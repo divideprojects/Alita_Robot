@@ -1,4 +1,5 @@
 import pickle
+from alita.utils.localization import GetLang
 from alita.__main__ import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
@@ -29,13 +30,13 @@ An example of promoting someone to admins:
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
 async def adminlist(c: Alita, m: Message):
-
+     _ = GetLang(m).strs
     try:
         me_id = int(redisClient.get("BOT_ID"))  # Get Bot ID from Redis!
         adminlist = pickle.loads(redisClient.get("ADMINDICT"))[
             str(m.chat.id)
         ]  # Load ADMINDICT from string
-        adminstr = f"Admins in **{m.chat.title}**:\n"
+        adminstr = _("admin.adminlist").format(chat_title=m.chat.title)
         for i in adminlist:
             usr = await c.get_users(i)
             if i == me_id:
@@ -47,11 +48,9 @@ async def adminlist(c: Alita, m: Message):
 
     except Exception as ef:
         if str(ef) == str(m.chat.id):
-            await m.reply_text("Use /admincache to reload admins!")
+            await m.reply_text(_("admin.useadmincache"))
         else:
-            await m.reply_text(
-                f"Some error occured, report to @{SUPPORT_GROUP}\n\nError: {ef}"
-            )
+            await m.reply_text(_("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef))
             LOGGER.error(ef)
 
     return
@@ -72,12 +71,10 @@ async def reload_admins(c: Alita, m: Message):
             adminlist.append(i.user.id)
         ADMINDICT[str(m.chat.id)] = adminlist
         redisClient.set("ADMINDICT", pickle.dumps(ADMINDICT))
-        await m.reply_text("Reloaded all admins in this chat!")
+        await m.reply_text(_("admin.reloadedadmins"))
         LOGGER.info(f"Reloaded admins for {m.chat.title}({m.chat.id})")
     except Exception as ef:
-        await m.reply_text(
-            f"Some error occured, report to @{SUPPORT_GROUP}\n\nError: {ef}"
-        )
+        await m.reply_text(_("admin.useadmincache"))
         LOGGER.error(ef)
 
     return
@@ -105,9 +102,7 @@ async def promote_usr(c: Alita, m: Message):
                 can_invite_users=True,
                 can_pin_messages=True,
             )
-            await m.reply_text(
-                f"{mention_html(m.from_user.first_name, m.from_user.id)} promoted {mention_html(user_first_name, user_id)} in chat **{m.chat.title}**"
-            )
+            await m.reply_text(_("admin.promoted").format(promoter=mention_html(m.from_user.first_name, m.from_user.id),promoted=mention_html(user_first_name, user_id), chat_title=m.chat.title))
 
             # ----- Add admin to redis cache! -----
             ADMINDICT = pickle.loads(
@@ -120,16 +115,14 @@ async def promote_usr(c: Alita, m: Message):
             redisClient.set("ADMINDICT", pickle.dumps(ADMINDICT))
 
         except errors.ChatAdminRequired:
-            await m.reply_text("I'm not admin!")
+            await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
-            await m.reply_text(
-                f"Some error occured, report to @{SUPPORT_GROUP}\n\nError: {ef}"
-            )
+            await m.reply_text(_("admin.useadmincache"))
             LOGGER.error(ef)
 
         return
 
-    await m.reply_text("You don't have permission to promote members!")
+    await m.reply_text(_("admin.nopromoteperm"))
     return
 
 
@@ -155,9 +148,7 @@ async def demote_usr(c: Alita, m: Message):
                 can_invite_users=False,
                 can_pin_messages=False,
             )
-            await m.reply_text(
-                f"{mention_html(m.from_user.first_name, m.from_user.id)} demoted {mention_html(user_first_name, user_id)} in chat **{m.chat.title}**"
-            )
+            await m.reply_text(_("admin.demoted").format(demoter=mention_html(m.from_user.first_name, m.from_user.id),demoted=mention_html(user_first_name, user_id), chat_title=m.chat.title)))
 
             # ----- Add admin to redis cache! -----
             ADMINDICT = pickle.loads(
@@ -170,16 +161,14 @@ async def demote_usr(c: Alita, m: Message):
             redisClient.set("ADMINDICT", pickle.dumps(ADMINDICT))
 
         except errors.ChatAdminRequired:
-            await m.reply_text("I'm not admin!")
+            await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
-            await m.reply_text(
-                f"Some error occured, report to @{SUPPORT_GROUP}\n\nError: {ef}"
-            )
+            await m.reply_text(_("admin.useadmincache"))
             LOGGER.error(ef)
 
         return
 
-    await m.reply_text("You don't have permission to demote members!")
+    await m.reply_text(_("admin.nodemoteperm"))
     return
 
 
@@ -197,20 +186,18 @@ async def demote_usr(c: Alita, m: Message):
 
         try:
             link = await c.export_chat_invite_link(m.chat.id)
-            await m.reply_text(f"**Invite Link for Chat:**\n`{link}`")
+            await m.reply_text(_("admin.invitelink").format(link=link))
         except errors.ChatAdminRequired:
-            await m.reply_text("I'm not admin!")
+            await m.reply_text(_("admin.notadmin"))
         except errors.ChatAdminInviteRequired:
-            await m.reply_text("I don't have permission for invite link!")
+            await m.reply_text(_("admin.noinviteperm"))
         except Exception as ef:
-            await m.reply_text(
-                f"Some error occured, report to @{SUPPORT_GROUP}\n\nError: {ef}"
-            )
+            await m.reply_text(_("admin.useadmincache"))
             LOGGER.error(ef)
 
         return
 
-    await m.reply_text("You don't have permission to invite users!")
+    await m.reply_text(_("admin.nouserinviteperm"))
     return
 
 
@@ -234,17 +221,15 @@ async def pin_message(c: Alita, m: Message):
                 m.reply_to_m.message_id,
                 disable_notification=disable_notification,
             )
-            await m.reply_text("`Pinned message!`")
+            await m.reply_text(_("admin.pinnedmsg"))
 
         except errors.ChatAdminRequired:
-            await m.reply_text("I'm not admin!")
+            await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
-            await m.reply_text(
-                f"Some error occured, report to @{SUPPORT_GROUP}\n\nError: {ef}"
-            )
+            await m.reply_text(_("admin.useadmincache"))
             LOGGER.error(ef)
     else:
-        await m.reply_text("`Reply to a message to which you want to pin...`")
+        await m.reply_text(_("admin.nopinmsg"))
     return
 
 
@@ -258,10 +243,8 @@ async def unpin_message(c: Alita, m: Message):
     try:
         await m.chat.unpin_chat_message(m.chat.id)
     except errors.ChatAdminRequired:
-        await m.reply_text("I'm not admin!")
+        await m.reply_text(_("admin.notadmin"))
     except Exception as ef:
-        await m.reply_text(
-            f"Some error occured, report to @{SUPPORT_GROUP}\n\nError: {ef}"
-        )
+        await m.reply_text(_("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef))
         LOGGER.error(ef)
     return

@@ -19,7 +19,7 @@ That's what approvals are for - approve trustworthy users to allow them to send 
 **Admin commands:**
 - `/approval`**:** Check a user's approval status in this chat.
 - `/approve`**:** Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-- `/unapprove`**:** Unapprove of a user. They will now be subject to locks, blacklists, and antiflood again.
+- `/unapprove`**:** Unapprove of a user. They will now be subject to blocklists.
 - `/approved`**:** List all approved users.
 - `/unapproveall`**:** Unapprove *ALL* users in a chat. This cannot be undone!
 """
@@ -43,7 +43,7 @@ async def approve_user(c: Alita, m: Message):
     member = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
     if member.status in ["administrator", "creator"]:
         await m.reply_text(
-            f"User is already admin - locks, blocklists, and antiflood already don't apply to them."
+            f"User is already admin - blocklists already don't apply to them."
         )
         return
     if db.is_approved(chat_id, user_id):
@@ -53,7 +53,7 @@ async def approve_user(c: Alita, m: Message):
         return
     db.approve(chat_id, user_id)
     await m.reply_text(
-        f"{mention_html(user_first_name, user_id)} has been approved in {chat_title}! They will now be ignored by automated admin actions like locks, blocklists, and antiflood."
+        f"{mention_html(user_first_name, user_id)} has been approved in {chat_title}! They will now be ignored by blocklists."
     )
     return
 
@@ -152,5 +152,5 @@ async def unapproveall_users(c: Alita, m: Message):
         db.disapprove_all(m.chat.id)
         await m.reply_text(f"All users have been disapproved in {m.chat.title}")
     except Exception as ef:
-        await m.reply_text(f"Some Error occured, report at @{SUPPORT_GROUP}.\n{ef}")
+        await m.reply_text(f"Some Error occured, report at {SUPPORT_GROUP}.\n{ef}")
     return
