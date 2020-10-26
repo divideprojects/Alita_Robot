@@ -11,7 +11,7 @@
 ![Contributors](https://img.shields.io/github/contributors/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
 ![Repo Size](https://img.shields.io/github/repo-size/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)</br>
 
-[![Crowdin](https://badges.crowdin.net/alitarobot/localized.svg)](https://crowdin.com/project/alitarobot)</br>
+[![Crowdin](https://badges.crowdin.net/alita_robot/localized.svg)](https://crowdin.com/project/alita_robot)</br>
 ![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/SkuzzyxD/Alita_Robot&title=Profile%20Views)</br>
 
 
