@@ -4,3 +4,4 @@ sample.env
 *.md
 crowdin.yml
 !README.md
+*.session

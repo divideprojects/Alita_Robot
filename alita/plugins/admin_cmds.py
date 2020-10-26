@@ -1,13 +1,13 @@
-import pickle
 from alita.utils.localization import GetLang
 from alita.__main__ import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
-from alita import PREFIX_HANDLER, LOGGER, redisClient, SUPPORT_GROUP
+from alita import PREFIX_HANDLER, LOGGER, SUPPORT_GROUP
 from alita.utils.localization import GetLang
 from alita.utils.admin_check import admin_check
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
+from alita.utils.redishelper import get_key, set_key
 
 __PLUGIN__ = "Admin"
 __help__ = """
@@ -30,12 +30,10 @@ An example of promoting someone to admins:
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
 async def adminlist(c: Alita, m: Message):
-     _ = GetLang(m).strs
+    _ = GetLang(m).strs
     try:
-        me_id = int(redisClient.get("BOT_ID"))  # Get Bot ID from Redis!
-        adminlist = pickle.loads(redisClient.get("ADMINDICT"))[
-            str(m.chat.id)
-        ]  # Load ADMINDICT from string
+        me_id = int(get_key("BOT_ID"))  # Get Bot ID from Redis!
+        adminlist = get_key("ADMINDICT")[str(m.chat.id)]  # Load ADMINDICT from string
         adminstr = _("admin.adminlist").format(chat_title=m.chat.title)
         for i in adminlist:
             usr = await c.get_users(i)
@@ -45,12 +43,14 @@ async def adminlist(c: Alita, m: Message):
                 usr = await c.get_users(i)
                 adminstr += f"- {mention_html(usr.first_name, i)} (`{i}`)\n"
         await m.reply_text(adminstr)
-
     except Exception as ef:
+
         if str(ef) == str(m.chat.id):
             await m.reply_text(_("admin.useadmincache"))
         else:
-            await m.reply_text(_("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef))
+            await m.reply_text(
+                _("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef)
+            )
             LOGGER.error(ef)
 
     return
@@ -63,14 +63,14 @@ async def reload_admins(c: Alita, m: Message):
     if not res:
         return
 
-    ADMINDICT = pickle.loads(redisClient.get("ADMINDICT"))  # Load ADMINDICT from string
+    ADMINDICT = get_key("ADMINDICT")  # Load ADMINDICT from string
 
     try:
         adminlist = []
         async for i in m.chat.iter_members(filter="administrators"):
             adminlist.append(i.user.id)
         ADMINDICT[str(m.chat.id)] = adminlist
-        redisClient.set("ADMINDICT", pickle.dumps(ADMINDICT))
+        set_key("ADMINDICT", ADMINDICT)
         await m.reply_text(_("admin.reloadedadmins"))
         LOGGER.info(f"Reloaded admins for {m.chat.title}({m.chat.id})")
     except Exception as ef:
@@ -102,17 +102,21 @@ async def promote_usr(c: Alita, m: Message):
                 can_invite_users=True,
                 can_pin_messages=True,
             )
-            await m.reply_text(_("admin.promoted").format(promoter=mention_html(m.from_user.first_name, m.from_user.id),promoted=mention_html(user_first_name, user_id), chat_title=m.chat.title))
+            await m.reply_text(
+                _("admin.promoted").format(
+                    promoter=mention_html(m.from_user.first_name, m.from_user.id),
+                    promoted=mention_html(user_first_name, user_id),
+                    chat_title=m.chat.title,
+                )
+            )
 
             # ----- Add admin to redis cache! -----
-            ADMINDICT = pickle.loads(
-                redisClient.get("ADMINDICT")
-            )  # Load ADMINDICT from string
+            ADMINDICT = get_key("ADMINDICT")  # Load ADMINDICT from string
             adminlist = []
             async for i in m.chat.iter_members(filter="administrators"):
                 adminlist.append(i.user.id)
             ADMINDICT[str(m.chat.id)] = adminlist
-            redisClient.set("ADMINDICT", pickle.dumps(ADMINDICT))
+            set_key("ADMINDICT", ADMINDICT)
 
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -148,17 +152,21 @@ async def demote_usr(c: Alita, m: Message):
                 can_invite_users=False,
                 can_pin_messages=False,
             )
-            await m.reply_text(_("admin.demoted").format(demoter=mention_html(m.from_user.first_name, m.from_user.id),demoted=mention_html(user_first_name, user_id), chat_title=m.chat.title)))
+            await m.reply_text(
+                _("admin.demoted").format(
+                    demoter=mention_html(m.from_user.first_name, m.from_user.id),
+                    demoted=mention_html(user_first_name, user_id),
+                    chat_title=m.chat.title,
+                )
+            )
 
             # ----- Add admin to redis cache! -----
-            ADMINDICT = pickle.loads(
-                redisClient.get("ADMINDICT")
-            )  # Load ADMINDICT from string
+            ADMINDICT = get_key("ADMINDICT")  # Load ADMINDICT from string
             adminlist = []
             async for i in m.chat.iter_members(filter="administrators"):
                 adminlist.append(i.user.id)
             ADMINDICT[str(m.chat.id)] = adminlist
-            redisClient.set("ADMINDICT", pickle.dumps(ADMINDICT))
+            set_key("ADMINDICT", ADMINDICT)
 
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -245,6 +253,8 @@ async def unpin_message(c: Alita, m: Message):
     except errors.ChatAdminRequired:
         await m.reply_text(_("admin.notadmin"))
     except Exception as ef:
-        await m.reply_text(_("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef))
+        await m.reply_text(
+            _("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef)
+        )
         LOGGER.error(ef)
     return

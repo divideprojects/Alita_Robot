@@ -1,7 +1,6 @@
 import sys
 import os
 import time
-import pickle
 import logging
 import importlib
 import redis
@@ -26,7 +25,7 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
 
 # the secret configuration specific things
 try:
-    if bool(os.environ.get("ENV", False)):
+    if os.environ.get("ENV"):
         from alita.sample_config import Config
     else:
         from alita.config import Development as Config
@@ -71,21 +70,6 @@ VERSION = Config.VERSION
 
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time.time()  # Check bot uptime
-
-
-def load_staff():
-    begin = time.time()
-    LOGGER.info("Begin Caching Support Staff...")
-    LOGGER.info(SUPPORT_STAFF)
-    try:
-        redisClient.set(
-            "SUPPORT_STAFF", pickle.dumps(SUPPORT_STAFF)
-        )  # Redis set value of support staff
-        LOGGER.info(
-            f"Cached SUPPORT_STAFF\nTime Taken: {round(time.time() - begin, 5)}s"
-        )
-    except Exception as ef:
-        LOGGER.info(ef)
 
 
 def load_cmds(ALL_PLUGINS):

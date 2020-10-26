@@ -1,6 +1,5 @@
 import os
 import time
-import pickle
 from pyrogram import Client, __version__
 from pyrogram.types import Message
 from pyrogram.raw.all import layer
@@ -16,9 +15,9 @@ from alita import (
     HELP_COMMANDS,
     WORKERS,
     load_cmds,
-    redisClient,
-    load_staff,
+    SUPPORT_STAFF,
 )
+from alita.utils.redishelper import set_key, flushredis, allkeys
 
 # Check that MESSAGE_DUMP ID is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
@@ -55,7 +54,7 @@ class Alita(Client):
 
         # Flush Redis data
         try:
-            redisClient.flushall()
+            flushredis()
         except Exception as ef:
             LOGGER.error(ef)
 
@@ -82,15 +81,13 @@ class Alita(Client):
             except Exception as ef:
                 LOGGER.error(ef)
 
-        ADMINDICT = pickle.dumps(ADMINDICT)  # Set dict as string using pickle
-        setadmindict = redisClient.set("ADMINDICT", ADMINDICT)
-        del ADMINDICT
-
-        if setadmindict:
+        try:
+            set_key("ADMINDICT", ADMINDICT)
+            del ADMINDICT
             end = time.time()
             LOGGER.info(f"Set admin list cache!\nTime Taken: {round(end-begin, 2)}s")
-        else:
-            LOGGER.error("Could not set ADMINDICT!")
+        except Exception as ef:
+            LOGGER.error(f"Could not set ADMINDICT!\n{ef}")
 
     async def start(self):
         await super().start()
@@ -100,8 +97,8 @@ class Alita(Client):
 
         """Redis Content Setup!"""
         await self.get_admins()  # Load admins in cache
-        load_staff()  # Load SUPPORT_STAFF in cache
-        redisClient.set("BOT_ID", int(me.id))  # Save Bot ID in Redis!
+        set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
+        set_key("BOT_ID", int(me.id))  # Save Bot ID in Redis!
         """Redis Content Setup!"""
 
         # Show in Log that bot has started
@@ -109,7 +106,7 @@ class Alita(Client):
             f"Pyrogram v{__version__}\n(Layer - {layer}) started on @{me.username}"
         )
         LOGGER.info(load_cmds(ALL_PLUGINS))
-        LOGGER.info(f"Redis Keys Loaded: {redisClient.keys()}")
+        LOGGER.info(f"Redis Keys Loaded: {allkeys()}")
 
         # Send a message to MESSAGE_DUMP telling that the bot has started and has loaded all plugins!
         await self.send_message(
@@ -119,7 +116,7 @@ class Alita(Client):
                 "<b>Loaded Plugins:</b>\n"
                 f"<i>{list(HELP_COMMANDS.keys())}</i>\n"
                 "<b>Redis Keys Loaded:</b>\n"
-                f"<i>{redisClient.keys()}</i>"
+                f"<i>{allkeys()}</i>"
             ),
         )
 
@@ -132,7 +129,7 @@ class Alita(Client):
         await super().stop()
         # Flush Redis data
         try:
-            redisClient.flushall()
+            flushredis()
             LOGGER.info("Flushed Redis!")
         except Exception as ef:
             LOGGER.error(ef)

@@ -29,22 +29,22 @@ class Development:
     # Fill in these vars if you want to use Traditional methods
     LOGGER = True
     TOKEN = "YOUR TOKEN"
-    APP_ID = YOUR APP_ID  # int value
+    APP_ID = 12345  # Your APP_ID - int value
     API_HASH = "YOUR TOKEN"
     OWNER_ID = "YOUR TOKEN"
     MESSAGE_DUMP = "YOUR TOKEN"
     DEV_USERS = []
     SUDO_USERS = []
     WHITELIST_USERS = []
-    DB_URI = postgres://username:password@postgresdb:5432/database_name
+    DB_URI = "postgres://username:password@postgresdb:5432/database_name"
     REDIS_HOST = "REDIS_HOST"
     REDIS_PORT = "REDIS_PORT"
     REDIS_DB = "REDIS_DB"
     NO_LOAD = []
-    PREFIX_HANDLER = ['!', '/']
+    PREFIX_HANDLER = ["!", "/"]
     SUPPORT_GROUP = "SUPPORT_GROUP"
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
     ENABLED_LOCALES = "ENABLED_LOCALES"
     VERSION = "VERSION"
-    DEV_PREFIX_HANDLER = '>'
+    DEV_PREFIX_HANDLER = ">"
     WORKERS = 8

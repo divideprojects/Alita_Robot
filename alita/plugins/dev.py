@@ -1,6 +1,5 @@
 import asyncio
 import io
-import pickle
 import time
 import os
 import sys
@@ -11,8 +10,9 @@ from alita.__main__ import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita.utils.localization import GetLang
-from alita import MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME, redisClient
+from alita import MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME
 from alita.utils.custom_filters import dev_filter
+from alita.utils.redishelper import get_key, allkeys
 from alita.utils.parser import mention_markdown
 from alita.db import users_db as userdb
 
@@ -222,9 +222,9 @@ async def store_members(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("alladmins", DEV_PREFIX_HANDLER) & dev_filter)
-async def test_speed(c: Alita, m: Message):
+async def list_all_admins(c: Alita, m: Message):
 
-    admindict = pickle.loads(redisClient.get("ADMINDICT"))
+    admindict = get_key("ADMINDICT")
 
     if len(str(admindict)) > 4000:
         with io.BytesIO(str.encode(chatfile)) as output:
@@ -236,4 +236,11 @@ async def test_speed(c: Alita, m: Message):
     else:
         await m.reply_text(admindict)
 
+    return
+
+
+@Alita.on_message(filters.command("rediskeys", DEV_PREFIX_HANDLER) & dev_filter)
+async def show_redis_keys(c: Alita, m: Message):
+    keys = allkeys()
+    await m.reply_text(keys)
     return
