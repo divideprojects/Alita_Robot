@@ -2,6 +2,6 @@
 postgres-data/
 sample.env
 *.md
-crowdin.yml
 !README.md
+crowdin.yml
 *.session

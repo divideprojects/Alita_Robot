@@ -14,7 +14,6 @@ services:
         links:
             - postgresdb
             - rediscache
-        env_file: alita.env
         restart: always
 
     rediscache:
