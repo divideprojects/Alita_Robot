@@ -196,7 +196,7 @@ async def chats(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("uptime", DEV_PREFIX_HANDLER) & dev_filter)
 async def uptime(c: Alita, m: Message):
-    up = time.strftime("%dd %Hh %Mm %Ss", time.gmtime(time.time() - UPTIME))
+    up = time.strftime("%Hh %Mm %Ss", time.gmtime(time.time() - UPTIME))
     await m.reply_text(f"<b>Uptime:</b> `{up}`")
     return
 
@@ -207,16 +207,18 @@ async def store_members(c: Alita, m: Message):
 
     lv = 0  # lv = local variable
 
-    async for member in m.chat.iter_members():
-
-        try:
-            userdb.update_user(
-                member.user.id, member.user.username, m.chat.id, m.chat.title
-            )
-            lv += 1
-        except:
-            pass
-
+    try:
+        async for member in m.chat.iter_members():
+            try:
+                userdb.update_user(
+                    member.user.id, member.user.username, m.chat.id, m.chat.title
+                )
+                lv += 1
+            except:
+                pass
+    except:
+        await c.send_message(chat_id=MESSAGE_DUMP, text="Error while storing members!")
+        return
     await sm.edit_text(f"Stored {lv} members")
     return
 

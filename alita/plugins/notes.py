@@ -31,6 +31,10 @@ Get that note, if avaiable.
 /clear <note>
 Delete that note, if avaiable.
 
+/clearall
+Clears all notes in the chat!
+**NOTE:** Can only be used by owner of chat!
+
 **All Notes**
 /saved or /notes
 Get all your notes, if too much notes, please use this in your saved message instead!

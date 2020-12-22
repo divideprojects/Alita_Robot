@@ -35,8 +35,8 @@ except Exception as ef:
 # Redis Cache
 REDIS_HOST = Config.REDIS_HOST
 REDIS_PORT = Config.REDIS_PORT
-REDIS_DB = Config.REDIS_DB
-redisClient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
+REDIS_PASS = Config.REDIS_PASS
+redisClient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASS)
 
 # Account Related
 TOKEN = Config.TOKEN

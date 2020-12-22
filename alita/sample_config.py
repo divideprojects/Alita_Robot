@@ -14,7 +14,7 @@ class Config:
     DB_URI = os.environ.get("DB_URI")
     REDIS_HOST = os.environ.get("REDIS_HOST")
     REDIS_PORT = os.environ.get("REDIS_PORT")
-    REDIS_DB = os.environ.get("REDIS_DB")
+    REDIS_PASS = os.environ.get("REDIS_PASS")
     NO_LOAD = os.environ.get("NO_LOAD").split()
     PREFIX_HANDLER = os.environ.get("PREFIX_HANDLER").split()
     SUPPORT_GROUP = os.environ.get("SUPPORT_GROUP")
@@ -38,8 +38,8 @@ class Development:
     WHITELIST_USERS = []
     DB_URI = "postgres://username:password@postgresdb:5432/database_name"
     REDIS_HOST = "REDIS_HOST"
-    REDIS_PORT = "REDIS_PORT"
-    REDIS_DB = "REDIS_DB"
+    REDIS_PORT = "REDIS_PORT"  # int type
+    REDIS_PASS = "REDIS_PASS"
     NO_LOAD = []
     PREFIX_HANDLER = ["!", "/"]
     SUPPORT_GROUP = "SUPPORT_GROUP"

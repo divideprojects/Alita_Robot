@@ -68,7 +68,7 @@ async def get_lyrics(c: Alita, m: Message):
             f.close()
         await m.reply_document(
             document="lyrics.txt",
-            caption=("Message length exceeded max limit! " "Sent as a text file."),
+            caption=("Message length exceeded max limit!\nSent as a text file."),
         )
         os.remove("lyrics.txt")
         await em.delete()

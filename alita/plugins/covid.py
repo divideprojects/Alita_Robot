@@ -210,7 +210,7 @@ async def get_covid(c: Alita, m: Message):
             total_confirmed_global - total_deaths_global - total_recovered_global
         )
         reply_text = (
-            "**Corona Stats🦠:**\n"
+            "**Corona Stats 🦠:**\n"
             "**New**\n"
             f"New Confirmed: `{str(new_confirmed_global)}`\n"
             f"New Deaths: `{str(new_deaths_global)}`\n"

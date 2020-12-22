@@ -25,7 +25,7 @@ lines will allow you to add multiple triggers.
 multiple triggers at once.
  - /rmblacklist <triggers>: Same as above.
 
- Can only remove one remove one blacklist at a time!
+**Note:** Can only remove one remove one blacklist at a time!
 """
 
 
@@ -93,7 +93,7 @@ async def rm_blacklist(c: Alita, m: Message):
             db.rm_from_blacklist(m.chat.id, bl_word.lower())
             await m.reply_text(_("blacklist.rm_blacklist").format(bl_word=bl_word))
             return
-        await m.reply_text(_("blacklist.no_bl_found").format())
+        await m.reply_text(_("blacklist.no_bl_found").format(bl_word=bl_word))
     else:
         await m.reply_text(_("general.check_help"), reply_to_message_id=m.message_id)
 
