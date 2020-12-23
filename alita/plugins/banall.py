@@ -18,7 +18,7 @@ async def get_stats(c: Alita, m: Message):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("⚠️ Confirm", callback_data="banallmembers"),
+                    InlineKeyboardButton("⚠️ Confirm", callback_data="ban.all.members"),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
                 ]
             ]
@@ -27,7 +27,7 @@ async def get_stats(c: Alita, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^banallmembers$"))
+@Alita.on_callback_query(filters.regex("^ban.all.members$"))
 async def banallnotes_callback(c: Alita, q: CallbackQuery):
     await q.message.reply_text("<i><b>Banning All Members...</b></i>")
     users = []

@@ -20,8 +20,10 @@ done easily using the bot.
  × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
  × /unpin: Unpins the currently pinned message.
  × /invitelink: Gets private chat's invitelink.
- × /promote: Promotes the user replied to.
- × /demote: Demotes the user replied to.
+ × /promote: Promotes the user replied to or tagged.
+ × /demote: Demotes the user replied to or tagged.
+ × /ban: Bans the user replied to or tagged.
+ × /unban: Unbans the user replied to or tagged.
 
 An example of promoting someone to admins:
 `/promote @username`; this promotes a user to admins.
@@ -76,6 +78,48 @@ async def reload_admins(c: Alita, m: Message):
     except Exception as ef:
         await m.reply_text(_("admin.useadmincache"))
         LOGGER.error(ef)
+
+    return
+
+
+@Alita.on_message(filters.command("ban", PREFIX_HANDLER) & filters.group)
+async def ban_usr(c: Alita, m: Message):
+
+    res = await admin_check(c, m)
+    if not res:
+        return
+
+    if from_user.can_restrict_members or from_user.status == "creator":
+        user_id, user_first_name = await extract_user(c, m)
+        try:
+            await c.kick_chat_member(m.chat.id, user_id)
+            await m.reply_text(f"Banned {mention_html(user_first_name, user_id)}")
+        except errors.ChatAdminRequired:
+            await m.reply_text(_("admin.notadmin"))
+        except Exception as ef:
+            await m.reply_text(f"Error: {ef}\n\nReport it in Support Group!")
+            LOGGER.error(ef)
+
+    return
+
+
+@Alita.on_message(filters.command("unban", PREFIX_HANDLER) & filters.group)
+async def unban_usr(c: Alita, m: Message):
+
+    res = await admin_check(c, m)
+    if not res:
+        return
+
+    if from_user.can_restrict_members or from_user.status == "creator":
+        user_id, user_first_name = await extract_user(c, m)
+        try:
+            await c.unban_chat_member(m.chat.id, user_id)
+            await m.reply_text(f"Unbanned {mention_html(user_first_name, user_id)}")
+        except errors.ChatAdminRequired:
+            await m.reply_text(_("admin.notadmin"))
+        except Exception as ef:
+            await m.reply_text(f"Error: {ef}\n\nReport it in Support Group!")
+            LOGGER.error(ef)
 
     return
 
