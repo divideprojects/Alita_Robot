@@ -89,6 +89,8 @@ async def ban_usr(c: Alita, m: Message):
     if not res:
         return
 
+    from_user = await m.chat.get_member(m.from_user.id)
+
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = await extract_user(c, m)
         try:
@@ -109,6 +111,8 @@ async def unban_usr(c: Alita, m: Message):
     res = await admin_check(c, m)
     if not res:
         return
+
+    from_user = await m.chat.get_member(m.from_user.id)
 
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = await extract_user(c, m)
