@@ -154,26 +154,29 @@ async def gban_list(c: Alita, m: Message):
 async def gban_watcher(c: Alita, m: Message):
     if db.is_user_gbanned(m.from_user.id):
         try:
-            await c.kick_chat_member(m.chat.id, m.from_user.id)
-            await m.reply_text(
-                (
-                    f"This user ({mention_html(m.from_user.first_name, m.from_user.id)}) "
-                    "has been banned globally!\n\n"
-                    f"To get unbanned appeal at {SUPPORT_GROUP}"
-                ),
-            )
-            LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
-            return
-        except (errors.ChatAdminRequired or errors.UserAdminInvalid):
-            # Bot not admin in group and hence cannot ban users!
-            # TO-DO - Improve Error Detection
-            LOGGER.info(
-                f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})"
-            )
-            pass
-        except Exception as excp:
-            await c.send_message(
-                MESSAGE_DUMP,
-                f"<b>Gban Watcher Error!</b>\n<b>Chat:</b> {m.chat.id}\n<b>Error:</b> `{excp}`",
-            )
+            try:
+                await c.kick_chat_member(m.chat.id, m.from_user.id)
+                await m.reply_text(
+                    (
+                        f"This user ({mention_html(m.from_user.first_name, m.from_user.id)}) "
+                        "has been banned globally!\n\n"
+                        f"To get unbanned appeal at {SUPPORT_GROUP}"
+                    ),
+                )
+                LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
+                return
+            except (errors.ChatAdminRequired or errors.UserAdminInvalid):
+                # Bot not admin in group and hence cannot ban users!
+                # TO-DO - Improve Error Detection
+                LOGGER.info(
+                    f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})"
+                )
+                pass
+            except Exception as excp:
+                await c.send_message(
+                    MESSAGE_DUMP,
+                    f"<b>Gban Watcher Error!</b>\n<b>Chat:</b> {m.chat.id}\n<b>Error:</b> `{excp}`",
+                )
+        except AttributeError:
+            pass  # Skip attribute errors!
     return

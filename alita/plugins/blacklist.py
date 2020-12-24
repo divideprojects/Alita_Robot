@@ -20,9 +20,9 @@ the message will immediately be deleted. A good combo is sometimes to pair this 
  - /blacklist: View the current blacklisted words.
 **Admin only:**
  - /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different \
-lines will allow you to add multiple triggers.
+lines will allow you to add muser_listtiple triggers.
  - /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove \
-multiple triggers at once.
+muser_listtiple triggers at once.
  - /rmblacklist <triggers>: Same as above.
 
 **Note:** Can only remove one remove one blacklist at a time!
@@ -102,27 +102,30 @@ async def rm_blacklist(c: Alita, m: Message):
 
 @Alita.on_message(filters.group, group=11)
 async def del_blacklist(c: Alita, m: Message):
-    ul = []
-    x = app_db.all_approved(m.chat.id)
-    for j in x:
-        ul.append(int(j.user_id))
-    async for i in m.chat.iter_members(filter="administrators"):
-        ul.append(i.user.id)
-    if m.from_user.id in ul:
-        del ul  # Reset Admin list, just in case new admins are added!
-        return
-    if m.text:
-        chat_filters = db.get_chat_blacklist(m.chat.id)
-        if not chat_filters:
+    try:
+        user_list = []
+        approved_users = app_db.all_approved(m.chat.id)
+        for auser in approved_users:
+            user_list.append(int(auser.user_id))
+        async for i in m.chat.iter_members(filter="administrators"):
+            user_list.append(i.user.id)
+        if m.from_user.id in user_list:
+            del user_list  # Reset Admin list, just in case new admins are added!
             return
-        for trigger in chat_filters:
-            pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
-            match = regex_searcher(pattern, m.text.lower())
-            if not match:
-                continue
-            if match:
-                try:
-                    await m.delete()
-                except Exception as ef:
-                    LOGGER.info(ef)
-                break
+        if m.text:
+            chat_filters = db.get_chat_blacklist(m.chat.id)
+            if not chat_filters:
+                return
+            for trigger in chat_filters:
+                pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
+                match = regex_searcher(pattern, m.text.lower())
+                if not match:
+                    continue
+                if match:
+                    try:
+                        await m.delete()
+                    except Exception as ef:
+                        LOGGER.info(ef)
+                    break
+    except AttributeError:
+        pass  # Skip attribute errors!

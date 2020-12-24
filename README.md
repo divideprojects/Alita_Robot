@@ -62,6 +62,18 @@ If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 *NOTE:* No need to specify alita.env file, docker-compose takes care of it!
 If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 
+## TO-DO
+- [ ] Fix Errors, by defining them
+- [ ] Add Captcha
+- [ ] Add federations
+- [ ] Add Sticker Blacklist
+- [ ] Add Greetings (Welcome and Goodbye)
+- [ ] Add anti-flood
+- [ ] Add backup
+- [ ] Add Logging of groups and channels
+- [ ] Add warnings
+- [ ] Add connections
+
 ## Contributing to the project
 
  - You must sign off on your commit.
