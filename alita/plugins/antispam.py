@@ -152,8 +152,8 @@ async def gban_list(c: Alita, m: Message):
 
 @Alita.on_message(filters.group, group=6)
 async def gban_watcher(c: Alita, m: Message):
-    if db.is_user_gbanned(m.from_user.id):
-        try:
+    try:
+        if db.is_user_gbanned(m.from_user.id):
             try:
                 await c.kick_chat_member(m.chat.id, m.from_user.id)
                 await m.reply_text(
@@ -177,6 +177,6 @@ async def gban_watcher(c: Alita, m: Message):
                     MESSAGE_DUMP,
                     f"<b>Gban Watcher Error!</b>\n<b>Chat:</b> {m.chat.id}\n<b>Error:</b> `{excp}`",
                 )
-        except AttributeError:
-            pass  # Skip attribute errors!
+    except AttributeError:
+        pass  # Skip attribute errors!
     return

@@ -1,12 +1,12 @@
 from alita.__main__ import Alita
-from pyrogram import filters
+from pyrogram import filters, errors
 from pyrogram.types import (
     CallbackQuery,
     Message,
     InlineKeyboardMarkup,
     InlineKeyboardButton,
 )
-from alita import PREFIX_HANDLER, VERSION, HELP_COMMANDS, OWNER_ID
+from alita import PREFIX_HANDLER, VERSION, HELP_COMMANDS, OWNER_ID, LOGGER
 from alita.utils.localization import GetLang
 
 
@@ -51,6 +51,9 @@ async def start(c: Alita, m: Message):
     me = await c.get_users("self")
     _ = GetLang(m).strs
     if m.chat.type == "private":
+        if errors.UserIsBlocked:
+            LOGGER.warning(f"Bot blocked by {m.from_user.id}")
+            pass
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 [

@@ -16,7 +16,7 @@ Uploads a picture, video or text to telegraph.
 @Alita.on_message(
     filters.command("telegraph", PREFIX_HANDLER) & (filters.group | filters.private)
 )
-async def telegraph(c: Alita, m: Message):
+async def telegraph_oof(c: Alita, m: Message):
     if m.reply_to_message:
         if (
             m.reply_to_message.photo

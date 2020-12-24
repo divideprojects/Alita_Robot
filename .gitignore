@@ -1,4 +1,5 @@
 *.session
+*.session-journal
 alita/config.py
 .vscode/
 postgres-data/
