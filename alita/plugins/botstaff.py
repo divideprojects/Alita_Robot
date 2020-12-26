@@ -25,7 +25,7 @@ async def botstaff(c: Alita, m: Message):
     true_dev = list(set(DEV_USERS) - {OWNER_ID})
     reply += "\n<b>Developers ⚡️:</b>\n"
     if true_dev == []:
-        reply += "No Dev Users"
+        reply += "No Dev Users\n"
     else:
         for each_user in true_dev:
             user_id = int(each_user)

@@ -131,6 +131,7 @@ async def get_gifid(c: Alita, m: Message):
     filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private)
 )
 async def my_info(c: Alita, m: Message):
+    infoMsg = await m.reply_text("<code>Getting user information...</code>")
     user_id, first_name = await extract_user(c, m)
 
     if user_id:
@@ -190,7 +191,7 @@ async def my_info(c: Alita, m: Message):
     except BaseException:
         pass
 
-    await m.reply_text(text, parse_mode="html", disable_web_page_preview=True)
+    await infoMsg.edit_text(text, parse_mode="html", disable_web_page_preview=True)
 
     return
 

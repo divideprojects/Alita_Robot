@@ -96,6 +96,19 @@ class Alita(Client):
 
         me = await self.get_me()  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
+        
+        # Send a message to MESSAGE_DUMP telling that the bot has started and has loaded all plugins!
+        await self.send_message(
+            MESSAGE_DUMP,
+            (
+                f"<b><i>Bot started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n\n"
+                "<b>Loaded Plugins:</b>\n"
+                f"<i>{list(HELP_COMMANDS.keys())}</i>\n"
+                "<b>Redis Keys Loaded:</b>\n"
+                f"<i>{allkeys()}</i>"
+            ),
+        )
+
 
         """Redis Content Setup!"""
         await self.get_admins()  # Load admins in cache
@@ -109,18 +122,7 @@ class Alita(Client):
         )
         LOGGER.info(load_cmds(ALL_PLUGINS))
         LOGGER.info(f"Redis Keys Loaded: {allkeys()}")
-
-        # Send a message to MESSAGE_DUMP telling that the bot has started and has loaded all plugins!
-        await self.send_message(
-            MESSAGE_DUMP,
-            (
-                f"<b><i>Bot started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n\n"
-                "<b>Loaded Plugins:</b>\n"
-                f"<i>{list(HELP_COMMANDS.keys())}</i>\n"
-                "<b>Redis Keys Loaded:</b>\n"
-                f"<i>{allkeys()}</i>"
-            ),
-        )
+        LOGGER.info("Bot Started Successfully!")
 
     async def stop(self, *args):
         # Send a message to MESSAGE_DUMP telling that the bot has stopped!

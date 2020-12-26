@@ -48,6 +48,8 @@ First Step!
 - Run the bot using `python3 -m alita`
 If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 
+
+*Docker Configuration is not working right now!*
 ### Docker:
 - Rename `sample.env` to `alita.env` in this folder and fill in all the variables. **Sudo, Dev, Whitelist** users are optional!!
 - Build using `docker build -t alita_robot`.
@@ -73,6 +75,7 @@ If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 - [ ] Add Logging of groups and channels
 - [ ] Add warnings
 - [ ] Add connections
+- [ ] Fix Docker Configuration
 
 ## Contributing to the project
 

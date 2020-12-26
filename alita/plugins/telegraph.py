@@ -23,12 +23,13 @@ async def telegraph_oof(c: Alita, m: Message):
             or m.reply_to_message.video
             or m.reply_to_message.animation
         ):
-            d_file = await m.reply_to_message.download()
-            media_urls = telegraph.upload_file(d_file)
+            d_file = await m.reply_to_message
+            the_dl_location = await c.download_media(message=m.reply_to_message, file_name=".")
+            media_urls = telegraph.upload_file(the_dl_location)
             tele_link = "https://telegra.ph" + media_urls[0]
             await m.reply_text(tele_link)
         elif m.reply_to_message.text:
-            tgph = telepraph.Telegraph()
+            tgph = telegraph.Telegraph()
             tgph.create_account(short_name=m.from_user.first_name)
             response = telegraph.create_page(
                 "Hey", html_content=f"<p>{m.reply_to_message.text}</p>"
