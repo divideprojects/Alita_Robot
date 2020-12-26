@@ -61,6 +61,8 @@ async def adminlist(c: Alita, m: Message):
 @Alita.on_message(filters.command("admincache", PREFIX_HANDLER) & filters.group)
 async def reload_admins(c: Alita, m: Message):
 
+    _ = GetLang(m).strs
+
     res = await admin_check(c, m)
     if not res:
         return
@@ -85,6 +87,8 @@ async def reload_admins(c: Alita, m: Message):
 @Alita.on_message(filters.command("ban", PREFIX_HANDLER) & filters.group)
 async def ban_usr(c: Alita, m: Message):
 
+    _ = GetLang(m).strs
+
     res = await admin_check(c, m)
     if not res:
         return
@@ -108,6 +112,8 @@ async def ban_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("unban", PREFIX_HANDLER) & filters.group)
 async def unban_usr(c: Alita, m: Message):
 
+    _ = GetLang(m).strs
+
     res = await admin_check(c, m)
     if not res:
         return
@@ -130,6 +136,8 @@ async def unban_usr(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("promote", PREFIX_HANDLER) & filters.group)
 async def promote_usr(c: Alita, m: Message):
+
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -181,6 +189,8 @@ async def promote_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("demote", PREFIX_HANDLER) & filters.group)
 async def demote_usr(c: Alita, m: Message):
 
+    _ = GetLang(m).strs
+
     res = await admin_check(c, m)
     if not res:
         return
@@ -231,6 +241,8 @@ async def demote_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("invitelink", PREFIX_HANDLER) & filters.group)
 async def demote_usr(c: Alita, m: Message):
 
+    _ = GetLang(m).strs
+
     res = await admin_check(c, m)
     if not res:
         return
@@ -259,6 +271,8 @@ async def demote_usr(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group)
 async def pin_message(c: Alita, m: Message):
+
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -291,6 +305,8 @@ async def pin_message(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & filters.me)
 async def unpin_message(c: Alita, m: Message):
+
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
