@@ -15,11 +15,16 @@ if not os.path.isdir(logdir):
     os.mkdir(f"{__name__}/logs")
 
 logfile = f"{logdir}/{__name__}_{log_datetime}.txt"
+
+file_handler = logging.FileHandler(filename=logfile)
+stdout_handler = logging.StreamHandler(sys.stdout)
+
 logging.basicConfig(
-    filename=logfile,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
+    handlers=[file_handler, stdout_handler],
 )
+
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 LOGGER = logging.getLogger(__name__)
 
