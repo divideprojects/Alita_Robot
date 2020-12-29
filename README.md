@@ -1,5 +1,6 @@
 # Alita_Robot
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/050f1262c0d843b5b077a57a9c840f20)](https://app.codacy.com/gh/SkuzzyxD/Alita_Robot?utm_source=github.com&utm_medium=referral&utm_content=SkuzzyxD/Alita_Robot&utm_campaign=Badge_Grade)
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 [![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Skuzzy_xD/)</br>
 
