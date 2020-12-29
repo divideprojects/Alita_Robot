@@ -8,7 +8,7 @@ from pyrogram.types import (
     CallbackQuery,
 )
 from pyrogram.errors import BadRequest, Unauthorized
-from alita import DEV_PREFIX_HANDLER
+from alita import DEV_PREFIX_HANDLER, LOGGER
 from alita.db import users_db as user_db, antispam_db as gban_db
 from alita.utils.custom_filters import dev_filter
 
@@ -229,25 +229,25 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^db_clean_"))
 async def db_clean_callbackAction(c: Alita, q: CallbackQuery):
-    query_type = q.data.split("_")[1]
+    try:
+        query_type = q.data.split("_")[1]
 
-    if query_type == "muted_chats":
-        await q.message.edit_text("Leaving chats ...")
-        chat_count = await get_muted_chats(c, q.message, True)
-        await q.message.edit_text(f"Left {chat_count} chats.")
-        return
+        if query_type == "muted_chats":
+            await q.message.edit_text("Leaving chats ...")
+            chat_count = await get_muted_chats(c, q.message, True)
+            await q.message.edit_text(f"Left {chat_count} chats.")
 
-    elif query_type == "inavlid_chats":
-        await q.message.edit_text("Cleaning up Db...")
-        invalid_chat_count = await get_invalid_chats(c, q.message, True)
-        await q.message.edit_text(f"Cleaned up {invalid_chat_count} chats from Db.")
-        return
+        elif query_type == "inavlid_chats":
+            await q.message.edit_text("Cleaning up Db...")
+            invalid_chat_count = await get_invalid_chats(c, q.message, True)
+            await q.message.edit_text(f"Cleaned up {invalid_chat_count} chats from Db.")
 
-    elif query_type == "invalid_gbans":
-        await q.message.edit_text("Removing Invalid Gbans from Db...")
-        invalid_gban_count = await get_invalid_gban(c, q.message, True)
-        await q.message.edit_text(
-            f"Cleaned up {invalid_gban_count} gbanned users from Db"
-        )
-        return
+        elif query_type == "invalid_gbans":
+            await q.message.edit_text("Removing Invalid Gbans from Db...")
+            invalid_gban_count = await get_invalid_gban(c, q.message, True)
+            await q.message.edit_text(
+                f"Cleaned up {invalid_gban_count} gbanned users from Db"
+            )
+    except Exception as ef:
+        LOGGER.error(f"Error while cleaning db:\n{ef}")
     return
