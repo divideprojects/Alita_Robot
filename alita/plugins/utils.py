@@ -81,7 +81,7 @@ async def get_lyrics(c: Alita, m: Message):
     filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private)
 )
 async def id_info(c: Alita, m: Message):
-    user_id, first_name = await extract_user(c, m)
+    user_id, first_name = extract_user(m)
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_m.from_user
@@ -132,7 +132,7 @@ async def get_gifid(c: Alita, m: Message):
 )
 async def my_info(c: Alita, m: Message):
     infoMsg = await m.reply_text("<code>Getting user information...</code>")
-    user_id, first_name = await extract_user(c, m)
+    user_id, first_name = extract_user(m)
 
     if user_id:
         user = await c.get_users(user_id)

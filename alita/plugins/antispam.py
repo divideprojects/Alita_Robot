@@ -21,7 +21,7 @@ async def gban(c: Alita, m: Message):
         await m.reply_text("Please enter a reason to gban user!")
         return
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name = extract_user(m)
     me = await c.get_me()
 
     if m.reply_to_message:
@@ -88,7 +88,7 @@ async def ungban(c: Alita, m: Message):
         await m.reply_text("Pass a user id or username as an argument!")
         return
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name = extract_user(m)
     me = await c.get_me()
 
     if user_id in SUPPORT_STAFF:

@@ -96,7 +96,7 @@ async def ban_usr(c: Alita, m: Message):
     from_user = await m.chat.get_member(m.from_user.id)
 
     if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = await extract_user(c, m)
+        user_id, user_first_name = extract_user(m)
         try:
             await c.kick_chat_member(m.chat.id, user_id)
             await m.reply_text(f"Banned {mention_html(user_first_name, user_id)}")
@@ -121,7 +121,7 @@ async def unban_usr(c: Alita, m: Message):
     from_user = await m.chat.get_member(m.from_user.id)
 
     if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = await extract_user(c, m)
+        user_id, user_first_name = extract_user(m)
         try:
             await c.unban_chat_member(m.chat.id, user_id)
             await m.reply_text(f"Unbanned {mention_html(user_first_name, user_id)}")
@@ -148,7 +148,7 @@ async def promote_usr(c: Alita, m: Message):
     # If user does not have permission to promote other users, return
     if from_user.can_promote_members or from_user.status == "creator":
 
-        user_id, user_first_name = await extract_user(c, m)
+        user_id, user_first_name = extract_user(m)
         try:
             await m.chat.promote_member(
                 user_id=user_id,
@@ -200,7 +200,7 @@ async def demote_usr(c: Alita, m: Message):
     # If user does not have permission to demote other users, return
     if from_user.can_promote_members or from_user.status == "creator":
 
-        user_id, user_first_name = await extract_user(c, m)
+        user_id, user_first_name = extract_user(m)
         try:
             await m.chat.promote_member(
                 user_id=user_id,

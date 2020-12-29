@@ -34,7 +34,7 @@ async def approve_user(c: Alita, m: Message):
 
     chat_title = m.chat.title
     chat_id = m.chat.id
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name = extract_user(m)
     if not user_id:
         await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!"
@@ -67,7 +67,7 @@ async def disapprove_user(c: Alita, m: Message):
 
     chat_title = m.chat.title
     chat_id = m.chat.id
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name = extract_user(m)
     if not user_id:
         await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!"
@@ -124,7 +124,7 @@ async def check_approval(c: Alita, m: Message):
     if not res:
         return
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name = extract_user(m)
     if not user_id:
         await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!"
