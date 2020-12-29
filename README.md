@@ -48,22 +48,6 @@ First Step!
 - Run the bot using `python3 -m alita`
 If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 
-
-*Docker Configuration is not working right now!*
-### Docker:
-- Rename `sample.env` to `alita.env` in this folder and fill in all the variables. **Sudo, Dev, Whitelist** users are optional!!
-- Build using `docker build -t alita_robot`.
-- Run using `docker run --name alita_robot --env-file alita.env alita_robot`.
-*NOTE:* You need to specify --env-file variable, otherwise the bot will not work!
-If successful, bot should send a message to the **MESSAGE_DUMP** Group!
-
-### Docker Compose:
-- Rename `sample.env` to `alita.env` in this folder and fill in all the variables. **Sudo, Dev, Whitelist** users are optional!!
-- Build using `docker-compose build`.
-- Run using `docker-compose up`.
-*NOTE:* No need to specify alita.env file, docker-compose takes care of it!
-If successful, bot should send a message to the **MESSAGE_DUMP** Group!
-
 ## TO-DO
 - [ ] Fix Errors, by defining them
 - [ ] Add Captcha
