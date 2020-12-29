@@ -46,7 +46,7 @@ async def approve_user(c: Alita, m: Message):
         await m.reply_text("This user is not in this chat!")
         return
     except Exception as ef:
-        await m.reply_text(f"<b>Error</b>: <code>{}</code>\nReport it to @{SUPPORT_GROUP}")
+        await m.reply_text(f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}")
         return
     if member.status in ["administrator", "creator"]:
         await m.reply_text(
@@ -88,7 +88,7 @@ async def disapprove_user(c: Alita, m: Message):
         await m.reply_text("This user is not in this chat!")
         return
     except Exception as ef:
-        await m.reply_text(f"<b>Error</b>: <code>{}</code>\nReport it to @{SUPPORT_GROUP}")
+        await m.reply_text(f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}")
         return
     if member.status in ["administrator", "creator"]:
         await m.reply_text("This user is an admin, they can't be unapproved.")
