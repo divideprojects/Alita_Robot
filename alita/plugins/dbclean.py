@@ -19,7 +19,7 @@ async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
     chats = user_db.get_all_chats()
     kicked_chats, progress = 0, 0
     chat_list = []
-    progress_message = None
+    progress_message = m
 
     for chat in chats:
         if ((100 * chats.index(chat)) / len(chats)) > progress:
@@ -86,7 +86,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
     chats = user_db.get_all_chats()
     muted_chats, progress = 0, 0
     chat_list = []
-    progress_message = None
+    progress_message = m
 
     for chat in chats:
 
