@@ -9,7 +9,7 @@ from alita import PREFIX_HANDLER
 __PLUGIN__ = "TRANSLATE"
 
 __help__ = """
-  × /tr <language>: Translates the text and then replies to you with the language \
+ × /tr <language>: Translates the text and then replies to you with the language \
  you have specifed, works as a reply to message.
 """
 

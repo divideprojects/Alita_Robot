@@ -17,11 +17,11 @@ __help__ = """
 Set rules for you chat so that members know what to do and \
 what not to do in your group!
 
-  × /rules: get the rules for current chat.
+ × /rules: get the rules for current chat.
 
 **Admin only:**
-  × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
-  × /clearrules: Clear the rules for this chat.
+ × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
+ × /clearrules: Clear the rules for this chat.
 """
 
 

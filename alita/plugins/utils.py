@@ -22,12 +22,12 @@ __PLUGIN__ = "Utils"
 __help__ = """
 Some utils provided by bot to make your tasks easy!
 
-  × /id: Get the current group id. If used by replying to a message, get that user's id.
-  × /info: Get information about a user.
-  × /ping - Get ping time of bot to telegram server.
-  × /gifid: Reply to a gif to me to tell you its file ID.
-  × /lyrics <song>: Get the lyrics of the song you specify!
-  × /weebify <text> or a reply to message: To weebify the message.
+ × /id: Get the current group id. If used by replying to a message, get that user's id.
+ × /info: Get information about a user.
+ × /ping - Get ping time of bot to telegram server.
+ × /gifid: Reply to a gif to me to tell you its file ID.
+ × /lyrics <song>: Get the lyrics of the song you specify!
+ × /weebify <text> or a reply to message: To weebify the message.
 """
 
 
