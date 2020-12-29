@@ -408,7 +408,7 @@ async def pin_message(c: Alita, m: Message):
 
             pinned_event = await c.pin_chat_message(
                 m.chat.id,
-                m.reply_to_m.message_id,
+                m.reply_to_message.message_id,
                 disable_notification=disable_notification,
             )
             await m.reply_text(_("admin.pinnedmsg"))
