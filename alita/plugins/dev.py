@@ -18,7 +18,7 @@ from alita.db import users_db as userdb
 
 
 @Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
-async def test_speed(c: Alita, m: Message):
+async def send_log(c: Alita, m: Message):
     _ = GetLang(m).strs
     rply = await m.reply_text("Sending logs...!")
     await c.send_message(
