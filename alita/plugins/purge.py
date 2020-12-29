@@ -14,7 +14,7 @@ Want to delete messages in you group?
 
  -/purge: Deletes messages upto replied message.
  -/purge <X>: Delete the number of messages specifed by number X
-- /del: Deletes a single message, used as a reply to message.
+ × /del: Deletes a single message, used as a reply to message.
 """
 
 

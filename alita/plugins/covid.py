@@ -15,7 +15,7 @@ __help__ = """
 Get Latest Corona Virus Stats in your group using this bot!
 
 **Usage:**
- - /covid: Get Worldwide Corona Status
+  × /covid: Get Worldwide Corona Status
 """
 
 T = TypeVar("T")

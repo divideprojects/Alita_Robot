@@ -17,12 +17,12 @@ from alita.utils.admin_check import admin_check
 __PLUGIN__ = "Reporting"
 
 __help__ = """
- - /report <reason>: reply to a message to report it to admins.
+  × /report <reason>: reply to a message to report it to admins.
  - @admin: reply to a message to report it to admins.
 **NOTE:** Neither of these will get triggered if used by admins.
 
 **Admins Only:**
- - /reports <on/off>: change report setting, or view current status.
+  × /reports <on/off>: change report setting, or view current status.
    - If done in PM, toggles your status.
    - If in group, toggles that groups's status.
 """

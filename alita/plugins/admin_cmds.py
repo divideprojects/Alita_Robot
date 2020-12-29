@@ -15,7 +15,7 @@ Lazy to promote or demote someone for admins? Want to see basic information abou
 All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
 done easily using the bot.
 
- × /adminlist: List of admins in the chat
+ × /adminlist: List of admins in the chat.
 *Admin only:*
  × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
  × /unpin: Unpins the currently pinned message. - add `all` to unpin all the messages in current chat.
