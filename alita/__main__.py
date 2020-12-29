@@ -17,6 +17,7 @@ from alita import (
     load_cmds,
     SUPPORT_STAFF,
     logfile,
+    log_datetime,
 )
 from alita.utils.redishelper import set_key, flushredis, allkeys
 
@@ -128,13 +129,12 @@ class Alita(Client):
     async def stop(self, *args):
         """Send a message to MESSAGE_DUMP telling that the bot has stopped!"""
 
-        await self.send_message(
-            MESSAGE_DUMP,
-            "<i>Uploading logs before stopping...!</i>",
-        )
+        LOGGER.info("Uploading logs before stopping...!")
         # Send Logs to MESSAGE-DUMP
         await self.send_document(
-            MESSAGE_DUMP, document=logfile, caption="Logs for last run."
+            MESSAGE_DUMP,
+            document=logfile,
+            caption=f"Logs for last run.\n<code>{log_datetime}<code>",
         )
         await self.send_message(
             MESSAGE_DUMP,
