@@ -12,4 +12,3 @@ pynewtonmath
 wikipedia
 redis
 python-dateutil
-telegraph
