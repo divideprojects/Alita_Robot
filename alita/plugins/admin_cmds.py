@@ -135,7 +135,7 @@ async def kick_usr(c: Alita, m: Message):
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
-            await m.reply_text(f"Error: {ef}\n\nReport it in Support Group!")
+            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 
     return
@@ -160,7 +160,7 @@ async def ban_usr(c: Alita, m: Message):
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
-            await m.reply_text(f"Error: {ef}\n\nReport it in Support Group!")
+            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 
     return
@@ -185,7 +185,7 @@ async def unban_usr(c: Alita, m: Message):
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
-            await m.reply_text(f"Error: {ef}\n\nReport it in Support Group!")
+            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 
     return
@@ -210,7 +210,7 @@ async def mute_usr(c: Alita, m: Message):
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
-            await m.reply_text(f"Error: {ef}\n\nReport it in Support Group!")
+            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 
         return
@@ -240,7 +240,7 @@ async def unmute_usr(c: Alita, m: Message):
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
-            await m.reply_text(f"Error: {ef}\n\nReport it in Support Group!")
+            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
         return
 

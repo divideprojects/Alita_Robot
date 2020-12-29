@@ -134,22 +134,10 @@ async def my_info(c: Alita, m: Message):
     infoMsg = await m.reply_text("<code>Getting user information...</code>")
     user_id, first_name = extract_user(m)
 
-    if user_id:
+    try:
         user = await c.get_users(user_id)
-    elif not m.reply_to_message and not len(m.command) >= 2:
-        user = m.from_user
-    elif not m.reply_to_message and (
-        not m.command
-        or (
-            len(m.command) >= 1
-            and not m.command[0].startswith("@")
-            and not m.command[0].isdigit()
-            and not m.parse_entities([MessageEntity.TEXT_MENTION])
-        )
-    ):
-        await m.reply_text("I can't extract a user from this.")
-        return
-    else:
+    except Exception as ef:
+        await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         return
 
     text = (
@@ -196,62 +184,10 @@ async def my_info(c: Alita, m: Message):
     return
 
 
-normiefont = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-]
-weebyfont = [
-    "卂",
-    "乃",
-    "匚",
-    "刀",
-    "乇",
-    "下",
-    "厶",
-    "卄",
-    "工",
-    "丁",
-    "长",
-    "乚",
-    "从",
-    "𠘨",
-    "口",
-    "尸",
-    "㔿",
-    "尺",
-    "丂",
-    "丅",
-    "凵",
-    "リ",
-    "山",
-    "乂",
-    "丫",
-    "乙",
-]
+# Use split to convert to list
+# Not using list itself becuase black changes it to long format...
+normiefont = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split()
+weebyfont = "卂 乃 匚 刀 乇 下 厶 卄 工 丁 长 乚 从 𠘨 口 尸 㔿 尺 丂 丅 凵 リ 山 乂 丫 乙".split()
 
 
 @Alita.on_message(filters.command("weebify", PREFIX_HANDLER))
