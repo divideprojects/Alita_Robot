@@ -51,6 +51,7 @@ If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 
 ## TO-DO
 - [ ] Fix Errors, by defining them
+- [ ] Proper Translations
 - [ ] Add Captcha
 - [ ] Add federations
 - [ ] Add Sticker Blacklist
