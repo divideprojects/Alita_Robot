@@ -134,7 +134,7 @@ class Alita(Client):
         await self.send_document(
             MESSAGE_DUMP,
             document=logfile,
-            caption=f"Logs for last run.\n<code>{log_datetime}<code>",
+            caption=f"Logs for last run.\n<code>{log_datetime}</code>",
         )
         await self.send_message(
             MESSAGE_DUMP,
