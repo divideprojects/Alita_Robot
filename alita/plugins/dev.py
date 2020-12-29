@@ -10,11 +10,25 @@ from alita.__main__ import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita.utils.localization import GetLang
-from alita import MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME
+from alita import MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME, logfile
 from alita.utils.custom_filters import dev_filter
 from alita.utils.redishelper import get_key, allkeys
 from alita.utils.parser import mention_markdown
 from alita.db import users_db as userdb
+
+
+@Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
+async def test_speed(c: Alita, m: Message):
+    _ = GetLang(m).strs
+    rply = await m.reply_text("Sending logs...!")
+    await c.send_message(
+        m.chat.id,
+        f"#LOGS\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
+    )
+    # Send logs
+    await m.reply_document(document=logfile, quote=True)
+    await rply.delete()
+    return
 
 
 @Alita.on_message(filters.command("speedtest", DEV_PREFIX_HANDLER) & dev_filter)

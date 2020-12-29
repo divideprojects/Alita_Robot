@@ -4,9 +4,19 @@ import time
 import logging
 import importlib
 import redis
+from datetime import datetime
 from pyrogram import Client
 
+log_datetime = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
+logdir = f"{__name__}/logs"
+
+# Make Logs directory if it does not exixts
+if not os.path.isdir(logdir):
+    os.mkdir(f"{__name__}/logs")
+
+logfile = f"{logdir}/{__name__}_{log_datetime}.txt"
 logging.basicConfig(
+    filename=logfile,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
 )
