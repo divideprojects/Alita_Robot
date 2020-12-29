@@ -1,7 +1,7 @@
 from alita.utils.localization import GetLang
 from alita.__main__ import Alita
 from pyrogram import filters, errors
-from pyrogram.types import Message
+from pyrogram.types import Message, ChatPermissions
 from alita import PREFIX_HANDLER, LOGGER, SUPPORT_GROUP
 from alita.utils.localization import GetLang
 from alita.utils.admin_check import admin_check
