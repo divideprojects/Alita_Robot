@@ -135,19 +135,19 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
 @Alita.on_message(filters.command("dbclean", DEV_PREFIX_HANDLER) & dev_filter)
 async def dbcleanxyz(c: Alita, m: Message):
     buttons = [
-        [InlineKeyboardButton("Invalid Chats", callback_data="dbclean.invalidchats")]
+        [InlineKeyboardButton("Invalid Chats", callback_data="dbclean_invalidchats")]
     ]
     buttons += [
-        [InlineKeyboardButton("Muted Chats", callback_data="dbclean.mutedchats")]
+        [InlineKeyboardButton("Muted Chats", callback_data="dbclean_mutedchats")]
     ]
-    buttons += [[InlineKeyboardButton("Invalid Gbans", callback_data="dbclean.gbans")]]
+    buttons += [[InlineKeyboardButton("Invalid Gbans", callback_data="dbclean_gbans")]]
     await m.reply_text(
         "What do you want to clean?", reply_markup=InlineKeyboardMarkup(buttons)
     )
     return
 
 
-@Alita.on_callback_query(filters.regex("^dbclean."))
+@Alita.on_callback_query(filters.regex("^dbclean_"))
 async def dbclean_callback(c: Alita, q: CallbackQuery):
     # Invalid Chats
     if q.data.split("_")[1] == "invalidchats":
@@ -165,7 +165,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                     [
                         InlineKeyboardButton(
                             "Remove Invalid Chats",
-                            callback_data=f"db.clean.inavlid_chats",
+                            callback_data=f"db_clean_inavlid_chats",
                         )
                     ]
                 ]
@@ -191,7 +191,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                     [
                         InlineKeyboardButton(
                             "Leave Muted Chats",
-                            callback_data=f"db.clean.muted_chats",
+                            callback_data=f"db_clean_muted_chats",
                         )
                     ]
                 ]
@@ -216,7 +216,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                     [
                         InlineKeyboardButton(
                             "Remove Invalid Gbans",
-                            callback_data=f"db.clean.invalid_gbans",
+                            callback_data=f"db_clean_invalid_gbans",
                         )
                     ]
                 ]
@@ -227,8 +227,8 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
     return
 
 
-@Alita.on_callback_query(filters.regex("^db.clean."))
-async def db.clean.callbackAction(c: Alita, q: CallbackQuery):
+@Alita.on_callback_query(filters.regex("^db_clean_"))
+async def db_clean_callbackAction(c: Alita, q: CallbackQuery):
     query_type = q.data.split("_")[1]
 
     if query_type == "muted_chats":
