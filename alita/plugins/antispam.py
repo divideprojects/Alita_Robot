@@ -70,7 +70,7 @@ async def gban(c: Alita, m: Message):
             (
                 "You have been added to my global ban list!\n"
                 f"Reason: `{gban_reason}`\n\n"
-                f"Appeal Chat: {SUPPORT_GROUP}"
+                f"Appeal Chat: @{SUPPORT_GROUP}"
             ),
         )
     except:  # TO DO: Improve Error Detection
@@ -160,7 +160,7 @@ async def gban_watcher(c: Alita, m: Message):
                     (
                         f"This user ({mention_html(m.from_user.first_name, m.from_user.id)}) "
                         "has been banned globally!\n\n"
-                        f"To get unbanned appeal at {SUPPORT_GROUP}"
+                        f"To get unbanned appeal at @{SUPPORT_GROUP}"
                     ),
                 )
                 LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")

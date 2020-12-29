@@ -40,7 +40,14 @@ async def approve_user(c: Alita, m: Message):
             "I don't know who you're talking about, you're going to need to specify a user!"
         )
         return
-    member = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
+    try:
+        member = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
+    except errors.UserNotParticipant:
+        await m.reply_text("This user is not in this chat!")
+        return
+    except Exception as ef:
+        await m.reply_text(f"<b>Error</b>: <code>{}</code>\nReport it to @{SUPPORT_GROUP}")
+        return
     if member.status in ["administrator", "creator"]:
         await m.reply_text(
             f"User is already admin - blocklists already don't apply to them."
@@ -73,7 +80,16 @@ async def disapprove_user(c: Alita, m: Message):
             "I don't know who you're talking about, you're going to need to specify a user!"
         )
         return
-    member = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
+    try:
+        member = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
+    except errors.UserNotParticipant:
+        if db.is_approved(chat_id, user_id):
+            db.disapprove(chat_id, user_id)
+        await m.reply_text("This user is not in this chat!")
+        return
+    except Exception as ef:
+        await m.reply_text(f"<b>Error</b>: <code>{}</code>\nReport it to @{SUPPORT_GROUP}")
+        return
     if member.status in ["administrator", "creator"]:
         await m.reply_text("This user is an admin, they can't be unapproved.")
         return
@@ -98,16 +114,15 @@ async def check_approved(c: Alita, m: Message):
 
     chat_title = m.chat.title
     chat = m.chat
-    no_users = False
     msg = "The following users are approved:\n"
     x = db.all_approved(m.chat.id)
 
     for i in x:
         try:
             member = await chat.get_member(int(i.user_id))
-        except:
-            no_users = True
-            break
+        except errors.UserNotParticipant:
+            db.disapprove(chat.id, user_id)
+            continue
         msg += f"- `{i.user_id}`: {mention_html(member.user['first_name'], int(i.user_id))}\n"
     if msg.endswith("approved:\n"):
         await m.reply_text(f"No users are approved in {chat_title}.")
@@ -152,5 +167,5 @@ async def unapproveall_users(c: Alita, m: Message):
         db.disapprove_all(m.chat.id)
         await m.reply_text(f"All users have been disapproved in {m.chat.title}")
     except Exception as ef:
-        await m.reply_text(f"Some Error occured, report at {SUPPORT_GROUP}.\n{ef}")
+        await m.reply_text(f"Some Error occured, report at @{SUPPORT_GROUP}.\n{ef}")
     return
