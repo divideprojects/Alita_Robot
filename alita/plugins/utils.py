@@ -14,6 +14,7 @@ from alita import (
     SUDO_USERS,
     WHITELIST_USERS,
     TOKEN,
+    SUPPORT_GROUP,
 )
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
