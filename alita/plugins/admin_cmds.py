@@ -437,8 +437,10 @@ async def unpin_message(c: Alita, m: Message):
     try:
         if len(m.command) > 1 and m.command[1] == "all":
             await c.unpin_all_chat_messages(m.chat.id)
+            await m.reply_text("Unpinned all messages!")
         else:
             await m.chat.unpin_chat_message(m.chat.id)
+            await m.reply_text("Unpinned last message!")
     except errors.ChatAdminRequired:
         await m.reply_text(_("admin.notadmin"))
     except errors.RightForbidden:
@@ -446,4 +448,5 @@ async def unpin_message(c: Alita, m: Message):
     except Exception as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         LOGGER.error(ef)
+
     return
