@@ -98,6 +98,8 @@ class Alita(Client):
 
         me = await self.get_me()  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
+        
+        await self.send_message(MESSAGE_DUMP, "Starting Bot...")
 
         """Redis Content Setup!"""
         await self.get_admins()  # Load admins in cache
