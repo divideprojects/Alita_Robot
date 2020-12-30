@@ -12,3 +12,4 @@ pynewtonmath
 wikipedia
 redis
 python-dateutil
+aiohttp

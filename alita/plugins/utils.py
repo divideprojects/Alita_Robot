@@ -1,6 +1,7 @@
 import html
 import os
 import requests
+import aiohttp
 from tswift import Song
 from datetime import datetime
 from alita.__main__ import Alita
@@ -26,6 +27,7 @@ Some utils provided by bot to make your tasks easy!
  × /info: Get information about a user.
  × /ping - Get ping time of bot to telegram server.
  × /gifid: Reply to a gif to me to tell you its file ID.
+ × /github <username>: Search for the user using github api!
  × /lyrics <song>: Get the lyrics of the song you specify!
  × /weebify <text> or a reply to message: To weebify the message.
 """
@@ -125,6 +127,57 @@ async def get_gifid(c: Alita, m: Message):
     else:
         await m.reply_text("Please reply to a gif to get its ID.")
     return
+
+@Alita.on_message(
+    filters.command("github", PREFIX_HANDLER) & (filters.group | filters.private)
+)
+async def github(c: Alita, m: Message):
+    if len(m.text.split()) == 2:
+        username = m.text.split(None, 1)[1]
+    else:
+        await m.reply_text(
+            f"Usage: `{PREFIX_HANDLER}github <username>`", parse_mode="md"
+        )
+        return
+
+    URL = f"https://api.github.com/users/{username}"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(URL) as request:
+            if request.status == 404:
+                return await m.reply_text(f"`{username} not found`", parse_mode="md")
+                return
+
+            result = await request.json()
+
+            url = result.get("html_url", None)
+            name = result.get("name", None)
+            company = result.get("company", None)
+            bio = result.get("bio", None)
+            created_at = result.get("created_at", "Not Found")
+
+            REPLY = (
+                f"**GitHub Info for** `{username}`"
+                f"\n**Username:** `{name}`\n**Bio:** `{bio}`\n**URL:** {url}"
+                f"\n**Company:** `{company}`\n**Created at:** `{created_at}`"
+            )
+
+            if not result.get("repos_url", None):
+                return await m.reply_text(REPLY, parse_mode="md")
+            async with session.get(result.get("repos_url", None)) as request:
+                result = request.json
+                if request.status == 404:
+                    return await m.reply_text(REPLY, parse_mode="md")
+
+                result = await request.json()
+
+                REPLY += "\nRepos:\n"
+
+                for nr in range(len(result)):
+                    REPLY += f"[{result[nr].get('name', None)}]({result[nr].get('html_url', None)})\n"
+
+                await m.reply_text(REPLY, parse_mode="md")
+    return
+
 
 
 @Alita.on_message(
