@@ -1,5 +1,6 @@
 from alita.__main__ import Alita
-from pyrogram.types import Message, OWNER_ID, DEV_USERS
+from pyrogram.types import Message
+from alita import OWNER_ID, DEV_USERS
 
 
 async def admin_check(c: Alita, m: Message) -> bool:
