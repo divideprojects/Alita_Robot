@@ -8,9 +8,9 @@ class Config:
     API_HASH = os.environ.get("API_HASH")
     OWNER_ID = int(os.environ.get("OWNER_ID"))
     MESSAGE_DUMP = int(os.environ.get("MESSAGE_DUMP"))
-    DEV_USERS = os.environ.get("DEV_USERS").split()
-    SUDO_USERS = os.environ.get("SUDO_USERS").split()
-    WHITELIST_USERS = os.environ.get("WHITELIST_USERS").split()
+    DEV_USERS = [int(i) for i in os.environ.get("DEV_USERS").split()]
+    SUDO_USERS = [int(i) for i in os.environ.get("SUDO_USERS").split()]
+    WHITELIST_USERS = [int(i) for i in os.environ.get("WHITELIST_USERS").split()]
     DB_URI = os.environ.get("DB_URI")
     REDIS_HOST = os.environ.get("REDIS_HOST")
     REDIS_PORT = os.environ.get("REDIS_PORT")
