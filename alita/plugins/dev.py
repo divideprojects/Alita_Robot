@@ -51,6 +51,32 @@ async def test_speed(c: Alita, m: Message):
     )
     return
 
+@Alita.on_message(filters.command("neofetch", DEV_PREFIX_HANDLER) & dev_filter)
+async def neofetch_stats(c: Alita, m: Message):
+    cmd = "neofetch --stdout"
+
+    reply_to_id = m.message_id
+
+    process = await asyncio.create_subprocess_shell(
+        cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+    )
+    stdout, stderr = await process.communicate()
+    e = stderr.decode()
+    if not e:
+        e = "No Error"
+    OUTPUT = stdout.decode()
+    if not OUTPUT:
+        OUTPUT = "No Output"
+
+    if len(OUTPUT) > MAX_MESSAGE_LENGTH:
+        with io.BytesIO(str.encode(OUTPUT)) as f:
+            f.name = "neofetch.txt"
+            await m.reply_document(document=f, caption=f"neofetch result")
+        await m.delete()
+    else:
+        await m.reply_text(OUTPUT, quote=True)
+    return
+
 
 @Alita.on_message(filters.command(["eval", "py"], DEV_PREFIX_HANDLER) & dev_filter)
 async def evaluate_code(c: Alita, m: Message):
