@@ -70,7 +70,10 @@ async def adminlist(c: Alita, m: Message):
         adminlist = get_key("ADMINDICT")[str(m.chat.id)]  # Load ADMINDICT from string
         adminstr = _("admin.adminlist").format(chat_title=m.chat.title)
         for i in adminlist:
-            usr = await c.get_users(i)
+            try:
+                usr = await c.get_users(i)
+            except errors.PeerIdInvalid:
+                pass
             if i == me_id:
                 adminstr += f"- {mention_html(usr.first_name, i)} (Me)\n"
             else:

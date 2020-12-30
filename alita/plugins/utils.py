@@ -5,7 +5,7 @@ import aiohttp
 from tswift import Song
 from datetime import datetime
 from alita.__main__ import Alita
-from pyrogram import filters
+from pyrogram import filters, errors
 from pyrogram.types import Message, MessageEntity
 from alita import (
     PREFIX_HANDLER,
@@ -99,7 +99,11 @@ async def id_info(c: Alita, m: Message):
                 parse_mode="HTML",
             )
         else:
-            user = await c.get_users(user_id)
+            try:
+                user = await c.get_users(user_id)
+            except errors.PeerIdInvalid:
+                await m.reply_text("Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!")
+
             await m.reply_text(
                 f"{mention_html(user.first_name, user.id)}'s ID is <code>{user.id}</code>.",
                 parse_mode="HTML",
@@ -190,6 +194,8 @@ async def my_info(c: Alita, m: Message):
 
     try:
         user = await c.get_users(user_id)
+    except errors.PeerIdInvalid:
+        await m.reply_text("Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!")
     except Exception as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         return
