@@ -435,8 +435,8 @@ async def unpin_message(c: Alita, m: Message):
         return
 
     try:
-        if m.command[1] == "all":
-            c.unpin_all_chat_messages(m.chat.id)
+        if len(m.command) > 1 and m.command[1] == "all":
+            await c.unpin_all_chat_messages(m.chat.id)
         else:
             await m.chat.unpin_chat_message(m.chat.id)
     except errors.ChatAdminRequired:
