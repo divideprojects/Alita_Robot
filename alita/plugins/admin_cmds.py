@@ -205,7 +205,7 @@ async def mute_usr(c: Alita, m: Message):
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = extract_user(m)
         try:
-            await m.chat.restrict_member(user_id=user_id, permisssions=mute_permission)
+            await m.chat.restrict_member(user_id=user_id, mute_permission)
             await m.reply_text(f"<b>Muted</b> {mention_html(user_first_name,user_id)}")
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -234,7 +234,7 @@ async def unmute_usr(c: Alita, m: Message):
         user_id, user_first_name = extract_user(m)
         try:
             await m.chat.restrict_member(
-                user_id=user_id, permisssions=unmute_permissions
+                user_id=user_id, unmute_permissions
             )
             await m.reply_text(f"<b>Muted</b> {mention_html(user_first_name,user_id)}")
         except errors.ChatAdminRequired:
