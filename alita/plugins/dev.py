@@ -68,7 +68,7 @@ async def neofetch_stats(c: Alita, m: Message):
     if not OUTPUT:
         OUTPUT = "No Output"
 
-    if len(OUTPUT) > MAX_MESSAGE_LENGTH:
+    if len(OUTPUT) > 4090:
         with io.BytesIO(str.encode(OUTPUT)) as f:
             f.name = "neofetch.txt"
             await m.reply_document(document=f, caption=f"neofetch result")
