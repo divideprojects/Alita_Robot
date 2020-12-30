@@ -357,7 +357,7 @@ async def demote_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("invitelink", PREFIX_HANDLER) & filters.group)
-async def demote_usr(c: Alita, m: Message):
+async def get_invitelink(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
@@ -425,7 +425,7 @@ async def pin_message(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & filters.me)
+@Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & filters.group)
 async def unpin_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs
