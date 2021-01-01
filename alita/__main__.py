@@ -49,6 +49,50 @@ class Alita(Client):
             workers=WORKERS,
         )
 
+    async def get_admins(self):
+        LOGGER.info("Begin caching admins...")
+        begin = time.time()
+        c = self
+
+        # Flush Redis data
+        try:
+            flushredis()
+        except Exception as ef:
+            LOGGER.error(ef)
+
+        # Get bot info
+        me = await self.get_me()
+
+        all_chats = userdb.get_all_chats() or []  # Get list of all chats
+        LOGGER.info(f"{len(all_chats)} chats loaded.")
+        ADMINDICT = {}
+        for chat in all_chats:
+            adminlist = []
+            try:
+                async for i in c.iter_chat_members(
+                    chat_id=chat.chat_id, filter="administrators"
+                ):
+                    adminlist.append(i.user.id)
+
+                ADMINDICT[str(chat.chat_id)] = adminlist  # Remove the last space
+
+                LOGGER.info(
+                    f"Set {len(adminlist)} admins for {chat.chat_id}\n{adminlist}"
+                )
+                del adminlist  # Delete list var
+            except errors.PeerIdInvalid:
+                pass
+            except Exception as ef:
+                LOGGER.error(ef)
+
+        try:
+            set_key("ADMINDICT", ADMINDICT)
+            del ADMINDICT
+            end = time.time()
+            LOGGER.info(f"Set admin list cache!\nTime Taken: {round(end-begin, 2)}s")
+        except Exception as ef:
+            LOGGER.error(f"Could not set ADMINDICT!\n{ef}")
+
     async def start(self):
         await super().start()
 
@@ -58,6 +102,7 @@ class Alita(Client):
         await self.send_message(MESSAGE_DUMP, "Starting Bot...")
 
         """Redis Content Setup!"""
+        await self.get_admins()  # Load admins in cache
         set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
         set_key("BOT_ID", int(me.id))  # Save Bot ID in Redis!
         """Redis Content Setup!"""
