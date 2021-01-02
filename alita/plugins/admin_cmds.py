@@ -133,7 +133,7 @@ async def kick_usr(c: Alita, m: Message):
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = extract_user(m)
         try:
-            await client.kick_chat_member(m.chat.id, user_id, int(time.time() + 45))
+            await c.kick_chat_member(m.chat.id, user_id, int(time.time() + 45))
             await m.reply_text(f"Banned {mention_html(user_first_name, user_id)}")
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
