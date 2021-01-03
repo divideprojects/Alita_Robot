@@ -13,7 +13,7 @@
   "admin.nopromoteperm": "You don't have permission to promote members!",
   "admin.nodemoteperm": "You don't have permission to demote members!",
   "admin.promoted": "{promoter} promoted {promoted} in chat <b>{chat_title}</b>",
-  "admin.demoted": "{demoter} promoted {demoted} in chat <b>{chat_title}</b>",
+  "admin.demoted": "{demoter} demoted {demoted} in chat <b>{chat_title}</b>",
   "admin.invitelink": "<b>Invite Link for Chat:</b>\n<code>{link}</code>",
   "admin.noinviteperm": "I don't have permission for invite link!",
   "admin.nouserinviteperm": "You don't have permission to invite users!",
