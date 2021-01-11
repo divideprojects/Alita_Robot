@@ -19,7 +19,7 @@ class Config:
     PREFIX_HANDLER = os.environ.get("PREFIX_HANDLER").split()
     SUPPORT_GROUP = os.environ.get("SUPPORT_GROUP")
     SUPPORT_CHANNEL = os.environ.get("SUPPORT_CHANNEL")
-    ENABLED_LOCALES = os.environ.get("ENABLED_LOCALES")
+    ENABLED_LOCALES = [str(i) for i in os.environ.get("ENABLED_LOCALES").split()]
     VERSION = os.environ.get("VERSION")
     DEV_PREFIX_HANDLER = os.environ.get("DEV_PREFIX_HANDLER").split()
     WORKERS = int(os.environ.get("WORKERS"))
