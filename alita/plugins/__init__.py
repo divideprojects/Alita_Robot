@@ -1,9 +1,7 @@
-from alita import LOGGER
-
-
+import glob
+from os.path import dirname, basename, isfile
+    
 def __list_all_plugins():
-    from os.path import dirname, basename, isfile
-    import glob
 
     # This generates a list of plugins in this folder for the * in __main__ to
     # work.
