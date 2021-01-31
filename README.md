@@ -10,7 +10,7 @@
 ![LICENSE](https://img.shields.io/github/license/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
 ![Contributors](https://img.shields.io/github/contributors/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
 ![Repo Size](https://img.shields.io/github/repo-size/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/050f1262c0d843b5b077a57a9c840f20)](https://app.codacy.com/gh/SkuzzyxD/Alita_Robot?utm_source=github.com&utm_medium=referral&utm_content=SkuzzyxD/Alita_Robot&utm_campaign=Badge_Grade)</br>
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194)](https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&utm_medium=referral&utm_content=Divkix/Alita_Robot&utm_campaign=Badge_Grade_Settings)</br>
 
 [![Crowdin](https://badges.crowdin.net/alita_robot/localized.svg)](https://crowdin.com/project/alita_robot)</br>
 ![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/SkuzzyxD/Alita_Robot&title=Profile%20Views)</br>
