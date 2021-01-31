@@ -25,7 +25,7 @@ async def admin_check(c: Alita, m: Message) -> bool:
 async def owner_check(c: Alita, m: Message) -> bool:
     chat_id = m.chat.id
     user_id = m.from_user.id
-    
+
     if int(user_id) == int(OWNER_ID) or int(user_id) in DEV_USERS:
         return True
 
