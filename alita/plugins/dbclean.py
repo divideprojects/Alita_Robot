@@ -27,7 +27,7 @@ async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
             if progress_message:
                 try:
                     await m.edit_text(progress_bar)
-                except:
+                except Exception:
                     pass
             else:
                 progress_message = await m.reply_text(progress_bar)
@@ -40,12 +40,12 @@ async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
         except (BadRequest, Unauthorized):
             kicked_chats += 1
             chat_list.append(cid)
-        except:
+        except Exception:
             pass
 
     try:
         await progress_message.delete()
-    except:
+    except Exception:
         pass
 
     if not remove:
@@ -70,7 +70,7 @@ async def get_invalid_gban(c: Alita, m: Message, remove: bool = False):
         except BadRequest:
             ungbanned_users += 1
             ungban_list.append(user_id)
-        except:
+        except Exception:
             pass
 
     if remove:
@@ -97,7 +97,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
                     bot.editMessageText(
                         progress_bar, chat_id, progress_message.message_id
                     )
-                except:
+                except Exception:
                     pass
             else:
                 progress_message = await m.edit_text(progress_bar)
@@ -111,12 +111,12 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
         except (BadRequest, Unauthorized):
             muted_chats += 1
             chat_list.append(cid)
-        except:
+        except Exception:
             pass
 
     try:
         await progress_message.delete()
-    except:
+    except Exception:
         pass
 
     if not leave:
@@ -126,7 +126,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
             sleep(0.1)
             try:
                 await c.leave_chat(muted_chat)
-            except:
+            except Exception:
                 pass
             user_db.rem_chat(muted_chat)
         return muted_chats

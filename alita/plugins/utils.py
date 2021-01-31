@@ -6,7 +6,7 @@ from tswift import Song
 from datetime import datetime
 from alita.__main__ import Alita
 from pyrogram import filters, errors
-from pyrogram.types import Message, MessageEntity
+from pyrogram.types import Message
 from alita import (
     PREFIX_HANDLER,
     OWNER_ID,
@@ -84,7 +84,7 @@ async def get_lyrics(c: Alita, m: Message):
     filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private)
 )
 async def id_info(c: Alita, m: Message):
-    user_id, first_name = extract_user(m)
+    user_id = extract_user(m)[0]
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_m.from_user
@@ -102,7 +102,9 @@ async def id_info(c: Alita, m: Message):
             try:
                 user = await c.get_users(user_id)
             except errors.PeerIdInvalid:
-                await m.reply_text("Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!")
+                await m.reply_text(
+                    "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!"
+                )
 
             await m.reply_text(
                 f"{mention_html(user.first_name, user.id)}'s ID is <code>{user.id}</code>.",
@@ -132,6 +134,7 @@ async def get_gifid(c: Alita, m: Message):
     else:
         await m.reply_text("Please reply to a gif to get its ID.")
     return
+
 
 @Alita.on_message(
     filters.command("github", PREFIX_HANDLER) & (filters.group | filters.private)
@@ -184,7 +187,6 @@ async def github(c: Alita, m: Message):
     return
 
 
-
 @Alita.on_message(
     filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private)
 )
@@ -195,7 +197,9 @@ async def my_info(c: Alita, m: Message):
     try:
         user = await c.get_users(user_id)
     except errors.PeerIdInvalid:
-        await m.reply_text("Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!")
+        await m.reply_text(
+            "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!"
+        )
     except Exception as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         return

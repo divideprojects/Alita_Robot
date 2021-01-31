@@ -30,7 +30,7 @@ async def gban(c: Alita, m: Message):
         gban_reason = m.text.split(None, 2)[2]
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(f"This user is part of Skuzzers!, Can't ban our own!")
+        await m.reply_text("This user is part of Skuzzers!, Can't ban our own!")
         return
 
     if user_id == me.id:
@@ -73,7 +73,7 @@ async def gban(c: Alita, m: Message):
                 f"Appeal Chat: @{SUPPORT_GROUP}"
             ),
         )
-    except:  # TO DO: Improve Error Detection
+    except Exception:  # TO DO: Improve Error Detection
         pass
     return
 
@@ -116,7 +116,7 @@ async def ungban(c: Alita, m: Message):
             await c.send_message(
                 user_id, "You have been removed from my global ban list!\n"
             )
-        except:  # TO DO: Improve Error Detection
+        except Exception:  # TO DO: Improve Error Detection
             pass
         return
 
@@ -171,7 +171,6 @@ async def gban_watcher(c: Alita, m: Message):
                 LOGGER.info(
                     f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})"
                 )
-                pass
             except Exception as excp:
                 await c.send_message(
                     MESSAGE_DUMP,

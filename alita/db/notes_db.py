@@ -90,7 +90,7 @@ def rm_all_note(chat_id):
                     SESSION.delete(note)
                     SESSION.commit()
                     CHAT_NOTES[str(chat_id)].pop(note_name)
-                except:
+                except Exception:
                     pass
             SESSION.close()
         del CHAT_NOTES[str(chat_id)]

@@ -51,6 +51,7 @@ async def test_speed(c: Alita, m: Message):
     )
     return
 
+
 @Alita.on_message(filters.command("neofetch", DEV_PREFIX_HANDLER) & dev_filter)
 async def neofetch_stats(c: Alita, m: Message):
     cmd = "neofetch --stdout"
@@ -252,9 +253,9 @@ async def store_members(c: Alita, m: Message):
                     member.user.id, member.user.username, m.chat.id, m.chat.title
                 )
                 lv += 1
-            except:
+            except Exception:
                 pass
-    except:
+    except Exception:
         await c.send_message(chat_id=MESSAGE_DUMP, text="Error while storing members!")
         return
     await sm.edit_text(f"Stored {lv} members")
