@@ -11,7 +11,8 @@ from alita.utils.redishelper import get_key, set_key
 
 __PLUGIN__ = "Admin"
 __help__ = """
-Lazy to promote or demote someone for admins? Want to see basic information about chat? \
+Lazy to promote or demote someone for admins? \
+Want to see basic information about chat? \
 All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
 done easily using the bot.
 
@@ -130,6 +131,10 @@ async def kick_usr(c: Alita, m: Message):
 
     from_user = await m.chat.get_member(m.from_user.id)
 
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text("Whom should I kick?\nSpecify a user first.")
+        return
+
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = extract_user(m)
         try:
@@ -154,6 +159,10 @@ async def ban_usr(c: Alita, m: Message):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
+
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text("Whom should I ban?\nSpecify a user first.")
+        return
 
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = extract_user(m)
@@ -180,6 +189,10 @@ async def unban_usr(c: Alita, m: Message):
 
     from_user = await m.chat.get_member(m.from_user.id)
 
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text("Whom should I unban?\nSpecify a user first.")
+        return
+
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = extract_user(m)
         try:
@@ -204,6 +217,10 @@ async def mute_usr(c: Alita, m: Message):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
+
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text("Whom should I mute?\nSpecify a user first.")
+        return
 
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = extract_user(m)
@@ -233,12 +250,14 @@ async def unmute_usr(c: Alita, m: Message):
 
     from_user = await m.chat.get_member(m.from_user.id)
 
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text("Whom should I unmute?\nSpecify a user first.")
+        return
+
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = extract_user(m)
         try:
-            await m.chat.restrict_member(
-                user_id, unmute_permissions
-            )
+            await m.chat.restrict_member(user_id, unmute_permissions)
             await m.reply_text(f"<b>Muted</b> {mention_html(user_first_name,user_id)}")
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -261,6 +280,10 @@ async def promote_usr(c: Alita, m: Message):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
+
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text("Whom should I promote?\nSpecify a user first.")
+        return
 
     # If user does not have permission to promote other users, return
     if from_user.can_promote_members or from_user.status == "creator":
@@ -315,6 +338,10 @@ async def demote_usr(c: Alita, m: Message):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
+
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text("Whom should I demote?\nSpecify a user first.")
+        return
 
     # If user does not have permission to demote other users, return
     if from_user.can_promote_members or from_user.status == "creator":
