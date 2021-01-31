@@ -28,7 +28,7 @@ Help us bring more languages to the bot by contributing to the project in [Crowd
 -   Frequently updated
 -   Multi Language Support
 
-Can be found on Telegram as [@AlitaBetaRobot](https://t.me/AlitaBetaRobot).
+Can be found on Telegram as [@AlitaRobot](https://t.me/AlitaRobot).
 
 Alita is currently available in 5 Languages as of now: **en-US**, **pt-BR**, **it-IT**, **ru-RU**, **hi-IN**.
 More languages can be managed in the _locales_ folder.
@@ -77,5 +77,5 @@ If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 
 ### Copyright & License
 
-* Copyright (C) 2020 by [SkuzzyxD](https://github.com/SkuzzyxD) ❤️️
-* Licensed under the terms of the [GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/SkuzzyxD/Alita_Robot/blob/master/LICENSE.md)
+* Copyright (C) 2020 by [Divkix](https://github.com/Divkix) ❤️️
+* Licensed under the terms of the [GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/Divkix/Alita_Robot/blob/master/LICENSE.md)
