@@ -1,5 +1,5 @@
 import pickle
-from alita import redisClient, LOGGER
+from alita import redisClient
 
 
 def set_key(key: str, value):

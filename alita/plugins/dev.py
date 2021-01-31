@@ -55,8 +55,6 @@ async def test_speed(c: Alita, m: Message):
 async def neofetch_stats(c: Alita, m: Message):
     cmd = "neofetch --stdout"
 
-    reply_to_id = m.message_id
-
     process = await asyncio.create_subprocess_shell(
         cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
     )
@@ -71,7 +69,7 @@ async def neofetch_stats(c: Alita, m: Message):
     if len(OUTPUT) > 4090:
         with io.BytesIO(str.encode(OUTPUT)) as f:
             f.name = "neofetch.txt"
-            await m.reply_document(document=f, caption=f"neofetch result")
+            await m.reply_document(document=f, caption="neofetch result")
         await m.delete()
     else:
         await m.reply_text(OUTPUT, quote=True)
@@ -243,7 +241,7 @@ async def uptime(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("loadmembers", DEV_PREFIX_HANDLER) & dev_filter)
 async def store_members(c: Alita, m: Message):
-    sm = await m.reply_text(f"Updating Members...")
+    sm = await m.reply_text("Updating Members...")
 
     lv = 0  # lv = local variable
 
@@ -269,7 +267,7 @@ async def list_all_admins(c: Alita, m: Message):
     admindict = get_key("ADMINDICT")
 
     if len(str(admindict)) > 4000:
-        with io.BytesIO(str.encode(chatfile)) as output:
+        with io.BytesIO(str.encode(admindict)) as output:
             output.name = "alladmins.txt"
             await m.reply_document(
                 document=output,

@@ -1,4 +1,4 @@
-from alita.utils.localization import GetLang
+import time
 from alita.__main__ import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message, ChatPermissions
@@ -409,7 +409,7 @@ async def pin_message(c: Alita, m: Message):
             if len(pin_loud) >= 2 and pin_loud[1] in ["alert", "notify", "loud"]:
                 disable_notification = False
 
-            pinned_event = await c.pin_chat_message(
+            await c.pin_chat_message(
                 m.chat.id,
                 m.reply_to_message.message_id,
                 disable_notification=disable_notification,

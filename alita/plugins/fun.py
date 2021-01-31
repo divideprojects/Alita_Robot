@@ -55,7 +55,7 @@ async def fun_slap(c: Alita, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
 
     curr_user = html.escape(m.from_user.first_name)
-    user_id, first_name = extract_user(m)
+    user_id = extract_user(m)[0]
 
     if user_id == me.id:
         temp = random.choice(fun_strings.SLAP_ALITA_TEMPLATES)
