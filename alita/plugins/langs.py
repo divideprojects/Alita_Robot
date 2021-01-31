@@ -101,9 +101,7 @@ async def set_lang_callback(c: Alita, m: CallbackQuery):
     return
 
 
-@Alita.on_message(
-    filters.command("lang", PREFIX_HANDLER) | filters.command("setlang", PREFIX_HANDLER)
-)
+@Alita.on_message(filters.command(["lang", "setlang"], PREFIX_HANDLER))
 async def set_lang(c: Alita, m: Message):
 
     res = await admin_check(c, m)

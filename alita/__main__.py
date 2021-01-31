@@ -1,7 +1,6 @@
 import os
 import time
 from pyrogram import Client, __version__, errors
-from pyrogram.types import Message
 from pyrogram.raw.all import layer
 from alita.plugins import ALL_PLUGINS
 from alita.db import users_db as userdb
@@ -16,6 +15,8 @@ from alita import (
     WORKERS,
     load_cmds,
     SUPPORT_STAFF,
+    logfile,
+    log_datetime,
 )
 from alita.utils.redishelper import set_key, flushredis, allkeys
 
@@ -58,9 +59,6 @@ class Alita(Client):
         except Exception as ef:
             LOGGER.error(ef)
 
-        # Get bot info
-        me = await self.get_me()
-
         all_chats = userdb.get_all_chats() or []  # Get list of all chats
         LOGGER.info(f"{len(all_chats)} chats loaded.")
         ADMINDICT = {}
@@ -97,11 +95,13 @@ class Alita(Client):
         me = await self.get_me()  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
 
-        """Redis Content Setup!"""
+        await self.send_message(MESSAGE_DUMP, "Starting Bot...")
+
+        # Redis Content Setup!
         await self.get_admins()  # Load admins in cache
         set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
         set_key("BOT_ID", int(me.id))  # Save Bot ID in Redis!
-        """Redis Content Setup!"""
+        # Redis Content Setup!
 
         # Show in Log that bot has started
         LOGGER.info(
@@ -125,7 +125,15 @@ class Alita(Client):
         LOGGER.info("Bot Started Successfully!")
 
     async def stop(self, *args):
-        # Send a message to MESSAGE_DUMP telling that the bot has stopped!
+        """Send a message to MESSAGE_DUMP telling that the bot has stopped!"""
+        LOGGER.info("Uploading logs before stopping...!")
+
+        # Send Logs to MESSAGE-DUMP
+        await self.send_document(
+            MESSAGE_DUMP,
+            document=logfile,
+            caption=f"Logs for last run.\n<code>{log_datetime}</code>",
+        )
         await self.send_message(
             MESSAGE_DUMP,
             "<i><b>Bot Stopped!</b></i>",

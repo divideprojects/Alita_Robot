@@ -1,7 +1,0 @@
-.git/
-postgres-data/
-sample.env
-*.md
-!README.md
-crowdin.yml
-*.session

@@ -17,13 +17,13 @@ Want to restrict certain words or sentences in your group?
 Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, \
 the message will immediately be deleted. A good combo is sometimes to pair this up with warn filters!
 **NOTE:** blacklists do not affect group admins.
- - /blacklist: View the current blacklisted words.
+ × /blacklist: View the current blacklisted words.
 **Admin only:**
- - /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different \
+ × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different \
 lines will allow you to add muser_listtiple triggers.
- - /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove \
+ × /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove \
 muser_listtiple triggers at once.
- - /rmblacklist <triggers>: Same as above.
+ × /rmblacklist <triggers>: Same as above.
 
 **Note:** Can only remove one remove one blacklist at a time!
 """

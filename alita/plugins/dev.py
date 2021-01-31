@@ -10,11 +10,25 @@ from alita.__main__ import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita.utils.localization import GetLang
-from alita import MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME
+from alita import MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME, logfile
 from alita.utils.custom_filters import dev_filter
 from alita.utils.redishelper import get_key, allkeys
 from alita.utils.parser import mention_markdown
 from alita.db import users_db as userdb
+
+
+@Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
+async def send_log(c: Alita, m: Message):
+    _ = GetLang(m).strs
+    rply = await m.reply_text("Sending logs...!")
+    await c.send_message(
+        m.chat.id,
+        f"#LOGS\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
+    )
+    # Send logs
+    await m.reply_document(document=logfile, quote=True)
+    await rply.delete()
+    return
 
 
 @Alita.on_message(filters.command("speedtest", DEV_PREFIX_HANDLER) & dev_filter)
@@ -35,6 +49,31 @@ async def test_speed(c: Alita, m: Message):
             host=bs["sponsor"], ping=int(bs["latency"]), download=dl, upload=ul
         )
     )
+    return
+
+
+@Alita.on_message(filters.command("neofetch", DEV_PREFIX_HANDLER) & dev_filter)
+async def neofetch_stats(c: Alita, m: Message):
+    cmd = "neofetch --stdout"
+
+    process = await asyncio.create_subprocess_shell(
+        cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+    )
+    stdout, stderr = await process.communicate()
+    e = stderr.decode()
+    if not e:
+        e = "No Error"
+    OUTPUT = stdout.decode()
+    if not OUTPUT:
+        OUTPUT = "No Output"
+
+    if len(OUTPUT) > 4090:
+        with io.BytesIO(str.encode(OUTPUT)) as f:
+            f.name = "neofetch.txt"
+            await m.reply_document(document=f, caption="neofetch result")
+        await m.delete()
+    else:
+        await m.reply_text(OUTPUT, quote=True)
     return
 
 
@@ -203,7 +242,7 @@ async def uptime(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("loadmembers", DEV_PREFIX_HANDLER) & dev_filter)
 async def store_members(c: Alita, m: Message):
-    sm = await m.reply_text(f"Updating Members...")
+    sm = await m.reply_text("Updating Members...")
 
     lv = 0  # lv = local variable
 
@@ -214,9 +253,9 @@ async def store_members(c: Alita, m: Message):
                     member.user.id, member.user.username, m.chat.id, m.chat.title
                 )
                 lv += 1
-            except:
+            except Exception:
                 pass
-    except:
+    except Exception:
         await c.send_message(chat_id=MESSAGE_DUMP, text="Error while storing members!")
         return
     await sm.edit_text(f"Stored {lv} members")
@@ -229,7 +268,7 @@ async def list_all_admins(c: Alita, m: Message):
     admindict = get_key("ADMINDICT")
 
     if len(str(admindict)) > 4000:
-        with io.BytesIO(str.encode(chatfile)) as output:
+        with io.BytesIO(str.encode(admindict)) as output:
             output.name = "alladmins.txt"
             await m.reply_document(
                 document=output,

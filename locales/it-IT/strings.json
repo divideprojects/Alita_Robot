@@ -3,7 +3,7 @@
   "general.no_perm_admin": "Non ho il permesso per farlo",
   "general.something_wrong": "Qualcosa è andato storto!",
   "general.no_results": "Nessun risultato trovato.",
-  "general.commands_available": "Ehilà! Mi chiamo Alita.\nSono qui per aiutarti a gestire i tuoi gruppi!\nComandi disponibili:\n - /start: avvia il bot\n - /help: ti do questo messaggio.\n - /donate: informazioni relative a come donare!\n\n Tutti i comandi possono essere usati con / o !.",
+  "general.commands_available": "Ehilà! Mi chiamo Alita.\nSono qui per aiutarti a gestire i tuoi gruppi!\nComandi disponibili:\n × /start: avvia il bot\n × /help: ti do questo messaggio.\n × /donate: informazioni relative a come donare!\n\n Tutti i comandi possono essere usati con / o !.",
   "general.check_help": "Si prega di controllare l'aiuto su come usare questo comando.",
   "start.commands_btn": "Comandi",
   "start.infos_btn": "ℹ️ Informazioni",

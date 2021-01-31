@@ -14,7 +14,7 @@ Want to delete messages in you group?
 
  -/purge: Deletes messages upto replied message.
  -/purge <X>: Delete the number of messages specifed by number X
-- /del: Deletes a single message, used as a reply to message.
+ × /del: Deletes a single message, used as a reply to message.
 """
 
 
@@ -49,6 +49,7 @@ async def purge(c: Alita, m: Message):
 
     try:
         await c.delete_messages(chat_id=m.chat.id, message_ids=message_ids, revoke=True)
+        await m.delete()
     except errors.MessageDeleteForbidden:
         await dm.edit_text(_("purge.old_msg_err"))
         return

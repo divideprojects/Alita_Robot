@@ -38,7 +38,7 @@ async def banallnotes_callback(c: Alita, q: CallbackQuery):
                 continue
             await c.kick_chat_member(chat_id=q.message.chat.id, user_id=x.user.id)
             users.append(x.user.id)
-        except:
+        except Exception:
             fs += 1
             pass
 

@@ -8,7 +8,7 @@ from pyrogram.types import (
     CallbackQuery,
 )
 from pyrogram.errors import BadRequest, Unauthorized
-from alita import DEV_PREFIX_HANDLER
+from alita import DEV_PREFIX_HANDLER, LOGGER
 from alita.db import users_db as user_db, antispam_db as gban_db
 from alita.utils.custom_filters import dev_filter
 
@@ -19,7 +19,7 @@ async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
     chats = user_db.get_all_chats()
     kicked_chats, progress = 0, 0
     chat_list = []
-    progress_message = None
+    progress_message = m
 
     for chat in chats:
         if ((100 * chats.index(chat)) / len(chats)) > progress:
@@ -27,7 +27,7 @@ async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
             if progress_message:
                 try:
                     await m.edit_text(progress_bar)
-                except:
+                except Exception:
                     pass
             else:
                 progress_message = await m.reply_text(progress_bar)
@@ -40,12 +40,12 @@ async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
         except (BadRequest, Unauthorized):
             kicked_chats += 1
             chat_list.append(cid)
-        except:
+        except Exception:
             pass
 
     try:
         await progress_message.delete()
-    except:
+    except Exception:
         pass
 
     if not remove:
@@ -70,7 +70,7 @@ async def get_invalid_gban(c: Alita, m: Message, remove: bool = False):
         except BadRequest:
             ungbanned_users += 1
             ungban_list.append(user_id)
-        except:
+        except Exception:
             pass
 
     if remove:
@@ -86,7 +86,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
     chats = user_db.get_all_chats()
     muted_chats, progress = 0, 0
     chat_list = []
-    progress_message = None
+    progress_message = m
 
     for chat in chats:
 
@@ -97,7 +97,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
                     bot.editMessageText(
                         progress_bar, chat_id, progress_message.message_id
                     )
-                except:
+                except Exception:
                     pass
             else:
                 progress_message = await m.edit_text(progress_bar)
@@ -111,12 +111,12 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
         except (BadRequest, Unauthorized):
             muted_chats += 1
             chat_list.append(cid)
-        except:
+        except Exception:
             pass
 
     try:
         await progress_message.delete()
-    except:
+    except Exception:
         pass
 
     if not leave:
@@ -126,7 +126,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
             sleep(0.1)
             try:
                 await c.leave_chat(muted_chat)
-            except:
+            except Exception:
                 pass
             user_db.rem_chat(muted_chat)
         return muted_chats
@@ -229,25 +229,25 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^db_clean_"))
 async def db_clean_callbackAction(c: Alita, q: CallbackQuery):
-    query_type = q.data.split("_")[1]
+    try:
+        query_type = q.data.split("_")[1]
 
-    if query_type == "muted_chats":
-        await q.message.edit_text("Leaving chats ...")
-        chat_count = await get_muted_chats(c, q.message, True)
-        await q.message.edit_text(f"Left {chat_count} chats.")
-        return
+        if query_type == "muted_chats":
+            await q.message.edit_text("Leaving chats ...")
+            chat_count = await get_muted_chats(c, q.message, True)
+            await q.message.edit_text(f"Left {chat_count} chats.")
 
-    elif query_type == "inavlid_chats":
-        await q.message.edit_text("Cleaning up Db...")
-        invalid_chat_count = await get_invalid_chats(c, q.message, True)
-        await q.message.edit_text(f"Cleaned up {invalid_chat_count} chats from Db.")
-        return
+        elif query_type == "inavlid_chats":
+            await q.message.edit_text("Cleaning up Db...")
+            invalid_chat_count = await get_invalid_chats(c, q.message, True)
+            await q.message.edit_text(f"Cleaned up {invalid_chat_count} chats from Db.")
 
-    elif query_type == "invalid_gbans":
-        await q.message.edit_text("Removing Invalid Gbans from Db...")
-        invalid_gban_count = await get_invalid_gban(c, q.message, True)
-        await q.message.edit_text(
-            f"Cleaned up {invalid_gban_count} gbanned users from Db"
-        )
-        return
+        elif query_type == "invalid_gbans":
+            await q.message.edit_text("Removing Invalid Gbans from Db...")
+            invalid_gban_count = await get_invalid_gban(c, q.message, True)
+            await q.message.edit_text(
+                f"Cleaned up {invalid_gban_count} gbanned users from Db"
+            )
+    except Exception as ef:
+        LOGGER.error(f"Error while cleaning db:\n{ef}")
     return

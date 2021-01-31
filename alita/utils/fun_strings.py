@@ -1,7 +1,6 @@
 RUN_STRINGS = (
     "Huh? what? did they get away?",
     "Get back here!",
-    "REEEEEEEEEEEEEEEEEE!!!!!!!",
     "Look out for the wall!",
     "Don't leave me alone with them!!",
     "You've got company!",

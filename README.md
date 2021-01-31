@@ -9,7 +9,8 @@
 ![Stars](https://img.shields.io/github/stars/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
 ![LICENSE](https://img.shields.io/github/license/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
 ![Contributors](https://img.shields.io/github/contributors/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
-![Repo Size](https://img.shields.io/github/repo-size/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)</br>
+![Repo Size](https://img.shields.io/github/repo-size/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194)](https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&utm_medium=referral&utm_content=Divkix/Alita_Robot&utm_campaign=Badge_Grade_Settings)</br>
 
 [![Crowdin](https://badges.crowdin.net/alita_robot/localized.svg)](https://crowdin.com/project/alita_robot)</br>
 ![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/SkuzzyxD/Alita_Robot&title=Profile%20Views)</br>
@@ -27,7 +28,7 @@ Help us bring more languages to the bot by contributing to the project in [Crowd
 -   Frequently updated
 -   Multi Language Support
 
-Can be found on Telegram as [@AlitaBetaRobot](https://t.me/AlitaBetaRobot).
+Can be found on Telegram as [@AlitaRobot](https://t.me/AlitaRobot).
 
 Alita is currently available in 5 Languages as of now: **en-US**, **pt-BR**, **it-IT**, **ru-RU**, **hi-IN**.
 More languages can be managed in the _locales_ folder.
@@ -48,24 +49,9 @@ First Step!
 - Run the bot using `python3 -m alita`
 If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 
-
-*Docker Configuration is not working right now!*
-### Docker:
-- Rename `sample.env` to `alita.env` in this folder and fill in all the variables. **Sudo, Dev, Whitelist** users are optional!!
-- Build using `docker build -t alita_robot`.
-- Run using `docker run --name alita_robot --env-file alita.env alita_robot`.
-*NOTE:* You need to specify --env-file variable, otherwise the bot will not work!
-If successful, bot should send a message to the **MESSAGE_DUMP** Group!
-
-### Docker Compose:
-- Rename `sample.env` to `alita.env` in this folder and fill in all the variables. **Sudo, Dev, Whitelist** users are optional!!
-- Build using `docker-compose build`.
-- Run using `docker-compose up`.
-*NOTE:* No need to specify alita.env file, docker-compose takes care of it!
-If successful, bot should send a message to the **MESSAGE_DUMP** Group!
-
 ## TO-DO
 - [ ] Fix Errors, by defining them
+- [ ] Proper Translations
 - [ ] Add Captcha
 - [ ] Add federations
 - [ ] Add Sticker Blacklist
@@ -91,5 +77,5 @@ If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 
 ### Copyright & License
 
-* Copyright (C) 2020 by [SkuzzyxD](https://github.com/SkuzzyxD) ❤️️
-* Licensed under the terms of the [GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/SkuzzyxD/Alita_Robot/blob/master/LICENSE.md)
+* Copyright (C) 2020 by [Divkix](https://github.com/Divkix) ❤️️
+* Licensed under the terms of the [GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/Divkix/Alita_Robot/blob/master/LICENSE.md)

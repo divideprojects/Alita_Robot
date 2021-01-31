@@ -11,15 +11,15 @@ from alita.utils.extract_user import extract_user
 __PLUGIN__ = "Fun"
 
 __help__ = """
- - /runs: reply a random string from an array of replies.
- - /slap: slap a user, or get slapped if not a reply.
- - /shrug : get shrug XD.
- - /decide : Randomly answers yes/no/maybe
- - /toss : Tosses A coin
- - /bluetext : check urself :V
- - /roll : Roll a dice.
- - /react : Random Reaction
- - /shout <keyword>: write anything you want to give loud shout.
+ × /runs: reply a random string from an array of replies.
+ × /slap: slap a user, or get slapped if not a reply.
+ × /shrug : get shrug XD.
+ × /decide : Randomly answers yes/no/maybe
+ × /toss : Tosses A coin
+ × /bluetext : check urself :V
+ × /roll : Roll a dice.
+ × /react : Random Reaction
+ × /shout <keyword>: write anything you want to give loud shout.
 """
 
 
@@ -55,7 +55,7 @@ async def fun_slap(c: Alita, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
 
     curr_user = html.escape(m.from_user.first_name)
-    user_id, first_name = await extract_user(c, m)
+    user_id = extract_user(m)[0]
 
     if user_id == me.id:
         temp = random.choice(fun_strings.SLAP_ALITA_TEMPLATES)

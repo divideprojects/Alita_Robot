@@ -1,11 +1,12 @@
 import html
 import os
 import requests
+import aiohttp
 from tswift import Song
 from datetime import datetime
 from alita.__main__ import Alita
-from pyrogram import filters
-from pyrogram.types import Message, MessageEntity
+from pyrogram import filters, errors
+from pyrogram.types import Message
 from alita import (
     PREFIX_HANDLER,
     OWNER_ID,
@@ -13,6 +14,7 @@ from alita import (
     SUDO_USERS,
     WHITELIST_USERS,
     TOKEN,
+    SUPPORT_GROUP,
 )
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -22,12 +24,13 @@ __PLUGIN__ = "Utils"
 __help__ = """
 Some utils provided by bot to make your tasks easy!
 
- - /id: Get the current group id. If used by replying to a message, get that user's id.
- - /info: Get information about a user.
- - /ping - Get ping time of bot to telegram server.
- - /gifid: Reply to a gif to me to tell you its file ID.
- - /lyrics <song>: Get the lyrics of the song you specify!
- - /weebify <text> or a reply to message: To weebify the message.
+ × /id: Get the current group id. If used by replying to a message, get that user's id.
+ × /info: Get information about a user.
+ × /ping - Get ping time of bot to telegram server.
+ × /gifid: Reply to a gif to me to tell you its file ID.
+ × /github <username>: Search for the user using github api!
+ × /lyrics <song>: Get the lyrics of the song you specify!
+ × /weebify <text> or a reply to message: To weebify the message.
 """
 
 
@@ -81,7 +84,7 @@ async def get_lyrics(c: Alita, m: Message):
     filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private)
 )
 async def id_info(c: Alita, m: Message):
-    user_id, first_name = await extract_user(c, m)
+    user_id = extract_user(m)[0]
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_m.from_user
@@ -96,7 +99,13 @@ async def id_info(c: Alita, m: Message):
                 parse_mode="HTML",
             )
         else:
-            user = await c.get_users(user_id)
+            try:
+                user = await c.get_users(user_id)
+            except errors.PeerIdInvalid:
+                await m.reply_text(
+                    "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!"
+                )
+
             await m.reply_text(
                 f"{mention_html(user.first_name, user.id)}'s ID is <code>{user.id}</code>.",
                 parse_mode="HTML",
@@ -128,28 +137,71 @@ async def get_gifid(c: Alita, m: Message):
 
 
 @Alita.on_message(
+    filters.command("github", PREFIX_HANDLER) & (filters.group | filters.private)
+)
+async def github(c: Alita, m: Message):
+    if len(m.text.split()) == 2:
+        username = m.text.split(None, 1)[1]
+    else:
+        await m.reply_text(
+            f"Usage: `{PREFIX_HANDLER}github <username>`", parse_mode="md"
+        )
+        return
+
+    URL = f"https://api.github.com/users/{username}"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(URL) as request:
+            if request.status == 404:
+                return await m.reply_text(f"`{username} not found`", parse_mode="md")
+                return
+
+            result = await request.json()
+
+            url = result.get("html_url", None)
+            name = result.get("name", None)
+            company = result.get("company", None)
+            bio = result.get("bio", None)
+            created_at = result.get("created_at", "Not Found")
+
+            REPLY = (
+                f"**GitHub Info for** `{username}`"
+                f"\n**Username:** `{name}`\n**Bio:** `{bio}`\n**URL:** {url}"
+                f"\n**Company:** `{company}`\n**Created at:** `{created_at}`"
+            )
+
+            if not result.get("repos_url", None):
+                return await m.reply_text(REPLY, parse_mode="md")
+            async with session.get(result.get("repos_url", None)) as request:
+                result = request.json
+                if request.status == 404:
+                    return await m.reply_text(REPLY, parse_mode="md")
+
+                result = await request.json()
+
+                REPLY += "\nRepos:\n"
+
+                for nr in range(len(result)):
+                    REPLY += f"[{result[nr].get('name', None)}]({result[nr].get('html_url', None)})\n"
+
+                await m.reply_text(REPLY, parse_mode="md")
+    return
+
+
+@Alita.on_message(
     filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private)
 )
 async def my_info(c: Alita, m: Message):
     infoMsg = await m.reply_text("<code>Getting user information...</code>")
-    user_id, first_name = await extract_user(c, m)
+    user_id, first_name = extract_user(m)
 
-    if user_id:
+    try:
         user = await c.get_users(user_id)
-    elif not m.reply_to_message and not len(m.command) >= 2:
-        user = m.from_user
-    elif not m.reply_to_message and (
-        not m.command
-        or (
-            len(m.command) >= 1
-            and not m.command[0].startswith("@")
-            and not m.command[0].isdigit()
-            and not m.parse_entities([MessageEntity.TEXT_MENTION])
+    except errors.PeerIdInvalid:
+        await m.reply_text(
+            "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!"
         )
-    ):
-        await m.reply_text("I can't extract a user from this.")
-        return
-    else:
+    except Exception as ef:
+        await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         return
 
     text = (
@@ -196,62 +248,10 @@ async def my_info(c: Alita, m: Message):
     return
 
 
-normiefont = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-]
-weebyfont = [
-    "卂",
-    "乃",
-    "匚",
-    "刀",
-    "乇",
-    "下",
-    "厶",
-    "卄",
-    "工",
-    "丁",
-    "长",
-    "乚",
-    "从",
-    "𠘨",
-    "口",
-    "尸",
-    "㔿",
-    "尺",
-    "丂",
-    "丅",
-    "凵",
-    "リ",
-    "山",
-    "乂",
-    "丫",
-    "乙",
-]
+# Use split to convert to list
+# Not using list itself becuase black changes it to long format...
+normiefont = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split()
+weebyfont = "卂 乃 匚 刀 乇 下 厶 卄 工 丁 长 乚 从 𠘨 口 尸 㔿 尺 丂 丅 凵 リ 山 乂 丫 乙".split()
 
 
 @Alita.on_message(filters.command("weebify", PREFIX_HANDLER))
