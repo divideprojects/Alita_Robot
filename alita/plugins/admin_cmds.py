@@ -239,7 +239,7 @@ async def unmute_usr(c: Alita, m: Message):
             await m.chat.restrict_member(
                 user_id, unmute_permissions
             )
-            await m.reply_text(f"<b>Muted</b> {mention_html(user_first_name,user_id)}")
+            await m.reply_text(f"<b>Unmuted</b> {mention_html(user_first_name,user_id)}")
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
