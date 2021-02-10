@@ -6,7 +6,7 @@ from tswift import Song
 from datetime import datetime
 from alita.__main__ import Alita
 from pyrogram import filters, errors
-from pyrogram.types import Message, MessageEntity
+from pyrogram.types import Message
 from alita import (
     PREFIX_HANDLER,
     OWNER_ID,
