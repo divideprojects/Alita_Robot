@@ -165,7 +165,7 @@ async def gban_watcher(c: Alita, m: Message):
                 )
                 LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
                 return
-            except (errors.ChatAdminRequired or errors.UserAdminInvalid):
+            except (errors.ChatAdminRequired, errors.UserAdminInvalid):
                 # Bot not admin in group and hence cannot ban users!
                 # TO-DO - Improve Error Detection
                 LOGGER.info(
