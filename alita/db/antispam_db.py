@@ -41,7 +41,6 @@ def gban_user(user_id, name, reason=None):
         finally:
             SESSION.close()
     __load_gbanned_userid_list()
-    return
 
 
 def update_gban_reason(user_id, name, reason=None):
@@ -72,7 +71,6 @@ def ungban_user(user_id):
         finally:
             SESSION.close()
             __load_gbanned_userid_list()
-    return
 
 
 def is_user_gbanned(user_id):
