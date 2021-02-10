@@ -28,13 +28,12 @@ async def extract_time(m, time_val):
             # how even...?
             return ""
         return bantime
-    else:
-        await m.reply(
-            "Invalid time type specified. Needed m, h, or s. got: {}".format(
-                time_val[-1]
-            )
+    await m.reply(
+        "Invalid time type specified. Needed m, h, or s. got: {}".format(
+            time_val[-1]
         )
-        return ""
+    )
+    return ""
 
 
 async def extract_time_str(m, time_val):
@@ -55,13 +54,12 @@ async def extract_time_str(m, time_val):
             # how even...?
             return ""
         return bantime
-    else:
-        await m.reply(
-            "Invalid time type specified. Needed m, h, or s. got: {}".format(
-                time_val[-1]
-            )
+    await m.reply(
+        "Invalid time type specified. Needed m, h, or s. got: {}".format(
+            time_val[-1]
         )
-        return ""
+    )
+    return ""
 
 
 def make_time(time_val):
@@ -153,8 +151,7 @@ def split_quotes(text: str):
         if not key:
             key = text[0] + text[0]
         return list(filter(None, [key, rest]))
-    else:
-        return text.split(None, 1)
+    return text.split(None, 1)
 
 
 def extract_text(m):
