@@ -1,7 +1,6 @@
 import os
 import time
 from pyrogram import Client, __version__, errors
-from pyrogram.types import Message
 from pyrogram.raw.all import layer
 from alita.plugins import ALL_PLUGINS
 from alita.db import users_db as userdb

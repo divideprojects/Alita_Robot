@@ -1,10 +1,8 @@
-from io import BytesIO
-from datetime import datetime
 from alita.db import approve_db as db
 from alita.__main__ import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
-from alita import MESSAGE_DUMP, PREFIX_HANDLER, SUPPORT_GROUP, LOGGER
+from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 from alita.utils.admin_check import admin_check, owner_check
