@@ -50,11 +50,10 @@ async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
 
     if not remove:
         return kicked_chats
-    else:
-        for muted_chat in chat_list:
-            sleep(0.1)
-            user_db.rem_chat(muted_chat)
-        return kicked_chats
+    for muted_chat in chat_list:
+        sleep(0.1)
+        user_db.rem_chat(muted_chat)
+    return kicked_chats
 
 
 async def get_invalid_gban(c: Alita, m: Message, remove: bool = False):
@@ -121,15 +120,14 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
 
     if not leave:
         return muted_chats
-    else:
-        for muted_chat in chat_list:
-            sleep(0.1)
-            try:
-                await c.leave_chat(muted_chat)
-            except:
-                pass
-            user_db.rem_chat(muted_chat)
-        return muted_chats
+    for muted_chat in chat_list:
+        sleep(0.1)
+        try:
+            await c.leave_chat(muted_chat)
+        except:
+            pass
+        user_db.rem_chat(muted_chat)
+    return muted_chats
 
 
 @Alita.on_message(filters.command("dbclean", DEV_PREFIX_HANDLER) & dev_filter)

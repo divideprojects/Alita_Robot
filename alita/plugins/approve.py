@@ -127,9 +127,8 @@ async def check_approved(c: Alita, m: Message):
     if msg.endswith("approved:\n"):
         await m.reply_text(f"No users are approved in {chat_title}.")
         return
-    else:
-        await m.reply_text(msg)
-        return
+    await m.reply_text(msg)
+    return
 
 
 @Alita.on_message(filters.command("approval", PREFIX_HANDLER) & filters.group)

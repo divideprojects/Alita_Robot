@@ -73,10 +73,8 @@ def rm_note(chat_id, note_name):
             SESSION.commit()
             CHAT_NOTES[str(chat_id)].pop(note_name)
             return True
-
-        else:
-            SESSION.close()
-            return False
+        SESSION.close()
+        return False
 
 
 def rm_all_note(chat_id):
