@@ -78,7 +78,6 @@ class Alita(Client):
                 LOGGER.info(
                     f"Set {len(adminlist)} admins for {chat.chat_id}\n{adminlist}"
                 )
-                del adminlist  # Delete list var
             except errors.PeerIdInvalid:
                 pass
             except Exception as ef:
@@ -86,7 +85,6 @@ class Alita(Client):
 
         try:
             set_key("ADMINDICT", ADMINDICT)
-            del ADMINDICT
             end = time.time()
             LOGGER.info(f"Set admin list cache!\nTime Taken: {round(end-begin, 2)}s")
         except Exception as ef:
