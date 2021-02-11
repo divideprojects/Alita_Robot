@@ -150,7 +150,7 @@ async def github(c: Alita, m: Message):
     async with aiohttp.ClientSession() as session:
         async with session.get(URL) as request:
             if request.status == 404:
-                return await m.reply_text(f"`{username} not found`", parse_mode="md")
+                await m.reply_text(f"`{username} not found`", parse_mode="md")
                 return
 
             result = await request.json()
