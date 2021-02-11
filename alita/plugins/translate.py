@@ -19,8 +19,7 @@ def get_lang(text):
         lang = text.split()[0]
         if lang.split("-")[0] not in LANGUAGES:
             lang = "pt"
-        if len(lang.split("-")) > 1:
-            if lang.split("-")[1] not in LANGUAGES:
+        if len(lang.split("-")) > 1 and lang.split("-")[1] not in LANGUAGES:
                 lang = "pt"
     else:
         lang = "pt"
