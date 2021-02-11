@@ -88,7 +88,7 @@ def rm_all_note(chat_id):
                     SESSION.delete(note)
                     SESSION.commit()
                     CHAT_NOTES[str(chat_id)].pop(note_name)
-                except:
+                except BaseException:
                     pass
             SESSION.close()
         del CHAT_NOTES[str(chat_id)]
@@ -105,7 +105,7 @@ def num_notes_all():
     count = 0
     if CHAT_NOTES:
         for i in CHAT_NOTES.values():
-            for j in i:
+            for _ in i:
                 count += 1
     return count
 

@@ -85,18 +85,18 @@ async def rm_blacklist(c: Alita, m: Message):
 
     _ = GetLang(m).strs
     chat_bl = db.get_chat_blacklist(m.chat.id)
-    if isinstance(chat_bl, bool):
+    if not isinstance(chat_bl, bool):
         pass
-    if len(m.text.split()) >= 2:
-        bl_word = m.text.split(None, 1)[1]
-        if bl_word in chat_bl:
-            db.rm_from_blacklist(m.chat.id, bl_word.lower())
-            await m.reply_text(_("blacklist.rm_blacklist").format(bl_word=bl_word))
-            return
-        await m.reply_text(_("blacklist.no_bl_found").format(bl_word=bl_word))
     else:
-        await m.reply_text(_("general.check_help"), reply_to_message_id=m.message_id)
-
+        if len(m.text.split()) >= 2:
+            bl_word = m.text.split(None, 1)[1]
+            if bl_word in chat_bl:
+                db.rm_from_blacklist(m.chat.id, bl_word.lower())
+                await m.reply_text(_("blacklist.rm_blacklist").format(bl_word=bl_word))
+                return
+            await m.reply_text(_("blacklist.no_bl_found").format(bl_word=bl_word))
+        else:
+            await m.reply_text(_("general.check_help"), reply_to_message_id=m.message_id)
     return
 
 

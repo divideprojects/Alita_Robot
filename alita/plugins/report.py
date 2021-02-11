@@ -99,7 +99,7 @@ async def report(c: Alita, m: Message):
 
         if m.chat.username and m.chat.type == "supergroup":
 
-            reported = f"{mention_html(m.from_user.first_name, m.from_user.id)} reported {mention_html(reported_user.first_name, reported_user.id)} to the admins!"
+            # reported = f"{mention_html(m.from_user.first_name, m.from_user.id)} reported {mention_html(reported_user.first_name, reported_user.id)} to the admins!"
 
             msg = (
                 f"<b>⚠️ Report: </b>{html.escape(m.chat.title)}\n"

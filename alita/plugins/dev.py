@@ -4,12 +4,12 @@ import time
 import os
 import sys
 import traceback
-import requests
 import speedtest
 from alita.__main__ import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita.utils.localization import GetLang
+from alita.utils.aiohttp_helper import AioHttp
 from alita import MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME, logfile
 from alita.utils.custom_filters import dev_filter
 from alita.utils.redishelper import get_key, allkeys
@@ -185,7 +185,7 @@ async def execution(c: Alita, m: Message):
 @Alita.on_message(filters.command("ip", DEV_PREFIX_HANDLER) & dev_filter)
 async def public_ip(c: Alita, m: Message):
     _ = GetLang(m).strs
-    ip = requests.get("https://api.ipify.org").text
+    ip = AioHttp().get_text("https://api.ipify.org")[0]
     await c.send_message(
         MESSAGE_DUMP,
         f"#IP\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
@@ -252,9 +252,9 @@ async def store_members(c: Alita, m: Message):
                     member.user.id, member.user.username, m.chat.id, m.chat.title
                 )
                 lv += 1
-            except:
+            except BaseException:
                 pass
-    except:
+    except BaseException:
         await c.send_message(chat_id=MESSAGE_DUMP, text="Error while storing members!")
         return
     await sm.edit_text(f"Stored {lv} members")

@@ -16,7 +16,7 @@
 ![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Divkix/Alita_Robot&title=Profile%20Views)</br>
 
 
-Alita is a Telegram Group managment bot made using **[Pyrogram](https://docs.pyrogram.org) _async version_** and **[Python](https://python.org)**, which makes it modern and faster than most of the Telegram chat managers.
+Alita is a Telegram Group managment bot made using **[Pyrogram](https://docs.pyrogram.org) _async version_** and **[Python](https://python.org)**, which makes it modern and faster than most of the exisitng Telegram Chat Managers.
 
 Help us bring more languages to the bot by contributing to the project in [Crowdin](https://crowdin.com/project/alitarobot)!
 
@@ -39,6 +39,7 @@ You need to have a *Postgres Database*, and *Redis Cache Database* as well!
 
 First Step!
 - Star **⭐** the repository!!
+It really motivates me to continue this project further.
 
 ### Traditional:
 - Install Python v3.7 or later from [Python's Website](https://python.org)
@@ -47,7 +48,7 @@ First Step!
 - Install the requirements using `python3 -m pip install -r requirements.txt`
 - Rename `sample_config.py` to `config.py` in `alita` folder and fill in all the variables in *Development* class, not *Config* class. **Sudo, Dev, Whitelist** users are optional!!
 - Run the bot using `python3 -m alita`
-If successful, bot should send a message to the **MESSAGE_DUMP** Group!
+If successful, bot should send message to the **MESSAGE_DUMP** Group!
 
 ## TO-DO
 - [ ] Fix Errors, by defining them
@@ -61,13 +62,14 @@ If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 - [ ] Add Logging of groups and channels
 - [ ] Add warnings
 - [ ] Add connections
-- [ ] Fix Docker Configuration
+- [x] Fix Docker Configuration
+- [ ] Fix existing errors, deepsource and codacy
 
 ## Contributing to the project
 
- - You must sign off on your commit.
- - You must sign the commit via GPG Key.
- - Make sure your PR works and doesn't break anything!
+- You must sign off on your commit.
+- You must sign the commit via GPG Key.
+- Make sure your PR works and doesn't break anything!
 
 ## Special Thanks to:
 - [AmanoTeam](https://github.com/AmanoTeam/) for [EduuRobot](https://github.com/AmanoTeam/EduuRobot/tree/rewrite) as that helped me make the language menu with the 4 langauges provided and some basic plugins too!

@@ -63,7 +63,7 @@ unmute_permissions = ChatPermissions(
 
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
-async def adminlist(c: Alita, m: Message):
+async def adminlist_show(c: Alita, m: Message):
     _ = GetLang(m).strs
     try:
         me_id = int(get_key("BOT_ID"))  # Get Bot ID from Redis!

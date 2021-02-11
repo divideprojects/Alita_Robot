@@ -57,10 +57,7 @@ class Alita(Client):
         try:
             flushredis()
         except Exception as ef:
-            LOGGER.error(ef)
-
-        # Get bot info
-        me = await self.get_me()
+            LOGGER.error(ef
 
         all_chats = userdb.get_all_chats() or []  # Get list of all chats
         LOGGER.info(f"{len(all_chats)} chats loaded.")
@@ -98,11 +95,11 @@ class Alita(Client):
 
         await self.send_message(MESSAGE_DUMP, "Starting Bot...")
 
-        """Redis Content Setup!"""
+        # Redis Content Setup!
         await self.get_admins()  # Load admins in cache
         set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
         set_key("BOT_ID", int(me.id))  # Save Bot ID in Redis!
-        """Redis Content Setup!"""
+        # Redis Content Setup!
 
         # Show in Log that bot has started
         LOGGER.info(

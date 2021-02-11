@@ -78,5 +78,5 @@ def disapprove_all(chat_id):
                 else:
                     SESSION.close()
         return True
-    except:
+    except BaseException:
         return False

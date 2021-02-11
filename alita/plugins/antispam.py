@@ -73,7 +73,7 @@ async def gban(c: Alita, m: Message):
                 f"Appeal Chat: @{SUPPORT_GROUP}"
             ),
         )
-    except:  # TO DO: Improve Error Detection
+    except BaseException:  # TO DO: Improve Error Detection
         pass
     return
 

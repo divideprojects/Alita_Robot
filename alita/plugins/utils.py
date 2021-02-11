@@ -1,6 +1,5 @@
 import html
 import os
-import requests
 import aiohttp
 from tswift import Song
 from datetime import datetime
@@ -84,7 +83,7 @@ async def get_lyrics(c: Alita, m: Message):
     filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private)
 )
 async def id_info(c: Alita, m: Message):
-    user_id, first_name = extract_user(m)
+    user_id = extract_user(m)[0]
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_m.from_user
@@ -190,8 +189,7 @@ async def github(c: Alita, m: Message):
 )
 async def my_info(c: Alita, m: Message):
     infoMsg = await m.reply_text("<code>Getting user information...</code>")
-    user_id, first_name = extract_user(m)
-
+    user_id = extract_user(m)[0]
     try:
         user = await c.get_users(user_id)
     except errors.PeerIdInvalid:
@@ -226,7 +224,7 @@ async def my_info(c: Alita, m: Message):
     try:
         user_member = await c.get_users(user.id)
         if user_member.status == "administrator":
-            result = requests.post(
+            result = AioHttp().post(
                 (
                     f"https://api.telegram.org/bot{TOKEN}/"
                     f"getChatMember?chat_id={m.chat.id}&user_id={user.id}"
@@ -237,7 +235,7 @@ async def my_info(c: Alita, m: Message):
                 custom_title = result["custom_title"]
                 text += f"\n\nThis user holds the title <b>{custom_title}</b> here."
     except BaseException:
-        pass
+        LOGGER.error("BaseException")
 
     await infoMsg.edit_text(text, parse_mode="html", disable_web_page_preview=True)
 
