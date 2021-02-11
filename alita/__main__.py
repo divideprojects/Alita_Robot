@@ -18,7 +18,7 @@ from alita import (
     logfile,
     log_datetime,
 )
-from alita.utils.redishelper import set_key, await flushredis, await allkeys
+from alita.utils.redishelper import set_key, flushredis, allkeys
 
 # Check that MESSAGE_DUMP ID is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):

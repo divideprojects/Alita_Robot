@@ -129,7 +129,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
 
 
 @Alita.on_message(filters.command("dbclean", DEV_PREFIX_HANDLER) & dev_filter)
-async def dbcleanxyz(c: Client m: Message):
+async def dbcleanxyz(c: Client, m: Message):
     buttons = [
         [InlineKeyboardButton("Invalid Chats", callback_data="dbclean_invalidchats")]
     ]

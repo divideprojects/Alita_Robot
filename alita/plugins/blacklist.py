@@ -103,7 +103,7 @@ async def rm_blacklist(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.group, group=11)
-async def del_blacklist(c: Client m: Message):
+async def del_blacklist(c: Client, m: Message):
     try:
         user_list = []
         approved_users = app_db.all_approved(m.chat.id)

@@ -11,7 +11,7 @@ from alita.db import (
 
 
 @Alita.on_message(group=-1)
-async def initial_works(c: Client m: Message):
+async def initial_works(c: Client, m: Message):
     try:
         if m.migrate_to_chat_id or m.migrate_from_chat_id:
             if m.migrate_to_chat_id:
