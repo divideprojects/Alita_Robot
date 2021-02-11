@@ -63,7 +63,6 @@ def set_lang(chat_id, chat_type, lang_code):
                 SESSION.commit()
             finally:
                 SESSION.close()
-    return
 
 
 def get_lang(chat_id, chat_type):
@@ -100,4 +99,3 @@ def migrate_chat(old_chat_id, new_chat_id):
             SESSION.merge(chat)
         SESSION.commit()
         SESSION.close()
-    return
