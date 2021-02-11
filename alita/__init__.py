@@ -21,11 +21,11 @@ stdout_handler = logging.StreamHandler(sys.stdout)
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.DEBUG,
+    level=logging.INFO,
     handlers=[file_handler, stdout_handler],
 )
 
-# logging.getLogger("pyrogram").setLevel(logging.WARNING)
+logging.getLogger("pyrogram").setLevel(logging.DEBUG)
 LOGGER = logging.getLogger(__name__)
 
 # if version < 3.6, stop bot.
