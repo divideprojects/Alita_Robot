@@ -1,6 +1,7 @@
 import glob
 from os.path import dirname, basename, isfile
 
+
 def __list_all_plugins():
 
     # This generates a list of plugins in this folder for the * in __main__ to
