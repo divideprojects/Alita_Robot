@@ -64,7 +64,7 @@ unmute_permissions = ChatPermissions(
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
 async def adminlist_show(c: Alita, m: Message):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     try:
         me_id = int(get_key("BOT_ID"))  # Get Bot ID from Redis!
         adminlist = get_key("ADMINDICT")[str(m.chat.id)]  # Load ADMINDICT from string
@@ -75,10 +75,10 @@ async def adminlist_show(c: Alita, m: Message):
             except errors.PeerIdInvalid:
                 pass
             if i == me_id:
-                adminstr += f"- {mention_html(usr.first_name, i)} (Me)\n"
+                adminstr += f"- {await mention_html(usr.first_name, i)} (Me)\n"
             else:
                 usr = await c.get_users(i)
-                adminstr += f"- {mention_html(usr.first_name, i)} (`{i}`)\n"
+                adminstr += f"- {await mention_html(usr.first_name, i)} (`{i}`)\n"
         await m.reply_text(adminstr)
     except Exception as ef:
 
@@ -96,7 +96,7 @@ async def adminlist_show(c: Alita, m: Message):
 @Alita.on_message(filters.command("admincache", PREFIX_HANDLER) & filters.group)
 async def reload_admins(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -122,7 +122,7 @@ async def reload_admins(c: Alita, m: Message):
 @Alita.on_message(filters.command("kick", PREFIX_HANDLER) & filters.group)
 async def kick_usr(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -131,10 +131,10 @@ async def kick_usr(c: Alita, m: Message):
     from_user = await m.chat.get_member(m.from_user.id)
 
     if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await c.kick_chat_member(m.chat.id, user_id, int(time.time() + 45))
-            await m.reply_text(f"Banned {mention_html(user_first_name, user_id)}")
+            await m.reply_text(f"Banned {await mention_html(user_first_name, user_id)}")
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -147,7 +147,7 @@ async def kick_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("ban", PREFIX_HANDLER) & filters.group)
 async def ban_usr(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -156,10 +156,10 @@ async def ban_usr(c: Alita, m: Message):
     from_user = await m.chat.get_member(m.from_user.id)
 
     if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await c.kick_chat_member(m.chat.id, user_id)
-            await m.reply_text(f"Banned {mention_html(user_first_name, user_id)}")
+            await m.reply_text(f"Banned {await mention_html(user_first_name, user_id)}")
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -172,7 +172,7 @@ async def ban_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("unban", PREFIX_HANDLER) & filters.group)
 async def unban_usr(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -181,10 +181,12 @@ async def unban_usr(c: Alita, m: Message):
     from_user = await m.chat.get_member(m.from_user.id)
 
     if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await c.unban_chat_member(m.chat.id, user_id)
-            await m.reply_text(f"Unbanned {mention_html(user_first_name, user_id)}")
+            await m.reply_text(
+                f"Unbanned {await mention_html(user_first_name, user_id)}"
+            )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -197,7 +199,7 @@ async def unban_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("mute", PREFIX_HANDLER) & filters.group)
 async def mute_usr(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -206,10 +208,12 @@ async def mute_usr(c: Alita, m: Message):
     from_user = await m.chat.get_member(m.from_user.id)
 
     if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await m.chat.restrict_member(user_id, mute_permission)
-            await m.reply_text(f"<b>Muted</b> {mention_html(user_first_name,user_id)}")
+            await m.reply_text(
+                f"<b>Muted</b> {await mention_html(user_first_name,user_id)}"
+            )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -225,7 +229,7 @@ async def mute_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("unmute", PREFIX_HANDLER) & filters.group)
 async def unmute_usr(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -234,11 +238,11 @@ async def unmute_usr(c: Alita, m: Message):
     from_user = await m.chat.get_member(m.from_user.id)
 
     if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await m.chat.restrict_member(user_id, unmute_permissions)
             await m.reply_text(
-                f"<b>Unmuted</b> {mention_html(user_first_name,user_id)}"
+                f"<b>Unmuted</b> {await mention_html(user_first_name,user_id)}"
             )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -254,7 +258,7 @@ async def unmute_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("promote", PREFIX_HANDLER) & filters.group)
 async def promote_usr(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -265,7 +269,7 @@ async def promote_usr(c: Alita, m: Message):
     # If user does not have permission to promote other users, return
     if from_user.can_promote_members or from_user.status == "creator":
 
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await m.chat.promote_member(
                 user_id=user_id,
@@ -308,7 +312,7 @@ async def promote_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("demote", PREFIX_HANDLER) & filters.group)
 async def demote_usr(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -319,7 +323,7 @@ async def demote_usr(c: Alita, m: Message):
     # If user does not have permission to demote other users, return
     if from_user.can_promote_members or from_user.status == "creator":
 
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await m.chat.promote_member(
                 user_id=user_id,
@@ -362,7 +366,7 @@ async def demote_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("invitelink", PREFIX_HANDLER) & filters.group)
 async def get_invitelink(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -395,7 +399,7 @@ async def get_invitelink(c: Alita, m: Message):
 @Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group)
 async def pin_message(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -431,7 +435,7 @@ async def pin_message(c: Alita, m: Message):
 @Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & filters.group)
 async def unpin_message(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:

@@ -12,18 +12,18 @@ from alita.utils.localization import GetLang
 from alita.utils.aiohttp_helper import AioHttp
 from alita import MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME, logfile
 from alita.utils.custom_filters import dev_filter
-from alita.utils.redishelper import get_key, allkeys
+from alita.utils.redishelper import get_key, await allkeys
 from alita.utils.parser import mention_markdown
 from alita.db import users_db as userdb
 
 
 @Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
 async def send_log(c: Alita, m: Message):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     rply = await m.reply_text("Sending logs...!")
     await c.send_message(
         m.chat.id,
-        f"#LOGS\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
+        f"#LOGS\n\n**User:** {await mention_markdown(m.from_user.first_name, m.from_user.id)}",
     )
     # Send logs
     await m.reply_document(document=logfile, quote=True)
@@ -33,11 +33,11 @@ async def send_log(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("speedtest", DEV_PREFIX_HANDLER) & dev_filter)
 async def test_speed(c: Alita, m: Message):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     string = _("dev.speedtest")
     await c.send_message(
         MESSAGE_DUMP,
-        f"#SPEEDTEST\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
+        f"#SPEEDTEST\n\n**User:** {await mention_markdown(m.from_user.first_name, m.from_user.id)}",
     )
     sent = await m.reply_text(_("dev.start_speedtest"))
     s = speedtest.Speedtest()
@@ -79,7 +79,7 @@ async def neofetch_stats(c: Client m: Message):
 
 @Alita.on_message(filters.command(["eval", "py"], DEV_PREFIX_HANDLER) & dev_filter)
 async def evaluate_code(c: Alita, m: Message):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     if len(m.text.split()) == 1:
         await m.reply_text(_("dev.execute_cmd_err"))
         return
@@ -141,7 +141,7 @@ async def aexec(code, c, m):
 
 @Alita.on_message(filters.command(["exec", "sh"], DEV_PREFIX_HANDLER) & dev_filter)
 async def execution(c: Client m: Message):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     if len(m.text.split()) == 1:
         await m.reply_text(_("dev.execute_cmd_err"))
         return
@@ -185,11 +185,11 @@ async def execution(c: Client m: Message):
 
 @Alita.on_message(filters.command("ip", DEV_PREFIX_HANDLER) & dev_filter)
 async def public_ip(c: Alita, m: Message):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     ip = AioHttp().get_text("https://api.ipify.org")[0]
     await c.send_message(
         MESSAGE_DUMP,
-        f"#IP\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
+        f"#IP\n\n**User:** {await mention_markdown(m.from_user.first_name, m.from_user.id)}",
     )
     await m.reply_text(_("dev.bot_ip").format(ip=ip))
     return
@@ -200,7 +200,7 @@ async def chats(c: Alita, m: Message):
     exmsg = await m.reply_text("`Exporting Chatlist...`")
     await c.send_message(
         MESSAGE_DUMP,
-        f"#CHATLIST\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
+        f"#CHATLIST\n\n**User:** {await mention_markdown(m.from_user.first_name, m.from_user.id)}",
     )
     all_chats = userdb.get_all_chats() or []
     chatfile = "List of chats.\n\nChat name | Chat ID | Members count\n"
@@ -282,6 +282,6 @@ async def list_all_admins(c: Client m: Message):
 
 @Alita.on_message(filters.command("rediskeys", DEV_PREFIX_HANDLER) & dev_filter)
 async def show_redis_keys(c: Client m: Message):
-    keys = allkeys()
+    keys = await allkeys()
     await m.reply_text(keys)
     return

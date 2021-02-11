@@ -27,7 +27,7 @@ what not to do in your group!
 
 @Alita.on_message(filters.command("rules", PREFIX_HANDLER) & filters.group)
 async def get_rules(c: Alita, m: Message):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     chat_id = m.chat.id
     rules = db.get_rules(chat_id)
@@ -62,7 +62,7 @@ async def set_rules(c: Alita, m: Message):
     if not res:
         return
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     chat_id = m.chat.id
     if m.reply_to_message and m.reply_to_message.text:
@@ -86,7 +86,7 @@ async def clear_rules(c: Alita, m: Message):
     if not res:
         return
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
 
     rules = db.get_rules(m.chat.id)
     if not rules:

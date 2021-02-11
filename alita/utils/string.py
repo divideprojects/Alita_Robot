@@ -6,7 +6,7 @@ from pyrogram.types import InlineKeyboardButton
 BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
 
 
-def replace_text(text):
+async def replace_text(text):
     return text.replace('"', "").replace("\\r", "").replace("\\n", "").replace("\\", "")
 
 
@@ -58,7 +58,7 @@ async def extract_time_str(m, time_val):
     return ""
 
 
-def make_time(time_val):
+async def make_time(time_val):
     if int(time_val) == 0:
         return "0"
     if int(time_val) <= 3600:
@@ -70,7 +70,7 @@ def make_time(time_val):
     return bantime
 
 
-def id_from_reply(m):
+async def id_from_reply(m):
     prev_message = m.reply_to_message
     if not prev_message:
         return None, None
@@ -81,7 +81,7 @@ def id_from_reply(m):
     return user_id, res[1]
 
 
-def parse_button(text):
+async def parse_button(text):
     markdown_note = text
     prev = 0
     note_data = ""
@@ -110,7 +110,7 @@ def parse_button(text):
     return note_data, buttons
 
 
-def build_keyboard(buttons):
+async def build_keyboard(buttons):
     keyb = []
     for btn in buttons:
         if btn[-1] and keyb:
@@ -126,7 +126,7 @@ SMART_CLOSE = "”"
 START_CHAR = ("'", '"', SMART_OPEN)
 
 
-def split_quotes(text: str):
+async def split_quotes(text: str):
     if any(text.startswith(char) for char in START_CHAR):
         counter = 1  # ignore first char -> is some kind of quote
         while counter < len(text):
@@ -150,11 +150,11 @@ def split_quotes(text: str):
     return text.split(None, 1)
 
 
-def extract_text(m):
+async def extract_text(m):
     return m.text or m.caption or (m.sticker.emoji if m.sticker else None)
 
 
-def remove_escapes(text: str) -> str:
+async def remove_escapes(text: str) -> str:
     counter = 0
     res = ""
     is_escaped = False

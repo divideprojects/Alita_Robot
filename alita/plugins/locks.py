@@ -49,7 +49,7 @@ async def lock_perm(c: Alita, m: Message):
     if not res:
         return
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     msg = ""
     media = ""
     stickers = ""
@@ -170,7 +170,7 @@ async def lock_perm(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("locks", PREFIX_HANDLER) & filters.group)
 async def view_locks(c: Alita, m: Message):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     v_perm = ""
     vmsg = ""
     vmedia = ""
@@ -235,7 +235,7 @@ async def unlock_perm(c: Alita, m: Message):
     if not res:
         return
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     umsg = ""
     umedia = ""
     ustickers = ""

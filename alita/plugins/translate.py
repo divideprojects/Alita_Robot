@@ -28,7 +28,7 @@ def get_lang(text):
 
 @Alita.on_message(filters.command("tr", PREFIX_HANDLER))
 async def translate(c: Client m: Message):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     translator = Translator()
     text = m.text[4:]
     lang = get_lang(text)

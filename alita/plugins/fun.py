@@ -25,7 +25,7 @@ __help__ = """
 
 @Alita.on_message(filters.command("shout", PREFIX_HANDLER))
 async def fun_shout(c: Client m: Message):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     if len(m.text.split()) == 1:
         await m.reply_text(_("general.check_help"), reply_to_message_id=m.message_id)
         return
@@ -55,7 +55,7 @@ async def fun_slap(c: Alita, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
 
     curr_user = html.escape(m.from_user.first_name)
-    user_id = extract_user(m)[0]
+    user_id = await extract_user(m)[0]
 
     if user_id == me.id:
         temp = random.choice(fun_strings.SLAP_ALITA_TEMPLATES)

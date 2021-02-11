@@ -19,7 +19,7 @@ __PLUGIN__ = "Botstaff"
 async def botstaff(c: Alita, m: Message):
     try:
         owner = await c.get_users(OWNER_ID)
-        reply = f"<b>🌟 Owner:</b> {mention_html(owner.first_name, OWNER_ID)} (<code>{OWNER_ID}</code>)\n"
+        reply = f"<b>🌟 Owner:</b> {await mention_html(owner.first_name, OWNER_ID)} (<code>{OWNER_ID}</code>)\n"
     except BaseException:
         pass
     true_dev = list(set(DEV_USERS) - {OWNER_ID})
@@ -31,7 +31,7 @@ async def botstaff(c: Alita, m: Message):
             user_id = int(each_user)
             try:
                 user = await c.get_users(user_id)
-                reply += f"• {mention_html(user.first_name, user_id)} (<code>{user_id}</code>)\n"
+                reply += f"• {await mention_html(user.first_name, user_id)} (<code>{user_id}</code>)\n"
             except BaseException:
                 pass
     true_sudo = list(set(SUDO_USERS) - set(DEV_USERS))
@@ -43,7 +43,7 @@ async def botstaff(c: Alita, m: Message):
             user_id = int(each_user)
             try:
                 user = await c.get_users(user_id)
-                reply += f"• {mention_html(user.first_name, user_id)} (<code>{user_id}</code>)\n"
+                reply += f"• {await mention_html(user.first_name, user_id)} (<code>{user_id}</code>)\n"
             except BaseException:
                 pass
     reply += "\n<b>Whitelisted Users 🐺:</b>\n"
@@ -54,7 +54,7 @@ async def botstaff(c: Alita, m: Message):
             user_id = int(each_user)
             try:
                 user = await c.get_users(user_id)
-                reply += f"• {mention_html(user.first_name, user_id)} (<code>{user_id}</code>)\n"
+                reply += f"• {await mention_html(user.first_name, user_id)} (<code>{user_id}</code>)\n"
             except BaseException:
                 pass
     await m.reply_text(reply)

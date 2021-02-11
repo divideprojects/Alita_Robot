@@ -1,7 +1,7 @@
 from pyrogram.types import Message
 
 
-def extract_user(m: Message) -> (int, str):
+async def extract_user(m: Message) -> (int, str):
     user_id = None
     user_first_name = None
 

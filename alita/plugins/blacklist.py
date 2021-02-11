@@ -36,7 +36,7 @@ async def view_blacklist(c: Alita, m: Message):
     if not res:
         return
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     chat_title = m.chat.title
     blacklists_chat = _("blacklist.curr_blacklist_initial").format(
         chat_title=chat_title
@@ -61,7 +61,7 @@ async def add_blacklist(c: Alita, m: Message):
     if not res:
         return
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     if len(m.text.split()) >= 2:
         bl_word = m.text.split(" ", 1)[1]
         db.add_to_blacklist(m.chat.id, bl_word.lower())
@@ -83,7 +83,7 @@ async def rm_blacklist(c: Alita, m: Message):
     if not res:
         return
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     chat_bl = db.get_chat_blacklist(m.chat.id)
     if not isinstance(chat_bl, bool):
         pass
@@ -119,7 +119,7 @@ async def del_blacklist(c: Client m: Message):
                 return
             for trigger in chat_filters:
                 pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
-                match = regex_searcher(pattern, m.text.lower())
+                match = await regex_searcher(pattern, m.text.lower())
                 if not match:
                     continue
                 if match:

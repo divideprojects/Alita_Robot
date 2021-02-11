@@ -50,7 +50,7 @@ def gen_langs_kb():
 
 @Alita.on_callback_query(filters.regex("^chlang$"))
 async def chlang_callback(m: CallbackQuery):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *gen_langs_kb(),
@@ -75,7 +75,7 @@ async def close_btn_callback(m: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^set_lang."))
 async def set_lang_callback(m: CallbackQuery):
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     if m.message.chat.type == "private":
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
@@ -108,7 +108,7 @@ async def set_lang(c: Alita, m: Message):
     if not res:
         return
 
-    _ = GetLang(m).strs
+    _ = await GetLang(m).strs
     keyboard = InlineKeyboardMarkup(inline_keyboard=[*gen_langs_kb()])
     if len(m.text.split()) >= 2:
         await m.reply_text(_("langs.correct_usage"))

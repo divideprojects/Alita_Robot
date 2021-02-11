@@ -85,16 +85,16 @@ async def get_lyrics(c: Client m: Message):
     filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private)
 )
 async def id_info(c: Alita, m: Message):
-    user_id = extract_user(m)[0]
+    user_id = await extract_user(m)[0]
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_m.from_user
             user2 = m.reply_to_m.forward_from
             await m.reply_text(
                 (
-                    f"Original Sender - {mention_html(user2.first_name, user2.id)} "
+                    f"Original Sender - {await mention_html(user2.first_name, user2.id)} "
                     f"(<code>{user2.id}</code>).\n"
-                    f"Forwarder - {mention_html(user1.first_name, user1.id)} "
+                    f"Forwarder - {await mention_html(user1.first_name, user1.id)} "
                     f"(<code>{user1.id}</code>)."
                 ),
                 parse_mode="HTML",
@@ -108,7 +108,7 @@ async def id_info(c: Alita, m: Message):
                 )
 
             await m.reply_text(
-                f"{mention_html(user.first_name, user.id)}'s ID is <code>{user.id}</code>.",
+                f"{await mention_html(user.first_name, user.id)}'s ID is <code>{user.id}</code>.",
                 parse_mode="HTML",
             )
     else:
@@ -193,7 +193,7 @@ async def github(c: Client m: Message):
 )
 async def my_info(c: Alita, m: Message):
     infoMsg = await m.reply_text("<code>Getting user information...</code>")
-    user_id = extract_user(m)[0]
+    user_id = await extract_user(m)[0]
     try:
         user = await c.get_users(user_id)
     except errors.PeerIdInvalid:
@@ -216,7 +216,7 @@ async def my_info(c: Alita, m: Message):
     if user.username:
         text += f"\n<b>Username</b>: @{html.escape(user.username)}"
 
-    text += f"\n<b>Permanent user link:</b> {mention_html('Click Here', user.id)}"
+    text += f"\n<b>Permanent user link:</b> {await mention_html('Click Here', user.id)}"
 
     if user.id == OWNER_ID:
         text += "\n\nThis person is my Owner, I would never do anything against them!"

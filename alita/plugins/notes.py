@@ -73,7 +73,7 @@ async def save_note(c: Alita, m: Message):
     if not res:
         return
 
-    note_name, text, data_type, content = get_note_type(m)
+    note_name, text, data_type, content = await get_note_type(m)
 
     if not note_name:
         await m.reply_text(
@@ -82,7 +82,7 @@ async def save_note(c: Alita, m: Message):
         return
 
     if data_type == Types.TEXT:
-        teks, _ = parse_button(text)
+        teks, _ = await parse_button(text)
         if not teks:
             await m.reply_text(
                 "```" + m.text + "```\n\nError: There is no text in here!"
@@ -107,8 +107,8 @@ async def get_note(c: Client m: Message):
         return
 
     if getnotes["type"] == Types.TEXT:
-        teks, button = parse_button(getnotes.get("value"))
-        button = build_keyboard(button)
+        teks, button = await parse_button(getnotes.get("value"))
+        button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
         if button:
             try:
@@ -131,8 +131,8 @@ async def get_note(c: Client m: Message):
         await GET_FORMAT[getnotes["type"]](m.chat.id, getnotes["file"])
     else:
         if getnotes.get("value"):
-            teks, button = parse_button(getnotes.get("value"))
-            button = build_keyboard(button)
+            teks, button = await parse_button(getnotes.get("value"))
+            button = await build_keyboard(button)
             button = InlineKeyboardMarkup(button) if button else None
         else:
             teks = None
