@@ -31,7 +31,7 @@ async def fun_shout(c: Alita, m: Message):
         return
     text = " ".join(m.text.split(None, 1)[1])
     result = []
-    result.append(" ".join([s for s in text]))
+    result.append(" ".join(list(text)))
     for pos, symbol in enumerate(text[1:]):
         result.append(symbol + " " + "  " * pos + symbol)
     result = list("\n".join(result))

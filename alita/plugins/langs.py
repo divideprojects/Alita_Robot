@@ -24,7 +24,7 @@ for yourself or your group.
 
 
 def gen_langs_kb():
-    langs = [lang for lang in langdict]
+    langs = list(langdict)
     kb = []
     while langs:
         lang = langdict[langs[0]]
