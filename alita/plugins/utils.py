@@ -38,7 +38,7 @@ Some utils provided by bot to make your tasks easy!
 @Alita.on_message(
     filters.command("ping", PREFIX_HANDLER) & (filters.group | filters.private)
 )
-async def ping(m: Message):
+async def ping(c: Client m: Message):
     first = datetime.now()
     sent = await m.reply_text("**Ping...**")
     second = datetime.now()
@@ -51,7 +51,7 @@ async def ping(m: Message):
 @Alita.on_message(
     filters.command("lyrics", PREFIX_HANDLER) & (filters.group | filters.private)
 )
-async def get_lyrics(m: Message):
+async def get_lyrics(c: Client m: Message):
     query = m.text.split()[1]
     song = ""
     if not query:
@@ -126,7 +126,7 @@ async def id_info(c: Alita, m: Message):
 @Alita.on_message(
     filters.command("gifid", PREFIX_HANDLER) & (filters.group | filters.private)
 )
-async def get_gifid(m: Message):
+async def get_gifid(c: Client m: Message):
     if m.reply_to_message and m.reply_to_message.animation:
         await m.reply_text(
             f"Gif ID:\n<code>{m.reply_to_message.animation.file_id}</code>",
@@ -140,7 +140,7 @@ async def get_gifid(m: Message):
 @Alita.on_message(
     filters.command("github", PREFIX_HANDLER) & (filters.group | filters.private)
 )
-async def github(m: Message):
+async def github(c: Client m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(None, 1)[1]
     else:
@@ -255,7 +255,7 @@ weebyfont = "卂 乃 匚 刀 乇 下 厶 卄 工 丁 长 乚 从 𠘨 口 尸 �
 
 
 @Alita.on_message(filters.command("weebify", PREFIX_HANDLER))
-async def weebify(m: Message):
+async def weebify(c: Client m: Message):
     if len(m.text.split()) >= 2:
         args = m.text.split(" ", 1)[1]
     if m.reply_to_message and len(m.text.split()) == 1:

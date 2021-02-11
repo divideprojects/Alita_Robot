@@ -95,7 +95,7 @@ async def save_note(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("get", PREFIX_HANDLER) & filters.group)
-async def get_note(m: Message):
+async def get_note(c: Client m: Message):
     if len(m.text.split()) >= 2:
         note = m.text.split()[1]
     else:
@@ -153,7 +153,7 @@ async def get_note(m: Message):
 
 
 @Alita.on_message(filters.command(["notes", "saved"], PREFIX_HANDLER) & filters.group)
-async def local_notes(m: Message):
+async def local_notes(c: Client m: Message):
     getnotes = db.get_all_notes(m.chat.id)
     if not getnotes:
         await m.reply_text(f"There are no notes in <b>{m.chat.title}</b>.")

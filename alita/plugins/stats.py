@@ -13,7 +13,7 @@ from alita.db import (
 
 
 @Alita.on_message(filters.command("stats", DEV_PREFIX_HANDLER) & dev_filter)
-async def get_stats(m: Message):
+async def get_stats(c: Client m: Message):
     sm = await m.reply_text("**__Fetching Stats...__**")
     rply = (
         f"<b>Users:</b> <code>{userdb.num_users()}</code> in <code>{userdb.num_chats()}</code> chats\n"

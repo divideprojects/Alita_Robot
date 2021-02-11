@@ -127,7 +127,7 @@ async def ungban(c: Alita, m: Message):
 @Alita.on_message(
     filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter
 )
-async def gban_list(m: Message):
+async def gban_list(c: Client m: Message):
     banned_users = db.get_gban_list()
 
     if not banned_users:
