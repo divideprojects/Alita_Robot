@@ -110,7 +110,6 @@ async def del_blacklist(c: Alita, m: Message):
         async for i in m.chat.iter_members(filter="administrators"):
             user_list.append(i.user.id)
         if m.from_user.id in user_list:
-            del user_list  # Reset Admin list, just in case new admins are added!
             return
         if m.text:
             chat_filters = db.get_chat_blacklist(m.chat.id)
