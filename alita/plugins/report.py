@@ -134,7 +134,7 @@ async def report(c: Alita, m: Message):
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
         else:
-            reported = f"{mention_html(m.from_user.first_name, m.from_user.id)} reported {mention_html(reported_user.first_name, reported_user.id)} to the admins!"
+            # reported = f"{mention_html(m.from_user.first_name, m.from_user.id)} reported {mention_html(reported_user.first_name, reported_user.id)} to the admins!"
 
             msg = f'{mention_html(m.from_user.first_name, m.from_user.id)} is calling for admins in "{html.escape(chat_name)}"!'
             link = ""

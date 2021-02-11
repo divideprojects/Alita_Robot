@@ -15,3 +15,7 @@ enabled = true
 
   [analyzers.meta]
   dockerfile_paths = ["Dockerfile"]
+
+[[transformers]]
+name = "black"
+enabled = true

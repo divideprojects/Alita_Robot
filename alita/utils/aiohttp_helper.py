@@ -21,7 +21,7 @@ class AioHttp:
         async with ClientSession() as session:
             async with session.get(link) as resp:
                 return await resp.read(), resp
-                
+
     @staticmethod
     async def post(link):
         async with ClientSession() as session:
