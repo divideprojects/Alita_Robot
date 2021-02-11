@@ -39,6 +39,7 @@ You need to have a *Postgres Database*, and *Redis Cache Database* as well!
 
 First Step!
 - Star **⭐** the repository!!
+
 It really motivates me to continue this project further.
 
 ### Traditional:
