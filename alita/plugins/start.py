@@ -12,7 +12,7 @@ from alita.utils.localization import GetLang
 
 def gen_cmds_kb():
     plugins = sorted(list(HELP_COMMANDS.keys()))
-    cmds = [cmd for cmd in plugins]
+    cmds = list(plugins)
     kb = []
 
     while cmds:
