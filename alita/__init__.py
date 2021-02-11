@@ -25,7 +25,7 @@ logging.basicConfig(
     handlers=[file_handler, stdout_handler],
 )
 
-logging.getLogger("pyrogram").setLevel(logging.DEBUG)
+logging.getLogger("pyrogram").setLevel(logging.WARNING)
 LOGGER = logging.getLogger(__name__)
 
 # if version < 3.6, stop bot.
