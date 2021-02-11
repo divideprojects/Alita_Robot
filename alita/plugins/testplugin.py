@@ -7,7 +7,7 @@ __PLUGIN__ = "Test Plugin"
 
 
 @Alita.on_message(filters.command("test", "/"))
-async def test_bot(m: Message):
+async def test_bot(c: Alita, m: Message):
     start = time()
     replymsg = await m.reply_text("Calculating...")
     end = round(time() - start, 2)
