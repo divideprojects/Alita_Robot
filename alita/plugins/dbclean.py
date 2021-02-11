@@ -93,9 +93,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
             progress_bar = f"{progress}% completed in getting muted chats."
             if progress_message:
                 try:
-                    await m.edit_text(
-                        progress_bar, chat_id
-                    )
+                    await m.edit_text(progress_bar, chat_id)
                 except BaseException:
                     pass
             else:
