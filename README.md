@@ -78,4 +78,4 @@ If successful, bot should send a message to the **MESSAGE_DUMP** Group!
 ### Copyright & License
 
 * Copyright (C) 2020 by [Divkix](https://github.com/Divkix) ❤️️
-* Licensed under the terms of the [GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/Divkix/Alita_Robot/blob/master/LICENSE.md)
+* Licensed under the terms of the [GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/Divkix/Alita_Robot/blob/master/LICENSE)
