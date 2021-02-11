@@ -21,7 +21,7 @@
   "start.add_chat_btn": "Aggiungimi ad un gruppo",
   "start.private": "Ciao! Sono Alita_Robot. Per scoprire di più riguardo alle mie funzioni, clicca uno dei pulsanti qui sotto.",
   "start.group": "Sono vivo: 3",
-  "start.info_page": "• @Alita_Robot\n\nVersione: {version}\n\nDevelopers: [Skuzzy xD](https://github.com/SkuzzyxD)\nOwner: [{Owner}](tg://user?id={ID})",
+  "start.info_page": "• @Alita_Robot\n\nVersione: {version}\n\nDevelopers: [Divkix](https://github.com/Divkix)\nOwner: [{Owner}](tg://user?id={ID})",
   "dev.speedtest": "<b>Speedtest</b>\n\n<b>Host:</b> <code>{host}</code>\n\n<b>Ping:</b> <code>{ping} ms</code>\n<b>Download:</b> <code>{download} Mbps</code>\n<b>Upload:</b> <code>{upload} Mbps</code>",
   "dev.start_speedtest": "Calcolando la mia velocità...",
   "dev.restarting": "<i><b>Mi sto riavviando...</b></i>",

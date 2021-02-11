@@ -1,19 +1,19 @@
 # Alita_Robot
 
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
-[![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Skuzzy_xD/)</br>
+[![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Divkix/)</br>
 
 ![Python Version](https://img.shields.io/badge/python-3.7-green?style=for-the-badge&logo=appveyor)
-![Issues](https://img.shields.io/github/issues/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
-![Forks](https://img.shields.io/github/forks/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
-![Stars](https://img.shields.io/github/stars/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
-![LICENSE](https://img.shields.io/github/license/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
-![Contributors](https://img.shields.io/github/contributors/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
-![Repo Size](https://img.shields.io/github/repo-size/SkuzzyxD/Alita_Robot?style=for-the-badge&logo=appveyor)
+![Issues](https://img.shields.io/github/issues/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
+![Forks](https://img.shields.io/github/forks/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
+![Stars](https://img.shields.io/github/stars/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
+![LICENSE](https://img.shields.io/github/license/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
+![Contributors](https://img.shields.io/github/contributors/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
+![Repo Size](https://img.shields.io/github/repo-size/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194)](https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&utm_medium=referral&utm_content=Divkix/Alita_Robot&utm_campaign=Badge_Grade_Settings)</br>
 
 [![Crowdin](https://badges.crowdin.net/alita_robot/localized.svg)](https://crowdin.com/project/alita_robot)</br>
-![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/SkuzzyxD/Alita_Robot&title=Profile%20Views)</br>
+![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Divkix/Alita_Robot&title=Profile%20Views)</br>
 
 
 Alita is a Telegram Group managment bot made using **[Pyrogram](https://docs.pyrogram.org) _async version_** and **[Python](https://python.org)**, which makes it modern and faster than most of the Telegram chat managers.
@@ -43,7 +43,7 @@ First Step!
 ### Traditional:
 - Install Python v3.7 or later from [Python's Website](https://python.org)
 - Install virtualenv using `python3 -m pip -U install virtualenv`.
-- **Fork** or Clone the project using `git clone https://github.com/SkuzzyxD/Alita_Robot.git`
+- **Fork** or Clone the project using `git clone https://github.com/Divkix/Alita_Robot.git`
 - Install the requirements using `python3 -m pip install -r requirements.txt`
 - Rename `sample_config.py` to `config.py` in `alita` folder and fill in all the variables in *Development* class, not *Config* class. **Sudo, Dev, Whitelist** users are optional!!
 - Run the bot using `python3 -m alita`
