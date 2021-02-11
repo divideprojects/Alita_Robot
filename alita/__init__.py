@@ -36,7 +36,7 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
             "Multiple features depend on this. Bot quitting."
         )
     )
-    quit(1)  # Quit the Script
+    sys.exit(1)  # Quit the Script
 
 # the secret configuration specific things
 try:
