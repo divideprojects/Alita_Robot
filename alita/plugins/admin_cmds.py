@@ -75,10 +75,10 @@ async def adminlist_show(c: Alita, m: Message):
             except errors.PeerIdInvalid:
                 pass
             if i == me_id:
-                adminstr += f"- {await mention_html(usr.first_name, i)} (Me)\n"
+                adminstr += f"- {mention_html(usr.first_name, i)} (Me)\n"
             else:
                 usr = await c.get_users(i)
-                adminstr += f"- {await mention_html(usr.first_name, i)} (`{i}`)\n"
+                adminstr += f"- {mention_html(usr.first_name, i)} (`{i}`)\n"
         await m.reply_text(adminstr)
     except Exception as ef:
 
@@ -134,7 +134,7 @@ async def kick_usr(c: Alita, m: Message):
         user_id, user_first_name = await extract_user(m)
         try:
             await c.kick_chat_member(m.chat.id, user_id, int(time.time() + 45))
-            await m.reply_text(f"Banned {await mention_html(user_first_name, user_id)}")
+            await m.reply_text(f"Banned {mention_html(user_first_name, user_id)}")
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -159,7 +159,7 @@ async def ban_usr(c: Alita, m: Message):
         user_id, user_first_name = await extract_user(m)
         try:
             await c.kick_chat_member(m.chat.id, user_id)
-            await m.reply_text(f"Banned {await mention_html(user_first_name, user_id)}")
+            await m.reply_text(f"Banned {mention_html(user_first_name, user_id)}")
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -184,9 +184,7 @@ async def unban_usr(c: Alita, m: Message):
         user_id, user_first_name = await extract_user(m)
         try:
             await c.unban_chat_member(m.chat.id, user_id)
-            await m.reply_text(
-                f"Unbanned {await mention_html(user_first_name, user_id)}"
-            )
+            await m.reply_text(f"Unbanned {mention_html(user_first_name, user_id)}")
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -211,9 +209,7 @@ async def mute_usr(c: Alita, m: Message):
         user_id, user_first_name = await extract_user(m)
         try:
             await m.chat.restrict_member(user_id, mute_permission)
-            await m.reply_text(
-                f"<b>Muted</b> {await mention_html(user_first_name,user_id)}"
-            )
+            await m.reply_text(f"<b>Muted</b> {mention_html(user_first_name,user_id)}")
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -242,7 +238,7 @@ async def unmute_usr(c: Alita, m: Message):
         try:
             await m.chat.restrict_member(user_id, unmute_permissions)
             await m.reply_text(
-                f"<b>Unmuted</b> {await mention_html(user_first_name,user_id)}"
+                f"<b>Unmuted</b> {mention_html(user_first_name,user_id)}"
             )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))

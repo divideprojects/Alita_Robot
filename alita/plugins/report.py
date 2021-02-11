@@ -99,12 +99,12 @@ async def report(c: Alita, m: Message):
 
         if m.chat.username and m.chat.type == "supergroup":
 
-            # reported = f"{await mention_html(m.from_user.first_name, m.from_user.id)} reported {await mention_html(reported_user.first_name, reported_user.id)} to the admins!"
+            # reported = f"{mention_html(m.from_user.first_name, m.from_user.id)} reported {mention_html(reported_user.first_name, reported_user.id)} to the admins!"
 
             msg = (
                 f"<b>⚠️ Report: </b>{html.escape(m.chat.title)}\n"
-                f"<b> • Report by:</b> {await mention_html(m.from_user.first_name, m.from_user.id)}(<code>{m.from_user.id}</code>)\n"
-                f"<b> • Reported user:</b> {await mention_html(reported_user.first_name, reported_user.id)} (<code>{reported_user.id}</code>)\n"
+                f"<b> • Report by:</b> {mention_html(m.from_user.first_name, m.from_user.id)}(<code>{m.from_user.id}</code>)\n"
+                f"<b> • Reported user:</b> {mention_html(reported_user.first_name, reported_user.id)} (<code>{reported_user.id}</code>)\n"
             )
             link = f'<b> • Reported message:</b> <a href="https://t.me/{m.chat.username}/{m.reply_to_message.message_id}">click here</a>'
             should_forward = False
@@ -134,9 +134,9 @@ async def report(c: Alita, m: Message):
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
         else:
-            # reported = f"{await mention_html(m.from_user.first_name, m.from_user.id)} reported {await mention_html(reported_user.first_name, reported_user.id)} to the admins!"
+            # reported = f"{mention_html(m.from_user.first_name, m.from_user.id)} reported {mention_html(reported_user.first_name, reported_user.id)} to the admins!"
 
-            msg = f'{await mention_html(m.from_user.first_name, m.from_user.id)} is calling for admins in "{html.escape(chat_name)}"!'
+            msg = f'{mention_html(m.from_user.first_name, m.from_user.id)} is calling for admins in "{html.escape(chat_name)}"!'
             link = ""
             should_forward = True
 
@@ -186,7 +186,7 @@ async def report(c: Alita, m: Message):
                     LOGGER.exception("Exception while reporting user")
 
         await m.reply_to_message.reply_text(
-            f"{await mention_html(m.from_user.first_name, m.from_user.id)} reported the message to the admins."
+            f"{mention_html(m.from_user.first_name, m.from_user.id)} reported the message to the admins."
         )
         return
     return

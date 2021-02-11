@@ -55,12 +55,12 @@ async def approve_user(c: Alita, m: Message):
         return
     if db.is_approved(chat_id, user_id):
         await m.reply_text(
-            f"{await mention_html(user_first_name, user_id)} is already approved in {chat_title}"
+            f"{mention_html(user_first_name, user_id)} is already approved in {chat_title}"
         )
         return
     db.approve(chat_id, user_id)
     await m.reply_text(
-        f"{await mention_html(user_first_name, user_id)} has been approved in {chat_title}! They will now be ignored by blocklists."
+        f"{mention_html(user_first_name, user_id)} has been approved in {chat_title}! They will now be ignored by blocklists."
     )
     return
 
@@ -97,12 +97,12 @@ async def disapprove_user(c: Alita, m: Message):
         return
     if not db.is_approved(chat_id, user_id):
         await m.reply_text(
-            f"{await mention_html(user_first_name, user_id)} isn't approved yet!"
+            f"{mention_html(user_first_name, user_id)} isn't approved yet!"
         )
         return
     db.disapprove(chat_id, user_id)
     await m.reply_text(
-        f"{await mention_html(user_first_name, user_id)} is no longer approved in {chat_title}."
+        f"{mention_html(user_first_name, user_id)} is no longer approved in {chat_title}."
     )
     return
 
@@ -126,7 +126,7 @@ async def check_approved(c: Alita, m: Message):
         except errors.UserNotParticipant:
             db.disapprove(chat.id, user_id)
             continue
-        msg += f"- `{i.user_id}`: {await mention_html(member.user['first_name'], int(i.user_id))}\n"
+        msg += f"- `{i.user_id}`: {mention_html(member.user['first_name'], int(i.user_id))}\n"
     if msg.endswith("approved:\n"):
         await m.reply_text(f"No users are approved in {chat_title}.")
         return
@@ -149,11 +149,11 @@ async def check_approval(c: Alita, m: Message):
         return
     if db.is_approved(m.chat.id, user_id):
         await m.reply_text(
-            f"{await mention_html(user_first_name, user_id)} is an approved user. Locks, antiflood, and blocklists won't apply to them."
+            f"{mention_html(user_first_name, user_id)} is an approved user. Locks, antiflood, and blocklists won't apply to them."
         )
     else:
         await m.reply_text(
-            f"{await mention_html(user_first_name, user_id)} is not an approved user. They are affected by normal commands."
+            f"{mention_html(user_first_name, user_id)} is not an approved user. They are affected by normal commands."
         )
     return
 
