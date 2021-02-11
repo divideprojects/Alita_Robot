@@ -57,7 +57,7 @@ class Alita(Client):
         try:
             flushredis()
         except Exception as ef:
-            LOGGER.error(ef
+            LOGGER.error(ef)
 
         all_chats = userdb.get_all_chats() or []  # Get list of all chats
         LOGGER.info(f"{len(all_chats)} chats loaded.")
