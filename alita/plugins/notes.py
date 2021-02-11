@@ -220,6 +220,6 @@ async def clear_allnote(c: Alita, m: Message):
 async def clearallnotes_callback(c: Alita, q: CallbackQuery):
     await q.message.edit_text("Clearing all notes...!")
     db.rm_all_note(q.message.chat.id)
-    await q.message.edit_text(f"Cleared all notes!")
+    await q.message.edit_text("Cleared all notes!")
     await q.answer()
     return

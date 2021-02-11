@@ -206,7 +206,7 @@ async def report_buttons(c: Alita, q: CallbackQuery):
     elif splitter[1] == "banned":
         try:
             await c.kick_chat_member(splitter[0], splitter[2])
-            await q.answer(f"✅ Succesfully Banned")
+            await q.answer("✅ Succesfully Banned")
             return
         except Exception as err:
             await q.answer(f"🛑 Failed to Ban\n<b>Error:</b>\n`{err}`", show_alert=True)

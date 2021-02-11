@@ -30,7 +30,7 @@ async def gban(c: Alita, m: Message):
         gban_reason = m.text.split(None, 2)[2]
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text(f"This user is part of Skuzzers!, Can't ban our own!")
+        await m.reply_text("This user is part of Skuzzers!, Can't ban our own!")
         return
 
     if user_id == me.id:
