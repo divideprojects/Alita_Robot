@@ -76,7 +76,7 @@ def get_lang(chat_id, chat_type):
                     lang = exist.lang_code
                 else:
                     exist = UserLang(chat_id, default_lang)
-                    lang = deafult_lang
+                    lang = default_lang
             finally:
                 SESSION.close()
         elif chat_type in group_types:
@@ -86,7 +86,7 @@ def get_lang(chat_id, chat_type):
                     lang = exist.lang_code
                 else:
                     exist = GroupLang(str(chat_id), default_lang)
-                    lang = deafult_lang
+                    lang = default_lang
             finally:
                 SESSION.close()
     return lang
