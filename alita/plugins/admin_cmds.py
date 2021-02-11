@@ -64,7 +64,7 @@ unmute_permissions = ChatPermissions(
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
 async def adminlist_show(c: Alita, m: Message):
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
     try:
         me_id = int(get_key("BOT_ID"))  # Get Bot ID from Redis!
         adminlist = get_key("ADMINDICT")[str(m.chat.id)]  # Load ADMINDICT from string
@@ -96,7 +96,7 @@ async def adminlist_show(c: Alita, m: Message):
 @Alita.on_message(filters.command("admincache", PREFIX_HANDLER) & filters.group)
 async def reload_admins(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -122,7 +122,7 @@ async def reload_admins(c: Alita, m: Message):
 @Alita.on_message(filters.command("kick", PREFIX_HANDLER) & filters.group)
 async def kick_usr(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -147,7 +147,7 @@ async def kick_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("ban", PREFIX_HANDLER) & filters.group)
 async def ban_usr(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -172,7 +172,7 @@ async def ban_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("unban", PREFIX_HANDLER) & filters.group)
 async def unban_usr(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -197,7 +197,7 @@ async def unban_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("mute", PREFIX_HANDLER) & filters.group)
 async def mute_usr(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -225,7 +225,7 @@ async def mute_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("unmute", PREFIX_HANDLER) & filters.group)
 async def unmute_usr(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -254,7 +254,7 @@ async def unmute_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("promote", PREFIX_HANDLER) & filters.group)
 async def promote_usr(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -308,7 +308,7 @@ async def promote_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("demote", PREFIX_HANDLER) & filters.group)
 async def demote_usr(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -362,7 +362,7 @@ async def demote_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("invitelink", PREFIX_HANDLER) & filters.group)
 async def get_invitelink(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -395,7 +395,7 @@ async def get_invitelink(c: Alita, m: Message):
 @Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group)
 async def pin_message(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:
@@ -431,7 +431,7 @@ async def pin_message(c: Alita, m: Message):
 @Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & filters.group)
 async def unpin_message(c: Alita, m: Message):
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
 
     res = await admin_check(c, m)
     if not res:

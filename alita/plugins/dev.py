@@ -19,7 +19,7 @@ from alita.db import users_db as userdb
 
 @Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
 async def send_log(c: Alita, m: Message):
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
     rply = await m.reply_text("Sending logs...!")
     await c.send_message(
         m.chat.id,
@@ -33,7 +33,7 @@ async def send_log(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("speedtest", DEV_PREFIX_HANDLER) & dev_filter)
 async def test_speed(c: Alita, m: Message):
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
     string = _("dev.speedtest")
     await c.send_message(
         MESSAGE_DUMP,
@@ -79,7 +79,7 @@ async def neofetch_stats(c: Alita, m: Message):
 
 @Alita.on_message(filters.command(["eval", "py"], DEV_PREFIX_HANDLER) & dev_filter)
 async def evaluate_code(c: Alita, m: Message):
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
     if len(m.text.split()) == 1:
         await m.reply_text(_("dev.execute_cmd_err"))
         return
@@ -141,7 +141,7 @@ async def aexec(code, c, m):
 
 @Alita.on_message(filters.command(["exec", "sh"], DEV_PREFIX_HANDLER) & dev_filter)
 async def execution(c: Alita, m: Message):
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
     if len(m.text.split()) == 1:
         await m.reply_text(_("dev.execute_cmd_err"))
         return
@@ -185,7 +185,7 @@ async def execution(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("ip", DEV_PREFIX_HANDLER) & dev_filter)
 async def public_ip(c: Alita, m: Message):
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
     ip = AioHttp().get_text("https://api.ipify.org")[0]
     await c.send_message(
         MESSAGE_DUMP,

@@ -25,7 +25,7 @@ async def purge(c: Alita, m: Message):
     if not res:
         return
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
     if m.chat.type != "supergroup":
         await m.reply_text(_("purge.err_basic"))
         return
@@ -69,7 +69,7 @@ async def del_msg(c: Alita, m: Message):
     if not res:
         return
 
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
     if m.reply_to_message:
         if m.chat.type != "supergroup":
             return

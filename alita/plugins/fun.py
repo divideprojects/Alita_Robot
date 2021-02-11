@@ -25,7 +25,7 @@ __help__ = """
 
 @Alita.on_message(filters.command("shout", PREFIX_HANDLER))
 async def fun_shout(c: Alita, m: Message):
-    _ = await GetLang(m).strs
+    _ = GetLang(m).strs
     if len(m.text.split()) == 1:
         await m.reply_text(_("general.check_help"), reply_to_message_id=m.message_id)
         return
