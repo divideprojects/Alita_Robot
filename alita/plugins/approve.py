@@ -48,7 +48,7 @@ async def approve_user(c: Alita, m: Message):
         return
     if member.status in ["administrator", "creator"]:
         await m.reply_text(
-            f"User is already admin - blocklists already don't apply to them."
+            "User is already admin - blocklists already don't apply to them."
         )
         return
     if db.is_approved(chat_id, user_id):

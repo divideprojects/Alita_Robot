@@ -163,7 +163,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                     [
                         InlineKeyboardButton(
                             "Remove Invalid Chats",
-                            callback_data=f"db_clean_inavlid_chats",
+                            callback_data="db_clean_inavlid_chats",
                         )
                     ]
                 ]
@@ -189,7 +189,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                     [
                         InlineKeyboardButton(
                             "Leave Muted Chats",
-                            callback_data=f"db_clean_muted_chats",
+                            callback_data="db_clean_muted_chats",
                         )
                     ]
                 ]
@@ -214,7 +214,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                     [
                         InlineKeyboardButton(
                             "Remove Invalid Gbans",
-                            callback_data=f"db_clean_invalid_gbans",
+                            callback_data="db_clean_invalid_gbans",
                         )
                     ]
                 ]
