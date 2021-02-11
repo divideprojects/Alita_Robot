@@ -108,7 +108,7 @@ async def clear_rules(c: Alita, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^clear.rules$"))
-async def clearrules_callback(c: Alita, q: CallbackQuery):
+async def clearrules_callback(q: CallbackQuery):
     _ = GetLang(q.message).strs
     db.clear_rules(q.message.chat.id)
     await q.message.reply_text(_("rules.clear"))

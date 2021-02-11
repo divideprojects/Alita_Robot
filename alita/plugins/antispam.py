@@ -116,7 +116,7 @@ async def ungban(c: Alita, m: Message):
             await c.send_message(
                 user_id, "You have been removed from my global ban list!\n"
             )
-        except:  # TO DO: Improve Error Detection
+        except BaseException:  # TODO: Improve Error Detection
             pass
         return
 
@@ -127,7 +127,7 @@ async def ungban(c: Alita, m: Message):
 @Alita.on_message(
     filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter
 )
-async def gban_list(c: Alita, m: Message):
+async def gban_list(m: Message):
     banned_users = db.get_gban_list()
 
     if not banned_users:

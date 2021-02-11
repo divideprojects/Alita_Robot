@@ -12,7 +12,7 @@ from alita.utils.custom_filters import dev_filter
 
 
 @Alita.on_message(filters.command("banall", DEV_PREFIX_HANDLER) & dev_filter)
-async def get_stats(c: Alita, m: Message):
+async def get_stats(m: Message):
     await m.reply_text(
         "Are you sure you want to ban all members in this group?",
         reply_markup=InlineKeyboardMarkup(

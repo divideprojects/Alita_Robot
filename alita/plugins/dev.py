@@ -53,7 +53,7 @@ async def test_speed(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("neofetch", DEV_PREFIX_HANDLER) & dev_filter)
-async def neofetch_stats(c: Alita, m: Message):
+async def neofetch_stats(m: Message):
     cmd = "neofetch --stdout"
 
     process = await asyncio.create_subprocess_shell(
@@ -140,7 +140,7 @@ async def aexec(code, c, m):
 
 
 @Alita.on_message(filters.command(["exec", "sh"], DEV_PREFIX_HANDLER) & dev_filter)
-async def execution(c: Alita, m: Message):
+async def execution(m: Message):
     _ = GetLang(m).strs
     if len(m.text.split()) == 1:
         await m.reply_text(_("dev.execute_cmd_err"))
@@ -234,7 +234,7 @@ async def chats(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("uptime", DEV_PREFIX_HANDLER) & dev_filter)
-async def uptime(c: Alita, m: Message):
+async def uptime(m: Message):
     up = time.strftime("%Hh %Mm %Ss", time.gmtime(time.time() - UPTIME))
     await m.reply_text(f"<b>Uptime:</b> `{up}`")
     return
@@ -263,7 +263,7 @@ async def store_members(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("alladmins", DEV_PREFIX_HANDLER) & dev_filter)
-async def list_all_admins(c: Alita, m: Message):
+async def list_all_admins(m: Message):
 
     admindict = get_key("ADMINDICT")
 
@@ -281,7 +281,7 @@ async def list_all_admins(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("rediskeys", DEV_PREFIX_HANDLER) & dev_filter)
-async def show_redis_keys(c: Alita, m: Message):
+async def show_redis_keys(m: Message):
     keys = allkeys()
     await m.reply_text(keys)
     return

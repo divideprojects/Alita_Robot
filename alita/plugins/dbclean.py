@@ -93,8 +93,8 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
             progress_bar = f"{progress}% completed in getting muted chats."
             if progress_message:
                 try:
-                    bot.editMessageText(
-                        progress_bar, chat_id, progress_message.message_id
+                    await m.edit_text(
+                        progress_bar, chat_id
                     )
                 except BaseException:
                     pass
@@ -131,7 +131,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
 
 
 @Alita.on_message(filters.command("dbclean", DEV_PREFIX_HANDLER) & dev_filter)
-async def dbcleanxyz(c: Alita, m: Message):
+async def dbcleanxyz(m: Message):
     buttons = [
         [InlineKeyboardButton("Invalid Chats", callback_data="dbclean_invalidchats")]
     ]
