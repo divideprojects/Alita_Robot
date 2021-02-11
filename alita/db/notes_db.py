@@ -14,7 +14,7 @@ class Notes(BASE):
     file = Column(UnicodeText)
 
     def __init__(self, chat_id, name, value, msgtype, file):
-        """initializing db"""
+        """Initializing db"""
         self.chat_id = chat_id
         self.name = name
         self.value = value

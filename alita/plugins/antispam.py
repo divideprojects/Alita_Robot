@@ -171,7 +171,6 @@ async def gban_watcher(c: Alita, m: Message):
                 LOGGER.info(
                     f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})"
                 )
-                pass
             except Exception as excp:
                 await c.send_message(
                     MESSAGE_DUMP,

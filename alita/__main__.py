@@ -97,7 +97,7 @@ class Alita(Client):
 
         me = await self.get_me()  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
-        
+
         await self.send_message(MESSAGE_DUMP, "Starting Bot...")
 
         """Redis Content Setup!"""
@@ -129,7 +129,6 @@ class Alita(Client):
 
     async def stop(self, *args):
         """Send a message to MESSAGE_DUMP telling that the bot has stopped!"""
-
         LOGGER.info("Uploading logs before stopping...!")
         # Send Logs to MESSAGE-DUMP
         await self.send_document(

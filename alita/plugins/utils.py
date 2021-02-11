@@ -133,6 +133,7 @@ async def get_gifid(c: Alita, m: Message):
         await m.reply_text("Please reply to a gif to get its ID.")
     return
 
+
 @Alita.on_message(
     filters.command("github", PREFIX_HANDLER) & (filters.group | filters.private)
 )
@@ -182,7 +183,6 @@ async def github(c: Alita, m: Message):
 
                 await m.reply_text(REPLY, parse_mode="md")
     return
-
 
 
 @Alita.on_message(

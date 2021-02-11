@@ -53,7 +53,6 @@ async def start(c: Alita, m: Message):
     if m.chat.type == "private":
         if errors.UserIsBlocked:
             LOGGER.warning(f"Bot blocked by {m.from_user.id}")
-            pass
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 [

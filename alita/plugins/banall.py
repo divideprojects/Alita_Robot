@@ -40,7 +40,6 @@ async def banallnotes_callback(c: Alita, q: CallbackQuery):
             users.append(x.user.id)
         except:
             fs += 1
-            pass
 
     rply = f"Users Banned:\n{users}"
 

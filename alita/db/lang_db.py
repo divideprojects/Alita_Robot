@@ -63,6 +63,7 @@ def set_lang(chat_id, chat_type, lang_code):
                 SESSION.commit()
             finally:
                 SESSION.close()
+    return
 
 
 def get_lang(chat_id, chat_type):
@@ -73,9 +74,9 @@ def get_lang(chat_id, chat_type):
                 exist = SESSION.query(UserLang).get(chat_id)
                 if exist:
                     lang = exist.lang_code
-                    return lang
-                exist = UserLang(chat_id, default_lang)
-                return default_lang
+                else:
+                    exist = UserLang(chat_id, default_lang)
+                    lang = deafult_lang
             finally:
                 SESSION.close()
         elif chat_type in group_types:
@@ -83,11 +84,12 @@ def get_lang(chat_id, chat_type):
                 exist = SESSION.query(GroupLang).get(str(chat_id))
                 if exist:
                     lang = exist.lang_code
-                    return lang
-                exist = GroupLang(str(chat_id), default_lang)
-                return default_lang
+                else:
+                    exist = GroupLang(str(chat_id), default_lang)
+                    lang = deafult_lang
             finally:
                 SESSION.close()
+    return lang
 
 
 def migrate_chat(old_chat_id, new_chat_id):
@@ -98,3 +100,4 @@ def migrate_chat(old_chat_id, new_chat_id):
             SESSION.merge(chat)
         SESSION.commit()
         SESSION.close()
+    return
