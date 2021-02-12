@@ -55,7 +55,7 @@ class Alita(Client):
 
         # Flush Redis data
         try:
-            await flushredis()
+            flushredis()
         except Exception as ef:
             LOGGER.error(ef)
 
@@ -106,7 +106,7 @@ class Alita(Client):
             f"Pyrogram v{__version__}\n(Layer - {layer}) started on @{me.username}"
         )
         LOGGER.info(load_cmds(ALL_PLUGINS))
-        LOGGER.info(f"Redis Keys Loaded: {await allkeys()}")
+        LOGGER.info(f"Redis Keys Loaded: {allkeys()}")
 
         # Send a message to MESSAGE_DUMP telling that the bot has started and has loaded all plugins!
         await self.send_message(
@@ -116,7 +116,7 @@ class Alita(Client):
                 "<b>Loaded Plugins:</b>\n"
                 f"<i>{list(HELP_COMMANDS.keys())}</i>\n"
                 "<b>Redis Keys Loaded:</b>\n"
-                f"<i>{await allkeys()}</i>"
+                f"<i>{allkeys()}</i>"
             ),
         )
 
@@ -138,7 +138,7 @@ class Alita(Client):
         await super().stop()
         # Flush Redis data
         try:
-            await flushredis()
+            flushredis()
             LOGGER.info("Flushed Redis!")
         except Exception as ef:
             LOGGER.error(ef)

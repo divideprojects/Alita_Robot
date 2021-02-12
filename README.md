@@ -64,7 +64,6 @@ If successful, bot should send message to the **MESSAGE_DUMP** Group!
 - [ ] Add warnings
 - [ ] Add connections
 - [x] Fix Docker Configuration
-- [ ] Fix existing errors, deepsource and codacy
 
 ## Contributing to the project
 

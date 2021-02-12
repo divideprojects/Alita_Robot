@@ -282,6 +282,6 @@ async def list_all_admins(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("rediskeys", DEV_PREFIX_HANDLER) & dev_filter)
 async def show_redis_keys(c: Alita, m: Message):
-    keys = await allkeys()
+    keys = allkeys()
     await m.reply_text(keys)
     return
