@@ -1,11 +1,10 @@
-from sys import stdout, stderr
 from traceback import format_exc
 from io import BytesIO, StringIO
 from time import strftime, gmtime, time
 from speedtest import Speedtest
+from asyncio import subprocess, create_subprocess_shell
 from pyrogram import filters, errors
 from pyrogram.types import Message
-from asyncio import subprocess, create_subprocess_shell
 from alita import LOGGER, MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME, logfile
 from alita.bot_class import Alita
 from alita.db import users_db as userdb
@@ -89,8 +88,6 @@ async def evaluate_code(c: Alita, m: Message):
     if m.reply_to_message:
         reply_to_id = m.reply_to_message.message_id
 
-    old_stderr = stderr
-    old_stdout = stdout
     redirected_output = stdout = StringIO()
     redirected_error = stderr = StringIO()
     stdout, stderr, exc = None, None, None

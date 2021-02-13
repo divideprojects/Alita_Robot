@@ -9,7 +9,7 @@ from logging import (
     StreamHandler,
     basicConfig,
     INFO,
-    WARNING,
+    # WARNING,
     getLogger,
     DEBUG,
 )
@@ -53,12 +53,13 @@ try:
         from alita.config import Development as Config
 except Exception as ef:
     LOGGER.error(ef)  # Print Error
+    sysexit(1)
 
 # Redis Cache
 REDIS_HOST = Config.REDIS_HOST
 REDIS_PORT = Config.REDIS_PORT
 REDIS_PASS = Config.REDIS_PASS
-redisClient = Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASS)
+redis_client = Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASS)
 
 # Account Related
 TOKEN = Config.TOKEN

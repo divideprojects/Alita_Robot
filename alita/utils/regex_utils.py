@@ -8,6 +8,7 @@ async def regex_searcher(regex_string, string):
         return False
     except BaseException:
         return False
+
     return re_search
 
 
@@ -17,8 +18,11 @@ async def infinite_loop_check(regex_string):
         r"[\(\[].{1,}\{\d(,)?\}[\)\]]\{\d(,)?\}"
         r"\(.{1,}\)\{.{1,}(,)?\}\(.*\)(\+|\* |\{.*\})"
     )
+
     for match in loop_matches:
         match_1 = search(match, regex_string)
+
     if match_1:
         return True
+
     return False
