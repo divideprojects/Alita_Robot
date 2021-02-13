@@ -5,7 +5,6 @@
 ![Stars](https://img.shields.io/github/stars/Divkix/Alita_Robot)
 ![LICENSE](https://img.shields.io/github/license/Divkix/Alita_Robot)
 ![Repo Size](https://img.shields.io/github/repo-size/Divkix/Alita_Robot)
-[![Build Status](https://travis-ci.com/Divkix/Alita_Robot.svg?branch=main)](https://travis-ci.com/Divkix/Alita_Robot)
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/Divkix/Alita_Robot/?ref=repository-badge)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194)](https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&utm_medium=referral&utm_content=Divkix/Alita_Robot&utm_campaign=Badge_Grade_Settings)
