@@ -74,7 +74,8 @@ async def chlang_callback(c: Alita, m: CallbackQuery):
             *(await gen_langs_kb()),
             [
                 InlineKeyboardButton(
-                    "« " + _("general.back_btn"), callback_data="start_back",
+                    "« " + _("general.back_btn"),
+                    callback_data="start_back",
                 ),
             ],
         ],
@@ -99,7 +100,8 @@ async def set_lang_callback(c: Alita, m: CallbackQuery):
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        "« " + _("general.back_btn"), callback_data="start_back",
+                        "« " + _("general.back_btn"),
+                        callback_data="start_back",
                     ),
                 ],
             ],

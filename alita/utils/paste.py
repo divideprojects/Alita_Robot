@@ -5,7 +5,8 @@ async def paste(content: str):
     NEKOBIN_URL = "https://nekobin.com/"
     async with ClientSession() as ses:
         async with ses.post(
-            NEKOBIN_URL + "api/documents", json={"content": content},
+            NEKOBIN_URL + "api/documents",
+            json={"content": content},
         ) as resp:
             if resp.status == 201:
                 response = await resp.json()

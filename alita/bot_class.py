@@ -90,7 +90,8 @@ class Alita(Client):
             adminlist = []
             try:
                 async for j in self.iter_chat_members(
-                    chat_id=chat_id, filter="administrators",
+                    chat_id=chat_id,
+                    filter="administrators",
                 ):
                     adminlist.append(j.user.id)
 

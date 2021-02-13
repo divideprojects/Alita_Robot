@@ -165,7 +165,9 @@ async def get_note(c: Alita, m: Message):
                 return
         else:
             await GET_FORMAT[getnotes["type"]](
-                m.chat.id, getnotes["file"], caption=teks,
+                m.chat.id,
+                getnotes["file"],
+                caption=teks,
             )
     return
 

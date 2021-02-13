@@ -132,7 +132,8 @@ async def ungban(c: Alita, m: Message):
         try:
             # Send message to user telling that he's ungbanned
             await c.send_message(
-                user_id, "You have been removed from my global ban list!\n",
+                user_id,
+                "You have been removed from my global ban list!\n",
             )
         except BaseException:  # TODO: Improve Error Detection
             pass

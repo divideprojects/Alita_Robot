@@ -77,7 +77,9 @@ except Exception as ef:
 
 # Redis Cache
 redis_client = Redis(
-    host=Config.REDIS_HOST, port=Config.REDIS_PORT, password=Config.REDIS_PASS,
+    host=Config.REDIS_HOST,
+    port=Config.REDIS_PORT,
+    password=Config.REDIS_PASS,
 )
 
 # Account Related
@@ -115,6 +117,7 @@ UPTIME = time()  # Check bot uptime
 BOT_USERNAME = ""
 BOT_NAME = ""
 BOT_ID = 0
+
 
 async def get_self(c):
     global BOT_USERNAME, BOT_NAME, BOT_ID

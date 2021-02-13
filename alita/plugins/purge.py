@@ -92,7 +92,8 @@ async def del_msg(c: Alita, m: Message):
         if m.chat.type != "supergroup":
             return
         await c.delete_messages(
-            chat_id=m.chat.id, message_ids=m.reply_to_message.message_id,
+            chat_id=m.chat.id,
+            message_ids=m.reply_to_message.message_id,
         )
         await sleep(0.5)
         await m.delete()

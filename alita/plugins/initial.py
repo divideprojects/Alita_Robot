@@ -46,7 +46,10 @@ async def initial_works(c: Alita, m: Message):
                 return
         else:
             userdb.update_user(
-                m.from_user.id, m.from_user.username, m.chat.id, m.chat.title,
+                m.from_user.id,
+                m.from_user.username,
+                m.chat.id,
+                m.chat.title,
             )
             if m.reply_to_message:
                 userdb.update_user(

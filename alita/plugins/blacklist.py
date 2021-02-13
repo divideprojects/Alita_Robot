@@ -115,7 +115,8 @@ async def rm_blacklist(c: Alita, m: Message):
             await m.reply_text(_("blacklist.no_bl_found").format(bl_word=bl_word))
         else:
             await m.reply_text(
-                _("general.check_help"), reply_to_message_id=m.message_id,
+                _("general.check_help"),
+                reply_to_message_id=m.message_id,
             )
     return
 

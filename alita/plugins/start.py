@@ -38,7 +38,8 @@ async def gen_cmds_kb():
             cmd = cmds[0]
             a = [
                 InlineKeyboardButton(
-                    f"{cmd.capitalize()}", callback_data=f"get_mod.{cmd.lower()}",
+                    f"{cmd.capitalize()}",
+                    callback_data=f"get_mod.{cmd.lower()}",
                 ),
             ]
             cmds.pop(0)
@@ -46,7 +47,8 @@ async def gen_cmds_kb():
             cmd = cmds[0]
             a.append(
                 InlineKeyboardButton(
-                    f"{cmd.capitalize()}", callback_data=f"get_mod.{cmd.lower()}",
+                    f"{cmd.capitalize()}",
+                    callback_data=f"get_mod.{cmd.lower()}",
                 ),
             )
             cmds.pop(0)
@@ -54,7 +56,8 @@ async def gen_cmds_kb():
             cmd = cmds[0]
             a.append(
                 InlineKeyboardButton(
-                    f"{cmd.capitalize()}", callback_data=f"get_mod.{cmd.lower()}",
+                    f"{cmd.capitalize()}",
+                    callback_data=f"get_mod.{cmd.lower()}",
                 ),
             )
             cmds.pop(0)
@@ -75,17 +78,20 @@ async def start(c: Alita, m: Message):
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        "📚 " + _("start.commands_btn"), callback_data="commands",
+                        "📚 " + _("start.commands_btn"),
+                        callback_data="commands",
                     ),
                 ]
                 + [
                     InlineKeyboardButton(
-                        "ℹ️ " + _("start.infos_btn"), callback_data="infos",
+                        "ℹ️ " + _("start.infos_btn"),
+                        callback_data="infos",
                     ),
                 ],
                 [
                     InlineKeyboardButton(
-                        "🌐  " + _("start.language_btn"), callback_data="chlang",
+                        "🌐  " + _("start.language_btn"),
+                        callback_data="chlang",
                     ),
                 ]
                 + [
@@ -97,7 +103,9 @@ async def start(c: Alita, m: Message):
             ],
         )
         await m.reply_text(
-            _("start.private"), reply_markup=keyboard, reply_to_message_id=m.message_id,
+            _("start.private"),
+            reply_markup=keyboard,
+            reply_to_message_id=m.message_id,
         )
     else:
         await m.reply_text(_("start.group"), reply_to_message_id=m.message_id)
@@ -112,17 +120,20 @@ async def start_back(c: Alita, m: CallbackQuery):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    "📚 " + _("start.commands_btn"), callback_data="commands",
+                    "📚 " + _("start.commands_btn"),
+                    callback_data="commands",
                 ),
             ]
             + [
                 InlineKeyboardButton(
-                    "ℹ️ " + _("start.infos_btn"), callback_data="infos",
+                    "ℹ️ " + _("start.infos_btn"),
+                    callback_data="infos",
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    "🌐 " + _("start.language_btn"), callback_data="chlang",
+                    "🌐 " + _("start.language_btn"),
+                    callback_data="chlang",
                 ),
             ]
             + [
@@ -145,7 +156,8 @@ async def commands_menu(c: Alita, m: CallbackQuery):
             *(await gen_cmds_kb()),
             [
                 InlineKeyboardButton(
-                    "« " + _("general.back_btn"), callback_data="start_back",
+                    "« " + _("general.back_btn"),
+                    callback_data="start_back",
                 ),
             ],
         ],
@@ -164,7 +176,8 @@ async def commands_pvt(c: Alita, m: Message):
             [
                 [
                     InlineKeyboardButton(
-                        text="Help", url=f"t.me/{me.username}?start=help",
+                        text="Help",
+                        url=f"t.me/{me.username}?start=help",
                     ),
                 ],
             ],
@@ -181,7 +194,8 @@ async def commands_pvt(c: Alita, m: Message):
             *gen_cmds_kb(),
             [
                 InlineKeyboardButton(
-                    "« " + _("general.back_btn"), callback_data="start_back",
+                    "« " + _("general.back_btn"),
+                    callback_data="start_back",
                 ),
             ],
         ],
@@ -191,20 +205,23 @@ async def commands_pvt(c: Alita, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^get_mod."))
-async def get_module_info(c: Alita,m: CallbackQuery):
+async def get_module_info(c: Alita, m: CallbackQuery):
     _ = GetLang(m).strs
     module = m.data.split(".")[1]
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    "« " + _("general.back_btn"), callback_data="commands",
+                    "« " + _("general.back_btn"),
+                    callback_data="commands",
                 ),
             ],
         ],
     )
     await m.message.edit_text(
-        HELP_COMMANDS[module], parse_mode="markdown", reply_markup=keyboard,
+        HELP_COMMANDS[module],
+        parse_mode="markdown",
+        reply_markup=keyboard,
     )
     await m.answer()
     return
@@ -227,7 +244,8 @@ async def infos(c: Alita, m: CallbackQuery):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    "« " + _("general.back_btn"), callback_data="start_back",
+                    "« " + _("general.back_btn"),
+                    callback_data="start_back",
                 ),
             ],
         ],

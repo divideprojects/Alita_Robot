@@ -183,7 +183,9 @@ async def report(c: Alita, m: Message):
 
                     if m.chat.username and m.chat.type == "supergroup":
                         await c.send_message(
-                            admin.user.id, msg + link, reply_markup=reply_markup,
+                            admin.user.id,
+                            msg + link,
+                            reply_markup=reply_markup,
                         )
 
                         if should_forward:
@@ -231,6 +233,7 @@ async def report_buttons(c: Alita, q: CallbackQuery):
             return
         except Exception as err:
             await q.answer(
-                f"🛑 Failed to delete message!\n<b>Error:</b>\n`{err}`", show_alert=True,
+                f"🛑 Failed to delete message!\n<b>Error:</b>\n`{err}`",
+                show_alert=True,
             )
     return

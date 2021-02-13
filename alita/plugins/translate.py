@@ -58,7 +58,8 @@ async def translate(c: Alita, m: Message):
 
     if text:
         sent = await m.reply_text(
-            _("translate.translating"), reply_to_message_id=m.message_id,
+            _("translate.translating"),
+            reply_to_message_id=m.message_id,
         )
         langs = {}
 
@@ -74,7 +75,9 @@ async def translate(c: Alita, m: Message):
         res = escape(text)
         await sent.edit_text(
             _("translate.translation").format(
-                from_lang=trres.src, to_lang=trres.dest, translation=res,
+                from_lang=trres.src,
+                to_lang=trres.dest,
+                translation=res,
             ),
             parse_mode="HTML",
         )

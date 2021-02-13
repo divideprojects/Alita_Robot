@@ -1,4 +1,5 @@
 test:
+	@black alita
 	@python3 -m pip install --upgrade pre-commit
 	@pre-commit run --all-files
 

@@ -156,7 +156,8 @@ async def dbcleanxyz(c: Alita, m: Message):
     ]
     buttons += [[InlineKeyboardButton("Invalid Gbans", callback_data="dbclean_gbans")]]
     await m.reply_text(
-        "What do you want to clean?", reply_markup=InlineKeyboardMarkup(buttons),
+        "What do you want to clean?",
+        reply_markup=InlineKeyboardMarkup(buttons),
     )
     return
 

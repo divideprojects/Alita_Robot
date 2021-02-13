@@ -130,11 +130,13 @@ async def id_info(c: Alita, m: Message):
     else:
         if m.chat.type == "private":
             await m.reply_text(
-                f"Your ID is <code>{m.chat.id}</code>.", parse_mode="HTML",
+                f"Your ID is <code>{m.chat.id}</code>.",
+                parse_mode="HTML",
             )
         else:
             await m.reply_text(
-                f"This Group's ID is <code>{m.chat.id}</code>.", parse_mode="HTML",
+                f"This Group's ID is <code>{m.chat.id}</code>.",
+                parse_mode="HTML",
             )
     return
 
@@ -161,7 +163,8 @@ async def github(c: Alita, m: Message):
         username = m.text.split(None, 1)[1]
     else:
         await m.reply_text(
-            f"Usage: `{PREFIX_HANDLER}github <username>`", parse_mode="md",
+            f"Usage: `{PREFIX_HANDLER}github <username>`",
+            parse_mode="md",
         )
         return
 
