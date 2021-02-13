@@ -4,10 +4,10 @@ language: python
 python:
   - "3.9"
 
-# command to install dependencies
+# Install dependencies
 install:
   - make install
 
-# command to check if bot works
+# Run bot
 script:
   - make run

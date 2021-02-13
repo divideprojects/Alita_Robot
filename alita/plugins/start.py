@@ -28,7 +28,7 @@ from alita.bot_class import Alita
 from alita.utils.localization import GetLang
 
 
-async def gen_cmds_kb():
+def gen_cmds_kb():
     plugins = sorted(list(HELP_COMMANDS.keys()))
     cmds = list(plugins)
     kb = []
@@ -140,10 +140,10 @@ async def start_back(c: Alita, m: CallbackQuery):
 @Alita.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(m: CallbackQuery):
     _ = GetLang(m).strs
-    kb = [(await gen_cmds_kb())]
+    # kb = [(await gen_cmds_kb())]
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            kb,
+            *gen_cmd_kb(),
             [
                 InlineKeyboardButton(
                     "« " + _("general.back_btn"), callback_data="start_back"
