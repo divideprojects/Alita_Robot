@@ -1,19 +1,16 @@
 # Alita_Robot
 
-[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
-[![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Divkix/)</br>
 
-![Python Version](https://img.shields.io/badge/python-3.7-green?style=for-the-badge&logo=appveyor)
-![Issues](https://img.shields.io/github/issues/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
-![Forks](https://img.shields.io/github/forks/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
-![Stars](https://img.shields.io/github/stars/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
-![LICENSE](https://img.shields.io/github/license/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
-![Contributors](https://img.shields.io/github/contributors/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
-![Repo Size](https://img.shields.io/github/repo-size/Divkix/Alita_Robot?style=for-the-badge&logo=appveyor)
+![Forks](https://img.shields.io/github/forks/Divkix/Alita_Robot)
+![Stars](https://img.shields.io/github/stars/Divkix/Alita_Robot)
+![LICENSE](https://img.shields.io/github/license/Divkix/Alita_Robot)
+![Repo Size](https://img.shields.io/github/repo-size/Divkix/Alita_Robot)
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194)](https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&utm_medium=referral&utm_content=Divkix/Alita_Robot&utm_campaign=Badge_Grade_Settings)</br>
 
-[![Crowdin](https://badges.crowdin.net/alita_robot/localized.svg)](https://crowdin.com/project/alita_robot)</br>
-![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Divkix/Alita_Robot&title=Profile%20Views)</br>
+[![Crowdin](https://badges.crowdin.net/alita_robot/localized.svg)](https://crowdin.com/project/alita_robot)
+
+![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Divkix/Alita_Robot&title=Profile%20Views)
 
 
 Alita is a Telegram Group managment bot made using **[Pyrogram](https://docs.pyrogram.org) _async version_** and **[Python](https://python.org)**, which makes it modern and faster than most of the exisitng Telegram Chat Managers.
@@ -63,7 +60,7 @@ If successful, bot should send message to the **MESSAGE_DUMP** Group!
 - [ ] Add Logging of groups and channels
 - [ ] Add warnings
 - [ ] Add connections
-- [x] Fix Docker Configuration
+- [x] Fix Docker Configuration (Need to enter ENV Vars Manually)
 
 ## Contributing to the project
 
