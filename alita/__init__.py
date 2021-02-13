@@ -28,9 +28,8 @@ from logging import (
     StreamHandler,
     basicConfig,
     INFO,
-    # WARNING,
+    WARNING,
     getLogger,
-    DEBUG,
 )
 
 apply()
@@ -53,7 +52,7 @@ basicConfig(
     handlers=[file_handler, stdout_handler],
 )
 
-getLogger("pyrogram").setLevel(DEBUG)
+getLogger("pyrogram").setLevel(WARNING)
 LOGGER = getLogger(__name__)
 
 # if version < 3.6, stop bot.
