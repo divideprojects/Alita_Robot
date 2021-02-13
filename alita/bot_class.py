@@ -115,7 +115,8 @@ class Alita(Client):
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
         LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
 
-        # Send a message to MESSAGE_DUMP telling that the bot has started and has loaded all plugins!
+        # Send a message to MESSAGE_DUMP telling that the
+        # bot has started and has loaded all plugins!
         await self.send_message(
             MESSAGE_DUMP,
             (

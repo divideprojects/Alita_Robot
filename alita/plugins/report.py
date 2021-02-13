@@ -99,8 +99,6 @@ async def report(c: Alita, m: Message):
 
         if m.chat.username and m.chat.type == "supergroup":
 
-            # reported = f"{(await mention_html(m.from_user.first_name, m.from_user.id)} reported {(await mention_html(reported_user.first_name, reported_user.id))} to the admins!"
-
             msg = (
                 f"<b>⚠️ Report: </b>{escape(m.chat.title)}\n"
                 f"<b> • Report by:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))} (<code>{m.from_user.id}</code>)\n"
@@ -134,8 +132,6 @@ async def report(c: Alita, m: Message):
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
         else:
-            # reported = f"{(await mention_html(m.from_user.first_name, m.from_user.id)} reported {(await mention_html(reported_user.first_name, reported_user.id))} to the admins!"
-
             msg = f'{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in f"{escape(chat_name)}"!'
             link = ""
             should_forward = True
