@@ -21,7 +21,7 @@ from io import BytesIO
 from tswift import Song
 from datetime import datetime
 from pyrogram import filters, errors
-from pyrogram.types import Message
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from alita import (
     PREFIX_HANDLER,
     OWNER_ID,
@@ -36,6 +36,7 @@ from alita.bot_class import Alita
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
+from alita.utils.paste import paste
 
 __PLUGIN__ = "Utils"
 
@@ -269,5 +270,27 @@ async def weebify(c: Alita, m: Message):
         if normiecharacter in normiefont:
             weebycharacter = weebyfont[normiefont.index(normiecharacter)]
             string = string.replace(normiecharacter, weebycharacter)
+
     await m.reply_text(f"**Weebified String:**\n`{string}`")
+
+    return
+
+
+@Alita.on_message(filters.command("paste", PREFIX_HANDLER))
+async def paste_it(c: Alita, m: Message):
+
+    replymsg = await m.reply_text("Pasting...", quote=True)
+
+    if m.reply_to_message:
+        txt = m.reply_to_message.text
+    else:
+        txt = m.text.split(None, 1)[1]
+
+    url = (await paste(txt))[0]
+
+    await replymsg.edit_text(
+        "Pasted to NekoBin!",
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("NekoBin", url=url)]]),
+    )
+
     return

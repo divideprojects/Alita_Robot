@@ -20,9 +20,14 @@ from time import time
 from os import path, makedirs
 from pyrogram import Client, __version__, errors
 from pyrogram.raw.all import layer
+from pyrogram.types import InlineKeyboardMarkup
+from pyrogram.types.bots_and_keyboards.inline_keyboard_button import (
+    InlineKeyboardButton,
+)
 from alita.plugins import ALL_PLUGINS
 from alita.db import users_db as userdb
 from alita.utils.redishelper import set_key, flushredis, allkeys
+from alita.utils.paste import paste
 from alita import (
     APP_ID,
     API_HASH,
@@ -151,11 +156,17 @@ class Alita(Client):
     async def stop(self):
         """Send a message to MESSAGE_DUMP telling that the bot has stopped."""
         LOGGER.info("Uploading logs before stopping...!")
+        with open(logfile) as f:
+            txt = f.read()
+            raw = (await paste(txt))[1]
         # Send Logs to MESSAGE-DUMP
         await self.send_document(
             MESSAGE_DUMP,
             document=logfile,
             caption=f"Logs for last run.\n<code>{log_datetime}</code>",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("NekoBin Raw", url=raw)]]
+            ),
         )
         await self.send_message(
             MESSAGE_DUMP,
