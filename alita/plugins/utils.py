@@ -92,9 +92,9 @@ async def id_info(c: Alita, m: Message):
             user2 = m.reply_to_m.forward_from
             await m.reply_text(
                 (
-                    f"Original Sender - {mention_html(user2.first_name, user2.id)} "
+                    f"Original Sender - {(await mention_html(user2.first_name, user2.id))} "
                     f"(<code>{user2.id}</code>).\n"
-                    f"Forwarder - {mention_html(user1.first_name, user1.id)} "
+                    f"Forwarder - {(await mention_html(user1.first_name, user1.id))} "
                     f"(<code>{user1.id}</code>)."
                 ),
                 parse_mode="HTML",
@@ -108,7 +108,7 @@ async def id_info(c: Alita, m: Message):
                 )
 
             await m.reply_text(
-                f"{mention_html(user.first_name, user.id)}'s ID is <code>{user.id}</code>.",
+                f"{(await mention_html(user.first_name, user.id))}'s ID is <code>{user.id}</code>.",
                 parse_mode="HTML",
             )
     else:

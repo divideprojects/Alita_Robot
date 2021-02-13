@@ -23,7 +23,7 @@ async def send_log(c: Alita, m: Message):
     rply = await m.reply_text("Sending logs...!")
     await c.send_message(
         m.chat.id,
-        f"#LOGS\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
+        f"#LOGS\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     # Send logs
     await m.reply_document(document=logfile, quote=True)
@@ -37,7 +37,7 @@ async def test_speed(c: Alita, m: Message):
     string = _("dev.speedtest")
     await c.send_message(
         MESSAGE_DUMP,
-        f"#SPEEDTEST\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
+        f"#SPEEDTEST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     sent = await m.reply_text(_("dev.start_speedtest"))
     s = speedtest.Speedtest()
@@ -189,7 +189,7 @@ async def public_ip(c: Alita, m: Message):
     ip = AioHttp().get_text("https://api.ipify.org")[0]
     await c.send_message(
         MESSAGE_DUMP,
-        f"#IP\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
+        f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     await m.reply_text(_("dev.bot_ip").format(ip=ip))
     return
@@ -200,7 +200,7 @@ async def chats(c: Alita, m: Message):
     exmsg = await m.reply_text("`Exporting Chatlist...`")
     await c.send_message(
         MESSAGE_DUMP,
-        f"#CHATLIST\n\n**User:** {mention_markdown(m.from_user.first_name, m.from_user.id)}",
+        f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     all_chats = userdb.get_all_chats() or []
     chatfile = "List of chats.\n\nChat name | Chat ID | Members count\n"

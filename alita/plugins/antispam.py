@@ -57,8 +57,8 @@ async def gban(c: Alita, m: Message):
     log_msg = (
         f"#GBAN\n"
         f"<b>Originated from:</b> {m.chat.id}\n"
-        f"<b>Admin:</b> {mention_html(m.from_user.first_name, m.from_user.id)}\n"
-        f"<b>Gbanned User:</b> {mention_html(user_first_name, user_id)}\n"
+        f"<b>Admin:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))}\n"
+        f"<b>Gbanned User:</b> {(await mention_html(user_first_name, user_id))}\n"
         f"<b>Gbanned User ID:</b> {user_id}\n"
         f"<b>Event Stamp:</b> {datetime.utcnow().strftime('%H:%M - %d-%m-%Y')}"
     )
@@ -105,8 +105,8 @@ async def ungban(c: Alita, m: Message):
         log_msg = (
             f"#UNGBAN\n"
             f"<b>Originated from:</b> {m.chat.id}\n"
-            f"<b>Admin:</b> {mention_html(m.from_user.first_name, m.from_user.id)}\n"
-            f"<b>UnGbanned User:</b> {mention_html(user_first_name, user_id)}\n"
+            f"<b>Admin:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))}\n"
+            f"<b>UnGbanned User:</b> {(await mention_html(user_first_name, user_id))}\n"
             f"<b>UnGbanned User ID:</b> {user_id}\n"
             f"<b>Event Stamp:</b> {datetime.utcnow().strftime('%H:%M - %d-%m-%Y')}"
         )
@@ -158,7 +158,7 @@ async def gban_watcher(c: Alita, m: Message):
                 await c.kick_chat_member(m.chat.id, m.from_user.id)
                 await m.reply_text(
                     (
-                        f"This user ({mention_html(m.from_user.first_name, m.from_user.id)}) "
+                        f"This user ({(await mention_html(m.from_user.first_name, m.from_user.id))}) "
                         "has been banned globally!\n\n"
                         f"To get unbanned appeal at @{SUPPORT_GROUP}"
                     ),
