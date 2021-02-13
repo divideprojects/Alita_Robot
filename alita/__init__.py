@@ -4,14 +4,22 @@ from datetime import datetime
 from os import path, mkdir, environ
 from importlib import import_module as imp_mod
 from sys import stdout, version_info, exit as sysexit
-from logging import FileHandler, StreamHandler, basicConfig, INFO, WARNING, getLogger
+from logging import (
+    FileHandler,
+    StreamHandler,
+    basicConfig,
+    INFO,
+    WARNING,
+    getLogger,
+    DEBUG,
+)
 
 log_datetime = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 logdir = f"{__name__}/logs"
 
 # Make Logs directory if it does not exixts
 if not path.isdir(logdir):
-    mkdir(f"{__name__}/logs")
+    mkdir(logdir)
 
 logfile = f"{logdir}/{__name__}_{log_datetime}.txt"
 
@@ -24,7 +32,7 @@ basicConfig(
     handlers=[file_handler, stdout_handler],
 )
 
-getLogger("pyrogram").setLevel(WARNING)
+getLogger("pyrogram").setLevel(DEBUG)
 LOGGER = getLogger(__name__)
 
 # if version < 3.6, stop bot.
