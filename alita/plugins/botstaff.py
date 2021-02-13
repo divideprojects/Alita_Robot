@@ -1,5 +1,4 @@
 from pyrogram import filters
-from alita.bot_class import Alita
 from pyrogram.types import Message
 from alita import (
     WHITELIST_USERS,
@@ -8,6 +7,7 @@ from alita import (
     OWNER_ID,
     DEV_PREFIX_HANDLER,
 )
+from alita.bot_class import Alita
 from alita.utils.parser import mention_html
 from alita.utils.custom_filters import dev_filter
 
