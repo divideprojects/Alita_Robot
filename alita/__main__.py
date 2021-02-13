@@ -55,7 +55,7 @@ class Alita(Client):
 
         # Flush Redis data
         try:
-            flushredis()
+            await flushredis()
         except Exception as ef:
             LOGGER.error(ef)
 
@@ -81,7 +81,7 @@ class Alita(Client):
                 LOGGER.error(ef)
 
         try:
-            set_key("ADMINDICT", ADMINDICT)
+            await set_key("ADMINDICT", ADMINDICT)
             end = time.time()
             LOGGER.info(f"Set admin list cache!\nTime Taken: {round(end-begin, 2)}s")
         except Exception as ef:
@@ -97,8 +97,8 @@ class Alita(Client):
 
         # Redis Content Setup!
         await self.get_admins()  # Load admins in cache
-        set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
-        set_key("BOT_ID", int(me.id))  # Save Bot ID in Redis!
+        await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
+        await set_key("BOT_ID", int(me.id))  # Save Bot ID in Redis!
         # Redis Content Setup!
 
         # Show in Log that bot has started
@@ -116,7 +116,7 @@ class Alita(Client):
                 "<b>Loaded Plugins:</b>\n"
                 f"<i>{list(HELP_COMMANDS.keys())}</i>\n"
                 "<b>Redis Keys Loaded:</b>\n"
-                f"<i>{allkeys()}</i>"
+                f"<i>{(await allkeys())}</i>"
             ),
         )
 
@@ -138,7 +138,7 @@ class Alita(Client):
         await super().stop()
         # Flush Redis data
         try:
-            flushredis()
+            await flushredis()
             LOGGER.info("Flushed Redis!")
         except Exception as ef:
             LOGGER.error(ef)

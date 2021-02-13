@@ -66,8 +66,10 @@ unmute_permissions = ChatPermissions(
 async def adminlist_show(c: Alita, m: Message):
     _ = GetLang(m).strs
     try:
-        me_id = int(get_key("BOT_ID"))  # Get Bot ID from Redis!
-        adminlist = get_key("ADMINDICT")[str(m.chat.id)]  # Load ADMINDICT from string
+        me_id = int(await get_key("BOT_ID"))  # Get Bot ID from Redis!
+        adminlist = await get_key("ADMINDICT")[
+            str(m.chat.id)
+        ]  # Load ADMINDICT from string
         adminstr = _("admin.adminlist").format(chat_title=m.chat.title)
         for i in adminlist:
             try:
@@ -102,14 +104,14 @@ async def reload_admins(c: Alita, m: Message):
     if not res:
         return
 
-    ADMINDICT = get_key("ADMINDICT")  # Load ADMINDICT from string
+    ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
 
     try:
         adminlist = []
         async for i in m.chat.iter_members(filter="administrators"):
             adminlist.append(i.user.id)
         ADMINDICT[str(m.chat.id)] = adminlist
-        set_key("ADMINDICT", ADMINDICT)
+        await set_key("ADMINDICT", ADMINDICT)
         await m.reply_text(_("admin.reloadedadmins"))
         LOGGER.info(f"Reloaded admins for {m.chat.title}({m.chat.id})")
     except Exception as ef:
@@ -292,12 +294,12 @@ async def promote_usr(c: Alita, m: Message):
             )
 
             # ----- Add admin to redis cache! -----
-            ADMINDICT = get_key("ADMINDICT")  # Load ADMINDICT from string
+            ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
             adminlist = []
             async for i in m.chat.iter_members(filter="administrators"):
                 adminlist.append(i.user.id)
             ADMINDICT[str(m.chat.id)] = adminlist
-            set_key("ADMINDICT", ADMINDICT)
+            await set_key("ADMINDICT", ADMINDICT)
 
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -348,12 +350,12 @@ async def demote_usr(c: Alita, m: Message):
             )
 
             # ----- Add admin to redis cache! -----
-            ADMINDICT = get_key("ADMINDICT")  # Load ADMINDICT from string
+            ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
             adminlist = []
             async for i in m.chat.iter_members(filter="administrators"):
                 adminlist.append(i.user.id)
             ADMINDICT[str(m.chat.id)] = adminlist
-            set_key("ADMINDICT", ADMINDICT)
+            await set_key("ADMINDICT", ADMINDICT)
 
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))

@@ -265,7 +265,7 @@ async def store_members(c: Alita, m: Message):
 @Alita.on_message(filters.command("alladmins", DEV_PREFIX_HANDLER) & dev_filter)
 async def list_all_admins(c: Alita, m: Message):
 
-    admindict = get_key("ADMINDICT")
+    admindict = await get_key("ADMINDICT")
 
     if len(str(admindict)) > 4000:
         with io.BytesIO(str.encode(admindict)) as output:
@@ -282,6 +282,6 @@ async def list_all_admins(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("rediskeys", DEV_PREFIX_HANDLER) & dev_filter)
 async def show_redis_keys(c: Alita, m: Message):
-    keys = allkeys()
+    keys = await allkeys()
     await m.reply_text(keys)
     return
