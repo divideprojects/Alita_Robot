@@ -16,14 +16,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from glob import glob
-from os.path import dirname, basename, isfile
+from asyncio import run
 
 
-def __list_all_plugins():
+async def __list_all_plugins():
 
     # This generates a list of plugins in this folder for the * in __main__ to
     # work.
+
+    from glob import glob
+    from os.path import dirname, basename, isfile
 
     mod_paths = glob(dirname(__file__) + "/*.py")
     all_plugins = [
@@ -34,5 +36,5 @@ def __list_all_plugins():
     return all_plugins
 
 
-ALL_PLUGINS = sorted(__list_all_plugins())
+ALL_PLUGINS = sorted(run(__list_all_plugins()))
 __all__ = ALL_PLUGINS + ["ALL_PLUGINS"]

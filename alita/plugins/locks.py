@@ -205,22 +205,22 @@ async def view_locks(c: Alita, m: Message):
     chkmsg = await m.reply_text(_("locks.check_perm_msg"))
     v_perm = await c.get_chat(m.chat.id)
 
-    def convert_to_emoji(val: bool):
+    async def convert_to_emoji(val: bool):
         if val is True:
             return "✅"
         return "❌"
 
-    vmsg = convert_to_emoji(v_perm.permissions.can_send_messages)
-    vmedia = convert_to_emoji(v_perm.permissions.can_send_media_messages)
-    vstickers = convert_to_emoji(v_perm.permissions.can_send_stickers)
-    vanimations = convert_to_emoji(v_perm.permissions.can_send_animations)
-    vgames = convert_to_emoji(v_perm.permissions.can_send_games)
-    vinlinebots = convert_to_emoji(v_perm.permissions.can_use_inline_bots)
-    vwebprev = convert_to_emoji(v_perm.permissions.can_add_web_page_previews)
-    vpolls = convert_to_emoji(v_perm.permissions.can_send_polls)
-    vinfo = convert_to_emoji(v_perm.permissions.can_change_info)
-    vinvite = convert_to_emoji(v_perm.permissions.can_invite_users)
-    vpin = convert_to_emoji(v_perm.permissions.can_pin_messages)
+    vmsg = await convert_to_emoji(v_perm.permissions.can_send_messages)
+    vmedia = await convert_to_emoji(v_perm.permissions.can_send_media_messages)
+    vstickers = await convert_to_emoji(v_perm.permissions.can_send_stickers)
+    vanimations = await convert_to_emoji(v_perm.permissions.can_send_animations)
+    vgames = await convert_to_emoji(v_perm.permissions.can_send_games)
+    vinlinebots = await convert_to_emoji(v_perm.permissions.can_use_inline_bots)
+    vwebprev = await convert_to_emoji(v_perm.permissions.can_add_web_page_previews)
+    vpolls = await convert_to_emoji(v_perm.permissions.can_send_polls)
+    vinfo = await convert_to_emoji(v_perm.permissions.can_change_info)
+    vinvite = await convert_to_emoji(v_perm.permissions.can_invite_users)
+    vpin = await convert_to_emoji(v_perm.permissions.can_pin_messages)
 
     if v_perm is not None:
         try:
