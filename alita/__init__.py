@@ -115,13 +115,14 @@ HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime
 BOT_USERNAME = ""
 BOT_NAME = ""
-
+BOT_ID = 0
 
 async def get_self(c):
-    global BOT_USERNAME, BOT_NAME
+    global BOT_USERNAME, BOT_NAME, BOT_ID
     getbot = await c.get_me()
     BOT_NAME = getbot.first_name
     BOT_USERNAME = getbot.username
+    BOT_ID = getbot.id
     return getbot
 
 
