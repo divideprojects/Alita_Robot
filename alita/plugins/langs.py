@@ -50,7 +50,7 @@ async def gen_langs_kb():
             InlineKeyboardButton(
                 f"{lang['language_flag']} {lang['language_name']}",
                 callback_data=f"set_lang.{langs[0]}",
-            )
+            ),
         ]
         langs.pop(0)
         if langs:
@@ -59,7 +59,7 @@ async def gen_langs_kb():
                 InlineKeyboardButton(
                     f"{lang['language_flag']} {lang['language_name']}",
                     callback_data=f"set_lang.{langs[0]}",
-                )
+                ),
             )
             langs.pop(0)
         kb.append(a)
@@ -74,10 +74,10 @@ async def chlang_callback(c: Alita, m: CallbackQuery):
             *(await gen_langs_kb()),
             [
                 InlineKeyboardButton(
-                    "« " + _("general.back_btn"), callback_data="start_back"
-                )
+                    "« " + _("general.back_btn"), callback_data="start_back",
+                ),
             ],
-        ]
+        ],
     )
     await m.message.edit_text(_("lang.changelang"), reply_markup=keyboard)
     await m.answer()
@@ -99,16 +99,16 @@ async def set_lang_callback(c: Alita, m: CallbackQuery):
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        "« " + _("general.back_btn"), callback_data="start_back"
-                    )
-                ]
-            ]
+                        "« " + _("general.back_btn"), callback_data="start_back",
+                    ),
+                ],
+            ],
         )
     else:
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton("❌ " + _("close_btn"), callback_data="close")]
-            ]
+                [InlineKeyboardButton("❌ " + _("close_btn"), callback_data="close")],
+            ],
         )
     db.set_lang(m.message.chat.id, m.message.chat.type, m.data.split(".")[1])
     await m.message.edit_text(

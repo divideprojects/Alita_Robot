@@ -106,7 +106,7 @@ async def adminlist_show(c: Alita, m: Message):
             await m.reply_text(_("admin.useadmincache"))
         else:
             await m.reply_text(
-                _("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef)
+                _("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef),
             )
             LOGGER.error(ef)
 
@@ -155,7 +155,7 @@ async def kick_usr(c: Alita, m: Message):
         try:
             await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
             await m.reply_text(
-                f"Banned {(await mention_html(user_first_name, user_id))}"
+                f"Banned {(await mention_html(user_first_name, user_id))}",
             )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -182,7 +182,7 @@ async def ban_usr(c: Alita, m: Message):
         try:
             await c.kick_chat_member(m.chat.id, user_id)
             await m.reply_text(
-                f"Banned {(await mention_html(user_first_name, user_id))}"
+                f"Banned {(await mention_html(user_first_name, user_id))}",
             )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -209,7 +209,7 @@ async def unban_usr(c: Alita, m: Message):
         try:
             await c.unban_chat_member(m.chat.id, user_id)
             await m.reply_text(
-                f"Unbanned {(await mention_html(user_first_name, user_id))}"
+                f"Unbanned {(await mention_html(user_first_name, user_id))}",
             )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -236,7 +236,7 @@ async def mute_usr(c: Alita, m: Message):
         try:
             await m.chat.restrict_member(user_id, mute_permission)
             await m.reply_text(
-                f"<b>Muted</b> {(await mention_html(user_first_name,user_id))}"
+                f"<b>Muted</b> {(await mention_html(user_first_name,user_id))}",
             )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -266,7 +266,7 @@ async def unmute_usr(c: Alita, m: Message):
         try:
             await m.chat.restrict_member(user_id, unmute_permissions)
             await m.reply_text(
-                f"<b>Unmuted</b> {(await mention_html(user_first_name,user_id))}"
+                f"<b>Unmuted</b> {(await mention_html(user_first_name,user_id))}",
             )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -306,11 +306,11 @@ async def promote_usr(c: Alita, m: Message):
             await m.reply_text(
                 _("admin.promoted").format(
                     promoter=(
-                        (await mention_html(m.from_user.first_name, m.from_user.id))
+                        await mention_html(m.from_user.first_name, m.from_user.id)
                     ),
                     promoted=(await mention_html(user_first_name, user_id)),
                     chat_title=m.chat.title,
-                )
+                ),
             )
 
             # ----- Add admin to redis cache! -----
@@ -366,7 +366,7 @@ async def demote_usr(c: Alita, m: Message):
                     ),
                     demoted=(await mention_html(user_first_name, user_id)),
                     chat_title=m.chat.title,
-                )
+                ),
             )
 
             # ----- Add admin to redis cache! -----

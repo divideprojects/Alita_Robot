@@ -149,14 +149,14 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
 @Alita.on_message(filters.command("dbclean", DEV_PREFIX_HANDLER) & dev_filter)
 async def dbcleanxyz(c: Alita, m: Message):
     buttons = [
-        [InlineKeyboardButton("Invalid Chats", callback_data="dbclean_invalidchats")]
+        [InlineKeyboardButton("Invalid Chats", callback_data="dbclean_invalidchats")],
     ]
     buttons += [
-        [InlineKeyboardButton("Muted Chats", callback_data="dbclean_mutedchats")]
+        [InlineKeyboardButton("Muted Chats", callback_data="dbclean_mutedchats")],
     ]
     buttons += [[InlineKeyboardButton("Invalid Gbans", callback_data="dbclean_gbans")]]
     await m.reply_text(
-        "What do you want to clean?", reply_markup=InlineKeyboardMarkup(buttons)
+        "What do you want to clean?", reply_markup=InlineKeyboardMarkup(buttons),
     )
     return
 
@@ -180,9 +180,9 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                         InlineKeyboardButton(
                             "Remove Invalid Chats",
                             callback_data="db_clean_inavlid_chats",
-                        )
-                    ]
-                ]
+                        ),
+                    ],
+                ],
             ),
         )
         await q.message.delete()
@@ -206,9 +206,9 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                         InlineKeyboardButton(
                             "Leave Muted Chats",
                             callback_data="db_clean_muted_chats",
-                        )
-                    ]
-                ]
+                        ),
+                    ],
+                ],
             ),
         )
         await q.message.delete()
@@ -231,9 +231,9 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                         InlineKeyboardButton(
                             "Remove Invalid Gbans",
                             callback_data="db_clean_invalid_gbans",
-                        )
-                    ]
-                ]
+                        ),
+                    ],
+                ],
             ),
         )
         await q.message.delete()
@@ -260,7 +260,7 @@ async def db_clean_callbackAction(c: Alita, q: CallbackQuery):
             await q.message.edit_text("Removing Invalid Gbans from Db...")
             invalid_gban_count = await get_invalid_gban(c, q.message, True)
             await q.message.edit_text(
-                f"Cleaned up {invalid_gban_count} gbanned users from Db"
+                f"Cleaned up {invalid_gban_count} gbanned users from Db",
             )
     except Exception as ef:
         LOGGER.error(f"Error while cleaning db:\n{ef}")

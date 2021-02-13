@@ -62,10 +62,10 @@ async def get_rules(c: Alita, m: Message):
     except errors.UserIsBlocked:
         me = await c.get_me()
         pm_kb = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("PM", url=f"https://t.me/{me.username}?start")]]
+            [[InlineKeyboardButton("PM", url=f"https://t.me/{me.username}?start")]],
         )
         await m.reply_text(
-            _("rules.pm_me"), reply_to_message_id=m.message_id, reply_markup=pm_kb
+            _("rules.pm_me"), reply_to_message_id=m.message_id, reply_markup=pm_kb,
         )
         return
 
@@ -118,8 +118,8 @@ async def clear_rules(c: Alita, m: Message):
                 [
                     InlineKeyboardButton("⚠️ Confirm", callback_data="clear.rules"),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
-                ]
-            ]
+                ],
+            ],
         ),
     )
     return

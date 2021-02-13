@@ -57,7 +57,7 @@ async def view_blacklist(c: Alita, m: Message):
     _ = GetLang(m).strs
     chat_title = m.chat.title
     blacklists_chat = _("blacklist.curr_blacklist_initial").format(
-        chat_title=chat_title
+        chat_title=chat_title,
     )
     all_blacklisted = db.get_chat_blacklist(m.chat.id)
 
@@ -93,7 +93,7 @@ async def add_blacklist(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["rmblacklist", "unblacklist"], PREFIX_HANDLER) & filters.group
+    filters.command(["rmblacklist", "unblacklist"], PREFIX_HANDLER) & filters.group,
 )
 async def rm_blacklist(c: Alita, m: Message):
 
@@ -115,7 +115,7 @@ async def rm_blacklist(c: Alita, m: Message):
             await m.reply_text(_("blacklist.no_bl_found").format(bl_word=bl_word))
         else:
             await m.reply_text(
-                _("general.check_help"), reply_to_message_id=m.message_id
+                _("general.check_help"), reply_to_message_id=m.message_id,
             )
     return
 

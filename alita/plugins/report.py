@@ -55,7 +55,7 @@ async def report_setting(c: Alita, m: Message):
             if args[1] in ("yes", "on"):
                 db.set_user_setting(m.chat.id, True)
                 await m.reply_text(
-                    "Turned on reporting! You'll be notified whenever anyone reports something."
+                    "Turned on reporting! You'll be notified whenever anyone reports something.",
                 )
 
             elif args[1] in ("no", "off"):
@@ -63,7 +63,7 @@ async def report_setting(c: Alita, m: Message):
                 await m.reply_text("Turned off reporting! You wont get any reports.")
         else:
             await m.reply_text(
-                f"Your current report preference is: `{db.user_should_report(m.chat.id)}`"
+                f"Your current report preference is: `{db.user_should_report(m.chat.id)}`",
             )
 
     else:
@@ -88,7 +88,7 @@ async def report_setting(c: Alita, m: Message):
                 )
         else:
             await m.reply_text(
-                f"This group's current setting is: `{db.chat_should_report(m.chat.id)}`"
+                f"This group's current setting is: `{db.chat_should_report(m.chat.id)}`",
             )
 
 
@@ -103,7 +103,7 @@ async def report(c: Alita, m: Message):
 
         if m.from_user.id == reported_user.id:
             await m.reply_text(
-                "Uh yeah, Sure sure...you don't need to report yourself!"
+                "Uh yeah, Sure sure...you don't need to report yourself!",
             )
             return
 
@@ -129,7 +129,7 @@ async def report(c: Alita, m: Message):
                     InlineKeyboardButton(
                         "➡ Message",
                         url=f"https://t.me/{m.chat.username}/{m.reply_to_message.message_id}",
-                    )
+                    ),
                 ],
                 [
                     InlineKeyboardButton(
@@ -145,7 +145,7 @@ async def report(c: Alita, m: Message):
                     InlineKeyboardButton(
                         "❎ Delete Message",
                         callback_data=f"report_{m.chat.id}=delete={reported_user.id}={m.reply_to_message.message_id}",
-                    )
+                    ),
                 ],
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
@@ -183,7 +183,7 @@ async def report(c: Alita, m: Message):
 
                     if m.chat.username and m.chat.type == "supergroup":
                         await c.send_message(
-                            admin.user.id, msg + link, reply_markup=reply_markup
+                            admin.user.id, msg + link, reply_markup=reply_markup,
                         )
 
                         if should_forward:
@@ -200,7 +200,7 @@ async def report(c: Alita, m: Message):
                     LOGGER.exception("Exception while reporting user")
 
         await m.reply_to_message.reply_text(
-            f"{(await mention_html(m.from_user.first_name, m.from_user.id))} reported the message to the admins."
+            f"{(await mention_html(m.from_user.first_name, m.from_user.id))} reported the message to the admins.",
         )
         return
     return
@@ -231,6 +231,6 @@ async def report_buttons(c: Alita, q: CallbackQuery):
             return
         except Exception as err:
             await q.answer(
-                f"🛑 Failed to delete message!\n<b>Error:</b>\n`{err}`", show_alert=True
+                f"🛑 Failed to delete message!\n<b>Error:</b>\n`{err}`", show_alert=True,
             )
     return

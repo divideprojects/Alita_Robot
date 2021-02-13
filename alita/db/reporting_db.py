@@ -31,7 +31,7 @@ class ReportingUserSettings(BASE):
         self.user_id = user_id
 
     def __repr__(self):
-        return "<User report settings ({})>".format(self.user_id)
+        return f"<User report settings ({self.user_id})>"
 
 
 class ReportingChatSettings(BASE):
@@ -43,7 +43,7 @@ class ReportingChatSettings(BASE):
         self.chat_id = str(chat_id)
 
     def __repr__(self):
-        return "<Chat report settings ({})>".format(self.chat_id)
+        return f"<Chat report settings ({self.chat_id})>"
 
 
 ReportingUserSettings.__table__.create(checkfirst=True)

@@ -34,7 +34,7 @@ class UserLang(BASE):
         self.lang_code = lang_code
 
     def __repr__(self):
-        return "Language for User {} is {}".format(self.user_id, self.user_lang)
+        return f"Language for User {self.user_id} is {self.user_lang}"
 
 
 class GroupLang(BASE):
@@ -48,7 +48,7 @@ class GroupLang(BASE):
         self.lang_code = lang_code
 
     def __repr__(self):
-        return "Language for Group {} is {}".format(self.user_id, self.group_lang)
+        return f"Language for Group {self.user_id} is {self.group_lang}"
 
 
 GroupLang.__table__.create(checkfirst=True)

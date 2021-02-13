@@ -28,7 +28,7 @@ def f_sudo_filter(_, __, m):
     return bool(
         m.from_user.id in SUDO_USERS
         or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)
+        or m.from_user.id == int(OWNER_ID),
     )
 
 

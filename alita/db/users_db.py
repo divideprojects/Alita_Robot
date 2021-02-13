@@ -31,7 +31,7 @@ class Users(BASE):
         self.username = username
 
     def __repr__(self):
-        return "<User {} ({})>".format(self.username, self.user_id)
+        return f"<User {self.username} ({self.user_id})>"
 
 
 class Chats(BASE):
@@ -44,7 +44,7 @@ class Chats(BASE):
         self.chat_name = chat_name
 
     def __repr__(self):
-        return "<Chat {} ({})>".format(self.chat_name, self.chat_id)
+        return f"<Chat {self.chat_name} ({self.chat_id})>"
 
 
 Users.__table__.create(checkfirst=True)

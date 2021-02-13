@@ -54,20 +54,20 @@ Some utils provided by bot to make your tasks easy!
 
 
 @Alita.on_message(
-    filters.command("ping", PREFIX_HANDLER) & (filters.group | filters.private)
+    filters.command("ping", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def ping(c: Alita, m: Message):
     first = datetime.now()
     sent = await m.reply_text("**Ping...**")
     second = datetime.now()
     await sent.edit_text(
-        f"**Pong!**\n`{round(((second-first).microseconds / 1000000), 2)}` Secs"
+        f"**Pong!**\n`{round(((second-first).microseconds / 1000000), 2)}` Secs",
     )
     return
 
 
 @Alita.on_message(
-    filters.command("lyrics", PREFIX_HANDLER) & (filters.group | filters.private)
+    filters.command("lyrics", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def get_lyrics(c: Alita, m: Message):
     query = m.text.split()[1]
@@ -98,7 +98,7 @@ async def get_lyrics(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private)
+    filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def id_info(c: Alita, m: Message):
     user_id = (await extract_user(m))[0]
@@ -120,7 +120,7 @@ async def id_info(c: Alita, m: Message):
                 user = await c.get_users(user_id)
             except errors.PeerIdInvalid:
                 await m.reply_text(
-                    "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!"
+                    "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!",
                 )
 
             await m.reply_text(
@@ -130,17 +130,17 @@ async def id_info(c: Alita, m: Message):
     else:
         if m.chat.type == "private":
             await m.reply_text(
-                f"Your ID is <code>{m.chat.id}</code>.", parse_mode="HTML"
+                f"Your ID is <code>{m.chat.id}</code>.", parse_mode="HTML",
             )
         else:
             await m.reply_text(
-                f"This Group's ID is <code>{m.chat.id}</code>.", parse_mode="HTML"
+                f"This Group's ID is <code>{m.chat.id}</code>.", parse_mode="HTML",
             )
     return
 
 
 @Alita.on_message(
-    filters.command("gifid", PREFIX_HANDLER) & (filters.group | filters.private)
+    filters.command("gifid", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def get_gifid(c: Alita, m: Message):
     if m.reply_to_message and m.reply_to_message.animation:
@@ -154,14 +154,14 @@ async def get_gifid(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command("github", PREFIX_HANDLER) & (filters.group | filters.private)
+    filters.command("github", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def github(c: Alita, m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(None, 1)[1]
     else:
         await m.reply_text(
-            f"Usage: `{PREFIX_HANDLER}github <username>`", parse_mode="md"
+            f"Usage: `{PREFIX_HANDLER}github <username>`", parse_mode="md",
         )
         return
 
@@ -189,7 +189,7 @@ async def github(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private)
+    filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def my_info(c: Alita, m: Message):
     infoMsg = await m.reply_text("<code>Getting user information...</code>")
@@ -198,7 +198,7 @@ async def my_info(c: Alita, m: Message):
         user = await c.get_users(user_id)
     except errors.PeerIdInvalid:
         await m.reply_text(
-            "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!"
+            "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!",
         )
     except Exception as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
@@ -236,7 +236,7 @@ async def my_info(c: Alita, m: Message):
                 (
                     f"https://api.telegram.org/bot{TOKEN}/"
                     f"getChatMember?chat_id={m.chat.id}&user_id={user.id}"
-                )
+                ),
             )
             result = result.json()["result"]
             if "custom_title" in result.keys():

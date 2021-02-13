@@ -47,7 +47,7 @@ from alita import (
 # Check if MESSAGE_DUMP is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
     raise Exception(
-        "Please enter a vaild Supergroup ID, A Supergroup ID starts with -100"
+        "Please enter a vaild Supergroup ID, A Supergroup ID starts with -100",
     )
 
 
@@ -90,14 +90,14 @@ class Alita(Client):
             adminlist = []
             try:
                 async for j in self.iter_chat_members(
-                    chat_id=chat_id, filter="administrators"
+                    chat_id=chat_id, filter="administrators",
                 ):
                     adminlist.append(j.user.id)
 
                 ADMINDICT[str(i.chat_id)] = adminlist  # Remove the last space
 
                 LOGGER.info(
-                    f"Set {len(adminlist)} admins for {i.chat_id}\n- {adminlist}"
+                    f"Set {len(adminlist)} admins for {i.chat_id}\n- {adminlist}",
                 )
             except errors.PeerIdInvalid:
                 pass
@@ -111,7 +111,7 @@ class Alita(Client):
                 (
                     "Set admin list cache!"
                     f"Time Taken: {round(end - begin, 2)} seconds."
-                )
+                ),
             )
         except Exception as ef:
             LOGGER.error(f"Could not set ADMINDICT!\n{ef}")
@@ -131,9 +131,9 @@ class Alita(Client):
 
         # Show in Log that bot has started
         LOGGER.info(
-            f"Pyrogram v{__version__}\n(Layer - {layer}) started on @{BOT_USERNAME}"
+            f"Pyrogram v{__version__}\n(Layer - {layer}) started on @{BOT_USERNAME}",
         )
-        cmd_list = await load_cmds((await ALL_PLUGINS))
+        cmd_list = await load_cmds(await ALL_PLUGINS)
         redis_keys = await allkeys()
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
         LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
@@ -165,7 +165,7 @@ class Alita(Client):
             document=logfile,
             caption=f"Logs for last run.\n<code>{log_datetime}</code>",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("NekoBin Raw", url=raw)]]
+                [[InlineKeyboardButton("NekoBin Raw", url=raw)]],
             ),
         )
         await self.send_message(

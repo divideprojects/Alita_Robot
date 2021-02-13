@@ -95,7 +95,7 @@ async def save_note(c: Alita, m: Message):
 
     if not note_name:
         await m.reply_text(
-            "```" + m.text + "```\n\nError: You must give a name for this note!"
+            "```" + m.text + "```\n\nError: You must give a name for this note!",
         )
         return
 
@@ -103,7 +103,7 @@ async def save_note(c: Alita, m: Message):
         teks, _ = await parse_button(text)
         if not teks:
             await m.reply_text(
-                "```" + m.text + "```\n\nError: There is no text in here!"
+                "```" + m.text + "```\n\nError: There is no text in here!",
             )
             return
 
@@ -165,7 +165,7 @@ async def get_note(c: Alita, m: Message):
                 return
         else:
             await GET_FORMAT[getnotes["type"]](
-                m.chat.id, getnotes["file"], caption=teks
+                m.chat.id, getnotes["file"], caption=teks,
             )
     return
 
@@ -227,8 +227,8 @@ async def clear_allnote(c: Alita, m: Message):
                 [
                     InlineKeyboardButton("⚠️ Confirm", callback_data="clear.notes"),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
-                ]
-            ]
+                ],
+            ],
         ),
     )
     return

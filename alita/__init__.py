@@ -61,7 +61,7 @@ if version_info[0] < 3 or version_info[1] < 7:
         (
             "You MUST have a Python Version of at least 3.7!\n"
             "Multiple features depend on this. Bot quitting."
-        )
+        ),
     )
     sysexit(1)  # Quit the Script
 
@@ -77,7 +77,7 @@ except Exception as ef:
 
 # Redis Cache
 redis_client = Redis(
-    host=Config.REDIS_HOST, port=Config.REDIS_PORT, password=Config.REDIS_PASS
+    host=Config.REDIS_HOST, port=Config.REDIS_PORT, password=Config.REDIS_PASS,
 )
 
 # Account Related
@@ -96,7 +96,7 @@ DEV_USERS = Config.DEV_USERS
 SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 SUPPORT_STAFF = list(
-    dict.fromkeys([OWNER_ID] + SUDO_USERS + DEV_USERS + WHITELIST_USERS)
+    dict.fromkeys([OWNER_ID] + SUDO_USERS + DEV_USERS + WHITELIST_USERS),
 )  # Remove duplicates!
 
 # Plugins, DB and Workers
@@ -140,7 +140,7 @@ async def load_cmds(ALL_PLUGINS):
                 continue
         else:
             raise Exception(
-                "Can't have two plugins with the same name! Please change one"
+                "Can't have two plugins with the same name! Please change one",
             )
 
     return ", ".join(list(HELP_COMMANDS.keys()))

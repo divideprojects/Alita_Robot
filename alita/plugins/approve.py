@@ -53,7 +53,7 @@ async def approve_user(c: Alita, m: Message):
     user_id, user_first_name = await extract_user(m)
     if not user_id:
         await m.reply_text(
-            "I don't know who you're talking about, you're going to need to specify a user!"
+            "I don't know who you're talking about, you're going to need to specify a user!",
         )
         return
     try:
@@ -63,22 +63,22 @@ async def approve_user(c: Alita, m: Message):
         return
     except Exception as ef:
         await m.reply_text(
-            f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}"
+            f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
         )
         return
     if member.status in ["administrator", "creator"]:
         await m.reply_text(
-            "User is already admin - blocklists already don't apply to them."
+            "User is already admin - blocklists already don't apply to them.",
         )
         return
     if db.is_approved(chat_id, user_id):
         await m.reply_text(
-            f"{(await mention_html(user_first_name, user_id))} is already approved in {chat_title}"
+            f"{(await mention_html(user_first_name, user_id))} is already approved in {chat_title}",
         )
         return
     db.approve(chat_id, user_id)
     await m.reply_text(
-        f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}! They will now be ignored by blocklists."
+        f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}! They will now be ignored by blocklists.",
     )
     return
 
@@ -95,7 +95,7 @@ async def disapprove_user(c: Alita, m: Message):
     user_id, user_first_name = await extract_user(m)
     if not user_id:
         await m.reply_text(
-            "I don't know who you're talking about, you're going to need to specify a user!"
+            "I don't know who you're talking about, you're going to need to specify a user!",
         )
         return
     try:
@@ -107,7 +107,7 @@ async def disapprove_user(c: Alita, m: Message):
         return
     except Exception as ef:
         await m.reply_text(
-            f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}"
+            f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
         )
         return
     if member.status in ["administrator", "creator"]:
@@ -115,12 +115,12 @@ async def disapprove_user(c: Alita, m: Message):
         return
     if not db.is_approved(chat_id, user_id):
         await m.reply_text(
-            f"{(await mention_html(user_first_name, user_id))} isn't approved yet!"
+            f"{(await mention_html(user_first_name, user_id))} isn't approved yet!",
         )
         return
     db.disapprove(chat_id, user_id)
     await m.reply_text(
-        f"{(await mention_html(user_first_name, user_id))} is no longer approved in {chat_title}."
+        f"{(await mention_html(user_first_name, user_id))} is no longer approved in {chat_title}.",
     )
     return
 
@@ -162,16 +162,16 @@ async def check_approval(c: Alita, m: Message):
     user_id, user_first_name = await extract_user(m)
     if not user_id:
         await m.reply_text(
-            "I don't know who you're talking about, you're going to need to specify a user!"
+            "I don't know who you're talking about, you're going to need to specify a user!",
         )
         return
     if db.is_approved(m.chat.id, user_id):
         await m.reply_text(
-            f"{(await mention_html(user_first_name, user_id))} is an approved user. Locks, antiflood, and blocklists won't apply to them."
+            f"{(await mention_html(user_first_name, user_id))} is an approved user. Locks, antiflood, and blocklists won't apply to them.",
         )
     else:
         await m.reply_text(
-            f"{(await mention_html(user_first_name, user_id))} is not an approved user. They are affected by normal commands."
+            f"{(await mention_html(user_first_name, user_id))} is not an approved user. They are affected by normal commands.",
         )
     return
 

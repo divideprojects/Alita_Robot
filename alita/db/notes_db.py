@@ -40,7 +40,7 @@ class Notes(BASE):
         self.file = file
 
     def __repr__(self):
-        return "<Note {} at {}>".format(self.name, self.chat_id)
+        return f"<Note {self.name} at {self.chat_id}>"
 
 
 Notes.__table__.create(checkfirst=True)

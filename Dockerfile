@@ -15,7 +15,7 @@ RUN apt update && apt upgrade -y && \
     gcc \
     make
 
-# Clean a bit 
+# Clean a bit
 RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp
 
 # Enter Workplace

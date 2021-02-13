@@ -62,8 +62,8 @@ async def test_speed(c: Alita, m: Message):
     ul = round(s.upload() / 1024 / 1024, 2)
     await sent.edit_text(
         string.format(
-            host=bs["sponsor"], ping=int(bs["latency"]), download=dl, upload=ul
-        )
+            host=bs["sponsor"], ping=int(bs["latency"]), download=dl, upload=ul,
+        ),
     )
     return
 
@@ -73,7 +73,7 @@ async def neofetch_stats(c: Alita, m: Message):
     cmd = "neofetch --stdout"
 
     process = await create_subprocess_shell(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
     )
     stdout, stderr = await process.communicate()
     e = stderr.decode()
@@ -164,7 +164,7 @@ async def execution(c: Alita, m: Message):
         reply_to_id = m.reply_to_message.message_id
 
     process = await create_subprocess_shell(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
     )
     stdout, stderr = await process.communicate()
     e = stderr.decode()
@@ -226,7 +226,7 @@ async def chats(c: Alita, m: Message):
             except KeyError:
                 invitelink = "No Link!"
             chatfile += "{}. {} | {} | {} | {}\n".format(
-                P, chat.chat_name, chat.chat_id, chat_members, invitelink
+                P, chat.chat_name, chat.chat_id, chat_members, invitelink,
             )
             P += 1
         except errors.ChatAdminRequired:
@@ -239,7 +239,7 @@ async def chats(c: Alita, m: Message):
     with BytesIO(str.encode(chatfile)) as output:
         output.name = "chatlist.txt"
         await m.reply_document(
-            document=output, caption="Here is the list of chats in my Database."
+            document=output, caption="Here is the list of chats in my Database.",
         )
     await exmsg.delete()
     return
@@ -262,7 +262,7 @@ async def store_members(c: Alita, m: Message):
         async for member in m.chat.iter_members():
             try:
                 userdb.update_user(
-                    member.user.id, member.user.username, m.chat.id, m.chat.title
+                    member.user.id, member.user.username, m.chat.id, m.chat.title,
                 )
                 lv += 1
             except BaseException:

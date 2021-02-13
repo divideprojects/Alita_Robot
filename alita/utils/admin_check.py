@@ -31,7 +31,7 @@ async def admin_check(c, m) -> bool:
 
     if user.status not in admin_strings:
         await m.reply_text(
-            "This is an Admin Restricted command and you're not allowed to use it."
+            "This is an Admin Restricted command and you're not allowed to use it.",
         )
         return False
 
@@ -49,7 +49,7 @@ async def owner_check(c, m) -> bool:
 
     if user.status != "creator":
         await m.reply_text(
-            "This is an Owner Restricted command and you're not allowed to use it."
+            "This is an Owner Restricted command and you're not allowed to use it.",
         )
         return False
 

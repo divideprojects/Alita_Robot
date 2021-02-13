@@ -37,7 +37,7 @@ class BlackListFilters(BASE):
         return bool(
             isinstance(other, BlackListFilters)
             and self.chat_id == other.chat_id
-            and self.trigger == other.trigger
+            and self.trigger == other.trigger,
         )
 
 
@@ -62,7 +62,7 @@ def rm_from_blacklist(chat_id, trigger):
     with INSERTION_LOCK:
         try:
             blacklist_filt = SESSION.query(BlackListFilters).get(
-                (str(chat_id), trigger)
+                (str(chat_id), trigger),
             )
             if blacklist_filt:
                 if trigger in CHAT_BLACKLISTS.get(str(chat_id), set()):
