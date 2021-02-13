@@ -106,7 +106,7 @@ class Alita(Client):
             f"Pyrogram v{__version__}\n(Layer - {layer}) started on @{me.username}"
         )
         LOGGER.info(load_cmds(ALL_PLUGINS))
-        LOGGER.info(f"Redis Keys Loaded: {allkeys()}")
+        LOGGER.info(f"Redis Keys Loaded: {(await allkeys())}")
 
         # Send a message to MESSAGE_DUMP telling that the bot has started and has loaded all plugins!
         await self.send_message(
@@ -122,7 +122,7 @@ class Alita(Client):
 
         LOGGER.info("Bot Started Successfully!")
 
-    async def stop(self, *args):
+    async def stop(self):
         """Send a message to MESSAGE_DUMP telling that the bot has stopped!"""
         LOGGER.info("Uploading logs before stopping...!")
         # Send Logs to MESSAGE-DUMP
