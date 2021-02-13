@@ -1,6 +1,5 @@
 from io import BytesIO
 from datetime import datetime
-from alita.db import antispam_db as db
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita import (
@@ -11,6 +10,7 @@ from alita import (
     SUPPORT_GROUP,
     LOGGER,
 )
+from alita.db import antispam_db as db
 from alita.utils.custom_filters import sudo_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
