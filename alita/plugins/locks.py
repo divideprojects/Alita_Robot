@@ -1,8 +1,7 @@
 import asyncio
-from alita import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message, ChatPermissions
-from alita import PREFIX_HANDLER, LOGGER
+from alita import Alita, PREFIX_HANDLER, LOGGER
 from alita.db import approve_db as app_db
 from alita.utils.localization import GetLang
 from alita.utils.admin_check import admin_check

@@ -1,7 +1,7 @@
-from alita import Alita
 from pyrogram import filters
 from pyrogram.types import Message
 from alita import (
+    Alita,
     WHITELIST_USERS,
     SUDO_USERS,
     DEV_USERS,

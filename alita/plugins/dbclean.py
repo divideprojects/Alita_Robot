@@ -1,5 +1,4 @@
 from time import sleep
-from alita import Alita
 from pyrogram import filters
 from pyrogram.types import (
     Message,
@@ -8,7 +7,7 @@ from pyrogram.types import (
     CallbackQuery,
 )
 from pyrogram.errors import BadRequest, Unauthorized
-from alita import DEV_PREFIX_HANDLER, LOGGER
+from alita import Alita, DEV_PREFIX_HANDLER, LOGGER
 from alita.db import users_db as user_db, antispam_db as gban_db
 from alita.utils.custom_filters import dev_filter
 

@@ -1,10 +1,9 @@
 import html
 from googletrans import Translator, LANGUAGES
-from alita import Alita
 from pyrogram import filters
 from pyrogram.types import Message
 from alita.utils.localization import GetLang
-from alita import PREFIX_HANDLER
+from alita import Alita, PREFIX_HANDLER
 
 __PLUGIN__ = "TRANSLATE"
 

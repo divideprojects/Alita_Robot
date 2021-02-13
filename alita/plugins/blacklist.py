@@ -1,8 +1,7 @@
 import html
 from pyrogram import filters
-from alita import Alita
 from pyrogram.types import Message
-from alita import PREFIX_HANDLER, LOGGER
+from alita import Alita, PREFIX_HANDLER, LOGGER
 from alita.utils.localization import GetLang
 from alita.db import blacklist_db as db, approve_db as app_db
 from alita.utils.regex_utils import regex_searcher

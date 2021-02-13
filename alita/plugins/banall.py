@@ -1,5 +1,4 @@
 from io import BytesIO
-from alita import Alita
 from pyrogram import filters
 from pyrogram.types import (
     Message,
@@ -7,7 +6,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
 )
-from alita import DEV_PREFIX_HANDLER
+from alita import Alita, DEV_PREFIX_HANDLER
 from alita.utils.custom_filters import dev_filter
 
 

@@ -1,4 +1,3 @@
-from alita import Alita
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
@@ -8,7 +7,7 @@ from pyrogram.types import (
 )
 from alita.utils.localization import GetLang, langdict
 from alita.db import lang_db as db
-from alita import PREFIX_HANDLER
+from alita import Alita, PREFIX_HANDLER
 from alita.utils.admin_check import admin_check
 
 
