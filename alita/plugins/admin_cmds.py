@@ -217,7 +217,9 @@ async def mute_usr(c: Alita, m: Message):
         user_id, user_first_name = await extract_user(m)
         try:
             await m.chat.restrict_member(user_id, mute_permission)
-            await m.reply_text(f"<b>Muted</b> {mention_html(user_first_name,user_id)}")
+            await m.reply_text(
+                f"<b>Muted</b> {(await mention_html(user_first_name,user_id))}"
+            )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -246,7 +248,7 @@ async def unmute_usr(c: Alita, m: Message):
         try:
             await m.chat.restrict_member(user_id, unmute_permissions)
             await m.reply_text(
-                f"<b>Unmuted</b> {mention_html(user_first_name,user_id)}"
+                f"<b>Unmuted</b> {(await mention_html(user_first_name,user_id))}"
             )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -286,7 +288,7 @@ async def promote_usr(c: Alita, m: Message):
             await m.reply_text(
                 _("admin.promoted").format(
                     promoter=(
-                        await mention_html(m.from_user.first_name, m.from_user.id)
+                        (await mention_html(m.from_user.first_name, m.from_user.id))
                     ),
                     promoted=(await mention_html(user_first_name, user_id)),
                     chat_title=m.chat.title,

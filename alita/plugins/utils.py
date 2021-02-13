@@ -197,7 +197,9 @@ async def my_info(c: Alita, m: Message):
     if user.username:
         text += f"\n<b>Username</b>: @{escape(user.username)}"
 
-    text += f"\n<b>Permanent user link:</b> {mention_html('Click Here', user.id)}"
+    text += (
+        f"\n<b>Permanent user link:</b> {(await mention_html('Click Here', user.id))}"
+    )
 
     if user.id == OWNER_ID:
         text += "\n\nThis person is my Owner, I would never do anything against them!"
