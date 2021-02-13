@@ -63,7 +63,7 @@ async def add_blacklist(c: Alita, m: Message):
 
     _ = GetLang(m).strs
     if len(m.text.split()) >= 2:
-        bl_word = m.text.split(" ", 1)[1]
+        bl_word = m.text.split(None, 1)[1]
         db.add_to_blacklist(m.chat.id, bl_word.lower())
         await m.reply_text(
             _("blacklist.added_blacklist").format(trigger=bl_word),

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "Alita_Robot"
 version = "0.4.3"
-description = "Alita is a Telegram Group managment bot made using Pyrogram and Python, fully asynchronous."
+description = "Alita is a Telegram Group managment bot made using Pyrogram and Python, fully asynchronous, using sql as storage and redis as cache."
 authors = ["Divkix <techdroidroot@gmail.com>"]
 license = "GNU AGPL v3.0"
 
@@ -20,6 +20,8 @@ wikipedia = "^1.4.0"
 redis = "^3.5.3"
 python-dateutil = "^2.8.1"
 aiohttp = "^3.7.3"
+aiodns = "^2.0.0"
+cchardet = "^2.1.7"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"

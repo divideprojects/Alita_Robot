@@ -48,7 +48,7 @@ if version_info[0] < 3 or version_info[1] < 7:
 # the secret configuration specific things
 try:
     if environ.get("ENV"):
-        from alita.sample_config import Config
+        from alita.config import Config
     else:
         from alita.config import Development as Config
 except Exception as ef:
@@ -56,10 +56,9 @@ except Exception as ef:
     sysexit(1)
 
 # Redis Cache
-REDIS_HOST = Config.REDIS_HOST
-REDIS_PORT = Config.REDIS_PORT
-REDIS_PASS = Config.REDIS_PASS
-redis_client = Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASS)
+redis_client = Redis(
+    host=Config.REDIS_HOST, port=Config.REDIS_PORT, password=Config.REDIS_PASS
+)
 
 # Account Related
 TOKEN = Config.TOKEN
@@ -93,9 +92,19 @@ VERSION = Config.VERSION
 
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime
+BOT_USERNAME = ""
+BOT_NAME = ""
 
 
-def load_cmds(ALL_PLUGINS):
+async def get_self(c):
+    global BOT_USERNAME, BOT_NAME
+    getbot = await c.get_me()
+    BOT_NAME = getbot.first_name
+    BOT_USERNAME = getbot.username
+    return getbot
+
+
+async def load_cmds(ALL_PLUGINS):
     for single in ALL_PLUGINS:
         imported_module = imp_mod("alita.plugins." + single)
         if not hasattr(imported_module, "__PLUGIN__"):
@@ -113,4 +122,4 @@ def load_cmds(ALL_PLUGINS):
                 "Can't have two plugins with the same name! Please change one"
             )
 
-    return f"Plugins Loaded: {', '.join(list(HELP_COMMANDS.keys()))}"
+    return ", ".join(list(HELP_COMMANDS.keys()))

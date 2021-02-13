@@ -66,7 +66,7 @@ async def lock_perm(c: Alita, m: Message):
     if not len(m.text.split()) >= 2:
         await m.reply_text("Please enter a permission to lock!")
         return
-    lock_type = m.text.split(" ", 1)[1]
+    lock_type = m.text.split(None, 1)[1]
     chat_id = m.chat.id
 
     if not lock_type:
@@ -252,7 +252,7 @@ async def unlock_perm(c: Alita, m: Message):
     if not len(m.text.split()) >= 2:
         await m.reply_text("Please enter a permission to unlock!")
         return
-    unlock_type = m.text.split(" ", 1)[1]
+    unlock_type = m.text.split(None, 1)[1]
     chat_id = m.chat.id
 
     if not unlock_type:

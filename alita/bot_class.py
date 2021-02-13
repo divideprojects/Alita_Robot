@@ -12,15 +12,16 @@ from alita import (
     TOKEN,
     NO_LOAD,
     MESSAGE_DUMP,
-    HELP_COMMANDS,
+    BOT_USERNAME,
     WORKERS,
     load_cmds,
     SUPPORT_STAFF,
     logfile,
     log_datetime,
+    get_self,
 )
 
-# Check that MESSAGE_DUMP ID is correct
+# Check if MESSAGE_DUMP is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
     raise Exception(
         "Please enter a vaild Supergroup ID, A Supergroup ID starts with -100"
@@ -51,7 +52,6 @@ class Alita(Client):
     async def get_admins(self):
         LOGGER.info("Begin caching admins...")
         begin = time()
-        c = self
 
         # Flush Redis data
         try:
@@ -62,18 +62,19 @@ class Alita(Client):
         all_chats = userdb.get_all_chats() or []  # Get list of all chats
         LOGGER.info(f"{len(all_chats)} chats loaded.")
         ADMINDICT = {}
-        for chat in all_chats:
+        for i in all_chats:
+            chat_id = i.chat_id
             adminlist = []
             try:
-                async for i in c.iter_chat_members(
-                    chat_id=chat.chat_id, filter="administrators"
+                async for j in self.iter_chat_members(
+                    chat_id=chat_id, filter="administrators"
                 ):
-                    adminlist.append(i.user.id)
+                    adminlist.append(j.user.id)
 
-                ADMINDICT[str(chat.chat_id)] = adminlist  # Remove the last space
+                ADMINDICT[str(i.chat_id)] = adminlist  # Remove the last space
 
                 LOGGER.info(
-                    f"Set {len(adminlist)} admins for {chat.chat_id}\n{adminlist}"
+                    f"Set {len(adminlist)} admins for {i.chat_id}\n- {adminlist}"
                 )
             except errors.PeerIdInvalid:
                 pass
@@ -82,15 +83,20 @@ class Alita(Client):
 
         try:
             await set_key("ADMINDICT", ADMINDICT)
-            end = time.time()
-            LOGGER.info(f"Set admin list cache!\nTime Taken: {round(end-begin, 2)}s")
+            end = time()
+            LOGGER.info(
+                (
+                    "Set admin list cache!"
+                    f"Time Taken: {round(end - begin, 2)} seconds."
+                )
+            )
         except Exception as ef:
             LOGGER.error(f"Could not set ADMINDICT!\n{ef}")
 
     async def start(self):
         await super().start()
 
-        me = await self.get_me()  # Get bot info from pyrogram client
+        await get_self(self)  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
 
         await self.send_message(MESSAGE_DUMP, "Starting Bot...")
@@ -98,15 +104,16 @@ class Alita(Client):
         # Redis Content Setup!
         await self.get_admins()  # Load admins in cache
         await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
-        await set_key("BOT_ID", int(me.id))  # Save Bot ID in Redis!
         # Redis Content Setup!
 
         # Show in Log that bot has started
         LOGGER.info(
-            f"Pyrogram v{__version__}\n(Layer - {layer}) started on @{me.username}"
+            f"Pyrogram v{__version__}\n(Layer - {layer}) started on @{BOT_USERNAME}"
         )
-        LOGGER.info(load_cmds(ALL_PLUGINS))
-        LOGGER.info(f"Redis Keys Loaded: {(await allkeys())}")
+        cmd_list = await load_cmds(ALL_PLUGINS)
+        redis_keys = await allkeys()
+        LOGGER.info(f"Plugins Loaded: {cmd_list}")
+        LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
 
         # Send a message to MESSAGE_DUMP telling that the bot has started and has loaded all plugins!
         await self.send_message(
@@ -114,16 +121,16 @@ class Alita(Client):
             (
                 f"<b><i>Bot started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n\n"
                 "<b>Loaded Plugins:</b>\n"
-                f"<i>{list(HELP_COMMANDS.keys())}</i>\n"
+                f"<i>{cmd_list}</i>\n"
                 "<b>Redis Keys Loaded:</b>\n"
-                f"<i>{(await allkeys())}</i>"
+                f"<i>{redis_keys}</i>"
             ),
         )
 
         LOGGER.info("Bot Started Successfully!")
 
     async def stop(self):
-        """Send a message to MESSAGE_DUMP telling that the bot has stopped!"""
+        """Send a message to MESSAGE_DUMP telling that the bot has stopped."""
         LOGGER.info("Uploading logs before stopping...!")
         # Send Logs to MESSAGE-DUMP
         await self.send_document(

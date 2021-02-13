@@ -240,7 +240,7 @@ weebyfont = "卂 乃 匚 刀 乇 下 厶 卄 工 丁 长 乚 从 𠘨 口 尸 �
 @Alita.on_message(filters.command("weebify", PREFIX_HANDLER))
 async def weebify(c: Alita, m: Message):
     if len(m.text.split()) >= 2:
-        args = m.text.split(" ", 1)[1]
+        args = m.text.split(None, 1)[1]
     if m.reply_to_message and len(m.text.split()) == 1:
         args = m.reply_to_message.text
     if not args:

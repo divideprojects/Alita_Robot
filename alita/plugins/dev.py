@@ -82,7 +82,7 @@ async def evaluate_code(c: Alita, m: Message):
         await m.reply_text(_("dev.execute_cmd_err"))
         return
     sm = await m.reply_text("`Processing...`")
-    cmd = m.text.split(" ", maxsplit=1)[1]
+    cmd = m.text.split(None, maxsplit=1)[1]
 
     reply_to_id = m.message_id
     if m.reply_to_message:

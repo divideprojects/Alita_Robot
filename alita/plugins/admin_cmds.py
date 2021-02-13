@@ -415,7 +415,7 @@ async def pin_message(c: Alita, m: Message):
     if not res:
         return
 
-    pin_loud = m.text.split(" ", 1)
+    pin_loud = m.text.split(None, 1)
     if m.reply_to_message:
         try:
             disable_notification = True
