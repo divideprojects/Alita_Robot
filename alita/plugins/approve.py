@@ -1,5 +1,5 @@
 from alita.db import approve_db as db
-from alita.__main__ import Alita
+from alita import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita import PREFIX_HANDLER, SUPPORT_GROUP

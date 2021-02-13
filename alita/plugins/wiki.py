@@ -1,7 +1,7 @@
 import wikipedia
 from wikipedia.exceptions import DisambiguationError, PageError
 from alita import PREFIX_HANDLER
-from alita.__main__ import Alita
+from alita import Alita
 from pyrogram import filters
 from pyrogram.types import Message
 

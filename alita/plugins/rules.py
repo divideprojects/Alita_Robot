@@ -1,4 +1,4 @@
-from alita.__main__ import Alita
+from alita import Alita
 from pyrogram import filters, errors
 from pyrogram.types import (
     Message,

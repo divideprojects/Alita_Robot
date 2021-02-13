@@ -6,6 +6,7 @@ import importlib
 import redis
 from datetime import datetime
 from pyrogram import Client
+from alita.bot_class import Alita
 
 log_datetime = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 logdir = f"{__name__}/logs"
