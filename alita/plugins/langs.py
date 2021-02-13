@@ -69,7 +69,7 @@ async def gen_langs_kb():
 @Alita.on_callback_query(filters.regex("^chlang$"))
 async def chlang_callback(m: CallbackQuery):
     _ = GetLang(m).strs
-    kb = await gen_langs_kb()
+    kb = [(await gen_langs_kb())]
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             kb,
