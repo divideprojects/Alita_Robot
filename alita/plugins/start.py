@@ -138,7 +138,7 @@ async def start_back(c: Alita, m: CallbackQuery):
 
 
 @Alita.on_callback_query(filters.regex("^commands$"))
-async def commands_menu(m: CallbackQuery):
+async def commands_menu(c: Alita, m: CallbackQuery):
     _ = GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -191,7 +191,7 @@ async def commands_pvt(c: Alita, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^get_mod."))
-async def get_module_info(m: CallbackQuery):
+async def get_module_info(c: Alita,m: CallbackQuery):
     _ = GetLang(m).strs
     module = m.data.split(".")[1]
     keyboard = InlineKeyboardMarkup(
