@@ -1,6 +1,6 @@
 import html
 from googletrans import Translator, LANGUAGES
-from alita import Alita
+from alita.bot_class import Alita
 from pyrogram import filters
 from pyrogram.types import Message
 from alita.utils.localization import GetLang

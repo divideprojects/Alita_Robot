@@ -1,6 +1,6 @@
-import json
-import os.path
+from os import path
 from glob import glob
+from json import load as loadjson
 from pyrogram.types import CallbackQuery
 from alita.db import lang_db as db
 from alita import ENABLED_LOCALES as enabled_locales
@@ -9,15 +9,15 @@ from alita import ENABLED_LOCALES as enabled_locales
 def cache_localizations(files):
     ldict = {lang: {} for lang in enabled_locales}
     for file in files:
-        lname = file.split(os.path.sep)[1]
-        dic = json.load(open(file, encoding="utf-8"))
+        lname = file.split(path.sep)[1]
+        dic = loadjson(open(file, encoding="utf-8"))
         ldict[lname].update(dic)
     return ldict
 
 
 jsons = []
 for locale in enabled_locales:
-    jsons += glob(os.path.join("locales", locale, "*.json"))
+    jsons += glob(path.join("locales", locale, "*.json"))
 
 
 langdict = cache_localizations(jsons)

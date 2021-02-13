@@ -1,9 +1,10 @@
-import os
-import time
+from time import time
+from os import path, makedirs
 from pyrogram import Client, __version__, errors
 from pyrogram.raw.all import layer
 from alita.plugins import ALL_PLUGINS
 from alita.db import users_db as userdb
+from alita.utils.redishelper import set_key, flushredis, allkeys
 from alita import (
     APP_ID,
     API_HASH,
@@ -18,7 +19,6 @@ from alita import (
     logfile,
     log_datetime,
 )
-from alita.utils.redishelper import set_key, flushredis, allkeys
 
 # Check that MESSAGE_DUMP ID is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
@@ -35,8 +35,8 @@ class Alita(Client):
 
         # Make a temporary direcory for storing session file
         SESSION_DIR = f"{name}/SESSION"
-        if not os.path.isdir(SESSION_DIR):
-            os.makedirs(SESSION_DIR)
+        if not path.isdir(SESSION_DIR):
+            makedirs(SESSION_DIR)
 
         super().__init__(
             name,
@@ -50,7 +50,7 @@ class Alita(Client):
 
     async def get_admins(self):
         LOGGER.info("Begin caching admins...")
-        begin = time.time()
+        begin = time()
         c = self
 
         # Flush Redis data

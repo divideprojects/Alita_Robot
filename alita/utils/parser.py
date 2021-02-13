@@ -1,20 +1,20 @@
-import html
-import re
+from html import escape
+from re import sub, compile as compilere
 
 
 async def cleanhtml(raw_html):
-    cleanr = re.compile("<.*?>")
-    cleantext = re.sub(cleanr, "", raw_html)
+    cleanr = compilere("<.*?>")
+    cleantext = sub(cleanr, "", raw_html)
     return cleantext
 
 
 async def escape_markdown(text):
     escape_chars = r"\*_`\["
-    return re.sub(r"([%s])" % escape_chars, r"\\\1", text)
+    return sub(r"([%s])" % escape_chars, r"\\\1", text)
 
 
 async def mention_html(name, user_id):
-    name = html.escape(name)
+    name = escape(name)
     return f'<a href="tg://user?id={user_id}">{name}</a>'
 
 

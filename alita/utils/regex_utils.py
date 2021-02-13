@@ -1,9 +1,9 @@
-import regex
+from regex import search
 
 
 async def regex_searcher(regex_string, string):
     try:
-        search = regex.search(regex_string, string, timeout=6)
+        search = search(regex_string, string, timeout=6)
     except TimeoutError:
         return False
     except BaseException:
@@ -18,7 +18,7 @@ async def infinite_loop_check(regex_string):
         r"\(.{1,}\)\{.{1,}(,)?\}\(.*\)(\+|\* |\{.*\})"
     )
     for match in loop_matches:
-        match_1 = regex.search(match, regex_string)
+        match_1 = search(match, regex_string)
     if match_1:
         return True
     return False

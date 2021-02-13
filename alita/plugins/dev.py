@@ -5,7 +5,7 @@ import os
 import sys
 import traceback
 import speedtest
-from alita import Alita
+from alita.bot_class import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita.utils.localization import GetLang

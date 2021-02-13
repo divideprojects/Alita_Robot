@@ -1,6 +1,6 @@
 import html
 from pyrogram import filters
-from alita import Alita
+from alita.bot_class import Alita
 from pyrogram.types import Message
 from alita import PREFIX_HANDLER, LOGGER
 from alita.utils.localization import GetLang

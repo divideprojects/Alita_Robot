@@ -1,47 +1,45 @@
-import sys
-import os
-import time
-import logging
-import importlib
-import redis
+from time import time
+from redis import Redis
 from datetime import datetime
-from pyrogram import Client
-from alita.bot_class import Alita
+from os import path, mkdir, environ
+from importlib import import_module as imp_mod
+from sys import stdout, version_info, exit as sysexit
+from logging import FileHandler, StreamHandler, basicConfig, INFO, WARNING, getLogger
 
 log_datetime = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 logdir = f"{__name__}/logs"
 
 # Make Logs directory if it does not exixts
-if not os.path.isdir(logdir):
-    os.mkdir(f"{__name__}/logs")
+if not path.isdir(logdir):
+    mkdir(f"{__name__}/logs")
 
 logfile = f"{logdir}/{__name__}_{log_datetime}.txt"
 
-file_handler = logging.FileHandler(filename=logfile)
-stdout_handler = logging.StreamHandler(sys.stdout)
+file_handler = FileHandler(filename=logfile)
+stdout_handler = StreamHandler(stdout)
 
-logging.basicConfig(
+basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
+    level=INFO,
     handlers=[file_handler, stdout_handler],
 )
 
-logging.getLogger("pyrogram").setLevel(logging.WARNING)
-LOGGER = logging.getLogger(__name__)
+getLogger("pyrogram").setLevel(WARNING)
+LOGGER = getLogger(__name__)
 
 # if version < 3.6, stop bot.
-if sys.version_info[0] < 3 or sys.version_info[1] < 6:
+if version_info[0] < 3 or version_info[1] < 6:
     LOGGER.error(
         (
             "You MUST have a Python Version of at least 3.6!\n"
             "Multiple features depend on this. Bot quitting."
         )
     )
-    sys.exit(1)  # Quit the Script
+    sysexit(1)  # Quit the Script
 
 # the secret configuration specific things
 try:
-    if os.environ.get("ENV"):
+    if environ.get("ENV"):
         from alita.sample_config import Config
     else:
         from alita.config import Development as Config
@@ -52,7 +50,7 @@ except Exception as ef:
 REDIS_HOST = Config.REDIS_HOST
 REDIS_PORT = Config.REDIS_PORT
 REDIS_PASS = Config.REDIS_PASS
-redisClient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASS)
+redisClient = Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASS)
 
 # Account Related
 TOKEN = Config.TOKEN
@@ -85,12 +83,12 @@ ENABLED_LOCALES = Config.ENABLED_LOCALES
 VERSION = Config.VERSION
 
 HELP_COMMANDS = {}  # For help menu
-UPTIME = time.time()  # Check bot uptime
+UPTIME = time()  # Check bot uptime
 
 
 def load_cmds(ALL_PLUGINS):
     for single in ALL_PLUGINS:
-        imported_module = importlib.import_module("alita.plugins." + single)
+        imported_module = imp_mod("alita.plugins." + single)
         if not hasattr(imported_module, "__PLUGIN__"):
             imported_module.__PLUGIN__ = imported_module.__name__
 

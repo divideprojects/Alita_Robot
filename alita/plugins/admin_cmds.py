@@ -1,5 +1,5 @@
 import time
-from alita import Alita
+from alita.bot_class import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message, ChatPermissions
 from alita import PREFIX_HANDLER, LOGGER, SUPPORT_GROUP
@@ -67,7 +67,7 @@ async def adminlist_show(c: Alita, m: Message):
     _ = GetLang(m).strs
     try:
         me_id = int(await get_key("BOT_ID"))  # Get Bot ID from Redis!
-        adminlist = await get_key("ADMINDICT")[
+        adminlist = (await get_key("ADMINDICT"))[
             str(m.chat.id)
         ]  # Load ADMINDICT from string
         adminstr = _("admin.adminlist").format(chat_title=m.chat.title)

@@ -1,4 +1,4 @@
-from alita import Alita
+from alita.bot_class import Alita
 from pyrogram.types import Message
 from alita import LOGGER
 from alita.db import (

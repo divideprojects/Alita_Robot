@@ -1,28 +1,32 @@
-import os
+from os import environ
+
+
+def load_var(var_name, def_value=None):
+    return environ.get(var_name, def_value)
 
 
 class Config:
     LOGGER = True
-    TOKEN = os.environ.get("TOKEN")
-    APP_ID = int(os.environ.get("APP_ID"))
-    API_HASH = os.environ.get("API_HASH")
-    OWNER_ID = int(os.environ.get("OWNER_ID"))
-    MESSAGE_DUMP = int(os.environ.get("MESSAGE_DUMP"))
-    DEV_USERS = [int(i) for i in os.environ.get("DEV_USERS").split()]
-    SUDO_USERS = [int(i) for i in os.environ.get("SUDO_USERS").split()]
-    WHITELIST_USERS = [int(i) for i in os.environ.get("WHITELIST_USERS").split()]
-    DB_URI = os.environ.get("DB_URI")
-    REDIS_HOST = os.environ.get("REDIS_HOST")
-    REDIS_PORT = os.environ.get("REDIS_PORT")
-    REDIS_PASS = os.environ.get("REDIS_PASS")
-    NO_LOAD = os.environ.get("NO_LOAD").split()
-    PREFIX_HANDLER = os.environ.get("PREFIX_HANDLER").split()
-    SUPPORT_GROUP = os.environ.get("SUPPORT_GROUP")
-    SUPPORT_CHANNEL = os.environ.get("SUPPORT_CHANNEL")
-    ENABLED_LOCALES = [str(i) for i in os.environ.get("ENABLED_LOCALES").split()]
-    VERSION = os.environ.get("VERSION")
-    DEV_PREFIX_HANDLER = os.environ.get("DEV_PREFIX_HANDLER").split()
-    WORKERS = int(os.environ.get("WORKERS"))
+    TOKEN = load_var("TOKEN")
+    APP_ID = int(load_var("APP_ID"))
+    API_HASH = load_var("API_HASH")
+    OWNER_ID = int(load_var("OWNER_ID"))
+    MESSAGE_DUMP = int(load_var("MESSAGE_DUMP", -100))
+    DEV_USERS = [int(i) for i in load_var("DEV_USERS", "").split()]
+    SUDO_USERS = [int(i) for i in load_var("SUDO_USERS", "").split()]
+    WHITELIST_USERS = [int(i) for i in load_var("WHITELIST_USERS", "").split()]
+    DB_URI = load_var("DB_URI")
+    REDIS_HOST = load_var("REDIS_HOST")
+    REDIS_PORT = load_var("REDIS_PORT")
+    REDIS_PASS = load_var("REDIS_PASS")
+    NO_LOAD = load_var("NO_LOAD", "").split()
+    PREFIX_HANDLER = load_var("PREFIX_HANDLER").split()
+    SUPPORT_GROUP = load_var("SUPPORT_GROUP")
+    SUPPORT_CHANNEL = load_var("SUPPORT_CHANNEL")
+    ENABLED_LOCALES = [str(i) for i in load_var("ENABLED_LOCALES", "").split()]
+    VERSION = load_var("VERSION")
+    DEV_PREFIX_HANDLER = load_var("DEV_PREFIX_HANDLER", ">").split()
+    WORKERS = int(load_var("WORKERS"))
 
 
 class Development:

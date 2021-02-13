@@ -1,7 +1,4 @@
-from pyrogram.types import Message
-
-
-async def extract_user(m: Message) -> (int, str):
+async def extract_user(m) -> (int, str):
     user_id = None
     user_first_name = None
 

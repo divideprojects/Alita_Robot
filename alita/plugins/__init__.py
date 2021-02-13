@@ -1,4 +1,4 @@
-import glob
+from glob import glob
 from os.path import dirname, basename, isfile
 
 
@@ -6,7 +6,8 @@ def __list_all_plugins():
 
     # This generates a list of plugins in this folder for the * in __main__ to
     # work.
-    mod_paths = glob.glob(dirname(__file__) + "/*.py")
+
+    mod_paths = glob(dirname(__file__) + "/*.py")
     all_plugins = [
         basename(f)[:-3]
         for f in mod_paths

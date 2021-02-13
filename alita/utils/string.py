@@ -1,9 +1,9 @@
-import re
-import time
+from time import time
+from re import compile as compilere
 
 from pyrogram.types import InlineKeyboardButton
 
-BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
+BTN_URL_REGEX = compilere(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
 
 
 async def replace_text(text):
@@ -19,11 +19,11 @@ async def extract_time(m, time_val):
             return ""
 
         if unit == "m":
-            bantime = int(time.time() + int(time_num) * 60)
+            bantime = int(time() + int(time_num) * 60)
         elif unit == "h":
-            bantime = int(time.time() + int(time_num) * 60 * 60)
+            bantime = int(time() + int(time_num) * 60 * 60)
         elif unit == "s":
-            bantime = int(time.time() + int(time_num) * 24 * 60 * 60)
+            bantime = int(time() + int(time_num) * 24 * 60 * 60)
         else:
             # how even...?
             return ""
