@@ -19,6 +19,7 @@
 from time import time
 from redis import Redis
 from datetime import datetime
+from nest_asyncio import apply
 from os import path, mkdir, environ
 from importlib import import_module as imp_mod
 from sys import stdout, version_info, exit as sysexit
@@ -31,6 +32,8 @@ from logging import (
     getLogger,
     DEBUG,
 )
+
+apply()
 
 log_datetime = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 logdir = f"{__name__}/logs"
