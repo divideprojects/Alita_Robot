@@ -3,10 +3,10 @@ import os
 import aiohttp
 from tswift import Song
 from datetime import datetime
+from alita import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita import (
-    Alita,
     PREFIX_HANDLER,
     OWNER_ID,
     DEV_USERS,

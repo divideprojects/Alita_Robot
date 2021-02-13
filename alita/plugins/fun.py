@@ -1,8 +1,9 @@
 import html
 import random
+from alita import Alita
 from pyrogram import filters
 from pyrogram.types import Message
-from alita import Alita, PREFIX_HANDLER
+from alita import PREFIX_HANDLER
 from alita.utils.localization import GetLang
 from alita.utils import fun_strings
 from alita.utils.extract_user import extract_user

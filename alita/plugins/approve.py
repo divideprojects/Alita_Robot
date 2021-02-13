@@ -1,7 +1,8 @@
+from alita.db import approve_db as db
+from alita import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
-from alita import Alita, PREFIX_HANDLER, SUPPORT_GROUP
-from alita.db import approve_db as db
+from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 from alita.utils.admin_check import admin_check, owner_check

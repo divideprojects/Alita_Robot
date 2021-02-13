@@ -5,11 +5,12 @@ import os
 import sys
 import traceback
 import speedtest
+from alita import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita.utils.localization import GetLang
 from alita.utils.aiohttp_helper import AioHttp
-from alita import Alita, MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME, logfile
+from alita import MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME, logfile
 from alita.utils.custom_filters import dev_filter
 from alita.utils.redishelper import get_key, allkeys
 from alita.utils.parser import mention_markdown

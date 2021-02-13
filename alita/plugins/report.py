@@ -1,4 +1,5 @@
 import html
+from alita import Alita
 from pyrogram import filters
 from pyrogram.types import (
     Message,
@@ -9,7 +10,7 @@ from pyrogram.types import (
 from pyrogram.errors import BadRequest, Unauthorized
 from alita.utils.parser import mention_html
 from alita.db import reporting_db as db
-from alita import Alita, LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
+from alita import LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
 from alita.utils.admin_check import admin_check
 
 
