@@ -15,10 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from asyncio import run
 
-
-async def __list_all_plugins():
+async def ALL_PLUGINS():
 
     # This generates a list of plugins in this folder for the * in __main__ to
     # work.
@@ -32,8 +30,4 @@ async def __list_all_plugins():
         for f in mod_paths
         if isfile(f) and f.endswith(".py") and not f.endswith("__init__.py")
     ]
-    return all_plugins
-
-
-ALL_PLUGINS = sorted(run(__list_all_plugins()))
-__all__ = ALL_PLUGINS + ["ALL_PLUGINS"]
+    return sorted(all_plugins)

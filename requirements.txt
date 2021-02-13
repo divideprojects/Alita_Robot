@@ -11,4 +11,3 @@ wikipedia
 redis
 python-dateutil
 aiohttp[speedups]
-nest-asyncio
