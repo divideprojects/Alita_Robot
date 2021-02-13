@@ -230,7 +230,7 @@ async def my_info(c: Alita, m: Message):
     try:
         user_member = await c.get_users(user.id)
         if user_member.status == "administrator":
-            result = AioHttp().post(
+            result = await AioHttp.post(
                 (
                     f"https://api.telegram.org/bot{TOKEN}/"
                     f"getChatMember?chat_id={m.chat.id}&user_id={user.id}"

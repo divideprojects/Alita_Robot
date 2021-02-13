@@ -1,4 +1,4 @@
-import wikipedia
+from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
@@ -22,7 +22,7 @@ async def wiki(c: Alita, m: Message):
     else:
         search = m.text.split(None, 1)[1]
     try:
-        res = wikipedia.summary(search)
+        res = summary(search)
     except DisambiguationError as de:
         await m.reply_text(
             f"Disambiguated pages found! Adjust your query accordingly.\n<i>{de}</i>",
@@ -46,4 +46,5 @@ async def wiki(c: Alita, m: Message):
                 )
         else:
             await m.reply_text(result, parse_mode="html", disable_web_page_preview=True)
+
     return

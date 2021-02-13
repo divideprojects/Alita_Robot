@@ -36,10 +36,10 @@ getLogger("pyrogram").setLevel(DEBUG)
 LOGGER = getLogger(__name__)
 
 # if version < 3.6, stop bot.
-if version_info[0] < 3 or version_info[1] < 6:
+if version_info[0] < 3 or version_info[1] < 7:
     LOGGER.error(
         (
-            "You MUST have a Python Version of at least 3.6!\n"
+            "You MUST have a Python Version of at least 3.7!\n"
             "Multiple features depend on this. Bot quitting."
         )
     )
@@ -52,7 +52,7 @@ try:
     else:
         from alita.config import Development as Config
 except Exception as ef:
-    print(ef)  # Print Error
+    LOGGER.error(ef)  # Print Error
 
 # Redis Cache
 REDIS_HOST = Config.REDIS_HOST

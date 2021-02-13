@@ -186,7 +186,7 @@ async def execution(c: Alita, m: Message):
 @Alita.on_message(filters.command("ip", DEV_PREFIX_HANDLER) & dev_filter)
 async def public_ip(c: Alita, m: Message):
     _ = GetLang(m).strs
-    ip = AioHttp().get_text("https://api.ipify.org")[0]
+    ip = (await AioHttp.get_text("https://api.ipify.org"))[0]
     await c.send_message(
         MESSAGE_DUMP,
         f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",

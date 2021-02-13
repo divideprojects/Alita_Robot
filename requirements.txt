@@ -3,12 +3,10 @@ tgcrypto
 asyncio
 psycopg2-binary
 sqlalchemy
-requests
 speedtest-cli
 googletrans
 tswift
 regex
-pynewtonmath
 wikipedia
 redis
 python-dateutil
