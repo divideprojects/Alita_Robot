@@ -1,9 +1,9 @@
-import html
-import random
-from alita.bot_class import Alita
+from html import escape
+from secrets import choice
 from pyrogram import filters
 from pyrogram.types import Message
 from alita import PREFIX_HANDLER
+from alita.bot_class import Alita
 from alita.utils.localization import GetLang
 from alita.utils import fun_strings
 from alita.utils.extract_user import extract_user
@@ -44,7 +44,7 @@ async def fun_shout(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("runs", PREFIX_HANDLER))
 async def fun_run(c: Alita, m: Message):
-    await m.reply_text(random.choice(fun_strings.RUN_STRINGS))
+    await m.reply_text(choice(fun_strings.RUN_STRINGS))
     return
 
 
@@ -54,26 +54,26 @@ async def fun_slap(c: Alita, m: Message):
 
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
 
-    curr_user = html.escape(m.from_user.first_name)
+    curr_user = escape(m.from_user.first_name)
     user_id = (await extract_user(m))[0]
 
     if user_id == me.id:
-        temp = random.choice(fun_strings.SLAP_ALITA_TEMPLATES)
+        temp = choice(fun_strings.SLAP_ALITA_TEMPLATES)
         return
 
     if user_id:
         slapped_user = await c.get_member(user_id)
         user1 = curr_user
-        user2 = html.escape(slapped_user.first_name)
+        user2 = escape(slapped_user.first_name)
 
     else:
         user1 = me.first_name
         user2 = curr_user
 
-    temp = random.choice(fun_strings.SLAP_ALITA_TEMPLATES)
-    item = random.choice(fun_strings.ITEMS)
-    hit = random.choice(fun_strings.HIT)
-    throw = random.choice(fun_strings.THROW)
+    temp = choice(fun_strings.SLAP_ALITA_TEMPLATES)
+    item = choice(fun_strings.ITEMS)
+    hit = choice(fun_strings.HIT)
+    throw = choice(fun_strings.THROW)
 
     reply = temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
 
@@ -84,14 +84,14 @@ async def fun_slap(c: Alita, m: Message):
 @Alita.on_message(filters.command("roll", PREFIX_HANDLER))
 async def fun_roll(c: Alita, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    await reply_text(random.choice(range(1, 7)))
+    await reply_text(choice(range(1, 7)))
     return
 
 
 @Alita.on_message(filters.command("toss", PREFIX_HANDLER))
 async def fun_toss(c: Alita, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    await reply_text(random.choice(fun_strings.TOSS))
+    await reply_text(choice(fun_strings.TOSS))
     return
 
 
@@ -114,12 +114,12 @@ async def fun_bluetext(c: Alita, m: Message):
 @Alita.on_message(filters.command("decide", PREFIX_HANDLER))
 async def fun_decide(c: Alita, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    await reply_text(random.choice(fun_strings.DECIDE))
+    await reply_text(choice(fun_strings.DECIDE))
     return
 
 
 @Alita.on_message(filters.command("react", PREFIX_HANDLER))
 async def fun_table(c: Alita, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    await reply_text(random.choice(fun_strings.REACTIONS))
+    await reply_text(choice(fun_strings.REACTIONS))
     return

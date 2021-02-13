@@ -1,4 +1,3 @@
-from alita.bot_class import Alita
 from pyrogram import filters
 from pyrogram.types import (
     InlineKeyboardMarkup,
@@ -7,9 +6,10 @@ from pyrogram.types import (
     CallbackQuery,
 )
 from alita import PREFIX_HANDLER, LOGGER
+from alita.bot_class import Alita
+from alita.db import notes_db as db
 from alita.utils.msg_types import Types, get_note_type
 from alita.utils.string import parse_button, build_keyboard
-from alita.db import notes_db as db
 from alita.utils.admin_check import admin_check, owner_check
 
 

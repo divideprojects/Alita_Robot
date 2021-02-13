@@ -1,5 +1,4 @@
-import html
-from alita.bot_class import Alita
+from html import escape
 from pyrogram import filters
 from pyrogram.types import (
     Message,
@@ -8,9 +7,10 @@ from pyrogram.types import (
     CallbackQuery,
 )
 from pyrogram.errors import BadRequest, Unauthorized
-from alita.utils.parser import mention_html
-from alita.db import reporting_db as db
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
+from alita.bot_class import Alita
+from alita.db import reporting_db as db
+from alita.utils.parser import mention_html
 from alita.utils.admin_check import admin_check
 
 
@@ -102,7 +102,7 @@ async def report(c: Alita, m: Message):
             # reported = f"{(await mention_html(m.from_user.first_name, m.from_user.id)} reported {mention_html(reported_user.first_name, reported_user.id))} to the admins!"
 
             msg = (
-                f"<b>⚠️ Report: </b>{html.escape(m.chat.title)}\n"
+                f"<b>⚠️ Report: </b>{escape(m.chat.title)}\n"
                 f"<b> • Report by:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))} (<code>{m.from_user.id}</code>)\n"
                 f"<b> • Reported user:</b> {(await mention_html(reported_user.first_name, reported_user.id))} (<code>{reported_user.id}</code>)\n"
             )
@@ -136,7 +136,7 @@ async def report(c: Alita, m: Message):
         else:
             # reported = f"{(await mention_html(m.from_user.first_name, m.from_user.id)} reported {mention_html(reported_user.first_name, reported_user.id))} to the admins!"
 
-            msg = f'{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in f"{html.escape(chat_name)}"!'
+            msg = f'{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in f"{escape(chat_name)}"!'
             link = ""
             should_forward = True
 

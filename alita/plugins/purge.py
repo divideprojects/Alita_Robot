@@ -1,8 +1,8 @@
-import asyncio
-from alita.bot_class import Alita
+from asyncio import sleep
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita import PREFIX_HANDLER
+from alita.bot_class import Alita
 from alita.utils.localization import GetLang
 from alita.utils.admin_check import admin_check
 
@@ -57,7 +57,7 @@ async def purge(c: Alita, m: Message):
     count_del_msg = len(message_ids)
 
     await dm.edit(_("purge.purge_msg_count").format(msg_count=count_del_msg))
-    await asyncio.sleep(3)
+    await sleep(3)
     await dm.delete()
     return
 
@@ -76,7 +76,7 @@ async def del_msg(c: Alita, m: Message):
         await c.delete_messages(
             chat_id=m.chat.id, message_ids=m.reply_to_message.message_id
         )
-        await asyncio.sleep(0.5)
+        await sleep(0.5)
         await m.delete()
     else:
         await m.reply_text(_("purge.what_del"))

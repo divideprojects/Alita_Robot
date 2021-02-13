@@ -1,9 +1,10 @@
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
-from alita import PREFIX_HANDLER
-from alita.bot_class import Alita
 from pyrogram import filters
 from pyrogram.types import Message
+from alita import PREFIX_HANDLER
+from alita.bot_class import Alita
+
 
 __PLUGIN__ = "Wikipedia"
 

@@ -1,20 +1,19 @@
-import asyncio
-import io
-import time
-import os
-import sys
-import traceback
-import speedtest
-from alita.bot_class import Alita
+from sys import stdout, stderr
+from traceback import format_exc
+from io import BytesIO, StringIO
+from time import strftime, gmtime, time
+from speedtest import Speedtest
 from pyrogram import filters, errors
 from pyrogram.types import Message
+from asyncio import subprocess, create_subprocess_shell
+from alita import LOGGER, MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME, logfile
+from alita.bot_class import Alita
+from alita.db import users_db as userdb
 from alita.utils.localization import GetLang
 from alita.utils.aiohttp_helper import AioHttp
-from alita import MESSAGE_DUMP, DEV_PREFIX_HANDLER, UPTIME, logfile
 from alita.utils.custom_filters import dev_filter
 from alita.utils.redishelper import get_key, allkeys
 from alita.utils.parser import mention_markdown
-from alita.db import users_db as userdb
 
 
 @Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
@@ -40,7 +39,7 @@ async def test_speed(c: Alita, m: Message):
         f"#SPEEDTEST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     sent = await m.reply_text(_("dev.start_speedtest"))
-    s = speedtest.Speedtest()
+    s = Speedtest()
     bs = s.get_best_server()
     dl = round(s.download() / 1024 / 1024, 2)
     ul = round(s.upload() / 1024 / 1024, 2)
@@ -56,8 +55,8 @@ async def test_speed(c: Alita, m: Message):
 async def neofetch_stats(c: Alita, m: Message):
     cmd = "neofetch --stdout"
 
-    process = await asyncio.create_subprocess_shell(
-        cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+    process = await create_subprocess_shell(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     stdout, stderr = await process.communicate()
     e = stderr.decode()
@@ -68,7 +67,7 @@ async def neofetch_stats(c: Alita, m: Message):
         OUTPUT = "No Output"
 
     if len(OUTPUT) > 4090:
-        with io.BytesIO(str.encode(OUTPUT)) as f:
+        with BytesIO(str.encode(OUTPUT)) as f:
             f.name = "neofetch.txt"
             await m.reply_document(document=f, caption="neofetch result")
         await m.delete()
@@ -90,21 +89,20 @@ async def evaluate_code(c: Alita, m: Message):
     if m.reply_to_message:
         reply_to_id = m.reply_to_message.message_id
 
-    old_stderr = sys.stderr
-    old_stdout = sys.stdout
-    redirected_output = sys.stdout = io.StringIO()
-    redirected_error = sys.stderr = io.StringIO()
+    old_stderr = stderr
+    old_stdout = stdout
+    redirected_output = stdout = StringIO()
+    redirected_error = stderr = StringIO()
     stdout, stderr, exc = None, None, None
 
     try:
         await aexec(cmd, c, m)
-    except Exception:
-        exc = traceback.format_exc()
+    except Exception as ef:
+        LOGGER.error(ef)
+        exc = format_exc()
 
     stdout = redirected_output.getvalue()
     stderr = redirected_error.getvalue()
-    sys.stdout = old_stdout
-    sys.stderr = old_stderr
 
     evaluation = ""
     if exc:
@@ -119,15 +117,14 @@ async def evaluate_code(c: Alita, m: Message):
     final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation.strip()}</code> \n"
 
     if len(final_output) > 4000:
-        with open("eval.text", "w+", encoding="utf8") as out_file:
-            out_file.write(str(final_output))
-        await m.reply_document(
-            document="eval.text",
-            caption=cmd,
-            disable_notification=True,
-            reply_to_message_id=reply_to_id,
-        )
-        os.remove("eval.text")
+        with BytesIO(str.encode(final_output)) as f:
+            f.name = "eval.txt"
+            await m.reply_document(
+                document=f,
+                caption=cmd,
+                disable_notification=True,
+                reply_to_message_id=reply_to_id,
+            )
         await sm.delete()
     else:
         await sm.edit(final_output)
@@ -151,8 +148,8 @@ async def execution(c: Alita, m: Message):
     if m.reply_to_message:
         reply_to_id = m.reply_to_message.message_id
 
-    process = await asyncio.create_subprocess_shell(
-        cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+    process = await create_subprocess_shell(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     stdout, stderr = await process.communicate()
     e = stderr.decode()
@@ -169,15 +166,15 @@ async def execution(c: Alita, m: Message):
     OUTPUT += f"<b>stdout</b>: \n<code>{o}</code>"
 
     if len(OUTPUT) > 4000:
-        with open("exec.text", "w+", encoding="utf8") as out_file:
-            out_file.write(str(OUTPUT))
-        await m.reply_document(
-            document="exec.text",
-            caption=cmd,
-            disable_notification=True,
-            reply_to_message_id=reply_to_id,
-        )
-        os.remove("exec.text")
+        with BytesIO(str.encode(OUTPUT)) as f:
+            f.name = "exec.txt"
+            await m.reply_document(
+                document=f,
+                caption=cmd,
+                disable_notification=True,
+                reply_to_message_id=reply_to_id,
+            )
+        await sm.delete()
     else:
         await sm.edit_text(OUTPUT)
     return
@@ -224,7 +221,7 @@ async def chats(c: Alita, m: Message):
         except Exception as ef:
             await m.reply_text(f"**Error:**\n{ef}")
 
-    with io.BytesIO(str.encode(chatfile)) as output:
+    with BytesIO(str.encode(chatfile)) as output:
         output.name = "chatlist.txt"
         await m.reply_document(
             document=output, caption="Here is the list of chats in my Database."
@@ -235,7 +232,7 @@ async def chats(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("uptime", DEV_PREFIX_HANDLER) & dev_filter)
 async def uptime(c: Alita, m: Message):
-    up = time.strftime("%Hh %Mm %Ss", time.gmtime(time.time() - UPTIME))
+    up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
     await m.reply_text(f"<b>Uptime:</b> `{up}`")
     return
 
@@ -268,7 +265,7 @@ async def list_all_admins(c: Alita, m: Message):
     admindict = await get_key("ADMINDICT")
 
     if len(str(admindict)) > 4000:
-        with io.BytesIO(str.encode(admindict)) as output:
+        with BytesIO(str.encode(admindict)) as output:
             output.name = "alladmins.txt"
             await m.reply_document(
                 document=output,

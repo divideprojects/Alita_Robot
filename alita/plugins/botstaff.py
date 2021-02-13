@@ -1,5 +1,5 @@
-from alita.bot_class import Alita
 from pyrogram import filters
+from alita.bot_class import Alita
 from pyrogram.types import Message
 from alita import (
     WHITELIST_USERS,

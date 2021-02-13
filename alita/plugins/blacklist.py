@@ -1,10 +1,10 @@
-import html
+from html import escape
 from pyrogram import filters
-from alita.bot_class import Alita
 from pyrogram.types import Message
 from alita import PREFIX_HANDLER, LOGGER
-from alita.utils.localization import GetLang
+from alita.bot_class import Alita
 from alita.db import blacklist_db as db, approve_db as app_db
+from alita.utils.localization import GetLang
 from alita.utils.regex_utils import regex_searcher
 from alita.utils.admin_check import admin_check
 
@@ -48,7 +48,7 @@ async def view_blacklist(c: Alita, m: Message):
         return
 
     for trigger in all_blacklisted:
-        blacklists_chat += f" • <code>{html.escape(trigger)}</code>\n"
+        blacklists_chat += f" • <code>{escape(trigger)}</code>\n"
 
     await m.reply_text(blacklists_chat, reply_to_message_id=m.message_id)
     return

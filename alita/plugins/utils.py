@@ -1,9 +1,7 @@
-import html
-import os
-import aiohttp
+from html import escape
+from io import BytesIO
 from tswift import Song
 from datetime import datetime
-from alita.bot_class import Alita
 from pyrogram import filters, errors
 from pyrogram.types import Message
 from alita import (
@@ -16,6 +14,7 @@ from alita import (
     SUPPORT_GROUP,
     LOGGER,
 )
+from alita.bot_class import Alita
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -67,14 +66,12 @@ async def get_lyrics(c: Alita, m: Message):
     else:
         reply = "Song not found!"
     if len(reply) > 4090:
-        with open("lyrics.txt", "w") as f:
-            f.write(reply)
-            f.close()
-        await m.reply_document(
-            document="lyrics.txt",
-            caption=("Message length exceeded max limit!\nSent as a text file."),
-        )
-        os.remove("lyrics.txt")
+        with BytesIO(str.encode(reply)) as f:
+            f.name = "lyrics.txt"
+            await m.reply_document(
+                document=f,
+                caption="Message length exceeded max limit!\nSent as a text file.",
+            )
         await em.delete()
     else:
         await em.edit_text(reply)
@@ -150,41 +147,25 @@ async def github(c: Alita, m: Message):
         return
 
     URL = f"https://api.github.com/users/{username}"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(URL) as request:
-            if request.status == 404:
-                await m.reply_text(f"`{username} not found`", parse_mode="md")
-                return
+    result, resp = await AioHttp.get_json(URL)
+    if resp.status == 404:
+        await m.reply_text(f"`{username} not found`", parse_mode="md")
+        return
 
-            result = await request.json()
+    url = result.get("html_url", None)
+    name = result.get("name", None)
+    company = result.get("company", None)
+    bio = result.get("bio", None)
+    created_at = result.get("created_at", "Not Found")
 
-            url = result.get("html_url", None)
-            name = result.get("name", None)
-            company = result.get("company", None)
-            bio = result.get("bio", None)
-            created_at = result.get("created_at", "Not Found")
+    REPLY = (
+        f"**GitHub Info for** `{username}`"
+        f"\n**Username:** `{name}`\n**Bio:** `{bio}`\n**URL:** {url}"
+        f"\n**Company:** `{company}`\n**Created at:** `{created_at}`"
+    )
 
-            REPLY = (
-                f"**GitHub Info for** `{username}`"
-                f"\n**Username:** `{name}`\n**Bio:** `{bio}`\n**URL:** {url}"
-                f"\n**Company:** `{company}`\n**Created at:** `{created_at}`"
-            )
+    await m.reply_text(REPLY)
 
-            if not result.get("repos_url", None):
-                return await m.reply_text(REPLY, parse_mode="md")
-            async with session.get(result.get("repos_url", None)) as request:
-                result = request.json
-                if request.status == 404:
-                    return await m.reply_text(REPLY, parse_mode="md")
-
-                result = await request.json()
-
-                REPLY += "\nRepos:\n"
-
-                for nr in range(len(result)):
-                    REPLY += f"[{result[nr].get('name', None)}]({result[nr].get('html_url', None)})\n"
-
-                await m.reply_text(REPLY, parse_mode="md")
     return
 
 
@@ -207,14 +188,14 @@ async def my_info(c: Alita, m: Message):
     text = (
         f"<b>Characteristics:</b>\n"
         f"<b>ID:</b> <code>{user.id}</code>\n"
-        f"<b>First Name:</b> <code>{html.escape(user.first_name)}</code>"
+        f"<b>First Name:</b> <code>{escape(user.first_name)}</code>"
     )
 
     if user.last_name:
-        text += f"\n<b>Last Name:</b></b> <code>{html.escape(user.last_name)}</code>"
+        text += f"\n<b>Last Name:</b></b> <code>{escape(user.last_name)}</code>"
 
     if user.username:
-        text += f"\n<b>Username</b>: @{html.escape(user.username)}"
+        text += f"\n<b>Username</b>: @{escape(user.username)}"
 
     text += f"\n<b>Permanent user link:</b> {mention_html('Click Here', user.id)}"
 

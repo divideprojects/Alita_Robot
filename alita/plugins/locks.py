@@ -1,8 +1,8 @@
-import asyncio
-from alita.bot_class import Alita
+from asyncio import sleep
 from pyrogram import filters, errors
 from pyrogram.types import Message, ChatPermissions
 from alita import PREFIX_HANDLER, LOGGER
+from alita.bot_class import Alita
 from alita.db import approve_db as app_db
 from alita.utils.localization import GetLang
 from alita.utils.admin_check import admin_check
@@ -395,6 +395,6 @@ async def prevent_approved(c: Alita, m: Message):
             ),
         )
         LOGGER.info(f"Approved {i} in {m.chat.id}")
-        await asyncio.sleep(0.2)
+        await sleep(0.2)
 
     return

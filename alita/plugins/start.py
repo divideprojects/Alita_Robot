@@ -1,4 +1,3 @@
-from alita.bot_class import Alita
 from pyrogram import filters, errors
 from pyrogram.types import (
     CallbackQuery,
@@ -7,6 +6,7 @@ from pyrogram.types import (
     InlineKeyboardButton,
 )
 from alita import PREFIX_HANDLER, VERSION, HELP_COMMANDS, OWNER_ID, LOGGER
+from alita.bot_class import Alita
 from alita.utils.localization import GetLang
 
 

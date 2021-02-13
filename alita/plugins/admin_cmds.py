@@ -1,8 +1,8 @@
-import time
-from alita.bot_class import Alita
+from time import time
 from pyrogram import filters, errors
 from pyrogram.types import Message, ChatPermissions
 from alita import PREFIX_HANDLER, LOGGER, SUPPORT_GROUP
+from alita.bot_class import Alita
 from alita.utils.localization import GetLang
 from alita.utils.admin_check import admin_check
 from alita.utils.extract_user import extract_user
@@ -135,7 +135,7 @@ async def kick_usr(c: Alita, m: Message):
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = await extract_user(m)
         try:
-            await c.kick_chat_member(m.chat.id, user_id, int(time.time() + 45))
+            await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
             await m.reply_text(
                 f"Banned {(await mention_html(user_first_name, user_id))}"
             )

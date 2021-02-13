@@ -1,10 +1,11 @@
-import html
+from html import escape
 from googletrans import Translator, LANGUAGES
-from alita.bot_class import Alita
 from pyrogram import filters
 from pyrogram.types import Message
-from alita.utils.localization import GetLang
 from alita import PREFIX_HANDLER
+from alita.bot_class import Alita
+from alita.utils.localization import GetLang
+
 
 __PLUGIN__ = "TRANSLATE"
 
@@ -52,7 +53,7 @@ async def translate(c: Alita, m: Message):
         trres = translator.translate(text, **langs)
         text = trres.text
 
-        res = html.escape(text)
+        res = escape(text)
         await sent.edit_text(
             _("translate.translation").format(
                 from_lang=trres.src, to_lang=trres.dest, translation=res

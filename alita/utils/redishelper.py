@@ -1,4 +1,4 @@
-from pickle import loads, dumps
+from _pickle import loads, dumps
 from alita import redisClient
 
 

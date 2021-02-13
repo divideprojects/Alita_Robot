@@ -1,6 +1,6 @@
-from alita.bot_class import Alita
 from pyrogram.types import Message
 from alita import LOGGER
+from alita.bot_class import Alita
 from alita.db import (
     users_db as userdb,
     lang_db as langdb,
