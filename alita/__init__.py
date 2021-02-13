@@ -113,4 +113,4 @@ def load_cmds(ALL_PLUGINS):
                 "Can't have two plugins with the same name! Please change one"
             )
 
-    return f"Plugins Loaded: {list(list(HELP_COMMANDS.keys()))}"
+    return f"Plugins Loaded: {', '.join(list(HELP_COMMANDS.keys()))}"
