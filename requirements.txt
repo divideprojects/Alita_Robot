@@ -10,4 +10,4 @@ regex
 wikipedia
 redis
 python-dateutil
-aiohttp
+aiohttp[speedups]
