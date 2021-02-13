@@ -116,7 +116,7 @@ async def check_approved(c: Alita, m: Message):
 
     chat_title = m.chat.title
     chat = m.chat
-    user_id = await extract_user(m)[0]
+    user_id = (await extract_user(m))[0]
     msg = "The following users are approved:\n"
     x = db.all_approved(m.chat.id)
 
