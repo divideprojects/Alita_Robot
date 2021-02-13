@@ -1,0 +1,11 @@
+language: python
+python:
+  - "3.9"
+
+# command to install dependencies
+install:
+  - make install
+
+# command to check if bot works
+script:
+  - make run
