@@ -105,15 +105,17 @@ async def adminlist_show(c: Alita, m: Message):
         for i in adminlist:
             try:
                 usr = await m.chat.get_member(i)
+                if i == me_id:
+                    adminstr += f"- {(await mention_html(usr.user.first_name, i))} (⭐)\n"
+                elif usr.user.is_bot:
+                   adminstr += f"- {(await mention_html(usr.user.first_name, i))} (🤖)\n"
+                elif usr.status == "owner":
+                    adminstr += f"- {(await mention_html(usr.user.first_name, i))} (👑)\n"
+                else:
+                    usr = await c.get_users(i)
+                    adminstr += f"- {(await mention_html(usr.first_name, i))} (`{i}`)\n"
             except errors.PeerIdInvalid:
                 pass
-            if i == me_id:
-                adminstr += f"- {(await mention_html(usr.first_name, i))} (⭐)\n"
-            #elif usr.is_bot:
-                #adminstr += f"- {(await mention_html(usr.first_name, i))} (🤖)"
-            elif usr.status == "owner":
-                adminstr += f"- {(await mention_html(usr.first_name, i))} (👑)"
-            else:
                 usr = await c.get_users(i)
                 adminstr += f"- {(await mention_html(usr.first_name, i))} (`{i}`)\n"
         await replymsg.edit_text(f"Admins in {m.chat.title}\n{adminstr}")
