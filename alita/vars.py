@@ -48,13 +48,13 @@ class Config:
 
 
 class Development:
-    # Fill in these vars if you want to use Traditional methods
+    # Fill in these vars if you want to use Traditional method of deploying
     LOGGER = True
     TOKEN = "YOUR TOKEN"
-    APP_ID = 12345  # Your APP_ID - int value
-    API_HASH = "YOUR TOKEN"
+    APP_ID = 12345  # Your APP_ID from Telegram
+    API_HASH = "YOUR TOKEN"  # Your APP_HASH from Telegram
     OWNER_ID = "YOUR TOKEN"
-    MESSAGE_DUMP = "YOUR TOKEN"
+    MESSAGE_DUMP = "YOUR TOKEN"  # Your Bot Token from BotFather in Telegram
     DEV_USERS = []
     SUDO_USERS = []
     WHITELIST_USERS = []

@@ -2,11 +2,23 @@ os: linux
 dist: xenial
 language: python
 
+# Latest & lighest code
+git:
+  depth: 1
+  quiet: true
+
+# Only build these branches
+branches:
+  only:
+  - main
+
+# Python Versions
 python:
   - "3.7"
   - "3.8"
   - "3.9"
 
+# Install dependencies
 install:
   - pip install -r requirements-dev.txt
 

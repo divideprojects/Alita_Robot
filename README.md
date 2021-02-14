@@ -8,6 +8,7 @@
 ![Repo Size](https://img.shields.io/github/repo-size/Divkix/Alita_Robot)
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/Divkix/Alita_Robot/?ref=repository-badge)
 
+[![Build Status](https://travis-ci.com/Divkix/Alita_Robot.svg?branch=main)](https://travis-ci.com/Divkix/Alita_Robot)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194)](https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&utm_medium=referral&utm_content=Divkix/Alita_Robot&utm_campaign=Badge_Grade_Settings)
 ![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Divkix/Alita_Robot&title=Profile%20Views)
 [![Crowdin](https://badges.crowdin.net/alita_robot/localized.svg)](https://crowdin.com/project/alita_robot)
@@ -15,12 +16,12 @@
 Alita is a Telegram Group managment bot made using **[Pyrogram](https://github.com/pyrogram/pyrogram) _async version_** and **[Python](https://python.org)**, which makes it modern and faster than most of the exisitng Telegram Chat Managers.
 
 **Alita's features over other bots:**
--   Modern
--   Fast
--   Fully asynchronous
--   Fully open-source
--   Frequently updated
--   Multi Language Support
+- Modern
+- Fast
+- Fully asynchronous
+- Fully open-source
+- Frequently updated
+- Multi Language Support
 
 Can be found on Telegram as [@Alita_Robot](https://t.me/Alita_Robot).
 
@@ -56,19 +57,20 @@ It really motivates me to continue this project further.
 - Install virtualenv using `python3 -m pip -U install virtualenv`.
 - **Fork** or Clone the project using `git clone https://github.com/Divkix/Alita_Robot.git`
 - Install the requirements using `python3 -m pip install -r requirements.txt`
-- Rename `sample_config.py` to `config.py` in `alita` folder and fill in all the variables in *Development* class, not *Config* class. **Sudo, Dev, Whitelist** users are optional!!
+- Fill in all the variables in *Development* class, not *Config* class. **Sudo, Dev, Whitelist** users are optional!!
 - Run the bot using `python3 -m alita`
+
 If successful, bot should send message to the **MESSAGE_DUMP** Group!
 
 
 ### Docker
-- Clone the repo and cd into it
-- Install [Docker](https://www.docker.com/)
-- Make a `run.env` file with all the vars from [vars.py](https://github.com/Divkix/Alita_Robot/blob/fixes/alita/vars.py) file
+- Clone the repo and enter into it
+- Install [Docker](https://www.docker.com/).
+- Fill in the `sample.env` file and rename it to `main.env`.
 - Build the docker image using: `docker build -t alita_robot:latest .`
-- Run the command `docker run --env-file run.env alita_robot`
+- Run the command `docker run --env-file main.env alita_robot`
 
-The bot should start and send a test message to the `MESSAGE_DUMP` Group
+If successful, bot should send message to the **MESSAGE_DUMP** Group!
 
 
 ## TO-DO
@@ -82,17 +84,17 @@ The bot should start and send a test message to the `MESSAGE_DUMP` Group
 - [x] Full Asynchronous (All functions run async)
 - [ ] Add backup/restore option (Chat settings can be backud up)
 - [ ] Add Warnings
-- [ ] Add Connections (Connect group to PM)
-- [x] Fix Docker Configuration (Need to enter ENV Vars Manually)
+- [ ] Add Connections (Connect group chats to PM)
+- [x] Fix Docker Configuration
 
-*Still need to add docker-compose
+*Still need to add docker-compose for
 
 
 ## Contributing to the project
 
 - Make sure your PR works and doesn't break anything.
 - You must join the support group.
-
+- Make sure it passes `make test` command.
 
 ## Special Thanks to
 - [AmanoTeam](https://github.com/AmanoTeam/) for [EduuRobot](https://github.com/AmanoTeam/EduuRobot/tree/rewrite) as that helped me make the language menu with the 4 langauges provided and some basic plugins.
