@@ -109,8 +109,8 @@ async def adminlist_show(c: Alita, m: Message):
                 pass
             if i == me_id:
                 adminstr += f"- {(await mention_html(usr.first_name, i))} (⭐)\n"
-            elif usr.is_bot:
-                adminstr += f"- {(await mention_html(usr.first_name, i))} (🤖)"
+            #elif usr.is_bot:
+                #adminstr += f"- {(await mention_html(usr.first_name, i))} (🤖)"
             elif usr.status == "owner":
                 adminstr += f"- {(await mention_html(usr.first_name, i))} (👑)"
             else:
