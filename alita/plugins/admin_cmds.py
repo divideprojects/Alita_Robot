@@ -104,7 +104,7 @@ async def adminlist_show(c: Alita, m: Message):
         adminstr = _("admin.adminlist").format(chat_title=m.chat.title)
         for i in adminlist:
             try:
-                usr = await m.get_member(i)
+                usr = await m.chat.get_member(i)
             except errors.PeerIdInvalid:
                 pass
             if i == me_id:
