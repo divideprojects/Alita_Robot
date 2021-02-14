@@ -1,17 +1,34 @@
-from alita.__main__ import Alita
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 from pyrogram.types import Message
+
 from alita import LOGGER
-from alita.db import (
-    users_db as userdb,
-    lang_db as langdb,
-    rules_db as ruledb,
-    blacklist_db as bldb,
-    notes_db as notedb,
-)
+from alita.bot_class import Alita
+from alita.db import blacklist_db as bldb
+from alita.db import lang_db as langdb
+from alita.db import notes_db as notedb
+from alita.db import rules_db as ruledb
+from alita.db import users_db as userdb
 
 
 @Alita.on_message(group=-1)
-async def initial_works(c: Alita, m: Message):
+async def initial_works(_: Alita, m: Message):
     try:
         if m.migrate_to_chat_id or m.migrate_from_chat_id:
             if m.migrate_to_chat_id:
@@ -28,7 +45,10 @@ async def initial_works(c: Alita, m: Message):
                 return
         else:
             userdb.update_user(
-                m.from_user.id, m.from_user.username, m.chat.id, m.chat.title
+                m.from_user.id,
+                m.from_user.username,
+                m.chat.id,
+                m.chat.title,
             )
             if m.reply_to_message:
                 userdb.update_user(

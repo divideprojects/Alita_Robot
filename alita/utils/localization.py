@@ -1,23 +1,43 @@
-import json
-import os.path
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 from glob import glob
+from json import load as loadjson
+from os import path
+
 from pyrogram.types import CallbackQuery
-from alita.db import lang_db as db
+
 from alita import ENABLED_LOCALES as enabled_locales
+from alita.db import lang_db as db
 
 
 def cache_localizations(files):
     ldict = {lang: {} for lang in enabled_locales}
     for file in files:
-        lname = file.split(os.path.sep)[1]
-        dic = json.load(open(file, encoding="utf-8"))
+        lname = file.split(path.sep)[1]
+        dic = loadjson(open(file, encoding="utf-8"))
         ldict[lname].update(dic)
     return ldict
 
 
 jsons = []
 for locale in enabled_locales:
-    jsons += glob(os.path.join("locales", locale, "*.json"))
+    jsons += glob(path.join("locales", locale, "*.json"))
 
 
 langdict = cache_localizations(jsons)

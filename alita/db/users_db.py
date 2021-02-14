@@ -1,5 +1,25 @@
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 import threading
-from sqlalchemy import Column, Integer, UnicodeText, String, func
+
+from sqlalchemy import Column, Integer, String, UnicodeText, func
+
 from alita.db import BASE, SESSION
 
 
@@ -13,7 +33,7 @@ class Users(BASE):
         self.username = username
 
     def __repr__(self):
-        return "<User {} ({})>".format(self.username, self.user_id)
+        return f"<User {self.username} ({self.user_id})>"
 
 
 class Chats(BASE):
@@ -26,7 +46,7 @@ class Chats(BASE):
         self.chat_name = chat_name
 
     def __repr__(self):
-        return "<Chat {} ({})>".format(self.chat_name, self.chat_id)
+        return f"<Chat {self.chat_name} ({self.chat_id})>"
 
 
 Users.__table__.create(checkfirst=True)

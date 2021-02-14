@@ -1,18 +1,38 @@
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 from io import BytesIO
-from alita.__main__ import Alita
+
 from pyrogram import filters
 from pyrogram.types import (
-    Message,
     CallbackQuery,
-    InlineKeyboardMarkup,
     InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
 )
+
 from alita import DEV_PREFIX_HANDLER
+from alita.bot_class import Alita
 from alita.utils.custom_filters import dev_filter
 
 
 @Alita.on_message(filters.command("banall", DEV_PREFIX_HANDLER) & dev_filter)
-async def get_stats(c: Alita, m: Message):
+async def get_stats(_: Alita, m: Message):
     await m.reply_text(
         "Are you sure you want to ban all members in this group?",
         reply_markup=InlineKeyboardMarkup(
@@ -20,8 +40,8 @@ async def get_stats(c: Alita, m: Message):
                 [
                     InlineKeyboardButton("⚠️ Confirm", callback_data="ban.all.members"),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
-                ]
-            ]
+                ],
+            ],
         ),
     )
     return
@@ -38,9 +58,8 @@ async def banallnotes_callback(c: Alita, q: CallbackQuery):
                 continue
             await c.kick_chat_member(chat_id=q.message.chat.id, user_id=x.user.id)
             users.append(x.user.id)
-        except Exception:
+        except BaseException:
             fs += 1
-            pass
 
     rply = f"Users Banned:\n{users}"
 

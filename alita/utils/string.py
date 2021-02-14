@@ -1,12 +1,30 @@
-import re
-import time
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+from re import compile as compilere
+from time import time
 
 from pyrogram.types import InlineKeyboardButton
 
-BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
+BTN_URL_REGEX = compilere(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
 
 
-def replace_text(text):
+async def replace_text(text):
     return text.replace('"', "").replace("\\r", "").replace("\\n", "").replace("\\", "")
 
 
@@ -19,22 +37,19 @@ async def extract_time(m, time_val):
             return ""
 
         if unit == "m":
-            bantime = int(time.time() + int(time_num) * 60)
+            bantime = int(time() + int(time_num) * 60)
         elif unit == "h":
-            bantime = int(time.time() + int(time_num) * 60 * 60)
+            bantime = int(time() + int(time_num) * 60 * 60)
         elif unit == "s":
-            bantime = int(time.time() + int(time_num) * 24 * 60 * 60)
+            bantime = int(time() + int(time_num) * 24 * 60 * 60)
         else:
             # how even...?
             return ""
         return bantime
-    else:
-        await m.reply(
-            "Invalid time type specified. Needed m, h, or s. got: {}".format(
-                time_val[-1]
-            )
-        )
-        return ""
+    await m.reply(
+        "Invalid time type specified. Needed m, h, or s. got: {}".format(time_val[-1]),
+    )
+    return ""
 
 
 async def extract_time_str(m, time_val):
@@ -55,16 +70,13 @@ async def extract_time_str(m, time_val):
             # how even...?
             return ""
         return bantime
-    else:
-        await m.reply(
-            "Invalid time type specified. Needed m, h, or s. got: {}".format(
-                time_val[-1]
-            )
-        )
-        return ""
+    await m.reply(
+        "Invalid time type specified. Needed m, h, or s. got: {}".format(time_val[-1]),
+    )
+    return ""
 
 
-def make_time(time_val):
+async def make_time(time_val):
     if int(time_val) == 0:
         return "0"
     if int(time_val) <= 3600:
@@ -76,7 +88,7 @@ def make_time(time_val):
     return bantime
 
 
-def id_from_reply(m):
+async def id_from_reply(m):
     prev_message = m.reply_to_message
     if not prev_message:
         return None, None
@@ -87,7 +99,7 @@ def id_from_reply(m):
     return user_id, res[1]
 
 
-def parse_button(text):
+async def parse_button(text):
     markdown_note = text
     prev = 0
     note_data = ""
@@ -110,13 +122,13 @@ def parse_button(text):
         else:
             note_data += markdown_note[prev:to_check]
             prev = match.start(1) - 1
-    else:
-        note_data += markdown_note[prev:]
+
+    note_data += markdown_note[prev:]
 
     return note_data, buttons
 
 
-def build_keyboard(buttons):
+async def build_keyboard(buttons):
     keyb = []
     for btn in buttons:
         if btn[-1] and keyb:
@@ -132,7 +144,7 @@ SMART_CLOSE = "”"
 START_CHAR = ("'", '"', SMART_OPEN)
 
 
-def split_quotes(text: str):
+async def split_quotes(text: str):
     if any(text.startswith(char) for char in START_CHAR):
         counter = 1  # ignore first char -> is some kind of quote
         while counter < len(text):
@@ -153,15 +165,14 @@ def split_quotes(text: str):
         if not key:
             key = text[0] + text[0]
         return list(filter(None, [key, rest]))
-    else:
-        return text.split(None, 1)
+    return text.split(None, 1)
 
 
-def extract_text(m):
+async def extract_text(m):
     return m.text or m.caption or (m.sticker.emoji if m.sticker else None)
 
 
-def remove_escapes(text: str) -> str:
+async def remove_escapes(text: str) -> str:
     counter = 0
     res = ""
     is_escaped = False

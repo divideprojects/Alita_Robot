@@ -1,5 +1,25 @@
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 import threading
-from sqlalchemy import func, distinct, Column, String, UnicodeText
+
+from sqlalchemy import Column, String, UnicodeText, distinct, func
+
 from alita.db import BASE, SESSION
 
 
@@ -19,7 +39,7 @@ class BlackListFilters(BASE):
         return bool(
             isinstance(other, BlackListFilters)
             and self.chat_id == other.chat_id
-            and self.trigger == other.trigger
+            and self.trigger == other.trigger,
         )
 
 
@@ -44,7 +64,7 @@ def rm_from_blacklist(chat_id, trigger):
     with INSERTION_LOCK:
         try:
             blacklist_filt = SESSION.query(BlackListFilters).get(
-                (str(chat_id), trigger)
+                (str(chat_id), trigger),
             )
             if blacklist_filt:
                 if trigger in CHAT_BLACKLISTS.get(str(chat_id), set()):

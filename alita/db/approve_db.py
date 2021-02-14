@@ -1,6 +1,26 @@
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 import threading
+
+from sqlalchemy import Column, Integer, String
+
 from alita.db import BASE, SESSION
-from sqlalchemy import Column, String, Integer
 
 
 class Approvals(BASE):
@@ -42,9 +62,8 @@ def disapprove(chat_id, user_id):
             SESSION.delete(note)
             SESSION.commit()
             return True
-        else:
-            SESSION.close()
-            return False
+        SESSION.close()
+        return False
 
 
 def all_approved(chat_id):
@@ -79,5 +98,5 @@ def disapprove_all(chat_id):
                 else:
                     SESSION.close()
         return True
-    except Exception:
+    except BaseException:
         return False

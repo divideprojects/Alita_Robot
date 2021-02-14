@@ -1,15 +1,34 @@
-from alita.__main__ import Alita
-from pyrogram import filters, errors
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+from pyrogram import errors, filters
 from pyrogram.types import (
-    Message,
-    InlineKeyboardMarkup,
-    InlineKeyboardButton,
     CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
 )
+
 from alita import PREFIX_HANDLER
-from alita.utils.localization import GetLang
+from alita.bot_class import Alita
 from alita.db import rules_db as db
 from alita.utils.admin_check import admin_check
+from alita.utils.localization import GetLang
 
 __PLUGIN__ = "Rules"
 
@@ -44,10 +63,12 @@ async def get_rules(c: Alita, m: Message):
     except errors.UserIsBlocked:
         me = await c.get_me()
         pm_kb = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("PM", url=f"https://t.me/{me.username}?start")]]
+            [[InlineKeyboardButton("PM", url=f"https://t.me/{me.username}?start")]],
         )
         await m.reply_text(
-            _("rules.pm_me"), reply_to_message_id=m.message_id, reply_markup=pm_kb
+            _("rules.pm_me"),
+            reply_to_message_id=m.message_id,
+            reply_markup=pm_kb,
         )
         return
 
@@ -100,15 +121,15 @@ async def clear_rules(c: Alita, m: Message):
                 [
                     InlineKeyboardButton("⚠️ Confirm", callback_data="clear.rules"),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
-                ]
-            ]
+                ],
+            ],
         ),
     )
     return
 
 
 @Alita.on_callback_query(filters.regex("^clear.rules$"))
-async def clearrules_callback(c: Alita, q: CallbackQuery):
+async def clearrules_callback(_: Alita, q: CallbackQuery):
     _ = GetLang(q.message).strs
     db.clear_rules(q.message.chat.id)
     await q.message.reply_text(_("rules.clear"))

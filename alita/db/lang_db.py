@@ -1,5 +1,25 @@
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 import threading
-from sqlalchemy import Column, UnicodeText, Integer, String
+
+from sqlalchemy import Column, Integer, String, UnicodeText
+
 from alita.db import BASE, SESSION
 
 group_types = ("group", "supergroup")
@@ -16,7 +36,7 @@ class UserLang(BASE):
         self.lang_code = lang_code
 
     def __repr__(self):
-        return "Language for User {} is {}".format(self.user_id, self.user_lang)
+        return f"Language for User {self.user_id} is {self.user_lang}"
 
 
 class GroupLang(BASE):
@@ -30,7 +50,7 @@ class GroupLang(BASE):
         self.lang_code = lang_code
 
     def __repr__(self):
-        return "Language for Group {} is {}".format(self.user_id, self.group_lang)
+        return f"Language for Group {self.user_id} is {self.group_lang}"
 
 
 GroupLang.__table__.create(checkfirst=True)
@@ -73,9 +93,9 @@ def get_lang(chat_id, chat_type):
                 exist = SESSION.query(UserLang).get(chat_id)
                 if exist:
                     lang = exist.lang_code
-                    return lang
-                exist = UserLang(chat_id, default_lang)
-                return default_lang
+                else:
+                    exist = UserLang(chat_id, default_lang)
+                    lang = default_lang
             finally:
                 SESSION.close()
         elif chat_type in group_types:
@@ -83,11 +103,12 @@ def get_lang(chat_id, chat_type):
                 exist = SESSION.query(GroupLang).get(str(chat_id))
                 if exist:
                     lang = exist.lang_code
-                    return lang
-                exist = GroupLang(str(chat_id), default_lang)
-                return default_lang
+                else:
+                    exist = GroupLang(str(chat_id), default_lang)
+                    lang = default_lang
             finally:
                 SESSION.close()
+    return lang
 
 
 def migrate_chat(old_chat_id, new_chat_id):

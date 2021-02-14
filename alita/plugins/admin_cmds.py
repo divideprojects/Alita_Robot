@@ -1,11 +1,31 @@
-import time
-from alita.__main__ import Alita
-from pyrogram import filters, errors
-from pyrogram.types import Message, ChatPermissions
-from alita import PREFIX_HANDLER, LOGGER, SUPPORT_GROUP
-from alita.utils.localization import GetLang
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+from time import time
+
+from pyrogram import errors, filters
+from pyrogram.types import ChatPermissions, Message
+
+from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
+from alita.bot_class import Alita
 from alita.utils.admin_check import admin_check
 from alita.utils.extract_user import extract_user
+from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
 from alita.utils.redishelper import get_key, set_key
 
@@ -64,30 +84,46 @@ unmute_permissions = ChatPermissions(
 
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
-async def adminlist(c: Alita, m: Message):
+async def adminlist_show(c: Alita, m: Message):
     _ = GetLang(m).strs
+    replymsg = await m.reply_text("Getting admins...")
     try:
-        me_id = int(get_key("BOT_ID"))  # Get Bot ID from Redis!
-        adminlist = get_key("ADMINDICT")[str(m.chat.id)]  # Load ADMINDICT from string
+        me_id = int(await get_key("BOT_ID"))  # Get Bot ID from Redis!
+        try:
+            adminlist = (await get_key("ADMINDICT"))[
+                str(m.chat.id)
+            ]  # Load ADMINDICT from string
+        except Exception:
+            adminlist = []
+            async for i in m.chat.iter_members(
+                filter="administrators",
+            ):
+                adminlist.append(i.user.id)
+            ADMINDICT = await get_key("ADMINDICT")
+            ADMINDICT[str(m.chat.id)] = adminlist
+            await set_key("ADMINDICT", ADMINDICT)
         adminstr = _("admin.adminlist").format(chat_title=m.chat.title)
         for i in adminlist:
             try:
-                usr = await c.get_users(i)
+                usr = await m.get_member(i)
             except errors.PeerIdInvalid:
                 pass
             if i == me_id:
-                adminstr += f"- {mention_html(usr.first_name, i)} (Me)\n"
+                adminstr += f"- {(await mention_html(usr.first_name, i))} (⭐)\n"
+            elif usr.is_bot:
+                adminstr += f"- {(await mention_html(usr.first_name, i))} (🤖)"
+            elif usr.status == "owner":
+                adminstr += f"- {(await mention_html(usr.first_name, i))} (👑)"
             else:
                 usr = await c.get_users(i)
-                adminstr += f"- {mention_html(usr.first_name, i)} (`{i}`)\n"
-        await m.reply_text(adminstr)
+                adminstr += f"- {(await mention_html(usr.first_name, i))} (`{i}`)\n"
+        await replymsg.edit_text(f"Admins in {m.chat.title}\n{adminstr}")
     except Exception as ef:
-
         if str(ef) == str(m.chat.id):
             await m.reply_text(_("admin.useadmincache"))
         else:
             await m.reply_text(
-                _("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef)
+                _("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef),
             )
             LOGGER.error(ef)
 
@@ -98,20 +134,20 @@ async def adminlist(c: Alita, m: Message):
 async def reload_admins(c: Alita, m: Message):
 
     _ = GetLang(m).strs
+    replymsg = await m.reply_text("Refreshing admin list...")
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
-    ADMINDICT = get_key("ADMINDICT")  # Load ADMINDICT from string
+    ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
 
     try:
         adminlist = []
         async for i in m.chat.iter_members(filter="administrators"):
             adminlist.append(i.user.id)
         ADMINDICT[str(m.chat.id)] = adminlist
-        set_key("ADMINDICT", ADMINDICT)
-        await m.reply_text(_("admin.reloadedadmins"))
+        await set_key("ADMINDICT", ADMINDICT)
+        await replymsg.edit_text(_("admin.reloadedadmins"))
         LOGGER.info(f"Reloaded admins for {m.chat.title}({m.chat.id})")
     except Exception as ef:
         await m.reply_text(_("admin.useadmincache"))
@@ -125,21 +161,18 @@ async def kick_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
 
-    if len(m.text.split()) == 1 and not m.reply_to_message:
-        await m.reply_text("Whom should I kick?\nSpecify a user first.")
-        return
-
     if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
-            await c.kick_chat_member(m.chat.id, user_id, int(time.time() + 45))
-            await m.reply_text(f"Banned {mention_html(user_first_name, user_id)}")
+            await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
+            await m.reply_text(
+                f"Banned {(await mention_html(user_first_name, user_id))}",
+            )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -154,8 +187,7 @@ async def ban_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -165,10 +197,12 @@ async def ban_usr(c: Alita, m: Message):
         return
 
     if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await c.kick_chat_member(m.chat.id, user_id)
-            await m.reply_text(f"Banned {mention_html(user_first_name, user_id)}")
+            await m.reply_text(
+                f"Banned {(await mention_html(user_first_name, user_id))}",
+            )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
@@ -183,8 +217,7 @@ async def unban_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -194,16 +227,75 @@ async def unban_usr(c: Alita, m: Message):
         return
 
     if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await c.unban_chat_member(m.chat.id, user_id)
-            await m.reply_text(f"Unbanned {mention_html(user_first_name, user_id)}")
+            await m.reply_text(
+                f"Unbanned {(await mention_html(user_first_name, user_id))}",
+            )
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except Exception as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 
+    return
+
+
+@Alita.on_message(filters.command("mute", PREFIX_HANDLER) & filters.group)
+async def mute_usr(c: Alita, m: Message):
+
+    _ = GetLang(m).strs
+
+    if not (await admin_check(c, m)):
+        return
+
+    from_user = await m.chat.get_member(m.from_user.id)
+
+    if from_user.can_restrict_members or from_user.status == "creator":
+        user_id, user_first_name = await extract_user(m)
+        try:
+            await m.chat.restrict_member(user_id, mute_permission)
+            await m.reply_text(
+                f"<b>Muted</b> {(await mention_html(user_first_name,user_id))}",
+            )
+        except errors.ChatAdminRequired:
+            await m.reply_text(_("admin.notadmin"))
+        except Exception as ef:
+            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
+            LOGGER.error(ef)
+
+        return
+
+    await m.reply_text("You don't have permissions to restrict users.")
+    return
+
+
+@Alita.on_message(filters.command("unmute", PREFIX_HANDLER) & filters.group)
+async def unmute_usr(c: Alita, m: Message):
+
+    _ = GetLang(m).strs
+
+    if not (await admin_check(c, m)):
+        return
+
+    from_user = await m.chat.get_member(m.from_user.id)
+
+    if from_user.can_restrict_members or from_user.status == "creator":
+        user_id, user_first_name = await extract_user(m)
+        try:
+            await m.chat.restrict_member(user_id, unmute_permissions)
+            await m.reply_text(
+                f"<b>Unmuted</b> {(await mention_html(user_first_name,user_id))}",
+            )
+        except errors.ChatAdminRequired:
+            await m.reply_text(_("admin.notadmin"))
+        except Exception as ef:
+            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
+            LOGGER.error(ef)
+        return
+
+    await m.reply_text("You don't have permissions to restrict users.")
     return
 
 
@@ -275,8 +367,7 @@ async def promote_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -288,7 +379,7 @@ async def promote_usr(c: Alita, m: Message):
     # If user does not have permission to promote other users, return
     if from_user.can_promote_members or from_user.status == "creator":
 
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await m.chat.promote_member(
                 user_id=user_id,
@@ -300,24 +391,26 @@ async def promote_usr(c: Alita, m: Message):
             )
             await m.reply_text(
                 _("admin.promoted").format(
-                    promoter=mention_html(m.from_user.first_name, m.from_user.id),
-                    promoted=mention_html(user_first_name, user_id),
+                    promoter=(
+                        await mention_html(m.from_user.first_name, m.from_user.id)
+                    ),
+                    promoted=(await mention_html(user_first_name, user_id)),
                     chat_title=m.chat.title,
-                )
+                ),
             )
 
             # ----- Add admin to redis cache! -----
-            ADMINDICT = get_key("ADMINDICT")  # Load ADMINDICT from string
+            ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
             adminlist = []
             async for i in m.chat.iter_members(filter="administrators"):
                 adminlist.append(i.user.id)
             ADMINDICT[str(m.chat.id)] = adminlist
-            set_key("ADMINDICT", ADMINDICT)
+            await set_key("ADMINDICT", ADMINDICT)
 
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
         except errors.RightForbidden:
-            await m.reply_text("I don't have enough rights topromote this user.")
+            await m.reply_text("I don't have enough rights to promote this user.")
         except Exception as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
@@ -333,8 +426,7 @@ async def demote_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -346,7 +438,7 @@ async def demote_usr(c: Alita, m: Message):
     # If user does not have permission to demote other users, return
     if from_user.can_promote_members or from_user.status == "creator":
 
-        user_id, user_first_name = extract_user(m)
+        user_id, user_first_name = await extract_user(m)
         try:
             await m.chat.promote_member(
                 user_id=user_id,
@@ -358,19 +450,21 @@ async def demote_usr(c: Alita, m: Message):
             )
             await m.reply_text(
                 _("admin.demoted").format(
-                    demoter=mention_html(m.from_user.first_name, m.from_user.id),
-                    demoted=mention_html(user_first_name, user_id),
+                    demoter=(
+                        await mention_html(m.from_user.first_name, m.from_user.id)
+                    ),
+                    demoted=(await mention_html(user_first_name, user_id)),
                     chat_title=m.chat.title,
-                )
+                ),
             )
 
             # ----- Add admin to redis cache! -----
-            ADMINDICT = get_key("ADMINDICT")  # Load ADMINDICT from string
+            ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
             adminlist = []
             async for i in m.chat.iter_members(filter="administrators"):
                 adminlist.append(i.user.id)
             ADMINDICT[str(m.chat.id)] = adminlist
-            set_key("ADMINDICT", ADMINDICT)
+            await set_key("ADMINDICT", ADMINDICT)
 
         except errors.ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
@@ -391,8 +485,7 @@ async def get_invitelink(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -424,11 +517,10 @@ async def pin_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
-    pin_loud = m.text.split(" ", 1)
+    pin_loud = m.text.split(None, 1)
     if m.reply_to_message:
         try:
             disable_notification = True
@@ -460,8 +552,7 @@ async def unpin_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
     try:

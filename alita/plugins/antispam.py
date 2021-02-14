@@ -1,10 +1,30 @@
-from io import BytesIO
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 from datetime import datetime
-from alita.db import antispam_db as db
-from alita.__main__ import Alita
-from pyrogram import filters, errors
+from io import BytesIO
+
+from pyrogram import errors, filters
 from pyrogram.types import Message
-from alita import SUPPORT_STAFF, MESSAGE_DUMP, PREFIX_HANDLER, SUPPORT_GROUP, LOGGER
+
+from alita import LOGGER, MESSAGE_DUMP, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
+from alita.bot_class import Alita
+from alita.db import antispam_db as db
 from alita.utils.custom_filters import sudo_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -21,7 +41,7 @@ async def gban(c: Alita, m: Message):
         await m.reply_text("Please enter a reason to gban user!")
         return
 
-    user_id, user_first_name = extract_user(m)
+    user_id, user_first_name = await extract_user(m)
     me = await c.get_me()
 
     if m.reply_to_message:
@@ -43,7 +63,7 @@ async def gban(c: Alita, m: Message):
             (
                 f"Updated Gban reason to: `{gban_reason}`.\n"
                 f"Old Reason was: `{old_reason}`"
-            )
+            ),
         )
         return
 
@@ -52,13 +72,13 @@ async def gban(c: Alita, m: Message):
         (
             f"Added {user_first_name} to Global Ban List.\n"
             "They will now be banned in all groups where I'm admin!"
-        )
+        ),
     )
     log_msg = (
         f"#GBAN\n"
         f"<b>Originated from:</b> {m.chat.id}\n"
-        f"<b>Admin:</b> {mention_html(m.from_user.first_name, m.from_user.id)}\n"
-        f"<b>Gbanned User:</b> {mention_html(user_first_name, user_id)}\n"
+        f"<b>Admin:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))}\n"
+        f"<b>Gbanned User:</b> {(await mention_html(user_first_name, user_id))}\n"
         f"<b>Gbanned User ID:</b> {user_id}\n"
         f"<b>Event Stamp:</b> {datetime.utcnow().strftime('%H:%M - %d-%m-%Y')}"
     )
@@ -73,14 +93,14 @@ async def gban(c: Alita, m: Message):
                 f"Appeal Chat: @{SUPPORT_GROUP}"
             ),
         )
-    except Exception:  # TO DO: Improve Error Detection
+    except BaseException:  # TO DO: Improve Error Detection
         pass
     return
 
 
 @Alita.on_message(
     filters.command(["ungban", "unglobalban", "globalunban"], PREFIX_HANDLER)
-    & sudo_filter
+    & sudo_filter,
 )
 async def ungban(c: Alita, m: Message):
 
@@ -88,7 +108,7 @@ async def ungban(c: Alita, m: Message):
         await m.reply_text("Pass a user id or username as an argument!")
         return
 
-    user_id, user_first_name = extract_user(m)
+    user_id, user_first_name = await extract_user(m)
     me = await c.get_me()
 
     if user_id in SUPPORT_STAFF:
@@ -105,8 +125,8 @@ async def ungban(c: Alita, m: Message):
         log_msg = (
             f"#UNGBAN\n"
             f"<b>Originated from:</b> {m.chat.id}\n"
-            f"<b>Admin:</b> {mention_html(m.from_user.first_name, m.from_user.id)}\n"
-            f"<b>UnGbanned User:</b> {mention_html(user_first_name, user_id)}\n"
+            f"<b>Admin:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))}\n"
+            f"<b>UnGbanned User:</b> {(await mention_html(user_first_name, user_id))}\n"
             f"<b>UnGbanned User ID:</b> {user_id}\n"
             f"<b>Event Stamp:</b> {datetime.utcnow().strftime('%H:%M - %d-%m-%Y')}"
         )
@@ -114,9 +134,10 @@ async def ungban(c: Alita, m: Message):
         try:
             # Send message to user telling that he's ungbanned
             await c.send_message(
-                user_id, "You have been removed from my global ban list!\n"
+                user_id,
+                "You have been removed from my global ban list!\n",
             )
-        except Exception:  # TO DO: Improve Error Detection
+        except BaseException:  # TODO: Improve Error Detection
             pass
         return
 
@@ -125,9 +146,9 @@ async def ungban(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter
+    filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter,
 )
-async def gban_list(c: Alita, m: Message):
+async def gban_list(_: Alita, m: Message):
     banned_users = db.get_gban_list()
 
     if not banned_users:
@@ -158,18 +179,18 @@ async def gban_watcher(c: Alita, m: Message):
                 await c.kick_chat_member(m.chat.id, m.from_user.id)
                 await m.reply_text(
                     (
-                        f"This user ({mention_html(m.from_user.first_name, m.from_user.id)}) "
+                        f"This user ({(await mention_html(m.from_user.first_name, m.from_user.id))}) "
                         "has been banned globally!\n\n"
                         f"To get unbanned appeal at @{SUPPORT_GROUP}"
                     ),
                 )
                 LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
                 return
-            except (errors.ChatAdminRequired or errors.UserAdminInvalid):
+            except (errors.ChatAdminRequired, errors.UserAdminInvalid):
                 # Bot not admin in group and hence cannot ban users!
                 # TO-DO - Improve Error Detection
                 LOGGER.info(
-                    f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})"
+                    f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})",
                 )
             except Exception as excp:
                 await c.send_message(

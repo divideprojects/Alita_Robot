@@ -1,6 +1,26 @@
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 import threading
-from alita.db import BASE, SESSION
+
 from sqlalchemy import Column, Integer, UnicodeText
+
+from alita.db import BASE, SESSION
 
 
 class GloballyBannedUsers(BASE):
@@ -41,7 +61,6 @@ def gban_user(user_id, name, reason=None):
         finally:
             SESSION.close()
     __load_gbanned_userid_list()
-    return
 
 
 def update_gban_reason(user_id, name, reason=None):
@@ -72,7 +91,6 @@ def ungban_user(user_id):
         finally:
             SESSION.close()
             __load_gbanned_userid_list()
-    return
 
 
 def is_user_gbanned(user_id):

@@ -1,7 +1,27 @@
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 import threading
 from typing import Union
-from sqlalchemy import Column, Integer, String, Boolean
-from alita.db import SESSION, BASE
+
+from sqlalchemy import Boolean, Column, Integer, String
+
+from alita.db import BASE, SESSION
 
 
 class ReportingUserSettings(BASE):
@@ -13,7 +33,7 @@ class ReportingUserSettings(BASE):
         self.user_id = user_id
 
     def __repr__(self):
-        return "<User report settings ({})>".format(self.user_id)
+        return f"<User report settings ({self.user_id})>"
 
 
 class ReportingChatSettings(BASE):
@@ -25,7 +45,7 @@ class ReportingChatSettings(BASE):
         self.chat_id = str(chat_id)
 
     def __repr__(self):
-        return "<Chat report settings ({})>".format(self.chat_id)
+        return f"<Chat report settings ({self.chat_id})>"
 
 
 ReportingUserSettings.__table__.create(checkfirst=True)

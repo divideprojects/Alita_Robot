@@ -21,7 +21,7 @@
   "start.add_chat_btn": "चैट में जोड़ें (A)",
   "start.private": "-हैलो! मैं Alita हूँ. मेरे कार्यों के बारे में अधिक जानने के लिए, नीचे दिए गए बटनों पर क्लिक करें.",
   "start.group": "मैं ज़िंदा हूँ: 3",
-  "start.info_page": "• @Alita_Robot\n\nसंस्करण: {version}\n\nडेवलपर्स: [Skuzzy xD](https://github.com/SkuzzyxD)\nमालिक: [{Owner}](tg://user?id={ID})",
+  "start.info_page": "• @Alita_Robot\n\nसंस्करण: {version}\n\nडेवलपर्स: [Divkix](https://github.com/Divkix)\nमालिक: [{Owner}](tg://user?id={ID})",
   "dev.speedtest": "<b>गति परीक्षा</b>\n\n<b>मेजबान:</b> <code>{host}</code>\n\n<b>पिंग:</b> <code>{ping} ms</code>\n<b>डाउनलोड:</b> <code>{download} Mbps</code>\n<b>अपलोड:</b> <code>{upload} Mbps</code>",
   "dev.start_speedtest": "मेरी गति की गणना ...",
   "dev.restarting": "<i><b>पुनरारंभ...</b></i>",

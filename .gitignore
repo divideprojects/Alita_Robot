@@ -3,7 +3,8 @@
 alita/config.py
 .vscode/
 postgres-data/
-alita.env
+*.env
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

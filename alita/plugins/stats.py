@@ -1,19 +1,36 @@
-from alita.__main__ import Alita
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 from pyrogram import filters
 from pyrogram.types import Message
+
 from alita import DEV_PREFIX_HANDLER
+from alita.bot_class import Alita
+from alita.db import antispam_db as gbandb
+from alita.db import blacklist_db as bldb
+from alita.db import notes_db as notesdb
+from alita.db import rules_db as rulesdb
+from alita.db import users_db as userdb
 from alita.utils.custom_filters import dev_filter
-from alita.db import (
-    users_db as userdb,
-    blacklist_db as bldb,
-    rules_db as rulesdb,
-    notes_db as notesdb,
-    antispam_db as gbandb,
-)
 
 
 @Alita.on_message(filters.command("stats", DEV_PREFIX_HANDLER) & dev_filter)
-async def get_stats(c: Alita, m: Message):
+async def get_stats(_: Alita, m: Message):
     sm = await m.reply_text("**__Fetching Stats...__**")
     rply = (
         f"<b>Users:</b> <code>{userdb.num_users()}</code> in <code>{userdb.num_chats()}</code> chats\n"

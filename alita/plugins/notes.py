@@ -1,17 +1,35 @@
-from alita.__main__ import Alita
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 from pyrogram import filters
 from pyrogram.types import (
-    InlineKeyboardMarkup,
-    InlineKeyboardButton,
-    Message,
     CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
 )
-from alita import PREFIX_HANDLER, LOGGER
-from alita.utils.msg_types import Types, get_note_type
-from alita.utils.string import parse_button, build_keyboard
+
+from alita import LOGGER, PREFIX_HANDLER
+from alita.bot_class import Alita
 from alita.db import notes_db as db
 from alita.utils.admin_check import admin_check, owner_check
-
+from alita.utils.msg_types import Types, get_note_type
+from alita.utils.string import build_keyboard, parse_button
 
 __PLUGIN__ = "Notes"
 __help__ = """
@@ -69,23 +87,22 @@ GET_FORMAT = {
 @Alita.on_message(filters.command("save", PREFIX_HANDLER) & filters.group)
 async def save_note(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
-    note_name, text, data_type, content = get_note_type(m)
+    note_name, text, data_type, content = await get_note_type(m)
 
     if not note_name:
         await m.reply_text(
-            "```" + m.text + "```\n\nError: You must give a name for this note!"
+            "```" + m.text + "```\n\nError: You must give a name for this note!",
         )
         return
 
     if data_type == Types.TEXT:
-        teks, _ = parse_button(text)
+        teks, _ = await parse_button(text)
         if not teks:
             await m.reply_text(
-                "```" + m.text + "```\n\nError: There is no text in here!"
+                "```" + m.text + "```\n\nError: There is no text in here!",
             )
             return
 
@@ -95,7 +112,7 @@ async def save_note(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("get", PREFIX_HANDLER) & filters.group)
-async def get_note(c: Alita, m: Message):
+async def get_note(_: Alita, m: Message):
     if len(m.text.split()) >= 2:
         note = m.text.split()[1]
     else:
@@ -107,8 +124,8 @@ async def get_note(c: Alita, m: Message):
         return
 
     if getnotes["type"] == Types.TEXT:
-        teks, button = parse_button(getnotes.get("value"))
-        button = build_keyboard(button)
+        teks, button = await parse_button(getnotes.get("value"))
+        button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
         if button:
             try:
@@ -131,8 +148,8 @@ async def get_note(c: Alita, m: Message):
         await GET_FORMAT[getnotes["type"]](m.chat.id, getnotes["file"])
     else:
         if getnotes.get("value"):
-            teks, button = parse_button(getnotes.get("value"))
-            button = build_keyboard(button)
+            teks, button = await parse_button(getnotes.get("value"))
+            button = await build_keyboard(button)
             button = InlineKeyboardMarkup(button) if button else None
         else:
             teks = None
@@ -147,13 +164,15 @@ async def get_note(c: Alita, m: Message):
                 return
         else:
             await GET_FORMAT[getnotes["type"]](
-                m.chat.id, getnotes["file"], caption=teks
+                m.chat.id,
+                getnotes["file"],
+                caption=teks,
             )
     return
 
 
 @Alita.on_message(filters.command(["notes", "saved"], PREFIX_HANDLER) & filters.group)
-async def local_notes(c: Alita, m: Message):
+async def local_notes(_: Alita, m: Message):
     getnotes = db.get_all_notes(m.chat.id)
     if not getnotes:
         await m.reply_text(f"There are no notes in <b>{m.chat.title}</b>.")
@@ -172,8 +191,7 @@ async def local_notes(c: Alita, m: Message):
 @Alita.on_message(filters.command("clear", PREFIX_HANDLER) & filters.group)
 async def clear_note(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
-    if not res:
+    if not (await admin_check(c, m)):
         return
 
     if len(m.text.split()) <= 1:
@@ -193,8 +211,7 @@ async def clear_note(c: Alita, m: Message):
 @Alita.on_message(filters.command("clearall", PREFIX_HANDLER) & filters.group)
 async def clear_allnote(c: Alita, m: Message):
 
-    res = await owner_check(c, m)
-    if not res:
+    if not (await owner_check(c, m)):
         return
 
     all_notes = db.get_all_notes(m.chat.id)
@@ -209,17 +226,17 @@ async def clear_allnote(c: Alita, m: Message):
                 [
                     InlineKeyboardButton("⚠️ Confirm", callback_data="clear.notes"),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
-                ]
-            ]
+                ],
+            ],
         ),
     )
     return
 
 
 @Alita.on_callback_query(filters.regex("^clear.notes$"))
-async def clearallnotes_callback(c: Alita, q: CallbackQuery):
+async def clearallnotes_callback(_: Alita, q: CallbackQuery):
     await q.message.edit_text("Clearing all notes...!")
     db.rm_all_note(q.message.chat.id)
-    await q.message.edit_text(f"Cleared all notes!")
+    await q.message.edit_text("Cleared all notes!")
     await q.answer()
     return

@@ -21,7 +21,7 @@
   "start.add_chat_btn": "Добавить в чат",
   "start.private": "Привет! Я Alita_Robot. Чтобы узнать больше о моих функциях, нажмите на кнопки ниже.",
   "start.group": "я живой :3",
-  "start.info_page": "• @Alita_Robot\n\nВерсия: {version}\n\nРазработчики: [Skuzzy xD](https://github.com/SkuzzyxD)\nВладелец: [{Owner}](tg://user?id={ID})",
+  "start.info_page": "• @Alita_Robot\n\nВерсия: {version}\n\nРазработчики: [Divkix](https://github.com/Divkix)\nВладелец: [{Owner}](tg://user?id={ID})",
   "dev.speedtest": "<b>Speedtest</b>\n\n<b>Хост:</b> <code>{host}</code>\n\n<b>Пинг:</b> <code>{ping} ms</code>\n<b>Загрузка:</b> <code>{download} Mbps</code>\n<b>Загрузить:</b> <code>{upload} Mbps</code>",
   "dev.start_speedtest": "Расчет моей скорости...",
   "dev.restarting": "<i><b>Перезагружать...</b></i>",

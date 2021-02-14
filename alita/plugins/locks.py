@@ -1,11 +1,31 @@
-import asyncio
-from alita.__main__ import Alita
-from pyrogram import filters, errors
-from pyrogram.types import Message, ChatPermissions
-from alita import PREFIX_HANDLER, LOGGER
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+from asyncio import sleep
+
+from pyrogram import errors, filters
+from pyrogram.types import ChatPermissions, Message
+
+from alita import LOGGER, PREFIX_HANDLER
+from alita.bot_class import Alita
 from alita.db import approve_db as app_db
-from alita.utils.localization import GetLang
 from alita.utils.admin_check import admin_check
+from alita.utils.localization import GetLang
 
 __PLUGIN__ = "Locks"
 
@@ -66,7 +86,7 @@ async def lock_perm(c: Alita, m: Message):
     if not len(m.text.split()) >= 2:
         await m.reply_text("Please enter a permission to lock!")
         return
-    lock_type = m.text.split(" ", 1)[1]
+    lock_type = m.text.split(None, 1)[1]
     chat_id = m.chat.id
 
     if not lock_type:
@@ -187,22 +207,22 @@ async def view_locks(c: Alita, m: Message):
     chkmsg = await m.reply_text(_("locks.check_perm_msg"))
     v_perm = await c.get_chat(m.chat.id)
 
-    def convert_to_emoji(val: bool):
+    async def convert_to_emoji(val: bool):
         if val is True:
             return "✅"
         return "❌"
 
-    vmsg = convert_to_emoji(v_perm.permissions.can_send_messages)
-    vmedia = convert_to_emoji(v_perm.permissions.can_send_media_messages)
-    vstickers = convert_to_emoji(v_perm.permissions.can_send_stickers)
-    vanimations = convert_to_emoji(v_perm.permissions.can_send_animations)
-    vgames = convert_to_emoji(v_perm.permissions.can_send_games)
-    vinlinebots = convert_to_emoji(v_perm.permissions.can_use_inline_bots)
-    vwebprev = convert_to_emoji(v_perm.permissions.can_add_web_page_previews)
-    vpolls = convert_to_emoji(v_perm.permissions.can_send_polls)
-    vinfo = convert_to_emoji(v_perm.permissions.can_change_info)
-    vinvite = convert_to_emoji(v_perm.permissions.can_invite_users)
-    vpin = convert_to_emoji(v_perm.permissions.can_pin_messages)
+    vmsg = await convert_to_emoji(v_perm.permissions.can_send_messages)
+    vmedia = await convert_to_emoji(v_perm.permissions.can_send_media_messages)
+    vstickers = await convert_to_emoji(v_perm.permissions.can_send_stickers)
+    vanimations = await convert_to_emoji(v_perm.permissions.can_send_animations)
+    vgames = await convert_to_emoji(v_perm.permissions.can_send_games)
+    vinlinebots = await convert_to_emoji(v_perm.permissions.can_use_inline_bots)
+    vwebprev = await convert_to_emoji(v_perm.permissions.can_add_web_page_previews)
+    vpolls = await convert_to_emoji(v_perm.permissions.can_send_polls)
+    vinfo = await convert_to_emoji(v_perm.permissions.can_change_info)
+    vinvite = await convert_to_emoji(v_perm.permissions.can_invite_users)
+    vpin = await convert_to_emoji(v_perm.permissions.can_pin_messages)
 
     if v_perm is not None:
         try:
@@ -252,7 +272,7 @@ async def unlock_perm(c: Alita, m: Message):
     if not len(m.text.split()) >= 2:
         await m.reply_text("Please enter a permission to unlock!")
         return
-    unlock_type = m.text.split(" ", 1)[1]
+    unlock_type = m.text.split(None, 1)[1]
     chat_id = m.chat.id
 
     if not unlock_type:
@@ -395,6 +415,6 @@ async def prevent_approved(c: Alita, m: Message):
             ),
         )
         LOGGER.info(f"Approved {i} in {m.chat.id}")
-        await asyncio.sleep(0.2)
+        await sleep(0.2)
 
     return

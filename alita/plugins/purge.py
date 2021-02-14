@@ -1,11 +1,30 @@
-import asyncio
-from alita.__main__ import Alita
-from pyrogram import filters, errors
-from pyrogram.types import Message
-from alita import PREFIX_HANDLER
-from alita.utils.localization import GetLang
-from alita.utils.admin_check import admin_check
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+from asyncio import sleep
+
+from pyrogram import errors, filters
+from pyrogram.types import Message
+
+from alita import PREFIX_HANDLER
+from alita.bot_class import Alita
+from alita.utils.admin_check import admin_check
+from alita.utils.localization import GetLang
 
 __PLUGIN__ = "Purges"
 
@@ -57,7 +76,7 @@ async def purge(c: Alita, m: Message):
     count_del_msg = len(message_ids)
 
     await dm.edit(_("purge.purge_msg_count").format(msg_count=count_del_msg))
-    await asyncio.sleep(3)
+    await sleep(3)
     await dm.delete()
     return
 
@@ -74,9 +93,10 @@ async def del_msg(c: Alita, m: Message):
         if m.chat.type != "supergroup":
             return
         await c.delete_messages(
-            chat_id=m.chat.id, message_ids=m.reply_to_message.message_id
+            chat_id=m.chat.id,
+            message_ids=m.reply_to_message.message_id,
         )
-        await asyncio.sleep(0.5)
+        await sleep(0.5)
         await m.delete()
     else:
         await m.reply_text(_("purge.what_del"))

@@ -16,18 +16,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-async def ALL_PLUGINS():
+from time import time
 
-    # This generates a list of plugins in this folder for the * in __main__ to
-    # work.
+from pyrogram import filters
+from pyrogram.types import Message
 
-    from glob import glob
-    from os.path import basename, dirname, isfile
+from alita.bot_class import Alita
 
-    mod_paths = glob(dirname(__file__) + "/*.py")
-    all_plugins = [
-        basename(f)[:-3]
-        for f in mod_paths
-        if isfile(f) and f.endswith(".py") and not f.endswith("__init__.py")
-    ]
-    return sorted(all_plugins)
+__PLUGIN__ = "Test Plugin"
+
+
+@Alita.on_message(filters.command("test", "/"))
+async def test_bot(_: Alita, m: Message):
+    start = time()
+    replymsg = await m.reply_text("Calculating...")
+    end = round(time() - start, 2)
+    await replymsg.edit_text(f"Test complete\nTime Taken:{end} seconds")
+    return

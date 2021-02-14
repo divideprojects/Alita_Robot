@@ -1,57 +1,82 @@
-import sys
-import os
-import time
-import logging
-import importlib
-import redis
-from datetime import datetime
-from pyrogram import Client
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
 
-log_datetime = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
-logdir = f"{__name__}/logs"
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+from datetime import datetime
+from importlib import import_module as imp_mod
+from logging import INFO, WARNING, FileHandler, StreamHandler, basicConfig, getLogger
+
+# from nest_asyncio import apply
+from os import environ, mkdir, path
+from sys import exit as sysexit
+from sys import stdout, version_info
+from time import time
+
+from redis import Redis
+
+# apply()
+
+LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
+LOGDIR = f"{__name__}/logs"
 
 # Make Logs directory if it does not exixts
-if not os.path.isdir(logdir):
-    os.mkdir(f"{__name__}/logs")
+if not path.isdir(LOGDIR):
+    mkdir(LOGDIR)
 
-logfile = f"{logdir}/{__name__}_{log_datetime}.txt"
+LOGFILE = f"{LOGDIR}/{__name__}_{LOG_DATETIME}.txt"
 
-file_handler = logging.FileHandler(filename=logfile)
-stdout_handler = logging.StreamHandler(sys.stdout)
+file_handler = FileHandler(filename=LOGFILE)
+stdout_handler = StreamHandler(stdout)
 
-logging.basicConfig(
+basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
+    level=INFO,
     handlers=[file_handler, stdout_handler],
 )
 
-logging.getLogger("pyrogram").setLevel(logging.WARNING)
-LOGGER = logging.getLogger(__name__)
+getLogger("pyrogram").setLevel(WARNING)
+LOGGER = getLogger(__name__)
 
 # if version < 3.6, stop bot.
-if sys.version_info[0] < 3 or sys.version_info[1] < 6:
+if version_info[0] < 3 or version_info[1] < 7:
     LOGGER.error(
         (
-            "You MUST have a Python Version of at least 3.6!\n"
+            "You MUST have a Python Version of at least 3.7!\n"
             "Multiple features depend on this. Bot quitting."
-        )
+        ),
     )
-    quit(1)  # Quit the Script
+    sysexit(1)  # Quit the Script
 
 # the secret configuration specific things
 try:
-    if os.environ.get("ENV"):
-        from alita.sample_config import Config
+    if environ.get("ENV"):
+        from alita.vars import Config
     else:
-        from alita.config import Development as Config
+        from alita.vars import Development as Config
 except Exception as ef:
-    print(ef)  # Print Error
+    LOGGER.error(ef)  # Print Error
+    sysexit(1)
 
 # Redis Cache
-REDIS_HOST = Config.REDIS_HOST
-REDIS_PORT = Config.REDIS_PORT
-REDIS_PASS = Config.REDIS_PASS
-redisClient = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASS)
+redis_client = Redis(
+    host=Config.REDIS_HOST,
+    port=Config.REDIS_PORT,
+    password=Config.REDIS_PASS,
+)
 
 # Account Related
 TOKEN = Config.TOKEN
@@ -69,7 +94,7 @@ DEV_USERS = Config.DEV_USERS
 SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 SUPPORT_STAFF = list(
-    dict.fromkeys([OWNER_ID] + SUDO_USERS + DEV_USERS + WHITELIST_USERS)
+    dict.fromkeys([OWNER_ID] + SUDO_USERS + DEV_USERS + WHITELIST_USERS),
 )  # Remove duplicates!
 
 # Plugins, DB and Workers
@@ -84,12 +109,24 @@ ENABLED_LOCALES = Config.ENABLED_LOCALES
 VERSION = Config.VERSION
 
 HELP_COMMANDS = {}  # For help menu
-UPTIME = time.time()  # Check bot uptime
+UPTIME = time()  # Check bot uptime
+BOT_USERNAME = ""
+BOT_NAME = ""
+BOT_ID = 0
 
 
-def load_cmds(ALL_PLUGINS):
+async def get_self(c):
+    global BOT_USERNAME, BOT_NAME, BOT_ID
+    getbot = await c.get_me()
+    BOT_NAME = getbot.first_name
+    BOT_USERNAME = getbot.username
+    BOT_ID = getbot.id
+    return getbot
+
+
+async def load_cmds(ALL_PLUGINS):
     for single in ALL_PLUGINS:
-        imported_module = importlib.import_module("alita.plugins." + single)
+        imported_module = imp_mod("alita.plugins." + single)
         if not hasattr(imported_module, "__PLUGIN__"):
             imported_module.__PLUGIN__ = imported_module.__name__
 
@@ -102,7 +139,7 @@ def load_cmds(ALL_PLUGINS):
                 continue
         else:
             raise Exception(
-                "Can't have two plugins with the same name! Please change one"
+                "Can't have two plugins with the same name! Please change one",
             )
 
-    return f"Plugins Loaded: {list(list(HELP_COMMANDS.keys()))}"
+    return ", ".join(list(HELP_COMMANDS.keys()))

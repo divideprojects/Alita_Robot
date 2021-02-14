@@ -1,21 +1,41 @@
-import re
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def cleanhtml(raw_html):
-    cleanr = re.compile("<.*?>")
-    cleantext = re.sub(cleanr, "", raw_html)
+from html import escape
+from re import compile as compilere
+from re import sub
+
+
+async def cleanhtml(raw_html):
+    cleanr = compilere("<.*?>")
+    cleantext = sub(cleanr, "", raw_html)
     return cleantext
 
 
-def escape_markdown(text):
+async def escape_markdown(text):
     escape_chars = r"\*_`\["
-    return re.sub(r"([%s])" % escape_chars, r"\\\1", text)
+    return sub(r"([%s])" % escape_chars, r"\\\1", text)
 
 
-def mention_html(name, user_id):
-    # name = html.escape(name)
-    return u'<a href="tg://user?id={}">{}</a>'.format(user_id, name)
+async def mention_html(name, user_id):
+    name = escape(name)
+    return f'<a href="tg://user?id={user_id}">{name}</a>'
 
 
-def mention_markdown(name, user_id):
-    return u"[{}](tg://user?id={})".format(escape_markdown(name), user_id)
+async def mention_markdown(name, user_id):
+    return f"[{(await escape_markdown(name))}](tg://user?id={user_id})"

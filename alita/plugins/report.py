@@ -1,18 +1,37 @@
-import html
-from alita.__main__ import Alita
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+from html import escape
+
 from pyrogram import filters
+from pyrogram.errors import BadRequest, Unauthorized
 from pyrogram.types import (
-    Message,
+    CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    CallbackQuery,
+    Message,
 )
-from pyrogram.errors import BadRequest, Unauthorized
-from alita.utils.parser import mention_html
-from alita.db import reporting_db as db
-from alita import LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
-from alita.utils.admin_check import admin_check
 
+from alita import LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
+from alita.bot_class import Alita
+from alita.db import reporting_db as db
+from alita.utils.admin_check import admin_check
+from alita.utils.parser import mention_html
 
 __PLUGIN__ = "Reporting"
 
@@ -37,7 +56,7 @@ async def report_setting(c: Alita, m: Message):
             if args[1] in ("yes", "on"):
                 db.set_user_setting(m.chat.id, True)
                 await m.reply_text(
-                    "Turned on reporting! You'll be notified whenever anyone reports something."
+                    "Turned on reporting! You'll be notified whenever anyone reports something.",
                 )
 
             elif args[1] in ("no", "off"):
@@ -45,7 +64,7 @@ async def report_setting(c: Alita, m: Message):
                 await m.reply_text("Turned off reporting! You wont get any reports.")
         else:
             await m.reply_text(
-                f"Your current report preference is: `{db.user_should_report(m.chat.id)}`"
+                f"Your current report preference is: `{db.user_should_report(m.chat.id)}`",
             )
 
     else:
@@ -70,7 +89,7 @@ async def report_setting(c: Alita, m: Message):
                 )
         else:
             await m.reply_text(
-                f"This group's current setting is: `{db.chat_should_report(m.chat.id)}`"
+                f"This group's current setting is: `{db.chat_should_report(m.chat.id)}`",
             )
 
 
@@ -85,7 +104,7 @@ async def report(c: Alita, m: Message):
 
         if m.from_user.id == reported_user.id:
             await m.reply_text(
-                "Uh yeah, Sure sure...you don't need to report yourself!"
+                "Uh yeah, Sure sure...you don't need to report yourself!",
             )
             return
 
@@ -99,12 +118,10 @@ async def report(c: Alita, m: Message):
 
         if m.chat.username and m.chat.type == "supergroup":
 
-            reported = f"{mention_html(m.from_user.first_name, m.from_user.id)} reported {mention_html(reported_user.first_name, reported_user.id)} to the admins!"
-
             msg = (
-                f"<b>⚠️ Report: </b>{html.escape(m.chat.title)}\n"
-                f"<b> • Report by:</b> {mention_html(m.from_user.first_name, m.from_user.id)}(<code>{m.from_user.id}</code>)\n"
-                f"<b> • Reported user:</b> {mention_html(reported_user.first_name, reported_user.id)} (<code>{reported_user.id}</code>)\n"
+                f"<b>⚠️ Report: </b>{escape(m.chat.title)}\n"
+                f"<b> • Report by:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))} (<code>{m.from_user.id}</code>)\n"
+                f"<b> • Reported user:</b> {(await mention_html(reported_user.first_name, reported_user.id))} (<code>{reported_user.id}</code>)\n"
             )
             link = f'<b> • Reported message:</b> <a href="https://t.me/{m.chat.username}/{m.reply_to_message.message_id}">click here</a>'
             should_forward = False
@@ -113,7 +130,7 @@ async def report(c: Alita, m: Message):
                     InlineKeyboardButton(
                         "➡ Message",
                         url=f"https://t.me/{m.chat.username}/{m.reply_to_message.message_id}",
-                    )
+                    ),
                 ],
                 [
                     InlineKeyboardButton(
@@ -129,14 +146,12 @@ async def report(c: Alita, m: Message):
                     InlineKeyboardButton(
                         "❎ Delete Message",
                         callback_data=f"report_{m.chat.id}=delete={reported_user.id}={m.reply_to_message.message_id}",
-                    )
+                    ),
                 ],
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
         else:
-            reported = f"{mention_html(m.from_user.first_name, m.from_user.id)} reported {mention_html(reported_user.first_name, reported_user.id)} to the admins!"
-
-            msg = f'{mention_html(m.from_user.first_name, m.from_user.id)} is calling for admins in "{html.escape(chat_name)}"!'
+            msg = f'{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in f"{escape(chat_name)}"!'
             link = ""
             should_forward = True
 
@@ -169,7 +184,9 @@ async def report(c: Alita, m: Message):
 
                     if m.chat.username and m.chat.type == "supergroup":
                         await c.send_message(
-                            admin.user.id, msg + link, reply_markup=reply_markup
+                            admin.user.id,
+                            msg + link,
+                            reply_markup=reply_markup,
                         )
 
                         if should_forward:
@@ -186,7 +203,7 @@ async def report(c: Alita, m: Message):
                     LOGGER.exception("Exception while reporting user")
 
         await m.reply_to_message.reply_text(
-            f"{mention_html(m.from_user.first_name, m.from_user.id)} reported the message to the admins."
+            f"{(await mention_html(m.from_user.first_name, m.from_user.id))} reported the message to the admins.",
         )
         return
     return
@@ -206,7 +223,7 @@ async def report_buttons(c: Alita, q: CallbackQuery):
     elif splitter[1] == "banned":
         try:
             await c.kick_chat_member(splitter[0], splitter[2])
-            await q.answer(f"✅ Succesfully Banned")
+            await q.answer("✅ Succesfully Banned")
             return
         except Exception as err:
             await q.answer(f"🛑 Failed to Ban\n<b>Error:</b>\n`{err}`", show_alert=True)
@@ -217,6 +234,7 @@ async def report_buttons(c: Alita, q: CallbackQuery):
             return
         except Exception as err:
             await q.answer(
-                f"🛑 Failed to delete message!\n<b>Error:</b>\n`{err}`", show_alert=True
+                f"🛑 Failed to delete message!\n<b>Error:</b>\n`{err}`",
+                show_alert=True,
             )
     return

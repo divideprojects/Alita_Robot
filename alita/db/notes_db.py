@@ -1,5 +1,25 @@
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 import threading
-from sqlalchemy import Column, UnicodeText, Integer, String
+
+from sqlalchemy import Column, Integer, String, UnicodeText
+
 from alita.db import BASE, SESSION
 from alita.utils.msg_types import Types
 
@@ -14,7 +34,7 @@ class Notes(BASE):
     file = Column(UnicodeText)
 
     def __init__(self, chat_id, name, value, msgtype, file):
-        """initializing db"""
+        """Initializing db"""
         self.chat_id = chat_id
         self.name = name
         self.value = value
@@ -22,7 +42,7 @@ class Notes(BASE):
         self.file = file
 
     def __repr__(self):
-        return "<Note {} at {}>".format(self.name, self.chat_id)
+        return f"<Note {self.name} at {self.chat_id}>"
 
 
 Notes.__table__.create(checkfirst=True)
@@ -73,10 +93,8 @@ def rm_note(chat_id, note_name):
             SESSION.commit()
             CHAT_NOTES[str(chat_id)].pop(note_name)
             return True
-
-        else:
-            SESSION.close()
-            return False
+        SESSION.close()
+        return False
 
 
 def rm_all_note(chat_id):
@@ -90,7 +108,7 @@ def rm_all_note(chat_id):
                     SESSION.delete(note)
                     SESSION.commit()
                     CHAT_NOTES[str(chat_id)].pop(note_name)
-                except Exception:
+                except BaseException:
                     pass
             SESSION.close()
         del CHAT_NOTES[str(chat_id)]
@@ -107,7 +125,7 @@ def num_notes_all():
     count = 0
     if CHAT_NOTES:
         for i in CHAT_NOTES.values():
-            for j in i:
+            for _ in i:
                 count += 1
     return count
 
