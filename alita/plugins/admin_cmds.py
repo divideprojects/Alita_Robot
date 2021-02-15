@@ -83,7 +83,7 @@ unmute_permissions = ChatPermissions(
 
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
-async def adminlist_show(c: Alita, m: Message):
+async def adminlist_show(_: Alita, m: Message):
     _ = GetLang(m).strs
     replymsg = await m.reply_text("Getting admins...")
     try:
@@ -103,7 +103,7 @@ async def adminlist_show(c: Alita, m: Message):
                         i.user.id,
                         f"@{i.user.username}"
                         if i.user.username
-                        else (j.user.first_name or "ItsADeletdAccount"),
+                        else (i.user.first_name or "ItsADeletdAccount"),
                     ),
                 )
             adminlist = sorted(adminlist, key=lambda x: x[1])

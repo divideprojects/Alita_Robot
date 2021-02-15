@@ -140,14 +140,14 @@ class Alita(Client):
         # Redis Content Setup!
         redis_client = await setup_redis()
         if redis_client:
-            LOGGER.info(f"Connected to redis!")
+            LOGGER.info("Connected to redis!")
             await self.get_admins()  # Load admins in cache
             await set_key("BOT_ID", meh.id)
             await set_key("BOT_USERNAME", meh.username)
             await set_key("BOT_NAME", meh.first_name)
             await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
         else:
-            LOGGER.error(f"Redis not connected!")
+            LOGGER.error("Redis not connected!")
         # Redis Content Setup!
 
         # Load Languages

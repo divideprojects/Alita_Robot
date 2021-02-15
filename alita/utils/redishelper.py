@@ -16,13 +16,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pickle import dumps, loads
+from ujson import dumps, loads
 
 
 async def set_key(key: str, value):
     from alita import redis_client
 
-    return await redis_client.set(key, dumps(value))
+    return await redis_client.set(
+        key,
+        dumps(
+            value,
+            reject_bytes=False,
+            escape_forward_slashes=True,
+            encode_html_chars=True,
+        ),
+    )
 
 
 async def get_key(key: str):
