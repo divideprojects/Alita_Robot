@@ -81,7 +81,7 @@ async def unpin_message(c: Alita, m: Message):
         return
 
     try:
-        await m.chat.unpin_chat_message(m.chat.id)
+        await c.unpin_chat_message(m.chat.id)
         await m.reply_text("Unpinned last message.")
     except errors.ChatAdminRequired:
         await m.reply_text(_("admin.notadmin"))
