@@ -16,8 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from asyncio import sleep
 from pickle import dumps, loads
 
+sleep(5)
 from alita import redis_client
 
 
