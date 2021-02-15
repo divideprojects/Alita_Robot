@@ -100,6 +100,7 @@ async def gen_start_kb():
 
 
 async def back_kb():
+    _ = GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -156,7 +157,6 @@ async def commands_menu(_: Alita, m: CallbackQuery):
 
 @Alita.on_message(filters.command("help", PREFIX_HANDLER))
 async def commands_pvt(c: Alita, m: Message):
-    me = await c.get_users("self")
     _ = GetLang(m).strs
     if m.chat.type != "private":
         priv8kb = InlineKeyboardMarkup(
@@ -188,7 +188,6 @@ async def commands_pvt(c: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^get_mod."))
 async def get_module_info(_: Alita, m: CallbackQuery):
-    _ = GetLang(m).strs
     module = m.data.split(".")[1]
     await m.message.edit_text(
         HELP_COMMANDS[module],
@@ -202,7 +201,6 @@ async def get_module_info(_: Alita, m: CallbackQuery):
 @Alita.on_callback_query(filters.regex("^infos$"))
 async def infos(c: Alita, m: CallbackQuery):
     _owner = await c.get_users(OWNER_ID)
-    _ = GetLang(m).strs
     res = _("start.info_page").format(
         Owner=(
             f"{_owner.first_name} + {_owner.last_name}"
