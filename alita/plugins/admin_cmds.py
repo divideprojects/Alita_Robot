@@ -114,21 +114,27 @@ async def adminlist_show(c: Alita, m: Message):
         for i in adminlist:
             try:
                 usr = await m.chat.get_member(i)
+                mention = (
+                    i[1] if i[1].startswith("@") else (await mention_html(i[1], i[0]))
+                )
                 if i[0] == me_id:
                     adminstr += f"- {(await get_key('BOT_USERNAME'))} (⭐)\n"
                 elif usr.user.is_bot:
-                    adminstr += f"- {i[1] if i[1].startswith('@') else (await mention_html(i[1], i[0]))} (🤖)\n"
+                    adminstr += f"- {mention} (🤖)\n"
                 elif usr.status == "owner":
-                    adminstr += f"- {i[1] if i[1].startswith('@') else (await mention_html(i[1], i[0]))} (👑)\n"
+                    adminstr += f"- {mention} (👑)\n"
                 else:
-                    adminstr += f"- {i[1] if i[1].startswith('@') else (await mention_html(i[1], i[0]))}\n"
+                    adminstr += f"- {mention}\n"
             except errors.PeerIdInvalid:
                 pass
+
         await replymsg.edit_text(f"{adminstr}\n\n<i>Note: {note}</i>")
+
     except Exception as ef:
         if str(ef) == str(m.chat.id):
             await m.reply_text(_("admin.useadmincache"))
         else:
+            ef += f"{adminlist}\n"
             await m.reply_text(
                 _("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef),
             )
