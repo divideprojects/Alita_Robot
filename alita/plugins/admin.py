@@ -157,7 +157,7 @@ async def reload_admins(c: Alita, m: Message):
         adminlist = []
         async for i in m.chat.iter_members(filter="administrators"):
             if not i.user.is_deleted:
-                    continue
+                continue
             adminlist.append(
                 (
                     i.user.id,
@@ -271,7 +271,12 @@ async def promote_usr(c: Alita, m: Message):
             async for i in m.chat.iter_members(filter="administrators"):
                 if not i.user.is_deleted:
                     continue
-                adminlist.append([i.user.id, f"@{i.user.username}" if i.user.username else i.user.first_name])
+                adminlist.append(
+                    [
+                        i.user.id,
+                        f"@{i.user.username}" if i.user.username else i.user.first_name,
+                    ],
+                )
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
@@ -328,7 +333,12 @@ async def demote_usr(c: Alita, m: Message):
             async for i in m.chat.iter_members(filter="administrators"):
                 if not i.user.is_deleted:
                     continue
-                adminlist.append([i.user.id, f"@{i.user.username}" if i.user.username else i.user.first_name])
+                adminlist.append(
+                    [
+                        i.user.id,
+                        f"@{i.user.username}" if i.user.username else i.user.first_name,
+                    ],
+                )
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
@@ -344,7 +354,6 @@ async def demote_usr(c: Alita, m: Message):
 
     await m.reply_text(_("admin.nodemoteperm"))
     return
-
 
 
 @Alita.on_message(filters.command("invitelink", PREFIX_HANDLER) & filters.group)

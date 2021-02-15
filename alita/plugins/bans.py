@@ -28,7 +28,6 @@ from alita.utils.extract_user import extract_user
 from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
 
-
 __PLUGIN__ = "Bans"
 __help__ = """
 Someone annoying entered your group?

@@ -17,11 +17,10 @@
 
 
 from datetime import datetime
-from io import BytesIO
 from html import escape
+from io import BytesIO
 
 from googletrans import LANGUAGES, Translator
-
 from pyrogram import errors, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from tswift import Song
