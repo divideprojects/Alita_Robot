@@ -136,6 +136,10 @@ class Alita(Client):
         meh = await get_self(self)  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
 
+        # Load Languages
+        lang_status = await load_langdict()
+        LOGGER.info(f"Loading Languages: {lang_status}")
+
         await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 
         # Redis Content Setup!
@@ -150,10 +154,6 @@ class Alita(Client):
         else:
             LOGGER.error("Redis not connected!")
         # Redis Content Setup!
-
-        # Load Languages
-        lang_status = await load_langdict()
-        LOGGER.info(f"Loading Languages: {lang_status}")
 
         # Show in Log that bot has started
         LOGGER.info(
