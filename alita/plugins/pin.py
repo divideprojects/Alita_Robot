@@ -25,7 +25,7 @@ from alita.utils.admin_check import admin_check
 from alita.utils.localization import GetLang
 
 
-__PLUGINS__ = "Pins"
+__PLUGIN__ = "Pins"
 __help__ = """
 Here you find find all help related to groups pins and how to manage them via me.
 
