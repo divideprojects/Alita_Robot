@@ -66,16 +66,8 @@ async def gen_cmds_kb():
     return kb
 
 
-@Alita.on_message(
-    filters.command("start", PREFIX_HANDLER) & (filters.group | filters.private),
-)
-async def start(c: Alita, m: Message):
-    me = await c.get_users("self")
-    _ = GetLang(m).strs
-    if m.chat.type == "private":
-        if errors.UserIsBlocked:
-            LOGGER.warning(f"Bot blocked by {m.from_user.id}")
-        keyboard = InlineKeyboardMarkup(
+async def gen_start_kb():
+    keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
@@ -104,9 +96,35 @@ async def start(c: Alita, m: Message):
                 [InlineKeyboardButton("🗃️ Source Code", url="https://github.com/Divkix/Alita_Robot")]
             ],
         )
+    return keyboard
+
+
+async def back_kb():
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    f"« {_('general.back_btn')}",
+                    callback_data="commands",
+                ),
+            ],
+        ],
+    )
+    return keyboard
+
+
+@Alita.on_message(
+    filters.command("start", PREFIX_HANDLER) & (filters.group | filters.private),
+)
+async def start(c: Alita, m: Message):
+    me = await c.get_users("self")
+    _ = GetLang(m).strs
+    if m.chat.type == "private":
+        if errors.UserIsBlocked:
+            LOGGER.warning(f"Bot blocked by {m.from_user.id}")
         await m.reply_text(
             _("start.private"),
-            reply_markup=keyboard,
+            reply_markup=(await gen_start_kb()),
             reply_to_message_id=m.message_id,
         )
     else:
@@ -118,36 +136,7 @@ async def start(c: Alita, m: Message):
 async def start_back(c: Alita, m: CallbackQuery):
     me = await c.get_users("self")
     _ = GetLang(m).strs
-    keyboard = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [
-                    InlineKeyboardButton(
-                        f"📚 {_('start.commands_btn')}",
-                        callback_data="commands",
-                    ),
-                ]
-                + [
-                    InlineKeyboardButton(
-                        f"ℹ️ {_('start.infos_btn')}",
-                        callback_data="infos",
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        f"🌐 {_('start.language_btn')}",
-                        callback_data="chlang",
-                    ),
-                ]
-                + [
-                    InlineKeyboardButton(
-                        f"➕ {_('start.add_chat_btn')}",
-                        url=f"https://t.me/{me.username}?startgroup=new",
-                    ),
-                ],
-                [InlineKeyboardButton("🗃️ Source Code", url="https://github.com/Divkix/Alita_Robot")]
-            ],
-        )
-    await m.message.edit_text(_("start.private"), reply_markup=keyboard)
+    await m.message.edit_text(_("start.private"), reply_markup=(await gen_start_kb()))
     await m.answer()
 
 
@@ -157,12 +146,7 @@ async def commands_menu(_: Alita, m: CallbackQuery):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_cmds_kb()),
-            [
-                InlineKeyboardButton(
-                    f"« {_('general.back_btn')}",
-                    callback_data="start_back",
-                ),
-            ],
+            (await back_kb())
         ],
     )
     await m.message.edit_text(_("general.commands_available"), reply_markup=keyboard)
@@ -195,12 +179,7 @@ async def commands_pvt(c: Alita, m: Message):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_cmds_kb()),
-            [
-                InlineKeyboardButton(
-                    f"« {_('general.back_btn')}",
-                    callback_data="start_back",
-                ),
-            ],
+            (await back_kb())
         ],
     )
     await m.reply_text(_("general.commands_available"), reply_markup=keyboard)
@@ -211,16 +190,6 @@ async def commands_pvt(c: Alita, m: Message):
 async def get_module_info(_: Alita, m: CallbackQuery):
     _ = GetLang(m).strs
     module = m.data.split(".")[1]
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    "« " + _("general.back_btn"),
-                    callback_data="commands",
-                ),
-            ],
-        ],
-    )
     await m.message.edit_text(
         HELP_COMMANDS[module],
         parse_mode="markdown",
@@ -243,16 +212,6 @@ async def infos(c: Alita, m: CallbackQuery):
         ID=OWNER_ID,
         version=VERSION,
     )
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    f"« {_('general.back_btn')}",
-                    callback_data="start_back",
-                ),
-            ],
-        ],
-    )
-    await m.message.edit_text(res, reply_markup=keyboard, disable_web_page_preview=True)
+    await m.message.edit_text(res, reply_markup=(await back_kb()), disable_web_page_preview=True)
     await m.answer()
     return
