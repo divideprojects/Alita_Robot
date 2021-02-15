@@ -22,7 +22,7 @@ from os import path
 from pyrogram.types import CallbackQuery
 from ujson import load
 
-from alita import ENABLED_LOCALES as enabled_locales
+from alita import ENABLED_LOCALES as enabled_locales, LOGGER
 from alita.db import lang_db as db
 
 
@@ -45,6 +45,7 @@ async def load_langdict():
         jsons += glob(path.join("locales", locale, "*.json"))
     langdict = await cache_localizations(jsons)
     if langdict:
+        LOGGER.info(langdict)
         return True
     return False
 
