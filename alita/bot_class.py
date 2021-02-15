@@ -149,8 +149,8 @@ class Alita(Client):
             f"Pyrogram v{__version__}\n(Layer - {layer}) started on @{BOT_USERNAME}",
         )
         cmd_list = await load_cmds(await ALL_PLUGINS())
-        # redis_keys = await allkeys()
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
+        # redis_keys = await allkeys()
         # LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
 
         # Send a message to MESSAGE_DUMP telling that the
@@ -161,8 +161,8 @@ class Alita(Client):
                 f"<b><i>{meh.username} started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n\n"
                 "<b>Loaded Plugins:</b>\n"
                 f"<i>{cmd_list}</i>\n"
-                "<b>Redis Keys Loaded:</b>\n"
-                f"<i>{redis_keys}</i>"
+                # "<b>Redis Keys Loaded:</b>\n"
+                # f"<i>{redis_keys}</i>"
             ),
         )
 
