@@ -79,28 +79,29 @@ async def start(c: Alita, m: Message):
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        "📚 " + _("start.commands_btn"),
+                        "📚 {_('start.commands_btn')}",
                         callback_data="commands",
                     ),
                 ]
                 + [
                     InlineKeyboardButton(
-                        "ℹ️ " + _("start.infos_btn"),
+                        f"ℹ️ {_('start.infos_btn')}",
                         callback_data="infos",
                     ),
                 ],
                 [
                     InlineKeyboardButton(
-                        "🌐  " + _("start.language_btn"),
+                        f"🌐 {_('start.language_btn')}",
                         callback_data="chlang",
                     ),
                 ]
                 + [
                     InlineKeyboardButton(
-                        "➕ " + _("start.add_chat_btn"),
+                        f"➕ {_('start.add_chat_btn')}",
                         url=f"https://t.me/{me.username}?startgroup=new",
                     ),
                 ],
+                [InlineKeyboardButton("🗃️ Source Code", url="https://github.com/Divkix/Alita_Robot",)]],
             ],
         )
         await m.reply_text(
