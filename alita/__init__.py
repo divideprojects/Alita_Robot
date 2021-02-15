@@ -69,6 +69,7 @@ except Exception as ef:
 
 redis_client = None
 
+
 # Redis Cache
 async def setup_redis():
     global redis_client
