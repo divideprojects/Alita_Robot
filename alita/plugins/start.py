@@ -145,7 +145,7 @@ async def start_back(c: Alita, m: CallbackQuery):
     _ = GetLang(m).strs
     await m.message.edit_text(
         _("start.private"),
-        reply_markup=(await gen_start_kb(m, me)),
+        reply_markup=(await gen_start_kb(m.message, me)),
     )
     await m.answer()
     return
@@ -189,7 +189,7 @@ async def commands_pvt(c: Alita, m: Message):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_cmds_kb()),
-            (await back_kb(m.message)),
+            (await back_kb(m)),
         ],
     )
     await m.reply_text(_("general.commands_available"), reply_markup=keyboard)
