@@ -72,7 +72,7 @@ async def ping(_: Alita, m: Message):
     filters.command("lyrics", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def get_lyrics(_: Alita, m: Message):
-    query = m.text.split()[1]
+    query = m.text.split(None, 1)[1]
     song = ""
     if not query:
         await m.edit_text("You haven't specified which song to look for!")
