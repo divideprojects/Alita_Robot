@@ -41,7 +41,7 @@ from alita import (
 )
 from alita.db import users_db as userdb
 from alita.plugins import ALL_PLUGINS
-from alita.utils.localizations import load_langdict
+from alita.utils.localization import load_langdict
 from alita.utils.paste import paste
 from alita.utils.redishelper import allkeys, flushredis, set_key
 
