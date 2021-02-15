@@ -117,7 +117,6 @@ class Alita(Client):
                 pass
             except Exception as ef:
                 LOGGER.error(ef)
-                pass
 
         try:
             await set_key("ADMINDICT", ADMINDICT)
