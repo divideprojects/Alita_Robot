@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from time import time
+
 from pyrogram import errors, filters
 from pyrogram.types import Message
 
