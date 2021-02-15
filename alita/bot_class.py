@@ -95,7 +95,12 @@ class Alita(Client):
                     filter="administrators",
                 ):
                     adminlist.append(
-                        (j.user.id, f"@{j.username}" if j.username else j.first_name),
+                        (
+                            j.user.id,
+                            f"@{j.user.username}"
+                            if j.user.username
+                            else j.user.first_name,
+                        ),
                     )
 
                 ADMINDICT[str(i.chat_id)] = adminlist  # Remove the last space
