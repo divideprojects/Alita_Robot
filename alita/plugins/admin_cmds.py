@@ -113,7 +113,7 @@ async def adminlist_show(c: Alita, m: Message):
 
         for i in adminlist:
             try:
-                usr = await m.chat.get_member(i)
+                usr = await m.chat.get_member(i[0])
                 mention = (
                     i[1] if i[1].startswith("@") else (await mention_html(i[1], i[0]))
                 )
