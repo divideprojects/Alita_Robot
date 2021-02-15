@@ -28,7 +28,7 @@ async def set_key(key: str, value):
 async def get_key(key: str):
     from alita import redis_client
 
-    return await loads(await redis_client.get(key))
+    return loads(await redis_client.get(key))
 
 
 async def flushredis():

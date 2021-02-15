@@ -28,6 +28,7 @@ from alita.utils.extract_user import extract_user
 from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
 from alita.utils.redishelper import get_key, set_key
+from alita.utils.sorters import sort_adminlist
 
 __PLUGIN__ = "Admin"
 __help__ = """
@@ -104,6 +105,7 @@ async def adminlist_show(c: Alita, m: Message):
                         f"@{i.user.username}" if i.user.username else i.user.first_name,
                     ),
                 )
+            adminlist = await sort_adminlist(adminlist)
             note = "These are up-to-date values!"
             ADMINDICT = await get_key("ADMINDICT")
             ADMINDICT[str(m.chat.id)] = adminlist

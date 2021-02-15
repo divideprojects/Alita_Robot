@@ -44,6 +44,7 @@ from alita.plugins import ALL_PLUGINS
 from alita.utils.localization import load_langdict
 from alita.utils.paste import paste
 from alita.utils.redishelper import allkeys, close, flushredis, set_key
+from alita.utils.sorters import sort_adminlist
 
 # Check if MESSAGE_DUMP is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
@@ -105,7 +106,7 @@ class Alita(Client):
                             else j.user.first_name,
                         ),
                     )
-
+                adminlist = await sort_adminlist(adminlist)
                 ADMINDICT[str(i.chat_id)] = adminlist  # Remove the last space
 
                 LOGGER.info(
