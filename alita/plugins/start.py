@@ -101,7 +101,7 @@ async def start(c: Alita, m: Message):
                         url=f"https://t.me/{me.username}?startgroup=new",
                     ),
                 ],
-                [InlineKeyboardButton("🗃️ Source Code", url="https://github.com/Divkix/Alita_Robot",)]],
+                [InlineKeyboardButton("🗃️ Source Code", url="https://github.com/Divkix/Alita_Robot")]
             ],
         )
         await m.reply_text(
