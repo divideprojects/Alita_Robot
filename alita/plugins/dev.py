@@ -24,6 +24,7 @@ from traceback import format_exc
 from pyrogram import errors, filters
 from pyrogram.types import Message
 from speedtest import Speedtest
+from ujson import dump
 
 from alita import DEV_PREFIX_HANDLER, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
 from alita.bot_class import Alita
@@ -91,8 +92,8 @@ async def neofetch_stats(_: Alita, m: Message):
         OUTPUT = "No Output"
 
     if len(OUTPUT) > 4090:
-        with BytesIO(str.encode(OUTPUT)) as f:
-            f.name = "neofetch.txt"
+        with open("neofetch.txt", "w+") as f:
+            f.write(OUTPUT)
             await m.reply_document(document=f, caption="neofetch result")
         await m.delete()
     else:
@@ -139,8 +140,8 @@ async def evaluate_code(c: Alita, m: Message):
     final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation.strip()}</code> \n"
 
     if len(final_output) > 4000:
-        with BytesIO(str.encode(final_output)) as f:
-            f.name = "eval.txt"
+        with open("eval.txt", "w+") as f:
+            f.write(final_output)
             await m.reply_document(
                 document=f,
                 caption=cmd,
@@ -190,8 +191,8 @@ async def execution(_: Alita, m: Message):
     OUTPUT += f"<b>stdout</b>: \n<code>{o}</code>"
 
     if len(OUTPUT) > 4000:
-        with BytesIO(str.encode(OUTPUT)) as f:
-            f.name = "exec.txt"
+        with open("exec.txt", "w+") as f:
+            f.write(OUTPUT)
             await m.reply_document(
                 document=f,
                 caption=cmd,
@@ -212,7 +213,7 @@ async def public_ip(c: Alita, m: Message):
         MESSAGE_DUMP,
         f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    await m.reply_text(_("dev.bot_ip").format(ip=ip))
+    await m.reply_text(_("dev.bot_ip").format(ip=ip), quote=True)
     return
 
 
@@ -246,6 +247,8 @@ async def chats(c: Alita, m: Message):
             pass
         except errors.ChannelPrivate:
             userdb.rem_chat(chat.chat_id)
+        except errors.PerIdInvalid:
+            LOGGER.warning(f"Group not loaded {chat.chat_id}")
         except Exception as ef:
             await m.reply_text(f"**Error:**\n{ef}")
 
@@ -262,7 +265,7 @@ async def chats(c: Alita, m: Message):
 @Alita.on_message(filters.command("uptime", DEV_PREFIX_HANDLER) & dev_filter)
 async def uptime(_: Alita, m: Message):
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
-    await m.reply_text(f"<b>Uptime:</b> `{up}`")
+    await m.reply_text(f"<b>Uptime:</b> `{up}`", quote=True)
     return
 
 
@@ -294,23 +297,30 @@ async def store_members(c: Alita, m: Message):
 @Alita.on_message(filters.command("alladmins", DEV_PREFIX_HANDLER) & dev_filter)
 async def list_all_admins(_: Alita, m: Message):
 
+    replymsg = await m.reply_text("Getting all admins in my cache...", quote=True)
+
     admindict = await get_key("ADMINDICT")
 
     if len(str(admindict)) > 4000:
-        with BytesIO(str.encode(admindict)) as output:
-            output.name = "alladmins.txt"
+        with open("alladmins.txt", "w+") as f:
+            dump(admindict, f, indent=4)
             await m.reply_document(
-                document=output,
-                caption="Here is the list of all admins in my Cache.",
+                document=f,
+                caption="Here is the list of all admins in my Redis cache.",
             )
+            await replymsg.delete()
     else:
-        await m.reply_text(admindict)
+        await replymsg.edit_text(admindict)
 
     return
 
 
 @Alita.on_message(filters.command("rediskeys", DEV_PREFIX_HANDLER) & dev_filter)
 async def show_redis_keys(_: Alita, m: Message):
+    txt_dict = {}
+    replymsg = await m.reply_text("Sending Redis Keys...", quote=True)
     keys = await allkeys()
-    await m.reply_text(keys)
+    for i in keys:
+        txt_dict[i] = await get_key(str(i))
+    await replymsg.edit_text(txt_dict)
     return

@@ -63,10 +63,10 @@ async def banallnotes_callback(c: Alita, q: CallbackQuery):
 
     rply = f"Users Banned:\n{users}"
 
-    with BytesIO(str.encode(rply)) as output:
-        output.name = f"bannedUsers_{q.message.chat.id}.txt"
+    with open(f"bannedUsers_{q.message.chat.id}.txt", "w+") as f:
+        f.write(rply)
         await q.message.reply_document(
-            document=output,
+            document=f,
             caption=f"Banned {len(users)} users!",
         )
 

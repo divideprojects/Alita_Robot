@@ -22,11 +22,11 @@ from alita import redis_client
 
 
 async def set_key(key: str, value):
-    return redis_client.set(key, dumps(value))
+    return await redis_client.set(key, dumps(value))
 
 
 async def get_key(key: str):
-    return loads(redis_client.get(key))
+    return loads(await redis_client.get(key))
 
 
 async def flushredis():

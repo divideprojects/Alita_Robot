@@ -10,4 +10,5 @@ speedtest-cli
 sqlalchemy
 tgcrypto
 tswift
+ujson
 wikipedia

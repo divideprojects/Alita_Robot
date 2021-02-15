@@ -34,10 +34,10 @@ Use this to lock group permissions.
 Allows you to lock and unlock permission types in the chat.
 
 **Usage:**
-/lock <type>: Lock Chat permission.
-/unlock <type>: Unlock Chat permission.
-/locks: View Chat permission.
-/locktypes: Check available lock types!
+ × /lock <type>: Lock Chat permission.
+ × /unlock <type>: Unlock Chat permission.
+ × /locks: View Chat permission.
+ × /locktypes: Check available lock types!
 """
 
 

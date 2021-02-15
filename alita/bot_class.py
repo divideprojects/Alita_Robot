@@ -37,9 +37,11 @@ from alita import (
     WORKERS,
     get_self,
     load_cmds,
+    setup_redis,
 )
 from alita.db import users_db as userdb
 from alita.plugins import ALL_PLUGINS
+from alita.utils.localizations import load_langdict
 from alita.utils.paste import paste
 from alita.utils.redishelper import allkeys, flushredis, set_key
 
@@ -76,10 +78,10 @@ class Alita(Client):
         begin = time()
 
         # Flush Redis data
-        try:
-            await flushredis()
-        except Exception as ef:
-            LOGGER.error(ef)
+        # try:
+        #     await flushredis()
+        # except Exception as ef:
+        #     LOGGER.error(ef)
 
         all_chats = userdb.get_all_chats() or []  # Get list of all chats
         LOGGER.info(f"{len(all_chats)} chats loaded.")
@@ -92,7 +94,9 @@ class Alita(Client):
                     chat_id=chat_id,
                     filter="administrators",
                 ):
-                    adminlist.append(j.user.id)
+                    adminlist.append(
+                        (j.user.id, f"@{j.username}" if j.username else j.first_name),
+                    )
 
                 ADMINDICT[str(i.chat_id)] = adminlist  # Remove the last space
 
@@ -126,12 +130,19 @@ class Alita(Client):
         await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 
         # Redis Content Setup!
-        await self.get_admins()  # Load admins in cache
-        await set_key("BOT_ID", meh.id)
-        await set_key("BOT_USERNAME", meh.username)
-        await set_key("BOT_NAME", meh.first_name)
-        await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
+        rsetup = await setup_redis()
+        LOGGER.info(f"Redis Connected: {rsetup}")
+        if rsetup:
+            await self.get_admins()  # Load admins in cache
+            await set_key("BOT_ID", meh.id)
+            await set_key("BOT_USERNAME", meh.username)
+            await set_key("BOT_NAME", meh.first_name)
+            await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
         # Redis Content Setup!
+
+        # Load Languages
+        lang_status = await load_langdict()
+        LOGGER.info(f"Loading Languages: {lang_status}")
 
         # Show in Log that bot has started
         LOGGER.info(
@@ -167,9 +178,9 @@ class Alita(Client):
         await self.send_document(
             MESSAGE_DUMP,
             document=LOGFILE,
-            caption=f"Logs for last run.\n<code>{LOG_DATETIME}</code>",
+            caption=f"Logs for last run, pasted to NekoBin.\n<code>{LOG_DATETIME}</code>",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Log", url=raw)]],
+                [[InlineKeyboardButton("Logs", url=raw)]],
             ),
         )
         await self.send_message(
@@ -178,9 +189,9 @@ class Alita(Client):
         )
         await super().stop()
         # Flush Redis data again
-        try:
-            await flushredis()
-            LOGGER.info("Flushed Redis!")
-        except Exception as ef:
-            LOGGER.error(ef)
+        # try:
+        #     await flushredis()
+        #     LOGGER.info("Flushed Redis!")
+        # except Exception as ef:
+        #     LOGGER.error(ef)
         LOGGER.info("Bot Stopped.\nkthxbye!")

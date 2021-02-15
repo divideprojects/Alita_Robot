@@ -92,33 +92,39 @@ async def adminlist_show(c: Alita, m: Message):
             adminlist = (await get_key("ADMINDICT"))[
                 str(m.chat.id)
             ]  # Load ADMINDICT from string
+            note = "These are cached values!"
         except Exception:
             adminlist = []
             async for i in m.chat.iter_members(
                 filter="administrators",
             ):
-                adminlist.append(i.user.id)
+                adminlist.append(
+                    (
+                        i.user.id,
+                        f"@{i.user.username}" if i.user.username else i.user.first_name,
+                    ),
+                )
+            note = "These are up-to-date values!"
             ADMINDICT = await get_key("ADMINDICT")
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
+
         adminstr = _("admin.adminlist").format(chat_title=m.chat.title)
+
         for i in adminlist:
             try:
                 usr = await m.chat.get_member(i)
-                if i == me_id:
-                    adminstr += f"- {(await mention_html(usr.user.first_name, i))} (⭐)\n"
+                if i[0] == me_id:
+                    adminstr += f"- {(await get_key('BOT_USERNAME'))} (⭐)\n"
                 elif usr.user.is_bot:
-                   adminstr += f"- {(await mention_html(usr.user.first_name, i))} (🤖)\n"
+                    adminstr += f"- {i[1] if i[1].startswith('@') else (await mention_html(i[1], i[0]))} (🤖)\n"
                 elif usr.status == "owner":
-                    adminstr += f"- {(await mention_html(usr.user.first_name, i))} (👑)\n"
+                    adminstr += f"- {i[1] if i[1].startswith('@') else (await mention_html(i[1], i[0]))} (👑)\n"
                 else:
-                    usr = await c.get_users(i)
-                    adminstr += f"- {(await mention_html(usr.first_name, i))} (`{i}`)\n"
+                    adminstr += f"- {i[1] if i[1].startswith('@') else (await mention_html(i[1], i[0]))}\n"
             except errors.PeerIdInvalid:
                 pass
-                usr = await c.get_users(i)
-                adminstr += f"- {(await mention_html(usr.first_name, i))} (`{i}`)\n"
-        await replymsg.edit_text(f"Admins in {m.chat.title}\n{adminstr}")
+        await replymsg.edit_text(f"{adminstr}\n\n<i>Note: {note}</i>")
     except Exception as ef:
         if str(ef) == str(m.chat.id):
             await m.reply_text(_("admin.useadmincache"))
@@ -145,7 +151,12 @@ async def reload_admins(c: Alita, m: Message):
     try:
         adminlist = []
         async for i in m.chat.iter_members(filter="administrators"):
-            adminlist.append(i.user.id)
+            adminlist.append(
+                (
+                    i.user.id,
+                    f"@{i.user.username}" if i.user.username else i.user.first_name,
+                ),
+            )
         ADMINDICT[str(m.chat.id)] = adminlist
         await set_key("ADMINDICT", ADMINDICT)
         await replymsg.edit_text(_("admin.reloadedadmins"))
