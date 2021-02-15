@@ -60,9 +60,6 @@ It really motivates me to continue this project further.
 - Fill in all the variables in *Development* class, not *Config* class. **Sudo, Dev, Whitelist** users are optional!!
 - Run the bot using `python3 -m alita`
 
-If successful, bot should send message to the **MESSAGE_DUMP** Group!
-
-
 ### Docker
 - Clone the repo and enter into it
 - Install [Docker](https://www.docker.com/).
@@ -70,7 +67,8 @@ If successful, bot should send message to the **MESSAGE_DUMP** Group!
 - Build the docker image using: `docker build -t alita_robot:latest .`
 - Run the command `docker run --env-file main.env alita_robot`
 
-If successful, bot should send message to the **MESSAGE_DUMP** Group!
+
+If all works well, bot should send message to the **MESSAGE_DUMP** Group!
 
 
 ## TO-DO
@@ -86,8 +84,9 @@ If successful, bot should send message to the **MESSAGE_DUMP** Group!
 - [ ] Add Warnings
 - [ ] Add Connections (Connect group chats to PM)
 - [x] Fix Docker Configuration
+- [ ] Switch to MongoDB
 
-*Still need to add docker-compose for
+*Still need to add docker-compose to connect with Redis and Db using a single command!
 
 
 ## Contributing to the project
@@ -95,6 +94,7 @@ If successful, bot should send message to the **MESSAGE_DUMP** Group!
 - Make sure your PR works and doesn't break anything.
 - You must join the support group.
 - Make sure it passes `make test` command.
+
 
 ## Special Thanks to
 - [AmanoTeam](https://github.com/AmanoTeam/) for [EduuRobot](https://github.com/AmanoTeam/EduuRobot/tree/rewrite) as that helped me make the language menu with the 4 langauges provided and some basic plugins.
