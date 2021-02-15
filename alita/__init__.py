@@ -77,13 +77,13 @@ redis_client = None
 # Redis Cache
 async def setup_redis():
     global redis_client
-    redis_client = aioredis.create_redis_pool(
+    redis_client = await aioredis.create_redis_pool(
         address=(Config.REDIS_HOST, Config.REDIS_PORT),
         db=0,
         password=Config.REDIS_PASS,
     )
     try:
-        # await redis_client.ping()
+        await redis_client.ping()
         return True
     except Exception as ef:
         LOGGER.error(f"Cannot connect to redis\nError: {ef}")
