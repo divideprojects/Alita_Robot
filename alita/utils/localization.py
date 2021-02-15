@@ -36,11 +36,13 @@ async def cache_localizations(files):
 
 
 jsons = []
+langdict = None
 for locale in enabled_locales:
     jsons += glob(path.join("locales", locale, "*.json"))
 
 
 async def load_langdict():
+    global langdict
     langdict = await cache_localizations(jsons)
     if langdict:
         return True
