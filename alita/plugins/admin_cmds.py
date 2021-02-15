@@ -134,7 +134,7 @@ async def adminlist_show(c: Alita, m: Message):
         if str(ef) == str(m.chat.id):
             await m.reply_text(_("admin.useadmincache"))
         else:
-            ef += f"{adminlist}\n"
+            ef = str(ef) + f"{adminlist}\n"
             await m.reply_text(
                 _("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef),
             )
