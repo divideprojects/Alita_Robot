@@ -150,8 +150,8 @@ class Alita(Client):
         )
         cmd_list = await load_cmds(await ALL_PLUGINS())
         # redis_keys = await allkeys()
-        # LOGGER.info(f"Plugins Loaded: {cmd_list}")
-        LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
+        LOGGER.info(f"Plugins Loaded: {cmd_list}")
+        # LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
 
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!
