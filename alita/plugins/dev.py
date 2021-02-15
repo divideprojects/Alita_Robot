@@ -17,7 +17,7 @@
 
 
 from asyncio import create_subprocess_shell, subprocess
-from io import BytesIO, StringIO
+from io import StringIO
 from time import gmtime, strftime, time
 from traceback import format_exc
 
@@ -252,10 +252,10 @@ async def chats(c: Alita, m: Message):
         except Exception as ef:
             await m.reply_text(f"**Error:**\n{ef}")
 
-    with BytesIO(str.encode(chatfile)) as output:
-        output.name = "chatlist.txt"
+    with open("chatlist.txt", "w+") as f:
+        f.write(chatfile)
         await m.reply_document(
-            document=output,
+            document=f,
             caption="Here is the list of chats in my Database.",
         )
     await exmsg.delete()

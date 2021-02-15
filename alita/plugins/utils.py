@@ -18,7 +18,6 @@
 
 from datetime import datetime
 from html import escape
-from io import BytesIO
 
 from googletrans import LANGUAGES, Translator
 from pyrogram import errors, filters
@@ -90,8 +89,8 @@ async def get_lyrics(_: Alita, m: Message):
     else:
         reply = "Song not found!"
     if len(reply) > 4090:
-        with BytesIO(str.encode(reply)) as f:
-            f.name = "lyrics.txt"
+        with open("lyrics.txt", "w+") as f:
+            f.write(reply)
             await m.reply_document(
                 document=f,
                 caption="Message length exceeded max limit!\nSent as a text file.",

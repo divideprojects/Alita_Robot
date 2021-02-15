@@ -17,7 +17,6 @@
 
 
 from datetime import datetime
-from io import BytesIO
 
 from pyrogram import errors, filters
 from pyrogram.types import Message
@@ -161,10 +160,10 @@ async def gban_list(_: Alita, m: Message):
         if user["reason"]:
             banfile += "Reason: {}\n".format(user["reason"])
 
-    with BytesIO(str.encode(banfile)) as output:
-        output.name = "gbanlist.txt"
+    with open("gbanlist.txt", "w+") as f:
+        f.write(banfile)
         await m.reply_document(
-            document=output,
+            document=f,
             caption="Here is the list of currently gbanned users.",
         )
 
