@@ -97,7 +97,7 @@ class Alita(Client):
                     chat_id=chat_id,
                     filter="administrators",
                 ):
-                    if i.user.is_deleted:
+                    if j.user.is_deleted:
                         continue
                     adminlist.append(
                         (
