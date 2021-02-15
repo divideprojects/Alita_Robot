@@ -35,10 +35,10 @@ Lazy to promote or demote someone for admins? Want to see basic information abou
 All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
 done easily using the bot.
 
- × /adminlist: List of admins in the chat.
-*Admin only:*
- × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
- × /unpin: Unpins the currently pinned message. - add `all` to unpin all the messages in current chat.
+**User Commands:**
+ × /adminlist: List all admins in the current chat.
+
+**Admin only:**
  × /invitelink: Gets private chat's invitelink.
  × /mute: Mute the user replied to or mentioned.
  × /unmute: Unmutes the user mentioned or replied to.
@@ -48,7 +48,7 @@ done easily using the bot.
  × /unban: Unbans the user replied to or tagged.
 
 An example of promoting someone to admins:
-`/promote @username`; this promotes a user to admins.
+`/promote @username`; this promotes a user to admin.
 """
 
 # Mute permissions
@@ -451,65 +451,4 @@ async def get_invitelink(c: Alita, m: Message):
         return
 
     await m.reply_text(_("admin.nouserinviteperm"))
-    return
-
-
-@Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group)
-async def pin_message(c: Alita, m: Message):
-
-    _ = GetLang(m).strs
-
-    if not (await admin_check(c, m)):
-        return
-
-    pin_loud = m.text.split(None, 1)
-    if m.reply_to_message:
-        try:
-            disable_notification = True
-
-            if len(pin_loud) >= 2 and pin_loud[1] in ["alert", "notify", "loud"]:
-                disable_notification = False
-
-            await c.pin_chat_message(
-                m.chat.id,
-                m.reply_to_message.message_id,
-                disable_notification=disable_notification,
-            )
-            await m.reply_text(_("admin.pinnedmsg"))
-
-        except errors.ChatAdminRequired:
-            await m.reply_text(_("admin.notadmin"))
-        except errors.RightForbidden:
-            await m.reply_text("I don't have enough rights to pin messages.")
-        except Exception as ef:
-            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
-            LOGGER.error(ef)
-    else:
-        await m.reply_text(_("admin.nopinmsg"))
-    return
-
-
-@Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & filters.group)
-async def unpin_message(c: Alita, m: Message):
-
-    _ = GetLang(m).strs
-
-    if not (await admin_check(c, m)):
-        return
-
-    try:
-        if len(m.command) > 1 and m.command[1] == "all":
-            await c.unpin_all_chat_messages(m.chat.id)
-            await m.reply_text("Unpinned all messages!")
-        else:
-            await m.chat.unpin_chat_message(m.chat.id)
-            await m.reply_text("Unpinned last message!")
-    except errors.ChatAdminRequired:
-        await m.reply_text(_("admin.notadmin"))
-    except errors.RightForbidden:
-        await m.reply_text("I don't have enough rights to unpin messages")
-    except Exception as ef:
-        await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
-        LOGGER.error(ef)
-
     return
