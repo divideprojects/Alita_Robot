@@ -97,12 +97,14 @@ class Alita(Client):
                     chat_id=chat_id,
                     filter="administrators",
                 ):
+                    if i.user.is_deleted:
+                        continue
                     adminlist.append(
                         (
                             j.user.id,
                             f"@{j.user.username}"
                             if j.user.username
-                            else (j.user.first_name or "ItsADeletdAccount"),
+                            else j.user.first_name,
                         ),
                     )
                 adminlist = sorted(adminlist, key=lambda x: x[1])
