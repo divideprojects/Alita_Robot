@@ -141,8 +141,12 @@ async def start(c: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^start_back$"))
 async def start_back(c: Alita, m: CallbackQuery):
+    me = await c.get_users("self")
     _ = GetLang(m).strs
-    await m.message.edit_text(_("start.private"), reply_markup=(await gen_start_kb(m)))
+    await m.message.edit_text(
+        _("start.private"),
+        reply_markup=(await gen_start_kb(m, me)),
+    )
     await m.answer()
 
 
