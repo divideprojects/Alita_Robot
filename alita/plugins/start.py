@@ -148,6 +148,7 @@ async def start_back(c: Alita, m: CallbackQuery):
         reply_markup=(await gen_start_kb(m, me)),
     )
     await m.answer()
+    return
 
 
 @Alita.on_callback_query(filters.regex("^commands$"))
