@@ -5,7 +5,6 @@ googletrans
 psycopg2-binary
 pyrogram>=1.0.7
 python-dateutil
-redis
 regex
 speedtest-cli
 sqlalchemy

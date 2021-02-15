@@ -118,7 +118,7 @@ async def adminlist_show(c: Alita, m: Message):
                     i[1] if i[1].startswith("@") else (await mention_html(i[1], i[0]))
                 )
                 if i[0] == me_id:
-                    adminstr += f"- {(await get_key('BOT_USERNAME'))} (⭐)\n"
+                    adminstr += f"- @{(await get_key('BOT_USERNAME'))} (⭐)\n"
                 elif usr.user.is_bot:
                     adminstr += f"- {mention} (🤖)\n"
                 elif usr.status == "owner":

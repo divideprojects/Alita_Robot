@@ -43,7 +43,7 @@ from alita.db import users_db as userdb
 from alita.plugins import ALL_PLUGINS
 from alita.utils.localization import load_langdict
 from alita.utils.paste import paste
-from alita.utils.redishelper import allkeys, flushredis, set_key
+from alita.utils.redishelper import allkeys, close, flushredis, set_key
 
 # Check if MESSAGE_DUMP is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
@@ -73,15 +73,18 @@ class Alita(Client):
             workers=WORKERS,
         )
 
+    async def flush_redis():
+        # Flush Redis data
+        try:
+            await flushredis()
+        except Exception as ef:
+            LOGGER.error(ef)
+
     async def get_admins(self):
         LOGGER.info("Begin caching admins...")
         begin = time()
 
-        # Flush Redis data
-        # try:
-        #     await flushredis()
-        # except Exception as ef:
-        #     LOGGER.error(ef)
+        await self.flush_redis()
 
         all_chats = userdb.get_all_chats() or []  # Get list of all chats
         LOGGER.info(f"{len(all_chats)} chats loaded.")
@@ -157,8 +160,8 @@ class Alita(Client):
         )
         cmd_list = await load_cmds(await ALL_PLUGINS())
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
-        # redis_keys = await allkeys()
-        # LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
+        redis_keys = await allkeys()
+        LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
 
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!
@@ -168,8 +171,8 @@ class Alita(Client):
                 f"<b><i>{meh.username} started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n\n"
                 "<b>Loaded Plugins:</b>\n"
                 f"<i>{cmd_list}</i>\n"
-                # "<b>Redis Keys Loaded:</b>\n"
-                # f"<i>{redis_keys}</i>"
+                "<b>Redis Keys Loaded:</b>\n"
+                f"<i>{redis_keys}</i>"
             ),
         )
 
@@ -195,10 +198,6 @@ class Alita(Client):
             "<i><b>Bot Stopped!</b></i>",
         )
         await super().stop()
-        # Flush Redis data again
-        # try:
-        #     await flushredis()
-        #     LOGGER.info("Flushed Redis!")
-        # except Exception as ef:
-        #     LOGGER.error(ef)
+        await self.flush_redis()
+        await close()  # Close redis connection
         LOGGER.info("Bot Stopped.\nkthxbye!")

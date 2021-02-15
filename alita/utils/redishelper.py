@@ -28,20 +28,27 @@ async def set_key(key: str, value):
 async def get_key(key: str):
     from alita import redis_client
 
-    return loads(await redis_client.get(key))
+    return await loads(await redis_client.get(key))
 
 
 async def flushredis():
     from alita import redis_client
 
-    return redis_client.flushall()
+    return await redis_client.flushall()
 
 
 async def allkeys():
     from alita import redis_client
 
-    keys = redis_client.keys()
+    keys = await redis_client.keys(pattern="*")
     keys_str = []
     for i in keys:
         keys_str.append(i.decode())
     return keys_str
+
+
+async def close():
+    from alita import redis_client
+
+    redis_client.close()
+    return await redis_client.wait_closed()
