@@ -128,7 +128,7 @@ async def set_lang(c: Alita, m: Message):
         return
 
     _ = GetLang(m).strs
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[*gen_langs_kb()])
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[*(await gen_langs_kb())])
     if len(m.text.split()) >= 2:
         await m.reply_text(_("langs.correct_usage"))
         return
