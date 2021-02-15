@@ -99,7 +99,7 @@ async def gen_start_kb():
     return keyboard
 
 
-async def back_kb():
+async def back_kb(m):
     _ = GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -143,11 +143,10 @@ async def start_back(c: Alita, m: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(_: Alita, m: CallbackQuery):
-    _ = GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_cmds_kb()),
-            (await back_kb())
+            (await back_kb(m.message))
         ],
     )
     await m.message.edit_text(_("general.commands_available"), reply_markup=keyboard)
@@ -157,7 +156,6 @@ async def commands_menu(_: Alita, m: CallbackQuery):
 
 @Alita.on_message(filters.command("help", PREFIX_HANDLER))
 async def commands_pvt(c: Alita, m: Message):
-    _ = GetLang(m).strs
     if m.chat.type != "private":
         priv8kb = InlineKeyboardMarkup(
             [
@@ -179,7 +177,7 @@ async def commands_pvt(c: Alita, m: Message):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_cmds_kb()),
-            (await back_kb())
+            (await back_kb(m.message))
         ],
     )
     await m.reply_text(_("general.commands_available"), reply_markup=keyboard)
@@ -192,7 +190,7 @@ async def get_module_info(_: Alita, m: CallbackQuery):
     await m.message.edit_text(
         HELP_COMMANDS[module],
         parse_mode="markdown",
-        reply_markup=keyboard,
+        reply_markup=(await back_kb(m.message)),
     )
     await m.answer()
     return
@@ -200,6 +198,7 @@ async def get_module_info(_: Alita, m: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^infos$"))
 async def infos(c: Alita, m: CallbackQuery):
+    _ = GetLang(m).strs
     _owner = await c.get_users(OWNER_ID)
     res = _("start.info_page").format(
         Owner=(
@@ -210,6 +209,6 @@ async def infos(c: Alita, m: CallbackQuery):
         ID=OWNER_ID,
         version=VERSION,
     )
-    await m.message.edit_text(res, reply_markup=(await back_kb()), disable_web_page_preview=True)
+    await m.message.edit_text(res, reply_markup=(await back_kb(m.message)), disable_web_page_preview=True)
     await m.answer()
     return
