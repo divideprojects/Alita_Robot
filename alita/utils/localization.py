@@ -39,6 +39,7 @@ langdict = None
 
 
 async def load_langdict():
+    global langdict
     jsons = []
     for locale in enabled_locales:
         jsons += glob(path.join("locales", locale, "*.json"))
