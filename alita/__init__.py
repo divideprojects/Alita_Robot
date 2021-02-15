@@ -83,7 +83,7 @@ async def setup_redis():
         password=Config.REDIS_PASS,
     )
     try:
-        await redis_client.ping()
+        # await redis_client.ping()
         return True
     except Exception as ef:
         LOGGER.error(f"Cannot connect to redis\nError: {ef}")
