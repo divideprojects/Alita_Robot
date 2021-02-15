@@ -1,4 +1,5 @@
 aiohttp[speedups]
+aioredis
 asyncio
 googletrans
 psycopg2-binary
