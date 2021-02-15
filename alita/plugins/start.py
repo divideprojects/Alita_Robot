@@ -79,7 +79,7 @@ async def start(c: Alita, m: Message):
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        "📚 {_('start.commands_btn')}",
+                        f"📚 {_('start.commands_btn')}",
                         callback_data="commands",
                     ),
                 ]
@@ -119,33 +119,34 @@ async def start_back(c: Alita, m: CallbackQuery):
     me = await c.get_users("self")
     _ = GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    "📚 " + _("start.commands_btn"),
-                    callback_data="commands",
-                ),
-            ]
-            + [
-                InlineKeyboardButton(
-                    "ℹ️ " + _("start.infos_btn"),
-                    callback_data="infos",
-                ),
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        f"📚 {_('start.commands_btn')}",
+                        callback_data="commands",
+                    ),
+                ]
+                + [
+                    InlineKeyboardButton(
+                        f"ℹ️ {_('start.infos_btn')}",
+                        callback_data="infos",
+                    ),
+                ],
+                [
+                    InlineKeyboardButton(
+                        f"🌐 {_('start.language_btn')}",
+                        callback_data="chlang",
+                    ),
+                ]
+                + [
+                    InlineKeyboardButton(
+                        f"➕ {_('start.add_chat_btn')}",
+                        url=f"https://t.me/{me.username}?startgroup=new",
+                    ),
+                ],
+                [InlineKeyboardButton("🗃️ Source Code", url="https://github.com/Divkix/Alita_Robot")]
             ],
-            [
-                InlineKeyboardButton(
-                    "🌐 " + _("start.language_btn"),
-                    callback_data="chlang",
-                ),
-            ]
-            + [
-                InlineKeyboardButton(
-                    "➕ " + _("start.add_chat_btn"),
-                    url=f"https://t.me/{me.username}?startgroup=new",
-                ),
-            ],
-        ],
-    )
+        )
     await m.message.edit_text(_("start.private"), reply_markup=keyboard)
     await m.answer()
 
@@ -158,7 +159,7 @@ async def commands_menu(_: Alita, m: CallbackQuery):
             *(await gen_cmds_kb()),
             [
                 InlineKeyboardButton(
-                    "« " + _("general.back_btn"),
+                    f"« {_('general.back_btn')}",
                     callback_data="start_back",
                 ),
             ],
@@ -196,7 +197,7 @@ async def commands_pvt(c: Alita, m: Message):
             *(await gen_cmds_kb()),
             [
                 InlineKeyboardButton(
-                    "« " + _("general.back_btn"),
+                    f"« {_('general.back_btn')}",
                     callback_data="start_back",
                 ),
             ],
@@ -246,7 +247,7 @@ async def infos(c: Alita, m: CallbackQuery):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    "« " + _("general.back_btn"),
+                    f"« {_('general.back_btn')}",
                     callback_data="start_back",
                 ),
             ],
