@@ -16,26 +16,30 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from asyncio import sleep
 from pickle import dumps, loads
-
-sleep(5)
-from alita import redis_client
 
 
 async def set_key(key: str, value):
+    from alita import redis_client
+
     return await redis_client.set(key, dumps(value))
 
 
 async def get_key(key: str):
+    from alita import redis_client
+
     return loads(await redis_client.get(key))
 
 
 async def flushredis():
+    from alita import redis_client
+
     return redis_client.flushall()
 
 
 async def allkeys():
+    from alita import redis_client
+
     keys = redis_client.keys()
     keys_str = []
     for i in keys:
