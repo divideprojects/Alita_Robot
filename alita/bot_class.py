@@ -73,7 +73,7 @@ class Alita(Client):
             workers=WORKERS,
         )
 
-    async def flush_redis():
+    async def flush_redis(self):
         # Flush Redis data
         try:
             await flushredis()
