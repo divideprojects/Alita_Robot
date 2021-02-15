@@ -192,7 +192,7 @@ async def commands_pvt(c: Alita, m: Message):
 
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            *gen_cmds_kb(),
+            *(await gen_cmds_kb()),
             [
                 InlineKeyboardButton(
                     "« " + _("general.back_btn"),
