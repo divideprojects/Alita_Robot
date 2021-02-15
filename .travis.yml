@@ -18,10 +18,20 @@ python:
   - "3.8"
   - "3.9"
 
+# Update pip and setuptools
+before_install:
+  - pip install --upgrade pip setuptools
+
 # Install dependencies
 install:
-  - pip install -r requirements-dev.txt
+  - pip install --upgrade -r requirements-dev.txt
 
 # Run test
 script:
   - make test
+
+# When to send mail
+notifications:
+  email:
+    on_success: never
+    on_failure: always

@@ -18,8 +18,8 @@
 
 from datetime import datetime
 from html import escape
-from io import BytesIO
 
+from googletrans import LANGUAGES, Translator
 from pyrogram import errors, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from tswift import Song
@@ -37,6 +37,7 @@ from alita import (
 from alita.bot_class import Alita
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.extract_user import extract_user
+from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
 from alita.utils.paste import paste
 
@@ -49,6 +50,7 @@ Some utils provided by bot to make your tasks easy!
  × /info: Get information about a user.
  × /ping - Get ping time of bot to telegram server.
  × /gifid: Reply to a gif to me to tell you its file ID.
+ × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
  × /github <username>: Search for the user using github api!
  × /lyrics <song>: Get the lyrics of the song you specify!
  × /weebify <text> or a reply to message: To weebify the message.
@@ -72,7 +74,7 @@ async def ping(_: Alita, m: Message):
     filters.command("lyrics", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def get_lyrics(_: Alita, m: Message):
-    query = m.text.split()[1]
+    query = m.text.split(None, 1)[1]
     song = ""
     if not query:
         await m.edit_text("You haven't specified which song to look for!")
@@ -87,8 +89,8 @@ async def get_lyrics(_: Alita, m: Message):
     else:
         reply = "Song not found!"
     if len(reply) > 4090:
-        with BytesIO(str.encode(reply)) as f:
-            f.name = "lyrics.txt"
+        with open("lyrics.txt", "w+") as f:
+            f.write(reply)
             await m.reply_document(
                 document=f,
                 caption="Message length exceeded max limit!\nSent as a text file.",
@@ -299,3 +301,62 @@ async def paste_it(_: Alita, m: Message):
     )
 
     return
+
+
+@Alita.on_message(filters.command("tr", PREFIX_HANDLER))
+async def translate(_: Alita, m: Message):
+    _ = GetLang(m).strs
+    translator = Translator()
+    text = m.text[4:]
+    lang = await get_lang(text)
+    if m.reply_to_message:
+        text = m.reply_to_message.text or m.reply_to_message.caption
+    else:
+        text = text.replace(lang, "", 1).strip() if text.startswith(lang) else text
+
+    if text:
+        sent = await m.reply_text(
+            _("translate.translating"),
+            reply_to_message_id=m.message_id,
+        )
+        langs = {}
+
+        if len(lang.split("-")) > 1:
+            langs["src"] = lang.split("-")[0]
+            langs["dest"] = lang.split("-")[1]
+        else:
+            langs["dest"] = lang
+
+        trres = translator.translate(text, **langs)
+        text = trres.text
+
+        res = escape(text)
+        await sent.edit_text(
+            _("translate.translation").format(
+                from_lang=trres.src,
+                to_lang=trres.dest,
+                translation=res,
+            ),
+            parse_mode="HTML",
+        )
+
+    else:
+        await m.reply_text(
+            _("translate.translate_usage"),
+            reply_to_message_id=m.message_id,
+            parse_mode="markdown",
+        )
+
+    return
+
+
+async def get_lang(text):
+    if len(text.split()) > 0:
+        lang = text.split()[0]
+        if lang.split("-")[0] not in LANGUAGES:
+            lang = "en"
+        if len(lang.split("-")) > 1 and lang.split("-")[1] not in LANGUAGES:
+            lang = "en"
+    else:
+        lang = "en"
+    return lang

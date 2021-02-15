@@ -38,23 +38,25 @@ This note only avaiable for yourself only!
 Also notes support inline button powered by inline query assistant bot.
 
 **Save Note**
-/save <note>
+ × /save <note>
 Save a note, you can get or delete that later.
 
 **Get Note**
-/get <note>
+ × /get <note>
 Get that note, if avaiable.
 
 **Delete Note**
-/clear <note>
+ × /clear <note>
 Delete that note, if avaiable.
 
-/clearall
+ × /clearall
 Clears all notes in the chat!
 **NOTE:** Can only be used by owner of chat!
 
 **All Notes**
-/saved or /notes
+ × /saved
+ or
+ × /notes
 Get all your notes, if too much notes, please use this in your saved message instead!
 
 

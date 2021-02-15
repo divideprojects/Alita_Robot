@@ -19,16 +19,12 @@
 from datetime import datetime
 from importlib import import_module as imp_mod
 from logging import INFO, WARNING, FileHandler, StreamHandler, basicConfig, getLogger
-
-# from nest_asyncio import apply
 from os import environ, mkdir, path
 from sys import exit as sysexit
 from sys import stdout, version_info
 from time import time
 
-from redis import Redis
-
-# apply()
+from aioredis import create_redis_pool
 
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
@@ -71,12 +67,24 @@ except Exception as ef:
     LOGGER.error(ef)  # Print Error
     sysexit(1)
 
+redis_client = None
+
+
 # Redis Cache
-redis_client = Redis(
-    host=Config.REDIS_HOST,
-    port=Config.REDIS_PORT,
-    password=Config.REDIS_PASS,
-)
+async def setup_redis():
+    global redis_client
+    redis_client = await create_redis_pool(
+        address=(Config.REDIS_HOST, Config.REDIS_PORT),
+        db=0,
+        password=Config.REDIS_PASS,
+    )
+    try:
+        await redis_client.ping()
+        return redis_client
+    except Exception as ef:
+        LOGGER.error(f"Cannot connect to redis\nError: {ef}")
+        return False
+
 
 # Account Related
 TOKEN = Config.TOKEN

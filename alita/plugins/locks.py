@@ -34,15 +34,15 @@ Use this to lock group permissions.
 Allows you to lock and unlock permission types in the chat.
 
 **Usage:**
-/lock <type>: Lock Chat permission.
-/unlock <type>: Unlock Chat permission.
-/locks: View Chat permission.
-/locktypes: Check available lock types!
+ × /lock <type>: Lock Chat permission.
+ × /unlock <type>: Unlock Chat permission.
+ × /locks: View Chat permission.
+ × /locktypes: Check available lock types!
 """
 
 
 @Alita.on_message(filters.command("locktypes", PREFIX_HANDLER) & filters.group)
-async def lock_types(c: Alita, m: Message):
+async def lock_types(_: Alita, m: Message):
     types = (
         "**Lock Types:**\n"
         " - `all` = Everything\n"

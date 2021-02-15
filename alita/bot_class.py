@@ -37,11 +37,13 @@ from alita import (
     WORKERS,
     get_self,
     load_cmds,
+    setup_redis,
 )
 from alita.db import users_db as userdb
 from alita.plugins import ALL_PLUGINS
+from alita.utils.localization import load_langdict
 from alita.utils.paste import paste
-from alita.utils.redishelper import allkeys, flushredis, set_key
+from alita.utils.redishelper import allkeys, close, flushredis, set_key
 
 # Check if MESSAGE_DUMP is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
@@ -71,15 +73,18 @@ class Alita(Client):
             workers=WORKERS,
         )
 
-    async def get_admins(self):
-        LOGGER.info("Begin caching admins...")
-        begin = time()
-
+    async def flush_redis(self):
         # Flush Redis data
         try:
             await flushredis()
         except Exception as ef:
             LOGGER.error(ef)
+
+    async def get_admins(self):
+        LOGGER.info("Begin caching admins...")
+        begin = time()
+
+        await self.flush_redis()
 
         all_chats = userdb.get_all_chats() or []  # Get list of all chats
         LOGGER.info(f"{len(all_chats)} chats loaded.")
@@ -92,8 +97,17 @@ class Alita(Client):
                     chat_id=chat_id,
                     filter="administrators",
                 ):
-                    adminlist.append(j.user.id)
-
+                    if j.user.is_deleted:
+                        continue
+                    adminlist.append(
+                        (
+                            j.user.id,
+                            f"@{j.user.username}"
+                            if j.user.username
+                            else j.user.first_name,
+                        ),
+                    )
+                adminlist = sorted(adminlist, key=lambda x: x[1])
                 ADMINDICT[str(i.chat_id)] = adminlist  # Remove the last space
 
                 LOGGER.info(
@@ -103,7 +117,6 @@ class Alita(Client):
                 pass
             except Exception as ef:
                 LOGGER.error(ef)
-                pass
 
         try:
             await set_key("ADMINDICT", ADMINDICT)
@@ -126,20 +139,29 @@ class Alita(Client):
         await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 
         # Redis Content Setup!
-        await self.get_admins()  # Load admins in cache
-        await set_key("BOT_ID", meh.id)
-        await set_key("BOT_USERNAME", meh.username)
-        await set_key("BOT_NAME", meh.first_name)
-        await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
+        redis_client = await setup_redis()
+        if redis_client:
+            LOGGER.info("Connected to redis!")
+            await self.get_admins()  # Load admins in cache
+            await set_key("BOT_ID", meh.id)
+            await set_key("BOT_USERNAME", meh.username)
+            await set_key("BOT_NAME", meh.first_name)
+            await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
+        else:
+            LOGGER.error("Redis not connected!")
         # Redis Content Setup!
+
+        # Load Languages
+        lang_status = await load_langdict()
+        LOGGER.info(f"Loading Languages: {lang_status}")
 
         # Show in Log that bot has started
         LOGGER.info(
             f"Pyrogram v{__version__}\n(Layer - {layer}) started on @{BOT_USERNAME}",
         )
         cmd_list = await load_cmds(await ALL_PLUGINS())
-        redis_keys = await allkeys()
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
+        redis_keys = await allkeys()
         LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
 
         # Send a message to MESSAGE_DUMP telling that the
@@ -167,9 +189,9 @@ class Alita(Client):
         await self.send_document(
             MESSAGE_DUMP,
             document=LOGFILE,
-            caption=f"Logs for last run.\n<code>{LOG_DATETIME}</code>",
+            caption=f"Logs for last run, pasted to NekoBin.\n<code>{LOG_DATETIME}</code>",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Log", url=raw)]],
+                [[InlineKeyboardButton("Logs", url=raw)]],
             ),
         )
         await self.send_message(
@@ -177,10 +199,6 @@ class Alita(Client):
             "<i><b>Bot Stopped!</b></i>",
         )
         await super().stop()
-        # Flush Redis data again
-        try:
-            await flushredis()
-            LOGGER.info("Flushed Redis!")
-        except Exception as ef:
-            LOGGER.error(ef)
+        await self.flush_redis()
+        await close()  # Close redis connection
         LOGGER.info("Bot Stopped.\nkthxbye!")

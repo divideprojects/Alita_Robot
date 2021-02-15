@@ -16,26 +16,47 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pickle import dumps, loads
-
-from alita import redis_client
+from ujson import dumps, loads
 
 
 async def set_key(key: str, value):
-    return redis_client.set(key, dumps(value))
+    from alita import redis_client
+
+    return await redis_client.set(
+        key,
+        dumps(
+            value,
+            reject_bytes=False,
+            escape_forward_slashes=True,
+            encode_html_chars=True,
+        ),
+    )
 
 
 async def get_key(key: str):
-    return loads(redis_client.get(key))
+    from alita import redis_client
+
+    return loads(await redis_client.get(key))
 
 
 async def flushredis():
-    return redis_client.flushall()
+    from alita import redis_client
+
+    return await redis_client.flushall()
 
 
 async def allkeys():
-    keys = redis_client.keys()
+    from alita import redis_client
+
+    keys = await redis_client.keys(pattern="*")
     keys_str = []
     for i in keys:
         keys_str.append(i.decode())
     return keys_str
+
+
+async def close():
+    from alita import redis_client
+
+    redis_client.close()
+    return await redis_client.wait_closed()
