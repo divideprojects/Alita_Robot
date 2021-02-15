@@ -156,6 +156,8 @@ async def reload_admins(c: Alita, m: Message):
     try:
         adminlist = []
         async for i in m.chat.iter_members(filter="administrators"):
+            if not i.user.is_deleted:
+                    continue
             adminlist.append(
                 (
                     i.user.id,
@@ -267,7 +269,9 @@ async def promote_usr(c: Alita, m: Message):
             ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
             adminlist = []
             async for i in m.chat.iter_members(filter="administrators"):
-                adminlist.append([i.user.id, f"@{i.user.username}" if i.user.username else (i.user.first_name or "ItsADeletdAccount"])
+                if not i.user.is_deleted:
+                    continue
+                adminlist.append([i.user.id, f"@{i.user.username}" if i.user.username else i.user.first_name])
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
@@ -322,7 +326,9 @@ async def demote_usr(c: Alita, m: Message):
             ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
             adminlist = []
             async for i in m.chat.iter_members(filter="administrators"):
-                adminlist.append([i.user.id, f"@{i.user.username}" if i.user.username else (i.user.first_name or "ItsADeletdAccount"])
+                if not i.user.is_deleted:
+                    continue
+                adminlist.append([i.user.id, f"@{i.user.username}" if i.user.username else i.user.first_name])
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
