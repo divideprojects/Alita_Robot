@@ -16,8 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from time import time
-
 from pyrogram import errors, filters
 from pyrogram.types import ChatPermissions, Message
 
@@ -44,8 +42,6 @@ done easily using the bot.
  × /unmute: Unmutes the user mentioned or replied to.
  × /promote: Promotes the user replied to or tagged.
  × /demote: Demotes the user replied to or tagged.
- × /ban: Bans the user replied to or tagged.
- × /unban: Unbans the user replied to or tagged.
 
 An example of promoting someone to admins:
 `/promote @username`; this promotes a user to admin.
@@ -177,84 +173,6 @@ async def reload_admins(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("kick", PREFIX_HANDLER) & filters.group)
-async def kick_usr(c: Alita, m: Message):
-
-    _ = GetLang(m).strs
-
-    if not (await admin_check(c, m)):
-        return
-
-    from_user = await m.chat.get_member(m.from_user.id)
-
-    if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = await extract_user(m)
-        try:
-            await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
-            await m.reply_text(
-                f"Banned {(await mention_html(user_first_name, user_id))}",
-            )
-        except errors.ChatAdminRequired:
-            await m.reply_text(_("admin.notadmin"))
-        except Exception as ef:
-            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
-            LOGGER.error(ef)
-
-    return
-
-
-@Alita.on_message(filters.command("ban", PREFIX_HANDLER) & filters.group)
-async def ban_usr(c: Alita, m: Message):
-
-    _ = GetLang(m).strs
-
-    if not (await admin_check(c, m)):
-        return
-
-    from_user = await m.chat.get_member(m.from_user.id)
-
-    if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = await extract_user(m)
-        try:
-            await c.kick_chat_member(m.chat.id, user_id)
-            await m.reply_text(
-                f"Banned {(await mention_html(user_first_name, user_id))}",
-            )
-        except errors.ChatAdminRequired:
-            await m.reply_text(_("admin.notadmin"))
-        except Exception as ef:
-            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
-            LOGGER.error(ef)
-
-    return
-
-
-@Alita.on_message(filters.command("unban", PREFIX_HANDLER) & filters.group)
-async def unban_usr(c: Alita, m: Message):
-
-    _ = GetLang(m).strs
-
-    if not (await admin_check(c, m)):
-        return
-
-    from_user = await m.chat.get_member(m.from_user.id)
-
-    if from_user.can_restrict_members or from_user.status == "creator":
-        user_id, user_first_name = await extract_user(m)
-        try:
-            await c.unban_chat_member(m.chat.id, user_id)
-            await m.reply_text(
-                f"Unbanned {(await mention_html(user_first_name, user_id))}",
-            )
-        except errors.ChatAdminRequired:
-            await m.reply_text(_("admin.notadmin"))
-        except Exception as ef:
-            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
-            LOGGER.error(ef)
-
-    return
-
-
 @Alita.on_message(filters.command("mute", PREFIX_HANDLER) & filters.group)
 async def mute_usr(c: Alita, m: Message):
 
@@ -349,7 +267,7 @@ async def promote_usr(c: Alita, m: Message):
             ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
             adminlist = []
             async for i in m.chat.iter_members(filter="administrators"):
-                adminlist.append(i.user.id)
+                adminlist.append([i.user.id, f"@{i.user.username}" if i.user.username else (i.user.first_name or "ItsADeletdAccount"])
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
@@ -404,7 +322,7 @@ async def demote_usr(c: Alita, m: Message):
             ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
             adminlist = []
             async for i in m.chat.iter_members(filter="administrators"):
-                adminlist.append(i.user.id)
+                adminlist.append([i.user.id, f"@{i.user.username}" if i.user.username else (i.user.first_name or "ItsADeletdAccount"])
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
@@ -420,6 +338,7 @@ async def demote_usr(c: Alita, m: Message):
 
     await m.reply_text(_("admin.nodemoteperm"))
     return
+
 
 
 @Alita.on_message(filters.command("invitelink", PREFIX_HANDLER) & filters.group)
