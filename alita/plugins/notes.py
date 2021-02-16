@@ -192,7 +192,7 @@ async def local_notes(_: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("clear", PREFIX_HANDLER) & filters.group)
-async def clear_note(c: Alita, m: Message):
+async def clear_note(_: Alita, m: Message):
 
     if not (await admin_check(m)):
         return
@@ -212,7 +212,7 @@ async def clear_note(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("clearall", PREFIX_HANDLER) & filters.group)
-async def clear_allnote(c: Alita, m: Message):
+async def clear_allnote(_: Alita, m: Message):
 
     if not (await owner_check(m)):
         return

@@ -150,7 +150,7 @@ async def adminlist_show(_: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("admincache", PREFIX_HANDLER) & filters.group)
-async def reload_admins(c: Alita, m: Message):
+async def reload_admins(_: Alita, m: Message):
 
     _ = GetLang(m).strs
     replymsg = await m.reply_text("Refreshing admin list...")
@@ -183,7 +183,7 @@ async def reload_admins(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("mute", PREFIX_HANDLER) & filters.group)
-async def mute_usr(c: Alita, m: Message):
+async def mute_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
 
@@ -212,7 +212,7 @@ async def mute_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("unmute", PREFIX_HANDLER) & filters.group)
-async def unmute_usr(c: Alita, m: Message):
+async def unmute_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
 
@@ -240,7 +240,7 @@ async def unmute_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("promote", PREFIX_HANDLER) & filters.group)
-async def promote_usr(c: Alita, m: Message):
+async def promote_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
 
@@ -302,7 +302,7 @@ async def promote_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("demote", PREFIX_HANDLER) & filters.group)
-async def demote_usr(c: Alita, m: Message):
+async def demote_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
 

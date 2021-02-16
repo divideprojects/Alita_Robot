@@ -77,7 +77,7 @@ async def get_rules(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("setrules", PREFIX_HANDLER) & filters.group)
-async def set_rules(c: Alita, m: Message):
+async def set_rules(_: Alita, m: Message):
 
     res = await admin_check(m)
     if not res:
@@ -101,7 +101,7 @@ async def set_rules(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("clearrules", PREFIX_HANDLER) & filters.group)
-async def clear_rules(c: Alita, m: Message):
+async def clear_rules(_: Alita, m: Message):
 
     res = await admin_check(m)
     if not res:

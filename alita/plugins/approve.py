@@ -44,7 +44,7 @@ That's what approvals are for - approve trustworthy users to allow them to send 
 
 
 @Alita.on_message(filters.command("approve", PREFIX_HANDLER) & filters.group)
-async def approve_user(c: Alita, m: Message):
+async def approve_user(_: Alita, m: Message):
 
     if not (await owner_check(m)):
         return
@@ -58,7 +58,7 @@ async def approve_user(c: Alita, m: Message):
         )
         return
     try:
-        member = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
+        member = await m.get_member(user_id)
     except UserNotParticipant:
         await m.reply_text("This user is not in this chat!")
         return
@@ -85,7 +85,7 @@ async def approve_user(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("disapprove", PREFIX_HANDLER) & filters.group)
-async def disapprove_user(c: Alita, m: Message):
+async def disapprove_user(_: Alita, m: Message):
 
     if not (await owner_check(m)):
         return
@@ -99,7 +99,7 @@ async def disapprove_user(c: Alita, m: Message):
         )
         return
     try:
-        member = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
+        member = await m.get_member(user_id)
     except UserNotParticipant:
         if db.is_approved(chat_id, user_id):
             db.disapprove(chat_id, user_id)
@@ -126,7 +126,7 @@ async def disapprove_user(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("approved", PREFIX_HANDLER) & filters.group)
-async def check_approved(c: Alita, m: Message):
+async def check_approved(_: Alita, m: Message):
 
     if not (await admin_check(m)):
         return
@@ -152,7 +152,7 @@ async def check_approved(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("approval", PREFIX_HANDLER) & filters.group)
-async def check_approval(c: Alita, m: Message):
+async def check_approval(_: Alita, m: Message):
 
     res = await admin_check(m)
     if not res:
@@ -176,7 +176,7 @@ async def check_approval(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("unapproveall", PREFIX_HANDLER) & filters.group)
-async def unapproveall_users(c: Alita, m: Message):
+async def unapproveall_users(_: Alita, m: Message):
 
     if not (await owner_check(m)):
         return

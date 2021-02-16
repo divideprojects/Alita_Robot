@@ -109,12 +109,12 @@ async def set_lang_callback(_: Alita, m: CallbackQuery):
     else:
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton("❌ " + _("close_btn"), callback_data="close")],
+                [InlineKeyboardButton(f"❌ {_('close_btn')}", callback_data="close")],
             ],
         )
     db.set_lang(m.message.chat.id, m.message.chat.type, m.data.split(".")[1])
     await m.message.edit_text(
-        "🌐 " + _("langs.changed").format(lang_code=m.data.split(".")[1]),
+        f"🌐 {_('langs.changed').format(lang_code=m.data.split('.')[1])}",
         reply_markup=keyboard,
     )
     await m.answer()
@@ -122,15 +122,18 @@ async def set_lang_callback(_: Alita, m: CallbackQuery):
 
 
 @Alita.on_message(filters.command(["lang", "setlang"], PREFIX_HANDLER))
-async def set_lang(c: Alita, m: Message):
+async def set_lang(_: Alita, m: Message):
 
-    if not (await admin_check(m)):
-        return
+    if m.chat.type == "supergroup":
+        if not (await admin_check(m)):
+            return
 
-    _ = GetLang(m).strs
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[*(await gen_langs_kb())])
+    _ = GetLang(m).str
     if len(m.text.split()) >= 2:
         await m.reply_text(_("langs.correct_usage"))
         return
-    await m.reply_text(_("lang.changelang"), reply_markup=keyboard)
+    await m.reply_text(
+        _("lang.changelang"),
+        reply_markup=InlineKeyboardMarkup([*(await gen_langs_kb())]),
+    )
     return
