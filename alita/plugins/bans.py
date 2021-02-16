@@ -31,7 +31,7 @@ from pyrogram.types import (
 
 from alita import DEV_PREFIX_HANDLER, LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
-from alita.utils.admin_check import admin_check
+from alita.utils.admin_check import admin_check, owner_check
 from alita.utils.custom_filters import dev_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.localization import GetLang
@@ -52,7 +52,7 @@ This is the plugin for you, easily kick, ban and unban members in a group.
 
 
 @Alita.on_message(filters.command("kick", PREFIX_HANDLER) & filters.group)
-async def kick_usr(c: Alita, m: Message):
+async def kick_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
 
@@ -64,7 +64,7 @@ async def kick_usr(c: Alita, m: Message):
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = await extract_user(m)
         try:
-            await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
+            await m.chat.kick_member(m.chat.id, user_id, int(time() + 45))
             await m.reply_text(
                 f"Banned {(await mention_html(user_first_name, user_id))}",
             )
@@ -78,7 +78,7 @@ async def kick_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("ban", PREFIX_HANDLER) & filters.group)
-async def ban_usr(c: Alita, m: Message):
+async def ban_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
 
@@ -90,7 +90,7 @@ async def ban_usr(c: Alita, m: Message):
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = await extract_user(m)
         try:
-            await c.kick_chat_member(m.chat.id, user_id)
+            await m.chat.kick_member(user_id)
             await m.reply_text(
                 f"Banned {(await mention_html(user_first_name, user_id))}",
             )
@@ -104,7 +104,7 @@ async def ban_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("unban", PREFIX_HANDLER) & filters.group)
-async def unban_usr(c: Alita, m: Message):
+async def unban_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
 
@@ -116,7 +116,7 @@ async def unban_usr(c: Alita, m: Message):
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = await extract_user(m)
         try:
-            await c.unban_chat_member(m.chat.id, user_id)
+            await m.chat.unban_member(user_id)
             await m.reply_text(
                 f"Unbanned {(await mention_html(user_first_name, user_id))}",
             )
@@ -130,7 +130,7 @@ async def unban_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("banall", DEV_PREFIX_HANDLER) & dev_filter)
-async def get_stats(_: Alita, m: Message):
+async def banall_chat(_: Alita, m: Message):
     await m.reply_text(
         "Are you sure you want to ban all members in this group?",
         reply_markup=InlineKeyboardMarkup(
@@ -146,15 +146,19 @@ async def get_stats(_: Alita, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^ban.all.members$"))
-async def banallnotes_callback(c: Alita, q: CallbackQuery):
-    await q.message.reply_text("<i><b>Banning All Members...</b></i>")
+async def banallnotes_callback(_: Alita, q: CallbackQuery):
+
+    if not (await owner_check(q.message)):
+        return
+
+    replymsg = await q.message.edit_text("<i><b>Banning All Members...</b></i>")
     users = []
     fs = 0
-    async for x in c.iter_chat_members(chat_id=q.message.chat.id):
+    async for x in m.chat.iter_members():
         try:
             if fs >= 5:
                 await sleep(5)
-            await c.kick_chat_member(chat_id=q.message.chat.id, user_id=x.user.id)
+            await q.message.chat.kick_member(x.user.id)
             users.append(x.user.id)
         except BaseException:
             fs += 1
@@ -167,6 +171,7 @@ async def banallnotes_callback(c: Alita, q: CallbackQuery):
             document=f,
             caption=f"Banned {len(users)} users!",
         )
+        await replymsg.delete()
 
     await q.answer()
     return
