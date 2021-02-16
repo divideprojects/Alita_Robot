@@ -195,6 +195,7 @@ async def commands_pvt(_: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^get_mod."))
 async def get_module_info(_: Alita, m: CallbackQuery):
+    _ = GetLang(m).strs
     module = m.data.split(".")[1]
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
