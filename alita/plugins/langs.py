@@ -42,7 +42,7 @@ for yourself or your group.
 
 
 async def gen_langs_kb():
-    langs = list(langdict)
+    langs = list(langdict.keys())
     kb = []
     while langs:
         lang = langdict[langs[0]]
