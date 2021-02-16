@@ -127,7 +127,7 @@ async def set_lang(_: Alita, m: Message):
     if (m.chat.type == "supergroup") and (await admin_check(m)):
         return
 
-    _ = GetLang(m).str
+    _ = GetLang(m).strs
     if len(m.text.split()) >= 2:
         await m.reply_text(_("langs.correct_usage"))
         return

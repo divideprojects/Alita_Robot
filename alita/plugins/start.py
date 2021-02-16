@@ -155,14 +155,14 @@ async def start_back(_: Alita, m: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(_: Alita, m: CallbackQuery):
-    _ = GetLang(m).strs
+    l = GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_cmds_kb()),
             (await back_kb(m.message)),
         ],
     )
-    await m.message.edit_text(_("general.commands_available"), reply_markup=keyboard)
+    await m.message.edit_text(l("general.commands_available"), reply_markup=keyboard)
     await m.answer()
     return
 
