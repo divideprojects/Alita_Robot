@@ -165,19 +165,22 @@ async def mute_usr(_: Alita, m: Message):
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = await extract_user(m)
         try:
-            await m.chat.restrict_member(user_id, ChatPermissions(
-                can_send_messages=False,
-                can_send_media_messages=False,
-                can_send_stickers=False,
-                can_send_animations=False,
-                can_send_games=False,
-                can_use_inline_bots=False,
-                can_add_web_page_previews=False,
-                can_send_polls=False,
-                can_change_info=False,
-                can_invite_users=True,
-                can_pin_messages=False,
-                ))
+            await m.chat.restrict_member(
+                user_id,
+                ChatPermissions(
+                    can_send_messages=False,
+                    can_send_media_messages=False,
+                    can_send_stickers=False,
+                    can_send_animations=False,
+                    can_send_games=False,
+                    can_use_inline_bots=False,
+                    can_add_web_page_previews=False,
+                    can_send_polls=False,
+                    can_change_info=False,
+                    can_invite_users=True,
+                    can_pin_messages=False,
+                ),
+            )
             await m.reply_text(
                 f"<b>Muted</b> {(await mention_html(user_first_name,user_id))}",
             )
