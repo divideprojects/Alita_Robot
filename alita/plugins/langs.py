@@ -97,6 +97,9 @@ async def close_btn_callback(_: Alita, m: CallbackQuery):
 @Alita.on_callback_query(filters.regex("^set_lang."))
 async def set_lang_callback(_: Alita, m: CallbackQuery):
     _ = GetLang(m).strs
+    db.set_lang(m.message.chat.id, m.message.chat.type, m.data.split(".")[1])
+    await sleep(0.5)
+    _ = GetLang(m).strs
     if m.message.chat.type == "private":
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
@@ -114,9 +117,6 @@ async def set_lang_callback(_: Alita, m: CallbackQuery):
                 [InlineKeyboardButton(f"❌ {_('close_btn')}", callback_data="close")],
             ],
         )
-    db.set_lang(m.message.chat.id, m.message.chat.type, m.data.split(".")[1])
-    await sleep(0.5)
-    _ = GetLang(m).strs
     await m.message.edit_text(
         f"🌐 {_('langs.changed').format(lang_code=m.data.split('.')[1])}",
         reply_markup=keyboard,
