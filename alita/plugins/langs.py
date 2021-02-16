@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from asyncio import sleep
+
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
@@ -113,6 +115,8 @@ async def set_lang_callback(_: Alita, m: CallbackQuery):
             ],
         )
     db.set_lang(m.message.chat.id, m.message.chat.type, m.data.split(".")[1])
+    await sleep(0.5)
+    _ = GetLang(m).strs
     await m.message.edit_text(
         f"🌐 {_('langs.changed').format(lang_code=m.data.split('.')[1])}",
         reply_markup=keyboard,
@@ -124,7 +128,7 @@ async def set_lang_callback(_: Alita, m: CallbackQuery):
 @Alita.on_message(filters.command(["lang", "setlang"], PREFIX_HANDLER))
 async def set_lang(_: Alita, m: Message):
 
-    if (m.chat.type == "supergroup") and (await admin_check(m)):
+    if (m.chat.type == "supergroup") and not (await admin_check(m)):
         return
 
     _ = GetLang(m).strs
