@@ -124,9 +124,8 @@ async def set_lang_callback(_: Alita, m: CallbackQuery):
 @Alita.on_message(filters.command(["lang", "setlang"], PREFIX_HANDLER))
 async def set_lang(_: Alita, m: Message):
 
-    if m.chat.type == "supergroup":
-        if not (await admin_check(m)):
-            return
+    if (m.chat.type == "supergroup") and (await admin_check(m)):
+        return
 
     _ = GetLang(m).str
     if len(m.text.split()) >= 2:
