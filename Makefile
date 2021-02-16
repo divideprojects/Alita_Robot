@@ -7,10 +7,11 @@ install:
 
 dev-install:
 	@python3 -m pip install --upgrade pip setuptools
+	@python3 -m pip install --upgrade -r requirements.txt
 	@python3 -m pip install --upgrade -r requirements-dev.txt
 	@pre-commit install
 	@pre-commit autoupdate
-	@pre-commit run README.md
+	@pre-commit run --all-files
 
 run:
 	@python3 -m alita

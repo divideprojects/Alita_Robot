@@ -1,2 +1,5 @@
+image:
+  file: Dockerfile.gitpod
+
 tasks:
-  - init: pip install -r ./requirements.txt
+  - init: make dev-install
