@@ -43,7 +43,7 @@ from alita import (
 )
 from alita.db import users_db as userdb
 from alita.plugins import ALL_PLUGINS
-from alita.utils.localization import load_langdict
+from alita.utils.localization import langdict
 from alita.utils.paste import paste
 from alita.utils.redishelper import allkeys, close, flushredis, set_key
 
@@ -134,7 +134,7 @@ class Alita(Client):
 
     async def start(self):
         # Load Languages
-        lang_status = load_langdict()
+        lang_status = True if len(langdict) >= 1 else False
         LOGGER.info(f"Loading Languages: {lang_status}")
 
         await super().start()
