@@ -19,7 +19,8 @@
 from datetime import datetime
 from io import BytesIO
 
-from pyrogram import errors, filters
+from pyrogram import filters
+from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
 from pyrogram.types import Message
 
 from alita import LOGGER, MESSAGE_DUMP, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
@@ -186,13 +187,13 @@ async def gban_watcher(c: Alita, m: Message):
                 )
                 LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
                 return
-            except (errors.ChatAdminRequired, errors.UserAdminInvalid):
+            except (ChatAdminRequired, UserAdminInvalid):
                 # Bot not admin in group and hence cannot ban users!
                 # TO-DO - Improve Error Detection
                 LOGGER.info(
                     f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})",
                 )
-            except Exception as excp:
+            except RPCError as excp:
                 await c.send_message(
                     MESSAGE_DUMP,
                     f"<b>Gban Watcher Error!</b>\n<b>Chat:</b> {m.chat.id}\n<b>Error:</b> `{excp}`",

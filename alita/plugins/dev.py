@@ -22,7 +22,8 @@ from io import BytesIO, StringIO
 from time import gmtime, strftime, time
 from traceback import format_exc
 
-from pyrogram import errors, filters
+from pyrogram import filters
+from pyrogram.errors import ChannelPrivate, ChatAdminRequired, PeerIdInvalid, RPCError
 from pyrogram.types import Message
 from speedtest import Speedtest
 from ujson import dumps
@@ -248,13 +249,14 @@ async def chats(c: Alita, m: Message):
                 invitelink,
             )
             P += 1
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             pass
-        except errors.ChannelPrivate:
+        except ChannelPrivate:
             userdb.rem_chat(chat.chat_id)
-        except errors.PeerIdInvalid:
+        except PeerIdInvalid:
             LOGGER.warning(f"Group not loaded {chat.chat_id}")
-        except Exception as ef:
+        except RPCError as ef:
+            LOGGER.erro(ef)
             await m.reply_text(f"**Error:**\n{ef}")
 
     with BytesIO(str.encode(chatfile)) as f:

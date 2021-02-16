@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
 from alita import LOGGER
@@ -40,7 +41,7 @@ async def initial_works(_: Alita, m: Message):
 
             try:
                 await migrate_chat(old_chat, new_chat)
-            except Exception as ef:
+            except RPCError as ef:
                 LOGGER.error(ef)
                 return
         else:

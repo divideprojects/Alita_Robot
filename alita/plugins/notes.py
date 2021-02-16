@@ -17,6 +17,7 @@
 
 
 from pyrogram import filters
+from pyrogram.errors import RPCError
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -133,7 +134,7 @@ async def get_note(_: Alita, m: Message):
             try:
                 await m.reply_text(teks, reply_markup=button)
                 return
-            except Exception as ef:
+            except RPCError as ef:
                 await m.reply_text("An error has accured! Cannot parse note.")
                 LOGGER.error(ef)
                 return
@@ -160,7 +161,7 @@ async def get_note(_: Alita, m: Message):
             try:
                 await m.reply_text(teks, reply_markup=button)
                 return
-            except Exception as ef:
+            except RPCError as ef:
                 await m.reply_text("An error has accured! Cannot parse note.")
                 LOGGER.error(ef)
                 return

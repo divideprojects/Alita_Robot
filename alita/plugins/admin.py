@@ -16,7 +16,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import errors, filters
+from pyrogram import filters
+from pyrogram.errors import (
+    ChatAdminInviteRequired,
+    ChatAdminRequired,
+    PeerIdInvalid,
+    RightForbidden,
+    RPCError,
+)
 from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
@@ -124,7 +131,7 @@ async def adminlist_show(_: Alita, m: Message):
                     adminstr += f"- {mention} (👑)\n"
                 else:
                     adminstr += f"- {mention}\n"
-            except errors.PeerIdInvalid:
+            except PeerIdInvalid:
                 pass
 
         await replymsg.edit_text(f"{adminstr}\n\n<i>Note: {note}</i>")
@@ -168,7 +175,7 @@ async def reload_admins(c: Alita, m: Message):
         await set_key("ADMINDICT", ADMINDICT)
         await replymsg.edit_text(_("admin.reloadedadmins"))
         LOGGER.info(f"Reloaded admins for {m.chat.title}({m.chat.id})")
-    except Exception as ef:
+    except RPCError as ef:
         await m.reply_text(_("admin.useadmincache"))
         LOGGER.error(ef)
 
@@ -192,9 +199,9 @@ async def mute_usr(c: Alita, m: Message):
             await m.reply_text(
                 f"<b>Muted</b> {(await mention_html(user_first_name,user_id))}",
             )
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
-        except Exception as ef:
+        except RPCError as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 
@@ -221,9 +228,9 @@ async def unmute_usr(c: Alita, m: Message):
             await m.reply_text(
                 f"<b>Unmuted</b> {(await mention_html(user_first_name,user_id))}",
             )
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
-        except Exception as ef:
+        except RPCError as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
         return
@@ -280,11 +287,11 @@ async def promote_usr(c: Alita, m: Message):
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
-        except errors.RightForbidden:
+        except RightForbidden:
             await m.reply_text("I don't have enough rights to promote this user.")
-        except Exception as ef:
+        except RPCError as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 
@@ -342,11 +349,11 @@ async def demote_usr(c: Alita, m: Message):
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
-        except errors.RightForbidden:
+        except RightForbidden:
             await m.reply_text("I don't have enough rights to demote this user.")
-        except Exception as ef:
+        except RPCError as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 
@@ -372,13 +379,13 @@ async def get_invitelink(c: Alita, m: Message):
         try:
             link = await c.export_chat_invite_link(m.chat.id)
             await m.reply_text(_("admin.invitelink").format(link=link))
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
-        except errors.ChatAdminInviteRequired:
+        except ChatAdminInviteRequired:
             await m.reply_text(_("admin.noinviteperm"))
-        except errors.RightForbidden:
+        except RightForbidden:
             await m.reply_text("I don't have enough rights to view invitelink.")
-        except Exception as ef:
+        except RPCError as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 

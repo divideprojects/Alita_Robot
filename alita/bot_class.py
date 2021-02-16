@@ -19,7 +19,8 @@
 from os import makedirs, path
 from time import time
 
-from pyrogram import Client, __version__, errors
+from pyrogram import Client, __version__
+from pyrogram.errors import PeerIdInvalid, RPCError
 from pyrogram.raw.all import layer
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -113,9 +114,9 @@ class Alita(Client):
                 LOGGER.info(
                     f"Set {len(adminlist)} admins for {i.chat_id}\n- {adminlist}",
                 )
-            except errors.PeerIdInvalid:
+            except PeerIdInvalid:
                 pass
-            except Exception as ef:
+            except RPCError as ef:
                 LOGGER.error(ef)
 
         try:

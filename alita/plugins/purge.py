@@ -18,7 +18,8 @@
 
 from asyncio import sleep
 
-from pyrogram import errors, filters
+from pyrogram import filters
+from pyrogram.errors import MessageDeleteForbidden
 from pyrogram.types import Message
 
 from alita import PREFIX_HANDLER
@@ -68,7 +69,7 @@ async def purge(c: Alita, m: Message):
     try:
         await c.delete_messages(chat_id=m.chat.id, message_ids=message_ids, revoke=True)
         await m.delete()
-    except errors.MessageDeleteForbidden:
+    except MessageDeleteForbidden:
         await dm.edit_text(_("purge.old_msg_err"))
         return
 

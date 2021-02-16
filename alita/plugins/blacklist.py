@@ -19,6 +19,7 @@
 from html import escape
 
 from pyrogram import filters
+from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
 from alita import LOGGER, PREFIX_HANDLER
@@ -146,7 +147,7 @@ async def del_blacklist(_: Alita, m: Message):
                 if match:
                     try:
                         await m.delete()
-                    except Exception as ef:
+                    except RPCError as ef:
                         LOGGER.info(ef)
                     break
     except AttributeError:

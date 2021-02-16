@@ -67,10 +67,11 @@ except Exception as ef:
     LOGGER.error(ef)  # Print Error
     sysexit(1)
 
+
+# Redis Cache
 redis_client = None
 
 
-# Redis Cache
 async def setup_redis():
     global redis_client
     redis_client = await create_redis_pool(

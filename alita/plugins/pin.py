@@ -16,7 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import errors, filters
+from pyrogram import filters
+from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
 from pyrogram.types import Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
@@ -58,11 +59,11 @@ async def pin_message(c: Alita, m: Message):
             )
             await m.reply_text(_("admin.pinnedmsg"))
 
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
-        except errors.RightForbidden:
+        except RightForbidden:
             await m.reply_text("I don't have enough rights to pin messages.")
-        except Exception as ef:
+        except RPCError as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
     else:
@@ -82,11 +83,11 @@ async def unpin_message(c: Alita, m: Message):
     try:
         await c.unpin_chat_message(m.chat.id)
         await m.reply_text("Unpinned last message.")
-    except errors.ChatAdminRequired:
+    except ChatAdminRequired:
         await m.reply_text(_("admin.notadmin"))
-    except errors.RightForbidden:
+    except RightForbidden:
         await m.reply_text("I don't have enough rights to unpin messages")
-    except Exception as ef:
+    except RPCError as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         LOGGER.error(ef)
 
@@ -104,11 +105,11 @@ async def unpinall_message(c: Alita, m: Message):
     try:
         await c.unpin_all_chat_messages(m.chat.id)
         await m.reply_text("Unpinned all messages in this chat.")
-    except errors.ChatAdminRequired:
+    except ChatAdminRequired:
         await m.reply_text(_("admin.notadmin"))
-    except errors.RightForbidden:
+    except RightForbidden:
         await m.reply_text("I don't have enough rights to unpin messages")
-    except Exception as ef:
+    except RPCError as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         LOGGER.error(ef)
 

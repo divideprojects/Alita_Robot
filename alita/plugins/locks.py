@@ -18,7 +18,8 @@
 
 from asyncio import sleep
 
-from pyrogram import errors, filters
+from pyrogram import filters
+from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, PREFIX_HANDLER
@@ -112,7 +113,7 @@ async def lock_perm(c: Alita, m: Message):
             await c.set_chat_permissions(chat_id, ChatPermissions())
             await prevent_approved(c, m)  # Don't lock permissions for approved users!
             await m.reply_text("🔒 " + _("locks.lock_all"))
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("general.no_perm_admin"))
         return
 
@@ -183,7 +184,7 @@ async def lock_perm(c: Alita, m: Message):
         )
         await prevent_approved(c, m)  # Don't lock permissions for approved users!
         await m.reply_text("🔒 " + _("locks.locked_perm").format(perm=perm))
-    except errors.ChatAdminRequired:
+    except ChatAdminRequired:
         await m.reply_text(_("general.no_perm_admin"))
     return
 
@@ -241,7 +242,7 @@ async def view_locks(c: Alita, m: Message):
             )
             await chkmsg.edit_text(permission_view_str)
 
-        except Exception as e_f:
+        except RPCError as e_f:
             await chkmsg.edit_text(_("general.something_wrong"))
             await m.reply_text(e_f)
 
@@ -313,7 +314,7 @@ async def unlock_perm(c: Alita, m: Message):
             )
             await prevent_approved(c, m)  # Don't lock permissions for approved users!
             await m.reply_text("🔓 " + _("locks.unlock_all"))
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("general.no_perm_admin"))
         return
 
@@ -385,7 +386,7 @@ async def unlock_perm(c: Alita, m: Message):
         await prevent_approved(c, m)  # Don't lock permissions for approved users!
         await m.reply_text("🔓 " + _("locks.unlocked_perm").format(uperm=uperm))
 
-    except errors.ChatAdminRequired:
+    except ChatAdminRequired:
         await m.reply_text(_("general.no_perm_admin"))
     return
 

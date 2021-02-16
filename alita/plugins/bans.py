@@ -20,7 +20,8 @@ from asyncio import sleep
 from io import BytesIO
 from time import time
 
-from pyrogram import errors, filters
+from pyrogram import filters
+from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -67,9 +68,9 @@ async def kick_usr(c: Alita, m: Message):
             await m.reply_text(
                 f"Banned {(await mention_html(user_first_name, user_id))}",
             )
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
-        except Exception as ef:
+        except RPCError as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 
@@ -93,9 +94,9 @@ async def ban_usr(c: Alita, m: Message):
             await m.reply_text(
                 f"Banned {(await mention_html(user_first_name, user_id))}",
             )
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
-        except Exception as ef:
+        except RPCError as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 
@@ -119,9 +120,9 @@ async def unban_usr(c: Alita, m: Message):
             await m.reply_text(
                 f"Unbanned {(await mention_html(user_first_name, user_id))}",
             )
-        except errors.ChatAdminRequired:
+        except ChatAdminRequired:
             await m.reply_text(_("admin.notadmin"))
-        except Exception as ef:
+        except RPCError as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
 

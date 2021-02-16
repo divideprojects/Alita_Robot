@@ -16,7 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import errors, filters
+from pyrogram import filters
+from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.types import Message
 
 from alita import PREFIX_HANDLER, SUPPORT_GROUP
@@ -58,10 +59,10 @@ async def approve_user(c: Alita, m: Message):
         return
     try:
         member = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
-    except errors.UserNotParticipant:
+    except UserNotParticipant:
         await m.reply_text("This user is not in this chat!")
         return
-    except Exception as ef:
+    except RPCError as ef:
         await m.reply_text(
             f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
         )
@@ -99,12 +100,12 @@ async def disapprove_user(c: Alita, m: Message):
         return
     try:
         member = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
-    except errors.UserNotParticipant:
+    except UserNotParticipant:
         if db.is_approved(chat_id, user_id):
             db.disapprove(chat_id, user_id)
         await m.reply_text("This user is not in this chat!")
         return
-    except Exception as ef:
+    except RPCError as ef:
         await m.reply_text(
             f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
         )
@@ -139,7 +140,7 @@ async def check_approved(c: Alita, m: Message):
     for i in x:
         try:
             member = await chat.get_member(int(i.user_id))
-        except errors.UserNotParticipant:
+        except UserNotParticipant:
             db.disapprove(chat.id, user_id)
             continue
         msg += f"- `{i.user_id}`: {(await mention_html(member.user['first_name'], int(i.user_id)))}\n"
@@ -183,6 +184,6 @@ async def unapproveall_users(c: Alita, m: Message):
     try:
         db.disapprove_all(m.chat.id)
         await m.reply_text(f"All users have been disapproved in {m.chat.title}")
-    except Exception as ef:
+    except RPCError as ef:
         await m.reply_text(f"Some Error occured, report at @{SUPPORT_GROUP}.\n{ef}")
     return

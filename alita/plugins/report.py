@@ -19,7 +19,7 @@
 from html import escape
 
 from pyrogram import filters
-from pyrogram.errors import BadRequest, Unauthorized
+from pyrogram.errors import BadRequest, RPCError, Unauthorized
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -218,21 +218,21 @@ async def report_buttons(c: Alita, q: CallbackQuery):
             await c.unban_chat_member(splitter[0], splitter[2])
             await q.answer("✅ Succesfully kicked")
             return
-        except Exception as err:
+        except RPCError as err:
             await q.answer(f"🛑 Failed to Kick\n<b>Error:</b>\n`{err}`", show_alert=True)
     elif splitter[1] == "banned":
         try:
             await c.kick_chat_member(splitter[0], splitter[2])
             await q.answer("✅ Succesfully Banned")
             return
-        except Exception as err:
+        except RPCError as err:
             await q.answer(f"🛑 Failed to Ban\n<b>Error:</b>\n`{err}`", show_alert=True)
     elif splitter[1] == "delete":
         try:
             await c.delete_messages(splitter[0], splitter[3])
             await q.answer("✅ Message Deleted")
             return
-        except Exception as err:
+        except RPCError as err:
             await q.answer(
                 f"🛑 Failed to delete message!\n<b>Error:</b>\n`{err}`",
                 show_alert=True,

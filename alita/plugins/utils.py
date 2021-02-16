@@ -22,6 +22,7 @@ from io import BytesIO
 
 from googletrans import LANGUAGES, Translator
 from pyrogram import errors, filters
+from pyrogram.errors import PeerIdInvalid, RPCError
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from tswift import Song
 
@@ -123,7 +124,7 @@ async def id_info(c: Alita, m: Message):
         else:
             try:
                 user = await c.get_users(user_id)
-            except errors.PeerIdInvalid:
+            except PeerIdInvalid:
                 await m.reply_text(
                     "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!",
                 )
@@ -204,11 +205,11 @@ async def my_info(c: Alita, m: Message):
     user_id = (await extract_user(m))[0]
     try:
         user = await c.get_users(user_id)
-    except errors.PeerIdInvalid:
+    except PeerIdInvalid:
         await m.reply_text(
             "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!",
         )
-    except Exception as ef:
+    except RPCError as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         return
 
