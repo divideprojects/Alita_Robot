@@ -41,7 +41,7 @@ async def pin_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     pin_args = m.text.split(None, 1)
@@ -77,7 +77,7 @@ async def unpin_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     try:
@@ -99,7 +99,7 @@ async def unpinall_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     try:

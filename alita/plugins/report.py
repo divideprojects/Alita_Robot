@@ -68,7 +68,7 @@ async def report_setting(c: Alita, m: Message):
             )
 
     else:
-        res = await admin_check(c, m)
+        res = await admin_check(m)
         if not res:
             return
 

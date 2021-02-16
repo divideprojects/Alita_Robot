@@ -53,7 +53,7 @@ muser_listtiple triggers at once.
 @Alita.on_message(filters.command("blacklist", PREFIX_HANDLER) & filters.group)
 async def view_blacklist(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
+    res = await admin_check(m)
     if not res:
         return
 
@@ -78,7 +78,7 @@ async def view_blacklist(c: Alita, m: Message):
 @Alita.on_message(filters.command("addblacklist", PREFIX_HANDLER) & filters.group)
 async def add_blacklist(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
+    res = await admin_check(m)
     if not res:
         return
 
@@ -100,7 +100,7 @@ async def add_blacklist(c: Alita, m: Message):
 )
 async def rm_blacklist(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
+    res = await admin_check(m)
     if not res:
         return
 

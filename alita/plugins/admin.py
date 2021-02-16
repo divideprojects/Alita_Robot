@@ -155,7 +155,7 @@ async def reload_admins(c: Alita, m: Message):
     _ = GetLang(m).strs
     replymsg = await m.reply_text("Refreshing admin list...")
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
@@ -187,7 +187,7 @@ async def mute_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -216,7 +216,7 @@ async def unmute_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -244,7 +244,7 @@ async def promote_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -306,7 +306,7 @@ async def demote_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -368,7 +368,7 @@ async def get_invitelink(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)

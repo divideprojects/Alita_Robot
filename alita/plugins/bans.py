@@ -56,7 +56,7 @@ async def kick_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -82,7 +82,7 @@ async def ban_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)
@@ -108,7 +108,7 @@ async def unban_usr(c: Alita, m: Message):
 
     _ = GetLang(m).strs
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     from_user = await m.chat.get_member(m.from_user.id)

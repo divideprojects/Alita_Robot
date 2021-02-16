@@ -66,7 +66,7 @@ async def lock_types(_: Alita, m: Message):
 @Alita.on_message(filters.command("lock", PREFIX_HANDLER) & filters.group)
 async def lock_perm(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
+    res = await admin_check(m)
     if not res:
         return
 
@@ -252,7 +252,7 @@ async def view_locks(c: Alita, m: Message):
 @Alita.on_message(filters.command("unlock", PREFIX_HANDLER) & filters.group)
 async def unlock_perm(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
+    res = await admin_check(m)
     if not res:
         return
 

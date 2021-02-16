@@ -19,38 +19,38 @@
 from alita import DEV_USERS, OWNER_ID
 
 
-async def admin_check(c, m) -> bool:
-    chat_id = m.chat.id
+async def admin_check(m) -> bool:
     user_id = m.from_user.id
 
-    if int(user_id) == int(OWNER_ID) or int(user_id) in DEV_USERS:
+    if (int(user_id) == int(OWNER_ID)) or (int(user_id) in DEV_USERS):
         return True
 
-    user = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
-    admin_strings = ["creator", "administrator"]
+    user = await m.chat.get_member(user_id)
+    admin_strings = ("creator", "administrator")
 
     if user.status not in admin_strings:
         await m.reply_text(
-            "This is an Admin Restricted command and you're not allowed to use it.",
+            "Nigga, you're not admin, don't try this explosive shit.",
         )
         return False
 
     return True
 
 
-async def owner_check(c, m) -> bool:
-    chat_id = m.chat.id
+async def owner_check(m) -> bool:
     user_id = m.from_user.id
 
-    if int(user_id) == int(OWNER_ID) or int(user_id) in DEV_USERS:
+    if (int(user_id) == int(OWNER_ID)) or (int(user_id) in DEV_USERS):
         return True
 
-    user = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
+    user = await m.chat.get_member(user_id)
 
     if user.status != "creator":
-        await m.reply_text(
-            "This is an Owner Restricted command and you're not allowed to use it.",
-        )
+        if user.status == "administrator":
+            reply = "Stay in your limits, or lose adminship too."
+        else:
+            reply = "You ain't even admin, what are you trying to do?"
+        await m.reply_text(reply)
         return False
 
     return True

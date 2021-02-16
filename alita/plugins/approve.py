@@ -46,7 +46,7 @@ That's what approvals are for - approve trustworthy users to allow them to send 
 @Alita.on_message(filters.command("approve", PREFIX_HANDLER) & filters.group)
 async def approve_user(c: Alita, m: Message):
 
-    if not (await owner_check(c, m)):
+    if not (await owner_check(m)):
         return
 
     chat_title = m.chat.title
@@ -87,7 +87,7 @@ async def approve_user(c: Alita, m: Message):
 @Alita.on_message(filters.command("disapprove", PREFIX_HANDLER) & filters.group)
 async def disapprove_user(c: Alita, m: Message):
 
-    if not (await owner_check(c, m)):
+    if not (await owner_check(m)):
         return
 
     chat_title = m.chat.title
@@ -128,7 +128,7 @@ async def disapprove_user(c: Alita, m: Message):
 @Alita.on_message(filters.command("approved", PREFIX_HANDLER) & filters.group)
 async def check_approved(c: Alita, m: Message):
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     chat_title = m.chat.title
@@ -154,7 +154,7 @@ async def check_approved(c: Alita, m: Message):
 @Alita.on_message(filters.command("approval", PREFIX_HANDLER) & filters.group)
 async def check_approval(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
+    res = await admin_check(m)
     if not res:
         return
 
@@ -178,7 +178,7 @@ async def check_approval(c: Alita, m: Message):
 @Alita.on_message(filters.command("unapproveall", PREFIX_HANDLER) & filters.group)
 async def unapproveall_users(c: Alita, m: Message):
 
-    if not (await owner_check(c, m)):
+    if not (await owner_check(m)):
         return
 
     try:

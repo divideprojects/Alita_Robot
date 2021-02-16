@@ -40,7 +40,7 @@ Want to delete messages in you group?
 @Alita.on_message(filters.command("purge", PREFIX_HANDLER) & filters.group)
 async def purge(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
+    res = await admin_check(m)
     if not res:
         return
 
@@ -84,7 +84,7 @@ async def purge(c: Alita, m: Message):
 @Alita.on_message(filters.command("del", PREFIX_HANDLER) & filters.group, group=3)
 async def del_msg(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
+    res = await admin_check(m)
     if not res:
         return
 

@@ -124,7 +124,7 @@ async def set_lang_callback(_: Alita, m: CallbackQuery):
 @Alita.on_message(filters.command(["lang", "setlang"], PREFIX_HANDLER))
 async def set_lang(c: Alita, m: Message):
 
-    if not (await admin_check(c, m)):
+    if not (await admin_check(m)):
         return
 
     _ = GetLang(m).strs
