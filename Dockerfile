@@ -14,7 +14,8 @@ RUN apt update && \
     python3-dev \
     python3-lxml \
     gcc \
-    make
+    make \
+    git
 
 # Enter Workplace
 WORKDIR /app/
