@@ -3,15 +3,16 @@
 
 ![Forks](https://img.shields.io/github/forks/Divkix/Alita_Robot)
 ![Stars](https://img.shields.io/github/stars/Divkix/Alita_Robot)
+![Issues](https://img.shields.io/github/issues/Divkix/Alita_Robot)
 ![LICENSE](https://img.shields.io/github/license/Divkix/Alita_Robot)
 ![Contributors](https://img.shields.io/github/contributors/Divkix/Alita_Robot)
 ![Repo Size](https://img.shields.io/github/repo-size/Divkix/Alita_Robot)
+![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Divkix/Alita_Robot&title=Profile%20Views)
+
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/Divkix/Alita_Robot/?ref=repository-badge)
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/Divkix/Alita_Robot)
-
 [![Build Status](https://travis-ci.com/Divkix/Alita_Robot.svg?branch=beta)](https://travis-ci.com/Divkix/Alita_Robot)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194)](https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&utm_medium=referral&utm_content=Divkix/Alita_Robot&utm_campaign=Badge_Grade_Settings)
-![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Divkix/Alita_Robot&title=Profile%20Views)
 [![Crowdin](https://badges.crowdin.net/alita_robot/localized.svg)](https://crowdin.com/project/alita_robot)
 
 Alita is a Telegram Group managment bot made using **[Pyrogram](https://github.com/pyrogram/pyrogram) _async version_** and **[Python](https://python.org)**, which makes it modern and faster than most of the exisitng Telegram Chat Managers.
