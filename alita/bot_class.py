@@ -137,7 +137,7 @@ class Alita(Client):
         LOGGER.info("Starting bot...")
 
         # Load Languages
-        lang_status = await load_langdict()
+        lang_status = load_langdict()
         LOGGER.info(f"Loading Languages: {lang_status}")
 
         await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
