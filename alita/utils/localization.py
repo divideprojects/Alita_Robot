@@ -25,8 +25,10 @@ from ujson import load
 from alita import ENABLED_LOCALES as enabled_locales, LOGGER
 from alita.db import lang_db as db
 
+# Empty Var
+langdict = None
 
-def cache_localizations(files):
+async def cache_localizations(files):
     ldict = {lang: {} for lang in enabled_locales}
     for file in files:
         lname = file.split(path.sep)[1]
@@ -35,13 +37,12 @@ def cache_localizations(files):
     return ldict
 
 
-jsons = []
-for locale in enabled_locales:
-    jsons += glob(path.join("locales", locale, "*.json"))
-langdict = cache_localizations(jsons)
-
-
-def load_langdict():
+async def load_langdict():
+    jsons = []
+    for locale in enabled_locales:
+        jsons += glob(path.join("locales", locale, "*.json"))
+    global langdict
+    langdict = await cache_localizations(jsons)
     if langdict:
         return True
     return False
