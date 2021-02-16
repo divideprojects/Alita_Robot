@@ -144,10 +144,10 @@ async def start(_: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^start_back$"))
 async def start_back(_: Alita, m: CallbackQuery):
-    _ = GetLang(m).strs
+    _ = GetLang(m.mesaage).strs
     await m.message.edit_text(
         _("start.private"),
-        reply_markup=(await gen_start_kb(m)),
+        reply_markup=(await gen_start_kb(m.message)),
     )
     await m.answer()
     return
@@ -155,7 +155,7 @@ async def start_back(_: Alita, m: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(_: Alita, m: CallbackQuery):
-    l = GetLang(m).strs
+    l = GetLang(m.message).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_cmds_kb()),
@@ -169,7 +169,7 @@ async def commands_menu(_: Alita, m: CallbackQuery):
 
 @Alita.on_message(filters.command("help", PREFIX_HANDLER))
 async def commands_pvt(_: Alita, m: Message):
-    _ = GetLang(m).strs
+    l = GetLang(m).strs
     me = await get_key("BOT_USERNAME")
     if m.chat.type != "private":
         priv8kb = InlineKeyboardMarkup(
