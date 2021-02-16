@@ -22,11 +22,12 @@ from os import path
 from pyrogram.types import CallbackQuery
 from ujson import load
 
-from alita import ENABLED_LOCALES as enabled_locales, LOGGER
+from alita import ENABLED_LOCALES as enabled_locales
 from alita.db import lang_db as db
 
 # Empty Var
 langdict = None
+
 
 def cache_localizations(files):
     ldict = {lang: {} for lang in enabled_locales}
