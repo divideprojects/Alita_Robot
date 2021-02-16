@@ -27,6 +27,7 @@ from pyrogram.types import (
 from alita import HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
 from alita.bot_class import Alita
 from alita.utils.localization import GetLang
+from alita.utils.redishelper import get_key
 
 
 async def gen_cmds_kb():
@@ -66,7 +67,26 @@ async def gen_cmds_kb():
     return kb
 
 
-async def gen_start_kb(m, me):
+async def back_kb(m):
+    _ = GetLang(m).strs
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    f"« {_('general.back_btn')}",
+                    callback_data="commands",
+                ),
+            ],
+        ],
+    )
+    return keyboard
+
+
+@Alita.on_message(
+    filters.command("start", PREFIX_HANDLER) & (filters.group | filters.private),
+)
+async def start(c: Alita, m: Message):
+    me = await get_key("BOT_USERNAME")
     _ = GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -91,7 +111,7 @@ async def gen_start_kb(m, me):
             + [
                 InlineKeyboardButton(
                     f"➕ {_('start.add_chat_btn')}",
-                    url=f"https://t.me/{me.username}?startgroup=new",
+                    url=f"https://t.me/{me}?startgroup=new",
                 ),
             ],
             [
@@ -102,36 +122,12 @@ async def gen_start_kb(m, me):
             ],
         ],
     )
-    return keyboard
-
-
-async def back_kb(m):
-    _ = GetLang(m).strs
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    f"« {_('general.back_btn')}",
-                    callback_data="commands",
-                ),
-            ],
-        ],
-    )
-    return keyboard
-
-
-@Alita.on_message(
-    filters.command("start", PREFIX_HANDLER) & (filters.group | filters.private),
-)
-async def start(c: Alita, m: Message):
-    me = await c.get_users("self")
-    _ = GetLang(m).strs
     if m.chat.type == "private":
         if errors.UserIsBlocked:
             LOGGER.warning(f"Bot blocked by {m.from_user.id}")
         await m.reply_text(
             _("start.private"),
-            reply_markup=(await gen_start_kb(m, me)),
+            reply_markup=keyboard,
             reply_to_message_id=m.message_id,
         )
     else:
@@ -141,11 +137,45 @@ async def start(c: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^start_back$"))
 async def start_back(c: Alita, m: CallbackQuery):
-    me = await c.get_users("self")
+    me = await get_key("BOT_USERNAME")
     _ = GetLang(m).strs
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    f"📚 {_('start.commands_btn')}",
+                    callback_data="commands",
+                ),
+            ]
+            + [
+                InlineKeyboardButton(
+                    f"ℹ️ {_('start.infos_btn')}",
+                    callback_data="infos",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    f"🌐 {_('start.language_btn')}",
+                    callback_data="chlang",
+                ),
+            ]
+            + [
+                InlineKeyboardButton(
+                    f"➕ {_('start.add_chat_btn')}",
+                    url=f"https://t.me/{me}?startgroup=new",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    "🗃️ Source Code",
+                    url="https://github.com/Divkix/Alita_Robot",
+                ),
+            ],
+        ],
+    )
     await m.message.edit_text(
         _("start.private"),
-        reply_markup=(await gen_start_kb(m.message, me)),
+        reply_markup=keyboard,
     )
     await m.answer()
     return
@@ -167,14 +197,14 @@ async def commands_menu(_: Alita, m: CallbackQuery):
 @Alita.on_message(filters.command("help", PREFIX_HANDLER))
 async def commands_pvt(c: Alita, m: Message):
     _ = GetLang(m).strs
-    me = await c.get_users("self")
+    me = await get_key("BOT_USERNAME")
     if m.chat.type != "private":
         priv8kb = InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
                         text="Help",
-                        url=f"t.me/{me.username}?start=help",
+                        url=f"t.me/{me}?start=help",
                     ),
                 ],
             ],

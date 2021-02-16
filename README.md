@@ -93,7 +93,7 @@ If all works well, bot should send message to the **MESSAGE_DUMP** Group!
 
 - Make sure your PR works and doesn't break anything.
 - You must join the support group.
-- Make sure it passes `make test` command.
+- Make sure it passes test using `make test`.
 
 
 ## Special Thanks to
