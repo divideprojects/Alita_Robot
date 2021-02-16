@@ -15,7 +15,8 @@ RUN apt update && \
     python3-lxml \
     gcc \
     make \
-    git
+    git \
+    neofetch
 
 # Enter Workplace
 WORKDIR /app/
