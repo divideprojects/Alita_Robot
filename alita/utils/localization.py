@@ -42,7 +42,7 @@ def load_langdict():
     for locale in enabled_locales:
         jsons += glob(path.join("locales", locale, "*.json"))
     global langdict
-    langdict = await cache_localizations(jsons)
+    langdict = cache_localizations(jsons)
     if langdict:
         return True
     return False
