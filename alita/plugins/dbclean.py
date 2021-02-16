@@ -16,10 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from time import sleep
+from asyncio import sleep
 
 from pyrogram import filters
-from pyrogram.errors import BadRequest, Unauthorized
+from pyrogram.errors import BadRequest, ChatWriteForbidden, RPCError, Unauthorized
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -48,32 +48,35 @@ async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
             if progress_message:
                 try:
                     await m.edit_text(progress_bar)
-                except BaseException:
+                except RPCError:
                     pass
             else:
                 progress_message = await m.reply_text(progress_bar)
             progress += 5
 
         cid = chat.chat_id
-        sleep(0.1)
+        await sleep(0.1)
         try:
             await c.get_chat(cid)
         except (BadRequest, Unauthorized):
             kicked_chats += 1
             chat_list.append(cid)
-        except BaseException:
+        except RPCError:
             pass
 
     try:
         await progress_message.delete()
-    except BaseException:
+    except RPCError:
         pass
 
     if not remove:
         return kicked_chats
     for muted_chat in chat_list:
-        sleep(0.1)
-        user_db.rem_chat(muted_chat)
+        try:
+            await sleep(0.1)
+            user_db.rem_chat(muted_chat)
+        except RPCError:
+            pass
     return kicked_chats
 
 
@@ -84,20 +87,23 @@ async def get_invalid_gban(c: Alita, _: Message, remove: bool = False):
 
     for user in banned:
         user_id = user["user_id"]
-        sleep(0.1)
+        await sleep(0.1)
         try:
             await c.get_users(user_id)
         except BadRequest:
             ungbanned_users += 1
             ungban_list.append(user_id)
-        except BaseException:
+        except RPCError:
             pass
 
     if remove:
         for user_id in ungban_list:
-            sleep(0.1)
-            gban_db.ungban_user(user_id)
-        return ungbanned_users
+            try:
+                await sleep(0.1)
+                gban_db.ungban_user(user_id)
+            except RPCError:
+                pass
+
     return ungbanned_users
 
 
@@ -115,49 +121,49 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
             if progress_message:
                 try:
                     await m.edit_text(progress_bar, chat_id)
-                except BaseException:
+                except RPCError:
                     pass
             else:
                 progress_message = await m.edit_text(progress_bar)
             progress += 5
 
         cid = chat.chat_id
-        sleep(0.1)
+        await sleep(0.1)
 
         try:
             await c.send_chat_action(cid, "typing")
-        except (BadRequest, Unauthorized):
+        except (BadRequest, Unauthorized, ChatWriteForbidden):
             muted_chats += 1
             chat_list.append(cid)
-        except BaseException:
+        except RPCError:
             pass
 
     try:
         await progress_message.delete()
-    except BaseException:
+    except RPCError:
         pass
 
     if not leave:
         return muted_chats
     for muted_chat in chat_list:
-        sleep(0.1)
+        await sleep(0.1)
         try:
             await c.leave_chat(muted_chat)
-        except BaseException:
+            user_db.rem_chat(muted_chat)
+        except RPCError:
             pass
-        user_db.rem_chat(muted_chat)
     return muted_chats
 
 
 @Alita.on_message(filters.command("dbclean", DEV_PREFIX_HANDLER) & dev_filter)
 async def dbcleanxyz(_: Alita, m: Message):
     buttons = [
-        [InlineKeyboardButton("Invalid Chats", callback_data="dbclean_invalidchats")],
+        [InlineKeyboardButton("Invalid Chats", callback_data="dbclean.invalidchats")],
     ]
     buttons += [
-        [InlineKeyboardButton("Muted Chats", callback_data="dbclean_mutedchats")],
+        [InlineKeyboardButton("Muted Chats", callback_data="dbclean.mutedchats")],
     ]
-    buttons += [[InlineKeyboardButton("Invalid Gbans", callback_data="dbclean_gbans")]]
+    buttons += [[InlineKeyboardButton("Invalid Gbans", callback_data="dbclean.gbans")]]
     await m.reply_text(
         "What do you want to clean?",
         reply_markup=InlineKeyboardMarkup(buttons),
@@ -167,8 +173,9 @@ async def dbcleanxyz(_: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^dbclean_"))
 async def dbclean_callback(c: Alita, q: CallbackQuery):
+    args = q.data.split(".")
     # Invalid Chats
-    if q.data.split("_")[1] == "invalidchats":
+    if args[1] == "invalidchats":
         await q.message.edit_text("Getting Invalid Chat Count ...")
         invalid_chat_count = await get_invalid_chats(c, q.message)
 
@@ -183,7 +190,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                     [
                         InlineKeyboardButton(
                             "Remove Invalid Chats",
-                            callback_data="db_clean_inavlid_chats",
+                            callback_data="remove.inavlid_chats",
                         ),
                     ],
                 ],
@@ -193,7 +200,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
         return
 
     # Muted Chats
-    if q.data.split("_")[1] == "mutedchats":
+    if args[1] == "mutedchats":
         await q.message.edit_text("Getting Muted Chat Count...")
         muted_chat_count = await get_muted_chats(c, q.message)
 
@@ -209,7 +216,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                     [
                         InlineKeyboardButton(
                             "Leave Muted Chats",
-                            callback_data="db_clean_muted_chats",
+                            callback_data="remove.muted_chats",
                         ),
                     ],
                 ],
@@ -219,7 +226,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
         return
 
     # Invalid Gbans
-    if q.data.split("_")[1] == "gbans":
+    if args[1] == "gbans":
         await q.message.edit_text("Getting Invalid Gban Count ...")
         invalid_gban_count = await get_invalid_gban(c, q.message)
 
@@ -234,7 +241,7 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
                     [
                         InlineKeyboardButton(
                             "Remove Invalid Gbans",
-                            callback_data="db_clean_invalid_gbans",
+                            callback_data="remove.invalid_gbans",
                         ),
                     ],
                 ],
@@ -245,22 +252,22 @@ async def dbclean_callback(c: Alita, q: CallbackQuery):
     return
 
 
-@Alita.on_callback_query(filters.regex("^db_clean_"))
+@Alita.on_callback_query(filters.regex("^remove."))
 async def db_clean_callbackAction(c: Alita, q: CallbackQuery):
     try:
-        query_type = q.data.split("_")[1]
+        args = q.data.split(".")[1]
 
-        if query_type == "muted_chats":
+        if args == "muted_chats":
             await q.message.edit_text("Leaving chats ...")
             chat_count = await get_muted_chats(c, q.message, True)
             await q.message.edit_text(f"Left {chat_count} chats.")
 
-        elif query_type == "inavlid_chats":
+        elif args == "inavlid_chats":
             await q.message.edit_text("Cleaning up Db...")
             invalid_chat_count = await get_invalid_chats(c, q.message, True)
             await q.message.edit_text(f"Cleaned up {invalid_chat_count} chats from Db.")
 
-        elif query_type == "invalid_gbans":
+        elif args == "invalid_gbans":
             await q.message.edit_text("Removing Invalid Gbans from Db...")
             invalid_gban_count = await get_invalid_gban(c, q.message, True)
             await q.message.edit_text(

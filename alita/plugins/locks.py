@@ -44,22 +44,23 @@ Allows you to lock and unlock permission types in the chat.
 
 @Alita.on_message(filters.command("locktypes", PREFIX_HANDLER) & filters.group)
 async def lock_types(_: Alita, m: Message):
-    types = (
-        "**Lock Types:**\n"
-        " - `all` = Everything\n"
-        " - `msg` = Messages\n"
-        " - `media` = Media, such as photo and video.\n"
-        " - `polls` = Polls\n"
-        " - `invite` = Add users to group\n"
-        " - `pin` = Pin Messages\n"
-        " - `info` = Change Group Info\n"
-        " - `webprev` = Web Page Previews\n"
-        " - `inlinebots` = Inline bots\n"
-        " - `animations` = Animations\n"
-        " - `games` = Game Bots\n"
-        " - `stickers` = Stickers"
+    await m.reply_text(
+        (
+            "**Lock Types:**\n"
+            " - `all` = Everything\n"
+            " - `msg` = Messages\n"
+            " - `media` = Media, such as photo and video.\n"
+            " - `polls` = Polls\n"
+            " - `invite` = Add users to group\n"
+            " - `pin` = Pin Messages\n"
+            " - `info` = Change Group Info\n"
+            " - `webprev` = Web Page Previews\n"
+            " - `inlinebots` = Inline bots\n"
+            " - `animations` = Animations\n"
+            " - `games` = Game Bots\n"
+            " - `stickers` = Stickers"
+        ),
     )
-    await m.reply_text(types)
     return
 
 

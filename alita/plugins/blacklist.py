@@ -46,7 +46,7 @@ lines will allow you to add muser_listtiple triggers.
 muser_listtiple triggers at once.
  × /rmblacklist <triggers>: Same as above.
 
-**Note:** Can only remove one remove one blacklist at a time!
+**Note:** Can only remove one blacklist at a time!
 """
 
 

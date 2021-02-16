@@ -17,6 +17,7 @@
 
 
 from pyrogram import filters
+from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
 from alita import DEV_PREFIX_HANDLER, DEV_USERS, OWNER_ID, SUDO_USERS, WHITELIST_USERS
@@ -32,7 +33,7 @@ async def botstaff(c: Alita, m: Message):
     try:
         owner = await c.get_users(OWNER_ID)
         reply = f"<b>🌟 Owner:</b> {(await mention_html(owner.first_name, OWNER_ID))} (<code>{OWNER_ID}</code>)\n"
-    except BaseException:
+    except RPCError:
         pass
     true_dev = list(set(DEV_USERS) - {OWNER_ID})
     reply += "\n<b>Developers ⚡️:</b>\n"
@@ -44,7 +45,7 @@ async def botstaff(c: Alita, m: Message):
             try:
                 user = await c.get_users(user_id)
                 reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
-            except BaseException:
+            except RPCError:
                 pass
     true_sudo = list(set(SUDO_USERS) - set(DEV_USERS))
     reply += "\n<b>Sudo Users 🐉:</b>\n"
@@ -56,7 +57,7 @@ async def botstaff(c: Alita, m: Message):
             try:
                 user = await c.get_users(user_id)
                 reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
-            except BaseException:
+            except RPCError:
                 pass
     reply += "\n<b>Whitelisted Users 🐺:</b>\n"
     if WHITELIST_USERS == []:
@@ -67,7 +68,7 @@ async def botstaff(c: Alita, m: Message):
             try:
                 user = await c.get_users(user_id)
                 reply += f"• {(await mention_html(user.first_name, user_id))} (<code>{user_id}</code>)\n"
-            except BaseException:
+            except RPCError:
                 pass
     await m.reply_text(reply)
     return

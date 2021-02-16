@@ -159,7 +159,7 @@ class Alita(Client):
 
         # Show in Log that bot has started
         LOGGER.info(
-            f"Pyrogram v{__version__}\n(Layer - {layer}) started on {BOT_USERNAME}"
+            f"Pyrogram v{__version__}\n(Layer - {layer}) started on {BOT_USERNAME}\n"
             f"Python Version: {python_version()}",
         )
         cmd_list = await load_cmds(await ALL_PLUGINS())
@@ -173,7 +173,7 @@ class Alita(Client):
             MESSAGE_DUMP,
             (
                 f"<b><i>@{meh.username} started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n"
-                f"<b>Python Version:</b> <u><i>{python_version()}</i></u>\n"
+                f"\n<b>Python Version:</b> <u>{python_version()}</u>\n"
                 "\n<b>Loaded Plugins:</b>\n"
                 f"<i>{cmd_list}</i>\n"
                 "\n<b>Redis Keys Loaded:</b>\n"
