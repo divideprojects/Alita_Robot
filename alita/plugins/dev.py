@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import sys
 from asyncio import create_subprocess_shell, subprocess
 from io import StringIO
 from time import gmtime, strftime, time
@@ -114,8 +115,10 @@ async def evaluate_code(c: Alita, m: Message):
     if m.reply_to_message:
         reply_to_id = m.reply_to_message.message_id
 
-    redirected_output = stdout = StringIO()
-    redirected_error = stderr = StringIO()
+    old_stderr = sys.stderr
+    old_stdout = sys.stdout
+    redirected_output = sys.stdout = io.StringIO()
+    redirected_error = sys.stderr = io.StringIO()
     stdout, stderr, exc = None, None, None
 
     try:
@@ -126,6 +129,8 @@ async def evaluate_code(c: Alita, m: Message):
 
     stdout = redirected_output.getvalue()
     stderr = redirected_error.getvalue()
+    sys.stdout = old_stdout
+    sys.stderr = old_stderr
 
     evaluation = ""
     if exc:
