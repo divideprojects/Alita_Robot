@@ -1,5 +1,2 @@
 image:
-  file: Dockerfile.gitpod
-
-tasks:
-  - init: make dev-install
+  file: .gitpod.Dockerfile
