@@ -252,7 +252,7 @@ async def chats(c: Alita, m: Message):
             pass
         except errors.ChannelPrivate:
             userdb.rem_chat(chat.chat_id)
-        except errors.PerIdInvalid:
+        except errors.PeerIdInvalid:
             LOGGER.warning(f"Group not loaded {chat.chat_id}")
         except Exception as ef:
             await m.reply_text(f"**Error:**\n{ef}")
