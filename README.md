@@ -26,12 +26,13 @@ Alita is a Telegram Group managment bot made using **[Pyrogram](https://github.c
 
 Can be found on Telegram as [@Alita_Robot](https://t.me/Alita_Robot).
 
-Alita is currently available in 5 Languages as of now:
+Alita is currently available in 6 Languages as of now:
 - **en-US**
 - **pt-BR**
 - **it-IT**
 - **ru-RU**
 - **hi-IN**
+- **he-IL**
 
 More languages can be managed in the _locales_ folder.
 
