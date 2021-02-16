@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from io import BytesIO
+
 from pyrogram import filters
 from pyrogram.types import Message
 from wikipedia import summary
@@ -56,7 +58,8 @@ async def wiki(_: Alita, m: Message):
         result += f"<i>{res}</i>\n"
         result += f"""<a href="https://en.wikipedia.org/wiki/{search.replace(" ", "%20")}">Read more...</a>"""
         if len(result) > 4000:
-            with open("result.txt", "rb") as f:
+            with BytesIO(str.encode(result)) as f:
+                f.name = "result.txt"
                 await m.reply_document(
                     document=f,
                     reply_to_message_id=m.message_id,

@@ -17,6 +17,7 @@
 
 
 from asyncio import sleep
+from io import BytesIO
 from time import time
 
 from pyrogram import errors, filters
@@ -159,8 +160,8 @@ async def banallnotes_callback(c: Alita, q: CallbackQuery):
 
     rply = f"Users Banned:\n{users}"
 
-    with open(f"bannedUsers_{q.message.chat.id}.txt", "w+") as f:
-        f.write(rply)
+    with BytesIO(str.encode(rply)) as f:
+        f.name = f"bannedUsers_{q.message.chat.id}.txt"
         await q.message.reply_document(
             document=f,
             caption=f"Banned {len(users)} users!",

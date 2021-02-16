@@ -18,14 +18,14 @@
 
 import sys
 from asyncio import create_subprocess_shell, subprocess
-from io import StringIO
+from io import BytesIO, StringIO
 from time import gmtime, strftime, time
 from traceback import format_exc
 
 from pyrogram import errors, filters
 from pyrogram.types import Message
 from speedtest import Speedtest
-from ujson import dump
+from ujson import dumps
 
 from alita import DEV_PREFIX_HANDLER, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
 from alita.bot_class import Alita
@@ -93,8 +93,8 @@ async def neofetch_stats(_: Alita, m: Message):
         OUTPUT = "No Output"
 
     if len(OUTPUT) > 4090:
-        with open("neofetch.txt", "w+") as f:
-            f.write(OUTPUT)
+        with BytesIO(str.encode(OUTPUT)) as f:
+            f.name = "neofetch.txt"
             await m.reply_document(document=f, caption="neofetch result")
         await m.delete()
     else:
@@ -145,8 +145,8 @@ async def evaluate_code(c: Alita, m: Message):
     final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation.strip()}</code> \n"
 
     if len(final_output) > 4000:
-        with open("eval.txt", "w+") as f:
-            f.write(final_output)
+        with BytesIO(str.encode(final_output)) as f:
+            f.name = "py.txt"
             await m.reply_document(
                 document=f,
                 caption=cmd,
@@ -196,8 +196,8 @@ async def execution(_: Alita, m: Message):
     OUTPUT += f"<b>stdout</b>: \n<code>{o}</code>"
 
     if len(OUTPUT) > 4000:
-        with open("exec.txt", "w+") as f:
-            f.write(OUTPUT)
+        with BytesIO(str.encode(OUTPUT)) as f:
+            f.name = "sh.txt"
             await m.reply_document(
                 document=f,
                 caption=cmd,
@@ -257,8 +257,8 @@ async def chats(c: Alita, m: Message):
         except Exception as ef:
             await m.reply_text(f"**Error:**\n{ef}")
 
-    with open("chatlist.txt", "w+") as f:
-        f.write(chatfile)
+    with BytesIO(str.encode(chatfile)) as f:
+        f.name = "chatlist.txt"
         await m.reply_document(
             document=f,
             caption="Here is the list of chats in my Database.",
@@ -307,8 +307,8 @@ async def list_all_admins(_: Alita, m: Message):
     admindict = await get_key("ADMINDICT")
 
     if len(str(admindict)) > 4000:
-        with open("alladmins.txt", "w+") as f:
-            dump(admindict, f, indent=4)
+        with BytesIO(str.encode(dumps(admindict, indent=4))) as f:
+            f.name = "alladmins.txt"
             await m.reply_document(
                 document=f,
                 caption="Here is the list of all admins in my Redis cache.",
