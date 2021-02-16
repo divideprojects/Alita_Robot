@@ -54,36 +54,6 @@ An example of promoting someone to admins:
 `/promote @username`; this promotes a user to admin.
 """
 
-# Mute permissions
-mute_permission = ChatPermissions(
-    can_send_messages=False,
-    can_send_media_messages=False,
-    can_send_stickers=False,
-    can_send_animations=False,
-    can_send_games=False,
-    can_use_inline_bots=False,
-    can_add_web_page_previews=False,
-    can_send_polls=False,
-    can_change_info=False,
-    can_invite_users=True,
-    can_pin_messages=False,
-)
-
-# Unmute permissions
-unmute_permissions = ChatPermissions(
-    can_send_messages=True,
-    can_send_media_messages=True,
-    can_send_stickers=True,
-    can_send_animations=True,
-    can_send_games=True,
-    can_use_inline_bots=True,
-    can_add_web_page_previews=True,
-    can_send_polls=True,
-    can_change_info=False,
-    can_invite_users=True,
-    can_pin_messages=False,
-)
-
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
 async def adminlist_show(_: Alita, m: Message):
@@ -195,7 +165,19 @@ async def mute_usr(_: Alita, m: Message):
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = await extract_user(m)
         try:
-            await m.chat.restrict_member(user_id, mute_permission)
+            await m.chat.restrict_member(user_id, ChatPermissions(
+                can_send_messages=False,
+                can_send_media_messages=False,
+                can_send_stickers=False,
+                can_send_animations=False,
+                can_send_games=False,
+                can_use_inline_bots=False,
+                can_add_web_page_previews=False,
+                can_send_polls=False,
+                can_change_info=False,
+                can_invite_users=True,
+                can_pin_messages=False,
+                ))
             await m.reply_text(
                 f"<b>Muted</b> {(await mention_html(user_first_name,user_id))}",
             )
@@ -224,7 +206,7 @@ async def unmute_usr(_: Alita, m: Message):
     if from_user.can_restrict_members or from_user.status == "creator":
         user_id, user_first_name = await extract_user(m)
         try:
-            await m.chat.restrict_member(user_id, unmute_permissions)
+            await m.chat.restrict_member(user_id, m.chat.permissions)
             await m.reply_text(
                 f"<b>Unmuted</b> {(await mention_html(user_first_name,user_id))}",
             )
