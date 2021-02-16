@@ -32,8 +32,7 @@ from alita.utils.redishelper import get_key
 
 
 async def gen_cmds_kb():
-    plugins = sorted(list(HELP_COMMANDS.keys()))
-    cmds = list(plugins)
+    cmds = sorted(list(HELP_COMMANDS.keys()))
     kb = []
 
     while cmds:
@@ -162,7 +161,7 @@ async def commands_menu(_: Alita, m: CallbackQuery):
             (await back_kb(m.message)),
         ],
     )
-    await m.message.edit_text(l("general.commands_available"), reply_markup=keyboard)
+    await m.message.edit_text("general.commands_available", reply_markup=keyboard)
     await m.answer()
     return
 
