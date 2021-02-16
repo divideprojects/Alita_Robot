@@ -40,11 +40,11 @@ Want to delete messages in you group?
 @Alita.on_message(filters.command("purge", PREFIX_HANDLER) & filters.group)
 async def purge(c: Alita, m: Message):
 
-    res = await admin_check(m)
-    if not res:
+    if not (await admin_check(m)):
         return
 
     _ = GetLang(m).strs
+
     if m.chat.type != "supergroup":
         await m.reply_text(_("purge.err_basic"))
         return
@@ -84,11 +84,11 @@ async def purge(c: Alita, m: Message):
 @Alita.on_message(filters.command("del", PREFIX_HANDLER) & filters.group, group=3)
 async def del_msg(c: Alita, m: Message):
 
-    res = await admin_check(m)
-    if not res:
+    if not (await admin_check(m)):
         return
 
     _ = GetLang(m).strs
+
     if m.reply_to_message:
         if m.chat.type != "supergroup":
             return
@@ -96,7 +96,6 @@ async def del_msg(c: Alita, m: Message):
             chat_id=m.chat.id,
             message_ids=m.reply_to_message.message_id,
         )
-        await sleep(0.5)
         await m.delete()
     else:
         await m.reply_text(_("purge.what_del"))
