@@ -128,7 +128,7 @@ async def start(_: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^start_back$"))
 async def start_back(_: Alita, m: CallbackQuery):
-    _ = GetLang(m.mesaage).strs
+    _ = GetLang(m).strs
     await m.message.edit_text(
         _("start.private"),
         reply_markup=(await gen_start_kb(m.message)),
@@ -139,7 +139,7 @@ async def start_back(_: Alita, m: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(_: Alita, m: CallbackQuery):
-    _ = GetLang(m.message).strs
+    _ = GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_cmds_kb()),
