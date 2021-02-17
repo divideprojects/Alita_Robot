@@ -9,6 +9,7 @@ dev-install:
 	@pip3 install --upgrade pip setuptools
 	@pip3 install --upgrade -r requirements.txt
 	@pip3 install --upgrade -r requirements-dev.txt
+	@sleep 5
 	@pre-commit
 	@pre-commit install
 
@@ -17,4 +18,5 @@ run:
 
 update:
 	@git pull
-	@python3 -m pip install --upgrade -r requirements.txt
+	@pip3 install --upgrade pip setuptools
+	@pip3 install --upgrade -r requirements.txt
