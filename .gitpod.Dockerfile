@@ -1,4 +1,4 @@
-FROM gitpod/workspace-full:latest
+FROM python:3.9.1-slim-buster
 
 USER gitpod
 
@@ -12,9 +12,3 @@ RUN sudo apt update && \
         python3-dev \
         python3-lxml \
         neofetch
-
-WORKDIR /workspace/
-
-COPY . .
-
-RUN make dev-install
