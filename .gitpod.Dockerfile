@@ -13,4 +13,8 @@ RUN sudo apt update && \
         python3-lxml \
         neofetch
 
+WORKDIR /workspace/
+
+COPY . .
+
 RUN make dev-install
