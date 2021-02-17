@@ -44,7 +44,7 @@ from alita.db import users_db as userdb
 from alita.plugins import ALL_PLUGINS
 from alita.utils.localization import langdict
 from alita.utils.paste import paste
-from alita.utils.redishelper import allkeys, close, flushredis, set_key, setup_redis
+from alita.utils.redishelper import allkeys, close, flushredis, set_key, setup_redis, get_key
 
 # Check if MESSAGE_DUMP is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
