@@ -18,6 +18,8 @@
 
 from alita import REDIS_HOST, REDIS_PORT, REDIS_DB, REDIS_PASS
 
+from aioredis import create_redis_pool
+
 from ujson import dumps, loads
 
 # Initialize redis_client var
