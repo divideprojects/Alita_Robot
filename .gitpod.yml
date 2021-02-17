@@ -1,10 +1,3 @@
 tasks:
   - before: export PIP_USER=false
     command: make dev-install
-
-vscode:
-  extensions:
-    - ms-python.python
-    - CoenraadS.bracket-pair-colorizer-2
-    - ms-azuretools.vscode-docker
-    - yzhang.markdown-all-in-one
