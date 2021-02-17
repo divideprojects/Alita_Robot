@@ -2,7 +2,7 @@ FROM gitpod/workspace-full
 
 USER gitpod
 
-EXPORT PIP_USER=false
+ENV PIP_USER=false
 
 RUN sudo apt update && \
     sudo apt upgrade -y && \
