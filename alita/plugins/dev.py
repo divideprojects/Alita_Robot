@@ -35,7 +35,7 @@ from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.custom_filters import dev_filter
 from alita.utils.localization import GetLang
 from alita.utils.parser import mention_markdown
-from alita.utils.redishelper import allkeys, get_key, flushredis
+from alita.utils.redishelper import allkeys, flushredis, get_key
 
 
 @Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
@@ -296,7 +296,10 @@ async def store_members(c: Alita, m: Message):
                 pass
         await sm.edit_text(f"Stored {lv} members in Database!")
     except BaseException as ef:
-        await c.send_message(chat_id=MESSAGE_DUMP, text=f"Error while storing members! Error: <code>{ef}</code>")
+        await c.send_message(
+            chat_id=MESSAGE_DUMP,
+            text=f"Error while storing members! Error: <code>{ef}</code>",
+        )
     return
 
 
@@ -340,7 +343,9 @@ async def flush_redis(_: Alita, m: Message):
         await replymsg.edit_text("Flushed Redis successfully!")
     except BaseException as ef:
         LOGGER.error(ef)
-        await replymsg.edit_text(f"Failed to flush redis database!\nError: <code>{ef}</code>.")
+        await replymsg.edit_text(
+            f"Failed to flush redis database!\nError: <code>{ef}</code>.",
+        )
     return
 
 

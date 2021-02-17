@@ -24,7 +24,6 @@ from sys import exit as sysexit
 from sys import stdout, version_info
 from time import time
 
-
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
 

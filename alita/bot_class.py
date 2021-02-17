@@ -93,7 +93,7 @@ class Alita(Client):
         try:
             ADMINDICT = await get_key("ADMINDICT")
         except BaseException as ef:
-        LOGGER.error(f"Unable to get ADMINDICT!\nError: {ef}")
+            LOGGER.error(f"Unable to get ADMINDICT!\nError: {ef}")
             ADMINDICT = {}
 
         for i in all_chats:

@@ -125,9 +125,8 @@ async def reload_admins(_: Alita, m: Message):
     _ = GetLang(m).strs
     if not (await admin_check(m)):
         return
-        
-    replymsg = await m.reply_text("Refreshing admin list...")
 
+    replymsg = await m.reply_text("Refreshing admin list...")
 
     ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
 

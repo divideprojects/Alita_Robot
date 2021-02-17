@@ -2,16 +2,15 @@ test:
 	@pre-commit run --all-files
 
 install:
-	@python3 -m pip install --upgrade pip setuptools
-	@python3 -m pip install --upgrade -r requirements.txt
+	@pip3 install --upgrade pip setuptools
+	@pip3 install --upgrade -r requirements.txt
 
 dev-install:
-	@python3 -m pip install --upgrade pip setuptools
-	@python3 -m pip install --upgrade -r requirements.txt
-	@python3 -m pip install --upgrade -r requirements-dev.txt
+	@pip3 install --upgrade pip setuptools
+	@pip3 install --upgrade -r requirements.txt
+	@pip3 install --upgrade -r requirements-dev.txt
+	@pre-commit
 	@pre-commit install
-	@pre-commit autoupdate
-	@pre-commit run --all-files
 
 run:
 	@python3 -m alita

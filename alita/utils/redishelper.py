@@ -16,11 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from alita import REDIS_HOST, REDIS_PORT, REDIS_DB, REDIS_PASS
-
 from aioredis import create_redis_pool
-
 from ujson import dumps, loads
+
+from alita import REDIS_DB, REDIS_HOST, REDIS_PASS, REDIS_PORT
 
 # Initialize redis_client var
 redis_client = None
