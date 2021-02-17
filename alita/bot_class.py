@@ -85,11 +85,17 @@ class Alita(Client):
         LOGGER.info("Begin caching admins...")
         begin = time()
 
-        await self.flush_redis()
+        # await self.flush_redis()
 
         all_chats = userdb.get_all_chats() or []  # Get list of all chats
-        LOGGER.info(f"{len(all_chats)} chats loaded.")
-        ADMINDICT = {}
+        LOGGER.info(f"{len(all_chats)} chats loaded from database.")
+
+        try:
+            ADMINDICT = await get_key("ADMINDICT")
+        except BaseException as ef:
+        LOGGER.error(f"Unable to get ADMINDICT!\nError: {ef}")
+            ADMINDICT = {}
+
         for i in all_chats:
             chat_id = i.chat_id
             adminlist = []
@@ -129,7 +135,7 @@ class Alita(Client):
                 ),
             )
         except Exception as ef:
-            LOGGER.error(f"Could not set ADMINDICT in RedisCache!\n{ef}")
+            LOGGER.error(f"Could not set ADMINDICT in RedisCache!\nError: {ef}")
 
     async def start(self):
         # Load Languages
@@ -202,6 +208,6 @@ class Alita(Client):
             "<i><b>Bot Stopped!</b></i>",
         )
         await super().stop()
-        await self.flush_redis()
+        # await self.flush_redis()
         await close()  # Close redis connection
         LOGGER.info("Bot Stopped.\nkthxbye!")
