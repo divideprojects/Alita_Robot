@@ -23,7 +23,13 @@ from time import gmtime, strftime, time
 from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import ChannelPrivate, ChatAdminRequired, PeerIdInvalid, RPCError
+from pyrogram.errors import (
+    ChannelPrivate,
+    ChatAdminRequired,
+    MessageTooLong,
+    PeerIdInvalid,
+    RPCError,
+)
 from pyrogram.types import Message
 from speedtest import Speedtest
 from ujson import dumps
@@ -93,13 +99,13 @@ async def neofetch_stats(_: Alita, m: Message):
     if not OUTPUT:
         OUTPUT = "No Output"
 
-    if len(OUTPUT) > 4090:
+    try:
+        await m.reply_text(OUTPUT, quote=True)
+    except MessageTooLong:
         with BytesIO(str.encode(OUTPUT)) as f:
             f.name = "neofetch.txt"
             await m.reply_document(document=f, caption="neofetch result")
         await m.delete()
-    else:
-        await m.reply_text(OUTPUT, quote=True)
     return
 
 
@@ -145,7 +151,9 @@ async def evaluate_code(c: Alita, m: Message):
 
     final_output = f"<b>EVAL</b>: <code>{cmd}</code>\n\n<b>OUTPUT</b>:\n<code>{evaluation.strip()}</code> \n"
 
-    if len(final_output) > 4000:
+    try:
+        await sm.edit(final_output)
+    except MessageTooLong:
         with BytesIO(str.encode(final_output)) as f:
             f.name = "py.txt"
             await m.reply_document(
@@ -155,8 +163,7 @@ async def evaluate_code(c: Alita, m: Message):
                 reply_to_message_id=reply_to_id,
             )
         await sm.delete()
-    else:
-        await sm.edit(final_output)
+
     return
 
 
@@ -196,7 +203,9 @@ async def execution(_: Alita, m: Message):
     OUTPUT += f"<b>stderr</b>: \n<code>{e}</code>\n\n"
     OUTPUT += f"<b>stdout</b>: \n<code>{o}</code>"
 
-    if len(OUTPUT) > 4000:
+    try:
+        await sm.edit_text(OUTPUT)
+    except MessageTooLong:
         with BytesIO(str.encode(OUTPUT)) as f:
             f.name = "sh.txt"
             await m.reply_document(
@@ -206,8 +215,6 @@ async def execution(_: Alita, m: Message):
                 reply_to_message_id=reply_to_id,
             )
         await sm.delete()
-    else:
-        await sm.edit_text(OUTPUT)
     return
 
 

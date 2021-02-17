@@ -22,7 +22,7 @@ from io import BytesIO
 
 from googletrans import LANGUAGES, Translator
 from pyrogram import errors, filters
-from pyrogram.errors import PeerIdInvalid, RPCError
+from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from tswift import Song
 
@@ -90,7 +90,9 @@ async def get_lyrics(_: Alita, m: Message):
             reply = "Couldn't find any lyrics for that song!"
     else:
         reply = "Song not found!"
-    if len(reply) > 4090:
+    try:
+        await em.edit_text(reply)
+    except MessageTooLong:
         with BytesIO(str.encode(reply)) as f:
             f.name = "lyrics.txt"
             await m.reply_document(
@@ -98,8 +100,6 @@ async def get_lyrics(_: Alita, m: Message):
                 caption="Message length exceeded max limit!\nSent as a text file.",
             )
         await em.delete()
-    else:
-        await em.edit_text(reply)
     return
 
 

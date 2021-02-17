@@ -17,6 +17,7 @@
 
 
 from pyrogram import errors, filters
+from pyrogram.errors import UserIsBlocked
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -60,7 +61,7 @@ async def get_rules(c: Alita, m: Message):
             m.from_user.id,
             _("rules.get_rules").format(chat=m.chat.title, rules=rules),
         )
-    except errors.UserIsBlocked:
+    except UserIsBlocked:
         me = await c.get_me()
         pm_kb = InlineKeyboardMarkup(
             [[InlineKeyboardButton("PM", url=f"https://t.me/{me.username}?start")]],

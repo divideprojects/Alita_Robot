@@ -19,6 +19,7 @@
 from io import BytesIO
 
 from pyrogram import filters
+from pyrogram.errors import MessageTooLong
 from pyrogram.types import Message
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
@@ -57,7 +58,9 @@ async def wiki(_: Alita, m: Message):
         result = f"<b>{search}</b>\n\n"
         result += f"<i>{res}</i>\n"
         result += f"""<a href="https://en.wikipedia.org/wiki/{search.replace(" ", "%20")}">Read more...</a>"""
-        if len(result) > 4000:
+        try:
+            await m.reply_text(result, parse_mode="html", disable_web_page_preview=True)
+        except MessageTooLong:
             with BytesIO(str.encode(result)) as f:
                 f.name = "result.txt"
                 await m.reply_document(
@@ -65,7 +68,5 @@ async def wiki(_: Alita, m: Message):
                     reply_to_message_id=m.message_id,
                     parse_mode="html",
                 )
-        else:
-            await m.reply_text(result, parse_mode="html", disable_web_page_preview=True)
 
     return
