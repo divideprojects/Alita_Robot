@@ -294,10 +294,9 @@ async def store_members(c: Alita, m: Message):
                 lv += 1
             except BaseException:
                 pass
-    except BaseException:
-        await c.send_message(chat_id=MESSAGE_DUMP, text="Error while storing members!")
-        return
-    await sm.edit_text(f"Stored {lv} members")
+        await sm.edit_text(f"Stored {lv} members in Database!")
+    except BaseException as ef:
+        await c.send_message(chat_id=MESSAGE_DUMP, text=f"Error while storing members! Error: <code>{ef}</code>")
     return
 
 
@@ -325,7 +324,7 @@ async def list_all_admins(_: Alita, m: Message):
 @Alita.on_message(filters.command("rediskeys", DEV_PREFIX_HANDLER) & dev_filter)
 async def show_redis_keys(_: Alita, m: Message):
     txt_dict = {}
-    replymsg = await m.reply_text("Sending Redis Keys...", quote=True)
+    replymsg = await m.reply_text("Fetching Redis Keys...", quote=True)
     keys = await allkeys()
     for i in keys:
         txt_dict[i] = await get_key(str(i))
@@ -340,5 +339,22 @@ async def flush_redis(_: Alita, m: Message):
         await flushredis()
         await replymsg.edit_text("Flushed Redis successfully!")
     except BaseException as ef:
-        await replymsg.edit_text(f"Failed to flush redis database!\nError: {ef}")
+        await replymsg.edit_text(f"Failed to flush redis database!\nError: <code>{ef}</code>.")
+    return
+
+
+@Alita.on_message(filters.command("leavechat", DEV_PREFIX_HANDLER) & dev_filter)
+async def leave_chat(c: Alita, m: Message):
+    if len(m.text.split()) != 2:
+        await m.reply_text("Supply a chat id which I should leave!", quoet=True)
+        return
+
+    chat_id = m.text.split(None, 1)[1]
+
+    replymsg = await m.reply_text(f"Trying to leave chat {chat_id}...", quote=True)
+    try:
+        await c.leave_chat(chat_id)
+        await replymsg.edit_text(f"Left <code>{chat_id}</code>.")
+    except RPCError as ef:
+        await replymsg.edit_text(f"Failed to leave chat!\nError: <code>{ef}</code>.")
     return
