@@ -1,5 +1,6 @@
 tasks:
-  - init: sudo make dev-install
+  - before: export PIP_USER=false
+    command: sudo make dev-install
 
 vscode:
   extensions:
