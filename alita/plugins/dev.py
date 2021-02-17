@@ -256,7 +256,7 @@ async def chats(c: Alita, m: Message):
         except PeerIdInvalid:
             LOGGER.warning(f"Group not loaded {chat.chat_id}")
         except RPCError as ef:
-            LOGGER.erro(ef)
+            LOGGER.error(ef)
             await m.reply_text(f"**Error:**\n{ef}")
 
     with BytesIO(str.encode(chatfile)) as f:
@@ -339,6 +339,7 @@ async def flush_redis(_: Alita, m: Message):
         await flushredis()
         await replymsg.edit_text("Flushed Redis successfully!")
     except BaseException as ef:
+        LOGGER.error(ef)
         await replymsg.edit_text(f"Failed to flush redis database!\nError: <code>{ef}</code>.")
     return
 
@@ -355,6 +356,9 @@ async def leave_chat(c: Alita, m: Message):
     try:
         await c.leave_chat(chat_id)
         await replymsg.edit_text(f"Left <code>{chat_id}</code>.")
+    except PeerIdInvalid:
+        await replymsg.edit_text()
     except RPCError as ef:
+        LOGGER.error(ef)
         await replymsg.edit_text(f"Failed to leave chat!\nError: <code>{ef}</code>.")
     return
