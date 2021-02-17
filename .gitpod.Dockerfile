@@ -1,6 +1,6 @@
-FROM python:3.9.1-slim-buster
+FROM gitpod/workspace-full
 
-USER root
+USER gitpod
 
 RUN sudo apt update && \
     sudo apt upgrade -y && \
