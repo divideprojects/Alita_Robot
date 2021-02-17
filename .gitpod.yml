@@ -2,5 +2,4 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - before: export PIP_USER=false
-    init: make dev-install
+  - init: sudo make dev-install
