@@ -3,4 +3,12 @@ tasks:
 
 vscode:
   extensions:
-    - Shan.code-settings-sync
+    - WakaTime.vscode-wakatime
+    - ms-python.python
+    - akamud.vscode-theme-onedark
+    - PKief.material-icon-theme
+    - CoenraadS.bracket-pair-colorizer-2
+    - ms-azuretools.vscode-docker
+    - yzhang.markdown-all-in-one
+    - eamodio.gitlens
+    - donjayamanne.githistory
