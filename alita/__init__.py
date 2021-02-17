@@ -68,29 +68,16 @@ except Exception as ef:
     sysexit(1)
 
 
-# Redis Cache
-redis_client = None
-
-
-async def setup_redis():
-    global redis_client
-    redis_client = await create_redis_pool(
-        address=(Config.REDIS_HOST, Config.REDIS_PORT),
-        db=Config.REDIS_DB,
-        password=Config.REDIS_PASS,
-    )
-    try:
-        await redis_client.ping()
-        return redis_client
-    except Exception as ef:
-        LOGGER.error(f"Cannot connect to redis\nError: {ef}")
-        return False
-
-
 # Account Related
 TOKEN = Config.TOKEN
 APP_ID = Config.APP_ID
 API_HASH = Config.API_HASH
+
+# Redis
+REDIS_HOST = Config.REDIS_HOST
+REDIS_PORT = Config.REDIS_PORT
+REDIS_PASS = Config.REDIS_PASS
+REDIS_DB = Config.REDIS_DB
 
 # General Config
 MESSAGE_DUMP = Config.MESSAGE_DUMP

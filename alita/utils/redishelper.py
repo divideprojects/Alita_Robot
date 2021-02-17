@@ -16,11 +16,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from alita import REDIS_HOST, REDIS_PORT, REDIS_DB, REDIS_PASS
+
 from ujson import dumps, loads
+
+# Initialize redis_client var
+redis_client = None
+
+
+async def setup_redis():
+    global redis_client
+    redis_client = await create_redis_pool(
+        address=(REDIS_HOST, REDIS_PORT),
+        db=REDIS_DB,
+        password=REDIS_PASS,
+    )
+    try:
+        await redis_client.ping()
+        return redis_client
+    except Exception as ef:
+        LOGGER.error(f"Cannot connect to redis\nError: {ef}")
+        return False
 
 
 async def set_key(key: str, value):
-    from alita import redis_client
+    # from alita import redis_client
 
     return await redis_client.set(
         key,
@@ -34,19 +54,19 @@ async def set_key(key: str, value):
 
 
 async def get_key(key: str):
-    from alita import redis_client
+    # from alita import redis_client
 
     return loads(await redis_client.get(key))
 
 
 async def flushredis():
-    from alita import redis_client
+    # from alita import redis_client
 
     return await redis_client.flushall()
 
 
 async def allkeys():
-    from alita import redis_client
+    # from alita import redis_client
 
     keys = await redis_client.keys(pattern="*")
     keys_str = []
@@ -56,7 +76,7 @@ async def allkeys():
 
 
 async def close():
-    from alita import redis_client
+    # from alita import redis_client
 
     redis_client.close()
     return await redis_client.wait_closed()
