@@ -1,2 +1,9 @@
 tasks:
   - init: sudo make dev-install
+
+vscode:
+  extensions:
+    - WakaTime.vscode-wakatime
+    - ms-python.python
+    - akamud.vscode-theme-onedark
+    - PKief.material-icon-theme
