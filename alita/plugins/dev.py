@@ -35,7 +35,7 @@ from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.custom_filters import dev_filter
 from alita.utils.localization import GetLang
 from alita.utils.parser import mention_markdown
-from alita.utils.redishelper import allkeys, get_key
+from alita.utils.redishelper import allkeys, get_key, flushredis
 
 
 @Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
@@ -330,4 +330,15 @@ async def show_redis_keys(_: Alita, m: Message):
     for i in keys:
         txt_dict[i] = await get_key(str(i))
     await replymsg.edit_text(txt_dict)
+    return
+
+
+@Alita.on_message(filters.command("flushredis", DEV_PREFIX_HANDLER) & dev_filter)
+async def flush_redis(_: Alita, m: Message):
+    replymsg = await m.reply_text("Flushing Redis Database...", quote=True)
+    try:
+        await flushredis()
+        await replymsg.edit_text("Flushed Redis successfully!")
+    except BaseException as ef:
+        await replymsg.edit_text(f"Failed to flush redis database!\nError: {ef}")
     return
