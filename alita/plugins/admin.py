@@ -71,12 +71,14 @@ async def adminlist_show(_: Alita, m: Message):
             async for i in m.chat.iter_members(
                 filter="administrators",
             ):
+                if i.user.is_deleted:
+                    continue
                 adminlist.append(
                     (
                         i.user.id,
                         f"@{i.user.username}"
                         if i.user.username
-                        else (i.user.first_name or "ItsADeletdAccount"),
+                        else i.user.first_name,
                     ),
                 )
             adminlist = sorted(adminlist, key=lambda x: x[1])
