@@ -1,6 +1,6 @@
 FROM python:3.9.1-slim-buster
 
-USER gitpod
+USER root
 
 RUN sudo apt update && \
     sudo apt upgrade -y && \
