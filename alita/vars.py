@@ -37,14 +37,15 @@ class Config:
     REDIS_HOST = load_var("REDIS_HOST")
     REDIS_PORT = load_var("REDIS_PORT")
     REDIS_PASS = load_var("REDIS_PASS")
+    REDIS_DB = load_var("REDIS_DB", 0)
     NO_LOAD = load_var("NO_LOAD", "").split()
-    PREFIX_HANDLER = load_var("PREFIX_HANDLER").split()
+    PREFIX_HANDLER = load_var("PREFIX_HANDLER", "/").split()
     SUPPORT_GROUP = load_var("SUPPORT_GROUP")
     SUPPORT_CHANNEL = load_var("SUPPORT_CHANNEL")
     ENABLED_LOCALES = [str(i) for i in load_var("ENABLED_LOCALES", "").split()]
     VERSION = load_var("VERSION")
     DEV_PREFIX_HANDLER = load_var("DEV_PREFIX_HANDLER", ">").split()
-    WORKERS = int(load_var("WORKERS"))
+    WORKERS = int(load_var("WORKERS", 16))
 
 
 class Development:

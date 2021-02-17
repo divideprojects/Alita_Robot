@@ -76,7 +76,7 @@ async def setup_redis():
     global redis_client
     redis_client = await create_redis_pool(
         address=(Config.REDIS_HOST, Config.REDIS_PORT),
-        db=0,
+        db=Config.REDIS_DB,
         password=Config.REDIS_PASS,
     )
     try:
