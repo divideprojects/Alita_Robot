@@ -10,7 +10,7 @@
 ![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Divkix/Alita_Robot&title=Profile%20Views)
 
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/Divkix/Alita_Robot/?ref=repository-badge)
-[![Build Status](https://travis-ci.com/Divkix/Alita_Robot.svg?branch=beta)](https://travis-ci.com/Divkix/Alita_Robot)
+[![Build Status](https://travis-ci.com/Divkix/Alita_Robot.svg?branch=main)](https://travis-ci.com/Divkix/Alita_Robot)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194)](https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&utm_medium=referral&utm_content=Divkix/Alita_Robot&utm_campaign=Badge_Grade_Settings)
 [![Crowdin](https://badges.crowdin.net/alita_robot/localized.svg)](https://crowdin.com/project/alita_robot)
 
@@ -40,7 +40,7 @@ More languages can be managed in the _locales_ folder.
 
 We are still working on adding new languages.
 
-Help us bring more languages to the bot by contributing to the project in [Crowdin](https://crowdin.com/project/alitarobot)
+Help us bring more languages to the bot by contributing to the project on [Crowdin](https://crowdin.com/project/alitarobot)
 
 ## Requirements
 - You need to have a *Postgres Database*
