@@ -366,6 +366,7 @@ async def leave_chat(c: Alita, m: Message):
 
     replymsg = await m.reply_text(f"Trying to leave chat {chat_id}...", quote=True)
     try:
+        await c.send_message(chat_id, "Bye everyone!")
         await c.leave_chat(chat_id)
         await replymsg.edit_text(f"Left <code>{chat_id}</code>.")
     except PeerIdInvalid:
