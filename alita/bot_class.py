@@ -145,16 +145,16 @@ class Alita(Client):
             LOGGER.error(f"Could not set ADMINDICT in RedisCache!\nError: {ef}")
 
     async def start(self):
-        # Load Languages
-        lang_status = len(langdict) >= 1
-        LOGGER.info(f"Loading Languages: {lang_status}")
-
         await super().start()
 
         meh = await get_self(self)  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
 
         await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
+
+        # Load Languages
+        lang_status = len(langdict) >= 1
+        LOGGER.info(f"Loading Languages: {lang_status}")
 
         # Redis Content Setup!
         redis_client = await setup_redis()
