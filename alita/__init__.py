@@ -18,7 +18,7 @@
 
 from datetime import datetime
 from importlib import import_module as imp_mod
-from logging import DEBUG, INFO, FileHandler, StreamHandler, basicConfig, getLogger
+from logging import WARNING, INFO, FileHandler, StreamHandler, basicConfig, getLogger
 from os import environ, mkdir, path
 from sys import exit as sysexit
 from sys import stdout, version_info
@@ -42,7 +42,7 @@ basicConfig(
     handlers=[file_handler, stdout_handler],
 )
 
-getLogger("pyrogram").setLevel(DEBUG)
+getLogger("pyrogram").setLevel(WARNING)
 LOGGER = getLogger(__name__)
 
 # if version < 3.6, stop bot.
