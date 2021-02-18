@@ -30,7 +30,7 @@ from pyrogram.errors import (
     PeerIdInvalid,
     RPCError,
 )
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from speedtest import Speedtest
 from ujson import dumps
 
@@ -56,9 +56,13 @@ async def send_log(c: Alita, m: Message):
     # Send logs
     with open(LOGFILE) as f:
         raw = (await paste(f.read()))[1]
-    await m.reply_document(document=LOGFILE, reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Logs", url=raw)]],
-            ), quote=True)
+    await m.reply_document(
+        document=LOGFILE,
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Logs", url=raw)]],
+        ),
+        quote=True,
+    )
     await replymsg.delete()
     return
 
@@ -327,7 +331,9 @@ async def list_all_admins(_: Alita, m: Message):
         len_admins += len(i)
 
     try:
-        await replymsg.edit_text(f"There are {len_admins} admins in my Redis cache!\n\n{str(admindict)}")
+        await replymsg.edit_text(
+            f"There are {len_admins} admins whom I know!\n\n{str(admindict)}",
+        )
     except MessageTooLong:
         raw = (await paste(str(admindict)))[1]
         with BytesIO(str.encode(dumps(admindict, indent=2))) as f:
