@@ -20,7 +20,7 @@ from datetime import datetime
 from html import escape
 from io import BytesIO
 from os import remove
-
+from time import time
 from googletrans import LANGUAGES, Translator
 from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
@@ -64,12 +64,10 @@ Some utils provided by bot to make your tasks easy!
     filters.command("ping", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def ping(_: Alita, m: Message):
-    first = datetime.now()
-    sent = await m.reply_text("**Ping...**")
-    second = datetime.now()
-    await sent.edit_text(
-        f"**Pong!**\n`{round(((second-first).microseconds / 1000000), 2)}` Secs",
-    )
+    start = time.time()
+    replymsg = await m.reply_text("Pinging...", quote=True)
+    delta_ping = time.time() - start
+    await replymsg.edit_text(f"**Pong!**\n{delta_ping * 1000:.3f} ms")
     return
 
 
