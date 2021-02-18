@@ -30,7 +30,7 @@ from pyrogram.errors import (
     PeerIdInvalid,
     RPCError,
 )
-from pyrogram.types import Message
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from speedtest import Speedtest
 from ujson import dumps
 
