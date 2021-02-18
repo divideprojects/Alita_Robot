@@ -258,17 +258,14 @@ async def promote_usr(_: Alita, m: Message):
             )
 
             # ----- Add admin to redis cache! -----
-            ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
-            adminlist = []
-            async for i in m.chat.iter_members(filter="administrators"):
-                if not i.user.is_deleted:
-                    continue
-                adminlist.append(
-                    [
-                        i.user.id,
-                        f"@{i.user.username}" if i.user.username else i.user.first_name,
-                    ],
-                )
+            adminlist = (await get_key("ADMINDICT"))[str(m.chat.id)]  # Load ADMINDICT from string
+            u = m.chat.get_member(user_id)
+            adminlist.append(
+                [
+                    u.user.id,
+                    f"@{u.user.username}" if u.user.username else u.user.first_name,
+                ],
+            )
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
