@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-async def ALL_PLUGINS():
+async def all_plugins():
 
     # This generates a list of plugins in this folder for the * in __main__ to
     # work.

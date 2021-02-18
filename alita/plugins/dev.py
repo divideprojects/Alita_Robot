@@ -41,7 +41,7 @@ from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.custom_filters import dev_filter
 from alita.utils.localization import GetLang
 from alita.utils.parser import mention_markdown
-from alita.utils.redishelper import allkeys, flushredis, get_key
+from alita.utils.redis_helper import allkeys, flushredis, get_key
 
 
 @Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)

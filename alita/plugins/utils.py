@@ -21,7 +21,7 @@ from html import escape
 from io import BytesIO
 
 from googletrans import LANGUAGES, Translator
-from pyrogram import errors, filters
+from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from tswift import Song

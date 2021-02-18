@@ -154,7 +154,7 @@ async def banallnotes_callback(_: Alita, q: CallbackQuery):
     replymsg = await q.message.edit_text("<i><b>Banning All Members...</b></i>")
     users = []
     fs = 0
-    async for x in m.chat.iter_members():
+    async for x in q.message.chat.iter_members():
         try:
             if fs >= 5:
                 await sleep(5)

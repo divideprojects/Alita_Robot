@@ -32,7 +32,7 @@ from alita.utils.admin_check import admin_check
 from alita.utils.extract_user import extract_user
 from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
-from alita.utils.redishelper import get_key, set_key
+from alita.utils.redis_helper import get_key, set_key
 
 __PLUGIN__ = "Admin"
 __help__ = """

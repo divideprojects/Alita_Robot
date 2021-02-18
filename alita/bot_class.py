@@ -41,10 +41,10 @@ from alita import (
     load_cmds,
 )
 from alita.db import users_db as userdb
-from alita.plugins import ALL_PLUGINS
+from alita.plugins import all_plugins
 from alita.utils.localization import langdict
 from alita.utils.paste import paste
-from alita.utils.redishelper import (
+from alita.utils.redis_helper import (
     allkeys,
     close,
     flushredis,
@@ -146,7 +146,7 @@ class Alita(Client):
 
     async def start(self):
         # Load Languages
-        lang_status = True if len(langdict) >= 1 else False
+        lang_status = len(langdict) >= 1
         LOGGER.info(f"Loading Languages: {lang_status}")
 
         await super().start()
@@ -174,7 +174,7 @@ class Alita(Client):
             f"Pyrogram v{__version__}\n(Layer - {layer}) started on {BOT_USERNAME}\n"
             f"Python Version: {python_version()}",
         )
-        cmd_list = await load_cmds(await ALL_PLUGINS())
+        cmd_list = await load_cmds(await all_plugins())
         redis_keys = ", ".join(await allkeys())
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
         LOGGER.info(f"Redis Keys Loaded: {redis_keys}")

@@ -88,7 +88,7 @@ GET_FORMAT = {
 
 
 @Alita.on_message(filters.command("save", PREFIX_HANDLER) & filters.group)
-async def save_note(c: Alita, m: Message):
+async def save_note(_: Alita, m: Message):
 
     if not (await admin_check(m)):
         return

@@ -118,8 +118,8 @@ async def get_self(c):
     return getbot
 
 
-async def load_cmds(ALL_PLUGINS):
-    for single in ALL_PLUGINS:
+async def load_cmds(all_plugins):
+    for single in all_plugins:
         imported_module = imp_mod("alita.plugins." + single)
         if not hasattr(imported_module, "__PLUGIN__"):
             imported_module.__PLUGIN__ = imported_module.__name__
