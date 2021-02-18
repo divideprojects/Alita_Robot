@@ -327,9 +327,9 @@ async def list_all_admins(_: Alita, m: Message):
         len_admins += len(i)
 
     try:
-        await replymsg.edit_text(f"There are {len_admins} admins in my Redis cache!\n\n{admindict}")
+        await replymsg.edit_text(f"There are {len_admins} admins in my Redis cache!\n\n{str(admindict)}")
     except MessageTooLong:
-        raw = (await paste(admindict))[1]
+        raw = (await paste(str(admindict)))[1]
         with BytesIO(str.encode(dumps(admindict, indent=2))) as f:
             f.name = "allAdmins.txt"
             await m.reply_document(
@@ -352,9 +352,9 @@ async def show_redis_keys(_: Alita, m: Message):
     for i in keys:
         txt_dict[i] = await get_key(str(i))
     try:
-        await replymsg.edit_text(txt_dict)
+        await replymsg.edit_text(str(txt_dict))
     except MessageTooLong:
-        raw = (await paste(txt_dict))[1]
+        raw = (await paste(str(txt_dict)))[1]
         with BytesIO(str.encode(dumps(txt_dict, indent=2))) as f:
             f.name = "redisKeys.txt"
             await m.reply_document(
