@@ -18,7 +18,7 @@
 
 from datetime import datetime
 from importlib import import_module as imp_mod
-from logging import INFO, DEBUG, FileHandler, StreamHandler, basicConfig, getLogger
+from logging import DEBUG, INFO, FileHandler, StreamHandler, basicConfig, getLogger
 from os import environ, mkdir, path
 from sys import exit as sysexit
 from sys import stdout, version_info

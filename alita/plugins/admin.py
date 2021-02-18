@@ -76,9 +76,7 @@ async def adminlist_show(_: Alita, m: Message):
                 adminlist.append(
                     (
                         i.user.id,
-                        f"@{i.user.username}"
-                        if i.user.username
-                        else i.user.first_name,
+                        f"@{i.user.username}" if i.user.username else i.user.first_name,
                     ),
                 )
             adminlist = sorted(adminlist, key=lambda x: x[1])
