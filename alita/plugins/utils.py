@@ -19,6 +19,7 @@
 from datetime import datetime
 from html import escape
 from io import BytesIO
+from os import remove
 
 from googletrans import LANGUAGES, Translator
 from pyrogram import filters
@@ -286,12 +287,18 @@ async def weebify(_: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("paste", PREFIX_HANDLER))
-async def paste_it(_: Alita, m: Message):
+async def paste_it(c: Alita, m: Message):
 
     replymsg = await m.reply_text("Pasting...", quote=True)
 
     if m.reply_to_message:
-        txt = m.reply_to_message.text
+        if m.reply_to_message.document:
+            dl_loc = await c.download_media(message=m.reply_to_message)
+            with open(dl_loc) as f:
+                txt = f.read()
+            remove(dl_loc)
+        else:
+            txt = m.reply_to_message.text
     else:
         txt = m.text.split(None, 1)[1]
 
