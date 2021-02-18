@@ -14,6 +14,7 @@ RUN apt update && \
     python3-dev \
     python3-lxml \
     gcc \
+    clang \
     make \
     git \
     neofetch
