@@ -85,7 +85,7 @@ class Alita(Client):
         # Flush Redis data
         try:
             await flushredis()
-        except Exception as ef:
+        except BaseException as ef:
             LOGGER.error(ef)
 
     async def get_admins(self):
@@ -141,7 +141,7 @@ class Alita(Client):
                     f"Time Taken: {round(end - begin, 2)} seconds."
                 ),
             )
-        except Exception as ef:
+        except BaseException as ef:
             LOGGER.error(f"Could not set ADMINDICT in RedisCache!\nError: {ef}")
 
     async def start(self):

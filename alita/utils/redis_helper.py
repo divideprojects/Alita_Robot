@@ -35,7 +35,7 @@ async def setup_redis():
     try:
         await redis_client.ping()
         return redis_client
-    except Exception as ef:
+    except BaseException as ef:
         LOGGER.error(f"Cannot connect to redis\nError: {ef}")
         return False
 

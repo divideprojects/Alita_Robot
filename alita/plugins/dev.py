@@ -130,7 +130,7 @@ async def evaluate_code(c: Alita, m: Message):
 
     try:
         await aexec(cmd, c, m)
-    except Exception as ef:
+    except BaseException as ef:
         LOGGER.error(ef)
         exc = format_exc()
 

@@ -61,7 +61,7 @@ try:
         from alita.vars import Config
     else:
         from alita.vars import Development as Config
-except Exception as ef:
+except BaseException as ef:
     LOGGER.error(ef)  # Print Error
     sysexit(1)
 

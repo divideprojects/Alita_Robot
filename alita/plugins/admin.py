@@ -106,7 +106,7 @@ async def adminlist_show(_: Alita, m: Message):
 
         await replymsg.edit_text(f"{adminstr}\n\n<i>Note: {note}</i>")
 
-    except Exception as ef:
+    except BaseException as ef:
         if str(ef) == str(m.chat.id):
             await m.reply_text(_("admin.useadmincache"))
         else:
