@@ -72,7 +72,7 @@ async def adminlist_show(_: Alita, m: Message):
                 filter="administrators",
             ):
                 if i.user.is_deleted:
-                    continue
+                    continue  # We don't need deleted accounts
                 adminlist.append(
                     (
                         i.user.id,
@@ -89,18 +89,18 @@ async def adminlist_show(_: Alita, m: Message):
 
         for i in adminlist:
             try:
-                usr = await m.chat.get_member(i[0])
+                # usr = await m.chat.get_member(i[0])
                 mention = (
                     i[1] if i[1].startswith("@") else (await mention_html(i[1], i[0]))
                 )
-                if i[0] == me_id:
-                    adminstr += f"- @{(await get_key('BOT_USERNAME'))} (⭐)\n"
-                elif usr.user.is_bot:
-                    adminstr += f"- {mention} (🤖)\n"
-                elif usr.status == "owner":
-                    adminstr += f"- {mention} (👑)\n"
-                else:
-                    adminstr += f"- {mention}\n"
+                # if i[0] == me_id:
+                    # adminstr += f"- @{(await get_key('BOT_USERNAME'))}\n"
+                # elif usr.user.is_bot:
+                    # adminstr += f"- {mention} (🤖)\n"
+                # elif usr.status == "owner":
+                    # adminstr += f"- {mention} (👑)\n"
+                # else:
+                adminstr += f"- {mention}\n"
             except PeerIdInvalid:
                 pass
 
