@@ -354,7 +354,7 @@ async def show_redis_keys(_: Alita, m: Message):
     try:
         await replymsg.edit_text(txt_dict)
     except MessageTooLong:
-        raw = (await paste(txt_data))[1]
+        raw = (await paste(txt_dict))[1]
         with BytesIO(str.encode(dumps(txt_dict, indent=2))) as f:
             f.name = "redisKeys.txt"
             await m.reply_document(
