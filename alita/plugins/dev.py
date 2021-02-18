@@ -41,20 +41,25 @@ from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.custom_filters import dev_filter
 from alita.utils.localization import GetLang
 from alita.utils.parser import mention_markdown
+from alita.utils.paste import paste
 from alita.utils.redis_helper import allkeys, flushredis, get_key
 
 
 @Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
 async def send_log(c: Alita, m: Message):
     _ = GetLang(m).strs
-    rply = await m.reply_text("Sending logs...!")
+    replymsg = await m.reply_text("Sending logs...!")
     await c.send_message(
-        m.chat.id,
+        MESSAGE_DUMP,
         f"#LOGS\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     # Send logs
-    await m.reply_document(document=LOGFILE, quote=True)
-    await rply.delete()
+    with open(LOGFILE) as f:
+        raw = (await paste(f.read()))[1]
+    await m.reply_document(document=LOGFILE, reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Logs", url=raw)]],
+            ), quote=True)
+    await replymsg.delete()
     return
 
 
@@ -314,19 +319,27 @@ async def store_members(c: Alita, m: Message):
 async def list_all_admins(_: Alita, m: Message):
 
     replymsg = await m.reply_text("Getting all admins in my cache...", quote=True)
+    len_admins = 0  # Total number of admins
 
     admindict = await get_key("ADMINDICT")
 
-    if len(str(admindict)) > 4000:
-        with BytesIO(str.encode(dumps(admindict, indent=4))) as f:
-            f.name = "alladmins.txt"
+    for i in list(admindict.values()):
+        len_admins += len(i)
+
+    try:
+        await replymsg.edit_text(f"There are {len_admins} admins in my Redis cache!\n\n{admindict}")
+    except MessageTooLong:
+        raw = (await paste(admindict))[1]
+        with BytesIO(str.encode(dumps(admindict, indent=2))) as f:
+            f.name = "allAdmins.txt"
             await m.reply_document(
                 document=f,
-                caption="Here is the list of all admins in my Redis cache.",
+                caption=f"There are {len_admins} admins in my Redis cache.",
+                reply_markup=InlineKeyboardMarkup(
+                    [[InlineKeyboardButton("All Admins", url=raw)]],
+                ),
             )
-            await replymsg.delete()
-    else:
-        await replymsg.edit_text(admindict)
+        await replymsg.delete()
 
     return
 
@@ -338,7 +351,20 @@ async def show_redis_keys(_: Alita, m: Message):
     keys = await allkeys()
     for i in keys:
         txt_dict[i] = await get_key(str(i))
-    await replymsg.edit_text(txt_dict)
+    try:
+        await replymsg.edit_text(txt_dict)
+    except MessageTooLong:
+        raw = (await paste(txt_data))[1]
+        with BytesIO(str.encode(dumps(txt_dict, indent=2))) as f:
+            f.name = "redisKeys.txt"
+            await m.reply_document(
+                document=f,
+                caption="Here are all the Redis Keys I know.",
+                reply_markup=InlineKeyboardMarkup(
+                    [[InlineKeyboardButton("Redis Keys", url=raw)]],
+                ),
+            )
+        await replymsg.delete()
     return
 
 
@@ -370,7 +396,7 @@ async def leave_chat(c: Alita, m: Message):
         await c.leave_chat(chat_id)
         await replymsg.edit_text(f"Left <code>{chat_id}</code>.")
     except PeerIdInvalid:
-        await replymsg.edit_text()
+        await replymsg.edit_text("Haven't seen this group in this session")
     except RPCError as ef:
         LOGGER.error(ef)
         await replymsg.edit_text(f"Failed to leave chat!\nError: <code>{ef}</code>.")
