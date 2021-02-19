@@ -34,7 +34,7 @@ async def f_sudo_filter(_, __, m):
 
 
 async def admin_check_filter(_, __, m):
-    if (await m.chat.get_member(m.from_user.id)).status) in ('creator', administrator):
+    if (await m.chat.get_member(m.from_user.id)).status in ('creator', 'administrator'):
         status = True
     else:
         status = False    
