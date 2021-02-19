@@ -11,7 +11,7 @@ git:
 branches:
   only:
   - main
-  - beta
+  - production
 
 # Python Versions
 python:
