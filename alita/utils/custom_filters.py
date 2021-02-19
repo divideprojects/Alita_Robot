@@ -33,5 +33,16 @@ async def f_sudo_filter(_, __, m):
     )
 
 
+async def admin_check_filter(_, __, m):
+    if (await m.chat.get_member(m.from_user.id)).status) in ('creator', administrator):
+        status = True
+    else:
+        status = False    
+        await m.reply_text("You cannot use an admin command!")
+    
+    return status
+
+
 dev_filter = filters.create(f_dev_filter)
 sudo_filter = filters.create(f_sudo_filter)
+admin_filter = filter.create(admin_check_filter)
