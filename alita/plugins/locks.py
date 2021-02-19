@@ -25,7 +25,7 @@ from pyrogram.types import ChatPermissions, Message
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import approve_db as app_db
-from alita.utils.admin_check import admin_check
+from alita.utils.custom_filters import  admin_filter
 from alita.utils.localization import GetLang
 
 __PLUGIN__ = "Locks"
@@ -64,14 +64,11 @@ async def lock_types(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("lock", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("lock", PREFIX_HANDLER) & filters.group& admin_filter)
 async def lock_perm(c: Alita, m: Message):
 
-    res = await admin_check(m)
-    if not res:
-        return
-
     _ = GetLang(m).strs
+
     msg = ""
     media = ""
     stickers = ""
@@ -190,9 +187,11 @@ async def lock_perm(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("locks", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("locks", PREFIX_HANDLER) & filters.group & admin_filter)
 async def view_locks(c: Alita, m: Message):
+
     _ = GetLang(m).strs
+
     v_perm = ""
     vmsg = ""
     vmedia = ""
@@ -250,14 +249,11 @@ async def view_locks(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unlock", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("unlock", PREFIX_HANDLER) & filters.group & admin_filter)
 async def unlock_perm(c: Alita, m: Message):
 
-    res = await admin_check(m)
-    if not res:
-        return
-
     _ = GetLang(m).strs
+
     umsg = ""
     umedia = ""
     ustickers = ""

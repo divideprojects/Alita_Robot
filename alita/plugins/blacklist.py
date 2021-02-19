@@ -26,7 +26,7 @@ from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import approve_db as app_db
 from alita.db import blacklist_db as db
-from alita.utils.admin_check import admin_check
+from alita.utils.custom_filters import admin_filter
 from alita.utils.localization import GetLang
 from alita.utils.regex_utils import regex_searcher
 
@@ -50,14 +50,11 @@ muser_listtiple triggers at once.
 """
 
 
-@Alita.on_message(filters.command("blacklist", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("blacklist", PREFIX_HANDLER) & filters.group & admin_filter)
 async def view_blacklist(_: Alita, m: Message):
 
-    res = await admin_check(m)
-    if not res:
-        return
-
     _ = GetLang(m).strs
+
     chat_title = m.chat.title
     blacklists_chat = _("blacklist.curr_blacklist_initial").format(
         chat_title=chat_title,
@@ -75,14 +72,11 @@ async def view_blacklist(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("addblacklist", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("addblacklist", PREFIX_HANDLER) & filters.group & admin_filter)
 async def add_blacklist(_: Alita, m: Message):
 
-    res = await admin_check(m)
-    if not res:
-        return
-
     _ = GetLang(m).strs
+
     if len(m.text.split()) >= 2:
         bl_word = m.text.split(None, 1)[1]
         db.add_to_blacklist(m.chat.id, bl_word.lower())
@@ -96,15 +90,11 @@ async def add_blacklist(_: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["rmblacklist", "unblacklist"], PREFIX_HANDLER) & filters.group,
-)
+    filters.command(["rmblacklist", "unblacklist"], PREFIX_HANDLER) & filters.group & admin_filter)
 async def rm_blacklist(_: Alita, m: Message):
 
-    res = await admin_check(m)
-    if not res:
-        return
-
     _ = GetLang(m).strs
+
     chat_bl = db.get_chat_blacklist(m.chat.id)
     if not isinstance(chat_bl, bool):
         pass

@@ -23,7 +23,8 @@ from pyrogram.types import Message
 from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.db import approve_db as db
-from alita.utils.admin_check import admin_check, owner_check
+from alita.utils.custom_filters import admin_filter
+from alita.utils.admin_check import owner_check
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
@@ -43,11 +44,8 @@ That's what approvals are for - approve trustworthy users to allow them to send 
 """
 
 
-@Alita.on_message(filters.command("approve", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("approve", PREFIX_HANDLER) & filters.group & admin_filter)
 async def approve_user(_: Alita, m: Message):
-
-    if not (await owner_check(m)):
-        return
 
     chat_title = m.chat.title
     chat_id = m.chat.id
@@ -84,11 +82,8 @@ async def approve_user(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("disapprove", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("disapprove", PREFIX_HANDLER) & filters.group & admin_filter)
 async def disapprove_user(_: Alita, m: Message):
-
-    if not (await owner_check(m)):
-        return
 
     chat_title = m.chat.title
     chat_id = m.chat.id
@@ -125,11 +120,8 @@ async def disapprove_user(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("approved", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("approved", PREFIX_HANDLER) & filters.group & admin_filter)
 async def check_approved(_: Alita, m: Message):
-
-    if not (await admin_check(m)):
-        return
 
     chat_title = m.chat.title
     chat = m.chat
@@ -151,12 +143,8 @@ async def check_approved(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("approval", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("approval", PREFIX_HANDLER) & filters.group & admin_filter)
 async def check_approval(_: Alita, m: Message):
-
-    res = await admin_check(m)
-    if not res:
-        return
 
     user_id, user_first_name = await extract_user(m)
     if not user_id:

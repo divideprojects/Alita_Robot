@@ -22,7 +22,7 @@ from pyrogram.types import Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
-from alita.utils.admin_check import admin_check
+from alita.utils.custom_filters import admin_filter
 from alita.utils.localization import GetLang
 
 __PLUGIN__ = "Pins"
@@ -36,13 +36,10 @@ Here you find find all help related to groups pins and how to manage them via me
 """
 
 
-@Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group & admin_filter)
 async def pin_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs
-
-    if not (await admin_check(m)):
-        return
 
     pin_args = m.text.split(None, 1)
     if m.reply_to_message:
@@ -72,13 +69,10 @@ async def pin_message(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & filters.group & admin_filter)
 async def unpin_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs
-
-    if not (await admin_check(m)):
-        return
 
     try:
         await c.unpin_chat_message(m.chat.id)
@@ -94,13 +88,10 @@ async def unpin_message(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unpinall", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("unpinall", PREFIX_HANDLER) & filters.group & admin_filter)
 async def unpinall_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs
-
-    if not (await admin_check(m)):
-        return
 
     try:
         await c.unpin_all_chat_messages(m.chat.id)

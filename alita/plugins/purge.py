@@ -24,7 +24,7 @@ from pyrogram.types import Message
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.utils.admin_check import admin_check
+from alita.utils.admin_filter import admin_filter
 from alita.utils.localization import GetLang
 
 __PLUGIN__ = "Purges"
@@ -37,11 +37,8 @@ Want to delete messages in you group?
 """
 
 
-@Alita.on_message(filters.command("purge", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("purge", PREFIX_HANDLER) & filters.group & admin_filter)
 async def purge(c: Alita, m: Message):
-
-    if not (await admin_check(m)):
-        return
 
     _ = GetLang(m).strs
 
@@ -81,11 +78,8 @@ async def purge(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("del", PREFIX_HANDLER) & filters.group, group=3)
+@Alita.on_message(filters.command("del", PREFIX_HANDLER) & filters.group & admin_filter, group=3)
 async def del_msg(c: Alita, m: Message):
-
-    if not (await admin_check(m)):
-        return
 
     _ = GetLang(m).strs
 

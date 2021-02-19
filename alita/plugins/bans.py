@@ -31,8 +31,8 @@ from pyrogram.types import (
 
 from alita import DEV_PREFIX_HANDLER, LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
-from alita.utils.admin_check import admin_check, owner_check
-from alita.utils.custom_filters import dev_filter
+from alita.utils.admin_check import owner_check
+from alita.utils.custom_filters import dev_filter, admin_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
@@ -51,13 +51,10 @@ This is the plugin for you, easily kick, ban and unban members in a group.
 """
 
 
-@Alita.on_message(filters.command("kick", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("kick", PREFIX_HANDLER) & filters.group & admin_filter)
 async def kick_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
-
-    if not (await admin_check(m)):
-        return
 
     from_user = await m.chat.get_member(m.from_user.id)
 
@@ -77,13 +74,10 @@ async def kick_usr(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("ban", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("ban", PREFIX_HANDLER) & filters.group & admin_filter)
 async def ban_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
-
-    if not (await admin_check(m)):
-        return
 
     from_user = await m.chat.get_member(m.from_user.id)
 
@@ -103,13 +97,10 @@ async def ban_usr(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unban", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("unban", PREFIX_HANDLER) & filters.group & admin_filter)
 async def unban_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
-
-    if not (await admin_check(m)):
-        return
 
     from_user = await m.chat.get_member(m.from_user.id)
 

@@ -28,7 +28,7 @@ from pyrogram.types import (
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import rules_db as db
-from alita.utils.admin_check import admin_check
+from alita.utils.admin_filter import admin_filter
 from alita.utils.localization import GetLang
 
 __PLUGIN__ = "Rules"
@@ -77,12 +77,8 @@ async def get_rules(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("setrules", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("setrules", PREFIX_HANDLER) & filters.group & admin_filter)
 async def set_rules(_: Alita, m: Message):
-
-    res = await admin_check(m)
-    if not res:
-        return
 
     _ = GetLang(m).strs
 
@@ -101,12 +97,8 @@ async def set_rules(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("clearrules", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("clearrules", PREFIX_HANDLER) & filters.group & admin_filter)
 async def clear_rules(_: Alita, m: Message):
-
-    res = await admin_check(m)
-    if not res:
-        return
 
     _ = GetLang(m).strs
 
