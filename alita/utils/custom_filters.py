@@ -45,4 +45,4 @@ async def admin_check_filter(_, __, m):
 
 dev_filter = filters.create(f_dev_filter)
 sudo_filter = filters.create(f_sudo_filter)
-admin_filter = filter.create(admin_check_filter)
+admin_filter = filters.create(admin_check_filter)
