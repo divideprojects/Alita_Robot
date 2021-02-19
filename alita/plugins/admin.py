@@ -94,11 +94,11 @@ async def adminlist_show(_: Alita, m: Message):
                     i[1] if i[1].startswith("@") else (await mention_html(i[1], i[0]))
                 )
                 # if i[0] == me_id:
-                    # adminstr += f"- @{(await get_key('BOT_USERNAME'))}\n"
+                # adminstr += f"- @{(await get_key('BOT_USERNAME'))}\n"
                 # elif usr.user.is_bot:
-                    # adminstr += f"- {mention} (🤖)\n"
+                # adminstr += f"- {mention} (🤖)\n"
                 # elif usr.status == "owner":
-                    # adminstr += f"- {mention} (👑)\n"
+                # adminstr += f"- {mention} (👑)\n"
                 # else:
                 adminstr += f"- {mention}\n"
             except PeerIdInvalid:
@@ -258,7 +258,9 @@ async def promote_usr(_: Alita, m: Message):
             )
 
             # ----- Add admin to redis cache! -----
-            adminlist = (await get_key("ADMINDICT"))[str(m.chat.id)]  # Load ADMINDICT from string
+            adminlist = (await get_key("ADMINDICT"))[
+                str(m.chat.id)
+            ]  # Load ADMINDICT from string
             u = m.chat.get_member(user_id)
             adminlist.append(
                 [

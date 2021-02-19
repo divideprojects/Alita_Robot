@@ -1,6 +1,9 @@
 from functools import wraps
-from alita.bot_class import Alita
+
 from pyrogram.types import Message
+
+from alita.bot_class import Alita
+
 
 def user_admin(func):
     @wraps(func)
