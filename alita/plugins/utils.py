@@ -64,9 +64,9 @@ Some utils provided by bot to make your tasks easy!
     filters.command("ping", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def ping(_: Alita, m: Message):
-    start = time.time()
+    start = time()
     replymsg = await m.reply_text("Pinging...", quote=True)
-    delta_ping = time.time() - start
+    delta_ping = time() - start
     await replymsg.edit_text(f"**Pong!**\n{delta_ping * 1000:.3f} ms")
     return
 
