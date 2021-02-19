@@ -21,11 +21,11 @@ from pyrogram import filters
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
 
 
-def f_dev_filter(_, __, m):
+async def f_dev_filter(_, __, m):
     return bool(m.from_user.id in DEV_USERS or m.from_user.id == int(OWNER_ID))
 
 
-def f_sudo_filter(_, __, m):
+async def f_sudo_filter(_, __, m):
     return bool(
         m.from_user.id in SUDO_USERS
         or m.from_user.id in DEV_USERS
