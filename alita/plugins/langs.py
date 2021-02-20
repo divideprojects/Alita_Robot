@@ -69,8 +69,8 @@ async def gen_langs_kb():
 
 
 @Alita.on_callback_query(filters.regex("^chlang$"))
-async def chlang_callback(_, m: CallbackQuery):
-    _ = GetLang(m).strs
+async def chlang_callback(_, q: CallbackQuery):
+    _ = GetLang(q).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_langs_kb()),
@@ -82,25 +82,25 @@ async def chlang_callback(_, m: CallbackQuery):
             ],
         ],
     )
-    await m.message.edit_text(_("lang.changelang"), reply_markup=keyboard)
-    await m.answer()
+    await q.message.edit_text(_("lang.changelang"), reply_markup=keyboard)
+    await q.answer()
     return
 
 
 @Alita.on_callback_query(filters.regex("^close$"))
-async def close_btn_callback(_, m: CallbackQuery):
-    await m.message.delete()
-    await m.answer()
+async def close_btn_callback(_, q: CallbackQuery):
+    await q.message.delete()
+    await q.answer()
     return
 
 
 @Alita.on_callback_query(filters.regex("^set_lang."))
-async def set_lang_callback(_, m: CallbackQuery):
-    _ = GetLang(m).strs
-    db.set_lang(m.message.chat.id, m.message.chat.type, m.data.split(".")[1])
+async def set_lang_callback(_, q: CallbackQuery):
+    _ = GetLang(q).strs
+    db.set_lang(q.message.chat.id, q.message.chat.type, q.data.split(".")[1])
     await sleep(0.5)
-    _ = GetLang(m).strs
-    if m.message.chat.type == "private":
+    _ = GetLang(q).strs
+    if q.message.chat.type == "private":
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 [
@@ -117,11 +117,11 @@ async def set_lang_callback(_, m: CallbackQuery):
                 [InlineKeyboardButton(f"❌ {_('close_btn')}", callback_data="close")],
             ],
         )
-    await m.message.edit_text(
-        f"🌐 {_('langs.changed').format(lang_code=m.data.split('.')[1])}",
+    await q.message.edit_text(
+        f"🌐 {_('langs.changed').format(lang_code=q.data.split('.')[1])}",
         reply_markup=keyboard,
     )
-    await m.answer()
+    await q.answer()
     return
 
 

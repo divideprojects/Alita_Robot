@@ -127,19 +127,19 @@ async def start(_, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^start_back$"))
-async def start_back(_, m: CallbackQuery):
-    _ = GetLang(m).strs
-    await m.message.edit_text(
+async def start_back(_, q: CallbackQuery):
+    _ = GetLang(q).strs
+    await q.message.edit_text(
         _("start.private"),
-        reply_markup=(await gen_start_kb(m.message)),
+        reply_markup=(await gen_start_kb(q.message)),
     )
-    await m.answer()
+    await q.answer()
     return
 
 
 @Alita.on_callback_query(filters.regex("^commands$"))
-async def commands_menu(_, m: CallbackQuery):
-    _ = GetLang(m).strs
+async def commands_menu(_, q: CallbackQuery):
+    _ = GetLang(q).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_cmds_kb()),
@@ -151,8 +151,8 @@ async def commands_menu(_, m: CallbackQuery):
             ],
         ],
     )
-    await m.message.edit_text(_("general.commands_available"), reply_markup=keyboard)
-    await m.answer()
+    await q.message.edit_text(_("general.commands_available"), reply_markup=keyboard)
+    await q.answer()
     return
 
 
@@ -194,9 +194,9 @@ async def commands_pvt(_, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^get_mod."))
-async def get_module_info(_, m: CallbackQuery):
-    _ = GetLang(m).strs
-    module = m.data.split(".")[1]
+async def get_module_info(_, q: CallbackQuery):
+    _ = GetLang(q).strs
+    module = q.data.split(".")[1]
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -207,18 +207,18 @@ async def get_module_info(_, m: CallbackQuery):
             ],
         ],
     )
-    await m.message.edit_text(
+    await q.message.edit_text(
         HELP_COMMANDS[module],
         parse_mode="markdown",
         reply_markup=keyboard,
     )
-    await m.answer()
+    await q.answer()
     return
 
 
 @Alita.on_callback_query(filters.regex("^infos$"))
-async def infos(c: Alita, m: CallbackQuery):
-    _ = GetLang(m).strs
+async def infos(c: Alita, q: CallbackQuery):
+    _ = GetLang(q).strs
     _owner = await c.get_users(OWNER_ID)
     res = _("start.info_page").format(
         Owner=(
@@ -239,10 +239,10 @@ async def infos(c: Alita, m: CallbackQuery):
             ],
         ],
     )
-    await m.message.edit_text(
+    await q.message.edit_text(
         res,
         reply_markup=keyboard,
         disable_web_page_preview=True,
     )
-    await m.answer()
+    await q.answer()
     return
