@@ -20,6 +20,7 @@ from regex import search
 
 
 async def regex_searcher(regex_string, string):
+    """Search for Regex in string."""
     try:
         re_search = search(regex_string, string, timeout=6)
     except TimeoutError:
@@ -31,6 +32,7 @@ async def regex_searcher(regex_string, string):
 
 
 async def infinite_loop_check(regex_string):
+    """Clear Regex in string."""
     loop_matches = (
         r"\((.{1,}[\+\*]){1,}\)[\+\*]."
         r"[\(\[].{1,}\{\d(,)?\}[\)\]]\{\d(,)?\}"

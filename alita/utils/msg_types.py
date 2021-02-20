@@ -35,6 +35,7 @@ class Types(IntEnum):
 
 
 async def get_message_type(m):
+    """Get type of message."""
     if m.text or m.caption:
         content = None
         message_type = Types.TEXT
@@ -92,6 +93,7 @@ async def get_message_type(m):
 
 
 async def get_note_type(m):
+    """Get type of note."""
     if len(m.text.split()) <= 1:
         return None, None, None, None
     data_type = None
@@ -156,6 +158,7 @@ async def get_note_type(m):
 
 
 async def get_welcome_type(m):
+    """Get type of welcome."""
     data_type = None
     content = None
 

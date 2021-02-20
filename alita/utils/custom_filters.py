@@ -23,10 +23,12 @@ from alita import DEV_USERS, OWNER_ID, SUDO_USERS
 
 
 async def dev_check_func(_, __, m):
+    """Check if user is Dev or not."""
     return bool(m.from_user.id in DEV_USERS or m.from_user.id == int(OWNER_ID))
 
 
 async def sudo_check_func(_, __, m):
+    """Check if user is Sudo or not."""
     return bool(
         m.from_user.id in SUDO_USERS
         or m.from_user.id in DEV_USERS
@@ -35,6 +37,7 @@ async def sudo_check_func(_, __, m):
 
 
 async def admin_check_func(_, __, m):
+    """Check if user is Admin or not."""
 
     if isinstance(m, CallbackQuery):
         m = m.message
@@ -51,6 +54,7 @@ async def admin_check_func(_, __, m):
 
 
 async def owner_check_func(_, __, m):
+    """Check if user is Owner or not."""
 
     if isinstance(m, CallbackQuery):
         m = m.message
@@ -71,6 +75,7 @@ async def owner_check_func(_, __, m):
 
 
 async def restrict_check_func(_, __, m):
+    """Check if user can restrict users or not."""
 
     if isinstance(m, CallbackQuery):
         m = m.message
@@ -87,6 +92,7 @@ async def restrict_check_func(_, __, m):
 
 
 async def promote_check_func(_, __, m):
+    """Check if user can promote users or not."""
 
     if isinstance(m, CallbackQuery):
         m = m.message
@@ -103,6 +109,7 @@ async def promote_check_func(_, __, m):
 
 
 async def invite_check_func(_, __, m):
+    """Check if user can invite users or not."""
 
     if isinstance(m, CallbackQuery):
         m = m.message

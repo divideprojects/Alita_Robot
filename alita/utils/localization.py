@@ -27,6 +27,7 @@ from alita.db import lang_db as db
 
 
 def cache_localizations(files):
+    """Load all json files."""
     ldict = {lang: {} for lang in enabled_locales}
     for file in files:
         lname = file.split(path.sep)[1]
@@ -42,6 +43,8 @@ langdict = cache_localizations(jsons)
 
 
 class GetLang:
+    """Localization main class."""
+
     def __init__(self, msg):
         if isinstance(msg, CallbackQuery):
             chat = msg.message.chat

@@ -20,6 +20,7 @@ from alita import DEV_USERS, OWNER_ID
 
 
 async def admin_check(m) -> bool:
+    """Checks if user is admin or not."""
     user_id = m.from_user.id
 
     if (int(user_id) == int(OWNER_ID)) or (int(user_id) in DEV_USERS):
@@ -38,6 +39,7 @@ async def admin_check(m) -> bool:
 
 
 async def owner_check(m) -> bool:
+    """Checks if user is owner or not."""
     user_id = m.from_user.id
 
     if (int(user_id) == int(OWNER_ID)) or (int(user_id) in DEV_USERS):

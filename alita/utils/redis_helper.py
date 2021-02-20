@@ -26,6 +26,7 @@ redis_client = None
 
 
 async def setup_redis():
+    """Start redis client."""
     global redis_client
     redis_client = await create_redis_pool(
         address=(REDIS_HOST, REDIS_PORT),
@@ -41,7 +42,7 @@ async def setup_redis():
 
 
 async def set_key(key: str, value):
-    # from alita import redis_client
+    """Set the key data in Redis Cache."""
 
     return await redis_client.set(
         key,
@@ -55,19 +56,19 @@ async def set_key(key: str, value):
 
 
 async def get_key(key: str):
-    # from alita import redis_client
+    """Get the key data from Redis Cache."""
 
     return loads(await redis_client.get(key))
 
 
 async def flushredis():
-    # from alita import redis_client
+    """Empty the Redis Cache Database."""
 
     return await redis_client.flushall()
 
 
 async def allkeys():
-    # from alita import redis_client
+    """Get all keys from Redis Cache."""
 
     keys = await redis_client.keys(pattern="*")
     keys_str = []
@@ -77,7 +78,7 @@ async def allkeys():
 
 
 async def close():
-    # from alita import redis_client
+    """Close connection to Redis."""
 
     redis_client.close()
     return await redis_client.wait_closed()

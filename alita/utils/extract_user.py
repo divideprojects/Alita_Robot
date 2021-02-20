@@ -17,6 +17,7 @@
 
 
 async def extract_user(m) -> (int, str):
+    """Extract the user from the provided message"""
     user_id = None
     user_first_name = None
 

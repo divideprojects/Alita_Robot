@@ -82,13 +82,14 @@ class Alita(Client):
         )
 
     async def flush_redis(self):
-        # Flush Redis data
+        """Flush Redis data."""
         try:
             await flushredis()
         except BaseException as ef:
             LOGGER.error(ef)
 
     async def get_admins(self):
+        """Cache all admins from chats in Redis DB."""
         LOGGER.info("Begin caching admins...")
         begin = time()
 
@@ -145,6 +146,7 @@ class Alita(Client):
             LOGGER.error(f"Could not set ADMINDICT in RedisCache!\nError: {ef}")
 
     async def start(self):
+        """Start the bot."""
         await super().start()
 
         meh = await get_self(self)  # Get bot info from pyrogram client
@@ -196,7 +198,7 @@ class Alita(Client):
         LOGGER.info("Bot Started Successfully!")
 
     async def stop(self):
-        """Send a message to MESSAGE_DUMP telling that the bot has stopped."""
+        """Stop the bot and send a message to MESSAGE_DUMP telling that the bot has stopped."""
         LOGGER.info("Uploading logs before stopping...!")
         with open(LOGFILE) as f:
             txt = f.read()

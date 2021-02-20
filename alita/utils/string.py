@@ -25,10 +25,12 @@ BTN_URL_REGEX = compilere(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))
 
 
 async def replace_text(text):
+    """Replace text data."""
     return text.replace('"', "").replace("\\r", "").replace("\\n", "").replace("\\", "")
 
 
 async def extract_time(m, time_val):
+    """Extract time from message."""
     if any(time_val.endswith(unit) for unit in ("m", "h", "d")):
         unit = time_val[-1]
         time_num = time_val[:-1]  # type: str
@@ -53,6 +55,7 @@ async def extract_time(m, time_val):
 
 
 async def extract_time_str(m, time_val):
+    """Replace time from message as string."""
     if any(time_val.endswith(unit) for unit in ("m", "h", "d")):
         unit = time_val[-1]
         time_num = time_val[:-1]  # type: str
@@ -77,6 +80,7 @@ async def extract_time_str(m, time_val):
 
 
 async def make_time(time_val):
+    """Format time data."""
     if int(time_val) == 0:
         return "0"
     if int(time_val) <= 3600:
@@ -89,6 +93,7 @@ async def make_time(time_val):
 
 
 async def id_from_reply(m):
+    """Get replied message id."""
     prev_message = m.reply_to_message
     if not prev_message:
         return None, None
@@ -100,6 +105,7 @@ async def id_from_reply(m):
 
 
 async def parse_button(text):
+    """Parse button from text."""
     markdown_note = text
     prev = 0
     note_data = ""
@@ -129,6 +135,7 @@ async def parse_button(text):
 
 
 async def build_keyboard(buttons):
+    """Build keyboards from provided buttons."""
     keyb = []
     for btn in buttons:
         if btn[-1] and keyb:
@@ -145,6 +152,7 @@ START_CHAR = ("'", '"', SMART_OPEN)
 
 
 async def split_quotes(text: str):
+    """Split quotes in text."""
     if any(text.startswith(char) for char in START_CHAR):
         counter = 1  # ignore first char -> is some kind of quote
         while counter < len(text):
@@ -169,10 +177,12 @@ async def split_quotes(text: str):
 
 
 async def extract_text(m):
+    """Get text data from message."""
     return m.text or m.caption or (m.sticker.emoji if m.sticker else None)
 
 
 async def remove_escapes(text: str) -> str:
+    """Remove the escaped from message."""
     counter = 0
     res = ""
     is_escaped = False

@@ -24,6 +24,8 @@ def load_var(var_name, def_value=None):
 
 
 class Config:
+    """Config class for variables."""
+
     LOGGER = True
     TOKEN = load_var("TOKEN")
     APP_ID = int(load_var("APP_ID"))
@@ -49,6 +51,8 @@ class Config:
 
 
 class Development:
+    """Development class for variables."""
+
     # Fill in these vars if you want to use Traditional method of deploying
     LOGGER = True
     TOKEN = "YOUR TOKEN"
