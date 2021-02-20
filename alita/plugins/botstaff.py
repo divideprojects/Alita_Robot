@@ -22,6 +22,7 @@ from pyrogram.types import Message
 
 from alita import DEV_PREFIX_HANDLER, DEV_USERS, OWNER_ID, SUDO_USERS, WHITELIST_USERS
 from alita.bot_class import Alita
+from alita.tr_engine import tlang
 from alita.utils.custom_filters import dev_filter
 from alita.utils.parser import mention_html
 

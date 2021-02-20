@@ -27,6 +27,7 @@ from pyrogram.types import (
 
 from alita import HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
 from alita.bot_class import Alita
+from alita.tr_engine import tlang
 from alita.utils.redis_helper import get_key
 
 
@@ -127,7 +128,7 @@ async def start(_, m: Message):
 
 @Alita.on_callback_query(filters.regex("^start_back$"))
 async def start_back(_, q: CallbackQuery):
-    _ = GetLang(q).strs
+
     await q.message.edit_text(
         tlang(m, "start.private"),
         reply_markup=(await gen_start_kb(q.message)),
@@ -138,7 +139,7 @@ async def start_back(_, q: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(_, q: CallbackQuery):
-    _ = GetLang(q).strs
+
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_cmds_kb()),
@@ -197,7 +198,7 @@ async def commands_pvt(_, m: Message):
 
 @Alita.on_callback_query(filters.regex("^get_mod."))
 async def get_module_info(_, q: CallbackQuery):
-    _ = GetLang(q).strs
+
     module = q.data.split(".")[1]
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -220,7 +221,7 @@ async def get_module_info(_, q: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^infos$"))
 async def infos(c: Alita, q: CallbackQuery):
-    _ = GetLang(q).strs
+
     _owner = await c.get_users(OWNER_ID)
     res = tlang(m, "start.info_page").format(
         Owner=(

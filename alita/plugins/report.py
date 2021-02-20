@@ -30,6 +30,7 @@ from pyrogram.types import (
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.db import reporting_db as db
+from alita.tr_engine import tlang
 from alita.utils.admin_check import admin_check
 from alita.utils.parser import mention_html
 

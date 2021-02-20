@@ -24,6 +24,7 @@ from pyrogram.types import Message
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
+from alita.tr_engine import tlang
 from alita.utils.admin_filter import admin_filter
 
 __PLUGIN__ = "Purges"

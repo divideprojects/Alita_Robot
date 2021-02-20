@@ -26,6 +26,7 @@ from alita.db import blacklist_db as bldb
 from alita.db import notes_db as notesdb
 from alita.db import rules_db as rulesdb
 from alita.db import users_db as userdb
+from alita.tr_engine import tlang
 from alita.utils.custom_filters import dev_filter
 
 

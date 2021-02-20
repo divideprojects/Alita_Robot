@@ -28,6 +28,7 @@ from pyrogram.types import (
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import rules_db as db
+from alita.tr_engine import tlang
 from alita.utils.admin_filter import admin_filter
 
 __PLUGIN__ = "Rules"
