@@ -23,6 +23,7 @@ from pyrogram.errors import (
     PeerIdInvalid,
     RightForbidden,
     RPCError,
+    UserAdminInvalid,
 )
 from pyrogram.types import ChatPermissions, Message
 
@@ -93,17 +94,9 @@ async def adminlist_show(_, m: Message):
 
         for i in adminlist:
             try:
-                # usr = await m.chat.get_member(i[0])
                 mention = (
                     i[1] if i[1].startswith("@") else (await mention_html(i[1], i[0]))
                 )
-                # if i[0] == me_id:
-                # adminstr += f"- @{(await get_key('BOT_USERNAME'))}\n"
-                # elif usr.user.is_bot:
-                # adminstr += f"- {mention} (🤖)\n"
-                # elif usr.status == "owner":
-                # adminstr += f"- {mention} (👑)\n"
-                # else:
                 adminstr += f"- {mention}\n"
             except PeerIdInvalid:
                 pass
@@ -299,6 +292,10 @@ async def demote_usr(_, m: Message):
         await m.reply_text(tlang(m, "admin.notadmin"))
     except RightForbidden:
         await m.reply_text("I don't have enough rights to demote this user.")
+    except UserAdminInvalid:
+        await m.reply_text(
+            "Cannot demote this user, maybe I wasn't the one who promoted them.",
+        )
     except RPCError as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         LOGGER.error(ef)

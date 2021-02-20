@@ -16,4 +16,4 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from alita.tr_engine.tr_engine import tlang
+from alita.tr_engine.tr_engine import lang_dict, tlang

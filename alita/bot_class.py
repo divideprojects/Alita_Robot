@@ -42,7 +42,7 @@ from alita import (
 )
 from alita.db import users_db as userdb
 from alita.plugins import all_plugins
-from alita.utils.localization import langdict
+from alita.tr_engine import lang_dict
 from alita.utils.paste import paste
 from alita.utils.redis_helper import (
     allkeys,
@@ -81,19 +81,10 @@ class Alita(Client):
             workers=WORKERS,
         )
 
-    async def flush_redis(self):
-        """Flush Redis data."""
-        try:
-            await flushredis()
-        except BaseException as ef:
-            LOGGER.error(ef)
-
     async def get_admins(self):
         """Cache all admins from chats in Redis DB."""
         LOGGER.info("Begin caching admins...")
         begin = time()
-
-        # await self.flush_redis()
 
         all_chats = userdb.get_all_chats() or []  # Get list of all chats
         LOGGER.info(f"{len(all_chats)} chats loaded from database.")
@@ -143,7 +134,7 @@ class Alita(Client):
                 ),
             )
         except BaseException as ef:
-            LOGGER.error(f"Could not set ADMINDICT in RedisCache!\nError: {ef}")
+            LOGGER.error(f"Could not set ADMINDICT in Redis Cache!\nError: {ef}")
 
     async def start(self):
         """Start the bot."""
@@ -155,7 +146,7 @@ class Alita(Client):
         await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 
         # Load Languages
-        lang_status = len(langdict) >= 1
+        lang_status = len(lang_dict) >= 1
         LOGGER.info(f"Loading Languages: {lang_status}")
 
         # Redis Content Setup!
@@ -187,7 +178,7 @@ class Alita(Client):
             MESSAGE_DUMP,
             (
                 f"<b><i>@{meh.username} started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n"
-                f"\n<b>Python Version:</b> <u>{python_version()}</u>\n"
+                f"\n<b>Python:</b> <u>{python_version()}</u>\n"
                 "\n<b>Loaded Plugins:</b>\n"
                 f"<i>{cmd_list}</i>\n"
                 "\n<b>Redis Keys Loaded:</b>\n"
@@ -217,6 +208,5 @@ class Alita(Client):
             "<i><b>Bot Stopped!</b></i>",
         )
         await super().stop()
-        # await self.flush_redis()
         await close()  # Close redis connection
         LOGGER.info("Bot Stopped.\nkthxbye!")

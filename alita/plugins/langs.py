@@ -29,7 +29,7 @@ from pyrogram.types import (
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import lang_db as db
-from alita.tr_engine import langdict, tlang
+from alita.tr_engine import lang_dict, tlang
 from alita.utils.custom_filters import admin_filter
 
 __PLUGIN__ = "Language"
@@ -44,10 +44,10 @@ for yourself or your group.
 
 
 async def gen_langs_kb():
-    langs = list(langdict.keys())
+    langs = list(lang_dict.keys())
     kb = []
     while langs:
-        lang = langdict[langs[0]]
+        lang = lang_dict[langs[0]]
         a = [
             InlineKeyboardButton(
                 f"{lang['language_flag']} {lang['language_name']}",
@@ -56,7 +56,7 @@ async def gen_langs_kb():
         ]
         langs.pop(0)
         if langs:
-            lang = langdict[langs[0]]
+            lang = lang_dict[langs[0]]
             a.append(
                 InlineKeyboardButton(
                     f"{lang['language_flag']} {lang['language_name']}",

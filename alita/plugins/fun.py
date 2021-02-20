@@ -85,7 +85,7 @@ async def fun_slap(c: Alita, m: Message):
         return
 
     if user_id:
-        slapped_user = await c.get_member(user_id)
+        slapped_user = await c.get_users(user_id)
         user1 = curr_user
         user2 = escape(slapped_user.first_name)
 
