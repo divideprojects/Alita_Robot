@@ -163,8 +163,21 @@ async def commands_menu(_, q: CallbackQuery):
 async def commands_pvt(_, m: Message):
 
     me = await get_key("BOT_USERNAME")
-    if m.chat.type != "private":
-        priv8kb = InlineKeyboardMarkup(
+    if m.chat.type == "private":
+        keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[
+                *gen_cmds_kb(),
+                [
+                    InlineKeyboardButton(
+                        "« " + tlang(m, "general.back_btn"),
+                        callback_data="start_back",
+                    ),
+                ],
+            ],
+        )
+        msg = tlang(m, "general.commands_available")
+    else:
+        keyboard = InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
@@ -174,25 +187,13 @@ async def commands_pvt(_, m: Message):
                 ],
             ],
         )
-        await m.reply_text(
-            "Contact me in PM to get the list of possible commands.",
-            reply_markup=priv8kb,
-            reply_to_message_id=m.message_id,
-        )
-        return
+        msg = "Contact me in PM to get the list of possible commands."
 
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            *gen_cmds_kb(),
-            [
-                InlineKeyboardButton(
-                    "« " + tlang(m, "general.back_btn"),
-                    callback_data="start_back",
-                ),
-            ],
-        ],
+    await m.reply_text(
+        msg,
+        reply_markup=keyboard,
     )
-    await m.reply_text(tlang(m, "general.commands_available"), reply_markup=keyboard)
+
     return
 
 
