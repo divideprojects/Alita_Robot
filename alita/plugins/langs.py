@@ -29,7 +29,7 @@ from pyrogram.types import (
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import lang_db as db
-from alita.utils.admin_check import admin_check
+from alita.utils.custom_filters import admin_filter
 from alita.utils.localization import GetLang, langdict
 
 __PLUGIN__ = "Language"
@@ -125,11 +125,11 @@ async def set_lang_callback(_: Alita, m: CallbackQuery):
     return
 
 
-@Alita.on_message(filters.command(["lang", "setlang"], PREFIX_HANDLER))
+@Alita.on_message(
+    filters.command(["lang", "setlang"], PREFIX_HANDLER)
+    & (admin_filter | filters.private),
+)
 async def set_lang(_: Alita, m: Message):
-
-    if (m.chat.type == "supergroup") and not (await admin_check(m)):
-        return
 
     _ = GetLang(m).strs
     if len(m.text.split()) >= 2:

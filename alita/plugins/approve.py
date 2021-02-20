@@ -23,8 +23,8 @@ from pyrogram.types import Message
 from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.db import approve_db as db
-from alita.utils.custom_filters import admin_filter
 from alita.utils.admin_check import owner_check
+from alita.utils.custom_filters import admin_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
@@ -44,7 +44,9 @@ That's what approvals are for - approve trustworthy users to allow them to send 
 """
 
 
-@Alita.on_message(filters.command("approve", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("approve", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def approve_user(_: Alita, m: Message):
 
     chat_title = m.chat.title
@@ -82,7 +84,9 @@ async def approve_user(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("disapprove", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("disapprove", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def disapprove_user(_: Alita, m: Message):
 
     chat_title = m.chat.title
@@ -120,7 +124,9 @@ async def disapprove_user(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("approved", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("approved", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def check_approved(_: Alita, m: Message):
 
     chat_title = m.chat.title
@@ -143,7 +149,9 @@ async def check_approved(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("approval", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("approval", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def check_approval(_: Alita, m: Message):
 
     user_id, user_first_name = await extract_user(m)

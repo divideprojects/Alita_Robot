@@ -37,7 +37,9 @@ Want to delete messages in you group?
 """
 
 
-@Alita.on_message(filters.command("purge", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("purge", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def purge(c: Alita, m: Message):
 
     _ = GetLang(m).strs
@@ -78,7 +80,10 @@ async def purge(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("del", PREFIX_HANDLER) & filters.group & admin_filter, group=3)
+@Alita.on_message(
+    filters.command("del", PREFIX_HANDLER) & filters.group & admin_filter,
+    group=3,
+)
 async def del_msg(c: Alita, m: Message):
 
     _ = GetLang(m).strs

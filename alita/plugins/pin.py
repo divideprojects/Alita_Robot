@@ -69,7 +69,9 @@ async def pin_message(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("unpin", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def unpin_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs
@@ -88,7 +90,9 @@ async def unpin_message(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unpinall", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("unpinall", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def unpinall_message(c: Alita, m: Message):
 
     _ = GetLang(m).strs

@@ -28,11 +28,11 @@ from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
+from alita.utils.custom_filters import admin_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
 from alita.utils.redis_helper import get_key, set_key
-from alita.utils.custom_filters import admin_filter
 
 __PLUGIN__ = "Admin"
 __help__ = """
@@ -119,7 +119,9 @@ async def adminlist_show(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("admincache", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("admincache", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def reload_admins(_: Alita, m: Message):
 
     _ = GetLang(m).strs
@@ -150,7 +152,9 @@ async def reload_admins(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("mute", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("mute", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def mute_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
@@ -191,7 +195,9 @@ async def mute_usr(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unmute", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("unmute", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def unmute_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
@@ -216,7 +222,9 @@ async def unmute_usr(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("promote", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("promote", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def promote_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
@@ -274,7 +282,9 @@ async def promote_usr(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("demote", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("demote", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def demote_usr(_: Alita, m: Message):
 
     _ = GetLang(m).strs
@@ -333,7 +343,9 @@ async def demote_usr(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("invitelink", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("invitelink", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def get_invitelink(c: Alita, m: Message):
 
     _ = GetLang(m).strs

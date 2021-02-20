@@ -77,7 +77,9 @@ async def get_rules(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("setrules", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("setrules", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def set_rules(_: Alita, m: Message):
 
     _ = GetLang(m).strs
@@ -97,7 +99,9 @@ async def set_rules(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("clearrules", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(
+    filters.command("clearrules", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def clear_rules(_: Alita, m: Message):
 
     _ = GetLang(m).strs

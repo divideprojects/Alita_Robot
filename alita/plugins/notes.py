@@ -28,7 +28,8 @@ from pyrogram.types import (
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import notes_db as db
-from alita.utils.admin_check import admin_check, owner_check
+from alita.utils.admin_check import owner_check
+from alita.utils.custom_filters import admin_filter
 from alita.utils.msg_types import Types, get_note_type
 from alita.utils.string import build_keyboard, parse_button
 
@@ -87,11 +88,10 @@ GET_FORMAT = {
 }
 
 
-@Alita.on_message(filters.command("save", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(
+    filters.command("save", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def save_note(_: Alita, m: Message):
-
-    if not (await admin_check(m)):
-        return
 
     note_name, text, data_type, content = await get_note_type(m)
 
@@ -191,11 +191,10 @@ async def local_notes(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("clear", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(
+    filters.command("clear", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def clear_note(_: Alita, m: Message):
-
-    if not (await admin_check(m)):
-        return
 
     if len(m.text.split()) <= 1:
         await m.reply_text("What do you want to clear?")

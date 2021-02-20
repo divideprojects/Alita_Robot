@@ -23,7 +23,7 @@ from pyrogram.types import Message
 
 from alita import DEV_PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.utils.custom_filters import sudo_filter, admin_filter
+from alita.utils.custom_filters import admin_filter, sudo_filter
 
 __PLUGIN__ = "Test Plugin"
 
