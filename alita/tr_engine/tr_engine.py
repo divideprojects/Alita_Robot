@@ -28,13 +28,13 @@ from alita import ENABLED_LOCALES as enabled_locales
 from alita.db import lang_db as db
 
 
-# Get data from list of keys
 def getFromDict(dict_data, list_data):
+    """Get data from list of keys."""
     return reduce(getitem, list_data, dict_data)
 
 
-# Get all translated strings from files
 def cache_localizations(files):
+    """Get all translated strings from files."""
     ldict = {lang: {} for lang in enabled_locales}
     for file in files:
         lang_name = file.split(path.sep)[1]
@@ -51,6 +51,7 @@ lang_dict = cache_localizations(lang_files)
 
 
 def tlang(m, user_msg):
+    """Main function for getting the string of preferred language."""
 
     m_args = user_msg.split(".")  # Split in a list
 
