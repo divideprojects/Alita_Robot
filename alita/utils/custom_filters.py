@@ -21,11 +21,11 @@ from pyrogram import filters
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
 
 
-async def f_dev_filter(_, __, m):
+async def dev_check_func(_, __, m):
     return bool(m.from_user.id in DEV_USERS or m.from_user.id == int(OWNER_ID))
 
 
-async def f_sudo_filter(_, __, m):
+async def sudo_check_func(_, __, m):
     return bool(
         m.from_user.id in SUDO_USERS
         or m.from_user.id in DEV_USERS
@@ -33,7 +33,7 @@ async def f_sudo_filter(_, __, m):
     )
 
 
-async def admin_check_filter(_, __, m):
+async def admin_check_func(_, __, m):
     user = await m.chat.get_member(m.from_user.id)
     if user.status in ("creator", "administrator"):
         status = True
@@ -44,6 +44,22 @@ async def admin_check_filter(_, __, m):
     return status
 
 
-dev_filter = filters.create(f_dev_filter)
-sudo_filter = filters.create(f_sudo_filter)
-admin_filter = filters.create(admin_check_filter)
+async def owner_check_func(_, __, m):
+    user = await m.chat.get_member(m.from_user.id)
+    if user.status == "creator":
+        status = True
+    else:
+        status = False
+        if user.status == "administrator":
+            msg = "You're an admin only, stay in your limits!"
+        else:
+            msg = "Do you think that you can execute admin commands?"
+        await m.reply_text(msg)
+
+    return status
+
+
+dev_filter = filters.create(dev_check_func)
+sudo_filter = filters.create(sudo_check_func)
+admin_filter = filters.create(admin_check_func)
+owner_filter = filters.create(owner_check_func)
