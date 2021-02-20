@@ -3,9 +3,7 @@ from aiohttp import ClientSession
 
 async def paste(content):
     """Paste the provided content to nekobin."""
-
     content = str(content)
-
     NEKOBIN_URL = "https://nekobin.com/"
     async with ClientSession() as ses:
         async with ses.post(

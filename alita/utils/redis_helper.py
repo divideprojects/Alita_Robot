@@ -43,7 +43,6 @@ async def setup_redis():
 
 async def set_key(key: str, value):
     """Set the key data in Redis Cache."""
-
     return await redis_client.set(
         key,
         dumps(
@@ -57,19 +56,16 @@ async def set_key(key: str, value):
 
 async def get_key(key: str):
     """Get the key data from Redis Cache."""
-
     return loads(await redis_client.get(key))
 
 
 async def flushredis():
     """Empty the Redis Cache Database."""
-
     return await redis_client.flushall()
 
 
 async def allkeys():
     """Get all keys from Redis Cache."""
-
     keys = await redis_client.keys(pattern="*")
     keys_str = []
     for i in keys:
@@ -79,6 +75,5 @@ async def allkeys():
 
 async def close():
     """Close connection to Redis."""
-
     redis_client.close()
     return await redis_client.wait_closed()

@@ -110,7 +110,7 @@ BOT_ID = 0
 
 
 async def get_self(c):
-    """gets the information about bot."""
+    """Gets the information about bot."""
     global BOT_USERNAME, BOT_NAME, BOT_ID
     getbot = await c.get_me()
     BOT_NAME = getbot.first_name
@@ -120,7 +120,7 @@ async def get_self(c):
 
 
 async def load_cmds(all_plugins):
-    """loads all the plugins in bot."""
+    """Loads all the plugins in bot."""
     for single in all_plugins:
         imported_module = imp_mod("alita.plugins." + single)
         if not hasattr(imported_module, "__PLUGIN__"):
