@@ -65,7 +65,6 @@ async def adminlist_show(_, m: Message):
     _ = GetLang(m).strs
     replymsg = await m.reply_text("Getting admins...")
     try:
-        me_id = int(await get_key("BOT_ID"))  # Get Bot ID from Redis!
         try:
             adminlist = (await get_key("ADMINDICT"))[
                 str(m.chat.id)

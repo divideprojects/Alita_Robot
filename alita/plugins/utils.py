@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from datetime import datetime
 from html import escape
 from io import BytesIO
 from os import remove
