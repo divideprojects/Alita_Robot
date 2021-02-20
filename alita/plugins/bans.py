@@ -53,7 +53,7 @@ This is the plugin for you, easily kick, ban and unban members in a group.
 @Alita.on_message(
     filters.command("kick", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
-async def kick_usr(_: Alita, m: Message):
+async def kick_usr(_, m: Message):
 
     _ = GetLang(m).strs
 
@@ -75,7 +75,7 @@ async def kick_usr(_: Alita, m: Message):
 @Alita.on_message(
     filters.command("ban", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
-async def ban_usr(_: Alita, m: Message):
+async def ban_usr(_, m: Message):
 
     _ = GetLang(m).strs
 
@@ -97,7 +97,7 @@ async def ban_usr(_: Alita, m: Message):
 @Alita.on_message(
     filters.command("unban", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
-async def unban_usr(_: Alita, m: Message):
+async def unban_usr(_, m: Message):
 
     _ = GetLang(m).strs
 
@@ -117,7 +117,7 @@ async def unban_usr(_: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("banall", DEV_PREFIX_HANDLER) & owner_filter)
-async def banall_chat(_: Alita, m: Message):
+async def banall_chat(_, m: Message):
     await m.reply_text(
         "Are you sure you want to ban all members in this group?",
         reply_markup=InlineKeyboardMarkup(
@@ -133,7 +133,7 @@ async def banall_chat(_: Alita, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^ban.all.members$") & owner_filter)
-async def banallnotes_callback(_: Alita, q: CallbackQuery):
+async def banallnotes_callback(_, q: CallbackQuery):
 
     replymsg = await q.message.edit_text("<i><b>Banning All Members...</b></i>")
     users = []

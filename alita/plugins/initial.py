@@ -29,7 +29,7 @@ from alita.db import users_db as userdb
 
 
 @Alita.on_message(group=-1)
-async def initial_works(_: Alita, m: Message):
+async def initial_works(_, m: Message):
     try:
         if m.migrate_to_chat_id or m.migrate_from_chat_id:
             if m.migrate_to_chat_id:

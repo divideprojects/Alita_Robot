@@ -80,7 +80,7 @@ async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
     return kicked_chats
 
 
-async def get_invalid_gban(c: Alita, _: Message, remove: bool = False):
+async def get_invalid_gban(c: Alita, _, remove: bool = False):
     banned = gban_db.get_gban_list()
     ungbanned_users = 0
     ungban_list = []
@@ -156,7 +156,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
 
 
 @Alita.on_message(filters.command("dbclean", DEV_PREFIX_HANDLER) & dev_filter)
-async def dbcleanxyz(_: Alita, m: Message):
+async def dbcleanxyz(_, m: Message):
     buttons = [
         [InlineKeyboardButton("Invalid Chats", callback_data="dbclean.invalidchats")],
     ]

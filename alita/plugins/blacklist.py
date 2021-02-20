@@ -53,7 +53,7 @@ muser_listtiple triggers at once.
 @Alita.on_message(
     filters.command("blacklist", PREFIX_HANDLER) & filters.group & admin_filter,
 )
-async def view_blacklist(_: Alita, m: Message):
+async def view_blacklist(_, m: Message):
 
     _ = GetLang(m).strs
 
@@ -77,7 +77,7 @@ async def view_blacklist(_: Alita, m: Message):
 @Alita.on_message(
     filters.command("addblacklist", PREFIX_HANDLER) & filters.group & admin_filter,
 )
-async def add_blacklist(_: Alita, m: Message):
+async def add_blacklist(_, m: Message):
 
     _ = GetLang(m).strs
 
@@ -98,7 +98,7 @@ async def add_blacklist(_: Alita, m: Message):
     & filters.group
     & admin_filter,
 )
-async def rm_blacklist(_: Alita, m: Message):
+async def rm_blacklist(_, m: Message):
 
     _ = GetLang(m).strs
 
@@ -122,7 +122,7 @@ async def rm_blacklist(_: Alita, m: Message):
 
 
 @Alita.on_message(filters.group, group=11)
-async def del_blacklist(_: Alita, m: Message):
+async def del_blacklist(_, m: Message):
     try:
         user_list = []
         approved_users = app_db.all_approved(m.chat.id)

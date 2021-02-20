@@ -38,7 +38,7 @@ Search Wikipedia on the go in your group!
 
 
 @Alita.on_message(filters.command("wiki", PREFIX_HANDLER))
-async def wiki(_: Alita, m: Message):
+async def wiki(_, m: Message):
     if m.reply_to_message:
         search = m.reply_to_message.text
     else:

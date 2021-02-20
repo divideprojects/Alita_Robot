@@ -69,7 +69,7 @@ async def gen_langs_kb():
 
 
 @Alita.on_callback_query(filters.regex("^chlang$"))
-async def chlang_callback(_: Alita, m: CallbackQuery):
+async def chlang_callback(_, m: CallbackQuery):
     _ = GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -88,14 +88,14 @@ async def chlang_callback(_: Alita, m: CallbackQuery):
 
 
 @Alita.on_callback_query(filters.regex("^close$"))
-async def close_btn_callback(_: Alita, m: CallbackQuery):
+async def close_btn_callback(_, m: CallbackQuery):
     await m.message.delete()
     await m.answer()
     return
 
 
 @Alita.on_callback_query(filters.regex("^set_lang."))
-async def set_lang_callback(_: Alita, m: CallbackQuery):
+async def set_lang_callback(_, m: CallbackQuery):
     _ = GetLang(m).strs
     db.set_lang(m.message.chat.id, m.message.chat.type, m.data.split(".")[1])
     await sleep(0.5)
@@ -129,7 +129,7 @@ async def set_lang_callback(_: Alita, m: CallbackQuery):
     filters.command(["lang", "setlang"], PREFIX_HANDLER)
     & (admin_filter | filters.private),
 )
-async def set_lang(_: Alita, m: Message):
+async def set_lang(_, m: Message):
 
     _ = GetLang(m).strs
     if len(m.text.split()) >= 2:

@@ -110,7 +110,7 @@ async def gen_start_kb(m):
 @Alita.on_message(
     filters.command("start", PREFIX_HANDLER) & (filters.group | filters.private),
 )
-async def start(_: Alita, m: Message):
+async def start(_, m: Message):
     _ = GetLang(m).strs
     if m.chat.type == "private":
         try:
@@ -127,7 +127,7 @@ async def start(_: Alita, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^start_back$"))
-async def start_back(_: Alita, m: CallbackQuery):
+async def start_back(_, m: CallbackQuery):
     _ = GetLang(m).strs
     await m.message.edit_text(
         _("start.private"),
@@ -138,7 +138,7 @@ async def start_back(_: Alita, m: CallbackQuery):
 
 
 @Alita.on_callback_query(filters.regex("^commands$"))
-async def commands_menu(_: Alita, m: CallbackQuery):
+async def commands_menu(_, m: CallbackQuery):
     _ = GetLang(m).strs
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -157,7 +157,7 @@ async def commands_menu(_: Alita, m: CallbackQuery):
 
 
 @Alita.on_message(filters.command("help", PREFIX_HANDLER))
-async def commands_pvt(_: Alita, m: Message):
+async def commands_pvt(_, m: Message):
     _ = GetLang(m).strs
     me = await get_key("BOT_USERNAME")
     if m.chat.type != "private":
@@ -194,7 +194,7 @@ async def commands_pvt(_: Alita, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^get_mod."))
-async def get_module_info(_: Alita, m: CallbackQuery):
+async def get_module_info(_, m: CallbackQuery):
     _ = GetLang(m).strs
     module = m.data.split(".")[1]
     keyboard = InlineKeyboardMarkup(

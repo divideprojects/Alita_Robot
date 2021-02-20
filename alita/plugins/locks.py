@@ -43,7 +43,7 @@ Allows you to lock and unlock permission types in the chat.
 
 
 @Alita.on_message(filters.command("locktypes", PREFIX_HANDLER) & filters.group)
-async def lock_types(_: Alita, m: Message):
+async def lock_types(_, m: Message):
     await m.reply_text(
         (
             "**Lock Types:**\n"

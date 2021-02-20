@@ -48,7 +48,7 @@ __help__ = """
 
 
 @Alita.on_message(filters.command("reports", PREFIX_HANDLER))
-async def report_setting(_: Alita, m: Message):
+async def report_setting(_, m: Message):
     args = m.text.split()
 
     if m.chat.type == "private":

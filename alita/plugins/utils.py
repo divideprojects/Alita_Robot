@@ -64,7 +64,7 @@ Some utils provided by bot to make your tasks easy!
 @Alita.on_message(
     filters.command("ping", PREFIX_HANDLER) & (filters.group | filters.private),
 )
-async def ping(_: Alita, m: Message):
+async def ping(_, m: Message):
     start = time()
     replymsg = await m.reply_text("Pinging...", quote=True)
     delta_ping = time() - start
@@ -75,7 +75,7 @@ async def ping(_: Alita, m: Message):
 @Alita.on_message(
     filters.command("lyrics", PREFIX_HANDLER) & (filters.group | filters.private),
 )
-async def get_lyrics(_: Alita, m: Message):
+async def get_lyrics(_, m: Message):
     query = m.text.split(None, 1)[1]
     song = ""
     if not query:
@@ -150,7 +150,7 @@ async def id_info(c: Alita, m: Message):
 @Alita.on_message(
     filters.command("gifid", PREFIX_HANDLER) & (filters.group | filters.private),
 )
-async def get_gifid(_: Alita, m: Message):
+async def get_gifid(_, m: Message):
     if m.reply_to_message and m.reply_to_message.animation:
         await m.reply_text(
             f"Gif ID:\n<code>{m.reply_to_message.animation.file_id}</code>",
@@ -164,7 +164,7 @@ async def get_gifid(_: Alita, m: Message):
 @Alita.on_message(
     filters.command("github", PREFIX_HANDLER) & (filters.group | filters.private),
 )
-async def github(_: Alita, m: Message):
+async def github(_, m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(None, 1)[1]
     else:
@@ -266,7 +266,7 @@ weebyfont = "卂 乃 匚 刀 乇 下 厶 卄 工 丁 长 乚 从 𠘨 口 尸 �
 
 
 @Alita.on_message(filters.command("weebify", PREFIX_HANDLER))
-async def weebify(_: Alita, m: Message):
+async def weebify(_, m: Message):
     if len(m.text.split()) >= 2:
         args = m.text.split(None, 1)[1]
     if m.reply_to_message and len(m.text.split()) == 1:
@@ -312,7 +312,7 @@ async def paste_it(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("tr", PREFIX_HANDLER))
-async def translate(_: Alita, m: Message):
+async def translate(_, m: Message):
     _ = GetLang(m).strs
     translator = Translator()
     text = m.text[4:]

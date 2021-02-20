@@ -92,7 +92,7 @@ async def test_speed(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("neofetch", DEV_PREFIX_HANDLER) & dev_filter)
-async def neofetch_stats(_: Alita, m: Message):
+async def neofetch_stats(_, m: Message):
     cmd = "neofetch --stdout"
 
     process = await create_subprocess_shell(
@@ -182,7 +182,7 @@ async def aexec(code, c, m):
 
 
 @Alita.on_message(filters.command(["exec", "sh"], DEV_PREFIX_HANDLER) & dev_filter)
-async def execution(_: Alita, m: Message):
+async def execution(_, m: Message):
     _ = GetLang(m).strs
     if len(m.text.split()) == 1:
         await m.reply_text(_("dev.execute_cmd_err"))
@@ -286,7 +286,7 @@ async def chats(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("uptime", DEV_PREFIX_HANDLER) & dev_filter)
-async def uptime(_: Alita, m: Message):
+async def uptime(_, m: Message):
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
     await m.reply_text(f"<b>Uptime:</b> `{up}`", quote=True)
     return
@@ -320,7 +320,7 @@ async def store_members(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("alladmins", DEV_PREFIX_HANDLER) & dev_filter)
-async def list_all_admins(_: Alita, m: Message):
+async def list_all_admins(_, m: Message):
 
     replymsg = await m.reply_text("Getting all admins in my cache...", quote=True)
     len_admins = 0  # Total number of admins
@@ -351,7 +351,7 @@ async def list_all_admins(_: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("rediskeys", DEV_PREFIX_HANDLER) & dev_filter)
-async def show_redis_keys(_: Alita, m: Message):
+async def show_redis_keys(_, m: Message):
     txt_dict = {}
     replymsg = await m.reply_text("Fetching Redis Keys...", quote=True)
     keys = await allkeys()
@@ -375,7 +375,7 @@ async def show_redis_keys(_: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("flushredis", DEV_PREFIX_HANDLER) & dev_filter)
-async def flush_redis(_: Alita, m: Message):
+async def flush_redis(_, m: Message):
     replymsg = await m.reply_text("Flushing Redis Database...", quote=True)
     try:
         await flushredis()

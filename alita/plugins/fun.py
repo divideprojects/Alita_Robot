@@ -44,7 +44,7 @@ __help__ = """
 
 
 @Alita.on_message(filters.command("shout", PREFIX_HANDLER))
-async def fun_shout(_: Alita, m: Message):
+async def fun_shout(_, m: Message):
     _ = GetLang(m).strs
     if len(m.text.split()) == 1:
         await m.reply_text(_("general.check_help"), reply_to_message_id=m.message_id)
@@ -63,7 +63,7 @@ async def fun_shout(_: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("runs", PREFIX_HANDLER))
-async def fun_run(_: Alita, m: Message):
+async def fun_run(_, m: Message):
     await m.reply_text(choice(fun_strings.RUN_STRINGS))
     return
 
@@ -102,28 +102,28 @@ async def fun_slap(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("roll", PREFIX_HANDLER))
-async def fun_roll(_: Alita, m: Message):
+async def fun_roll(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(choice(range(1, 7)))
     return
 
 
 @Alita.on_message(filters.command("toss", PREFIX_HANDLER))
-async def fun_toss(_: Alita, m: Message):
+async def fun_toss(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(choice(fun_strings.TOSS))
     return
 
 
 @Alita.on_message(filters.command("shrug", PREFIX_HANDLER))
-async def fun_shrug(_: Alita, m: Message):
+async def fun_shrug(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(r"¯\_(ツ)_/¯")
     return
 
 
 @Alita.on_message(filters.command("bluetext", PREFIX_HANDLER))
-async def fun_bluetext(_: Alita, m: Message):
+async def fun_bluetext(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(
         "/BLUE /TEXT\n/MUST /CLICK\n/I /AM /A /STUPID /ANIMAL /THAT /IS /ATTRACTED /TO /COLORS",
@@ -132,14 +132,14 @@ async def fun_bluetext(_: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("decide", PREFIX_HANDLER))
-async def fun_decide(_: Alita, m: Message):
+async def fun_decide(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(choice(fun_strings.DECIDE))
     return
 
 
 @Alita.on_message(filters.command("react", PREFIX_HANDLER))
-async def fun_table(_: Alita, m: Message):
+async def fun_table(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(choice(fun_strings.REACTIONS))
     return

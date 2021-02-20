@@ -30,7 +30,7 @@ from alita.utils.custom_filters import dev_filter
 
 
 @Alita.on_message(filters.command("stats", DEV_PREFIX_HANDLER) & dev_filter)
-async def get_stats(_: Alita, m: Message):
+async def get_stats(_, m: Message):
     sm = await m.reply_text("**__Fetching Stats...__**")
     rply = (
         f"<b>Users:</b> <code>{userdb.num_users()}</code> in <code>{userdb.num_chats()}</code> chats\n"

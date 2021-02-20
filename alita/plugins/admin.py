@@ -61,7 +61,7 @@ An example of promoting someone to admins:
 
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
-async def adminlist_show(_: Alita, m: Message):
+async def adminlist_show(_, m: Message):
     _ = GetLang(m).strs
     replymsg = await m.reply_text("Getting admins...")
     try:
@@ -127,7 +127,7 @@ async def adminlist_show(_: Alita, m: Message):
 @Alita.on_message(
     filters.command("admincache", PREFIX_HANDLER) & filters.group & admin_filter,
 )
-async def reload_admins(_: Alita, m: Message):
+async def reload_admins(_, m: Message):
 
     _ = GetLang(m).strs
 
@@ -160,7 +160,7 @@ async def reload_admins(_: Alita, m: Message):
 @Alita.on_message(
     filters.command("mute", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
-async def mute_usr(_: Alita, m: Message):
+async def mute_usr(_, m: Message):
 
     _ = GetLang(m).strs
 
@@ -197,7 +197,7 @@ async def mute_usr(_: Alita, m: Message):
 @Alita.on_message(
     filters.command("unmute", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
-async def unmute_usr(_: Alita, m: Message):
+async def unmute_usr(_, m: Message):
 
     _ = GetLang(m).strs
 
@@ -218,7 +218,7 @@ async def unmute_usr(_: Alita, m: Message):
 @Alita.on_message(
     filters.command("promote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
-async def promote_usr(_: Alita, m: Message):
+async def promote_usr(_, m: Message):
 
     _ = GetLang(m).strs
 
@@ -269,7 +269,7 @@ async def promote_usr(_: Alita, m: Message):
 @Alita.on_message(
     filters.command("demote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
-async def demote_usr(_: Alita, m: Message):
+async def demote_usr(_, m: Message):
 
     _ = GetLang(m).strs
 
