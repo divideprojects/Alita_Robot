@@ -250,8 +250,8 @@ async def my_info(c: Alita, m: Message):
             if "custom_title" in result.keys():
                 custom_title = result["custom_title"]
                 text += f"\n\nThis user holds the title <b>{custom_title}</b> here."
-    except BaseException:
-        LOGGER.error("BaseException")
+    except BaseException as ef:
+        LOGGER.error(f"Error: {ef}")
 
     await infoMsg.edit_text(text, parse_mode="html", disable_web_page_preview=True)
 

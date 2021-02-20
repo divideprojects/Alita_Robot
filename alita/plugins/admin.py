@@ -70,7 +70,7 @@ async def adminlist_show(_, m: Message):
                 str(m.chat.id)
             ]  # Load ADMINDICT from string
             note = "These are cached values!"
-        except Exception:
+        except BaseException:
             adminlist = []
             async for i in m.chat.iter_members(
                 filter="administrators",
