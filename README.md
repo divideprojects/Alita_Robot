@@ -46,7 +46,7 @@ Help us bring more languages to the bot by contributing to the project on [Crowd
 
 ## Requirements
 - You need to have a *Postgres Database*
-- You also need *Redis Cache Database*
+- You also need *Redis Database*
 - Linux machine (Ubuntu/Denain-based OS Preferred)
 
 
@@ -68,31 +68,13 @@ It really motivates me to continue this project further.
 
 ### Docker
 - Clone the repo and enter into it
-- Install [Docker](https://www.docker.com/).
+- Install [Docker](https://www.docker.com/)
 - Fill in the `sample.env` file and rename it to `main.env`.
 - Build the docker image using: `docker build -t alita_robot:latest .`
 - Run the command `docker run --env-file main.env alita_robot`
 
 
 If all works well, bot should send message to the **MESSAGE_DUMP** Group!
-
-
-## TO-DO
-- [ ] Fix Errors (by defining them in `except Exception`)
-- [ ] Fix translations (Some are still in English)
-- [ ] Add Captcha (To check user when they enter group)
-- [ ] Add Federations
-- [ ] Add Sticker Blacklist
-- [ ] Add Greetings (Welcome and Goodbye)
-- [ ] Add Anti-flood
-- [x] Full Asynchronous (All functions run async)
-- [ ] Add backup/restore option (Chat settings can be backud up)
-- [ ] Add Warnings
-- [ ] Add Connections (Connect group chats to PM)
-- [x] Fix Docker Configuration
-- [ ] Switch to MongoDB
-
-*Still need to add docker-compose to connect with Redis and Db using a single command!
 
 
 ## Contributing to the project
@@ -103,8 +85,8 @@ If all works well, bot should send message to the **MESSAGE_DUMP** Group!
 
 
 ## Special Thanks to
-- [AmanoTeam](https://github.com/AmanoTeam/) for [EduuRobot](https://github.com/AmanoTeam/EduuRobot/tree/rewrite) as that helped me make the language menu with the 4 langauges provided and some basic plugins.
-- [Dan](https://github.com/delivrance) for his [Pyrogram](https://github.com/pyrogram) library
+- [AmanoTeam](https://github.com/AmanoTeam/) for [EduuRobot](https://github.com/AmanoTeam/EduuRobot/tree/rewrite) as that helped me make the translation engine.
+- [Dan](https://github.com/delivrance) for his [Pyrogram](https://github.com/pyrogram/pyrogram) library
 - [Paul Larsen](https://github.com/PaulSonOfLars) for his Original Marie Source Code.
 - Everyone else who inspired me to make this project, more names can be seen on commits!
 
