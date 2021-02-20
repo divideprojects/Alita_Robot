@@ -29,7 +29,8 @@ from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import rules_db as db
 from alita.tr_engine import tlang
-from alita.utils.admin_filter import admin_filter
+from alita.utils.custom_filters import admin_filter
+from alita.utils.redis_helper import get_key
 
 __PLUGIN__ = "Rules"
 
@@ -61,9 +62,9 @@ async def get_rules(c: Alita, m: Message):
             tlang(m, "rules.get_rules").format(chat=m.chat.title, rules=rules),
         )
     except UserIsBlocked:
-        me = await c.get_me()
+        me_name = await get_key("BOT_USERNAME")
         pm_kb = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("PM", url=f"https://t.me/{me.username}?start")]],
+            [[InlineKeyboardButton("PM", url=f"https://t.me/{me}?start")]],
         )
         await m.reply_text(
             tlang(m, "rules.pm_me"),
@@ -125,8 +126,8 @@ async def clear_rules(_, m: Message):
 
 @Alita.on_callback_query(filters.regex("^clear.rules$"))
 async def clearrules_callback(_, q: CallbackQuery):
-    _ = GetLang(q.message).strs
+
     db.clear_rules(q.message.chat.id)
-    await q.message.reply_text(tlang(m, "rules.clear"))
+    await q.message.reply_text(tlang(q, "rules.clear"))
     await q.answer()
     return
