@@ -133,7 +133,7 @@ async def reload_admins(_: Alita, m: Message):
     try:
         adminlist = []
         async for i in m.chat.iter_members(filter="administrators"):
-            if not i.user.is_deleted:
+            if i.user.is_deleted:
                 continue
             adminlist.append(
                 (

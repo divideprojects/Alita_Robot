@@ -28,8 +28,7 @@ from pyrogram.types import (
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import notes_db as db
-from alita.utils.admin_check import owner_check
-from alita.utils.custom_filters import admin_filter
+from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.msg_types import Types, get_note_type
 from alita.utils.string import build_keyboard, parse_button
 
@@ -210,11 +209,10 @@ async def clear_note(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("clearall", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(
+    filters.command("clearall", PREFIX_HANDLER) & filters.group & owner_filter,
+)
 async def clear_allnote(_: Alita, m: Message):
-
-    if not (await owner_check(m)):
-        return
 
     all_notes = db.get_all_notes(m.chat.id)
     if not all_notes:
@@ -235,7 +233,7 @@ async def clear_allnote(_: Alita, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^clear.notes$"))
+@Alita.on_callback_query(filters.regex("^clear.notes$") & owner_filter)
 async def clearallnotes_callback(_: Alita, q: CallbackQuery):
     await q.message.edit_text("Clearing all notes...!")
     db.rm_all_note(q.message.chat.id)

@@ -17,6 +17,7 @@
 
 
 from pyrogram import filters
+from pyrogram.types import CallbackQuery
 
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
 
@@ -34,6 +35,8 @@ async def sudo_check_func(_, __, m):
 
 
 async def admin_check_func(_, __, m):
+    if isinstance(m, CallbackQuery):
+        m = m.message
     user = await m.chat.get_member(m.from_user.id)
     if user.status in ("creator", "administrator"):
         status = True
@@ -45,6 +48,8 @@ async def admin_check_func(_, __, m):
 
 
 async def owner_check_func(_, __, m):
+    if isinstance(m, CallbackQuery):
+        m = m.message
     user = await m.chat.get_member(m.from_user.id)
     if user.status == "creator":
         status = True

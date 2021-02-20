@@ -31,8 +31,7 @@ from pyrogram.types import (
 
 from alita import DEV_PREFIX_HANDLER, LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
-from alita.utils.admin_check import owner_check
-from alita.utils.custom_filters import admin_filter, dev_filter
+from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
@@ -124,7 +123,7 @@ async def unban_usr(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("banall", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(filters.command("banall", DEV_PREFIX_HANDLER) & owner_filter)
 async def banall_chat(_: Alita, m: Message):
     await m.reply_text(
         "Are you sure you want to ban all members in this group?",
@@ -140,11 +139,8 @@ async def banall_chat(_: Alita, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^ban.all.members$"))
+@Alita.on_callback_query(filters.regex("^ban.all.members$") & owner_filter)
 async def banallnotes_callback(_: Alita, q: CallbackQuery):
-
-    if not (await owner_check(q.message)):
-        return
 
     replymsg = await q.message.edit_text("<i><b>Banning All Members...</b></i>")
     users = []

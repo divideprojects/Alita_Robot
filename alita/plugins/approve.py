@@ -23,8 +23,7 @@ from pyrogram.types import Message
 from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.db import approve_db as db
-from alita.utils.admin_check import owner_check
-from alita.utils.custom_filters import admin_filter
+from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
@@ -171,11 +170,10 @@ async def check_approval(_: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unapproveall", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(
+    filters.command("unapproveall", PREFIX_HANDLER) & filters.group & owner_filter,
+)
 async def unapproveall_users(_: Alita, m: Message):
-
-    if not (await owner_check(m)):
-        return
 
     try:
         db.disapprove_all(m.chat.id)
