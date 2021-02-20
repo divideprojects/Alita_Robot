@@ -64,7 +64,7 @@ async def get_rules(c: Alita, m: Message):
     except UserIsBlocked:
         me_name = await get_key("BOT_USERNAME")
         pm_kb = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("PM", url=f"https://t.me/{me}?start")]],
+            [[InlineKeyboardButton("PM", url=f"https://t.me/{me_name}?start")]],
         )
         await m.reply_text(
             tlang(m, "rules.pm_me"),
