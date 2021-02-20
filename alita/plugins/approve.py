@@ -66,7 +66,7 @@ async def approve_user(_: Alita, m: Message):
             f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
         )
         return
-    if member.status in ["administrator", "creator"]:
+    if member.status in ("administrator", "creator"):
         await m.reply_text(
             "User is already admin - blocklists already don't apply to them.",
         )

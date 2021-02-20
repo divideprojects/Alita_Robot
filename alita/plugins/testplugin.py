@@ -23,22 +23,13 @@ from pyrogram.types import Message
 
 from alita import DEV_PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.utils.custom_filters import admin_filter, sudo_filter
+from alita.utils.custom_filters import sudo_filter
 
 __PLUGIN__ = "Test Plugin"
 
 
 @Alita.on_message(filters.command("test", DEV_PREFIX_HANDLER) & sudo_filter)
 async def test_bot(_: Alita, m: Message):
-    start = time()
-    replymsg = await m.reply_text("Calculating...")
-    end = round(time() - start, 2)
-    await replymsg.edit_text(f"Test complete\nTime Taken:{end} seconds")
-    return
-
-
-@Alita.on_message(filters.command("meh", DEV_PREFIX_HANDLER) & admin_filter)
-async def meh_check(_: Alita, m: Message):
     start = time()
     replymsg = await m.reply_text("Calculating...")
     end = round(time() - start, 2)

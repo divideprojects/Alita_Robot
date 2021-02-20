@@ -419,6 +419,6 @@ async def prevent_approved(c: Alita, m: Message):
             ),
         )
         LOGGER.info(f"Approved {i} in {m.chat.id}")
-        await sleep(0.2)
+        await sleep(0.1)
 
     return

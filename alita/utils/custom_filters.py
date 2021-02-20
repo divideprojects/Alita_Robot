@@ -35,9 +35,12 @@ async def sudo_check_func(_, __, m):
 
 
 async def admin_check_func(_, __, m):
+
     if isinstance(m, CallbackQuery):
         m = m.message
+
     user = await m.chat.get_member(m.from_user.id)
+
     if user.status in ("creator", "administrator"):
         status = True
     else:
@@ -48,9 +51,12 @@ async def admin_check_func(_, __, m):
 
 
 async def owner_check_func(_, __, m):
+
     if isinstance(m, CallbackQuery):
         m = m.message
+
     user = await m.chat.get_member(m.from_user.id)
+
     if user.status == "creator":
         status = True
     else:
@@ -64,7 +70,58 @@ async def owner_check_func(_, __, m):
     return status
 
 
+async def restrict_check_func(_, __, m):
+
+    if isinstance(m, CallbackQuery):
+        m = m.message
+
+    user = await m.chat.get_member(m.from_user.id)
+
+    if user.can_restrict_members or user.status == "creator":
+        status = True
+    else:
+        status = False
+        await m.reply_text("You don't have permissions to restrict members!")
+
+    return status
+
+
+async def promote_check_func(_, __, m):
+
+    if isinstance(m, CallbackQuery):
+        m = m.message
+
+    user = await m.chat.get_member(m.from_user.id)
+
+    if user.can_promote_members or user.status == "creator":
+        status = True
+    else:
+        status = False
+        await m.reply_text("You don't have permissions to promote members!")
+
+    return status
+
+
+async def invite_check_func(_, __, m):
+
+    if isinstance(m, CallbackQuery):
+        m = m.message
+
+    user = await m.chat.get_member(m.from_user.id)
+
+    if user.can_invite_users or user.status == "creator":
+        status = True
+    else:
+        status = False
+        await m.reply_text("You don't have permissions to invite users!")
+
+    return status
+
+
 dev_filter = filters.create(dev_check_func)
 sudo_filter = filters.create(sudo_check_func)
 admin_filter = filters.create(admin_check_func)
 owner_filter = filters.create(owner_check_func)
+restrict_filter = filters.create(restrict_check_func)
+promote_filter = filters.create(promote_check_func)
+invite_filter = filters.create(invite_check_func)
