@@ -31,7 +31,6 @@ from alita import DEV_PREFIX_HANDLER, LOGGER
 from alita.bot_class import Alita
 from alita.db import antispam_db as gban_db
 from alita.db import users_db as user_db
-from alita.tr_engine import tlang
 from alita.utils.custom_filters import dev_filter
 
 __PLUGIN__ = "Database Cleaning"

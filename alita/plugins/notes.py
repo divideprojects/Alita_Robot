@@ -28,7 +28,6 @@ from pyrogram.types import (
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import notes_db as db
-from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.msg_types import Types, get_note_type
 from alita.utils.string import build_keyboard, parse_button

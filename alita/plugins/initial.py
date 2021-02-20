@@ -26,7 +26,6 @@ from alita.db import lang_db as langdb
 from alita.db import notes_db as notedb
 from alita.db import rules_db as ruledb
 from alita.db import users_db as userdb
-from alita.tr_engine import tlang
 
 
 @Alita.on_message(group=-1)
