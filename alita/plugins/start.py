@@ -163,13 +163,23 @@ async def commands_menu(_, q: CallbackQuery):
 async def commands_pvt(_, m: Message):
 
     me = await get_key("BOT_USERNAME")
+
+    if (m.text.split()) != 1:
+        help_option = (m.text.split(None, 1)[1]).lower()
+        if help_option in sorted([i.lower() for i in list(HELP_COMMANDS.keys())]):
+            help_msg = HELP_COMMANDS[help_option]
+        if m.chat.type == "private":
+            await m.reply_text(help_msg)
+        else:
+            await m.reply_text(f"Press the button below to get help for {help_option}", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Help", url=f"t.me/{me}?start={help_option}")]]))
+        return
     if m.chat.type == "private":
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 *gen_cmds_kb(),
                 [
                     InlineKeyboardButton(
-                        "« " + tlang(m, "general.back_btn"),
+                        "« {tlang(m, 'general.back_btn')}",
                         callback_data="start_back",
                     ),
                 ],
