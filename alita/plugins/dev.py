@@ -335,7 +335,7 @@ async def list_all_admins(_, m: Message):
             f"There are {len_admins} admins whom I know!\n\n{str(admindict)}",
         )
     except MessageTooLong:
-        raw = (await paste(str(admindict)))[1]
+        raw = (await paste(admindict))[1]
         with BytesIO(str.encode(dumps(admindict, indent=2))) as f:
             f.name = "allAdmins.txt"
             await m.reply_document(
@@ -360,7 +360,7 @@ async def show_redis_keys(_, m: Message):
     try:
         await replymsg.edit_text(str(txt_dict))
     except MessageTooLong:
-        raw = (await paste(str(txt_dict)))[1]
+        raw = (await paste(txt_dict))[1]
         with BytesIO(str.encode(dumps(txt_dict, indent=2))) as f:
             f.name = "redisKeys.txt"
             await m.reply_document(
