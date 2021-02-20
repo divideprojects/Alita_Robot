@@ -29,7 +29,6 @@ from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import rules_db as db
 from alita.utils.admin_filter import admin_filter
-from alita.utils.localization import GetLang
 
 __PLUGIN__ = "Rules"
 
@@ -47,19 +46,18 @@ what not to do in your group!
 
 @Alita.on_message(filters.command("rules", PREFIX_HANDLER) & filters.group)
 async def get_rules(c: Alita, m: Message):
-    _ = GetLang(m).strs
 
     chat_id = m.chat.id
     rules = db.get_rules(chat_id)
 
     if not rules:
-        await m.reply_text(_("rules.no_rules"), reply_to_message_id=m.message_id)
+        await m.reply_text(tlang(m, "rules.no_rules"), reply_to_message_id=m.message_id)
         return
 
     try:
         await c.send_message(
             m.from_user.id,
-            _("rules.get_rules").format(chat=m.chat.title, rules=rules),
+            tlang(m, "rules.get_rules").format(chat=m.chat.title, rules=rules),
         )
     except UserIsBlocked:
         me = await c.get_me()
@@ -67,13 +65,16 @@ async def get_rules(c: Alita, m: Message):
             [[InlineKeyboardButton("PM", url=f"https://t.me/{me.username}?start")]],
         )
         await m.reply_text(
-            _("rules.pm_me"),
+            tlang(m, "rules.pm_me"),
             reply_to_message_id=m.message_id,
             reply_markup=pm_kb,
         )
         return
 
-    await m.reply_text(_("rules.sent_pm_rules"), reply_to_message_id=m.message_id)
+    await m.reply_text(
+        tlang(m, "rules.sent_pm_rules"),
+        reply_to_message_id=m.message_id,
+    )
     return
 
 
@@ -81,8 +82,6 @@ async def get_rules(c: Alita, m: Message):
     filters.command("setrules", PREFIX_HANDLER) & filters.group & admin_filter,
 )
 async def set_rules(_, m: Message):
-
-    _ = GetLang(m).strs
 
     chat_id = m.chat.id
     if m.reply_to_message and m.reply_to_message.text:
@@ -95,7 +94,7 @@ async def set_rules(_, m: Message):
         await m.reply_text("Rules truncated to 3950 characters!")
 
     db.set_rules(chat_id, rules)
-    await m.reply_text(_("rules.set_rules"), reply_to_message_id=m.message_id)
+    await m.reply_text(tlang(m, "rules.set_rules"), reply_to_message_id=m.message_id)
     return
 
 
@@ -104,11 +103,9 @@ async def set_rules(_, m: Message):
 )
 async def clear_rules(_, m: Message):
 
-    _ = GetLang(m).strs
-
     rules = db.get_rules(m.chat.id)
     if not rules:
-        await m.reply_text(_("rules.no_rules"), reply_to_message_id=m.message_id)
+        await m.reply_text(tlang(m, "rules.no_rules"), reply_to_message_id=m.message_id)
         return
 
     await m.reply_text(
@@ -129,6 +126,6 @@ async def clear_rules(_, m: Message):
 async def clearrules_callback(_, q: CallbackQuery):
     _ = GetLang(q.message).strs
     db.clear_rules(q.message.chat.id)
-    await q.message.reply_text(_("rules.clear"))
+    await q.message.reply_text(tlang(m, "rules.clear"))
     await q.answer()
     return

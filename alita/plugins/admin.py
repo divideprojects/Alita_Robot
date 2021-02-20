@@ -28,6 +28,7 @@ from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
+from alita.tr_engine import tlang
 from alita.utils.custom_filters import (
     admin_filter,
     invite_filter,
@@ -35,7 +36,6 @@ from alita.utils.custom_filters import (
     restrict_filter,
 )
 from alita.utils.extract_user import extract_user
-from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
 from alita.utils.redis_helper import get_key, set_key
 
@@ -62,7 +62,7 @@ An example of promoting someone to admins:
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
 async def adminlist_show(_, m: Message):
-    _ = GetLang(m).strs
+
     replymsg = await m.reply_text("Getting admins...")
     try:
         try:
@@ -89,7 +89,7 @@ async def adminlist_show(_, m: Message):
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
-        adminstr = _("admin.adminlist").format(chat_title=m.chat.title)
+        adminstr = tlang(m, "admin.adminlist").format(chat_title=m.chat.title)
 
         for i in adminlist:
             try:
@@ -112,11 +112,11 @@ async def adminlist_show(_, m: Message):
 
     except BaseException as ef:
         if str(ef) == str(m.chat.id):
-            await m.reply_text(_("admin.useadmincache"))
+            await m.reply_text(tlang(m, "admin.useadmincache"))
         else:
             ef = str(ef) + f"{adminlist}\n"
             await m.reply_text(
-                _("admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef),
+                tlang(m, "admin.somerror").format(SUPPORT_GROUP=SUPPORT_GROUP, ef=ef),
             )
             LOGGER.error(ef)
 
@@ -127,8 +127,6 @@ async def adminlist_show(_, m: Message):
     filters.command("admincache", PREFIX_HANDLER) & filters.group & admin_filter,
 )
 async def reload_admins(_, m: Message):
-
-    _ = GetLang(m).strs
 
     replymsg = await m.reply_text("Refreshing admin list...")
 
@@ -147,10 +145,10 @@ async def reload_admins(_, m: Message):
             )
         ADMINDICT[str(m.chat.id)] = adminlist
         await set_key("ADMINDICT", ADMINDICT)
-        await replymsg.edit_text(_("admin.reloadedadmins"))
+        await replymsg.edit_text(tlang(m, "admin.reloadedadmins"))
         LOGGER.info(f"Reloaded admins for {m.chat.title}({m.chat.id})")
     except RPCError as ef:
-        await m.reply_text(_("admin.useadmincache"))
+        await m.reply_text(tlang(m, "admin.useadmincache"))
         LOGGER.error(ef)
 
     return
@@ -160,8 +158,6 @@ async def reload_admins(_, m: Message):
     filters.command("mute", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
 async def mute_usr(_, m: Message):
-
-    _ = GetLang(m).strs
 
     user_id, user_first_name = await extract_user(m)
     try:
@@ -185,7 +181,7 @@ async def mute_usr(_, m: Message):
             f"<b>Muted</b> {(await mention_html(user_first_name,user_id))}",
         )
     except ChatAdminRequired:
-        await m.reply_text(_("admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.notadmin"))
     except RPCError as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         LOGGER.error(ef)
@@ -198,8 +194,6 @@ async def mute_usr(_, m: Message):
 )
 async def unmute_usr(_, m: Message):
 
-    _ = GetLang(m).strs
-
     user_id, user_first_name = await extract_user(m)
     try:
         await m.chat.restrict_member(user_id, m.chat.permissions)
@@ -207,7 +201,7 @@ async def unmute_usr(_, m: Message):
             f"<b>Unmuted</b> {(await mention_html(user_first_name,user_id))}",
         )
     except ChatAdminRequired:
-        await m.reply_text(_("admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.notadmin"))
     except RPCError as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         LOGGER.error(ef)
@@ -218,8 +212,6 @@ async def unmute_usr(_, m: Message):
     filters.command("promote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
 async def promote_usr(_, m: Message):
-
-    _ = GetLang(m).strs
 
     user_id, user_first_name = await extract_user(m)
     try:
@@ -232,7 +224,7 @@ async def promote_usr(_, m: Message):
             can_pin_messages=True,
         )
         await m.reply_text(
-            _("admin.promoted").format(
+            tlang(m, "admin.promoted").format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=m.chat.title,
@@ -255,7 +247,7 @@ async def promote_usr(_, m: Message):
         await set_key("ADMINDICT", ADMINDICT)
 
     except ChatAdminRequired:
-        await m.reply_text(_("admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.notadmin"))
     except RightForbidden:
         await m.reply_text("I don't have enough rights to promote this user.")
     except RPCError as ef:
@@ -270,8 +262,6 @@ async def promote_usr(_, m: Message):
 )
 async def demote_usr(_, m: Message):
 
-    _ = GetLang(m).strs
-
     user_id, user_first_name = await extract_user(m)
     try:
         await m.chat.promote_member(
@@ -283,7 +273,7 @@ async def demote_usr(_, m: Message):
             can_pin_messages=False,
         )
         await m.reply_text(
-            _("admin.demoted").format(
+            tlang(m, "admin.demoted").format(
                 demoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 demoted=(await mention_html(user_first_name, user_id)),
                 chat_title=m.chat.title,
@@ -306,7 +296,7 @@ async def demote_usr(_, m: Message):
         await set_key("ADMINDICT", ADMINDICT)
 
     except ChatAdminRequired:
-        await m.reply_text(_("admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.notadmin"))
     except RightForbidden:
         await m.reply_text("I don't have enough rights to demote this user.")
     except RPCError as ef:
@@ -321,15 +311,13 @@ async def demote_usr(_, m: Message):
 )
 async def get_invitelink(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
-
     try:
         link = await c.export_chat_invite_link(m.chat.id)
-        await m.reply_text(_("admin.invitelink").format(link=link))
+        await m.reply_text(tlang(m, "admin.invitelink").format(link=link))
     except ChatAdminRequired:
-        await m.reply_text(_("admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.notadmin"))
     except ChatAdminInviteRequired:
-        await m.reply_text(_("admin.noinviteperm"))
+        await m.reply_text(tlang(m, "admin.noinviteperm"))
     except RightForbidden:
         await m.reply_text("I don't have enough rights to view invitelink.")
     except RPCError as ef:

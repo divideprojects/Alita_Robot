@@ -37,9 +37,9 @@ from ujson import dumps
 from alita import DEV_PREFIX_HANDLER, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
 from alita.bot_class import Alita
 from alita.db import users_db as userdb
+from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.custom_filters import dev_filter
-from alita.utils.localization import GetLang
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
 from alita.utils.redis_helper import allkeys, flushredis, get_key
@@ -47,7 +47,7 @@ from alita.utils.redis_helper import allkeys, flushredis, get_key
 
 @Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
 async def send_log(c: Alita, m: Message):
-    _ = GetLang(m).strs
+
     replymsg = await m.reply_text("Sending logs...!")
     await c.send_message(
         MESSAGE_DUMP,
@@ -69,13 +69,13 @@ async def send_log(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("speedtest", DEV_PREFIX_HANDLER) & dev_filter)
 async def test_speed(c: Alita, m: Message):
-    _ = GetLang(m).strs
-    string = _("dev.speedtest")
+
+    string = tlang(m, "dev.speedtest")
     await c.send_message(
         MESSAGE_DUMP,
         f"#SPEEDTEST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    sent = await m.reply_text(_("dev.start_speedtest"))
+    sent = await m.reply_text(tlang(m, "dev.start_speedtest"))
     s = Speedtest()
     bs = s.get_best_server()
     dl = round(s.download() / 1024 / 1024, 2)
@@ -120,9 +120,9 @@ async def neofetch_stats(_, m: Message):
 
 @Alita.on_message(filters.command(["eval", "py"], DEV_PREFIX_HANDLER) & dev_filter)
 async def evaluate_code(c: Alita, m: Message):
-    _ = GetLang(m).strs
+
     if len(m.text.split()) == 1:
-        await m.reply_text(_("dev.execute_cmd_err"))
+        await m.reply_text(tlang(m, "dev.execute_cmd_err"))
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(None, maxsplit=1)[1]
@@ -183,9 +183,9 @@ async def aexec(code, c, m):
 
 @Alita.on_message(filters.command(["exec", "sh"], DEV_PREFIX_HANDLER) & dev_filter)
 async def execution(_, m: Message):
-    _ = GetLang(m).strs
+
     if len(m.text.split()) == 1:
-        await m.reply_text(_("dev.execute_cmd_err"))
+        await m.reply_text(tlang(m, "dev.execute_cmd_err"))
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(maxsplit=1)[1]
@@ -229,13 +229,13 @@ async def execution(_, m: Message):
 
 @Alita.on_message(filters.command("ip", DEV_PREFIX_HANDLER) & dev_filter)
 async def public_ip(c: Alita, m: Message):
-    _ = GetLang(m).strs
+
     ip = (await AioHttp.get_text("https://api.ipify.org"))[0]
     await c.send_message(
         MESSAGE_DUMP,
         f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    await m.reply_text(_("dev.bot_ip").format(ip=ip), quote=True)
+    await m.reply_text(tlang(m, "dev.bot_ip").format(ip=ip), quote=True)
     return
 
 

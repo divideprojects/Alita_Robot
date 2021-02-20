@@ -26,8 +26,8 @@ from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import approve_db as app_db
 from alita.db import blacklist_db as db
+from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
-from alita.utils.localization import GetLang
 from alita.utils.regex_utils import regex_searcher
 
 __PLUGIN__ = "Blacklist"
@@ -55,16 +55,16 @@ muser_listtiple triggers at once.
 )
 async def view_blacklist(_, m: Message):
 
-    _ = GetLang(m).strs
-
     chat_title = m.chat.title
-    blacklists_chat = _("blacklist.curr_blacklist_initial").format(
+    blacklists_chat = tlang(m, "blacklist.curr_blacklist_initial").format(
         chat_title=chat_title,
     )
     all_blacklisted = db.get_chat_blacklist(m.chat.id)
 
     if not all_blacklisted:
-        await m.reply_text(_("blacklist.no_blacklist").format(chat_title=chat_title))
+        await m.reply_text(
+            tlang(m, "blacklist.no_blacklist").format(chat_title=chat_title),
+        )
         return
 
     for trigger in all_blacklisted:
@@ -79,17 +79,15 @@ async def view_blacklist(_, m: Message):
 )
 async def add_blacklist(_, m: Message):
 
-    _ = GetLang(m).strs
-
     if len(m.text.split()) >= 2:
         bl_word = m.text.split(None, 1)[1]
         db.add_to_blacklist(m.chat.id, bl_word.lower())
         await m.reply_text(
-            _("blacklist.added_blacklist").format(trigger=bl_word),
+            tlang(m, "blacklist.added_blacklist").format(trigger=bl_word),
             reply_to_message_id=m.message_id,
         )
         return
-    await m.reply_text(_("general.check_help"), reply_to_message_id=m.message_id)
+    await m.reply_text(tlang(m, "general.check_help"), reply_to_message_id=m.message_id)
     return
 
 
@@ -100,8 +98,6 @@ async def add_blacklist(_, m: Message):
 )
 async def rm_blacklist(_, m: Message):
 
-    _ = GetLang(m).strs
-
     chat_bl = db.get_chat_blacklist(m.chat.id)
     if not isinstance(chat_bl, bool):
         pass
@@ -110,12 +106,16 @@ async def rm_blacklist(_, m: Message):
             bl_word = m.text.split(None, 1)[1]
             if bl_word in chat_bl:
                 db.rm_from_blacklist(m.chat.id, bl_word.lower())
-                await m.reply_text(_("blacklist.rm_blacklist").format(bl_word=bl_word))
+                await m.reply_text(
+                    tlang(m, "blacklist.rm_blacklist").format(bl_word=bl_word),
+                )
                 return
-            await m.reply_text(_("blacklist.no_bl_found").format(bl_word=bl_word))
+            await m.reply_text(
+                tlang(m, "blacklist.no_bl_found").format(bl_word=bl_word),
+            )
         else:
             await m.reply_text(
-                _("general.check_help"),
+                tlang(m, "general.check_help"),
                 reply_to_message_id=m.message_id,
             )
     return

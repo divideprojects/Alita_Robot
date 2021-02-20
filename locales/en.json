@@ -1,0 +1,92 @@
+{
+    "main": {
+        "language_name": "English",
+        "language_flag": "🇺🇸"
+    },
+    "strings": {
+        "general": {
+            "close_btn": "Close",
+            "back_btn": "Back",
+            "no_perm_admin": "I don't have permission to do that",
+            "something_wrong": "Something went wrong!",
+            "no_results": "No results found.",
+            "commands_available": "Hey There! My name is Alita.\nI'm here to help you manage your groups!\nCommands available:\n × /start: Start the bot\n × /help: Give's you this message.\n × /donate: Information related about how to donate!\n\nAll commands can either be used with / or !.",
+            "check_help": "Please check help on how to use this this command."
+        },
+        "admin": {
+            "adminlist": "Admins in <b>{chat_title}</b>:\n",
+            "useadmincache": "Use /admincache to reload admins!",
+            "somerror": "Some error occured, report to @{SUPPORT_GROUP}\n\nError: <code>{ef}</code>",
+            "reloadedadmins": "Reloaded all admins in this chat!",
+            "notadmin": "I'm not admin!",
+            "nopromoteperm": "You don't have permission to promote members!",
+            "nodemoteperm": "You don't have permission to demote members!",
+            "promoted": "{promoter} promoted {promoted} in chat <b>{chat_title}</b>",
+            "demoted": "{demoter} demoted {demoted} in chat <b>{chat_title}</b>",
+            "invitelink": "<b>Invite Link for Chat:</b>\n<code>{link}</code>",
+            "noinviteperm": "I don't have permission for invite link!",
+            "nouserinviteperm": "You don't have permission to invite users!",
+            "pinnedmsg": "Pinned message!",
+            "nopinmsg": "Reply to a message to which you want to pin..."
+        },
+        "start": {
+            "commands_btn": "Commands",
+            "infos_btn": "Info",
+            "language_btn": "Language",
+            "add_chat_btn": "Add to a chat",
+            "private": "Hello! I'm Alita_Robot. To discover more about my functions, click on the buttons below.",
+            "group": "I'm alive :3",
+            "info_page": "• @Alita_Robot\n\nVersion: {version}\n\nDevelopers: [Divkix](https://github.com/Divkix)\nOwner: [{Owner}](tg://user?id={ID})"
+        },
+        "rules": {
+            "get_rules": "Rules for <b>{chat}</b>:\n\n{rules}",
+            "clear": "Successfully cleared rules for this group!",
+            "set_rules": "Successfully set rules for this group.",
+            "no_rules": "The Admins for this group have not setup rules!",
+            "sent_pm_rules": "I've messaged you the rules",
+            "pm_me": "First PM me and then get the rules!",
+            "lang.changelang": "Here you can change language used for the bot."
+        },
+        "langs": {
+            "changed": "Language changed to {lang_code}",
+            "correct_usage": "<b>Correct Usage:</b> /lang or /setlang language-code"
+        },
+        "dev": {
+            "speedtest": "<b>Speedtest</b>\n\n<b>Host:</b> <code>{host}</code>\n\n<b>Ping:</b> <code>{ping} ms</code>\n<b>Download:</b> <code>{download} Mbps</code>\n<b>Upload:</b> <code>{upload} Mbps</code>",
+            "start_speedtest": "Calculating my speed...",
+            "restarting": "<i><b>Restarting...</b></i>",
+            "bot_ip": "<b>Bot IP Address:</b>\n<code>{ip}</code>",
+            "execute_cmd_err": "<b>Please execute the code correctly!</b>"
+        },
+        "translate": {
+            "translate_usage": "<b>Usage:</b> <code>/tr <language> text for translation</code> (Can be also used in reply to a message).",
+            "translating": "Translating...",
+            "translation": "<b>Language:</b> {from_lang} -> {to_lang}\n</b>Translation:</b> <code>{translation}</code>"
+        },
+        "locks": {
+            "locks_perm.sp_perm": "Specify a permission to lock!",
+            "lock_all": "<b>Locked all permission from this Chat!</b>",
+            "invalid_lock": "Invalid Lock Type!\n\nUse /locktypes to get the lock types",
+            "locked_perm": "<b>Locked {perm} for this Chat.</b>",
+            "check_perm_msg": "<b><i>Checking Chat permissions...</i></b>",
+            "view_perm": "<b>CHAT PERMISSIONS:</b>\n\n<b>Send Messages:</b> {vmsg}\n<b>Send Media:</b> {vmedia}\n<b>Send Stickers:</b> {vstickers}\n<b>Send Animations:</b> {vanimations}\n<b>Can Play Games:</b> {vgames}\n<b>Can Use Inline Bots:</b> {vinlinebots}\n<b>Webpage Preview:</b> {vwebprev}\n<b>Send Polls:</b> {vpolls}\n<b>Change Info:</b> {vinfo}\n<b>Invite Users:</b> {vinvite}\n<b>Pin Messages:</b> {vpin}",
+            "unlocks_perm.sp_perm": "Specify a permission to unlock!",
+            "unlock_all": "<b>Unlocked all permission from this Chat!</b>",
+            "unlocked_perm": "<b>Unlocked {uperm} for this Chat.</b>"
+        },
+        "purge": {
+            "purge_msg_count": "Deleted <i>{msg_count}</i> messages",
+            "what_del": "What do you wanna delete?",
+            "deleting": "Incinerating these useless messages...",
+            "old_msg_err": "Cannot delete all messages. The messages may be too old, I might not have delete rights, or this might not be a supergroup.",
+            "err_basic": "Cannot purge messages in a basic group"
+        },
+        "blacklist": {
+            "blacklist.curr_blacklist_initial": "Current <b>Blacklisted</b> words in <b>{chat_title}</b>:\n",
+            "blacklist.no_blacklist": "There are no blacklisted messages in <b>{chat_title}</b>!",
+            "blacklist.added_blacklist": "Added <code>{trigger}</code> in blacklist words!",
+            "blacklist.no_bl_found": "No blacklist <code>{bl_word}</code> found!",
+            "blacklist.rm_blacklist": "Removed <code>{bl_word}</code> from blacklist words!"
+        }
+    }
+}

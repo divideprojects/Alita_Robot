@@ -40,7 +40,6 @@ from alita import (
 from alita.bot_class import Alita
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.extract_user import extract_user
-from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
 from alita.utils.paste import paste
 
@@ -312,7 +311,7 @@ async def paste_it(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("tr", PREFIX_HANDLER))
 async def translate(_, m: Message):
-    _ = GetLang(m).strs
+
     translator = Translator()
     text = m.text[4:]
     lang = await get_lang(text)
@@ -323,7 +322,7 @@ async def translate(_, m: Message):
 
     if text:
         sent = await m.reply_text(
-            _("translate.translating"),
+            tlang(m, "translate.translating"),
             reply_to_message_id=m.message_id,
         )
         langs = {}
@@ -339,7 +338,7 @@ async def translate(_, m: Message):
 
         res = escape(text)
         await sent.edit_text(
-            _("translate.translation").format(
+            tlang(m, "translate.translation").format(
                 from_lang=trres.src,
                 to_lang=trres.dest,
                 translation=res,
@@ -349,7 +348,7 @@ async def translate(_, m: Message):
 
     else:
         await m.reply_text(
-            _("translate.translate_usage"),
+            tlang(m, "translate.translate_usage"),
             reply_to_message_id=m.message_id,
             parse_mode="markdown",
         )

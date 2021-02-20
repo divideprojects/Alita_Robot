@@ -24,9 +24,9 @@ from pyrogram.types import Message
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
+from alita.tr_engine import tlang
 from alita.utils import fun_strings
 from alita.utils.extract_user import extract_user
-from alita.utils.localization import GetLang
 
 __PLUGIN__ = "Fun"
 
@@ -45,9 +45,12 @@ __help__ = """
 
 @Alita.on_message(filters.command("shout", PREFIX_HANDLER))
 async def fun_shout(_, m: Message):
-    _ = GetLang(m).strs
+
     if len(m.text.split()) == 1:
-        await m.reply_text(_("general.check_help"), reply_to_message_id=m.message_id)
+        await m.reply_text(
+            tlang(m, "general.check_help"),
+            reply_to_message_id=m.message_id,
+        )
         return
     text = " ".join(m.text.split(None, 1)[1])
     result = []

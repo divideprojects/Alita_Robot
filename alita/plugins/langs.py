@@ -29,8 +29,8 @@ from pyrogram.types import (
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.db import lang_db as db
+from alita.tr_engine import langdict, tlang
 from alita.utils.custom_filters import admin_filter
-from alita.utils.localization import GetLang, langdict
 
 __PLUGIN__ = "Language"
 
@@ -76,13 +76,13 @@ async def chlang_callback(_, q: CallbackQuery):
             *(await gen_langs_kb()),
             [
                 InlineKeyboardButton(
-                    f"« {_('general.back_btn')}",
+                    f"« {tlang(q, 'general.back_btn')}",
                     callback_data="start_back",
                 ),
             ],
         ],
     )
-    await q.message.edit_text(_("lang.changelang"), reply_markup=keyboard)
+    await q.message.edit_text(tlang(m, "lang.changelang"), reply_markup=keyboard)
     await q.answer()
     return
 
@@ -105,7 +105,7 @@ async def set_lang_callback(_, q: CallbackQuery):
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        f"« {_('general.back_btn')}",
+                        f"« {tlang(q, 'general.back_btn')}",
                         callback_data="start_back",
                     ),
                 ],
@@ -114,11 +114,16 @@ async def set_lang_callback(_, q: CallbackQuery):
     else:
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(f"❌ {_('close_btn')}", callback_data="close")],
+                [
+                    InlineKeyboardButton(
+                        f"❌ {tlang(q, 'close_btn')}",
+                        callback_data="close",
+                    ),
+                ],
             ],
         )
     await q.message.edit_text(
-        f"🌐 {_('langs.changed').format(lang_code=q.data.split('.')[1])}",
+        f"🌐 {tlang(q, 'langs.changed').format(lang_code=q.data.split('.')[1])}",
         reply_markup=keyboard,
     )
     await q.answer()
@@ -131,12 +136,11 @@ async def set_lang_callback(_, q: CallbackQuery):
 )
 async def set_lang(_, m: Message):
 
-    _ = GetLang(m).strs
     if len(m.text.split()) >= 2:
-        await m.reply_text(_("langs.correct_usage"))
+        await m.reply_text(tlang(m, "langs.correct_usage"))
         return
     await m.reply_text(
-        _("lang.changelang"),
+        tlang(m, "lang.changelang"),
         reply_markup=InlineKeyboardMarkup([*(await gen_langs_kb())]),
     )
     return

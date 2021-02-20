@@ -22,8 +22,8 @@ from pyrogram.types import Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
+from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
-from alita.utils.localization import GetLang
 
 __PLUGIN__ = "Pins"
 __help__ = """
@@ -39,8 +39,6 @@ Here you find find all help related to groups pins and how to manage them via me
 @Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group & admin_filter)
 async def pin_message(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
-
     pin_args = m.text.split(None, 1)
     if m.reply_to_message:
         try:
@@ -54,17 +52,17 @@ async def pin_message(c: Alita, m: Message):
                 m.reply_to_message.message_id,
                 disable_notification=disable_notification,
             )
-            await m.reply_text(_("admin.pinnedmsg"))
+            await m.reply_text(tlang(m, "admin.pinnedmsg"))
 
         except ChatAdminRequired:
-            await m.reply_text(_("admin.notadmin"))
+            await m.reply_text(tlang(m, "admin.notadmin"))
         except RightForbidden:
             await m.reply_text("I don't have enough rights to pin messages.")
         except RPCError as ef:
             await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
             LOGGER.error(ef)
     else:
-        await m.reply_text(_("admin.nopinmsg"))
+        await m.reply_text(tlang(m, "admin.nopinmsg"))
 
     return
 
@@ -74,13 +72,11 @@ async def pin_message(c: Alita, m: Message):
 )
 async def unpin_message(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
-
     try:
         await c.unpin_chat_message(m.chat.id)
         await m.reply_text("Unpinned last message.")
     except ChatAdminRequired:
-        await m.reply_text(_("admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.notadmin"))
     except RightForbidden:
         await m.reply_text("I don't have enough rights to unpin messages")
     except RPCError as ef:
@@ -95,13 +91,11 @@ async def unpin_message(c: Alita, m: Message):
 )
 async def unpinall_message(c: Alita, m: Message):
 
-    _ = GetLang(m).strs
-
     try:
         await c.unpin_all_chat_messages(m.chat.id)
         await m.reply_text("Unpinned all messages in this chat.")
     except ChatAdminRequired:
-        await m.reply_text(_("admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.notadmin"))
     except RightForbidden:
         await m.reply_text("I don't have enough rights to unpin messages")
     except RPCError as ef:
