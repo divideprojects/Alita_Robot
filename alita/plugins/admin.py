@@ -251,6 +251,7 @@ async def promote_usr(_: Alita, m: Message):
                 f"@{u.user.username}" if u.user.username else u.user.first_name,
             ],
         )
+        ADMINDICT = await get_key("ADMINDICT")
         ADMINDICT[str(m.chat.id)] = adminlist
         await set_key("ADMINDICT", ADMINDICT)
 
@@ -294,7 +295,7 @@ async def demote_usr(_: Alita, m: Message):
         ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
         adminlist = []
         async for i in m.chat.iter_members(filter="administrators"):
-            if not i.user.is_deleted:
+            if i.user.is_deleted:
                 continue
             adminlist.append(
                 [
