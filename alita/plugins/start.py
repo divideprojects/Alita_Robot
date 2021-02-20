@@ -67,7 +67,7 @@ async def gen_cmds_kb():
     return kb
 
 
-async def gen_start_kb(m):
+async def gen_start_kb(q):
 
     me = await get_key("BOT_USERNAME")
     keyboard = InlineKeyboardMarkup(
@@ -130,7 +130,7 @@ async def start(_, m: Message):
 async def start_back(_, q: CallbackQuery):
 
     await q.message.edit_text(
-        tlang(m, "start.private"),
+        tlang(q, "start.private"),
         reply_markup=(await gen_start_kb(q.message)),
     )
     await q.answer()
@@ -145,14 +145,14 @@ async def commands_menu(_, q: CallbackQuery):
             *(await gen_cmds_kb()),
             [
                 InlineKeyboardButton(
-                    "« " + tlang(m, "general.back_btn"),
+                    "« " + tlang(q, "general.back_btn"),
                     callback_data="start_back",
                 ),
             ],
         ],
     )
     await q.message.edit_text(
-        tlang(m, "general.commands_available"),
+        tlang(q, "general.commands_available"),
         reply_markup=keyboard,
     )
     await q.answer()
@@ -204,7 +204,7 @@ async def get_module_info(_, q: CallbackQuery):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    "« " + tlang(m, "general.back_btn"),
+                    "« " + tlang(q, "general.back_btn"),
                     callback_data="commands",
                 ),
             ],
@@ -223,7 +223,7 @@ async def get_module_info(_, q: CallbackQuery):
 async def infos(c: Alita, q: CallbackQuery):
 
     _owner = await c.get_users(OWNER_ID)
-    res = tlang(m, "start.info_page").format(
+    res = tlang(q, "start.info_page").format(
         Owner=(
             f"{_owner.first_name} + {_owner.last_name}"
             if _owner.last_name
@@ -236,7 +236,7 @@ async def infos(c: Alita, q: CallbackQuery):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    "« " + tlang(m, "general.back_btn"),
+                    "« " + tlang(q, "general.back_btn"),
                     callback_data="start_back",
                 ),
             ],

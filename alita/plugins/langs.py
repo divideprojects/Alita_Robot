@@ -82,7 +82,7 @@ async def chlang_callback(_, q: CallbackQuery):
             ],
         ],
     )
-    await q.message.edit_text(tlang(m, "lang.changelang"), reply_markup=keyboard)
+    await q.message.edit_text(tlang(q, "lang.changelang"), reply_markup=keyboard)
     await q.answer()
     return
 
