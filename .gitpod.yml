@@ -1,3 +1,5 @@
 tasks:
   - before: export PIP_USER=false
-    command: make dev-install
+    command: >
+      git pull &&
+      make dev-install
