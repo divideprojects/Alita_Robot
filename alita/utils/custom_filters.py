@@ -20,6 +20,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery
 
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
+from alita.tr_engine import tlang
 
 
 async def dev_check_func(_, __, m):
@@ -47,7 +48,7 @@ async def admin_check_func(_, __, m):
         status = True
     else:
         status = False
-        await m.reply_text("You cannot use an admin command!")
+        await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
 
     return status
 
@@ -83,7 +84,7 @@ async def restrict_check_func(_, __, m):
         status = True
     else:
         status = False
-        await m.reply_text("You don't have permissions to restrict members!")
+        await m.reply_text(tlang(m, "admin.no_restrict_perm"))
 
     return status
 
@@ -99,7 +100,7 @@ async def promote_check_func(_, __, m):
         status = True
     else:
         status = False
-        await m.reply_text("You don't have permissions to promote members!")
+        await m.reply_text(tlang(m, "admin.no_promote_demote_perm"))
 
     return status
 
@@ -115,7 +116,7 @@ async def invite_check_func(_, __, m):
         status = True
     else:
         status = False
-        await m.reply_text("You don't have permissions to invite users!")
+        await m.reply_text(tlang(m, "admin.no_user_invite_perm"))
 
     return status
 

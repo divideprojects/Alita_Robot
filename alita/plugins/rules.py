@@ -59,7 +59,10 @@ async def get_rules(c: Alita, m: Message):
     try:
         await c.send_message(
             m.from_user.id,
-            tlang(m, "rules.get_rules").format(chat=m.chat.title, rules=rules),
+            tlang(m, "rules.get_rules").format(
+                chat=f"<b>{m.chat.title}</b>",
+                rules=rules,
+            ),
         )
     except UserIsBlocked:
         me_name = await get_key("BOT_USERNAME")
@@ -96,7 +99,7 @@ async def set_rules(_, m: Message):
         await m.reply_text("Rules truncated to 3950 characters!")
 
     db.set_rules(chat_id, rules)
-    await m.reply_text(tlang(m, "rules.set_rules"), reply_to_message_id=m.message_id)
+    await m.reply_text(tlang(m, "rules.set_rules"))
     return
 
 
@@ -107,11 +110,11 @@ async def clear_rules(_, m: Message):
 
     rules = db.get_rules(m.chat.id)
     if not rules:
-        await m.reply_text(tlang(m, "rules.no_rules"), reply_to_message_id=m.message_id)
+        await m.reply_text(tlang(m, "rules.no_rules"))
         return
 
     await m.reply_text(
-        "Are you sure you want to clear rules?",
+        tlang(m, "rules.clear_rules"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -128,6 +131,6 @@ async def clear_rules(_, m: Message):
 async def clearrules_callback(_, q: CallbackQuery):
 
     db.clear_rules(q.message.chat.id)
-    await q.message.reply_text(tlang(q, "rules.clear"))
+    await q.message.reply_text(tlang(q, "rules.cleared"))
     await q.answer()
     return

@@ -21,7 +21,7 @@ from io import BytesIO
 from time import time
 
 from pyrogram import filters
-from pyrogram.errors import ChatAdminRequired, RPCError
+from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -59,12 +59,23 @@ async def kick_usr(_, m: Message):
     try:
         await m.chat.kick_member(user_id, int(time() + 45))
         await m.reply_text(
-            f"Banned {(await mention_html(user_first_name, user_id))}",
+            tlang(m, "admin.kicked_user").format(
+                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                kicked=(await mention_html(user_first_name, user_id)),
+                chat_title=f"<b>{m.chat.title}</b>",
+            ),
         )
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
+    except RightForbidden:
+        await m.reply_text(tlang(m, "admin.bot_no_kick_right"))
     except RPCError as ef:
-        await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
+        await m.reply_text(
+            tlang(m, "general.some_error").format(
+                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
+                ef=f"<code>{ef}</code>",
+            ),
+        )
         LOGGER.error(ef)
 
     return
@@ -79,12 +90,23 @@ async def ban_usr(_, m: Message):
     try:
         await m.chat.kick_member(user_id)
         await m.reply_text(
-            f"Banned {(await mention_html(user_first_name, user_id))}",
+            tlang(m, "admin.banned_user").format(
+                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                banned=(await mention_html(user_first_name, user_id)),
+                chat_title=f"<b>{m.chat.title}</b>",
+            ),
         )
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
+    except RightForbidden:
+        await m.reply_text(tlang(m, tlang(m, "admin.bot_no_ban_right")))
     except RPCError as ef:
-        await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
+        await m.reply_text(
+            tlang(m, "general.some_error").format(
+                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
+                ef=f"<code>{ef}</code>",
+            ),
+        )
         LOGGER.error(ef)
 
     return
@@ -99,12 +121,23 @@ async def unban_usr(_, m: Message):
     try:
         await m.chat.unban_member(user_id)
         await m.reply_text(
-            f"Unbanned {(await mention_html(user_first_name, user_id))}",
+            tlang(m, "admin.banned_user").format(
+                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                unbanned=(await mention_html(user_first_name, user_id)),
+                chat_title=f"<b>{m.chat.title}</b>",
+            ),
         )
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
+    except RightForbidden:
+        await m.reply_text(tlang(m, tlang(m, "admin.bot_no_unban_right")))
     except RPCError as ef:
-        await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
+        await m.reply_text(
+            tlang(m, "general.some_error").format(
+                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
+                ef=f"<code>{ef}</code>",
+            ),
+        )
         LOGGER.error(ef)
 
     return
@@ -113,7 +146,7 @@ async def unban_usr(_, m: Message):
 @Alita.on_message(filters.command("banall", DEV_PREFIX_HANDLER) & owner_filter)
 async def banall_chat(_, m: Message):
     await m.reply_text(
-        "Are you sure you want to ban all members in this group?",
+        tlang(m, "admin.ban_all"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -129,7 +162,9 @@ async def banall_chat(_, m: Message):
 @Alita.on_callback_query(filters.regex("^ban.all.members$") & owner_filter)
 async def banallnotes_callback(_, q: CallbackQuery):
 
-    replymsg = await q.message.edit_text("<i><b>Banning All Members...</b></i>")
+    replymsg = await q.message.edit_text(
+        f"<i><b>{tlang(q, 'admin.banning_all')}</b></i>",
+    )
     users = []
     fs = 0
     async for x in q.message.chat.iter_members():

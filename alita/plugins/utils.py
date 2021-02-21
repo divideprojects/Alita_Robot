@@ -65,7 +65,7 @@ Some utils provided by bot to make your tasks easy!
 )
 async def ping(_, m: Message):
     start = time()
-    replymsg = await m.reply_text("Pinging...", quote=True)
+    replymsg = await m.reply_text(tlang(m, "utils.ping.pinging"), quote=True)
     delta_ping = time() - start
     await replymsg.edit_text(f"**Pong!**\n{delta_ping * 1000:.3f} ms")
     return
@@ -78,17 +78,17 @@ async def get_lyrics(_, m: Message):
     query = m.text.split(None, 1)[1]
     song = ""
     if not query:
-        await m.edit_text("You haven't specified which song to look for!")
+        await m.edit_text(tlang(m, "utils.song.no_song_given"))
         return
-    em = await m.reply_text(f"**Finding lyrics for:** `{query}`")
+    em = await m.reply_text(tlang(m, "utils.song.searching").format(song_name=query))
     song = Song.find_song(query)
     if song:
         if song.lyrics:
             reply = song.format()
         else:
-            reply = "Couldn't find any lyrics for that song!"
+            reply = tlang(m, "utils.song.no_lyrics_found")
     else:
-        reply = "Song not found!"
+        reply = tlang(m, "utils.song.song_not_found")
     try:
         await em.edit_text(reply)
     except MessageTooLong:
@@ -96,7 +96,6 @@ async def get_lyrics(_, m: Message):
             f.name = "lyrics.txt"
             await m.reply_document(
                 document=f,
-                caption="Message length exceeded max limit!\nSent as a text file.",
             )
         await em.delete()
     return
@@ -112,11 +111,11 @@ async def id_info(c: Alita, m: Message):
             user1 = m.reply_to_m.from_user
             user2 = m.reply_to_m.forward_from
             await m.reply_text(
-                (
-                    f"Original Sender - {(await mention_html(user2.first_name, user2.id))} "
-                    f"(<code>{user2.id}</code>).\n"
-                    f"Forwarder - {(await mention_html(user1.first_name, user1.id))} "
-                    f"(<code>{user1.id}</code>)."
+                tlang(m, "utils.id.id_main").format(
+                    orig_sender=(await mention_html(user2.first_name, user2.id)),
+                    orig_id=f"<code>{user2.id}</code>",
+                    fwd_sender=(await mention_html(user1.first_name, user1.id)),
+                    fwd_id=f"<code>{user1.id}</code>",
                 ),
                 parse_mode="HTML",
             )
@@ -124,9 +123,7 @@ async def id_info(c: Alita, m: Message):
             try:
                 user = await c.get_users(user_id)
             except PeerIdInvalid:
-                await m.reply_text(
-                    "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!",
-                )
+                await m.reply_text(tlang(m, "utils.no_user_db"))
 
             await m.reply_text(
                 f"{(await mention_html(user.first_name, user.id))}'s ID is <code>{user.id}</code>.",
@@ -135,13 +132,13 @@ async def id_info(c: Alita, m: Message):
     else:
         if m.chat.type == "private":
             await m.reply_text(
-                f"Your ID is <code>{m.chat.id}</code>.",
-                parse_mode="HTML",
+                tlang(m, "utils.id.my_id").format(my_id=f"<code>{m.chat.id}</code>"),
             )
         else:
             await m.reply_text(
-                f"This Group's ID is <code>{m.chat.id}</code>.",
-                parse_mode="HTML",
+                tlang(m, "utils.id.group_id").format(
+                    group_id=f"<code>{m.chat.id}</code>",
+                ),
             )
     return
 
@@ -205,9 +202,7 @@ async def my_info(c: Alita, m: Message):
     try:
         user = await c.get_users(user_id)
     except PeerIdInvalid:
-        await m.reply_text(
-            "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!",
-        )
+        await m.reply_text(tlang(m, "utils.no_user_db"))
     except RPCError as ef:
         await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         return
@@ -322,10 +317,7 @@ async def translate(_, m: Message):
         text = text.replace(lang, "", 1).strip() if text.startswith(lang) else text
 
     if text:
-        sent = await m.reply_text(
-            tlang(m, "translate.translating"),
-            reply_to_message_id=m.message_id,
-        )
+        sent = await m.reply_text(tlang(m, "utils.translate.translating"))
         langs = {}
 
         if len(lang.split("-")) > 1:
@@ -339,20 +331,15 @@ async def translate(_, m: Message):
 
         res = escape(text)
         await sent.edit_text(
-            tlang(m, "translate.translation").format(
+            tlang(m, "utils.translate.translation").format(
                 from_lang=trres.src,
                 to_lang=trres.dest,
                 translation=res,
             ),
-            parse_mode="HTML",
         )
 
     else:
-        await m.reply_text(
-            tlang(m, "translate.translate_usage"),
-            reply_to_message_id=m.message_id,
-            parse_mode="markdown",
-        )
+        await m.reply_text(tlang(m, "utils.translate.translate_usage"))
 
     return
 

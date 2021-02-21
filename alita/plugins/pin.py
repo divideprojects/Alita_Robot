@@ -52,14 +52,19 @@ async def pin_message(c: Alita, m: Message):
                 m.reply_to_message.message_id,
                 disable_notification=disable_notification,
             )
-            await m.reply_text(tlang(m, "admin.pinnedmsg"))
+            await m.reply_text(tlang(m, "pin.pinned_msg"))
 
         except ChatAdminRequired:
-            await m.reply_text(tlang(m, "admin.notadmin"))
+            await m.reply_text(tlang(m, "admin.not_admin"))
         except RightForbidden:
-            await m.reply_text("I don't have enough rights to pin messages.")
+            await m.reply_text(tlang(m, "pin.no_rights_pin"))
         except RPCError as ef:
-            await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
+            await m.reply_text(
+                tlang(m, "general.some_error").format(
+                    SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
+                    ef=f"<code>{ef}</code>",
+                ),
+            )
             LOGGER.error(ef)
     else:
         await m.reply_text(tlang(m, "admin.nopinmsg"))
@@ -74,13 +79,18 @@ async def unpin_message(c: Alita, m: Message):
 
     try:
         await c.unpin_chat_message(m.chat.id)
-        await m.reply_text("Unpinned last message.")
+        await m.reply_text(tlang(m, "pin.unpinned_last_msg"))
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.notadmin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text("I don't have enough rights to unpin messages")
+        await m.reply_text(tlang(m, "pin.no_rights_unpin"))
     except RPCError as ef:
-        await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
+        await m.reply_text(
+            tlang(m, "general.some_error").format(
+                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
+                ef=f"<code>{ef}</code>",
+            ),
+        )
         LOGGER.error(ef)
 
     return
@@ -93,13 +103,18 @@ async def unpinall_message(c: Alita, m: Message):
 
     try:
         await c.unpin_all_chat_messages(m.chat.id)
-        await m.reply_text("Unpinned all messages in this chat.")
+        await m.reply_text(tlang(m, "pin.unpinned_all_msg"))
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.notadmin"))
     except RightForbidden:
-        await m.reply_text("I don't have enough rights to unpin messages")
+        await m.reply_text(tlang(m, "pin.no_rights_unpin"))
     except RPCError as ef:
-        await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
+        await m.reply_text(
+            tlang(m, "general.some_error").format(
+                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
+                ef=f"<code>{ef}</code>",
+            ),
+        )
         LOGGER.error(ef)
 
     return

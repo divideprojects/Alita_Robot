@@ -89,7 +89,7 @@ async def lock_perm(c: Alita, m: Message):
     chat_id = m.chat.id
 
     if not lock_type:
-        await m.reply_text(tlang(m, "locks.locks_perm.sp_perm"))
+        await m.reply_text(tlang(m, "locks.locks_perm_sp"))
         return
 
     get_perm = await c.get_chat(chat_id)
@@ -274,7 +274,7 @@ async def unlock_perm(c: Alita, m: Message):
     chat_id = m.chat.id
 
     if not unlock_type:
-        await m.reply_text(tlang(m, "locks.unlocks_perm.sp_perm"))
+        await m.reply_text(tlang(m, "locks.unlocks_perm_sp"))
         return
 
     get_uperm = await c.get_chat(chat_id)

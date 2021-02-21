@@ -98,7 +98,7 @@ async def gen_start_kb(q):
             ],
             [
                 InlineKeyboardButton(
-                    "🗃️ Source Code",
+                    f"🗃️ {tlang(q, 'start.source_code')}",
                     url="https://github.com/Divkix/Alita_Robot",
                 ),
             ],
@@ -145,7 +145,7 @@ async def commands_menu(_, q: CallbackQuery):
             *(await gen_cmds_kb()),
             [
                 InlineKeyboardButton(
-                    "« " + tlang(q, "general.back_btn"),
+                    f"« {tlang(q, 'general.back_btn')}",
                     callback_data="start_back",
                 ),
             ],
@@ -171,7 +171,19 @@ async def commands_pvt(_, m: Message):
         if m.chat.type == "private":
             await m.reply_text(help_msg)
         else:
-            await m.reply_text(f"Press the button below to get help for {help_option}", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Help", url=f"t.me/{me}?start={help_option}")]]))
+            await m.reply_text(
+                tlang(m, "start.public_help").format(help_option=help_option),
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                "Help",
+                                url=f"t.me/{me}?start={help_option}",
+                            ),
+                        ],
+                    ],
+                ),
+            )
         return
     if m.chat.type == "private":
         keyboard = InlineKeyboardMarkup(
@@ -179,7 +191,7 @@ async def commands_pvt(_, m: Message):
                 *gen_cmds_kb(),
                 [
                     InlineKeyboardButton(
-                        "« {tlang(m, 'general.back_btn')}",
+                        f"« {tlang(m, 'general.back_btn')}",
                         callback_data="start_back",
                     ),
                 ],
@@ -197,7 +209,7 @@ async def commands_pvt(_, m: Message):
                 ],
             ],
         )
-        msg = "Contact me in PM to get the list of possible commands."
+        msg = tlang(m, "start.pm_for_help")
 
     await m.reply_text(
         msg,
@@ -247,7 +259,7 @@ async def infos(c: Alita, q: CallbackQuery):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    "« " + tlang(q, "general.back_btn"),
+                    f"« {tlang(q, 'general.back_btn')}",
                     callback_data="start_back",
                 ),
             ],

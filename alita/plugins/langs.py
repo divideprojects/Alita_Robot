@@ -98,7 +98,7 @@ async def close_btn_callback(_, q: CallbackQuery):
 async def set_lang_callback(_, q: CallbackQuery):
 
     db.set_lang(q.message.chat.id, q.message.chat.type, q.data.split(".")[1])
-    await sleep(0.5)
+    await sleep(0.1)
 
     if q.message.chat.type == "private":
         keyboard = InlineKeyboardMarkup(
@@ -122,8 +122,9 @@ async def set_lang_callback(_, q: CallbackQuery):
                 ],
             ],
         )
+    lang_code = q.data.split(".")[1]
     await q.message.edit_text(
-        f"🌐 {tlang(q, 'langs.changed').format(lang_code=q.data.split('.')[1])}",
+        f"🌐 {tlang(q, 'langs.changed').format(lang_code=lang_code)}",
         reply_markup=keyboard,
     )
     await q.answer()

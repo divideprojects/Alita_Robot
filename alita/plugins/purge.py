@@ -25,7 +25,7 @@ from pyrogram.types import Message
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.admin_filter import admin_filter
+from alita.utils.custom_filters import admin_filter
 
 __PLUGIN__ = "Purges"
 
@@ -72,7 +72,9 @@ async def purge(c: Alita, m: Message):
 
     count_del_msg = len(message_ids)
 
-    await dm.edit(tlang(m, "purge.purge_msg_count").format(msg_count=count_del_msg))
+    await dm.edit(
+        tlang(m, "purge.purge_msg_count").format(msg_count=f"<i>{count_del_msg}</i>"),
+    )
     await sleep(3)
     await dm.delete()
     return

@@ -235,7 +235,10 @@ async def public_ip(c: Alita, m: Message):
         MESSAGE_DUMP,
         f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    await m.reply_text(tlang(m, "dev.bot_ip").format(ip=ip), quote=True)
+    await m.reply_text(
+        tlang(m, "dev.bot_ip").format(ip=f"<code>{ip}</code>"),
+        quote=True,
+    )
     return
 
 
@@ -279,7 +282,7 @@ async def chats(c: Alita, m: Message):
         f.name = "chatlist.txt"
         await m.reply_document(
             document=f,
-            caption="Here is the list of chats in my Database.",
+            caption=tlang(m, "dev.chats_in_db"),
         )
     await exmsg.delete()
     return
@@ -376,10 +379,10 @@ async def show_redis_keys(_, m: Message):
 
 @Alita.on_message(filters.command("flushredis", DEV_PREFIX_HANDLER) & dev_filter)
 async def flush_redis(_, m: Message):
-    replymsg = await m.reply_text("Flushing Redis Database...", quote=True)
+    replymsg = await m.reply_text(tlang(m, "dev.flushing_redis"), quote=True)
     try:
         await flushredis()
-        await replymsg.edit_text("Flushed Redis successfully!")
+        await replymsg.edit_text(tlang(m, "dev.flushed_redis"))
     except BaseException as ef:
         LOGGER.error(ef)
         await replymsg.edit_text(
