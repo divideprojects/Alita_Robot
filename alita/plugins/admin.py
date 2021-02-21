@@ -27,7 +27,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import ChatPermissions, Message
 
-from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
+from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import (
@@ -158,6 +158,11 @@ async def reload_admins(_, m: Message):
 async def mute_usr(_, m: Message):
 
     user_id, user_first_name = await extract_user(m)
+
+    if user_id in SUPPORT_STAFF:
+        await m.reply_text("This user is in my support staff, cannot restrict them.")
+        return
+
     try:
         await m.chat.restrict_member(
             user_id,
@@ -202,6 +207,11 @@ async def mute_usr(_, m: Message):
 async def unmute_usr(_, m: Message):
 
     user_id, user_first_name = await extract_user(m)
+
+    if user_id in SUPPORT_STAFF:
+        await m.reply_text("This user is in my support staff, cannot restrict them.")
+        return
+
     try:
         await m.chat.restrict_member(user_id, m.chat.permissions)
         await m.reply_text(
