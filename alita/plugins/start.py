@@ -169,7 +169,7 @@ async def commands_pvt(_, m: Message):
         if help_option in sorted([i.lower() for i in list(HELP_COMMANDS.keys())]):
             help_msg = HELP_COMMANDS[help_option]
         if m.chat.type == "private":
-            await m.reply_text(help_msg, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(f"« {tlang(q, 'general.back_btn')}",, callback_data="commands")]]))
+            await m.reply_text(help_msg, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(f"« {tlang(q, 'general.back_btn')}", callback_data="commands")]]))
         else:
             await m.reply_text(
                 tlang(m, "start.public_help").format(help_option=help_option),
