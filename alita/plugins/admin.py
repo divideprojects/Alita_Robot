@@ -261,7 +261,7 @@ async def promote_usr(_, m: Message):
         adminlist = (await get_key("ADMINDICT"))[
             str(m.chat.id)
         ]  # Load ADMINDICT from string
-        u = m.chat.get_member(user_id)
+        u = await m.chat.get_member(user_id)
         adminlist.append(
             [
                 u.user.id,
