@@ -42,13 +42,23 @@ async def admin_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    user = await m.chat.get_member(m.from_user.id)
+    # Bypass the bot devs, sudos and owner
+    if (m.from_user.id in DEV_USERS
+        or m.from_user.id in DEV_USERS
+        or m.from_user.id == int(OWNER_ID)):
+        return True
 
-    if user.status in ("creator", "administrator"):
-        status = True
-    else:
-        status = False
-        await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
+    try:
+        user = await m.chat.get_member(m.from_user.id)
+
+        if user.status in ("creator", "administrator"):
+            status = True
+        else:
+            status = False
+            await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
+    except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
+        if ("The chat_id" and "belongs to a user") in ef:
+            status = True
 
     return status
 
@@ -57,6 +67,12 @@ async def owner_check_func(_, __, m):
     """Check if user is Owner or not."""
     if isinstance(m, CallbackQuery):
         m = m.message
+
+    # Bypass the bot devs, sudos and owner
+    if (m.from_user.id in DEV_USERS
+        or m.from_user.id in DEV_USERS
+        or m.from_user.id == int(OWNER_ID)):
+        return True
 
     user = await m.chat.get_member(m.from_user.id)
 
@@ -78,6 +94,12 @@ async def restrict_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
+    # Bypass the bot devs, sudos and owner
+    if (m.from_user.id in DEV_USERS
+        or m.from_user.id in DEV_USERS
+        or m.from_user.id == int(OWNER_ID)):
+        return True
+
     user = await m.chat.get_member(m.from_user.id)
 
     if user.can_restrict_members or user.status == "creator":
@@ -94,6 +116,12 @@ async def promote_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
+    # Bypass the bot devs, sudos and owner
+    if (m.from_user.id in DEV_USERS
+        or m.from_user.id in DEV_USERS
+        or m.from_user.id == int(OWNER_ID)):
+        return True
+
     user = await m.chat.get_member(m.from_user.id)
 
     if user.can_promote_members or user.status == "creator":
@@ -109,6 +137,12 @@ async def invite_check_func(_, __, m):
     """Check if user can invite users or not."""
     if isinstance(m, CallbackQuery):
         m = m.message
+
+    # Bypass the bot devs, sudos and owner
+    if (m.from_user.id in DEV_USERS
+        or m.from_user.id in DEV_USERS
+        or m.from_user.id == int(OWNER_ID)):
+        return True
 
     user = await m.chat.get_member(m.from_user.id)
 
