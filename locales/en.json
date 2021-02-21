@@ -54,7 +54,8 @@
             "pinned_msg": "Pinned message!",
             "no_pin_msg": "Reply to a message to which you want to pin...",
             "unpinned_last_msg": "Unpinned last message.",
-            "unpinned_all_msg": "Unpinned all messages in this chat."
+            "unpinned_all_msg": "Unpinned all messages in this chat.",
+            "reply_to_unpin": "Idk what do you want to unpin, reply to a message to unpin it."
         },
         "start": {
             "pm_for_help": "Contact me in PM to get the list of possible commands.",
