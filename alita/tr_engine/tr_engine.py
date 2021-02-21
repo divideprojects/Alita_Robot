@@ -30,7 +30,7 @@ from alita.db import lang_db as db
 
 def cache_localizations(files):
     """Get all translated strings from files."""
-    ldict = {lang: {} for lang in enabled_locales}
+    ldict = {lang: {} for lang in ENABLED_LOCALES}
     for file in files:
         lang_name = (file.split(path.sep)[1]).replace(".json", "")
         lang_data = load(open(file, encoding="utf-8"))
@@ -40,7 +40,7 @@ def cache_localizations(files):
 
 # Get all translation files
 lang_files = []
-for locale in enabled_locales:
+for locale in ENABLED_LOCALES:
     lang_files += glob(path.join("locales", f"{locale}.json"))
 lang_dict = cache_localizations(lang_files)
 
