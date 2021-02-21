@@ -82,7 +82,7 @@ async def chlang_callback(_, q: CallbackQuery):
             ],
         ],
     )
-    await q.message.edit_text(tlang(q, "lang.changelang"), reply_markup=keyboard)
+    await q.message.edit_text(tlang(q, "langs.changelang"), reply_markup=keyboard)
     await q.answer()
     return
 
@@ -141,7 +141,7 @@ async def set_lang(_, m: Message):
         await m.reply_text(tlang(m, "langs.correct_usage"))
         return
     await m.reply_text(
-        tlang(m, "lang.changelang"),
+        tlang(m, "langs.changelang"),
         reply_markup=InlineKeyboardMarkup([*(await gen_langs_kb())]),
     )
     return
