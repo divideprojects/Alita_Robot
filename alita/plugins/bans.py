@@ -30,7 +30,7 @@ from pyrogram.types import (
 )
 
 from alita import DEV_PREFIX_HANDLER, LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
-from alita.bot_class import Alit_
+from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import owner_filter, restrict_filter
 from alita.utils.extract_user import extract_user
