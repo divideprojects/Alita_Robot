@@ -31,7 +31,7 @@ class UserLang(BASE):
     user_id = Column(Integer, primary_key=True)
     lang_code = Column(UnicodeText)
 
-    def __init__(self, user_id, lang_code="en-US"):
+    def __init__(self, user_id, lang_code="en"):
         self.user_id = user_id
         self.lang_code = lang_code
 
@@ -45,7 +45,7 @@ class GroupLang(BASE):
     chat_id = Column(String, primary_key=True)
     lang_code = Column(UnicodeText)
 
-    def __init__(self, chat_id, lang_code="en-US"):
+    def __init__(self, chat_id, lang_code="en"):
         self.chat_id = chat_id
         self.lang_code = lang_code
 
