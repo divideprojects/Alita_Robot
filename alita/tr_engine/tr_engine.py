@@ -39,7 +39,7 @@ def cache_localizations(files):
     for file in files:
         lang_name = file.split(path.sep)[1]
         lang_data = load(open(file, encoding="utf-8"))
-        ldict[lang_name] = lang_data
+        ldict[lang_name.replace(".json", "")] = lang_data
     return ldict
 
 
