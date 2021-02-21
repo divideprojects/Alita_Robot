@@ -86,7 +86,7 @@ def set_lang(chat_id, chat_type, lang_code):
 
 
 def get_lang(chat_id, chat_type):
-    default_lang = "en-US"
+    default_lang = "en"
     with INSERTION_LOCK:
         if chat_type == "private":
             try:
