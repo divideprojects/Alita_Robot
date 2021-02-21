@@ -116,7 +116,7 @@ async def set_lang_callback(_, q: CallbackQuery):
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        f"❌ {tlang(q, 'close_btn')}",
+                        f"❌ {tlang(q, 'general.close_btn')}",
                         callback_data="close",
                     ),
                 ],
