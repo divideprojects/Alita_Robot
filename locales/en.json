@@ -1,7 +1,8 @@
 {
     "main": {
         "language_name": "English",
-        "language_flag": "🇺🇸"
+        "language_flag": "🇺🇸",
+        "lang_sample": "US English"
     },
     "strings": {
         "general": {
