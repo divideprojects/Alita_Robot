@@ -24,22 +24,17 @@ from os import path
 from pyrogram.types import CallbackQuery
 from ujson import load
 
-from alita import ENABLED_LOCALES as enabled_locales
+from alita import ENABLED_LOCALES
 from alita.db import lang_db as db
-
-
-def getFromDict(dict_data, list_data):
-    """Get data from list of keys."""
-    return reduce(getitem, list_data, dict_data)
 
 
 def cache_localizations(files):
     """Get all translated strings from files."""
     ldict = {lang: {} for lang in enabled_locales}
     for file in files:
-        lang_name = file.split(path.sep)[1]
+        lang_name = (file.split(path.sep)[1]).replace(".json", "")
         lang_data = load(open(file, encoding="utf-8"))
-        ldict[lang_name.replace(".json", "")] = lang_data
+        ldict[lang_name] = lang_data
     return ldict
 
 
@@ -48,6 +43,11 @@ lang_files = []
 for locale in enabled_locales:
     lang_files += glob(path.join("locales", f"{locale}.json"))
 lang_dict = cache_localizations(lang_files)
+
+
+def getFromDict(list_data, lang_dict=lang_dict):
+    """Get data from list of keys."""
+    return reduce(getitem, list_data, lang_dict)
 
 
 def tlang(m, user_msg):
@@ -67,9 +67,10 @@ def tlang(m, user_msg):
 
     # Get lang
     m_args.insert(0, lang)
+    m_args.insert(1, "strings")
 
     # Raise exception if lang_code not found
-    if lang not in enabled_locales:
+    if lang not in ENABLED_LOCALES:
         raise Exception("Unknown Language Code found!")
 
-    return getFromDict(lang_dict, m_args)
+    return getFromDict(m_args)
