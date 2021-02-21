@@ -57,11 +57,12 @@ def tlang(m, user_msg):
 
     # Get Chat
     if isinstance(m, CallbackQuery):
-        chat = m.message.chat
-    else:
-        chat = m.chat
+        m = m.message
 
-    # Get language of user from database, default = 'en'
+    # Get Chat
+    chat = m.chat
+
+    # Get language of user from database, default = 'en' (English)
     lang = db.get_lang(chat.id, chat.type) or "en"
 
     # Get lang
