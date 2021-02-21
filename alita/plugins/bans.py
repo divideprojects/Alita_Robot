@@ -29,8 +29,8 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import DEV_PREFIX_HANDLER, LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
-from alita.bot_class import Alita
+from alita import DEV_PREFIX_HANDLER, LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT STAFF
+from alita.bot_class import Alit_
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import owner_filter, restrict_filter
 from alita.utils.extract_user import extract_user
@@ -56,6 +56,11 @@ This is the plugin for you, easily kick, ban and unban members in a group.
 async def kick_usr(_, m: Message):
 
     user_id, user_first_name = await extract_user(m)
+
+    if user_id in SUPPORT_STAFF:
+        await m.reply_text("This user is in my support staff, cannot restrict them.")
+        return
+
     try:
         await m.chat.kick_member(user_id, int(time() + 45))
         await m.reply_text(
@@ -87,6 +92,11 @@ async def kick_usr(_, m: Message):
 async def ban_usr(_, m: Message):
 
     user_id, user_first_name = await extract_user(m)
+
+    if user_id in SUPPORT_STAFF:
+        await m.reply_text("This user is in my support staff, cannot restrict them.")
+        return
+
     try:
         await m.chat.kick_member(user_id)
         await m.reply_text(
@@ -118,6 +128,11 @@ async def ban_usr(_, m: Message):
 async def unban_usr(_, m: Message):
 
     user_id, user_first_name = await extract_user(m)
+
+    if user_id in SUPPORT_STAFF:
+        await m.reply_text("This user is in my support staff, cannot restrict them.")
+        return
+
     try:
         await m.chat.unban_member(user_id)
         await m.reply_text(
