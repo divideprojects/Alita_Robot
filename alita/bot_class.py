@@ -40,7 +40,7 @@ from alita import (
     get_self,
     load_cmds,
 )
-from alita.db import users_db as userdb
+from alita.database import users_db as userdb
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
 from alita.utils.paste import paste

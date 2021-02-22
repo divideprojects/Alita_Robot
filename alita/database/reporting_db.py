@@ -21,7 +21,7 @@ from typing import Union
 
 from sqlalchemy import Boolean, Column, Integer, String
 
-from alita.db import BASE, SESSION
+from alita.database import BASE, SESSION
 
 
 class ReportingUserSettings(BASE):

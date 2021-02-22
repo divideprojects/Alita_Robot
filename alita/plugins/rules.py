@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import rules_db as db
 from pyrogram import filters
 from pyrogram.errors import UserIsBlocked
 from pyrogram.types import (
@@ -27,7 +28,6 @@ from pyrogram.types import (
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.db import rules_db as db
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 from alita.utils.redis_helper import get_key

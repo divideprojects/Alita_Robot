@@ -36,7 +36,7 @@ from ujson import dumps
 
 from alita import DEV_PREFIX_HANDLER, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
 from alita.bot_class import Alita
-from alita.db import users_db as userdb
+from alita.database import users_db as userdb
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.custom_filters import dev_filter

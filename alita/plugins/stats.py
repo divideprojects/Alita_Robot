@@ -16,16 +16,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import antispam_db as gbandb
+import blacklist_db as bldb
+import notes_db as notesdb
+import rules_db as rulesdb
+import users_db as userdb
 from pyrogram import filters
 from pyrogram.types import Message
 
 from alita import DEV_PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.db import antispam_db as gbandb
-from alita.db import blacklist_db as bldb
-from alita.db import notes_db as notesdb
-from alita.db import rules_db as rulesdb
-from alita.db import users_db as userdb
 from alita.utils.custom_filters import dev_filter
 
 

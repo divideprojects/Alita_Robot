@@ -18,6 +18,7 @@
 
 from asyncio import sleep
 
+import lang_db as db
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
@@ -28,7 +29,6 @@ from pyrogram.types import (
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.db import lang_db as db
 from alita.tr_engine import lang_dict, tlang
 from alita.utils.custom_filters import admin_filter
 

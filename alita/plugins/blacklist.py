@@ -24,8 +24,8 @@ from pyrogram.types import Message
 
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.db import approve_db as app_db
-from alita.db import blacklist_db as db
+from alita.database import approve_db as app_db
+from alita.database import blacklist_db as db
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 from alita.utils.regex_utils import regex_searcher

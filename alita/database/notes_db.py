@@ -20,7 +20,7 @@ import threading
 
 from sqlalchemy import Column, Integer, String, UnicodeText
 
-from alita.db import BASE, SESSION
+from alita.database import BASE, SESSION
 from alita.utils.msg_types import Types
 
 

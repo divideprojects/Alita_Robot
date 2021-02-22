@@ -21,11 +21,11 @@ from glob import glob
 from operator import getitem
 from os import path
 
+import lang_db as db
 from pyrogram.types import CallbackQuery
 from ujson import load
 
 from alita import ENABLED_LOCALES
-from alita.db import lang_db as db
 
 
 def cache_localizations(files):

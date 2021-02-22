@@ -25,7 +25,7 @@ from pyrogram.types import Message
 
 from alita import LOGGER, MESSAGE_DUMP, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
-from alita.db import antispam_db as db
+from alita.database import antispam_db as db
 from alita.utils.custom_filters import sudo_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html

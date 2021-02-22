@@ -20,7 +20,7 @@ import threading
 
 from sqlalchemy import Column, Integer, UnicodeText
 
-from alita.db import BASE, SESSION
+from alita.database import BASE, SESSION
 
 
 class GloballyBannedUsers(BASE):
