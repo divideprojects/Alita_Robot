@@ -1,0 +1,118 @@
+{
+      "name": "Alita_Robot",
+      "description": "Alita is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers.",
+      "keywords": [
+         "telegram",
+         "group bot",
+         "group",
+         "manager",
+         "alita",
+         "Alita Robot"
+      ],   
+   "repository": "https://github.com/Divkix/Alita_Robot",
+   "env": {
+      "TOKEN": {
+         "description": "Your telegram bot token, get from @Botfather in telegram.",
+         "required": true,
+         "value": ""
+      },
+      "API_ID": {
+         "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
+         "required": true,
+         "value": ""
+      },
+      "API_HASH": {
+         "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
+         "required": true,
+         "value": ""
+      },    
+      "DB_URI": {
+         "description": "Your postgres sql db, empty this field if you dont have one.",
+         "required": true,
+         "value": "sqldbtype://username:pw@hostname:port/db_name"
+      },      
+      "OWNER_ID": {
+         "description": "Your user ID as an integer.",
+         "required": true,
+         "value": "1198820588"
+      },
+      "REDIS_HOST": {
+         "description": "Host/link of redis database",
+         "required": true,
+         "value": ""
+      },
+      "REDIS_PORT": {
+         "description": "Port of redis database.",
+         "required": true,
+         "value": ""
+      },
+      "REDIS_PASS": {
+         "description": "Password of redis database.",
+         "required": true,
+         "value": ""
+      },
+      "REDIS_DB": {
+         "description": "Your username without the @",
+         "required": true,
+         "value": "0"
+      },
+      "SUPPORT_CHAT": {
+         "description": "Your Telegram support group chat username where user's can contact in case of a problem..",
+         "required": true,
+         "value": "DraXCommunity"
+      },
+      "MESSAGE_DUMP": {
+         "description": "Event logs channel where bot will send updates.",
+         "required": true,
+         "value": "-123456798"
+      },
+      "VERSION": {
+         "description": "A Version to be shown in bot.",
+         "required": false,
+         "value": "Stable"
+      },      
+      "DEV_PREFIX_HANDLER": {
+         "description": "Handler for executing dev commands",
+         "required": true,
+         "value": "-xyz"
+      },
+      "PREFIX_HANDLER": {
+         "description": "Something like '/' to execute commands.",
+         "required": true,
+         "value": "/"
+      },
+      "DEV_USERS": {
+         "description": "ID of users who are Devs of your bot (can use /py etc.). If you are a noob and would come and bother Saitama support then keep the current ID's here at they are and add yours.",
+         "required": false,
+         "value": ""
+      },
+      "SUPPORT_CHANNEL": {
+         "description": "Channel where bot uodates will be posted!",
+         "value": ""
+      },
+      "SUDO_USERS": {
+         "description": "A space separated list of user IDs who you want to assign as sudo users.",
+         "required": false,
+         "value": ""
+      },
+      "WHITELIST_USERS": {
+         "description": "A space separated list of user IDs whitelisted, cannot be restricted..",
+         "required": false,
+         "value": "615304572"
+      },
+      "ENABLED_LOCALES": {
+         "description": "A space separated list of language which should be enabled in bot.",
+         "required": false,
+         "value": ""
+      },
+      "WORKERS": {
+         "description": "Number of workers to eun the bot.",
+         "required": false,
+         "value": "8"
+      },
+      "ENV": {
+         "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
+         "value": "True"
+      },
+   }
+}
