@@ -1,28 +1,32 @@
 # Alita_Robot
 
 <p align='center'>
-<img src="https://img.shields.io/github/forks/Divkix/Alita_Robot" alt="Forks">
-<img src="https://img.shields.io/github/stars/Divkix/Alita_Robot" alt="Stars">
-<img src="https://img.shields.io/github/issues/Divkix/Alita_Robot" alt="Issues">
-<img src="https://img.shields.io/github/license/Divkix/Alita_Robot" alt="LICENSE">
-<img src="https://img.shields.io/github/contributors/Divkix/Alita_Robot" alt="Contributors">
-<img src="https://img.shields.io/github/repo-size/Divkix/Alita_Robot" alt="Repo Size">
-<img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Divkix/Alita_Robot&amp;title=Profile%20Views" alt="Views">
-<img src="https://img.shields.io/librariesio/github/Divkix/Alita_Robot" alt="Dependencies">
+  <img src="https://img.shields.io/github/forks/Divkix/Alita_Robot" alt="Forks">
+  <img src="https://img.shields.io/github/stars/Divkix/Alita_Robot" alt="Stars">
+  <img src="https://img.shields.io/github/issues/Divkix/Alita_Robot" alt="Issues">
+  <img src="https://img.shields.io/github/license/Divkix/Alita_Robot" alt="LICENSE">
+  <img src="https://img.shields.io/github/contributors/Divkix/Alita_Robot" alt="Contributors">
+  <img src="https://img.shields.io/github/repo-size/Divkix/Alita_Robot" alt="Repo Size">
+  <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Divkix/Alita_Robot&amp;title=Profile%20Views" alt="Views">
+  <img src="https://img.shields.io/librariesio/github/Divkix/Alita_Robot" alt="Dependencies">
 </p>
 
 <p align='center'>
-<a href="https://www.python.org/" alt="made-with-python"> <img src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?style=flat&logo=python&color=blue" /> </a>
-<a href="https://github.com/Divkix/Alita_Robot" alt="Docker!"> <img src="https://aleen42.github.io/badges/src/docker.svg" /> </a>
-<a href="https://github.com/Divkix/Alita_Robot/graphs/commit-activity" alt="Maintenance"> <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /> </a>
+  <a href="https://www.python.org/" alt="made-with-python"> <img src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?style=flat&logo=python&color=blue" /> </a>
+  <a href="https://github.com/Divkix/Alita_Robot" alt="Docker!"> <img src="https://aleen42.github.io/badges/src/docker.svg" /> </a>
+  <a href="https://github.com/Divkix/Alita_Robot/graphs/commit-activity" alt="Maintenance"> <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /> </a>
 </p>
 
 <p align='center'>
-<a href="https://deepsource.io/gh/Divkix/Alita_Robot/?ref=repository-badge"><img src="https://static.deepsource.io/deepsource-badge-light-mini.svg" alt="DeepSource"></a>
-<a href="https://travis-ci.com/Divkix/Alita_Robot"><img src="https://travis-ci.com/Divkix/Alita_Robot.svg?branch=main" alt="Build Status"></a>
-<a href="https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Divkix/Alita_Robot&amp;utm_campaign=Badge_Grade_Settings"><img src="https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194" alt="Codacy Badge"></a>
-<a href="https://makeapullrequest.com" alt="PRs Welcome"> <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /> </a>
-<a href="https://crowdin.com/project/alita_robot"><img src="https://badges.crowdin.net/alita_robot/localized.svg" alt="Crowdin"></a>
+  <img src="https://img.shields.io/github/commit-activity/m/divkix/alita_robot" />
+</p>
+
+<p align='center'>
+  <a href="https://deepsource.io/gh/Divkix/Alita_Robot/?ref=repository-badge"><img src="https://static.deepsource.io/deepsource-badge-light-mini.svg" alt="DeepSource"></a>
+  <a href="https://travis-ci.com/Divkix/Alita_Robot"><img src="https://travis-ci.com/Divkix/Alita_Robot.svg?branch=main" alt="Build Status"></a>
+  <a href="https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Divkix/Alita_Robot&amp;utm_campaign=Badge_Grade_Settings"><img src="https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194" alt="Codacy Badge"></a>
+  <a href="https://makeapullrequest.com" alt="PRs Welcome"> <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /> </a>
+  <a href="https://crowdin.com/project/alita_robot"><img src="https://badges.crowdin.net/alita_robot/localized.svg" alt="Crowdin"></a>
 </p>
 
 <a href="https://gitpod.io/#https://github.com/Divkix/Alita_Robot/tree/main"><img src="https://gitpod.io/button/open-in-gitpod.svg" alt="Gitpod Ready-to-Code"></a>
@@ -40,7 +44,11 @@ Alita is a Telegram Group managment bot made using **[Pyrogram](https://github.c
 - Frequently updated
 - Multi Language Support
 
-Can be found on Telegram as [@Alita_Robot](https://t.me/Alita_Robot).
+Can be found on Telegram as [@Alita_Robot](https://t.me/Alita_Robot)</br>
+This runs the stable version, aka [production](https://github.com/Divkix/Alita_Robot/tree/production) branch.
+
+Beta Version: [@AlitaBetaBot](https://t.me/AlitaBetaBot)</br>
+This runs on beta version, which is from [main](https://github.com/Divkix/Alita_Robot/tree/main) branch.
 
 Alita is currently available in 1 Language as of now:
 - **US English**
@@ -68,6 +76,7 @@ It really motivates me to continue this project further.
 
 
 ### Traditional
+
 - Install Python v3.7 or later from [Python's Website](https://python.org)
 - Install virtualenv using `python3 -m pip -U install virtualenv`.
 - **Fork** or Clone the project using `git clone https://github.com/Divkix/Alita_Robot.git`
@@ -76,10 +85,11 @@ It really motivates me to continue this project further.
 - Run the bot using `python3 -m alita`
 
 ### Docker
+
 - Clone the repo and enter into it
 - Install [Docker](https://www.docker.com/)
 - Fill in the `sample.env` file and rename it to `main.env`.
-- Build the docker image using: `docker build -t alita_robot:latest .`
+- Build the docker image using: `docker build -t alita_robot:latest .` (The dot '.' at last is necessary!)
 - Run the command `docker run --env-file main.env alita_robot`
 
 
