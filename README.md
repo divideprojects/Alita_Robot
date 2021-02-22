@@ -29,9 +29,10 @@
   <a href="https://crowdin.com/project/alita_robot"><img src="https://badges.crowdin.net/alita_robot/localized.svg" alt="Crowdin"></a>
 </p>
 
-<a href="https://gitpod.io/#https://github.com/Divkix/Alita_Robot/tree/main"><img src="https://gitpod.io/button/open-in-gitpod.svg" alt="Gitpod Ready-to-Code"></a>
-
-<a href="https://t.me/DivideProjects"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&amp;logo=telegram&amp;logoColor=white" alt="Join us on Telegram"></a>
+<p align='center'>
+  <a href="https://gitpod.io/#https://github.com/Divkix/Alita_Robot/tree/main"><img src="https://gitpod.io/button/open-in-gitpod.svg" alt="Gitpod Ready-to-Code"></a></br></br>
+  <a href="https://t.me/DivideProjects"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&amp;logo=telegram&amp;logoColor=white" alt="Join us on Telegram"></a>
+</p>
 
 
 Alita is a Telegram Group managment bot made using **[Pyrogram](https://github.com/pyrogram/pyrogram) _async version_** and **[Python](https://python.org)**, which makes it modern and faster than most of the exisitng Telegram Chat Managers.
