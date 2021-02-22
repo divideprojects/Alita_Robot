@@ -29,7 +29,13 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import DEV_PREFIX_HANDLER, LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
+from alita import (
+    DEV_PREFIX_HANDLER,
+    LOGGER,
+    PREFIX_HANDLER,
+    SUPPORT_GROUP,
+    SUPPORT_STAFF,
+)
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import owner_filter, restrict_filter

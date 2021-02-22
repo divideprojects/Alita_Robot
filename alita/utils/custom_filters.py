@@ -43,9 +43,11 @@ async def admin_check_func(_, __, m):
         m = m.message
 
     # Bypass the bot devs, sudos and owner
-    if (m.from_user.id in DEV_USERS
+    if (
+        m.from_user.id in DEV_USERS
         or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)):
+        or m.from_user.id == int(OWNER_ID)
+    ):
         return True
 
     try:
@@ -69,9 +71,11 @@ async def owner_check_func(_, __, m):
         m = m.message
 
     # Bypass the bot devs, sudos and owner
-    if (m.from_user.id in DEV_USERS
+    if (
+        m.from_user.id in DEV_USERS
         or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)):
+        or m.from_user.id == int(OWNER_ID)
+    ):
         return True
 
     user = await m.chat.get_member(m.from_user.id)
@@ -95,9 +99,11 @@ async def restrict_check_func(_, __, m):
         m = m.message
 
     # Bypass the bot devs, sudos and owner
-    if (m.from_user.id in DEV_USERS
+    if (
+        m.from_user.id in DEV_USERS
         or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)):
+        or m.from_user.id == int(OWNER_ID)
+    ):
         return True
 
     user = await m.chat.get_member(m.from_user.id)
@@ -117,9 +123,11 @@ async def promote_check_func(_, __, m):
         m = m.message
 
     # Bypass the bot devs, sudos and owner
-    if (m.from_user.id in DEV_USERS
+    if (
+        m.from_user.id in DEV_USERS
         or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)):
+        or m.from_user.id == int(OWNER_ID)
+    ):
         return True
 
     user = await m.chat.get_member(m.from_user.id)
@@ -139,9 +147,11 @@ async def invite_check_func(_, __, m):
         m = m.message
 
     # Bypass the bot devs, sudos and owner
-    if (m.from_user.id in DEV_USERS
+    if (
+        m.from_user.id in DEV_USERS
         or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)):
+        or m.from_user.id == int(OWNER_ID)
+    ):
         return True
 
     user = await m.chat.get_member(m.from_user.id)
