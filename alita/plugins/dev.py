@@ -70,18 +70,17 @@ async def send_log(c: Alita, m: Message):
 @Alita.on_message(filters.command("speedtest", DEV_PREFIX_HANDLER) & dev_filter)
 async def test_speed(c: Alita, m: Message):
 
-    string = tlang(m, "dev.speedtest")
     await c.send_message(
         MESSAGE_DUMP,
         f"#SPEEDTEST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    sent = await m.reply_text(tlang(m, "dev.start_speedtest"))
+    sent = await m.reply_text(tlang(m, "dev.speedtest.start_speedtest"))
     s = Speedtest()
     bs = s.get_best_server()
     dl = round(s.download() / 1024 / 1024, 2)
     ul = round(s.upload() / 1024 / 1024, 2)
     await sent.edit_text(
-        string.format(
+        tlang(m, "dev.speedtest.speedtest_txt").format(
             host=bs["sponsor"],
             ping=int(bs["latency"]),
             download=dl,
@@ -244,13 +243,13 @@ async def public_ip(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("chatlist", DEV_PREFIX_HANDLER) & dev_filter)
 async def chats(c: Alita, m: Message):
-    exmsg = await m.reply_text("`Exporting Chatlist...`")
+    exmsg = await m.reply_text(tlang(m, "chatlist.exporting"))
     await c.send_message(
         MESSAGE_DUMP,
         f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     all_chats = userdb.get_all_chats() or []
-    chatfile = "List of chats.\n\nChat name | Chat ID | Members count\n"
+    chatfile = tlang(m, "chatlist.header")
     P = 1
     for chat in all_chats:
         try:
@@ -273,7 +272,7 @@ async def chats(c: Alita, m: Message):
         except ChannelPrivate:
             userdb.rem_chat(chat.chat_id)
         except PeerIdInvalid:
-            LOGGER.warning(f"Group not loaded {chat.chat_id}")
+            LOGGER.warning(f"Peer  not found {chat.chat_id}")
         except RPCError as ef:
             LOGGER.error(ef)
             await m.reply_text(f"**Error:**\n{ef}")
@@ -282,7 +281,7 @@ async def chats(c: Alita, m: Message):
         f.name = "chatlist.txt"
         await m.reply_document(
             document=f,
-            caption=tlang(m, "dev.chats_in_db"),
+            caption=tlang(m, "dev.chatlist.chats_in_db"),
         )
     await exmsg.delete()
     return
@@ -291,7 +290,7 @@ async def chats(c: Alita, m: Message):
 @Alita.on_message(filters.command("uptime", DEV_PREFIX_HANDLER) & dev_filter)
 async def uptime(_, m: Message):
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
-    await m.reply_text(f"<b>Uptime:</b> `{up}`", quote=True)
+    await m.reply_text(tlang(m, "dev.uptime").format(uptime=up), quote=True)
     return
 
 
@@ -325,7 +324,7 @@ async def store_members(c: Alita, m: Message):
 @Alita.on_message(filters.command("alladmins", DEV_PREFIX_HANDLER) & dev_filter)
 async def list_all_admins(_, m: Message):
 
-    replymsg = await m.reply_text("Getting all admins in my cache...", quote=True)
+    replymsg = await m.reply_text(tlang(m, "dev.alladmins.getting_admins"), quote=True)
     len_admins = 0  # Total number of admins
 
     admindict = await get_key("ADMINDICT")
@@ -335,7 +334,10 @@ async def list_all_admins(_, m: Message):
 
     try:
         await replymsg.edit_text(
-            f"There are {len_admins} admins whom I know!\n\n{str(admindict)}",
+            tlang(m, "dev.alladmins.admins_i_know_str").format(
+                len_admins=len_admins,
+                admindict=str(admindict),
+            ),
         )
     except MessageTooLong:
         raw = (await paste(admindict))[1]
@@ -343,9 +345,18 @@ async def list_all_admins(_, m: Message):
             f.name = "allAdmins.txt"
             await m.reply_document(
                 document=f,
-                caption=f"There are {len_admins} admins in my Redis cache.",
+                caption=tlang(m, "dev.alladmins.admins_in_cache").format(
+                    len_admins=len_admins,
+                ),
                 reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("All Admins", url=raw)]],
+                    [
+                        [
+                            InlineKeyboardButton(
+                                tlang(m, "dev.alladmins.alladmins_btn"),
+                                url=raw,
+                            ),
+                        ],
+                    ],
                 ),
             )
         await replymsg.delete()
@@ -379,15 +390,16 @@ async def show_redis_keys(_, m: Message):
 
 @Alita.on_message(filters.command("flushredis", DEV_PREFIX_HANDLER) & dev_filter)
 async def flush_redis(_, m: Message):
-    replymsg = await m.reply_text(tlang(m, "dev.flushing_redis"), quote=True)
+    replymsg = await m.reply_text(
+        tlang(m, "dev.flush_redis.flushing_redis"),
+        quote=True,
+    )
     try:
         await flushredis()
-        await replymsg.edit_text(tlang(m, "dev.flushed_redis"))
+        await replymsg.edit_text(tlang(m, "dev.flush_redis.flushed_redis"))
     except BaseException as ef:
         LOGGER.error(ef)
-        await replymsg.edit_text(
-            f"Failed to flush redis database!\nError: <code>{ef}</code>.",
-        )
+        await replymsg.edit_text(tlang(m, "dev.flush_redis.flush_failed"))
     return
 
 

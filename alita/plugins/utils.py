@@ -153,7 +153,7 @@ async def get_gifid(_, m: Message):
             parse_mode="html",
         )
     else:
-        await m.reply_text("Please reply to a gif to get its ID.")
+        await m.reply_text(tlang(m, "utils.gif_id.reply_gif"))
     return
 
 
@@ -197,43 +197,53 @@ async def github(_, m: Message):
     filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def my_info(c: Alita, m: Message):
-    infoMsg = await m.reply_text("<code>Getting user information...</code>")
+    infoMsg = await m.reply_text(
+        f"<code>{tlang(m, 'utils.user_info.getting_info')}</code>",
+    )
     user_id = (await extract_user(m))[0]
     try:
         user = await c.get_users(user_id)
     except PeerIdInvalid:
         await m.reply_text(tlang(m, "utils.no_user_db"))
     except RPCError as ef:
-        await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
+        await m.reply_text(
+            tlang(m, "general.some_error").format(
+                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
+                ef=f"<code>{ef}</code>",
+            ),
+        )
         return
 
-    text = (
-        f"<b>Characteristics:</b>\n"
-        f"<b>ID:</b> <code>{user.id}</code>\n"
-        f"<b>First Name:</b> <code>{escape(user.first_name)}</code>"
+    text = tlang(m, "utils.user_info.info_text.main").format(
+        user_id=user.id,
+        user_name=escape(user.first_name),
     )
 
     if user.last_name:
-        text += f"\n<b>Last Name:</b></b> <code>{escape(user.last_name)}</code>"
+        text += tlang(m, "utils.user_info.info_text.last_name").format(
+            user_lname=escape(user.last_name),
+        )
 
     if user.username:
-        text += f"\n<b>Username</b>: @{escape(user.username)}"
+        text += tlang(m, "utils.user_info.info_text.username").format(
+            username=escape(user.username),
+        )
 
-    text += (
-        f"\n<b>Permanent user link:</b> {(await mention_html('Click Here', user.id))}"
+    text += tlang(m, "utils.user_info.info_text.perma_link").format(
+        perma_link=(await mention_html("Click Here", user.id)),
     )
 
     if user.id == OWNER_ID:
-        text += "\n\nThis person is my Owner, I would never do anything against them!"
+        text += tlang(m, "utils.user_info.support_user.owner")
     elif user.id in DEV_USERS:
-        text += "\n\nThis member is one of my Developers ⚡️"
+        text += tlang(m, "utils.user_info.support_user.dev")
     elif user.id in SUDO_USERS:
-        text += "\n\nThe Power level of this person is 'Sudo'"
+        text += tlang(m, "utils.user_info.support_user.sudo")
     elif user.id in WHITELIST_USERS:
-        text += "\n\nThis person is 'Whitelist User', they cannot be banned!"
+        text += tlang(m, "utils.user_info.support_user.whitelist")
 
     try:
-        user_member = await c.get_users(user.id)
+        user_member = await m.chat.get_member(user.id)
         if user_member.status == "administrator":
             result = await AioHttp.post(
                 (
@@ -244,7 +254,9 @@ async def my_info(c: Alita, m: Message):
             result = result.json()["result"]
             if "custom_title" in result.keys():
                 custom_title = result["custom_title"]
-                text += f"\n\nThis user holds the title <b>{custom_title}</b> here."
+                text += tlang(m, "utils.user_info.custom_title").format(
+                    custom_title=f"<b>{custom_title}</b>",
+                )
     except BaseException as ef:
         LOGGER.error(f"Error: {ef}")
 
@@ -266,7 +278,7 @@ async def weebify(_, m: Message):
     if m.reply_to_message and len(m.text.split()) == 1:
         args = m.reply_to_message.text
     if not args:
-        await m.reply_text("`What am I supposed to Weebify?`")
+        await m.reply_text(tlang(m, "utils.weebify.weebify_what"))
         return
     string = "  ".join(args).lower()
     for normiecharacter in string:
@@ -274,7 +286,7 @@ async def weebify(_, m: Message):
             weebycharacter = weebyfont[normiefont.index(normiecharacter)]
             string = string.replace(normiecharacter, weebycharacter)
 
-    await m.reply_text(f"**Weebified String:**\n`{string}`")
+    await m.reply_text(tlang(m, "utils.weebify.weebified_string").format(string=string))
 
     return
 
@@ -282,7 +294,7 @@ async def weebify(_, m: Message):
 @Alita.on_message(filters.command("paste", PREFIX_HANDLER))
 async def paste_it(c: Alita, m: Message):
 
-    replymsg = await m.reply_text("Pasting...", quote=True)
+    replymsg = await m.reply_text(tlang(m, "utils.paste.pasting"), quote=True)
 
     if m.reply_to_message:
         if m.reply_to_message.document:
@@ -298,8 +310,10 @@ async def paste_it(c: Alita, m: Message):
     url = (await paste(txt))[0]
 
     await replymsg.edit_text(
-        "Pasted to NekoBin!",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("NekoBin", url=url)]]),
+        tlang(m, "utils.paste.pasted"),
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton(tlang(m, "utils.paste.nekobin_btn"), url=url)]],
+        ),
     )
 
     return
