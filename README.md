@@ -23,7 +23,7 @@
 
 <p align='center'>
   <a href="https://deepsource.io/gh/Divkix/Alita_Robot/?ref=repository-badge"><img src="https://static.deepsource.io/deepsource-badge-light-mini.svg" alt="DeepSource"></a>
-  <a href="https://travis-ci.com/Divkix/Alita_Robot"><img src="https://www.travis-ci.com/Divkix/Alita_Robot.svg?branch=main" alt="Build Status"></a>
+  <a href="https://travis-ci.com/Divkix/Alita_Robot"><img src="https://img.shields.io/travis/com/Divkix/Alita_Robot/main?style=flat-square&logo=travis" alt="Build Status"></a>
   <a href="https://app.codacy.com/gh/Divkix/Alita_Robot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Divkix/Alita_Robot&amp;utm_campaign=Badge_Grade_Settings"><img src="https://api.codacy.com/project/badge/Grade/4ed13d169d5246c983bfcbfa813b6194" alt="Codacy Badge"></a>
   <a href="https://makeapullrequest.com" alt="PRs Welcome"> <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /> </a>
   <a href="https://crowdin.com/project/alita_robot"><img src="https://badges.crowdin.net/alita_robot/localized.svg" alt="Crowdin"></a>
