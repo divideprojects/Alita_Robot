@@ -21,11 +21,11 @@ from glob import glob
 from operator import getitem
 from os import path
 
-from alita.db import lang_db as db
 from pyrogram.types import CallbackQuery
 from ujson import load
 
 from alita import ENABLED_LOCALES
+from alita.database.lang_db import Langs
 
 
 def cache_localizations(files):
@@ -63,7 +63,7 @@ def tlang(m, user_msg):
     chat = m.chat
 
     # Get language of user from database, default = 'en' (English)
-    lang = db.get_lang(chat.id, chat.type) or "en"
+    lang = Langs.get_lang(chat.id) or "en"
 
     # Get lang
     m_args.insert(0, lang)

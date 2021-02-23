@@ -1,14 +1,14 @@
 {
-      "name": "Alita_Robot",
-      "description": "Alita is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers.",
-      "keywords": [
-         "telegram",
-         "group bot",
-         "group",
-         "manager",
-         "alita",
-         "Alita Robot"
-      ],   
+   "name": "Alita_Robot",
+   "description": "Alita is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers.",
+   "keywords": [
+      "telegram",
+      "group bot",
+      "group",
+      "manager",
+      "alita",
+      "Alita Robot"
+   ],
    "repository": "https://github.com/Divkix/Alita_Robot",
    "env": {
       "TOKEN": {
@@ -25,12 +25,12 @@
          "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
          "required": true,
          "value": ""
-      },    
+      },
       "DB_URI": {
          "description": "Your postgres sql db, empty this field if you dont have one.",
          "required": true,
          "value": "sqldbtype://username:pw@hostname:port/db_name"
-      },      
+      },
       "OWNER_ID": {
          "description": "Your user ID as an integer.",
          "required": true,
@@ -70,7 +70,7 @@
          "description": "A Version to be shown in bot.",
          "required": false,
          "value": "Stable"
-      },      
+      },
       "DEV_PREFIX_HANDLER": {
          "description": "Handler for executing dev commands",
          "required": true,
@@ -113,6 +113,6 @@
       "ENV": {
          "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
          "value": "True"
-      },
+      }
    }
 }

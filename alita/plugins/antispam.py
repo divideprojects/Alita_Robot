@@ -25,7 +25,7 @@ from pyrogram.types import Message
 
 from alita import LOGGER, MESSAGE_DUMP, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
-from alita.database import antispam_db as db
+from alita.database.antispam_db import GBan
 from alita.utils.custom_filters import sudo_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -58,17 +58,14 @@ async def gban(c: Alita, m: Message):
         await m.reply_text("You can't gban me nigga!\nNice Try...!")
         return
 
-    if db.is_user_gbanned(user_id):
-        old_reason = db.update_gban_reason(user_id, user_first_name, gban_reason)
+    if await GBan.check_gban(user_id):
+        await GBan.update_gban_reason(user_id, gban_reason)
         await m.reply_text(
-            (
-                f"Updated Gban reason to: `{gban_reason}`.\n"
-                f"Old Reason was: `{old_reason}`"
-            ),
+            (f"Updated Gban reason to: `{gban_reason}`."),
         )
         return
 
-    db.gban_user(user_id, user_first_name, gban_reason)
+    await GBan.add_gban(user_id, gban_reason, m.from_user.id)
     await m.reply_text(
         (
             f"Added {user_first_name} to Global Ban List.\n"
@@ -120,8 +117,8 @@ async def ungban(c: Alita, m: Message):
         await m.reply_text("Nice Try...!")
         return
 
-    if db.is_user_gbanned(user_id):
-        db.ungban_user(user_id)
+    if await GBan.check_gban(user_id):
+        await GBan.remove_gban(user_id)
         await m.reply_text(f"Removed {user_first_name} from Global Ban List.")
         log_msg = (
             f"#UNGBAN\n"
@@ -150,7 +147,7 @@ async def ungban(c: Alita, m: Message):
     filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter,
 )
 async def gban_list(_, m: Message):
-    banned_users = db.get_gban_list()
+    banned_users = await GBan.list_collection()
 
     if not banned_users:
         await m.reply_text("There aren't any gbanned users...!")
@@ -175,7 +172,7 @@ async def gban_list(_, m: Message):
 @Alita.on_message(filters.group, group=6)
 async def gban_watcher(c: Alita, m: Message):
     try:
-        if db.is_user_gbanned(m.from_user.id):
+        if await GBan.check_gban(m.from_user.id):
             try:
                 await c.kick_chat_member(m.chat.id, m.from_user.id)
                 await m.reply_text(

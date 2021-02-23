@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import rules_db as db
 from pyrogram import filters
 from pyrogram.errors import UserIsBlocked
 from pyrogram.types import (
@@ -28,6 +27,7 @@ from pyrogram.types import (
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
+from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 from alita.utils.redis_helper import get_key
@@ -50,7 +50,7 @@ what not to do in your group!
 async def get_rules(c: Alita, m: Message):
 
     chat_id = m.chat.id
-    rules = db.get_rules(chat_id)
+    rules = await Rules.get_rules(chat_id)
 
     if not rules:
         await m.reply_text(tlang(m, "rules.no_rules"), reply_to_message_id=m.message_id)
@@ -98,7 +98,7 @@ async def set_rules(_, m: Message):
         rules = rules[0:3949]  # Split Rules if len > 4000 chars
         await m.reply_text("Rules truncated to 3950 characters!")
 
-    db.set_rules(chat_id, rules)
+    await Rules.set_rules(chat_id, rules)
     await m.reply_text(tlang(m, "rules.set_rules"))
     return
 
@@ -108,7 +108,7 @@ async def set_rules(_, m: Message):
 )
 async def clear_rules(_, m: Message):
 
-    rules = db.get_rules(m.chat.id)
+    rules = await Rules.get_rules(m.chat.id)
     if not rules:
         await m.reply_text(tlang(m, "rules.no_rules"))
         return
@@ -129,8 +129,7 @@ async def clear_rules(_, m: Message):
 
 @Alita.on_callback_query(filters.regex("^clear.rules$"))
 async def clearrules_callback(_, q: CallbackQuery):
-
-    db.clear_rules(q.message.chat.id)
+    await Rules.clear_rules(q.message.chat.id)
     await q.message.reply_text(tlang(q, "rules.cleared"))
     await q.answer()
     return

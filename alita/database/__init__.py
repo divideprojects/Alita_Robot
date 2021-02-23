@@ -15,20 +15,55 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
+import motor.motor_asyncio
 
 from alita import DB_URI
 
-
-def start() -> scoped_session:
-    engine = create_engine(DB_URI, client_encoding="utf8")
-    BASE.metadata.bind = engine
-    BASE.metadata.create_all(engine)
-    return scoped_session(sessionmaker(bind=engine, autoflush=False))
+# Client to connect to mongodb
+mongodb_client = motor.motor_asyncio.AsyncIOMotorClient(DB_URI)
 
 
-BASE = declarative_base()
-SESSION = start()
+class MongoDB:
+    """Class for interacting with Bot database."""
+
+    def __init__(self, collection) -> None:
+        self.db = mongodb_client.spam_db  # Test database
+        self.collection = self.db[collection]
+
+    # Insert one entry into collection
+    async def insert_one(self, document):
+        result = await self.collection.insert_one(document)
+        return repr(result.inserted_id)
+
+    # Find one entry from collection
+    async def find_one(self, query):
+        result = await self.collection.find_one(query)
+        if result:
+            return True
+        return False
+
+    # Find entries from collection
+    async def find_all(self, query={}):
+        lst = []
+        async for document in self.collection.find(query):
+            lst.append(document)
+        return lst
+
+    # Count entries from collection
+    async def count(self):
+        return await self.collection.count_documents({})
+
+    # Delete entry/entries from collection
+    async def delete_one(self, query):
+        before_delete = await self.collection.count_documents({})
+        await self.collection.delete_many(query)
+        after_delete = await self.collection.count_documents({})
+        return before_delete, after_delete
+
+    # Replace one entry in collection
+    async def replace(self, query, new_data):
+        old = await self.collection.find_one(query)
+        _id = old["_id"]
+        await self.collection.replace_one({"_id": _id}, new_data)
+        new = await self.collection.find_one({"_id": _id})
+        return old, new

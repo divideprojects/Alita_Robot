@@ -1,13 +1,13 @@
 aiohttp[speedups]
 aioredis
 asyncio
+dnspython
 googletrans
-psycopg2-binary
+motor
 pyrogram>=1.0.7
 python-dateutil
 regex
 speedtest-cli
-sqlalchemy
 tgcrypto
 tswift
 ujson
