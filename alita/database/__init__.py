@@ -23,12 +23,14 @@ from alita import DB_URI
 mongodb_client = motor.motor_asyncio.AsyncIOMotorClient(DB_URI)
 
 
+db = mongodb_client.spam_db  # Test database
+
+
 class MongoDB:
     """Class for interacting with Bot database."""
 
     def __init__(self, collection) -> None:
-        self.db = mongodb_client.spam_db  # Test database
-        self.collection = self.db[collection]
+        self.collection = db[collection]
 
     # Insert one entry into collection
     async def insert_one(self, document):
@@ -39,7 +41,7 @@ class MongoDB:
     async def find_one(self, query):
         result = await self.collection.find_one(query)
         if result:
-            return True
+            return result
         return False
 
     # Find entries from collection
@@ -50,15 +52,15 @@ class MongoDB:
         return lst
 
     # Count entries from collection
-    async def count(self):
-        return await self.collection.count_documents({})
+    async def count(self, query={}):
+        return await self.collection.count_documents(query)
 
     # Delete entry/entries from collection
     async def delete_one(self, query):
         before_delete = await self.collection.count_documents({})
         await self.collection.delete_many(query)
         after_delete = await self.collection.count_documents({})
-        return before_delete, after_delete
+        return after_delete
 
     # Replace one entry in collection
     async def replace(self, query, new_data):
