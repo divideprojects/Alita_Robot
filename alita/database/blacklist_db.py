@@ -45,7 +45,7 @@ class Blacklist:
             )
         return "Blacklist not found!"
 
-    async def change_action(self, chat_id: int, action: str = "kick"):
+    async def set_action(self, chat_id: int, action: str = "kick"):
 
         if action not in ("mute", "ban", "kick"):
             action = "kick"

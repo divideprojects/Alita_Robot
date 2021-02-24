@@ -29,10 +29,14 @@ class AFK:
         return await self.collection.find_one({"user_id": user_id})
 
     async def add_afk(self, user_id: int, reason: str = None):
+        if (await self.check_afk(user_id)):
+            return await self.collection.update({"user_id": user_id}, {"user_id": user_id, "reason": reason})
         return await self.collection.insert_one({"user_id": user_id, "reason": reason})
 
     async def remove_afk(self, user_id: int):
-        return await self.collection.delete_one({"user_id": user_id})
+        if (await self.check_afk(user_id)):
+            return await self.collection.delete_one({"user_id": user_id})
+        return
 
     async def count_afk(self):
         return await self.collection.count()

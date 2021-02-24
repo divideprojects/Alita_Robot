@@ -36,13 +36,13 @@ class Approve:
         return False
 
     async def add_approve(self, chat_id: int, user_id: int):
-        if not (
+        if (
             await self.collection.find_one({"chat_id": chat_id, "user_id": user_id})
         ):
-            return await self.collection.insert_one(
+            return "Already Added!"
+        return await self.collection.insert_one(
                 {"chat_id": chat_id, "user_id": user_id},
             )
-        return "Already Added!"
 
     async def remove_approve(self, chat_id: int, user_id: int):
         if await self.collection.find_one({"chat_id": chat_id, "user_id": user_id}):
