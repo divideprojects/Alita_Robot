@@ -292,13 +292,13 @@ async def weebify(_, m: Message):
 
 
 @Alita.on_message(filters.command("paste", PREFIX_HANDLER))
-async def paste_it(c: Alita, m: Message):
+async def paste_it(_, m: Message):
 
     replymsg = await m.reply_text(tlang(m, "utils.paste.pasting"), quote=True)
 
     if m.reply_to_message:
         if m.reply_to_message.document:
-            dl_loc = await c.download_media(message=m.reply_to_message)
+            dl_loc = await m.reply_to_message.download()
             with open(dl_loc) as f:
                 txt = f.read()
             remove(dl_loc)
