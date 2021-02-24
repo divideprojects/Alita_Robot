@@ -1,4 +1,4 @@
-FROM python:3.9.1-slim-buster
+FROM python:3.9.2-slim-buster
 
 # Don't use cached python packages
 ENV PIP_NO_CACHE_DIR 1
