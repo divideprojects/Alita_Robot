@@ -26,17 +26,46 @@ class Chats:
         self.collection = MongoDB("chats")
 
     async def add_chat(self, chat_id: int, chat_name: str):
-        curr = (await self.collection.find_one({"chat_id": chat_id})))
+        curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
             return True
-        return await self.collection.insert_one({"chat_id": chat_id, "chat_name": chat_name, "users": []})
+        return await self.collection.insert_one(
+            {"chat_id": chat_id, "chat_name": chat_name, "users": []},
+        )
 
     async def update_user(self, user_id: int, chat_id: int, chat_name: str):
-        curr = (await self.collection.find_one({"chat_id": chat_id})))
+        curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            curr['users'].append(user_id)
-            return await self.collection.replace({"user_id": user_id}, {"user_id": user_id, "chat_id": chat_id, "chat_name": chat_name, "users": curr})
-        return await self.collection.insert_one({"user_id": user_id, "chat_id": chat_id, "chat_name": chat_name, "users": [])
+            curr["users"].append(user_id)
+            return await self.collection.update(
+                {"user_id": user_id},
+                {
+                    "user_id": user_id,
+                    "chat_id": chat_id,
+                    "chat_name": chat_name,
+                    "users": curr["users"],
+                },
+            )
+        return await self.collection.insert_one(
+            {
+                "user_id": user_id,
+                "chat_id": chat_id,
+                "chat_name": chat_name,
+                "users": [],
+            },
+        )
+
+    async def count_chat_users(self, chat_id: int):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            return len(curr["users"])
+        return 0
+
+    async def chat_members(self, chat_id: int):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            return curr["users"]
+        return []
 
     async def delete_chat(self, chat_id: int):
         curr = await self.collection.find_one({"chat_id": chat_id})
@@ -49,4 +78,3 @@ class Chats:
 
     async def list_chats(self):
         return await self.collection.find_all()
-

@@ -22,7 +22,6 @@ from alita import DB_URI
 # Client to connect to mongodb
 mongodb_client = motor.motor_asyncio.AsyncIOMotorClient(DB_URI)
 
-
 db = mongodb_client.spam_db  # Test database
 
 
@@ -69,3 +68,9 @@ class MongoDB:
         await self.collection.replace_one({"_id": _id}, new_data)
         new = await self.collection.find_one({"_id": _id})
         return old, new
+
+    # Update one entry from collection
+    async def update(self, query, update):
+        result = await self.collection.update_one(query, {"$set": update})
+        new_document = await self.collection.find_one(query)
+        return result.modified_count, new_document

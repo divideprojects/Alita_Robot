@@ -48,9 +48,9 @@ class GBan:
         return
 
     async def update_gban_reason(self, user_id: int, reason: str):
-        return await self.collection.replace(
+        return await self.collection.update(
             {"user_id": user_id},
-            {"user_id": user_id, "reason": reason},
+            {"reason": reason},
         )
 
     async def count_collection(self):

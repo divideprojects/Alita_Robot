@@ -28,13 +28,21 @@ class Users:
     async def update_user(self, user_id: int, name: str, username: str = None):
         curr = await self.collection.find_one({"user_id": user_id})
         if curr:
-            return await self.collection.replace({"user_id": user_id}, {"user_id": user_id, "username": username, "name": name})
-        return await self.collection.insert_one({"user_id": user_id, "username": username, "name": name})
+            return await self.collection.update(
+                {"user_id": user_id},
+                {"username": username, "name": name},
+            )
+        return await self.collection.insert_one(
+            {"user_id": user_id, "username": username, "name": name},
+        )
 
     async def delete_user(self, user_id: int):
         curr = await self.collection.find_one({"user_id": user_id})
         if curr:
-            return await self.collection.delete_one({"user_id": user_id}, {"user_id": user_id})
+            return await self.collection.delete_one(
+                {"user_id": user_id},
+                {"user_id": user_id},
+            )
         return True
 
     async def count_users(self):
@@ -42,4 +50,3 @@ class Users:
 
     async def list_users(self):
         return await self.collection.find_all()
-

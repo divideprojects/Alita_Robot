@@ -28,9 +28,9 @@ class AntiFlood:
     async def set_status(self, chat_id: int, status: bool = False):
         z = (await self.collection.find_one({"chat_id": chat_id}))["status"]
         if z:
-            return await self.collection.replace(
+            return await self.collection.update(
                 {"chat_id": chat_id},
-                {"chat_id": chat_id, "status": status},
+                {"status": status},
             )
         return await self.collection.insert_one({"chat_id": chat_id, "status": status})
 
@@ -42,18 +42,18 @@ class AntiFlood:
             action = "kick"  # Default action
         z = (await self.collection.find_one({"chat_id": chat_id}))["action"]
         if z:
-            return await self.collection.replace(
+            return await self.collection.update(
                 {"chat_id": chat_id},
-                {"chat_id": chat_id, "action": action},
+                {"action": action},
             )
         return await self.collection.insert_one({"chat_id": chat_id, "action": action})
 
     async def set_warning(self, chat_id: int, max_msg: int):
         z = (await self.collection.find_one({"chat_id": chat_id}))["max_msg"]
         if z:
-            return await self.collection.replace(
+            return await self.collection.update(
                 {"chat_id": chat_id},
-                {"chat_id": chat_id, "max_msg": max_msg},
+                {"max_msg": max_msg},
             )
         return await self.collection.insert_one(
             {"chat_id": chat_id, "max_msg": max_msg},
