@@ -36,9 +36,9 @@ class Langs:
         chat_type = await self.get_chat_type(chat_id)
 
         if (await self.collection.find_one({"chat_id": chat_id}))["lang"]:
-            return self.collection.replace(
+            return self.collection.update(
                 {"chat_id": chat_id},
-                {"chat_id": chat_id, "chat_type": chat_type, "lang": lang},
+                {"lang": lang},
             )
 
         return await self.collection.insert_one(

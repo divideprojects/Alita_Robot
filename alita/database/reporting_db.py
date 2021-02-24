@@ -36,9 +36,9 @@ class Reporting:
         chat_type = await self.get_chat_type(chat_id)
         curr_settings = (await self.collection.find_one({"chat_id": chat_id}))["status"]
         if curr_settings:
-            return await self.collection.replace(
+            return await self.collection.update(
                 {"chat_id": chat_id},
-                {"chat_id": chat_id, "chat_type": chat_type, "status": status},
+                {"status": status},
             )
         return await self.collection.insert_one(
             {"chat_id": chat_id, "chat_type": chat_type, "status": status},

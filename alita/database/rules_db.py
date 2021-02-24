@@ -34,9 +34,9 @@ class Rules:
     async def set_rules(self, chat_id: int, rules: str):
         curr_rules = (await self.collection.find_one({"chat_id": chat_id}))["rules"]
         if curr_rules:
-            return await self.collection.replace(
+            return await self.collection.update(
                 {"chat_id": chat_id},
-                {"chat_id": chat_id, "rules": rules},
+                {"rules": rules},
             )
         return await self.collection.insert_one({"chat_id": chat_id, "rules": rules})
 
