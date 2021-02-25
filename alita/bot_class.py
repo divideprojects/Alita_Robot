@@ -83,7 +83,7 @@ class Alita(Client):
         LOGGER.info("Begin caching admins...")
         begin = time()
 
-        all_chats = await chatdb.list_chats() or []  # Get list of all chats
+        all_chats = await chatdb().list_chats() or []  # Get list of all chats
         LOGGER.info(f"{len(all_chats)} chats loaded from database.")
 
         try:

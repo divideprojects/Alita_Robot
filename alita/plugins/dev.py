@@ -30,7 +30,6 @@ from pyrogram.errors import (
     PeerIdInvalid,
     RPCError,
 )
-from pyrogram.methods.users import Users
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from speedtest import Speedtest
 from ujson import dumps
@@ -250,7 +249,7 @@ async def chats(c: Alita, m: Message):
         MESSAGE_DUMP,
         f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    all_chats = (await chatdb.list_chats()) or []
+    all_chats = (await chatdb().list_chats()) or []
     chatfile = await tlang(m, "chatlist.header")
     P = 1
     for chat in all_chats:
@@ -272,7 +271,7 @@ async def chats(c: Alita, m: Message):
         except ChatAdminRequired:
             pass
         except ChannelPrivate:
-            await chatdb.rem_chat(chat.chat_id)
+            await chatdb().rem_chat(chat.chat_id)
         except PeerIdInvalid:
             LOGGER.warning(f"Peer  not found {chat.chat_id}")
         except RPCError as ef:
@@ -305,7 +304,7 @@ async def store_members(c: Alita, m: Message):
     try:
         async for member in m.chat.iter_members():
             try:
-                await userdb.update_user(
+                await userdb().update_user(
                     member.user.id,
                     member.user.username,
                     m.chat.id,

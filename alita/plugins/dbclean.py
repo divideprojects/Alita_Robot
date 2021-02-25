@@ -37,7 +37,7 @@ __PLUGIN__ = "Database Cleaning"
 
 
 async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
-    chats = user_db.get_all_chats()
+    chats = user_db().get_all_chats()
     kicked_chats, progress = 0, 0
     chat_list = []
     progress_message = m
@@ -74,14 +74,14 @@ async def get_invalid_chats(c: Alita, m: Message, remove: bool = False):
     for muted_chat in chat_list:
         try:
             await sleep(0.1)
-            user_db.rem_chat(muted_chat)
+            user_db().rem_chat(muted_chat)
         except RPCError:
             pass
     return kicked_chats
 
 
 async def get_invalid_gban(c: Alita, _, remove: bool = False):
-    banned = gban_db.get_gban_list()
+    banned = gban_db().get_gban_list()
     ungbanned_users = 0
     ungban_list = []
 
@@ -100,7 +100,7 @@ async def get_invalid_gban(c: Alita, _, remove: bool = False):
         for user_id in ungban_list:
             try:
                 await sleep(0.1)
-                gban_db.ungban_user(user_id)
+                gban_db().ungban_user(user_id)
             except RPCError:
                 pass
 
@@ -109,7 +109,7 @@ async def get_invalid_gban(c: Alita, _, remove: bool = False):
 
 async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
     chat_id = m.chat.id
-    chats = user_db.get_all_chats()
+    chats = user_db().get_all_chats()
     muted_chats, progress = 0, 0
     chat_list = []
     progress_message = m
@@ -149,7 +149,7 @@ async def get_muted_chats(c: Alita, m: Message, leave: bool = False):
         await sleep(0.1)
         try:
             await c.leave_chat(muted_chat)
-            user_db.rem_chat(muted_chat)
+            user_db().rem_chat(muted_chat)
         except RPCError:
             pass
     return muted_chats

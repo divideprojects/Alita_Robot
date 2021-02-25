@@ -108,7 +108,7 @@ async def save_note(_, m: Message):
             )
             return
 
-    await Notes.save_note(m.chat.id, note_name, text, data_type, content)
+    await Notes().save_note(m.chat.id, note_name, text, data_type, content)
     await m.reply_text(f"Saved note <code>{note_name}</code>!")
     return
 
@@ -120,7 +120,7 @@ async def get_note(_, m: Message):
     else:
         await m.reply_text("Give me a note tag!")
 
-    getnotes = await Notes.get_note(m.chat.id, note)
+    getnotes = await Notes().get_note(m.chat.id, note)
     if not getnotes:
         await m.reply_text("This note does not exist!")
         return
@@ -175,7 +175,7 @@ async def get_note(_, m: Message):
 
 @Alita.on_message(filters.command(["notes", "saved"], PREFIX_HANDLER) & filters.group)
 async def local_notes(_, m: Message):
-    getnotes = await Notes.get_all_notes(m.chat.id)
+    getnotes = await Notes().get_all_notes(m.chat.id)
     if not getnotes:
         await m.reply_text(f"There are no notes in <b>{m.chat.title}</b>.")
         return
@@ -200,7 +200,7 @@ async def clear_note(_, m: Message):
         return
 
     note = m.text.split()[1]
-    getnote = await Notes.rm_note(m.chat.id, note)
+    getnote = await Notes().rm_note(m.chat.id, note)
     if not getnote:
         await m.reply_text("This note does not exist!")
         return
@@ -214,7 +214,7 @@ async def clear_note(_, m: Message):
 )
 async def clear_allnote(_, m: Message):
 
-    all_notes = await Notes.get_all_notes(m.chat.id)
+    all_notes = await Notes().get_all_notes(m.chat.id)
     if not all_notes:
         await m.reply_text("No notes are there in this chat")
         return
@@ -236,7 +236,7 @@ async def clear_allnote(_, m: Message):
 @Alita.on_callback_query(filters.regex("^clear.notes$") & owner_filter)
 async def clearallnotes_callback(_, q: CallbackQuery):
     await q.message.edit_text("Clearing all notes...!")
-    await Notes.rm_all_notes(q.message.chat.id)
+    await Notes().rm_all_notes(q.message.chat.id)
     await q.message.edit_text("Cleared all notes!")
     await q.answer()
     return

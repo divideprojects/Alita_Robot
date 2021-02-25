@@ -391,7 +391,7 @@ async def unlock_perm(c: Alita, m: Message):
 
 
 async def prevent_approved(c: Alita, m: Message):
-    x = app_db.all_approved(m.chat.id)
+    x = app_db().all_approved(m.chat.id)
     LOGGER.info(x)
     ul = []
     for j in x:

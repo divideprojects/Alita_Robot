@@ -58,14 +58,14 @@ async def gban(c: Alita, m: Message):
         await m.reply_text("You can't gban me nigga!\nNice Try...!")
         return
 
-    if await GBan.check_gban(user_id):
-        await GBan.update_gban_reason(user_id, gban_reason)
+    if await GBan().check_gban(user_id):
+        await GBan().update_gban_reason(user_id, gban_reason)
         await m.reply_text(
             (f"Updated Gban reason to: `{gban_reason}`."),
         )
         return
 
-    await GBan.add_gban(user_id, gban_reason, m.from_user.id)
+    await GBan().add_gban(user_id, gban_reason, m.from_user.id)
     await m.reply_text(
         (
             f"Added {user_first_name} to Global Ban List.\n"
@@ -117,8 +117,8 @@ async def ungban(c: Alita, m: Message):
         await m.reply_text("Nice Try...!")
         return
 
-    if await GBan.check_gban(user_id):
-        await GBan.remove_gban(user_id)
+    if await GBan().check_gban(user_id):
+        await GBan().remove_gban(user_id)
         await m.reply_text(f"Removed {user_first_name} from Global Ban List.")
         log_msg = (
             f"#UNGBAN\n"
@@ -147,7 +147,7 @@ async def ungban(c: Alita, m: Message):
     filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter,
 )
 async def gban_list(_, m: Message):
-    banned_users = await GBan.list_collection()
+    banned_users = await GBan().list_collection()
 
     if not banned_users:
         await m.reply_text("There aren't any gbanned users...!")
@@ -172,7 +172,7 @@ async def gban_list(_, m: Message):
 @Alita.on_message(filters.group, group=6)
 async def gban_watcher(c: Alita, m: Message):
     try:
-        if await GBan.check_gban(m.from_user.id):
+        if await GBan().check_gban(m.from_user.id):
             try:
                 await c.kick_chat_member(m.chat.id, m.from_user.id)
                 await m.reply_text(

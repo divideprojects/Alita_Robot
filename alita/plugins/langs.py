@@ -28,7 +28,7 @@ from pyrogram.types import (
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.database.lang_db import Lang as db
+from alita.database.lang_db import Langs as db
 from alita.tr_engine import lang_dict, tlang
 from alita.utils.custom_filters import admin_filter
 
@@ -97,7 +97,7 @@ async def close_btn_callback(_, q: CallbackQuery):
 @Alita.on_callback_query(filters.regex("^set_lang."))
 async def set_lang_callback(_, q: CallbackQuery):
 
-    await db.set_lang(q.message.chat.id, q.message.chat.type, q.data.split(".")[1])
+    await db().set_lang(q.message.chat.id, q.message.chat.type, q.data.split(".")[1])
     await sleep(0.1)
 
     if q.message.chat.type == "private":

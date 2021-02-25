@@ -54,13 +54,13 @@ async def report_setting(_, m: Message):
     if m.chat.type == "private":
         if len(args) >= 2:
             if args[1] in ("yes", "on"):
-                db.set_user_setting(m.chat.id, True)
+                db().set_user_setting(m.chat.id, True)
                 await m.reply_text(
                     "Turned on reporting! You'll be notified whenever anyone reports something.",
                 )
 
             elif args[1] in ("no", "off"):
-                db.set_user_setting(m.chat.id, False)
+                db().set_user_setting(m.chat.id, False)
                 await m.reply_text("Turned off reporting! You wont get any reports.")
         else:
             await m.reply_text(
@@ -74,7 +74,7 @@ async def report_setting(_, m: Message):
 
         if len(args) >= 2:
             if args[1] in ("yes", "on"):
-                db.set_chat_setting(m.chat.id, True)
+                db().set_chat_setting(m.chat.id, True)
                 await m.reply_text(
                     "Turned on reporting! Admins who have turned on reports will be notified when /report "
                     "or @admin is called.",
@@ -82,7 +82,7 @@ async def report_setting(_, m: Message):
                 )
 
             elif args[1] in ("no", "off"):
-                db.set_chat_setting(m.chat.id, False)
+                db().set_chat_setting(m.chat.id, False)
                 await m.reply_text(
                     "Turned off reporting! No admins will be notified on /report or @admin.",
                     reply_to_message_id=m.message_id,
@@ -97,7 +97,7 @@ async def report_setting(_, m: Message):
 async def report(c: Alita, m: Message):
     me = await c.get_me()
 
-    if m.chat and m.reply_to_message and db.chat_should_report(m.chat.id):
+    if m.chat and m.reply_to_message and db().chat_should_report(m.chat.id):
         reported_user = m.reply_to_message.from_user
         chat_name = m.chat.title or m.chat.username
         admin_list = await c.get_chat_members(m.chat.id, filter="administrators")
@@ -159,7 +159,7 @@ async def report(c: Alita, m: Message):
             if admin.user.is_bot:  # can't message bots
                 continue
 
-            if db.user_should_report(admin.user.id):
+            if db().user_should_report(admin.user.id):
                 try:
                     if not m.chat.type == "supergroup":
                         await c.send_message(admin.user.id, msg + link)

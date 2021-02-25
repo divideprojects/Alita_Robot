@@ -25,7 +25,7 @@ class Langs:
     def __init__(self) -> None:
         self.collection = MongoDB("langs")
 
-    async def get_chat_type(chat_id: int):
+    async def get_chat_type(self, chat_id: int):
         if str(chat_id).startswith("-100"):
             chat_type = "supergroup"
         else:

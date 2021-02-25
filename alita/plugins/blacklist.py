@@ -59,7 +59,7 @@ async def view_blacklist(_, m: Message):
     blacklists_chat = await tlang(m, "blacklist.curr_blacklist_initial").format(
         chat_title=f"<b>{chat_title}</b>",
     )
-    all_blacklisted = db.get_chat_blacklist(m.chat.id)
+    all_blacklisted = await db().get_chat_blacklist(m.chat.id)
 
     if not all_blacklisted:
         await m.reply_text(
@@ -83,7 +83,7 @@ async def add_blacklist(_, m: Message):
 
     if len(m.text.split()) >= 2:
         bl_word = m.text.split(None, 1)[1]
-        db.add_to_blacklist(m.chat.id, bl_word.lower())
+        await db().add_to_blacklist(m.chat.id, bl_word.lower())
         await m.reply_text(
             await tlang(m, "blacklist.added_blacklist").format(
                 trigger=f"<code>{bl_word}</code>",
@@ -105,14 +105,14 @@ async def add_blacklist(_, m: Message):
 )
 async def rm_blacklist(_, m: Message):
 
-    chat_bl = db.get_chat_blacklist(m.chat.id)
+    chat_bl = await db().get_chat_blacklist(m.chat.id)
     if not isinstance(chat_bl, bool):
         pass
     else:
         if len(m.text.split()) >= 2:
             bl_word = m.text.split(None, 1)[1]
             if bl_word in chat_bl:
-                db.rm_from_blacklist(m.chat.id, bl_word.lower())
+                await db().rm_from_blacklist(m.chat.id, bl_word.lower())
                 await m.reply_text(
                     await tlang(m, "blacklist.rm_blacklist").format(
                         bl_word=f"<code>{bl_word}</code>",
@@ -136,7 +136,7 @@ async def rm_blacklist(_, m: Message):
 async def del_blacklist(_, m: Message):
     try:
         user_list = []
-        approved_users = app_db.all_approved(m.chat.id)
+        approved_users = await app_db().all_approved(m.chat.id)
         for auser in approved_users:
             user_list.append(int(auser.user_id))
         async for i in m.chat.iter_members(filter="administrators"):
@@ -144,7 +144,7 @@ async def del_blacklist(_, m: Message):
         if m.from_user.id in user_list:
             return
         if m.text:
-            chat_filters = db.get_chat_blacklist(m.chat.id)
+            chat_filters = await db().get_chat_blacklist(m.chat.id)
             if not chat_filters:
                 return
             for trigger in chat_filters:
