@@ -56,14 +56,14 @@ muser_listtiple triggers at once.
 async def view_blacklist(_, m: Message):
 
     chat_title = m.chat.title
-    blacklists_chat = tlang(m, "blacklist.curr_blacklist_initial").format(
+    blacklists_chat = await tlang(m, "blacklist.curr_blacklist_initial").format(
         chat_title=f"<b>{chat_title}</b>",
     )
     all_blacklisted = db.get_chat_blacklist(m.chat.id)
 
     if not all_blacklisted:
         await m.reply_text(
-            tlang(m, "blacklist.no_blacklist").format(
+            await tlang(m, "blacklist.no_blacklist").format(
                 chat_title=f"<b>{chat_title}</b>",
             ),
         )
@@ -85,13 +85,16 @@ async def add_blacklist(_, m: Message):
         bl_word = m.text.split(None, 1)[1]
         db.add_to_blacklist(m.chat.id, bl_word.lower())
         await m.reply_text(
-            tlang(m, "blacklist.added_blacklist").format(
+            await tlang(m, "blacklist.added_blacklist").format(
                 trigger=f"<code>{bl_word}</code>",
             ),
             reply_to_message_id=m.message_id,
         )
         return
-    await m.reply_text(tlang(m, "general.check_help"), reply_to_message_id=m.message_id)
+    await m.reply_text(
+        await tlang(m, "general.check_help"),
+        reply_to_message_id=m.message_id,
+    )
     return
 
 
@@ -111,19 +114,19 @@ async def rm_blacklist(_, m: Message):
             if bl_word in chat_bl:
                 db.rm_from_blacklist(m.chat.id, bl_word.lower())
                 await m.reply_text(
-                    tlang(m, "blacklist.rm_blacklist").format(
+                    await tlang(m, "blacklist.rm_blacklist").format(
                         bl_word=f"<code>{bl_word}</code>",
                     ),
                 )
                 return
             await m.reply_text(
-                tlang(m, "blacklist.no_bl_found").format(
+                await tlang(m, "blacklist.no_bl_found").format(
                     bl_word=f"<code>{bl_word}</code>",
                 ),
             )
         else:
             await m.reply_text(
-                tlang(m, "general.check_help"),
+                await tlang(m, "general.check_help"),
                 reply_to_message_id=m.message_id,
             )
     return

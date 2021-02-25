@@ -50,7 +50,7 @@ def getFromDict(list_data, lang_dict=lang_dict):
     return reduce(getitem, list_data, lang_dict)
 
 
-def tlang(m, user_msg):
+async def tlang(m, user_msg):
     """Main function for getting the string of preferred language."""
 
     m_args = user_msg.split(".")  # Split in a list
@@ -63,7 +63,7 @@ def tlang(m, user_msg):
     chat = m.chat
 
     # Get language of user from database, default = 'en' (English)
-    lang = Langs.get_lang(chat.id) or "en"
+    lang = (await Langs.get_lang(chat.id)) or "en"
 
     # Get lang
     m_args.insert(0, lang)

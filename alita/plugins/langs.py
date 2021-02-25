@@ -76,13 +76,13 @@ async def chlang_callback(_, q: CallbackQuery):
             *(await gen_langs_kb()),
             [
                 InlineKeyboardButton(
-                    f"« {tlang(q, 'general.back_btn')}",
+                    f"« {await tlang(q, 'general.back_btn')}",
                     callback_data="start_back",
                 ),
             ],
         ],
     )
-    await q.message.edit_text(tlang(q, "langs.changelang"), reply_markup=keyboard)
+    await q.message.edit_text(await tlang(q, "langs.changelang"), reply_markup=keyboard)
     await q.answer()
     return
 
@@ -105,7 +105,7 @@ async def set_lang_callback(_, q: CallbackQuery):
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        f"« {tlang(q, 'general.back_btn')}",
+                        f"« {await tlang(q, 'general.back_btn')}",
                         callback_data="start_back",
                     ),
                 ],
@@ -116,7 +116,7 @@ async def set_lang_callback(_, q: CallbackQuery):
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        f"❌ {tlang(q, 'general.close_btn')}",
+                        f"❌ {await tlang(q, 'general.close_btn')}",
                         callback_data="close",
                     ),
                 ],
@@ -124,7 +124,7 @@ async def set_lang_callback(_, q: CallbackQuery):
         )
     lang_code = q.data.split(".")[1]
     await q.message.edit_text(
-        f"🌐 {tlang(q, 'langs.changed').format(lang_code=lang_code)}",
+        f"🌐 {await tlang(q, 'langs.changed').format(lang_code=lang_code)}",
         reply_markup=keyboard,
     )
     await q.answer()
@@ -138,10 +138,10 @@ async def set_lang_callback(_, q: CallbackQuery):
 async def set_lang(_, m: Message):
 
     if len(m.text.split()) >= 2:
-        await m.reply_text(tlang(m, "langs.correct_usage"))
+        await m.reply_text(await tlang(m, "langs.correct_usage"))
         return
     await m.reply_text(
-        tlang(m, "langs.changelang"),
+        await tlang(m, "langs.changelang"),
         reply_markup=InlineKeyboardMarkup([*(await gen_langs_kb())]),
     )
     return

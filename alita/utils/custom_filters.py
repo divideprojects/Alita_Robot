@@ -57,7 +57,7 @@ async def admin_check_func(_, __, m):
             status = True
         else:
             status = False
-            await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
+            await m.reply_text(await tlang(m, "general.no_admin_cmd_perm"))
     except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
         if ("The chat_id" and "belongs to a user") in ef:
             status = True
@@ -112,7 +112,7 @@ async def restrict_check_func(_, __, m):
         status = True
     else:
         status = False
-        await m.reply_text(tlang(m, "admin.no_restrict_perm"))
+        await m.reply_text(await tlang(m, "admin.no_restrict_perm"))
 
     return status
 
@@ -136,7 +136,7 @@ async def promote_check_func(_, __, m):
         status = True
     else:
         status = False
-        await m.reply_text(tlang(m, "admin.no_promote_demote_perm"))
+        await m.reply_text(await tlang(m, "admin.no_promote_demote_perm"))
 
     return status
 
@@ -160,7 +160,7 @@ async def invite_check_func(_, __, m):
         status = True
     else:
         status = False
-        await m.reply_text(tlang(m, "admin.no_user_invite_perm"))
+        await m.reply_text(await tlang(m, "admin.no_user_invite_perm"))
 
     return status
 

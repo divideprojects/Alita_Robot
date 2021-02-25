@@ -69,7 +69,7 @@ async def adminlist_show(_, m: Message):
             adminlist = (await get_key("ADMINDICT"))[
                 str(m.chat.id)
             ]  # Load ADMINDICT from string
-            note = tlang(m, "admin.adminlist.note_cached")
+            note = await tlang(m, "admin.adminlist.note_cached")
         except BaseException:
             adminlist = []
             async for i in m.chat.iter_members(
@@ -84,12 +84,12 @@ async def adminlist_show(_, m: Message):
                     ),
                 )
             adminlist = sorted(adminlist, key=lambda x: x[1])
-            note = tlang(m, "admin.adminlist.note_updated")
+            note = await tlang(m, "admin.adminlist.note_updated")
             ADMINDICT = await get_key("ADMINDICT")
             ADMINDICT[str(m.chat.id)] = adminlist
             await set_key("ADMINDICT", ADMINDICT)
 
-        adminstr = tlang(m, "admin.adminlist.adminstr").format(
+        adminstr = await tlang(m, "admin.adminlist.adminstr").format(
             chat_title=f"<b>{m.chat.title}</b>",
         )
 
@@ -106,11 +106,11 @@ async def adminlist_show(_, m: Message):
 
     except BaseException as ef:
         if str(ef) == str(m.chat.id):
-            await m.reply_text(tlang(m, "admin.adminlist.use_admin_cache"))
+            await m.reply_text(await tlang(m, "admin.adminlist.use_admin_cache"))
         else:
             ef = str(ef) + f"{adminlist}\n"
             await m.reply_text(
-                tlang(m, "general.some_error").format(
+                await tlang(m, "general.some_error").format(
                     SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                     ef=f"<code>{ef}</code>",
                 ),
@@ -140,10 +140,10 @@ async def reload_admins(_, m: Message):
             )
         ADMINDICT[str(m.chat.id)] = adminlist
         await set_key("ADMINDICT", ADMINDICT)
-        await m.reply_text(tlang(m, "admin.adminlist.reloaded_admins"))
+        await m.reply_text(await tlang(m, "admin.adminlist.reloaded_admins"))
     except RPCError as ef:
         await m.reply_text(
-            tlang(m, "general.some_error").format(
+            await tlang(m, "general.some_error").format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -181,17 +181,17 @@ async def mute_usr(_, m: Message):
             ),
         )
         await m.reply_text(
-            tlang(m, "admin.muted_user").format(
+            await tlang(m, "admin.muted_user").format(
                 user=(await mention_html(user_first_name, user_id)),
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(await tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.bot_no_mute_right"))
+        await m.reply_text(await tlang(m, "admin.bot_no_mute_right"))
     except RPCError as ef:
         await m.reply_text(
-            tlang(m, "general.some_error").format(
+            await tlang(m, "general.some_error").format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -215,17 +215,17 @@ async def unmute_usr(_, m: Message):
     try:
         await m.chat.restrict_member(user_id, m.chat.permissions)
         await m.reply_text(
-            tlang(m, "admin.unmuted_user").format(
+            await tlang(m, "admin.unmuted_user").format(
                 user=(await mention_html(user_first_name, user_id)),
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(await tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.bot_no_mute_right"))
+        await m.reply_text(await tlang(m, "admin.bot_no_mute_right"))
     except RPCError as ef:
         await m.reply_text(
-            tlang(m, "general.some_error").format(
+            await tlang(m, "general.some_error").format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -250,7 +250,7 @@ async def promote_usr(_, m: Message):
             can_pin_messages=True,
         )
         await m.reply_text(
-            tlang(m, "admin.promoted_user").format(
+            await tlang(m, "admin.promoted_user").format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"<b>{m.chat.title}</b>",
@@ -273,12 +273,12 @@ async def promote_usr(_, m: Message):
         await set_key("ADMINDICT", ADMINDICT)
 
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(await tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.bot_no_promote_right"))
+        await m.reply_text(await tlang(m, "admin.bot_no_promote_right"))
     except RPCError as ef:
         await m.reply_text(
-            tlang(m, "general.some_error").format(
+            await tlang(m, "general.some_error").format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -304,7 +304,7 @@ async def demote_usr(_, m: Message):
             can_pin_messages=False,
         )
         await m.reply_text(
-            tlang(m, "admin.demoted_user").format(
+            await tlang(m, "admin.demoted_user").format(
                 demoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 demoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"<b>{m.chat.title}</b>",
@@ -327,14 +327,14 @@ async def demote_usr(_, m: Message):
         await set_key("ADMINDICT", ADMINDICT)
 
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(await tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.bot_no_demote_right"))
+        await m.reply_text(await tlang(m, "admin.bot_no_demote_right"))
     except UserAdminInvalid:
-        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(await tlang(m, "admin.user_admin_invalid"))
     except RPCError as ef:
         await m.reply_text(
-            tlang(m, "general.some_error").format(
+            await tlang(m, "general.some_error").format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -352,20 +352,20 @@ async def get_invitelink(c: Alita, m: Message):
     try:
         link = await c.export_chat_invite_link(m.chat.id)
         await m.reply_text(
-            tlang(m, "admin.invitelink").format(
+            await tlang(m, "admin.invitelink").format(
                 chat_name=f"<b>{m.chat.id}</b>",
                 link=link,
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.not_admin"))
+        await m.reply_text(await tlang(m, "admin.not_admin"))
     except ChatAdminInviteRequired:
-        await m.reply_text(tlang(m, "admin.noinviteperm"))
+        await m.reply_text(await tlang(m, "admin.noinviteperm"))
     except RightForbidden:
-        await m.reply_text(tlang(m, "no_invite_perm"))
+        await m.reply_text(await tlang(m, "no_invite_perm"))
     except RPCError as ef:
         await m.reply_text(
-            tlang(m, "general.some_error").format(
+            await tlang(m, "general.some_error").format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),

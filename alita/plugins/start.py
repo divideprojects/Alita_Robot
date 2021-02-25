@@ -74,31 +74,31 @@ async def gen_start_kb(q):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    f"📚 {tlang(q, 'start.commands_btn')}",
+                    f"📚 {await tlang(q, 'start.commands_btn')}",
                     callback_data="commands",
                 ),
             ]
             + [
                 InlineKeyboardButton(
-                    f"ℹ️ {tlang(q, 'start.infos_btn')}",
+                    f"ℹ️ {await tlang(q, 'start.infos_btn')}",
                     callback_data="infos",
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    f"🌐 {tlang(q, 'start.language_btn')}",
+                    f"🌐 {await tlang(q, 'start.language_btn')}",
                     callback_data="chlang",
                 ),
             ]
             + [
                 InlineKeyboardButton(
-                    f"➕ {tlang(q, 'start.add_chat_btn')}",
+                    f"➕ {await tlang(q, 'start.add_chat_btn')}",
                     url=f"https://t.me/{me}?startgroup=new",
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    f"🗃️ {tlang(q, 'start.source_code')}",
+                    f"🗃️ {await tlang(q, 'start.source_code')}",
                     url="https://github.com/Divkix/Alita_Robot",
                 ),
             ],
@@ -115,14 +115,17 @@ async def start(_, m: Message):
     if m.chat.type == "private":
         try:
             await m.reply_text(
-                tlang(m, "start.private"),
+                await tlang(m, "start.private"),
                 reply_markup=(await gen_start_kb(m)),
                 reply_to_message_id=m.message_id,
             )
         except UserIsBlocked:
             LOGGER.warning(f"Bot blocked by {m.from_user.id}")
     else:
-        await m.reply_text(tlang(m, "start.group"), reply_to_message_id=m.message_id)
+        await m.reply_text(
+            await tlang(m, "start.group"),
+            reply_to_message_id=m.message_id,
+        )
     return
 
 
@@ -130,7 +133,7 @@ async def start(_, m: Message):
 async def start_back(_, q: CallbackQuery):
 
     await q.message.edit_text(
-        tlang(q, "start.private"),
+        await tlang(q, "start.private"),
         reply_markup=(await gen_start_kb(q.message)),
     )
     await q.answer()
@@ -145,14 +148,14 @@ async def commands_menu(_, q: CallbackQuery):
             *(await gen_cmds_kb()),
             [
                 InlineKeyboardButton(
-                    f"« {tlang(q, 'general.back_btn')}",
+                    f"« {await tlang(q, 'general.back_btn')}",
                     callback_data="start_back",
                 ),
             ],
         ],
     )
     await q.message.edit_text(
-        tlang(q, "general.commands_available"),
+        await tlang(q, "general.commands_available"),
         reply_markup=keyboard,
     )
     await q.answer()
@@ -175,7 +178,7 @@ async def commands_pvt(_, m: Message):
                     [
                         [
                             InlineKeyboardButton(
-                                f"« {tlang(m, 'general.back_btn')}",
+                                f"« {await tlang(m, 'general.back_btn')}",
                                 callback_data="commands",
                             ),
                         ],
@@ -184,7 +187,7 @@ async def commands_pvt(_, m: Message):
             )
         else:
             await m.reply_text(
-                tlang(m, "start.public_help").format(help_option=help_option),
+                await tlang(m, "start.public_help").format(help_option=help_option),
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
@@ -203,13 +206,13 @@ async def commands_pvt(_, m: Message):
                 *gen_cmds_kb(),
                 [
                     InlineKeyboardButton(
-                        f"« {tlang(m, 'general.back_btn')}",
+                        f"« {await tlang(m, 'general.back_btn')}",
                         callback_data="start_back",
                     ),
                 ],
             ],
         )
-        msg = tlang(m, "general.commands_available")
+        msg = await tlang(m, "general.commands_available")
     else:
         keyboard = InlineKeyboardMarkup(
             [
@@ -221,7 +224,7 @@ async def commands_pvt(_, m: Message):
                 ],
             ],
         )
-        msg = tlang(m, "start.pm_for_help")
+        msg = await tlang(m, "start.pm_for_help")
 
     await m.reply_text(
         msg,
@@ -239,7 +242,7 @@ async def get_module_info(_, q: CallbackQuery):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    "« " + tlang(q, "general.back_btn"),
+                    "« " + await tlang(q, "general.back_btn"),
                     callback_data="commands",
                 ),
             ],
@@ -258,7 +261,7 @@ async def get_module_info(_, q: CallbackQuery):
 async def infos(c: Alita, q: CallbackQuery):
 
     _owner = await c.get_users(OWNER_ID)
-    res = tlang(q, "start.info_page").format(
+    res = await tlang(q, "start.info_page").format(
         Owner=(
             f"{_owner.first_name} + {_owner.last_name}"
             if _owner.last_name
@@ -271,7 +274,7 @@ async def infos(c: Alita, q: CallbackQuery):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    f"« {tlang(q, 'general.back_btn')}",
+                    f"« {await tlang(q, 'general.back_btn')}",
                     callback_data="start_back",
                 ),
             ],
