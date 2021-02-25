@@ -18,7 +18,7 @@
 
 from asyncio import sleep
 
-import lang_db as db
+from alita.database.lang_db import Lang as db
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
@@ -97,7 +97,7 @@ async def close_btn_callback(_, q: CallbackQuery):
 @Alita.on_callback_query(filters.regex("^set_lang."))
 async def set_lang_callback(_, q: CallbackQuery):
 
-    db.set_lang(q.message.chat.id, q.message.chat.type, q.data.split(".")[1])
+    await db.set_lang(q.message.chat.id, q.message.chat.type, q.data.split(".")[1])
     await sleep(0.1)
 
     if q.message.chat.type == "private":
