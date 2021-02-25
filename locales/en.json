@@ -167,10 +167,10 @@
                 "custom_title": "\n\nThis user holds the title {custom_title} here.",
                 "getting_info": "Getting user information...",
                 "info_text": {
-                    "last_name": "\n<b>Last Name:</b></b> <code>{user_lname}</code>",
-                    "main": "<b>Characteristics:</b>\n<b>ID:</b> <code>{user_id}</code>\n<b>First Name:</b> <code>{user_name)}</code>",
-                    "perma_link": "\n<b>Permanent user link:</b> {perma_link}",
-                    "username": "\n<b>Username</b>: @{username}"
+                    "last_name": "\nLast Name: {user_lname}",
+                    "main": "Characteristics:\nID: {user_id}\nFirst Name: {user_name)}",
+                    "perma_link": "\nPermanent user link: {perma_link}",
+                    "username": "\nUsername: @{username}"
                 },
                 "support_user": {
                     "dev": "\n\nThis member is one of my Developers ⚡️",
