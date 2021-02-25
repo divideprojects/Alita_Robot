@@ -32,7 +32,7 @@ class GBan:
     async def add_gban(self, user_id: int, reason: str, by_user: int):
 
         # Check if  user is already gbanned or not
-        if (await self.collection.find_one({"user_id": user_id})):
+        if await self.collection.find_one({"user_id": user_id}):
             return await self.update_gban_reason(user_id, reason)
 
         # If not already gbanned, then add to gban
