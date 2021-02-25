@@ -16,6 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import uvloop
+uvloop.install()
+
 from os import makedirs, path
 from platform import python_version
 from time import time
