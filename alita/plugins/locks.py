@@ -18,13 +18,13 @@
 
 from asyncio import sleep
 
-import approve_db as app_db
 from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
+from alita.database.approve_db import Approve as app_db
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 

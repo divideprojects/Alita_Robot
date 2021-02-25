@@ -18,7 +18,6 @@
 
 from html import escape
 
-import reporting_db as db
 from pyrogram import filters
 from pyrogram.errors import BadRequest, RPCError, Unauthorized
 from pyrogram.types import (
@@ -30,6 +29,7 @@ from pyrogram.types import (
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
 from alita.bot_class import Alita
+from alita.database.reporting_db import Reporting as db
 from alita.utils.admin_check import admin_check
 from alita.utils.parser import mention_html
 

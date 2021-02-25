@@ -17,6 +17,7 @@
 
 
 import uvloop
+
 uvloop.install()
 
 from os import makedirs, path
@@ -43,7 +44,7 @@ from alita import (
     get_self,
     load_cmds,
 )
-from alita.database import users_db as userdb
+from alita.database.chats_db import Chats as chatdb
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
 from alita.utils.paste import paste
@@ -82,7 +83,7 @@ class Alita(Client):
         LOGGER.info("Begin caching admins...")
         begin = time()
 
-        all_chats = userdb.get_all_chats() or []  # Get list of all chats
+        all_chats = await chatdb.list_chats() or []  # Get list of all chats
         LOGGER.info(f"{len(all_chats)} chats loaded from database.")
 
         try:

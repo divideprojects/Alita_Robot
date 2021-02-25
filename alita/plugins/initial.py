@@ -16,16 +16,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from alita.database.blacklist_db import Blacklist as bldb
-from alita.database.lang_db import Langs as langdb
-from alita.database.notes_db import Notes as notedb
-from alita.database.rules_db import Rules as ruledb
-from alita.database.users_db import Users as userdb
 from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
 from alita import LOGGER
 from alita.bot_class import Alita
+from alita.database.blacklist_db import Blacklist as bldb
+from alita.database.lang_db import Langs as langdb
+from alita.database.notes_db import Notes as notedb
+from alita.database.rules_db import Rules as ruledb
+from alita.database.users_db import Users as userdb
 
 
 @Alita.on_message(group=-1)

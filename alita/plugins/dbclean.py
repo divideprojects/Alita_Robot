@@ -29,8 +29,8 @@ from pyrogram.types import (
 
 from alita import DEV_PREFIX_HANDLER, LOGGER
 from alita.bot_class import Alita
-from alita.database import antispam_db as gban_db
-from alita.database import users_db as user_db
+from alita.database.antispam_db import GBan as gban_db
+from alita.database.chats_db import Chats as user_db
 from alita.utils.custom_filters import dev_filter
 
 __PLUGIN__ = "Database Cleaning"
