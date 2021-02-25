@@ -11,4 +11,5 @@ speedtest-cli
 tgcrypto
 tswift
 ujson
+uvloop
 wikipedia
