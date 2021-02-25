@@ -60,7 +60,7 @@ try:
     if environ.get("ENV"):
         from alita.vars import Config
     else:
-        from alita.vars import Development as Config
+        from alita.local_vars import Development as Config
 except BaseException as ef:
     LOGGER.error(ef)  # Print Error
     sysexit(1)
