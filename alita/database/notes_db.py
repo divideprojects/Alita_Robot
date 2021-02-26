@@ -32,14 +32,14 @@ class Notes:
         msgtype: int = Types.TEXT,
         file=None,
     ):
-        curr = await self.collection.find_one({"chat_id": chat_id, "name": note_name})
+        curr = await self.collection.find_one({"chat_id": chat_id, "note_name": note_name})
         if curr:
             return False
         return await self.collection.insert_one(
             {
                 "chat_id": chat_id,
-                "name": note_name,
-                "value": note_value,
+                "note_name": note_name,
+                "note_value": note_value,
                 "msgtype": msgtype,
                 "file": file,
             },
@@ -47,10 +47,10 @@ class Notes:
 
     async def get_note(self, chat_id: int, note_name: str):
         curr = (
-            await self.collection.find_one({"chat_id": chat_id, "name": note_name})
-        )["note_value"]
+            await self.collection.find_one({"chat_id": chat_id, "note_name": note_name})
+        )
         if curr:
-            return curr
+            return curr["note_value"]
         return "Note does not exist!"
 
     async def get_all_notes(self, chat_id: int):
