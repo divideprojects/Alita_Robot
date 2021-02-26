@@ -23,6 +23,7 @@ from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.afk_db import AFK
 from alita.tr_engine import tlang
+from alita.utils.parser import mention_html
 
 __PLUGIN__ = "AFK"
 
