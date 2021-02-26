@@ -60,7 +60,7 @@ async def approve_user(_, m: Message):
         )
         return
     try:
-        member = await m.get_member(user_id)
+        member = await m.chat.get_member(user_id)
     except UserNotParticipant:
         await m.reply_text("This user is not in this chat!")
         return
@@ -101,7 +101,7 @@ async def disapprove_user(_, m: Message):
         )
         return
     try:
-        member = await m.get_member(user_id)
+        member = await m.chat.get_member(user_id)
     except UserNotParticipant:
         if await db.check_approve(
             chat_id,
