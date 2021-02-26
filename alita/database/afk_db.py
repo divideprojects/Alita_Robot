@@ -28,7 +28,7 @@ class AFK:
     async def check_afk(self, user_id: int):
         return await self.collection.find_one({"user_id": user_id})
 
-    async def add_afk(self, user_id: int, reason: str = None):
+    async def add_afk(self, user_id: int, reason: str = ""):
         if await self.check_afk(user_id):
             return await self.collection.update(
                 {"user_id": user_id},
