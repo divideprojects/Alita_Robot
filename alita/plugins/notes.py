@@ -126,11 +126,12 @@ async def get_note(_, m: Message):
         await m.reply_text("Give me a note tag!")
 
     getnotes = await db.get_note(m.chat.id, note)
+    msgtype = getnotes["msgtype"]
     if not getnotes:
         await m.reply_text("This note does not exist!")
         return
 
-    if getnotes["msgtype"] == Types.TEXT:
+    if msgtype == Types.TEXT:
         teks, button = await parse_button(getnotes.get("note_value"))
         button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
@@ -145,16 +146,16 @@ async def get_note(_, m: Message):
         else:
             await m.reply_text(teks)
             return
-    elif getnotes["msgtype"] in (
+    elif msgtype in (
         Types.STICKER,
         Types.VOICE,
         Types.VIDEO_NOTE,
         Types.CONTACT,
         Types.ANIMATED_STICKER,
     ):
-        await GET_FORMAT[getnotes["msgtype"]](m.chat.id, getnotes["file"])
+        await GET_FORMAT[msgtype](m.chat.id, getnotes["file"])
     else:
-        if getnotes.get("note_value"):
+        if getnotes["note_value"]:
             teks, button = await parse_button(getnotes.get("note_value"))
             button = await build_keyboard(button)
             button = InlineKeyboardMarkup(button) if button else None
@@ -170,7 +171,7 @@ async def get_note(_, m: Message):
                 LOGGER.error(ef)
                 return
         else:
-            await GET_FORMAT[getnotes["msgtype"]](
+            await GET_FORMAT[msgtype](
                 m.chat.id,
                 getnotes["file"],
                 caption=teks,
