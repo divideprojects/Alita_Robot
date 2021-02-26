@@ -87,7 +87,7 @@ async def afk_mentioned(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.group, group=12)
-async def rem_afk: Alita, m: Message):
+async def rem_afk(c: Alita, m: Message):
     if m.from_user:
         try:
             user_afk = await db.check_afk(m.from_user.id)
