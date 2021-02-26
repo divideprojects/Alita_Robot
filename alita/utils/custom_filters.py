@@ -22,6 +22,9 @@ from pyrogram.types import CallbackQuery
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
 from alita.tr_engine import tlang
 
+SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
+DEV_LEVEL = DEV_USERS + [int(OWNER_ID)]
+
 
 async def dev_check_func(_, __, m):
     """Check if user is Dev or not."""
@@ -30,11 +33,7 @@ async def dev_check_func(_, __, m):
 
 async def sudo_check_func(_, __, m):
     """Check if user is Sudo or not."""
-    return bool(
-        m.from_user.id in SUDO_USERS
-        or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID),
-    )
+    return bool(m.from_user.id in SUDO_LEVEL)
 
 
 async def admin_check_func(_, __, m):
@@ -43,24 +42,20 @@ async def admin_check_func(_, __, m):
         m = m.message
 
     # Bypass the bot devs, sudos and owner
-    if (
-        m.from_user.id in DEV_USERS
-        or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)
-    ):
+    if m.from_user.id in SUDO_LEVEL:
         return True
+    else:
+        try:
+            user = await m.chat.get_member(m.from_user.id)
 
-    try:
-        user = await m.chat.get_member(m.from_user.id)
-
-        if user.status in ("creator", "administrator"):
-            status = True
-        else:
-            status = False
-            await m.reply_text(await tlang(m, "general.no_admin_cmd_perm"))
-    except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
-        if ("The chat_id" and "belongs to a user") in ef:
-            status = True
+            if user.status in ("creator", "administrator"):
+                status = True
+            else:
+                status = False
+                await m.reply_text(await tlang(m, "general.no_admin_cmd_perm"))
+        except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
+            if ("The chat_id" and "belongs to a user") in ef:
+                status = True
 
     return status
 
@@ -71,24 +66,20 @@ async def owner_check_func(_, __, m):
         m = m.message
 
     # Bypass the bot devs, sudos and owner
-    if (
-        m.from_user.id in DEV_USERS
-        or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)
-    ):
+    if m.from_user.id in DEV_LEVEL:
         return True
-
-    user = await m.chat.get_member(m.from_user.id)
-
-    if user.status == "creator":
-        status = True
     else:
-        status = False
-        if user.status == "administrator":
-            msg = "You're an admin only, stay in your limits!"
+        user = await m.chat.get_member(m.from_user.id)
+
+        if user.status == "creator":
+            status = True
         else:
-            msg = "Do you think that you can execute admin commands?"
-        await m.reply_text(msg)
+            status = False
+            if user.status == "administrator":
+                msg = "You're an admin only, stay in your limits!"
+            else:
+                msg = "Do you think that you can execute admin commands?"
+            await m.reply_text(msg)
 
     return status
 
@@ -99,20 +90,17 @@ async def restrict_check_func(_, __, m):
         m = m.message
 
     # Bypass the bot devs, sudos and owner
-    if (
-        m.from_user.id in DEV_USERS
-        or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)
-    ):
+    if m.from_user.id in DEV_LEVEL:
         return True
 
-    user = await m.chat.get_member(m.from_user.id)
-
-    if user.can_restrict_members or user.status == "creator":
-        status = True
     else:
-        status = False
-        await m.reply_text(await tlang(m, "admin.no_restrict_perm"))
+        user = await m.chat.get_member(m.from_user.id)
+
+        if user.can_restrict_members or user.status == "creator":
+            status = True
+        else:
+            status = False
+            await m.reply_text(await tlang(m, "admin.no_restrict_perm"))
 
     return status
 
@@ -123,20 +111,16 @@ async def promote_check_func(_, __, m):
         m = m.message
 
     # Bypass the bot devs, sudos and owner
-    if (
-        m.from_user.id in DEV_USERS
-        or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)
-    ):
+    if m.from_user.id in DEV_LEVEL:
         return True
-
-    user = await m.chat.get_member(m.from_user.id)
-
-    if user.can_promote_members or user.status == "creator":
-        status = True
     else:
-        status = False
-        await m.reply_text(await tlang(m, "admin.no_promote_demote_perm"))
+        user = await m.chat.get_member(m.from_user.id)
+
+        if user.can_promote_members or user.status == "creator":
+            status = True
+        else:
+            status = False
+            await m.reply_text(await tlang(m, "admin.no_promote_demote_perm"))
 
     return status
 
@@ -147,11 +131,7 @@ async def invite_check_func(_, __, m):
         m = m.message
 
     # Bypass the bot devs, sudos and owner
-    if (
-        m.from_user.id in DEV_USERS
-        or m.from_user.id in DEV_USERS
-        or m.from_user.id == int(OWNER_ID)
-    ):
+    if m.from_user.id in DEV_LEVEL:
         return True
 
     user = await m.chat.get_member(m.from_user.id)

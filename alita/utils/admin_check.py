@@ -16,23 +16,36 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from alita import DEV_USERS, OWNER_ID
+from pyrogram.types import Message
+
+from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
+
+SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
+DEV_LEVEL = DEV_USERS + [int(OWNER_ID)]
 
 
 async def admin_check(m) -> bool:
     """Checks if user is admin or not."""
-    user_id = m.from_user.id
+    if isinstance(m, Message):
+        user_id = m.from_user.id
+    elif isinstance(m, int):
+        user_id = m
+    else:
+        pass
 
-    if (int(user_id) == int(OWNER_ID)) or (int(user_id) in DEV_USERS):
+    if user_id in SUDO_LEVEL:
         return True
 
     user = await m.chat.get_member(user_id)
     admin_strings = ("creator", "administrator")
 
     if user.status not in admin_strings:
-        await m.reply_text(
-            "Nigga, you're not admin, don't try this explosive shit.",
-        )
+        reply = ("Nigga, you're not admin, don't try this explosive shit.",)
+        try:
+            await m.edit_text(reply)
+        except Exception as ef:
+            await m.reply_text(reply)
+            LOGGER.error(ef)
         return False
 
     return True
@@ -40,9 +53,14 @@ async def admin_check(m) -> bool:
 
 async def owner_check(m) -> bool:
     """Checks if user is owner or not."""
-    user_id = m.from_user.id
+    if isinstance(m, Message):
+        user_id = m.from_user.id
+    elif isinstance(m, int):
+        user_id = m
+    else:
+        pass
 
-    if (int(user_id) == int(OWNER_ID)) or (int(user_id) in DEV_USERS):
+    if user_id in DEV_LEVEL:
         return True
 
     user = await m.chat.get_member(user_id)
@@ -52,7 +70,12 @@ async def owner_check(m) -> bool:
             reply = "Stay in your limits, or lose adminship too."
         else:
             reply = "You ain't even admin, what are you trying to do?"
-        await m.reply_text(reply)
+        try:
+            await m.edit_text(reply)
+        except Exception as ef:
+            await m.reply_text(reply)
+            LOGGER.error(ef)
+
         return False
 
     return True

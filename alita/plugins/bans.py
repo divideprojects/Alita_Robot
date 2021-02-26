@@ -142,7 +142,7 @@ async def unban_usr(_, m: Message):
     try:
         await m.chat.unban_member(user_id)
         await m.reply_text(
-            (await tlang(m, "admin.banned_user")).format(
+            (await tlang(m, "admin.unbanned_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 unbanned=(await mention_html(user_first_name, user_id)),
                 chat_title=f"<b>{m.chat.title}</b>",

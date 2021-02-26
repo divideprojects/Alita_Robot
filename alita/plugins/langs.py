@@ -103,9 +103,9 @@ async def close_btn_callback(_, q: CallbackQuery):
 @Alita.on_callback_query(filters.regex("^set_lang."))
 async def set_lang_callback(_, q: CallbackQuery):
 
-    lang = q.data.split(".")[1]
+    lang_code = q.data.split(".")[1]
 
-    await db.set_lang(q.message.chat.id, lang)
+    await db.set_lang(q.message.chat.id, lang_code)
     await sleep(0.1)
 
     if q.message.chat.type == "private":
@@ -130,7 +130,6 @@ async def set_lang_callback(_, q: CallbackQuery):
                 ],
             ],
         )
-    lang_code = q.data.split(".")[1]
     await q.message.edit_text(
         f"🌐 {((await tlang(q, 'langs.changed')).format(lang_code=lang_code))}",
         reply_markup=keyboard,

@@ -168,7 +168,7 @@
                 "getting_info": "Getting user information...",
                 "info_text": {
                     "last_name": "\nLast Name: {user_lname}",
-                    "main": "Characteristics:\nID: {user_id}\nFirst Name: {user_name)}",
+                    "main": "Characteristics:\nID: {user_id}\nFirst Name: {user_name}",
                     "perma_link": "\nPermanent user link: {perma_link}",
                     "username": "\nUsername: @{username}"
                 },

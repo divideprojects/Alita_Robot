@@ -28,9 +28,14 @@ from pyrogram.types import (
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.notes_db import Notes
+from alita.utils.admin_check import owner_check
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.msg_types import Types, get_note_type
+from alita.utils.parser import mention_html
 from alita.utils.string import build_keyboard, parse_button
+
+# Initialise
+db = Notes()
 
 __PLUGIN__ = "Notes"
 __help__ = """
@@ -108,7 +113,7 @@ async def save_note(_, m: Message):
             )
             return
 
-    await Notes().save_note(m.chat.id, note_name, text, data_type, content)
+    await db.save_note(m.chat.id, note_name, text, data_type, content)
     await m.reply_text(f"Saved note <code>{note_name}</code>!")
     return
 
@@ -120,7 +125,7 @@ async def get_note(_, m: Message):
     else:
         await m.reply_text("Give me a note tag!")
 
-    getnotes = await Notes().get_note(m.chat.id, note)
+    getnotes = await db.get_note(m.chat.id, note)
     if not getnotes:
         await m.reply_text("This note does not exist!")
         return
@@ -175,7 +180,7 @@ async def get_note(_, m: Message):
 
 @Alita.on_message(filters.command(["notes", "saved"], PREFIX_HANDLER) & filters.group)
 async def local_notes(_, m: Message):
-    getnotes = await Notes().get_all_notes(m.chat.id)
+    getnotes = await db.get_all_notes(m.chat.id)
     if not getnotes:
         await m.reply_text(f"There are no notes in <b>{m.chat.title}</b>.")
         return
@@ -200,12 +205,12 @@ async def clear_note(_, m: Message):
         return
 
     note = m.text.split()[1]
-    getnote = await Notes().rm_note(m.chat.id, note)
+    getnote = await db.rm_note(m.chat.id, note)
     if not getnote:
         await m.reply_text("This note does not exist!")
         return
 
-    await m.reply_text(f"Deleted note `{note}`!")
+    await m.reply_text(f"Note '`{note}`' deleted!")
     return
 
 
@@ -214,7 +219,7 @@ async def clear_note(_, m: Message):
 )
 async def clear_allnote(_, m: Message):
 
-    all_notes = await Notes().get_all_notes(m.chat.id)
+    all_notes = await db.get_all_notes(m.chat.id)
     if not all_notes:
         await m.reply_text("No notes are there in this chat")
         return
@@ -224,7 +229,10 @@ async def clear_allnote(_, m: Message):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("⚠️ Confirm", callback_data="clear.notes"),
+                    InlineKeyboardButton(
+                        "⚠️ Confirm",
+                        callback_data=f"clear.notes.{m.from_user.id}.{m.from_user.first_name}",
+                    ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
                 ],
             ],
@@ -233,10 +241,20 @@ async def clear_allnote(_, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^clear.notes$") & owner_filter)
+@Alita.on_callback_query(filters.regex("^clear.notes."))
 async def clearallnotes_callback(_, q: CallbackQuery):
+    m = q.data.split(".")[-2]
+    name = q.data.split(".")[-1]
+    if not (await owner_check(m)):
+        await q.message.edit(
+            (
+                f"You're an admin {await mention_html(name, m)}, not owner!\n"
+                "Stay in your limits!"
+            ),
+        )
+        return
     await q.message.edit_text("Clearing all notes...!")
-    await Notes().rm_all_notes(q.message.chat.id)
-    await q.message.edit_text("Cleared all notes!")
-    await q.answer()
+    await db.rm_all_notes(q.message.chat.id)
+    await q.message.delete()
+    await q.answer("Cleared all notes!", show_alert=True)
     return

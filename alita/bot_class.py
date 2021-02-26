@@ -140,7 +140,7 @@ class Alita(Client):
         meh = await get_self(self)  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
 
-        await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
+        startmsg = await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 
         # Load Languages
         lang_status = len(lang_dict) >= 1
@@ -149,14 +149,14 @@ class Alita(Client):
         # Redis Content Setup!
         redis_client = await setup_redis()
         if redis_client:
-            LOGGER.info("Connected to redis!")
+            LOGGER.info("Redis Connected: True")
             await self.get_admins()  # Load admins in cache
             await set_key("BOT_ID", meh.id)
             await set_key("BOT_USERNAME", meh.username)
             await set_key("BOT_NAME", meh.first_name)
             await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
         else:
-            LOGGER.error("Redis not connected!")
+            LOGGER.error("Redis Connected: False")
         # Redis Content Setup!
 
         # Show in Log that bot has started
@@ -171,8 +171,7 @@ class Alita(Client):
 
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!
-        await self.send_message(
-            MESSAGE_DUMP,
+        await startmsg.edit_text(
             (
                 f"<b><i>@{meh.username} started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n"
                 f"\n<b>Python:</b> <u>{python_version()}</u>\n"
@@ -195,14 +194,13 @@ class Alita(Client):
         await self.send_document(
             MESSAGE_DUMP,
             document=LOGFILE,
-            caption=f"Logs for last run, pasted to NekoBin.\n<code>{LOG_DATETIME}</code>",
+            caption=(
+                "Bot Stopped!\n\nLogs for last run, pasted to NekoBin as "
+                f"well as uploaded a file here.\n<code>{LOG_DATETIME}</code>"
+            ),
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("Logs", url=raw)]],
             ),
-        )
-        await self.send_message(
-            MESSAGE_DUMP,
-            "<i><b>Bot Stopped!</b></i>",
         )
         await super().stop()
         await close()  # Close redis connection
