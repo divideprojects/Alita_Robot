@@ -16,6 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from pyrogram.filters import user
+from pyrogram.methods.chats import delete_user_history
+
 from alita.database import MongoDB
 
 
@@ -45,6 +48,10 @@ class Blacklist:
             )
         return "Blacklist not found!"
 
+    async def get_blacklists(self, chat_id: int):
+        blacklists = await self.collection.find_all({"chat_id": chat_id})
+        return blacklists
+
     async def set_action(self, chat_id: int, action: str = "kick"):
 
         if action not in ("mute", "ban", "kick"):
@@ -59,3 +66,13 @@ class Blacklist:
                     await self.collection.update(i, {"action": action})
                 return "Updated Action!"
         return f"Current action remains same: {action}"
+
+    async def count_blacklists(self):
+        return await self.collection.count()
+
+    async def count_chats_blacklist(self):
+        chats_num = await self.collection.find_all()
+        chats_ids = []
+        for chat in chats_num:
+            chats_ids.append(chat["chat_id"])
+        return len(list(dict.fromkeys(chats_ids)))

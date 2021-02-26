@@ -25,12 +25,14 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import PREFIX_HANDLER
+from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 from alita.utils.redis_helper import get_key
+
+db = Rules()
 
 __PLUGIN__ = "Rules"
 
@@ -50,11 +52,11 @@ what not to do in your group!
 async def get_rules(c: Alita, m: Message):
 
     chat_id = m.chat.id
-    rules = await Rules().get_rules(chat_id)
+    rules = await db.get_rules(chat_id)
 
     if not rules:
         await m.reply_text(
-            await tlang(m, "rules.no_rules"),
+            (await tlang(m, "rules.no_rules")),
             reply_to_message_id=m.message_id,
         )
         return
@@ -62,7 +64,7 @@ async def get_rules(c: Alita, m: Message):
     try:
         await c.send_message(
             m.from_user.id,
-            await tlang(m, "rules.get_rules").format(
+            (await tlang(m, "rules.get_rules")).format(
                 chat=f"<b>{m.chat.title}</b>",
                 rules=rules,
             ),
@@ -73,14 +75,16 @@ async def get_rules(c: Alita, m: Message):
             [[InlineKeyboardButton("PM", url=f"https://t.me/{me_name}?start")]],
         )
         await m.reply_text(
-            await tlang(m, "rules.pm_me"),
+            (await tlang(m, "rules.pm_me")),
             reply_to_message_id=m.message_id,
             reply_markup=pm_kb,
         )
         return
+    except Exception as ef:
+        LOGGER.error(ef)
 
     await m.reply_text(
-        await tlang(m, "rules.sent_pm_rules"),
+        (await tlang(m, "rules.sent_pm_rules")),
         reply_to_message_id=m.message_id,
     )
     return
@@ -101,7 +105,7 @@ async def set_rules(_, m: Message):
         rules = rules[0:3949]  # Split Rules if len > 4000 chars
         await m.reply_text("Rules truncated to 3950 characters!")
 
-    await Rules().set_rules(chat_id, rules)
+    await db.set_rules(chat_id, rules)
     await m.reply_text(await tlang(m, "rules.set_rules"))
     return
 
@@ -111,13 +115,13 @@ async def set_rules(_, m: Message):
 )
 async def clear_rules(_, m: Message):
 
-    rules = await Rules().get_rules(m.chat.id)
+    rules = await db.get_rules(m.chat.id)
     if not rules:
         await m.reply_text(await tlang(m, "rules.no_rules"))
         return
 
     await m.reply_text(
-        await tlang(m, "rules.clear_rules"),
+        (await tlang(m, "rules.clear_rules")),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -130,9 +134,9 @@ async def clear_rules(_, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^clear.rules$"))
+@Alita.on_callback_query(filters.regex("^clear.rules$") & admin_filter)
 async def clearrules_callback(_, q: CallbackQuery):
-    await Rules().clear_rules(q.message.chat.id)
-    await q.message.reply_text(await tlang(q, "rules.cleared"))
-    await q.answer()
+    await db.clear_rules(q.message.chat.id)
+    await q.message.edit_text(await tlang(q, "rules.cleared"))
+    await q.answer("Rules for the chat have been cleared!", show_alert=True)
     return

@@ -60,7 +60,7 @@ async def pin_message(c: Alita, m: Message):
             await m.reply_text(await tlang(m, "pin.no_rights_pin"))
         except RPCError as ef:
             await m.reply_text(
-                await tlang(m, "general.some_error").format(
+                (await tlang(m, "general.some_error")).format(
                     SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                     ef=f"<code>{ef}</code>",
                 ),
@@ -89,7 +89,7 @@ async def unpin_message(c: Alita, m: Message):
         await m.reply_text(await tlang(m, "pin.no_rights_unpin"))
     except RPCError as ef:
         await m.reply_text(
-            await tlang(m, "general.some_error").format(
+            (await tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -113,7 +113,7 @@ async def unpinall_message(c: Alita, m: Message):
         await m.reply_text(await tlang(m, "pin.no_rights_unpin"))
     except RPCError as ef:
         await m.reply_text(
-            await tlang(m, "general.some_error").format(
+            (await tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),

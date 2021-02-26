@@ -27,7 +27,7 @@ class GBan:
         self.collection = MongoDB("gbans")
 
     async def check_gban(self, user_id: int):
-        return await self.collection.find_one({"user_id": user_id})
+        return bool(await self.collection.find_one({"user_id": user_id}))
 
     async def add_gban(self, user_id: int, reason: str, by_user: int):
 
@@ -53,8 +53,8 @@ class GBan:
             {"reason": reason},
         )
 
-    async def count_collection(self):
+    async def count_gbans(self):
         return await self.collection.count()
 
-    async def list_collection(self):
-        return await self.collection.find_all({})
+    async def list_gbans(self):
+        return await self.collection.find_all()

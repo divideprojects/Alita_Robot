@@ -13,6 +13,7 @@ dev-install:
 	@pre-commit install
 
 run:
+	@clear
 	@python3 -m alita
 
 update:

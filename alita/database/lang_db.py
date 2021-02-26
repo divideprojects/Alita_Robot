@@ -35,8 +35,8 @@ class Langs:
     async def set_lang(self, chat_id: int, lang: str = "en"):
         chat_type = await self.get_chat_type(chat_id)
 
-        if (await self.collection.find_one({"chat_id": chat_id}))["lang"]:
-            return self.collection.update(
+        if await self.collection.find_one({"chat_id": chat_id}):
+            return await self.collection.update(
                 {"chat_id": chat_id},
                 {"lang": lang},
             )
@@ -48,9 +48,9 @@ class Langs:
     async def get_lang(self, chat_id: int):
         chat_type = await self.get_chat_type(chat_id)
 
-        curr_lang = (await self.collection.find_one({"chat_id": chat_id}))["lang"]
+        curr_lang = await self.collection.find_one({"chat_id": chat_id})
         if curr_lang:
-            return curr_lang
+            return str(curr_lang["lang"])
 
         await self.collection.insert_one(
             {"chat_id": chat_id, "chat_type": chat_type, "lang": "en"},

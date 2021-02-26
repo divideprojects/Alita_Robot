@@ -26,13 +26,13 @@ class Rules:
         self.collection = MongoDB("rules")
 
     async def get_rules(self, chat_id: int):
-        rules = (await self.collection.find_one({"chat_id": chat_id}))["rules"]
+        rules = await self.collection.find_one({"chat_id": chat_id})
         if rules:
-            return rules
+            return rules["rules"]
         return None
 
     async def set_rules(self, chat_id: int, rules: str):
-        curr_rules = (await self.collection.find_one({"chat_id": chat_id}))["rules"]
+        curr_rules = await self.collection.find_one({"chat_id": chat_id})
         if curr_rules:
             return await self.collection.update(
                 {"chat_id": chat_id},
@@ -41,7 +41,10 @@ class Rules:
         return await self.collection.insert_one({"chat_id": chat_id, "rules": rules})
 
     async def clear_rules(self, chat_id: int):
-        curr_rules = (await self.collection.find_one({"chat_id": chat_id}))["rules"]
+        curr_rules = await self.collection.find_one({"chat_id": chat_id})
         if curr_rules:
             return await self.collection.delete_one({"chat_id": chat_id})
         return
+
+    async def count_chats(self):
+        return await self.collection.count()

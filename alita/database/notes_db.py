@@ -84,5 +84,12 @@ class Notes:
             return len(curr)
         return 0
 
+    async def count_notes_chats(self):
+        notes = await self.collection.find_all()
+        chats_ids = []
+        for chat in notes:
+            chats_ids.append(chat["chat_id"])
+        return len(list(dict.fromkeys(chats_ids)))
+
     async def count_all_notes(self):
         return len(await self.collection.find_all())

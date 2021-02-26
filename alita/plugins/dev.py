@@ -81,7 +81,7 @@ async def test_speed(c: Alita, m: Message):
     dl = round(s.download() / 1024 / 1024, 2)
     ul = round(s.upload() / 1024 / 1024, 2)
     await sent.edit_text(
-        await tlang(m, "dev.speedtest.speedtest_txt").format(
+        (await tlang(m, "dev.speedtest.speedtest_txt")).format(
             host=bs["sponsor"],
             ping=int(bs["latency"]),
             download=dl,
@@ -236,7 +236,7 @@ async def public_ip(c: Alita, m: Message):
         f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     await m.reply_text(
-        await tlang(m, "dev.bot_ip").format(ip=f"<code>{ip}</code>"),
+        (await tlang(m, "dev.bot_ip").format(ip=f"<code>{ip}</code>")),
         quote=True,
     )
     return
@@ -282,7 +282,7 @@ async def chats(c: Alita, m: Message):
         f.name = "chatlist.txt"
         await m.reply_document(
             document=f,
-            caption=await tlang(m, "dev.chatlist.chats_in_db"),
+            caption=(await tlang(m, "dev.chatlist.chats_in_db")),
         )
     await exmsg.delete()
     return
@@ -291,7 +291,7 @@ async def chats(c: Alita, m: Message):
 @Alita.on_message(filters.command("uptime", DEV_PREFIX_HANDLER) & dev_filter)
 async def uptime(_, m: Message):
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
-    await m.reply_text(await tlang(m, "dev.uptime").format(uptime=up), quote=True)
+    await m.reply_text((await tlang(m, "dev.uptime")).format(uptime=up), quote=True)
     return
 
 
@@ -326,7 +326,7 @@ async def store_members(c: Alita, m: Message):
 async def list_all_admins(_, m: Message):
 
     replymsg = await m.reply_text(
-        await tlang(m, "dev.alladmins.getting_admins"),
+        (await tlang(m, "dev.alladmins.getting_admins")),
         quote=True,
     )
     len_admins = 0  # Total number of admins
@@ -338,7 +338,7 @@ async def list_all_admins(_, m: Message):
 
     try:
         await replymsg.edit_text(
-            await tlang(m, "dev.alladmins.admins_i_know_str").format(
+            (await tlang(m, "dev.alladmins.admins_i_know_str")).format(
                 len_admins=len_admins,
                 admindict=str(admindict),
             ),
@@ -349,14 +349,14 @@ async def list_all_admins(_, m: Message):
             f.name = "allAdmins.txt"
             await m.reply_document(
                 document=f,
-                caption=await tlang(m, "dev.alladmins.admins_in_cache").format(
+                caption=(await tlang(m, "dev.alladmins.admins_in_cache")).format(
                     len_admins=len_admins,
                 ),
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton(
-                                await tlang(m, "dev.alladmins.alladmins_btn"),
+                                (await tlang(m, "dev.alladmins.alladmins_btn")),
                                 url=raw,
                             ),
                         ],
@@ -395,7 +395,7 @@ async def show_redis_keys(_, m: Message):
 @Alita.on_message(filters.command("flushredis", DEV_PREFIX_HANDLER) & dev_filter)
 async def flush_redis(_, m: Message):
     replymsg = await m.reply_text(
-        await tlang(m, "dev.flush_redis.flushing_redis"),
+        (await tlang(m, "dev.flush_redis.flushing_redis")),
         quote=True,
     )
     try:

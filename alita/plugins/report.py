@@ -29,9 +29,12 @@ from pyrogram.types import (
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
 from alita.bot_class import Alita
-from alita.database.reporting_db import Reporting as db
+from alita.database.reporting_db import Reporting
 from alita.utils.admin_check import admin_check
 from alita.utils.parser import mention_html
+
+#  initialise
+db = Reporting()
 
 __PLUGIN__ = "Reporting"
 
@@ -53,28 +56,28 @@ async def report_setting(_, m: Message):
 
     if m.chat.type == "private":
         if len(args) >= 2:
-            if args[1] in ("yes", "on"):
-                db().set_user_setting(m.chat.id, True)
+            if args[1] in ("yes", "on", "true"):
+                await db.set_settings(m.chat.id, True)
                 await m.reply_text(
-                    "Turned on reporting! You'll be notified whenever anyone reports something.",
+                    "Turned on reporting! You'll be notified whenever anyone reports something in groups you are admin.",
                 )
 
-            elif args[1] in ("no", "off"):
-                db().set_user_setting(m.chat.id, False)
+            elif args[1] in ("no", "off", "false"):
+                await db.set_settings(m.chat.id, False)
                 await m.reply_text("Turned off reporting! You wont get any reports.")
         else:
             await m.reply_text(
-                f"Your current report preference is: `{db.user_should_report(m.chat.id)}`",
+                f"Your current report preference is: `{(await db.get_settings(m.chat.id))}`",
             )
 
     else:
-        res = await admin_check(m)
-        if not res:
+        if not (await admin_check(m)):
+            await m.delete()
             return
 
         if len(args) >= 2:
-            if args[1] in ("yes", "on"):
-                db().set_chat_setting(m.chat.id, True)
+            if args[1] in ("yes", "on", "true"):
+                await db.set_settings(m.chat.id, True)
                 await m.reply_text(
                     "Turned on reporting! Admins who have turned on reports will be notified when /report "
                     "or @admin is called.",
@@ -82,22 +85,23 @@ async def report_setting(_, m: Message):
                 )
 
             elif args[1] in ("no", "off"):
-                db().set_chat_setting(m.chat.id, False)
+                await db.set_settings(m.chat.id, False)
                 await m.reply_text(
                     "Turned off reporting! No admins will be notified on /report or @admin.",
                     reply_to_message_id=m.message_id,
                 )
         else:
             await m.reply_text(
-                f"This group's current setting is: `{db.chat_should_report(m.chat.id)}`",
+                f"This group's current setting is: `{(await db.get_settings(m.chat.id))}`",
             )
 
 
+# TODO - Fix this
 @Alita.on_message(filters.command("report", PREFIX_HANDLER))
 async def report(c: Alita, m: Message):
     me = await c.get_me()
 
-    if m.chat and m.reply_to_message and db().chat_should_report(m.chat.id):
+    if m.chat and m.reply_to_message and db.chat_should_report(m.chat.id):
         reported_user = m.reply_to_message.from_user
         chat_name = m.chat.title or m.chat.username
         admin_list = await c.get_chat_members(m.chat.id, filter="administrators")
@@ -159,7 +163,7 @@ async def report(c: Alita, m: Message):
             if admin.user.is_bot:  # can't message bots
                 continue
 
-            if db().user_should_report(admin.user.id):
+            if db.user_should_report(admin.user.id):
                 try:
                     if not m.chat.type == "supergroup":
                         await c.send_message(admin.user.id, msg + link)

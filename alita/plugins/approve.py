@@ -27,6 +27,9 @@ from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
+# Initialise
+db = Approve()
+
 __PLUGIN__ = "Approve"
 
 __help__ = """
@@ -68,15 +71,15 @@ async def approve_user(_, m: Message):
         return
     if member.status in ("administrator", "creator"):
         await m.reply_text(
-            "User is already admin - blocklists already don't apply to them.",
+            "User is already admin - blacklists and locks already don't apply to them.",
         )
         return
-    if await Approve().check_approve(chat_id, user_id):
+    if await db.check_approve(chat_id, user_id):
         await m.reply_text(
             f"{(await mention_html(user_first_name, user_id))} is already approved in {chat_title}",
         )
         return
-    await Approve().add_approve(chat_id, user_id)
+    await db.add_approve(chat_id, user_id)
     await m.reply_text(
         f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}! They will now be ignored by blocklists.",
     )
@@ -90,6 +93,7 @@ async def disapprove_user(_, m: Message):
 
     chat_title = m.chat.title
     chat_id = m.chat.id
+
     user_id, user_first_name = await extract_user(m)
     if not user_id:
         await m.reply_text(
@@ -99,9 +103,12 @@ async def disapprove_user(_, m: Message):
     try:
         member = await m.get_member(user_id)
     except UserNotParticipant:
-        if await Approve().check_approve(chat_id, user_id):
-            await Approve().remove_approve(chat_id, user_id)
-        await m.reply_text("This user is not in this chat!")
+        if await db.check_approve(
+            chat_id,
+            user_id,
+        ):  # If user is approved and not in chat, unapprove them.
+            await db.remove_approve(chat_id, user_id)
+        await m.reply_text("This user is not in this chat, unapproved them.")
         return
     except RPCError as ef:
         await m.reply_text(
@@ -111,12 +118,12 @@ async def disapprove_user(_, m: Message):
     if member.status in ["administrator", "creator"]:
         await m.reply_text("This user is an admin, they can't be unapproved.")
         return
-    if not (await Approve().check_approve(chat_id, user_id)):
+    if not (await db.check_approve(chat_id, user_id)):
         await m.reply_text(
             f"{(await mention_html(user_first_name, user_id))} isn't approved yet!",
         )
         return
-    await Approve().remove_approve(chat_id, user_id)
+    await db.remove_approve(chat_id, user_id)
     await m.reply_text(
         f"{(await mention_html(user_first_name, user_id))} is no longer approved in {chat_title}.",
     )
@@ -132,18 +139,19 @@ async def check_approved(_, m: Message):
     chat_title = chat.title
     user_id = (await extract_user(m))[0]
     msg = "The following users are approved:\n"
-    x = await Approve().list_approved(chat.id)
+    approved_people = await db.list_approved(chat.id)
 
-    for i in x:
+    if not approved_people:
+        await m.reply_text(f"No users are approved in {chat_title}.")
+        return
+
+    for i in approved_people:
         try:
             member = await chat.get_member(int(i.user_id))
         except UserNotParticipant:
-            await Approve().remove_approve(chat.id, user_id)
+            await db.remove_approve(chat.id, user_id)
             continue
         msg += f"- `{i.user_id}`: {(await mention_html(member.user['first_name'], int(i.user_id)))}\n"
-    if msg.endswith("approved:\n"):
-        await m.reply_text(f"No users are approved in {chat_title}.")
-        return
     await m.reply_text(msg)
     return
 
@@ -154,12 +162,13 @@ async def check_approved(_, m: Message):
 async def check_approval(_, m: Message):
 
     user_id, user_first_name = await extract_user(m)
+
     if not user_id:
         await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!",
         )
         return
-    if await Approve().check_approve(m.chat.id, user_id):
+    if await db.check_approve(m.chat.id, user_id):
         await m.reply_text(
             f"{(await mention_html(user_first_name, user_id))} is an approved user. Locks, antiflood, and blocklists won't apply to them.",
         )
@@ -176,7 +185,7 @@ async def check_approval(_, m: Message):
 async def unapproveall_users(_, m: Message):
 
     try:
-        await Approve().unapprove_all(m.chat.id)
+        await db.unapprove_all(m.chat.id)
         await m.reply_text(f"All users have been disapproved in {m.chat.title}")
     except RPCError as ef:
         await m.reply_text(f"Some Error occured, report at @{SUPPORT_GROUP}.\n{ef}")

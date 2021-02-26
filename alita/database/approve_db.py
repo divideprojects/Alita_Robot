@@ -16,8 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from logging import currentframe
-
 from alita.database import MongoDB
 
 
@@ -60,8 +58,11 @@ class Approve:
     async def list_approved(self, chat_id: int):
         return await self.collection.find_all({"chat_id": chat_id})
 
-    async def count_approved(self):
+    async def count_all_approved(self):
         return await self.collection.count()
+
+    async def count_approved(self, chat_id: int):
+        return await self.collection.count({"chat_id": chat_id})
 
     async def list_all_approved(self):
         return await self.collection.find_all({})

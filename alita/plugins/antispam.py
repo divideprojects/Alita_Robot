@@ -29,6 +29,10 @@ from alita.database.antispam_db import GBan
 from alita.utils.custom_filters import sudo_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
+from alita.utils.redis_helper import get_key
+
+# Initialize
+db = GBan()
 
 
 @Alita.on_message(filters.command(["gban", "globalban"], PREFIX_HANDLER) & sudo_filter)
@@ -43,7 +47,7 @@ async def gban(c: Alita, m: Message):
         return
 
     user_id, user_first_name = await extract_user(m)
-    me = await c.get_me()
+    me = await get_key("BOT_ID")
 
     if m.reply_to_message:
         gban_reason = m.text.split(None, 1)[1]
@@ -51,21 +55,21 @@ async def gban(c: Alita, m: Message):
         gban_reason = m.text.split(None, 2)[2]
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text("This user is part of Skuzzers!, Can't ban our own!")
+        await m.reply_text("This user is part of my Support!, Can't ban our own!")
         return
 
-    if user_id == me.id:
+    if user_id == me:
         await m.reply_text("You can't gban me nigga!\nNice Try...!")
         return
 
-    if await GBan().check_gban(user_id):
-        await GBan().update_gban_reason(user_id, gban_reason)
+    if await db.check_gban(user_id):
+        await db.update_gban_reason(user_id, gban_reason)
         await m.reply_text(
-            (f"Updated Gban reason to: `{gban_reason}`."),
+            f"Updated Gban reason to: `{gban_reason}`.",
         )
         return
 
-    await GBan().add_gban(user_id, gban_reason, m.from_user.id)
+    await db.add_gban(user_id, gban_reason, m.from_user.id)
     await m.reply_text(
         (
             f"Added {user_first_name} to Global Ban List.\n"
@@ -91,8 +95,8 @@ async def gban(c: Alita, m: Message):
                 f"Appeal Chat: @{SUPPORT_GROUP}"
             ),
         )
-    except BaseException:  # TO DO: Improve Error Detection
-        pass
+    except BaseException as ef:  # TO DO: Improve Error Detection
+        LOGGER.error(ef)
     return
 
 
@@ -107,18 +111,18 @@ async def ungban(c: Alita, m: Message):
         return
 
     user_id, user_first_name = await extract_user(m)
-    me = await c.get_me()
+    me = await get_key("BOT_ID")
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text("They can't be banned, so how am I supposed to ungban them?")
         return
 
-    if user_id == me.id:
+    if user_id == me:
         await m.reply_text("Nice Try...!")
         return
 
-    if await GBan().check_gban(user_id):
-        await GBan().remove_gban(user_id)
+    if await db.check_gban(user_id):
+        await db.remove_gban(user_id)
         await m.reply_text(f"Removed {user_first_name} from Global Ban List.")
         log_msg = (
             f"#UNGBAN\n"
@@ -135,8 +139,8 @@ async def ungban(c: Alita, m: Message):
                 user_id,
                 "You have been removed from my global ban list!\n",
             )
-        except BaseException:  # TODO: Improve Error Detection
-            pass
+        except BaseException as ef:  # TODO: Improve Error Detection
+            LOGGER.error(ef)
         return
 
     await m.reply_text("User is not gbanned!")
@@ -144,26 +148,34 @@ async def ungban(c: Alita, m: Message):
 
 
 @Alita.on_message(
+    filters.command(["numgbans", "countgbans"], PREFIX_HANDLER) & sudo_filter,
+)
+async def gban_count(_, m: Message):
+    await m.reply_text(f"Number of people gbanned {(await db.count_collection())}")
+    return
+
+
+@Alita.on_message(
     filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter,
 )
 async def gban_list(_, m: Message):
-    banned_users = await GBan().list_collection()
+    banned_users = await db.list_collection()
 
     if not banned_users:
         await m.reply_text("There aren't any gbanned users...!")
         return
 
-    banfile = "Banned geys!.\n"
+    banfile = "Here are all the globally banned geys!\n"
     for user in banned_users:
-        banfile += "[x] {} - {}\n".format(user["name"], user["user_id"])
+        banfile += f"[x] {user['name']} - {user['user_id']}\n"
         if user["reason"]:
-            banfile += "Reason: {}\n".format(user["reason"])
+            banfile += f"Reason: {user['reason']}\n"
 
     with BytesIO(str.encode(banfile)) as f:
         f.name = "gbanlist.txt"
         await m.reply_document(
             document=f,
-            caption="Here is the list of currently gbanned users.",
+            caption=banfile,
         )
 
         return
@@ -172,9 +184,15 @@ async def gban_list(_, m: Message):
 @Alita.on_message(filters.group, group=6)
 async def gban_watcher(c: Alita, m: Message):
     try:
-        if await GBan().check_gban(m.from_user.id):
+        try:
+            _banned = await db.check_gban(m.from_user.id)
+        except Exception as ef:
+            LOGGER.error(ef)
+            return
+        if _banned:
             try:
-                await c.kick_chat_member(m.chat.id, m.from_user.id)
+                await m.chat.kick_member(m.from_user.id)
+                await m.delete(m.message_id)  # Delete users message!
                 await m.reply_text(
                     (
                         f"This user ({(await mention_html(m.from_user.first_name, m.from_user.id))}) "
@@ -193,7 +211,7 @@ async def gban_watcher(c: Alita, m: Message):
             except RPCError as excp:
                 await c.send_message(
                     MESSAGE_DUMP,
-                    f"<b>Gban Watcher Error!</b>\n<b>Chat:</b> {m.chat.id}\n<b>Error:</b> `{excp}`",
+                    f"<b>Gban Watcher Error!</b>\n<b>Chat:</b> {m.chat.id}\n<b>Error:</b> <code>{excp}</code>",
                 )
     except AttributeError:
         pass  # Skip attribute errors!

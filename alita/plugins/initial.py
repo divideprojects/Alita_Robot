@@ -22,10 +22,16 @@ from pyrogram.types import Message
 from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.blacklist_db import Blacklist as bldb
-from alita.database.lang_db import Langs as langdb
-from alita.database.notes_db import Notes as notedb
-from alita.database.rules_db import Rules as ruledb
-from alita.database.users_db import Users as userdb
+from alita.database.lang_db import Langs
+from alita.database.notes_db import Notes
+from alita.database.rules_db import Rules
+from alita.database.users_db import Users
+
+# Initialise
+langdb = Langs()
+notedb = Notes()
+ruledb = Rules()
+userdb = Users()
 
 
 @Alita.on_message(group=-1)
@@ -40,26 +46,29 @@ async def initial_works(_, m: Message):
                 new_chat = m.chat.id
 
             try:
-                await migrate_chat(old_chat, new_chat)
+                # await migrate_chat(old_chat, new_chat)
+                pass
             except RPCError as ef:
                 LOGGER.error(ef)
                 return
         else:
-            userdb().update_user(
+            await userdb.update_user(
                 m.from_user.id,
+                m.from_user.first_name,
                 m.from_user.username,
-                m.chat.id,
-                m.chat.title,
             )
             if m.reply_to_message:
-                userdb().update_user(
+                await userdb.update_user(
                     m.reply_to_message.from_user.id,
+                    m.reply_to_message.from_user.first_name,
                     m.reply_to_message.from_user.username,
-                    m.chat.id,
-                    m.chat.title,
                 )
             if m.forward_from:
-                userdb().update_user(m.forward_from.id, m.forward_from.username)
+                await userdb.update_user(
+                    m.forward_from.id,
+                    m.forward_from.first_name,
+                    m.forward_from.username,
+                )
     except AttributeError:
         pass  # Skip attribute errors!
     return
@@ -67,9 +76,9 @@ async def initial_works(_, m: Message):
 
 async def migrate_chat(old_chat, new_chat):
     LOGGER.info(f"Migrating from {str(old_chat)} to {str(new_chat)}")
-    userdb().migrate_chat(old_chat, new_chat)
-    langdb().migrate_chat(old_chat, new_chat)
-    ruledb().migrate_chat(old_chat, new_chat)
-    bldb().migrate_chat(old_chat, new_chat)
-    notedb().migrate_chat(old_chat, new_chat)
+    await userdb.migrate_chat(old_chat, new_chat)
+    await langdb.migrate_chat(old_chat, new_chat)
+    await ruledb.migrate_chat(old_chat, new_chat)
+    await bldb.migrate_chat(old_chat, new_chat)
+    await notedb.migrate_chat(old_chat, new_chat)
     LOGGER.info("Successfully migrated!")
