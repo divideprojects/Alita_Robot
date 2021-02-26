@@ -66,7 +66,7 @@ async def set_afk(_, m: Message):
     return
 
 
-@Alita.on_message(filters.mentioned & filters.group & ~filters.bot, group=11)
+@Alita.on_message(filters.mentioned & ~filters.bot, group=11)
 async def afk_mentioned(c: Alita, m: Message):
     if m.from_user:
         try:
