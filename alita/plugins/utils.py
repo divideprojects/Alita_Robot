@@ -316,7 +316,7 @@ async def paste_it(_, m: Message):
     url = (await paste(txt))[0]
 
     await replymsg.edit_text(
-        (await tlang(m, "utils.paste.pasted")),
+        (await tlang(m, "utils.paste.pasted_nekobin")),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
