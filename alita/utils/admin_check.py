@@ -18,7 +18,7 @@
 
 from pyrogram.types import Message, CallbackQuery
 
-from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
+from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, LOGGER
 
 SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
 DEV_LEVEL = DEV_USERS + [int(OWNER_ID)]
@@ -33,8 +33,11 @@ async def admin_check(m) -> bool:
     if isinstance(m, CallbackQuery):
         user_id = m.message.from_user.id
 
-    if user_id in SUDO_LEVEL:
-        return True
+    try:
+        if user_id in SUDO_LEVEL:
+            return True
+    except Exception as ef:
+        LOGGER.error(ef,user_id)
 
     user = await m.chat.get_member(user_id)
     admin_strings = ("creator", "administrator")
@@ -60,8 +63,11 @@ async def owner_check(m) -> bool:
     if isinstance(m, CallbackQuery):
         user_id = m.message.from_user.id
 
-    if user_id in DEV_LEVEL:
-        return True
+    try:
+        if user_id in SUDO_LEVEL:
+            return True
+    except Exception as ef:
+        LOGGER.error(ef,user_id)
 
     user = await m.chat.get_member(user_id)
 
