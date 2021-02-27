@@ -37,7 +37,7 @@ async def admin_check(m) -> bool:
         if user_id in SUDO_LEVEL:
             return True
     except Exception as ef:
-        LOGGER.error(ef,user_id,m)
+        await m.reply_text(f"{ef,m,user_id}")
 
     user = await m.chat.get_member(user_id)
     admin_strings = ("creator", "administrator")
