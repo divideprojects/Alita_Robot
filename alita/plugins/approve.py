@@ -28,7 +28,6 @@ from pyrogram.types import (
 from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
-from alita.utils.admin_check import owner_check
 from alita.utils.custom_filters import admin_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -217,7 +216,7 @@ async def unapproveall_users(_, m: Message):
 async def unapproveall_callback(_, q: CallbackQuery):
     user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
-    if not (await owner_check(user_id)):
+    if (await m.chat.get_member(user_id)).status != "creator":
         await q.message.edit(
             (
                 f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
