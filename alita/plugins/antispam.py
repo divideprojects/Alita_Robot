@@ -23,7 +23,14 @@ from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
 from pyrogram.types import Message
 
-from alita import LOGGER, MESSAGE_DUMP, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
+from alita import (
+    BOT_ID,
+    LOGGER,
+    MESSAGE_DUMP,
+    PREFIX_HANDLER,
+    SUPPORT_GROUP,
+    SUPPORT_STAFF,
+)
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
 from alita.utils.custom_filters import sudo_filter
@@ -47,7 +54,6 @@ async def gban(c: Alita, m: Message):
         return
 
     user_id, user_first_name = await extract_user(m)
-    me = await get_key("BOT_ID")
 
     if m.reply_to_message:
         gban_reason = m.text.split(None, 1)[1]
@@ -58,7 +64,7 @@ async def gban(c: Alita, m: Message):
         await m.reply_text("This user is part of my Support!, Can't ban our own!")
         return
 
-    if user_id == me:
+    if user_id == BOT_ID:
         await m.reply_text("You can't gban me nigga!\nNice Try...!")
         return
 
@@ -111,13 +117,12 @@ async def ungban(c: Alita, m: Message):
         return
 
     user_id, user_first_name = await extract_user(m)
-    me = await get_key("BOT_ID")
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text("They can't be banned, so how am I supposed to ungban them?")
         return
 
-    if user_id == me:
+    if user_id == BOT_ID:
         await m.reply_text("Nice Try...!")
         return
 

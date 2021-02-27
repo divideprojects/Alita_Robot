@@ -25,7 +25,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
+from alita import BOT_USERNAME, HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.redis_helper import get_key
@@ -69,7 +69,6 @@ async def gen_cmds_kb():
 
 async def gen_start_kb(q):
 
-    me = await get_key("BOT_USERNAME")
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -93,7 +92,7 @@ async def gen_start_kb(q):
             + [
                 InlineKeyboardButton(
                     f"➕ {(await tlang(q, 'start.add_chat_btn'))}",
-                    url=f"https://t.me/{me}?startgroup=new",
+                    url=f"https://t.me/{BOT_USERNAME}?startgroup=new",
                 ),
             ],
             [
@@ -165,8 +164,6 @@ async def commands_menu(_, q: CallbackQuery):
 @Alita.on_message(filters.command("help", PREFIX_HANDLER))
 async def commands_pvt(_, m: Message):
 
-    me = await get_key("BOT_USERNAME")
-
     if (m.text.split()) != 1:
         help_option = (m.text.split(None, 1)[1]).lower()
         if help_option in sorted([i.lower() for i in list(HELP_COMMANDS.keys())]):
@@ -193,7 +190,7 @@ async def commands_pvt(_, m: Message):
                         [
                             InlineKeyboardButton(
                                 "Help",
-                                url=f"t.me/{me}?start={help_option}",
+                                url=f"t.me/{BOT_USERNAME}?start={help_option}",
                             ),
                         ],
                     ],
@@ -219,7 +216,7 @@ async def commands_pvt(_, m: Message):
                 [
                     InlineKeyboardButton(
                         text="Help",
-                        url=f"t.me/{me}?start=help",
+                        url=f"t.me/{BOT_USERNAME}?start=help",
                     ),
                 ],
             ],

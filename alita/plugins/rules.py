@@ -25,7 +25,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import LOGGER, PREFIX_HANDLER
+from alita import BOT_ID, LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
@@ -70,9 +70,8 @@ async def get_rules(c: Alita, m: Message):
             ),
         )
     except UserIsBlocked:
-        me_name = await get_key("BOT_USERNAME")
         pm_kb = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("PM", url=f"https://t.me/{me_name}?start")]],
+            [[InlineKeyboardButton("PM", url=f"https://t.me/{BOT_ID}?start")]],
         )
         await m.reply_text(
             (await tlang(m, "rules.pm_me")),
