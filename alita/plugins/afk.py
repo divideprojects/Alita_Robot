@@ -44,6 +44,7 @@ To stop it, send message to any group.
 # Initialise
 db = AFK()
 
+
 @Alita.on_message(
     filters.command("afk", PREFIX_HANDLER) & filters.group,
 )
@@ -58,7 +59,7 @@ async def set_afk(_, m: Message):
 
     try:
         await db.add_afk(m.from_user.id, reason)
-        replymsg = await m.reply_text(afkmsg+reason)
+        replymsg = await m.reply_text(afkmsg + reason)
     except Exception as ef:
         await m.reply_text(ef)
         LOGGER.error(ef)
@@ -74,13 +75,13 @@ async def afk_mentioned(c: Alita, m: Message):
         except Exception as ef:
             await m.reply_text(f"Error while chekcing afk\n{ef}")
             return
- 
+
         if not user_afk:
             return
 
         afkmsg = f"{(await c.get_users(user_afk['user_id'])).first_name} is Afk!"
 
-        if user_afk['reason']:
+        if user_afk["reason"]:
             afkmsg += f"<b>Reason:</b> {user_afk['reason']}"
 
         await m.reply_text(afkmsg)
@@ -98,6 +99,8 @@ async def rem_afk(c: Alita, m: Message):
 
         if user_afk:
             await db.remove_afk(m.from_user.id)
-            await m.reply_text(f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!")
+            await m.reply_text(
+                f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!",
+            )
 
     return

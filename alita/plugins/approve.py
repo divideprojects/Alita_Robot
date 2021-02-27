@@ -18,12 +18,18 @@
 
 from pyrogram import filters
 from pyrogram.errors import RPCError, UserNotParticipant
-from pyrogram.types import Message
+from pyrogram.types import (
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+)
 
 from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
-from alita.utils.custom_filters import admin_filter, owner_filter
+from alita.utils.admin_check import owner_check
+from alita.utils.custom_filters import admin_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
@@ -162,13 +168,14 @@ async def check_approved(_, m: Message):
 async def check_approval(_, m: Message):
 
     user_id, user_first_name = await extract_user(m)
+    check_approve = await db.check_approve(m.chat.id, user_id)
 
     if not user_id:
         await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!",
         )
         return
-    if await db.check_approve(m.chat.id, user_id):
+    if check_approve:
         await m.reply_text(
             f"{(await mention_html(user_first_name, user_id))} is an approved user. Locks, antiflood, and blocklists won't apply to them.",
         )
@@ -180,13 +187,52 @@ async def check_approval(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("unapproveall", PREFIX_HANDLER) & filters.group & owner_filter,
+    filters.command("unapproveall", PREFIX_HANDLER) & filters.group,
 )
 async def unapproveall_users(_, m: Message):
 
+    all_approved = await db.list_approved(m.chat.id)
+    if not all_approved:
+        await m.reply_text("No one is approved in this chat.")
+        return
+
+    await m.reply_text(
+        "Are you sure you want to remove everyone who is approved in this chat?",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "⚠️ Confirm",
+                        callback_data=f"unapprove.all.{m.from_user.id}.{m.from_user.first_name}",
+                    ),
+                    InlineKeyboardButton("❌ Cancel", callback_data="close"),
+                ],
+            ],
+        ),
+    )
+    return
+
+
+@Alita.on_message(filters.regex("^unapprove.all.") & filters.group)
+async def unapproveall_callback(_, q: CallbackQuery):
+    user_id = q.data.split(".")[-2]
+    name = q.data.split(".")[-1]
+    if not (await owner_check(user_id)):
+        await q.message.edit(
+            (
+                f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
+                "Stay in your limits!"
+            ),
+        )
+        return
+
     try:
-        await db.unapprove_all(m.chat.id)
-        await m.reply_text(f"All users have been disapproved in {m.chat.title}")
+        await db.unapprove_all(q.message.chat.id)
+        await q.message.edit_text(
+            f"All users have been disapproved in {q.message.chat.title}",
+        )
     except RPCError as ef:
-        await m.reply_text(f"Some Error occured, report at @{SUPPORT_GROUP}.\n{ef}")
+        await q.message.edit_text(
+            f"Some Error occured, report at @{SUPPORT_GROUP}.\n{ef}",
+        )
     return

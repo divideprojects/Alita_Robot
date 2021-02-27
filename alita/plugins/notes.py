@@ -244,12 +244,12 @@ async def clear_allnote(_, m: Message):
 
 @Alita.on_callback_query(filters.regex("^clear.notes."))
 async def clearallnotes_callback(_, q: CallbackQuery):
-    m = q.data.split(".")[-2]
+    user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
-    if not (await owner_check(m)):
+    if not (await owner_check(user_id)):
         await q.message.edit(
             (
-                f"You're an admin {await mention_html(name, m)}, not owner!\n"
+                f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
                 "Stay in your limits!"
             ),
         )
