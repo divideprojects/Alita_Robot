@@ -28,7 +28,6 @@ from pyrogram.types import (
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.notes_db import Notes
-from alita.utils.admin_check import owner_check
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.msg_types import Types, get_note_type
 from alita.utils.parser import mention_html
@@ -246,7 +245,7 @@ async def clear_allnote(_, m: Message):
 async def clearallnotes_callback(_, q: CallbackQuery):
     user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
-    if not (await owner_check(user_id)):
+    if (await m.chat.get_member(user_id)).status != "creator":
         await q.message.edit(
             (
                 f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
