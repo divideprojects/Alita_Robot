@@ -23,6 +23,7 @@ from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.afk_db import AFK
 from alita.tr_engine import tlang
+from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 __PLUGIN__ = "AFK"
@@ -53,13 +54,14 @@ async def set_afk(_, m: Message):
     afkmsg = f"User {(await mention_html(m.from_user.first_name, m.from_user.id))} is now afk!"
 
     if len(m.text.split()) > 1:
-        reason = "\n<b>Reason:</b>" + m.text.split(None, 1)[1]
+        reason = m.text.split(None, 1)[1]
+        reason_txt = "\n<b>Reason:</b>" + reason
     else:
-        reason = ""
+        reason_txt = ""
 
     try:
-        await db.add_afk(m.from_user.id, reason)
-        replymsg = await m.reply_text(afkmsg + reason)
+        await db.add_afk(m.from_user.id, reason_txt)
+        replymsg = await m.reply_text(afkmsg + reason_txt)
     except Exception as ef:
         await m.reply_text(ef)
         LOGGER.error(ef)
@@ -74,7 +76,7 @@ async def afk_mentioned(c: Alita, m: Message):
         try:
             user_afk = await db.check_afk(m.reply_to_message.from_user.id)
         except Exception as ef:
-            await m.reply_text(f"Error while chekcing afk\n{ef}")
+            await m.reply_text(f"Error while checking afk\n{ef}")
             return
 
         if not user_afk:
@@ -83,7 +85,7 @@ async def afk_mentioned(c: Alita, m: Message):
         afkmsg = f"{(await c.get_users(user_afk['user_id'])).first_name} is Afk!"
 
         if user_afk["reason"]:
-            afkmsg += f"<b>Reason:</b> {user_afk['reason']}"
+            afkmsg += f"\n<b>Reason:</b> {user_afk['reason']}"
 
         await m.reply_text(afkmsg)
     await m.stop_propagation()
@@ -92,15 +94,17 @@ async def afk_mentioned(c: Alita, m: Message):
 
 @Alita.on_message(filters.group, group=12)
 async def rem_afk(c: Alita, m: Message):
-    if m.from_user:
+    user_id = (await extract_user(m))
+
+    if user_id != m.from_user.id:
         try:
             user_afk = await db.check_afk(m.from_user.id)
         except Exception as ef:
             await m.reply_text(f"Error while chekcing afk\n{ef}")
             return
 
-        if user_afk:
-            await db.remove_afk(m.from_user.id)
+    if user_afk:
+        await db.remove_afk(m.from_user.id)
             await m.reply_text(
                 f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!",
             )
