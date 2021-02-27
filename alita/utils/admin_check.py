@@ -67,7 +67,7 @@ async def owner_check(m) -> bool:
         if user_id in SUDO_LEVEL:
             return True
     except Exception as ef:
-        LOGGER.info(ef,user_id,m)
+        LOGGER.info(ef,m)
 
     user = await m.chat.get_member(user_id)
 
