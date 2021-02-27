@@ -72,7 +72,11 @@ async def set_afk(_, m: Message):
 
 @Alita.on_message(filters.group & ~filters.bot, group=11)
 async def afk_mentioned(c: Alita, m: Message):
-    user_id = (await extract_user(m))[0]
+    try:
+        user_id = (await extract_user(m))[0]
+    except Exception as ef:
+        LOGGER.error(ef)
+        return
     if user_is != m.from_user:
         try:
             user_afk = await db.check_afk(user_id)
