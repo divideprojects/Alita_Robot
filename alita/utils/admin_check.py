@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram.types import Message
+from pyrogram.types import Message, CallbackQuery
 
 from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
 
@@ -28,10 +28,10 @@ async def admin_check(m) -> bool:
     """Checks if user is admin or not."""
     if isinstance(m, Message):
         user_id = m.from_user.id
-    elif isinstance(m, int):
+    if isinstance(m, int):
         user_id = m
-    else:
-        pass
+    if isinstance(m, CallbackQuery):
+        user_id = m.message.from_user.id
 
     if user_id in SUDO_LEVEL:
         return True
@@ -55,10 +55,10 @@ async def owner_check(m) -> bool:
     """Checks if user is owner or not."""
     if isinstance(m, Message):
         user_id = m.from_user.id
-    elif isinstance(m, int):
+    if isinstance(m, int):
         user_id = m
-    else:
-        pass
+    if isinstance(m, CallbackQuery):
+        user_id = m.message.from_user.id
 
     if user_id in DEV_LEVEL:
         return True
