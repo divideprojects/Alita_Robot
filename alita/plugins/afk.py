@@ -68,11 +68,11 @@ async def set_afk(_, m: Message):
     return
 
 
-@Alita.on_message(filters.mentioned & ~filters.bot, group=11)
+@Alita.on_message(filters.group & ~filters.bot, group=11)
 async def afk_mentioned(c: Alita, m: Message):
-    if m.from_user:
+    if m.reply_to_message.from_user:
         try:
-            user_afk = await db.check_afk(m.from_user.id)
+            user_afk = await db.check_afk(m.reply_to_message.from_user.id)
         except Exception as ef:
             await m.reply_text(f"Error while chekcing afk\n{ef}")
             return
