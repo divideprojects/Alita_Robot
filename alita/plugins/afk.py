@@ -72,9 +72,10 @@ async def set_afk(_, m: Message):
 
 @Alita.on_message(filters.group & ~filters.bot, group=11)
 async def afk_mentioned(c: Alita, m: Message):
-    if m.reply_to_message.from_user:
+    user_id = (await extract_user(m))[0]
+    if user_is != m.from_user:
         try:
-            user_afk = await db.check_afk(m.reply_to_message.from_user.id)
+            user_afk = await db.check_afk(user_id)
         except Exception as ef:
             await m.reply_text(f"Error while checking afk\n{ef}")
             return
@@ -94,9 +95,8 @@ async def afk_mentioned(c: Alita, m: Message):
 
 @Alita.on_message(filters.group, group=12)
 async def rem_afk(c: Alita, m: Message):
-    user_id = (await extract_user(m))
 
-    if user_id != m.from_user.id:
+    if m.from_user.id:
         try:
             user_afk = await db.check_afk(m.from_user.id)
         except Exception as ef:
@@ -105,8 +105,8 @@ async def rem_afk(c: Alita, m: Message):
 
     if user_afk:
         await db.remove_afk(m.from_user.id)
-            await m.reply_text(
-                f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!",
-            )
-    
+        await m.reply_text(
+            f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!",
+        )
+
     return
