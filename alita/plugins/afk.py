@@ -74,8 +74,6 @@ async def set_afk(_, m: Message):
 async def afk_mentioned(c: Alita, m: Message):
     try:
         user_id = (await extract_user(m))[0]
-    except TypeError:
-        return
     except Exception as ef:
         LOGGER.error(ef)
         return
