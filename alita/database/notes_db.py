@@ -73,7 +73,7 @@ class Notes:
         return False
 
     async def rm_all_notes(self, chat_id: int):
-        note_list = await self.collection.get_all_notes({"chat_id": chat_id})
+        note_list = await self.get_all_notes({"chat_id": chat_id})
         if note_list:
             for note in note_list:
                 await self.collection.rm_note(note)
