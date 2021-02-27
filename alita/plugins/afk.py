@@ -79,7 +79,7 @@ async def afk_mentioned(c: Alita, m: Message):
     except Exception as ef:
         LOGGER.error(ef)
         return
-    if user_is != m.from_user:
+    if user_id != m.from_user:
         try:
             user_afk = await db.check_afk(user_id)
         except Exception as ef:
