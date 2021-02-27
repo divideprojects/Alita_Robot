@@ -142,7 +142,6 @@ async def check_approved(_, m: Message):
 
     chat = m.chat
     chat_title = chat.title
-    user_id = (await extract_user(m))[0]
     msg = "The following users are approved:\n"
     approved_people = await db.list_approved(chat.id)
 
@@ -151,12 +150,13 @@ async def check_approved(_, m: Message):
         return
 
     for i in approved_people:
+        user_id = i['user_id']
         try:
-            member = await chat.get_member(int(i.user_id))
+            member = await chat.get_member(int(user_id))
         except UserNotParticipant:
             await db.remove_approve(chat.id, user_id)
             continue
-        msg += f"- `{i.user_id}`: {(await mention_html(member.user['first_name'], int(i.user_id)))}\n"
+        msg += f"- `{user_id}`: {(await mention_html(member.user['first_name'], int(user_id)))}\n"
     await m.reply_text(msg)
     return
 
