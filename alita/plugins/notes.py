@@ -246,6 +246,7 @@ async def clear_allnote(_, m: Message):
 async def clearallnotes_callback(_, q: CallbackQuery):
     user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
+    LOGGER.info(user_id,name)
     if not (await owner_check(user_id)):
         await q.message.edit(
             (
