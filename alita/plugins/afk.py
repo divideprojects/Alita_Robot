@@ -64,6 +64,7 @@ async def set_afk(_, m: Message):
         await m.reply_text(ef)
         LOGGER.error(ef)
 
+    await m.stop_propagation()
     return
 
 
