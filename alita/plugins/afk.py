@@ -86,6 +86,7 @@ async def afk_mentioned(c: Alita, m: Message):
             afkmsg += f"<b>Reason:</b> {user_afk['reason']}"
 
         await m.reply_text(afkmsg)
+    await m.stop_propagation()
     return
 
 
@@ -103,5 +104,5 @@ async def rem_afk(c: Alita, m: Message):
             await m.reply_text(
                 f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!",
             )
-
+    
     return
