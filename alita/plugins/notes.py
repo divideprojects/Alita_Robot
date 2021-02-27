@@ -245,7 +245,7 @@ async def clear_allnote(_, m: Message):
 async def clearallnotes_callback(_, q: CallbackQuery):
     user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
-    if (await m.chat.get_member(user_id)).status != "creator":
+    if (await q.message.chat.get_member(user_id)).status != "creator":
         await q.message.edit(
             (
                 f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
