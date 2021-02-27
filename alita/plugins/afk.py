@@ -60,7 +60,7 @@ async def set_afk(_, m: Message):
         reason_txt = ""
 
     try:
-        await db.add_afk(m.from_user.id, reason_txt)
+        await db.add_afk(m.from_user.id, reason)
         replymsg = await m.reply_text(afkmsg + reason_txt)
     except Exception as ef:
         await m.reply_text(ef)
