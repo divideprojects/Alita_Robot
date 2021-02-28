@@ -50,7 +50,7 @@ async def set_afk(_, m: Message):
 
     afkmsg = f"User {(await mention_html(m.from_user.first_name, m.from_user.id))} is now afk!"
 
-    if len(m.text.split()) > 1:
+    if len(m.command) > 1:
         reason = m.text.split(None, 1)[1]
         reason_txt = "\n<b>Reason:</b>" + reason
     else:
@@ -58,13 +58,11 @@ async def set_afk(_, m: Message):
 
     try:
         await db.add_afk(m.from_user.id, reason)
-        replymsg = await m.reply_text(afkmsg + reason_txt)
+        await m.reply_text(afkmsg + reason_txt)
+        await m.stop_propagation()
     except Exception as ef:
         await m.reply_text(ef)
         LOGGER.error(ef)
-
-    await m.stop_propagation()
-    return
 
 
 @Alita.on_message(filters.group & ~filters.bot, group=11)
@@ -91,23 +89,26 @@ async def afk_mentioned(c: Alita, m: Message):
 
         await m.reply_text(afkmsg)
     await m.stop_propagation()
-    return
 
 
 @Alita.on_message(filters.group, group=12)
 async def rem_afk(c: Alita, m: Message):
 
-    if m.from_user.id:
-        try:
-            user_afk = await db.check_afk(m.from_user.id)
-        except Exception as ef:
-            await m.reply_text(f"Error while chekcing afk\n{ef}")
-            return
+    if not m.from_user.id:
+        return
 
-    if user_afk:
-        await db.remove_afk(m.from_user.id)
-        await m.reply_text(
-            f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!",
-        )
+    try:
+        user_afk = await db.check_afk(m.from_user.id)
+    except Exception as ef:
+        await m.reply_text(f"Error while chekcing afk\n{ef}")
+        return
+
+    if not user_afk:
+        return
+
+    await db.remove_afk(m.from_user.id)
+    await m.reply_text(
+        f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!",
+    )
 
     return
