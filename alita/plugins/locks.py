@@ -398,8 +398,8 @@ async def unlock_perm(c: Alita, m: Message):
 async def prevent_approved(c: Alita, m: Message):
     approved_users = await app_db.list_approved(m.chat.id)
     ul = []
-    for j in approved_users:
-        ul.append(j["user_id"])
+    for user in approved_users:
+        ul.append(user["user_id"])
     for i in ul:
         await m.chat.restrict_member(
             user_id=i,
