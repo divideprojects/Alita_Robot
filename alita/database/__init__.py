@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 import motor.motor_asyncio
 
 from alita import DB_URI
@@ -22,7 +23,7 @@ from alita import DB_URI
 # Client to connect to mongodb
 mongodb_client = motor.motor_asyncio.AsyncIOMotorClient(DB_URI)
 
-db = mongodb_client.spam_db  # Test database
+db = mongodb_client.alita_robot
 
 
 class MongoDB:

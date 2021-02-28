@@ -189,17 +189,17 @@ class Alita(Client):
         LOGGER.info("Uploading logs before stopping...!")
         with open(LOGFILE) as f:
             txt = f.read()
-            raw = (await paste(txt))[1]
+            neko, raw = await paste(txt)
         # Send Logs to MESSAGE-DUMP
         await self.send_document(
             MESSAGE_DUMP,
             document=LOGFILE,
             caption=(
-                "Bot Stopped!\n\nLogs for last run, pasted to NekoBin as "
+                f"Bot Stopped!\n\nLogs for last run, pasted to [NekoBin]({neko}) as "
                 f"well as uploaded a file here.\n<code>{LOG_DATETIME}</code>"
             ),
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Logs", url=raw)]],
+                [[InlineKeyboardButton("Raw Logs", url=raw)]],
             ),
         )
         await super().stop()
