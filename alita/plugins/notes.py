@@ -76,34 +76,19 @@ Get all your notes, if too much notes, please use this in your saved message ins
 `Code` (grave accent)
 """
 
-GET_FORMAT = {
-    Types.TEXT.value: Alita.send_message,
-    Types.DOCUMENT.value: Alita.send_document,
-    Types.PHOTO.value: Alita.send_photo,
-    Types.VIDEO.value: Alita.send_video,
-    Types.STICKER.value: Alita.send_sticker,
-    Types.AUDIO.value: Alita.send_audio,
-    Types.VOICE.value: Alita.send_voice,
-    Types.VIDEO_NOTE.value: Alita.send_video_note,
-    Types.ANIMATION.value: Alita.send_animation,
-    Types.ANIMATED_STICKER.value: Alita.send_sticker,
-    Types.CONTACT: Alita.send_contact,
-}
-
-
 async def send_cmd(client: Alita, msgtype):
     GET_FORMAT = {
-    Types.TEXT.value: client.send_message,
-    Types.DOCUMENT.value: client.send_document,
-    Types.PHOTO.value: client.send_photo,
-    Types.VIDEO.value: client.send_video,
-    Types.STICKER.value: client.send_sticker,
-    Types.AUDIO.value: client.send_audio,
-    Types.VOICE.value: client.send_voice,
-    Types.VIDEO_NOTE.value: client.send_video_note,
-    Types.ANIMATION.value: client.send_animation,
-    Types.ANIMATED_STICKER.value: client.send_sticker,
-    Types.CONTACT: client.send_contact,
+        Types.TEXT.value: client.send_message,
+        Types.DOCUMENT.value: client.send_document,
+        Types.PHOTO.value: client.send_photo,
+        Types.VIDEO.value: client.send_video,
+        Types.STICKER.value: client.send_sticker,
+        Types.AUDIO.value: client.send_audio,
+        Types.VOICE.value: client.send_voice,
+        Types.VIDEO_NOTE.value: client.send_video_note,
+        Types.ANIMATION.value: client.send_animation,
+        Types.ANIMATED_STICKER.value: client.send_sticker,
+        Types.CONTACT: client.send_contact,
     }
     return GET_FORMAT[msgtype]
 
