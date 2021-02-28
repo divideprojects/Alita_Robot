@@ -26,7 +26,7 @@ async def extract_user(m) -> (int, str):
         user_first_name = m.reply_to_message.from_user.first_name
 
     elif len(m.command) > 1:
-        if m.entities and (len(m.entities) > 1):
+        if len(m.entities) > 1:
             required_entity = m.entities[1]
             if required_entity.type == "text_mention":
                 user_id = required_entity.user.id

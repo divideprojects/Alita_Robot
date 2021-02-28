@@ -21,7 +21,6 @@ from pyrogram.types import Message
 
 from alita import DEV_PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.database.afk_db import AFK
 from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
@@ -38,7 +37,6 @@ notesdb = Notes()
 rulesdb = Rules()
 userdb = Users()
 appdb = Approve()
-afkdb = AFK()
 chatdb = Chats()
 
 
@@ -51,7 +49,6 @@ async def get_stats(_, m: Message):
         f"<b>Rules:</b> Set in <code>{(await rulesdb.count_chats())}</code> chats\n"
         f"<b>Notes:</b> <code>{(await notesdb.count_all_notes())}</code> in <code>{(await notesdb.count_notes_chats())}</code>\n"
         f"<b>Globally Banned Users:</b> <code>{(await gbandb.count_gbans())}</code>\n"
-        f"<b>AFK:</b> <code>{(await afkdb.count_afk())}</code>\n"
         f"<b>Approved People</b>: {(await appdb.count_all_approved())}\n"
     )
     await replymsg.edit_text(rply, parse_mode="html")
