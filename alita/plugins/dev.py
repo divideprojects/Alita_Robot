@@ -252,7 +252,7 @@ async def chats(c: Alita, m: Message):
         f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     all_chats = (await chatdb.list_chats()) or []
-    chatfile = await tlang(m, "chatlist.header")
+    chatfile = await tlang(m, "dev.chatlist.header")
     P = 1
     for chat in all_chats:
         try:
@@ -351,6 +351,8 @@ async def show_redis_keys(_, m: Message):
     for i in keys:
         txt_dict[i] = await get_key(str(i))
     try:
+        if txt_data = {}:
+            return replymsg.edit_text("No keys stored in redis!")
         await replymsg.edit_text(str(txt_dict))
     except MessageTooLong:
         raw = (await paste(txt_dict))[1]
