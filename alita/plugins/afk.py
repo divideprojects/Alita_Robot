@@ -67,11 +67,18 @@ async def set_afk(_, m: Message):
 
 @Alita.on_message(filters.group & ~filters.bot, group=11)
 async def afk_mentioned(c: Alita, m: Message):
+
+    # if msg isn't from user, ignore nd return
+    if not m.from_user:
+        return
+
     try:
-        user_id = (await extract_user(m))[0]
+        user_id, user_first_name = await extract_user(m)
     except Exception as ef:
         LOGGER.error(ef)
         return
+
+    # incase the extract_user returns the self user id, ignore it
     if user_id != m.from_user:
         try:
             user_afk = await db.check_afk(user_id)
@@ -82,7 +89,7 @@ async def afk_mentioned(c: Alita, m: Message):
         if not user_afk:
             return
 
-        afkmsg = f"{(await c.get_users(user_afk['user_id'])).first_name} is Afk!"
+        afkmsg = f"{user_first_name} is Afk!"
 
         if user_afk["reason"]:
             afkmsg += f"\n<b>Reason:</b> {user_afk['reason']}"
@@ -100,7 +107,7 @@ async def rem_afk(c: Alita, m: Message):
     try:
         user_afk = await db.check_afk(m.from_user.id)
     except Exception as ef:
-        await m.reply_text(f"Error while chekcing afk\n{ef}")
+        await m.reply_text(f"Error while checking afk\n{ef}")
         return
 
     if not user_afk:
