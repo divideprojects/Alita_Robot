@@ -26,7 +26,7 @@ class AFK:
         self.collection = MongoDB("afk")
 
     async def check_afk(self, user_id: int):
-        return (await self.collection.find_one({"user_id": user_id}))['time']
+        return await self.collection.find_one({"user_id": user_id})
 
     async def add_afk(self, user_id: int, time: int, reason: str = ""):
         if await self.check_afk(user_id):
