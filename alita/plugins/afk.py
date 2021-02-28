@@ -73,7 +73,7 @@ async def afk_mentioned(c: Alita, m: Message):
         return
 
     try:
-        user_id, user_first_name = await extract_user(m)
+        user_id, user_first_name = await extract_user(c, m)
     except Exception as ef:
         LOGGER.error(ef)
         return
