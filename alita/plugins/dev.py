@@ -238,7 +238,7 @@ async def public_ip(c: Alita, m: Message):
         f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     await m.reply_text(
-        (await tlang(m, "dev.bot_ip").format(ip=f"<code>{ip}</code>")),
+        (await tlang(m, "dev.bot_ip")).format(ip=f"<code>{ip}</code>"),
         quote=True,
     )
     return
