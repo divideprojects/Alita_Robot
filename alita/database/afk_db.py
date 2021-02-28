@@ -26,15 +26,15 @@ class AFK:
         self.collection = MongoDB("afk")
 
     async def check_afk(self, user_id: int):
-        return await self.collection.find_one({"user_id": user_id})
+        return (await self.collection.find_one({"user_id": user_id}))['time']
 
-    async def add_afk(self, user_id: int, reason: str = ""):
+    async def add_afk(self, user_id: int, time: int, reason: str = ""):
         if await self.check_afk(user_id):
             return await self.collection.update(
                 {"user_id": user_id},
-                {"user_id": user_id, "reason": reason},
+                {"user_id": user_id, "reason": reason, "time": time},
             )
-        return await self.collection.insert_one({"user_id": user_id, "reason": reason})
+        return await self.collection.insert_one({"user_id": user_id, "reason": reason, "time": time})
 
     async def remove_afk(self, user_id: int):
         if await self.check_afk(user_id):
