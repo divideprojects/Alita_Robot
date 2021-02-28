@@ -133,31 +133,31 @@ async def rm_blacklist(_, m: Message):
     return
 
 
-@Alita.on_message(filters.group, group=11)
-async def del_blacklist(_, m: Message):
-    try:
-        user_list = []
-        approved_users = await app_db.list_approved(m.chat.id)
-        for auser in approved_users:
-            user_list.append(int(auser["user_id"]))
-        async for i in m.chat.iter_members(filter="administrators"):
-            user_list.append(i.user.id)
-        if m.from_user.id in user_list:
-            return
-        if m.text:
-            chat_blacklists = await db.get_blacklists(m.chat.id)
-            if not chat_blacklists:
-                return
-            for trigger in chat_blacklists:
-                pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
-                match = await regex_searcher(pattern, m.text.lower())
-                if not match:
-                    continue
-                if match:
-                    try:
-                        await m.delete()
-                    except RPCError as ef:
-                        LOGGER.info(ef)
-                    break
-    except AttributeError:
-        pass  # Skip attribute errors!
+# @Alita.on_message(filters.group, group=11)
+# async def del_blacklist(_, m: Message):
+#     try:
+#         user_list = []
+#         approved_users = await app_db.list_approved(m.chat.id)
+#         for auser in approved_users:
+#             user_list.append(int(auser["user_id"]))
+#         async for i in m.chat.iter_members(filter="administrators"):
+#             user_list.append(i.user.id)
+#         if m.from_user.id in user_list:
+#             return
+#         if m.text:
+#             chat_blacklists = await db.get_blacklists(m.chat.id)
+#             if not chat_blacklists:
+#                 return
+#             for trigger in chat_blacklists:
+#                 pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
+#                 match = await regex_searcher(pattern, m.text.lower())
+#                 if not match:
+#                     continue
+#                 if match:
+#                     try:
+#                         await m.delete()
+#                     except RPCError as ef:
+#                         LOGGER.info(ef)
+#                     break
+#     except AttributeError:
+#         pass  # Skip attribute errors!
