@@ -91,6 +91,23 @@ GET_FORMAT = {
 }
 
 
+async def send_cmd(client: Alita, msgtype):
+    GET_FORMAT = {
+    Types.TEXT.value: client.send_message,
+    Types.DOCUMENT.value: client.send_document,
+    Types.PHOTO.value: client.send_photo,
+    Types.VIDEO.value: client.send_video,
+    Types.STICKER.value: client.send_sticker,
+    Types.AUDIO.value: client.send_audio,
+    Types.VOICE.value: client.send_voice,
+    Types.VIDEO_NOTE.value: client.send_video_note,
+    Types.ANIMATION.value: client.send_animation,
+    Types.ANIMATED_STICKER.value: client.send_sticker,
+    Types.CONTACT: client.send_contact,
+    }
+    return GET_FORMAT[msgtype]
+
+
 @Alita.on_message(
     filters.command("save", PREFIX_HANDLER) & filters.group & admin_filter,
 )
@@ -118,7 +135,7 @@ async def save_note(_, m: Message):
 
 
 @Alita.on_message(filters.command("get", PREFIX_HANDLER) & filters.group)
-async def get_note(_, m: Message):
+async def get_note(c: Alita, m: Message):
     if len(m.text.split()) >= 2:
         note = m.text.split()[1]
     else:
@@ -152,7 +169,7 @@ async def get_note(_, m: Message):
         Types.CONTACT,
         Types.ANIMATED_STICKER,
     ):
-        await GET_FORMAT[msgtype](m.chat.id, getnotes["file"])
+        await (await send_cmd(c, msgtype))(m.chat.id, getnotes["file"])
     else:
         if getnotes["note_value"]:
             teks, button = await parse_button(getnotes.get("note_value"))
@@ -170,7 +187,7 @@ async def get_note(_, m: Message):
                 LOGGER.error(ef)
                 return
         else:
-            await GET_FORMAT[msgtype](
+            await (await send_cmd(c, msgtype))(
                 m.chat.id,
                 getnotes["file"],
                 caption=teks,
