@@ -16,7 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-async def extract_user(m) -> (int, str):
+from typing import Tuple
+
+
+async def extract_user(c, m) -> Tuple[int, str]:
     """Extract the user from the provided message."""
     user_id = None
     user_first_name = None
@@ -44,5 +47,9 @@ async def extract_user(m) -> (int, str):
     else:
         user_id = m.from_user.id
         user_first_name = m.from_user.first_name
+
+    user = await c.get_users(user_id)
+    user_id = user.id
+    user_first_name = user.first_name
 
     return user_id, user_first_name

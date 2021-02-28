@@ -59,9 +59,9 @@ This is the plugin for you, easily kick, ban and unban members in a group.
 @Alita.on_message(
     filters.command("kick", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
-async def kick_usr(_, m: Message):
+async def kick_usr(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(m)
+    user_id, user_first_name = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user is in my support staff, cannot restrict them.")
@@ -95,9 +95,9 @@ async def kick_usr(_, m: Message):
 @Alita.on_message(
     filters.command("ban", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
-async def ban_usr(_, m: Message):
+async def ban_usr(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(m)
+    user_id, user_first_name = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user is in my support staff, cannot restrict them.")
@@ -131,9 +131,9 @@ async def ban_usr(_, m: Message):
 @Alita.on_message(
     filters.command("unban", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
-async def unban_usr(_, m: Message):
+async def unban_usr(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(m)
+    user_id, user_first_name = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user is in my support staff, cannot restrict them.")

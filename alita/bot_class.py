@@ -126,7 +126,7 @@ class Alita(Client):
             end = time()
             LOGGER.info(
                 (
-                    "Set admin list cache!"
+                    "Set admin list cache!\n"
                     f"Time Taken: {round(end - begin, 2)} seconds."
                 ),
             )

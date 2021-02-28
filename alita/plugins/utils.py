@@ -107,7 +107,7 @@ async def get_lyrics(_, m: Message):
     filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def id_info(c: Alita, m: Message):
-    user_id = (await extract_user(m))[0]
+    user_id = (await extract_user(c, m))[0]
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_m.from_user
@@ -204,7 +204,7 @@ async def my_info(c: Alita, m: Message):
     infoMsg = await m.reply_text(
         f"<code>{(await tlang(m, 'utils.user_info.getting_info'))}</code>",
     )
-    user_id = (await extract_user(m))[0]
+    user_id = (await extract_user(c, m))[0]
     try:
         user = await c.get_users(user_id)
     except PeerIdInvalid:

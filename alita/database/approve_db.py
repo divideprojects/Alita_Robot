@@ -34,26 +34,25 @@ class Approve:
         return False
 
     async def add_approve(self, chat_id: int, user_id: int):
-        if await self.collection.find_one({"chat_id": chat_id, "user_id": user_id}):
+        curr = await self.collection.find_one({"chat_id": chat_id, "user_id": user_id})
+        if curr:
             return "Already Added!"
         return await self.collection.insert_one(
             {"chat_id": chat_id, "user_id": user_id},
         )
 
     async def remove_approve(self, chat_id: int, user_id: int):
-        if await self.collection.find_one({"chat_id": chat_id, "user_id": user_id}):
+        curr = await self.collection.find_one({"chat_id": chat_id, "user_id": user_id})
+        if curr:
             return await self.collection.delete_one(
                 {"chat_id": chat_id, "user_id": user_id},
             )
-        return "Removed from Approves!"
+        return "Not approved"
 
     async def unapprove_all(self, chat_id: int):
-        all_users = await self.collection.find_all({"chat_id": chat_id})
-        for user_id in all_users:
-            await self.collection.delete_one(
-                {"chat_id": chat_id, "user_id": user_id},
-            )
-        return
+        return await self.collection.delete_one(
+            {"chat_id": chat_id},
+        )
 
     async def list_approved(self, chat_id: int):
         return await self.collection.find_all({"chat_id": chat_id})

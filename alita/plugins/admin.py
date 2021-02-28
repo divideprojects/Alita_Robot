@@ -155,9 +155,9 @@ async def reload_admins(_, m: Message):
 @Alita.on_message(
     filters.command("mute", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
-async def mute_usr(_, m: Message):
+async def mute_usr(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(m)
+    user_id, user_first_name = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user is in my support staff, cannot restrict them.")
@@ -204,9 +204,9 @@ async def mute_usr(_, m: Message):
 @Alita.on_message(
     filters.command("unmute", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
-async def unmute_usr(_, m: Message):
+async def unmute_usr(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(m)
+    user_id, user_first_name = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user is in my support staff, cannot restrict them.")
@@ -237,9 +237,9 @@ async def unmute_usr(_, m: Message):
 @Alita.on_message(
     filters.command("promote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
-async def promote_usr(_, m: Message):
+async def promote_usr(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(m)
+    user_id, user_first_name = await extract_user(c, m)
     try:
         await m.chat.promote_member(
             user_id=user_id,
@@ -291,9 +291,9 @@ async def promote_usr(_, m: Message):
 @Alita.on_message(
     filters.command("demote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
-async def demote_usr(_, m: Message):
+async def demote_usr(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(m)
+    user_id, user_first_name = await extract_user(c, m)
     try:
         await m.chat.promote_member(
             user_id=user_id,
