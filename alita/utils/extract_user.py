@@ -28,7 +28,7 @@ async def extract_user(c, m) -> Tuple[int, str]:
         user_id = m.reply_to_message.from_user.id
         user_first_name = m.reply_to_message.from_user.first_name
 
-    elif len(m.command) > 1:
+    elif m.command and len(m.command) > 1:
         if m.entities:
             if len(m.entities) > 1:
                 required_entity = m.entities[1]
