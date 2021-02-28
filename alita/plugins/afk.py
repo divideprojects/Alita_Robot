@@ -57,7 +57,7 @@ async def set_afk(_, m: Message):
 
     if len(m.command) > 1:
         reason = m.text.split(None, 1)[1]
-        reason_txt = "\n<b>Reason:</b>" + reason
+        reason_txt = "\n<b>Reason:</b> " + reason
     else:
         reason_txt = ""
 
