@@ -117,9 +117,6 @@ async def rem_afk(c: Alita, m: Message):
         await m.reply_text(f"Error while checking afk\n{ef}")
         return
 
-    if not user_afk:
-        return
-
     await db.remove_afk(m.from_user.id)
     await m.reply_text(
         (
