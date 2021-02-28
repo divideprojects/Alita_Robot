@@ -19,11 +19,14 @@
 from pyrogram import filters
 from pyrogram.types import Message
 
+from time import time
+
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.afk_db import AFK
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
+from alita.utils.string import make_time
 
 __PLUGIN__ = "AFK"
 
@@ -59,7 +62,7 @@ async def set_afk(_, m: Message):
         reason_txt = ""
 
     try:
-        await db.add_afk(m.from_user.id, reason)
+        await db.add_afk(m.from_user.id, time(), reason)
         await m.reply_text(afkmsg + reason_txt)
     except Exception as ef:
         await m.reply_text(ef)
@@ -92,12 +95,13 @@ async def afk_mentioned(c: Alita, m: Message):
         if not user_afk:
             return
 
-        afkmsg = f"{user_first_name} is Afk!"
+        afkmsg = f"{user_first_name} is Afk!\<b>Since:</b> {make_time(int(time() - user_afk['time']))}"
 
         if user_afk["reason"]:
             afkmsg += f"\n<b>Reason:</b> {user_afk['reason']}"
 
         await m.reply_text(afkmsg)
+
     await m.stop_propagation()
 
 
