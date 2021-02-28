@@ -36,14 +36,16 @@ from ujson import dumps
 
 from alita import DEV_PREFIX_HANDLER, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
 from alita.bot_class import Alita
-from alita.database.chats_db import Chats as chatdb
-from alita.database.users_db import Users as userdb
+from alita.database.chats_db import Chats
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.custom_filters import dev_filter
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
 from alita.utils.redis_helper import allkeys, flushredis, get_key
+
+# initialise database
+chatdb = Chats()
 
 
 @Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
@@ -249,7 +251,7 @@ async def chats(c: Alita, m: Message):
         MESSAGE_DUMP,
         f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    all_chats = (await chatdb().list_chats()) or []
+    all_chats = (await chatdb.list_chats()) or []
     chatfile = await tlang(m, "chatlist.header")
     P = 1
     for chat in all_chats:
@@ -271,7 +273,7 @@ async def chats(c: Alita, m: Message):
         except ChatAdminRequired:
             pass
         except ChannelPrivate:
-            await chatdb().rem_chat(chat.chat_id)
+            await chatdb.remove_chat(chat.chat_id)
         except PeerIdInvalid:
             LOGGER.warning(f"Peer  not found {chat.chat_id}")
         except RPCError as ef:
@@ -292,33 +294,6 @@ async def chats(c: Alita, m: Message):
 async def uptime(_, m: Message):
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
     await m.reply_text((await tlang(m, "dev.uptime")).format(uptime=up), quote=True)
-    return
-
-
-@Alita.on_message(filters.command("loadmembers", DEV_PREFIX_HANDLER) & dev_filter)
-async def store_members(c: Alita, m: Message):
-    sm = await m.reply_text("Updating Members...")
-
-    lv = 0  # lv = local variable
-
-    try:
-        async for member in m.chat.iter_members():
-            try:
-                await userdb().update_user(
-                    member.user.id,
-                    member.user.username,
-                    m.chat.id,
-                    m.chat.title,
-                )
-                lv += 1
-            except BaseException:
-                pass
-        await sm.edit_text(f"Stored {lv} members in Database!")
-    except BaseException as ef:
-        await c.send_message(
-            chat_id=MESSAGE_DUMP,
-            text=f"Error while storing members! Error: <code>{ef}</code>",
-        )
     return
 
 

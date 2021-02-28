@@ -22,6 +22,7 @@ from pyrogram.types import Message
 from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.blacklist_db import Blacklist as bldb
+from alita.database.chats_db import Chats
 from alita.database.lang_db import Langs
 from alita.database.notes_db import Notes
 from alita.database.rules_db import Rules
@@ -32,6 +33,7 @@ langdb = Langs()
 notedb = Notes()
 ruledb = Rules()
 userdb = Users()
+chatdb = Chats()
 
 
 @Alita.on_message(group=-1)
@@ -52,18 +54,29 @@ async def initial_works(_, m: Message):
                 LOGGER.error(ef)
                 return
         else:
+            await chatdb.update_chat(m.chat.id, m.chat.title, m.from_user.id)
             await userdb.update_user(
                 m.from_user.id,
                 m.from_user.first_name,
                 m.from_user.username,
             )
             if m.reply_to_message:
+                await chatdb.update_chat(
+                    m.chat.id,
+                    m.chat.title,
+                    m.reply_to_message.from_user.id,
+                )
                 await userdb.update_user(
                     m.reply_to_message.from_user.id,
                     m.reply_to_message.from_user.first_name,
                     m.reply_to_message.from_user.username,
                 )
             if m.forward_from:
+                await chatdb.update_chat(
+                    m.chat.id,
+                    m.chat.title,
+                    m.forward_from.from_user.id,
+                )
                 await userdb.update_user(
                     m.forward_from.id,
                     m.forward_from.first_name,
