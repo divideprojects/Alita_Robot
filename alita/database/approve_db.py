@@ -55,16 +55,16 @@ class Approve:
         )
 
     async def list_approved(self, chat_id: int):
-        return await self.collection.find_all({"chat_id": chat_id})
+        return (await self.collection.find_all({"chat_id": chat_id})) or []
 
     async def count_all_approved(self):
-        return await self.collection.count()
+        return (await self.collection.count()) or 0
 
     async def count_approved(self, chat_id: int):
-        return await self.collection.count({"chat_id": chat_id})
+        return (await self.collection.count({"chat_id": chat_id})) or 0
 
     async def list_all_approved(self):
-        return await self.collection.find_all({})
+        return (await self.collection.find_all({})) or []
 
     # Migrate if chat id changes!
     async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
