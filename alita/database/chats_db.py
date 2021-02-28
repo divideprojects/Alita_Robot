@@ -31,13 +31,15 @@ class Chats:
     async def update_chat(self, chat_id: int, chat_name: str, user_id: int):
         curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            curr["users"].append(user_id)
+            users_old = curr["users"]
+            users_old.append(user_id)
+            users = list(dict.fromkeys(users_old))
             return await self.collection.update(
                 {"chat_id": chat_id},
                 {
                     "chat_id": chat_id,
                     "chat_name": chat_name,
-                    "users": curr["users"],
+                    "users": users,
                 },
             )
         return await self.collection.insert_one(

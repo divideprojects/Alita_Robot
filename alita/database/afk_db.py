@@ -23,7 +23,7 @@ class AFK:
     """Class for managing AFKs of users."""
 
     def __init__(self) -> None:
-        self.collection = MongoDB("afk_users")
+        self.collection = MongoDB("afk")
 
     async def check_afk(self, user_id: int):
         return await self.collection.find_one({"user_id": user_id})

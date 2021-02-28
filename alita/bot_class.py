@@ -84,6 +84,7 @@ class Alita(Client):
         begin = time()
 
         all_chats = await chatdb().list_chats() or []  # Get list of all chats
+        print(all_chats)
         LOGGER.info(f"{len(all_chats)} chats loaded from database.")
 
         try:
@@ -92,8 +93,7 @@ class Alita(Client):
             LOGGER.error(f"Unable to get ADMINDICT!\nError: {ef}")
             ADMINDICT = {}
 
-        for i in all_chats:
-            chat_id = i.chat_id
+        for chat_id in all_chats:
             adminlist = []
             try:
                 async for j in self.iter_chat_members(
@@ -111,10 +111,10 @@ class Alita(Client):
                         ),
                     )
                 adminlist = sorted(adminlist, key=lambda x: x[1])
-                ADMINDICT[str(i.chat_id)] = adminlist  # Remove the last space
+                ADMINDICT[str(chat_id)] = adminlist  # Remove the last space
 
                 LOGGER.info(
-                    f"Set {len(adminlist)} admins for {i.chat_id}\n- {adminlist}",
+                    f"Set {len(adminlist)} admins for {chat_id}\n- {adminlist}",
                 )
             except PeerIdInvalid:
                 pass
