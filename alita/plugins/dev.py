@@ -246,7 +246,7 @@ async def public_ip(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("chatlist", DEV_PREFIX_HANDLER) & dev_filter)
 async def chats(c: Alita, m: Message):
-    exmsg = await m.reply_text(await tlang(m, "chatlist.exporting"))
+    exmsg = await m.reply_text(await tlang(m, "dev.chatlist.exporting"))
     await c.send_message(
         MESSAGE_DUMP,
         f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
