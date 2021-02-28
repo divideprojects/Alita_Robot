@@ -21,10 +21,13 @@ from pyrogram.types import Message
 
 from alita import LOGGER
 from alita.bot_class import Alita
+from alita.database.antiflood_db import AntiFlood
+from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist as bldb
 from alita.database.chats_db import Chats
 from alita.database.lang_db import Langs
 from alita.database.notes_db import Notes
+from alita.database.reporting_db import Reporting
 from alita.database.rules_db import Rules
 from alita.database.users_db import Users
 
@@ -34,6 +37,9 @@ notedb = Notes()
 ruledb = Rules()
 userdb = Users()
 chatdb = Chats()
+flooddb = AntiFlood()
+approvedb = Approve()
+reportdb = Reporting()
 
 
 @Alita.on_message(group=-1)
@@ -48,8 +54,7 @@ async def initial_works(_, m: Message):
                 new_chat = m.chat.id
 
             try:
-                # await migrate_chat(old_chat, new_chat)
-                pass
+                await migrate_chat(old_chat, new_chat)
             except RPCError as ef:
                 LOGGER.error(ef)
                 return
@@ -94,4 +99,7 @@ async def migrate_chat(old_chat, new_chat):
     await ruledb.migrate_chat(old_chat, new_chat)
     await bldb.migrate_chat(old_chat, new_chat)
     await notedb.migrate_chat(old_chat, new_chat)
+    await flooddb.migrate_chat(old_chat, new_chat)
+    await approvedb.migrate_chat(old_chat, new_chat)
+    await reportdb.migrate_chat(old_chat, new_chat)
     LOGGER.info("Successfully migrated!")

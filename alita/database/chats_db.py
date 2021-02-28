@@ -71,3 +71,13 @@ class Chats:
         for chat in chats:
             chat_list.append(chat["chat_id"])
         return chat_list
+
+    # Migrate if chat id changes!
+    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+        old_chat = await self.collection.find_one({"chat_id": old_chat_id})
+        if old_chat:
+            return await self.collection.update(
+                {"chat_id": old_chat_id},
+                {"chat_id": new_chat_id},
+            )
+        return
