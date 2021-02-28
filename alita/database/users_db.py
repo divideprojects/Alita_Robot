@@ -41,7 +41,6 @@ class Users:
         if curr:
             return await self.collection.delete_one(
                 {"user_id": user_id},
-                {"user_id": user_id},
             )
         return True
 
