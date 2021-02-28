@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
@@ -42,7 +43,7 @@ approvedb = Approve()
 reportdb = Reporting()
 
 
-@Alita.on_message(group=-1)
+@Alita.on_message(filters.group, group=-1)
 async def initial_works(_, m: Message):
     try:
         if m.migrate_to_chat_id or m.migrate_from_chat_id:
