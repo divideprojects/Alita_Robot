@@ -32,8 +32,10 @@ Module for enabling auto replies when you are AFK.
 When enabled,
 anyone who mentions you will be replied with a message saying that
 you are AFK.
+
 **Setting AFK Status**
  × /afk <reason>
+
 Enable auto replies when you are AFK.
 To stop it, send message to any group.
 * Reason is optional
