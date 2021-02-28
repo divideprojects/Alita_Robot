@@ -30,7 +30,7 @@ class Notes:
         note_name: str,
         note_value: str,
         msgtype: int = Types.TEXT,
-        file=None,
+        file = "",
     ):
         curr = await self.collection.find_one(
             {"chat_id": chat_id, "note_name": note_name},
