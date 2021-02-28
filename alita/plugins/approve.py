@@ -17,7 +17,7 @@
 
 
 from pyrogram import filters
-from pyrogram.errors import RPCError, UserNotParticipant, PeerIdInvalid
+from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -150,16 +150,16 @@ async def check_approved(_, m: Message):
         return
 
     for i in approved_people:
-        user_id = i['user_id']
+        user_id = i["user_id"]
         try:
             member = await chat.get_member(int(user_id))
         except UserNotParticipant:
             await db.remove_approve(chat.id, user_id)
             continue
         try:
-            mention = (await mention_html(member.user['first_name'], int(user_id)))
+            mention = await mention_html(member.user["first_name"], int(user_id))
         except PeerIdInvalid:
-            mention = member.user['first_name']
+            mention = member.user["first_name"]
         msg += f"- `{user_id}`: {mention}\n"
     await m.reply_text(msg)
     return

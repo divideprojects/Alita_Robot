@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram.types import Message, CallbackQuery
+from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
 
@@ -67,7 +67,7 @@ async def owner_check(m) -> bool:
         if user_id in SUDO_LEVEL:
             return True
     except Exception as ef:
-        LOGGER.info(ef,m)
+        LOGGER.info(ef, m)
 
     user = await m.chat.get_member(user_id)
 
