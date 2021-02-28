@@ -95,7 +95,7 @@ async def afk_mentioned(c: Alita, m: Message):
         if not user_afk:
             return
 
-        afkmsg = f"{user_first_name} is Afk!\<b>Since:</b> {make_time(int(time() - user_afk['time']))}"
+        afkmsg = f"{user_first_name} is Afk!\n<b>Since:</b> {(await make_time(int(time() - user_afk['time'])))}"
 
         if user_afk["reason"]:
             afkmsg += f"\n<b>Reason:</b> {user_afk['reason']}"
@@ -122,7 +122,10 @@ async def rem_afk(c: Alita, m: Message):
 
     await db.remove_afk(m.from_user.id)
     await m.reply_text(
-        f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!",
+        (
+            f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!\n"
+            f"Was AFK for {(await make_time(int(time() - user_afk['time'])))}"
+        )
     )
 
     return
