@@ -83,7 +83,9 @@ async def make_time(time_val):
     """Format time data."""
     if int(time_val) == 0:
         return "0"
-    if int(time_val) <= 3600:
+    if int(time_val) <= 60:
+        bantime = str(int(time_val)) + "s"
+    elif int(time_val) <= 3600:
         bantime = str(int(time_val / 60)) + "m"
     elif int(time_val) >= 3600 and time_val <= 86400:
         bantime = str(int(time_val / 60 / 60)) + "h"
