@@ -59,10 +59,11 @@ async def set_afk(_, m: Message):
     try:
         await db.add_afk(m.from_user.id, reason)
         await m.reply_text(afkmsg + reason_txt)
-        await m.stop_propagation()
     except Exception as ef:
         await m.reply_text(ef)
         LOGGER.error(ef)
+
+    await m.stop_propagation()
 
 
 @Alita.on_message(filters.group & ~filters.bot, group=11)
