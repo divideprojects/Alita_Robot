@@ -75,8 +75,8 @@ async def adminlist_show(_, m: Message):
             async for i in m.chat.iter_members(
                 filter="administrators",
             ):
-                if i.user.is_deleted:
-                    continue  # We don't need deleted accounts
+                if i.user.is_deleted or i.user.is_bot:
+                    continue  # We don't need deleted accounts or bot accounts
                 adminlist.append(
                     (
                         i.user.id,

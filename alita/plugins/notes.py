@@ -76,6 +76,7 @@ Get all your notes, if too much notes, please use this in your saved message ins
 `Code` (grave accent)
 """
 
+
 async def send_cmd(client: Alita, msgtype):
     GET_FORMAT = {
         Types.TEXT.value: client.send_message,

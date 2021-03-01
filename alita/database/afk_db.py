@@ -34,7 +34,9 @@ class AFK:
                 {"user_id": user_id},
                 {"user_id": user_id, "reason": reason, "time": time},
             )
-        return await self.collection.insert_one({"user_id": user_id, "reason": reason, "time": time})
+        return await self.collection.insert_one(
+            {"user_id": user_id, "reason": reason, "time": time},
+        )
 
     async def remove_afk(self, user_id: int):
         if await self.check_afk(user_id):

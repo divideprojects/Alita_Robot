@@ -53,20 +53,13 @@ async def initial_works(_, m: Message):
             elif m.migrate_from_chat_id:
                 old_chat = m.migrate_from_chat_id
                 new_chat = m.chat.id
-
             try:
                 await migrate_chat(old_chat, new_chat)
             except RPCError as ef:
                 LOGGER.error(ef)
                 return
         else:
-            await chatdb.update_chat(m.chat.id, m.chat.title, m.from_user.id)
-            await userdb.update_user(
-                m.from_user.id,
-                m.from_user.first_name,
-                m.from_user.username,
-            )
-            if m.reply_to_message:
+            if m.reply_to_message and not m.forward_from:
                 await chatdb.update_chat(
                     m.chat.id,
                     m.chat.title,
@@ -74,19 +67,53 @@ async def initial_works(_, m: Message):
                 )
                 await userdb.update_user(
                     m.reply_to_message.from_user.id,
-                    m.reply_to_message.from_user.first_name,
+                    (
+                        f"{m.reply_to_message.from_user.first_name} {m.reply_to_message.from_user.last_name}"
+                        if m.reply_to_message.from_user.last_name
+                        else m.reply_to_message.from_user.first_name
+                    ),
                     m.reply_to_message.from_user.username,
                 )
-            if m.forward_from:
+            elif m.forward_from and not m.reply_to_message:
                 await chatdb.update_chat(
                     m.chat.id,
                     m.chat.title,
-                    m.forward_from.from_user.id,
+                    m.forward_from.id,
                 )
                 await userdb.update_user(
                     m.forward_from.id,
-                    m.forward_from.first_name,
+                    (
+                        f"{m.forward_from.first_name} {m.forward_from.last_name}"
+                        if m.forward_from.last_name
+                        else m.forward_from.first_name
+                    ),
                     m.forward_from.username,
+                )
+            elif m.reply_to_message and m.forward_from:
+                await chatdb.update_chat(
+                    m.chat.id,
+                    m.chat.title,
+                    m.reply_to_message.forward_from.id,
+                )
+                await userdb.update_user(
+                    m.forward_from.id,
+                    (
+                        f"{m.reply_to_message.forward_from.first_name} {m.reply_to_message.forward_from.last_name}"
+                        if m.reply_to_message.forward_from.last_name
+                        else m.reply_to_message.forward_from.first_name
+                    ),
+                    m.forward_from.username,
+                )
+            else:
+                await chatdb.update_chat(m.chat.id, m.chat.title, m.from_user.id)
+                await userdb.update_user(
+                    m.from_user.id,
+                    (
+                        f"{m.from_user.first_name} {m.from_user.last_name}"
+                        if m.from_user.last_name
+                        else m.from_user.first_name
+                    ),
+                    m.from_user.username,
                 )
     except AttributeError:
         pass  # Skip attribute errors!

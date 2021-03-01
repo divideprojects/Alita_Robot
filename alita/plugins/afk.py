@@ -16,10 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from time import gmtime, strftime, time
+
 from pyrogram import filters
 from pyrogram.types import Message
-
-from time import gmtime, strftime, time
 
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
@@ -95,7 +95,7 @@ async def afk_mentioned(c: Alita, m: Message):
         if not user_afk:
             return
 
-        since = strftime("%Hh %Mm %Ss", gmtime(time() - user_afk['time']))
+        since = strftime("%Hh %Mm %Ss", gmtime(time() - user_afk["time"]))
         afkmsg = f"{user_first_name} is Afk!\n<b>Since:</b> <code>{since}</code>"
 
         if user_afk["reason"]:
@@ -118,14 +118,11 @@ async def rem_afk(c: Alita, m: Message):
         await m.reply_text(f"Error while checking afk\n{ef}")
         return
 
-    since = strftime("%Hh %Mm %Ss", gmtime(time() - user_afk['time']))
+    since = strftime("%Hh %Mm %Ss", gmtime(time() - user_afk["time"]))
     await db.remove_afk(m.from_user.id)
-    user = await c.get_users(user_afk['user_id'])
+    user = await c.get_users(user_afk["user_id"])
     await m.reply_text(
-        (
-            f"{user.first_name} is no longer Afk!\n"
-            f"Was AFK for <code>{since}</code>"
-        )
+        (f"{user.first_name} is no longer Afk!\n" f"Was AFK for <code>{since}</code>"),
     )
 
     return

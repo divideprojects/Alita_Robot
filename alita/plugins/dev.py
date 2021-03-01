@@ -256,7 +256,7 @@ async def chats(c: Alita, m: Message):
     P = 1
     for chat in all_chats:
         try:
-            chat_info = await c.get_chat(chat['chat_id'])
+            chat_info = await c.get_chat(chat["chat_id"])
             chat_members = chat_info.members_count
             try:
                 invitelink = chat_info.invite_link
@@ -264,8 +264,8 @@ async def chats(c: Alita, m: Message):
                 invitelink = "No Link!"
             chatfile += "{}. {} | {} | {} | {}\n".format(
                 P,
-                chat['chat_name'],
-                chat['chat_id'],
+                chat["chat_name"],
+                chat["chat_id"],
                 chat_members,
                 invitelink,
             )
@@ -349,7 +349,7 @@ async def show_redis_keys(_, m: Message):
     replymsg = await m.reply_text("Fetching Redis Keys...", quote=True)
     keys = await allkeys()
     for i in keys:
-        txt_dict[i] = (await get_key(str(i)))
+        txt_dict[i] = await get_key(str(i))
     try:
         if txt_data == {}:
             return replymsg.edit_text("No keys stored in redis!")
