@@ -28,8 +28,6 @@ async def admin_check(m) -> bool:
     """Checks if user is admin or not."""
     if isinstance(m, Message):
         user_id = m.from_user.id
-    if isinstance(m, int):
-        user_id = m
     if isinstance(m, CallbackQuery):
         user_id = m.message.from_user.id
 
@@ -58,10 +56,9 @@ async def owner_check(m) -> bool:
     """Checks if user is owner or not."""
     if isinstance(m, Message):
         user_id = m.from_user.id
-    if isinstance(m, int):
-        user_id = m
     if isinstance(m, CallbackQuery):
         user_id = m.message.from_user.id
+        m = m.message
 
     try:
         if user_id in SUDO_LEVEL:
