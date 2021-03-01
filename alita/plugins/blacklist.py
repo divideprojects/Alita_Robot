@@ -46,9 +46,10 @@ lines will allow you to add muser_listtiple triggers.
  × /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove \
 muser_listtiple triggers at once.
  × /rmblacklist <triggers>: Same as above.
- × /blaction <action>: Choose from 'kick', 'ban', 'mute', 'warn'
+ × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'
+ Default is 'kick', which will kick the user on typing blacklist word.
 
-**Note:** Can only remove one blacklist at a time!
+**Note:** Can only add or remove one blacklist at a time!
 """
 
 # Initialise
@@ -154,7 +155,7 @@ async def set_bl_action(_, m: Message):
 @Alita.on_message(filters.group, group=11)
 async def del_blacklist(_, m: Message):
     chat_blacklists = await db.get_blacklists(m.chat.id)
-    action = db.get_action(m.chat.id)
+    action = await db.get_action(m.chat.id)
 
     # If no blacklists, then return
     if not chat_blacklists:
