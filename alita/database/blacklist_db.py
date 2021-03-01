@@ -28,54 +28,76 @@ class Blacklist:
     def __init__(self) -> None:
         self.collection = MongoDB("blacklists")
 
-    async def save_blacklist(self, chat_id: int, trigger: str, action: str = "kick"):
-
-        if action not in ("mute", "ban", "kick"):
-            action = "kick"
-
-        curr = await self.collection.find_one({"chat_id": chat_id, "trigger": trigger})
+    async def add_blacklist(self, chat_id: int, trigger: str):
+        curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            return "Blacklist already added!"
+            triggers_old = curr["triggers"]
+            triggers_old.append(trigger)
+            triggers = list(dict.fromkeys(triggers_old))
+            return await self.collection.update(
+                {"chat_id": chat_id},
+                {
+                    "chat_id": chat_id,
+                    "triggers": triggers,
+                },
+            )
         return await self.collection.insert_one(
-            {"chat_id": chat_id, "trigger": trigger, "action": action},
+            {
+                "chat_id": chat_id,
+                "triggers": [trigger],
+                "action": "kick",
+            },
         )
 
-    async def remove_blacklist(self, chat_id: int, trigger: int):
-        curr = await self.collection.find_one({"chat_id": chat_id, "trigger": trigger})
+    async def remove_blacklist(self, chat_id: int, trigger: str):
+        curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            return await self.collection.delete_one(
-                {"chat_id": chat_id, "trigger": trigger},
+            triggers_old = curr["triggers"]
+            try:
+                triggers_old.remove(trigger)
+            except ValueError:
+                return False
+            triggers = list(dict.fromkeys(triggers_old))
+            return await self.collection.update(
+                {"chat_id": chat_id},
+                {
+                    "chat_id": chat_id,
+                    "triggers": triggers,
+                },
             )
-        return "Blacklist not found!"
 
     async def get_blacklists(self, chat_id: int):
-        blacklists = await self.collection.find_all({"chat_id": chat_id})
-        return blacklists
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            return curr["triggers"]
+        return []
 
-    async def set_action(self, chat_id: int, action: str = "kick"):
+    async def count_blacklists_all(self):
+        curr = await self.collection.find_all()
+        if curr:
+            return len(curr)
+        return 0
 
-        if action not in ("mute", "ban", "kick"):
-            action = "kick"
+    async def count_blackists_chats(self):
+        curr = await self.collection.find_all()
+        if curr:
+            return len(curr)
+        return 0
 
-        curr_action = (await self.collection.find_all({"actin": action}))["action"]
+    async def set_action(self, chat_id: int, action: int):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            return await self.collection.update(
+                {"chat_id": chat_id},
+                {"chat_id": chat_id, "action": action},
+            )
+        return None
 
-        if curr_action != action:
-            curr = await self.collection.find_all({"chat_id": chat_id})
-            if curr:
-                for i in curr:
-                    await self.collection.update(i, {"action": action})
-                return "Updated Action!"
-        return f"Current action remains same: {action}"
-
-    async def count_blacklists(self):
-        return await self.collection.count()
-
-    async def count_chats_blacklist(self):
-        chats_num = await self.collection.find_all()
-        chats_ids = []
-        for chat in chats_num:
-            chats_ids.append(chat["chat_id"])
-        return len(list(dict.fromkeys(chats_ids)))
+    async def get_action(self, chat_id: int):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            return curr["action"]
+        return None
 
     # Migrate if chat id changes!
     async def migrate_chat(self, old_chat_id: int, new_chat_id: int):

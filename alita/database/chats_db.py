@@ -46,7 +46,7 @@ class Chats:
             {
                 "chat_id": chat_id,
                 "chat_name": chat_name,
-                "users": [],
+                "users": [user_id],
             },
         )
 

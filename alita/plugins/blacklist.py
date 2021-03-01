@@ -73,10 +73,11 @@ async def view_blacklist(_, m: Message):
         )
         return
 
-    for trigger in all_blacklisted:
-        blacklists_chat += f" • <code>{escape(trigger)}</code>\n"
+    blacklists_chat = "\n".join(
+        [f" • <code>{escape(i)}</code>" for i in all_blacklisted],
+    )
 
-    await m.reply_text(blacklists_chat, reply_to_message_id=m.message_id)
+    await m.reply_text(blacklists_chat)
     return
 
 
@@ -86,19 +87,15 @@ async def view_blacklist(_, m: Message):
 async def add_blacklist(_, m: Message):
 
     if len(m.text.split()) >= 2:
-        bl_word = m.text.split(None, 1)[1]
-        await db.save_blacklist(m.chat.id, bl_word.lower())
+        bl_word = (m.text.split(None, 1)[1]).lower()
+        await db.add_blacklist(m.chat.id, bl_word)
         await m.reply_text(
             (await tlang(m, "blacklist.added_blacklist")).format(
                 trigger=f"<code>{bl_word}</code>",
             ),
-            reply_to_message_id=m.message_id,
         )
         return
-    await m.reply_text(
-        (await tlang(m, "general.check_help")),
-        reply_to_message_id=m.message_id,
-    )
+    await m.reply_text(await tlang(m, "general.check_help"))
     return
 
 
@@ -110,54 +107,63 @@ async def add_blacklist(_, m: Message):
 async def rm_blacklist(_, m: Message):
 
     chat_bl = await db.get_blacklists(m.chat.id)
-    if len(m.text.split()) >= 2:
-        bl_word = m.text.split(None, 1)[1]
-        if bl_word in chat_bl:
-            await db.remove_blacklist(m.chat.id, bl_word.lower())
-            await m.reply_text(
-                (await tlang(m, "blacklist.rm_blacklist")).format(
-                    bl_word=f"<code>{bl_word}</code>",
-                ),
-            )
-            return
+    if not len(m.text.split()) >= 2:
+        await m.reply_text(await tlang(m, "general.check_help"))
+        return
+
+    bl_word = (m.text.split(None, 1)[1]).lower()
+    if bl_word not in chat_bl:
         await m.reply_text(
             (await tlang(m, "blacklist.no_bl_found")).format(
                 bl_word=f"<code>{bl_word}</code>",
             ),
         )
-    else:
-        await m.reply_text(
-            (await tlang(m, "general.check_help")),
-            reply_to_message_id=m.message_id,
-        )
+        return
+
+    await db.remove_blacklist(m.chat.id, bl_word)
+    await m.reply_text(
+        (await tlang(m, "blacklist.rm_blacklist")).format(
+            bl_word=f"<code>{bl_word}</code>",
+        ),
+    )
+
     return
 
 
-# @Alita.on_message(filters.group, group=11)
-# async def del_blacklist(_, m: Message):
-#     try:
-#         user_list = []
-#         approved_users = await app_db.list_approved(m.chat.id)
-#         for auser in approved_users:
-#             user_list.append(int(auser["user_id"]))
-#         async for i in m.chat.iter_members(filter="administrators"):
-#             user_list.append(i.user.id)
-#         if m.from_user.id in user_list:
-#             return
-#         if m.text:
-#             chat_blacklists = await db.get_blacklists(m.chat.id)
-#             if not chat_blacklists:
-#                 return
-#             for trigger in chat_blacklists:
-#                 pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
-#                 match = await regex_searcher(pattern, m.text.lower())
-#                 if not match:
-#                     continue
-#                 if match:
-#                     try:
-#                         await m.delete()
-#                     except RPCError as ef:
-#                         LOGGER.info(ef)
-#                     break
-#     except AttributeError:
-#         pass  # Skip attribute errors!
+@Alita.on_message(filters.group, group=11)
+async def del_blacklist(_, m: Message):
+    chat_blacklists = await db.get_blacklists(m.chat.id)
+
+    # If no blacklists, then return
+    if not chat_blacklists:
+        return
+
+    try:
+        approved_users = []
+        app_users = await app_db.list_approved(m.chat.id)
+
+        for i in app_users:
+            approved_users.append(int(i["user_id"]))
+
+        async for i in m.chat.iter_members(filter="administrators"):
+            approved_users.append(i.user.id)
+
+        # If user_id in approved_users list, return and don't delete the message
+        if m.from_user.id in approved_users:
+            return
+
+        if m.text:
+            for trigger in chat_blacklists:
+                pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
+                match = await regex_searcher(pattern, m.text.lower())
+                if not match:
+                    continue
+                if match:
+                    try:
+                        await m.delete()
+                    except RPCError as ef:
+                        LOGGER.info(ef)
+                    break
+
+    except AttributeError:
+        pass  # Skip attribute errors!

@@ -45,7 +45,7 @@ async def get_stats(_, m: Message):
     replymsg = await m.reply_text("<b><i>Fetching Stats...</i></b>", quote=True)
     rply = (
         f"<b>Users:</b> <code>{(await userdb.count_users())}</code> in <code>{(await chatdb.count_chats())}</code> chats\n"
-        f"<b>Blacklists:</b> <code>{(await bldb.count_blacklists())}</code> in <code>{(await bldb.count_chats_blacklist())}</code> chats\n"
+        f"<b>Blacklists:</b> <code>{(await bldb.count_blacklists_all())}</code> in <code>{(await bldb.count_blackists_chats())}</code> chats\n"
         f"<b>Rules:</b> Set in <code>{(await rulesdb.count_chats())}</code> chats\n"
         f"<b>Notes:</b> <code>{(await notesdb.count_all_notes())}</code> in <code>{(await notesdb.count_notes_chats())}</code>\n"
         f"<b>Globally Banned Users:</b> <code>{(await gbandb.count_gbans())}</code>\n"
