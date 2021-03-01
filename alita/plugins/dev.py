@@ -256,7 +256,7 @@ async def chats(c: Alita, m: Message):
     P = 1
     for chat in all_chats:
         try:
-            chat_info = await c.get_chat(chat["chat_id"])
+            chat_info = await c.get_chat(int(chat["chat_id"]))
             chat_members = chat_info.members_count
             try:
                 invitelink = chat_info.invite_link
