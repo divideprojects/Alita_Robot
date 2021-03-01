@@ -186,7 +186,7 @@ async def gban_list(_, m: Message):
         return
 
 
-@Alita.on_message(filters.group, group=6)
+@Alita.on_message(filters.group, group=2)
 async def gban_watcher(c: Alita, m: Message):
     try:
         try:

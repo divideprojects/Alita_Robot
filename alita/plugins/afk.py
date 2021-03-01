@@ -106,7 +106,7 @@ async def afk_mentioned(c: Alita, m: Message):
     await m.stop_propagation()
 
 
-@Alita.on_message(filters.group, group=8)
+@Alita.on_message(filters.group, group=12)
 async def rem_afk(c: Alita, m: Message):
 
     if not m.from_user:

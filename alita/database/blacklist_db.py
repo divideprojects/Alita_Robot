@@ -45,7 +45,7 @@ class Blacklist:
             {
                 "chat_id": chat_id,
                 "triggers": [trigger],
-                "action": "kick",
+                "action": "mute",
             },
         )
 
@@ -95,13 +95,26 @@ class Blacklist:
                 {"chat_id": chat_id},
                 {"chat_id": chat_id, "action": action},
             )
-        return None
+        return await self.collection.insert_one(
+            {
+                "chat_id": chat_id,
+                "triggers": [],
+                "action": action,
+            },
+        )
 
     async def get_action(self, chat_id: int):
         curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            return curr["action"] or "kick"
-        return None
+            return curr["action"] or "mute"
+        await self.collection.insert_one(
+            {
+                "chat_id": chat_id,
+                "triggers": [],
+                "action": "mute",
+            },
+        )
+        return "mute"
 
     # Migrate if chat id changes!
     async def migrate_chat(self, old_chat_id: int, new_chat_id: int):

@@ -76,7 +76,7 @@ async def view_blacklist(_, m: Message):
         )
         return
 
-    blacklists_chat = "\n".join(
+    blacklists_chat += "\n".join(
         [f" • <code>{escape(i)}</code>" for i in all_blacklisted],
     )
 
@@ -133,7 +133,7 @@ async def rm_blacklist(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("blacton", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(filters.command("blaction", PREFIX_HANDLER) & filters.group)
 async def set_bl_action(_, m: Message):
     if len(m.text.split()) == 2:
         action = m.text.split(None, 1)[1]
@@ -152,7 +152,7 @@ async def set_bl_action(_, m: Message):
     return
 
 
-@Alita.on_message(filters.group, group=11)
+@Alita.on_message(filters.group, group=3)
 async def del_blacklist(_, m: Message):
     chat_blacklists = await db.get_blacklists(m.chat.id)
     action = await db.get_action(m.chat.id)
@@ -183,7 +183,7 @@ async def del_blacklist(_, m: Message):
                     continue
                 if match:
                     try:
-                        await perform_action(m, m.from_user.id, action)
+                        await perform_action(m, action)
                         await m.delete()
                     except RPCError as ef:
                         LOGGER.info(ef)
@@ -194,17 +194,31 @@ async def del_blacklist(_, m: Message):
 
 
 # TODO - Add warn option when Warn db is added!!
-async def perform_action(m: Message, user_id: int, action: str):
-    ACTIONS = {
-        "kick": (await m.chat.kick_member(user_id, int(time() + 45))),
-        "ban": (
+async def perform_action(m: Message, action: str):
+    if action == "kick":
+        (await m.chat.kick_member(m.from_user.id, int(time() + 45)))
+        await m.reply_text(
+            (
+                f"Kicked {m.from_user.username if m.from_user.username else m.from_user.first_name}"
+                " for using a blacklisted word!"
+            ),
+        )
+    elif action == "ban":
+        (
             await m.chat.kick_member(
-                user_id,
+                m.from_user.id,
             )
-        ),
-        "mute": (
+        )
+        await m.reply_text(
+            (
+                f"Banned {m.from_user.username if m.from_user.username else m.from_user.first_name}"
+                " for using a blacklisted word!"
+            ),
+        )
+    elif action == "mute":
+        (
             await m.chat.restrict_member(
-                user_id,
+                m.from_user.id,
                 ChatPermissions(
                     can_send_messages=False,
                     can_send_media_messages=False,
@@ -219,6 +233,11 @@ async def perform_action(m: Message, user_id: int, action: str):
                     can_pin_messages=False,
                 ),
             )
-        ),
-    }
-    return ACTIONS[action]
+        )
+        await m.reply_text(
+            (
+                f"Muted {m.from_user.username if m.from_user.username else m.from_user.first_name}"
+                " for using a blacklisted word!"
+            ),
+        )
+    return

@@ -84,7 +84,7 @@ async def purge(c: Alita, m: Message):
 
 @Alita.on_message(
     filters.command("del", PREFIX_HANDLER) & filters.group & admin_filter,
-    group=3,
+    group=4,
 )
 async def del_msg(c: Alita, m: Message):
 
