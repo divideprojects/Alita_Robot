@@ -17,10 +17,11 @@
 
 
 from html import escape
+from time import time
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import Message
+from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
@@ -45,6 +46,7 @@ lines will allow you to add muser_listtiple triggers.
  × /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove \
 muser_listtiple triggers at once.
  × /rmblacklist <triggers>: Same as above.
+ × /blaction <action>: Choose from 'kick', 'ban', 'mute', 'warn'
 
 **Note:** Can only remove one blacklist at a time!
 """
@@ -130,9 +132,29 @@ async def rm_blacklist(_, m: Message):
     return
 
 
+@Alita.on_message(filters.command("blacton", PREFIX_HANDLER) & filters.group)
+async def set_bl_action(_, m: Message):
+    if len(m.text.split()) == 2:
+        action = m.text.split(None, 1)[1]
+        await db.set_action(m.chat.id, action)
+        await m.reply_text(
+            (await tlang(m, "blacklist.action_set")).format(action=f"<b>{action}</b>"),
+        )
+    elif len(m.text.split()) == 1:
+        action = await db.get_action(m.chat.id)
+        await m.reply_text(
+            (await tlang(m, "blacklist.action_get")).format(action=f"<b>{action}</b>"),
+        )
+    else:
+        await m.reply_text(await tlang(m, "general.check_help"))
+
+    return
+
+
 @Alita.on_message(filters.group, group=11)
 async def del_blacklist(_, m: Message):
     chat_blacklists = await db.get_blacklists(m.chat.id)
+    action = db.get_action(m.chat.id)
 
     # If no blacklists, then return
     if not chat_blacklists:
@@ -160,6 +182,7 @@ async def del_blacklist(_, m: Message):
                     continue
                 if match:
                     try:
+                        await perform_action(m, m.from_user.id, action)
                         await m.delete()
                     except RPCError as ef:
                         LOGGER.info(ef)
@@ -167,3 +190,34 @@ async def del_blacklist(_, m: Message):
 
     except AttributeError:
         pass  # Skip attribute errors!
+
+
+# TODO - Add warn option when Warn db is added!!
+async def perform_action(m: Message, user_id: int, action: str):
+    ACTIONS = {
+        "kick": (await m.chat.kick_member(user_id, int(time() + 45))),
+        "ban": (
+            await m.chat.kick_member(
+                user_id,
+            )
+        ),
+        "mute": (
+            await m.chat.restrict_member(
+                user_id,
+                ChatPermissions(
+                    can_send_messages=False,
+                    can_send_media_messages=False,
+                    can_send_stickers=False,
+                    can_send_animations=False,
+                    can_send_games=False,
+                    can_use_inline_bots=False,
+                    can_add_web_page_previews=False,
+                    can_send_polls=False,
+                    can_change_info=False,
+                    can_invite_users=True,
+                    can_pin_messages=False,
+                ),
+            )
+        ),
+    }
+    return ACTIONS[action]

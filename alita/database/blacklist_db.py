@@ -85,6 +85,10 @@ class Blacklist:
         return 0
 
     async def set_action(self, chat_id: int, action: int):
+
+        if action not in ("kick", "mute", "ban", "warn"):
+            return "invalid action"
+
         curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
             return await self.collection.update(
@@ -96,7 +100,7 @@ class Blacklist:
     async def get_action(self, chat_id: int):
         curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            return curr["action"]
+            return curr["action"] or "kick"
         return None
 
     # Migrate if chat id changes!

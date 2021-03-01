@@ -42,7 +42,9 @@
             "curr_blacklist_initial": "Current Blacklisted words in {chat_title}:\n",
             "no_bl_found": "No blacklist {bl_word} found!",
             "no_blacklist": "There are no blacklisted messages in {chat_title}!",
-            "rm_blacklist": "Removed {bl_word} from blacklist words!"
+            "rm_blacklist": "Removed {bl_word} from blacklist words!",
+            "action_set": "Set action for blacklist for this to {action}",
+            "action_get": "The current action for blacklists in this chat is {action}"
         },
         "dev": {
             "alladmins": {
