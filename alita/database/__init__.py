@@ -75,3 +75,7 @@ class MongoDB:
         result = await self.collection.update_one(query, {"$set": update})
         new_document = await self.collection.find_one(query)
         return result.modified_count, new_document
+        
+    # Close connection
+    async def close():
+        return mongodb_client.close()
