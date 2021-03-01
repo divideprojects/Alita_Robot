@@ -1,4 +1,4 @@
 commit_message: "[skip ci] Update Translations"
 files:
-  - source: locales/en-US/strings.json
-    translation: /**/locales/%locale%/strings.json
+  - source: locales/en.json
+    translation: /**/locales/%locale_with_underscore%.json
