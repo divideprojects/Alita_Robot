@@ -120,9 +120,10 @@ async def rem_afk(c: Alita, m: Message):
 
     since = strftime("%Hh %Mm %Ss", gmtime(time() - user_afk['time')
     await db.remove_afk(m.from_user.id)
+    user = await c.get_users(user_afk['user_id'])
     await m.reply_text(
         (
-            f"{(await c.get_users(user_afk['user_id'])).first_name} is no longer Afk!\n"
+            f"{user.first_name} is no longer Afk!\n"
             f"Was AFK for <code>{since}</code>"
         )
     )
