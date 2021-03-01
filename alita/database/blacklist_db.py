@@ -74,15 +74,18 @@ class Blacklist:
 
     async def count_blacklists_all(self):
         curr = await self.collection.find_all()
-        if curr:
-            return len(curr)
-        return 0
+        num = 0
+        for chat in curr:
+            num += len(chat["triggers"])
+        return num
 
     async def count_blackists_chats(self):
         curr = await self.collection.find_all()
-        if curr:
-            return len(curr)
-        return 0
+        num = 0
+        for chat in curr:
+            if chat["triggers"]:
+                num += 1
+        return num
 
     async def set_action(self, chat_id: int, action: int):
 
