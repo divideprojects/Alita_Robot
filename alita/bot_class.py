@@ -164,8 +164,12 @@ class Alita(Client):
             f"Pyrogram v{__version__}\n(Layer - {layer}) started on {BOT_USERNAME}\n"
             f"Python Version: {python_version()}",
         )
+        
+        # Get cmds and keys
         cmd_list = await load_cmds(await all_plugins())
         redis_keys = ", ".join(await allkeys())
+
+
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
         LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
 
