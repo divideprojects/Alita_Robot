@@ -208,10 +208,6 @@ async def unmute_usr(c: Alita, m: Message):
 
     user_id, user_first_name = await extract_user(c, m)
 
-    if user_id in SUPPORT_STAFF:
-        await m.reply_text("This user is in my support staff, cannot restrict them.")
-        return
-
     try:
         await m.chat.restrict_member(user_id, m.chat.permissions)
         await m.reply_text(
