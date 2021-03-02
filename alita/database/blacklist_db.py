@@ -16,9 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram.filters import user
-from pyrogram.methods.chats import delete_user_history
-
 from alita.database import MongoDB
 
 
