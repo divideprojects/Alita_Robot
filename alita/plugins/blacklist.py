@@ -21,14 +21,21 @@ from time import time
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import ChatPermissions, Message
+from pyrogram.types import (
+    CallbackQuery,
+    ChatPermissions,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+)
 
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.tr_engine import tlang
-from alita.utils.custom_filters import admin_filter
+from alita.utils.custom_filters import admin_filter, owner_filter
+from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
 
 __PLUGIN__ = "Blacklist"
@@ -40,6 +47,7 @@ Blacklists are used to stop certain triggers from being said in a group. Any tim
 the message will immediately be deleted. A good combo is sometimes to pair this up with warn filters!
 **NOTE:** blacklists do not affect group admins.
  × /blacklist: View the current blacklisted words.
+
 **Admin only:**
  × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different \
 lines will allow you to add muser_listtiple triggers.
@@ -48,6 +56,9 @@ muser_listtiple triggers at once.
  × /rmblacklist <triggers>: Same as above.
  × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'
  Default is 'kick', which will kick the user on typing blacklist word.
+
+**Owner Only**
+ × /rmallblacklist: Removes all the blacklists from the current chat.
 
 **Note:** Can only add or remove one blacklist at a time!
 """
@@ -240,4 +251,50 @@ async def perform_action(m: Message, action: str):
                 " for using a blacklisted word!"
             ),
         )
+    return
+
+
+@Alita.on_message(
+    filters.command("rmallblacklist", PREFIX_HANDLER) & filters.group & owner_filter,
+)
+async def rm_allblacklist(_, m: Message):
+
+    all_bls = await db.get_blacklists(m.chat.id)
+    if not all_bls:
+        await m.reply_text("No notes are blacklists in this chat")
+        return
+
+    await m.reply_text(
+        "Are you sure you want to clear all blacklists?",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "⚠️ Confirm",
+                        callback_data=f"rm_allbl.{m.from_user.id}.{m.from_user.first_name}",
+                    ),
+                    InlineKeyboardButton("❌ Cancel", callback_data="close"),
+                ],
+            ],
+        ),
+    )
+    return
+
+
+@Alita.on_callback_query(filters.regex("^rm_allbl."))
+async def rm_allbl_callback(_, q: CallbackQuery):
+    user_id = q.data.split(".")[-2]
+    name = q.data.split(".")[-1]
+    user_status = (await q.message.chat.get_member(user_id)).status
+    if user_status != "creator":
+        await q.message.edit(
+            (
+                f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
+                "Stay in your limits!"
+            ),
+        )
+        return
+    await db.rm_all_blacklist(q.message.chat.id)
+    await q.message.delete()
+    await q.answer("Cleared all notes!", show_alert=True)
     return

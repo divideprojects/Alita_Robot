@@ -119,6 +119,15 @@ class Blacklist:
         )
         return "mute"
 
+    async def rm_all_blacklist(self, chat_id: int):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            await self.collection.update(
+                {"chat_id": chat_id},
+                {"triggers": []},
+            )
+        return False
+
     # Migrate if chat id changes!
     async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         old_chat = await self.collection.find_one({"chat_id": old_chat_id})
