@@ -49,7 +49,7 @@ async def get_stats(_, m: Message):
         f"<b>Rules:</b> Set in <code>{(await rulesdb.count_chats())}</code> chats\n"
         f"<b>Notes:</b> <code>{(await notesdb.count_all_notes())}</code> in <code>{(await notesdb.count_notes_chats())}</code>\n"
         f"<b>Globally Banned Users:</b> <code>{(await gbandb.count_gbans())}</code>\n"
-        f"<b>Approved People</b>: {(await appdb.count_all_approved())}\n"
+        f"<b>Approved People</b>: <code>{(await appdb.count_all_approved())}</code>\n"
     )
     await replymsg.edit_text(rply, parse_mode="html")
 
