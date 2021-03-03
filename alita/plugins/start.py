@@ -171,6 +171,7 @@ async def commands_pvt(_, m: Message):
         if m.chat.type == "private":
             await m.reply_text(
                 help_msg,
+                parse_mode="markdown",
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
