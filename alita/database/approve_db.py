@@ -27,25 +27,44 @@ class Approve:
 
     async def check_approve(self, chat_id: int, user_id: int):
         curr_approve = await self.collection.find_one(
-            {"chat_id": chat_id, "user_id": user_id},
+            {"chat_id": chat_id},
         )
         if curr_approve:
-            return True
+            st = True if user_id in curr_approve["users"] else False
+            return st
         return False
 
     async def add_approve(self, chat_id: int, user_id: int):
-        curr = await self.collection.find_one({"chat_id": chat_id, "user_id": user_id})
+        curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            return "Already Added!"
+            users_old = curr["users"]
+            users_old.append(user_id)
+            users = list(dict.fromkeys(users_old))
+            return await self.collection.update(
+                {"chat_id": chat_id},
+                {
+                    "chat_id": chat_id,
+                    "users": users,
+                },
+            )
         return await self.collection.insert_one(
-            {"chat_id": chat_id, "user_id": user_id},
+            {
+                "chat_id": chat_id,
+                "users": [user_id],
+            },
         )
 
     async def remove_approve(self, chat_id: int, user_id: int):
-        curr = await self.collection.find_one({"chat_id": chat_id, "user_id": user_id})
+        curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            return await self.collection.delete_one(
-                {"chat_id": chat_id, "user_id": user_id},
+            users = curr["users"]
+            users.remove(user_id)
+            return await self.collection.update(
+                {"chat_id": chat_id},
+                {
+                    "chat_id": chat_id,
+                    "users": users,
+                },
             )
         return "Not approved"
 
@@ -55,16 +74,14 @@ class Approve:
         )
 
     async def list_approved(self, chat_id: int):
-        return (await self.collection.find_all({"chat_id": chat_id})) or []
+        return (await self.collection.find_all({"chat_id": chat_id})["users"]) or []
 
     async def count_all_approved(self):
         return (await self.collection.count()) or 0
 
     async def count_approved(self, chat_id: int):
-        return (await self.collection.count({"chat_id": chat_id})) or 0
-
-    async def list_all_approved(self):
-        return (await self.collection.find_all({})) or []
+        all_app = await self.collection.find_one({"chat_id": chat_id})
+        return len(all_app["users"]) or 0
 
     # Migrate if chat id changes!
     async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
