@@ -31,7 +31,7 @@ class SpamProtect:
             stat = curr["cas"]
             return stat
         await self.collection.insert_one(
-            {"chat_id": chat_id, "cas": False, "attack": False},
+            {"chat_id": chat_id, "cas": False, "underattack": False},
         )
         return False
 
@@ -40,20 +40,20 @@ class SpamProtect:
         if curr:
             return await self.collection.update(
                 {"chat_id": chat_id},
-                {"chat_id": chat_id, "cas": status, "attack": False},
+                {"chat_id": chat_id, "cas": status},
             )
         await self.collection.insert_one(
-            {"chat_id": chat_id, "cas": status, "attack": False},
+            {"chat_id": chat_id, "cas": status, "underattack": False},
         )
         return status
 
     async def get_attack_status(self, chat_id: int):
         curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            stat = curr["attack"]
+            stat = curr["underattack"]
             return stat
         await self.collection.insert_one(
-            {"chat_id": chat_id, "cas": False, "attack": False},
+            {"chat_id": chat_id, "cas": False, "underattack": False},
         )
         return False
 
@@ -62,10 +62,10 @@ class SpamProtect:
         if curr:
             return await self.collection.update(
                 {"chat_id": chat_id},
-                {"chat_id": chat_id, "cas": False, "attack": status},
+                {"chat_id": chat_id, "underattack": status},
             )
         await self.collection.insert_one(
-            {"chat_id": chat_id, "cas": False, "attack": status},
+            {"chat_id": chat_id, "cas": False, "underattack": status},
         )
         return status
 
@@ -83,7 +83,7 @@ class SpamProtect:
         num = 0
         if curr:
             for chat in curr:
-                if chat["attack"]:
+                if chat["underattack"]:
                     num += 1
         return num
 
@@ -101,6 +101,6 @@ class SpamProtect:
         lst = []
         if curr:
             for chat in curr:
-                if chat["attack"]:
+                if chat["underattack"]:
                     lst.append(chat["chat_id"])
         return lst
