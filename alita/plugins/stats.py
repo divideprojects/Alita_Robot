@@ -53,8 +53,8 @@ async def get_stats(_, m: Message):
         f"<b>Globally Banned Users:</b> <code>{(await gbandb.count_gbans())}</code>\n"
         f"<b>Approved People</b>: <code>{(await appdb.count_all_approved())}</code>\n"
         "\n<b>Spam Protection:</b>\n"
-        f"\t\t<b>CAS Enabled:</b> {(await spamdb.get_cas_enabled_chats_num())}\n"
-        f"\t\t<b>UnderAttack Enabled:</b> {(await spamdb.get_attack_enabled_chats_num())}\n"
+        f"    <b>CAS Enabled:</b> {(await spamdb.get_cas_enabled_chats_num())}\n"
+        f"    <b>UnderAttack Enabled:</b> {(await spamdb.get_attack_enabled_chats_num())}\n"
     )
     await replymsg.edit_text(rply, parse_mode="html")
 
