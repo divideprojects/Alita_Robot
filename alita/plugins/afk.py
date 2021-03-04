@@ -84,24 +84,22 @@ async def afk_mentioned(c: Alita, m: Message):
         LOGGER.error(ef)
         return
 
-    # incase the extract_user returns the self user id, ignore it
-    if user_id != m.from_user:
-        try:
-            user_afk = await db.check_afk(user_id)
-        except Exception as ef:
-            await m.reply_text(f"Error while checking afk\n{ef}")
-            return
+    try:
+        user_afk = await db.check_afk(user_id)
+    except Exception as ef:
+        await m.reply_text(f"Error while checking afk\n{ef}")
+        return
 
-        if not user_afk:
-            return
+    if not user_afk:
+        return
 
-        since = strftime("%Hh %Mm %Ss", gmtime(time() - user_afk["time"]))
-        afkmsg = f"{user_first_name} is Afk!\n<b>Since:</b> <code>{since}</code>"
+    since = strftime("%Hh %Mm %Ss", gmtime(time() - user_afk["time"]))
+    afkmsg = f"{user_first_name} is Afk!\n<b>Since:</b> <code>{since}</code>"
 
-        if user_afk["reason"]:
-            afkmsg += f"\n<b>Reason:</b> {user_afk['reason']}"
+    if user_afk["reason"]:
+        afkmsg += f"\n<b>Reason:</b> {user_afk['reason']}"
 
-        await m.reply_text(afkmsg)
+    await m.reply_text(afkmsg)
 
     await m.stop_propagation()
 
