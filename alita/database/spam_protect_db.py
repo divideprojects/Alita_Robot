@@ -28,24 +28,79 @@ class SpamProtect:
     async def get_cas_status(self, chat_id: int):
         curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            stat = curr['cas']
-            return cas
-        return await self.collection.insert_one(
-            {"chat_id": chat_id, 'cas': False, 'attack': False},
+            stat = curr["cas"]
+            return stat
+        await self.collection.insert_one(
+            {"chat_id": chat_id, "cas": False, "attack": False},
         )
+        return False
 
-
-    async def add_afk(self, user_id: int, time: int, reason: str = ""):
-        if await self.check_afk(user_id):
+    async def set_cas_status(self, chat_id: int, status: bool = False):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
             return await self.collection.update(
-                {"user_id": user_id},
-                {"user_id": user_id, "reason": reason, "time": time},
+                {"chat_id": chat_id},
+                {"chat_id": chat_id, "cas": status, "attack": False},
             )
-        return await self.collection.insert_one(
-            {"user_id": user_id, "reason": reason, "time": time},
+        await self.collection.insert_one(
+            {"chat_id": chat_id, "cas": status, "attack": False},
         )
+        return status
 
-    async def remove_afk(self, user_id: int):
-        if await self.check_afk(user_id):
-            return await self.collection.delete_one({"user_id": user_id})
-        return
+    async def get_attack_status(self, chat_id: int):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            stat = curr["attack"]
+            return stat
+        await self.collection.insert_one(
+            {"chat_id": chat_id, "cas": False, "attack": False},
+        )
+        return False
+
+    async def set_attack_status(self, chat_id: int, status: bool = False):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            return await self.collection.update(
+                {"chat_id": chat_id},
+                {"chat_id": chat_id, "cas": False, "attack": status},
+            )
+        await self.collection.insert_one(
+            {"chat_id": chat_id, "cas": False, "attack": status},
+        )
+        return status
+
+    async def get_cas_enabled_chats_num(self):
+        curr = await self.collection.find_all()
+        num = 0
+        if curr:
+            for chat in curr:
+                if chat["cas"]:
+                    num += 1
+        return num
+
+    async def get_attack_enabled_chats_num(self):
+        curr = await self.collection.find_all()
+        num = 0
+        if curr:
+            for chat in curr:
+                if chat["attack"]:
+                    num += 1
+        return num
+
+    async def get_cas_enabled_chats(self):
+        curr = await self.collection.find_all()
+        lst = []
+        if curr:
+            for chat in curr:
+                if chat["cas"]:
+                    lst.append(chat["chat_id"])
+        return lst
+
+    async def get_attack_enabled_chats(self):
+        curr = await self.collection.find_all()
+        lst = []
+        if curr:
+            for chat in curr:
+                if chat["attack"]:
+                    lst.append(chat["chat_id"])
+        return lst
