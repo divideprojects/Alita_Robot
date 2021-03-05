@@ -87,6 +87,23 @@ async def approve_user(c: Alita, m: Message):
         )
         return
     await db.add_approve(chat_id, user_id)
+    # Allow all permissions
+    await m.chat.restrict_member(
+            user_id=user_id,
+            permissions=ChatPermissions(
+                can_send_messages=True,
+                can_send_media_messages=True,
+                can_send_stickers=True,
+                can_send_animations=True,
+                can_send_games=True,
+                can_use_inline_bots=True,
+                can_add_web_page_previews=True,
+                can_send_polls=True,
+                can_change_info=True,
+                can_invite_users=True,
+                can_pin_messages=True,
+            ),
+        )
     await m.reply_text(
         (
             f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}!\n"
@@ -136,7 +153,11 @@ async def disapprove_user(c: Alita, m: Message):
         return
 
     await db.remove_approve(chat_id, user_id)
-    
+    # Set permission same as of current user by fetching them from chat!
+    await m.chat.restrict_member(
+            user_id=i,
+            permissions=(await get_chat_permission(m))
+        )
 
     await m.reply_text(
         f"{(await mention_html(user_first_name, user_id))} is no longer approved in {chat_title}.",
@@ -153,6 +174,7 @@ async def check_approved(_, m: Message):
     chat_title = chat.title
     msg = "The following users are approved:\n"
     approved_people = await db.list_approved(chat.id)
+
 
     if not approved_people:
         await m.reply_text(f"No users are approved in {chat_title}.")
@@ -227,9 +249,9 @@ async def unapproveall_users(_, m: Message):
 
 @Alita.on_callback_query(filters.regex("^unapprove_all."))
 async def unapproveall_callback(_, q: CallbackQuery):
-    print("meh")
     user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
+    approved_people = await db.list_approved(chat.id)
     user_status = (await q.message.chat.get_member(user_id)).status
     if user_status != "creator":
         await q.message.edit(
@@ -240,12 +262,22 @@ async def unapproveall_callback(_, q: CallbackQuery):
         )
         return
     await db.unapprove_all(q.message.chat.id)
+    for i in approved_people:
+        await q.message.chat.restrict_member(
+            user_id=i,
+            permissions=(await get_chat_permission(q))
+        )
     await q.message.delete()
     await q.answer("Disapproved all users!", show_alert=True)
     return
 
 
-async def get_chat_permission(m: Message):
+async def get_chat_permission(m):
+    if isinstance(m, Message):
+        m = m
+    if isinstance(m, CallbackQuery):
+        user_id = m.message.from_user.id
+        m = m.message
     msg = get_perm.permissions.can_send_messages
     media = get_perm.permissions.can_send_media_messages
     stickers = get_perm.permissions.can_send_stickers
