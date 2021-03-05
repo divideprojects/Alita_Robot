@@ -102,6 +102,7 @@ async def mute_usr(c: Alita, m: Message):
 
     return
 
+
 @Alita.on_message(
     filters.command("unmute", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
@@ -129,5 +130,3 @@ async def unmute_usr(c: Alita, m: Message):
         )
         LOGGER.error(ef)
     return
-
-

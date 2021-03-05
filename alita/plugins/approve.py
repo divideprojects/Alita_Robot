@@ -89,21 +89,21 @@ async def approve_user(c: Alita, m: Message):
     await db.add_approve(chat_id, user_id)
     # Allow all permissions
     await m.chat.restrict_member(
-            user_id=user_id,
-            permissions=ChatPermissions(
-                can_send_messages=True,
-                can_send_media_messages=True,
-                can_send_stickers=True,
-                can_send_animations=True,
-                can_send_games=True,
-                can_use_inline_bots=True,
-                can_add_web_page_previews=True,
-                can_send_polls=True,
-                can_change_info=True,
-                can_invite_users=True,
-                can_pin_messages=True,
-            ),
-        )
+        user_id=user_id,
+        permissions=ChatPermissions(
+            can_send_messages=True,
+            can_send_media_messages=True,
+            can_send_stickers=True,
+            can_send_animations=True,
+            can_send_games=True,
+            can_use_inline_bots=True,
+            can_add_web_page_previews=True,
+            can_send_polls=True,
+            can_change_info=True,
+            can_invite_users=True,
+            can_pin_messages=True,
+        ),
+    )
     await m.reply_text(
         (
             f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}!\n"
@@ -154,10 +154,7 @@ async def disapprove_user(c: Alita, m: Message):
 
     await db.remove_approve(chat_id, user_id)
     # Set permission same as of current user by fetching them from chat!
-    await m.chat.restrict_member(
-            user_id=i,
-            permissions=(await get_chat_permission(m))
-        )
+    await m.chat.restrict_member(user_id=i, permissions=(await get_chat_permission(m)))
 
     await m.reply_text(
         f"{(await mention_html(user_first_name, user_id))} is no longer approved in {chat_title}.",
@@ -174,7 +171,6 @@ async def check_approved(_, m: Message):
     chat_title = chat.title
     msg = "The following users are approved:\n"
     approved_people = await db.list_approved(chat.id)
-
 
     if not approved_people:
         await m.reply_text(f"No users are approved in {chat_title}.")
@@ -265,7 +261,7 @@ async def unapproveall_callback(_, q: CallbackQuery):
     for i in approved_people:
         await q.message.chat.restrict_member(
             user_id=i,
-            permissions=(await get_chat_permission(q))
+            permissions=(await get_chat_permission(q)),
         )
     await q.message.delete()
     await q.answer("Disapproved all users!", show_alert=True)
@@ -290,16 +286,16 @@ async def get_chat_permission(m):
     invite = get_perm.permissions.can_invite_users
     pin = get_perm.permissions.can_pin_messages
     perms = ChatPermissions(
-                can_send_messages=msg,
-                can_send_media_messages=media,
-                can_send_stickers=stickers,
-                can_send_animations=animations,
-                can_send_games=games,
-                can_use_inline_bots=inlinebots,
-                can_add_web_page_previews=webprev,
-                can_send_polls=polls,
-                can_change_info=info,
-                can_invite_users=invite,
-                can_pin_messages=pin,
-            )
+        can_send_messages=msg,
+        can_send_media_messages=media,
+        can_send_stickers=stickers,
+        can_send_animations=animations,
+        can_send_games=games,
+        can_use_inline_bots=inlinebots,
+        can_add_web_page_previews=webprev,
+        can_send_polls=polls,
+        can_change_info=info,
+        can_invite_users=invite,
+        can_pin_messages=pin,
+    )
     return perm
