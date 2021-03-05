@@ -17,7 +17,7 @@
 
 
 from pyrogram import filters
-from pyrogram.errors import UserIsBlocked
+from pyrogram.errors import MessageNotModified, UserIsBlocked
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -131,10 +131,13 @@ async def start(_, m: Message):
 @Alita.on_callback_query(filters.regex("^start_back$"))
 async def start_back(_, q: CallbackQuery):
 
-    await q.message.edit_text(
-        (await tlang(q, "start.private")),
-        reply_markup=(await gen_start_kb(q.message)),
-    )
+    try:
+        await q.message.edit_text(
+            (await tlang(q, "start.private")),
+            reply_markup=(await gen_start_kb(q.message)),
+        )
+    except MessageNotModified:
+        pass
     await q.answer()
     return
 
