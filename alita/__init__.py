@@ -122,6 +122,9 @@ async def get_self(c):
 async def load_cmds(all_plugins):
     """Loads all the plugins in bot."""
     for single in all_plugins:
+        # If plugin in NO_LOAD, skip the plugin
+        if single.lower() in [i.lower() for i in Config.NO_LOAD]:
+            continue
         imported_module = imp_mod("alita.plugins." + single)
         if not hasattr(imported_module, "__PLUGIN__"):
             imported_module.__PLUGIN__ = imported_module.__name__
