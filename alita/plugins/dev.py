@@ -351,7 +351,7 @@ async def show_redis_keys(_, m: Message):
     for i in keys:
         txt_dict[i] = await get_key(str(i))
     try:
-        if txt_data == {}:
+        if not txt_dict:
             return replymsg.edit_text("No keys stored in redis!")
         await replymsg.edit_text(str(txt_dict))
     except MessageTooLong:
