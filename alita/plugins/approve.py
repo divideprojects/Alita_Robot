@@ -136,6 +136,7 @@ async def disapprove_user(c: Alita, m: Message):
         return
 
     await db.remove_approve(chat_id, user_id)
+    
 
     await m.reply_text(
         f"{(await mention_html(user_first_name, user_id))} is no longer approved in {chat_title}.",
@@ -242,3 +243,31 @@ async def unapproveall_callback(_, q: CallbackQuery):
     await q.message.delete()
     await q.answer("Disapproved all users!", show_alert=True)
     return
+
+
+async def get_chat_permission(m: Message):
+    msg = get_perm.permissions.can_send_messages
+    media = get_perm.permissions.can_send_media_messages
+    stickers = get_perm.permissions.can_send_stickers
+    animations = get_perm.permissions.can_send_animations
+    games = get_perm.permissions.can_send_games
+    inlinebots = get_perm.permissions.can_use_inline_bots
+    webprev = get_perm.permissions.can_add_web_page_previews
+    polls = get_perm.permissions.can_send_polls
+    info = get_perm.permissions.can_change_info
+    invite = get_perm.permissions.can_invite_users
+    pin = get_perm.permissions.can_pin_messages
+    perms = ChatPermissions(
+                can_send_messages=msg,
+                can_send_media_messages=media,
+                can_send_stickers=stickers,
+                can_send_animations=animations,
+                can_send_games=games,
+                can_use_inline_bots=inlinebots,
+                can_add_web_page_previews=webprev,
+                can_send_polls=polls,
+                can_change_info=info,
+                can_invite_users=invite,
+                can_pin_messages=pin,
+            )
+    return perm
