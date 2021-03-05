@@ -18,9 +18,9 @@
 
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
-from pyrogram.methods.decorators import on_user_status
 from pyrogram.types import (
     CallbackQuery,
+    ChatPermissions,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     Message,
@@ -154,7 +154,10 @@ async def disapprove_user(c: Alita, m: Message):
 
     await db.remove_approve(chat_id, user_id)
     # Set permission same as of current user by fetching them from chat!
-    await m.chat.restrict_member(user_id=i, permissions=(await get_chat_permission(m)))
+    await m.chat.restrict_member(
+        user_id=user_id,
+        permissions=(await get_chat_permission(m)),
+    )
 
     await m.reply_text(
         f"{(await mention_html(user_first_name, user_id))} is no longer approved in {chat_title}.",
@@ -247,7 +250,7 @@ async def unapproveall_users(_, m: Message):
 async def unapproveall_callback(_, q: CallbackQuery):
     user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
-    approved_people = await db.list_approved(chat.id)
+    approved_people = await db.list_approved(q.message.chat.id)
     user_status = (await q.message.chat.get_member(user_id)).status
     if user_status != "creator":
         await q.message.edit(
@@ -269,23 +272,20 @@ async def unapproveall_callback(_, q: CallbackQuery):
 
 
 async def get_chat_permission(m):
-    if isinstance(m, Message):
-        m = m
     if isinstance(m, CallbackQuery):
-        user_id = m.message.from_user.id
         m = m.message
-    msg = get_perm.permissions.can_send_messages
-    media = get_perm.permissions.can_send_media_messages
-    stickers = get_perm.permissions.can_send_stickers
-    animations = get_perm.permissions.can_send_animations
-    games = get_perm.permissions.can_send_games
-    inlinebots = get_perm.permissions.can_use_inline_bots
-    webprev = get_perm.permissions.can_add_web_page_previews
-    polls = get_perm.permissions.can_send_polls
-    info = get_perm.permissions.can_change_info
-    invite = get_perm.permissions.can_invite_users
-    pin = get_perm.permissions.can_pin_messages
-    perms = ChatPermissions(
+    msg = m.chat.permissions.can_send_messages
+    media = m.chat.permissions.can_send_media_messages
+    stickers = m.chat.permissions.can_send_stickers
+    animations = m.chat.permissions.can_send_animations
+    games = m.chat.permissions.can_send_games
+    inlinebots = m.chat.permissions.can_use_inline_bots
+    webprev = m.chat.permissions.can_add_web_page_previews
+    polls = m.chat.permissions.can_send_polls
+    info = m.chat.permissions.can_change_info
+    invite = m.chat.permissions.can_invite_users
+    pin = m.chat.permissions.can_pin_messages
+    perm = ChatPermissions(
         can_send_messages=msg,
         can_send_media_messages=media,
         can_send_stickers=stickers,
