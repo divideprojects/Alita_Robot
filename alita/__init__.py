@@ -141,4 +141,6 @@ async def load_cmds(all_plugins):
                 "Can't have two plugins with the same name! Please change one",
             )
 
+    LOGGER.info(f"Not loading Plugins - {', '.join(Config.NO_LOAD)}")
+
     return ", ".join(list(HELP_COMMANDS.keys()))
