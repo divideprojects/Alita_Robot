@@ -155,7 +155,7 @@ async def get_note(c: Alita, m: Message):
         Types.CONTACT,
         Types.ANIMATED_STICKER,
     ):
-        await (await send_cmd(c, msgtype))(m.chat.id, getnotes["file"])
+        await (await send_cmd(c, msgtype))(m.chat.id, getnotes["fileid"])
     else:
         if getnotes["note_value"]:
             teks, button = await parse_button(getnotes.get("note_value"))
@@ -175,7 +175,7 @@ async def get_note(c: Alita, m: Message):
         else:
             await (await send_cmd(c, msgtype))(
                 m.chat.id,
-                getnotes["file"],
+                getnotes["fileid"],
                 caption=teks,
             )
     return

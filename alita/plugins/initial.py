@@ -122,7 +122,7 @@ async def initial_works(_, m: Message):
 
 
 async def migrate_chat(old_chat, new_chat):
-    LOGGER.info(f"Migrating from {str(old_chat)} to {str(new_chat)}")
+    LOGGER.info(f"Migrating from {old_chat} to {new_chat}")
     await userdb.migrate_chat(old_chat, new_chat)
     await langdb.migrate_chat(old_chat, new_chat)
     await ruledb.migrate_chat(old_chat, new_chat)
