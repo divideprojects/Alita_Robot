@@ -25,17 +25,12 @@ from pyrogram.errors import (
     RPCError,
     UserAdminInvalid,
 )
-from pyrogram.types import ChatPermissions, Message
+from pyrogram.types import Message
 
-from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
+from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.custom_filters import (
-    admin_filter,
-    invite_filter,
-    promote_filter,
-    restrict_filter,
-)
+from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 from alita.utils.redis_helper import get_key, set_key
