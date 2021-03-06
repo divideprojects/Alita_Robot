@@ -24,7 +24,7 @@ from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.antiflood_db import AntiFlood
 from alita.database.approve_db import Approve
-from alita.database.blacklist_db import Blacklist as bldb
+from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
 from alita.database.lang_db import Langs
 from alita.database.notes_db import Notes
@@ -38,6 +38,7 @@ notedb = Notes()
 ruledb = Rules()
 userdb = Users()
 chatdb = Chats()
+bldb = Blacklist()
 flooddb = AntiFlood()
 approvedb = Approve()
 reportdb = Reporting()

@@ -77,5 +77,6 @@ class MongoDB:
         return result.modified_count, new_document
 
     # Close connection
-    async def close():
+    async def close(self):
+        _ = self
         return mongodb_client.close()
