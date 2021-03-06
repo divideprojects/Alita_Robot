@@ -24,6 +24,7 @@ from pyrogram.types import Message
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.afk_db import AFK
+from alita.tr_engine import tlang
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
@@ -52,11 +53,13 @@ db = AFK()
 )
 async def set_afk(_, m: Message):
 
-    afkmsg = f"User {(await mention_html(m.from_user.first_name, m.from_user.id))} is now afk!"
+    afkmsg = (await tlang(m, "afk.user_now_afk")).format(
+        user=(await mention_html(m.from_user.first_name, m.from_user.id)),
+    )
 
     if len(m.command) > 1:
         reason = m.text.split(None, 1)[1]
-        reason_txt = "\n<b>Reason:</b> " + reason
+        reason_txt = (await tlang(m, "afk.reason")).format(res=reason)
     else:
         reason_txt = ""
 
@@ -86,17 +89,20 @@ async def afk_mentioned(c: Alita, m: Message):
     try:
         user_afk = await db.check_afk(user_id)
     except Exception as ef:
-        await m.reply_text(f"Error while checking afk\n{ef}")
+        await m.reply_text((await tlang(m, "afk.error_check_afk")).format(ef=ef))
         return
 
     if not user_afk:
         return
 
     since = strftime("%Hh %Mm %Ss", gmtime(time() - user_afk["time"]))
-    afkmsg = f"{user_first_name} is Afk!\n<b>Since:</b> <code>{since}</code>"
+    afkmsg = (await tlang(m, "afk.user_afk")).format(
+        first_name=user_first_name,
+        since=since,
+    )
 
     if user_afk["reason"]:
-        afkmsg += f"\n<b>Reason:</b> {user_afk['reason']}"
+        afkmsg += (await tlang(m, "afk.user_afk")).format(reason=user_afk["reason"])
 
     await m.reply_text(afkmsg)
 
@@ -112,7 +118,7 @@ async def rem_afk(c: Alita, m: Message):
     try:
         user_afk = await db.check_afk(m.from_user.id)
     except Exception as ef:
-        await m.reply_text(f"Error while checking afk\n{ef}")
+        await m.reply_text((await tlang(m, "afk.error_check_afk")).format(ef=ef))
         return
 
     if not user_afk:
@@ -122,7 +128,10 @@ async def rem_afk(c: Alita, m: Message):
     await db.remove_afk(m.from_user.id)
     user = await c.get_users(user_afk["user_id"])
     await m.reply_text(
-        (f"{user.first_name} is no longer Afk!\n" f"Was AFK for <code>{since}</code>"),
+        (await tlang(m, "afk.no_longer_afk")).format(
+            first_name=user.first_name,
+            since=since,
+        ),
     )
 
     return
