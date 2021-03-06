@@ -6,6 +6,7 @@ googletrans
 motor
 pyrogram>=1.0.7
 python-dateutil
+pyyaml
 regex
 speedtest-cli
 tgcrypto
