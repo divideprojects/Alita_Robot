@@ -16,7 +16,7 @@
          "required": true,
          "value": ""
       },
-      "API_ID": {
+      "APp_ID": {
          "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
          "required": true,
          "value": ""
