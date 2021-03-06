@@ -46,8 +46,6 @@ done easily using the bot.
 
 **Admin only:**
  × /invitelink: Gets private chat's invitelink.
- × /mute: Mute the user replied to or mentioned.
- × /unmute: Unmutes the user mentioned or replied to.
  × /promote: Promotes the user replied to or tagged.
  × /demote: Demotes the user replied to or tagged.
 
