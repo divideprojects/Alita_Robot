@@ -51,7 +51,7 @@ async def get_stats(_, m: Message):
         f"<b>Rules:</b> Set in <code>{(await rulesdb.count_chats())}</code> chats\n"
         f"<b>Notes:</b> <code>{(await notesdb.count_all_notes())}</code> in <code>{(await notesdb.count_notes_chats())}</code>\n"
         f"<b>Globally Banned Users:</b> <code>{(await gbandb.count_gbans())}</code>\n"
-        f"<b>Approved People</b>: <code>{(await appdb.count_all_approved())}</code>\n"
+        f"<b>Approved People</b>: <code>{(await appdb.count_all_approved())}</code> in <code>{(await appdb.count_approved_chats())}</code> chats\n"
         "\n<b>Spam Protection:</b>\n"
         f"    <b>CAS Enabled:</b> {(await spamdb.get_cas_enabled_chats_num())}\n"
         f"    <b>UnderAttack Enabled:</b> {(await spamdb.get_attack_enabled_chats_num())}\n"
