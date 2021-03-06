@@ -45,14 +45,18 @@ class MongoDB:
         return False
 
     # Find entries from collection
-    async def find_all(self, query={}):
+    async def find_all(self, query=None):
+        if query is None:
+            query = {}
         lst = []
         async for document in self.collection.find(query):
             lst.append(document)
         return lst
 
     # Count entries from collection
-    async def count(self, query={}):
+    async def count(self, query=None):
+        if query is None:
+            query = {}
         return await self.collection.count_documents(query)
 
     # Delete entry/entries from collection
