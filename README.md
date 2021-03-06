@@ -75,6 +75,12 @@ First Step!
 
 It really motivates me to continue this project further.
 
+### Deploy to Heroku
+- Get your `API_ID` and `API_HASH` from [here](https://my.telegram.org/)    
+- Get your Bot Token from [@BotFather](https://t.me/BotFather)
+and click the below button!  <br />  
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ### Traditional
 
