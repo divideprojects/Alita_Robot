@@ -21,19 +21,20 @@ from glob import glob
 from operator import getitem
 from os import path
 
-from alita.db import lang_db as db
 from pyrogram.types import CallbackQuery
-from ujson import load
+from yaml import FullLoader
+from yaml import load as load_yml
 
 from alita import ENABLED_LOCALES
+from alita.database.lang_db import Langs
 
 
 def cache_localizations(files):
     """Get all translated strings from files."""
     ldict = {lang: {} for lang in ENABLED_LOCALES}
     for file in files:
-        lang_name = (file.split(path.sep)[1]).replace(".json", "")
-        lang_data = load(open(file, encoding="utf-8"))
+        lang_name = (file.split(path.sep)[1]).replace(".yaml", "")
+        lang_data = load_yml(open(file, encoding="utf-8"), Loader=FullLoader)
         ldict[lang_name] = lang_data
     return ldict
 
@@ -41,7 +42,7 @@ def cache_localizations(files):
 # Get all translation files
 lang_files = []
 for locale in ENABLED_LOCALES:
-    lang_files += glob(path.join("locales", f"{locale}.json"))
+    lang_files += glob(path.join("locales", f"{locale}.yaml"))
 lang_dict = cache_localizations(lang_files)
 
 
@@ -50,7 +51,7 @@ def getFromDict(list_data, lang_dict=lang_dict):
     return reduce(getitem, list_data, lang_dict)
 
 
-def tlang(m, user_msg):
+async def tlang(m, user_msg):
     """Main function for getting the string of preferred language."""
 
     m_args = user_msg.split(".")  # Split in a list
@@ -63,7 +64,7 @@ def tlang(m, user_msg):
     chat = m.chat
 
     # Get language of user from database, default = 'en' (English)
-    lang = db.get_lang(chat.id, chat.type) or "en"
+    lang = (await Langs().get_lang(chat.id)) or "en"
 
     # Get lang
     m_args.insert(0, lang)

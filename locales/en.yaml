@@ -1,0 +1,340 @@
+main:
+  lang_sample: US English
+  language_flag: 🇺🇸
+  language_name: English
+strings:
+  admin:
+    adminlist:
+      adminstr: 'Admins in {chat_title}:
+
+        '
+      cached_values: These are cached values!
+      note_updated: These are up-to-date values!
+      reloaded_admins: Reloaded all admins in this chat!
+      use_admin_cache: Use /admincache to reload admins!
+    ban_all: Are you sure you want to ban all members in this group?
+    banned_user: '{admin} banned {banned} in chat {chat_title}!'
+    banning_all: Banning All Members...
+    bot_no_ban_right: I don't have enough rights to ban this user.
+    bot_no_demote_right: I don't have enough rights to demote this user.
+    bot_no_kick_right: I don't have enough rights to kick this user.
+    bot_no_mute_right: I don't have enough rights to mute this user.
+    bot_no_promote_right: I don't have enough rights to promote this user.
+    bot_no_unban_right: I don't have enough rights to unban this user.
+    bot_no_unmute_right: I don't have enough rights to unmute this user.
+    demoted_user: '{demoter} demoted {demoted} in chat {chat_title}!'
+    invitelink: 'Invite Link for Chat {chat_name}:
+
+      {link}'
+    kicked_user: '{admin} kicked {kicked} in chat {chat_title}!'
+    muted_user: Muted {user}!
+    no_invite_perm: I don't have permission for invite link!
+    no_promote_demote_perm: You don't have permission to promote or demote members!
+    no_restrict_perm: You don't have permissions to restrict members!
+    no_user_invite_perm: You don't have permissions to invite users.
+    not_admin: I'm not admin or I don't have rights.
+    promoted_user: '{promoter} promoted {promoted} in chat {chat_title}!'
+    unbanned_user: '{admin} unbanned {unbanned} in chat {chat_title}!'
+    unmuted_user: Unmuted {user}!
+    user_admin_invalid: Cannot act on this user, maybe I wasn't the one who changed
+      their permissions.
+  afk:
+    error_check_afk: 'Error while checking afk
+
+      {ef}'
+    no_longer_afk: '{first_name} is no longer Afk!
+
+      Was AFK for {since}'
+    reason: 'Reason: {res}'
+    user_afk: '{first_name} is Afk!
+
+      Since: {since}'
+    user_now_afk: User {user} is now afk!
+  antispam:
+    gban:
+      added_to_watch: 'Added {first_name} to Global Ban List.
+
+        They will now be banned in all groups where I''m admin!'
+      enter_reason: Please enter a reason to gban user!
+      how_to: '<b>How to gban?</b>
+
+        <b>Answer:</b> `/gban user_id reason`'
+      log_msg: '#GBAN
+
+        <b>Originated from:</b> {chat_id}
+
+        <b>Admin:</b> {ban_admin}
+
+        <b>Gbanned User:</b> {gbanned_user}
+
+        <b>Gbanned User ID:</b> {gban_user_id}
+
+        <b>Event Stamp:</b> {time}'
+      not_self: 'You can''t gban me nigga!
+
+        Nice Try...!'
+      updated_reason: 'Updated Gban reason to: `{gban_reason}`.'
+      user_added_to_watch: 'You have been added to my global ban list!
+
+        Reason: `{gban_reason}`
+
+
+        Appeal Chat: @{SUPPORT_GROUP}'
+    here_gbanned_start: 'Here are all the globally banned geys!
+
+      '
+    none_gbanned: There aren't any gbanned users...!
+    num_gbans: Number of people gbanned {count}
+    part_of_support: This user is part of my Support!, Can't ban our own!
+    pass_user_id: Pass a user id or username as an argument!
+    ungban:
+      log_msg: '#UNGBAN
+
+        <b>Originated from:</b> {chat_id}
+
+        <b>Admin:</b> {ungban_admin}
+
+        <b>UnGbanned User:</b> {ungbanned_user}
+
+        <b>UnGbanned User ID:</b> {ungbanned_user_id}
+
+        <b>Event Stamp:</b> {time}'
+      non_gbanned: User is not gbanned!
+      not_self: Nice Try...!
+      removed_from_list: Removed {first_name} from Global Ban List.
+      user_removed_from_list: You have been removed from my global ban list!
+    watcher_banned: 'This user ({user_gbanned}) has been banned globally!
+
+
+      To get unbanned appeal at @{SUPPORT_GROUP}'
+  blacklist:
+    action_get: The current action for blacklists in this chat is {action}
+    action_set: Set action for blacklist for this to {action}
+    added_blacklist: Added {trigger} in blacklist words!
+    curr_blacklist_initial: 'Current Blacklisted words in {chat_title}:
+
+      '
+    no_bl_found: No blacklist {bl_word} found!
+    no_blacklist: There are no blacklisted messages in {chat_title}!
+    rm_blacklist: Removed {bl_word} from blacklist words!
+  dev:
+    alladmins:
+      admins_i_know_str: 'There are {len_admins} admins whom I know!
+
+
+        {admindict}'
+      admins_in_cache: There are {len_admins} admins in my Redis cache.
+      alladmins_btn: All Admins
+      getting_admins: Getting all admins in my cache...
+    bot_ip: 'Bot IP Address:
+
+      {ip}'
+    chatlist:
+      chats_in_db: Here is the list of chats in my Database.
+      exporting: Exporting Charlist...
+      header: 'List of chats.
+
+
+        Chat name | Chat ID | Members count
+
+        '
+    execute_cmd_err: Please execute the code correctly!
+    flush_redis:
+      flush_failed: 'Failed to flush redis database!
+
+        Error: {ef}.'
+      flushed_redis: Flushed Redis successfully!
+      flushing_redis: Flushing Redis Database...
+    restarting: Restarting...
+    speedtest:
+      speedtest_txt: 'Speedtest
+
+
+        Host: {host}
+
+
+        Ping: {ping} ms
+
+        Download: {download} Mbps
+
+        Upload: {upload} Mbps'
+      start_speedtest: Calculating my speed...
+    uptime: 'Uptime: {uptime}'
+  general:
+    back_btn: Back
+    check_help: Please check help on how to use this this command.
+    close_btn: Close
+    commands_available: "Hey There! My name is Alita.\nI'm here to help you manage\
+      \ your groups!\nCommands available:\n × /start: Start the bot\n × /help: Give's\
+      \ you this message.\n × /donate: Information related about how to donate!\n\n\
+      All commands can either be used with / or !."
+    no_admin_cmd_perm: You cannot use an admin command!
+    no_perm_admin: I don't have permission to do that
+    no_results: No results found.
+    some_error: 'Some error occured, report to {SUPPORT_GROUP}
+
+
+      Error: {ef}'
+    something_wrong: Something went wrong!
+  langs:
+    changed: Language changed to {lang_code}
+    changelang: Here you can change language for the bot.
+    correct_usage: 'Correct Usage:
+
+      /lang or /setlang language-code'
+  locks:
+    check_perm_msg: Checking Chat permissions...
+    invalid_lock: 'Invalid Lock Type!
+
+
+      Use /locktypes to get the lock types'
+    lock_all: Locked all permission from this Chat!
+    locked_perm: Locked {perm} for this Chat.
+    locks_perm_sp: Specify a permission to lock!
+    unlock_all: Unlocked all permission from this Chat!
+    unlocked_perm: Unlocked {uperm} for this Chat.
+    unlocks_perm.sp_perm: Specify a permission to unlock!
+    view_perm: 'CHAT PERMISSIONS:
+
+
+      Send Messages: {vmsg}
+
+      Send Media: {vmedia}
+
+      Send Stickers: {vstickers}
+
+      Send Animations: {vanimations}
+
+      Can Play Games: {vgames}
+
+      Can Use Inline Bots: {vinlinebots}
+
+      Webpage Preview: {vwebprev}
+
+      Send Polls: {vpolls}
+
+      Change Info: {vinfo}
+
+      Invite Users: {vinvite}
+
+      Pin Messages: {vpin}'
+  pin:
+    no_pin_msg: Reply to a message to which you want to pin...
+    no_rights_pin: I don't have enough rights to pin messages.
+    no_rights_unpin: I don't have enough rights to unpin messages.
+    pinned_msg: Pinned message!
+    reply_to_unpin: Idk what do you want to unpin, reply to a message to unpin it.
+    unpinned_all_msg: Unpinned all messages in this chat.
+    unpinned_last_msg: Unpinned last message.
+  purge:
+    deleting: Incinerating these useless messages...
+    err_basic: Cannot purge messages in a basic group
+    old_msg_err: Cannot delete all messages. The messages may be too old, I might
+      not have delete rights, or this might not be a supergroup.
+    purge_msg_count: Deleted {msg_count} messages
+    what_del: What do you wanna delete?
+  rules:
+    clear_rules: Are you sure you want to clear rules?
+    cleared: Successfully cleared rules for this group!
+    get_rules: 'Rules for {chat}:
+
+
+      {rules}'
+    no_rules: The Admins for this group have not setup rules!
+    pm_me: First PM me and then get the rules!
+    sent_pm_rules: I've messaged you the rules
+    set_rules: Successfully set rules for this group.
+  start:
+    add_chat_btn: Add to a chat
+    commands_btn: Commands
+    group: I'm alive :3
+    info_page: '• @Alita_Robot
+
+
+      Version: {version}
+
+
+      Developers: [Divkix](https://github.com/Divkix)
+
+      Owner: [{Owner}](tg://user?id={ID})'
+    infos_btn: Info
+    language_btn: Language
+    pm_for_help: Contact me in PM to get the list of possible commands.
+    private: Hello! I'm Alita_Robot. To discover more about my functions, click on
+      the buttons below.
+    public_help: Press the button below to get help for {help_option}
+    source_code: Source Code
+  utils:
+    gif_id:
+      reply_gif: Please reply to a gif to get its ID.
+    id:
+      group_id: This Groups ID is {group_id}
+      id_main: 'Original Sender - {orig_sender} ({orig_id})
+
+        Forwarder - {fwd_sender} ({fwd_id})'
+      my_id: Your ID is {my_id}.
+    no_user_db: 'Failed to get user
+
+      Peer ID invalid, I haven''t seen this user anywhere earlier, maybe username
+      would help to know them!'
+    paste:
+      nekobin_btn: NekoBin
+      pasted_nekobin: Pasted to NekoBin!
+      pasting: Pasting...
+    ping:
+      pinging: Pinging...
+    song:
+      no_lyrics_found: Couldn't find any lyrics for that song!
+      no_song_given: You haven't specified which song to look for!
+      searching: Finding lyrics for {song_name}...
+      song_not_found: Song not found!
+    translate:
+      translate_usage: 'Usage: /tr <language> text for translation (Can be also used
+        in reply to a message).'
+      translating: Translating...
+      translation: 'Language: {from_lang} -> {to_lang}
+
+        Translation: {translation}'
+    user_info:
+      custom_title: '
+
+
+        This user holds the title {custom_title} here.'
+      getting_info: Getting user information...
+      info_text:
+        last_name: '
+
+          Last Name: {user_lname}'
+        main: 'Characteristics:
+
+          ID: {user_id}
+
+          First Name: {user_name}'
+        perma_link: '
+
+          Permanent user link: {perma_link}'
+        username: '
+
+          Username: @{username}'
+      support_user:
+        dev: '
+
+
+          This member is one of my Developers ⚡️'
+        owner: '
+
+
+          This person is my Owner, I would never do anything against them!'
+        sudo: '
+
+
+          The Power level of this person is ''Sudo'''
+        whitelist: '
+
+
+          This person is ''Whitelist User'', they cannot be banned!'
+    weebify:
+      weebified_string: 'Weebified String:
+
+        {string}'
+      weebify_what: What am I supposed to Weebify?

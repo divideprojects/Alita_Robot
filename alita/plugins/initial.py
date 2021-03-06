@@ -16,19 +16,35 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import blacklist_db as bldb
-import lang_db as langdb
-import notes_db as notedb
-import rules_db as ruledb
-import users_db as userdb
+from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
 from alita import LOGGER
 from alita.bot_class import Alita
+from alita.database.antiflood_db import AntiFlood
+from alita.database.approve_db import Approve
+from alita.database.blacklist_db import Blacklist
+from alita.database.chats_db import Chats
+from alita.database.lang_db import Langs
+from alita.database.notes_db import Notes
+from alita.database.reporting_db import Reporting
+from alita.database.rules_db import Rules
+from alita.database.users_db import Users
+
+# Initialise
+langdb = Langs()
+notedb = Notes()
+ruledb = Rules()
+userdb = Users()
+chatdb = Chats()
+bldb = Blacklist()
+flooddb = AntiFlood()
+approvedb = Approve()
+reportdb = Reporting()
 
 
-@Alita.on_message(group=-1)
+@Alita.on_message(filters.group, group=-1)
 async def initial_works(_, m: Message):
     try:
         if m.migrate_to_chat_id or m.migrate_from_chat_id:
@@ -38,38 +54,81 @@ async def initial_works(_, m: Message):
             elif m.migrate_from_chat_id:
                 old_chat = m.migrate_from_chat_id
                 new_chat = m.chat.id
-
             try:
                 await migrate_chat(old_chat, new_chat)
             except RPCError as ef:
                 LOGGER.error(ef)
                 return
         else:
-            userdb.update_user(
-                m.from_user.id,
-                m.from_user.username,
-                m.chat.id,
-                m.chat.title,
-            )
-            if m.reply_to_message:
-                userdb.update_user(
-                    m.reply_to_message.from_user.id,
-                    m.reply_to_message.from_user.username,
+            if m.reply_to_message and not m.forward_from:
+                await chatdb.update_chat(
                     m.chat.id,
                     m.chat.title,
+                    m.reply_to_message.from_user.id,
                 )
-            if m.forward_from:
-                userdb.update_user(m.forward_from.id, m.forward_from.username)
+                await userdb.update_user(
+                    m.reply_to_message.from_user.id,
+                    (
+                        f"{m.reply_to_message.from_user.first_name} {m.reply_to_message.from_user.last_name}"
+                        if m.reply_to_message.from_user.last_name
+                        else m.reply_to_message.from_user.first_name
+                    ),
+                    m.reply_to_message.from_user.username,
+                )
+            elif m.forward_from and not m.reply_to_message:
+                await chatdb.update_chat(
+                    m.chat.id,
+                    m.chat.title,
+                    m.forward_from.id,
+                )
+                await userdb.update_user(
+                    m.forward_from.id,
+                    (
+                        f"{m.forward_from.first_name} {m.forward_from.last_name}"
+                        if m.forward_from.last_name
+                        else m.forward_from.first_name
+                    ),
+                    m.forward_from.username,
+                )
+            elif m.reply_to_message and m.forward_from:
+                await chatdb.update_chat(
+                    m.chat.id,
+                    m.chat.title,
+                    m.reply_to_message.forward_from.id,
+                )
+                await userdb.update_user(
+                    m.forward_from.id,
+                    (
+                        f"{m.reply_to_message.forward_from.first_name} {m.reply_to_message.forward_from.last_name}"
+                        if m.reply_to_message.forward_from.last_name
+                        else m.reply_to_message.forward_from.first_name
+                    ),
+                    m.forward_from.username,
+                )
+            else:
+                await chatdb.update_chat(m.chat.id, m.chat.title, m.from_user.id)
+                await userdb.update_user(
+                    m.from_user.id,
+                    (
+                        f"{m.from_user.first_name} {m.from_user.last_name}"
+                        if m.from_user.last_name
+                        else m.from_user.first_name
+                    ),
+                    m.from_user.username,
+                )
     except AttributeError:
         pass  # Skip attribute errors!
     return
 
 
 async def migrate_chat(old_chat, new_chat):
-    LOGGER.info(f"Migrating from {str(old_chat)} to {str(new_chat)}")
-    userdb.migrate_chat(old_chat, new_chat)
-    langdb.migrate_chat(old_chat, new_chat)
-    ruledb.migrate_chat(old_chat, new_chat)
-    bldb.migrate_chat(old_chat, new_chat)
-    notedb.migrate_chat(old_chat, new_chat)
+    LOGGER.info(f"Migrating from {old_chat} to {new_chat}")
+    await userdb.migrate_chat(old_chat, new_chat)
+    await langdb.migrate_chat(old_chat, new_chat)
+    await ruledb.migrate_chat(old_chat, new_chat)
+    await bldb.migrate_chat(old_chat, new_chat)
+    await notedb.migrate_chat(old_chat, new_chat)
+    await flooddb.migrate_chat(old_chat, new_chat)
+    await approvedb.migrate_chat(old_chat, new_chat)
+    await reportdb.migrate_chat(old_chat, new_chat)
     LOGGER.info("Successfully migrated!")

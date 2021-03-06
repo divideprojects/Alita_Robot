@@ -60,7 +60,7 @@ try:
     if environ.get("ENV"):
         from alita.vars import Config
     else:
-        from alita.vars import Development as Config
+        from alita.local_vars import Development as Config
 except BaseException as ef:
     LOGGER.error(ef)  # Print Error
     sysexit(1)
@@ -122,6 +122,9 @@ async def get_self(c):
 async def load_cmds(all_plugins):
     """Loads all the plugins in bot."""
     for single in all_plugins:
+        # If plugin in NO_LOAD, skip the plugin
+        if single.lower() in [i.lower() for i in Config.NO_LOAD]:
+            continue
         imported_module = imp_mod("alita.plugins." + single)
         if not hasattr(imported_module, "__PLUGIN__"):
             imported_module.__PLUGIN__ = imported_module.__name__
@@ -137,5 +140,7 @@ async def load_cmds(all_plugins):
             raise Exception(
                 "Can't have two plugins with the same name! Please change one",
             )
+
+    LOGGER.info(f"Not loading Plugins - {', '.join(Config.NO_LOAD)}")
 
     return ", ".join(list(HELP_COMMANDS.keys()))

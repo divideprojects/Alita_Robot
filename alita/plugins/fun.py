@@ -48,7 +48,7 @@ async def fun_shout(_, m: Message):
 
     if len(m.text.split()) == 1:
         await m.reply_text(
-            tlang(m, "general.check_help"),
+            (await tlang(m, "general.check_help")),
             reply_to_message_id=m.message_id,
         )
         return
@@ -78,7 +78,7 @@ async def fun_slap(c: Alita, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
 
     curr_user = escape(m.from_user.first_name)
-    user_id = (await extract_user(m))[0]
+    user_id = (await extract_user(c, m))[0]
 
     if user_id == me.id:
         temp = choice(fun_strings.SLAP_ALITA_TEMPLATES)

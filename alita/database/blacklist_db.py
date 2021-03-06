@@ -16,128 +16,121 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import threading
-
-from sqlalchemy import Column, String, UnicodeText, distinct, func
-
-from alita.database import BASE, SESSION
+from alita.database import MongoDB
 
 
-class BlackListFilters(BASE):
-    __tablename__ = "blacklist"
-    chat_id = Column(String(14), primary_key=True)
-    trigger = Column(UnicodeText, primary_key=True, nullable=False)
+class Blacklist:
+    """Class to manage database for blacklists for chats."""
 
-    def __init__(self, chat_id, trigger):
-        self.chat_id = str(chat_id)
-        self.trigger = trigger
+    def __init__(self) -> None:
+        self.collection = MongoDB("blacklists")
 
-    def __repr__(self):
-        return f"<Blacklist filter '{self.trigger}' for {self.chat_id}>"
-
-    def __eq__(self, other):
-        return bool(
-            isinstance(other, BlackListFilters)
-            and self.chat_id == other.chat_id
-            and self.trigger == other.trigger,
+    async def add_blacklist(self, chat_id: int, trigger: str):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            triggers_old = curr["triggers"]
+            triggers_old.append(trigger)
+            triggers = list(dict.fromkeys(triggers_old))
+            return await self.collection.update(
+                {"chat_id": chat_id},
+                {
+                    "chat_id": chat_id,
+                    "triggers": triggers,
+                },
+            )
+        return await self.collection.insert_one(
+            {
+                "chat_id": chat_id,
+                "triggers": [trigger],
+                "action": "mute",
+            },
         )
 
-
-BlackListFilters.__table__.create(checkfirst=True)
-INSERTION_LOCK = threading.RLock()
-CHAT_BLACKLISTS = {}
-
-
-def add_to_blacklist(chat_id, trigger):
-    with INSERTION_LOCK:
-        try:
-            blacklist_filt = BlackListFilters(str(chat_id), trigger)
-
-            SESSION.merge(blacklist_filt)
-            SESSION.commit()
-            CHAT_BLACKLISTS.setdefault(str(chat_id), set()).add(trigger)
-        finally:
-            SESSION.close()
-
-
-def rm_from_blacklist(chat_id, trigger):
-    with INSERTION_LOCK:
-        try:
-            blacklist_filt = SESSION.query(BlackListFilters).get(
-                (str(chat_id), trigger),
+    async def remove_blacklist(self, chat_id: int, trigger: str):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            triggers_old = curr["triggers"]
+            try:
+                triggers_old.remove(trigger)
+            except ValueError:
+                return False
+            triggers = list(dict.fromkeys(triggers_old))
+            return await self.collection.update(
+                {"chat_id": chat_id},
+                {
+                    "chat_id": chat_id,
+                    "triggers": triggers,
+                },
             )
-            if blacklist_filt:
-                if trigger in CHAT_BLACKLISTS.get(str(chat_id), set()):
-                    CHAT_BLACKLISTS.get(str(chat_id), set()).remove(trigger)
 
-                SESSION.delete(blacklist_filt)
-                SESSION.commit()
-                return True
-        finally:
-            SESSION.close()
+    async def get_blacklists(self, chat_id: int):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            return curr["triggers"]
+        return []
+
+    async def count_blacklists_all(self):
+        curr = await self.collection.find_all()
+        num = 0
+        for chat in curr:
+            num += len(chat["triggers"])
+        return num
+
+    async def count_blackists_chats(self):
+        curr = await self.collection.find_all()
+        num = 0
+        for chat in curr:
+            if chat["triggers"]:
+                num += 1
+        return num
+
+    async def set_action(self, chat_id: int, action: int):
+
+        if action not in ("kick", "mute", "ban", "warn"):
+            return "invalid action"
+
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            return await self.collection.update(
+                {"chat_id": chat_id},
+                {"chat_id": chat_id, "action": action},
+            )
+        return await self.collection.insert_one(
+            {
+                "chat_id": chat_id,
+                "triggers": [],
+                "action": action,
+            },
+        )
+
+    async def get_action(self, chat_id: int):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            return curr["action"] or "mute"
+        await self.collection.insert_one(
+            {
+                "chat_id": chat_id,
+                "triggers": [],
+                "action": "mute",
+            },
+        )
+        return "mute"
+
+    async def rm_all_blacklist(self, chat_id: int):
+        curr = await self.collection.find_one({"chat_id": chat_id})
+        if curr:
+            await self.collection.update(
+                {"chat_id": chat_id},
+                {"triggers": []},
+            )
         return False
 
-
-def get_chat_blacklist(chat_id):
-    if CHAT_BLACKLISTS.get(str(chat_id), set()):
-        return CHAT_BLACKLISTS.get(str(chat_id), set())
-    return False
-
-
-def num_blacklist_filters():
-    try:
-        return SESSION.query(BlackListFilters).count()
-    finally:
-        SESSION.close()
-
-
-def num_blacklist_chat_filters(chat_id):
-    try:
-        return (
-            SESSION.query(BlackListFilters.chat_id)
-            .filter(BlackListFilters.chat_id == str(chat_id))
-            .count()
-        )
-    finally:
-        SESSION.close()
-
-
-def num_blacklist_filter_chats():
-    try:
-        return SESSION.query(func.count(distinct(BlackListFilters.chat_id))).scalar()
-    finally:
-        SESSION.close()
-
-
-def __load_chat_blacklists():
-    global CHAT_BLACKLISTS
-    try:
-        chats = SESSION.query(BlackListFilters.chat_id).distinct().all()
-        for (chat_id,) in chats:
-            CHAT_BLACKLISTS[chat_id] = []
-
-        all_filters = SESSION.query(BlackListFilters).all()
-        for x in all_filters:
-            CHAT_BLACKLISTS[x.chat_id] += [x.trigger]
-
-        CHAT_BLACKLISTS = {x: set(y) for x, y in CHAT_BLACKLISTS.items()}
-    finally:
-        SESSION.close()
-
-
-def migrate_chat(old_chat_id, new_chat_id):
-    with INSERTION_LOCK:
-        try:
-            chat_filters = (
-                SESSION.query(BlackListFilters)
-                .filter(BlackListFilters.chat_id == str(old_chat_id))
-                .all()
+    # Migrate if chat id changes!
+    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+        old_chat = await self.collection.find_one({"chat_id": old_chat_id})
+        if old_chat:
+            return await self.collection.update(
+                {"chat_id": old_chat_id},
+                {"chat_id": new_chat_id},
             )
-            for filt in chat_filters:
-                filt.chat_id = str(new_chat_id)
-            SESSION.commit()
-        finally:
-            SESSION.close()
-
-
-__load_chat_blacklists()
+        return

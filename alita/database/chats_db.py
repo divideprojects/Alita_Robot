@@ -19,22 +19,16 @@
 from alita.database import MongoDB
 
 
-class Approve:
-    """Class for managing Approves in Chats in Bot."""
+class Chats:
+    """Class to manage users for bot."""
 
     def __init__(self) -> None:
-        self.collection = MongoDB("approve")
+        self.collection = MongoDB("chats")
 
-    async def check_approve(self, chat_id: int, user_id: int):
-        curr_approve = await self.collection.find_one(
-            {"chat_id": chat_id},
-        )
-        if curr_approve:
-            st = user_id in curr_approve["users"]
-            return st
-        return False
+    async def remove_chat(self, chat_id: int):
+        await self.collection.delete_one({"chat_id": chat_id})
 
-    async def add_approve(self, chat_id: int, user_id: int):
+    async def update_chat(self, chat_id: int, chat_name: str, user_id: int):
         curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
             users_old = curr["users"]
@@ -44,54 +38,39 @@ class Approve:
                 {"chat_id": chat_id},
                 {
                     "chat_id": chat_id,
+                    "chat_name": chat_name,
                     "users": users,
                 },
             )
         return await self.collection.insert_one(
             {
                 "chat_id": chat_id,
+                "chat_name": chat_name,
                 "users": [user_id],
             },
         )
 
-    async def remove_approve(self, chat_id: int, user_id: int):
+    async def count_chat_users(self, chat_id: int):
         curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            users = curr["users"]
-            users.remove(user_id)
-            return await self.collection.update(
-                {"chat_id": chat_id},
-                {
-                    "chat_id": chat_id,
-                    "users": users,
-                },
-            )
-        return "Not approved"
+            return len(curr["users"])
+        return 0
 
-    async def unapprove_all(self, chat_id: int):
-        return await self.collection.delete_one(
-            {"chat_id": chat_id},
-        )
-
-    async def list_approved(self, chat_id: int):
-        return ((await self.collection.find_all({"chat_id": chat_id}))["users"]) or []
-
-    async def count_all_approved(self):
-        num = 0
-        curr = await self.collection.find_all()
+    async def chat_members(self, chat_id: int):
+        curr = await self.collection.find_one({"chat_id": chat_id})
         if curr:
-            for chat in curr:
-                users = chat["users"]
-                num += len(users)
+            return curr["users"]
+        return []
 
-        return num
+    async def count_chats(self):
+        return await self.collection.count()
 
-    async def count_approved_chats(self):
-        return (await self.collection.count()) or 0
-
-    async def count_approved(self, chat_id: int):
-        all_app = await self.collection.find_one({"chat_id": chat_id})
-        return len(all_app["users"]) or 0
+    async def list_chats(self):
+        chats = await self.collection.find_all()
+        chat_list = []
+        for chat in chats:
+            chat_list.append(chat["chat_id"])
+        return chat_list
 
     # Migrate if chat id changes!
     async def migrate_chat(self, old_chat_id: int, new_chat_id: int):

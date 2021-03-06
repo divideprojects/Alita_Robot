@@ -16,6 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# Install uvloop
+import uvloop
+
+uvloop.install()
+
 from os import makedirs, path
 from platform import python_version
 from time import time
@@ -40,7 +45,7 @@ from alita import (
     get_self,
     load_cmds,
 )
-from alita.database import users_db as userdb
+from alita.database.chats_db import Chats as chatdb
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
 from alita.utils.paste import paste
@@ -79,7 +84,8 @@ class Alita(Client):
         LOGGER.info("Begin caching admins...")
         begin = time()
 
-        all_chats = userdb.get_all_chats() or []  # Get list of all chats
+        all_chats = (await chatdb().list_chats()) or []  # Get list of all chats
+        LOGGER.info(all_chats)
         LOGGER.info(f"{len(all_chats)} chats loaded from database.")
 
         try:
@@ -88,8 +94,7 @@ class Alita(Client):
             LOGGER.error(f"Unable to get ADMINDICT!\nError: {ef}")
             ADMINDICT = {}
 
-        for i in all_chats:
-            chat_id = i.chat_id
+        for chat_id in all_chats:
             adminlist = []
             try:
                 async for j in self.iter_chat_members(
@@ -107,10 +112,10 @@ class Alita(Client):
                         ),
                     )
                 adminlist = sorted(adminlist, key=lambda x: x[1])
-                ADMINDICT[str(i.chat_id)] = adminlist  # Remove the last space
+                ADMINDICT[str(chat_id)] = adminlist  # Remove the last space
 
                 LOGGER.info(
-                    f"Set {len(adminlist)} admins for {i.chat_id}\n- {adminlist}",
+                    f"Set {len(adminlist)} admins for {chat_id}\n- {adminlist}",
                 )
             except PeerIdInvalid:
                 pass
@@ -122,7 +127,7 @@ class Alita(Client):
             end = time()
             LOGGER.info(
                 (
-                    "Set admin list cache!"
+                    "Set admin list cache!\n"
                     f"Time Taken: {round(end - begin, 2)} seconds."
                 ),
             )
@@ -136,7 +141,7 @@ class Alita(Client):
         meh = await get_self(self)  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
 
-        await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
+        startmsg = await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 
         # Load Languages
         lang_status = len(lang_dict) >= 1
@@ -145,14 +150,14 @@ class Alita(Client):
         # Redis Content Setup!
         redis_client = await setup_redis()
         if redis_client:
-            LOGGER.info("Connected to redis!")
+            LOGGER.info("Redis Connected: True")
             await self.get_admins()  # Load admins in cache
             await set_key("BOT_ID", meh.id)
             await set_key("BOT_USERNAME", meh.username)
             await set_key("BOT_NAME", meh.first_name)
             await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
         else:
-            LOGGER.error("Redis not connected!")
+            LOGGER.error("Redis Connected: False")
         # Redis Content Setup!
 
         # Show in Log that bot has started
@@ -160,15 +165,17 @@ class Alita(Client):
             f"Pyrogram v{__version__}\n(Layer - {layer}) started on {BOT_USERNAME}\n"
             f"Python Version: {python_version()}",
         )
+
+        # Get cmds and keys
         cmd_list = await load_cmds(await all_plugins())
         redis_keys = ", ".join(await allkeys())
+
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
         LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
 
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!
-        await self.send_message(
-            MESSAGE_DUMP,
+        await startmsg.edit_text(
             (
                 f"<b><i>@{meh.username} started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n"
                 f"\n<b>Python:</b> <u>{python_version()}</u>\n"
@@ -186,19 +193,18 @@ class Alita(Client):
         LOGGER.info("Uploading logs before stopping...!")
         with open(LOGFILE) as f:
             txt = f.read()
-            raw = (await paste(txt))[1]
+            neko, raw = await paste(txt)
         # Send Logs to MESSAGE-DUMP
         await self.send_document(
             MESSAGE_DUMP,
             document=LOGFILE,
-            caption=f"Logs for last run, pasted to NekoBin.\n<code>{LOG_DATETIME}</code>",
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Logs", url=raw)]],
+            caption=(
+                f"Bot Stopped!\n\nLogs for last run, pasted to [NekoBin]({neko}) as "
+                f"well as uploaded a file here.\n<code>{LOG_DATETIME}</code>"
             ),
-        )
-        await self.send_message(
-            MESSAGE_DUMP,
-            "<i><b>Bot Stopped!</b></i>",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Raw Logs", url=raw)]],
+            ),
         )
         await super().stop()
         await close()  # Close redis connection

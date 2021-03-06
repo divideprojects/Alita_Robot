@@ -16,84 +16,45 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import threading
-
-from sqlalchemy import Column, String, UnicodeText, distinct, func
-
-from alita.database import BASE, SESSION
+from alita.database import MongoDB
 
 
-class Rules(BASE):
-    __tablename__ = "rules"
-    chat_id = Column(String(14), primary_key=True)
-    rules = Column(UnicodeText, default="")
+class Rules:
+    """Class for rules for chats in bot."""
 
-    def __init__(self, chat_id):
-        self.chat_id = chat_id
+    def __init__(self) -> None:
+        self.collection = MongoDB("rules")
 
-    def __repr__(self):
-        return f"<Chat {self.chat_id} rules: {self.rules}>"
+    async def get_rules(self, chat_id: int):
+        rules = await self.collection.find_one({"chat_id": chat_id})
+        if rules:
+            return rules["rules"]
+        return None
 
+    async def set_rules(self, chat_id: int, rules: str):
+        curr_rules = await self.collection.find_one({"chat_id": chat_id})
+        if curr_rules:
+            return await self.collection.update(
+                {"chat_id": chat_id},
+                {"rules": rules},
+            )
+        return await self.collection.insert_one({"chat_id": chat_id, "rules": rules})
 
-Rules.__table__.create(checkfirst=True)
+    async def clear_rules(self, chat_id: int):
+        curr_rules = await self.collection.find_one({"chat_id": chat_id})
+        if curr_rules:
+            return await self.collection.delete_one({"chat_id": chat_id})
+        return
 
-INSERTION_LOCK = threading.RLock()
+    async def count_chats(self):
+        return await self.collection.count()
 
-
-def set_rules(chat_id, rules_text):
-    with INSERTION_LOCK:
-        try:
-            rules = SESSION.query(Rules).get(str(chat_id))
-            if not rules:
-                rules = Rules(str(chat_id))
-            rules.rules = rules_text
-
-            SESSION.add(rules)
-            SESSION.commit()
-        finally:
-            SESSION.close()
-
-
-def clear_rules(chat_id):
-    with INSERTION_LOCK:
-        try:
-            rules = SESSION.query(Rules).get(str(chat_id))
-            SESSION.delete(rules)
-            SESSION.commit()
-        except BaseException:
-            return False
-        finally:
-            SESSION.close()
-    return True
-
-
-def get_rules(chat_id):
-    with INSERTION_LOCK:
-        try:
-            rules = SESSION.query(Rules).get(str(chat_id))
-            ret_rules = ""
-            if rules:
-                ret_rules = rules.rules
-        except BaseException:
-            return False
-        finally:
-            SESSION.close()
-    return ret_rules
-
-
-def num_chats():
-    try:
-        return SESSION.query(func.count(distinct(Rules.chat_id))).scalar()
-    finally:
-        SESSION.close()
-
-
-def migrate_chat(old_chat_id, new_chat_id):
-    with INSERTION_LOCK:
-        try:
-            chat = SESSION.query(Rules).get(str(old_chat_id))
-            if chat:
-                chat.chat_id = str(new_chat_id)
-            SESSION.commit()
-        finally:
-            SESSION.close()
+    # Migrate if chat id changes!
+    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+        old_chat = await self.collection.find_one({"chat_id": old_chat_id})
+        if old_chat:
+            return await self.collection.update(
+                {"chat_id": old_chat_id},
+                {"chat_id": new_chat_id},
+            )
+        return

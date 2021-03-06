@@ -17,15 +17,24 @@
 
 
 from pyrogram import filters
-from pyrogram.errors import RPCError, UserNotParticipant
-from pyrogram.types import Message
+from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
+from pyrogram.types import (
+    CallbackQuery,
+    ChatPermissions,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+)
 
 from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
-from alita.database import approve_db as db
+from alita.database.approve_db import Approve
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
+
+# Initialise
+db = Approve()
 
 __PLUGIN__ = "Approve"
 
@@ -46,18 +55,18 @@ That's what approvals are for - approve trustworthy users to allow them to send 
 @Alita.on_message(
     filters.command("approve", PREFIX_HANDLER) & filters.group & admin_filter,
 )
-async def approve_user(_, m: Message):
+async def approve_user(c: Alita, m: Message):
 
     chat_title = m.chat.title
     chat_id = m.chat.id
-    user_id, user_first_name = await extract_user(m)
+    user_id, user_first_name = await extract_user(c, m)
     if not user_id:
         await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!",
         )
         return
     try:
-        member = await m.get_member(user_id)
+        member = await m.chat.get_member(user_id)
     except UserNotParticipant:
         await m.reply_text("This user is not in this chat!")
         return
@@ -68,55 +77,88 @@ async def approve_user(_, m: Message):
         return
     if member.status in ("administrator", "creator"):
         await m.reply_text(
-            "User is already admin - blocklists already don't apply to them.",
+            "User is already admin - blacklists and locks already don't apply to them.",
         )
         return
-    if db.is_approved(chat_id, user_id):
+    already_approved = await db.check_approve(chat_id, user_id)
+    if already_approved:
         await m.reply_text(
             f"{(await mention_html(user_first_name, user_id))} is already approved in {chat_title}",
         )
         return
-    db.approve(chat_id, user_id)
+    await db.add_approve(chat_id, user_id)
+    # Allow all permissions
+    await m.chat.restrict_member(
+        user_id=user_id,
+        permissions=ChatPermissions(
+            can_send_messages=True,
+            can_send_media_messages=True,
+            can_send_stickers=True,
+            can_send_animations=True,
+            can_send_games=True,
+            can_use_inline_bots=True,
+            can_add_web_page_previews=True,
+            can_send_polls=True,
+            can_change_info=True,
+            can_invite_users=True,
+            can_pin_messages=True,
+        ),
+    )
     await m.reply_text(
-        f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}! They will now be ignored by blocklists.",
+        (
+            f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}!\n"
+            "They will now be ignored by blacklists, locks and antiflood!"
+        ),
     )
     return
 
 
 @Alita.on_message(
-    filters.command("disapprove", PREFIX_HANDLER) & filters.group & admin_filter,
+    filters.command(["disapprove", "unapprove"], PREFIX_HANDLER)
+    & filters.group
+    & admin_filter,
 )
-async def disapprove_user(_, m: Message):
+async def disapprove_user(c: Alita, m: Message):
 
     chat_title = m.chat.title
     chat_id = m.chat.id
-    user_id, user_first_name = await extract_user(m)
+    user_id, user_first_name = await extract_user(c, m)
+    already_approved = await db.check_approve(chat_id, user_id)
     if not user_id:
         await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!",
         )
         return
     try:
-        member = await m.get_member(user_id)
+        member = await m.chat.get_member(user_id)
     except UserNotParticipant:
-        if db.is_approved(chat_id, user_id):
-            db.disapprove(chat_id, user_id)
-        await m.reply_text("This user is not in this chat!")
+        if already_approved:  # If user is approved and not in chat, unapprove them.
+            await db.remove_approve(chat_id, user_id)
+        await m.reply_text("This user is not in this chat, unapproved them.")
         return
     except RPCError as ef:
         await m.reply_text(
             f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
         )
         return
-    if member.status in ["administrator", "creator"]:
-        await m.reply_text("This user is an admin, they can't be unapproved.")
+
+    if member.status in ("administrator", "creator"):
+        await m.reply_text("This user is an admin, they can't be disapproved.")
         return
-    if not db.is_approved(chat_id, user_id):
+
+    if not already_approved:
         await m.reply_text(
             f"{(await mention_html(user_first_name, user_id))} isn't approved yet!",
         )
         return
-    db.disapprove(chat_id, user_id)
+
+    await db.remove_approve(chat_id, user_id)
+    # Set permission same as of current user by fetching them from chat!
+    await m.chat.restrict_member(
+        user_id=user_id,
+        permissions=(await get_chat_permission(m)),
+    )
+
     await m.reply_text(
         f"{(await mention_html(user_first_name, user_id))} is no longer approved in {chat_title}.",
     )
@@ -128,22 +170,27 @@ async def disapprove_user(_, m: Message):
 )
 async def check_approved(_, m: Message):
 
-    chat_title = m.chat.title
     chat = m.chat
-    user_id = (await extract_user(m))[0]
+    chat_title = chat.title
     msg = "The following users are approved:\n"
-    x = db.all_approved(m.chat.id)
+    approved_people = await db.list_approved(chat.id)
 
-    for i in x:
-        try:
-            member = await chat.get_member(int(i.user_id))
-        except UserNotParticipant:
-            db.disapprove(chat.id, user_id)
-            continue
-        msg += f"- `{i.user_id}`: {(await mention_html(member.user['first_name'], int(i.user_id)))}\n"
-    if msg.endswith("approved:\n"):
+    if not approved_people:
         await m.reply_text(f"No users are approved in {chat_title}.")
         return
+
+    for i in approved_people:
+        user_id = i["user_id"]
+        try:
+            member = await chat.get_member(user_id)
+            user_id = member.user["id"]
+        except UserNotParticipant:
+            await db.remove_approve(chat.id, user_id)
+            continue
+        except PeerIdInvalid:
+            continue
+        mention = await mention_html(member.user["first_name"], user_id)
+        msg += f"- `{user_id}`: {mention}\n"
     await m.reply_text(msg)
     return
 
@@ -151,15 +198,17 @@ async def check_approved(_, m: Message):
 @Alita.on_message(
     filters.command("approval", PREFIX_HANDLER) & filters.group & admin_filter,
 )
-async def check_approval(_, m: Message):
+async def check_approval(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(m)
+    user_id, user_first_name = await extract_user(c, m)
+    check_approve = await db.check_approve(m.chat.id, user_id)
+
     if not user_id:
         await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!",
         )
         return
-    if db.is_approved(m.chat.id, user_id):
+    if check_approve:
         await m.reply_text(
             f"{(await mention_html(user_first_name, user_id))} is an approved user. Locks, antiflood, and blocklists won't apply to them.",
         )
@@ -175,9 +224,81 @@ async def check_approval(_, m: Message):
 )
 async def unapproveall_users(_, m: Message):
 
-    try:
-        db.disapprove_all(m.chat.id)
-        await m.reply_text(f"All users have been disapproved in {m.chat.title}")
-    except RPCError as ef:
-        await m.reply_text(f"Some Error occured, report at @{SUPPORT_GROUP}.\n{ef}")
+    all_approved = await db.list_approved(m.chat.id)
+    if not all_approved:
+        await m.reply_text("No one is approved in this chat.")
+        return
+
+    await m.reply_text(
+        "Are you sure you want to remove everyone who is approved in this chat?",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "⚠️ Confirm",
+                        callback_data=f"unapprove_all.{m.from_user.id}.{m.from_user.first_name}",
+                    ),
+                    InlineKeyboardButton("❌ Cancel", callback_data="close"),
+                ],
+            ],
+        ),
+    )
     return
+
+
+@Alita.on_callback_query(filters.regex("^unapprove_all."))
+async def unapproveall_callback(_, q: CallbackQuery):
+    user_id = q.data.split(".")[-2]
+    name = q.data.split(".")[-1]
+    approved_people = await db.list_approved(q.message.chat.id)
+    user_status = (await q.message.chat.get_member(user_id)).status
+    if user_status != "creator":
+        await q.message.edit(
+            (
+                f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
+                "Stay in your limits!"
+            ),
+        )
+        return
+    await db.unapprove_all(q.message.chat.id)
+    for i in approved_people:
+        await q.message.chat.restrict_member(
+            user_id=i,
+            permissions=(await get_chat_permission(q)),
+        )
+    await q.message.delete()
+    await q.answer("Disapproved all users!", show_alert=True)
+    return
+
+
+async def get_chat_permission(m):
+    if isinstance(m, CallbackQuery):
+        m = m.message
+
+    chat_perms = m.chat.permissions
+
+    msg = chat_perms.can_send_messages
+    media = chat_perms.can_send_media_messages
+    stickers = chat_perms.can_send_stickers
+    animations = chat_perms.can_send_animations
+    games = chat_perms.can_send_games
+    inlinebots = chat_perms.can_use_inline_bots
+    webprev = chat_perms.can_add_web_page_previews
+    polls = chat_perms.can_send_polls
+    info = chat_perms.can_change_info
+    invite = chat_perms.can_invite_users
+    pin = chat_perms.can_pin_messages
+    perm = ChatPermissions(
+        can_send_messages=msg,
+        can_send_media_messages=media,
+        can_send_stickers=stickers,
+        can_send_animations=animations,
+        can_send_games=games,
+        can_use_inline_bots=inlinebots,
+        can_add_web_page_previews=webprev,
+        can_send_polls=polls,
+        can_change_info=info,
+        can_invite_users=invite,
+        can_pin_messages=pin,
+    )
+    return perm
