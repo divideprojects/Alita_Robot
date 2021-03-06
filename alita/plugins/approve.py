@@ -274,17 +274,20 @@ async def unapproveall_callback(_, q: CallbackQuery):
 async def get_chat_permission(m):
     if isinstance(m, CallbackQuery):
         m = m.message
-    msg = m.chat.permissions.can_send_messages
-    media = m.chat.permissions.can_send_media_messages
-    stickers = m.chat.permissions.can_send_stickers
-    animations = m.chat.permissions.can_send_animations
-    games = m.chat.permissions.can_send_games
-    inlinebots = m.chat.permissions.can_use_inline_bots
-    webprev = m.chat.permissions.can_add_web_page_previews
-    polls = m.chat.permissions.can_send_polls
-    info = m.chat.permissions.can_change_info
-    invite = m.chat.permissions.can_invite_users
-    pin = m.chat.permissions.can_pin_messages
+
+    chat_perms = m.chat.permissions
+
+    msg = chat_perms.can_send_messages
+    media = chat_perms.can_send_media_messages
+    stickers = chat_perms.can_send_stickers
+    animations = chat_perms.can_send_animations
+    games = chat_perms.can_send_games
+    inlinebots = chat_perms.can_use_inline_bots
+    webprev = chat_perms.can_add_web_page_previews
+    polls = chat_perms.can_send_polls
+    info = chat_perms.can_change_info
+    invite = chat_perms.can_invite_users
+    pin = chat_perms.can_pin_messages
     perm = ChatPermissions(
         can_send_messages=msg,
         can_send_media_messages=media,
