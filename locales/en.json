@@ -5,6 +5,37 @@
         "language_name": "English"
     },
     "strings": {
+        "afk": {
+            "user_now_afk": "User {user} is now afk!",
+            "reason": "Reason: {res}",
+            "error_check_afk": "Error while checking afk\n{ef}",
+            "user_afk": "{first_name} is Afk!\nSince: {since}",
+            "no_longer_afk": "{first_name} is no longer Afk!\nWas AFK for {since}"
+        },
+        "antispam": {
+            "gban": {
+                "how_to": "<b>How to gban?</b>\n<b>Answer:</b> `/gban user_id reason`",
+                "enter_reason": "Please enter a reason to gban user!",
+                "not_self": "You can't gban me nigga!\nNice Try...!",
+                "updated_reason": "Updated Gban reason to: `{gban_reason}`.",
+                "added_to_watch": "Added {first_name} to Global Ban List.\nThey will now be banned in all groups where I'm admin!",
+                "user_added_to_watch": "You have been added to my global ban list!\nReason: `{gban_reason}`\n\nAppeal Chat: @{SUPPORT_GROUP}",
+                "log_msg": "#GBAN\n<b>Originated from:</b> {chat_id}\n<b>Admin:</b> {ban_admin}\n<b>Gbanned User:</b> {gbanned_user}\n<b>Gbanned User ID:</b> {gban_user_id}\n<b>Event Stamp:</b> {time}"
+            },
+            "ungban": {
+                "not_self": "Nice Try...!",
+                "removed_from_list": "Removed {first_name} from Global Ban List.",
+                "user_removed_from_list": "You have been removed from my global ban list!",
+                "non_gbanned": "User is not gbanned!",
+                "log_msg": "#UNGBAN\n<b>Originated from:</b> {chat_id}\n<b>Admin:</b> {ungban_admin}\n<b>UnGbanned User:</b> {ungbanned_user}\n<b>UnGbanned User ID:</b> {ungbanned_user_id}\n<b>Event Stamp:</b> {time}"
+            },
+            "part_of_support": "This user is part of my Support!, Can't ban our own!",
+            "pass_user_id": "Pass a user id or username as an argument!",
+            "num_gbans": "Number of people gbanned {count}",
+            "none_gbanned": "There aren't any gbanned users...!",
+            "here_gbanned_start": "Here are all the globally banned geys!\n",
+            "watcher_banned": "This user ({user_gbanned}) has been banned globally!\n\nTo get unbanned appeal at @{SUPPORT_GROUP}"
+        },
         "admin": {
             "adminlist": {
                 "adminstr": "Admins in {chat_title}:\n",

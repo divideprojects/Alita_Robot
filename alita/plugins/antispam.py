@@ -33,6 +33,7 @@ from alita import (
 )
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
+from alita.tr_engine import tlang
 from alita.utils.custom_filters import sudo_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -45,11 +46,11 @@ db = GBan()
 async def gban(c: Alita, m: Message):
 
     if len(m.text.split()) == 1:
-        await m.reply_text("<b>How to gban?</b>\n<b>Answer:</b> `/gban user_id reason`")
+        await m.reply_text(await tlang(m, "antispam.gban.how_to"))
         return
 
     if len(m.text.split()) == 2 and not m.reply_to_message:
-        await m.reply_text("Please enter a reason to gban user!")
+        await m.reply_text(await tlang(m, "antispam.gban.enter_reason"))
         return
 
     user_id, user_first_name = await extract_user(c, m)
@@ -60,44 +61,43 @@ async def gban(c: Alita, m: Message):
         gban_reason = m.text.split(None, 2)[2]
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text("This user is part of my Support!, Can't ban our own!")
+        await m.reply_text(await tlang(m, "antispam.part_of_support"))
         return
 
     if user_id == BOT_ID:
-        await m.reply_text("You can't gban me nigga!\nNice Try...!")
+        await m.reply_text(await tlang(m, "antispam.gban.not_self"))
         return
 
     if await db.check_gban(user_id):
         await db.update_gban_reason(user_id, gban_reason)
         await m.reply_text(
-            f"Updated Gban reason to: `{gban_reason}`.",
+            (await tlang(m, "antispam.gban.updated_reason")).format(
+                gban_reason=gban_reason,
+            ),
         )
         return
 
     await db.add_gban(user_id, gban_reason, m.from_user.id)
     await m.reply_text(
-        (
-            f"Added {user_first_name} to Global Ban List.\n"
-            "They will now be banned in all groups where I'm admin!"
+        (await tlang(m, "antispam.gban.added_to_watch")).format(
+            first_name=user_first_name,
         ),
     )
-    log_msg = (
-        f"#GBAN\n"
-        f"<b>Originated from:</b> {m.chat.id}\n"
-        f"<b>Admin:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))}\n"
-        f"<b>Gbanned User:</b> {(await mention_html(user_first_name, user_id))}\n"
-        f"<b>Gbanned User ID:</b> {user_id}\n"
-        f"<b>Event Stamp:</b> {datetime.utcnow().strftime('%H:%M - %d-%m-%Y')}"
+    log_msg = (await tlang(m, "antispam.gban.log_msg")).format(
+        chat_id=m.chat.id,
+        ban_admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+        gbanned_user=(await mention_html(user_first_name, user_id)),
+        gban_user_id=user_id,
+        time=(datetime.utcnow().strftime("%H:%M - %d-%m-%Y")),
     )
     await c.send_message(MESSAGE_DUMP, log_msg)
     try:
         # Send message to user telling that he's gbanned
         await c.send_message(
             user_id,
-            (
-                "You have been added to my global ban list!\n"
-                f"Reason: `{gban_reason}`\n\n"
-                f"Appeal Chat: @{SUPPORT_GROUP}"
+            (await tlang(m, "antispam.gban.user_added_to_watch")).format(
+                gban_reason=gban_reason,
+                SUPPORT_GROUP=SUPPORT_GROUP,
             ),
         )
     except BaseException as ef:  # TO DO: Improve Error Detection
@@ -112,42 +112,45 @@ async def gban(c: Alita, m: Message):
 async def ungban(c: Alita, m: Message):
 
     if len(m.text.split()) == 1:
-        await m.reply_text("Pass a user id or username as an argument!")
+        await m.reply_text(await tlang(m, "antispam.pass_user_id"))
         return
 
     user_id, user_first_name = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text("They can't be banned, so how am I supposed to ungban them?")
+        await m.reply_text(await tlang(m, "antispam.part_of_support"))
         return
 
     if user_id == BOT_ID:
-        await m.reply_text("Nice Try...!")
+        await m.reply_text(await tlang(m, "antispam.ungban.not_self"))
         return
 
     if await db.check_gban(user_id):
         await db.remove_gban(user_id)
-        await m.reply_text(f"Removed {user_first_name} from Global Ban List.")
-        log_msg = (
-            f"#UNGBAN\n"
-            f"<b>Originated from:</b> {m.chat.id}\n"
-            f"<b>Admin:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))}\n"
-            f"<b>UnGbanned User:</b> {(await mention_html(user_first_name, user_id))}\n"
-            f"<b>UnGbanned User ID:</b> {user_id}\n"
-            f"<b>Event Stamp:</b> {datetime.utcnow().strftime('%H:%M - %d-%m-%Y')}"
+        await m.reply_text(
+            (await tlang(m, "antispam.ungban.removed_from_list")).format(
+                first_name=user_first_name,
+            ),
+        )
+        log_msg = (await tlang(m, "amtispam.ungban.log_msg")).format(
+            chat_id=m.chat.id,
+            ungban_admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            ungbaned_user=(await mention_html(user_first_name, user_id)),
+            ungbanned_user_id=user_id,
+            time=(datetime.utcnow().strftime("%H:%M - %d-%m-%Y")),
         )
         await c.send_message(MESSAGE_DUMP, log_msg)
         try:
             # Send message to user telling that he's ungbanned
             await c.send_message(
                 user_id,
-                "You have been removed from my global ban list!\n",
+                (await tlang(m, "antispam.ungban.user_removed_from_list")),
             )
         except BaseException as ef:  # TODO: Improve Error Detection
             LOGGER.error(ef)
         return
 
-    await m.reply_text("User is not gbanned!")
+    await m.reply_text(await tlang(m, "antispam.ungban.non_gbanned"))
     return
 
 
@@ -155,7 +158,9 @@ async def ungban(c: Alita, m: Message):
     filters.command(["numgbans", "countgbans"], PREFIX_HANDLER) & sudo_filter,
 )
 async def gban_count(_, m: Message):
-    await m.reply_text(f"Number of people gbanned {(await db.count_collection())}")
+    await m.reply_text(
+        (await tlang(m, "antispam.num_gbans")).format(count=(await db.count_gbans())),
+    )
     return
 
 
@@ -166,10 +171,10 @@ async def gban_list(_, m: Message):
     banned_users = await db.list_collection()
 
     if not banned_users:
-        await m.reply_text("There aren't any gbanned users...!")
+        await m.reply_text(await tlang(m, "antispam.none_gbanned"))
         return
 
-    banfile = "Here are all the globally banned geys!\n"
+    banfile = await tlang(m, "antispam.here_gbanned_start")
     for user in banned_users:
         banfile += f"[x] {user['name']} - {user['user_id']}\n"
         if user["reason"]:
@@ -198,10 +203,11 @@ async def gban_watcher(c: Alita, m: Message):
                 await m.chat.kick_member(m.from_user.id)
                 await m.delete(m.message_id)  # Delete users message!
                 await m.reply_text(
-                    (
-                        f"This user ({(await mention_html(m.from_user.first_name, m.from_user.id))}) "
-                        "has been banned globally!\n\n"
-                        f"To get unbanned appeal at @{SUPPORT_GROUP}"
+                    (await tlang(m, "antispam.watcher_banned")).format(
+                        user_gbanned=(
+                            await mention_html(m.from_user.first_name, m.from_user.id)
+                        ),
+                        SUPPORT_GROUP=SUPPORT_GROUP,
                     ),
                 )
                 LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
@@ -212,10 +218,10 @@ async def gban_watcher(c: Alita, m: Message):
                 LOGGER.info(
                     f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})",
                 )
-            except RPCError as excp:
+            except RPCError as ef:
                 await c.send_message(
                     MESSAGE_DUMP,
-                    f"<b>Gban Watcher Error!</b>\n<b>Chat:</b> {m.chat.id}\n<b>Error:</b> <code>{excp}</code>",
+                    f"<b>Gban Watcher Error!</b>\n<b>Chat:</b> {m.chat.id}\n<b>Error:</b> <code>{ef}</code>",
                 )
     except AttributeError:
         pass  # Skip attribute errors!
