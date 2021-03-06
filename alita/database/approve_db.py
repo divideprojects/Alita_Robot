@@ -30,7 +30,7 @@ class Approve:
             {"chat_id": chat_id},
         )
         if curr_approve:
-            st = True if user_id in curr_approve["users"] else False
+            st = user_id in curr_approve["users"]
             return st
         return False
 
