@@ -22,6 +22,7 @@ from operator import getitem
 from os import path
 
 from pyrogram.types import CallbackQuery
+from yaml import FullLoader
 from yaml import load as load_yml
 
 from alita import ENABLED_LOCALES
@@ -33,7 +34,7 @@ def cache_localizations(files):
     ldict = {lang: {} for lang in ENABLED_LOCALES}
     for file in files:
         lang_name = (file.split(path.sep)[1]).replace(".yaml", "")
-        lang_data = load_yml(open(file, encoding="utf-8"))
+        lang_data = load_yml(open(file, encoding="utf-8"), Loader=FullLoader)
         ldict[lang_name] = lang_data
     return ldict
 
