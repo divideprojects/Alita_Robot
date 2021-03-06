@@ -74,7 +74,7 @@ class Approve:
         )
 
     async def list_approved(self, chat_id: int):
-        return (await self.collection.find_all({"chat_id": chat_id})["users"]) or []
+        return ((await self.collection.find_all({"chat_id": chat_id}))["users"]) or []
 
     async def count_all_approved(self):
         num = 0
