@@ -63,7 +63,7 @@ We are still working on adding new languages.
 Help us bring more languages to the bot by contributing to the project on [Crowdin](https://crowdin.com/project/alitarobot)
 
 ## Requirements
-- You need to have a *Postgres Database*
+- You need to have a *Mongo Database* (Cluster Preferred)
 - You also need *Redis Database*
 - Linux machine (Ubuntu/Denain-based OS Preferred)
 
