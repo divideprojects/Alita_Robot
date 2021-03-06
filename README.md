@@ -80,7 +80,7 @@ It really motivates me to continue this project further.
 - Get your Bot Token from [@BotFather](https://t.me/BotFather)
 and click the below button!  <br />  
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Divkix/Alita_Robot)
 
 ### Traditional
 
