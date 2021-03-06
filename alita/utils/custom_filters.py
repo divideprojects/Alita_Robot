@@ -44,18 +44,17 @@ async def admin_check_func(_, __, m):
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in SUDO_LEVEL:
         return True
-    else:
-        try:
-            user = await m.chat.get_member(m.from_user.id)
+    try:
+        user = await m.chat.get_member(m.from_user.id)
 
-            if user.status in ("creator", "administrator"):
-                status = True
-            else:
-                status = False
-                await m.reply_text(await tlang(m, "general.no_admin_cmd_perm"))
-        except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
-            if ("The chat_id" and "belongs to a user") in ef:
-                status = True
+        if user.status in ("creator", "administrator"):
+            status = True
+        else:
+            status = False
+            await m.reply_text(await tlang(m, "general.no_admin_cmd_perm"))
+    except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
+        if ("The chat_id" and "belongs to a user") in ef:
+            status = True
 
     return status
 
@@ -68,18 +67,17 @@ async def owner_check_func(_, __, m):
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:
         return True
-    else:
-        user = await m.chat.get_member(m.from_user.id)
+    user = await m.chat.get_member(m.from_user.id)
 
-        if user.status == "creator":
-            status = True
+    if user.status == "creator":
+        status = True
+    else:
+        status = False
+        if user.status == "administrator":
+            msg = "You're an admin only, stay in your limits!"
         else:
-            status = False
-            if user.status == "administrator":
-                msg = "You're an admin only, stay in your limits!"
-            else:
-                msg = "Do you think that you can execute admin commands?"
-            await m.reply_text(msg)
+            msg = "Do you think that you can execute admin commands?"
+        await m.reply_text(msg)
 
     return status
 
@@ -92,15 +90,13 @@ async def restrict_check_func(_, __, m):
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:
         return True
+    user = await m.chat.get_member(m.from_user.id)
 
+    if user.can_restrict_members or user.status == "creator":
+        status = True
     else:
-        user = await m.chat.get_member(m.from_user.id)
-
-        if user.can_restrict_members or user.status == "creator":
-            status = True
-        else:
-            status = False
-            await m.reply_text(await tlang(m, "admin.no_restrict_perm"))
+        status = False
+        await m.reply_text(await tlang(m, "admin.no_restrict_perm"))
 
     return status
 
@@ -113,14 +109,13 @@ async def promote_check_func(_, __, m):
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:
         return True
-    else:
-        user = await m.chat.get_member(m.from_user.id)
+    user = await m.chat.get_member(m.from_user.id)
 
-        if user.can_promote_members or user.status == "creator":
-            status = True
-        else:
-            status = False
-            await m.reply_text(await tlang(m, "admin.no_promote_demote_perm"))
+    if user.can_promote_members or user.status == "creator":
+        status = True
+    else:
+        status = False
+        await m.reply_text(await tlang(m, "admin.no_promote_demote_perm"))
 
     return status
 
