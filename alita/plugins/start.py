@@ -28,7 +28,6 @@ from pyrogram.types import (
 from alita import BOT_USERNAME, HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.redis_helper import get_key
 
 
 async def gen_cmds_kb():

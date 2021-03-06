@@ -26,7 +26,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
+from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.utils.custom_filters import admin_filter, owner_filter

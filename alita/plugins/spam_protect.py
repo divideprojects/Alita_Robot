@@ -1,7 +1,7 @@
 from pyrogram import filters
 from pyrogram.types import Message
 
-from alita import LOGGER, PREFIX_HANDLER
+from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.spam_protect_db import SpamProtect
 from alita.utils.custom_filters import admin_filter

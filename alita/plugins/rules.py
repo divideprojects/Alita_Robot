@@ -30,7 +30,6 @@ from alita.bot_class import Alita
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
-from alita.utils.redis_helper import get_key
 
 db = Rules()
 
