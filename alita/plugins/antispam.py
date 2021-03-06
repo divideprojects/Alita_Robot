@@ -36,7 +36,6 @@ from alita.database.antispam_db import GBan
 from alita.utils.custom_filters import sudo_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
-from alita.utils.redis_helper import get_key
 
 # Initialize
 db = GBan()
