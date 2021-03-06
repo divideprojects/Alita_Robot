@@ -17,17 +17,13 @@
 
 
 from pyrogram import filters
-from pyrogram.errors import (
-    ChatAdminRequired,
-    RightForbidden,
-    RPCError)
+from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
 from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.custom_filters import (
-    restrict_filter)
+from alita.utils.custom_filters import restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
