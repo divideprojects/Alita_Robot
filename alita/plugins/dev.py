@@ -71,7 +71,7 @@ async def send_log(c: Alita, m: Message):
 
 
 @Alita.on_message(filters.command("ginfo", DEV_PREFIX_HANDLER) & sudo_filter)
-async def send_log(c: Alita, m: Message):
+async def group_info(c: Alita, m: Message):
 
     if not len(m.text.split()) == 2:
         await m.reply_text(
