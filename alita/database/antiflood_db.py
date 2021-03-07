@@ -86,9 +86,7 @@ class AntiFlood:
             set_dict = {"chat_id": chat_id, "max_msg": max_msg}
             ANTIFLOOD_SETTINGS.append(set_dict)
             yield True
-            return self.collection.insert_one(
-                set_dict,
-            )
+            return self.collection.insert_one(set_dict)
 
     def get_antiflood(self, chat_id: int):
         with INSERTION_LOCK:
