@@ -180,7 +180,7 @@ async def check_approved(_, m: Message):
         return
 
     for i in approved_people:
-        user_id = i["user_id"]
+        user_id = i
         try:
             member = await chat.get_member(user_id)
             user_id = member.user["id"]
