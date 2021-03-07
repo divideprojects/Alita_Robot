@@ -69,7 +69,9 @@ class Langs:
             chat_type = self.get_chat_type(chat_id)
 
             try:
-                user_dict = next(chat for chat in LANG_DATA if chat["chat_id"] == chat_id)
+                user_dict = next(
+                    chat for chat in LANG_DATA if chat["chat_id"] == chat_id
+                )
                 if user_dict:
                     user_lang = user_dict["lang"]
                     yield user_lang
