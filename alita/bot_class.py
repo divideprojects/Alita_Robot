@@ -19,7 +19,7 @@
 # Install uvloop
 import uvloop
 
-uvloop.install()
+# uvloop.install()
 
 from os import makedirs, path
 from platform import python_version
