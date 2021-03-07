@@ -190,7 +190,7 @@ async def banallnotes_callback(_, q: CallbackQuery):
                 await sleep(5)
             await q.message.chat.kick_member(x.user.id)
             users.append(x.user.id)
-        except BaseException:
+        except Exception:
             fs += 1
 
     rply = f"Users Banned:\n{users}"

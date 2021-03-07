@@ -33,7 +33,7 @@ from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
-from alita.utils.redis_helper import get_key, set_key
+from alita.utils.redis_helper import RedisHelper
 
 __PLUGIN__ = "Admin"
 __help__ = """
@@ -59,11 +59,11 @@ async def adminlist_show(_, m: Message):
 
     try:
         try:
-            adminlist = (await get_key("ADMINDICT"))[
+            adminlist = (await RedisHelper.get_key("ADMINDICT"))[
                 str(m.chat.id)
             ]  # Load ADMINDICT from string
             note = tlang(m, "admin.adminlist.note_cached")
-        except BaseException:
+        except Exception:
             adminlist = []
             async for i in m.chat.iter_members(
                 filter="administrators",
@@ -78,9 +78,9 @@ async def adminlist_show(_, m: Message):
                 )
             adminlist = sorted(adminlist, key=lambda x: x[1])
             note = tlang(m, "admin.adminlist.note_updated")
-            ADMINDICT = await get_key("ADMINDICT")
+            ADMINDICT = await RedisHelper.get_key("ADMINDICT")
             ADMINDICT[str(m.chat.id)] = adminlist
-            await set_key("ADMINDICT", ADMINDICT)
+            await RedisHelper.set_key("ADMINDICT", ADMINDICT)
 
         adminstr = (tlang(m, "admin.adminlist.adminstr")).format(
             chat_title=f"<b>{m.chat.title}</b>",
@@ -97,7 +97,7 @@ async def adminlist_show(_, m: Message):
 
         await m.reply_text(f"{adminstr}\n\n<i>Note: {note}</i>")
 
-    except BaseException as ef:
+    except Exception as ef:
         if str(ef) == str(m.chat.id):
             await m.reply_text(tlang(m, "admin.adminlist.use_admin_cache"))
         else:
@@ -118,7 +118,7 @@ async def adminlist_show(_, m: Message):
 )
 async def reload_admins(_, m: Message):
 
-    ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
+    ADMINDICT = await RedisHelper.get_key("ADMINDICT")  # Load ADMINDICT from string
 
     try:
         adminlist = []
@@ -132,7 +132,7 @@ async def reload_admins(_, m: Message):
                 ),
             )
         ADMINDICT[str(m.chat.id)] = adminlist
-        await set_key("ADMINDICT", ADMINDICT)
+        await RedisHelper.set_key("ADMINDICT", ADMINDICT)
         await m.reply_text(tlang(m, "admin.adminlist.reloaded_admins"))
     except RPCError as ef:
         await m.reply_text(
@@ -169,7 +169,7 @@ async def promote_usr(c: Alita, m: Message):
         )
 
         # ----- Add admin to redis cache! -----
-        adminlist = (await get_key("ADMINDICT"))[
+        adminlist = (await RedisHelper.get_key("ADMINDICT"))[
             str(m.chat.id)
         ]  # Load ADMINDICT from string
         u = await m.chat.get_member(user_id)
@@ -179,9 +179,9 @@ async def promote_usr(c: Alita, m: Message):
                 f"@{u.user.username}" if u.user.username else u.user.first_name,
             ],
         )
-        ADMINDICT = await get_key("ADMINDICT")
+        ADMINDICT = await RedisHelper.get_key("ADMINDICT")
         ADMINDICT[str(m.chat.id)] = adminlist
-        await set_key("ADMINDICT", ADMINDICT)
+        await RedisHelper.set_key("ADMINDICT", ADMINDICT)
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -223,7 +223,7 @@ async def demote_usr(c: Alita, m: Message):
         )
 
         # ----- Add admin to redis cache! -----
-        ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
+        ADMINDICT = await RedisHelper.get_key("ADMINDICT")  # Load ADMINDICT from string
         adminlist = []
         async for i in m.chat.iter_members(filter="administrators"):
             if i.user.is_deleted:
@@ -235,7 +235,7 @@ async def demote_usr(c: Alita, m: Message):
                 ],
             )
         ADMINDICT[str(m.chat.id)] = adminlist
-        await set_key("ADMINDICT", ADMINDICT)
+        await RedisHelper.set_key("ADMINDICT", ADMINDICT)
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))

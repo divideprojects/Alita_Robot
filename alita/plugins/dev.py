@@ -42,7 +42,7 @@ from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.custom_filters import dev_filter, sudo_filter
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
-from alita.utils.redis_helper import allkeys, flushredis, get_key
+from alita.utils.redis_helper import RedisHelper
 
 # initialise database
 chatdb = Chats()
@@ -165,7 +165,7 @@ async def evaluate_code(c: Alita, m: Message):
 
     try:
         await aexec(cmd, c, m)
-    except BaseException as ef:
+    except Exception as ef:
         LOGGER.error(ef)
         exc = format_exc()
 
@@ -330,7 +330,7 @@ async def list_all_admins(_, m: Message):
     )
     len_admins = 0  # Total number of admins
 
-    admindict = await get_key("ADMINDICT")
+    admindict = await RedisHelper.get_key("ADMINDICT")
 
     for i in list(admindict.values()):
         len_admins += len(i)
@@ -371,9 +371,9 @@ async def list_all_admins(_, m: Message):
 async def show_redis_keys(_, m: Message):
     txt_dict = {}
     replymsg = await m.reply_text("Fetching Redis Keys...", quote=True)
-    keys = await allkeys()
+    keys = await RedisHelper.allkeys()
     for i in keys:
-        txt_dict[i] = await get_key(str(i))
+        txt_dict[i] = await RedisHelper.get_key(str(i))
     try:
         if not txt_dict:
             return replymsg.edit_text("No keys stored in redis!")
@@ -400,9 +400,9 @@ async def flush_redis(_, m: Message):
         quote=True,
     )
     try:
-        await flushredis()
+        await RedisHelper.flushredis()
         await replymsg.edit_text(tlang(m, "dev.flush_redis.flushed_redis"))
-    except BaseException as ef:
+    except Exception as ef:
         LOGGER.error(ef)
         await replymsg.edit_text(tlang(m, "dev.flush_redis.flush_failed"))
     return

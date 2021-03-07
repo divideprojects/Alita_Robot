@@ -25,7 +25,7 @@ async def regex_searcher(regex_string, string):
         re_search = search(regex_string, string, timeout=6)
     except TimeoutError:
         return False
-    except BaseException:
+    except Exception:
         return False
 
     return re_search

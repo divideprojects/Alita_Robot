@@ -100,7 +100,7 @@ async def gban(c: Alita, m: Message):
                 SUPPORT_GROUP=SUPPORT_GROUP,
             ),
         )
-    except BaseException as ef:  # TO DO: Improve Error Detection
+    except Exception as ef:  # TO DO: Improve Error Detection
         LOGGER.error(ef)
     return
 
@@ -146,7 +146,7 @@ async def ungban(c: Alita, m: Message):
                 user_id,
                 (tlang(m, "antispam.ungban.user_removed_from_list")),
             )
-        except BaseException as ef:  # TODO: Improve Error Detection
+        except Exception as ef:  # TODO: Improve Error Detection
             LOGGER.error(ef)
         return
 

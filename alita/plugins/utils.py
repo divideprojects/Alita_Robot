@@ -270,7 +270,7 @@ async def my_info(c: Alita, m: Message):
                 text += (tlang(m, "utils.user_info.custom_title")).format(
                     custom_title=f"<b>{custom_title}</b>",
                 )
-    except BaseException as ef:
+    except Exception as ef:
         LOGGER.error(f"Error: {ef}")
 
     await infoMsg.edit_text(text, parse_mode="html", disable_web_page_preview=True)

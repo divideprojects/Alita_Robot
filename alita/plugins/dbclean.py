@@ -276,6 +276,6 @@ async def db_clean_callbackAction(c: Alita, q: CallbackQuery):
             await q.message.edit_text(
                 f"Cleaned up {invalid_gban_count} gbanned users from Db",
             )
-    except BaseException as ef:
+    except Exception as ef:
         LOGGER.error(f"Error while cleaning db:\n{ef}")
     return
