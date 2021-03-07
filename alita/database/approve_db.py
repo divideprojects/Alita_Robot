@@ -39,12 +39,12 @@ class Approve:
                 return st
             return False
 
-    def add_approve(self, chat_id: int, user_id: int):
+    def add_approve(self, chat_id: int, user_id: int, user_name: str):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
                 users_old = curr["users"]
-                users_old.append(user_id)
+                users_old.append((user_id, user_name))
                 users = list(dict.fromkeys(users_old))
                 return self.collection.update(
                     {"chat_id": chat_id},
@@ -56,7 +56,7 @@ class Approve:
             return self.collection.insert_one(
                 {
                     "chat_id": chat_id,
-                    "users": [user_id],
+                    "users": [(user_id, user_name)],
                 },
             )
 
@@ -65,7 +65,8 @@ class Approve:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
                 users = curr["users"]
-                users.remove(user_id)
+                user = next(user for user in users if user[0] == user_id)
+                users.remove(user)
                 return self.collection.update(
                     {"chat_id": chat_id},
                     {

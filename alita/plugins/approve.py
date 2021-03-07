@@ -86,7 +86,8 @@ async def approve_user(c: Alita, m: Message):
             f"{(await mention_html(user_first_name, user_id))} is already approved in {chat_title}",
         )
         return
-    db.add_approve(chat_id, user_id)
+    db.add_approve(chat_id, user_id, user_first_name)
+
     # Allow all permissions
     await m.chat.restrict_member(
         user_id=user_id,
@@ -104,6 +105,7 @@ async def approve_user(c: Alita, m: Message):
             can_pin_messages=True,
         ),
     )
+
     await m.reply_text(
         (
             f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}!\n"
@@ -153,6 +155,7 @@ async def disapprove_user(c: Alita, m: Message):
         return
 
     db.remove_approve(chat_id, user_id)
+
     # Set permission same as of current user by fetching them from chat!
     await m.chat.restrict_member(
         user_id=user_id,
@@ -179,11 +182,9 @@ async def check_approved(_, m: Message):
         await m.reply_text(f"No users are approved in {chat_title}.")
         return
 
-    for user_id in approved_people:
+    for user_id, user_name in approved_people:
         try:
-            member = await chat.get_member(user_id)
-            user_id = member.user["id"]
-            user_nane = member.user["first_name"]
+            await chat.get_member(user_id)  # Check if user is in chat or not
         except UserNotParticipant:
             db.remove_approve(chat.id, user_id)
             continue
