@@ -83,7 +83,9 @@ class Approve:
 
     def list_approved(self, chat_id: int):
         with INSERTION_LOCK:
-            return ((self.collection.find_one({"chat_id": chat_id}))["users"]) or []
+            if self.collection.find_one({"chat_id": chat_id}):
+                return (self.collection.find_one({"chat_id": chat_id}))["users"]
+            return []
 
     def count_all_approved(self):
         with INSERTION_LOCK:
