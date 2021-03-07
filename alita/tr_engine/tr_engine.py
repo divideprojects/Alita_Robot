@@ -28,6 +28,9 @@ from yaml import load as load_yml
 from alita import ENABLED_LOCALES
 from alita.database.lang_db import Langs
 
+# Initialise
+db = Langs()
+
 
 def cache_localizations(files):
     """Get all translated strings from files."""
@@ -64,7 +67,7 @@ async def tlang(m, user_msg):
     chat = m.chat
 
     # Get language of user from database, default = 'en' (English)
-    lang = (await Langs().get_lang(chat.id)) or "en"
+    lang = (db.get_lang(chat.id)) or "en"
 
     # Get lang
     m_args.insert(0, lang)
