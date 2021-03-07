@@ -88,6 +88,7 @@ def __load_afk_users():
     db = AFK()
     all_users = db.list_afk_users()
     for user in all_users:
+        del user["_id"]
         AFK_USERS.append(user)
     return
 

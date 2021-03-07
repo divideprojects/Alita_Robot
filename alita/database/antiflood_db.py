@@ -158,6 +158,7 @@ def __load_antiflood_settings():
     global ANTIFLOOD_SETTINGS
     db = AntiFlood()
     for chat in db.get_all_antiflood_settings():
+        del chat["_id"]
         ANTIFLOOD_SETTINGS.append(chat)
     return
 

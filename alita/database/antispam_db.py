@@ -108,6 +108,7 @@ def __load_antispam():
     global GBAN_DATA
     db = GBan()
     for chat in db.list_gbans():
+        del chat["_id"]
         GBAN_DATA.append(chat)
     return
 

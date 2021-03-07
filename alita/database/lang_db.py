@@ -109,6 +109,7 @@ def __load_all_langs():
     global LANG_DATA
     db = Langs()
     for chat in db.get_all_langs():
+        del chat["_id"]
         LANG_DATA.append(chat)
     return
 
