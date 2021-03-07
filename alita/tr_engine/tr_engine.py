@@ -70,7 +70,7 @@ def tlang(m, user_msg):
         chat = m.chat
 
         # Get language of user from database, default = 'en' (English)
-        lang = (db.get_lang(chat.id)) or "en"
+        lang = next(db.get_lang(chat.id)) or "en"
 
         # Get lang
         m_args.insert(0, lang)

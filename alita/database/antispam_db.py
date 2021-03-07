@@ -34,7 +34,7 @@ class GBan:
 
     def check_gban(self, user_id: int):
         with INSERTION_LOCK:
-            if user_id in (list(user["chat_id"] for user in GBAN_DATA)):
+            if user_id in (list(user["user_id"] for user in GBAN_DATA)):
                 user_dict = next(
                     user for user in GBAN_DATA if user["user_id"] == user_id
                 )
