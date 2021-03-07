@@ -22,6 +22,8 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
+ANTIFLOOD_SETTINGS = []
+
 
 class AntiFlood:
     """Class for managing antiflood in groups."""
@@ -31,16 +33,33 @@ class AntiFlood:
 
     def get_grp(self, chat_id: int):
         with INSERTION_LOCK:
+
+            if chat_id in (list(user["chat_id"] for user in ANTIFLOOD_SETTINGS)):
+                return next(
+                    chat for chat in ANTIFLOOD_SETTINGS if chat["chat_id"] == chat_id
+                )
+
             return self.collection.find_one({"chat_id": chat_id})
 
     def set_status(self, chat_id: int, status: bool = False):
+        global ANTIFLOOD_SETTINGS
         with INSERTION_LOCK:
-            if self.get_grp(chat_id):
+
+            chat_dict = self.get_grp(chat_id)
+            if chat_dict:
+                indice = ANTIFLOOD_SETTINGS.index(chat_dict)
+                (ANTIFLOOD_SETTINGS[indice]).update({"status": status})
+                yield True
+
                 return self.collection.update(
                     {"chat_id": chat_id},
                     {"status": status},
                 )
-            return self.collection.insert_one({"chat_id": chat_id, "status": status})
+
+            set_dict = {"chat_id": chat_id, "status": status}
+            ANTIFLOOD_SETTINGS.append(set_dict)
+            yield True
+            return self.collection.insert_one(set_dict)
 
     def get_status(self, chat_id: int):
         with INSERTION_LOCK:
@@ -50,14 +69,25 @@ class AntiFlood:
             return
 
     def set_antiflood(self, chat_id: int, max_msg: int):
+        global ANTIFLOOD_SETTINGS
         with INSERTION_LOCK:
-            if self.get_grp(chat_id):
+
+            chat_dict = self.get_grp(chat_id)
+            if chat_dict:
+                indice = ANTIFLOOD_SETTINGS.index(chat_dict)
+                (ANTIFLOOD_SETTINGS[indice]).update({"max_msg": max_msg})
+                yield True
+
                 return self.collection.update(
                     {"chat_id": chat_id},
                     {"max_msg": max_msg},
                 )
+
+            set_dict = {"chat_id": chat_id, "max_msg": max_msg}
+            ANTIFLOOD_SETTINGS.append(set_dict)
+            yield True
             return self.collection.insert_one(
-                {"chat_id": chat_id, "max_msg": max_msg},
+                set_dict,
             )
 
     def get_antiflood(self, chat_id: int):
@@ -68,17 +98,27 @@ class AntiFlood:
             return
 
     def set_action(self, chat_id: int, action: str = "mute"):
+        global ANTIFLOOD_SETTINGS
         with INSERTION_LOCK:
 
             if action not in ("kick", "ban", "mute"):
                 action = "mute"  # Default action
 
-            if self.get_grp(chat_id):
+            chat_dict = self.get_grp(chat_id)
+            if chat_dict:
+                indice = ANTIFLOOD_SETTINGS.index(chat_dict)
+                (ANTIFLOOD_SETTINGS[indice]).update({"action": action})
+                yield True
+
                 return self.collection.update(
                     {"chat_id": chat_id},
                     {"action": action},
                 )
-            return self.collection.insert_one({"chat_id": chat_id, "action": action})
+
+            set_dict = {"chat_id": chat_id, "action": action}
+            ANTIFLOOD_SETTINGS.append(set_dict)
+            yield True
+            return self.collection.insert_one(set_dict)
 
     def get_action(self, chat_id: int):
         with INSERTION_LOCK:
@@ -87,13 +127,41 @@ class AntiFlood:
                 return z["action"]
             return
 
+    def get_all_antiflood_settings(self):
+        return self.collection.find_all()
+
+    def get_num_antiflood(self):
+        try:
+            return len(ANTIFLOOD_SETTINGS)
+        except Exception:
+            return self.collection.count()
+
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+        global ANTIFLOOD_SETTINGS
         with INSERTION_LOCK:
-            old_chat = self.collection.find_one({"chat_id": old_chat_id})
-            if old_chat:
-                return self.collection.update(
+
+            old_chat_local = self.get_grp(chat_id=old_chat_id)
+            if old_chat_local:
+                indice = ANTIFLOOD_SETTINGS.index(old_chat_local)
+                (ANTIFLOOD_SETTINGS[indice]).update({"chat_id": new_chat_id})
+                yield True
+
+            old_chat_db = self.collection.find_one({"chat_id": old_chat_id})
+            if old_chat_db:
+                yield self.collection.update(
                     {"chat_id": old_chat_id},
                     {"chat_id": new_chat_id},
                 )
             return
+
+
+def __load_antiflood_settings():
+    global ANTIFLOOD_SETTINGS
+    db = AntiFlood()
+    for chat in db.get_all_antiflood_settings():
+        ANTIFLOOD_SETTINGS.append(chat)
+    return
+
+
+__load_antiflood_settings()
