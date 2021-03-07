@@ -179,18 +179,17 @@ async def check_approved(_, m: Message):
         await m.reply_text(f"No users are approved in {chat_title}.")
         return
 
-    for i in approved_people:
-        user_id = i
+    for user_id in approved_people:
         try:
             member = await chat.get_member(user_id)
             user_id = member.user["id"]
+            user_nane = member.user["first_name"]
         except UserNotParticipant:
             db.remove_approve(chat.id, user_id)
             continue
         except PeerIdInvalid:
             continue
-        mention = await mention_html(member.user["first_name"], user_id)
-        msg += f"- `{user_id}`: {mention}\n"
+        msg += f"- `{user_id}`: {user_name}\n"
     await m.reply_text(msg)
     return
 
