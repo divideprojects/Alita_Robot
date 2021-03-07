@@ -39,7 +39,7 @@ from alita.bot_class import Alita
 from alita.database.chats_db import Chats
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
-from alita.utils.custom_filters import dev_filter
+from alita.utils.custom_filters import dev_filter, sudo_filter
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
 from alita.utils.redis_helper import allkeys, flushredis, get_key
@@ -67,6 +67,30 @@ async def send_log(c: Alita, m: Message):
         quote=True,
     )
     await replymsg.delete()
+    return
+
+
+@Alita.on_message(filters.command("ginfo", DEV_PREFIX_HANDLER) & sudo_filter)
+async def send_log(c: Alita, m: Message):
+
+    if not len(m.text.split()) == 2:
+        await m.reply_text(
+            f"It works like this: <code>{DEV_PREFIX_HANDLER} chat_id</code>",
+        )
+        return
+
+    chat_id = m.text.split(None, 1)[1]
+
+    replymsg = await m.reply_text("Fetching info about group...!")
+    grp_data = await c.get_chat(chat_id)
+    msg = (
+        f"Information for group: {chat_id}\n\n"
+        f"Group Name: {grp_data['title']}\n"
+        f"Members Count: {grp_data['members_count']}\n"
+        f"Type: {grp_data['type']}\n"
+        f"Group ID: {grp_data['id']}"
+    )
+    await replymsg.edit_text(msg)
     return
 
 
