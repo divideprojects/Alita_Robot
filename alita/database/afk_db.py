@@ -16,7 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
+
 from alita.database import MongoDB
+
+INSERTION_LOCK = RLock()
 
 
 class AFK:
@@ -26,25 +30,30 @@ class AFK:
         self.collection = MongoDB("afk")
 
     async def check_afk(self, user_id: int):
-        return await self.collection.find_one({"user_id": user_id})
+        with INSERTION_LOCK:
+            return self.collection.find_one({"user_id": user_id})
 
     async def add_afk(self, user_id: int, time: int, reason: str = ""):
-        if await self.check_afk(user_id):
-            return await self.collection.update(
-                {"user_id": user_id},
+        with INSERTION_LOCK:
+            if self.check_afk(user_id):
+                return self.collection.update(
+                    {"user_id": user_id},
+                    {"user_id": user_id, "reason": reason, "time": time},
+                )
+            return self.collection.insert_one(
                 {"user_id": user_id, "reason": reason, "time": time},
             )
-        return await self.collection.insert_one(
-            {"user_id": user_id, "reason": reason, "time": time},
-        )
 
     async def remove_afk(self, user_id: int):
-        if await self.check_afk(user_id):
-            return await self.collection.delete_one({"user_id": user_id})
-        return
+        with INSERTION_LOCK:
+            if self.check_afk(user_id):
+                return self.collection.delete_one({"user_id": user_id})
+            return
 
     async def count_afk(self):
-        return await self.collection.count()
+        with INSERTION_LOCK:
+            return self.collection.count()
 
     async def list_afk_users(self):
-        return await self.collection.find_all()
+        with INSERTION_LOCK:
+            return self.collection.find_all()

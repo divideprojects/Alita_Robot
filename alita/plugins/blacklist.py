@@ -77,7 +77,7 @@ async def view_blacklist(_, m: Message):
     blacklists_chat = (await tlang(m, "blacklist.curr_blacklist_initial")).format(
         chat_title=f"<b>{chat_title}</b>",
     )
-    all_blacklisted = await db.get_blacklists(m.chat.id)
+    all_blacklisted = db.get_blacklists(m.chat.id)
 
     if not all_blacklisted:
         await m.reply_text(
@@ -102,7 +102,7 @@ async def add_blacklist(_, m: Message):
 
     if len(m.text.split()) >= 2:
         bl_word = (m.text.split(None, 1)[1]).lower()
-        await db.add_blacklist(m.chat.id, bl_word)
+        db.add_blacklist(m.chat.id, bl_word)
         await m.reply_text(
             (await tlang(m, "blacklist.added_blacklist")).format(
                 trigger=f"<code>{bl_word}</code>",
@@ -120,7 +120,7 @@ async def add_blacklist(_, m: Message):
 )
 async def rm_blacklist(_, m: Message):
 
-    chat_bl = await db.get_blacklists(m.chat.id)
+    chat_bl = db.get_blacklists(m.chat.id)
     if not len(m.text.split()) >= 2:
         await m.reply_text(await tlang(m, "general.check_help"))
         return
@@ -134,7 +134,7 @@ async def rm_blacklist(_, m: Message):
         )
         return
 
-    await db.remove_blacklist(m.chat.id, bl_word)
+    db.remove_blacklist(m.chat.id, bl_word)
     await m.reply_text(
         (await tlang(m, "blacklist.rm_blacklist")).format(
             bl_word=f"<code>{bl_word}</code>",
@@ -148,12 +148,12 @@ async def rm_blacklist(_, m: Message):
 async def set_bl_action(_, m: Message):
     if len(m.text.split()) == 2:
         action = m.text.split(None, 1)[1]
-        await db.set_action(m.chat.id, action)
+        db.set_action(m.chat.id, action)
         await m.reply_text(
             (await tlang(m, "blacklist.action_set")).format(action=f"<b>{action}</b>"),
         )
     elif len(m.text.split()) == 1:
-        action = await db.get_action(m.chat.id)
+        action = db.get_action(m.chat.id)
         await m.reply_text(
             (await tlang(m, "blacklist.action_get")).format(action=f"<b>{action}</b>"),
         )
@@ -169,8 +169,8 @@ async def del_blacklist(_, m: Message):
     if not m.from_user:
         return
 
-    chat_blacklists = await db.get_blacklists(m.chat.id)
-    action = await db.get_action(m.chat.id)
+    chat_blacklists = db.get_blacklists(m.chat.id)
+    action = db.get_action(m.chat.id)
 
     # If no blacklists, then return
     if not chat_blacklists:
@@ -178,7 +178,7 @@ async def del_blacklist(_, m: Message):
 
     try:
         approved_users = []
-        app_users = await app_db.list_approved(m.chat.id)
+        app_users = app_db.list_approved(m.chat.id)
 
         for i in app_users:
             approved_users.append(int(i["user_id"]))
@@ -263,7 +263,7 @@ async def perform_action(m: Message, action: str):
 )
 async def rm_allblacklist(_, m: Message):
 
-    all_bls = await db.get_blacklists(m.chat.id)
+    all_bls = db.get_blacklists(m.chat.id)
     if not all_bls:
         await m.reply_text("No notes are blacklists in this chat")
         return
@@ -298,7 +298,7 @@ async def rm_allbl_callback(_, q: CallbackQuery):
             ),
         )
         return
-    await db.rm_all_blacklist(q.message.chat.id)
+    db.rm_all_blacklist(q.message.chat.id)
     await q.message.delete()
     await q.answer("Cleared all notes!", show_alert=True)
     return

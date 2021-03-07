@@ -115,7 +115,7 @@ async def save_note(_, m: Message):
             )
             return
 
-    await db.save_note(m.chat.id, note_name, text, data_type, content)
+    db.save_note(m.chat.id, note_name, text, data_type, content)
     await m.reply_text(f"Saved note <code>{note_name}</code>!")
     return
 
@@ -127,7 +127,7 @@ async def get_note(c: Alita, m: Message):
     else:
         await m.reply_text("Give me a note tag!")
 
-    getnotes = await db.get_note(m.chat.id, note)
+    getnotes = db.get_note(m.chat.id, note)
     msgtype = getnotes["msgtype"]
     if not getnotes:
         await m.reply_text("This note does not exist!")
@@ -183,7 +183,7 @@ async def get_note(c: Alita, m: Message):
 
 @Alita.on_message(filters.command(["notes", "saved"], PREFIX_HANDLER) & filters.group)
 async def local_notes(_, m: Message):
-    getnotes = await db.get_all_notes(m.chat.id)
+    getnotes = db.get_all_notes(m.chat.id)
     if not getnotes:
         await m.reply_text(f"There are no notes in <b>{m.chat.title}</b>.")
         return
@@ -208,7 +208,7 @@ async def clear_note(_, m: Message):
         return
 
     note = m.text.split()[1]
-    getnote = await db.rm_note(m.chat.id, note)
+    getnote = db.rm_note(m.chat.id, note)
     if not getnote:
         await m.reply_text("This note does not exist!")
         return
@@ -222,7 +222,7 @@ async def clear_note(_, m: Message):
 )
 async def clear_allnote(_, m: Message):
 
-    all_notes = await db.get_all_notes(m.chat.id)
+    all_notes = db.get_all_notes(m.chat.id)
     if not all_notes:
         await m.reply_text("No notes are there in this chat")
         return
@@ -257,7 +257,7 @@ async def clearallnotes_callback(_, q: CallbackQuery):
             ),
         )
         return
-    await db.rm_all_notes(q.message.chat.id)
+    db.rm_all_notes(q.message.chat.id)
     await q.message.delete()
     await q.answer("Cleared all notes!", show_alert=True)
     return

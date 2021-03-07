@@ -16,7 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
+
 from alita.database import MongoDB
+
+INSERTION_LOCK = RLock()
 
 
 class Users:
@@ -26,26 +30,30 @@ class Users:
         self.collection = MongoDB("users")
 
     async def update_user(self, user_id: int, name: str, username: str = None):
-        curr = await self.collection.find_one({"user_id": user_id})
-        if curr:
-            return await self.collection.update(
-                {"user_id": user_id},
-                {"username": username, "name": name},
+        with INSERTION_LOCK:
+            curr = self.collection.find_one({"user_id": user_id})
+            if curr:
+                return self.collection.update(
+                    {"user_id": user_id},
+                    {"username": username, "name": name},
+                )
+            return self.collection.insert_one(
+                {"user_id": user_id, "username": username, "name": name},
             )
-        return await self.collection.insert_one(
-            {"user_id": user_id, "username": username, "name": name},
-        )
 
     async def delete_user(self, user_id: int):
-        curr = await self.collection.find_one({"user_id": user_id})
-        if curr:
-            return await self.collection.delete_one(
-                {"user_id": user_id},
-            )
-        return True
+        with INSERTION_LOCK:
+            curr = self.collection.find_one({"user_id": user_id})
+            if curr:
+                return self.collection.delete_one(
+                    {"user_id": user_id},
+                )
+            return True
 
     async def count_users(self):
-        return await self.collection.count()
+        with INSERTION_LOCK:
+            return self.collection.count()
 
     async def list_users(self):
-        return await self.collection.find_all()
+        with INSERTION_LOCK:
+            return self.collection.find_all()

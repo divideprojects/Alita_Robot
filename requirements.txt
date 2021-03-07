@@ -5,7 +5,7 @@ asyncio==3.4.3
 cchardet==2.1.7
 dnspython==2.1.0
 googletrans
-motor==2.3.1
+pymongo==3.11.3
 pyrogram==1.1.13
 python-dateutil==2.8.1
 pyyaml==5.4.1

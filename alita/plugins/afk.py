@@ -64,7 +64,7 @@ async def set_afk(_, m: Message):
         reason_txt = ""
 
     try:
-        await db.add_afk(m.from_user.id, time(), reason)
+        db.add_afk(m.from_user.id, time(), reason)
         await m.reply_text(afkmsg + reason_txt)
     except Exception as ef:
         await m.reply_text(ef)
@@ -87,7 +87,7 @@ async def afk_mentioned(c: Alita, m: Message):
         return
 
     try:
-        user_afk = await db.check_afk(user_id)
+        user_afk = db.check_afk(user_id)
     except Exception as ef:
         await m.reply_text((await tlang(m, "afk.error_check_afk")).format(ef=ef))
         return
@@ -116,7 +116,7 @@ async def rem_afk(c: Alita, m: Message):
         return
 
     try:
-        user_afk = await db.check_afk(m.from_user.id)
+        user_afk = db.check_afk(m.from_user.id)
     except Exception as ef:
         await m.reply_text((await tlang(m, "afk.error_check_afk")).format(ef=ef))
         return
@@ -125,7 +125,7 @@ async def rem_afk(c: Alita, m: Message):
         return
 
     since = strftime("%Hh %Mm %Ss", gmtime(time() - (user_afk["time"])))
-    await db.remove_afk(m.from_user.id)
+    db.remove_afk(m.from_user.id)
     user = await c.get_users(user_afk["user_id"])
     await m.reply_text(
         (await tlang(m, "afk.no_longer_afk")).format(

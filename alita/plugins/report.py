@@ -57,17 +57,17 @@ async def report_setting(_, m: Message):
     if m.chat.type == "private":
         if len(args) >= 2:
             if args[1] in ("yes", "on", "true"):
-                await db.set_settings(m.chat.id, True)
+                db.set_settings(m.chat.id, True)
                 await m.reply_text(
                     "Turned on reporting! You'll be notified whenever anyone reports something in groups you are admin.",
                 )
 
             elif args[1] in ("no", "off", "false"):
-                await db.set_settings(m.chat.id, False)
+                db.set_settings(m.chat.id, False)
                 await m.reply_text("Turned off reporting! You wont get any reports.")
         else:
             await m.reply_text(
-                f"Your current report preference is: `{(await db.get_settings(m.chat.id))}`",
+                f"Your current report preference is: `{(db.get_settings(m.chat.id))}`",
             )
 
     else:
@@ -77,7 +77,7 @@ async def report_setting(_, m: Message):
 
         if len(args) >= 2:
             if args[1] in ("yes", "on", "true"):
-                await db.set_settings(m.chat.id, True)
+                db.set_settings(m.chat.id, True)
                 await m.reply_text(
                     "Turned on reporting! Admins who have turned on reports will be notified when /report "
                     "or @admin is called.",
@@ -85,14 +85,14 @@ async def report_setting(_, m: Message):
                 )
 
             elif args[1] in ("no", "off"):
-                await db.set_settings(m.chat.id, False)
+                db.set_settings(m.chat.id, False)
                 await m.reply_text(
                     "Turned off reporting! No admins will be notified on /report or @admin.",
                     reply_to_message_id=m.message_id,
                 )
         else:
             await m.reply_text(
-                f"This group's current setting is: `{(await db.get_settings(m.chat.id))}`",
+                f"This group's current setting is: `{(db.get_settings(m.chat.id))}`",
             )
 
 

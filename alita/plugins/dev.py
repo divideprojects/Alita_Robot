@@ -251,7 +251,7 @@ async def chats(c: Alita, m: Message):
         MESSAGE_DUMP,
         f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    all_chats = (await chatdb.list_chats()) or []
+    all_chats = (chatdb.list_chats()) or []
     chatfile = await tlang(m, "dev.chatlist.header")
     P = 1
     for chat in all_chats:
@@ -273,7 +273,7 @@ async def chats(c: Alita, m: Message):
         except ChatAdminRequired:
             pass
         except ChannelPrivate:
-            await chatdb.remove_chat(chat.chat_id)
+            chatdb.remove_chat(chat.chat_id)
         except PeerIdInvalid:
             LOGGER.warning(f"Peer  not found {chat.chat_id}")
         except RPCError as ef:

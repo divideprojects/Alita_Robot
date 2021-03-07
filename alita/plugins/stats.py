@@ -46,15 +46,15 @@ spamdb = SpamProtect()
 async def get_stats(_, m: Message):
     replymsg = await m.reply_text("<b><i>Fetching Stats...</i></b>", quote=True)
     rply = (
-        f"<b>Users:</b> <code>{(await userdb.count_users())}</code> in <code>{(await chatdb.count_chats())}</code> chats\n"
-        f"<b>Blacklists:</b> <code>{(await bldb.count_blacklists_all())}</code> in <code>{(await bldb.count_blackists_chats())}</code> chats\n"
-        f"<b>Rules:</b> Set in <code>{(await rulesdb.count_chats())}</code> chats\n"
-        f"<b>Notes:</b> <code>{(await notesdb.count_all_notes())}</code> in <code>{(await notesdb.count_notes_chats())}</code>\n"
-        f"<b>Globally Banned Users:</b> <code>{(await gbandb.count_gbans())}</code>\n"
-        f"<b>Approved People</b>: <code>{(await appdb.count_all_approved())}</code> in <code>{(await appdb.count_approved_chats())}</code> chats\n"
+        f"<b>Users:</b> <code>{(userdb.count_users())}</code> in <code>{(chatdb.count_chats())}</code> chats\n"
+        f"<b>Blacklists:</b> <code>{(bldb.count_blacklists_all())}</code> in <code>{(bldb.count_blackists_chats())}</code> chats\n"
+        f"<b>Rules:</b> Set in <code>{(rulesdb.count_chats())}</code> chats\n"
+        f"<b>Notes:</b> <code>{(notesdb.count_all_notes())}</code> in <code>{(notesdb.count_notes_chats())}</code>\n"
+        f"<b>Globally Banned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
+        f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
         "\n<b>Spam Protection:</b>\n"
-        f"    <b>CAS Enabled:</b> {(await spamdb.get_cas_enabled_chats_num())}\n"
-        f"    <b>UnderAttack Enabled:</b> {(await spamdb.get_attack_enabled_chats_num())}\n"
+        f"    <b>CAS Enabled:</b> {(spamdb.get_cas_enabled_chats_num())}\n"
+        f"    <b>UnderAttack Enabled:</b> {(spamdb.get_attack_enabled_chats_num())}\n"
     )
     await replymsg.edit_text(rply, parse_mode="html")
 

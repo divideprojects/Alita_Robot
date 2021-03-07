@@ -16,7 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
+
 from alita.database import MongoDB
+
+INSERTION_LOCK = RLock()
 
 
 class Approve:
@@ -26,79 +30,88 @@ class Approve:
         self.collection = MongoDB("approve")
 
     async def check_approve(self, chat_id: int, user_id: int):
-        curr_approve = await self.collection.find_one(
-            {"chat_id": chat_id},
-        )
-        if curr_approve:
-            st = user_id in curr_approve["users"]
-            return st
-        return False
+        with INSERTION_LOCK:
+            curr_approve = self.collection.find_one(
+                {"chat_id": chat_id},
+            )
+            if curr_approve:
+                st = user_id in curr_approve["users"]
+                return st
+            return False
 
     async def add_approve(self, chat_id: int, user_id: int):
-        curr = await self.collection.find_one({"chat_id": chat_id})
-        if curr:
-            users_old = curr["users"]
-            users_old.append(user_id)
-            users = list(dict.fromkeys(users_old))
-            return await self.collection.update(
-                {"chat_id": chat_id},
+        with INSERTION_LOCK:
+            curr = self.collection.find_one({"chat_id": chat_id})
+            if curr:
+                users_old = curr["users"]
+                users_old.append(user_id)
+                users = list(dict.fromkeys(users_old))
+                return self.collection.update(
+                    {"chat_id": chat_id},
+                    {
+                        "chat_id": chat_id,
+                        "users": users,
+                    },
+                )
+            return self.collection.insert_one(
                 {
                     "chat_id": chat_id,
-                    "users": users,
+                    "users": [user_id],
                 },
             )
-        return await self.collection.insert_one(
-            {
-                "chat_id": chat_id,
-                "users": [user_id],
-            },
-        )
 
     async def remove_approve(self, chat_id: int, user_id: int):
-        curr = await self.collection.find_one({"chat_id": chat_id})
-        if curr:
-            users = curr["users"]
-            users.remove(user_id)
-            return await self.collection.update(
-                {"chat_id": chat_id},
-                {
-                    "chat_id": chat_id,
-                    "users": users,
-                },
-            )
-        return "Not approved"
+        with INSERTION_LOCK:
+            curr = self.collection.find_one({"chat_id": chat_id})
+            if curr:
+                users = curr["users"]
+                users.remove(user_id)
+                return self.collection.update(
+                    {"chat_id": chat_id},
+                    {
+                        "chat_id": chat_id,
+                        "users": users,
+                    },
+                )
+            return "Not approved"
 
     async def unapprove_all(self, chat_id: int):
-        return await self.collection.delete_one(
-            {"chat_id": chat_id},
-        )
+        with INSERTION_LOCK:
+            return self.collection.delete_one(
+                {"chat_id": chat_id},
+            )
 
     async def list_approved(self, chat_id: int):
-        return ((await self.collection.find_all({"chat_id": chat_id}))["users"]) or []
+        with INSERTION_LOCK:
+            return ((self.collection.find_all({"chat_id": chat_id}))["users"]) or []
 
     async def count_all_approved(self):
-        num = 0
-        curr = await self.collection.find_all()
-        if curr:
-            for chat in curr:
-                users = chat["users"]
-                num += len(users)
+        with INSERTION_LOCK:
+            num = 0
+            curr = self.collection.find_all()
+            if curr:
+                for chat in curr:
+                    users = chat["users"]
+                    num += len(users)
 
-        return num
+            return num
 
     async def count_approved_chats(self):
-        return (await self.collection.count()) or 0
+        with INSERTION_LOCK:
+            return (self.collection.count()) or 0
 
     async def count_approved(self, chat_id: int):
-        all_app = await self.collection.find_one({"chat_id": chat_id})
-        return len(all_app["users"]) or 0
+        with INSERTION_LOCK:
+            all_app = self.collection.find_one({"chat_id": chat_id})
+            return len(all_app["users"]) or 0
 
     # Migrate if chat id changes!
     async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        old_chat = await self.collection.find_one({"chat_id": old_chat_id})
-        if old_chat:
-            return await self.collection.update(
-                {"chat_id": old_chat_id},
-                {"chat_id": new_chat_id},
-            )
-        return
+        with INSERTION_LOCK:
+            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            if old_chat:
+                return self.collection.update(
+                    {"chat_id": old_chat_id},
+                    {"chat_id": new_chat_id},
+                )
+            return

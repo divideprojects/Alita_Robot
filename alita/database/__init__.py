@@ -16,12 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import motor.motor_asyncio
+from pymongo import MongoClient
 
 from alita import DB_URI
 
 # Client to connect to mongodb
-mongodb_client = motor.motor_asyncio.AsyncIOMotorClient(DB_URI)
+mongodb_client = MongoClient(DB_URI)
 
 db = mongodb_client.alita_robot
 
@@ -33,54 +33,54 @@ class MongoDB:
         self.collection = db[collection]
 
     # Insert one entry into collection
-    async def insert_one(self, document):
-        result = await self.collection.insert_one(document)
+    def insert_one(self, document):
+        result = self.collection.insert_one(document)
         return repr(result.inserted_id)
 
     # Find one entry from collection
-    async def find_one(self, query):
-        result = await self.collection.find_one(query)
+    def find_one(self, query):
+        result = self.collection.find_one(query)
         if result:
             return result
         return False
 
     # Find entries from collection
-    async def find_all(self, query=None):
+    def find_all(self, query=None):
         if query is None:
             query = {}
         lst = []
-        async for document in self.collection.find(query):
+        for document in self.collection.find(query):
             lst.append(document)
         return lst
 
     # Count entries from collection
-    async def count(self, query=None):
+    def count(self, query=None):
         if query is None:
             query = {}
-        return await self.collection.count_documents(query)
+        return self.collection.count_documents(query)
 
     # Delete entry/entries from collection
-    async def delete_one(self, query):
-        before_delete = await self.collection.count_documents({})
-        await self.collection.delete_many(query)
-        after_delete = await self.collection.count_documents({})
+    def delete_one(self, query):
+        before_delete = self.collection.count_documents({})
+        self.collection.delete_many(query)
+        after_delete = self.collection.count_documents({})
         return after_delete
 
     # Replace one entry in collection
-    async def replace(self, query, new_data):
-        old = await self.collection.find_one(query)
+    def replace(self, query, new_data):
+        old = self.collection.find_one(query)
         _id = old["_id"]
-        await self.collection.replace_one({"_id": _id}, new_data)
-        new = await self.collection.find_one({"_id": _id})
+        self.collection.replace_one({"_id": _id}, new_data)
+        new = self.collection.find_one({"_id": _id})
         return old, new
 
     # Update one entry from collection
-    async def update(self, query, update):
-        result = await self.collection.update_one(query, {"$set": update})
-        new_document = await self.collection.find_one(query)
+    def update(self, query, update):
+        result = self.collection.update_one(query, {"$set": update})
+        new_document = self.collection.find_one(query)
         return result.modified_count, new_document
 
     # Close connection
-    async def close(self):
+    def close(self):
         _ = self
         return mongodb_client.close()

@@ -51,7 +51,7 @@ what not to do in your group!
 async def get_rules(c: Alita, m: Message):
 
     chat_id = m.chat.id
-    rules = await db.get_rules(chat_id)
+    rules = db.get_rules(chat_id)
 
     if not rules:
         await m.reply_text(
@@ -103,7 +103,7 @@ async def set_rules(_, m: Message):
         rules = rules[0:3949]  # Split Rules if len > 4000 chars
         await m.reply_text("Rules truncated to 3950 characters!")
 
-    await db.set_rules(chat_id, rules)
+    db.set_rules(chat_id, rules)
     await m.reply_text(await tlang(m, "rules.set_rules"))
     return
 
@@ -113,7 +113,7 @@ async def set_rules(_, m: Message):
 )
 async def clear_rules(_, m: Message):
 
-    rules = await db.get_rules(m.chat.id)
+    rules = db.get_rules(m.chat.id)
     if not rules:
         await m.reply_text(await tlang(m, "rules.no_rules"))
         return
@@ -134,7 +134,7 @@ async def clear_rules(_, m: Message):
 
 @Alita.on_callback_query(filters.regex("^clear.rules$") & admin_filter)
 async def clearrules_callback(_, q: CallbackQuery):
-    await db.clear_rules(q.message.chat.id)
+    db.clear_rules(q.message.chat.id)
     await q.message.edit_text(await tlang(q, "rules.cleared"))
     await q.answer("Rules for the chat have been cleared!", show_alert=True)
     return

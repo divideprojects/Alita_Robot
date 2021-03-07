@@ -16,10 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# Install uvloop
 import uvloop
 
-# uvloop.install()
+# Install uvloop
+uvloop.install()
 
 from os import makedirs, path
 from platform import python_version
@@ -86,7 +86,7 @@ class Alita(Client):
         LOGGER.info("Begin caching admins...")
         begin = time()
 
-        all_chats = (await chatdb.list_chats()) or []  # Get list of all chats
+        all_chats = (chatdb.list_chats()) or []  # Get list of all chats
         LOGGER.info(all_chats)
         LOGGER.info(f"{len(all_chats)} chats loaded from database.")
 

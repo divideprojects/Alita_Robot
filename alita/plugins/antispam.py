@@ -68,8 +68,8 @@ async def gban(c: Alita, m: Message):
         await m.reply_text(await tlang(m, "antispam.gban.not_self"))
         return
 
-    if await db.check_gban(user_id):
-        await db.update_gban_reason(user_id, gban_reason)
+    if db.check_gban(user_id):
+        db.update_gban_reason(user_id, gban_reason)
         await m.reply_text(
             (await tlang(m, "antispam.gban.updated_reason")).format(
                 gban_reason=gban_reason,
@@ -77,7 +77,7 @@ async def gban(c: Alita, m: Message):
         )
         return
 
-    await db.add_gban(user_id, gban_reason, m.from_user.id)
+    db.add_gban(user_id, gban_reason, m.from_user.id)
     await m.reply_text(
         (await tlang(m, "antispam.gban.added_to_watch")).format(
             first_name=user_first_name,
@@ -125,8 +125,8 @@ async def ungban(c: Alita, m: Message):
         await m.reply_text(await tlang(m, "antispam.ungban.not_self"))
         return
 
-    if await db.check_gban(user_id):
-        await db.remove_gban(user_id)
+    if db.check_gban(user_id):
+        db.remove_gban(user_id)
         await m.reply_text(
             (await tlang(m, "antispam.ungban.removed_from_list")).format(
                 first_name=user_first_name,
@@ -159,7 +159,7 @@ async def ungban(c: Alita, m: Message):
 )
 async def gban_count(_, m: Message):
     await m.reply_text(
-        (await tlang(m, "antispam.num_gbans")).format(count=(await db.count_gbans())),
+        (await tlang(m, "antispam.num_gbans")).format(count=(db.count_gbans())),
     )
     return
 
@@ -168,7 +168,7 @@ async def gban_count(_, m: Message):
     filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter,
 )
 async def gban_list(_, m: Message):
-    banned_users = await db.list_collection()
+    banned_users = db.list_collection()
 
     if not banned_users:
         await m.reply_text(await tlang(m, "antispam.none_gbanned"))
@@ -194,7 +194,7 @@ async def gban_list(_, m: Message):
 async def gban_watcher(c: Alita, m: Message):
     try:
         try:
-            _banned = await db.check_gban(m.from_user.id)
+            _banned = db.check_gban(m.from_user.id)
         except Exception as ef:
             LOGGER.error(ef)
             return
