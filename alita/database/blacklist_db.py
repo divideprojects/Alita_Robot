@@ -47,7 +47,7 @@ class Blacklist:
                 {
                     "chat_id": chat_id,
                     "triggers": [trigger],
-                    "action": "mute",
+                    "action": "none",
                 },
             )
 
@@ -96,7 +96,7 @@ class Blacklist:
     def set_action(self, chat_id: int, action: int):
         with INSERTION_LOCK:
 
-            if action not in ("kick", "mute", "ban", "warn"):
+            if action not in ("kick", "mute", "ban", "warn", "none"):
                 return "invalid action"
 
             curr = self.collection.find_one({"chat_id": chat_id})
@@ -117,15 +117,15 @@ class Blacklist:
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
-                return curr["action"] or "mute"
+                return curr["action"] or "none"
             self.collection.insert_one(
                 {
                     "chat_id": chat_id,
                     "triggers": [],
-                    "action": "mute",
+                    "action": "none",
                 },
             )
-            return "mute"
+            return "none"
 
     def rm_all_blacklist(self, chat_id: int):
         with INSERTION_LOCK:

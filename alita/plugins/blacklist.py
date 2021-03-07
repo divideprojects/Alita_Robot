@@ -255,6 +255,8 @@ async def perform_action(m: Message, action: str):
                 " for using a blacklisted word!"
             ),
         )
+    elif action == "none":
+        pass
     return
 
 
@@ -300,5 +302,5 @@ async def rm_allbl_callback(_, q: CallbackQuery):
         return
     db.rm_all_blacklist(q.message.chat.id)
     await q.message.delete()
-    await q.answer("Cleared all notes!", show_alert=True)
+    await q.answer("Cleared all Blacklists!", show_alert=True)
     return
