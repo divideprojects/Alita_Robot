@@ -29,7 +29,7 @@ class Users:
     def __init__(self) -> None:
         self.collection = MongoDB("users")
 
-    async def update_user(self, user_id: int, name: str, username: str = None):
+    def update_user(self, user_id: int, name: str, username: str = None):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"user_id": user_id})
             if curr:
@@ -41,7 +41,7 @@ class Users:
                 {"user_id": user_id, "username": username, "name": name},
             )
 
-    async def delete_user(self, user_id: int):
+    def delete_user(self, user_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"user_id": user_id})
             if curr:
@@ -50,10 +50,10 @@ class Users:
                 )
             return True
 
-    async def count_users(self):
+    def count_users(self):
         with INSERTION_LOCK:
             return self.collection.count()
 
-    async def list_users(self):
+    def list_users(self):
         with INSERTION_LOCK:
             return self.collection.find_all()

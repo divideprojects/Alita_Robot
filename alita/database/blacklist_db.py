@@ -29,7 +29,7 @@ class Blacklist:
     def __init__(self) -> None:
         self.collection = MongoDB("blacklists")
 
-    async def add_blacklist(self, chat_id: int, trigger: str):
+    def add_blacklist(self, chat_id: int, trigger: str):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -51,7 +51,7 @@ class Blacklist:
                 },
             )
 
-    async def remove_blacklist(self, chat_id: int, trigger: str):
+    def remove_blacklist(self, chat_id: int, trigger: str):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -69,14 +69,14 @@ class Blacklist:
                     },
                 )
 
-    async def get_blacklists(self, chat_id: int):
+    def get_blacklists(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
                 return curr["triggers"]
             return []
 
-    async def count_blacklists_all(self):
+    def count_blacklists_all(self):
         with INSERTION_LOCK:
             curr = self.collection.find_all()
             num = 0
@@ -84,7 +84,7 @@ class Blacklist:
                 num += len(chat["triggers"])
             return num
 
-    async def count_blackists_chats(self):
+    def count_blackists_chats(self):
         with INSERTION_LOCK:
             curr = self.collection.find_all()
             num = 0
@@ -93,7 +93,7 @@ class Blacklist:
                     num += 1
             return num
 
-    async def set_action(self, chat_id: int, action: int):
+    def set_action(self, chat_id: int, action: int):
         with INSERTION_LOCK:
 
             if action not in ("kick", "mute", "ban", "warn"):
@@ -113,7 +113,7 @@ class Blacklist:
                 },
             )
 
-    async def get_action(self, chat_id: int):
+    def get_action(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -127,7 +127,7 @@ class Blacklist:
             )
             return "mute"
 
-    async def rm_all_blacklist(self, chat_id: int):
+    def rm_all_blacklist(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -138,7 +138,7 @@ class Blacklist:
             return False
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
             old_chat = self.collection.find_one({"chat_id": old_chat_id})
             if old_chat:

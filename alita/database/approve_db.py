@@ -29,7 +29,7 @@ class Approve:
     def __init__(self) -> None:
         self.collection = MongoDB("approve")
 
-    async def check_approve(self, chat_id: int, user_id: int):
+    def check_approve(self, chat_id: int, user_id: int):
         with INSERTION_LOCK:
             curr_approve = self.collection.find_one(
                 {"chat_id": chat_id},
@@ -39,7 +39,7 @@ class Approve:
                 return st
             return False
 
-    async def add_approve(self, chat_id: int, user_id: int):
+    def add_approve(self, chat_id: int, user_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -60,7 +60,7 @@ class Approve:
                 },
             )
 
-    async def remove_approve(self, chat_id: int, user_id: int):
+    def remove_approve(self, chat_id: int, user_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -75,17 +75,17 @@ class Approve:
                 )
             return "Not approved"
 
-    async def unapprove_all(self, chat_id: int):
+    def unapprove_all(self, chat_id: int):
         with INSERTION_LOCK:
             return self.collection.delete_one(
                 {"chat_id": chat_id},
             )
 
-    async def list_approved(self, chat_id: int):
+    def list_approved(self, chat_id: int):
         with INSERTION_LOCK:
             return ((self.collection.find_all({"chat_id": chat_id}))["users"]) or []
 
-    async def count_all_approved(self):
+    def count_all_approved(self):
         with INSERTION_LOCK:
             num = 0
             curr = self.collection.find_all()
@@ -96,17 +96,17 @@ class Approve:
 
             return num
 
-    async def count_approved_chats(self):
+    def count_approved_chats(self):
         with INSERTION_LOCK:
             return (self.collection.count()) or 0
 
-    async def count_approved(self, chat_id: int):
+    def count_approved(self, chat_id: int):
         with INSERTION_LOCK:
             all_app = self.collection.find_one({"chat_id": chat_id})
             return len(all_app["users"]) or 0
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
             old_chat = self.collection.find_one({"chat_id": old_chat_id})
             if old_chat:

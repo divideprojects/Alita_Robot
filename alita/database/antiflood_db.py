@@ -29,11 +29,11 @@ class AntiFlood:
     def __init__(self) -> None:
         self.collection = MongoDB("antiflood")
 
-    async def get_grp(self, chat_id: int):
+    def get_grp(self, chat_id: int):
         with INSERTION_LOCK:
             return self.collection.find_one({"chat_id": chat_id})
 
-    async def set_status(self, chat_id: int, status: bool = False):
+    def set_status(self, chat_id: int, status: bool = False):
         with INSERTION_LOCK:
             if self.get_grp(chat_id):
                 return self.collection.update(
@@ -42,14 +42,14 @@ class AntiFlood:
                 )
             return self.collection.insert_one({"chat_id": chat_id, "status": status})
 
-    async def get_status(self, chat_id: int):
+    def get_status(self, chat_id: int):
         with INSERTION_LOCK:
             z = self.get_grp(chat_id)
             if z:
                 return z["status"]
             return
 
-    async def set_antiflood(self, chat_id: int, max_msg: int):
+    def set_antiflood(self, chat_id: int, max_msg: int):
         with INSERTION_LOCK:
             if self.get_grp(chat_id):
                 return self.collection.update(
@@ -60,14 +60,14 @@ class AntiFlood:
                 {"chat_id": chat_id, "max_msg": max_msg},
             )
 
-    async def get_antiflood(self, chat_id: int):
+    def get_antiflood(self, chat_id: int):
         with INSERTION_LOCK:
             z = self.get_grp(chat_id)
             if z:
                 return z["max_msg"]
             return
 
-    async def set_action(self, chat_id: int, action: str = "mute"):
+    def set_action(self, chat_id: int, action: str = "mute"):
         with INSERTION_LOCK:
 
             if action not in ("kick", "ban", "mute"):
@@ -80,7 +80,7 @@ class AntiFlood:
                 )
             return self.collection.insert_one({"chat_id": chat_id, "action": action})
 
-    async def get_action(self, chat_id: int):
+    def get_action(self, chat_id: int):
         with INSERTION_LOCK:
             z = self.get_grp(chat_id)
             if z:
@@ -88,7 +88,7 @@ class AntiFlood:
             return
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
             old_chat = self.collection.find_one({"chat_id": old_chat_id})
             if old_chat:

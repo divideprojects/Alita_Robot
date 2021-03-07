@@ -29,14 +29,14 @@ class Reporting:
     def __init__(self) -> None:
         self.collection = MongoDB("reporting_settings")
 
-    async def get_chat_type(self, chat_id: int):
+    def get_chat_type(self, chat_id: int):
         if str(chat_id).startswith("-100"):
             chat_type = "supergroup"
         else:
             chat_type = "user"
         return chat_type
 
-    async def set_settings(self, chat_id: int, status: bool = True):
+    def set_settings(self, chat_id: int, status: bool = True):
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
             curr_settings = (self.collection.find_one({"chat_id": chat_id}))["status"]
@@ -49,7 +49,7 @@ class Reporting:
                 {"chat_id": chat_id, "chat_type": chat_type, "status": status},
             )
 
-    async def get_settings(self, chat_id: int):
+    def get_settings(self, chat_id: int):
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
             curr_settings = (self.collection.find_one({"chat_id": chat_id}))["status"]
@@ -61,7 +61,7 @@ class Reporting:
             return True
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
             old_chat = self.collection.find_one({"chat_id": old_chat_id})
             if old_chat:

@@ -29,11 +29,11 @@ class Chats:
     def __init__(self) -> None:
         self.collection = MongoDB("chats")
 
-    async def remove_chat(self, chat_id: int):
+    def remove_chat(self, chat_id: int):
         with INSERTION_LOCK:
             self.collection.delete_one({"chat_id": chat_id})
 
-    async def update_chat(self, chat_id: int, chat_name: str, user_id: int):
+    def update_chat(self, chat_id: int, chat_name: str, user_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -56,25 +56,25 @@ class Chats:
                 },
             )
 
-    async def count_chat_users(self, chat_id: int):
+    def count_chat_users(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
                 return len(curr["users"])
             return 0
 
-    async def chat_members(self, chat_id: int):
+    def chat_members(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
                 return curr["users"]
             return []
 
-    async def count_chats(self):
+    def count_chats(self):
         with INSERTION_LOCK:
             return self.collection.count()
 
-    async def list_chats(self):
+    def list_chats(self):
         with INSERTION_LOCK:
             chats = self.collection.find_all()
             chat_list = []
@@ -83,7 +83,7 @@ class Chats:
             return chat_list
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
             old_chat = self.collection.find_one({"chat_id": old_chat_id})
             if old_chat:

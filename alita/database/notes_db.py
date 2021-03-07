@@ -28,7 +28,7 @@ class Notes:
     def __init__(self) -> None:
         self.collection = MongoDB("notes")
 
-    async def save_note(
+    def save_note(
         self,
         chat_id: int,
         note_name: str,
@@ -52,7 +52,7 @@ class Notes:
                 },
             )
 
-    async def get_note(self, chat_id: int, note_name: str):
+    def get_note(self, chat_id: int, note_name: str):
         with INSERTION_LOCK:
             curr = self.collection.find_one(
                 {"chat_id": chat_id, "note_name": note_name},
@@ -61,7 +61,7 @@ class Notes:
                 return curr
             return "Note does not exist!"
 
-    async def get_all_notes(self, chat_id: int):
+    def get_all_notes(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_all({"chat_id": chat_id})
             note_list = []
@@ -70,7 +70,7 @@ class Notes:
             note_list.sort()
             return note_list
 
-    async def rm_note(self, chat_id: int, note_name: str):
+    def rm_note(self, chat_id: int, note_name: str):
         with INSERTION_LOCK:
             curr = self.collection.find_one(
                 {"chat_id": chat_id, "note_name": note_name},
@@ -80,18 +80,18 @@ class Notes:
                 return True
             return False
 
-    async def rm_all_notes(self, chat_id: int):
+    def rm_all_notes(self, chat_id: int):
         with INSERTION_LOCK:
             return self.collection.delete_one({"chat_id": chat_id})
 
-    async def count_notes(self, chat_id: int):
+    def count_notes(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_all({"chat_id": chat_id})
             if curr:
                 return len(curr)
             return 0
 
-    async def count_notes_chats(self):
+    def count_notes_chats(self):
         with INSERTION_LOCK:
             notes = self.collection.find_all()
             chats_ids = []
@@ -99,12 +99,12 @@ class Notes:
                 chats_ids.append(chat["chat_id"])
             return len(list(dict.fromkeys(chats_ids)))
 
-    async def count_all_notes(self):
+    def count_all_notes(self):
         with INSERTION_LOCK:
             return len(self.collection.find_all())
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
             old_chat = self.collection.find_one({"chat_id": old_chat_id})
             if old_chat:

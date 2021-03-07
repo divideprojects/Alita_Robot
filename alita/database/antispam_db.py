@@ -29,11 +29,11 @@ class GBan:
     def __init__(self) -> None:
         self.collection = MongoDB("gbans")
 
-    async def check_gban(self, user_id: int):
+    def check_gban(self, user_id: int):
         with INSERTION_LOCK:
             return bool(self.collection.find_one({"user_id": user_id}))
 
-    async def add_gban(self, user_id: int, reason: str, by_user: int):
+    def add_gban(self, user_id: int, reason: str, by_user: int):
         with INSERTION_LOCK:
 
             # Check if  user is already gbanned or not
@@ -46,24 +46,24 @@ class GBan:
                 {"user_id": user_id, "reason": reason, "by": by_user, "time": time_rn},
             )
 
-    async def remove_gban(self, user_id: int):
+    def remove_gban(self, user_id: int):
         with INSERTION_LOCK:
             # Check if  user is already gbanned or not
             if self.collection.insert_one({"user_id": user_id}):
                 return self.collection.delete_one({"user_id": user_id})
             return
 
-    async def update_gban_reason(self, user_id: int, reason: str):
+    def update_gban_reason(self, user_id: int, reason: str):
         with INSERTION_LOCK:
             return self.collection.update(
                 {"user_id": user_id},
                 {"reason": reason},
             )
 
-    async def count_gbans(self):
+    def count_gbans(self):
         with INSERTION_LOCK:
             return self.collection.count()
 
-    async def list_gbans(self):
+    def list_gbans(self):
         with INSERTION_LOCK:
             return self.collection.find_all()

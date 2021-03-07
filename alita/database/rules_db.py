@@ -29,14 +29,14 @@ class Rules:
     def __init__(self) -> None:
         self.collection = MongoDB("rules")
 
-    async def get_rules(self, chat_id: int):
+    def get_rules(self, chat_id: int):
         with INSERTION_LOCK:
             rules = self.collection.find_one({"chat_id": chat_id})
             if rules:
                 return rules["rules"]
             return None
 
-    async def set_rules(self, chat_id: int, rules: str):
+    def set_rules(self, chat_id: int, rules: str):
         with INSERTION_LOCK:
             curr_rules = self.collection.find_one({"chat_id": chat_id})
             if curr_rules:
@@ -46,19 +46,19 @@ class Rules:
                 )
             return self.collection.insert_one({"chat_id": chat_id, "rules": rules})
 
-    async def clear_rules(self, chat_id: int):
+    def clear_rules(self, chat_id: int):
         with INSERTION_LOCK:
             curr_rules = self.collection.find_one({"chat_id": chat_id})
             if curr_rules:
                 return self.collection.delete_one({"chat_id": chat_id})
             return
 
-    async def count_chats(self):
+    def count_chats(self):
         with INSERTION_LOCK:
             return self.collection.count()
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
             old_chat = self.collection.find_one({"chat_id": old_chat_id})
             if old_chat:

@@ -29,7 +29,7 @@ class SpamProtect:
     def __init__(self) -> None:
         self.collection = MongoDB("spam_protect")
 
-    async def get_cas_status(self, chat_id: int):
+    def get_cas_status(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -40,7 +40,7 @@ class SpamProtect:
             )
             return False
 
-    async def set_cas_status(self, chat_id: int, status: bool = False):
+    def set_cas_status(self, chat_id: int, status: bool = False):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -53,7 +53,7 @@ class SpamProtect:
             )
             return status
 
-    async def get_attack_status(self, chat_id: int):
+    def get_attack_status(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -64,7 +64,7 @@ class SpamProtect:
             )
             return False
 
-    async def set_attack_status(self, chat_id: int, status: bool = False):
+    def set_attack_status(self, chat_id: int, status: bool = False):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
@@ -77,7 +77,7 @@ class SpamProtect:
             )
             return status
 
-    async def get_cas_enabled_chats_num(self):
+    def get_cas_enabled_chats_num(self):
         with INSERTION_LOCK:
             curr = self.collection.find_all()
             num = 0
@@ -87,7 +87,7 @@ class SpamProtect:
                         num += 1
             return num
 
-    async def get_attack_enabled_chats_num(self):
+    def get_attack_enabled_chats_num(self):
         with INSERTION_LOCK:
             curr = self.collection.find_all()
             num = 0
@@ -97,7 +97,7 @@ class SpamProtect:
                         num += 1
             return num
 
-    async def get_cas_enabled_chats(self):
+    def get_cas_enabled_chats(self):
         with INSERTION_LOCK:
             curr = self.collection.find_all()
             lst = []
@@ -107,7 +107,7 @@ class SpamProtect:
                         lst.append(chat["chat_id"])
             return lst
 
-    async def get_attack_enabled_chats(self):
+    def get_attack_enabled_chats(self):
         with INSERTION_LOCK:
             curr = self.collection.find_all()
             lst = []

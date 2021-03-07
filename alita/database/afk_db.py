@@ -29,11 +29,11 @@ class AFK:
     def __init__(self) -> None:
         self.collection = MongoDB("afk")
 
-    async def check_afk(self, user_id: int):
+    def check_afk(self, user_id: int):
         with INSERTION_LOCK:
             return self.collection.find_one({"user_id": user_id})
 
-    async def add_afk(self, user_id: int, time: int, reason: str = ""):
+    def add_afk(self, user_id: int, time: int, reason: str = ""):
         with INSERTION_LOCK:
             if self.check_afk(user_id):
                 return self.collection.update(
@@ -44,16 +44,16 @@ class AFK:
                 {"user_id": user_id, "reason": reason, "time": time},
             )
 
-    async def remove_afk(self, user_id: int):
+    def remove_afk(self, user_id: int):
         with INSERTION_LOCK:
             if self.check_afk(user_id):
                 return self.collection.delete_one({"user_id": user_id})
             return
 
-    async def count_afk(self):
+    def count_afk(self):
         with INSERTION_LOCK:
             return self.collection.count()
 
-    async def list_afk_users(self):
+    def list_afk_users(self):
         with INSERTION_LOCK:
             return self.collection.find_all()

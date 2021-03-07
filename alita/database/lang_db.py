@@ -29,14 +29,14 @@ class Langs:
     def __init__(self) -> None:
         self.collection = MongoDB("langs")
 
-    async def get_chat_type(self, chat_id: int):
+    def get_chat_type(self, chat_id: int):
         if str(chat_id).startswith("-100"):
             chat_type = "supergroup"
         else:
             chat_type = "user"
         return chat_type
 
-    async def set_lang(self, chat_id: int, lang: str = "en"):
+    def set_lang(self, chat_id: int, lang: str = "en"):
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
 
@@ -50,7 +50,7 @@ class Langs:
                 {"chat_id": chat_id, "chat_type": chat_type, "lang": lang},
             )
 
-    async def get_lang(self, chat_id: int):
+    def get_lang(self, chat_id: int):
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
 
@@ -64,7 +64,7 @@ class Langs:
             return "en"
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
             old_chat = self.collection.find_one({"chat_id": old_chat_id})
             if old_chat:
