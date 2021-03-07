@@ -107,6 +107,15 @@ async def get_lyrics(_, m: Message):
     filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def id_info(c: Alita, m: Message):
+
+    if m.chat.type == "supergroup":
+        await m.reply_text((tlang(m, "utils.id.group_id")).format(group_id=m.chat.id))
+        return
+
+    if m.chat.type == "private":
+        await m.reply_text((tlang(m, "utils.id.my_id")).format(my_id=m.chat.id))
+        return
+
     user_id = (await extract_user(c, m))[0]
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
