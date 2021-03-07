@@ -45,11 +45,13 @@ from alita import (
     get_self,
     load_cmds,
 )
-from alita.database.chats_db import Chats as chatdb
+from alita.database.chats_db import Chats
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
 from alita.utils.paste import paste
 from alita.utils.redis_helper import allkeys, close, get_key, set_key, setup_redis
+
+chatdb = Chats()
 
 # Check if MESSAGE_DUMP is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
@@ -84,7 +86,7 @@ class Alita(Client):
         LOGGER.info("Begin caching admins...")
         begin = time()
 
-        all_chats = (await chatdb().list_chats()) or []  # Get list of all chats
+        all_chats = (await chatdb.list_chats()) or []  # Get list of all chats
         LOGGER.info(all_chats)
         LOGGER.info(f"{len(all_chats)} chats loaded from database.")
 
