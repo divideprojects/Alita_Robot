@@ -165,6 +165,10 @@ async def set_bl_action(_, m: Message):
 
 @Alita.on_message(filters.group, group=3)
 async def del_blacklist(_, m: Message):
+
+    if not m.from_user:
+        return
+
     chat_blacklists = await db.get_blacklists(m.chat.id)
     action = await db.get_action(m.chat.id)
 
