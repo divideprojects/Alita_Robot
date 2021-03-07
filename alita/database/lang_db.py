@@ -68,19 +68,23 @@ class Langs:
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
 
-            user_dict = next(chat for chat in LANG_DATA if chat["chat_id"] == chat_id)
-            if user_dict:
-                user_lang = user_dict["lang"]
-                yield user_lang
-
-            curr_lang = self.collection.find_one({"chat_id": chat_id})
-            if curr_lang:
-                return str(curr_lang["lang"])
+            try:
+                user_dict = next(chat for chat in LANG_DATA if chat["chat_id"] == chat_id)
+                if user_dict:
+                    user_lang = user_dict["lang"]
+                    yield user_lang
+                    return
+            except Exception:
+                curr_lang = self.collection.find_one({"chat_id": chat_id})
+                if curr_lang:
+                    yield str(curr_lang["lang"])
+                    return
 
             chat_dict = {"chat_id": chat_id, "chat_type": chat_type, "lang": "en"}
             LANG_DATA.append(chat_dict)
             self.collection.insert_one(chat_dict)
-            return "en"
+            yield "en"
+            return
 
     def get_all_langs(self):
         return self.collection.find_all()
