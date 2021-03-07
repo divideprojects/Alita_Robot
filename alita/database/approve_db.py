@@ -35,7 +35,7 @@ class Approve:
                 {"chat_id": chat_id},
             )
             if curr_approve:
-                st = user_id in curr_approve["users"]
+                st = next(user for user in curr_approve["users"] if user[0] == user_id)
                 return st
             return False
 
