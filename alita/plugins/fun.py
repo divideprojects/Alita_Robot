@@ -48,7 +48,7 @@ async def fun_shout(_, m: Message):
 
     if len(m.text.split()) == 1:
         await m.reply_text(
-            (await tlang(m, "general.check_help")),
+            (tlang(m, "general.check_help")),
             reply_to_message_id=m.message_id,
         )
         return

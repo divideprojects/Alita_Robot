@@ -55,7 +55,7 @@ async def get_rules(c: Alita, m: Message):
 
     if not rules:
         await m.reply_text(
-            (await tlang(m, "rules.no_rules")),
+            (tlang(m, "rules.no_rules")),
             reply_to_message_id=m.message_id,
         )
         return
@@ -63,7 +63,7 @@ async def get_rules(c: Alita, m: Message):
     try:
         await c.send_message(
             m.from_user.id,
-            (await tlang(m, "rules.get_rules")).format(
+            (tlang(m, "rules.get_rules")).format(
                 chat=f"<b>{m.chat.title}</b>",
                 rules=rules,
             ),
@@ -73,7 +73,7 @@ async def get_rules(c: Alita, m: Message):
             [[InlineKeyboardButton("PM", url=f"https://t.me/{BOT_ID}?start")]],
         )
         await m.reply_text(
-            (await tlang(m, "rules.pm_me")),
+            (tlang(m, "rules.pm_me")),
             reply_to_message_id=m.message_id,
             reply_markup=pm_kb,
         )
@@ -82,7 +82,7 @@ async def get_rules(c: Alita, m: Message):
         LOGGER.error(ef)
 
     await m.reply_text(
-        (await tlang(m, "rules.sent_pm_rules")),
+        (tlang(m, "rules.sent_pm_rules")),
         reply_to_message_id=m.message_id,
     )
     return
@@ -104,7 +104,7 @@ async def set_rules(_, m: Message):
         await m.reply_text("Rules truncated to 3950 characters!")
 
     db.set_rules(chat_id, rules)
-    await m.reply_text(await tlang(m, "rules.set_rules"))
+    await m.reply_text(tlang(m, "rules.set_rules"))
     return
 
 
@@ -115,11 +115,11 @@ async def clear_rules(_, m: Message):
 
     rules = db.get_rules(m.chat.id)
     if not rules:
-        await m.reply_text(await tlang(m, "rules.no_rules"))
+        await m.reply_text(tlang(m, "rules.no_rules"))
         return
 
     await m.reply_text(
-        (await tlang(m, "rules.clear_rules")),
+        (tlang(m, "rules.clear_rules")),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -135,6 +135,6 @@ async def clear_rules(_, m: Message):
 @Alita.on_callback_query(filters.regex("^clear.rules$") & admin_filter)
 async def clearrules_callback(_, q: CallbackQuery):
     db.clear_rules(q.message.chat.id)
-    await q.message.edit_text(await tlang(q, "rules.cleared"))
+    await q.message.edit_text(tlang(q, "rules.cleared"))
     await q.answer("Rules for the chat have been cleared!", show_alert=True)
     return

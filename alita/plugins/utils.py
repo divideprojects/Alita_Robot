@@ -65,7 +65,7 @@ Some utils provided by bot to make your tasks easy!
 )
 async def ping(_, m: Message):
     start = time()
-    replymsg = await m.reply_text((await tlang(m, "utils.ping.pinging")), quote=True)
+    replymsg = await m.reply_text((tlang(m, "utils.ping.pinging")), quote=True)
     delta_ping = time() - start
     await replymsg.edit_text(f"**Pong!**\n{delta_ping * 1000:.3f} ms")
     return
@@ -78,19 +78,19 @@ async def get_lyrics(_, m: Message):
     query = m.text.split(None, 1)[1]
     song = ""
     if not query:
-        await m.edit_text(await tlang(m, "utils.song.no_song_given"))
+        await m.edit_text(tlang(m, "utils.song.no_song_given"))
         return
     em = await m.reply_text(
-        (await tlang(m, "utils.song.searching").format(song_name=query)),
+        (tlang(m, "utils.song.searching").format(song_name=query)),
     )
     song = Song.find_song(query)
     if song:
         if song.lyrics:
             reply = song.format()
         else:
-            reply = await tlang(m, "utils.song.no_lyrics_found")
+            reply = tlang(m, "utils.song.no_lyrics_found")
     else:
-        reply = await tlang(m, "utils.song.song_not_found")
+        reply = tlang(m, "utils.song.song_not_found")
     try:
         await em.edit_text(reply)
     except MessageTooLong:
@@ -113,7 +113,7 @@ async def id_info(c: Alita, m: Message):
             user1 = m.reply_to_m.from_user
             user2 = m.reply_to_m.forward_from
             await m.reply_text(
-                (await tlang(m, "utils.id.id_main")).format(
+                (tlang(m, "utils.id.id_main")).format(
                     orig_sender=(await mention_html(user2.first_name, user2.id)),
                     orig_id=f"<code>{user2.id}</code>",
                     fwd_sender=(await mention_html(user1.first_name, user1.id)),
@@ -125,7 +125,7 @@ async def id_info(c: Alita, m: Message):
             try:
                 user = await c.get_users(user_id)
             except PeerIdInvalid:
-                await m.reply_text(await tlang(m, "utils.no_user_db"))
+                await m.reply_text(tlang(m, "utils.no_user_db"))
 
             await m.reply_text(
                 f"{(await mention_html(user.first_name, user.id))}'s ID is <code>{user.id}</code>.",
@@ -134,13 +134,13 @@ async def id_info(c: Alita, m: Message):
     else:
         if m.chat.type == "private":
             await m.reply_text(
-                (await tlang(m, "utils.id.my_id")).format(
+                (tlang(m, "utils.id.my_id")).format(
                     my_id=f"<code>{m.chat.id}</code>",
                 ),
             )
         else:
             await m.reply_text(
-                (await tlang(m, "utils.id.group_id")).format(
+                (tlang(m, "utils.id.group_id")).format(
                     group_id=f"<code>{m.chat.id}</code>",
                 ),
             )
@@ -157,7 +157,7 @@ async def get_gifid(_, m: Message):
             parse_mode="html",
         )
     else:
-        await m.reply_text(await tlang(m, "utils.gif_id.reply_gif"))
+        await m.reply_text(tlang(m, "utils.gif_id.reply_gif"))
     return
 
 
@@ -202,49 +202,49 @@ async def github(_, m: Message):
 )
 async def my_info(c: Alita, m: Message):
     infoMsg = await m.reply_text(
-        f"<code>{(await tlang(m, 'utils.user_info.getting_info'))}</code>",
+        f"<code>{(tlang(m, 'utils.user_info.getting_info'))}</code>",
     )
     user_id = (await extract_user(c, m))[0]
     try:
         user = await c.get_users(user_id)
     except PeerIdInvalid:
-        await m.reply_text(await tlang(m, "utils.no_user_db"))
+        await m.reply_text(tlang(m, "utils.no_user_db"))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
         )
         return
 
-    text = (await tlang(m, "utils.user_info.info_text.main")).format(
+    text = (tlang(m, "utils.user_info.info_text.main")).format(
         user_id=user.id,
         user_name=escape(user.first_name),
     )
 
     if user.last_name:
-        text += (await tlang(m, "utils.user_info.info_text.last_name")).format(
+        text += (tlang(m, "utils.user_info.info_text.last_name")).format(
             user_lname=escape(user.last_name),
         )
 
     if user.username:
-        text += (await tlang(m, "utils.user_info.info_text.username")).format(
+        text += (tlang(m, "utils.user_info.info_text.username")).format(
             username=escape(user.username),
         )
 
-    text += (await tlang(m, "utils.user_info.info_text.perma_link")).format(
+    text += (tlang(m, "utils.user_info.info_text.perma_link")).format(
         perma_link=(await mention_html("Click Here", user.id)),
     )
 
     if user.id == OWNER_ID:
-        text += await tlang(m, "utils.user_info.support_user.owner")
+        text += tlang(m, "utils.user_info.support_user.owner")
     elif user.id in DEV_USERS:
-        text += await tlang(m, "utils.user_info.support_user.dev")
+        text += tlang(m, "utils.user_info.support_user.dev")
     elif user.id in SUDO_USERS:
-        text += await tlang(m, "utils.user_info.support_user.sudo")
+        text += tlang(m, "utils.user_info.support_user.sudo")
     elif user.id in WHITELIST_USERS:
-        text += await tlang(m, "utils.user_info.support_user.whitelist")
+        text += tlang(m, "utils.user_info.support_user.whitelist")
 
     try:
         user_member = await m.chat.get_member(user.id)
@@ -258,7 +258,7 @@ async def my_info(c: Alita, m: Message):
             result = result.json()["result"]
             if "custom_title" in result.keys():
                 custom_title = result["custom_title"]
-                text += (await tlang(m, "utils.user_info.custom_title")).format(
+                text += (tlang(m, "utils.user_info.custom_title")).format(
                     custom_title=f"<b>{custom_title}</b>",
                 )
     except BaseException as ef:
@@ -282,7 +282,7 @@ async def weebify(_, m: Message):
     if m.reply_to_message and len(m.text.split()) == 1:
         args = m.reply_to_message.text
     if not args:
-        await m.reply_text(await tlang(m, "utils.weebify.weebify_what"))
+        await m.reply_text(tlang(m, "utils.weebify.weebify_what"))
         return
     string = "  ".join(args).lower()
     for normiecharacter in string:
@@ -291,7 +291,7 @@ async def weebify(_, m: Message):
             string = string.replace(normiecharacter, weebycharacter)
 
     await m.reply_text(
-        (await tlang(m, "utils.weebify.weebified_string").format(string=string)),
+        (tlang(m, "utils.weebify.weebified_string").format(string=string)),
     )
 
     return
@@ -300,7 +300,7 @@ async def weebify(_, m: Message):
 @Alita.on_message(filters.command("paste", PREFIX_HANDLER))
 async def paste_it(_, m: Message):
 
-    replymsg = await m.reply_text((await tlang(m, "utils.paste.pasting")), quote=True)
+    replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")), quote=True)
 
     if m.reply_to_message:
         if m.reply_to_message.document:
@@ -316,12 +316,12 @@ async def paste_it(_, m: Message):
     url = (await paste(txt))[0]
 
     await replymsg.edit_text(
-        (await tlang(m, "utils.paste.pasted_nekobin")),
+        (tlang(m, "utils.paste.pasted_nekobin")),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        (await tlang(m, "utils.paste.nekobin_btn")),
+                        (tlang(m, "utils.paste.nekobin_btn")),
                         url=url,
                     ),
                 ],
@@ -344,7 +344,7 @@ async def translate(_, m: Message):
         text = text.replace(lang, "", 1).strip() if text.startswith(lang) else text
 
     if text:
-        sent = await m.reply_text(await tlang(m, "utils.translate.translating"))
+        sent = await m.reply_text(tlang(m, "utils.translate.translating"))
         langs = {}
 
         if len(lang.split("-")) > 1:
@@ -358,7 +358,7 @@ async def translate(_, m: Message):
 
         res = escape(text)
         await sent.edit_text(
-            (await tlang(m, "utils.translate.translation")).format(
+            (tlang(m, "utils.translate.translation")).format(
                 from_lang=trres.src,
                 to_lang=trres.dest,
                 translation=res,
@@ -366,7 +366,7 @@ async def translate(_, m: Message):
         )
 
     else:
-        await m.reply_text(await tlang(m, "utils.translate.translate_usage"))
+        await m.reply_text(tlang(m, "utils.translate.translate_usage"))
 
     return
 

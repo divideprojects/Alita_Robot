@@ -74,14 +74,14 @@ app_db = Approve()
 async def view_blacklist(_, m: Message):
 
     chat_title = m.chat.title
-    blacklists_chat = (await tlang(m, "blacklist.curr_blacklist_initial")).format(
+    blacklists_chat = (tlang(m, "blacklist.curr_blacklist_initial")).format(
         chat_title=f"<b>{chat_title}</b>",
     )
     all_blacklisted = db.get_blacklists(m.chat.id)
 
     if not all_blacklisted:
         await m.reply_text(
-            (await tlang(m, "blacklist.no_blacklist")).format(
+            (tlang(m, "blacklist.no_blacklist")).format(
                 chat_title=f"<b>{chat_title}</b>",
             ),
         )
@@ -104,12 +104,12 @@ async def add_blacklist(_, m: Message):
         bl_word = (m.text.split(None, 1)[1]).lower()
         db.add_blacklist(m.chat.id, bl_word)
         await m.reply_text(
-            (await tlang(m, "blacklist.added_blacklist")).format(
+            (tlang(m, "blacklist.added_blacklist")).format(
                 trigger=f"<code>{bl_word}</code>",
             ),
         )
         return
-    await m.reply_text(await tlang(m, "general.check_help"))
+    await m.reply_text(tlang(m, "general.check_help"))
     return
 
 
@@ -122,13 +122,13 @@ async def rm_blacklist(_, m: Message):
 
     chat_bl = db.get_blacklists(m.chat.id)
     if not len(m.text.split()) >= 2:
-        await m.reply_text(await tlang(m, "general.check_help"))
+        await m.reply_text(tlang(m, "general.check_help"))
         return
 
     bl_word = (m.text.split(None, 1)[1]).lower()
     if bl_word not in chat_bl:
         await m.reply_text(
-            (await tlang(m, "blacklist.no_bl_found")).format(
+            (tlang(m, "blacklist.no_bl_found")).format(
                 bl_word=f"<code>{bl_word}</code>",
             ),
         )
@@ -136,7 +136,7 @@ async def rm_blacklist(_, m: Message):
 
     db.remove_blacklist(m.chat.id, bl_word)
     await m.reply_text(
-        (await tlang(m, "blacklist.rm_blacklist")).format(
+        (tlang(m, "blacklist.rm_blacklist")).format(
             bl_word=f"<code>{bl_word}</code>",
         ),
     )
@@ -150,15 +150,15 @@ async def set_bl_action(_, m: Message):
         action = m.text.split(None, 1)[1]
         db.set_action(m.chat.id, action)
         await m.reply_text(
-            (await tlang(m, "blacklist.action_set")).format(action=f"<b>{action}</b>"),
+            (tlang(m, "blacklist.action_set")).format(action=f"<b>{action}</b>"),
         )
     elif len(m.text.split()) == 1:
         action = db.get_action(m.chat.id)
         await m.reply_text(
-            (await tlang(m, "blacklist.action_get")).format(action=f"<b>{action}</b>"),
+            (tlang(m, "blacklist.action_get")).format(action=f"<b>{action}</b>"),
         )
     else:
-        await m.reply_text(await tlang(m, "general.check_help"))
+        await m.reply_text(tlang(m, "general.check_help"))
 
     return
 

@@ -70,17 +70,17 @@ async def mute_usr(c: Alita, m: Message):
             ),
         )
         await m.reply_text(
-            (await tlang(m, "admin.muted_user")).format(
+            (tlang(m, "admin.muted_user")).format(
                 user=(await mention_html(user_first_name, user_id)),
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "admin.not_admin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(await tlang(m, "admin.bot_no_mute_right"))
+        await m.reply_text(tlang(m, "admin.bot_no_mute_right"))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -100,17 +100,17 @@ async def unmute_usr(c: Alita, m: Message):
     try:
         await m.chat.restrict_member(user_id, m.chat.permissions)
         await m.reply_text(
-            (await tlang(m, "admin.unmuted_user")).format(
+            (tlang(m, "admin.unmuted_user")).format(
                 user=(await mention_html(user_first_name, user_id)),
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "admin.not_admin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(await tlang(m, "admin.bot_no_mute_right"))
+        await m.reply_text(tlang(m, "admin.bot_no_mute_right"))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),

@@ -20,6 +20,7 @@ from functools import reduce
 from glob import glob
 from operator import getitem
 from os import path
+from threading import RLock
 
 from pyrogram.types import CallbackQuery
 from yaml import FullLoader
@@ -29,6 +30,7 @@ from alita import ENABLED_LOCALES
 from alita.database.lang_db import Langs
 
 # Initialise
+LOCK = RLock()
 db = Langs()
 
 
@@ -54,27 +56,28 @@ def getFromDict(list_data, lang_dict=lang_dict):
     return reduce(getitem, list_data, lang_dict)
 
 
-async def tlang(m, user_msg):
+def tlang(m, user_msg):
     """Main function for getting the string of preferred language."""
+    with LOCK:
 
-    m_args = user_msg.split(".")  # Split in a list
+        m_args = user_msg.split(".")  # Split in a list
 
-    # Get Chat
-    if isinstance(m, CallbackQuery):
-        m = m.message
+        # Get Chat
+        if isinstance(m, CallbackQuery):
+            m = m.message
 
-    # Get Chat
-    chat = m.chat
+        # Get Chat
+        chat = m.chat
 
-    # Get language of user from database, default = 'en' (English)
-    lang = (db.get_lang(chat.id)) or "en"
+        # Get language of user from database, default = 'en' (English)
+        lang = (db.get_lang(chat.id)) or "en"
 
-    # Get lang
-    m_args.insert(0, lang)
-    m_args.insert(1, "strings")
+        # Get lang
+        m_args.insert(0, lang)
+        m_args.insert(1, "strings")
 
-    # Raise exception if lang_code not found
-    if lang not in ENABLED_LOCALES:
-        raise Exception("Unknown Language Code found!")
+        # Raise exception if lang_code not found
+        if lang not in ENABLED_LOCALES:
+            raise Exception("Unknown Language Code found!")
 
-    return getFromDict(m_args)
+        return getFromDict(m_args)
