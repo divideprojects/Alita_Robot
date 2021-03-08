@@ -53,7 +53,7 @@ class Langs:
                     indice = LANG_DATA.index(chat_dict)
                     (LANG_DATA[indice]).update({"lang": lang})
                     yield True
-                except Exception:
+                except StopIteration:
                     pass
 
             if self.collection.find_one({"chat_id": chat_id}):
@@ -80,7 +80,7 @@ class Langs:
                     user_lang = user_dict["lang"]
                     yield user_lang
                     return
-            except Exception:
+            except StopIteration:
                 curr_lang = self.collection.find_one({"chat_id": chat_id})
                 if curr_lang:
                     yield str(curr_lang["lang"])
