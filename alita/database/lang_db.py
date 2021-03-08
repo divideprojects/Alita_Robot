@@ -32,6 +32,7 @@ class Langs:
         self.collection = MongoDB("langs")
 
     def get_chat_type(self, chat_id: int):
+        _ = self
         if str(chat_id).startswith("-100"):
             chat_type = "supergroup"
         else:
@@ -42,7 +43,7 @@ class Langs:
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
 
-            if chat_id in (list(chat_or_user["chat_id"] for chat_or_user in LANG_DATA)):
+            if chat_id in [chat_or_user["chat_id"] for chat_or_user in LANG_DATA]:
                 chat_dict = next(
                     chat_or_user
                     for chat_or_user in LANG_DATA

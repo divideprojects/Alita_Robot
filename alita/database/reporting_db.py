@@ -30,6 +30,7 @@ class Reporting:
         self.collection = MongoDB("reporting_settings")
 
     def get_chat_type(self, chat_id: int):
+        _ = self
         if str(chat_id).startswith("-100"):
             chat_type = "supergroup"
         else:

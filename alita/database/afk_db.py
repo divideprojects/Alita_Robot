@@ -35,8 +35,8 @@ class AFK:
             return self.collection.find_one({"user_id": user_id})
 
     def add_afk(self, user_id: int, time: int, reason: str = ""):
-        global AFK_USERS
         with INSERTION_LOCK:
+
             if self.check_afk(user_id):
 
                 # Remove afk if user is already AFK
@@ -46,8 +46,8 @@ class AFK:
                 )
 
     def remove_afk(self, user_id: int):
-        global AFK_USERS
         with INSERTION_LOCK:
+
             if self.check_afk(user_id):
                 # If user_id in AFK_USERS, remove it
                 return self.collection.delete_one({"user_id": user_id})
