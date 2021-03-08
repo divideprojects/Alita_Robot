@@ -34,7 +34,6 @@ class GBan:
             return bool(self.collection.find_one({"user_id": user_id}))
 
     def add_gban(self, user_id: int, reason: str, by_user: int):
-        global GBAN_DATA
         with INSERTION_LOCK:
 
             # Check if  user is already gbanned or not
@@ -53,7 +52,6 @@ class GBan:
             )
 
     def remove_gban(self, user_id: int):
-        global GBAN_DATA
         with INSERTION_LOCK:
             # Check if  user is already gbanned or not
             if self.collection.insert_one({"user_id": user_id}):

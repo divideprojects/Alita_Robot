@@ -34,7 +34,6 @@ class AntiFlood:
             return self.collection.find_one({"chat_id": chat_id})
 
     def set_status(self, chat_id: int, status: bool = False):
-        global ANTIFLOOD_SETTINGS
         with INSERTION_LOCK:
 
             chat_dict = self.get_grp(chat_id)
@@ -54,7 +53,6 @@ class AntiFlood:
             return
 
     def set_antiflood(self, chat_id: int, max_msg: int):
-        global ANTIFLOOD_SETTINGS
         with INSERTION_LOCK:
 
             chat_dict = self.get_grp(chat_id)
@@ -74,7 +72,6 @@ class AntiFlood:
             return
 
     def set_action(self, chat_id: int, action: str = "mute"):
-        global ANTIFLOOD_SETTINGS
         with INSERTION_LOCK:
 
             if action not in ("kick", "ban", "mute"):
@@ -92,6 +89,7 @@ class AntiFlood:
 
     def get_action(self, chat_id: int):
         with INSERTION_LOCK:
+
             z = self.get_grp(chat_id)
             if z:
                 return z["action"]
@@ -105,13 +103,12 @@ class AntiFlood:
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        global ANTIFLOOD_SETTINGS
-        with INSERTION_LOCK:
 
+        with INSERTION_LOCK:
             old_chat = self.collection.find_one({"chat_id": old_chat_id})
             if old_chat:
                 return self.collection.update(
                     {"chat_id": old_chat_id},
                     {"chat_id": new_chat_id},
                 )
-        return
+            return
