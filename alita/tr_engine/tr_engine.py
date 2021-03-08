@@ -38,7 +38,7 @@ def cache_localizations(files):
     """Get all translated strings from files."""
     ldict = {lang: {} for lang in ENABLED_LOCALES}
     for file in files:
-        lang_name = (file.split(path.sep)[1]).replace(".yaml", "")
+        lang_name = (file.split(path.sep)[1]).replace(".yml", "")
         lang_data = load_yml(open(file, encoding="utf-8"), Loader=FullLoader)
         ldict[lang_name] = lang_data
     return ldict
@@ -47,7 +47,7 @@ def cache_localizations(files):
 # Get all translation files
 lang_files = []
 for locale in ENABLED_LOCALES:
-    lang_files += glob(path.join("locales", f"{locale}.yaml"))
+    lang_files += glob(path.join("locales", f"{locale}.yml"))
 lang_dict = cache_localizations(lang_files)
 
 
