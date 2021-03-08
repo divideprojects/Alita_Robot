@@ -166,7 +166,7 @@ async def commands_menu(_, q: CallbackQuery):
 @Alita.on_message(filters.command("help", PREFIX_HANDLER))
 async def help_menu(_, m: Message):
 
-    if (m.text.split()) == 2:
+    if (m.text.split()) != 1:
 
         help_option = (m.text.split(None, 1)[1]).lower()
         help_cmd_keys = sorted([i.lower() for i in list(HELP_COMMANDS.keys())])
@@ -202,37 +202,37 @@ async def help_menu(_, m: Message):
                     ],
                 ),
             )
-        return
-    if m.chat.type == "private":
-        keyboard = InlineKeyboardMarkup(
-            inline_keyboard=[
-                *(await gen_cmds_kb()),
-                [
-                    InlineKeyboardButton(
-                        f"« {(tlang(m, 'general.back_btn'))}",
-                        callback_data="start_back",
-                    ),
-                ],
-            ],
-        )
-        msg = tlang(m, "general.commands_available")
     else:
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        text="Help",
-                        url=f"t.me/{BOT_USERNAME}?start=help",
-                    ),
+        if m.chat.type == "private":
+            keyboard = InlineKeyboardMarkup(
+                inline_keyboard=[
+                    *(await gen_cmds_kb()),
+                    [
+                        InlineKeyboardButton(
+                            f"« {(tlang(m, 'general.back_btn'))}",
+                            callback_data="start_back",
+                        ),
+                    ],
                 ],
-            ],
-        )
-        msg = tlang(m, "start.pm_for_help")
+            )
+            msg = tlang(m, "general.commands_available")
+        else:
+            keyboard = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="Help",
+                            url=f"t.me/{BOT_USERNAME}?start=help",
+                        ),
+                    ],
+                ],
+            )
+            msg = tlang(m, "start.pm_for_help")
 
-    await m.reply_text(
-        msg,
-        reply_markup=keyboard,
-    )
+        await m.reply_text(
+            msg,
+            reply_markup=keyboard,
+        )
 
     return
 
