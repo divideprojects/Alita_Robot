@@ -161,7 +161,7 @@ async def promote_usr(c: Alita, m: Message):
             can_pin_messages=True,
         )
         await m.reply_text(
-            (tlang(m, "admin.promoted_user")).format(
+            (tlang(m, "admin.promote.promoted_user")).format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"<b>{m.chat.title}</b>",
@@ -186,7 +186,7 @@ async def promote_usr(c: Alita, m: Message):
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.bot_no_promote_right"))
+        await m.reply_text(tlang(m, "admin.promote.bot_no_right"))
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
@@ -215,7 +215,7 @@ async def demote_usr(c: Alita, m: Message):
             can_pin_messages=False,
         )
         await m.reply_text(
-            (tlang(m, "admin.demoted_user")).format(
+            (tlang(m, "admin.demote.demoted_user")).format(
                 demoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 demoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"<b>{m.chat.title}</b>",
@@ -240,7 +240,7 @@ async def demote_usr(c: Alita, m: Message):
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(tlang(m, "admin.bot_no_demote_right"))
+        await m.reply_text(tlang(m, "admin.demote.bot_no_right"))
     except UserAdminInvalid:
         await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RPCError as ef:
@@ -271,9 +271,9 @@ async def get_invitelink(c: Alita, m: Message):
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except ChatAdminInviteRequired:
-        await m.reply_text(tlang(m, "admin.noinviteperm"))
+        await m.reply_text(tlang(m, "admin.no_invite_perm"))
     except RightForbidden:
-        await m.reply_text(tlang(m, "no_invite_perm"))
+        await m.reply_text(tlang(m, "admin.no_user_invite_perm"))
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(

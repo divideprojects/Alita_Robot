@@ -159,7 +159,7 @@ async def disapprove_user(c: Alita, m: Message):
     # Set permission same as of current user by fetching them from chat!
     await m.chat.restrict_member(
         user_id=user_id,
-        permissions=(await get_chat_permission(m)),
+        permissions=m.chat.permissions,
     )
 
     await m.reply_text(
@@ -264,41 +264,8 @@ async def unapproveall_callback(_, q: CallbackQuery):
     for i in approved_people:
         await q.message.chat.restrict_member(
             user_id=i,
-            permissions=(await get_chat_permission(q)),
+            permissions=q.message.chat.permissions,
         )
     await q.message.delete()
     await q.answer("Disapproved all users!", show_alert=True)
     return
-
-
-async def get_chat_permission(m):
-    if isinstance(m, CallbackQuery):
-        m = m.message
-
-    chat_perms = m.chat.permissions
-
-    msg = chat_perms.can_send_messages
-    media = chat_perms.can_send_media_messages
-    stickers = chat_perms.can_send_stickers
-    animations = chat_perms.can_send_animations
-    games = chat_perms.can_send_games
-    inlinebots = chat_perms.can_use_inline_bots
-    webprev = chat_perms.can_add_web_page_previews
-    polls = chat_perms.can_send_polls
-    info = chat_perms.can_change_info
-    invite = chat_perms.can_invite_users
-    pin = chat_perms.can_pin_messages
-    perm = ChatPermissions(
-        can_send_messages=msg,
-        can_send_media_messages=media,
-        can_send_stickers=stickers,
-        can_send_animations=animations,
-        can_send_games=games,
-        can_use_inline_bots=inlinebots,
-        can_add_web_page_previews=webprev,
-        can_send_polls=polls,
-        can_change_info=info,
-        can_invite_users=invite,
-        can_pin_messages=pin,
-    )
-    return perm
