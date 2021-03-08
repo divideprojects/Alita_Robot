@@ -1,7 +1,7 @@
 ---
 main:
-  lang_sample: Españo
-  language_flag: 🇪🇸
+  lang_sample: "Españo"
+  language_flag: '🇪🇸'
   language_name: Spanish
 strings:
   admin:
@@ -162,9 +162,9 @@ strings:
       ¡Hola! Mi nombre es Alita.
       ¡Estoy aquí para ayudarlo a administrar sus grupos!
       Comandos disponibles:
-       × /start: inicia el bot
-       × /ayuda: Te doy este mensaje.
-       × /donate: ¡Información relacionada con cómo donar!
+      × /start: inicia el bot
+      × /ayuda: Te doy este mensaje.
+      × /donate: ¡Información relacionada con cómo donar!
 
       Todos los comandos se pueden usar con / o!.
     no_admin_cmd_perm: "¡No puede usar un comando de administrador!"
@@ -282,39 +282,39 @@ strings:
       custom_title: |-
 
 
-                  Este usuario tiene el título {custom_title} aquí.
+        Este usuario tiene el título {custom_title} aquí.
       getting_info: "Obteniendo información de usuario ..."
       info_text:
         last_name: |-
 
-                      Apellido: {user_lname}
+          Apellido: {user_lname}
         main: |-
           Caracteristicas:
           ID: {user_id}
           Primer nombre Nombre de usuario}
         perma_link: |-
 
-                      Enlace de usuario permanente: {perma_link}
+          Enlace de usuario permanente: {perma_link}
         username: |-
 
-                      Nombre de usuario: @{username}
+          Nombre de usuario: @{username}
       support_user:
         dev: |-
 
 
-                      Este miembro es uno de mis desarrolladores ⚡️
+          Este miembro es uno de mis desarrolladores ⚡️
         owner: |-
 
 
-                      Esta persona es mi Dueña, ¡nunca haría nada en su contra!
+          Esta persona es mi Dueña, ¡nunca haría nada en su contra!
         sudo: |-
 
 
-                      El nivel de poder de esta persona es 'Sudo'
+          El nivel de poder de esta persona es 'Sudo'
         whitelist: |-
 
 
-                      Esta persona es 'Usuario de la lista blanca', ¡no puede ser baneado!
+          Esta persona es 'Usuario de la lista blanca', ¡no puede ser baneado!
     weebify:
       weebified_string: |-
         Cuerda Weebified:
