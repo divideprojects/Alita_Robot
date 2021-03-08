@@ -35,8 +35,13 @@ class Approve:
                 {"chat_id": chat_id},
             )
             if curr_approve:
-                st = next(user for user in curr_approve["users"] if user[0] == user_id)
-                return st
+                try:
+                    return next(
+                        user for user in curr_approve["users"] if user[0] == user_id
+                    )
+                except Exception:
+                    return False
+
             return False
 
     def add_approve(self, chat_id: int, user_id: int, user_name: str):
@@ -45,7 +50,7 @@ class Approve:
             if curr:
                 users_old = curr["users"]
                 users_old.append((user_id, user_name))
-                users = list(dict.fromkeys(users_old))
+                users = list(dict.fromkeys(users_old))  # Remove duplicates
                 return self.collection.update(
                     {"chat_id": chat_id},
                     {
@@ -65,7 +70,12 @@ class Approve:
             curr = self.collection.find_one({"chat_id": chat_id})
             if curr:
                 users = curr["users"]
-                user = next(user for user in users if user[0] == user_id)
+
+                try:
+                    user = next(user for user in users if user[0] == user_id)
+                except Exception:
+                    return "Not Approved"
+
                 users.remove(user)
                 return self.collection.update(
                     {"chat_id": chat_id},
