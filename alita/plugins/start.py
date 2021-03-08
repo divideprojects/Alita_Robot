@@ -206,7 +206,7 @@ async def help_menu(_, m: Message):
     if m.chat.type == "private":
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                *gen_cmds_kb(),
+                *(await gen_cmds_kb()),
                 [
                     InlineKeyboardButton(
                         f"« {(tlang(m, 'general.back_btn'))}",
