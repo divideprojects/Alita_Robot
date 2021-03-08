@@ -21,7 +21,7 @@ from io import BytesIO
 from os import remove
 from time import time
 
-from googletrans import LANGUAGES, Translator
+from gpytranslate import Translator
 from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
@@ -53,10 +53,10 @@ Some utils provided by bot to make your tasks easy!
  × /info: Get information about a user.
  × /ping - Get ping time of bot to telegram server.
  × /gifid: Reply to a gif to me to tell you its file ID.
- × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
+ × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
  × /github <username>: Search for the user using github api!
  × /lyrics <song>: Get the lyrics of the song you specify!
- × /weebify <text> or a reply to message: To weebify the message.
+ × /weebify <text> or a reply to message: To weebify the m.
 """
 
 
@@ -344,49 +344,39 @@ async def paste_it(_, m: Message):
 @Alita.on_message(filters.command("tr", PREFIX_HANDLER))
 async def translate(_, m: Message):
 
-    translator = Translator()
-    text = m.text[4:]
-    lang = await get_lang(text)
-    if m.reply_to_message:
-        text = m.reply_to_message.text or m.reply_to_message.caption
-    else:
-        text = text.replace(lang, "", 1).strip() if text.startswith(lang) else text
-
-    if text:
-        sent = await m.reply_text(tlang(m, "utils.translate.translating"))
-        langs = {}
-
-        if len(lang.split("-")) > 1:
-            langs["src"] = lang.split("-")[0]
-            langs["dest"] = lang.split("-")[1]
+    trl = Translator()
+    if m.reply_to_message and (m.reply_to_message.text or m.reply_to_message.caption):
+        if len(m.text.split()) == 1:
+            await m.reply_text(
+                "Provide lang code.\n[Available options](https://telegra.ph/Lang-Codes-11-08).\n**Usage:** `/tr en`",
+            )
+            return
+        target_lang = m.text.split()[1]
+        if m.reply_to_message.text:
+            text = m.reply_to_message.text
         else:
-            langs["dest"] = lang
-
-        trres = translator.translate(text, **langs)
-        text = trres.text
-
-        res = escape(text)
-        await sent.edit_text(
-            (tlang(m, "utils.translate.translation")).format(
-                from_lang=trres.src,
-                to_lang=trres.dest,
-                translation=res,
-            ),
-        )
-
+            text = m.reply_to_message.caption
+        detectlang = await trl.detect(text)
+        try:
+            tekstr = await trl(text, targetlang=target_lang)
+        except ValueError as err:
+            await m.reply_text(f"Error: `{str(err)}`")
+            return
     else:
-        await m.reply_text(tlang(m, "utils.translate.translate_usage"))
+        if len(m.text.split()) <= 2:
+            await m.reply_text(
+                "Provide lang code.\n[Available options](https://telegra.ph/Lang-Codes-11-08).\n**Usage:** `/tr en`",
+            )
+            return
+        target_lang = m.text.split(None, 2)[1]
+        text = m.text.split(None, 2)[2]
+        detectlang = await trl.detect(text)
+        try:
+            tekstr = await trl(text, targetlang=target_lang)
+        except ValueError as err:
+            await m.reply_text("Error: `{}`".format(str(err)))
+            return
 
-    return
-
-
-async def get_lang(text):
-    if len(text.split()) > 0:
-        lang = text.split()[0]
-        if lang.split("-")[0] not in LANGUAGES:
-            lang = "en"
-        if len(lang.split("-")) > 1 and lang.split("-")[1] not in LANGUAGES:
-            lang = "en"
-    else:
-        lang = "en"
-    return lang
+    await m.reply_text(
+        f"**Translated:** from {detectlang} to {target_lang} \n```{tekstr.text}```",
+    )
