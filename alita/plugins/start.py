@@ -166,7 +166,7 @@ async def commands_menu(_, q: CallbackQuery):
 @Alita.on_message(filters.command("help", PREFIX_HANDLER))
 async def help_menu(_, m: Message):
 
-    if (m.text.split()) != 1:
+    if len(m.text.split()) >= 2:
 
         help_option = (m.text.split(None, 1)[1]).lower()
         help_cmd_keys = sorted([i.lower() for i in list(HELP_COMMANDS.keys())])
