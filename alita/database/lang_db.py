@@ -44,14 +44,17 @@ class Langs:
             chat_type = self.get_chat_type(chat_id)
 
             if chat_id in [chat_or_user["chat_id"] for chat_or_user in LANG_DATA]:
-                chat_dict = next(
-                    chat_or_user
-                    for chat_or_user in LANG_DATA
-                    if chat_or_user["chat_id"] == chat_id
-                )
-                indice = LANG_DATA.index(chat_dict)
-                (LANG_DATA[indice]).update({"lang": lang})
-                yield True
+                try:
+                    chat_dict = next(
+                        chat_or_user
+                        for chat_or_user in LANG_DATA
+                        if chat_or_user["chat_id"] == chat_id
+                    )
+                    indice = LANG_DATA.index(chat_dict)
+                    (LANG_DATA[indice]).update({"lang": lang})
+                    yield True
+                except Exception:
+                    pass
 
             if self.collection.find_one({"chat_id": chat_id}):
                 return self.collection.update(
