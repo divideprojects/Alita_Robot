@@ -164,12 +164,15 @@ async def commands_menu(_, q: CallbackQuery):
 
 
 @Alita.on_message(filters.command("help", PREFIX_HANDLER))
-async def commands_pvt(_, m: Message):
+async def help_menu(_, m: Message):
 
-    if (m.text.split()) != 1:
+    if (m.text.split()) == 2:
+
         help_option = (m.text.split(None, 1)[1]).lower()
-        if help_option in sorted([i.lower() for i in list(HELP_COMMANDS.keys())]):
+        help_cmd_keys = sorted([i.lower() for i in list(HELP_COMMANDS.keys())])
+        if help_option in help_cmd_keys:
             help_msg = HELP_COMMANDS[help_option]
+
         if m.chat.type == "private":
             await m.reply_text(
                 help_msg,
