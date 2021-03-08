@@ -115,7 +115,7 @@ async def bl_watcher(_, m: Message):
                 ),
             )
         elif action == "none":
-            pass
+            return
         return
 
     # If no blacklists, then return
