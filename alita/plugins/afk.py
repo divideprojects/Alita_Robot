@@ -53,18 +53,18 @@ db = AFK()
 )
 async def set_afk(_, m: Message):
 
-    afkmsg = (await tlang(m, "afk.user_now_afk")).format(
+    afkmsg = (tlang(m, "afk.user_now_afk")).format(
         user=(await mention_html(m.from_user.first_name, m.from_user.id)),
     )
 
     if len(m.command) > 1:
         reason = m.text.split(None, 1)[1]
-        reason_txt = (await tlang(m, "afk.reason")).format(res=reason)
+        reason_txt = (tlang(m, "afk.reason")).format(res=reason)
     else:
         reason_txt = ""
 
     try:
-        await db.add_afk(m.from_user.id, time(), reason)
+        db.add_afk(m.from_user.id, time(), reason)
         await m.reply_text(afkmsg + reason_txt)
     except Exception as ef:
         await m.reply_text(ef)
@@ -87,22 +87,22 @@ async def afk_mentioned(c: Alita, m: Message):
         return
 
     try:
-        user_afk = await db.check_afk(user_id)
+        user_afk = db.check_afk(user_id)
     except Exception as ef:
-        await m.reply_text((await tlang(m, "afk.error_check_afk")).format(ef=ef))
+        await m.reply_text((tlang(m, "afk.error_check_afk")).format(ef=ef))
         return
 
     if not user_afk:
         return
 
     since = strftime("%Hh %Mm %Ss", gmtime(time() - user_afk["time"]))
-    afkmsg = (await tlang(m, "afk.user_afk")).format(
+    afkmsg = (tlang(m, "afk.user_afk")).format(
         first_name=user_first_name,
         since=since,
     )
 
     if user_afk["reason"]:
-        afkmsg += (await tlang(m, "afk.user_afk")).format(reason=user_afk["reason"])
+        afkmsg += (tlang(m, "afk.user_afk")).format(reason=user_afk["reason"])
 
     await m.reply_text(afkmsg)
 
@@ -116,19 +116,19 @@ async def rem_afk(c: Alita, m: Message):
         return
 
     try:
-        user_afk = await db.check_afk(m.from_user.id)
+        user_afk = db.check_afk(m.from_user.id)
     except Exception as ef:
-        await m.reply_text((await tlang(m, "afk.error_check_afk")).format(ef=ef))
+        await m.reply_text((tlang(m, "afk.error_check_afk")).format(ef=ef))
         return
 
     if not user_afk:
         return
 
     since = strftime("%Hh %Mm %Ss", gmtime(time() - (user_afk["time"])))
-    await db.remove_afk(m.from_user.id)
+    db.remove_afk(m.from_user.id)
     user = await c.get_users(user_afk["user_id"])
     await m.reply_text(
-        (await tlang(m, "afk.no_longer_afk")).format(
+        (tlang(m, "afk.no_longer_afk")).format(
             first_name=user.first_name,
             since=since,
         ),

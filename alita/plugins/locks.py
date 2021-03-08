@@ -92,7 +92,7 @@ async def lock_perm(c: Alita, m: Message):
     chat_id = m.chat.id
 
     if not lock_type:
-        await m.reply_text(await tlang(m, "locks.locks_perm_sp"))
+        await m.reply_text(tlang(m, "locks.locks_perm_sp"))
         return
 
     get_perm = m.chat.permissions
@@ -113,9 +113,9 @@ async def lock_perm(c: Alita, m: Message):
         try:
             await c.set_chat_permissions(chat_id, ChatPermissions())
             await prevent_approved(m)  # Don't lock permissions for approved users!
-            await m.reply_text("🔒 " + (await tlang(m, "locks.lock_all")))
+            await m.reply_text("🔒 " + (tlang(m, "locks.lock_all")))
         except ChatAdminRequired:
-            await m.reply_text(await tlang(m, "general.no_perm_admin"))
+            await m.reply_text(tlang(m, "general.no_perm_admin"))
         return
 
     if lock_type == "msg":
@@ -163,7 +163,7 @@ async def lock_perm(c: Alita, m: Message):
         perm = "pin"
 
     else:
-        await m.reply_text(await tlang(m, "locks.invalid_lock"))
+        await m.reply_text(tlang(m, "locks.invalid_lock"))
         return
 
     try:
@@ -185,10 +185,10 @@ async def lock_perm(c: Alita, m: Message):
         )
         await prevent_approved(m)  # Don't lock permissions for approved users!
         await m.reply_text(
-            "🔒 " + (await tlang(m, "locks.locked_perm").format(perm=perm)),
+            "🔒 " + (tlang(m, "locks.locked_perm").format(perm=perm)),
         )
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "general.no_perm_admin"))
+        await m.reply_text(tlang(m, "general.no_perm_admin"))
     return
 
 
@@ -212,7 +212,7 @@ async def view_locks(_, m: Message):
         vpin,
     ) = ("", "", "", "", "", "", "", "", "", "", "", "")
 
-    chkmsg = await m.reply_text(await tlang(m, "locks.check_perm_msg"))
+    chkmsg = await m.reply_text(tlang(m, "locks.check_perm_msg"))
     v_perm = m.chat.permissions
 
     async def convert_to_emoji(val: bool):
@@ -234,7 +234,7 @@ async def view_locks(_, m: Message):
 
     if v_perm is not None:
         try:
-            permission_view_str = (await tlang(m, "locks.view_perm")).format(
+            permission_view_str = (tlang(m, "locks.view_perm")).format(
                 vmsg=vmsg,
                 vmedia=vmedia,
                 vstickers=vstickers,
@@ -250,7 +250,7 @@ async def view_locks(_, m: Message):
             await chkmsg.edit_text(permission_view_str)
 
         except RPCError as e_f:
-            await chkmsg.edit_text(await tlang(m, "general.something_wrong"))
+            await chkmsg.edit_text(tlang(m, "general.something_wrong"))
             await m.reply_text(e_f)
 
     return
@@ -283,7 +283,7 @@ async def unlock_perm(c: Alita, m: Message):
     chat_id = m.chat.id
 
     if not unlock_type:
-        await m.reply_text(await tlang(m, "locks.unlocks_perm_sp"))
+        await m.reply_text(tlang(m, "locks.unlocks_perm_sp"))
         return
 
     get_uperm = m.chat.permissions
@@ -319,9 +319,9 @@ async def unlock_perm(c: Alita, m: Message):
                 ),
             )
             await prevent_approved(m)  # Don't lock permissions for approved users!
-            await m.reply_text("🔓 " + (await tlang(m, "locks.unlock_all")))
+            await m.reply_text("🔓 " + (tlang(m, "locks.unlock_all")))
         except ChatAdminRequired:
-            await m.reply_text(await tlang(m, "general.no_perm_admin"))
+            await m.reply_text(tlang(m, "general.no_perm_admin"))
         return
 
     if unlock_type == "msg":
@@ -369,7 +369,7 @@ async def unlock_perm(c: Alita, m: Message):
         uperm = "pin"
 
     else:
-        await m.reply_text(await tlang(m, "locks.invalid_lock"))
+        await m.reply_text(tlang(m, "locks.invalid_lock"))
         return
 
     try:
@@ -391,16 +391,16 @@ async def unlock_perm(c: Alita, m: Message):
         )
         await prevent_approved(m)  # Don't lock permissions for approved users!
         await m.reply_text(
-            "🔓 " + (await tlang(m, "locks.unlocked_perm").format(uperm=uperm)),
+            "🔓 " + (tlang(m, "locks.unlocked_perm").format(uperm=uperm)),
         )
 
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "general.no_perm_admin"))
+        await m.reply_text(tlang(m, "general.no_perm_admin"))
     return
 
 
 async def prevent_approved(m: Message):
-    approved_users = await app_db.list_approved(m.chat.id)
+    approved_users = app_db.list_approved(m.chat.id)
     ul = []
     for user in approved_users:
         ul.append(user["user_id"])

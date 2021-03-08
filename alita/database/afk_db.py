@@ -16,7 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
+
 from alita.database import MongoDB
+
+INSERTION_LOCK = RLock()
 
 
 class AFK:
@@ -25,26 +29,34 @@ class AFK:
     def __init__(self) -> None:
         self.collection = MongoDB("afk")
 
-    async def check_afk(self, user_id: int):
-        return await self.collection.find_one({"user_id": user_id})
+    def check_afk(self, user_id: int):
 
-    async def add_afk(self, user_id: int, time: int, reason: str = ""):
-        if await self.check_afk(user_id):
-            return await self.collection.update(
-                {"user_id": user_id},
-                {"user_id": user_id, "reason": reason, "time": time},
-            )
-        return await self.collection.insert_one(
-            {"user_id": user_id, "reason": reason, "time": time},
-        )
+        with INSERTION_LOCK:
+            return self.collection.find_one({"user_id": user_id})
 
-    async def remove_afk(self, user_id: int):
-        if await self.check_afk(user_id):
-            return await self.collection.delete_one({"user_id": user_id})
+    def add_afk(self, user_id: int, time: int, reason: str = ""):
+        with INSERTION_LOCK:
+
+            if self.check_afk(user_id):
+
+                # Remove afk if user is already AFK
+                self.remove_afk(user_id)
+                return self.collection.insert_one(
+                    {"user_id": user_id, "reason": reason, "time": time},
+                )
+
+    def remove_afk(self, user_id: int):
+        with INSERTION_LOCK:
+
+            if self.check_afk(user_id):
+                # If user_id in AFK_USERS, remove it
+                return self.collection.delete_one({"user_id": user_id})
         return
 
-    async def count_afk(self):
-        return await self.collection.count()
+    def count_afk(self):
+        with INSERTION_LOCK:
+            return self.collection.count()
 
-    async def list_afk_users(self):
-        return await self.collection.find_all()
+    def list_afk_users(self):
+        with INSERTION_LOCK:
+            return self.collection.find_all()

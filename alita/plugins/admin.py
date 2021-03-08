@@ -33,7 +33,7 @@ from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
-from alita.utils.redis_helper import get_key, set_key
+from alita.utils.redis_helper import RedisHelper
 
 __PLUGIN__ = "Admin"
 __help__ = """
@@ -59,11 +59,11 @@ async def adminlist_show(_, m: Message):
 
     try:
         try:
-            adminlist = (await get_key("ADMINDICT"))[
+            adminlist = (await RedisHelper.get_key("ADMINDICT"))[
                 str(m.chat.id)
             ]  # Load ADMINDICT from string
-            note = await tlang(m, "admin.adminlist.note_cached")
-        except BaseException:
+            note = tlang(m, "admin.adminlist.note_cached")
+        except Exception:
             adminlist = []
             async for i in m.chat.iter_members(
                 filter="administrators",
@@ -77,12 +77,12 @@ async def adminlist_show(_, m: Message):
                     ),
                 )
             adminlist = sorted(adminlist, key=lambda x: x[1])
-            note = await tlang(m, "admin.adminlist.note_updated")
-            ADMINDICT = await get_key("ADMINDICT")
+            note = tlang(m, "admin.adminlist.note_updated")
+            ADMINDICT = await RedisHelper.get_key("ADMINDICT")
             ADMINDICT[str(m.chat.id)] = adminlist
-            await set_key("ADMINDICT", ADMINDICT)
+            await RedisHelper.set_key("ADMINDICT", ADMINDICT)
 
-        adminstr = (await tlang(m, "admin.adminlist.adminstr")).format(
+        adminstr = (tlang(m, "admin.adminlist.adminstr")).format(
             chat_title=f"<b>{m.chat.title}</b>",
         )
 
@@ -97,13 +97,13 @@ async def adminlist_show(_, m: Message):
 
         await m.reply_text(f"{adminstr}\n\n<i>Note: {note}</i>")
 
-    except BaseException as ef:
+    except Exception as ef:
         if str(ef) == str(m.chat.id):
-            await m.reply_text(await tlang(m, "admin.adminlist.use_admin_cache"))
+            await m.reply_text(tlang(m, "admin.adminlist.use_admin_cache"))
         else:
             ef = str(ef) + f"{adminlist}\n"
             await m.reply_text(
-                (await tlang(m, "general.some_error")).format(
+                (tlang(m, "general.some_error")).format(
                     SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                     ef=f"<code>{ef}</code>",
                 ),
@@ -118,7 +118,7 @@ async def adminlist_show(_, m: Message):
 )
 async def reload_admins(_, m: Message):
 
-    ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
+    ADMINDICT = await RedisHelper.get_key("ADMINDICT")  # Load ADMINDICT from string
 
     try:
         adminlist = []
@@ -132,11 +132,11 @@ async def reload_admins(_, m: Message):
                 ),
             )
         ADMINDICT[str(m.chat.id)] = adminlist
-        await set_key("ADMINDICT", ADMINDICT)
-        await m.reply_text(await tlang(m, "admin.adminlist.reloaded_admins"))
+        await RedisHelper.set_key("ADMINDICT", ADMINDICT)
+        await m.reply_text(tlang(m, "admin.adminlist.reloaded_admins"))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -161,7 +161,7 @@ async def promote_usr(c: Alita, m: Message):
             can_pin_messages=True,
         )
         await m.reply_text(
-            (await tlang(m, "admin.promoted_user")).format(
+            (tlang(m, "admin.promote.promoted_user")).format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"<b>{m.chat.title}</b>",
@@ -169,7 +169,7 @@ async def promote_usr(c: Alita, m: Message):
         )
 
         # ----- Add admin to redis cache! -----
-        adminlist = (await get_key("ADMINDICT"))[
+        adminlist = (await RedisHelper.get_key("ADMINDICT"))[
             str(m.chat.id)
         ]  # Load ADMINDICT from string
         u = await m.chat.get_member(user_id)
@@ -179,17 +179,17 @@ async def promote_usr(c: Alita, m: Message):
                 f"@{u.user.username}" if u.user.username else u.user.first_name,
             ],
         )
-        ADMINDICT = await get_key("ADMINDICT")
+        ADMINDICT = await RedisHelper.get_key("ADMINDICT")
         ADMINDICT[str(m.chat.id)] = adminlist
-        await set_key("ADMINDICT", ADMINDICT)
+        await RedisHelper.set_key("ADMINDICT", ADMINDICT)
 
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "admin.not_admin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(await tlang(m, "admin.bot_no_promote_right"))
+        await m.reply_text(tlang(m, "admin.promote.bot_no_right"))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -215,7 +215,7 @@ async def demote_usr(c: Alita, m: Message):
             can_pin_messages=False,
         )
         await m.reply_text(
-            (await tlang(m, "admin.demoted_user")).format(
+            (tlang(m, "admin.demote.demoted_user")).format(
                 demoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 demoted=(await mention_html(user_first_name, user_id)),
                 chat_title=f"<b>{m.chat.title}</b>",
@@ -223,7 +223,7 @@ async def demote_usr(c: Alita, m: Message):
         )
 
         # ----- Add admin to redis cache! -----
-        ADMINDICT = await get_key("ADMINDICT")  # Load ADMINDICT from string
+        ADMINDICT = await RedisHelper.get_key("ADMINDICT")  # Load ADMINDICT from string
         adminlist = []
         async for i in m.chat.iter_members(filter="administrators"):
             if i.user.is_deleted:
@@ -235,17 +235,17 @@ async def demote_usr(c: Alita, m: Message):
                 ],
             )
         ADMINDICT[str(m.chat.id)] = adminlist
-        await set_key("ADMINDICT", ADMINDICT)
+        await RedisHelper.set_key("ADMINDICT", ADMINDICT)
 
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "admin.not_admin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(await tlang(m, "admin.bot_no_demote_right"))
+        await m.reply_text(tlang(m, "admin.demote.bot_no_right"))
     except UserAdminInvalid:
-        await m.reply_text(await tlang(m, "admin.user_admin_invalid"))
+        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -263,20 +263,20 @@ async def get_invitelink(c: Alita, m: Message):
     try:
         link = await c.export_chat_invite_link(m.chat.id)
         await m.reply_text(
-            (await tlang(m, "admin.invitelink")).format(
+            (tlang(m, "admin.invitelink")).format(
                 chat_name=f"<b>{m.chat.id}</b>",
                 link=link,
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "admin.not_admin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except ChatAdminInviteRequired:
-        await m.reply_text(await tlang(m, "admin.noinviteperm"))
+        await m.reply_text(tlang(m, "admin.no_invite_perm"))
     except RightForbidden:
-        await m.reply_text(await tlang(m, "no_invite_perm"))
+        await m.reply_text(tlang(m, "admin.no_user_invite_perm"))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),

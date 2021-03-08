@@ -16,10 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# Install uvloop
 import uvloop
 
-# uvloop.install()
+# Install uvloop
+uvloop.install()
 
 from os import makedirs, path
 from platform import python_version
@@ -49,7 +49,7 @@ from alita.database.chats_db import Chats
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
 from alita.utils.paste import paste
-from alita.utils.redis_helper import allkeys, close, get_key, set_key, setup_redis
+from alita.utils.redis_helper import RedisHelper, setup_redis
 
 chatdb = Chats()
 
@@ -86,13 +86,13 @@ class Alita(Client):
         LOGGER.info("Begin caching admins...")
         begin = time()
 
-        all_chats = (await chatdb.list_chats()) or []  # Get list of all chats
+        all_chats = (chatdb.list_chats()) or []  # Get list of all chats
         LOGGER.info(all_chats)
         LOGGER.info(f"{len(all_chats)} chats loaded from database.")
 
         try:
-            ADMINDICT = await get_key("ADMINDICT")
-        except BaseException as ef:
+            ADMINDICT = await RedisHelper.get_key("ADMINDICT")
+        except Exception as ef:
             LOGGER.error(f"Unable to get ADMINDICT!\nError: {ef}")
             ADMINDICT = {}
 
@@ -103,7 +103,7 @@ class Alita(Client):
                     chat_id=chat_id,
                     filter="administrators",
                 ):
-                    if j.user.is_deleted:
+                    if j.user.is_deleted or j.user.is_bot:
                         continue
                     adminlist.append(
                         (
@@ -125,7 +125,7 @@ class Alita(Client):
                 LOGGER.error(ef)
 
         try:
-            await set_key("ADMINDICT", ADMINDICT)
+            await RedisHelper.set_key("ADMINDICT", ADMINDICT)
             end = time()
             LOGGER.info(
                 (
@@ -133,7 +133,7 @@ class Alita(Client):
                     f"Time Taken: {round(end - begin, 2)} seconds."
                 ),
             )
-        except BaseException as ef:
+        except Exception as ef:
             LOGGER.error(f"Could not set ADMINDICT in Redis Cache!\nError: {ef}")
 
     async def start(self):
@@ -154,10 +154,13 @@ class Alita(Client):
         if redis_client:
             LOGGER.info("Redis Connected: True")
             await self.get_admins()  # Load admins in cache
-            await set_key("BOT_ID", meh.id)
-            await set_key("BOT_USERNAME", meh.username)
-            await set_key("BOT_NAME", meh.first_name)
-            await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
+            await RedisHelper.set_key("BOT_ID", meh.id)
+            await RedisHelper.set_key("BOT_USERNAME", meh.username)
+            await RedisHelper.set_key("BOT_NAME", meh.first_name)
+            await RedisHelper.set_key(
+                "SUPPORT_STAFF",
+                SUPPORT_STAFF,
+            )  # Load SUPPORT_STAFF in cache
         else:
             LOGGER.error("Redis Connected: False")
         # Redis Content Setup!
@@ -170,7 +173,7 @@ class Alita(Client):
 
         # Get cmds and keys
         cmd_list = await load_cmds(await all_plugins())
-        redis_keys = ", ".join(await allkeys())
+        redis_keys = ", ".join(await RedisHelper.allkeys())
 
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
         LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
@@ -209,5 +212,5 @@ class Alita(Client):
             ),
         )
         await super().stop()
-        await close()  # Close redis connection
+        await RedisHelper.close()  # Close redis connection
         LOGGER.info("Bot Stopped.\nkthxbye!")

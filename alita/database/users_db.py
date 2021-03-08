@@ -16,7 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
+
 from alita.database import MongoDB
+
+INSERTION_LOCK = RLock()
 
 
 class Users:
@@ -25,27 +29,31 @@ class Users:
     def __init__(self) -> None:
         self.collection = MongoDB("users")
 
-    async def update_user(self, user_id: int, name: str, username: str = None):
-        curr = await self.collection.find_one({"user_id": user_id})
-        if curr:
-            return await self.collection.update(
-                {"user_id": user_id},
-                {"username": username, "name": name},
+    def update_user(self, user_id: int, name: str, username: str = None):
+        with INSERTION_LOCK:
+            curr = self.collection.find_one({"user_id": user_id})
+            if curr:
+                return self.collection.update(
+                    {"user_id": user_id},
+                    {"username": username, "name": name},
+                )
+            return self.collection.insert_one(
+                {"user_id": user_id, "username": username, "name": name},
             )
-        return await self.collection.insert_one(
-            {"user_id": user_id, "username": username, "name": name},
-        )
 
-    async def delete_user(self, user_id: int):
-        curr = await self.collection.find_one({"user_id": user_id})
-        if curr:
-            return await self.collection.delete_one(
-                {"user_id": user_id},
-            )
-        return True
+    def delete_user(self, user_id: int):
+        with INSERTION_LOCK:
+            curr = self.collection.find_one({"user_id": user_id})
+            if curr:
+                return self.collection.delete_one(
+                    {"user_id": user_id},
+                )
+            return True
 
-    async def count_users(self):
-        return await self.collection.count()
+    def count_users(self):
+        with INSERTION_LOCK:
+            return self.collection.count()
 
-    async def list_users(self):
-        return await self.collection.find_all()
+    def list_users(self):
+        with INSERTION_LOCK:
+            return self.collection.find_all()

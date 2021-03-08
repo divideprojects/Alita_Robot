@@ -36,44 +36,48 @@ async def setup_redis():
     try:
         await redis_client.ping()
         return redis_client
-    except BaseException as ef:
+    except Exception as ef:
         LOGGER.error(f"Cannot connect to redis\nError: {ef}")
         return False
 
 
-async def set_key(key: str, value):
-    """Set the key data in Redis Cache."""
-    return await redis_client.set(
-        key,
-        dumps(
-            value,
-            reject_bytes=False,
-            escape_forward_slashes=True,
-            encode_html_chars=True,
-        ),
-    )
+class RedisHelper:
+    """Class for connecting to Redis cache db."""
 
+    @staticmethod
+    async def set_key(key: str, value):
+        """Set the key data in Redis Cache."""
+        return await redis_client.set(
+            key,
+            dumps(
+                value,
+                reject_bytes=False,
+                escape_forward_slashes=True,
+                encode_html_chars=True,
+            ),
+        )
 
-async def get_key(key: str):
-    """Get the key data from Redis Cache."""
-    return loads(await redis_client.get(key))
+    @staticmethod
+    async def get_key(key: str):
+        """Get the key data from Redis Cache."""
+        return loads(await redis_client.get(key))
 
+    @staticmethod
+    async def flushredis():
+        """Empty the Redis Cache Database."""
+        return await redis_client.flushall()
 
-async def flushredis():
-    """Empty the Redis Cache Database."""
-    return await redis_client.flushall()
+    @staticmethod
+    async def allkeys():
+        """Get all keys from Redis Cache."""
+        keys = await redis_client.keys(pattern="*")
+        keys_str = []
+        for i in keys:
+            keys_str.append(i.decode())
+        return keys_str
 
-
-async def allkeys():
-    """Get all keys from Redis Cache."""
-    keys = await redis_client.keys(pattern="*")
-    keys_str = []
-    for i in keys:
-        keys_str.append(i.decode())
-    return keys_str
-
-
-async def close():
-    """Close connection to Redis."""
-    redis_client.close()
-    return await redis_client.wait_closed()
+    @staticmethod
+    async def close():
+        """Close connection to Redis."""
+        redis_client.close()
+        return await redis_client.wait_closed()

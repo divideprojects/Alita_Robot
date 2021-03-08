@@ -47,9 +47,16 @@ An example of promoting someone to admins:
 async def mute_usr(c: Alita, m: Message):
 
     user_id, user_first_name = await extract_user(c, m)
+    user = await m.chat.get_member(user_id)
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text("This user is in my support staff, cannot restrict them.")
+        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        return
+    if user.status == "administrator":
+        await m.reply_text(tlang(m, "admin.mute.admin_cannot_mute"))
+        return
+    if user.status == "creator":
+        await m.reply_text(tlang(m, "admin.mute.owner_cannot_mute"))
         return
 
     try:
@@ -70,17 +77,17 @@ async def mute_usr(c: Alita, m: Message):
             ),
         )
         await m.reply_text(
-            (await tlang(m, "admin.muted_user")).format(
+            (tlang(m, "admin.mute.muted_user")).format(
                 user=(await mention_html(user_first_name, user_id)),
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "admin.not_admin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(await tlang(m, "admin.bot_no_mute_right"))
+        await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -100,17 +107,17 @@ async def unmute_usr(c: Alita, m: Message):
     try:
         await m.chat.restrict_member(user_id, m.chat.permissions)
         await m.reply_text(
-            (await tlang(m, "admin.unmuted_user")).format(
+            (tlang(m, "admin.unmute.unmuted_user")).format(
                 user=(await mention_html(user_first_name, user_id)),
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "admin.not_admin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(await tlang(m, "admin.bot_no_mute_right"))
+        await m.reply_text(tlang(m, "admin.unmute.bot_no_right"))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),

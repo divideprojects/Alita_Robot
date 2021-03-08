@@ -16,7 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
+
 from alita.database import MongoDB
+
+INSERTION_LOCK = RLock()
 
 
 class AntiFlood:
@@ -25,63 +29,86 @@ class AntiFlood:
     def __init__(self) -> None:
         self.collection = MongoDB("antiflood")
 
-    async def get_grp(self, chat_id: int):
-        return await self.collection.find_one({"chat_id": chat_id})
+    def get_grp(self, chat_id: int):
+        with INSERTION_LOCK:
+            return self.collection.find_one({"chat_id": chat_id})
 
-    async def set_status(self, chat_id: int, status: bool = False):
-        if await self.get_grp(chat_id):
-            return await self.collection.update(
-                {"chat_id": chat_id},
-                {"status": status},
-            )
-        return await self.collection.insert_one({"chat_id": chat_id, "status": status})
+    def set_status(self, chat_id: int, status: bool = False):
+        with INSERTION_LOCK:
 
-    async def get_status(self, chat_id: int):
-        z = await self.get_grp(chat_id)
-        if z:
-            return z["status"]
+            chat_dict = self.get_grp(chat_id)
+            if chat_dict:
+                return self.collection.update(
+                    {"chat_id": chat_id},
+                    {"status": status},
+                )
+
+            return self.collection.insert_one({"chat_id": chat_id, "status": status})
+
+    def get_status(self, chat_id: int):
+        with INSERTION_LOCK:
+            z = self.get_grp(chat_id)
+            if z:
+                return z["status"]
+            return
+
+    def set_antiflood(self, chat_id: int, max_msg: int):
+        with INSERTION_LOCK:
+
+            chat_dict = self.get_grp(chat_id)
+            if chat_dict:
+                return self.collection.update(
+                    {"chat_id": chat_id},
+                    {"max_msg": max_msg},
+                )
+
+            return self.collection.insert_one({"chat_id": chat_id, "max_msg": max_msg})
+
+    def get_antiflood(self, chat_id: int):
+        with INSERTION_LOCK:
+            z = self.get_grp(chat_id)
+            if z:
+                return z["max_msg"]
+            return
+
+    def set_action(self, chat_id: int, action: str = "mute"):
+        with INSERTION_LOCK:
+
+            if action not in ("kick", "ban", "mute"):
+                action = "mute"  # Default action
+
+            chat_dict = self.get_grp(chat_id)
+            if chat_dict:
+
+                return self.collection.update(
+                    {"chat_id": chat_id},
+                    {"action": action},
+                )
+
+            return self.collection.insert_one({"chat_id": chat_id, "action": action})
+
+    def get_action(self, chat_id: int):
+        with INSERTION_LOCK:
+
+            z = self.get_grp(chat_id)
+            if z:
+                return z["action"]
         return
 
-    async def set_antiflood(self, chat_id: int, max_msg: int):
-        if await self.get_grp(chat_id):
-            return await self.collection.update(
-                {"chat_id": chat_id},
-                {"max_msg": max_msg},
-            )
-        return await self.collection.insert_one(
-            {"chat_id": chat_id, "max_msg": max_msg},
-        )
+    def get_all_antiflood_settings(self):
+        return self.collection.find_all()
 
-    async def get_antiflood(self, chat_id: int):
-        z = await self.get_grp(chat_id)
-        if z:
-            return z["max_msg"]
-        return
-
-    async def set_action(self, chat_id: int, action: str = "kick"):
-
-        if action not in ("kick", "ban", "mute"):
-            action = "kick"  # Default action
-
-        if await self.get_grp(chat_id):
-            return await self.collection.update(
-                {"chat_id": chat_id},
-                {"action": action},
-            )
-        return await self.collection.insert_one({"chat_id": chat_id, "action": action})
-
-    async def get_action(self, chat_id: int):
-        z = await self.get_grp(chat_id)
-        if z:
-            return z["action"]
-        return
+    def get_num_antiflood(self):
+        return self.collection.count()
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        old_chat = await self.collection.find_one({"chat_id": old_chat_id})
-        if old_chat:
-            return await self.collection.update(
-                {"chat_id": old_chat_id},
-                {"chat_id": new_chat_id},
-            )
-        return
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+
+        with INSERTION_LOCK:
+            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            if old_chat:
+                return self.collection.update(
+                    {"chat_id": old_chat_id},
+                    {"chat_id": new_chat_id},
+                )
+            return

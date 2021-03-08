@@ -39,10 +39,10 @@ from alita.bot_class import Alita
 from alita.database.chats_db import Chats
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
-from alita.utils.custom_filters import dev_filter
+from alita.utils.custom_filters import dev_filter, sudo_filter
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
-from alita.utils.redis_helper import allkeys, flushredis, get_key
+from alita.utils.redis_helper import RedisHelper
 
 # initialise database
 chatdb = Chats()
@@ -70,6 +70,30 @@ async def send_log(c: Alita, m: Message):
     return
 
 
+@Alita.on_message(filters.command("ginfo", DEV_PREFIX_HANDLER) & sudo_filter)
+async def group_info(c: Alita, m: Message):
+
+    if not len(m.text.split()) == 2:
+        await m.reply_text(
+            f"It works like this: <code>{DEV_PREFIX_HANDLER} chat_id</code>",
+        )
+        return
+
+    chat_id = m.text.split(None, 1)[1]
+
+    replymsg = await m.reply_text("Fetching info about group...!")
+    grp_data = await c.get_chat(chat_id)
+    msg = (
+        f"Information for group: {chat_id}\n\n"
+        f"Group Name: {grp_data['title']}\n"
+        f"Members Count: {grp_data['members_count']}\n"
+        f"Type: {grp_data['type']}\n"
+        f"Group ID: {grp_data['id']}"
+    )
+    await replymsg.edit_text(msg)
+    return
+
+
 @Alita.on_message(filters.command("speedtest", DEV_PREFIX_HANDLER) & dev_filter)
 async def test_speed(c: Alita, m: Message):
 
@@ -77,13 +101,13 @@ async def test_speed(c: Alita, m: Message):
         MESSAGE_DUMP,
         f"#SPEEDTEST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    sent = await m.reply_text(await tlang(m, "dev.speedtest.start_speedtest"))
+    sent = await m.reply_text(tlang(m, "dev.speedtest.start_speedtest"))
     s = Speedtest()
     bs = s.get_best_server()
     dl = round(s.download() / 1024 / 1024, 2)
     ul = round(s.upload() / 1024 / 1024, 2)
     await sent.edit_text(
-        (await tlang(m, "dev.speedtest.speedtest_txt")).format(
+        (tlang(m, "dev.speedtest.speedtest_txt")).format(
             host=bs["sponsor"],
             ping=int(bs["latency"]),
             download=dl,
@@ -124,7 +148,7 @@ async def neofetch_stats(_, m: Message):
 async def evaluate_code(c: Alita, m: Message):
 
     if len(m.text.split()) == 1:
-        await m.reply_text(await tlang(m, "dev.execute_cmd_err"))
+        await m.reply_text(tlang(m, "dev.execute_cmd_err"))
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(None, maxsplit=1)[1]
@@ -141,7 +165,7 @@ async def evaluate_code(c: Alita, m: Message):
 
     try:
         await aexec(cmd, c, m)
-    except BaseException as ef:
+    except Exception as ef:
         LOGGER.error(ef)
         exc = format_exc()
 
@@ -187,7 +211,7 @@ async def aexec(code, c, m):
 async def execution(_, m: Message):
 
     if len(m.text.split()) == 1:
-        await m.reply_text(await tlang(m, "dev.execute_cmd_err"))
+        await m.reply_text(tlang(m, "dev.execute_cmd_err"))
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(maxsplit=1)[1]
@@ -238,7 +262,7 @@ async def public_ip(c: Alita, m: Message):
         f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     await m.reply_text(
-        (await tlang(m, "dev.bot_ip")).format(ip=f"<code>{ip}</code>"),
+        (tlang(m, "dev.bot_ip")).format(ip=f"<code>{ip}</code>"),
         quote=True,
     )
     return
@@ -246,13 +270,13 @@ async def public_ip(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("chatlist", DEV_PREFIX_HANDLER) & dev_filter)
 async def chats(c: Alita, m: Message):
-    exmsg = await m.reply_text(await tlang(m, "dev.chatlist.exporting"))
+    exmsg = await m.reply_text(tlang(m, "dev.chatlist.exporting"))
     await c.send_message(
         MESSAGE_DUMP,
         f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    all_chats = (await chatdb.list_chats()) or []
-    chatfile = await tlang(m, "dev.chatlist.header")
+    all_chats = (chatdb.list_chats()) or []
+    chatfile = tlang(m, "dev.chatlist.header")
     P = 1
     for chat in all_chats:
         try:
@@ -273,7 +297,7 @@ async def chats(c: Alita, m: Message):
         except ChatAdminRequired:
             pass
         except ChannelPrivate:
-            await chatdb.remove_chat(chat.chat_id)
+            chatdb.remove_chat(chat.chat_id)
         except PeerIdInvalid:
             LOGGER.warning(f"Peer  not found {chat.chat_id}")
         except RPCError as ef:
@@ -284,7 +308,7 @@ async def chats(c: Alita, m: Message):
         f.name = "chatlist.txt"
         await m.reply_document(
             document=f,
-            caption=(await tlang(m, "dev.chatlist.chats_in_db")),
+            caption=(tlang(m, "dev.chatlist.chats_in_db")),
         )
     await exmsg.delete()
     return
@@ -293,7 +317,7 @@ async def chats(c: Alita, m: Message):
 @Alita.on_message(filters.command("uptime", DEV_PREFIX_HANDLER) & dev_filter)
 async def uptime(_, m: Message):
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
-    await m.reply_text((await tlang(m, "dev.uptime")).format(uptime=up), quote=True)
+    await m.reply_text((tlang(m, "dev.uptime")).format(uptime=up), quote=True)
     return
 
 
@@ -301,19 +325,19 @@ async def uptime(_, m: Message):
 async def list_all_admins(_, m: Message):
 
     replymsg = await m.reply_text(
-        (await tlang(m, "dev.alladmins.getting_admins")),
+        (tlang(m, "dev.alladmins.getting_admins")),
         quote=True,
     )
     len_admins = 0  # Total number of admins
 
-    admindict = await get_key("ADMINDICT")
+    admindict = await RedisHelper.get_key("ADMINDICT")
 
     for i in list(admindict.values()):
         len_admins += len(i)
 
     try:
         await replymsg.edit_text(
-            (await tlang(m, "dev.alladmins.admins_i_know_str")).format(
+            (tlang(m, "dev.alladmins.admins_i_know_str")).format(
                 len_admins=len_admins,
                 admindict=str(admindict),
             ),
@@ -324,14 +348,14 @@ async def list_all_admins(_, m: Message):
             f.name = "allAdmins.txt"
             await m.reply_document(
                 document=f,
-                caption=(await tlang(m, "dev.alladmins.admins_in_cache")).format(
+                caption=(tlang(m, "dev.alladmins.admins_in_cache")).format(
                     len_admins=len_admins,
                 ),
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton(
-                                (await tlang(m, "dev.alladmins.alladmins_btn")),
+                                (tlang(m, "dev.alladmins.alladmins_btn")),
                                 url=raw,
                             ),
                         ],
@@ -347,9 +371,9 @@ async def list_all_admins(_, m: Message):
 async def show_redis_keys(_, m: Message):
     txt_dict = {}
     replymsg = await m.reply_text("Fetching Redis Keys...", quote=True)
-    keys = await allkeys()
+    keys = await RedisHelper.allkeys()
     for i in keys:
-        txt_dict[i] = await get_key(str(i))
+        txt_dict[i] = await RedisHelper.get_key(str(i))
     try:
         if not txt_dict:
             return replymsg.edit_text("No keys stored in redis!")
@@ -372,15 +396,15 @@ async def show_redis_keys(_, m: Message):
 @Alita.on_message(filters.command("flushredis", DEV_PREFIX_HANDLER) & dev_filter)
 async def flush_redis(_, m: Message):
     replymsg = await m.reply_text(
-        (await tlang(m, "dev.flush_redis.flushing_redis")),
+        (tlang(m, "dev.flush_redis.flushing_redis")),
         quote=True,
     )
     try:
-        await flushredis()
-        await replymsg.edit_text(await tlang(m, "dev.flush_redis.flushed_redis"))
-    except BaseException as ef:
+        await RedisHelper.flushredis()
+        await replymsg.edit_text(tlang(m, "dev.flush_redis.flushed_redis"))
+    except Exception as ef:
         LOGGER.error(ef)
-        await replymsg.edit_text(await tlang(m, "dev.flush_redis.flush_failed"))
+        await replymsg.edit_text(tlang(m, "dev.flush_redis.flush_failed"))
     return
 
 

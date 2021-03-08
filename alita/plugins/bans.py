@@ -52,7 +52,6 @@ This is the plugin for you, easily kick, ban and unban members in a group.
  × /kick: Kick the user replied or tagged.
  × /ban: Bans the user replied to or tagged.
  × /unban: Unbans the user replied to or tagged.
- × /banall: Ban all members of a chat!
 """
 
 
@@ -62,27 +61,34 @@ This is the plugin for you, easily kick, ban and unban members in a group.
 async def kick_usr(c: Alita, m: Message):
 
     user_id, user_first_name = await extract_user(c, m)
+    user = await m.chat.get_member(user_id)
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text("This user is in my support staff, cannot restrict them.")
+        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        return
+    if user.status == "administrator":
+        await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
+        return
+    if user.status == "creator":
+        await m.reply_text(tlang(m, "admin.kick.owner_cannot_kick"))
         return
 
     try:
         await m.chat.kick_member(user_id, int(time() + 45))
         await m.reply_text(
-            (await tlang(m, "admin.kicked_user")).format(
+            (tlang(m, "admin.kick.kicked_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 kicked=(await mention_html(user_first_name, user_id)),
                 chat_title=f"<b>{m.chat.title}</b>",
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "admin.not_admin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(await tlang(m, "admin.bot_no_kick_right"))
+        await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -98,27 +104,34 @@ async def kick_usr(c: Alita, m: Message):
 async def ban_usr(c: Alita, m: Message):
 
     user_id, user_first_name = await extract_user(c, m)
+    user = await m.chat.get_member(user_id)
 
     if user_id in SUPPORT_STAFF:
-        await m.reply_text("This user is in my support staff, cannot restrict them.")
+        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        return
+    if user.status == "administrator":
+        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
+        return
+    if user.status == "creator":
+        await m.reply_text(tlang(m, "admin.ban.owner_cannot_ban"))
         return
 
     try:
         await m.chat.kick_member(user_id)
         await m.reply_text(
-            (await tlang(m, "admin.banned_user")).format(
+            (tlang(m, "admin.ban.banned_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 banned=(await mention_html(user_first_name, user_id)),
                 chat_title=f"<b>{m.chat.title}</b>",
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "admin.not_admin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(await tlang(m, await tlang(m, "admin.bot_no_ban_right")))
+        await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -138,19 +151,19 @@ async def unban_usr(c: Alita, m: Message):
     try:
         await m.chat.unban_member(user_id)
         await m.reply_text(
-            (await tlang(m, "admin.unbanned_user")).format(
+            (tlang(m, "admin.unban.unbanned_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 unbanned=(await mention_html(user_first_name, user_id)),
                 chat_title=f"<b>{m.chat.title}</b>",
             ),
         )
     except ChatAdminRequired:
-        await m.reply_text(await tlang(m, "admin.not_admin"))
+        await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
-        await m.reply_text(await tlang(m, await tlang(m, "admin.bot_no_unban_right")))
+        await m.reply_text(tlang(m, tlang(m, "admin.unban.bot_no_right")))
     except RPCError as ef:
         await m.reply_text(
-            (await tlang(m, "general.some_error")).format(
+            (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
                 ef=f"<code>{ef}</code>",
             ),
@@ -163,7 +176,7 @@ async def unban_usr(c: Alita, m: Message):
 @Alita.on_message(filters.command("banall", DEV_PREFIX_HANDLER) & owner_filter)
 async def banall_chat(_, m: Message):
     await m.reply_text(
-        (await tlang(m, "admin.ban_all")),
+        (tlang(m, "admin.ban.ban_all")),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -180,7 +193,7 @@ async def banall_chat(_, m: Message):
 async def banallnotes_callback(_, q: CallbackQuery):
 
     replymsg = await q.message.edit_text(
-        f"<i><b>{(await tlang(q, 'admin.banning_all'))}</b></i>",
+        f"<i><b>{(tlang(q, 'admin.ban.banning_all'))}</b></i>",
     )
     users = []
     fs = 0
@@ -190,7 +203,7 @@ async def banallnotes_callback(_, q: CallbackQuery):
                 await sleep(5)
             await q.message.chat.kick_member(x.user.id)
             users.append(x.user.id)
-        except BaseException:
+        except Exception:
             fs += 1
 
     rply = f"Users Banned:\n{users}"

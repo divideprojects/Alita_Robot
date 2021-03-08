@@ -17,26 +17,22 @@
 
 
 from html import escape
-from time import time
 
 from pyrogram import filters
-from pyrogram.errors import RPCError
 from pyrogram.types import (
     CallbackQuery,
-    ChatPermissions,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     Message,
 )
 
-from alita import LOGGER, PREFIX_HANDLER
+from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.parser import mention_html
-from alita.utils.regex_utils import regex_searcher
 
 __PLUGIN__ = "Blacklist"
 
@@ -74,14 +70,14 @@ app_db = Approve()
 async def view_blacklist(_, m: Message):
 
     chat_title = m.chat.title
-    blacklists_chat = (await tlang(m, "blacklist.curr_blacklist_initial")).format(
+    blacklists_chat = (tlang(m, "blacklist.curr_blacklist_initial")).format(
         chat_title=f"<b>{chat_title}</b>",
     )
-    all_blacklisted = await db.get_blacklists(m.chat.id)
+    all_blacklisted = db.get_blacklists(m.chat.id)
 
     if not all_blacklisted:
         await m.reply_text(
-            (await tlang(m, "blacklist.no_blacklist")).format(
+            (tlang(m, "blacklist.no_blacklist")).format(
                 chat_title=f"<b>{chat_title}</b>",
             ),
         )
@@ -102,14 +98,14 @@ async def add_blacklist(_, m: Message):
 
     if len(m.text.split()) >= 2:
         bl_word = (m.text.split(None, 1)[1]).lower()
-        await db.add_blacklist(m.chat.id, bl_word)
+        db.add_blacklist(m.chat.id, bl_word)
         await m.reply_text(
-            (await tlang(m, "blacklist.added_blacklist")).format(
+            (tlang(m, "blacklist.added_blacklist")).format(
                 trigger=f"<code>{bl_word}</code>",
             ),
         )
         return
-    await m.reply_text(await tlang(m, "general.check_help"))
+    await m.reply_text(tlang(m, "general.check_help"))
     return
 
 
@@ -120,23 +116,23 @@ async def add_blacklist(_, m: Message):
 )
 async def rm_blacklist(_, m: Message):
 
-    chat_bl = await db.get_blacklists(m.chat.id)
+    chat_bl = db.get_blacklists(m.chat.id)
     if not len(m.text.split()) >= 2:
-        await m.reply_text(await tlang(m, "general.check_help"))
+        await m.reply_text(tlang(m, "general.check_help"))
         return
 
     bl_word = (m.text.split(None, 1)[1]).lower()
     if bl_word not in chat_bl:
         await m.reply_text(
-            (await tlang(m, "blacklist.no_bl_found")).format(
+            (tlang(m, "blacklist.no_bl_found")).format(
                 bl_word=f"<code>{bl_word}</code>",
             ),
         )
         return
 
-    await db.remove_blacklist(m.chat.id, bl_word)
+    db.remove_blacklist(m.chat.id, bl_word)
     await m.reply_text(
-        (await tlang(m, "blacklist.rm_blacklist")).format(
+        (tlang(m, "blacklist.rm_blacklist")).format(
             bl_word=f"<code>{bl_word}</code>",
         ),
     )
@@ -148,113 +144,18 @@ async def rm_blacklist(_, m: Message):
 async def set_bl_action(_, m: Message):
     if len(m.text.split()) == 2:
         action = m.text.split(None, 1)[1]
-        await db.set_action(m.chat.id, action)
+        db.set_action(m.chat.id, action)
         await m.reply_text(
-            (await tlang(m, "blacklist.action_set")).format(action=f"<b>{action}</b>"),
+            (tlang(m, "blacklist.action_set")).format(action=f"<b>{action}</b>"),
         )
     elif len(m.text.split()) == 1:
-        action = await db.get_action(m.chat.id)
+        action = db.get_action(m.chat.id)
         await m.reply_text(
-            (await tlang(m, "blacklist.action_get")).format(action=f"<b>{action}</b>"),
+            (tlang(m, "blacklist.action_get")).format(action=f"<b>{action}</b>"),
         )
     else:
-        await m.reply_text(await tlang(m, "general.check_help"))
+        await m.reply_text(tlang(m, "general.check_help"))
 
-    return
-
-
-@Alita.on_message(filters.group, group=3)
-async def del_blacklist(_, m: Message):
-
-    if not m.from_user:
-        return
-
-    chat_blacklists = await db.get_blacklists(m.chat.id)
-    action = await db.get_action(m.chat.id)
-
-    # If no blacklists, then return
-    if not chat_blacklists:
-        return
-
-    try:
-        approved_users = []
-        app_users = await app_db.list_approved(m.chat.id)
-
-        for i in app_users:
-            approved_users.append(int(i["user_id"]))
-
-        async for i in m.chat.iter_members(filter="administrators"):
-            approved_users.append(i.user.id)
-
-        # If user_id in approved_users list, return and don't delete the message
-        if m.from_user.id in approved_users:
-            return
-
-        if m.text:
-            for trigger in chat_blacklists:
-                pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
-                match = await regex_searcher(pattern, m.text.lower())
-                if not match:
-                    continue
-                if match:
-                    try:
-                        await perform_action(m, action)
-                        await m.delete()
-                    except RPCError as ef:
-                        LOGGER.info(ef)
-                    break
-
-    except AttributeError:
-        pass  # Skip attribute errors!
-
-
-# TODO - Add warn option when Warn db is added!!
-async def perform_action(m: Message, action: str):
-    if action == "kick":
-        (await m.chat.kick_member(m.from_user.id, int(time() + 45)))
-        await m.reply_text(
-            (
-                f"Kicked {m.from_user.username if m.from_user.username else m.from_user.first_name}"
-                " for using a blacklisted word!"
-            ),
-        )
-    elif action == "ban":
-        (
-            await m.chat.kick_member(
-                m.from_user.id,
-            )
-        )
-        await m.reply_text(
-            (
-                f"Banned {m.from_user.username if m.from_user.username else m.from_user.first_name}"
-                " for using a blacklisted word!"
-            ),
-        )
-    elif action == "mute":
-        (
-            await m.chat.restrict_member(
-                m.from_user.id,
-                ChatPermissions(
-                    can_send_messages=False,
-                    can_send_media_messages=False,
-                    can_send_stickers=False,
-                    can_send_animations=False,
-                    can_send_games=False,
-                    can_use_inline_bots=False,
-                    can_add_web_page_previews=False,
-                    can_send_polls=False,
-                    can_change_info=False,
-                    can_invite_users=True,
-                    can_pin_messages=False,
-                ),
-            )
-        )
-        await m.reply_text(
-            (
-                f"Muted {m.from_user.username if m.from_user.username else m.from_user.first_name}"
-                " for using a blacklisted word!"
-            ),
-        )
     return
 
 
@@ -263,7 +164,7 @@ async def perform_action(m: Message, action: str):
 )
 async def rm_allblacklist(_, m: Message):
 
-    all_bls = await db.get_blacklists(m.chat.id)
+    all_bls = db.get_blacklists(m.chat.id)
     if not all_bls:
         await m.reply_text("No notes are blacklists in this chat")
         return
@@ -298,7 +199,7 @@ async def rm_allbl_callback(_, q: CallbackQuery):
             ),
         )
         return
-    await db.rm_all_blacklist(q.message.chat.id)
+    db.rm_all_blacklist(q.message.chat.id)
     await q.message.delete()
-    await q.answer("Cleared all notes!", show_alert=True)
+    await q.answer("Cleared all Blacklists!", show_alert=True)
     return

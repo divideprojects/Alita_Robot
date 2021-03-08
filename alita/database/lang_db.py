@@ -16,7 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
+
 from alita.database import MongoDB
+
+INSERTION_LOCK = RLock()
+
+LANG_DATA = []
 
 
 class Langs:
@@ -25,44 +31,96 @@ class Langs:
     def __init__(self) -> None:
         self.collection = MongoDB("langs")
 
-    async def get_chat_type(self, chat_id: int):
+    def get_chat_type(self, chat_id: int):
+        _ = self
         if str(chat_id).startswith("-100"):
             chat_type = "supergroup"
         else:
             chat_type = "user"
         return chat_type
 
-    async def set_lang(self, chat_id: int, lang: str = "en"):
-        chat_type = await self.get_chat_type(chat_id)
+    def set_lang(self, chat_id: int, lang: str = "en"):
+        with INSERTION_LOCK:
+            chat_type = self.get_chat_type(chat_id)
 
-        if await self.collection.find_one({"chat_id": chat_id}):
-            return await self.collection.update(
-                {"chat_id": chat_id},
-                {"lang": lang},
-            )
+            if chat_id in [chat_or_user["chat_id"] for chat_or_user in LANG_DATA]:
+                try:
+                    chat_dict = next(
+                        chat_or_user
+                        for chat_or_user in LANG_DATA
+                        if chat_or_user["chat_id"] == chat_id
+                    )
+                    indice = LANG_DATA.index(chat_dict)
+                    (LANG_DATA[indice]).update({"lang": lang})
+                    yield True
+                except StopIteration:
+                    pass
 
-        return await self.collection.insert_one(
-            {"chat_id": chat_id, "chat_type": chat_type, "lang": lang},
-        )
+            if self.collection.find_one({"chat_id": chat_id}):
+                return self.collection.update(
+                    {"chat_id": chat_id},
+                    {"lang": lang},
+                )
 
-    async def get_lang(self, chat_id: int):
-        chat_type = await self.get_chat_type(chat_id)
+            chat_dict = {"chat_id": chat_id, "chat_type": chat_type, "lang": lang}
+            LANG_DATA.append(chat_dict)
+            yield True
+            return self.collection.insert_one(chat_dict)
 
-        curr_lang = await self.collection.find_one({"chat_id": chat_id})
-        if curr_lang:
-            return str(curr_lang["lang"])
+    def get_lang(self, chat_id: int):
+        global LANG_DATA
+        with INSERTION_LOCK:
+            chat_type = self.get_chat_type(chat_id)
 
-        await self.collection.insert_one(
-            {"chat_id": chat_id, "chat_type": chat_type, "lang": "en"},
-        )
-        return "en"
+            try:
+                user_dict = next(
+                    chat for chat in LANG_DATA if chat["chat_id"] == chat_id
+                )
+                if user_dict:
+                    user_lang = user_dict["lang"]
+                    yield user_lang
+                    return
+            except StopIteration:
+                curr_lang = self.collection.find_one({"chat_id": chat_id})
+                if curr_lang:
+                    yield str(curr_lang["lang"])
+                    return
+
+            chat_dict = {"chat_id": chat_id, "chat_type": chat_type, "lang": "en"}
+            LANG_DATA.append(chat_dict)
+            self.collection.insert_one(chat_dict)
+            yield "en"
+            return
+
+    def get_all_langs(self):
+        return self.collection.find_all()
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        old_chat = await self.collection.find_one({"chat_id": old_chat_id})
-        if old_chat:
-            return await self.collection.update(
-                {"chat_id": old_chat_id},
-                {"chat_id": new_chat_id},
-            )
-        return
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+        global LANG_DATA
+        with INSERTION_LOCK:
+
+            old_chat_local = self.get_grp(chat_id=old_chat_id)
+            if old_chat_local:
+                indice = LANG_DATA.index(old_chat_local)
+                (LANG_DATA[indice]).update({"chat_id": new_chat_id})
+                yield True
+
+            old_chat_db = self.collection.find_one({"chat_id": old_chat_id})
+            if old_chat_db:
+                yield self.collection.update(
+                    {"chat_id": old_chat_id},
+                    {"chat_id": new_chat_id},
+                )
+            return
+
+
+def __load_all_langs():
+    global LANG_DATA
+    db = Langs()
+    for chat in db.get_all_langs():
+        del chat["_id"]
+        LANG_DATA.append(chat)
+
+
+__load_all_langs()

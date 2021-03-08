@@ -61,12 +61,12 @@ async def initial_works(_, m: Message):
                 return
         else:
             if m.reply_to_message and not m.forward_from:
-                await chatdb.update_chat(
+                chatdb.update_chat(
                     m.chat.id,
                     m.chat.title,
                     m.reply_to_message.from_user.id,
                 )
-                await userdb.update_user(
+                userdb.update_user(
                     m.reply_to_message.from_user.id,
                     (
                         f"{m.reply_to_message.from_user.first_name} {m.reply_to_message.from_user.last_name}"
@@ -76,12 +76,12 @@ async def initial_works(_, m: Message):
                     m.reply_to_message.from_user.username,
                 )
             elif m.forward_from and not m.reply_to_message:
-                await chatdb.update_chat(
+                chatdb.update_chat(
                     m.chat.id,
                     m.chat.title,
                     m.forward_from.id,
                 )
-                await userdb.update_user(
+                userdb.update_user(
                     m.forward_from.id,
                     (
                         f"{m.forward_from.first_name} {m.forward_from.last_name}"
@@ -91,12 +91,12 @@ async def initial_works(_, m: Message):
                     m.forward_from.username,
                 )
             elif m.reply_to_message and m.forward_from:
-                await chatdb.update_chat(
+                chatdb.update_chat(
                     m.chat.id,
                     m.chat.title,
                     m.reply_to_message.forward_from.id,
                 )
-                await userdb.update_user(
+                userdb.update_user(
                     m.forward_from.id,
                     (
                         f"{m.reply_to_message.forward_from.first_name} {m.reply_to_message.forward_from.last_name}"
@@ -106,8 +106,8 @@ async def initial_works(_, m: Message):
                     m.forward_from.username,
                 )
             else:
-                await chatdb.update_chat(m.chat.id, m.chat.title, m.from_user.id)
-                await userdb.update_user(
+                chatdb.update_chat(m.chat.id, m.chat.title, m.from_user.id)
+                userdb.update_user(
                     m.from_user.id,
                     (
                         f"{m.from_user.first_name} {m.from_user.last_name}"
@@ -123,12 +123,12 @@ async def initial_works(_, m: Message):
 
 async def migrate_chat(old_chat, new_chat):
     LOGGER.info(f"Migrating from {old_chat} to {new_chat}")
-    await userdb.migrate_chat(old_chat, new_chat)
-    await langdb.migrate_chat(old_chat, new_chat)
-    await ruledb.migrate_chat(old_chat, new_chat)
-    await bldb.migrate_chat(old_chat, new_chat)
-    await notedb.migrate_chat(old_chat, new_chat)
-    await flooddb.migrate_chat(old_chat, new_chat)
-    await approvedb.migrate_chat(old_chat, new_chat)
-    await reportdb.migrate_chat(old_chat, new_chat)
+    userdb.migrate_chat(old_chat, new_chat)
+    langdb.migrate_chat(old_chat, new_chat)
+    ruledb.migrate_chat(old_chat, new_chat)
+    bldb.migrate_chat(old_chat, new_chat)
+    notedb.migrate_chat(old_chat, new_chat)
+    flooddb.migrate_chat(old_chat, new_chat)
+    approvedb.migrate_chat(old_chat, new_chat)
+    reportdb.migrate_chat(old_chat, new_chat)
     LOGGER.info("Successfully migrated!")

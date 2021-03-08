@@ -24,7 +24,7 @@ No problem at all, here you can find all the options to protect your groups from
     filters.command("cas", PREFIX_HANDLER) & filters.group & admin_filter,
 )
 async def cas_protect(_, m: Message):
-    get_cas = await db.get_cas_status(m.chat.id)
+    get_cas = db.get_cas_status(m.chat.id)
 
     if len(m.text.split()) == 2:
         new_s = m.text.split(None, 1)[1]
@@ -37,7 +37,7 @@ async def cas_protect(_, m: Message):
                 ("Please use an option out of:\non, yes, true or no, off, false"),
             )
             return
-        await db.set_cas_status(m.chat.id, yn)
+        db.set_cas_status(m.chat.id, yn)
         await m.reply_text(f"Set CAS Status to <code>{new_s}</code>")
     else:
         await m.reply_text(f"Your current CAS Setting is: <b>{get_cas}</b>")
@@ -49,7 +49,7 @@ async def cas_protect(_, m: Message):
     filters.command("underattack", PREFIX_HANDLER) & filters.group & admin_filter,
 )
 async def underattack(_, m: Message):
-    get_a = await db.get_attack_status(m.chat.id)
+    get_a = db.get_attack_status(m.chat.id)
 
     if len(m.text.split()) == 2:
         new_s = m.text.split(None, 1)[1]
@@ -62,7 +62,7 @@ async def underattack(_, m: Message):
                 ("Please use an option out of:\non, yes, true or no, off, false"),
             )
             return
-        await db.set_attack_status(m.chat.id, yn)
+        db.set_attack_status(m.chat.id, yn)
         await m.reply_text(f"Set UnderAttack Status to <code>{new_s}</code>")
     else:
         await m.reply_text(f"Your current underAttack Status is: <b>{get_a}</b>")

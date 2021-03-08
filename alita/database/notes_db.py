@@ -16,15 +16,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
+
 from alita.database import MongoDB
 from alita.utils.msg_types import Types
+
+INSERTION_LOCK = RLock()
 
 
 class Notes:
     def __init__(self) -> None:
         self.collection = MongoDB("notes")
 
-    async def save_note(
+    def save_note(
         self,
         chat_id: int,
         note_name: str,
@@ -32,71 +36,80 @@ class Notes:
         msgtype: int = Types.TEXT,
         fileid="",
     ):
-        curr = await self.collection.find_one(
-            {"chat_id": chat_id, "note_name": note_name},
-        )
-        if curr:
+        with INSERTION_LOCK:
+            curr = self.collection.find_one(
+                {"chat_id": chat_id, "note_name": note_name},
+            )
+            if curr:
+                return False
+            return self.collection.insert_one(
+                {
+                    "chat_id": chat_id,
+                    "note_name": note_name,
+                    "note_value": note_value,
+                    "msgtype": msgtype,
+                    "fileid": fileid,
+                },
+            )
+
+    def get_note(self, chat_id: int, note_name: str):
+        with INSERTION_LOCK:
+            curr = self.collection.find_one(
+                {"chat_id": chat_id, "note_name": note_name},
+            )
+            if curr:
+                return curr
+            return "Note does not exist!"
+
+    def get_all_notes(self, chat_id: int):
+        with INSERTION_LOCK:
+            curr = self.collection.find_all({"chat_id": chat_id})
+            note_list = []
+            for note in curr:
+                note_list.append(note["note_name"])
+            note_list.sort()
+            return note_list
+
+    def rm_note(self, chat_id: int, note_name: str):
+        with INSERTION_LOCK:
+            curr = self.collection.find_one(
+                {"chat_id": chat_id, "note_name": note_name},
+            )
+            if curr:
+                self.collection.delete_one(curr)
+                return True
             return False
-        return await self.collection.insert_one(
-            {
-                "chat_id": chat_id,
-                "note_name": note_name,
-                "note_value": note_value,
-                "msgtype": msgtype,
-                "fileid": fileid,
-            },
-        )
 
-    async def get_note(self, chat_id: int, note_name: str):
-        curr = await self.collection.find_one(
-            {"chat_id": chat_id, "note_name": note_name},
-        )
-        if curr:
-            return curr
-        return "Note does not exist!"
+    def rm_all_notes(self, chat_id: int):
+        with INSERTION_LOCK:
+            return self.collection.delete_one({"chat_id": chat_id})
 
-    async def get_all_notes(self, chat_id: int):
-        curr = await self.collection.find_all({"chat_id": chat_id})
-        note_list = []
-        for note in curr:
-            note_list.append(note["note_name"])
-        note_list.sort()
-        return note_list
+    def count_notes(self, chat_id: int):
+        with INSERTION_LOCK:
+            curr = self.collection.find_all({"chat_id": chat_id})
+            if curr:
+                return len(curr)
+            return 0
 
-    async def rm_note(self, chat_id: int, note_name: str):
-        curr = await self.collection.find_one(
-            {"chat_id": chat_id, "note_name": note_name},
-        )
-        if curr:
-            await self.collection.delete_one(curr)
-            return True
-        return False
+    def count_notes_chats(self):
+        with INSERTION_LOCK:
+            notes = self.collection.find_all()
+            chats_ids = []
+            for chat in notes:
+                chats_ids.append(chat["chat_id"])
+            return len(list(dict.fromkeys(chats_ids)))
 
-    async def rm_all_notes(self, chat_id: int):
-        return await self.collection.delete_one({"chat_id": chat_id})
-
-    async def count_notes(self, chat_id: int):
-        curr = await self.collection.find_all({"chat_id": chat_id})
-        if curr:
-            return len(curr)
-        return 0
-
-    async def count_notes_chats(self):
-        notes = await self.collection.find_all()
-        chats_ids = []
-        for chat in notes:
-            chats_ids.append(chat["chat_id"])
-        return len(list(dict.fromkeys(chats_ids)))
-
-    async def count_all_notes(self):
-        return len(await self.collection.find_all())
+    def count_all_notes(self):
+        with INSERTION_LOCK:
+            return len(self.collection.find_all())
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        old_chat = await self.collection.find_one({"chat_id": old_chat_id})
-        if old_chat:
-            return await self.collection.update(
-                {"chat_id": old_chat_id},
-                {"chat_id": new_chat_id},
-            )
-        return
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+        with INSERTION_LOCK:
+            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            if old_chat:
+                return self.collection.update(
+                    {"chat_id": old_chat_id},
+                    {"chat_id": new_chat_id},
+                )
+            return

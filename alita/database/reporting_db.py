@@ -16,7 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
+
 from alita.database import MongoDB
+
+INSERTION_LOCK = RLock()
 
 
 class Reporting:
@@ -25,41 +29,45 @@ class Reporting:
     def __init__(self) -> None:
         self.collection = MongoDB("reporting_settings")
 
-    async def get_chat_type(self, chat_id: int):
+    def get_chat_type(self, chat_id: int):
+        _ = self
         if str(chat_id).startswith("-100"):
             chat_type = "supergroup"
         else:
             chat_type = "user"
         return chat_type
 
-    async def set_settings(self, chat_id: int, status: bool = True):
-        chat_type = await self.get_chat_type(chat_id)
-        curr_settings = (await self.collection.find_one({"chat_id": chat_id}))["status"]
-        if curr_settings:
-            return await self.collection.update(
-                {"chat_id": chat_id},
-                {"status": status},
+    def set_settings(self, chat_id: int, status: bool = True):
+        with INSERTION_LOCK:
+            chat_type = self.get_chat_type(chat_id)
+            curr_settings = (self.collection.find_one({"chat_id": chat_id}))["status"]
+            if curr_settings:
+                return self.collection.update(
+                    {"chat_id": chat_id},
+                    {"status": status},
+                )
+            return self.collection.insert_one(
+                {"chat_id": chat_id, "chat_type": chat_type, "status": status},
             )
-        return await self.collection.insert_one(
-            {"chat_id": chat_id, "chat_type": chat_type, "status": status},
-        )
 
-    async def get_settings(self, chat_id: int):
-        chat_type = await self.get_chat_type(chat_id)
-        curr_settings = (await self.collection.find_one({"chat_id": chat_id}))["status"]
-        if curr_settings:
-            return curr_settings
-        await self.collection.insert_one(
-            {"chat_id": chat_id, "chat_type": chat_type, "status": True},
-        )
-        return True
+    def get_settings(self, chat_id: int):
+        with INSERTION_LOCK:
+            chat_type = self.get_chat_type(chat_id)
+            curr_settings = (self.collection.find_one({"chat_id": chat_id}))["status"]
+            if curr_settings:
+                return curr_settings
+            self.collection.insert_one(
+                {"chat_id": chat_id, "chat_type": chat_type, "status": True},
+            )
+            return True
 
     # Migrate if chat id changes!
-    async def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        old_chat = await self.collection.find_one({"chat_id": old_chat_id})
-        if old_chat:
-            return await self.collection.update(
-                {"chat_id": old_chat_id},
-                {"chat_id": new_chat_id},
-            )
-        return
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+        with INSERTION_LOCK:
+            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            if old_chat:
+                return self.collection.update(
+                    {"chat_id": old_chat_id},
+                    {"chat_id": new_chat_id},
+                )
+            return

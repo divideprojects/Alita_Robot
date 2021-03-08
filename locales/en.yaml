@@ -4,6 +4,7 @@ main:
   language_name: English
 strings:
   admin:
+    support_cannot_restrict: This user is in my support staff, cannot restrict them.
     adminlist:
       adminstr: 'Admins in {chat_title}:
 
@@ -12,32 +13,47 @@ strings:
       note_updated: These are up-to-date values!
       reloaded_admins: Reloaded all admins in this chat!
       use_admin_cache: Use /admincache to reload admins!
-    ban_all: Are you sure you want to ban all members in this group?
-    banned_user: '{admin} banned {banned} in chat {chat_title}!'
-    banning_all: Banning All Members...
-    bot_no_ban_right: I don't have enough rights to ban this user.
-    bot_no_demote_right: I don't have enough rights to demote this user.
-    bot_no_kick_right: I don't have enough rights to kick this user.
-    bot_no_mute_right: I don't have enough rights to mute this user.
-    bot_no_promote_right: I don't have enough rights to promote this user.
-    bot_no_unban_right: I don't have enough rights to unban this user.
-    bot_no_unmute_right: I don't have enough rights to unmute this user.
-    demoted_user: '{demoter} demoted {demoted} in chat {chat_title}!'
+    ban:
+      admin_cannot_ban: This user is an admin, I cannot ban them!"
+      owner_cannot_ban: This person created the group, how can I ban them?
+      ban_all: Are you sure you want to ban all members in this group?
+      banned_user: '{admin} banned {banned} in chat {chat_title}!'
+      banning_all: Banning All Members...
+      bot_no_right: I don't have enough rights to ban this user.
+    promote:
+      no_promote_perm: You don't have permission to promote members!
+      promoted_user: '{promoter} promoted {promoted} in chat {chat_title}!'
+      bot_no_right: I don't have enough rights to promote this user.
+    demote:
+      demoted_user: '{demoter} demoted {demoted} in chat {chat_title}!'
+      bot_no_right: I don't have enough rights to demote this user.
+    kick:
+      admin_cannot_kick: This user is an admin, I cannot kick them!"
+      owner_cannot_kick: This person created the group, how can I kick them?
+      kicked_user: '{admin} kicked {kicked} in chat {chat_title}!'
+      bot_no_right: I don't have enough rights to kick this user.
+    unban:
+      unbanned_user: '{admin} unbanned {unbanned} in chat {chat_title}!'
+      bot_no_right: I don't have enough rights to unban this user.
+    unmute:
+      unmuted_user: Unmuted {user}!
+      bot_no_right: I don't have enough rights to unmute this user.
+    mute:
+      admin_cannot_mute: This user is an admin, I cannot mute them!"
+      owner_cannot_mute: This person created the group, how can I mute them?
+      muted_user: Muted {user}!
+      bot_no_right: I don't have enough rights to mute this user.
+
     invitelink: 'Invite Link for Chat {chat_name}:
 
       {link}'
-    kicked_user: '{admin} kicked {kicked} in chat {chat_title}!'
-    muted_user: Muted {user}!
     no_invite_perm: I don't have permission for invite link!
-    no_promote_demote_perm: You don't have permission to promote or demote members!
     no_restrict_perm: You don't have permissions to restrict members!
     no_user_invite_perm: You don't have permissions to invite users.
     not_admin: I'm not admin or I don't have rights.
-    promoted_user: '{promoter} promoted {promoted} in chat {chat_title}!'
-    unbanned_user: '{admin} unbanned {unbanned} in chat {chat_title}!'
-    unmuted_user: Unmuted {user}!
     user_admin_invalid: Cannot act on this user, maybe I wasn't the one who changed
       their permissions.
+
   afk:
     error_check_afk: 'Error while checking afk
 
