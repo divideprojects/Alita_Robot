@@ -17,26 +17,22 @@
 
 
 from html import escape
-from time import time
 
 from pyrogram import filters
-from pyrogram.errors import RPCError
 from pyrogram.types import (
     CallbackQuery,
-    ChatPermissions,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     Message,
 )
 
-from alita import LOGGER, PREFIX_HANDLER
+from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.parser import mention_html
-from alita.utils.regex_utils import regex_searcher
 
 __PLUGIN__ = "Blacklist"
 
