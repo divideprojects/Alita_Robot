@@ -1,7 +1,7 @@
 ---
 main:
   lang_sample: "الإنجليزية الأمريكية"
-  language_flag: '🇺🇸'
+  language_flag: "🇺🇸"
   language_name: الإنكليزية
 strings:
   admin:
@@ -12,7 +12,7 @@ strings:
       reloaded_admins: "تم تحميل جميع المشرفين في هذه المحادثة!"
       use_admin_cache: "استخدم /admincache لإعادة تحميل المشرفين!"
     ban:
-      admin_cannot_ban: "هذا المستخدم مشرف، لا يمكنني حظرهم!\""
+      admin_cannot_ban: 'هذا المستخدم مشرف، لا يمكنني حظرهم!"'
       ban_all: "هل أنت متأكد من أنك تريد حظر جميع الأعضاء في هذه المجموعة؟"
       banned_user: "{admin} حظر {banned} في الدردشة {chat_title}!"
       banning_all: "حظر جميع الأعضاء..."
@@ -25,12 +25,12 @@ strings:
       رابط الدعوة للمحادثة {chat_name}:
       {link}
     kick:
-      admin_cannot_kick: "هذا المستخدم مشرف، لا يمكنني طردهم!\""
+      admin_cannot_kick: 'هذا المستخدم مشرف، لا يمكنني طردهم!"'
       bot_no_right: "ليس لدي حقوق كافية لطرد هذا المستخدم."
       kicked_user: "{admin} طرد {kicked} في الدردشة {chat_title}!"
       owner_cannot_kick: "هذا الشخص أنشأ المجموعة، كيف يمكنني طردهم؟"
     mute:
-      admin_cannot_mute: "هذا المستخدم مشرف، لا يمكنني كتم هم!\""
+      admin_cannot_mute: 'هذا المستخدم مشرف، لا يمكنني كتم هم!"'
       bot_no_right: "ليس لدي ما يكفي من الصلاحيات لكتم هذا المستخدم."
       muted_user: "تم كتم {user}!"
       owner_cannot_mute: "هذا الشخص أنشأ المجموعة، كيف يمكنني كتمهم؟"
@@ -222,6 +222,11 @@ strings:
     purge_msg_count: "{msg_count} رسائل محذوفة"
     what_del: "ماذا تريد الحذف؟"
   rules:
+    priv_rules:
+      no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
+      turned_on: "Private Rules have been turned <b>on</b> for chat <b>{chat_name}</b>"
+      turned_off: "Private Rules have been turned <b>off</b> for chat <b>{chat_name}</b>"
+      current_preference: "Current Preference for Private rules in this chat is: {current_option}"
     clear_rules: "هل أنت متأكد من أنك تريد مسح القواعد؟"
     cleared: "تم مسح قواعد هذه المجموعة بنجاح!"
     get_rules: |-
