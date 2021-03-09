@@ -76,6 +76,15 @@ class Rules:
         with INSERTION_LOCK:
             return self.collection.count()
 
+    def count_privrules_chats(self):
+        with INSERTION_LOCK:
+            return len(self.collection.find_all({"privrules": True}))
+
+    def count_grouprules_chats(self):
+        with INSERTION_LOCK:
+            return len(self.collection.find_all({"privrules": False}))
+
+
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
