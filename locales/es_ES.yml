@@ -166,7 +166,7 @@ strings:
       × /help: Te doy este mensaje.
       × /donate: ¡Información relacionada con cómo donar!
 
-      Todos los comandos se pueden usar con / o!.
+      Todos los comandos se pueden usar con / o !.
     no_admin_cmd_perm: "¡No puede usar un comando de administrador!"
     no_perm_admin: "No tengo permiso para hacer eso"
     no_results: "No se han encontrado resultados."
