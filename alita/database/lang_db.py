@@ -22,7 +22,7 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-LANG_DATA = []
+LANG_DATA = {}
 
 
 class Langs:
@@ -44,18 +44,11 @@ class Langs:
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
 
-            if chat_id in [chat_or_user["chat_id"] for chat_or_user in LANG_DATA]:
+            if chat_id in [LANG_DATA.keys()]:
                 try:
-                    chat_dict = next(
-                        chat_or_user
-                        for chat_or_user in LANG_DATA
-                        if chat_or_user["chat_id"] == chat_id
-                    )
-                    LANG_DATA.remove(chat_dict)
-                    new_dict = chat_dict.update({'lang': lang})
-                    LANG_DATA.append(new_dict)
+                    (LANG_DATA[chat_id]).update({"lang": lang})
                     yield lang
-                except StopIteration:
+                except Exception:
                     pass
 
             curr = self.collection.find_one({"chat_id": chat_id})
@@ -65,33 +58,34 @@ class Langs:
                     {"lang": lang},
                 )
 
-            chat_dict = {"chat_id": chat_id, "chat_type": chat_type, "lang": lang}
-            LANG_DATA.append(chat_dict)
+            LANG_DATA[chat_id] = {"chat_type": chat_type, "lang": lang}
             yield True
-            return self.collection.insert_one(chat_dict)
+            return self.collection.insert_one(
+                {"chat_id": chat_id, "chat_type": chat_type, "lang": lang},
+            )
 
     def get_lang(self, chat_id: int):
         global LANG_DATA
+
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
 
             try:
-                user_dict = next(
-                    chat for chat in LANG_DATA if chat["chat_id"] == chat_id
-                )
-                if user_dict:
-                    user_lang = user_dict["lang"]
+                lang_dict = LANG_DATA[chat_id]
+                if lang_dict:
+                    user_lang = lang_dict["lang"]
                     yield user_lang
                     return
-            except StopIteration:
+            except Exception:
                 curr_lang = self.collection.find_one({"chat_id": chat_id})
                 if curr_lang:
                     yield curr_lang["lang"]
                     return
 
-            chat_dict = {"chat_id": chat_id, "chat_type": chat_type, "lang": "en"}
-            LANG_DATA.append(chat_dict)
-            self.collection.insert_one(chat_dict)
+            LANG_DATA[chat_id] = {"chat_type": chat_type, "lang": "en"}
+            self.collection.insert_one(
+                {"chat_id": chat_id, "chat_type": chat_type, "lang": "en"},
+            )
             yield "en"  # default lang
             return
 
@@ -105,8 +99,9 @@ class Langs:
 
             old_chat_local = self.get_grp(chat_id=old_chat_id)
             if old_chat_local:
-                indice = LANG_DATA.index(old_chat_local)
-                (LANG_DATA[indice]).update({"chat_id": new_chat_id})
+                lang_dict = LANG_DATA[old_chat_id]
+                del LANG_DATA[old_chat_id]
+                LANG_DATA[new_chat_id] = lang_dict
                 yield True
 
             old_chat_db = self.collection.find_one({"chat_id": old_chat_id})
@@ -122,8 +117,11 @@ def __load_all_langs():
     global LANG_DATA
     db = Langs()
     for chat in db.get_all_langs():
-        del chat["_id"]
-        LANG_DATA.append(chat)
+        chat_id = chat["chat_id"]
+        chat_type = chat["chat_type"]
+        lang = chat["lang"]
+        LANG_DATA[chat_id] = {"lang": lang, "chat_type": chat_type}
+    LANG_DATA.sort()
 
 
 __load_all_langs()

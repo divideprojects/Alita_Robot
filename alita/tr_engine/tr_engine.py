@@ -26,11 +26,11 @@ from pyrogram.types import CallbackQuery
 from yaml import FullLoader
 from yaml import load as load_yml
 
-from alita import ENABLED_LOCALES
+from alita import ENABLED_LOCALES, LOGGER
 from alita.database.lang_db import Langs
 
 # Initialise
-LOCK = RLock()
+LANG_LOCK = RLock()
 db = Langs()
 
 
@@ -51,14 +51,14 @@ for locale in ENABLED_LOCALES:
 lang_dict = cache_localizations(lang_files)
 
 
-def getFromDict(list_data, my_lang_dict=lang_dict):
+def get_from_dict(list_data, my_lang_dict=lang_dict):
     """Get data from list of keys."""
     return reduce(getitem, list_data, my_lang_dict)
 
 
 def tlang(m, user_msg):
     """Main function for getting the string of preferred language."""
-    with LOCK:
+    with LANG_LOCK:
 
         m_args = user_msg.split(".")  # Split in a list
 
@@ -66,13 +66,11 @@ def tlang(m, user_msg):
         if isinstance(m, CallbackQuery):
             m = m.message
 
-        # Get Chat
-        chat = m.chat
-
         # Get language of user from database, default = 'en' (English)
         try:
-            lang = next(db.get_lang(chat.id))
-        except Exception:
+            lang = next(db.get_lang(m.chat.id))
+        except Exception as ef:
+            LOGGER.error(ef)
             lang = "en"
 
         # Get lang
@@ -83,4 +81,4 @@ def tlang(m, user_msg):
         if lang not in ENABLED_LOCALES:
             raise Exception("Unknown Language Code found!")
 
-        return getFromDict(m_args)
+        return get_from_dict(m_args)
