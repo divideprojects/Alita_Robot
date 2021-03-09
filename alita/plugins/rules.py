@@ -25,7 +25,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import BOT_ID, LOGGER, PREFIX_HANDLER
+from alita import BOT_USERNAME, LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
@@ -44,6 +44,7 @@ what not to do in your group!
 **Admin only:**
  × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
  × /clearrules: Clear the rules for this chat.
+ × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
 """
 
 
@@ -60,32 +61,48 @@ async def get_rules(c: Alita, m: Message):
         )
         return
 
-    try:
-        await c.send_message(
-            m.from_user.id,
+    priv_rules = db.get_privrules(m.chat.id)
+
+    if not priv_rules:
+        await m.reply_text(
             (tlang(m, "rules.get_rules")).format(
                 chat=f"<b>{m.chat.title}</b>",
                 rules=rules,
             ),
         )
-    except UserIsBlocked:
-        pm_kb = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("PM", url=f"https://t.me/{BOT_ID}?start")]],
-        )
-        await m.reply_text(
-            (tlang(m, "rules.pm_me")),
-            reply_to_message_id=m.message_id,
-            reply_markup=pm_kb,
-        )
-        return
-    except Exception as ef:
-        LOGGER.error(ef)
+    else:
+        try:
+            await c.send_message(
+                m.from_user.id,
+                (tlang(m, "rules.get_rules")).format(
+                    chat=f"<b>{m.chat.title}</b>",
+                    rules=rules,
+                ),
+            )
+        except UserIsBlocked:
+            pm_kb = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "PM",
+                            url=f"https://t.me/{BOT_USERNAME}?start",
+                        ),
+                    ],
+                ],
+            )
+            await m.reply_text(
+                (tlang(m, "rules.pm_me")),
+                reply_to_message_id=m.message_id,
+                reply_markup=pm_kb,
+            )
+            return
+        except Exception as ef:
+            LOGGER.error(ef)
 
-    await m.reply_text(
-        (tlang(m, "rules.sent_pm_rules")),
-        reply_to_message_id=m.message_id,
-    )
-    return
+        await m.reply_text(
+            (tlang(m, "rules.sent_pm_rules")),
+            reply_to_message_id=m.message_id,
+        )
 
 
 @Alita.on_message(
@@ -105,6 +122,35 @@ async def set_rules(_, m: Message):
 
     db.set_rules(chat_id, rules)
     await m.reply_text(tlang(m, "rules.set_rules"))
+    return
+
+
+@Alita.on_message(
+    filters.command("privrules", PREFIX_HANDLER) & filters.group & admin_filter,
+)
+async def priv_rules(_, m: Message):
+
+    chat_id = m.chat.id
+    if len(m.text.split()) == 2:
+        option = (m.text.split())[1]
+        if option in ("on", "yes"):
+            db.set_privrules(chat_id, True)
+            msg = tlang(m, "rules.priv_rules.turned_on").format(chat_name=m.chat.title)
+        elif option in ("off", "no"):
+            db.set_privrules(chat_id, False)
+            msg = tlang(m, "rules.priv_rules.turned_off").format(chat_name=m.chat.title)
+        else:
+            msg = tlang("m,rules.priv_rules.no_option")
+        await m.reply_text(msg)
+    elif len(m.text.split()) == 1:
+        curr_pref = db.get_privrules(m.chat.id)
+        msg = tlang(m, "rules.priv_rules.current_preference").format(
+            current_option=curr_pref,
+        )
+        await m.reply_text(msg)
+    else:
+        await m.replt_text(tlang(m, "general.check_help"))
+
     return
 
 

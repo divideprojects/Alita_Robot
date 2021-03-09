@@ -36,7 +36,7 @@ class Rules:
                 return rules["rules"]
             return None
 
-    def set_rules(self, chat_id: int, rules: str):
+    def set_rules(self, chat_id: int, rules: str, privrules: bool = False):
         with INSERTION_LOCK:
             curr_rules = self.collection.find_one({"_id": chat_id})
             if curr_rules:
@@ -44,7 +44,26 @@ class Rules:
                     {"_id": chat_id},
                     {"rules": rules},
                 )
-            return self.collection.insert_one({"_id": chat_id, "rules": rules})
+            return self.collection.insert_one(
+                {"_id": chat_id, "rules": rules, "privrules": privrules},
+            )
+
+    def set_privrules(self, chat_id: int, privrules: bool):
+        with INSERTION_LOCK:
+            curr_rules = self.collection.find_one({"_id": chat_id})
+            if curr_rules:
+                return self.collection.update(
+                    {"_id": chat_id},
+                    {"privrules": privrules},
+                )
+            return self.collection.insert_one({"_id": chat_id, "privrules": privrules})
+
+    def get_privrules(self, chat_id: int):
+        with INSERTION_LOCK:
+            curr_rules = self.collection.find_one({"_id": chat_id})
+            if curr_rules:
+                return curr_rules["privrules"]
+            return self.collection.insert_one({"_id": chat_id, "privrules": False})
 
     def clear_rules(self, chat_id: int):
         with INSERTION_LOCK:
