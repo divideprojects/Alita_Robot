@@ -68,8 +68,6 @@ def tlang(m, user_msg):
             LOGGER.error(ef)
             lang = "en"
 
-        print("getlang", lang)
-
         # Get lang
         m_args.insert(0, lang)
         m_args.insert(1, "strings")

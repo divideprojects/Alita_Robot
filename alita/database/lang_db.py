@@ -40,54 +40,51 @@ class Langs:
         return chat_type
 
     def set_lang(self, chat_id: int, lang):
-        print("setlang", lang)
         with INSERTION_LOCK:
 
+            global LANG_DATA
             chat_type = self.get_chat_type(chat_id)
+            if chat_id in list(LANG_DATA.keys()):
+                try:
+                    lang_dict = (LANG_DATA[chat_id]).update({"lang": lang})
+                    (LANG_DATA[chat_id]).update(lang_dict)
+                except Exception:
+                    pass
 
-            # global LANG_DATA
-
-            # if chat_id in [LANG_DATA.keys()]:
-            #     try:
-            #         old_lang_dict = LANG_DATA[chat_id]
-            #         LANG_DATA.pop(old_lang_dict)
-            #         new_lang_dict = old_lang_dict.update({"lang": lang})
-            #         LANG_DATA[chat_id] = new_lang_dict
-            #     except Exception:
-            #         pass
-
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
-                return self.collection.update(
-                    {"chat_id": chat_id},
+                self.collection.update(
+                    {"_id": chat_id},
                     {"lang": lang},
                 )
+                return
 
-            # LANG_DATA[chat_id] = {"chat_type": chat_type, "lang": lang}
+            LANG_DATA[chat_id] = {"chat_type": chat_type, "lang": lang}
             return self.collection.insert_one(
-                {"chat_id": chat_id, "chat_type": chat_type, "lang": lang},
+                {"_id": chat_id, "chat_type": chat_type, "lang": lang},
             )
 
     def get_lang(self, chat_id: int):
         with INSERTION_LOCK:
+
             global LANG_DATA
             chat_type = self.get_chat_type(chat_id)
 
-            # try:
-            #     lang_dict = LANG_DATA[chat_id]
-            #     if lang_dict:
-            #         user_lang = lang_dict["lang"]
-            #         return user_lang
-            # except Exception:
-            #     pass
+            try:
+                lang_dict = LANG_DATA[chat_id]
+                if lang_dict:
+                    user_lang = lang_dict["lang"]
+                    return user_lang
+            except Exception:
+                pass
 
-            curr_lang = self.collection.find_one({"chat_id": chat_id})
+            curr_lang = self.collection.find_one({"_id": chat_id})
             if curr_lang:
                 return curr_lang["lang"]
 
-            # LANG_DATA[chat_id] = {"chat_type": chat_type, "lang": "en"}
+            LANG_DATA[chat_id] = {"chat_type": chat_type, "lang": "en"}
             self.collection.insert_one(
-                {"chat_id": chat_id, "chat_type": chat_type, "lang": "en"},
+                {"_id": chat_id, "chat_type": chat_type, "lang": "en"},
             )
             return "en"  # default lang
 
@@ -104,14 +101,11 @@ class Langs:
                 lang_dict = LANG_DATA[old_chat_id]
                 del LANG_DATA[old_chat_id]
                 LANG_DATA[new_chat_id] = lang_dict
-                yield True
-
-            old_chat_db = self.collection.find_one({"chat_id": old_chat_id})
+            old_chat_db = self.collection.find_one({"_id": old_chat_id})
             if old_chat_db:
-                yield self.collection.update(
-                    {"chat_id": old_chat_id},
-                    {"chat_id": new_chat_id},
-                )
+                new_data = old_chat_db.update({"_id": new_chat_id})
+                self.collection.delete_one({"_id": old_chat_id})
+                self.collection.insert_one(new_data)
             return
 
 
@@ -119,7 +113,7 @@ def __load_all_langs():
     global LANG_DATA
     db = Langs()
     for chat in db.get_all_langs():
-        chat_id = chat["chat_id"]
+        chat_id = chat["_id"]
         chat_type = chat["chat_type"]
         lang = chat["lang"]
         LANG_DATA[chat_id] = {"lang": lang, "chat_type": chat_type}
