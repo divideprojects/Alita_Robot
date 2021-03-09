@@ -6,7 +6,7 @@ main:
 strings:
   admin:
     adminlist:
-      adminstr: "Admins in {chat_title}:\n"
+      adminstr: "Admins in <b>{chat_title}</b>:\n"
       cached_values: "Dies sind zwischengespeicherte Werte!"
       note_updated: "Das sind aktuelle Werte!"
       reloaded_admins: "Alle Administratoren in diesem Chat neu geladen!"
@@ -14,20 +14,20 @@ strings:
     ban:
       admin_cannot_ban: 'Dieser Benutzer ist ein Admin, ich kann ihn nicht bannen! "'
       ban_all: "Sind Sie sicher, dass Sie alle Mitglieder dieser Gruppe sperren möchten?"
-      banned_user: "{admin} hat {banned} im Chat {chat_title} gesperrt!"
+      banned_user: "{admin} banned {banned} in chat <b>{chat_title}</b>!"
       banning_all: "Alle Mitglieder werden gesperrt..."
       bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu bannen."
       owner_cannot_ban: "Diese Person hat die Gruppe erstellt, wie kann ich sie verbieten?"
     demote:
       bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu degradieren."
-      demoted_user: "{demoter} hat {demoted} im Chat {chat_title} degradiert!"
+      demoted_user: "{demoter} demoted {demoted} in chat <b>{chat_title}</b>!"
     invitelink: |-
-      Einladungslink für den Chat {chat_name}:
+      Invite Link for Chat <b>{chat_name}</b>:
       {link}
     kick:
       admin_cannot_kick: 'Dieser Benutzer ist ein Admin, ich kann ihn nicht kicken! "'
       bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu kicken."
-      kicked_user: "{admin} hat {kicked} im Chat {chat_title} gekickt!"
+      kicked_user: "{admin} kicked {kicked} in chat <b>{chat_title}<b>!"
       owner_cannot_kick: "Diese Person hat die Gruppe erstellt, wie kann ich sie kicken?"
     mute:
       admin_cannot_mute: 'Dieser Benutzer ist ein Admin, ich kann ihn nicht stummschalten!"'
@@ -41,11 +41,11 @@ strings:
     promote:
       bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu fördern."
       no_promote_perm: "Du hast keine Berechtigung Mitglieder zu bewerben!"
-      promoted_user: "{promoter} hat {promoted} im Chat {chat_title} beworben!"
+      promoted_user: "{promoter} promoted {promoted} in chat <b>{chat_title}</b>!"
     support_cannot_restrict: "Dieser Benutzer ist in meinem Support-Personal, kann ihn nicht einschränken."
     unban:
       bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu entbannen."
-      unbanned_user: "{admin} entsperrt {unbanned} im Chat {chat_title}!"
+      unbanned_user: "{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu entmutieren."
       unmuted_user: "Entstumm {user}!"
@@ -55,12 +55,12 @@ strings:
       Fehler beim Prüfen
       {ef}
     no_longer_afk: |-
-      {first_name} ist nicht mehr Afk!
-      War AFK für {since}
-    reason: "Grund: {res}"
+      {first_name} is no longer Afk!
+      Was AFK for <code>{since}</code>
+    reason: "<b>Reason:</b> {res}"
     user_afk: |-
-      {first_name} ist Afk!
-      Seit: {since}
+      {first_name} is Afk!
+      <b>Since:</b> <code>{since}</code>
     user_now_afk: "Benutzer {user} ist jetzt verfügbar!"
   antispam:
     gban:
@@ -83,13 +83,13 @@ strings:
         Toller Versuch...!
       updated_reason: "Gban Grund wurde aktualisiert zu: <code>{gban_reason}</code>."
       user_added_to_watch: |-
-        Du wurdest zu meiner globalen Bannliste hinzugefügt!
-        Grund: <code>{gban_reason}</code>
+        You have been added to my global ban list!
+        <b>Reason:</b> <code>{gban_reason}</code>
 
         Appeal Chat: @{SUPPORT_GROUP}
     here_gbanned_start: "Hier sind alle weltweit gebannten Geys!\n"
     none_gbanned: "Es gibt keine ggebannten Benutzer...!"
-    num_gbans: "Anzahl der Personen gbannt {count}"
+    num_gbans: "Number of people gbanned: <code>{count}</code>"
     part_of_support: "Dieser Benutzer ist Teil meines Support!, kann unseren eigenen nicht bannen!"
     pass_user_id: "Benutzer-ID oder Benutzername als Argument übergeben!"
     ungban:
@@ -105,29 +105,29 @@ strings:
       removed_from_list: "{first_name} von der globalen Sperrliste entfernt."
       user_removed_from_list: "Du wurdest von meiner globalen Bannliste entfernt!"
     watcher_banned: |-
-      Dieser Benutzer ({user_gbanned}) wurde weltweit gebannt!
+      This user ({user_gbanned}) has been banned globally!
 
-      Um eine Entbannung zu erhalten unter @{SUPPORT_GROUP}
+      To get unbanned, appeal at @{SUPPORT_GROUP}
   blacklist:
-    action_get: "Die aktuelle Aktion für Blacklisten in diesem Chat ist {action}"
+    action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
     action_set: "Aktion für Blacklist auf {action} setzen"
-    added_blacklist: "{trigger} in Blacklist-Wörtern hinzugefügt!"
-    curr_blacklist_initial: "Aktuelle blockierte Wörter in {chat_title}:\n"
-    no_bl_found: "Keine Blacklist {bl_word} gefunden!"
-    no_blacklist: "Es gibt keine Nachrichten auf der schwarzen Liste in {chat_title}!"
-    rm_blacklist: "{bl_word} von Wörtern der Blacklist entfernt!"
+    added_blacklist: "Added <b>{trigger}</b> in blacklist words!"
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n"
+    no_bl_found: "No blacklist <b>{bl_word}</b> found!"
+    no_blacklist: "There are no blacklisted messages in <b>{chat_title}</b>!"
+    rm_blacklist: "Removed <b>{bl_word}</b> from blacklist words!"
   dev:
     alladmins:
       admins_i_know_str: |-
-        Es gibt {len_admins} Administratoren, die ich kenne!
+        There are <b>{len_admins}</b> admins whom I know!
 
-        {admindict}
-      admins_in_cache: "Es gibt {len_admins} Administratoren in meinem Redis-Cache."
+        <code>{admindict}</code>
+      admins_in_cache: "There are <b>{len_admins}</b> admins in my Redis cache."
       alladmins_btn: "Alle Admins"
       getting_admins: "Lade alle Administratoren in meinem Cache..."
     bot_ip: |-
-      Bot IP-Adresse:
-      {ip}
+      <b>Bot IP Address:</b>
+      <code>{ip}</code>
     chatlist:
       chats_in_db: "Hier ist die Liste der Chats in meiner Datenbank."
       exporting: "Charlist wird exportiert..."
@@ -138,45 +138,45 @@ strings:
     execute_cmd_err: "Bitte führen Sie den Code korrekt aus!"
     flush_redis:
       flush_failed: |-
-        Fehler beim Leeren der Redis-Datenbank!
-        Fehler: {ef}.
+        Failed to flush redis database!
+        Error: {ef}
       flushed_redis: "Redis erfolgreich geleert!"
       flushing_redis: "Redis Datenbank wird geleert..."
     restarting: Neustarten...
     speedtest:
       speedtest_txt: |-
-        Geschwindigkeit
+        Speedtest
 
-        Host: {host}
+        <b>Host:</b> <code>{host}</code>
 
-        Ping: {ping} ms
-        Download: {download} Mbps
-        Upload: {upload} Mbps
+        <b>Ping:</b> <code>{ping}</code> ms
+        <b>Download:</b> <code>{download}</code> Mbps
+        <b>Upload:</b> <code>{upload}</code> Mbps
       start_speedtest: "Berechne meine Geschwindigkeit..."
-    uptime: "Laufzeit: {uptime}"
+    uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
     back_btn: Zurück
     check_help: "Bitte überprüfen Sie die Hilfe zur Verwendung dieses Befehls."
     close_btn: Schließen
     commands_available: |-
-      Hallo! Mein Name ist Alita.
-      Ich bin hier, um Ihnen bei der Verwaltung Ihrer Gruppen zu helfen!
-      Befehle verfügbar:
-      × /start: Starten Sie den Bot
-      × /help: Geben Sie Ihnen diese Nachricht.
-      × /donate: Informationen darüber, wie man spenden kann!
+      Hey There! My name is Alita.
+      I'm here to help you manage your groups!
+      Commands available:
+      × /start: Start the bot
+      × /help: Give's you this message.
+      × /donate: Information related about how to donate to my owner!
 
-      Alle Befehle können entweder mit / oder !.
+      All commands can either be used with / or !.
     no_admin_cmd_perm: "Sie können keinen Admin-Befehl verwenden!"
     no_perm_admin: "Ich habe keine Berechtigung, das zu tun"
     no_results: "Keine Ergebnisse gefunden."
     some_error: |-
-      Ein Fehler ist aufgetreten, melde an {SUPPORT_GROUP}
+      Some error occured, report to @{SUPPORT_GROUP}
 
-      Fehler: {ef}
+      Error: {ef}
     something_wrong: "Etwas ist schiefgelaufen!"
   langs:
-    changed: "Sprache geändert zu {lang_code}"
+    changed: "Language changed to <code>{lang_code}</code>"
     changelang: "Hier können Sie die Sprache für den Bot ändern."
     correct_usage: |-
       Richtige Verwendung:
@@ -188,25 +188,25 @@ strings:
 
       Benutze /locktypes um die Sperrtypen zu erhalten
     lock_all: "Alle Berechtigungen in diesem Chat gesperrt!"
-    locked_perm: "{perm} für diesen Chat gesperrt."
+    locked_perm: "Locked <b>{perm}</b> for this Chat."
     locks_perm_sp: "Berechtigung zum Sperren angeben!"
     unlock_all: "Alle Berechtigungen in diesem Chat entsperrt!"
-    unlocked_perm: "{uperm} für diesen Chat freigeschaltet."
+    unlocked_perm: "Unlocked <b>{uperm}</b> for this Chat."
     unlocks_perm.sp_perm: "Geben Sie eine Berechtigung zum Entsperren an!"
     view_perm: |-
-      CHAT-PERMISSIONEN:
+      CHAT PERMISSIONS:
 
-      Nachrichten senden: {vmsg}
-      Medien senden: {vmedia}
-      Sticker senden: {vstickers}
-      Animationen senden: {vanimations}
-      Kann Spiele spielen: {vgames}
-      Kann Inline-Bots verwenden: {vinlinebots}
-      Webseiten-Vorschau: {vwebprev}
-      Sende Umfragen: {vpolls}
-      Info ändern: {vinfo}
-      Einladende Benutzer: {vinvite}
-      Pin Nachrichten: {vpin}
+      <b>Send Messages:</b> {vmsg}
+      <b>Send Media:</b> {vmedia}
+      <b>Send Stickers:</b> {vstickers}
+      <b>Send Animations:</b> {vanimations}
+      <b>Can Play Games:</b> {vgames}
+      <b>Can Use Inline Bots:</b> {vinlinebots}
+      <b>Webpage Preview:</b> {vwebprev}
+      <b>Send Polls:</b> {vpolls}
+      <b>Change Info:</b> {vinfo}
+      <b>Invite Users:</b> {vinvite}
+      <b> Pin Messages:</b> {vpin}
   pin:
     no_pin_msg: "Auf eine Nachricht antworten, auf die Sie pinnen..."
     no_rights_pin: "Ich habe nicht genügend Rechte, um Nachrichten zu pinnen."
@@ -230,7 +230,7 @@ strings:
     clear_rules: "Sind Sie sicher, dass Sie die Regeln löschen möchten?"
     cleared: "Regeln für diese Gruppe erfolgreich gelöscht!"
     get_rules: |-
-      Regeln für {chat}:
+      Rules for <b>{chat}:</b>
 
       {rules}
     no_rules: "Die Admins für diese Gruppe haben keine Regeln!"
@@ -244,25 +244,25 @@ strings:
     info_page: |-
       • @Alita_Robot
 
-      Version: {version}
+      <b>Version:</b> <i>{version}</i>
 
-      Entwickler: [Divkix](https://github.com/Divkix)
-      Eigentümer: [{Owner}](tg://user?id={ID})
+      <b>Developers:</b> [Divkix](https://github.com/Divkix)
+      <b>Owner:</b> [{Owner}](tg://user?id={ID})
     infos_btn: Info
     language_btn: Sprache
     pm_for_help: "Kontaktieren Sie mich in PN um die Liste möglicher Befehle zu erhalten."
     private: "Hallo! Ich bin Alita_Robot. Um mehr über meine Funktionen zu erfahren, klicken Sie auf die Schaltflächen unten."
-    public_help: "Drücken Sie die Schaltfläche unten, um Hilfe für {help_option} zu erhalten"
+    public_help: "Press the button below to get help for <i>{help_option}</i>"
     source_code: "Quellcode"
   utils:
     gif_id:
       reply_gif: "Bitte antworten Sie auf ein GIF, um seine ID zu erhalten."
     id:
-      group_id: "Diese Gruppen-ID ist {group_id}"
+      group_id: "This Groups ID is <code>{group_id}</code>"
       id_main: |-
-        Original Absender - {orig_sender} ({orig_id})
-        Weiterleitung - {fwd_sender} ({fwd_id})
-      my_id: "Ihre ID ist {my_id}."
+        Original Sender - {orig_sender} (<code>{orig_id}</code>)
+        Forwarder - {fwd_sender} (<code>{fwd_id}</code>)
+      my_id: "Your ID is <code>{my_id}</code>."
     no_user_db: |-
       Fehler beim Holen der Benutzer
       Peer-ID ungültig. Ich habe diesen Benutzer nirgends früher gesehen, vielleicht würde der Benutzername ihn kennenlernen!
@@ -281,25 +281,25 @@ strings:
       translate_usage: "Verwendung: /tr <language> Text für die Übersetzung (kann auch als Antwort auf eine Nachricht verwendet werden)."
       translating: Übersetzen...
       translation: |-
-        Sprache: {from_lang} -> {to_lang}
-        Übersetzung: {translation}
+        <b>Language:</b> {from_lang} -> {to_lang}
+        Translation: <code>{translation}</code>
     user_info:
       custom_title: |-
 
 
-        Dieser Benutzer trägt hier den Titel {custom_title}.
+        This user holds the title <b>{custom_title}</b> here.
       getting_info: "Benutzerinformationen werden abgerufen..."
       info_text:
         last_name: |-
 
-          Nachname: {user_lname}
+          <b>Last Name:</b> {user_lname}
         main: |-
-          Zeichen:
-          ID: {user_id}
-          Vorname: {user_name}
+          <b>Characteristics:</b>
+          <b>ID:</b> <code>{user_id}</code>
+          <b>First Name:</b> {user_name}
         perma_link: |-
 
-          Permanenter Benutzerlink: {perma_link}
+          Permanent User Link: {perma_link}
         username: |-
 
           Benutzername: @{username}
@@ -315,13 +315,13 @@ strings:
         sudo: |-
 
 
-          Die Stärke dieser Person ist 'Sudo'
+          This user is one of my Sudos, he has powers which are approximately same to owner!
         whitelist: |-
 
 
           Diese Person ist 'Whitelist Benutzer', sie kann nicht verboten werden!
     weebify:
       weebified_string: |-
-        Weebified String:
+        <b>Weebified String:</b>
         {string}
       weebify_what: "Was soll ich zu Weebify machen?"
