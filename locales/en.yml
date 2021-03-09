@@ -206,7 +206,7 @@ strings:
       <b>Send Polls:</b> {vpolls}
       <b>Change Info:</b> {vinfo}
       <b>Invite Users:</b> {vinvite}
-     <b> Pin Messages:</b> {vpin}
+      <b>Pin Messages:</b> {vpin}
   pin:
     no_pin_msg: "Reply to a message to which you want to pin..."
     no_rights_pin: "I don't have enough rights to pin messages."
