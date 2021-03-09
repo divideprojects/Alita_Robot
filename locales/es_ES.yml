@@ -69,8 +69,8 @@ strings:
         ¡Ahora estarán prohibidos en todos los grupos en los que soy administrador!
       enter_reason: "Por favor ingrese un motivo para ser usuario de gban."
       how_to: |-
-        <b>How to gban?</b>
-        <b>Answer:</b> <code>/gban user_id reason</code>
+        <b>¿Cómo banear?</b>
+        <b>Respuesta:</b> <code>/gban user_id reason</code>
       log_msg: |-
         #GBAN
         <b> Se originó en: </b> {chat_id}
@@ -81,12 +81,12 @@ strings:
       not_self: |-
         ¡No puedes gbanme nigga!
         Buen intento...!
-      updated_reason: "Updated Gban reason to: <code>{gban_reason}</code>."
+      updated_reason: "Motivo actualizado de Gban a: <code>{gban_reason}</code>."
       user_added_to_watch: |-
-        You have been added to my global ban list!
-        Reason: <code>{gban_reason}</code>
+        ¡Has sido añadido a mi lista global de baneos!
+        Motivo: <code>{gban_reason}</code>
 
-        Appeal Chat: @{SUPPORT_GROUP}
+        Chat de Apelación: @{SUPPORT_GROUP}
     here_gbanned_start: "¡Aquí están todos los géys prohibidos a nivel mundial!\n"
     none_gbanned: "¡No hay usuarios con gbanned ...!"
     num_gbans: "Número de personas con gban {count}"
