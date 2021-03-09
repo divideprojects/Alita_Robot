@@ -121,7 +121,6 @@ def __load_all_langs():
         chat_type = chat["chat_type"]
         lang = chat["lang"]
         LANG_DATA[chat_id] = {"lang": lang, "chat_type": chat_type}
-    LANG_DATA.sort()
 
 
 __load_all_langs()
