@@ -40,6 +40,7 @@ class Langs:
         return chat_type
 
     def set_lang(self, chat_id: int, lang: str = "en"):
+        global LANG_DATA
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
 
