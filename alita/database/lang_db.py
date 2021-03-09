@@ -51,13 +51,15 @@ class Langs:
                         for chat_or_user in LANG_DATA
                         if chat_or_user["chat_id"] == chat_id
                     )
-                    indice = LANG_DATA.index(chat_dict)
-                    (LANG_DATA[indice]).update({"lang": lang})
-                    yield True
+                    LANG_DATA.remove(chat_dict)
+                    new_dict = chat_dict.update({'lang': lang})
+                    LANG_DATA.append(new_dict)
+                    yield lang
                 except StopIteration:
                     pass
 
-            if self.collection.find_one({"chat_id": chat_id}):
+            curr = self.collection.find_one({"chat_id": chat_id})
+            if curr:
                 return self.collection.update(
                     {"chat_id": chat_id},
                     {"lang": lang},
@@ -84,13 +86,13 @@ class Langs:
             except StopIteration:
                 curr_lang = self.collection.find_one({"chat_id": chat_id})
                 if curr_lang:
-                    yield str(curr_lang["lang"])
+                    yield curr_lang["lang"]
                     return
 
             chat_dict = {"chat_id": chat_id, "chat_type": chat_type, "lang": "en"}
             LANG_DATA.append(chat_dict)
             self.collection.insert_one(chat_dict)
-            yield "en"
+            yield "en"  # default lang
             return
 
     def get_all_langs(self):
