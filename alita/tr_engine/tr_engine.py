@@ -47,7 +47,6 @@ def cache_localizations(files):
 # Get all translation files
 lang_files = []
 for locale in ENABLED_LOCALES:
-    locale = locale.split("_")[0]
     lang_files += glob(path.join("locales", f"{locale}.yml"))
 lang_dict = cache_localizations(lang_files)
 
