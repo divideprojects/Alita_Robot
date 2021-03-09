@@ -224,9 +224,9 @@ strings:
   rules:
     priv_rules:
       no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
-      turned_on: "Private Rules have been turned <b>on</b> for chat <b>{chat_name}</b>"
-      turned_off: "Private Rules have been turned <b>off</b> for chat <b>{chat_name}</b>"
-      current_preference: "Current Preference for Private rules in this chat is: {current_option}"
+      turned_on: "تم تشغيل القواعد الخاصة <b>على</b> للمحادثة <b>{chat_name}</b>"
+      turned_off: "تم تشغيل القواعد الخاصة <b>من</b> للمحادثة <b>{chat_name}</b>"
+      current_preference: "التفضيلات الحالية للقواعد الخاصة في هذه المحادثة هي : {current_option}"
     clear_rules: "هل أنت متأكد من أنك تريد مسح القواعد؟"
     cleared: "تم مسح قواعد هذه المجموعة بنجاح!"
     get_rules: |-
