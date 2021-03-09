@@ -39,6 +39,7 @@ from alita.bot_class import Alita
 from alita.database.chats_db import Chats
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
+from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import dev_filter, sudo_filter
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
@@ -137,7 +138,7 @@ async def neofetch_stats(_, m: Message):
     try:
         await m.reply_text(OUTPUT, quote=True)
     except MessageTooLong:
-        with BytesIO(str.encode(OUTPUT)) as f:
+        with BytesIO(str.encode(remove_markdown_and_html(OUTPUT))) as f:
             f.name = "neofetch.txt"
             await m.reply_document(document=f, caption="neofetch result")
         await m.delete()
@@ -189,7 +190,7 @@ async def evaluate_code(c: Alita, m: Message):
     try:
         await sm.edit(final_output)
     except MessageTooLong:
-        with BytesIO(str.encode(final_output)) as f:
+        with BytesIO(str.encode(remove_markdown_and_html(final_output))) as f:
             f.name = "py.txt"
             await m.reply_document(
                 document=f,
@@ -241,7 +242,7 @@ async def execution(_, m: Message):
     try:
         await sm.edit_text(OUTPUT)
     except MessageTooLong:
-        with BytesIO(str.encode(OUTPUT)) as f:
+        with BytesIO(str.encode(remove_markdown_and_html(OUTPUT))) as f:
             f.name = "sh.txt"
             await m.reply_document(
                 document=f,
@@ -304,7 +305,7 @@ async def chats(c: Alita, m: Message):
             LOGGER.error(ef)
             await m.reply_text(f"**Error:**\n{ef}")
 
-    with BytesIO(str.encode(chatfile)) as f:
+    with BytesIO(str.encode(remove_markdown_and_html(chatfile))) as f:
         f.name = "chatlist.txt"
         await m.reply_document(
             document=f,
@@ -344,7 +345,9 @@ async def list_all_admins(_, m: Message):
         )
     except MessageTooLong:
         raw = (await paste(admindict))[1]
-        with BytesIO(str.encode(dumps(admindict, indent=2))) as f:
+        with BytesIO(
+            str.encode(remove_markdown_and_html(dumps(admindict, indent=2))),
+        ) as f:
             f.name = "allAdmins.txt"
             await m.reply_document(
                 document=f,
@@ -380,7 +383,9 @@ async def show_redis_keys(_, m: Message):
         await replymsg.edit_text(str(txt_dict))
     except MessageTooLong:
         raw = (await paste(txt_dict))[1]
-        with BytesIO(str.encode(dumps(txt_dict, indent=2))) as f:
+        with BytesIO(
+            str.encode(remove_markdown_and_html(dumps(txt_dict, indent=2))),
+        ) as f:
             f.name = "redisKeys.txt"
             await m.reply_document(
                 document=f,

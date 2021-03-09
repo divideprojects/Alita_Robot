@@ -53,8 +53,8 @@ async def get_stats(_, m: Message):
         f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
         f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
         "\n<b>Spam Protection:</b>\n"
-        f"    <b>CAS Enabled:</b> {(spamdb.get_cas_enabled_chats_num())}\n"
-        f"    <b>UnderAttack Enabled:</b> {(spamdb.get_attack_enabled_chats_num())}\n"
+        f"    <b>CAS Enabled:</b> {(spamdb.get_cas_enabled_chats_num())} chats\n"
+        f"    <b>UnderAttack Enabled:</b> {(spamdb.get_attack_enabled_chats_num())} chats\n"
     )
     await replymsg.edit_text(rply, parse_mode="html")
 

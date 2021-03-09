@@ -38,6 +38,7 @@ from alita import (
 )
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
+from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import owner_filter, restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -208,7 +209,7 @@ async def banallnotes_callback(_, q: CallbackQuery):
 
     rply = f"Users Banned:\n{users}"
 
-    with BytesIO(str.encode(rply)) as f:
+    with BytesIO(str.encode(remove_markdown_and_html(rply))) as f:
         f.name = f"bannedUsers_{q.message.chat.id}.txt"
         await q.message.reply_document(
             document=f,

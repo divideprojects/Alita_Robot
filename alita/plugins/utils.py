@@ -40,6 +40,7 @@ from alita import (
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
+from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 from alita.utils.paste import paste
@@ -94,7 +95,7 @@ async def get_lyrics(_, m: Message):
     try:
         await em.edit_text(reply)
     except MessageTooLong:
-        with BytesIO(str.encode(reply)) as f:
+        with BytesIO(str.encode(remove_markdown_and_html(reply))) as f:
             f.name = "lyrics.txt"
             await m.reply_document(
                 document=f,

@@ -26,6 +26,7 @@ from wikipedia.exceptions import DisambiguationError, PageError
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
+from alita.utils.clean_file import remove_markdown_and_html
 
 __PLUGIN__ = "Wikipedia"
 
@@ -61,7 +62,7 @@ async def wiki(_, m: Message):
         try:
             await m.reply_text(result, parse_mode="html", disable_web_page_preview=True)
         except MessageTooLong:
-            with BytesIO(str.encode(result)) as f:
+            with BytesIO(str.encode(remove_markdown_and_html(result))) as f:
                 f.name = "result.txt"
                 await m.reply_document(
                     document=f,
