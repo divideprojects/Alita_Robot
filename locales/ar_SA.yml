@@ -284,42 +284,21 @@ strings:
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
-      custom_title: |-
-
-
-        يقوم هذا المستخدم بالاحتفاظ بالعنوان <b>{custom_title}</b> هنا.
+      custom_title: "This user holds the title <b>{custom_title}</b> here."
       getting_info: "الحصول على معلومات المستخدم..."
       info_text:
-        last_name: |-
-
-          <b>الاسم الأخير :</b> {user_lname}
+        last_name: <b>Last Name:</b> {user_lname}
         main: |-
           <b>Characteristics:</b>
           <b>ID:</b> <code>{user_id}</code>
           <b>First Name:</b> {user_name}
-        perma_link: |-
-
-          "<b>وصلة المستخدم الدائمة :</b> {perma_link}"
-        username: |-
-
-          "<b>اسم المستخدم :</b> @{username}"
+        perma_link: "<b>Permanent User Link:</b> {perma_link}"
+        username: "<b>Username:</b> @{username}"
       support_user:
-        dev: |-
-
-
-          هذا العضو هو أحد المطورين ⚡
-        owner: |-
-
-
-          هذا الشخص هو مالكي، لن أفعل أي شيء ضدهم!
-        sudo: |-
-
-
-          هذا المستخدم هو أحد المهام الخاصة بي ، لديه الصلاحيات والتي هي نفسها تقريبا للمالك !
-        whitelist: |-
-
-
-          هذا الشخص هو 'مستخدم القائمة البيضاء'، لا يمكن حظره!
+        dev: "This member is one of my Developers ⚡️"
+        owner: "This person is my Owner, I would never do anything against them!"
+        sudo: "This user is one of my Sudos, he has powers which are approximately same to owner!"
+        whitelist: "This person is 'Whitelist User', they cannot be banned!"
     weebify:
       weebified_string: |-
         <b>مجموعة الحروف التي تم تعديلها :</b>
