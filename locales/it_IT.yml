@@ -1,8 +1,8 @@
 ---
 main:
-  lang_sample: "Inglese americano"
-  language_flag: '🇺🇸'
-  language_name: Inglese
+  lang_sample: "Italian"
+  language_flag: '🇮🇹'
+  language_name: Italiano
 strings:
   admin:
     adminlist:
@@ -166,7 +166,7 @@ strings:
       × /help: Dacci questo messaggio.
       × /donate: Informazioni relative a come donare!
 
-      Tutti i comandi possono essere utilizzati con / o!.
+      Tutti i comandi possono essere utilizzati con / o !.
     no_admin_cmd_perm: "Non è possibile utilizzare un comando admin!"
     no_perm_admin: "Non ho il permesso per farlo"
     no_results: "Nessun risultato trovato."
@@ -243,12 +243,12 @@ strings:
 
       Developers: [Divkix](https://github.com/Divkix)
       Owner: [{Owner}](tg://user?id={ID})
-    infos_btn: ℹ️ Informazioni
+    infos_btn: Informazioni
     language_btn: Lingua
     pm_for_help: "Contattatemi in PM per avere la lista dei possibili comandi."
     private: "Ciao! Sono Alita_Robot. Per scoprire di più riguardo alle mie funzioni, clicca uno dei pulsanti qui sotto."
     public_help: "Premi il pulsante sottostante per ricevere aiuto per {help_option}"
-    source_code: "Codice sorgente"
+    source_code: "Codice Sorgente"
   utils:
     gif_id:
       reply_gif: "Si prega di rispondere a un gif per ottenere il suo ID."
