@@ -1,0 +1,327 @@
+---
+main:
+  lang_sample: "americká angličtina"
+  language_flag: "🇺🇸"
+  language_name: anglický
+strings:
+  admin:
+    adminlist:
+      adminstr: "Administrátoři v <b>{chat_title}</b>:\n"
+      cached_values: "Jedná se o hodnoty z mezipaměti!"
+      note_updated: "Jedná se o hodnoty mezi sebou!"
+      reloaded_admins: "V této konverzaci znovu načetli všechny administrátory!"
+      use_admin_cache: "Chcete-li znovu načíst administrátory, použijte /admincache."
+    ban:
+      admin_cannot_ban: 'Tento uživatel je administrátorem, nemohu je zakázat! "'
+      ban_all: "Jste si jisti, že chcete zakázat všechny členy této skupiny?"
+      banned_user: "{admin} zakázal {banned} v konverzaci <b>{chat_title}</b>!"
+      banning_all: "Banning All Members ..."
+      bot_no_right: "Nemám dost práv na zákaz tohoto uživatele."
+      owner_cannot_ban: "Tato osoba vytvořila skupinu, jak je mohu zakázat?"
+    demote:
+      bot_no_right: "Nemám dost práv na snížení úrovně tohoto uživatele."
+      demoted_user: "{demoter} demoted {demoted} in chat <b>{chat_title}</b>!"
+    invitelink: |-
+      Pozvat odkaz na konverzaci <b>{chat_name}</b>:
+      {link}
+    kick:
+      admin_cannot_kick: 'Tento uživatel je admin, nemohu je kopat! "'
+      bot_no_right: "Nemám dost práv na to, abych toho uživatele vyhodil."
+      kicked_user: "{admin} kicked {kicked} in chat <b>{chat_title}<b>!"
+      owner_cannot_kick: "Tato osoba vytvořila skupinu, jak je mohu kopnout?"
+    mute:
+      admin_cannot_mute: 'Tento uživatel je administrátorem, nemohu je ztlumit! "'
+      bot_no_right: "Nemám dost práv na umlčení tohoto uživatele."
+      muted_user: "Ztlumený {user}!"
+      owner_cannot_mute: "Tato osoba vytvořila skupinu, jak je mohu ztlumit?"
+    no_invite_perm: "Nemám svolení k pozvání na pozvání!"
+    no_restrict_perm: "Nemáte oprávnění omezit členy!"
+    no_user_invite_perm: "Nemáte oprávnění zvát uživatele."
+    not_admin: "Já nejsem správce, nebo nemám práva."
+    promote:
+      bot_no_right: "Nemám dostatek práv na podporu tohoto uživatele."
+      no_promote_perm: "Nemáte oprávnění povýšit členy!"
+      promoted_user: "{promoter} povýšena {promoted} v konverzaci <b>{chat_title}</b>!"
+    support_cannot_restrict: "Tento uživatel je v mých podpůrných zaměstnancích, nemůže je omezit."
+    unban:
+      bot_no_right: "Nemám dost práv na zrušení zákazu tohoto uživatele."
+      unbanned_user: "{admin} unzakázaných {unbanned} v konverzaci <b>{chat_title}</b>!"
+    unmute:
+      bot_no_right: "Nemám dost práv na zrušení ztlumení tohoto uživatele."
+      unmuted_user: "Ztlumený {user}!"
+    user_admin_invalid: "Nelze na tomto uživateli působit, možná jsem to nebyl já, kdo změnil jejich oprávnění."
+  afk:
+    error_check_afk: |-
+      Chyba při kontrole afk
+      {ef}
+    no_longer_afk: |-
+      {first_name} is no longer Afk!
+      Was AFK for <code>{since}</code>
+    reason: "<b>Důvod:</b> {res}"
+    user_afk: |-
+      {first_name} je Afk!
+      <b>od:</b> <code>{since}</code>
+    user_now_afk: "Uživatel {user} je nyní na fli!"
+  antispam:
+    gban:
+      added_to_watch: |-
+        Přidán {first_name} do seznamu globálních bang.
+        . Budou nyní zakázány ve všech skupinách, kde jsem admin!
+      enter_reason: "Zadejte prosím důvod pro gban uživatele!"
+      how_to: |-
+        <b>Jak se chubovat?</b>
+        <b>Odpověď:</b> <code>/gban user_id důvod</code>
+      log_msg: |-
+        #GBAN
+        <b>Originated from:</b> {chat_id}
+        <b>Admin:</b> {ban_admin}
+        <b>Gbanned User:</b> {gbanned_user}
+        <b>Gbanned User ID:</b> {gban_user_id}
+        <b>Event Stamp:</b> {time}
+      not_self: |-
+        Nemůžeš mě oblbovat negře!
+        Pěkný pokus ...!
+      updated_reason: "Aktualizovaný důvod pro Gban: <code>{gban_reason}</code>."
+      user_added_to_watch: |-
+        Byli jste přidáni do mého seznamu globálních zákazů!
+        <b>Příčina:</b> <code>{gban_reason}</code>
+
+        <b>Kasační konverzace:</b> @{SUPPORT_GROUP}
+    here_gbanned_start: "Zde jsou všechny globálně zakázané geys!\n"
+    none_gbanned: "Nejsou tu žádní zakázaní uživatelé ...!"
+    num_gbans: "Počet osob, které jsou zakázanou: <code>{count}</code>"
+    part_of_support: "Tento uživatel je součástí mé podpory!, nemohu zakázat naše vlastní!"
+    pass_user_id: "Předejte ID uživatele nebo jméno uživatele jako argument!"
+    ungban:
+      log_msg: |-
+        #UNGBAN
+        <b>Originated from:</b> {chat_id}
+        <b>Admin:</b> {ungban_admin}
+        <b>UnGbanned User:</b> {ungbanned_user}
+        <b>UnGbanned User ID:</b> {ungbanned_user_id}
+        <b>Event Stamp:</b> {time}
+      non_gbanned: "Uživatel není zakázaný!"
+      not_self: "Pěkný pokus ...!"
+      removed_from_list: "Odebráno {first_name} ze seznamu globálních bang."
+      user_removed_from_list: "Byli jste odebráni ze seznamu mých globálních zákazů!"
+    watcher_banned: |-
+      Tento uživatel ({user_gbanned}) byl zakázán na celém světě!
+
+      Chcete-li dostat nezakázanou, odvolání na @{SUPPORT_GROUP}
+  blacklist:
+    action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
+    action_set: "Nastavit akci pro černou listinu pro tuto hodnotu na <b>{action}</b>"
+    added_blacklist: "Přidán <b>{trigger}</b> v seznamu zakázaných slov!"
+    curr_blacklist_initial: "Aktuální černá uvedená slova v <b>{chat_title}</b>:\n"
+    no_bl_found: "Nebyla nalezena žádná černá listina <b>{bl_word}</b>!"
+    no_blacklist: "Ve formátu <b>{chat_title}</b> nejsou k dispozici žádné zprávy o zakázaných adres."
+    rm_blacklist: "Odstraněno <b>{bl_word}</b> ze seznamu zakázaných slov!"
+  dev:
+    alladmins:
+      admins_i_know_str: |-
+        Existuje <b>{len_admins}</b> admins, které znám!
+
+        <code>{admindict}</code>
+      admins_in_cache: "Ve své mezipaměti Redis je položka <b>{len_admins}</b> admins v mé mezipaměti Redis."
+      alladmins_btn: "Všichni administrátoři"
+      getting_admins: "Získání všech administrátorů v mezipaměti ..."
+    bot_ip: |-
+      <b>Bot IP adresa:</b>
+      <code>{ip}</code>
+    chatlist:
+      chats_in_db: "Toto je seznam konverzací v mé databázi."
+      exporting: "Probíhá export seznamu Charlist ..."
+      header: |
+        Seznam konverzací v mé databázi.
+
+        <b>Název konverzace | Konverzační ID | Počet členů</b>
+    execute_cmd_err: "Spusťte kód správně!"
+    flush_redis:
+      flush_failed: |-
+        Nepodařilo se vyprázdnit databázi Redis!
+        <b>Chyba:</b> {ef}
+      flushed_redis: "Dokument byl úspěšně vyprázdněna!"
+      flushing_redis: "Vyprázdnění databáze Redis ..."
+    restarting: Restartování ...
+    speedtest:
+      speedtest_txt: |-
+        Speedtest
+
+        <b>Host:</b> <code>{host}</code>
+
+        <b>Ping:</b> <code>{ping}</code> ms
+        <b>Download:</b> <code>{download}</code> Mbps
+        <b>Upload:</b> <code>{upload}</code> Mbps
+      start_speedtest: "Výpočet rychlosti ..."
+    uptime: "<b>Doba provozu:<b> <code>{uptime}</code>"
+  general:
+    back_btn: Zadní
+    check_help: "Prosím, zkontrolujte nápovědu, jak tento příkaz použít."
+    close_btn: Zavřeno
+    commands_available: |-
+      Hej, tady! Jmenuji se Alita.
+      Jsem zde, abych vám pomohl se správou vašich skupin!
+      Příkazy k dispozici:
+      × /start: Spustit bot
+      × /help: Zadejte tuto zprávu.
+      × /daruto: Informace týkající se toho, jak darovat svému vlastníkovi!
+
+      Všechny příkazy lze buď použít buď s/nebo!.
+    no_admin_cmd_perm: "Nemůžete použít příkaz admin!"
+    no_perm_admin: "K tomu nemám svolení."
+    no_results: "Nebyly nalezeny žádné výsledky."
+    some_error: |-
+      Vyskytla se chyba, hlášení pro @{SUPPORT_GROUP}
+
+      <b>Chyba:</b> {ef}
+    something_wrong: "Něco se pokazilo!"
+  langs:
+    changed: "Jazyk změněn na <code>{lang_code}</code>"
+    changelang: "Zde můžete změnit jazyk pro robot."
+    correct_usage: |-
+      <b>Správné použití:</b>
+      /lang or /setlang language-code
+  locks:
+    check_perm_msg: "Kontrola oprávnění pro konverzaci ..."
+    invalid_lock: |-
+      Neplatný typ zámku!
+
+      Chcete-li získat typy zámků, použijte /locktypes
+    lock_all: "Uzamknuto <b>všem</b> oprávnění od této konverzace!"
+    locked_perm: "Uzamknuto <b>{perm}</b> pro tuto konverzaci."
+    locks_perm_sp: "Uveďte oprávnění k uzamčení!"
+    unlock_all: "Neuzamčeno <b>všem</b> oprávnění od této konverzace!"
+    unlocked_perm: "Odemknuto <b>{uperm}</b> pro tuto konverzaci."
+    unlocks_perm.sp_perm: "Uveďte oprávnění k odemčení!"
+    view_perm: |-
+      CHAT PERMISSIONS:
+
+      <b>Send Messages:</b> {vmsg}
+      <b>Send Media:</b> {vmedia}
+      <b>Send Stickers:</b> {vstickers}
+      <b>Send Animations:</b> {vanimations}
+      <b>Can Play Games:</b> {vgames}
+      <b>Can Use Inline Bots:</b> {vinlinebots}
+      <b>Webpage Preview:</b> {vwebprev}
+      <b>Send Polls:</b> {vpolls}
+      <b>Change Info:</b> {vinfo}
+      <b>Invite Users:</b> {vinvite}
+      <b>Pin Messages:</b> {vpin}
+  pin:
+    no_pin_msg: "Odpovězte na zprávu, na kterou chcete přidržet ..."
+    no_rights_pin: "Nemám dost práv na brož zprávy."
+    no_rights_unpin: "Nemám dost práv na odblokování zpráv."
+    pinned_msg: "Ukotvená zpráva!"
+    reply_to_unpin: "Idk, co chcete zrušit, odpovědět na zprávu, abyste ji odpíchli."
+    unpinned_all_msg: "Neukotvili všechny zprávy v této konverzaci."
+    unpinned_last_msg: "Nefixovaná poslední zpráva."
+  purge:
+    deleting: "Odpalování těchto zbytečných zpráv ..."
+    err_basic: "Nelze vyprázdnit zprávy v základní skupině"
+    old_msg_err: "Nelze odstranit všechny zprávy. Zprávy mohou být příliš staré, možná nebudu mít práva k odstranění, nebo to nemusí být superskupina."
+    purge_msg_count: "Odstraněno <i>{msg_count}</i> zprávy"
+    what_del: "Co chcete odstranit?"
+  rules:
+    priv_rules:
+      no_option: "Volba není platná, vyberte z <code>na</code>, <code>ano</code>, <code>vypnuto</code>, <code>č.</code>"
+      turned_on: "Soukromá pravidla byla otočna <b>pro konverzaci</b> pro konverzaci <b>{chat_name}</b>"
+      turned_off: "Soukromá pravidla byla otočila <b>pro konverzaci</b> pro konverzaci <b>{chat_name}</b>"
+      current_preference: "Aktuální předvolba pro soukromá pravidla v této konverzaci je: <b>{current_option}</b>"
+    clear_rules: "Jste si jisti, že chcete vymazat pravidla?"
+    cleared: "Úspěšně vymazaná pravidla pro tuto skupinu!"
+    get_rules: |-
+      Pravidla pro <b>{chat}:</b>
+
+      {rules}
+    no_rules: "Administrátoři této skupiny nemají nastavová pravidla!"
+    pm_me: "Nejdřív ode mě, a pak si najdi pravidla!"
+    sent_pm_rules: "Zkazím ti pravidla."
+    set_rules: "Pravidla pro tuto skupinu byla úspěšně nastavena."
+  start:
+    add_chat_btn: "Přidat do konverzace"
+    commands_btn: Příkazy
+    group: "Jsem naživu: 3"
+    info_page: |-
+      @Alita_Robot
+
+      <b>Verze:</b> <i>{version}</i>
+
+      <b>Developers:</b> [Divkix](https: //github.com/Divkix)
+      <b>Vlastník:</b> [{Owner}] (tg://user?id={ID})
+    infos_btn: Informace
+    language_btn: Jazyk
+    pm_for_help: "Kontaktujte mne v PÚ, abyste získali seznam možných příkazů."
+    private: "Haló! Jsem Alista_Robot. Chcete-li zjistit více o mých funkcích, klepněte na níže uvedená tlačítka."
+    public_help: "Chcete-li získat nápovědu pro <i>{help_option}</i>, stiskněte tlačítko níže."
+    source_code: "Zdrojový kód"
+  utils:
+    gif_id:
+      reply_gif: "Prosím odpovězte na gif, abyste získali jeho ID."
+    id:
+      group_id: "Toto ID skupin je <code>{group_id}</code>"
+      id_main: |-
+        Původní odesilatel- {orig_sender} (<code>{orig_id}</code>)
+        Forwarder- {fwd_sender} (<code>{fwd_id}</code>)
+      my_id: "Vaše ID je <code>{my_id}</code>."
+    no_user_db: |-
+      Nezdařilo se získat uživatele
+      Peer ID je neplatný, já jsem tohoto uživatele neviděl nikde dříve, možná by jméno uživatele pomohlo znát je!
+    paste:
+      nekobin_btn: NekoBin
+      pasted_nekobin: "Vloženo do NekoBin!"
+      pasting: Vkládání ...
+    ping:
+      pinging: Ping ...
+    song:
+      no_lyrics_found: "Na tu písničku nebyla nalezena žádná písnička!"
+      no_song_given: "Neurčili jste píseň, kterou byste měli hledat!"
+      searching: "Nalezení textu pro <code>{song_name}<code>..."
+      song_not_found: "Písnička nebyla nalezena!"
+    translate:
+      translate_usage: "Použití: /tr <language> text pro překlad (Může být také použit v odpovědi na zprávu)."
+      translating: Probíhá překlad ...
+      translation: |-
+        <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
+        <b>Translation:</b> <code>{translation}</code>
+    user_info:
+      custom_title: |-
+
+
+        Tento uživatel má titul <b>{custom_title}</b> zde.
+      getting_info: "Získávání informací o uživateli ..."
+      info_text:
+        last_name: |-
+
+          <b>Poslední název:</b> {user_lname}
+        main: |-
+          <b>Charakteristika:</b>
+          <b>ID:</b> <code>{user_id}</code>
+          <b>Křestní jméno:</b> {user_name}
+        perma_link: |-
+
+          "<b>Permanent User Link:</b> {perma_link}"
+        username: |-
+
+          "<b>Jméno uživatele:</b> @{username}"
+      support_user:
+        dev: |-
+
+
+          Tento člen je jedním z mých vývojářů ⚡️
+        owner: |-
+
+
+          Tato osoba je mým vlastníkem, nikdy bych proti nim nic neudělali!
+        sudo: |-
+
+
+          Tento uživatel je jedním z mých Sudos, má schopnosti, které jsou přibližně stejné jako vlastník!
+        whitelist: |-
+
+
+          Tato osoba je 'Whitelist User', nelze ji zakázat!
+    weebify:
+      weebified_string: |-
+        <b>Weebified Řetězec:</b>
+        {string}
+      weebify_what: "Co mám jako Weebify?"
