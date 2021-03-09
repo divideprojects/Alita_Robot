@@ -1,7 +1,7 @@
 ---
 main:
   lang_sample: "Italian"
-  language_flag: '🇮🇹'
+  language_flag: "🇮🇹"
   language_name: Italiano
 strings:
   admin:
@@ -12,7 +12,7 @@ strings:
       reloaded_admins: "Ricaricati tutti gli admins in questa chat!"
       use_admin_cache: "Usa /admincache per ricaricare gli admins!"
     ban:
-      admin_cannot_ban: "Questo utente è un admin, non posso vietarli! \"."
+      admin_cannot_ban: 'Questo utente è un admin, non posso vietarli! ".'
       ban_all: "Sei sicuro di voler vietare tutti i membri di questo gruppo?"
       banned_user: "{admin} vietato {banned} in chat {chat_title}!"
       banning_all: "Bando tutti i membri ..."
@@ -25,12 +25,12 @@ strings:
       Invito Link per Chat {chat_name}:
       {link}
     kick:
-      admin_cannot_kick: "Questo utente è un admin, non posso calciarli! \"."
+      admin_cannot_kick: 'Questo utente è un admin, non posso calciarli! ".'
       bot_no_right: "Non ho abbastanza diritti per calciare questo utente."
       kicked_user: "{admin} calci {kicked} in chat {chat_title}!"
       owner_cannot_kick: "Questa persona ha creato il gruppo, come posso calciarli?"
     mute:
-      admin_cannot_mute: "Questo utente è un admin, non posso morderli! \"."
+      admin_cannot_mute: 'Questo utente è un admin, non posso morderli! ".'
       bot_no_right: "Non ho abbastanza diritti per muto questo utente."
       muted_user: "Mutato {user}!"
       owner_cannot_mute: "Questa persona ha creato il gruppo, come posso muta?"
@@ -222,6 +222,11 @@ strings:
     purge_msg_count: "Messaggi {msg_count} eliminati"
     what_del: "Cosa vuoi eliminare?"
   rules:
+    priv_rules:
+      no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
+      turned_on: "Private Rules have been turned <b>on</b> for chat <b>{chat_name}</b>"
+      turned_off: "Private Rules have been turned <b>off</b> for chat <b>{chat_name}</b>"
+      current_preference: "Current Preference for Private rules in this chat is: {current_option}"
     clear_rules: "Sei sicuro di voler regole chiare?"
     cleared: "Regole cancellate con successo per questo gruppo!"
     get_rules: |-
