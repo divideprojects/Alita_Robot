@@ -106,10 +106,10 @@ class Notes:
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-            old_chat = self.collection.find_one({"chat_id": old_chat_id})
-            if old_chat:
-                return self.collection.update(
-                    {"chat_id": old_chat_id},
-                    {"chat_id": new_chat_id},
-                )
+
+            old_chat_db = self.collection.find_one({"_id": old_chat_id})
+            if old_chat_db:
+                new_data = old_chat_db.update({"_id": new_chat_id})
+                self.collection.delete_one({"_id": old_chat_id})
+                self.collection.insert_one(new_data)
             return
