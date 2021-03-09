@@ -86,7 +86,7 @@ strings:
         Vous avez été ajouté à ma liste d'interdiction globale !
         <b>Raison:</b> <code>{gban_reason}</code>
 
-        Discussion d'appel: @{SUPPORT_GROUP}
+        <b>Discussion d'appel:</b> @{SUPPORT_GROUP}
     here_gbanned_start: "Voici tous les geys mondialement bannis !\n"
     none_gbanned: "Il n'y a aucun utilisateur banni !"
     num_gbans: "Nombre de personnes ginterdites: <code>{count}</code>"
@@ -110,7 +110,7 @@ strings:
       Pour se faire interdire, appel au @{SUPPORT_GROUP}
   blacklist:
     action_get: "L'action en cours pour les listes noires dans cette discussion est <i><b>{action}</b></i>"
-    action_set: "Définir l'action pour la liste noire pour ceci à {action}"
+    action_set: "Définir une action pour la liste noire à <b>{action}</b>"
     added_blacklist: "Ajouté <b>{trigger}</b> dans la liste noire !"
     curr_blacklist_initial: "Les mots Blackrépertoriés actuels dans <b>{chat_title}</b>:\n"
     no_bl_found: "No blacklist <b>{bl_word}</b> found !"
@@ -132,14 +132,14 @@ strings:
       chats_in_db: "Voici la liste des chats dans ma base de données."
       exporting: "Exportation de Charliste..."
       header: |
-        Liste des chats.
+        Liste des discussions dans ma base de données.
 
-        Nom du chat | ID du chat | nombre de membres
+        <b>Nom de la discussion | ID discussion | Nombre de membres</b>
     execute_cmd_err: "Veuillez exécuter le code correctement !"
     flush_redis:
       flush_failed: |-
-        Echec du vidage de la base de données redis !
-        Erreur: {ef}
+        Echec de vidage de la base de données redis !
+        <b>Erreur:</b> {ef}
       flushed_redis: "Redis vidé avec succès!"
       flushing_redis: "Suppression de la base de données Redis..."
     restarting: Redémarrage...
@@ -173,13 +173,13 @@ strings:
     some_error: |-
       Une erreur s'est produite, rapport au @{SUPPORT_GROUP}
 
-      Erreur: {ef}
+      <b>Erreur:</b> {ef}
     something_wrong: "Quelque chose s'est mal passé !"
   langs:
     changed: "Langue passée à <code>{lang_code}</code>"
     changelang: "Ici, vous pouvez changer de langue pour le bot."
     correct_usage: |-
-      Utilisation correcte :
+      <b>Syntaxe correcte:</b>
       /lang ou /setlang language-code
   locks:
     check_perm_msg: "Vérification des autorisations de chat..."
@@ -187,26 +187,26 @@ strings:
       Type de verrou invalide!
 
       Utilisez /locktypes pour obtenir les types de verrou
-    lock_all: "Toutes les permissions de ce chat ont été verrouillées !"
+    lock_all: "Locked <b>all</b> permission from this Chat !"
     locked_perm: "Verrouillé <b>{perm}</b> pour cette discussion."
     locks_perm_sp: "Spécifiez une permission pour verrouiller !"
-    unlock_all: "Déverrouillé toutes les permissions de ce chat !"
+    unlock_all: "Unlocked <b>all</b> permission from this Chat !"
     unlocked_perm: "Unlocked <b>{uperm}</b> pour cette discussion."
     unlocks_perm.sp_perm: "Spécifiez la permission de déverrouiller !"
     view_perm: |-
-      CHAT PERMISSIONS:
+       PERMISSIONS DE CHAT: 
 
-      <b>Send Messages:</b> {vmsg}
-      <b>Send Media:</b> {vmedia}
-      <b>Send Stickers:</b> {vstickers}
-      <b>Send Animations:</b> {vanimations}
-      <b>Can Play Games:</b> {vgames}
-      <b>Can Use Inline Bots:</b> {vinlinebots}
-      <b>Webpage Preview:</b> {vwebprev}
-      <b>Send Polls:</b> {vpolls}
-      <b>Change Info:</b> {vinfo}
-      <b>Invite Users:</b> {vinvite}
-      <b>Pin Messages:</b> {vpin}
+      <b> Envoyer des messages: </b> {vmsg}
+      <b> Envoyer un média: </b> {vmedia}
+      <b> Envoyer des autocollants: </b> {vstickers}
+      <b> Envoyer des animations: </b> {vanimations}
+      <b> Peut jouer à des jeux: </b> {vgames}
+      <b> Peut utiliser des robots en ligne: </b> {vinlinebots}
+      <b> Aperçu de la page Web: </b> {vwebprev}
+      <b> Envoyer des sondages: </b> {vpolls}
+      <b> Modifier les informations: </b> {vinfo}
+      <b> Inviter des utilisateurs: </b> {vinvite}
+      <b> Messages d'épinglage: </b> {vpin}
   pin:
     no_pin_msg: "Répondre à un message auquel vous voulez épingler..."
     no_rights_pin: "Je n'ai pas les droits suffisants pour épingler les messages."
@@ -219,14 +219,14 @@ strings:
     deleting: "Incinération de ces messages inutiles..."
     err_basic: "Impossible de purger les messages dans un groupe de base"
     old_msg_err: "Impossible de supprimer tous les messages. Les messages sont peut-être trop anciens, je n'ai pas de droits de suppression, ou cela pourrait ne pas être un super-groupe."
-    purge_msg_count: "{msg_count} messages supprimés"
+    purge_msg_count: "Supprimé <i>{msg_count}Messages</i>"
     what_del: "Que voulez-vous supprimer?"
   rules:
     priv_rules:
       no_option: "Option non valide, choisir entre <code>et</code>, <code>oui</code>, <code>off</code>, <code>no</code>"
       turned_on: "Les règles privées ont été tournées <b>le</b> pour la discussion <b>{chat_name}</b>"
       turned_off: "Les règles privées ont été tournées <b>off</b> pour la discussion <b>{chat_name}</b>"
-      current_preference: "La préférence actuelle pour les règles privées dans cette discussion est: {current_option}"
+      current_preference: "La préférence actuelle pour les règles privées dans cette discussion est: <b>{current_option}</b>"
     clear_rules: "Êtes-vous sûr de vouloir effacer les règles?"
     cleared: "Règles effacées avec succès pour ce groupe !"
     get_rules: |-
@@ -275,14 +275,14 @@ strings:
     song:
       no_lyrics_found: "Impossible de trouver les paroles de cette chanson !"
       no_song_given: "Vous n'avez pas précisé quelle chanson chercher !"
-      searching: "Recherche des paroles pour {song_name}..."
+      searching: "Trouver des paroles pour <code>{song_name}<code>..."
       song_not_found: "Chanson introuvable !"
     translate:
       translate_usage: "Utilisation: /tr <language> texte pour la traduction (Can peut également être utilisé en réponse à un message)."
       translating: Traduction...
       translation: |-
-        <b>Langue:</b> {from_lang} -> {to_lang}
-        Traduction: <code>{translation}{translation}</code>
+        <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
+        <b>Translation:</b> <code>{translation}</code>
     user_info:
       custom_title: |-
 
@@ -299,10 +299,10 @@ strings:
           <b>Prénom:</b> {user_name}
         perma_link: |-
 
-          Lien d'utilisateur permanent: {perma_link}
+          "<b>Lien d'utilisateur permanent:</b> {perma_link}"
         username: |-
 
-          Nom d'utilisateur : @{username}
+          "<b>Nom d'utilisateur:</b> @{username}"
       support_user:
         dev: |-
 
