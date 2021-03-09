@@ -59,7 +59,7 @@ async def gen_langs_kb():
         ]
         langs.pop(0)
         if langs:
-            lang = lang_dict[langs[0]]
+            lang = lang_dict[langs[0]]["main"]
             a.append(
                 InlineKeyboardButton(
                     f"{lang['language_flag']} {lang['language_name']} ({lang['lang_sample']})",
