@@ -86,7 +86,7 @@ strings:
         Dodano Cię do mojej globalnej listy zakazu!
         <b>Powód:</b> <code>{gban_reason}</code>
 
-        Czat odwoławczy: @{SUPPORT_GROUP}
+        <b>Czat odwoławczy:</b> @{SUPPORT_GROUP}
     here_gbanned_start: "Oto wszystkie globalnie zakazane geys!\n"
     none_gbanned: "Nie ma żadnych zakazanych użytkowników ...!"
     num_gbans: "Liczba osób gzabronione: <code>{count}</code>"
@@ -110,7 +110,7 @@ strings:
       Aby uzyskać niebanalny, apel at @{SUPPORT_GROUP}
   blacklist:
     action_get: "Bieżące działanie dla czarnych list w tej rozmowie to <i><b>{action}</b></i>"
-    action_set: "Ustaw działanie dla czarnej listy dla tej opcji na wartość {action}"
+    action_set: "Ustaw działanie dla czarnej listy dla tej opcji na <b>{action}</b>"
     added_blacklist: "Dodano <b>{trigger}</b> w czarnej liście słów!"
     curr_blacklist_initial: "Aktualne słowa czarnej listy w <b>{chat_title}</b>:\n"
     no_bl_found: "Nie znaleziono czarnej listy <b>{bl_word}</b>!"
@@ -132,14 +132,14 @@ strings:
       chats_in_db: "Poniżej znajduje się lista rozmów sieciowych w mojej bazie danych."
       exporting: "Eksportowanie listy wykresów ..."
       header: |
-        Lista rozmów sieciowych.
+        Lista rozmów sieciowych w mojej bazie danych.
 
-        Nazwa rozmowy sieciowej | Identyfikator rozmowy sieciowej | Liczba członków
+        <b>Nazwa czatu | Czat ID | Członkowie liczą</b>
     execute_cmd_err: "Wykonaj poprawnie kod!"
     flush_redis:
       flush_failed: |-
         Nie powiodło się opróżnienie bazy danych redis!
-        Błąd: {ef}
+        <b>Błąd:</b> {ef}
       flushed_redis: "Opróżniono Redis pomyślnie!"
       flushing_redis: "Opróżnianie bazy danych Redis ..."
     restarting: Restartowanie ...
@@ -173,24 +173,24 @@ strings:
     some_error: |-
       Wystąpił błąd, raportujący@{SUPPORT_GROUP}
 
-      Błąd: {ef}
+      <b>Błąd:</b> {ef}
     something_wrong: "Coś poszło nie tak!"
   langs:
     changed: "Język zmienił się na <code>{lang_code}</code>"
     changelang: "Tutaj możesz zmienić język dla bota."
     correct_usage: |-
-      Poprawne użycie:
-      /lang lub /setlang language-code
+      <b>Prawidłowa składnia:</b>
+      /lang lub /setlang język-kod
   locks:
     check_perm_msg: "Sprawdzanie uprawnień rozmowy sieciowej ..."
     invalid_lock: |-
       Niepoprawny typ blokady!
 
       Użyj /locktypes, aby uzyskać typy blokad
-    lock_all: "Zablokowano wszystkie uprawnienia z tego komponentu Rozmowa sieciowa!"
+    lock_all: "Zablokowano <b>wszystkie uprawnienia</b> z tej rozmowy sieciowej!"
     locked_perm: "Zablokowano <b>{perm}</b> dla tej rozmowy sieciowej."
     locks_perm_sp: "Podaj uprawnienie do zablokowania!"
-    unlock_all: "Odblokowano wszystkie uprawnienia z tej rozmowy sieciowej!"
+    unlock_all: "Odblokowano <b>wszystkie uprawnienia</b> z tej rozmowy sieciowej!"
     unlocked_perm: "Odblokowano <b>{uperm}</b> dla tej rozmowy sieciowej."
     unlocks_perm.sp_perm: "Określ uprawnienia do odblokowania!"
     view_perm: |-
@@ -219,14 +219,14 @@ strings:
     deleting: "Spalanie tych bezużytecznych wiadomości ..."
     err_basic: "Nie można wyczyścić komunikatów w grupie podstawowej"
     old_msg_err: "Nie można usunąć wszystkich komunikatów. Komunikaty mogą być zbyt stare, mogę nie mieć praw do usuwania, albo może to nie być supergrupa."
-    purge_msg_count: "Usunięto komunikaty {msg_count}"
+    purge_msg_count: "Skasowany <i>{msg_count}</i> komunikaty"
     what_del: "Co chcesz usunąć?"
   rules:
     priv_rules:
       no_option: "Opcja nie jest poprawna, wybierz z <code>na</code>, <code>tak</code>, <code>off</code>, <code>nr</code>"
       turned_on: "Reguły prywatne zostały obrócono <b>na</b> dla czatu <b>{chat_name}</b>"
       turned_off: "Reguły prywatne zostały obrócono <b>off</b> dla czatu <b>{chat_name}</b>"
-      current_preference: "Bieżąca preferencja dla reguł prywatnych w rozmowie sieciowej to: {current_option}"
+      current_preference: "Bieżąca preferencja dla reguł prywatnych w tej rozmowie to: <b>{current_option}</b>"
     clear_rules: "Czy na pewno chcesz wyczyścić reguły?"
     cleared: "Pomyślnie wyczyszczono reguły dla tej grupy!"
     get_rules: |-
@@ -275,14 +275,14 @@ strings:
     song:
       no_lyrics_found: "Nie mogłem znaleźć żadnych tekstów dla tej piosenki!"
       no_song_given: "Nie określiłeś, która piosenka będzie szukać!"
-      searching: "Znajdowanie tekstów dla {song_name}..."
+      searching: "Znajdowanie tekstów do tekstów <code>{song_name}<code>..."
       song_not_found: "Nie znaleziono utworu!"
     translate:
       translate_usage: "Składnia: /tr <language> tekst do tłumaczenia (Może być również użyty w odpowiedzi na wiadomość)."
       translating: Tłumaczenie ...
       translation: |-
-        <b>Język:</b> {from_lang} -> {to_lang}
-        Przekład: <code>{translation}</code>
+        <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
+        <b>Translation:</b> <code>{translation}</code>
     user_info:
       custom_title: |-
 
@@ -299,10 +299,10 @@ strings:
           <b>Imię:</b> {user_name}
         perma_link: |-
 
-          Stały Użytkownik Link: {perma_link}
+          "<b>Stały Użytkownik Link:</b> {perma_link}"
         username: |-
 
-          Nazwa użytkownika: @{username}
+          "<b>Nazwa użytkownika:</b> @{username}"
       support_user:
         dev: |-
 
