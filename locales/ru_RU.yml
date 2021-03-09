@@ -223,10 +223,10 @@ strings:
     what_del: "Что вы хотите удалить?"
   rules:
     priv_rules:
-      no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
-      turned_on: "Private Rules have been turned <b>on</b> for chat <b>{chat_name}</b>"
-      turned_off: "Private Rules have been turned <b>off</b> for chat <b>{chat_name}</b>"
-      current_preference: "Current Preference for Private rules in this chat is: {current_option}"
+      no_option: "Опция недопустима, выберите из <code>по</code>, <code>да</code>, <code>off</code>, <code>no</code>"
+      turned_on: "Для чата <b><b> <b><b></b> </b> 210-10-012{chat_name}</b>"
+      turned_off: "Частные правила были выключаны <b>от</b> для чата <b>{chat_name}</b>"
+      current_preference: "Текущее предпочтение частных правил в этом чате: {current_option}"
     clear_rules: "Вы действительно хотите очистить правила?"
     cleared: "Правила для этой группы успешно очищены!"
     get_rules: |-
