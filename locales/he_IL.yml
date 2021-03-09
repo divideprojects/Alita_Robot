@@ -83,10 +83,10 @@ strings:
         Nice Try...!
       updated_reason: "הסיבה לכך היא: <code>{gban_reason}</code>."
       user_added_to_watch: |-
-        הוספתם לרשימת האיסור העולמית שלי.
-        <b>סיבה:</b> <code>{gban_reason}</code>
+        You have been added to my global ban list!
+        <b>Reason:</b> <code>{gban_reason}</code>
 
-        צ ' אט לערעורים: @{SUPPORT_GROUP}
+        <b>Appeal Chat:</b> @{SUPPORT_GROUP}
     here_gbanned_start: "Here are all the globally banned geys!\n"
     none_gbanned: "אין שום משתמשים אסורים ...!"
     num_gbans: "מספר האנשים הגורו: <code>{count}</code>"
@@ -110,7 +110,7 @@ strings:
       כדי לקבל לא אסור, לערער על{SUPPORT_GROUP}
   blacklist:
     action_get: "הפעולה הנוכחית עבור רשימות שחורות בצ ' אט זה היא <i><b>{action}</b></i>"
-    action_set: "הגדרת פעולה עבור רשימה שחורה עבור פריט זה עד {action}"
+    action_set: "הגדרת פעולה עבור הרשימה השחורה עבור <b>{action}</b>"
     added_blacklist: "נוסף <b>{trigger}</b> במילות הרשימה השחורה!"
     curr_blacklist_initial: "מילים שחורות נוכחיות <b>{chat_title}</b>:\n"
     no_bl_found: "אין רשימה שחורה <b>{bl_word}</b> נמצאו!"
@@ -132,14 +132,14 @@ strings:
       chats_in_db: "להלן רשימת שיחות הצ ' אט במסד הנתונים שלי."
       exporting: "יצוא רשימת תרשימים ..."
       header: |
-        רשימת שיחות צ ' אט.
+        רשימת שיחות צ ' אט במסד הנתונים שלי.
 
-        שם צ 'אט | זיהוי צ' אט | ספירת חברים
+        <b>שם צ 'אט | זיהוי צ' אט | מספר חברים</b>
     execute_cmd_err: "נא לבצע את הקוד כהלכה!"
     flush_redis:
       flush_failed: |-
-        לא ניתן לרוקן את מסד הנתונים של redis!
-        שגיאה: {ef}
+        נכשל בהורדת בסיס הנתונים של redis!
+        <b>שגיאה:</b> {ef}
       flushed_redis: "Redshed Redis בהצלחה!"
       flushing_redis: "ניקוי מסד הנתונים של Redis ..."
     restarting: מתחיל מחדש ...
@@ -171,15 +171,15 @@ strings:
     no_perm_admin: "אין לי אישור לעשות את זה."
     no_results: "לא נמצאו תוצאות."
     some_error: |-
-      אירעה שגיאה כלשהי, דוח ל-{SUPPORT_GROUP}
+      אירעה שגיאה, דווחו ל-{SUPPORT_GROUP}
 
-      שגיאה: {ef}
+      <b>שגיאה:</b> {ef}
     something_wrong: "משהו השתבש!"
   langs:
     changed: "השפה השתנתה ל- <code>{lang_code}</code>"
     changelang: "כאן אתה יכול לשנות את השפה עבור הרובוט."
     correct_usage: |-
-      שימוש נכון:
+      <b>שימוש נכון:</b>
       /lang או /setlang - קוד
   locks:
     check_perm_msg: "בדיקת הרשאות צ ' אט ..."
@@ -187,26 +187,26 @@ strings:
       סוג נעילה לא חוקי!
 
       שימוש/לוקווד כדי לקבל את סוגי הנעילה
-    lock_all: "נעלו את כל ההרשאות מצ ' אט זה!"
+    lock_all: "נעול <b>כל</b> הרשאות מצ ' אט זה!"
     locked_perm: "נעול <b>{perm}</b> עבור צ ' אט זה."
     locks_perm_sp: "ציינו הרשאה לנעול!"
-    unlock_all: "שחררו את כל ההרשאות מצ ' אט זה!"
+    unlock_all: "שחררו את <b>כל</b> הרשאות מצ ' אט זה!"
     unlocked_perm: "לא נעול <b>{uperm}</b> עבור צ ' אט זה."
     unlocks_perm.sp_perm: "ציינו הרשאה לביטול נעילה!"
     view_perm: |-
-      CHAT PERMISSIONS:
+      הרשאות ברירת מחדל בקבוצה זאת:
 
-      <b>Send Messages:</b> {vmsg}
-      <b>Send Media:</b> {vmedia}
-      <b>Send Stickers:</b> {vstickers}
-      <b>Send Animations:</b> {vanimations}
-      <b>Can Play Games:</b> {vgames}
-      <b>Can Use Inline Bots:</b> {vinlinebots}
-      <b>Webpage Preview:</b> {vwebprev}
-      <b>Send Polls:</b> {vpolls}
-      <b>Change Info:</b> {vinfo}
-      <b>Invite Users:</b> {vinvite}
-      <b>Pin Messages:</b> {vpin}
+      <b>שליחת הודעות:</b> {vmsg}
+      <b>שליחת מדיה:</b> {vmedia}
+      <b>שליחת מדבקות:</b> {vstickers}
+      <b>שליחת אנימציות:</b> {vanimations}
+      <b>לשחק משחקים:</b> {vgames}
+      <b>להשתמש בבוטים מוטמעים:</b> {vinlinebots}
+      <b>תצוגה מקדימה של קישורים:</b> {vwebprev}
+      <b>שליחת סקרים:</b> {vpolls}
+      <b>שינוי פרטי הקבוצה:</b> {vinfo}
+      <b>הוספת משתמשים:</b> {vinvite}
+      <b>נעיצת הודעות:</b> {vpin}
   pin:
     no_pin_msg: "תשובה להודעה שאליה ברצונכם לנעוץ ..."
     no_rights_pin: "אין לי מספיק זכויות כדי להצמיד הודעות."
@@ -219,14 +219,14 @@ strings:
     deleting: "מקרין הודעות חסרות תועלת אלה ..."
     err_basic: "לא ניתן למחוק לצמיתות הודעות בקבוצה בסיסית."
     old_msg_err: "לא ניתן למחוק את כל ההודעות. ייתכן שההודעות ישנות מדי, ייתכן שאין לי זכויות מחיקה, או שזו אינה קבוצת עליונות."
-    purge_msg_count: "נמחקו {msg_count} הודעות"
+    purge_msg_count: "נמחק <i>{msg_count}</i> הודעות"
     what_del: "מה אתה רוצה למחוק?"
   rules:
     priv_rules:
       no_option: "אפשרות זו אינה חוקית, בחרו מ- <code>על</code>, <code>כן</code>, <code>את</code>, <code>ללא</code>"
       turned_on: "כללים פרטיים הפכו <b>על</b> עבור צ ' אט <b>{chat_name}</b>"
       turned_off: "כללים פרטיים הפכו <b>את</b> עבור צ ' אט <b>{chat_name}</b>"
-      current_preference: "העדפה נוכחית עבור כללים פרטיים בצ ' אט זה היא: {current_option}"
+      current_preference: "העדפה נוכחית עבור כללים פרטיים בצ ' אט זה הוא: <b>{current_option}</b>"
     clear_rules: "אתם בטוחים שברצונכם לנקות את הכללים?"
     cleared: "הכללים נוקינו בהצלחה עבור קבוצה זו!"
     get_rules: |-
@@ -275,14 +275,14 @@ strings:
     song:
       no_lyrics_found: "לא הצלחתי למצוא מילים לשיר הזה!"
       no_song_given: "לא ציינתם איזה שיר לחפש!"
-      searching: "מציאת מילים עבור {song_name}..."
+      searching: "מציאת מילים עבור <code>{song_name}<code>..."
       song_not_found: "השיר לא נמצא!"
     translate:
       translate_usage: "שימוש: /tr <language> תמליל לתרגום (ניתן להשתמש גם בתשובה להודעה)."
       translating: תרגום ...
       translation: |-
-        <b>שפה:</b> {from_lang} - > {to_lang}
-        תרגום: <code>{translation}</code>
+        <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
+        <b>Translation:</b> <code>{translation}</code>
     user_info:
       custom_title: |-
 
@@ -299,10 +299,10 @@ strings:
           <b>First Name:</b> {user_name}
         perma_link: |-
 
-          קישור משתמש קבוע: {perma_link}
+          "<b>קישור משתמש קבוע:</b> {perma_link}"
         username: |-
 
-          שם משתמש:{username}
+          "<b>שם משתמש:</b> @{username}
       support_user:
         dev: |-
 
