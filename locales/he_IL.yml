@@ -1,0 +1,322 @@
+---
+main:
+  lang_sample: "עברית"
+  language_flag: '🇮🇱'
+  language_name: עברית
+strings:
+  admin:
+    adminlist:
+      adminstr: "מנהלים ב {chat_title}:\n"
+      cached_values: "אלה הם ערכים מוטמנים!"
+      note_updated: "אלה הם ערכים מעודכנים!"
+      reloaded_admins: "נטענו את כל המנהלים בצ ' אט זה!"
+      use_admin_cache: "השתמשו ב - /admincache כדי לטעון מחדש את המנהלים!"
+    ban:
+      admin_cannot_ban: "משתמש זה הוא מנהל, אני לא יכול לחסום אותו!\""
+      ban_all: "אתם בטוחים שברצונכם לאסור את כל החברים בקבוצה זו?"
+      banned_user: "{admin} אסרו {banned} בצ ' אט {chat_title}!"
+      banning_all: "בנינג כל החברים ..."
+      bot_no_right: "אין לי מספיק זכויות כדי לאסור את המשתמש הזה."
+      owner_cannot_ban: "אדם זה יצר את הקבוצה, איך אני יכול לאסור אותם?"
+    demote:
+      bot_no_right: "אין לי מספיק זכויות כדי להסיג את המשתמש הזה."
+      demoted_user: "{demoter} שהורידו {demoted} בצ ' אט {chat_title}!"
+    invitelink: |-
+      הזמנת קישור לצ ' אט {chat_name}:
+      {link}
+    kick:
+      admin_cannot_kick: "משתמש זה הוא מנהלן, אני לא יכול לבעוט בהם!\""
+      bot_no_right: "אין לי מספיק זכויות כדי לבעוט את המשתמש הזה."
+      kicked_user: "{admin} בעט {kicked} בצ ' אט {chat_title}!"
+      owner_cannot_kick: "האדם הזה יצר את הקבוצה, איך אני יכול לבעוט בהם?"
+    mute:
+      admin_cannot_mute: "משתמש זה הוא מנהלן, אני לא יכול להשתיק אותם!\""
+      bot_no_right: "אין לי מספיק זכויות להשתיק את המשתמש הזה."
+      muted_user: "מושתק {user}!"
+      owner_cannot_mute: "האדם הזה יצר את הקבוצה, איך אני יכול להשתיק אותם?"
+    no_invite_perm: "אין לי אישור להזמין את הקישור!"
+    no_restrict_perm: "אין לכם הרשאות להגביל את החברים!"
+    no_user_invite_perm: "אין לכם הרשאות להזמין משתמשים."
+    not_admin: "אני לא מנהל או אין לי זכויות."
+    promote:
+      bot_no_right: "אין לי מספיק זכויות כדי לקדם את המשתמש הזה."
+      no_promote_perm: "אין לך רשות לקדם חברים!"
+      promoted_user: "{promoter} קידמו {promoted} בצ ' אט {chat_title}!"
+    support_cannot_restrict: "משתמש זה נמצא בצוות התמיכה שלי, לא יכול להגביל אותם."
+    unban:
+      bot_no_right: "אין לי מספיק זכויות כדי לשחרר את המשתמש הזה."
+      unbanned_user: "{admin} unאסרו {unbanned} בצ ' אט {chat_title}!"
+    unmute:
+      bot_no_right: "אין לי מספיק זכויות כדי לבטל את השתקה של משתמש זה."
+      unmuted_user: "Unmuted {user}!"
+    user_admin_invalid: "לא יכול לפעול על משתמש זה, אולי לא אני זה ששינה את ההרשאות שלהם."
+  afk:
+    error_check_afk: |-
+      שגיאה במהלך בדיקת afk
+      {ef}
+    no_longer_afk: |-
+      {first_name} הוא כבר לא אפק!
+      היה AFK עבור {since}
+    reason: "סיבה: {res}"
+    user_afk: |-
+      {first_name} הוא אפק!
+      מאז: {since}
+    user_now_afk: "משתמש {user} הוא עכשיו afk!"
+  antispam:
+    gban:
+      added_to_watch: |-
+        הוסיף {first_name} לרשימת Ban גלובלי.
+        הם עכשיו להיות אסורים בכל הקבוצות שבו אני מנהל!
+      enter_reason: "נא לציין סיבה למשתמש gban!"
+      how_to: |-
+        <b>איך gban?</b>
+        <b>תשובה:</b> <code>/gban user_id מהסיבה</code>
+      log_msg: |-
+        #GBAN
+        <b>Originated from:</b> {chat_id}
+        <b>Admin:</b> {ban_admin}
+        <b>Gbanned User:</b> {gbanned_user}
+        <b>Gbanned User ID:</b> {gban_user_id}
+        <b>Event Stamp:</b> {time}
+      not_self: |-
+        You can't gban me nigga!
+        Nice Try...!
+      updated_reason: "הסיבה לכך היא: <code>{gban_reason}</code>."
+      user_added_to_watch: |-
+        הוספתם לרשימת האיסור העולמית שלי!
+        סיבה: <code>{gban_reason}</code>
+
+        :{SUPPORT_GROUP}
+    here_gbanned_start: "Here are all the globally banned geys!\n"
+    none_gbanned: "אין שום משתמשים אסורים ...!"
+    num_gbans: "מספר האנשים gנאסר {count}"
+    part_of_support: "משתמש זה הוא חלק מהתמיכה שלי, לא יכול לאסור את שלנו!"
+    pass_user_id: "העבירו זיהוי משתמש או שם משתמש כארגומנט!"
+    ungban:
+      log_msg: |-
+        #UNGBAN
+        <b>Originated from:</b> {chat_id}
+        <b>Admin:</b> {ungban_admin}
+        <b>UnGbanned User:</b> {ungbanned_user}
+        <b>UnGbanned User ID:</b> {ungbanned_user_id}
+        <b>Event Stamp:</b> {time}
+      non_gbanned: "המשתמש אינו מוחרם!"
+      not_self: "ניסיון יפה ...!"
+      removed_from_list: "{first_name} מתוך רשימת Ban גלובלית."
+      user_removed_from_list: "הוציאו אותך מרשימת האיסור העולמית שלי!"
+    watcher_banned: |-
+      משתמש זה ({user_gbanned})
+
+      כדי לקבל ערעור לא אסור ב{SUPPORT_GROUP}
+  blacklist:
+    action_get: "הפעולה הנוכחית עבור רשימות שחורות בצ ' אט זה היא {action}"
+    action_set: "הגדרת פעולה עבור רשימה שחורה עבור פריט זה עד {action}"
+    added_blacklist: "הוסיף {trigger} במילים שחורות!"
+    curr_blacklist_initial: "מילים מפורטות נוכחיות ב- {chat_title}:\n"
+    no_bl_found: "לא נמצאה רשימה שחורה {bl_word}!"
+    no_blacklist: "אין הודעות ברשימה השחורה ב- {chat_title}!"
+    rm_blacklist: "החזרת {bl_word} ממילות הרשימה השחורה!"
+  dev:
+    alladmins:
+      admins_i_know_str: |-
+        ישנם {len_admins} admins שאני מכיר
+
+        {admindict}
+      admins_in_cache: "ישנם {len_admins} admins מטמון Redis שלי."
+      alladmins_btn: "כל Admins"
+      getting_admins: "קבלת כל admins במטמון שלי ..."
+    bot_ip: |-
+      כתובת IP של Bot:
+      {ip}
+    chatlist:
+      chats_in_db: "להלן רשימת שיחות הצ ' אט במסד הנתונים שלי."
+      exporting: "יצוא רשימת תרשימים ..."
+      header: |
+        רשימת שיחות צ ' אט.
+
+        שם צ 'אט | זיהוי צ' אט | ספירת חברים
+    execute_cmd_err: "נא לבצע את הקוד כהלכה!"
+    flush_redis:
+      flush_failed: |-
+        לא ניתן לרוקן את בסיס הנתונים של redis!
+        שגיאה: {ef}.
+      flushed_redis: "Redshed Redis בהצלחה!"
+      flushing_redis: "ניקוי מסד הנתונים של Redis ..."
+    restarting: מתחיל מחדש ...
+    speedtest:
+      speedtest_txt: |-
+        מספר
+
+        מארח: {host}
+
+        פינג: {ping} ס '
+        הורדה: {download} Mbps
+        הטעינה: {upload} Mbps
+      start_speedtest: "חישוב המהירות שלי ..."
+    uptime: "זמן: {uptime}"
+  general:
+    back_btn: חזרה
+    check_help: "בדקו את העזרה לשימוש בפקודה זו."
+    close_btn: קרוב
+    commands_available: |-
+      היי שם! שמי אליטה.
+      אני כאן כדי לעזור לכם לנהל את הקבוצות שלכם.
+      פקודות זמינות:
+      × /התחלה: הפעילו את הרובוט
+      × /help:
+      × /לתרום: מידע הקשור כיצד לתרום.
+
+      כל הפקודות יכולות להיות בשימוש עם/או!.
+    no_admin_cmd_perm: "אינכם יכולים להשתמש בפקודת מנהלן!"
+    no_perm_admin: "אין לי אישור לעשות את זה."
+    no_results: "לא נמצאו תוצאות."
+    some_error: |-
+      אירעה שגיאה, דוח עד {SUPPORT_GROUP}
+
+      שגיאה: {ef}
+    something_wrong: "משהו השתבש!"
+  langs:
+    changed: "השפה השתנתה ל- {lang_code}"
+    changelang: "כאן אתה יכול לשנות את השפה עבור הרובוט."
+    correct_usage: |-
+      שימוש נכון:
+      /lang או /setlang - קוד
+  locks:
+    check_perm_msg: "בדיקת הרשאות צ ' אט ..."
+    invalid_lock: |-
+      סוג נעילה לא חוקי!
+
+      שימוש/לוקווד כדי לקבל את סוגי הנעילה
+    lock_all: "נעלו את כל ההרשאות מצ ' אט זה!"
+    locked_perm: "ננעל {perm} עבור צ ' אט זה."
+    locks_perm_sp: "ציינו הרשאה לנעול!"
+    unlock_all: "שחררו את כל ההרשאות מצ ' אט זה!"
+    unlocked_perm: "לא נעול {uperm} עבור צ ' אט זה."
+    unlocks_perm.sp_perm: "ציינו הרשאה לביטול נעילה!"
+    view_perm: |-
+      הרשאות הצ'אט:
+
+      שליחת הודעות: {vmsg}
+      שליחת מדיה: {vmedia}
+      שליחת מדבקות: {vstickers}
+      שליחת אנימציות: {vanimations}
+      לשחק משחקים: {vgames}
+      להשתמש בבוטים מוטמעים: {vinlinebots}
+      תצוגה מקדימה של קישורים: {vwebprev}
+      שליחת סקרים: {vpolls}
+      שינוי פרטי הקבוצה: {vinfo}
+      הוספת משתמשים: {vinvite}
+      נעיצת הודעות: {vpin}
+  pin:
+    no_pin_msg: "תשובה להודעה שאליה ברצונכם לנעוץ ..."
+    no_rights_pin: "אין לי מספיק זכויות כדי להצמיד הודעות."
+    no_rights_unpin: "אין לי מספיק זכויות כדי לשחרר הודעות."
+    pinned_msg: "הודעה נעוצה!"
+    reply_to_unpin: "אידג ' ק, מה אתה רוצה לשחרר, לענות על הודעה לשחרר את זה."
+    unpinned_all_msg: "שחררו את כל ההודעות בצ ' אט זה."
+    unpinned_last_msg: "הודעה אחרונה לא מוצמדת."
+  purge:
+    deleting: "מקרין הודעות חסרות תועלת אלה ..."
+    err_basic: "לא ניתן למחוק לצמיתות הודעות בקבוצה בסיסית."
+    old_msg_err: "לא ניתן למחוק את כל ההודעות. ייתכן שההודעות ישנות מדי, ייתכן שאין לי זכויות מחיקה, או שזו אינה קבוצת עליונות."
+    purge_msg_count: "נמחקו {msg_count} הודעות"
+    what_del: "מה אתה רוצה למחוק?"
+  rules:
+    clear_rules: "אתם בטוחים שברצונכם לנקות את הכללים?"
+    cleared: "הכללים נוקינו בהצלחה עבור קבוצה זו!"
+    get_rules: |-
+      כללים עבור {chat}:
+
+      {rules}
+    no_rules: "ל-Admins עבור קבוצה זו לא הוגדרו כללים!"
+    pm_me: "קודם PM אותי ולאחר מכן לקבל את הכללים!"
+    sent_pm_rules: "שלחתי לך הודעה על החוקים."
+    set_rules: "כללים הוגדרו בהצלחה עבור קבוצה זו."
+  start:
+    add_chat_btn: "הוספה לצ ' אט"
+    commands_btn: פקודות
+    group: "אני חי: 3"
+    info_page: |-
+      @Alita_Robot
+
+      גרסה: {version}
+
+      מפתחים: [Divkix](https: //github.com/Divkix)
+      בעלים: [{Owner}] (tg://user?id={ID})
+    infos_btn: מידע
+    language_btn: שפה
+    pm_for_help: "פנו אליי בתחזוקה המונעת כדי לקבל את רשימת הפקודות האפשריות."
+    private: "הלו! אני אליט_רובוט. כדי לגלות עוד על הפונקציות שלי, לחצו על הלחצנים למטה."
+    public_help: "לחצו על הלחצן למטה כדי לקבל עזרה עבור {help_option}"
+    source_code: "קוד מקור"
+  utils:
+    gif_id:
+      reply_gif: "נא להשיב על gif כדי לקבל את הזיהוי שלו."
+    id:
+      group_id: "זיהוי קבוצות זה הוא {group_id}"
+      id_main: |-
+        שולח מקורי- {orig_sender} ({orig_id})
+        Forwarder- {fwd_sender} ({fwd_id})
+      my_id: "תעודת הזהות שלך היא {my_id}."
+    no_user_db: |-
+      כשל בקבלת המשתמש
+      זיהוי משתמש לא חוקי, לא ראיתי משתמש זה בכל מקום מוקדם יותר, אולי שם המשתמש יסייע לכם להכיר אותם!
+    paste:
+      nekobin_btn: Nekoהסל
+      pasted_nekobin: "הוא הדביק את Nekoהסל!"
+      pasting: הדבקת ...
+    ping:
+      pinging: פינג ...
+    song:
+      no_lyrics_found: "לא הצלחתי למצוא מילים לשיר הזה!"
+      no_song_given: "לא ציינתם איזה שיר לחפש!"
+      searching: "מציאת מילים עבור {song_name}..."
+      song_not_found: "השיר לא נמצא!"
+    translate:
+      translate_usage: "שימוש: /tr <language> תמליל לתרגום (ניתן להשתמש גם בתשובה להודעה)."
+      translating: תרגום ...
+      translation: |-
+        שפה: {from_lang} - > {to_lang}
+        תרגום: {translation}
+    user_info:
+      custom_title: |-
+
+
+        משתמש זה מחזיק את הכותרת {custom_title} כאן.
+      getting_info: "פרטי המשתמש מקבלים ..."
+      info_text:
+        last_name: |-
+
+          שם משפחה: {user_lname}
+        main: |-
+          פרטים:
+          id: {user_id}
+          שם פרטי: {user_name}
+        perma_link: |-
+
+          קישור משתמש קבוע: {perma_link}
+        username: |-
+
+          שם משתמש:{username}
+      support_user:
+        dev: |-
+
+
+          חבר זה הוא אחד המתפתחים שלי ⚡️
+        owner: |-
+
+
+          משתמש זה הוא הבעלים שלי, אני לעולם לא אעשה שום דבר נגדו!
+        sudo: |-
+
+
+          רמת הכוח של אדם זה היא ' Sudo '
+        whitelist: |-
+
+
+          אדם זה הוא 'משתמש רשימה לבנה', לא ניתן להחרים אותם!
+    weebify:
+      weebified_string: |-
+        מחרוזת שבויה:
+        {string}
+      weebify_what: "מה אני אמור לעשות לוויביפי?"
