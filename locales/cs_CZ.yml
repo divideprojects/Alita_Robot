@@ -284,42 +284,21 @@ strings:
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
-      custom_title: |-
-
-
-        Tento uživatel má titul <b>{custom_title}</b> zde.
+      custom_title: "This user holds the title <b>{custom_title}</b> here."
       getting_info: "Získávání informací o uživateli ..."
       info_text:
-        last_name: |-
-
-          <b>Poslední název:</b> {user_lname}
+        last_name: <b>Last Name:</b> {user_lname}
         main: |-
           <b>Charakteristika:</b>
           <b>ID:</b> <code>{user_id}</code>
           <b>Křestní jméno:</b> {user_name}
-        perma_link: |-
-
-          "<b>Permanent User Link:</b> {perma_link}"
-        username: |-
-
-          "<b>Jméno uživatele:</b> @{username}"
+        perma_link: "<b>Permanent User Link:</b> {perma_link}"
+        username: "<b>Username:</b> @{username}"
       support_user:
-        dev: |-
-
-
-          Tento člen je jedním z mých vývojářů ⚡️
-        owner: |-
-
-
-          Tato osoba je mým vlastníkem, nikdy bych proti nim nic neudělali!
-        sudo: |-
-
-
-          Tento uživatel je jedním z mých Sudos, má schopnosti, které jsou přibližně stejné jako vlastník!
-        whitelist: |-
-
-
-          Tato osoba je 'Whitelist User', nelze ji zakázat!
+        dev: "This member is one of my Developers ⚡️"
+        owner: "This person is my Owner, I would never do anything against them!"
+        sudo: "This user is one of my Sudos, he has powers which are approximately same to owner!"
+        whitelist: "This person is 'Whitelist User', they cannot be banned!"
     weebify:
       weebified_string: |-
         <b>Weebified Řetězec:</b>
