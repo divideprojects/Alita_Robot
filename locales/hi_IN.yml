@@ -206,7 +206,7 @@ strings:
       <b>Send Polls:</b> {vpolls}
       <b>Change Info:</b> {vinfo}
       <b>Invite Users:</b> {vinvite}
-      <b> Pin Messages:</b> {vpin}
+      <b>Pin Messages:</b> {vpin}
   pin:
     no_pin_msg: "जिस संदेश को आप पिन करना चाहते हैं उसके जवाब में जवाब दें ..."
     no_rights_pin: "मेरे पास संदेशों को पिन करने के लिए पर्याप्त अधिकार नहीं हैं."
