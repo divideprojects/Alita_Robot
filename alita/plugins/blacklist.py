@@ -71,14 +71,14 @@ async def view_blacklist(_, m: Message):
 
     chat_title = m.chat.title
     blacklists_chat = (tlang(m, "blacklist.curr_blacklist_initial")).format(
-        chat_title=f"<b>{chat_title}</b>",
+        chat_title=chat_title,
     )
     all_blacklisted = db.get_blacklists(m.chat.id)
 
     if not all_blacklisted:
         await m.reply_text(
             (tlang(m, "blacklist.no_blacklist")).format(
-                chat_title=f"<b>{chat_title}</b>",
+                chat_title=chat_title,
             ),
         )
         return
@@ -146,12 +146,12 @@ async def set_bl_action(_, m: Message):
         action = m.text.split(None, 1)[1]
         db.set_action(m.chat.id, action)
         await m.reply_text(
-            (tlang(m, "blacklist.action_set")).format(action=f"<b>{action}</b>"),
+            (tlang(m, "blacklist.action_set")).format(action=action),
         )
     elif len(m.text.split()) == 1:
         action = db.get_action(m.chat.id)
         await m.reply_text(
-            (tlang(m, "blacklist.action_get")).format(action=f"<b>{action}</b>"),
+            (tlang(m, "blacklist.action_get")).format(action=action),
         )
     else:
         await m.reply_text(tlang(m, "general.check_help"))

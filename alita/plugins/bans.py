@@ -80,7 +80,7 @@ async def kick_usr(c: Alita, m: Message):
             (tlang(m, "admin.kick.kicked_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 kicked=(await mention_html(user_first_name, user_id)),
-                chat_title=f"<b>{m.chat.title}</b>",
+                chat_title=m.chat.title,
             ),
         )
     except ChatAdminRequired:
@@ -123,7 +123,7 @@ async def ban_usr(c: Alita, m: Message):
             (tlang(m, "admin.ban.banned_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 banned=(await mention_html(user_first_name, user_id)),
-                chat_title=f"<b>{m.chat.title}</b>",
+                chat_title=m.chat.title,
             ),
         )
     except ChatAdminRequired:
@@ -155,7 +155,7 @@ async def unban_usr(c: Alita, m: Message):
             (tlang(m, "admin.unban.unbanned_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 unbanned=(await mention_html(user_first_name, user_id)),
-                chat_title=f"<b>{m.chat.title}</b>",
+                chat_title=m.chat.title,
             ),
         )
     except ChatAdminRequired:

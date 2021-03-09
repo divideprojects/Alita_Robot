@@ -83,7 +83,7 @@ async def adminlist_show(_, m: Message):
             await RedisHelper.set_key("ADMINDICT", ADMINDICT)
 
         adminstr = (tlang(m, "admin.adminlist.adminstr")).format(
-            chat_title=f"<b>{m.chat.title}</b>",
+            chat_title=m.chat.title,
         )
 
         for i in adminlist:
@@ -164,7 +164,7 @@ async def promote_usr(c: Alita, m: Message):
             (tlang(m, "admin.promote.promoted_user")).format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
-                chat_title=f"<b>{m.chat.title}</b>",
+                chat_title=m.chat.title,
             ),
         )
 
@@ -218,7 +218,7 @@ async def demote_usr(c: Alita, m: Message):
             (tlang(m, "admin.demote.demoted_user")).format(
                 demoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 demoted=(await mention_html(user_first_name, user_id)),
-                chat_title=f"<b>{m.chat.title}</b>",
+                chat_title=m.chat.title,
             ),
         )
 
@@ -264,7 +264,7 @@ async def get_invitelink(c: Alita, m: Message):
         link = await c.export_chat_invite_link(m.chat.id)
         await m.reply_text(
             (tlang(m, "admin.invitelink")).format(
-                chat_name=f"<b>{m.chat.id}</b>",
+                chat_name=m.chat.id,
                 link=link,
             ),
         )

@@ -66,7 +66,7 @@ async def get_rules(c: Alita, m: Message):
     if not priv_rules:
         await m.reply_text(
             (tlang(m, "rules.get_rules")).format(
-                chat=f"<b>{m.chat.title}</b>",
+                chat=m.chat.title,
                 rules=rules,
             ),
         )
@@ -75,7 +75,7 @@ async def get_rules(c: Alita, m: Message):
             await c.send_message(
                 m.from_user.id,
                 (tlang(m, "rules.get_rules")).format(
-                    chat=f"<b>{m.chat.title}</b>",
+                    chat=m.chat.title,
                     rules=rules,
                 ),
             )

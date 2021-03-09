@@ -269,7 +269,7 @@ async def my_info(c: Alita, m: Message):
             if "custom_title" in result.keys():
                 custom_title = result["custom_title"]
                 text += (tlang(m, "utils.user_info.custom_title")).format(
-                    custom_title=f"<b>{custom_title}</b>",
+                    custom_title=custom_title,
                 )
     except Exception as ef:
         LOGGER.error(f"Error: {ef}")
