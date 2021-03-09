@@ -1,7 +1,7 @@
 ---
 main:
   lang_sample: "Españo"
-  language_flag: '🇪🇸'
+  language_flag: "🇪🇸"
   language_name: Spanish
 strings:
   admin:
@@ -12,7 +12,7 @@ strings:
       reloaded_admins: "¡Recargué a todos los administradores en este chat!"
       use_admin_cache: "¡Utiliza /admincache para recargar administradores!"
     ban:
-      admin_cannot_ban: "Este usuario es un administrador, ¡no puedo prohibirlo! \""
+      admin_cannot_ban: 'Este usuario es un administrador, ¡no puedo prohibirlo! "'
       ban_all: "¿Estás seguro de que deseas prohibir a todos los miembros de este grupo?"
       banned_user: "¡{admin} prohibido {banned} en el chat {chat_title}!"
       banning_all: "Prohibir a todos los miembros ..."
@@ -25,12 +25,12 @@ strings:
       Enlace de invitación para chat {chat_name}:
       {link}
     kick:
-      admin_cannot_kick: "Este usuario es un administrador, ¡no puedo patearlo! \""
+      admin_cannot_kick: 'Este usuario es un administrador, ¡no puedo patearlo! "'
       bot_no_right: "No tengo suficientes derechos para expulsar a este usuario."
       kicked_user: "¡{admin} pateó {kicked} en el chat {chat_title}!"
       owner_cannot_kick: "Esta persona creó el grupo, ¿cómo puedo patearlos?"
     mute:
-      admin_cannot_mute: "¡Este usuario es un administrador, no puedo silenciarlo! \""
+      admin_cannot_mute: '¡Este usuario es un administrador, no puedo silenciarlo! "'
       bot_no_right: "No tengo suficientes derechos para silenciar a este usuario."
       muted_user: "¡Silenciado a {user}!"
       owner_cannot_mute: "Esta persona creó el grupo, ¿cómo puedo silenciarlos?"
@@ -222,6 +222,11 @@ strings:
     purge_msg_count: "Mensajes {msg_count} eliminados"
     what_del: "¿Qué quieres borrar?"
   rules:
+    priv_rules:
+      no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
+      turned_on: "Private Rules have been turned <b>on</b> for chat <b>{chat_name}</b>"
+      turned_off: "Private Rules have been turned <b>off</b> for chat <b>{chat_name}</b>"
+      current_preference: "Current Preference for Private rules in this chat is: {current_option}"
     clear_rules: "¿Estás seguro de que quieres aclarar las reglas?"
     cleared: "¡Reglas completas para este grupo!"
     get_rules: |-
