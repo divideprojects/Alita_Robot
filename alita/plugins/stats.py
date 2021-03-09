@@ -49,7 +49,7 @@ async def get_stats(_, m: Message):
         f"<b>Users:</b> <code>{(userdb.count_users())}</code> in <code>{(chatdb.count_chats())}</code> chats\n"
         f"<b>Blacklists:</b> <code>{(bldb.count_blacklists_all())}</code> in <code>{(bldb.count_blackists_chats())}</code> chats\n"
         f"<b>Rules:</b> Set in <code>{(rulesdb.count_chats())}</code> chats\n"
-        f"    <b>Private Rules:</b> {(rulesdb.count_privrules_chats())} chats"
+        f"    <b>Private Rules:</b> {(rulesdb.count_privrules_chats())} chats\n"
         f"<b>Notes:</b> <code>{(notesdb.count_all_notes())}</code> in <code>{(notesdb.count_notes_chats())}</code> chats\n"
         f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
         f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
