@@ -69,37 +69,37 @@ strings:
         Они будут запрещены во всех группах, где я являюсь администратором!
       enter_reason: "Введите причину для пользователя gban!"
       how_to: |-
-        <b>How to gban?</b>
-        <b>Answer:</b> <code>/gban user_id reason</code>
+        <b>Как gban?</b>
+        <b>Ответ:</b> <code>/gban user_id reason</code>
       log_msg: |-
         #GBAN
-        <b>Originated from:</b> {chat_id}
-        <b>Admin:</b> {ban_admin}
-        <b>Gbanned User:</b> {gbanned_user}
-        <b>Gbanned User ID:</b> {gban_user_id}
-        <b>Event Stamp:</b> {time}
+        <b>Начато с</b> {chat_id}
+        <b>Администратор:</b> {ban_admin}
+        <b>Забаненный пользователь:</b> {gbanned_user}
+        <b>ID заблокированного пользователя:</b> {gban_user_id}
+        <b>Змея событий:</b> {time}
       not_self: |-
-        You can't gban me nigga!
-        Nice Try...!
-      updated_reason: "Updated Gban reason to: <code>{gban_reason}</code>."
+        Вы не можете забанить меня нигга!
+        Хорошая попытка...!
+      updated_reason: "Обновлен Gban причина: <code>{gban_reason}</code>"
       user_added_to_watch: |-
-        You have been added to my global ban list!
-        Reason: <code>{gban_reason}</code>
+        Вы были добавлены в мой глобальный список банов!
+        Причина: <code>{gban_reason}</code>
 
-        Appeal Chat: @{SUPPORT_GROUP}
+        Объявление в чате: @{SUPPORT_GROUP}
     here_gbanned_start: "Вот и все глобально запрещенные геи!\n"
     none_gbanned: "Нет никаких запрещёных пользователей ...!"
-    num_gbans: "Number of people gbanned {count}"
+    num_gbans: "Количество забаненных людей {count}"
     part_of_support: "Этот пользователь входит в мою поддержку!"
     pass_user_id: "Передай ИД пользователя или имя пользователя в качестве аргумента!"
     ungban:
       log_msg: |-
         #UNGBAN
-        <b>Originated from:</b> {chat_id}
-        <b>Admin:</b> {ungban_admin}
-        <b>UnGbanned User:</b> {ungbanned_user}
-        <b>UnGbanned User ID:</b> {ungbanned_user_id}
-        <b>Event Stamp:</b> {time}
+        <b>Оригинал:</b> {chat_id}
+        <b>Администратор:</b> {ungban_admin}
+        <b>Разбаненный пользователь:</b> {ungbanned_user}
+        <b>Разбаненный ID пользователя:</b> {ungbanned_user_id}
+        <b>Змея событий:</b> {time}
       non_gbanned: "Пользователь не запрещен!"
       not_self: "Хорошая Попытка ...!"
       removed_from_list: "Удалено {first_name} из списка Global Ban List."
@@ -194,19 +194,19 @@ strings:
     unlocked_perm: "Разблокировано {uperm} для этого чата."
     unlocks_perm.sp_perm: "Укажите разрешение на разблокирование!"
     view_perm: |-
-      CHAT PERMISSIONS:
+      Сообщения чата:
 
-      Send Messages: {vmsg}
-      Send Media: {vmedia}
-      Send Stickers: {vstickers}
-      Send Animations: {vanimations}
-      Can Play Games: {vgames}
-      Can Use Inline Bots: {vinlinebots}
-      Webpage Preview: {vwebprev}
-      Send Polls: {vpolls}
-      Change Info: {vinfo}
-      Invite Users: {vinvite}
-      Pin Messages: {vpin}
+      Послать сообщения: {vmsg}
+      Послать медиа: {vmedia}
+      Послать стикеры: {vstickers}
+      Послать анимацию: {vanimations}
+      Может играть в игры: {vgames}
+      Может использовать встроенные роботы: {vinlinebots}
+      Предпросмотр веб-страницы: {vwebprev}
+      Послать опросы: {vpolls}
+      Информация об изменении: {vinfo}
+      Приглашение пользователей: {vinvite}
+      Сообщения с пингом: {vpin}
   pin:
     no_pin_msg: "Ответить на сообщение, на которое вы хотите закрепить ..."
     no_rights_pin: "У меня недостаточно прав для закрепления сообщений."
