@@ -303,15 +303,19 @@ strings:
       support_user:
         dev: |-
 
+
           This member is one of my Developers ⚡️
         owner: |-
+
 
           This person is my Owner, I would never do anything against them!
 
         sudo: |-
 
+
           This user is one of my Sudos, he has powers which are approximately same to owner!
         whitelist: |-
+
 
           This person is 'Whitelist User', they cannot be banned!
     weebify:
