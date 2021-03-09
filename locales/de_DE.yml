@@ -1,0 +1,322 @@
+---
+main:
+  lang_sample: "US Englisch"
+  language_flag: '🇺🇸'
+  language_name: Englisch
+strings:
+  admin:
+    adminlist:
+      adminstr: "Admins in {chat_title}:\n"
+      cached_values: "Dies sind zwischengespeicherte Werte!"
+      note_updated: "Das sind aktuelle Werte!"
+      reloaded_admins: "Alle Administratoren in diesem Chat neu geladen!"
+      use_admin_cache: "Benutze /admincache um Admins neu zu laden!"
+    ban:
+      admin_cannot_ban: "Dieser Benutzer ist ein Admin, ich kann ihn nicht bannen! \""
+      ban_all: "Sind Sie sicher, dass Sie alle Mitglieder dieser Gruppe sperren möchten?"
+      banned_user: "{admin} hat {banned} im Chat {chat_title} gesperrt!"
+      banning_all: "Alle Mitglieder werden gesperrt..."
+      bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu bannen."
+      owner_cannot_ban: "Diese Person hat die Gruppe erstellt, wie kann ich sie verbieten?"
+    demote:
+      bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu degradieren."
+      demoted_user: "{demoter} hat {demoted} im Chat {chat_title} degradiert!"
+    invitelink: |-
+      Einladungslink für den Chat {chat_name}:
+      {link}
+    kick:
+      admin_cannot_kick: "Dieser Benutzer ist ein Admin, ich kann ihn nicht kicken! \""
+      bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu kicken."
+      kicked_user: "{admin} hat {kicked} im Chat {chat_title} gekickt!"
+      owner_cannot_kick: "Diese Person hat die Gruppe erstellt, wie kann ich sie kicken?"
+    mute:
+      admin_cannot_mute: "Dieser Benutzer ist ein Admin, ich kann ihn nicht stummschalten!\""
+      bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu stummschalten."
+      muted_user: "{user} stumm !"
+      owner_cannot_mute: "Diese Person hat die Gruppe erstellt, wie kann ich sie stummschalten?"
+    no_invite_perm: "Ich habe keine Berechtigung zum Einladungslink!"
+    no_restrict_perm: "Du hast keine Berechtigung um Mitglieder zu beschränken!"
+    no_user_invite_perm: "Sie haben keine Berechtigung, Benutzer einzuladen."
+    not_admin: "Ich bin kein Admin oder ich habe keine Rechte."
+    promote:
+      bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu fördern."
+      no_promote_perm: "Du hast keine Berechtigung Mitglieder zu bewerben!"
+      promoted_user: "{promoter} hat {promoted} im Chat {chat_title} beworben!"
+    support_cannot_restrict: "Dieser Benutzer ist in meinem Support-Personal, kann ihn nicht einschränken."
+    unban:
+      bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu entbannen."
+      unbanned_user: "{admin} entsperrt {unbanned} im Chat {chat_title}!"
+    unmute:
+      bot_no_right: "Ich habe nicht genügend Rechte, um diesen Benutzer zu entmutieren."
+      unmuted_user: "Entstumm {user}!"
+    user_admin_invalid: "Kann nicht auf diesen Benutzer reagieren, vielleicht war ich nicht derjenige, der seine Berechtigungen geändert hat."
+  afk:
+    error_check_afk: |-
+      Fehler beim Prüfen
+      {ef}
+    no_longer_afk: |-
+      {first_name} ist nicht mehr Afk!
+      War AFK für {since}
+    reason: "Grund: {res}"
+    user_afk: |-
+      {first_name} ist Afk!
+      Seit: {since}
+    user_now_afk: "Benutzer {user} ist jetzt verfügbar!"
+  antispam:
+    gban:
+      added_to_watch: |-
+        {first_name} zur globalen Sperrliste hinzugefügt.
+        Sie werden jetzt in allen Gruppen gebannt, in denen ich Admin bin!
+      enter_reason: "Bitte geben Sie einen Grund für gban-Benutzer ein!"
+      how_to: |-
+        <b>Wie kann ich gban?</b>
+        <b>Antwort:</b> <code>/gban user_id Grund</code>
+      log_msg: |-
+        #GBAN
+        <b>Ursprünglich aus:</b> {chat_id}
+        <b>Admin:</b> {ban_admin}
+        <b>Gbanned Benutzer:</b> {gbanned_user}
+        <b>Gbannte Benutzer-ID:</b> {gban_user_id}
+        <b>Event Stamp:</b> {time}
+      not_self: |-
+        Du kannst mich nicht gban nigga!
+        Toller Versuch...!
+      updated_reason: "Gban Grund wurde aktualisiert zu: <code>{gban_reason}</code>."
+      user_added_to_watch: |-
+        Du wurdest zu meiner globalen Bannliste hinzugefügt!
+        Grund: <code>{gban_reason}</code>
+
+        Appeal Chat: @{SUPPORT_GROUP}
+    here_gbanned_start: "Hier sind alle weltweit gebannten Geys!\n"
+    none_gbanned: "Es gibt keine ggebannten Benutzer...!"
+    num_gbans: "Anzahl der Personen gbannt {count}"
+    part_of_support: "Dieser Benutzer ist Teil meines Support!, kann unseren eigenen nicht bannen!"
+    pass_user_id: "Benutzer-ID oder Benutzername als Argument übergeben!"
+    ungban:
+      log_msg: |-
+        #UNGBAN
+        <b>Ursprünglich aus:</b> {chat_id}
+        <b>Admin:</b> {ungban_admin}
+        <b>UnGbanned Benutzer:</b> {ungbanned_user}
+        <b>UnGbanned User ID:</b> {ungbanned_user_id}
+        <b>Event Stamp:</b> {time}
+      non_gbanned: "Benutzer ist nicht abgebrochen!"
+      not_self: "Schöner Versuch...!"
+      removed_from_list: "{first_name} von der globalen Sperrliste entfernt."
+      user_removed_from_list: "Du wurdest von meiner globalen Bannliste entfernt!"
+    watcher_banned: |-
+      Dieser Benutzer ({user_gbanned}) wurde weltweit gebannt!
+
+      Um eine Entbannung zu erhalten unter @{SUPPORT_GROUP}
+  blacklist:
+    action_get: "Die aktuelle Aktion für Blacklisten in diesem Chat ist {action}"
+    action_set: "Aktion für Blacklist auf {action} setzen"
+    added_blacklist: "{trigger} in Blacklist-Wörtern hinzugefügt!"
+    curr_blacklist_initial: "Aktuelle blockierte Wörter in {chat_title}:\n"
+    no_bl_found: "Keine Blacklist {bl_word} gefunden!"
+    no_blacklist: "Es gibt keine Nachrichten auf der schwarzen Liste in {chat_title}!"
+    rm_blacklist: "{bl_word} von Wörtern der Blacklist entfernt!"
+  dev:
+    alladmins:
+      admins_i_know_str: |-
+        Es gibt {len_admins} Administratoren, die ich kenne!
+
+        {admindict}
+      admins_in_cache: "Es gibt {len_admins} Administratoren in meinem Redis-Cache."
+      alladmins_btn: "Alle Admins"
+      getting_admins: "Lade alle Administratoren in meinem Cache..."
+    bot_ip: |-
+      Bot IP-Adresse:
+      {ip}
+    chatlist:
+      chats_in_db: "Hier ist die Liste der Chats in meiner Datenbank."
+      exporting: "Charlist wird exportiert..."
+      header: |
+        Liste der Chats.
+
+        Chatname | Chat-ID | Anzahl der Mitglieder
+    execute_cmd_err: "Bitte führen Sie den Code korrekt aus!"
+    flush_redis:
+      flush_failed: |-
+        Fehler beim Leeren der Redis-Datenbank!
+        Fehler: {ef}.
+      flushed_redis: "Redis erfolgreich geleert!"
+      flushing_redis: "Redis Datenbank wird geleert..."
+    restarting: Neustarten...
+    speedtest:
+      speedtest_txt: |-
+        Geschwindigkeit
+
+        Host: {host}
+
+        Ping: {ping} ms
+        Download: {download} Mbps
+        Upload: {upload} Mbps
+      start_speedtest: "Berechne meine Geschwindigkeit..."
+    uptime: "Laufzeit: {uptime}"
+  general:
+    back_btn: Zurück
+    check_help: "Bitte überprüfen Sie die Hilfe zur Verwendung dieses Befehls."
+    close_btn: Schließen
+    commands_available: |-
+      Hallo! Mein Name ist Alita.
+      Ich bin hier, um Ihnen bei der Verwaltung Ihrer Gruppen zu helfen!
+      Befehle verfügbar:
+      × /start: Starten Sie den Bot
+      × /help: Geben Sie Ihnen diese Nachricht.
+      × /donate: Informationen darüber, wie man spenden kann!
+
+      Alle Befehle können entweder mit / oder !.
+    no_admin_cmd_perm: "Sie können keinen Admin-Befehl verwenden!"
+    no_perm_admin: "Ich habe keine Berechtigung, das zu tun"
+    no_results: "Keine Ergebnisse gefunden."
+    some_error: |-
+      Ein Fehler ist aufgetreten, melde an {SUPPORT_GROUP}
+
+      Fehler: {ef}
+    something_wrong: "Etwas ist schiefgelaufen!"
+  langs:
+    changed: "Sprache geändert zu {lang_code}"
+    changelang: "Hier können Sie die Sprache für den Bot ändern."
+    correct_usage: |-
+      Richtige Verwendung:
+      /lang oder /setlang Sprachcode
+  locks:
+    check_perm_msg: "Prüfe Chat-Berechtigungen..."
+    invalid_lock: |-
+      Ungültiger Sperrtyp!
+
+      Benutze /locktypes um die Sperrtypen zu erhalten
+    lock_all: "Alle Berechtigungen in diesem Chat gesperrt!"
+    locked_perm: "{perm} für diesen Chat gesperrt."
+    locks_perm_sp: "Berechtigung zum Sperren angeben!"
+    unlock_all: "Alle Berechtigungen in diesem Chat entsperrt!"
+    unlocked_perm: "{uperm} für diesen Chat freigeschaltet."
+    unlocks_perm.sp_perm: "Geben Sie eine Berechtigung zum Entsperren an!"
+    view_perm: |-
+      CHAT-PERMISSIONEN:
+
+      Nachrichten senden: {vmsg}
+      Medien senden: {vmedia}
+      Sticker senden: {vstickers}
+      Animationen senden: {vanimations}
+      Kann Spiele spielen: {vgames}
+      Kann Inline-Bots verwenden: {vinlinebots}
+      Webseiten-Vorschau: {vwebprev}
+      Sende Umfragen: {vpolls}
+      Info ändern: {vinfo}
+      Einladende Benutzer: {vinvite}
+      Pin Nachrichten: {vpin}
+  pin:
+    no_pin_msg: "Auf eine Nachricht antworten, auf die Sie pinnen..."
+    no_rights_pin: "Ich habe nicht genügend Rechte, um Nachrichten zu pinnen."
+    no_rights_unpin: "Ich habe nicht genügend Rechte, um Nachrichten zu lösen."
+    pinned_msg: "Nachricht angeheftet!"
+    reply_to_unpin: "Idk was du entfernen möchtest, antworte auf eine Nachricht, um sie zu lösen."
+    unpinned_all_msg: "Alle Nachrichten in diesem Chat entfernt."
+    unpinned_last_msg: "Letzte Nachricht entpinnt."
+  purge:
+    deleting: "Verbrennung dieser nutzlosen Nachrichten..."
+    err_basic: "Nachrichten in einer Basisgruppe können nicht gelöscht werden"
+    old_msg_err: "Alle Nachrichten können nicht gelöscht werden. Die Nachrichten sind möglicherweise zu alt. Ich habe keine Löschrechte oder dies kann keine Supergruppe sein."
+    purge_msg_count: "{msg_count} Nachrichten gelöscht"
+    what_del: "Was möchtest du löschen?"
+  rules:
+    clear_rules: "Sind Sie sicher, dass Sie die Regeln löschen möchten?"
+    cleared: "Regeln für diese Gruppe erfolgreich gelöscht!"
+    get_rules: |-
+      Regeln für {chat}:
+
+      {rules}
+    no_rules: "Die Admins für diese Gruppe haben keine Regeln!"
+    pm_me: "Zuerst PM mich und dann die Regeln bekommen!"
+    sent_pm_rules: "Ich habe dir die Regeln gemeldet"
+    set_rules: "Regeln für diese Gruppe wurden erfolgreich festgelegt."
+  start:
+    add_chat_btn: "Zu einem Chat hinzufügen"
+    commands_btn: Befehle
+    group: "I'm alive :3"
+    info_page: |-
+      • @Alita_Robot
+
+      Version: {version}
+
+      Entwickler: [Divkix](https://github.com/Divkix)
+      Eigentümer: [{Owner}](tg://user?id={ID})
+    infos_btn: Info
+    language_btn: Sprache
+    pm_for_help: "Kontaktieren Sie mich in PN um die Liste möglicher Befehle zu erhalten."
+    private: "Hallo! Ich bin Alita_Robot. Um mehr über meine Funktionen zu erfahren, klicken Sie auf die Schaltflächen unten."
+    public_help: "Drücken Sie die Schaltfläche unten, um Hilfe für {help_option} zu erhalten"
+    source_code: "Quellcode"
+  utils:
+    gif_id:
+      reply_gif: "Bitte antworten Sie auf ein GIF, um seine ID zu erhalten."
+    id:
+      group_id: "Diese Gruppen-ID ist {group_id}"
+      id_main: |-
+        Original Absender - {orig_sender} ({orig_id})
+        Weiterleitung - {fwd_sender} ({fwd_id})
+      my_id: "Ihre ID ist {my_id}."
+    no_user_db: |-
+      Fehler beim Holen der Benutzer
+      Peer-ID ungültig. Ich habe diesen Benutzer nirgends früher gesehen, vielleicht würde der Benutzername ihn kennenlernen!
+    paste:
+      nekobin_btn: NekoBin
+      pasted_nekobin: "Bei NekoBin eingefügt!"
+      pasting: Einfügen...
+    ping:
+      pinging: Ping...
+    song:
+      no_lyrics_found: "Es konnten keine Songtexte für dieses Lied gefunden werden!"
+      no_song_given: "Du hast nicht angegeben, nach welchem Song du suchen möchtest!"
+      searching: "Finde Songtexte für {song_name}..."
+      song_not_found: "Song nicht gefunden!"
+    translate:
+      translate_usage: "Verwendung: /tr <language> Text für die Übersetzung (kann auch als Antwort auf eine Nachricht verwendet werden)."
+      translating: Übersetzen...
+      translation: |-
+        Sprache: {from_lang} -> {to_lang}
+        Übersetzung: {translation}
+    user_info:
+      custom_title: |-
+
+
+        Dieser Benutzer trägt hier den Titel {custom_title}.
+      getting_info: "Benutzerinformationen werden abgerufen..."
+      info_text:
+        last_name: |-
+
+          Nachname: {user_lname}
+        main: |-
+          Zeichen:
+          ID: {user_id}
+          Vorname: {user_name}
+        perma_link: |-
+
+          Permanenter Benutzerlink: {perma_link}
+        username: |-
+
+          Benutzername: @{username}
+      support_user:
+        dev: |-
+
+
+          Dieses Mitglied ist einer meiner Entwickler :high_voltade:
+        owner: |-
+
+
+          Diese Person ist mein Besitzer, ich würde nie etwas gegen sie tun!
+        sudo: |-
+
+
+          Die Stärke dieser Person ist 'Sudo'
+        whitelist: |-
+
+
+          Diese Person ist 'Whitelist Benutzer', sie kann nicht verboten werden!
+    weebify:
+      weebified_string: |-
+        Weebified String:
+        {string}
+      weebify_what: "Was soll ich zu Weebify machen?"
