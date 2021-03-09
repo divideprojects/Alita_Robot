@@ -1,0 +1,327 @@
+---
+main:
+  lang_sample: "ABD İngilizcesi"
+  language_flag: "🇺🇸"
+  language_name: İngilizce
+strings:
+  admin:
+    adminlist:
+      adminstr: "<b>{chat_title}</b>içinde yöneticiler:\n"
+      cached_values: "Bunlar önbelleğe alınmış değerlerdir!"
+      note_updated: "Bunlar güncel değerler!"
+      reloaded_admins: "Bu sohbetteki tüm yöneticiler yeniden yüklendi!"
+      use_admin_cache: "Administrator 'ı yeniden yüklemek için /admincache kullanın!"
+    ban:
+      admin_cannot_ban: 'bu kullanıcı admin, onları yasaklayamam! " dedi.'
+      ban_all: "Bu gruptaki tüm üyeleri yasaklamak istediğinizden emin misiniz?"
+      banned_user: "{admin} yasaklı {banned} sohpet <b>{chat_title}</b>!"
+      banning_all: "Tüm Üyeler Yasaklıyor ..."
+      bot_no_right: "Bu kullanıcıyı yasamak için yeterli haklara sahip değilim."
+      owner_cannot_ban: "Bu kişi grubu yarattı, onları nasıl yasaklayabilirim?"
+    demote:
+      bot_no_right: "Bu kullanıcıyı indirgemek için yeterli haklara sahip değilim."
+      demoted_user: "{demoter} indirilen {demoted} sohpet <b>{chat_title}</b>!"
+    invitelink: |-
+      <b>{chat_name}</b>Sohbet için Bağlantı Davet Et:
+      {link}
+    kick:
+      admin_cannot_kick: 'Bu kullanıcı bir yöneticidir, onları tekmeleyemem! "'
+      bot_no_right: "Bu kullanıcıyı tekmelemek için yeterli haklara sahip değilim."
+      kicked_user: "{admin} , {kicked} sohbet <b>{chat_title}<b> numaralı sohbete başladı!"
+      owner_cannot_kick: "Bu kişi grubu yarattı, onları nasıl tekmeleyebilirim?"
+    mute:
+      admin_cannot_mute: 'Bu kullanıcı bir yöneticidir, onları susturamam! "'
+      bot_no_right: "Bu kullanıcının sesini kapatmak için yeterli haklara sahip değilim."
+      muted_user: "{user} kapatılıyor!"
+      owner_cannot_mute: "Bu kişi grubu yarattı, onları nasıl susturabilirim?"
+    no_invite_perm: "Link davet etmek için iznim yok!"
+    no_restrict_perm: "Üyeleri kısıtlamak için izniniz yok!"
+    no_user_invite_perm: "Kullanıcıları davet etme izniniz yok."
+    not_admin: "Ben yönetici değilim ya da haklarım yok."
+    promote:
+      bot_no_right: "Bu kullanıcıyı tanıtmak için yeterli haklara sahip değilim."
+      no_promote_perm: "Üye olmak için izniniz yok!"
+      promoted_user: "{promoter} , {promoted} sohbetinde {promoted}, <b>{chat_title}</b> öne çıkarılıyor!"
+    support_cannot_restrict: "Bu kullanıcı benim destek ekibimde, onları kısıtlayamaz."
+    unban:
+      bot_no_right: "Bu kullanıcıyı kaldırmak için yeterli haklara sahip değilim."
+      unbanned_user: "{admin} yasaksız {unbanned} sohpet <b>{chat_title}</b>!"
+    unmute:
+      bot_no_right: "Bu kullanıcının sesini açmak için yeterli haklara sahip değilim."
+      unmuted_user: "Kapatılmamış {user}!"
+    user_admin_invalid: "Bu kullanıcı üzerinde işlem yapamazsınız, belki de izinlerini değiştiren kişi ben değildim."
+  afk:
+    error_check_afk: |-
+      afk
+      {ef} denetlenirken hata oluştu
+    no_longer_afk: |-
+      {first_name} artık Afk!
+      , <code>{since}</code> için AFK ' di
+    reason: "<b>Neden:</b> {res}"
+    user_afk: |-
+      {first_name} , Afk!
+      <b>Bu tarihten beri:</b> <code>{since}</code>
+    user_now_afk: "{user} kullanıcısı artık afk!"
+  antispam:
+    gban:
+      added_to_watch: |-
+        Küresel Yasak Listesine {first_name} eklendi.
+        Şu anda yöneticim olduğum tüm gruplarda yasaklanacaklar!
+      enter_reason: "Lütfen kullanıcıyı gmen etmek için bir neden girin!"
+      how_to: |-
+        <b>Gban nasıl?</b>
+        <b>Cevap:</b> <code>/gban kullanıcı_tnt neden</code>
+      log_msg: |-
+        #GBAN
+        <b>Originated from:</b> {chat_id}
+        <b>Admin:</b> {ban_admin}
+        <b>Gbanned User:</b> {gbanned_user}
+        <b>Gbanned User ID:</b> {gban_user_id}
+        <b>Event Stamp:</b> {time}
+      not_self: |-
+        You can't gban me nigga!
+        Nice Try...!
+      updated_reason: "Gban nedeni güncellendi: <code>{gban_reason}</code>."
+      user_added_to_watch: |-
+        küresel yasak listeme eklendiniz!
+        <b>neden:</b> <code>{gban_reason}</code>
+
+        <b>temyiz sohbet:</b> @{SUPPORT_GROUP}
+    here_gbanned_start: "Tüm küresel yasaklı gayler burada!\n"
+    none_gbanned: "Hiç yasaklı kullanıcı yok ...!"
+    num_gbans: "Yasaklanan kişi sayısı: <code>{count}</code>"
+    part_of_support: "Bu kullanıcı benim desteğimin bir parçası! Kendi başımızı bile çekemez!"
+    pass_user_id: "Bağımsız değişken olarak kullanıcı kimliğini ya da kullanıcı adını geçirin!"
+    ungban:
+      log_msg: |-
+        #UNGBAN
+        <b>Originated from:</b> {chat_id}
+        <b>Admin:</b> {ungban_admin}
+        <b>UnGbanned User:</b> {ungbanned_user}
+        <b>UnGbanned User ID:</b> {ungbanned_user_id}
+        <b>Event Stamp:</b> {time}
+      non_gbanned: "Kullanıcı gişe girmedi!"
+      not_self: "İyi Denedin ...!"
+      removed_from_list: "Genel Ban Listesi 'nden {first_name} çıkarıldı."
+      user_removed_from_list: "Benim küresel yasak listemden çıkarıldınız!"
+    watcher_banned: |-
+      Bu kullanıcı ({user_gbanned}) küresel olarak yasaklandı!
+
+      yasaksız çıkmak için @{SUPPORT_GROUP} tarihinde itiraz
+  blacklist:
+    action_get: "Bu sohbetteki kara listelere ilişkin geçerli eylem <i><b>{action}</b></i>"
+    action_set: "Bunun için kara listeye ilişkin eylemi <b>{action}</b> olarak ayarlayın"
+    added_blacklist: "Kara liste kelimelerindeki <b>{trigger}</b> eklendi!"
+    curr_blacklist_initial: "<b>{chat_title}</b>:\n içinde geçerli Blacklisteli sözcükler"
+    no_bl_found: "blacklist <b>{bl_word}</b> bulundu!"
+    no_blacklist: "<b>{chat_title}</b> içinde kara listelenmiş mesaj yok!"
+    rm_blacklist: "Kara liste sözcüklerinden <b>{bl_word}</b> çıkarıldı!"
+  dev:
+    alladmins:
+      admins_i_know_str: |-
+        <b>{len_admins}</b> admins biliyorum ki ben biliyorum!
+
+        <code>{admindict}</code>
+      admins_in_cache: "Redis önbelleğimde <b>{len_admins}</b> admins vardır."
+      alladmins_btn: "Tüm Yöneticiler"
+      getting_admins: "Önbellekteki tüm yöneticiler alınıyor ..."
+    bot_ip: |-
+      <b>Bot IP Adresi:</b>
+      <code>{ip}</code>
+    chatlist:
+      chats_in_db: "Burada, Veritabanındaki sohbetlerin listesi yer alıyor."
+      exporting: "Charlist Dışa Aktarılıyor ..."
+      header: |
+        Veritabanımdaki sohbetlerin listesi.
+
+        <b>Sohbet adı | Sohbet Tanıtıcısı | Üyeler sayısı</b>
+    execute_cmd_err: "Lütfen kodu doğru olarak yürütün!"
+    flush_redis:
+      flush_failed: |-
+        Redis veritabanı temizlenemedi!
+        <b>Hata:</b> {ef}
+      flushed_redis: "Düzeltme Reddi başarıyla tamamlandı!"
+      flushing_redis: "Reis Veritabanı Akışlanıyor ..."
+    restarting: Yeniden başlatılıyor ...
+    speedtest:
+      speedtest_txt: |-
+        Speedtest
+
+        <b>Host:</b> <code>{host}</code>
+
+        <b>Ping:</b> <code>{ping}</code> ms
+        <b>Download:</b> <code>{download}</code> Mbps
+        <b>Upload:</b> <code>{upload}</code> Mbps
+      start_speedtest: "Hızımı hesaplıyor ..."
+    uptime: "<b>Uptime:<b> <code>{uptime}</code>"
+  general:
+    back_btn: Geri
+    check_help: "Lütfen bu komutun nasıl kullanılacağı konusunda yardımı denetleyin."
+    close_btn: Kapat
+    commands_available: |-
+      Hey, Işte! Benim adım Alita.
+      grubunuzu yönetmenize yardımcı olmak için buradayım!
+      Komutları kullanılabilir:
+      × /start:
+      × /help komutunu başlatın: Bu iletiyi verin.
+      × /donate: sahibime nasıl bağışlanabileceğiyle ilgili bilgiler!
+
+      tüm komutlar/veya/veya! ile birlikte kullanılabilir.
+    no_admin_cmd_perm: "Yönetici komutunu kullanamazsınız!"
+    no_perm_admin: "Bunu yapmak için iznim yok."
+    no_results: "Sonuç bulunamadı."
+    some_error: |-
+      Bir hata oluştu, @{SUPPORT_GROUP}
+
+      <b>ile ilgili rapor oluştu Hata:</b> {ef}
+    something_wrong: "Bir şeyler ters gitti!"
+  langs:
+    changed: "Dil, <code>{lang_code}</code> olarak değiştirildi"
+    changelang: "Burada, robot için dil değiştirebilirsin."
+    correct_usage: |-
+      <b>Doğru Kullanım Kullanımı:</b>
+      /lang ya da /setlang dili-kodu
+  locks:
+    check_perm_msg: "Sohbet izinleri denetleniyor ..."
+    invalid_lock: |-
+      Kilit tipi için geçersiz Kilit Tipi!
+
+      Kilit tipleri almak için /locktypes
+    lock_all: "Bu Sohbetten <b>tüm</b> izni kilitlendi!"
+    locked_perm: "Bu Sohbet için Kilitlenmiş <b>{perm}</b>."
+    locks_perm_sp: "Kilitlemek için bir izin belirtin!"
+    unlock_all: "Bu Sohbetten <b>tüm</b> izin kilidi açıldı!"
+    unlocked_perm: "Bu Sohbet için <b>{uperm}</b> numaralı kilidi açıldır."
+    unlocks_perm.sp_perm: "Kilidi açmak için bir izin belirtin!"
+    view_perm: |-
+      CHAT PERMISSIONS:
+
+      <b>Send Messages:</b> {vmsg}
+      <b>Send Media:</b> {vmedia}
+      <b>Send Stickers:</b> {vstickers}
+      <b>Send Animations:</b> {vanimations}
+      <b>Can Play Games:</b> {vgames}
+      <b>Can Use Inline Bots:</b> {vinlinebots}
+      <b>Webpage Preview:</b> {vwebprev}
+      <b>Send Polls:</b> {vpolls}
+      <b>Change Info:</b> {vinfo}
+      <b>Invite Users:</b> {vinvite}
+      <b>Pin Messages:</b> {vpin}
+  pin:
+    no_pin_msg: "Sabitlemek istediğiniz bir iletiyi yanıtlayın ..."
+    no_rights_pin: "Mesaj atmaya yetecek kadar haklarım yok."
+    no_rights_unpin: "Mesajlarımı kaldırmak için yeterli hakkım yok."
+    pinned_msg: "Sabitlenmiş mesaj!"
+    reply_to_unpin: "İğne açmak için bir iletiyi yanıtlamak için ne yapmak istiyorsunuz?"
+    unpinned_all_msg: "Bu sohbetteki tüm iletiler sabitlendi."
+    unpinned_last_msg: "Son ileti kaldırıldı."
+  purge:
+    deleting: "Bu işe yaramaz mesajları yakıp kül et."
+    err_basic: "Temel bir gruptaki iletiler temizlenemez"
+    old_msg_err: "Tüm iletiler silinemiyor. İletiler çok eski olabilir, silme haklarım olmayabilir ya da bu bir üst grup olmayabilir."
+    purge_msg_count: "Silinen <i>{msg_count}</i> ileti"
+    what_del: "Ne silmek istiyorsun?"
+  rules:
+    priv_rules:
+      no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
+      turned_on: "Özel Kurallar <b>,</b> numaralı sohbet için </b> numaralı <b>{chat_name}</b> numaralı telefonlardan çevrildi."
+      turned_off: "Özel Kurallar <b>off</b> , sohbet için </b>, <b>{chat_name}</b> olarak çevrildi."
+      current_preference: "Bu sohbetteki Özel kurallar için geçerli Tercih: <b>{current_option}</b>"
+    clear_rules: "Kuralları temizlemek istediğinizden emin misiniz?"
+    cleared: "Bu gruba ilişkin kurallar başarıyla temizlendi!"
+    get_rules: |-
+      <b>{chat}kuralları için kurallar:</b>
+
+      {rules}
+    no_rules: "Bu gruba ilişkin Admins kuralları ayarlanmadı!"
+    pm_me: "Önce bana yardım et, sonra da kuralları getir!"
+    sent_pm_rules: "Sana kuralları ben yolladım."
+    set_rules: "Bu grup için kurallar başarıyla ayarlandı."
+  start:
+    add_chat_btn: "Sohbete ekle"
+    commands_btn: Komutlar
+    group: "Hayattayım: 3"
+    info_page: |-
+      @Alita_Robot
+
+      <b>Sürüm:</b> <i>{version}</i>
+
+      <b>Geliştiriciler:</b> [Divkix](https: //github.com/Divkix)
+      <b>Sahip:</b> [{Owner}] (tg://user?id={ID})
+    infos_btn: Bilgi
+    language_btn: Dil
+    pm_for_help: "Olası komutların listesini almak için Koruyucu Bakımda benimle iletişim kurun."
+    private: "Merhaba! Ben Alita_Robot. İşlevlerim hakkında daha fazla bilgi almak için aşağıdaki düğmeleri tıklatın."
+    public_help: "Press the button below to get help for <i>{help_option}</i>"
+    source_code: "Kaynak Kodu"
+  utils:
+    gif_id:
+      reply_gif: "Lütfen tanıtıcısını almak için bir gif yanıtlayın."
+    id:
+      group_id: "Bu Grup Tanıtıcısı: <code>{group_id}</code>"
+      id_main: |-
+        Özgün Gönderen- {orig_sender} (<code>{orig_id}</code>)
+        Forwarder- {fwd_sender} (<code>{fwd_id}</code>)
+      my_id: "Kimliğiniz <code>{my_id}</code> 'dir."
+    no_user_db: |-
+      Kullanıcı
+      Eşdüzey kimliği geçersiz, bu kullanıcıyı daha önce herhangi bir yerde görmedim, belki kullanıcı adı bunları bilmeye yardımcı olur!
+    paste:
+      nekobin_btn: NekoBin
+      pasted_nekobin: "Nekobin 'e yapıştırıldı!"
+      pasting: Yapıştırıyor ...
+    ping:
+      pinging: Ping ...
+    song:
+      no_lyrics_found: "O şarkı için şarkı sözü bile bulamadım!"
+      no_song_given: "Hangi şarkıyı aradığınızı belirtmemişsin!"
+      searching: "<code>{song_name}<code> için şarkı sözleri bulma ..."
+      song_not_found: "Şarkı bulunamadı!"
+    translate:
+      translate_usage: "Kullanım: /tr <language> çeviri için metin (bir iletiye yanıt olarak da kullanılabilir)."
+      translating: Çeviri ...
+      translation: |-
+        <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
+        <b>Translation:</b> <code>{translation}</code>
+    user_info:
+      custom_title: |-
+
+
+        Bu kullanıcı, <b>{custom_title}</b> unvanı burada tutar.
+      getting_info: "Kullanıcı bilgileri alınıyor ..."
+      info_text:
+        last_name: |-
+
+          <b>Son Ad:</b> {user_lname}
+        main: |-
+          <b>Özellikler:</b>
+          <b>Kimlik:</b> <code>{user_id}</code>
+          <b>İlk Ad:</b> {user_name}
+        perma_link: |-
+
+          "<b>Kalıcı Kullanıcı Bağlantısı:</b> {perma_link}"
+        username: |-
+
+          "<b>Kullanıcı adı:</b> @{username}"
+      support_user:
+        dev: |-
+
+
+          Bu üye, geliştiricilerimden biri ⚡️
+        owner: |-
+
+
+          Bu kişi benim sahibidir, onlara karşı hiçbir şey yapmam!
+        sudo: |-
+
+
+          Bu kullanıcı benim Sudos 'larımdan biri, sahip olduğu yaklaşık olarak aynı güce sahip!
+        whitelist: |-
+
+
+          Bu kişi 'Whitelist User' (Kullanıcı), yasaklanamaz!
+    weebify:
+      weebified_string: |-
+        <b>Weebified String:</b>
+        {string}
+      weebify_what: "Weebisy 'e ne yapmam gerekiyor?"
