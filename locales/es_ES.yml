@@ -86,7 +86,7 @@ strings:
         ¡Usted ha sido añadido a mi lista de prohibición global!
         <b>Razón:</b> <code>{gban_reason}</code>
 
-        Chat de apelación: @{SUPPORT_GROUP}
+        <b>Chat de apelación:</b> @{SUPPORT_GROUP}
     here_gbanned_start: "¡Aquí están todos los géys prohibidos a nivel mundial!\n"
     none_gbanned: "¡No hay usuarios con gbanned ...!"
     num_gbans: "Número de personas prohibidas: <code>{count}</code>"
@@ -110,7 +110,7 @@ strings:
       Para no ser prohibido, apelación en @{SUPPORT_GROUP}
   blacklist:
     action_get: "La acción actual para listas negras en este chat es <i><b>{action}</b></i>"
-    action_set: "Establecer la acción de la lista negra para esto en {action}"
+    action_set: "Establecer acción para la lista negra para esto a <b>{action}</b>"
     added_blacklist: "Añadido <b>{trigger}</b> en palabras negras!"
     curr_blacklist_initial: "Palabras actuales de Blacklisten en <b>{chat_title}</b>:\n"
     no_bl_found: "No blacklist <b>{bl_word}</b> found!"
@@ -132,14 +132,14 @@ strings:
       chats_in_db: "Aquí está la lista de chats en mi base de datos."
       exporting: "Exportando Charlist ..."
       header: |
-        Lista de chats.
+        Lista de chats en mi base de datos.
 
-        Nombre del chat | ID de chat | Los miembros cuentan
+        <b>Nombre de conversación | ID de conversación | Número de miembros</b>
     execute_cmd_err: "¡Ejecute el código correctamente!"
     flush_redis:
       flush_failed: |-
         No se ha podido vaciar la base de datos redis!
-        Error: {ef}
+        <b>Error:</b> {ef}
       flushed_redis: "¡Redis limpiado con éxito!"
       flushing_redis: "Vaciado de la base de datos de Redis ..."
     restarting: Reiniciando ...
@@ -173,24 +173,24 @@ strings:
     some_error: |-
       Se ha producido algún error, informe a @{SUPPORT_GROUP}
 
-      Error: {ef}
+      <b>Error:</b> {ef}
     something_wrong: "¡Algo salió mal!"
   langs:
     changed: "Idioma cambiado a <code>{lang_code}</code>"
     changelang: "Aquí puede cambiar el idioma del bot."
     correct_usage: |-
-      Uso Correcto:
-      /lang o /setlang código de idioma
+      <b>Uso correcto:</b>
+      /lang o /setlang-código de idioma
   locks:
     check_perm_msg: "Comprobando los permisos de chat ..."
     invalid_lock: |-
       ¡Tipo de bloqueo no válido!
 
       Utilice /locktypes para obtener los tipos de bloqueo
-    lock_all: "¡Bloqueado todos los permisos de este chat!"
+    lock_all: "Bloqueado <b>todos los permisos</b> de este Chat!"
     locked_perm: "Bloqueado <b>{perm}</b> para este Chat."
     locks_perm_sp: "¡Especifique un permiso para bloquear!"
-    unlock_all: "¡Desbloqueó todos los permisos de este chat!"
+    unlock_all: "¡Desbloqueado <b>todos los permisos</b> de este Chat!"
     unlocked_perm: "Desbloqueado <b>{uperm}</b> para este Chat."
     unlocks_perm.sp_perm: "¡Especifique un permiso para desbloquear!"
     view_perm: |-
@@ -219,14 +219,14 @@ strings:
     deleting: "Incinerando estos mensajes inútiles ..."
     err_basic: "No se pueden depurar mensajes en un grupo básico"
     old_msg_err: "No se pueden borrar todos los mensajes. Es posible que los mensajes sean demasiado antiguos, que no tenga derechos de eliminación o que este no sea un supergrupo."
-    purge_msg_count: "Mensajes {msg_count} eliminados"
+    purge_msg_count: "Mensajes suprimidos <i>{msg_count}</i>"
     what_del: "¿Qué quieres borrar?"
   rules:
     priv_rules:
       no_option: "Opción no válida, elija entre <code>el</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
       turned_on: "Las reglas privadas se han convertido en <b>en</b> para el chat <b>{chat_name}</b>"
       turned_off: "Las reglas privadas se han convertido en <b>de</b> para el chat <b>{chat_name}</b>"
-      current_preference: "La preferencia actual para las reglas privadas en esta conversación es: {current_option}"
+      current_preference: "La preferencia actual para las reglas privadas en este chat es: <b>{current_option}</b>"
     clear_rules: "¿Estás seguro de que quieres aclarar las reglas?"
     cleared: "¡Reglas completas para este grupo!"
     get_rules: |-
@@ -275,14 +275,14 @@ strings:
     song:
       no_lyrics_found: "¡No se pudo encontrar la letra de esa canción!"
       no_song_given: "¡No has especificado qué canción buscar!"
-      searching: "Buscando letra de {song_name} ..."
+      searching: "Buscando letras para <code>{song_name}<code>..."
       song_not_found: "¡Canción no encontrada!"
     translate:
       translate_usage: "Uso: /tr <idioma> texto para traducción (también se puede usar en respuesta a un mensaje)."
       translating: Traductorio...
       translation: |-
-        <b>Idioma:</b> {from_lang} -> {to_lang}
-        Traducción: <code>{translation}</code>
+        <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
+        <b>Translation:</b> <code>{translation}</code>
     user_info:
       custom_title: |-
 
@@ -299,10 +299,10 @@ strings:
           <b>Nombre:</b> {user_name}
         perma_link: |-
 
-          Enlace de usuario permanente: {perma_link}
+          "<b>Enlace de usuario permanente:</b> {perma_link}"
         username: |-
 
-          Nombre de usuario: @{username}
+          "<b>Nombre de usuario:</b> @{username}"
       support_user:
         dev: |-
 
