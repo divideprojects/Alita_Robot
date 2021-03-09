@@ -39,9 +39,14 @@ class Langs:
             chat_type = "user"
         return chat_type
 
-    def set_lang(self, chat_id: int, lang: str = "en"):
-        global LANG_DATA
+    def set_lang(self, chat_id: int, lang=None):
         with INSERTION_LOCK:
+
+            if lang is None:
+                lang = "en"
+
+            global LANG_DATA
+
             chat_type = self.get_chat_type(chat_id)
 
             if chat_id in [LANG_DATA.keys()]:
@@ -65,9 +70,8 @@ class Langs:
             )
 
     def get_lang(self, chat_id: int):
-        global LANG_DATA
-
         with INSERTION_LOCK:
+            global LANG_DATA
             chat_type = self.get_chat_type(chat_id)
 
             try:
