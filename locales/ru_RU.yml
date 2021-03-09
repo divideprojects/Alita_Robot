@@ -287,18 +287,36 @@ strings:
       custom_title: "This user holds the title <b>{custom_title}</b> here."
       getting_info: "Получение информации о пользователе ..."
       info_text:
-        last_name: <b>Last Name:</b> {user_lname}
+        last_name: |-
+
+          <b>Last Name:</b> {user_lname}
         main: |-
           <b>Характеристики:</b>
           <b>ИД:</b> <code>{user_id}</code>
           <b>Имя:</b> {user_name}
-        perma_link: "<b>Permanent User Link:</b> {perma_link}"
-        username: "<b>Username:</b> @{username}"
+        perma_link: |-
+
+          <b>Permanent User Link:</b> {perma_link}
+        username: |-
+
+          <b>Username:</b> @{username}
       support_user:
-        dev: "This member is one of my Developers ⚡️"
-        owner: "This person is my Owner, I would never do anything against them!"
-        sudo: "This user is one of my Sudos, he has powers which are approximately same to owner!"
-        whitelist: "This person is 'Whitelist User', they cannot be banned!"
+        dev: |-
+
+
+          This member is one of my Developers ⚡️
+        owner: |-
+
+
+          This person is my Owner, I would never do anything against them!
+        sudo: |-
+
+
+          This user is one of my Sudos, he has powers which are approximately same to owner!
+        whitelist: |-
+
+
+          This person is 'Whitelist User', they cannot be banned!
     weebify:
       weebified_string: |-
         <b>Неочищенная строка:</b>
