@@ -69,8 +69,8 @@ strings:
         Saranno ora vietati in tutti i gruppi dove sono admin!
       enter_reason: "Si prega di inserire un motivo per gagliare l'utente!"
       how_to: |-
-        <b>Come gagliare?</b>
-        <b>Risposta:</b> € /gban user_id motivo `
+        <b>How to gban?</b>
+        <b>Answer:</b> <code>/gban user_id reason</code>
       log_msg: |-
         #GBAN
         <b>Originated from:</b> {chat_id}
@@ -81,12 +81,12 @@ strings:
       not_self: |-
         Non puoi gridare a me nigga!
         Nice Prova ...!
-      updated_reason: "Motivo Gban aggiornato a: `{gban_reason}`."
+      updated_reason: "Updated Gban reason to: <code>{gban_reason}</code>."
       user_added_to_watch: |-
-        Sei stato aggiunto alla mia lista di bando globale!
-        Reason: `{gban_reason}`
+        You have been added to my global ban list!
+        Reason: <code>{gban_reason}</code>
 
-        Appello Chat: @{SUPPORT_GROUP}
+        Appeal Chat: @{SUPPORT_GROUP}
     here_gbanned_start: "Ecco tutte le geie globalmente vietate!\n"
     none_gbanned: "Non ci sono utenti gvietati ...!"
     num_gbans: "Numero di persone gvietate {count}"
