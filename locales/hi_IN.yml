@@ -70,7 +70,7 @@ strings:
       enter_reason: "ग्बान उपयोगकर्ता के लिए एक कारण दर्ज करें!"
       how_to: |-
         <b>How to gban?</b>
-        <b>Answer:</b> `/gban user_id reason`
+        <b>Answer:</b> <code>/gban user_id reason</code>
       log_msg: |-
         #GBAN
         <b>Originated from:</b> {chat_id}
@@ -81,10 +81,10 @@ strings:
       not_self: |-
         You can't gban me nigga!
         Nice Try...!
-      updated_reason: "Updated Gban reason to: `{gban_reason}`."
+      updated_reason: "Updated Gban reason to: <code>{gban_reason}</code>."
       user_added_to_watch: |-
         You have been added to my global ban list!
-        Reason: `{gban_reason}`
+        Reason: <code>{gban_reason}</code>
 
         Appeal Chat: @{SUPPORT_GROUP}
     here_gbanned_start: "Here are all the globally banned geys!\n"
