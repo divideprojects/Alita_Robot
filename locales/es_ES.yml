@@ -223,10 +223,10 @@ strings:
     what_del: "¿Qué quieres borrar?"
   rules:
     priv_rules:
-      no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
-      turned_on: "Private Rules have been turned <b>on</b> for chat <b>{chat_name}</b>"
-      turned_off: "Private Rules have been turned <b>off</b> for chat <b>{chat_name}</b>"
-      current_preference: "Current Preference for Private rules in this chat is: {current_option}"
+      no_option: "Opción no válida, elija entre <code>el</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
+      turned_on: "Las reglas privadas se han convertido en <b>en</b> para el chat <b>{chat_name}</b>"
+      turned_off: "Las reglas privadas se han convertido en <b>de</b> para el chat <b>{chat_name}</b>"
+      current_preference: "La preferencia actual para las reglas privadas en esta conversación es: {current_option}"
     clear_rules: "¿Estás seguro de que quieres aclarar las reglas?"
     cleared: "¡Reglas completas para este grupo!"
     get_rules: |-
