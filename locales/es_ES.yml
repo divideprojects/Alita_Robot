@@ -1,7 +1,7 @@
 ---
 main:
-  lang_sample: Españo
-  language_flag: 🇪🇸
+  lang_sample: "Españo"
+  language_flag: '🇪🇸'
   language_name: Spanish
 strings:
   admin:
@@ -162,9 +162,9 @@ strings:
       ¡Hola! Mi nombre es Alita.
       ¡Estoy aquí para ayudarlo a administrar sus grupos!
       Comandos disponibles:
-       × /start: inicia el bot
-       × /ayuda: Te doy este mensaje.
-       × /donate: ¡Información relacionada con cómo donar!
+      × /start: inicia el bot
+      × /help: Te doy este mensaje.
+      × /donate: ¡Información relacionada con cómo donar!
 
       Todos los comandos se pueden usar con / o!.
     no_admin_cmd_perm: "¡No puede usar un comando de administrador!"
@@ -180,13 +180,13 @@ strings:
     changelang: "Aquí puede cambiar el idioma del bot."
     correct_usage: |-
       Uso Correcto:
-      / lang o / setlang código de idioma
+      /lang o /setlang código de idioma
   locks:
     check_perm_msg: "Comprobando los permisos de chat ..."
     invalid_lock: |-
       ¡Tipo de bloqueo no válido!
 
-      Utilice / locktypes para obtener los tipos de bloqueo
+      Utilice /locktypes para obtener los tipos de bloqueo
     lock_all: "¡Bloqueado todos los permisos de este chat!"
     locked_perm: "Bloqueado {perm} para este chat."
     locks_perm_sp: "¡Especifique un permiso para bloquear!"
@@ -241,8 +241,8 @@ strings:
 
       Versión: {version}
 
-      Desarrolladores: [Divkix] (https://github.com/Divkix)
-      Propietario: [{Owner}] (tg://user?Id={ID})
+      Desarrolladores: [Divkix](https://github.com/Divkix)
+      Propietario: [{Owner}](tg://user?Id={ID})
     infos_btn: Info
     language_btn: Idioma
     pm_for_help: "Contácteme en PM para obtener la lista de posibles comandos."
@@ -273,7 +273,7 @@ strings:
       searching: "Buscando letra de {song_name} ..."
       song_not_found: "¡Canción no encontrada!"
     translate:
-      translate_usage: "Uso: / tr <idioma> texto para traducción (también se puede usar en respuesta a un mensaje)."
+      translate_usage: "Uso: /tr <idioma> texto para traducción (también se puede usar en respuesta a un mensaje)."
       translating: Traductorio...
       translation: |-
         Idioma: {from_lang} -> {to_lang}
@@ -282,39 +282,39 @@ strings:
       custom_title: |-
 
 
-                  Este usuario tiene el título {custom_title} aquí.
+        Este usuario tiene el título {custom_title} aquí.
       getting_info: "Obteniendo información de usuario ..."
       info_text:
         last_name: |-
 
-                      Apellido: {user_lname}
+          Apellido: {user_lname}
         main: |-
           Caracteristicas:
           ID: {user_id}
           Primer nombre Nombre de usuario}
         perma_link: |-
 
-                      Enlace de usuario permanente: {perma_link}
+          Enlace de usuario permanente: {perma_link}
         username: |-
 
-                      Nombre de usuario: @{username}
+          Nombre de usuario: @{username}
       support_user:
         dev: |-
 
 
-                      Este miembro es uno de mis desarrolladores ⚡️
+          Este miembro es uno de mis desarrolladores ⚡️
         owner: |-
 
 
-                      Esta persona es mi Dueña, ¡nunca haría nada en su contra!
+          Esta persona es mi Dueña, ¡nunca haría nada en su contra!
         sudo: |-
 
 
-                      El nivel de poder de esta persona es 'Sudo'
+          El nivel de poder de esta persona es 'Sudo'
         whitelist: |-
 
 
-                      Esta persona es 'Usuario de la lista blanca', ¡no puede ser baneado!
+          Esta persona es 'Usuario de la lista blanca', ¡no puede ser baneado!
     weebify:
       weebified_string: |-
         Cuerda Weebified:
