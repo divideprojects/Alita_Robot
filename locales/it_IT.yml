@@ -86,7 +86,7 @@ strings:
         Sei stato aggiunto alla mia lista di bando globale!
         <b>Reason:</b> <code>{gban_reason}</code>
 
-        Appello Chat: @{SUPPORT_GROUP}
+        <b>Appello Chat:</b> @{SUPPORT_GROUP}
     here_gbanned_start: "Ecco tutte le geie globalmente vietate!\n"
     none_gbanned: "Non ci sono utenti gvietati ...!"
     num_gbans: "Numero di persone vietate: <code>{count}</code>"
@@ -110,7 +110,7 @@ strings:
       Per non essere vietato, appello a @{SUPPORT_GROUP}
   blacklist:
     action_get: "L'azione attuale per le blacklist in questa chat è <i><b>{action}</b></i>"
-    action_set: "Imposta azione per la lista nera per questo a {action}"
+    action_set: "Set action per la lista nera per questo a <b>{action}</b>"
     added_blacklist: "Aggiunto <b>{trigger}</b> in parole blacklist!"
     curr_blacklist_initial: "Attuali parole Blackelencate nel <b>{chat_title}</b>:\n"
     no_bl_found: "Nessun blacklist <b>{bl_word}</b> trovato!"
@@ -132,14 +132,14 @@ strings:
       chats_in_db: "Ecco la lista delle chat nel mio Database."
       exporting: "Esportazione Charlist ..."
       header: |
-        Elenco delle conversazioni.
+        Elenco delle chat nel mio database.
 
-        Nome della chat | Chat ID | I membri contano
+        <b>Nome Chat | Chat ID | Membri count</b>
     execute_cmd_err: "Eseguire correttamente il codice!"
     flush_redis:
       flush_failed: |-
         Impossibile flush database redis!
-        Errore: {ef}
+        <b>Errore:</b> {ef}
       flushed_redis: "Risciacquo Redis con successo!"
       flushing_redis: "Flushing Redis Database ..."
     restarting: Riavvio ...
@@ -173,13 +173,13 @@ strings:
     some_error: |-
       Qualche errore si è verificato, report a @{SUPPORT_GROUP}
 
-      Errore: {ef}
+      <b>Errore:</b> {ef}
     something_wrong: "Qualcosa è andato storto!"
   langs:
     changed: "Lingua cambiata a <code>{lang_code}</code>"
     changelang: "Qui puoi cambiare lingua per il bot."
     correct_usage: |-
-      Utilizzo corretto:
+      <b>Corso di utilizzo:</b>
       /lang o /setlang lingua - codice
   locks:
     check_perm_msg: "Verifica Permessi Chat ..."
@@ -187,26 +187,26 @@ strings:
       Tipo di blocco non valido!
 
       Usa /locktypes per ottenere i tipi di blocco.
-    lock_all: "Bloccato tutto il permesso da questo Chat!"
+    lock_all: "Bloccato <b>tutte le</b> autorizzazioni da questo Chat!"
     locked_perm: "Bloccato <b>{perm}</b> per questo Chat."
     locks_perm_sp: "Specifica un'autorizzazione per bloccare!"
-    unlock_all: "Sbloccato tutto il permesso da questo Chat!"
+    unlock_all: "Sbloccato <b>tutte le</b> autorizzazioni da questo Chat!"
     unlocked_perm: "Sbloccato <b>{uperm}</b> per questo Chat."
     unlocks_perm.sp_perm: "Specifica un'autorizzazione per bloccare!"
     view_perm: |-
-      CHAT PERMISSIONS:
+      AUTORIZZAZIONI CHAT:
 
-      <b>Send Messages:</b> {vmsg}
-      <b>Send Media:</b> {vmedia}
-      <b>Send Stickers:</b> {vstickers}
-      <b>Send Animations:</b> {vanimations}
-      <b>Can Play Games:</b> {vgames}
-      <b>Can Use Inline Bots:</b> {vinlinebots}
-      <b>Webpage Preview:</b> {vwebprev}
-      <b>Send Polls:</b> {vpolls}
-      <b>Change Info:</b> {vinfo}
-      <b>Invite Users:</b> {vinvite}
-      <b>Pin Messages:</b> {vpin}
+      <b>📩 Invia messaggi:</b> {vmsg}
+      <b>🎭 Invia contenuti multimediali:</b> {vmedia}
+      <b>🎴 Invia adesivi:</b> {vstickers}
+      <b>🎲 Invia animazioni:</b> {vanimations}
+      <b>🎮 Può giocare:</b> {vgames}
+      <b>🤖 Può utilizzare bot in linea:</b> {vinlinebots}
+      <b>🌐 Anteprima della pagina web:</b> {vwebprev}
+      <b>🗳 Invia sondaggi:</b> {vpolls}
+      <b>ℹ Modifica informazioni:</b> {vinfo}
+      <b>👥 Invita utenti:</b> {vinvite}
+      <b>📌 Blocca messaggi:</b> {vpin}
   pin:
     no_pin_msg: "Rispondi a un messaggio a cui vuoi pin ..."
     no_rights_pin: "Non ho abbastanza diritti per pin i messaggi."
@@ -219,14 +219,14 @@ strings:
     deleting: "Incenerendo questi messaggi inutili..."
     err_basic: "Impossibile eliminare i messaggi in un gruppo di base"
     old_msg_err: "Impossibile eliminare tutti i messaggi. I messaggi potrebbero essere troppo vecchi, potrei non disporre dei diritti di eliminazione o questo potrebbe non essere un supergruppo."
-    purge_msg_count: "Messaggi {msg_count} eliminati"
+    purge_msg_count: "Cancellati <i>{msg_count}</i> messaggi"
     what_del: "Cosa vuoi eliminare?"
   rules:
     priv_rules:
       no_option: "Opzione non valida, scegliere da <code>su</code>, <code>sì</code>, <code>di sconto</code>, <code>no</code>"
       turned_on: "Le regole private sono state girate <b>su</b> per la chat <b>{chat_name}</b>"
       turned_off: "Le regole private sono state girate <b>di sconto</b> per la chat <b>{chat_name}</b>"
-      current_preference: "Current Preferenze per le regole private in questa chat è: {current_option}"
+      current_preference: "Current Preferenze per le regole private in questa chat è: <b>{current_option}</b>"
     clear_rules: "Sei sicuro di voler regole chiare?"
     cleared: "Regole cancellate con successo per questo gruppo!"
     get_rules: |-
@@ -275,14 +275,14 @@ strings:
     song:
       no_lyrics_found: "Impossibile trovare testi per quella canzone!"
       no_song_given: "Non hai specificato quale canzone cercare!"
-      searching: "Trovare testi per {song_name}..."
+      searching: "Trovare testi per <code>{song_name}<code>..."
       song_not_found: "Canzone non trovata!"
     translate:
       translate_usage: "Utilizzo: /tr <language> testo per la traduzione (Può essere utilizzato anche in risposta a un messaggio)."
       translating: Tradurre...
       translation: |-
-        <b>Lingua:</b> {from_lang} -> {to_lang}
-        Traduzione: <code>{translation}</code>
+        <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
+        <b>Translation:</b> <code>{translation}</code>
     user_info:
       custom_title: |-
 
@@ -299,10 +299,10 @@ strings:
           <b>Primo Nome:</b> {user_name}
         perma_link: |-
 
-          Link utente permanente: {perma_link}
+          "<b>Link utente permanente:</b> {perma_link}"
         username: |-
 
-          Username: @{username}
+          "<b>Username:</b> @{username}"
       support_user:
         dev: |-
 
