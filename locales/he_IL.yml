@@ -223,10 +223,10 @@ strings:
     what_del: "מה אתה רוצה למחוק?"
   rules:
     priv_rules:
-      no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
-      turned_on: "Private Rules have been turned <b>on</b> for chat <b>{chat_name}</b>"
-      turned_off: "Private Rules have been turned <b>off</b> for chat <b>{chat_name}</b>"
-      current_preference: "Current Preference for Private rules in this chat is: {current_option}"
+      no_option: "אפשרות זו אינה חוקית, בחרו מ- <code>על</code>, <code>כן</code>, <code>את</code>, <code>ללא</code>"
+      turned_on: "כללים פרטיים הפכו <b>על</b> עבור צ ' אט <b>{chat_name}</b>"
+      turned_off: "כללים פרטיים הפכו <b>את</b> עבור צ ' אט <b>{chat_name}</b>"
+      current_preference: "העדפה נוכחית עבור כללים פרטיים בצ ' אט זה היא: {current_option}"
     clear_rules: "אתם בטוחים שברצונכם לנקות את הכללים?"
     cleared: "הכללים נוקינו בהצלחה עבור קבוצה זו!"
     get_rules: |-
