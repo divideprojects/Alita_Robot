@@ -51,9 +51,9 @@ for locale in ENABLED_LOCALES:
 lang_dict = cache_localizations(lang_files)
 
 
-def get_from_dict(list_data, my_lang_dict=lang_dict):
+def get_from_dict(list_data):
     """Get data from list of keys."""
-    return reduce(getitem, list_data, my_lang_dict)
+    return reduce(getitem, list_data, lang_dict)
 
 
 def tlang(m, user_msg):
