@@ -284,42 +284,21 @@ strings:
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
-      custom_title: |-
-
-
-        Ten użytkownik posiada w tym miejscu tytuł <b>{custom_title}</b>.
+      custom_title: "This user holds the title <b>{custom_title}</b> here."
       getting_info: "Pobieranie informacji o użytkowniku ..."
       info_text:
-        last_name: |-
-
-          <b>Ostatnia nazwa:</b> {user_lname}
+        last_name: <b>Last Name:</b> {user_lname}
         main: |-
           <b>Charakterystyka:</b>
           <b>ID:</b> <code>{user_id}</code>Imię:
           <b>Imię:</b> {user_name}
-        perma_link: |-
-
-          "<b>Stały Użytkownik Link:</b> {perma_link}"
-        username: |-
-
-          "<b>Nazwa użytkownika:</b> @{username}"
+        perma_link: "<b>Permanent User Link:</b> {perma_link}"
+        username: "<b>Username:</b> @{username}"
       support_user:
-        dev: |-
-
-
-          Ten element jest jednym z moich programistów ⚡️
-        owner: |-
-
-
-          Ta osoba jest moim właścicielem, nigdy nie zrobiłbym nic przeciwko nim!
-        sudo: |-
-
-
-          Ten użytkownik jest jednym z moich Sudos, posiada uprawnienia, które są w przybliżeniu takie same dla właściciela!
-        whitelist: |-
-
-
-          Ta osoba to 'Whitelist User', nie mogą być zakazane!
+        dev: "This member is one of my Developers ⚡️"
+        owner: "This person is my Owner, I would never do anything against them!"
+        sudo: "This user is one of my Sudos, he has powers which are approximately same to owner!"
+        whitelist: "This person is 'Whitelist User', they cannot be banned!"
     weebify:
       weebified_string: |-
         <b>Weebifikowany Łańcuch:</b>
