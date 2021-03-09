@@ -1,7 +1,7 @@
 ---
 main:
   lang_sample: "US Anglais"
-  language_flag: '🇺🇸'
+  language_flag: "🇺🇸"
   language_name: Anglais
 strings:
   admin:
@@ -12,7 +12,7 @@ strings:
       reloaded_admins: "Tous les administrateurs de ce chat ont été rechargés!"
       use_admin_cache: "Utilisez /admincache pour recharger les administrateurs !"
     ban:
-      admin_cannot_ban: "Cet utilisateur est un administrateur, je ne peux pas le bannir !\""
+      admin_cannot_ban: 'Cet utilisateur est un administrateur, je ne peux pas le bannir !"'
       ban_all: "Êtes-vous sûr de vouloir bannir tous les membres de ce groupe ?"
       banned_user: "{admin} a banni {banned} dans le chat {chat_title}!"
       banning_all: "Bannir tous les membres..."
@@ -25,12 +25,12 @@ strings:
       Lien d'invitation pour le chat {chat_name}:
       {link}
     kick:
-      admin_cannot_kick: "Cet utilisateur est un administrateur, je ne peux pas l'expulser!"
+      admin_cannot_kick: 'Cet utilisateur est un administrateur, je ne peux pas l''expulser!'
       bot_no_right: "Je n'ai pas assez de droits pour expulser cet utilisateur."
       kicked_user: "{admin} a expulsé {kicked} dans le chat {chat_title}!"
       owner_cannot_kick: "Cette personne a créé le groupe, comment puis-je les expulser?"
     mute:
-      admin_cannot_mute: "Cet utilisateur est un administrateur, je ne peux pas le rendre muet !\""
+      admin_cannot_mute: 'Cet utilisateur est un administrateur, je ne peux pas le rendre muet !"'
       bot_no_right: "Je n'ai pas assez de droits pour rendre muet cet utilisateur."
       muted_user: "{user} mis en sourdine !"
       owner_cannot_mute: "Cette personne a créé le groupe, comment puis-je les rendre muets?"
@@ -222,6 +222,11 @@ strings:
     purge_msg_count: "{msg_count} messages supprimés"
     what_del: "Que voulez-vous supprimer?"
   rules:
+    priv_rules:
+      no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
+      turned_on: "Private Rules have been turned <b>on</b> for chat <b>{chat_name}</b>"
+      turned_off: "Private Rules have been turned <b>off</b> for chat <b>{chat_name}</b>"
+      current_preference: "Current Preference for Private rules in this chat is: {current_option}"
     clear_rules: "Êtes-vous sûr de vouloir effacer les règles?"
     cleared: "Règles effacées avec succès pour ce groupe !"
     get_rules: |-
