@@ -70,7 +70,7 @@ strings:
       enter_reason: "Por favor ingrese un motivo para ser usuario de gban."
       how_to: |-
         <b> ¿Cómo gban? </b>
-        <b> Respuesta: </b> `/gban user_id reason`
+        <b> Respuesta: </b> <code>/gban user_id reason</code>
       log_msg: |-
         #GBAN
         <b> Se originó en: </b> {chat_id}
@@ -81,7 +81,7 @@ strings:
       not_self: |-
         ¡No puedes gbanme nigga!
         Buen intento...!
-      updated_reason: "Se actualizó el motivo de Gban a: `{gban_reason}`."
+      updated_reason: "Se actualizó el motivo de Gban a: <code>{gban_reason}</code>."
       user_added_to_watch: |-
         ¡Ha sido agregado a mi lista global de prohibiciones!
         Razón: "{gban_reason}"

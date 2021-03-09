@@ -47,13 +47,9 @@ def cache_localizations(files):
 # Get all translation files
 lang_files = []
 for locale in ENABLED_LOCALES:
+    locale = locale.split("_")[0]
     lang_files += glob(path.join("locales", f"{locale}.yml"))
 lang_dict = cache_localizations(lang_files)
-
-
-def get_from_dict(list_data):
-    """Get data from list of keys."""
-    return reduce(getitem, list_data, lang_dict)
 
 
 def tlang(m, user_msg):
@@ -81,4 +77,4 @@ def tlang(m, user_msg):
         if lang not in ENABLED_LOCALES:
             raise Exception("Unknown Language Code found!")
 
-        return get_from_dict(m_args)
+        return reduce(getitem, m_args, lang_dict)
