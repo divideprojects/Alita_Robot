@@ -6,7 +6,7 @@ main:
 strings:
   admin:
     adminlist:
-      adminstr: "Admins in <b>{chat_title}</b>:\n"
+      adminstr: "Администраторы в <b>{chat_title}</b>:\n"
       cached_values: "Это кэшированные значения!"
       note_updated: "Это актуальное значение!"
       reloaded_admins: "Перезагрузить все администраторы в этом чате!"
@@ -14,20 +14,20 @@ strings:
     ban:
       admin_cannot_ban: 'Этот пользователь-админ, я не могу их запретить! "'
       ban_all: "Вы действительно хотите запретить все элементы в этой группе?"
-      banned_user: "{admin} banned {banned} in chat <b>{chat_title}</b>!"
+      banned_user: "{admin} запретили {banned} в чате <b>{chat_title}</b>!"
       banning_all: "Запрет Всех Членов ..."
       bot_no_right: "У меня недостаточно прав, чтобы запретить этому пользователю."
       owner_cannot_ban: "Этот человек создал группу, как я могу их запретить?"
     demote:
       bot_no_right: "У меня недостаточно прав на понижание этого пользователя."
-      demoted_user: "{demoter} demoted {demoted} in chat <b>{chat_title}</b>!"
+      demoted_user: "{demoter} понижало {demoted} в чате <b>{chat_title}</b>!"
     invitelink: |-
-      Invite Link for Chat <b>{chat_name}</b>:
+      Пригласить ссылку для чата <b>{chat_name}</b>:
       {link}
     kick:
       admin_cannot_kick: 'Этот пользователь-админ, я не могу пинать их! "'
       bot_no_right: "У меня недостаточно прав, чтобы надрать этого пользователя."
-      kicked_user: "{admin} kicked {kicked} in chat <b>{chat_title}<b>!"
+      kicked_user: "{admin} пнул {kicked} в чате <b>{chat_title}<b>!"
       owner_cannot_kick: "Этот человек создал группу, как я могу надрать их?"
     mute:
       admin_cannot_mute: 'Этот пользователь-администратор, я не могу их отключить! "'
@@ -41,11 +41,11 @@ strings:
     promote:
       bot_no_right: "У меня недостаточно прав для продвижения этого пользователя."
       no_promote_perm: "У вас нет разрешения на продвижение членов!"
-      promoted_user: "{promoter} promoted {promoted} in chat <b>{chat_title}</b>!"
+      promoted_user: "{promoter} содействовал {promoted} в чате <b>{chat_title}</b>!"
     support_cannot_restrict: "Этот пользователь входит в состав моей службы поддержки, не может их ограничить."
     unban:
       bot_no_right: "У меня нет прав на то, чтобы запрещать этого пользователя."
-      unbanned_user: "{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
+      unbanned_user: "{admin} без запретов {unbanned} в чате <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "У меня недостаточно прав, чтобы отмутировать этого пользователя."
       unmuted_user: "Отмотано {user}!"
@@ -55,11 +55,11 @@ strings:
       Ошибка при проверке afk
       {ef}
     no_longer_afk: |-
-      {first_name} is no longer Afk!
-      Was AFK for <code>{since}</code>
-    reason: "<b>Reason:</b> {res}"
+      {first_name} больше нет Afk!
+      Был AFK для <code>{since}</code>
+    reason: "<b>Причина:</b> {res}"
     user_afk: |-
-      {first_name} is Afk!
+      {first_name} -Afk!
       <b>Since:</b> <code>{since}</code>
     user_now_afk: "Пользователь {user} сейчас аф!"
   antispam:
@@ -83,13 +83,13 @@ strings:
         Хорошая попытка...!
       updated_reason: "Обновлен Gban причина: <code>{gban_reason}</code>"
       user_added_to_watch: |-
-        You have been added to my global ban list!
-        <b>Reason:</b> <code>{gban_reason}</code>
+        Вы были добавлены в мой список глобальных запретов!
+        <b>Причина:</b> <code>{gban_reason}</code>
 
-        Appeal Chat: @{SUPPORT_GROUP}
+        Обращение чата: @{SUPPORT_GROUP}
     here_gbanned_start: "Вот и все глобально запрещенные геи!\n"
     none_gbanned: "Нет никаких запрещёных пользователей ...!"
-    num_gbans: "Number of people gbanned: <code>{count}</code>"
+    num_gbans: "Число лиц, которым запрещен въезд: <code>{count}</code>"
     part_of_support: "Этот пользователь входит в мою поддержку!"
     pass_user_id: "Передай ИД пользователя или имя пользователя в качестве аргумента!"
     ungban:
@@ -105,28 +105,28 @@ strings:
       removed_from_list: "Удалено {first_name} из списка Global Ban List."
       user_removed_from_list: "Вы были удалены из моего списка глобальных запретов!"
     watcher_banned: |-
-      This user ({user_gbanned}) has been banned globally!
+      Этот пользователь ({user_gbanned}) было запрещено глобально!
 
-      To get unbanned, appeal at @{SUPPORT_GROUP}
+      Чтобы получить незапрещенный, привлекай @{SUPPORT_GROUP}
   blacklist:
-    action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
+    action_get: "Текущее действие для черных списков в этом чате- <i><b>{action}</b></i>"
     action_set: "Задать действие для черного списка для этого значения: {action}"
-    added_blacklist: "Added <b>{trigger}</b> in blacklist words!"
-    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n"
-    no_bl_found: "No blacklist <b>{bl_word}</b> found!"
-    no_blacklist: "There are no blacklisted messages in <b>{chat_title}</b>!"
-    rm_blacklist: "Removed <b>{bl_word}</b> from blacklist words!"
+    added_blacklist: "Добавлено <b>{trigger}</b> в черном списке!"
+    curr_blacklist_initial: "Текущие слова Блэккотирующих в <b>{chat_title}</b>:\n"
+    no_bl_found: "Нет черного списка <b>{bl_word}</b> найден!"
+    no_blacklist: "Нет сообщений в черном списке в <b>{chat_title}</b>!"
+    rm_blacklist: "Удален <b>{bl_word}</b> из черного списка!"
   dev:
     alladmins:
       admins_i_know_str: |-
-        There are <b>{len_admins}</b> admins whom I know!
+        Есть <b>{len_admins}</b> админов которых я знаю!
 
         <code>{admindict}</code>
-      admins_in_cache: "There are <b>{len_admins}</b> admins in my Redis cache."
+      admins_in_cache: "В моем кэше Redis есть <b>{len_admins}</b> admins."
       alladmins_btn: "Все администраторы"
       getting_admins: "Получение всех администраторов в моем кэше ..."
     bot_ip: |-
-      <b>Bot IP Address:</b>
+      <b>IP-адрес бота:</b>
       <code>{ip}</code>
     chatlist:
       chats_in_db: "Вот список чатов в моей базе данных."
@@ -138,8 +138,8 @@ strings:
     execute_cmd_err: "Пожалуйста, выполните код правильно!"
     flush_redis:
       flush_failed: |-
-        Failed to flush redis database!
-        Error: {ef}
+        Не удалось очистить базу данных redis!
+        Ошибка: {ef}
       flushed_redis: "Сброс выполнен успешно!"
       flushing_redis: "Очистка базы данных Redis ..."
     restarting: Перезапуск ...
@@ -153,30 +153,30 @@ strings:
         <b>Download:</b> <code>{download}</code> Mbps
         <b>Upload:</b> <code>{upload}</code> Mbps
       start_speedtest: "Вычислить скорость ..."
-    uptime: "<b>Uptime:<b> <code>{uptime}</code>"
+    uptime: "<b>Время работы:<b> <code>{uptime}</code>"
   general:
     back_btn: Назад
     check_help: "Проверьте, как использовать эту команду."
     close_btn: Закрыть
     commands_available: |-
-      Hey There! My name is Alita.
-      I'm here to help you manage your groups!
-      Commands available:
-      × /start: Start the bot
-      × /help: Give's you this message.
-      × /donate: Information related about how to donate to my owner!
+      Эй! Меня зовут Алита.
+      Я здесь, чтобы помочь вам управлять группами!
+      Команды доступны:
+      × /start: Запустить бот
+      × /help: Дайте вам это сообщение.
+      × /donate: Информация, связанная с тем, как пожертвовать моему владельцу!
 
-      All commands can either be used with / or !.
+      Все команды могут быть использованы с/или!.
     no_admin_cmd_perm: "Нельзя использовать команду admin!"
     no_perm_admin: "У меня нет разрешения на это."
     no_results: "Результаты не найдены."
     some_error: |-
-      Some error occured, report to @{SUPPORT_GROUP}
+      Произошла ошибка, отчет по @{SUPPORT_GROUP}
 
-      Error: {ef}
+      Ошибка: {ef}
     something_wrong: "Что-то не так!"
   langs:
-    changed: "Language changed to <code>{lang_code}</code>"
+    changed: "Язык изменен на <code>{lang_code}</code>"
     changelang: "Здесь вы можете изменить язык для бота."
     correct_usage: |-
       Правильное использование:
@@ -188,10 +188,10 @@ strings:
 
       Используйте /locktypes для получения типов блокировок
     lock_all: "Заблокировать все разрешения из этого чата!"
-    locked_perm: "Locked <b>{perm}</b> for this Chat."
+    locked_perm: "Заблокирован <b>{perm}</b> для этого чата."
     locks_perm_sp: "Укажите разрешение на блокировку!"
     unlock_all: "Разблокировано все разрешения из этого чата!"
-    unlocked_perm: "Unlocked <b>{uperm}</b> for this Chat."
+    unlocked_perm: "Разблокировать <b>{uperm}</b> для этого чата."
     unlocks_perm.sp_perm: "Укажите разрешение на разблокирование!"
     view_perm: |-
       CHAT PERMISSIONS:
@@ -206,7 +206,7 @@ strings:
       <b>Send Polls:</b> {vpolls}
       <b>Change Info:</b> {vinfo}
       <b>Invite Users:</b> {vinvite}
-      <b> Pin Messages:</b> {vpin}
+      <b>Pin Messages:</b> {vpin}
   pin:
     no_pin_msg: "Ответить на сообщение, на которое вы хотите закрепить ..."
     no_rights_pin: "У меня недостаточно прав для закрепления сообщений."
@@ -230,7 +230,7 @@ strings:
     clear_rules: "Вы действительно хотите очистить правила?"
     cleared: "Правила для этой группы успешно очищены!"
     get_rules: |-
-      Rules for <b>{chat}:</b>
+      Правила для <b>{chat}:</b>
 
       {rules}
     no_rules: "Администраторы для этой группы не имеют правил настройки!"
@@ -242,27 +242,27 @@ strings:
     commands_btn: Команды
     group: "Я жива: 3"
     info_page: |-
-      • @Alita_Robot
+      @Alita_Robot
 
-      <b>Version:</b> <i>{version}</i>
+      <b>Версия:</b> <i>{version}</i>
 
-      <b>Developers:</b> [Divkix](https://github.com/Divkix)
-      <b>Owner:</b> [{Owner}](tg://user?id={ID})
+      <b>Разработчики:</b> [Divkix](https: //github.com/Divkix)
+      <b>Владелец:</b> [{Owner}] (tg://user?id={ID})
     infos_btn: Информация
     language_btn: Язык
     pm_for_help: "Свяжитесь со мной в ПТОиР, чтобы получить список возможных команд."
     private: "Алло! Я Алита_Робот. Чтобы узнать больше о моих функциях, нажмите на кнопки ниже."
-    public_help: "Press the button below to get help for <i>{help_option}</i>"
+    public_help: "Нажмите кнопку ниже, чтобы получить справку по <i>{help_option}</i>"
     source_code: "Исходный код"
   utils:
     gif_id:
       reply_gif: "Чтобы получить свой ID, ответьте на gif."
     id:
-      group_id: "This Groups ID is <code>{group_id}</code>"
+      group_id: "ИД групп: <code>{group_id}</code>"
       id_main: |-
-        Original Sender - {orig_sender} (<code>{orig_id}</code>)
-        Forwarder - {fwd_sender} (<code>{fwd_id}</code>)
-      my_id: "Your ID is <code>{my_id}</code>."
+        Исходный отправитель- {orig_sender} (<code>{orig_id}</code>)
+        Экспедитор- {fwd_sender} (<code>{fwd_id}</code>)
+      my_id: "Ваш ID- <code>{my_id}</code>."
     no_user_db: |-
       Не удалось получить ИД пользователя
       Равноправный ИД, я не видел этого пользователя где-либо ранее, возможно, имя пользователя поможет узнать их!
@@ -281,25 +281,25 @@ strings:
       translate_usage: "Формат: /tr <language> текст для перевода (можно также использовать в ответ на сообщение)."
       translating: Перевод ...
       translation: |-
-        <b>Language:</b> {from_lang} -> {to_lang}
-        Translation: <code>{translation}</code>
+        <b>Язык:</b> {from_lang} -> {to_lang}
+        Перевод: <code>{translation}</code>
     user_info:
       custom_title: |-
 
 
-        This user holds the title <b>{custom_title}</b> here.
+        Этот пользователь имеет заголовок <b>{custom_title}</b> здесь.
       getting_info: "Получение информации о пользователе ..."
       info_text:
         last_name: |-
 
-          <b>Last Name:</b> {user_lname}
+          <b>фамилия:</b> {user_lname}
         main: |-
-          <b>Characteristics:</b>
-          <b>ID:</b> <code>{user_id}</code>
-          <b>First Name:</b> {user_name}
+          <b>Характеристики:</b>
+          <b>ИД:</b> <code>{user_id}</code>
+          <b>Имя:</b> {user_name}
         perma_link: |-
 
-          Permanent User Link: {perma_link}
+          Постоянная ссылка на пользователя: {perma_link}
         username: |-
 
           Имя пользователя: @{username}
@@ -315,13 +315,13 @@ strings:
         sudo: |-
 
 
-          This user is one of my Sudos, he has powers which are approximately same to owner!
+          Этот пользователь-один из моих Sudos, у него есть полномочия, которые примерно одинаковы для владельца!
         whitelist: |-
 
 
           Этот пользователь 'Whitelist User' не может быть запрещен!
     weebify:
       weebified_string: |-
-        <b>Weebified String:</b>
+        <b>Неочищенная строка:</b>
         {string}
       weebify_what: "И что же мне делать?"
