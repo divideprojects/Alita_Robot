@@ -32,7 +32,7 @@ class AFK:
     def check_afk(self, user_id: int):
 
         with INSERTION_LOCK:
-            return self.collection.find_one({"user_id": user_id})
+            return self.collection.find_one({"_id": user_id})
 
     def add_afk(self, user_id: int, time: int, reason: str = ""):
         with INSERTION_LOCK:
@@ -42,7 +42,7 @@ class AFK:
                 # Remove afk if user is already AFK
                 self.remove_afk(user_id)
                 return self.collection.insert_one(
-                    {"user_id": user_id, "reason": reason, "time": time},
+                    {"_id": user_id, "reason": reason, "time": time},
                 )
 
     def remove_afk(self, user_id: int):
@@ -50,7 +50,7 @@ class AFK:
 
             if self.check_afk(user_id):
                 # If user_id in AFK_USERS, remove it
-                return self.collection.delete_one({"user_id": user_id})
+                return self.collection.delete_one({"_id": user_id})
         return
 
     def count_afk(self):

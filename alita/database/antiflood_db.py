@@ -31,7 +31,7 @@ class AntiFlood:
 
     def get_grp(self, chat_id: int):
         with INSERTION_LOCK:
-            return self.collection.find_one({"chat_id": chat_id})
+            return self.collection.find_one({"_id": chat_id})
 
     def set_status(self, chat_id: int, status: bool = False):
         with INSERTION_LOCK:
@@ -39,11 +39,11 @@ class AntiFlood:
             chat_dict = self.get_grp(chat_id)
             if chat_dict:
                 return self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {"status": status},
                 )
 
-            return self.collection.insert_one({"chat_id": chat_id, "status": status})
+            return self.collection.insert_one({"_id": chat_id, "status": status})
 
     def get_status(self, chat_id: int):
         with INSERTION_LOCK:
@@ -58,11 +58,11 @@ class AntiFlood:
             chat_dict = self.get_grp(chat_id)
             if chat_dict:
                 return self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {"max_msg": max_msg},
                 )
 
-            return self.collection.insert_one({"chat_id": chat_id, "max_msg": max_msg})
+            return self.collection.insert_one({"_id": chat_id, "max_msg": max_msg})
 
     def get_antiflood(self, chat_id: int):
         with INSERTION_LOCK:
@@ -81,11 +81,11 @@ class AntiFlood:
             if chat_dict:
 
                 return self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {"action": action},
                 )
 
-            return self.collection.insert_one({"chat_id": chat_id, "action": action})
+            return self.collection.insert_one({"_id": chat_id, "action": action})
 
     def get_action(self, chat_id: int):
         with INSERTION_LOCK:
@@ -105,10 +105,10 @@ class AntiFlood:
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
 
         with INSERTION_LOCK:
-            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            old_chat = self.collection.find_one({"_id": old_chat_id})
             if old_chat:
                 return self.collection.update(
-                    {"chat_id": old_chat_id},
-                    {"chat_id": new_chat_id},
+                    {"_id": old_chat_id},
+                    {"_id": new_chat_id},
                 )
             return

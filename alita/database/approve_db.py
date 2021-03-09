@@ -32,7 +32,7 @@ class Approve:
     def check_approve(self, chat_id: int, user_id: int):
         with INSERTION_LOCK:
             curr_approve = self.collection.find_one(
-                {"chat_id": chat_id},
+                {"_id": chat_id},
             )
             if curr_approve:
                 try:
@@ -46,28 +46,28 @@ class Approve:
 
     def add_approve(self, chat_id: int, user_id: int, user_name: str):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 users_old = curr["users"]
                 users_old.append((user_id, user_name))
                 users = list(dict.fromkeys(users_old))  # Remove duplicates
                 return self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {
-                        "chat_id": chat_id,
+                        "_id": chat_id,
                         "users": users,
                     },
                 )
             return self.collection.insert_one(
                 {
-                    "chat_id": chat_id,
+                    "_id": chat_id,
                     "users": [(user_id, user_name)],
                 },
             )
 
     def remove_approve(self, chat_id: int, user_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 users = curr["users"]
 
@@ -78,9 +78,9 @@ class Approve:
 
                 users.remove(user)
                 return self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {
-                        "chat_id": chat_id,
+                        "_id": chat_id,
                         "users": users,
                     },
                 )
@@ -89,13 +89,13 @@ class Approve:
     def unapprove_all(self, chat_id: int):
         with INSERTION_LOCK:
             return self.collection.delete_one(
-                {"chat_id": chat_id},
+                {"_id": chat_id},
             )
 
     def list_approved(self, chat_id: int):
         with INSERTION_LOCK:
-            if self.collection.find_one({"chat_id": chat_id}):
-                return (self.collection.find_one({"chat_id": chat_id}))["users"]
+            if self.collection.find_one({"_id": chat_id}):
+                return (self.collection.find_one({"_id": chat_id}))["users"]
             return []
 
     def count_all_approved(self):
@@ -115,16 +115,16 @@ class Approve:
 
     def count_approved(self, chat_id: int):
         with INSERTION_LOCK:
-            all_app = self.collection.find_one({"chat_id": chat_id})
+            all_app = self.collection.find_one({"_id": chat_id})
             return len(all_app["users"]) or 0
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            old_chat = self.collection.find_one({"_id": old_chat_id})
             if old_chat:
                 return self.collection.update(
-                    {"chat_id": old_chat_id},
-                    {"chat_id": new_chat_id},
+                    {"_id": old_chat_id},
+                    {"_id": new_chat_id},
                 )
             return

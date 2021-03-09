@@ -31,22 +31,22 @@ class Users:
 
     def update_user(self, user_id: int, name: str, username: str = None):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"user_id": user_id})
+            curr = self.collection.find_one({"_id": user_id})
             if curr:
                 return self.collection.update(
-                    {"user_id": user_id},
+                    {"_id": user_id},
                     {"username": username, "name": name},
                 )
             return self.collection.insert_one(
-                {"user_id": user_id, "username": username, "name": name},
+                {"_id": user_id, "username": username, "name": name},
             )
 
     def delete_user(self, user_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"user_id": user_id})
+            curr = self.collection.find_one({"_id": user_id})
             if curr:
                 return self.collection.delete_one(
-                    {"user_id": user_id},
+                    {"_id": user_id},
                 )
             return True
 

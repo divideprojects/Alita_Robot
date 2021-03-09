@@ -31,26 +31,26 @@ class Chats:
 
     def remove_chat(self, chat_id: int):
         with INSERTION_LOCK:
-            self.collection.delete_one({"chat_id": chat_id})
+            self.collection.delete_one({"_id": chat_id})
 
     def update_chat(self, chat_id: int, chat_name: str, user_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 users_old = curr["users"]
                 users_old.append(user_id)
                 users = list(dict.fromkeys(users_old))
                 return self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {
-                        "chat_id": chat_id,
+                        "_id": chat_id,
                         "chat_name": chat_name,
                         "users": users,
                     },
                 )
             return self.collection.insert_one(
                 {
-                    "chat_id": chat_id,
+                    "_id": chat_id,
                     "chat_name": chat_name,
                     "users": [user_id],
                 },
@@ -58,14 +58,14 @@ class Chats:
 
     def count_chat_users(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 return len(curr["users"])
             return 0
 
     def chat_members(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 return curr["users"]
             return []
@@ -79,16 +79,16 @@ class Chats:
             chats = self.collection.find_all()
             chat_list = []
             for chat in chats:
-                chat_list.append(chat["chat_id"])
+                chat_list.append(chat["_id"])
             return chat_list
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            old_chat = self.collection.find_one({"_id": old_chat_id})
             if old_chat:
                 return self.collection.update(
-                    {"chat_id": old_chat_id},
-                    {"chat_id": new_chat_id},
+                    {"_id": old_chat_id},
+                    {"_id": new_chat_id},
                 )
             return

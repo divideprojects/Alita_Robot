@@ -40,34 +40,34 @@ class Reporting:
     def set_settings(self, chat_id: int, status: bool = True):
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
-            curr_settings = (self.collection.find_one({"chat_id": chat_id}))["status"]
+            curr_settings = (self.collection.find_one({"_id": chat_id}))["status"]
             if curr_settings:
                 return self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {"status": status},
                 )
             return self.collection.insert_one(
-                {"chat_id": chat_id, "chat_type": chat_type, "status": status},
+                {"_id": chat_id, "chat_type": chat_type, "status": status},
             )
 
     def get_settings(self, chat_id: int):
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
-            curr_settings = (self.collection.find_one({"chat_id": chat_id}))["status"]
+            curr_settings = (self.collection.find_one({"_id": chat_id}))["status"]
             if curr_settings:
                 return curr_settings
             self.collection.insert_one(
-                {"chat_id": chat_id, "chat_type": chat_type, "status": True},
+                {"_id": chat_id, "chat_type": chat_type, "status": True},
             )
             return True
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            old_chat = self.collection.find_one({"_id": old_chat_id})
             if old_chat:
                 return self.collection.update(
-                    {"chat_id": old_chat_id},
-                    {"chat_id": new_chat_id},
+                    {"_id": old_chat_id},
+                    {"_id": new_chat_id},
                 )
             return

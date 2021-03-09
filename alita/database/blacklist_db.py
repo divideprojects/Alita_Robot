@@ -31,21 +31,21 @@ class Blacklist:
 
     def add_blacklist(self, chat_id: int, trigger: str):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 triggers_old = curr["triggers"]
                 triggers_old.append(trigger)
                 triggers = list(dict.fromkeys(triggers_old))
                 return self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {
-                        "chat_id": chat_id,
+                        "_id": chat_id,
                         "triggers": triggers,
                     },
                 )
             return self.collection.insert_one(
                 {
-                    "chat_id": chat_id,
+                    "_id": chat_id,
                     "triggers": [trigger],
                     "action": "none",
                 },
@@ -53,7 +53,7 @@ class Blacklist:
 
     def remove_blacklist(self, chat_id: int, trigger: str):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 triggers_old = curr["triggers"]
                 try:
@@ -62,16 +62,16 @@ class Blacklist:
                     return False
                 triggers = list(dict.fromkeys(triggers_old))
                 return self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {
-                        "chat_id": chat_id,
+                        "_id": chat_id,
                         "triggers": triggers,
                     },
                 )
 
     def get_blacklists(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 return curr["triggers"]
             return []
@@ -99,15 +99,15 @@ class Blacklist:
             if action not in ("kick", "mute", "ban", "warn", "none"):
                 return "invalid action"
 
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 return self.collection.update(
-                    {"chat_id": chat_id},
-                    {"chat_id": chat_id, "action": action},
+                    {"_id": chat_id},
+                    {"_id": chat_id, "action": action},
                 )
             return self.collection.insert_one(
                 {
-                    "chat_id": chat_id,
+                    "_id": chat_id,
                     "triggers": [],
                     "action": action,
                 },
@@ -115,12 +115,12 @@ class Blacklist:
 
     def get_action(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 return curr["action"] or "none"
             self.collection.insert_one(
                 {
-                    "chat_id": chat_id,
+                    "_id": chat_id,
                     "triggers": [],
                     "action": "none",
                 },
@@ -129,10 +129,10 @@ class Blacklist:
 
     def rm_all_blacklist(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {"triggers": []},
                 )
             return False
@@ -140,10 +140,10 @@ class Blacklist:
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            old_chat = self.collection.find_one({"_id": old_chat_id})
             if old_chat:
                 return self.collection.update(
-                    {"chat_id": old_chat_id},
-                    {"chat_id": new_chat_id},
+                    {"_id": old_chat_id},
+                    {"_id": new_chat_id},
                 )
             return

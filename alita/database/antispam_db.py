@@ -31,20 +31,20 @@ class GBan:
 
     def check_gban(self, user_id: int):
         with INSERTION_LOCK:
-            return bool(self.collection.find_one({"user_id": user_id}))
+            return bool(self.collection.find_one({"_id": user_id}))
 
     def add_gban(self, user_id: int, reason: str, by_user: int):
         with INSERTION_LOCK:
 
             # Check if  user is already gbanned or not
-            if self.collection.find_one({"user_id": user_id}):
+            if self.collection.find_one({"_id": user_id}):
                 return self.update_gban_reason(user_id, reason)
 
             # If not already gbanned, then add to gban
             time_rn = datetime.now()
             return self.collection.insert_one(
                 {
-                    "user_id": user_id,
+                    "_id": user_id,
                     "reason": reason,
                     "by": by_user,
                     "time": time_rn,
@@ -54,8 +54,8 @@ class GBan:
     def remove_gban(self, user_id: int):
         with INSERTION_LOCK:
             # Check if  user is already gbanned or not
-            if self.collection.insert_one({"user_id": user_id}):
-                return self.collection.delete_one({"user_id": user_id})
+            if self.collection.insert_one({"_id": user_id}):
+                return self.collection.delete_one({"_id": user_id})
 
             return
 
@@ -63,7 +63,7 @@ class GBan:
         with INSERTION_LOCK:
 
             return self.collection.update(
-                {"user_id": user_id},
+                {"_id": user_id},
                 {"reason": reason},
             )
 

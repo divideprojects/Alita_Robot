@@ -38,13 +38,13 @@ class Notes:
     ):
         with INSERTION_LOCK:
             curr = self.collection.find_one(
-                {"chat_id": chat_id, "note_name": note_name},
+                {"_id": chat_id, "note_name": note_name},
             )
             if curr:
                 return False
             return self.collection.insert_one(
                 {
-                    "chat_id": chat_id,
+                    "_id": chat_id,
                     "note_name": note_name,
                     "note_value": note_value,
                     "msgtype": msgtype,
@@ -55,7 +55,7 @@ class Notes:
     def get_note(self, chat_id: int, note_name: str):
         with INSERTION_LOCK:
             curr = self.collection.find_one(
-                {"chat_id": chat_id, "note_name": note_name},
+                {"_id": chat_id, "note_name": note_name},
             )
             if curr:
                 return curr
@@ -63,7 +63,7 @@ class Notes:
 
     def get_all_notes(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_all({"chat_id": chat_id})
+            curr = self.collection.find_all({"_id": chat_id})
             note_list = []
             for note in curr:
                 note_list.append(note["note_name"])
@@ -73,7 +73,7 @@ class Notes:
     def rm_note(self, chat_id: int, note_name: str):
         with INSERTION_LOCK:
             curr = self.collection.find_one(
-                {"chat_id": chat_id, "note_name": note_name},
+                {"_id": chat_id, "note_name": note_name},
             )
             if curr:
                 self.collection.delete_one(curr)
@@ -82,11 +82,11 @@ class Notes:
 
     def rm_all_notes(self, chat_id: int):
         with INSERTION_LOCK:
-            return self.collection.delete_one({"chat_id": chat_id})
+            return self.collection.delete_one({"_id": chat_id})
 
     def count_notes(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_all({"chat_id": chat_id})
+            curr = self.collection.find_all({"_id": chat_id})
             if curr:
                 return len(curr)
             return 0
@@ -96,7 +96,7 @@ class Notes:
             notes = self.collection.find_all()
             chats_ids = []
             for chat in notes:
-                chats_ids.append(chat["chat_id"])
+                chats_ids.append(chat["_id"])
             return len(list(dict.fromkeys(chats_ids)))
 
     def count_all_notes(self):
@@ -106,10 +106,10 @@ class Notes:
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            old_chat = self.collection.find_one({"_id": old_chat_id})
             if old_chat:
                 return self.collection.update(
-                    {"chat_id": old_chat_id},
-                    {"chat_id": new_chat_id},
+                    {"_id": old_chat_id},
+                    {"_id": new_chat_id},
                 )
             return

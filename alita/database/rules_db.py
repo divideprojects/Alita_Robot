@@ -31,26 +31,26 @@ class Rules:
 
     def get_rules(self, chat_id: int):
         with INSERTION_LOCK:
-            rules = self.collection.find_one({"chat_id": chat_id})
+            rules = self.collection.find_one({"_id": chat_id})
             if rules:
                 return rules["rules"]
             return None
 
     def set_rules(self, chat_id: int, rules: str):
         with INSERTION_LOCK:
-            curr_rules = self.collection.find_one({"chat_id": chat_id})
+            curr_rules = self.collection.find_one({"_id": chat_id})
             if curr_rules:
                 return self.collection.update(
-                    {"chat_id": chat_id},
+                    {"_id": chat_id},
                     {"rules": rules},
                 )
-            return self.collection.insert_one({"chat_id": chat_id, "rules": rules})
+            return self.collection.insert_one({"_id": chat_id, "rules": rules})
 
     def clear_rules(self, chat_id: int):
         with INSERTION_LOCK:
-            curr_rules = self.collection.find_one({"chat_id": chat_id})
+            curr_rules = self.collection.find_one({"_id": chat_id})
             if curr_rules:
-                return self.collection.delete_one({"chat_id": chat_id})
+                return self.collection.delete_one({"_id": chat_id})
             return
 
     def count_chats(self):
@@ -60,10 +60,10 @@ class Rules:
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-            old_chat = self.collection.find_one({"chat_id": old_chat_id})
+            old_chat = self.collection.find_one({"_id": old_chat_id})
             if old_chat:
                 return self.collection.update(
-                    {"chat_id": old_chat_id},
-                    {"chat_id": new_chat_id},
+                    {"_id": old_chat_id},
+                    {"_id": new_chat_id},
                 )
             return

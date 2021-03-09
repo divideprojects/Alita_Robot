@@ -31,49 +31,49 @@ class SpamProtect:
 
     def get_cas_status(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 stat = curr["cas"]
                 return stat
             self.collection.insert_one(
-                {"chat_id": chat_id, "cas": False, "underattack": False},
+                {"_id": chat_id, "cas": False, "underattack": False},
             )
             return False
 
     def set_cas_status(self, chat_id: int, status: bool = False):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 return self.collection.update(
-                    {"chat_id": chat_id},
-                    {"chat_id": chat_id, "cas": status},
+                    {"_id": chat_id},
+                    {"_id": chat_id, "cas": status},
                 )
             self.collection.insert_one(
-                {"chat_id": chat_id, "cas": status, "underattack": False},
+                {"_id": chat_id, "cas": status, "underattack": False},
             )
             return status
 
     def get_attack_status(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 stat = curr["underattack"]
                 return stat
             self.collection.insert_one(
-                {"chat_id": chat_id, "cas": False, "underattack": False},
+                {"_id": chat_id, "cas": False, "underattack": False},
             )
             return False
 
     def set_attack_status(self, chat_id: int, status: bool = False):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"chat_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 return self.collection.update(
-                    {"chat_id": chat_id},
-                    {"chat_id": chat_id, "underattack": status},
+                    {"_id": chat_id},
+                    {"_id": chat_id, "underattack": status},
                 )
             self.collection.insert_one(
-                {"chat_id": chat_id, "cas": False, "underattack": status},
+                {"_id": chat_id, "cas": False, "underattack": status},
             )
             return status
 
@@ -104,7 +104,7 @@ class SpamProtect:
             if curr:
                 for chat in curr:
                     if chat["cas"]:
-                        lst.append(chat["chat_id"])
+                        lst.append(chat["_id"])
             return lst
 
     def get_attack_enabled_chats(self):
@@ -114,5 +114,5 @@ class SpamProtect:
             if curr:
                 for chat in curr:
                     if chat["underattack"]:
-                        lst.append(chat["chat_id"])
+                        lst.append(chat["_id"])
             return lst
