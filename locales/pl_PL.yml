@@ -1,0 +1,327 @@
+---
+main:
+  lang_sample: "angielski (USA)"
+  language_flag: "🇺🇸"
+  language_name: Angielski
+strings:
+  admin:
+    adminlist:
+      adminstr: "Admins w {chat_title}:\n"
+      cached_values: "Są to wartości buforowane!"
+      note_updated: "Są to aktualne wartości!"
+      reloaded_admins: "Ponownie załadowano wszystkich administratorów w tej rozmowie sieciowej!"
+      use_admin_cache: "Użyj komendy /admincache, aby przeładować admins!"
+    ban:
+      admin_cannot_ban: 'Ten użytkownik jest administratorem, nie mogę ich zakazać! "'
+      ban_all: "Czy na pewno chcesz zakazać wszystkich członków tej grupy?"
+      banned_user: "{admin} zakazano {banned} w czacie {chat_title}!"
+      banning_all: "Zakazy stosowania wszystkich członków ..."
+      bot_no_right: "Nie mam wystarczających praw, by zakazać tego użytkownika."
+      owner_cannot_ban: "Ta osoba stworzyła grupę, jak mogę ich zakazać?"
+    demote:
+      bot_no_right: "Nie mam wystarczających praw do demotowania tego użytkownika."
+      demoted_user: "{demoter} demotowany {demoted} w czacie {chat_title}!"
+    invitelink: |-
+      Zaproś Link for Chat {chat_name}:
+      {link}
+    kick:
+      admin_cannot_kick: 'Ten użytkownik jest administratorem, nie mogę ich kopnąć! "'
+      bot_no_right: "Nie mam wystarczających praw, by kopnąć tego użytkownika."
+      kicked_user: "{admin} kopnął {kicked} w czacie {chat_title}!"
+      owner_cannot_kick: "Ta osoba stworzyła grupę, jak mogę je kopać?"
+    mute:
+      admin_cannot_mute: 'Ten użytkownik jest administratorem, nie mogę ich wyciszyć! "'
+      bot_no_right: "Nie mam wystarczających praw do wyciszenia tego użytkownika."
+      muted_user: "Wyciszona {user}!"
+      owner_cannot_mute: "Ta osoba stworzyła grupę, jak mogę je wyciszyć?"
+    no_invite_perm: "Nie mam pozwolenia na zaproszenie link!"
+    no_restrict_perm: "Nie masz uprawnień, aby ograniczyć liczbę członków!"
+    no_user_invite_perm: "Nie masz uprawnień do zapraszania użytkowników."
+    not_admin: "Nie jestem administratorem ani nie mam praw."
+    promote:
+      bot_no_right: "Nie mam wystarczających praw do promowania tego użytkownika."
+      no_promote_perm: "Nie masz uprawnień do awansowania członków!"
+      promoted_user: "{promoter} promował {promoted} w czacie {chat_title}!"
+    support_cannot_restrict: "Ten użytkownik jest w moim personelu wsparcia, nie może ich ograniczyć."
+    unban:
+      bot_no_right: "Nie mam wystarczających praw do odblokowania tego użytkownika."
+      unbanned_user: "{admin} niezakazane {unbanned} w czacie {chat_title}!"
+    unmute:
+      bot_no_right: "Nie mam wystarczających praw, aby anulować wyciszenie tego użytkownika."
+      unmuted_user: "Unmuted {user}!"
+    user_admin_invalid: "Nie mogę działać na tego użytkownika, może nie byłem tym, który zmienił swoje uprawnienia."
+  afk:
+    error_check_afk: |-
+      Błąd podczas sprawdzania afk
+      {ef}
+    no_longer_afk: |-
+      {first_name} nie jest już Afk!
+      Było AFK dla {since}
+    reason: "Przyczyna: {res}"
+    user_afk: |-
+      {first_name} jest Afk!
+      Od: {since}
+    user_now_afk: "Użytkownik {user} jest teraz afk!"
+  antispam:
+    gban:
+      added_to_watch: |-
+        Dodano {first_name} do Global Ban List.
+        Będą one teraz zakazane we wszystkich grupach, w których jestem adminem!
+      enter_reason: "Proszę podać powód, aby gbanować użytkownika!"
+      how_to: |-
+        <b>Jak gban?</b>
+        <b>Odpowiedź:</b> <code>/gban user_id przyczyna</code>
+      log_msg: |-
+        #GBAN
+        <b>Originated from:</b> {chat_id}
+        <b>Admin:</b> {ban_admin}
+        <b>Gbanned User:</b> {gbanned_user}
+        <b>Gbanned User ID:</b> {gban_user_id}
+        <b>Event Stamp:</b> {time}
+      not_self: |-
+        Nie możesz gbanować mnie czarnuchu!
+        Nicea Spróbuj ...!
+      updated_reason: "Aktualizacja przyczyny Gban do: <code>{gban_reason}</code>."
+      user_added_to_watch: |-
+        Dodano Cię do mojej globalnej listy zakazu!
+        Przyczyna: <code>{gban_reason}</code>
+
+        Czat odwoławczy: @{SUPPORT_GROUP}
+    here_gbanned_start: "Oto wszystkie globalnie zakazane geys!\n"
+    none_gbanned: "Nie ma żadnych zakazanych użytkowników ...!"
+    num_gbans: "Liczba osób gzakaz {count}"
+    part_of_support: "Ten użytkownik jest częścią mojego wsparcia!, Can't ban our own!"
+    pass_user_id: "Przekaz ID użytkownika lub nazwę użytkownika jako argument!"
+    ungban:
+      log_msg: |-
+        #UNGBAN
+        <b>Originated from:</b> {chat_id}
+        <b>Admin:</b> {ungban_admin}
+        <b>UnGbanned User:</b> {ungbanned_user}
+        <b>UnGbanned User ID:</b> {ungbanned_user_id}
+        <b>Event Stamp:</b> {time}
+      non_gbanned: "Użytkownik nie jest zakazany!"
+      not_self: "Ładne Spróbuj ...!"
+      removed_from_list: "Usunięto {first_name} z Global Ban List (Global Ban List)."
+      user_removed_from_list: "Zostałeś usunięty z mojej globalnej listy zakazanej!"
+    watcher_banned: |-
+      Ten użytkownik ({user_gbanned}) została zakazana globalnie!
+
+      Aby uzyskać niebanalny apel pod @{SUPPORT_GROUP}
+  blacklist:
+    action_get: "Bieżące działanie dla czarnych list w tej rozmowie to {action}"
+    action_set: "Ustaw działanie dla czarnej listy dla tej opcji na wartość {action}"
+    added_blacklist: "Dodano {trigger} w słowa czarnej listy!"
+    curr_blacklist_initial: "Aktualne słowa czarnej listy w {chat_title}:\n"
+    no_bl_found: "Nie znaleziono czarnej listy {bl_word}!"
+    no_blacklist: "W {chat_title} nie ma żadnych wiadomości z czarnej listy!"
+    rm_blacklist: "Usunięto {bl_word} z czarnej listy słów!"
+  dev:
+    alladmins:
+      admins_i_know_str: |-
+        Jest {len_admins} adminów, których znam!
+
+        {admindict}
+      admins_in_cache: "W mojej pamięci podręcznej Redis znajduje się {len_admins} admins."
+      alladmins_btn: "Wszyscy administratorzy"
+      getting_admins: "Pobieranie wszystkich adminów w mojej pamięci podręcznej ..."
+    bot_ip: |-
+      Bot Adres IP:
+      {ip}
+    chatlist:
+      chats_in_db: "Poniżej znajduje się lista rozmów sieciowych w mojej bazie danych."
+      exporting: "Eksportowanie listy wykresów ..."
+      header: |
+        Lista rozmów sieciowych.
+
+        Nazwa rozmowy sieciowej | Identyfikator rozmowy sieciowej | Liczba członków
+    execute_cmd_err: "Wykonaj poprawnie kod!"
+    flush_redis:
+      flush_failed: |-
+        Nie powiodło się opróżnienie bazy danych redis!
+        Błąd: {ef}.
+      flushed_redis: "Opróżniono Redis pomyślnie!"
+      flushing_redis: "Opróżnianie bazy danych Redis ..."
+    restarting: Restartowanie ...
+    speedtest:
+      speedtest_txt: |-
+        Speedtest
+
+        Host: {host}
+
+        Ping: {ping} ms
+        Pobierz: {download} Mbps
+        Prześlij: {upload} Mb/s
+      start_speedtest: "Obliczanie mojej prędkości ..."
+    uptime: "Czas dostępności: {uptime}"
+  general:
+    back_btn: Wstecz
+    check_help: "Informacje na temat używania tej komendy można znaleźć w pomocy."
+    close_btn: Zamknij
+    commands_available: |-
+      Hey Tam! Nazywam się Alita.
+      Jestem tutaj, aby pomóc Ci zarządzać grupami!
+      Komendy dostępne:
+      × /start: Start the bot
+      × /help: Poddaj się tym wiadomości.
+      × /donate: Informacje związane z tym, jak darować!
+
+      Wszystkie komendy mogą być używane z/lub!.
+    no_admin_cmd_perm: "Nie można użyć komendy administracyjnej!"
+    no_perm_admin: "Nie mam pozwolenia na to, by"
+    no_results: "Nie znaleziono wyników."
+    some_error: |-
+      Wystąpił błąd, raportydo {SUPPORT_GROUP}
+
+      Błąd: {ef}
+    something_wrong: "Coś poszło nie tak!"
+  langs:
+    changed: "Zmieniono język na {lang_code}"
+    changelang: "Tutaj możesz zmienić język dla bota."
+    correct_usage: |-
+      Poprawne użycie:
+      /lang lub /setlang language-code
+  locks:
+    check_perm_msg: "Sprawdzanie uprawnień rozmowy sieciowej ..."
+    invalid_lock: |-
+      Niepoprawny typ blokady!
+
+      Użyj /locktypes, aby uzyskać typy blokad
+    lock_all: "Zablokowano wszystkie uprawnienia z tego komponentu Rozmowa sieciowa!"
+    locked_perm: "Zablokowano {perm} dla tej rozmowy sieciowej."
+    locks_perm_sp: "Podaj uprawnienie do zablokowania!"
+    unlock_all: "Odblokowano wszystkie uprawnienia z tej rozmowy sieciowej!"
+    unlocked_perm: "Odblokowano {uperm} dla tej rozmowy sieciowej."
+    unlocks_perm.sp_perm: "Określ uprawnienia do odblokowania!"
+    view_perm: |-
+      CHAT PERMISSIONS:
+
+      Send Messages: {vmsg}
+      Send Media: {vmedia}
+      Send Stickers: {vstickers}
+      Send Animations: {vanimations}
+      Can Play Games: {vgames}
+      Can Use Inline Bots: {vinlinebots}
+      Webpage Preview: {vwebprev}
+      Send Polls: {vpolls}
+      Change Info: {vinfo}
+      Invite Users: {vinvite}
+      Pin Messages: {vpin}
+  pin:
+    no_pin_msg: "Odpowiedz na komunikat, do którego ma zostać zaczepiony ..."
+    no_rights_pin: "Nie mam wystarczających praw do przypinania wiadomości."
+    no_rights_unpin: "Nie mam wystarczających praw do odpinania wiadomości."
+    pinned_msg: "Przypięty komunikat!"
+    reply_to_unpin: "Idk, co chcesz odpinać, odpowiadaj na wiadomość, aby ją odpinać."
+    unpinned_all_msg: "Odpięto wszystkie komunikaty w tej rozmowie sieciowej."
+    unpinned_last_msg: "Niezaczepiony ostatni komunikat."
+  purge:
+    deleting: "Spalanie tych bezużytecznych wiadomości ..."
+    err_basic: "Nie można wyczyścić komunikatów w grupie podstawowej"
+    old_msg_err: "Nie można usunąć wszystkich komunikatów. Komunikaty mogą być zbyt stare, mogę nie mieć praw do usuwania, albo może to nie być supergrupa."
+    purge_msg_count: "Usunięto komunikaty {msg_count}"
+    what_del: "Co chcesz usunąć?"
+  rules:
+    priv_rules:
+      no_option: "Opcja nie jest poprawna, wybierz z <code>na</code>, <code>tak</code>, <code>off</code>, <code>nr</code>"
+      turned_on: "Reguły prywatne zostały obrócono <b>na</b> dla czatu <b>{chat_name}</b>"
+      turned_off: "Reguły prywatne zostały obrócono <b>off</b> dla czatu <b>{chat_name}</b>"
+      current_preference: "Bieżąca preferencja dla reguł prywatnych w rozmowie sieciowej to: {current_option}"
+    clear_rules: "Czy na pewno chcesz wyczyścić reguły?"
+    cleared: "Pomyślnie wyczyszczono reguły dla tej grupy!"
+    get_rules: |-
+      Reguły dla {chat}:
+
+      {rules}
+    no_rules: "Administratorzy dla tej grupy nie mają reguł konfiguracji!"
+    pm_me: "Najpierw mnie, a potem zdobicie zasady!"
+    sent_pm_rules: "Zadbałem o to, co ci się udało."
+    set_rules: "Pomyślnie ustawiono reguły dla tej grupy."
+  start:
+    add_chat_btn: "Dodaj do rozmowy sieciowej"
+    commands_btn: Komendy
+    group: "Żyję: 3"
+    info_page: |-
+      @Alita_Robot
+
+      Wersja: {version}
+
+      Developers: [Divkix](https: //github.com/Divkix)
+      Właściciel: [{Owner}] (tg://user?id={ID})
+    infos_btn: Informacja
+    language_btn: Język
+    pm_for_help: "Skontaktuj się ze mną w PM, aby uzyskać listę możliwych komend."
+    private: "Witaj! Jestem Alita_Robot. Aby dowiedzieć się więcej o moich funkcjach, kliknij na poniższe przyciski."
+    public_help: "Naciśnij przycisk poniżej, aby uzyskać pomoc dla {help_option}"
+    source_code: "Kod źródłowy"
+  utils:
+    gif_id:
+      reply_gif: "Proszę odpowiedzieć na gif, aby uzyskać jego identyfikator."
+    id:
+      group_id: "Ten identyfikator grup to {group_id}"
+      id_main: |-
+        Oryginalny nadawca- {orig_sender} ({orig_id})
+        Forwarder- {fwd_sender} ({fwd_id})
+      my_id: "Identyfikator użytkownika to {my_id}."
+    no_user_db: |-
+      Nie powiodło się pobranie identyfikatora użytkownika
+      . Niepoprawny identyfikator użytkownika, nie widziałem tego użytkownika w żadnym miejscu wcześniej, być może nazwa użytkownika może być pomocna w ich znaniu!
+    paste:
+      nekobin_btn: NekoBin
+      pasted_nekobin: "Wklejony do NekoBin!"
+      pasting: Wklejanie ...
+    ping:
+      pinging: Wykonywanie komendy ping ...
+    song:
+      no_lyrics_found: "Nie mogłem znaleźć żadnych tekstów dla tej piosenki!"
+      no_song_given: "Nie określiłeś, która piosenka będzie szukać!"
+      searching: "Znajdowanie tekstów dla {song_name}..."
+      song_not_found: "Nie znaleziono utworu!"
+    translate:
+      translate_usage: "Składnia: /tr <language> tekst do tłumaczenia (Może być również użyty w odpowiedzi na wiadomość)."
+      translating: Tłumaczenie ...
+      translation: |-
+        Język: {from_lang} -> {to_lang}
+        Przekład: {translation}
+    user_info:
+      custom_title: |-
+
+
+        Ten użytkownik posiada tutaj tytuł {custom_title}.
+      getting_info: "Pobieranie informacji o użytkowniku ..."
+      info_text:
+        last_name: |-
+
+          Ostatnia nazwa: {user_lname}
+        main: |-
+          Charakterystyka:
+          ID: {user_id}
+          Imię: {user_name}
+        perma_link: |-
+
+          Stały link użytkownika: {perma_link}
+        username: |-
+
+          Nazwa użytkownika: @{username}
+      support_user:
+        dev: |-
+
+
+          Ten element jest jednym z moich programistów ⚡️
+        owner: |-
+
+
+          Ta osoba jest moim właścicielem, nigdy nie zrobiłbym nic przeciwko nim!
+        sudo: |-
+
+
+          Poziom mocy tej osoby to "Sudo"
+        whitelist: |-
+
+
+          Ta osoba to 'Whitelist User', nie mogą być zakazane!
+    weebify:
+      weebified_string: |-
+        Łańcuch weebifikowany:
+        {string}
+      weebify_what: "Co ja mam zrobić z Weebify?"
