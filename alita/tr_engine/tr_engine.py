@@ -63,10 +63,12 @@ def tlang(m, user_msg):
 
         # Get language of user from database, default = 'en' (English)
         try:
-            lang = next(db.get_lang(m.chat.id))
+            lang = db.get_lang(m.chat.id)
         except Exception as ef:
             LOGGER.error(ef)
             lang = "en"
+
+        print("getlang", lang)
 
         # Get lang
         m_args.insert(0, lang)

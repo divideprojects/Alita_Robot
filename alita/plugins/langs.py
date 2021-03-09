@@ -50,19 +50,19 @@ async def gen_langs_kb():
     langs = list(lang_dict.keys())
     kb = []
     while langs:
-        lang = lang_dict[langs[0]]["main"]
+        lang_main = lang_dict[langs[0]]["main"]
         a = [
             InlineKeyboardButton(
-                f"{lang['language_flag']} {lang['language_name']} ({lang['lang_sample']})",
+                f"{lang_main['language_flag']} {lang_main['language_name']} ({lang_main['lang_sample']})",
                 callback_data=f"set_lang.{langs[0]}",
             ),
         ]
         langs.pop(0)
         if langs:
-            lang = lang_dict[langs[0]]["main"]
+            lang_main = lang_dict[langs[0]]["main"]
             a.append(
                 InlineKeyboardButton(
-                    f"{lang['language_flag']} {lang['language_name']} ({lang['lang_sample']})",
+                    f"{lang_main['language_flag']} {lang_main['language_name']} ({lang_main['lang_sample']})",
                     callback_data=f"set_lang.{langs[0]}",
                 ),
             )
