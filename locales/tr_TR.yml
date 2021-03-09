@@ -284,42 +284,21 @@ strings:
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
-      custom_title: |-
-
-
-        Bu kullanıcı, <b>{custom_title}</b> unvanı burada tutar.
+      custom_title: "This user holds the title <b>{custom_title}</b> here."
       getting_info: "Kullanıcı bilgileri alınıyor ..."
       info_text:
-        last_name: |-
-
-          <b>Son Ad:</b> {user_lname}
+        last_name: <b>Last Name:</b> {user_lname}
         main: |-
           <b>Özellikler:</b>
           <b>Kimlik:</b> <code>{user_id}</code>
           <b>İlk Ad:</b> {user_name}
-        perma_link: |-
-
-          "<b>Kalıcı Kullanıcı Bağlantısı:</b> {perma_link}"
-        username: |-
-
-          "<b>Kullanıcı adı:</b> @{username}"
+        perma_link: "<b>Permanent User Link:</b> {perma_link}"
+        username: "<b>Username:</b> @{username}"
       support_user:
-        dev: |-
-
-
-          Bu üye, geliştiricilerimden biri ⚡️
-        owner: |-
-
-
-          Bu kişi benim sahibidir, onlara karşı hiçbir şey yapmam!
-        sudo: |-
-
-
-          Bu kullanıcı benim Sudos 'larımdan biri, sahip olduğu yaklaşık olarak aynı güce sahip!
-        whitelist: |-
-
-
-          Bu kişi 'Whitelist User' (Kullanıcı), yasaklanamaz!
+        dev: "This member is one of my Developers ⚡️"
+        owner: "This person is my Owner, I would never do anything against them!"
+        sudo: "This user is one of my Sudos, he has powers which are approximately same to owner!"
+        whitelist: "This person is 'Whitelist User', they cannot be banned!"
     weebify:
       weebified_string: |-
         <b>Weebified String:</b>
