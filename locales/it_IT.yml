@@ -69,24 +69,24 @@ strings:
         Saranno ora vietati in tutti i gruppi dove sono admin!
       enter_reason: "Si prega di inserire un motivo per gagliare l'utente!"
       how_to: |-
-        <b>How to gban?</b>
-        <b>Answer:</b> <code>/gban user_id reason</code>
+        <b>Come gban?</b>
+        <b>Risposta:</b> <code>/gban user_id reason</code>
       log_msg: |-
         #GBAN
-        <b>Originated from:</b> {chat_id}
-        <b>Admin:</b> {ban_admin}
-        <b>Gbanned User:</b> {gbanned_user}
-        <b>Gbanned User ID:</b> {gban_user_id}
-        <b>Event Stamp:</b> {time}
+        <b>Originato da:</b> {chat_id}
+        <b>Amministratore:</b> {ban_admin}
+        <b>Utente Gbannato:</b> {gbanned_user}
+        <b>Identificativo Utente Gbannato:</b> {gban_user_id}
+        <b>Timbro Evento:</b> {time}
       not_self: |-
         Non puoi gridare a me nigga!
         Nice Prova ...!
-      updated_reason: "Updated Gban reason to: <code>{gban_reason}</code>."
+      updated_reason: "Motivo Gban aggiornato a: <code>{gban_reason}</code>."
       user_added_to_watch: |-
-        You have been added to my global ban list!
-        Reason: <code>{gban_reason}</code>
+        Sei stato aggiunto alla mia lista di ban globale!
+        Motivo: <code>{gban_reason}</code>
 
-        Appeal Chat: @{SUPPORT_GROUP}
+        Chat di appello: @{SUPPORT_GROUP}
     here_gbanned_start: "Ecco tutte le geie globalmente vietate!\n"
     none_gbanned: "Non ci sono utenti gvietati ...!"
     num_gbans: "Numero di persone gvietate {count}"
@@ -95,11 +95,11 @@ strings:
     ungban:
       log_msg: |-
         #UNGBAN
-        <b>Originated from:</b> {chat_id}
-        <b>Admin:</b> {ungban_admin}
-        <b>UnGbanned User:</b> {ungbanned_user}
-        <b>UnGbanned User ID:</b> {ungbanned_user_id}
-        <b>Event Stamp:</b> {time}
+        <b>Originata da:</b> {chat_id}
+        <b>Amministratore:</b> {ungban_admin}
+        <b>Utente non Gbannato:</b> {ungbanned_user}
+        <b>Identificativo Utente non Gbannato:</b> {ungbanned_user_id}
+        <b>Timbro Evento:</b> {time}
       non_gbanned: "L'utente non è gvietato!"
       not_self: "Bella Prova ...!"
       removed_from_list: "Rimosso {first_name} da Global Ban List."
