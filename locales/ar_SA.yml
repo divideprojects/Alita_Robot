@@ -86,7 +86,7 @@ strings:
         You have been added to my global ban list!
         <b>Reason:</b> <code>{gban_reason}</code>
 
-        Appeal Chat: @{SUPPORT_GROUP}
+        <b>Appeal Chat:</b> @{SUPPORT_GROUP}
     here_gbanned_start: "إليك كل الأوز المحظورة عالمياً!\n"
     none_gbanned: "لا يوجد أي مستخدمين محظورين..!"
     num_gbans: "عدد الأشخاص المحدبين : <code>{count}</code>"
@@ -110,7 +110,7 @@ strings:
       للحصول على غير محظور ، استئناف عند @{SUPPORT_GROUP}
   blacklist:
     action_get: "والإجراء الحالي للقوائم السوداء في هذه المحادثة هو <i><b>{action}</b></i>"
-    action_set: "تعيين إجراء للقائمة السوداء لهذا إلى {action}"
+    action_set: "قم بتحديد التصرف للقائمة السوداء لهذا الى <b>{action}</b>"
     added_blacklist: "تم اضافته <b>{trigger}</b> بكلمات سوداء !"
     curr_blacklist_initial: "الكلمات المدرجة في القائمة السوداء الحالية في <b>{chat_title}</b>:\n"
     no_bl_found: "لم يتم ايجاد أي قائمة سوداء <b>{bl_word}</b>!"
@@ -132,14 +132,14 @@ strings:
       chats_in_db: "ها هي قائمة المحادثاتي في قاعدة بياناتي."
       exporting: "تصدير قائمة الأحرف..."
       header: |
-        قائمة المحادثات.
+        كشف بالمحادثات في قاعدة البيانات الخاصة بي.
 
-        اسم المحادثة <unk> معرف المحادثة <unk> عدد الأعضاء
+        <b>اسم المحادثة | كود المحادثة | عدد الأعضاء</b>
     execute_cmd_err: "الرجاء تنفيذ الرمز بشكل صحيح!"
     flush_redis:
       flush_failed: |-
-        فشل في تدفق قاعدة بيانات redush !
-        خطأ : {ef}
+        فشل في تدفق قاعدة بيانات redairs !
+        <b>خطأ :</b> {ef}
       flushed_redis: "رديس مسحوق بنجاح!"
       flushing_redis: "دفع قاعدة بيانات Redis ..."
     restarting: إعادة التشغيل...
@@ -173,24 +173,24 @@ strings:
     some_error: |-
       حدث خطأ ما ، التقرير الى @{SUPPORT_GROUP}
 
-      خطأ : {ef}
+      <b>خطأ :</b> {ef}
     something_wrong: "حدث خطأ ما!"
   langs:
     changed: "تم تغيير اللغة الى <code>{lang_code}</code>"
     changelang: "هنا يمكنك تغيير لغة البوت."
     correct_usage: |-
-      الاستخدام الصحيح:
-      /lang أو /setlang language-code
+      <b>الاستخدام الصحيح :</b>
+      /lang or /setlang language-code
   locks:
     check_perm_msg: "التحقق من أذونات الدردشة..."
     invalid_lock: |-
       نوع القفل غير صالح!
 
       استخدم /locktypes للحصول على أنواع القفل
-    lock_all: "تم تأمين كل الصلاحيات من هذه المحادثة!"
+    lock_all: "تم اقفال <b>كل تصاريح</b> من هذه المحادثة !"
     locked_perm: "تم اقفال <b>{perm}</b> لهذه المحادثة."
     locks_perm_sp: "حدد الإذن للقفل!"
-    unlock_all: "فتح جميع الأذونات من هذه المحادثة!"
+    unlock_all: "الغاء اقفال <b>كل</b> تصريح من هذه المحادثة !"
     unlocked_perm: "تم الغاء اقفال <b>{uperm}</b> لهذه المحادثة."
     unlocks_perm.sp_perm: "حدد الإذن لإلغاء القفل!"
     view_perm: |-
@@ -219,14 +219,14 @@ strings:
     deleting: "غرس هذه الرسائل عديمة الفائدة..."
     err_basic: "لا يمكن إزالة الرسائل في مجموعة أساسية"
     old_msg_err: "لا يمكن حذف جميع الرسائل. قد تكون الرسائل قديمة جداً، قد لا يكون لدي حقوق حذف، أو قد لا يكون هذا مجموعة خارقة."
-    purge_msg_count: "{msg_count} رسائل محذوفة"
+    purge_msg_count: "تم حذف <i>{msg_count}رسائل</i>"
     what_del: "ماذا تريد الحذف؟"
   rules:
     priv_rules:
       no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
       turned_on: "تم تشغيل القواعد الخاصة <b>على</b> للمحادثة <b>{chat_name}</b>"
       turned_off: "تم تشغيل القواعد الخاصة <b>من</b> للمحادثة <b>{chat_name}</b>"
-      current_preference: "التفضيلات الحالية للقواعد الخاصة في هذه المحادثة هي : {current_option}"
+      current_preference: "التفضيلات الحالية للقواعد الخاصة في هذه المحادثة هي : <b>{current_option}</b>"
     clear_rules: "هل أنت متأكد من أنك تريد مسح القواعد؟"
     cleared: "تم مسح قواعد هذه المجموعة بنجاح!"
     get_rules: |-
@@ -275,14 +275,14 @@ strings:
     song:
       no_lyrics_found: "تعذر العثور على أي كلمات لهذه الأغنية!"
       no_song_given: "لم تقم بتحديد الأغنية التي تريد البحث عنها!"
-      searching: "العثور على كلمات ل {song_name}..."
+      searching: "ايجاد كلمات بالنسبة الى <code>{song_name}<code>..."
       song_not_found: "الأغنية غير موجودة!"
     translate:
       translate_usage: "الاستخدام: /tr <language> نص للترجمة (يمكن استخدامه أيضا في الرد على رسالة)."
       translating: ترجمة ...
       translation: |-
-        <b>Language:</b> {from_lang} -> {to_lang}
-        Translation: <code>{translation}</code>
+        <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
+        <b>Translation:</b> <code>{translation}</code>
     user_info:
       custom_title: |-
 
@@ -299,10 +299,10 @@ strings:
           <b>First Name:</b> {user_name}
         perma_link: |-
 
-          وصلة المستخدم الدائمة : {perma_link}
+          "<b>وصلة المستخدم الدائمة :</b> {perma_link}"
         username: |-
 
-          اسم المستخدم: @{username}
+          "<b>اسم المستخدم :</b> @{username}"
       support_user:
         dev: |-
 
