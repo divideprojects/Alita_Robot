@@ -22,6 +22,14 @@ from pyrogram.types import CallbackQuery
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
 from alita.tr_engine import tlang
 
+from time import perf_counter
+from cachetools import TTLCache
+
+from threading import RLock
+
+ADMIN_CACHE = TTLCache(maxsize=512, ttl=60 * 10, timer=perf_counter)
+THREAD_LOCK = RLock()
+
 SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
 DEV_LEVEL = DEV_USERS + [int(OWNER_ID)]
 
@@ -44,19 +52,34 @@ async def admin_check_func(_, __, m):
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in SUDO_LEVEL:
         return True
-    try:
-        user = await m.chat.get_member(m.from_user.id)
 
-        if user.status in ("creator", "administrator"):
-            status = True
-        else:
-            status = False
-            await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
-    except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
-        if ("The chat_id" and "belongs to a user") in ef:
-            status = True
+    with THREAD_LOCK:
+        try:
+            admin_list = [user[0] for user in ADMIN_CACHE[m.chat.id]]
+            if m.from_user.id in admin_list:
+                return True
+            else:
+                await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
+                return False
+        except KeyError;
+            admins_list = []
+            async for i in m.chat.iter_members(filter="administrators"):
+                admins_list.append((i.user.id, ("@"+i.user.username) if i.user.username else i.user.first_name))
+            ADMIN_CACHE[m.chat.id] = admins_list
+            if m.from_user.id in admin_list:
+                return True
+            else:
+                await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
+                return False
+        except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
+            if ("The chat_id" or "belongs to a user") in ef:
+                return True
+        except Exception as ef:
+            user = await m.chat.get_member(m.from_user.id)
+            if user.status in ("creator", "administrator"):
+                return True
 
-    return status
+    return False
 
 
 async def owner_check_func(_, __, m):
