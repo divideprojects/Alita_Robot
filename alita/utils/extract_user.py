@@ -30,6 +30,7 @@ db = Users()
 async def extract_user(c, m) -> Tuple[int, str]:
     """Extract the user from the provided message."""
     user_id = None
+    user_first_name = None
 
     if m.reply_to_message:
         user_id = m.reply_to_message.from_user.id
