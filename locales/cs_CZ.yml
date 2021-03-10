@@ -7,7 +7,7 @@ strings:
   admin:
     adminlist:
       adminstr: "Administrátoři v <b>{chat_title}</b>:\n"
-      cached_values: "Jedná se o hodnoty z mezipaměti!"
+      note_cached: "These are cached values!"
       note_updated: "Jedná se o hodnoty mezi sebou!"
       reloaded_admins: "V této konverzaci znovu načetli všechny administrátory!"
       use_admin_cache: "Chcete-li znovu načíst administrátory, použijte /admincache."
