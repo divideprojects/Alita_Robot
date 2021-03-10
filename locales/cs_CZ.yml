@@ -103,6 +103,8 @@ strings:
 
         Just type /lang and use inline keyboard to choose a language \
         for yourself or your group.
+
+        Můžete nám pomoci přinést více jazyků tím, že vám pomůže s [Crowdin](https: //crowdin.com/project/alita_robot)
     locks:
       main: "Zámky"
       help: |-
@@ -293,6 +295,9 @@ strings:
     user_now_afk: "Uživatel {user} je nyní na fli!"
   antispam:
     gban:
+      gban_error_log: |-
+        <b>Chyba Gbana Watcher!</b>
+        <b>Chat:</b> {chat_id}\n<b>Chyba:</b> <code>{ef}</code>
       added_to_watch: |-
         Přidán {first_name} do seznamu globálních bang.
         . Budou nyní zakázány ve všech skupinách, kde jsem admin!
@@ -338,6 +343,10 @@ strings:
 
       Chcete-li dostat nezakázanou, odvolání na @{SUPPORT_GROUP}
   blacklist:
+    bl_watcher:
+      action_kick: "Ked {user} pro použití blacklisted word!"
+      action_ban: "Banned {user} -for using a blacklisted word!"
+      action_mute: "Muted {user} pro použití blacklisted word!"
     action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
     action_set: "Nastavit akci pro černou listinu pro tuto hodnotu na <b>{action}</b>"
     added_blacklist: "Přidán <b>{trigger}</b> v seznamu zakázaných slov!"
@@ -399,7 +408,10 @@ strings:
     something_wrong: "Něco se pokazilo!"
   langs:
     changed: "Jazyk změněn na <code>{lang_code}</code>"
-    changelang: "Zde můžete změnit jazyk pro robot."
+    changelang: |-
+      Here you can change language for the bot.
+
+      You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
     correct_usage: |-
       <b>Správné použití:</b>
       /lang or /setlang language-code
