@@ -8,60 +8,60 @@ strings:
     admin:
       main: "Admin"
       help: |-
-        Lazy to promote or demote someone for admins? Want to see basic information about chat? \
-        All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
-        done easily using the bot.
+        Lazy pour promouvoir ou rétrogradez quelqu'un pour les administrateurs? Vous voulez voir des informations de base sur la discussion? \
+        Tout ce qu'il y a au sujet de l'aumônier tel que les listes d'administration, l'épinglage ou la saisie d'un lien d'invitation peut être le \
+        effectué facilement à l'aide du bot.
 
-        **User Commands:**
-        × /adminlist: List all admins in the current chat.
+        ** Commandes utilisateur: **
+        × /adminlist: Affiche la liste de tous les administrateurs dans la discussion en cours.
 
-        **Admin only:**
+        ** Admin seulement: **
         × /invitelink: Gets private chat's invitelink.
-        × /promote: Promotes the user replied to or tagged.
-        × /demote: Demotes the user replied to or tagged.
+        × /promote: Promotes l'utilisateur a répondu ou marqué.
+        × /demote: Désigne l'utilisateur ayant répondu ou marqué.
 
-        An example of promoting someone to admins:
-        `/promote @username`; this promotes a user to admin.
+        Exemple de promotion de quelqu'un à admin:
+        `/promote @username` ; cela fait la promotion d'un utilisateur à admin.
     afk:
       main: "AFK"
       help: |-
-        Module for enabling auto replies when you are AFK.
-        When enabled,
-        anyone who mentions you will be replied with a message saying that
-        you are AFK.
+        Module pour l'activation des réponses automatiques lorsque vous êtes AFK.
+        Lorsque cette option est activée,
+        Quiconque mentionne vous sera répondu par un message indiquant que
+        vous êtes AFK.
 
-        **Setting AFK Status**
+        ** Paramètre AFK Status * *
         × /afk <reason>
 
-        Enable auto replies when you are AFK.
-        To stop it, send message to any group.
-        * Reason is optional
+        Activer les réponses automatiques lorsque vous êtes AFK.
+        Pour l'arrêter, envoyez un message à n'importe quel groupe.
+        * La raison est facultative
     approve:
       main: "AFK"
       help: |-
-        Sometimes, you might trust a user not to send unwanted content.
-        Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
-        That's what approvals are for - approve trustworthy users to allow them to send stuff without restrictions!
+        Parfois, vous pouvez faire confiance à un utilisateur pour ne pas envoyer de contenu indésirable.
+        Peut-être pas assez pour les faire admin, mais vous pourriez être ok avec des verrous, des listes noires et des anti-inondation ne s'appliquant pas à eux.
+        C'est ce que les approbations sont pour-approuvent les utilisateurs dignes de confiance pour leur permettre d'envoyer des trucs sans restrictions !
 
-        **Admin commands:**
-        × /approval: Check a user's approval status in this chat.
-        × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-        × /unapprove: Unapprove of a user. They will now be subject to blocklists.
-        × /approved: List all approved users.
-        × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
+        ** Commandes d'administration: **
+        × /approval: Vérifiez le statut d'approbation d'un utilisateur dans cette discussion.
+        × /approuver: Approuver un utilisateur. Les écluses, les listes noires et les antiinondations ne s'appliqueront plus à eux.
+        × /désapprouver: Désapprouver un utilisateur. Ils seront désormais soumis à des listes de blocage.
+        × /approuvé: Liste de tous les utilisateurs approuvés.
+        × /unapproveall: Désapprouver les utilisateurs *ALL* dans une discussion. Cela ne peut pas être fait !
     bans:
       main: "Bans"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        Quelqu'un a embêter votre groupe?
+        Vous voulez l'interdire / la restreindre?
+        C'est le plugin pour vous, facilement bottant, bannis et bannis les membres d'un groupe.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /ban: Bans the user replied to or tagged.
-        × /unban: Unbans the user replied to or tagged.
+        ** Admin seulement: **
+        × /kick: Kick l'utilisateur a répondu ou balisé.
+        × /ban: Bans l'utilisateur a répondu à ou marqué.
+        × /unban: Unbans l'utilisateur a répondu ou balisé.
     blacklist:
-      main: "Blacklist"
+      main: "Liste noire"
       help: |-
         Want to restrict certain words or sentences in your group?
 
@@ -86,46 +86,46 @@ strings:
     fun:
       main: "Fun"
       help: |-
-        × /runs: reply a random string from an array of replies.
+        × /runs: répondez à une chaîne aléatoire à partir d'un tableau de réponses.
         × /slap: slap a user, or get slapped if not a reply.
-        × /shrug : get shrug XD.
-        × /decide : Randomly answers yes/no/maybe
-        × /toss : Tosses A coin
-        × /bluetext : check urself :V
-        × /roll : Roll a dice.
-        × /react : Random Reaction
-        × /shout <keyword>: write anything you want to give loud shout.
+        × /arbusg: get arbusg XD.
+        × /décidera: Réponses Randomly yes / no/peut-être
+        × /toss: Tosses A coin
+        × /bluetext: check urself :V
+        × /roll: Roll a dice.
+        × /réagir: Réaction aléatoire
+        × /shout <keyword>: écrire tout ce que vous voulez donner à haute voix.
     language:
       main: "Langue"
       help: |-
-        Not able to change language of the bot?
-        Easily change by using this module!
+        Impossible de changer la langue du bot?
+        Changement facile en utilisant ce module !
 
         Just type /lang and use inline keyboard to choose a language \
         for yourself or your group.
     locks:
-      main: "Locks"
+      main: "Verrous"
       help: |-
-        Use this to lock group permissions.
-        Allows you to lock and unlock permission types in the chat.
+        Utilisez cette option pour verrouiller les droits d'accès aux groupes.
+        Permet de verrouiller et de déverrouiller les types d'autorisation dans la discussion.
 
-        **Usage:**
-        × /lock <type>: Lock Chat permission.
+        ** Usage:**
+        × /lock <type>: Droit de discussion de verrouillage.
         × /unlock <type>: Unlock Chat permission.
-        × /locks: View Chat permission.
-        × /locktypes: Check available lock types!
+        × /locks: Afficher l'autorisation de discussion.
+        × /locktypes: Vérifiez les types de verrous disponibles !
     muting:
-      main: "Muting"
+      main: "Mutation"
       help: |-
-        Want someone to keep quite for a while in the group?
-        Mute plugin is here to help, mute or unmute any user easily!
+        Vous voulez que quelqu'un continue pendant un certain temps dans le groupe?
+        Mute plugin est ici pour aider, mute ou unmute n'importe quel utilisateur facilement !
 
-        **Admin only:**
-        × /mute: Mute the user replied to or mentioned.
-        × /unmute: Unmutes the user mentioned or replied to.
+        ** Admin only: **
+        × /mute: Mute the user répliqué to or mentioned.
+        × /unmute: Unmute l'utilisateur mentionné ou répondu.
 
-        An example of promoting someone to admins:
-        `/mute @username`; this mutes a user.
+        Exemple de promotion d'une personne à admins:
+        `/mute @username` ; cela mute un utilisateur.
     notes:
       main: "Notes"
       help: |-
@@ -166,78 +166,78 @@ strings:
         -> `Code`
         `Code` (grave accent)
     pins:
-      main: "Pins"
+      main: "Broches"
       help: |-
-        Here you find find all help related to groups pins and how to manage them via me.
+        Vous trouverez ici toutes les aide liées aux broches des groupes et comment les gérer via moi.
 
-        **Admin Cmds:**
-        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
-        × /unpin: Unpins the last pinned message.
-        × /unpinall: Unpins all the pinned message in the current chat.
+        ** Capc d'administration: **
+        × /pin: épingles en silence le message a répondu à l'ajout ` bruyante `, ` notification ` ou ` alerte ` pour donner un notificaton aux utilisateurs.
+        × /unpin: Inclin le dernier message réservé.
+        × /unpinall: Déplace tout le message réservé dans la discussion en cours.
     purges:
       main: "Purges"
       help: |-
-        Want to delete messages in you group?
+        Voulez-vous supprimer des messages dans votre groupe?
 
-        × /purge: Deletes messages upto replied message.
-        × /del: Deletes a single message, used as a reply to message.
+        × /purge: Supprime les messages de réponse à la réponse.
+        × /del: Supprime un message unique, utilisé comme réponse au message.
     reporting:
-      main: "Reporting"
+      main: "Génération de rapports"
       help: |-
-        × /report <reason>: reply to a message to report it to admins.
-        - @admin: reply to a message to report it to admins.
-        **NOTE:** Neither of these will get triggered if used by admins.
+        × /report <reason>: réponse à un message pour le signaler aux administrateurs.
+        - @admin: réponse à un message pour la signaler aux administrateurs.
+        ** REMARQUE: ** Aucun de ces éléments ne sera déclenché s'il est utilisé par les administrateurs.
 
-        **Admins Only:**
-        × /reports <on/off>: change report setting, or view current status.
-        - If done in PM, toggles your status.
-        - If in group, toggles that groups's status.
+        ** Admins seulement: **
+        × /reports <on/off>: modification du paramètre de rapport, ou affichage du statut courant.
+        -S'il est fait dans la fiche MP, vous touchez à votre statut.
+        -Si dans le groupe, bascule le statut de ce groupe.
     rules:
-      main: "Rules"
+      main: "Règles"
       help: |-
-        Set rules for you chat so that members know what to do and \
-        what not to do in your group!
+        Définissez des règles pour vous chat afin que les membres sachent ce qu'il faut faire et \
+        ce qu'il ne faut pas faire dans votre groupe !
 
-        × /rules: get the rules for current chat.
+        × /rules: obtenir les règles pour la discussion en cours.
 
-        **Admin only:**
-        × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
-        × /clearrules: Clear the rules for this chat.
-        × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
+        ** Admin uniquement: **
+        × /setrules <rules>: Définissez les règles pour cette discussion, également en tant que réponse à un message.
+        × /clearrules: Effacer les règles pour cette discussion.
+        × /privrules <on/yes/no/off>: Turns on / off the option to send the rules to PM of user or group.
     spam_protect:
       main: "Spam Protect"
       help: |-
-        Spammers joining your group?
-        No problem at all, here you can find all the options to protect your groups from raids and scums!
+        Les spammeurs rejoignant votre groupe?
+        Pas de problème du tout, ici vous pouvez trouver toutes les options pour protéger vos groupes contre les raids et les scommes !
 
-        **Admin Only:**
-        × /cas <on/off>: Turns on or off the CAS check for group.
-        × /underattack <on/off>: Kick all the new users on entry!
+        ** Admin seulement: **
+        × /cas <on/off>: Active ou désactive le contrôle CAS pour le groupe.
+        × /underattaque <on/off>: Kick tous les nouveaux utilisateurs à l'entrée !
     utils:
       main: "Utils"
       help: |-
-        Some utils provided by bot to make your tasks easy!
+        Quelques utils fournis par bot pour faciliter vos tâches !
 
-        × /id: Get the current group id. If used by replying to a message, get that user's id.
-        × /info: Get information about a user.
-        × /ping - Get ping time of bot to telegram server.
-        × /gifid: Reply to a gif to me to tell you its file ID.
-        × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
-        × /github <username>: Search for the user using github api!
-        × /lyrics <song>: Get the lyrics of the song you specify!
+        × /id: Obtenez l'ID de groupe en cours. S'il est utilisé en répondant à un message, obtenez l'ID de cet utilisateur.
+        × /info: Obtenez des informations sur un utilisateur.
+        × /ping-Temps de ping-ping pour le serveur de télégramme.
+        × /gifid: Réponse à un gif pour que je vous dise son ID de dossier.
+        × /tr <language>: Traduction du texte, puis réponse à vous avec la langue que vous avez indiquée, fonctionne comme une réponse à m.
+        × /github <username>: Search for the user using github api !
+        × /paroles <song>: Get the paroles of the song you spécification !
         × /weebify <text> or a reply to message: To weebify the text.
     wiki:
       main: "Wikipedia"
       help: |-
-        Search Wikipedia on the go in your group!
+        Recherchez Wikipédia dans votre groupe !
 
-        **Available commands:**
-        × /wiki <query>: wiki your query.
+        ** Commandes disponibles: **
+        × /wiki <query>: wiki votre requête.
   admin:
     adminlist:
       adminstr: "Admins in <b>{chat_title}</b>:\n"
-      note_cached: "<i>Note:</i> These are cached values!"
-      note_updated: "<i>Note:</i> These are up-to-date values!"
+      note_cached: "<i>Note:</i> Ces valeurs sont mises en cache !"
+      note_updated: "<i>Note:</i> Ces valeurs sont à jour !"
       reloaded_admins: "Tous les administrateurs de ce chat ont été rechargés!"
       use_admin_cache: "Utilisez /admincache pour recharger les administrateurs !"
     ban:
@@ -393,9 +393,9 @@ strings:
     no_perm_admin: "Je n'ai pas la permission de faire cela"
     no_results: "Aucun résultat trouvé."
     some_error: |-
-      Some error occured, report to @{SUPPORT_GROUP}
+      Une erreur s'est produite, rapport au @{SUPPORT_GROUP}
 
-      <b>Error:</b> <code>{ef}</code>
+      <b>Erreur:</b> <code>{ef}</code>
     something_wrong: "Quelque chose s'est mal passé !"
   langs:
     changed: "Langue passée à <code>{lang_code}</code>"
@@ -506,39 +506,39 @@ strings:
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
-      custom_title: "This user holds the title <b>{custom_title}</b> here."
+      custom_title: "Cet utilisateur détient le titre <b>{custom_title}</b> ici."
       getting_info: "Obtention des informations de l'utilisateur..."
       info_text:
         last_name: |-
 
-          <b>Last Name:</b> {user_lname}
+          <b>Nom de famille:</b> {user_lname}
         main: |-
           <b>Caractéristiques:</b>
           <b>ID:</b> <code>{user_id}</code>
           <b>Prénom:</b> {user_name}
         perma_link: |-
 
-          <b>Permanent User Link:</b> {perma_link}
+          <b>Lien d'utilisateur permanent:</b> {perma_link}
         username: |-
 
-          <b>Username:</b> @{username}
+          <b>Nom d'utilisateur:</b> @{username}
       support_user:
         dev: |-
 
 
-          This member is one of my Developers ⚡️
+          Ce membre est l'un de mes développeurs ⚡️
         owner: |-
 
 
-          This person is my Owner, I would never do anything against them!
+          Cette personne est mon propriétaire, je ne ferais jamais rien contre eux !
         sudo: |-
 
 
-          This user is one of my Sudos, he has powers which are approximately same to owner!
+          Cet utilisateur est l'un de mes Sudos, il a des pouvoirs qui sont à peu près identiques au propriétaire !
         whitelist: |-
 
 
-          This person is 'Whitelist User', they cannot be banned!
+          Cette personne est "Whitelist User", ils ne peuvent pas être interdits !
     weebify:
       weebified_string: |-
         <b>Chaîne Weebified:</b>
