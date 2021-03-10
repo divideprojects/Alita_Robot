@@ -69,14 +69,13 @@ class Alita(Client):
         name = self.__class__.__name__.lower()
 
         # Make a temporary direcory for storing session file
-        SESSION_DIR = f"{name}/SESSION"
-        if not path.isdir(SESSION_DIR):
-            makedirs(SESSION_DIR)
+        if not path.isdir(f"{name}/SESSION"):
+            makedirs(f"{name}/SESSION")
 
         super().__init__(
             name,
-            plugins=dict(root=f"{name}/plugins", exclude=NO_LOAD),
-            workdir=SESSION_DIR,
+            plugins=dict(root=f"{name}.plugins", exclude=NO_LOAD),
+            workdir=f"{name}.SESSION",
             api_id=APP_ID,
             api_hash=API_HASH,
             bot_token=TOKEN,
