@@ -6,62 +6,62 @@ main:
 strings:
   plugins:
     admin:
-      main: "Admin"
+      main: "Yönetici"
       help: |-
-        Lazy to promote or demote someone for admins? Want to see basic information about chat? \
-        All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
-        done easily using the bot.
+        Yöneticiler için birini teşvik etmek ya da indirgemek için tembel misiniz? Sohbet hakkında temel bilgileri görmek ister misiniz? \
+        Yönetici listeleri, sabitleme ya da davet etme bağlantısı gibi chat odalarının tümü \
+        numaralı bot kullanılarak kolayca gerçekleştirilebilecek.
 
-        **User Commands:**
-        × /adminlist: List all admins in the current chat.
+        ** Kullanıcı Komutları: **
+        × /adminlist: Geçerli sohbetteki tüm yöneticiler listelenir.
 
-        **Admin only:**
-        × /invitelink: Gets private chat's invitelink.
-        × /promote: Promotes the user replied to or tagged.
-        × /demote: Demotes the user replied to or tagged.
+        ** Yalnızca yönetici: **
+        × /inviteselink: Özel sohbetin değişmez.
+        × /promote: Kullanıcının yanıtlağı ya da etiketlenmiş olduğu promosyonlar.
+        × /demote: Kullanıcının yanıtlağı ya da etiketlenmiş olduğu ifade eder.
 
-        An example of promoting someone to admins:
-        `/promote @username`; this promotes a user to admin.
+        Bir kişiyi yöneticiye tanıtmanın bir örneği:
+        , /promote @username`; bu, bir kullanıcıyı yönetici olarak tanıtır.
     afk:
       main: "AFK"
       help: |-
-        Module for enabling auto replies when you are AFK.
-        When enabled,
-        anyone who mentions you will be replied with a message saying that
-        you are AFK.
+        AFK 'ken otomatik yanıtları etkinleştirme modülü.
+        etkinleştirildiğinde,
+        sizden söz eden herhangi bir kişi
+        ' nin AFK 'olduğunu bildiren bir ileti ile yanıtlanır.
 
-        **Setting AFK Status**
+        ** AFK Durumu Ayarlayın * *
         × /afk <reason>
 
-        Enable auto replies when you are AFK.
-        To stop it, send message to any group.
-        * Reason is optional
+        AFK' ken otomatik yanıtları etkinleştirin.
+        Bunu durdurmak için, herhangi bir gruba ileti gönderin.
+        * Neden isteğe bağlıdır
     approve:
       main: "AFK"
       help: |-
-        Sometimes, you might trust a user not to send unwanted content.
-        Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
-        That's what approvals are for - approve trustworthy users to allow them to send stuff without restrictions!
+        Bazen, bir kullanıcının istenmeyen içerik göndermemesine güvenebilirsiniz.
+        belki onları admin yapmak için yeterli olmayabilir ama kilitler, kara listeler ve antissel onlara başvurmamakla iyi olabilirsin.
+        Onaylar, güvenilir kullanıcıların kısıtlama olmadan bir şey göndermelerine olanak tanıyacak şekilde onaylar!
 
-        **Admin commands:**
-        × /approval: Check a user's approval status in this chat.
-        × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-        × /unapprove: Unapprove of a user. They will now be subject to blocklists.
-        × /approved: List all approved users.
-        × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
+        ** Yönetici komutları: **
+        × /onay: Bu sohbetteki bir kullanıcının onay durumunu denetleyin.
+        × /onayla: Kullanıcının onaylanması. Kilitler, kara listeler, ve antisel artık onlar için geçerli olmayacak.
+        × /Onaylamasız: Kullanıcının onayını geri al. Bunlar artık blok listelerine tabi olacak.
+        × /onaylandı: Onaylayan tüm kullanıcılar listelenir.
+        × /unapraveall: Bir sohbetteki *ALL* kullanıcıları onaylamasız. Bu işlem geri alınamaz!
     bans:
-      main: "Bans"
+      main: "Yasaklar"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        Sinir bozucu biri sizin grubunuza mı girdi?
+        Onu yasaklamak/yasaklamak istiyor musunuz?
+        bu eklenti, bir gruptaki üyelerin kolayca tekme, yasak ve yasaksız üye olmalarının eklentidir.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /ban: Bans the user replied to or tagged.
-        × /unban: Unbans the user replied to or tagged.
+        ** Yalnızca yönetici: **
+        × /kick: Kullanıcı yanıtlıyor ya da imlenmiş.
+        × /ban: Kullanıcının yanıtlanması ya da etiketlenen kullanıcılar.
+        × /unban: Kullanıcının yanıtlanması ya da etiketlenmemeleri yasaktır.
     blacklist:
-      main: "Blacklist"
+      main: "Kara Liste"
       help: |-
         Want to restrict certain words or sentences in your group?
 
@@ -84,50 +84,50 @@ strings:
 
         **Note:** Can only add or remove one blacklist at a time!
     fun:
-      main: "Fun"
+      main: "Eğlence."
       help: |-
-        × /runs: reply a random string from an array of replies.
-        × /slap: slap a user, or get slapped if not a reply.
-        × /shrug : get shrug XD.
-        × /decide : Randomly answers yes/no/maybe
-        × /toss : Tosses A coin
-        × /bluetext : check urself :V
-        × /roll : Roll a dice.
-        × /react : Random Reaction
-        × /shout <keyword>: write anything you want to give loud shout.
+        × /crans: Bir yanıt dizisinden rasgele bir dizgi yanıtlayın.
+        × /tokat: bir kullanıcıya tokat atmak, ya da cevap değilse tokat atsın.
+        × /shkill: get sharm XD.
+        × /karar ver: rastgele cevaplar evet/no/belki
+        × /tour: Tosses A coin
+        × /bluetext: check urself :V
+        × /roll: Bir zar atın.
+        × /reaction: Random Reaction
+        × /shout <keyword>: yüksek sesle bağırarak vermek istediğiniz her şeyi yazın.
     language:
       main: "Dil"
       help: |-
-        Not able to change language of the bot?
-        Easily change by using this module!
+        Robotun dili değişemez mi?
+        Bu modülü kullanarak kolayca değiştirin!
 
-        Just type /lang and use inline keyboard to choose a language \
-        for yourself or your group.
+        Yalnızca /lang yazın ve kendiniz ya da grubunuz için bir dil \
+        seçmek için yerleşik klavye kullanın.
     locks:
-      main: "Locks"
+      main: "Kilitler"
       help: |-
-        Use this to lock group permissions.
-        Allows you to lock and unlock permission types in the chat.
+        Grup izinlerini kilitlemek için bunu kullanın.
+        Sohbet içindeki izin tiplerini kilitlemenizi ve kilidini açmanızı sağlar.
 
-        **Usage:**
-        × /lock <type>: Lock Chat permission.
-        × /unlock <type>: Unlock Chat permission.
-        × /locks: View Chat permission.
-        × /locktypes: Check available lock types!
+        ** Usage:**
+        × /lock <type>: Sohbet izni kilitleyin.
+        × /unlock <type>: Sohbet izininin kilidini açın.
+        × /kilitler: Sohbet iznini görüntüleyin.
+        × /locktypes: Kullanılabilir kilit tiplerini denetleyin!
     muting:
-      main: "Muting"
+      main: "Ses Verme"
       help: |-
-        Want someone to keep quite for a while in the group?
-        Mute plugin is here to help, mute or unmute any user easily!
+        Grupta bir süre saklanacak birini ister misin?
+        Sessiz eklenti, herhangi bir kullanıcının kolayca yardımcı olması, sesini kapatmak ya da açmak için burada.
 
-        **Admin only:**
-        × /mute: Mute the user replied to or mentioned.
-        × /unmute: Unmutes the user mentioned or replied to.
+        ** Yalnızca yönetici: **
+        × /dilsiz: Kullanıcının yanıtlağı ya da söz konusu olduğu dile kapatılır.
+        × /undilsiz: Kullanıcının sözü edilen ya da yanıtlanmamış olan kullanıcının sesi kaldırır.
 
-        An example of promoting someone to admins:
-        `/mute @username`; this mutes a user.
+        Bir kişiyi yöneticiler için teşvik etme örneği:
+        , /dilsiz @username`; bu bir kullanıcıyı bu şekilde kabul eder.
     notes:
-      main: "Notes"
+      main: "Notlar"
       help: |-
         Save a note, get that, even you can delete that note.
         This note only avaiable for yourself only!
@@ -166,78 +166,78 @@ strings:
         -> `Code`
         `Code` (grave accent)
     pins:
-      main: "Pins"
+      main: "Sabitler"
       help: |-
-        Here you find find all help related to groups pins and how to manage them via me.
+        Burada, grup iğnelleriyle ilgili tüm yardımı ve bunları benim aracımla nasıl yönetebildiğinizi bulabilirsiniz.
 
-        **Admin Cmds:**
-        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
-        × /unpin: Unpins the last pinned message.
-        × /unpinall: Unpins all the pinned message in the current chat.
+        ** Admin Cmds: **
+        × /pin: İletinin yanıtlanan iğneleri, kullanıcılara notificaton vermek için ' sesli `, ` notify ` veya ` alert ` şeklinde yanıtlandı.
+        × /unpin: Son sabitlenen iletinin iğneleri kaldırın.
+        × /unpinall: Geçerli sohbette, sabitlenmiş tüm iletinin iğneleri kaldırır.
     purges:
-      main: "Purges"
+      main: "Aralıklar"
       help: |-
-        Want to delete messages in you group?
+        Grubunuz içindeki iletileri silmek istiyor musunuz?
 
-        × /purge: Deletes messages upto replied message.
-        × /del: Deletes a single message, used as a reply to message.
+        × /purge: Yanıt iletilecek iletileri yukarı siler.
+        × /del: İletiye yanıt olarak kullanılan tek bir iletiyi siler.
     reporting:
-      main: "Reporting"
+      main: "Raporlama"
       help: |-
-        × /report <reason>: reply to a message to report it to admins.
-        - @admin: reply to a message to report it to admins.
-        **NOTE:** Neither of these will get triggered if used by admins.
+        × /report <reason>: bir iletiyi, administrator ' a bildirmek için bir mesaj iletin.
+        - @admin: iletiyi admins olarak bildirmek için bir iletiyi yanıtlayın.
+        **NOT: \ Bunlar yöneticiler tarafından kullanılırsa bunların hiçbiri tetiklenmez.
 
-        **Admins Only:**
-        × /reports <on/off>: change report setting, or view current status.
-        - If done in PM, toggles your status.
-        - If in group, toggles that groups's status.
+        ** Yalnızca yöneticiler: **
+        × /reports <on/off>: rapor ayarını değiştirin ya da geçerli durumu görüntüleyin.
+        -PM ' de yapıldıysa, durumunuzu kapatır.
+        -Grupta bu grupların durumu arasında geçiş yapar.
     rules:
-      main: "Rules"
+      main: "Kurallar"
       help: |-
-        Set rules for you chat so that members know what to do and \
-        what not to do in your group!
+        Üyelerin ne yapacağını bilebilmesi ve \
+        grubunuzda ne yapmaması için sohbet etmek için kuralları ayarlayın!
 
-        × /rules: get the rules for current chat.
+        × /rules: Geçerli sohbete ilişkin kuralları alın.
 
-        **Admin only:**
-        × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
-        × /clearrules: Clear the rules for this chat.
-        × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
+        ** Yalnızca yönetici: **
+        × /setrles <rules>: Bu sohbete ilişkin kuralları ayarlayın, ayrıca bir iletinin yanıtı olarak da çalışır.
+        × /clearrules: Bu sohbete ilişkin kuralları temizleyin.
+        × /privrules <on/yes/no/off>: Kuralları kullanıcının ya da grubun Koruyucu Bakımlarına gönderme seçeneği geçerli/kapalı.
     spam_protect:
-      main: "Spam Protect"
+      main: "İstenmeyen E"
       help: |-
-        Spammers joining your group?
-        No problem at all, here you can find all the options to protect your groups from raids and scums!
+        Spammers grubunuza katılıyor mu?
+        Hiçbir sorun yok. burada, gruplarınızı baskınlardan ve scums ' lardan korumak için tüm seçenekleri bulabilirsiniz!
 
-        **Admin Only:**
-        × /cas <on/off>: Turns on or off the CAS check for group.
-        × /underattack <on/off>: Kick all the new users on entry!
+        ** Admin Only: **
+        × /cas <on/off>: Grup için CAS denetimini açar ya da kapatır.
+        × /underattack <on/off>: giriş üzerine tüm yeni kullanıcıları tekmele!
     utils:
-      main: "Utils"
+      main: "Utillar"
       help: |-
-        Some utils provided by bot to make your tasks easy!
+        robot tarafından görevlerinizi kolay hale getirmek için sağlanan bazı utillar!
 
-        × /id: Get the current group id. If used by replying to a message, get that user's id.
-        × /info: Get information about a user.
-        × /ping - Get ping time of bot to telegram server.
-        × /gifid: Reply to a gif to me to tell you its file ID.
-        × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
-        × /github <username>: Search for the user using github api!
-        × /lyrics <song>: Get the lyrics of the song you specify!
-        × /weebify <text> or a reply to message: To weebify the text.
+        × /id: mevcut grup kimliğini alın. Bir iletiyi yanıtlayarak kullanılırsa, o kullanıcının kimliğini alın.
+        × /info: Bir kullanıcıyla ilgili bilgileri alın.
+        × /ping-Ping-ping time of bot to telgraf server.
+        × /gifid: size dosya tanıtıcısını anlatmak için bana bir gif ' i yanıtlayın.
+        × /tr <language>: metni tercüme eder ve daha sonra size belirtmiş olduğunuz dili ile size cevap verir, m cevap olarak çalışır.
+        × /github <username>: gisub api kullanarak kullanıcıyı arayın!
+        × /şarkı sözleri <song>: belirttiğiniz şarkının sözlerini alın!
+        × /weebify <text> ya da mesaja cevap yazın: to weothy the text.
     wiki:
-      main: "Wikipedia"
+      main: "Vikipedi"
       help: |-
-        Search Wikipedia on the go in your group!
+        grubunuzda gittigidiyor 'da wikipedia' da arama yapın!
 
-        **Available commands:**
-        × /wiki <query>: wiki your query.
+        ** kullanılabilir komutlar: **
+        × /viki <query>: vikipedi sorgunuz.
   admin:
     adminlist:
       adminstr: "<b>{chat_title}</b>içinde yöneticiler:\n"
-      note_cached: "<i>Note:</i> These are cached values!"
-      note_updated: "<i>Note:</i> These are up-to-date values!"
+      note_cached: "<i>Not:</i> Bunlar önbelleğe alınmış değerlerdir!"
+      note_updated: "<i>Not:</i> bunlar güncel değerlerdir!"
       reloaded_admins: "Bu sohbetteki tüm yöneticiler yeniden yüklendi!"
       use_admin_cache: "Administrator 'ı yeniden yüklemek için /admincache kullanın!"
     ban:
@@ -393,9 +393,9 @@ strings:
     no_perm_admin: "Bunu yapmak için iznim yok."
     no_results: "Sonuç bulunamadı."
     some_error: |-
-      Some error occured, report to @{SUPPORT_GROUP}
+      Bir hata ortaya çıktı, @{SUPPORT_GROUP}
 
-      <b>Error:</b> <code>{ef}</code>
+      <b>ile ilgili rapor oluştu Hata:</b> <code>{ef}</code>
     something_wrong: "Bir şeyler ters gitti!"
   langs:
     changed: "Dil, <code>{lang_code}</code> olarak değiştirildi"
@@ -506,39 +506,39 @@ strings:
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
-      custom_title: "This user holds the title <b>{custom_title}</b> here."
+      custom_title: "Bu kullanıcı <b>{custom_title}</b> ünvanını burada tutar."
       getting_info: "Kullanıcı bilgileri alınıyor ..."
       info_text:
         last_name: |-
 
-          <b>Last Name:</b> {user_lname}
+          <b>Son Ad:</b> {user_lname}
         main: |-
           <b>Özellikler:</b>
           <b>Kimlik:</b> <code>{user_id}</code>
           <b>İlk Ad:</b> {user_name}
         perma_link: |-
 
-          <b>Permanent User Link:</b> {perma_link}
+          <b>Kalıcı Kullanıcı Bağlantısı:</b> {perma_link}
         username: |-
 
-          <b>Username:</b> @{username}
+          <b>Kullanıcı adı:</b> @{username}
       support_user:
         dev: |-
 
 
-          This member is one of my Developers ⚡️
+          Bu üye, geliştiricilerimden biri ⚡️
         owner: |-
 
 
-          This person is my Owner, I would never do anything against them!
+          Bu kişi benim sahibidir, onlara karşı hiçbir şey yapmam!
         sudo: |-
 
 
-          This user is one of my Sudos, he has powers which are approximately same to owner!
+          Bu kullanıcı benim Sudos 'larımdan biri, sahip olduğu yaklaşık olarak aynı güce sahip!
         whitelist: |-
 
 
-          This person is 'Whitelist User', they cannot be banned!
+          Bu kişi 'Whitelist User' (Kullanıcı), yasaklanamaz!
     weebify:
       weebified_string: |-
         <b>Weebified String:</b>
