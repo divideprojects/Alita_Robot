@@ -97,11 +97,11 @@ async def get_lyrics(_, m: Message):
 )
 async def id_info(c: Alita, m: Message):
 
-    if m.chat.type == "supergroup":
+    if m.chat.type == "supergroup" and not m.reply_to_message:
         await m.reply_text((tlang(m, "utils.id.group_id")).format(group_id=m.chat.id))
         return
 
-    if m.chat.type == "private":
+    if m.chat.type == "private" and not m.reply_to_message:
         await m.reply_text((tlang(m, "utils.id.my_id")).format(my_id=m.chat.id))
         return
 
