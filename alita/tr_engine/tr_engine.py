@@ -21,6 +21,7 @@ from glob import glob
 from operator import getitem
 from os import path
 from threading import RLock
+from traceback import print_exc
 
 from pyrogram.types import CallbackQuery
 from yaml import FullLoader
@@ -68,6 +69,7 @@ def tlang(m, user_msg):
         except Exception as ef:
             LOGGER.error(f"Lang Error: {ef}")
             lang = default_lang
+            print_exc()
 
         # Raise exception if lang_code not found
         if lang not in ENABLED_LOCALES:

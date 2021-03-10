@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from traceback import print_exc
+
 from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
@@ -35,7 +37,7 @@ async def admin_check(m) -> bool:
         if user_id in SUDO_LEVEL:
             return True
     except Exception as ef:
-        await m.reply_text(f"{ef,m}")
+        print_exc()
 
     user = await m.chat.get_member(user_id)
     admin_strings = ("creator", "administrator")
@@ -47,6 +49,7 @@ async def admin_check(m) -> bool:
         except Exception as ef:
             await m.reply_text(reply)
             LOGGER.error(ef)
+            print_exc()
         return False
 
     return True
@@ -65,6 +68,7 @@ async def owner_check(m) -> bool:
             return True
     except Exception as ef:
         LOGGER.info(ef, m)
+        print_exc()
 
     user = await m.chat.get_member(user_id)
 
@@ -78,6 +82,7 @@ async def owner_check(m) -> bool:
         except Exception as ef:
             await m.reply_text(reply)
             LOGGER.error(ef)
+            print_exc()
 
         return False
 

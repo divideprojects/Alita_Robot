@@ -18,6 +18,7 @@
 
 from datetime import datetime
 from io import BytesIO
+from traceback import print_exc
 
 from pyrogram import filters
 from pyrogram.types import Message
@@ -102,6 +103,7 @@ async def gban(c: Alita, m: Message):
         )
     except Exception as ef:  # TO DO: Improve Error Detection
         LOGGER.error(ef)
+        print_exc()
     return
 
 
@@ -148,6 +150,7 @@ async def ungban(c: Alita, m: Message):
             )
         except Exception as ef:  # TODO: Improve Error Detection
             LOGGER.error(ef)
+            print_exc()
         return
 
     await m.reply_text(tlang(m, "antispam.ungban.non_gbanned"))

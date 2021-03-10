@@ -19,6 +19,7 @@
 from asyncio import sleep
 from io import BytesIO
 from time import time
+from traceback import print_exc
 
 from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
@@ -197,6 +198,7 @@ async def banallnotes_callback(_, q: CallbackQuery):
             users.append(x.user.id)
         except Exception:
             fs += 1
+            print_exc()
 
     rply = f"Users Banned:\n{users}"
 

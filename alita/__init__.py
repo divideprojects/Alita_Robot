@@ -23,6 +23,7 @@ from os import environ, mkdir, path
 from sys import exit as sysexit
 from sys import stdout, version_info
 from time import time
+from traceback import print_exc
 
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
@@ -63,6 +64,7 @@ try:
         from alita.local_vars import Development as Config
 except Exception as ef:
     LOGGER.error(ef)  # Print Error
+    print_exc()
     sysexit(1)
 
 

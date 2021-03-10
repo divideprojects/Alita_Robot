@@ -18,6 +18,7 @@
 
 from threading import RLock
 from time import time
+from traceback import print_exc
 
 from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
@@ -57,6 +58,7 @@ async def gban_watcher(c: Alita, m: Message):
             _banned = gban_db.check_gban(m.from_user.id)
         except Exception as ef:
             LOGGER.error(ef)
+            print_exc()
             return
         if _banned:
             try:

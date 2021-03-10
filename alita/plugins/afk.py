@@ -17,6 +17,7 @@
 
 
 from time import gmtime, strftime, time
+from traceback import print_exc
 
 from pyrogram import filters
 from pyrogram.types import Message
@@ -56,6 +57,7 @@ async def set_afk(_, m: Message):
     except Exception as ef:
         await m.reply_text(ef)
         LOGGER.error(ef)
+        print_exc()
 
     await m.stop_propagation()
 
@@ -71,11 +73,13 @@ async def afk_mentioned(c: Alita, m: Message):
         user_id, user_first_name = await extract_user(c, m)
     except Exception as ef:
         LOGGER.error(ef)
+        print_exc()
         return
 
     try:
         user_afk = db.check_afk(user_id)
     except Exception as ef:
+        print_exc()
         await m.reply_text((tlang(m, "afk.error_check_afk")).format(ef=ef))
         return
 
@@ -105,6 +109,7 @@ async def rem_afk(c: Alita, m: Message):
     try:
         user_afk = db.check_afk(m.from_user.id)
     except Exception as ef:
+        print_exc()
         await m.reply_text((tlang(m, "afk.error_check_afk")).format(ef=ef))
         return
 
