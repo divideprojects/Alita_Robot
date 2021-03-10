@@ -22,7 +22,7 @@ from time import time
 from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
+from pyrogram.errors import ChatAdminRequired, RightForbidden, UserNotParticipant, RPCError
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -79,6 +79,8 @@ async def kick_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
+    except UserNotParticipant:
+        await m.reply_text("How can I kick a member who is not in this chat?")
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
@@ -122,6 +124,8 @@ async def ban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
+    except UserNotParticipant:
+        await m.reply_text("How can I kick a member who is not in this chat?")
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
