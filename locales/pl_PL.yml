@@ -236,8 +236,8 @@ strings:
   admin:
     adminlist:
       adminstr: "Admins w <b>{chat_title}</b>:\n"
-      note_cached: "These are cached values!"
-      note_updated: "Są to aktualne wartości!"
+      note_cached: "<i>Note:</i> These are cached values!"
+      note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "Ponownie załadowano wszystkich administratorów w tej rozmowie sieciowej!"
       use_admin_cache: "Użyj komendy /admincache, aby przeładować admins!"
     ban:
@@ -351,7 +351,6 @@ strings:
         Tam jest <b>{len_admins}</b> admins kogo znam!
 
         <code>{admindict}</code>
-      admins_in_cache: "Istnieje <b>{len_admins}</b> admins w mojej pamięci podręcznej Redis."
       alladmins_btn: "Wszyscy administratorzy"
       getting_admins: "Pobieranie wszystkich adminów w mojej pamięci podręcznej ..."
     bot_ip: |-
@@ -365,12 +364,6 @@ strings:
 
         <b>Nazwa czatu | Czat ID | Członkowie liczą</b>
     execute_cmd_err: "Wykonaj poprawnie kod!"
-    flush_redis:
-      flush_failed: |-
-        Nie powiodło się opróżnienie bazy danych redis!
-        <b>Błąd:</b> {ef}
-      flushed_redis: "Opróżniono Redis pomyślnie!"
-      flushing_redis: "Opróżnianie bazy danych Redis ..."
     restarting: Restartowanie ...
     speedtest:
       speedtest_txt: |-
@@ -400,9 +393,9 @@ strings:
     no_perm_admin: "Nie mam pozwolenia na to, by"
     no_results: "Nie znaleziono wyników."
     some_error: |-
-      Wystąpił błąd, raportujący@{SUPPORT_GROUP}
+      Some error occured, report to @{SUPPORT_GROUP}
 
-      <b>Błąd:</b> {ef}
+      <b>Error:</b> <code>{ef}</code>
     something_wrong: "Coś poszło nie tak!"
   langs:
     changed: "Język zmienił się na <code>{lang_code}</code>"
