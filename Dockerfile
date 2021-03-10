@@ -20,7 +20,7 @@ RUN apt-get update && \
     neofetch
 
 # Clear apt lists
-RUN rm /var/lib/apt/lists/*
+RUN rm -rf /var/lib/apt/lists/*
 
 # Enter Workplace
 WORKDIR /app/
