@@ -236,8 +236,8 @@ strings:
   admin:
     adminlist:
       adminstr: "Admins in <b>{chat_title}</b>:\n"
-      note_cached: "These are cached values!"
-      note_updated: "هذه قيم حديثة!"
+      note_cached: "<i>Note:</i> These are cached values!"
+      note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "تم تحميل جميع المشرفين في هذه المحادثة!"
       use_admin_cache: "استخدم /admincache لإعادة تحميل المشرفين!"
     ban:
@@ -351,7 +351,6 @@ strings:
         There are <b>{len_admins}</b> admins whom I know!
 
         <code>{admindict}</code>
-      admins_in_cache: "يوجد <b>{len_admins}</b> admins في الذاكرة الوسيطة لي Reds."
       alladmins_btn: "جميع المشرفين"
       getting_admins: "الحصول على جميع المدراء في ذاكرة التخزين المؤقتة..."
     bot_ip: |-
@@ -365,12 +364,6 @@ strings:
 
         <b>اسم المحادثة | كود المحادثة | عدد الأعضاء</b>
     execute_cmd_err: "الرجاء تنفيذ الرمز بشكل صحيح!"
-    flush_redis:
-      flush_failed: |-
-        فشل في تدفق قاعدة بيانات redairs !
-        <b>خطأ :</b> {ef}
-      flushed_redis: "رديس مسحوق بنجاح!"
-      flushing_redis: "دفع قاعدة بيانات Redis ..."
     restarting: إعادة التشغيل...
     speedtest:
       speedtest_txt: |-
@@ -400,9 +393,9 @@ strings:
     no_perm_admin: "ليس لدي إذن للقيام بذلك"
     no_results: "لا توجد نتائج."
     some_error: |-
-      حدث خطأ ما ، التقرير الى @{SUPPORT_GROUP}
+      Some error occured, report to @{SUPPORT_GROUP}
 
-      <b>خطأ :</b> {ef}
+      <b>Error:</b> <code>{ef}</code>
     something_wrong: "حدث خطأ ما!"
   langs:
     changed: "تم تغيير اللغة الى <code>{lang_code}</code>"
