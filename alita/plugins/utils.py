@@ -16,11 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from datetime import datetime
 from html import escape
+from io import BytesIO
+from os import remove
+from time import time
+from traceback import format_exc
 
-from googletrans import LANGUAGES, Translator
-from pyrogram import errors, filters
+from gpytranslate import Translator
+from pyrogram import filters
+from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from tswift import Song
 
@@ -35,69 +39,57 @@ from alita import (
     WHITELIST_USERS,
 )
 from alita.bot_class import Alita
+from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
+from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.extract_user import extract_user
-from alita.utils.localization import GetLang
 from alita.utils.parser import mention_html
 from alita.utils.paste import paste
 
-__PLUGIN__ = "Utils"
-
-__help__ = """
-Some utils provided by bot to make your tasks easy!
-
- × /id: Get the current group id. If used by replying to a message, get that user's id.
- × /info: Get information about a user.
- × /ping - Get ping time of bot to telegram server.
- × /gifid: Reply to a gif to me to tell you its file ID.
- × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
- × /github <username>: Search for the user using github api!
- × /lyrics <song>: Get the lyrics of the song you specify!
- × /weebify <text> or a reply to message: To weebify the message.
-"""
+__PLUGIN__ = "plugins.utils.main"
+__help__ = "plugins.utils.help"
 
 
 @Alita.on_message(
     filters.command("ping", PREFIX_HANDLER) & (filters.group | filters.private),
 )
-async def ping(_: Alita, m: Message):
-    first = datetime.now()
-    sent = await m.reply_text("**Ping...**")
-    second = datetime.now()
-    await sent.edit_text(
-        f"**Pong!**\n`{round(((second-first).microseconds / 1000000), 2)}` Secs",
-    )
+async def ping(_, m: Message):
+    start = time()
+    replymsg = await m.reply_text((tlang(m, "utils.ping.pinging")), quote=True)
+    delta_ping = time() - start
+    await replymsg.edit_text(f"**Pong!**\n{delta_ping * 1000:.3f} ms")
     return
 
 
 @Alita.on_message(
     filters.command("lyrics", PREFIX_HANDLER) & (filters.group | filters.private),
 )
-async def get_lyrics(_: Alita, m: Message):
+async def get_lyrics(_, m: Message):
     query = m.text.split(None, 1)[1]
     song = ""
     if not query:
-        await m.edit_text("You haven't specified which song to look for!")
+        await m.edit_text(tlang(m, "utils.song.no_song_given"))
         return
-    em = await m.reply_text(f"**Finding lyrics for:** `{query}`")
+    em = await m.reply_text(
+        (tlang(m, "utils.song.searching").format(song_name=query)),
+    )
     song = Song.find_song(query)
     if song:
         if song.lyrics:
             reply = song.format()
         else:
-            reply = "Couldn't find any lyrics for that song!"
+            reply = tlang(m, "utils.song.no_lyrics_found")
     else:
-        reply = "Song not found!"
-    if len(reply) > 4090:
-        with open("lyrics.txt", "w+") as f:
-            f.write(reply)
+        reply = tlang(m, "utils.song.song_not_found")
+    try:
+        await em.edit_text(reply)
+    except MessageTooLong:
+        with BytesIO(str.encode(remove_markdown_and_html(reply))) as f:
+            f.name = "lyrics.txt"
             await m.reply_document(
                 document=f,
-                caption="Message length exceeded max limit!\nSent as a text file.",
             )
         await em.delete()
-    else:
-        await em.edit_text(reply)
     return
 
 
@@ -105,27 +97,34 @@ async def get_lyrics(_: Alita, m: Message):
     filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def id_info(c: Alita, m: Message):
-    user_id = (await extract_user(m))[0]
+
+    if m.chat.type == "supergroup" and not m.reply_to_message:
+        await m.reply_text((tlang(m, "utils.id.group_id")).format(group_id=m.chat.id))
+        return
+
+    if m.chat.type == "private" and not m.reply_to_message:
+        await m.reply_text((tlang(m, "utils.id.my_id")).format(my_id=m.chat.id))
+        return
+
+    user_id = (await extract_user(c, m))[0]
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_m.from_user
             user2 = m.reply_to_m.forward_from
             await m.reply_text(
-                (
-                    f"Original Sender - {(await mention_html(user2.first_name, user2.id))} "
-                    f"(<code>{user2.id}</code>).\n"
-                    f"Forwarder - {(await mention_html(user1.first_name, user1.id))} "
-                    f"(<code>{user1.id}</code>)."
+                (tlang(m, "utils.id.id_main")).format(
+                    orig_sender=(await mention_html(user2.first_name, user2.id)),
+                    orig_id=f"<code>{user2.id}</code>",
+                    fwd_sender=(await mention_html(user1.first_name, user1.id)),
+                    fwd_id=f"<code>{user1.id}</code>",
                 ),
                 parse_mode="HTML",
             )
         else:
             try:
                 user = await c.get_users(user_id)
-            except errors.PeerIdInvalid:
-                await m.reply_text(
-                    "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!",
-                )
+            except PeerIdInvalid:
+                await m.reply_text(tlang(m, "utils.no_user_db"))
 
             await m.reply_text(
                 f"{(await mention_html(user.first_name, user.id))}'s ID is <code>{user.id}</code>.",
@@ -134,13 +133,15 @@ async def id_info(c: Alita, m: Message):
     else:
         if m.chat.type == "private":
             await m.reply_text(
-                f"Your ID is <code>{m.chat.id}</code>.",
-                parse_mode="HTML",
+                (tlang(m, "utils.id.my_id")).format(
+                    my_id=f"<code>{m.chat.id}</code>",
+                ),
             )
         else:
             await m.reply_text(
-                f"This Group's ID is <code>{m.chat.id}</code>.",
-                parse_mode="HTML",
+                (tlang(m, "utils.id.group_id")).format(
+                    group_id=f"<code>{m.chat.id}</code>",
+                ),
             )
     return
 
@@ -148,21 +149,21 @@ async def id_info(c: Alita, m: Message):
 @Alita.on_message(
     filters.command("gifid", PREFIX_HANDLER) & (filters.group | filters.private),
 )
-async def get_gifid(_: Alita, m: Message):
+async def get_gifid(_, m: Message):
     if m.reply_to_message and m.reply_to_message.animation:
         await m.reply_text(
             f"Gif ID:\n<code>{m.reply_to_message.animation.file_id}</code>",
             parse_mode="html",
         )
     else:
-        await m.reply_text("Please reply to a gif to get its ID.")
+        await m.reply_text(tlang(m, "utils.gif_id.reply_gif"))
     return
 
 
 @Alita.on_message(
     filters.command("github", PREFIX_HANDLER) & (filters.group | filters.private),
 )
-async def github(_: Alita, m: Message):
+async def github(_, m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(None, 1)[1]
     else:
@@ -199,45 +200,53 @@ async def github(_: Alita, m: Message):
     filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def my_info(c: Alita, m: Message):
-    infoMsg = await m.reply_text("<code>Getting user information...</code>")
-    user_id = (await extract_user(m))[0]
+    infoMsg = await m.reply_text(
+        f"<code>{(tlang(m, 'utils.user_info.getting_info'))}</code>",
+    )
+    user_id = (await extract_user(c, m))[0]
     try:
         user = await c.get_users(user_id)
-    except errors.PeerIdInvalid:
+    except PeerIdInvalid:
+        await m.reply_text(tlang(m, "utils.no_user_db"))
+    except RPCError as ef:
         await m.reply_text(
-            "Failed to get user\nPeer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!",
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
         )
-    except Exception as ef:
-        await m.reply_text(f"<code>{ef}</code>\nReport to @{SUPPORT_GROUP}")
         return
 
-    text = (
-        f"<b>Characteristics:</b>\n"
-        f"<b>ID:</b> <code>{user.id}</code>\n"
-        f"<b>First Name:</b> <code>{escape(user.first_name)}</code>"
+    text = (tlang(m, "utils.user_info.info_text.main")).format(
+        user_id=user.id,
+        user_name=escape(user.first_name),
     )
 
     if user.last_name:
-        text += f"\n<b>Last Name:</b></b> <code>{escape(user.last_name)}</code>"
+        text += (tlang(m, "utils.user_info.info_text.last_name")).format(
+            user_lname=escape(user.last_name),
+        )
 
     if user.username:
-        text += f"\n<b>Username</b>: @{escape(user.username)}"
+        text += (tlang(m, "utils.user_info.info_text.username")).format(
+            username=escape(user.username),
+        )
 
-    text += (
-        f"\n<b>Permanent user link:</b> {(await mention_html('Click Here', user.id))}"
+    text += (tlang(m, "utils.user_info.info_text.perma_link")).format(
+        perma_link=(await mention_html("Click Here", user.id)),
     )
 
     if user.id == OWNER_ID:
-        text += "\n\nThis person is my Owner, I would never do anything against them!"
+        text += tlang(m, "utils.user_info.support_user.owner")
     elif user.id in DEV_USERS:
-        text += "\n\nThis member is one of my Developers ⚡️"
+        text += tlang(m, "utils.user_info.support_user.dev")
     elif user.id in SUDO_USERS:
-        text += "\n\nThe Power level of this person is 'Sudo'"
+        text += tlang(m, "utils.user_info.support_user.sudo")
     elif user.id in WHITELIST_USERS:
-        text += "\n\nThis person is 'Whitelist User', they cannot be banned!"
+        text += tlang(m, "utils.user_info.support_user.whitelist")
 
     try:
-        user_member = await c.get_users(user.id)
+        user_member = await m.chat.get_member(user.id)
         if user_member.status == "administrator":
             result = await AioHttp.post(
                 (
@@ -248,9 +257,12 @@ async def my_info(c: Alita, m: Message):
             result = result.json()["result"]
             if "custom_title" in result.keys():
                 custom_title = result["custom_title"]
-                text += f"\n\nThis user holds the title <b>{custom_title}</b> here."
-    except BaseException:
-        LOGGER.error("BaseException")
+                text += (tlang(m, "utils.user_info.custom_title")).format(
+                    custom_title=custom_title,
+                )
+    except Exception as ef:
+        LOGGER.error(f"Error: {ef}")
+        LOGGER.error(format_exc())
 
     await infoMsg.edit_text(text, parse_mode="html", disable_web_page_preview=True)
 
@@ -264,13 +276,13 @@ weebyfont = "卂 乃 匚 刀 乇 下 厶 卄 工 丁 长 乚 从 𠘨 口 尸 �
 
 
 @Alita.on_message(filters.command("weebify", PREFIX_HANDLER))
-async def weebify(_: Alita, m: Message):
+async def weebify(_, m: Message):
     if len(m.text.split()) >= 2:
         args = m.text.split(None, 1)[1]
     if m.reply_to_message and len(m.text.split()) == 1:
         args = m.reply_to_message.text
     if not args:
-        await m.reply_text("`What am I supposed to Weebify?`")
+        await m.reply_text(tlang(m, "utils.weebify.weebify_what"))
         return
     string = "  ".join(args).lower()
     for normiecharacter in string:
@@ -278,85 +290,84 @@ async def weebify(_: Alita, m: Message):
             weebycharacter = weebyfont[normiefont.index(normiecharacter)]
             string = string.replace(normiecharacter, weebycharacter)
 
-    await m.reply_text(f"**Weebified String:**\n`{string}`")
+    await m.reply_text(
+        (tlang(m, "utils.weebify.weebified_string").format(string=string)),
+    )
 
     return
 
 
 @Alita.on_message(filters.command("paste", PREFIX_HANDLER))
-async def paste_it(_: Alita, m: Message):
+async def paste_it(_, m: Message):
 
-    replymsg = await m.reply_text("Pasting...", quote=True)
+    replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")), quote=True)
 
     if m.reply_to_message:
-        txt = m.reply_to_message.text
+        if m.reply_to_message.document:
+            dl_loc = await m.reply_to_message.download()
+            with open(dl_loc) as f:
+                txt = f.read()
+            remove(dl_loc)
+        else:
+            txt = m.reply_to_message.text
     else:
         txt = m.text.split(None, 1)[1]
 
     url = (await paste(txt))[0]
 
     await replymsg.edit_text(
-        "Pasted to NekoBin!",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("NekoBin", url=url)]]),
+        (tlang(m, "utils.paste.pasted_nekobin")),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        (tlang(m, "utils.paste.nekobin_btn")),
+                        url=url,
+                    ),
+                ],
+            ],
+        ),
     )
 
     return
 
 
 @Alita.on_message(filters.command("tr", PREFIX_HANDLER))
-async def translate(_: Alita, m: Message):
-    _ = GetLang(m).strs
-    translator = Translator()
-    text = m.text[4:]
-    lang = await get_lang(text)
-    if m.reply_to_message:
-        text = m.reply_to_message.text or m.reply_to_message.caption
-    else:
-        text = text.replace(lang, "", 1).strip() if text.startswith(lang) else text
+async def translate(_, m: Message):
 
-    if text:
-        sent = await m.reply_text(
-            _("translate.translating"),
-            reply_to_message_id=m.message_id,
-        )
-        langs = {}
-
-        if len(lang.split("-")) > 1:
-            langs["src"] = lang.split("-")[0]
-            langs["dest"] = lang.split("-")[1]
+    trl = Translator()
+    if m.reply_to_message and (m.reply_to_message.text or m.reply_to_message.caption):
+        if len(m.text.split()) == 1:
+            await m.reply_text(
+                "Provide lang code.\n[Available options](https://telegra.ph/Lang-Codes-11-08).\n**Usage:** `/tr en`",
+            )
+            return
+        target_lang = m.text.split()[1]
+        if m.reply_to_message.text:
+            text = m.reply_to_message.text
         else:
-            langs["dest"] = lang
-
-        trres = translator.translate(text, **langs)
-        text = trres.text
-
-        res = escape(text)
-        await sent.edit_text(
-            _("translate.translation").format(
-                from_lang=trres.src,
-                to_lang=trres.dest,
-                translation=res,
-            ),
-            parse_mode="HTML",
-        )
-
+            text = m.reply_to_message.caption
+        detectlang = await trl.detect(text)
+        try:
+            tekstr = await trl(text, targetlang=target_lang)
+        except ValueError as err:
+            await m.reply_text(f"Error: `{str(err)}`")
+            return
     else:
-        await m.reply_text(
-            _("translate.translate_usage"),
-            reply_to_message_id=m.message_id,
-            parse_mode="markdown",
-        )
+        if len(m.text.split()) <= 2:
+            await m.reply_text(
+                "Provide lang code.\n[Available options](https://telegra.ph/Lang-Codes-11-08).\n**Usage:** `/tr en`",
+            )
+            return
+        target_lang = m.text.split(None, 2)[1]
+        text = m.text.split(None, 2)[2]
+        detectlang = await trl.detect(text)
+        try:
+            tekstr = await trl(text, targetlang=target_lang)
+        except ValueError as err:
+            await m.reply_text("Error: `{}`".format(str(err)))
+            return
 
-    return
-
-
-async def get_lang(text):
-    if len(text.split()) > 0:
-        lang = text.split()[0]
-        if lang.split("-")[0] not in LANGUAGES:
-            lang = "en"
-        if len(lang.split("-")) > 1 and lang.split("-")[1] not in LANGUAGES:
-            lang = "en"
-    else:
-        lang = "en"
-    return lang
+    await m.reply_text(
+        f"**Translated:** from {detectlang} to {target_lang} \n```{tekstr.text}```",
+    )

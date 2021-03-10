@@ -16,41 +16,74 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from alita import DEV_USERS, OWNER_ID
+from traceback import format_exc
+
+from pyrogram.types import CallbackQuery, Message
+
+from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
+
+SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
+DEV_LEVEL = DEV_USERS + [int(OWNER_ID)]
 
 
-async def admin_check(c, m) -> bool:
-    chat_id = m.chat.id
-    user_id = m.from_user.id
+async def admin_check(m) -> bool:
+    """Checks if user is admin or not."""
+    if isinstance(m, Message):
+        user_id = m.from_user.id
+    if isinstance(m, CallbackQuery):
+        user_id = m.message.from_user.id
 
-    if int(user_id) == int(OWNER_ID) or int(user_id) in DEV_USERS:
-        return True
+    try:
+        if user_id in SUDO_LEVEL:
+            return True
+    except Exception as ef:
+        LOGGER.error(format_exc())
 
-    user = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
-    admin_strings = ["creator", "administrator"]
+    user = await m.chat.get_member(user_id)
+    admin_strings = ("creator", "administrator")
 
     if user.status not in admin_strings:
-        await m.reply_text(
-            "This is an Admin Restricted command and you're not allowed to use it.",
-        )
+        reply = ("Nigga, you're not admin, don't try this explosive shit.",)
+        try:
+            await m.edit_text(reply)
+        except Exception as ef:
+            await m.reply_text(reply)
+            LOGGER.error(ef)
+            LOGGER.error(format_exc())
         return False
 
     return True
 
 
-async def owner_check(c, m) -> bool:
-    chat_id = m.chat.id
-    user_id = m.from_user.id
+async def owner_check(m) -> bool:
+    """Checks if user is owner or not."""
+    if isinstance(m, Message):
+        user_id = m.from_user.id
+    if isinstance(m, CallbackQuery):
+        user_id = m.message.from_user.id
+        m = m.message
 
-    if int(user_id) == int(OWNER_ID) or int(user_id) in DEV_USERS:
-        return True
+    try:
+        if user_id in SUDO_LEVEL:
+            return True
+    except Exception as ef:
+        LOGGER.info(ef, m)
+        LOGGER.error(format_exc())
 
-    user = await c.get_chat_member(chat_id=chat_id, user_id=user_id)
+    user = await m.chat.get_member(user_id)
 
     if user.status != "creator":
-        await m.reply_text(
-            "This is an Owner Restricted command and you're not allowed to use it.",
-        )
+        if user.status == "administrator":
+            reply = "Stay in your limits, or lose adminship too."
+        else:
+            reply = "You ain't even admin, what are you trying to do?"
+        try:
+            await m.edit_text(reply)
+        except Exception as ef:
+            await m.reply_text(reply)
+            LOGGER.error(ef)
+            LOGGER.error(format_exc())
+
         return False
 
     return True

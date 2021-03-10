@@ -18,36 +18,28 @@
 
 from asyncio import sleep
 
-from pyrogram import errors, filters
+from pyrogram import filters
+from pyrogram.errors import MessageDeleteForbidden
 from pyrogram.types import Message
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.utils.admin_check import admin_check
-from alita.utils.localization import GetLang
+from alita.tr_engine import tlang
+from alita.utils.custom_filters import admin_filter
 
-__PLUGIN__ = "Purges"
-
-__help__ = """
-Want to delete messages in you group?
-
- × /purge: Deletes messages upto replied message.
- × /del: Deletes a single message, used as a reply to message.
-"""
+__PLUGIN__ = "plugins.purges.main"
+__help__ = "plugins.purges.help"
 
 
-@Alita.on_message(filters.command("purge", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(
+    filters.command("purge", PREFIX_HANDLER) & filters.group & admin_filter,
+)
 async def purge(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
-    if not res:
-        return
-
-    _ = GetLang(m).strs
     if m.chat.type != "supergroup":
-        await m.reply_text(_("purge.err_basic"))
+        await m.reply_text(tlang(m, "purge.err_basic"))
         return
-    dm = await m.reply_text(_("purge.deleting"))
+    dm = await m.reply_text(tlang(m, "purge.deleting"))
 
     message_ids = []
 
@@ -68,26 +60,28 @@ async def purge(c: Alita, m: Message):
     try:
         await c.delete_messages(chat_id=m.chat.id, message_ids=message_ids, revoke=True)
         await m.delete()
-    except errors.MessageDeleteForbidden:
-        await dm.edit_text(_("purge.old_msg_err"))
+    except MessageDeleteForbidden:
+        await dm.edit_text(tlang(m, "purge.old_msg_err"))
         return
 
     count_del_msg = len(message_ids)
 
-    await dm.edit(_("purge.purge_msg_count").format(msg_count=count_del_msg))
+    await dm.edit(
+        (tlang(m, "purge.purge_msg_count")).format(
+            msg_count=count_del_msg,
+        ),
+    )
     await sleep(3)
     await dm.delete()
     return
 
 
-@Alita.on_message(filters.command("del", PREFIX_HANDLER) & filters.group, group=3)
+@Alita.on_message(
+    filters.command("del", PREFIX_HANDLER) & filters.group & admin_filter,
+    group=4,
+)
 async def del_msg(c: Alita, m: Message):
 
-    res = await admin_check(c, m)
-    if not res:
-        return
-
-    _ = GetLang(m).strs
     if m.reply_to_message:
         if m.chat.type != "supergroup":
             return
@@ -95,8 +89,7 @@ async def del_msg(c: Alita, m: Message):
             chat_id=m.chat.id,
             message_ids=m.reply_to_message.message_id,
         )
-        await sleep(0.5)
         await m.delete()
     else:
-        await m.reply_text(_("purge.what_del"))
+        await m.reply_text(tlang(m, "purge.what_del"))
     return

@@ -21,24 +21,42 @@ from pyrogram.types import Message
 
 from alita import DEV_PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.db import antispam_db as gbandb
-from alita.db import blacklist_db as bldb
-from alita.db import notes_db as notesdb
-from alita.db import rules_db as rulesdb
-from alita.db import users_db as userdb
+from alita.database.antispam_db import GBan
+from alita.database.approve_db import Approve
+from alita.database.blacklist_db import Blacklist
+from alita.database.chats_db import Chats
+from alita.database.notes_db import Notes
+from alita.database.rules_db import Rules
+from alita.database.spam_protect_db import SpamProtect
+from alita.database.users_db import Users
 from alita.utils.custom_filters import dev_filter
+
+# initialise
+bldb = Blacklist()
+gbandb = GBan()
+notesdb = Notes()
+rulesdb = Rules()
+userdb = Users()
+appdb = Approve()
+chatdb = Chats()
+spamdb = SpamProtect()
 
 
 @Alita.on_message(filters.command("stats", DEV_PREFIX_HANDLER) & dev_filter)
-async def get_stats(_: Alita, m: Message):
-    sm = await m.reply_text("**__Fetching Stats...__**")
+async def get_stats(_, m: Message):
+    replymsg = await m.reply_text("<b><i>Fetching Stats...</i></b>", quote=True)
     rply = (
-        f"<b>Users:</b> <code>{userdb.num_users()}</code> in <code>{userdb.num_chats()}</code> chats\n"
-        f"<b>Blacklists:</b> <code>{bldb.num_blacklist_filters()}</code> in <code>{bldb.num_blacklist_filter_chats()}</code> chats\n"
-        f"<b>Rules:</b> Set in <code>{rulesdb.num_chats()}</code> chats\n"
-        f"<b>Notes:</b> <code>{notesdb.num_notes_all()}</code> in <code>{notesdb.all_notes_chats()}</code>\n"
-        f"<b>Globally Banned Users:</b> <code>{gbandb.num_gbanned_users()}</code>\n"
+        f"<b>Users:</b> <code>{(userdb.count_users())}</code> in <code>{(chatdb.count_chats())}</code> chats\n"
+        f"<b>Blacklists:</b> <code>{(bldb.count_blacklists_all())}</code> in <code>{(bldb.count_blackists_chats())}</code> chats\n"
+        f"<b>Rules:</b> Set in <code>{(rulesdb.count_chats())}</code> chats\n"
+        f"    <b>Private Rules:</b> {(rulesdb.count_privrules_chats())} chats\n"
+        f"<b>Notes:</b> <code>{(notesdb.count_all_notes())}</code> in <code>{(notesdb.count_notes_chats())}</code> chats\n"
+        f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
+        f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
+        "\n<b>Spam Protection:</b>\n"
+        f"    <b>CAS Enabled:</b> {(spamdb.get_cas_enabled_chats_num())} chats\n"
+        f"    <b>UnderAttack Enabled:</b> {(spamdb.get_attack_enabled_chats_num())} chats\n"
     )
-    await sm.edit_text(rply, parse_mode="html")
+    await replymsg.edit_text(rply, parse_mode="html")
 
     return

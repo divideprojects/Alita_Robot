@@ -1,5 +1,5 @@
 os: linux
-dist: xenial
+dist: bionic
 language: python
 
 # Latest & lighest code
@@ -11,7 +11,7 @@ git:
 branches:
   only:
   - main
-  - beta
+  - production
 
 # Python Versions
 python:
@@ -19,20 +19,14 @@ python:
   - "3.8"
   - "3.9"
 
-# Update pip and setuptools
-before_install:
-  - pip install --upgrade pip setuptools
-
 # Install dependencies
 install:
-  - pip install --upgrade -r requirements-dev.txt
+  - make ci
 
 # Run test
 script:
   - make test
 
-# When to send mail
+# Don't send mail
 notifications:
-  email:
-    on_success: never
-    on_failure: always
+  email: false

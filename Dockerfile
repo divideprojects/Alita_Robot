@@ -1,4 +1,4 @@
-FROM python:3.9.1-slim-buster
+FROM python:3.9.2-slim-buster
 
 # Don't use cached python packages
 ENV PIP_NO_CACHE_DIR 1
@@ -7,14 +7,20 @@ ENV PIP_NO_CACHE_DIR 1
 RUN sed -i.bak 's/us-west-2\.ec2\.//' /etc/apt/sources.list
 
 # Installing Required Packages
-RUN apt update && \
-    apt upgrade -y && \
-    apt install --no-install-recommends -y \
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install --no-install-recommends -y \
     bash \
     python3-dev \
     python3-lxml \
     gcc \
-    make
+    clang \
+    make \
+    git \
+    neofetch
+
+# Clear apt lists
+RUN rm /var/lib/apt/lists/*
 
 # Enter Workplace
 WORKDIR /app/

@@ -24,6 +24,8 @@ def load_var(var_name, def_value=None):
 
 
 class Config:
+    """Config class for variables."""
+
     LOGGER = True
     TOKEN = load_var("TOKEN")
     APP_ID = int(load_var("APP_ID"))
@@ -34,20 +36,20 @@ class Config:
     SUDO_USERS = [int(i) for i in load_var("SUDO_USERS", "").split()]
     WHITELIST_USERS = [int(i) for i in load_var("WHITELIST_USERS", "").split()]
     DB_URI = load_var("DB_URI")
-    REDIS_HOST = load_var("REDIS_HOST")
-    REDIS_PORT = load_var("REDIS_PORT")
-    REDIS_PASS = load_var("REDIS_PASS")
+    DB_NAME = load_var("DB_NAME", "alita_robot")
     NO_LOAD = load_var("NO_LOAD", "").split()
-    PREFIX_HANDLER = load_var("PREFIX_HANDLER").split()
+    PREFIX_HANDLER = load_var("PREFIX_HANDLER", "/").split()
     SUPPORT_GROUP = load_var("SUPPORT_GROUP")
     SUPPORT_CHANNEL = load_var("SUPPORT_CHANNEL")
     ENABLED_LOCALES = [str(i) for i in load_var("ENABLED_LOCALES", "").split()]
     VERSION = load_var("VERSION")
     DEV_PREFIX_HANDLER = load_var("DEV_PREFIX_HANDLER", ">").split()
-    WORKERS = int(load_var("WORKERS"))
+    WORKERS = int(load_var("WORKERS", 16))
 
 
 class Development:
+    """Development class for variables."""
+
     # Fill in these vars if you want to use Traditional method of deploying
     LOGGER = True
     TOKEN = "YOUR TOKEN"
@@ -59,9 +61,7 @@ class Development:
     SUDO_USERS = []
     WHITELIST_USERS = []
     DB_URI = "postgres://username:password@postgresdb:5432/database_name"
-    REDIS_HOST = "REDIS_HOST"
-    REDIS_PORT = "REDIS_PORT"  # int type
-    REDIS_PASS = "REDIS_PASS"
+    DB_NAME = "alita_robot"
     NO_LOAD = []
     PREFIX_HANDLER = ["!", "/"]
     SUPPORT_GROUP = "SUPPORT_GROUP"

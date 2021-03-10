@@ -16,21 +16,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from traceback import format_exc
+
 from regex import search
 
 
 async def regex_searcher(regex_string, string):
+    """Search for Regex in string."""
     try:
         re_search = search(regex_string, string, timeout=6)
     except TimeoutError:
         return False
-    except BaseException:
+    except Exception:
+        LOGGER.error(format_exc())
         return False
 
     return re_search
 
 
 async def infinite_loop_check(regex_string):
+    """Clear Regex in string."""
     loop_matches = (
         r"\((.{1,}[\+\*]){1,}\)[\+\*]."
         r"[\(\[].{1,}\{\d(,)?\}[\)\]]\{\d(,)?\}"

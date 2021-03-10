@@ -23,8 +23,7 @@ from os import environ, mkdir, path
 from sys import exit as sysexit
 from sys import stdout, version_info
 from time import time
-
-from aioredis import create_redis_pool
+from traceback import format_exc
 
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
@@ -62,28 +61,11 @@ try:
     if environ.get("ENV"):
         from alita.vars import Config
     else:
-        from alita.vars import Development as Config
+        from alita.local_vars import Development as Config
 except Exception as ef:
     LOGGER.error(ef)  # Print Error
+    LOGGER.error(format_exc())
     sysexit(1)
-
-redis_client = None
-
-
-# Redis Cache
-async def setup_redis():
-    global redis_client
-    redis_client = await create_redis_pool(
-        address=(Config.REDIS_HOST, Config.REDIS_PORT),
-        db=0,
-        password=Config.REDIS_PASS,
-    )
-    try:
-        await redis_client.ping()
-        return redis_client
-    except Exception as ef:
-        LOGGER.error(f"Cannot connect to redis\nError: {ef}")
-        return False
 
 
 # Account Related
@@ -107,6 +89,7 @@ SUPPORT_STAFF = list(
 
 # Plugins, DB and Workers
 DB_URI = Config.DB_URI
+DB_NAME = Config.DB_NAME
 NO_LOAD = Config.NO_LOAD
 WORKERS = Config.WORKERS
 
@@ -124,6 +107,7 @@ BOT_ID = 0
 
 
 async def get_self(c):
+    """Gets the information about bot."""
     global BOT_USERNAME, BOT_NAME, BOT_ID
     getbot = await c.get_me()
     BOT_NAME = getbot.first_name
@@ -132,8 +116,12 @@ async def get_self(c):
     return getbot
 
 
-async def load_cmds(ALL_PLUGINS):
-    for single in ALL_PLUGINS:
+async def load_cmds(all_plugins):
+    """Loads all the plugins in bot."""
+    for single in all_plugins:
+        # If plugin in NO_LOAD, skip the plugin
+        if single.lower() in [i.lower() for i in Config.NO_LOAD]:
+            continue
         imported_module = imp_mod("alita.plugins." + single)
         if not hasattr(imported_module, "__PLUGIN__"):
             imported_module.__PLUGIN__ = imported_module.__name__
@@ -150,4 +138,8 @@ async def load_cmds(ALL_PLUGINS):
                 "Can't have two plugins with the same name! Please change one",
             )
 
-    return ", ".join(list(HELP_COMMANDS.keys()))
+    LOGGER.info(f"Not loading Plugins - {', '.join(Config.NO_LOAD)}")
+
+    return ", ".join(
+        [(i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())],
+    )

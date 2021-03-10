@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from asyncio import sleep
+
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
@@ -26,38 +28,34 @@ from pyrogram.types import (
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.db import lang_db as db
-from alita.utils.admin_check import admin_check
-from alita.utils.localization import GetLang, langdict
+from alita.database.lang_db import Langs
+from alita.tr_engine import lang_dict, tlang
+from alita.utils.custom_filters import admin_filter
 
-__PLUGIN__ = "Language"
+# initialise
+db = Langs()
 
-__help__ = """
-Not able to change language of the bot?
-Easily change by using this module!
-
-Just type /lang and use inline keyboard to choose a language \
-for yourself or your group.
-"""
+__PLUGIN__ = "plugins.language.main"
+__help__ = "plugins.language.help"
 
 
 async def gen_langs_kb():
-    langs = list(langdict)
+    langs = list(lang_dict.keys())
     kb = []
     while langs:
-        lang = langdict[langs[0]]
+        lang_main = lang_dict[langs[0]]["main"]
         a = [
             InlineKeyboardButton(
-                f"{lang['language_flag']} {lang['language_name']}",
+                f"{lang_main['language_flag']} {lang_main['language_name']} ({lang_main['lang_sample']})",
                 callback_data=f"set_lang.{langs[0]}",
             ),
         ]
         langs.pop(0)
         if langs:
-            lang = langdict[langs[0]]
+            lang_main = lang_dict[langs[0]]["main"]
             a.append(
                 InlineKeyboardButton(
-                    f"{lang['language_flag']} {lang['language_name']}",
+                    f"{lang_main['language_flag']} {lang_main['language_name']} ({lang_main['lang_sample']})",
                     callback_data=f"set_lang.{langs[0]}",
                 ),
             )
@@ -67,40 +65,48 @@ async def gen_langs_kb():
 
 
 @Alita.on_callback_query(filters.regex("^chlang$"))
-async def chlang_callback(_: Alita, m: CallbackQuery):
-    _ = GetLang(m).strs
+async def chlang_callback(_, q: CallbackQuery):
+
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             *(await gen_langs_kb()),
             [
                 InlineKeyboardButton(
-                    "« " + _("general.back_btn"),
+                    f"« {(tlang(q, 'general.back_btn'))}",
                     callback_data="start_back",
                 ),
             ],
         ],
     )
-    await m.message.edit_text(_("lang.changelang"), reply_markup=keyboard)
-    await m.answer()
+    await q.message.edit_text(
+        (tlang(q, "langs.changelang")),
+        reply_markup=keyboard,
+    )
+    await q.answer()
     return
 
 
 @Alita.on_callback_query(filters.regex("^close$"))
-async def close_btn_callback(_: Alita, m: CallbackQuery):
-    await m.message.delete()
-    await m.answer()
+async def close_btn_callback(_, q: CallbackQuery):
+    await q.message.delete()
+    await q.answer()
     return
 
 
 @Alita.on_callback_query(filters.regex("^set_lang."))
-async def set_lang_callback(_: Alita, m: CallbackQuery):
-    _ = GetLang(m).strs
-    if m.message.chat.type == "private":
+async def set_lang_callback(_, q: CallbackQuery):
+
+    lang_code = q.data.split(".")[1]
+
+    db.set_lang(q.message.chat.id, lang_code)
+    await sleep(0.1)
+
+    if q.message.chat.type == "private":
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        "« " + _("general.back_btn"),
+                        f"« {(tlang(q, 'general.back_btn'))}",
                         callback_data="start_back",
                     ),
                 ],
@@ -109,28 +115,33 @@ async def set_lang_callback(_: Alita, m: CallbackQuery):
     else:
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton("❌ " + _("close_btn"), callback_data="close")],
+                [
+                    InlineKeyboardButton(
+                        f"❌ {(tlang(q, 'general.close_btn'))}",
+                        callback_data="close",
+                    ),
+                ],
             ],
         )
-    db.set_lang(m.message.chat.id, m.message.chat.type, m.data.split(".")[1])
-    await m.message.edit_text(
-        "🌐 " + _("langs.changed").format(lang_code=m.data.split(".")[1]),
+    await q.message.edit_text(
+        f"🌐 {((tlang(q, 'langs.changed')).format(lang_code=lang_code))}",
         reply_markup=keyboard,
     )
-    await m.answer()
+    await q.answer()
     return
 
 
-@Alita.on_message(filters.command(["lang", "setlang"], PREFIX_HANDLER))
-async def set_lang(c: Alita, m: Message):
+@Alita.on_message(
+    filters.command(["lang", "setlang"], PREFIX_HANDLER)
+    & ((admin_filter & filters.group) | filters.private),
+)
+async def set_lang(_, m: Message):
 
-    if not (await admin_check(c, m)):
-        return
-
-    _ = GetLang(m).strs
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[*(await gen_langs_kb())])
     if len(m.text.split()) >= 2:
-        await m.reply_text(_("langs.correct_usage"))
+        await m.reply_text(tlang(m, "langs.correct_usage"))
         return
-    await m.reply_text(_("lang.changelang"), reply_markup=keyboard)
+    await m.reply_text(
+        (tlang(m, "langs.changelang")),
+        reply_markup=InlineKeyboardMarkup([*(await gen_langs_kb())]),
+    )
     return

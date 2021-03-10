@@ -16,10 +16,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import uvloop
+
+# Install uvloop
+uvloop.install()
+
 from os import makedirs, path
+from platform import python_version
+from threading import RLock
 from time import time
 
-from pyrogram import Client, __version__, errors
+from pyrogram import Client, __version__
+from pyrogram.errors import PeerIdInvalid, RPCError
 from pyrogram.raw.all import layer
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -32,18 +40,20 @@ from alita import (
     LOGGER,
     MESSAGE_DUMP,
     NO_LOAD,
-    SUPPORT_STAFF,
     TOKEN,
     WORKERS,
     get_self,
     load_cmds,
-    setup_redis,
 )
-from alita.db import users_db as userdb
-from alita.plugins import ALL_PLUGINS
-from alita.utils.localization import load_langdict
+from alita.database import MongoDB
+from alita.database.chats_db import Chats
+from alita.plugins import all_plugins
+from alita.tr_engine import lang_dict
+from alita.utils.admin_cache import ADMIN_CACHE
 from alita.utils.paste import paste
-from alita.utils.redishelper import allkeys, close, flushredis, set_key
+
+chatdb = Chats()
+INITIAL_LOCK = RLock()
 
 # Check if MESSAGE_DUMP is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
@@ -73,132 +83,113 @@ class Alita(Client):
             workers=WORKERS,
         )
 
-    async def flush_redis(self):
-        # Flush Redis data
-        try:
-            await flushredis()
-        except Exception as ef:
-            LOGGER.error(ef)
-
     async def get_admins(self):
-        LOGGER.info("Begin caching admins...")
-        begin = time()
+        """Cache all admins from chats in local DB."""
+        with INITIAL_LOCK:
 
-        await self.flush_redis()
+            global ADMIN_CACHE
 
-        all_chats = userdb.get_all_chats() or []  # Get list of all chats
-        LOGGER.info(f"{len(all_chats)} chats loaded.")
-        ADMINDICT = {}
-        for i in all_chats:
-            chat_id = i.chat_id
-            adminlist = []
-            try:
-                async for j in self.iter_chat_members(
-                    chat_id=chat_id,
-                    filter="administrators",
-                ):
-                    if j.user.is_deleted:
-                        continue
-                    adminlist.append(
-                        (
-                            j.user.id,
-                            f"@{j.user.username}"
-                            if j.user.username
-                            else j.user.first_name,
-                        ),
+            LOGGER.info("Begin caching admins...")
+            begin = time()
+
+            all_chats = (chatdb.list_chats()) or []  # Get list of all chats
+            LOGGER.info(all_chats)
+            LOGGER.info(f"{len(all_chats)} chats loaded from database.")
+
+            for chat_id in all_chats:
+                admin_list = []
+                try:
+                    async for j in self.iter_chat_members(
+                        chat_id=chat_id,
+                        filter="administrators",
+                    ):
+                        if j.user.is_deleted or j.user.is_bot:
+                            continue
+                        admin_list.append(
+                            (
+                                j.user.id,
+                                f"@{j.user.username}"
+                                if j.user.username
+                                else j.user.first_name,
+                            ),
+                        )
+                    admin_list = sorted(admin_list, key=lambda x: x[1])
+                    ADMIN_CACHE[chat_id] = admin_list  # Remove the last space
+
+                    LOGGER.info(
+                        f"Set {len(admin_list)} admins for {chat_id}\n- {admin_list}",
                     )
-                adminlist = sorted(adminlist, key=lambda x: x[1])
-                ADMINDICT[str(i.chat_id)] = adminlist  # Remove the last space
+                except PeerIdInvalid:
+                    pass
+                except RPCError as ef:
+                    LOGGER.error(ef)
 
-                LOGGER.info(
-                    f"Set {len(adminlist)} admins for {i.chat_id}\n- {adminlist}",
-                )
-            except errors.PeerIdInvalid:
-                pass
-            except Exception as ef:
-                LOGGER.error(ef)
-
-        try:
-            await set_key("ADMINDICT", ADMINDICT)
             end = time()
             LOGGER.info(
                 (
-                    "Set admin list cache!"
+                    "Set admin list cache!\n"
                     f"Time Taken: {round(end - begin, 2)} seconds."
                 ),
             )
-        except Exception as ef:
-            LOGGER.error(f"Could not set ADMINDICT in RedisCache!\n{ef}")
 
     async def start(self):
+        """Start the bot."""
         await super().start()
 
         meh = await get_self(self)  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
 
-        await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
-
-        # Redis Content Setup!
-        redis_client = await setup_redis()
-        if redis_client:
-            LOGGER.info("Connected to redis!")
-            await self.get_admins()  # Load admins in cache
-            await set_key("BOT_ID", meh.id)
-            await set_key("BOT_USERNAME", meh.username)
-            await set_key("BOT_NAME", meh.first_name)
-            await set_key("SUPPORT_STAFF", SUPPORT_STAFF)  # Load SUPPORT_STAFF in cache
-        else:
-            LOGGER.error("Redis not connected!")
-        # Redis Content Setup!
+        startmsg = await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 
         # Load Languages
-        lang_status = await load_langdict()
+        lang_status = len(lang_dict) >= 1
         LOGGER.info(f"Loading Languages: {lang_status}")
+
+        # Cache admins
+        await self.get_admins()
 
         # Show in Log that bot has started
         LOGGER.info(
-            f"Pyrogram v{__version__}\n(Layer - {layer}) started on @{BOT_USERNAME}",
+            f"Pyrogram v{__version__}\n(Layer - {layer}) started on {BOT_USERNAME}\n"
+            f"Python Version: {python_version()}",
         )
-        cmd_list = await load_cmds(await ALL_PLUGINS())
+
+        # Get cmds and keys
+        cmd_list = await load_cmds(await all_plugins())
+
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
-        redis_keys = await allkeys()
-        LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
 
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!
-        await self.send_message(
-            MESSAGE_DUMP,
+        await startmsg.edit_text(
             (
-                f"<b><i>{meh.username} started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n\n"
-                "<b>Loaded Plugins:</b>\n"
+                f"<b><i>@{meh.username} started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n"
+                f"\n<b>Python:</b> <u>{python_version()}</u>\n"
+                "\n<b>Loaded Plugins:</b>\n"
                 f"<i>{cmd_list}</i>\n"
-                "<b>Redis Keys Loaded:</b>\n"
-                f"<i>{redis_keys}</i>"
             ),
         )
 
         LOGGER.info("Bot Started Successfully!")
 
     async def stop(self):
-        """Send a message to MESSAGE_DUMP telling that the bot has stopped."""
+        """Stop the bot and send a message to MESSAGE_DUMP telling that the bot has stopped."""
         LOGGER.info("Uploading logs before stopping...!")
         with open(LOGFILE) as f:
             txt = f.read()
-            raw = (await paste(txt))[1]
+            neko, raw = await paste(txt)
         # Send Logs to MESSAGE-DUMP
         await self.send_document(
             MESSAGE_DUMP,
             document=LOGFILE,
-            caption=f"Logs for last run, pasted to NekoBin.\n<code>{LOG_DATETIME}</code>",
+            caption=(
+                f"Bot Stopped!\n\nLogs for last run, pasted to [NekoBin]({neko}) as "
+                f"well as uploaded a file here.\n<code>{LOG_DATETIME}</code>"
+            ),
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Logs", url=raw)]],
+                [[InlineKeyboardButton("Raw Logs", url=raw)]],
             ),
         )
-        await self.send_message(
-            MESSAGE_DUMP,
-            "<i><b>Bot Stopped!</b></i>",
-        )
         await super().stop()
-        await self.flush_redis()
-        await close()  # Close redis connection
+        MongoDB.close()
         LOGGER.info("Bot Stopped.\nkthxbye!")

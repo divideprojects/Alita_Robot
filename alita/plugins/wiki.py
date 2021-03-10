@@ -16,26 +16,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from io import BytesIO
+
 from pyrogram import filters
+from pyrogram.errors import MessageTooLong
 from pyrogram.types import Message
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
 
 from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
+from alita.utils.clean_file import remove_markdown_and_html
 
-__PLUGIN__ = "Wikipedia"
-
-__help__ = """
-Search Wikipedia on the go in your group!
-
-**Available commands:**
- × /wiki <query>: wiki your query.
-"""
+__PLUGIN__ = "plugins.wiki.main"
+__help__ = "plugins.wiki.help"
 
 
 @Alita.on_message(filters.command("wiki", PREFIX_HANDLER))
-async def wiki(_: Alita, m: Message):
+async def wiki(_, m: Message):
     if m.reply_to_message:
         search = m.reply_to_message.text
     else:
@@ -55,14 +53,15 @@ async def wiki(_: Alita, m: Message):
         result = f"<b>{search}</b>\n\n"
         result += f"<i>{res}</i>\n"
         result += f"""<a href="https://en.wikipedia.org/wiki/{search.replace(" ", "%20")}">Read more...</a>"""
-        if len(result) > 4000:
-            with open("result.txt", "rb") as f:
+        try:
+            await m.reply_text(result, parse_mode="html", disable_web_page_preview=True)
+        except MessageTooLong:
+            with BytesIO(str.encode(remove_markdown_and_html(result))) as f:
+                f.name = "result.txt"
                 await m.reply_document(
                     document=f,
                     reply_to_message_id=m.message_id,
                     parse_mode="html",
                 )
-        else:
-            await m.reply_text(result, parse_mode="html", disable_web_page_preview=True)
 
     return

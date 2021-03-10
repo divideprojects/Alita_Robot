@@ -16,19 +16,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
-
-from alita import DB_URI
-
-
-def start() -> scoped_session:
-    engine = create_engine(DB_URI, client_encoding="utf8")
-    BASE.metadata.bind = engine
-    BASE.metadata.create_all(engine)
-    return scoped_session(sessionmaker(bind=engine, autoflush=False))
-
-
-BASE = declarative_base()
-SESSION = start()
+def remove_markdown_and_html(text):
+    clean_html = (
+        text.replace("<code>", "")
+        .replace("</code>", "")
+        .replace("<b>", "")
+        .replace("</b>", "")
+        .replace("<i>", "")
+        .replace("</i>", "")
+        .replace("<u>", "")
+        .replace("</u>", "")
+    )
+    clean_text = clean_html.replace("`", "").replace("**", "").replace("__", "")
+    return clean_text
