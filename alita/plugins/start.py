@@ -173,7 +173,7 @@ async def help_menu(_, m: Message):
     if len(m.text.split()) >= 2:
 
         help_option = (m.text.split(None, 1)[1]).lower()
-        help_cmd_keys = sorted([i.lower() for i in list(HELP_COMMANDS.keys())])
+        help_cmd_keys = sorted([i.split(".")[1].lower() for i in list(HELP_COMMANDS.keys())])
         if help_option in help_cmd_keys:
             help_msg = tlang(m, HELP_COMMANDS[help_option])
 
