@@ -30,10 +30,10 @@ from pyrogram.types import Message
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
+from alita.utils.admin_cache import ADMIN_CACHE
 from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
-from alita.utils.redis_helper import RedisHelper
 
 __PLUGIN__ = "Admin"
 __help__ = """
@@ -56,37 +56,35 @@ An example of promoting someone to admins:
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
 async def adminlist_show(_, m: Message):
-
+    global ADMIN_CACHE
     try:
         try:
-            adminlist = (await RedisHelper.get_key("ADMINDICT"))[
-                str(m.chat.id)
-            ]  # Load ADMINDICT from string
+            admin_list = ADMIN_CACHE[m.chat.id]
             note = tlang(m, "admin.adminlist.note_cached")
-        except Exception:
-            adminlist = []
+        except KeyError:
+            admin_list = []
             async for i in m.chat.iter_members(
                 filter="administrators",
             ):
                 if i.user.is_deleted or i.user.is_bot:
                     continue  # We don't need deleted accounts or bot accounts
-                adminlist.append(
+                admin_list.append(
                     (
                         i.user.id,
-                        f"@{i.user.username}" if i.user.username else i.user.first_name,
+                        ("@" + i.user.username)
+                        if i.user.username
+                        else i.user.first_name,
                     ),
                 )
-            adminlist = sorted(adminlist, key=lambda x: x[1])
+            admin_list = sorted(admin_list, key=lambda x: x[1])
             note = tlang(m, "admin.adminlist.note_updated")
-            ADMINDICT = await RedisHelper.get_key("ADMINDICT")
-            ADMINDICT[str(m.chat.id)] = adminlist
-            await RedisHelper.set_key("ADMINDICT", ADMINDICT)
+            ADMIN_CACHE[m.chat.id] = admin_list
 
         adminstr = (tlang(m, "admin.adminlist.adminstr")).format(
             chat_title=m.chat.title,
         )
 
-        for i in adminlist:
+        for i in admin_list:
             try:
                 mention = (
                     i[1] if i[1].startswith("@") else (await mention_html(i[1], i[0]))
@@ -101,7 +99,7 @@ async def adminlist_show(_, m: Message):
         if str(ef) == str(m.chat.id):
             await m.reply_text(tlang(m, "admin.adminlist.use_admin_cache"))
         else:
-            ef = str(ef) + f"{adminlist}\n"
+            ef = str(ef) + f"{admin_list}\n"
             await m.reply_text(
                 (tlang(m, "general.some_error")).format(
                     SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
@@ -117,22 +115,21 @@ async def adminlist_show(_, m: Message):
     filters.command("admincache", PREFIX_HANDLER) & filters.group & admin_filter,
 )
 async def reload_admins(_, m: Message):
-
-    ADMINDICT = await RedisHelper.get_key("ADMINDICT")  # Load ADMINDICT from string
-
     try:
-        adminlist = []
+        global ADMIN_CACHE
+        admin_list = []
         async for i in m.chat.iter_members(filter="administrators"):
-            if i.user.is_deleted:
+            if (
+                i.user.is_deleted or i.user.is_bot
+            ):  # Don't cache deleted users and bots!
                 continue
-            adminlist.append(
+            admin_list.append(
                 (
                     i.user.id,
-                    f"@{i.user.username}" if i.user.username else i.user.first_name,
+                    ("@" + i.user.username) if i.user.username else i.user.first_name,
                 ),
             )
-        ADMINDICT[str(m.chat.id)] = adminlist
-        await RedisHelper.set_key("ADMINDICT", ADMINDICT)
+        ADMIN_CACHE[m.chat.id] = admin_list
         await m.reply_text(tlang(m, "admin.adminlist.reloaded_admins"))
     except RPCError as ef:
         await m.reply_text(
@@ -168,20 +165,35 @@ async def promote_usr(c: Alita, m: Message):
             ),
         )
 
-        # ----- Add admin to redis cache! -----
-        adminlist = (await RedisHelper.get_key("ADMINDICT"))[
-            str(m.chat.id)
-        ]  # Load ADMINDICT from string
+        # ----- Add admin to temp cache -----
+        try:
+            global ADMIN_CACHE
+            admin_list = ADMIN_CACHE[m.chat.id]  # Load Admins from cached list
+        except KeyError:
+            admin_list = []
+            async for i in m.chat.iter_members(filter="administrators"):
+                if (
+                    i.user.is_deleted or i.user.is_bot
+                ):  # Don't cache deleted users and bots!
+                    continue
+                admin_list.append(
+                    (
+                        i.user.id,
+                        ("@" + i.user.username)
+                        if i.user.username
+                        else i.user.first_name,
+                    ),
+                )
+
         u = await m.chat.get_member(user_id)
-        adminlist.append(
+        admin_list.append(
             [
                 u.user.id,
-                f"@{u.user.username}" if u.user.username else u.user.first_name,
+                ("@" + u.user.username) if u.user.username else u.user.first_name,
             ],
         )
-        ADMINDICT = await RedisHelper.get_key("ADMINDICT")
-        ADMINDICT[str(m.chat.id)] = adminlist
-        await RedisHelper.set_key("ADMINDICT", ADMINDICT)
+        admin_list = admin_list = sorted(admin_list, key=lambda x: x[1])
+        ADMIN_CACHE[m.chat.id] = admin_list
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -222,20 +234,27 @@ async def demote_usr(c: Alita, m: Message):
             ),
         )
 
-        # ----- Add admin to redis cache! -----
-        ADMINDICT = await RedisHelper.get_key("ADMINDICT")  # Load ADMINDICT from string
-        adminlist = []
-        async for i in m.chat.iter_members(filter="administrators"):
-            if i.user.is_deleted:
-                continue
-            adminlist.append(
-                [
-                    i.user.id,
-                    f"@{i.user.username}" if i.user.username else i.user.first_name,
-                ],
-            )
-        ADMINDICT[str(m.chat.id)] = adminlist
-        await RedisHelper.set_key("ADMINDICT", ADMINDICT)
+        # ----- Remove admin from cache -----
+        try:
+            global ADMIN_CACHE
+            admin_list = ADMIN_CACHE[m.chat.id]
+            user = next(user for user in admin_list if user[0] == user_id)
+            admin_list.remove(user)
+        except (KeyError, StopIteration):
+            admin_list = []
+            async for i in m.chat.iter_members(filter="administrators"):
+                if i.user.is_deleted or i.user.is_bot:
+                    continue
+                admin_list.append(
+                    [
+                        i.user.id,
+                        ("@" + i.user.username)
+                        if i.user.username
+                        else i.user.first_name,
+                    ],
+                )
+            admin_list = admin_list = sorted(admin_list, key=lambda x: x[1])
+            ADMIN_CACHE[m.chat.id] = admin_list
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))

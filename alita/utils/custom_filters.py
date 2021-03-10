@@ -16,18 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
+
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
 
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
 from alita.tr_engine import tlang
+from alita.utils.admin_cache import ADMIN_CACHE
 
-from time import perf_counter
-from cachetools import TTLCache
-
-from threading import RLock
-
-ADMIN_CACHE = TTLCache(maxsize=512, ttl=60 * 10, timer=perf_counter)
 THREAD_LOCK = RLock()
 
 SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
@@ -46,6 +43,8 @@ async def sudo_check_func(_, __, m):
 
 async def admin_check_func(_, __, m):
     """Check if user is Admin or not."""
+    global ADMIN_CACHE
+
     if isinstance(m, CallbackQuery):
         m = m.message
 
@@ -56,21 +55,18 @@ async def admin_check_func(_, __, m):
     with THREAD_LOCK:
         try:
             admin_list = [user[0] for user in ADMIN_CACHE[m.chat.id]]
-            if m.from_user.id in admin_list:
-                return True
-            else:
-                await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
-                return False
-        except KeyError;
+        except KeyError:
             admins_list = []
             async for i in m.chat.iter_members(filter="administrators"):
-                admins_list.append((i.user.id, ("@"+i.user.username) if i.user.username else i.user.first_name))
+                admins_list.append(
+                    (
+                        i.user.id,
+                        ("@" + i.user.username)
+                        if i.user.username
+                        else i.user.first_name,
+                    ),
+                )
             ADMIN_CACHE[m.chat.id] = admins_list
-            if m.from_user.id in admin_list:
-                return True
-            else:
-                await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
-                return False
         except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
             if ("The chat_id" or "belongs to a user") in ef:
                 return True
@@ -79,7 +75,11 @@ async def admin_check_func(_, __, m):
             if user.status in ("creator", "administrator"):
                 return True
 
-    return False
+        if m.from_user.id in admin_list:
+            return True
+        else:
+            await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
+            return False
 
 
 async def owner_check_func(_, __, m):

@@ -84,7 +84,6 @@ class Rules:
         with INSERTION_LOCK:
             return len(self.collection.find_all({"privrules": False}))
 
-
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
