@@ -6,24 +6,24 @@ main:
 strings:
   plugins:
     admin:
-      main: "Admin"
+      main: "اداري"
       help: |-
-        Lazy to promote or demote someone for admins? Want to see basic information about chat? \
-        All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
-        done easily using the bot.
+        Lazy لترقية أو عرض شخص لموجه النظام ؟ هل تريد مشاهدة معلومات أساسية عن المحادثة ؟ \
+        كل الأشياء الخاصة بغرفة المحادثة مثل كشوف الادارة ، أو الفوز أو الحصول على وصلة دعوة يمكن أن تكون \
+        قم بها بسهولة باستخدام الروبوت.
 
-        **User Commands:**
-        × /adminlist: List all admins in the current chat.
+        ** أوامر المستخدم : **
+        × /adminlist : كشف بكل admins في المحادثة الحالية.
 
-        **Admin only:**
-        × /invitelink: Gets private chat's invitelink.
-        × /promote: Promotes the user replied to or tagged.
-        × /demote: Demotes the user replied to or tagged.
+        ** Admin فقط : **
+        × /invitelink : Gets الخاصة بالمحادثة الخاصة بالمحادثة الخاصة.
+        × / ترقية : يتم ترقيها للمستخدم الذي قام بالرد عليه أو تعليمه.
+        × /demote : يجب أن يقوم المستخدم بالرد على أو تعليم شارة.
 
-        An example of promoting someone to admins:
-        `/promote @username`; this promotes a user to admin.
+        مثال لترقية شخص ما الى admins :
+        R/ترقية @username' ; يؤدي ذلك الى ترقية المستخدم الى موجه النظام.
     afk:
-      main: "AFK"
+      main: "أفك"
       help: |-
         Module for enabling auto replies when you are AFK.
         When enabled,
@@ -37,31 +37,31 @@ strings:
         To stop it, send message to any group.
         * Reason is optional
     approve:
-      main: "AFK"
+      main: "أفك"
       help: |-
-        Sometimes, you might trust a user not to send unwanted content.
-        Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
-        That's what approvals are for - approve trustworthy users to allow them to send stuff without restrictions!
+        في بعض الأحيان ، قد تثق في أن المستخدم لا يقوم بارسال محتويات غير مرغوب فيها.
+        ربما ليس بما فيه الكفاية لجعلهم admin ، ولكن قد تكون على ما يرام مع الأقفال ، والقوائم السوداء ، ومكافحة الفيضانات لا ينطبق عليها.
+        هذا هو ما تكون الموافقة عليه بالنسبة للمستخدمين الموثوق بهم للسماح لهم بارسال الاشياء بدون قيود !
 
-        **Admin commands:**
-        × /approval: Check a user's approval status in this chat.
-        × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-        × /unapprove: Unapprove of a user. They will now be subject to blocklists.
-        × /approved: List all approved users.
-        × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
+        ** أوامر الادارة : **
+        × / موافقة : قم بالتحقق من حالة الموافقة الخاصة بالمستخدم في هذه المحادثة.
+        × / موافقة : موافقة على المستخدم. الأقفال ، القوائم السوداء ، ومكافحة الفيضانات لن ينطبق عليهم بعد الآن.
+        × / عدم الموافقة : الغاء الموافقة على المستخدم. وسيخضعون الآن للحصار.
+        × /معتمد : يقوم بعرض كل المستخدمين الذين تم الموافقة عليهم.
+        × /unappeopeالكل : لا يتم اعتماد مستخدمي *ALL* في المحادثة. لا يمكن التراجع عن هذا !
     bans:
-      main: "Bans"
+      main: "وحدات Bans"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        شخص مزعج دخل مجموعتك ؟
+        هل تريد حظر / تقييدها ؟
+        هذا هو plugin بالنسبة لك ، وركلة بسهولة وحظر والغاء حظر العناصر في المجموعة.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /ban: Bans the user replied to or tagged.
-        × /unban: Unbans the user replied to or tagged.
+        ** Admin فقط : **
+        × /ksk : Kick قام المستخدم بالرد أو الشارة.
+        × /الحظر : Bans الذي قام المستخدم بالرد عليه أو تعليمه.
+        × /unban : الغاء الحظر الذي قام المستخدم بالرد عليه أو تعليمه.
     blacklist:
-      main: "Blacklist"
+      main: "القائمة السوداء"
       help: |-
         Want to restrict certain words or sentences in your group?
 
@@ -84,48 +84,48 @@ strings:
 
         **Note:** Can only add or remove one blacklist at a time!
     fun:
-      main: "Fun"
+      main: "المرح"
       help: |-
-        × /runs: reply a random string from an array of replies.
-        × /slap: slap a user, or get slapped if not a reply.
-        × /shrug : get shrug XD.
-        × /decide : Randomly answers yes/no/maybe
-        × /toss : Tosses A coin
-        × /bluetext : check urself :V
+        × /runs : الرد على مجموعة حروف عشوائية من خلال مجموعة من الردود.
+        x / صفعة : صفعة لمستخدم ، أو يتم الحصول على صفعة اذا لم يكن رد.
+        × /shrobros : الحصول على shساط XD.
+        × /not :
+        × /tros : tsemes A
+        × /bluetext : kcept urself :V
         × /roll : Roll a dice.
-        × /react : Random Reaction
-        × /shout <keyword>: write anything you want to give loud shout.
+        × /action : Random Reaction
+        × /صيحة <keyword>: قم بكتابة أي شيء تريده لكي تصرخ بصوت عال.
     language:
       main: "اللغة"
       help: |-
-        Not able to change language of the bot?
-        Easily change by using this module!
+        غير قادر على تغيير لغة الروبوت ؟
+        تغيير بسهولة باستخدام وحدة البرامج هذه !
 
-        Just type /lang and use inline keyboard to choose a language \
-        for yourself or your group.
+        فقط أدخل /lang واستخدم لوحة المفاتيح الحالية لاختيار لغة \
+        لنفسك أو للمجموعة الخاصة بك.
     locks:
-      main: "Locks"
+      main: "اقفال"
       help: |-
-        Use this to lock group permissions.
-        Allows you to lock and unlock permission types in the chat.
+        استخدم هذا الاختيار لاقفال تصاريح المجموعة.
+        يسمح لك باقفال والغاء اقفال أنواع التصاريح في المحادثة.
 
-        **Usage:**
-        × /lock <type>: Lock Chat permission.
-        × /unlock <type>: Unlock Chat permission.
-        × /locks: View Chat permission.
-        × /locktypes: Check available lock types!
+        ** Usage:**
+        × /lock <type>: اقفال تصريح المحادثة.
+        × /unlock <type>: الغاء اقفال تصريح المحادثة.
+        × /locks : مشاهدة تصريح المحادثة.
+        × /lockypes : تحقق من أنواع الاقفال المتاحة !
     muting:
-      main: "Muting"
+      main: "اخفاء الصوت"
       help: |-
-        Want someone to keep quite for a while in the group?
-        Mute plugin is here to help, mute or unmute any user easily!
+        هل تريد أن يبقى شخص ما لفترة من الوقت في المجموعة ؟
+        Mute plugin موجود هنا لمساعدة أو اخفاء أو الغاء اخفاء صوت أي مستخدم بسهولة !
 
-        **Admin only:**
-        × /mute: Mute the user replied to or mentioned.
-        × /unmute: Unmutes the user mentioned or replied to.
+        ** اداري فقط : **
+        × / اخفاء الصوت : اخفاء صوت المستخدم له أو ذكره.
+        × /unاخفاء : سيتم الغاء اخفاء الصوت الذي قام المستخدم بالاشارة اليه أو الرد عليه.
 
-        An example of promoting someone to admins:
-        `/mute @username`; this mutes a user.
+        مثال لترقية شخص ما الى admins :
+        الى /اخفاء صوت @username' ؛ هذا سيقوم باخفاء صوت مستخدم.
     notes:
       main: "Notes"
       help: |-
@@ -166,53 +166,53 @@ strings:
         -> `Code`
         `Code` (grave accent)
     pins:
-      main: "Pins"
+      main: "بينز"
       help: |-
-        Here you find find all help related to groups pins and how to manage them via me.
+        تجد هنا تجد كل المساعدة المتعلقة بدبابيس المجموعات وكيفية إدارتها من خلالي.
 
-        **Admin Cmds:**
-        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
-        × /unpin: Unpins the last pinned message.
-        × /unpinall: Unpins all the pinned message in the current chat.
+        ** CAdmin Cmds : **
+        × /pin : لاضافة الرسالة التي تم الرد عليها بطريقة غير مباشرة-لاضافة 'sadopy' أو 'notify' أو 'تنبيه' لاعطاء notificaton الى المستخدمين.
+        × /unpin : قم بالغاء ربط آخر رسالة معلقة.
+        × /uninpinالكل : قم بالغاء ربط كل الرسائل التي تم الحاقها في المحادثة الحالية.
     purges:
-      main: "Purges"
+      main: "تحث"
       help: |-
-        Want to delete messages in you group?
+        هل تريد حذف الرسائل في المجموعة الخاصة بك ؟
 
-        × /purge: Deletes messages upto replied message.
-        × /del: Deletes a single message, used as a reply to message.
+        × / ازالة : يتم حذف الرسائل التي تم الرد عليها للرسالة التي تم الرد عليها.
+        × /del : لحذف رسالة واحدة ، يتم استخدامها كرد على الرسالة.
     reporting:
-      main: "Reporting"
+      main: "التقارير"
       help: |-
-        × /report <reason>: reply to a message to report it to admins.
-        - @admin: reply to a message to report it to admins.
-        **NOTE:** Neither of these will get triggered if used by admins.
+        × /report <reason>: قم بالرد على رسالة للابلاغ عنها الى admins.
+        - @admin: قم بالرد على رسالة للابلاغ عنها الى admins.
+        ***NOTE : ** لن يتم اطلاق أيا منهما اذا تم استخدامه بواسطة admins.
 
-        **Admins Only:**
-        × /reports <on/off>: change report setting, or view current status.
-        - If done in PM, toggles your status.
-        - If in group, toggles that groups's status.
+        ** Admins فقط : **
+        × /report <on/off>: تغيير محددات التقرير ، أو مشاهدة الحالة الحالية.
+        -اذا تم تنفيذه في أمر الصيانة الوقائية ، يقوم بتبديل الحالة الخاصة بك.
+        -اذا كان في المجموعة ، يقوم بتبديل حالة المجموعات.
     rules:
-      main: "Rules"
+      main: "القواعد"
       help: |-
-        Set rules for you chat so that members know what to do and \
-        what not to do in your group!
+        قم بتحديد القواعد لاجراء المحادثة بحيث يقوم الأعضاء بمعرفة ما يجب القيام به و \
+        ما الذي لا يجب القيام به في المجموعة الخاصة بك !
 
-        × /rules: get the rules for current chat.
+        x /rules : الحصول على القواعد للمحادثة الحالية.
 
-        **Admin only:**
-        × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
-        × /clearrules: Clear the rules for this chat.
-        × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
+        ** موجه فقط : **
+        × /setprules <rules>: قم بتحديد القواعد لهذه المحادثة ، ويعمل أيضا كرد على رسالة.
+        × /clearrules : قم باخلاء القواعد لهذه المحادثة.
+        × /privles <on/yes/no/off>: يقوم بتشغيل / ايقاف تشغيل الاختيار الخاص بارسال القواعد الى PM للمستخدم أو المجموعة.
     spam_protect:
-      main: "Spam Protect"
+      main: "حماية الهجاء"
       help: |-
-        Spammers joining your group?
-        No problem at all, here you can find all the options to protect your groups from raids and scums!
+        هل سينضم المطارق إلى مجموعتك ؟
+        لا توجد مشكلة على الاطلاق ، هنا يمكنك ايجاد كل الاختيارات لحماية المجموعات الخاصة بك من الغارات و scops !
 
-        **Admin Only:**
-        × /cas <on/off>: Turns on or off the CAS check for group.
-        × /underattack <on/off>: Kick all the new users on entry!
+        ** Admin Only : **
+        × /cs <on/off>: يقوم بتشغيل أو ايقاف التحقق من CAS للمجموعة.
+        × /undلهجوم <on/off>: ركل جميع المستخدمين الجدد عند الدخول !
     utils:
       main: "Utils"
       help: |-
@@ -227,17 +227,17 @@ strings:
         × /lyrics <song>: Get the lyrics of the song you specify!
         × /weebify <text> or a reply to message: To weebify the text.
     wiki:
-      main: "Wikipedia"
+      main: "ويكيبيديا"
       help: |-
-        Search Wikipedia on the go in your group!
+        قم بالبحث في موقع ويكيبيديا في المجموعة الخاصة بك !
 
-        **Available commands:**
-        × /wiki <query>: wiki your query.
+        ** الأوامر المتاحة : **
+        x /wiki <query>: صفحة wiki الخاصة بك.
   admin:
     adminlist:
       adminstr: "Admins in <b>{chat_title}</b>:\n"
-      note_cached: "<i>Note:</i> These are cached values!"
-      note_updated: "<i>Note:</i> These are up-to-date values!"
+      note_cached: "<i>ملحوظة :</i> هذه هي قيم تم تخزينها بالذاكرة الوسيطة !"
+      note_updated: "<i>ملحوظة :</i> هذه قيم حديثة !"
       reloaded_admins: "تم تحميل جميع المشرفين في هذه المحادثة!"
       use_admin_cache: "استخدم /admincache لإعادة تحميل المشرفين!"
     ban:
@@ -506,39 +506,39 @@ strings:
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
-      custom_title: "This user holds the title <b>{custom_title}</b> here."
+      custom_title: "يقوم هذا المستخدم بالاحتفاظ بالعنوان <b>{custom_title}</b> هنا."
       getting_info: "الحصول على معلومات المستخدم..."
       info_text:
         last_name: |-
 
-          <b>Last Name:</b> {user_lname}
+          <b>الاسم الأخير :</b> {user_lname}
         main: |-
           <b>Characteristics:</b>
           <b>ID:</b> <code>{user_id}</code>
           <b>First Name:</b> {user_name}
         perma_link: |-
 
-          <b>Permanent User Link:</b> {perma_link}
+          <b>وصلة المستخدم الدائم :</b> {perma_link}
         username: |-
 
-          <b>Username:</b> @{username}
+          <b>اسم المستخدم :</b> @{username}
       support_user:
         dev: |-
 
 
-          This member is one of my Developers ⚡️
+          هذا العضو هو أحد مطوري البرامج الخاصة بي ⚡️
         owner: |-
 
 
-          This person is my Owner, I would never do anything against them!
+          هذا الشخص هو صاحبي ، أنا لن أفعل أي شيء ضدهم !
         sudo: |-
 
 
-          This user is one of my Sudos, he has powers which are approximately same to owner!
+          هذا المستخدم هو أحد المهام الخاصة بي ، لديه الصلاحيات والتي هي نفسها تقريبا للمالك !
         whitelist: |-
 
 
-          This person is 'Whitelist User', they cannot be banned!
+          هذا الشخص هو 'مستخدم Whitelist' ، لا يمكن منعهم !
     weebify:
       weebified_string: |-
         <b>مجموعة الحروف التي تم تعديلها :</b>
