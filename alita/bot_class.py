@@ -23,6 +23,7 @@ uvloop.install()
 
 from os import makedirs, path
 from platform import python_version
+from threading import RLock
 from time import time
 
 from pyrogram import Client, __version__
@@ -52,6 +53,7 @@ from alita.utils.admin_cache import ADMIN_CACHE
 from alita.utils.paste import paste
 
 chatdb = Chats()
+INITIAL_LOCK = RLock()
 
 # Check if MESSAGE_DUMP is correct
 if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
@@ -83,47 +85,52 @@ class Alita(Client):
 
     async def get_admins(self):
         """Cache all admins from chats in local DB."""
-        global ADMIN_CACHE
+        with INITIAL_LOCK:
 
-        LOGGER.info("Begin caching admins...")
-        begin = time()
+            global ADMIN_CACHE
 
-        all_chats = (chatdb.list_chats()) or []  # Get list of all chats
-        LOGGER.info(all_chats)
-        LOGGER.info(f"{len(all_chats)} chats loaded from database.")
+            LOGGER.info("Begin caching admins...")
+            begin = time()
 
-        for chat_id in all_chats:
-            admin_list = []
-            try:
-                async for j in self.iter_chat_members(
-                    chat_id=chat_id,
-                    filter="administrators",
-                ):
-                    if j.user.is_deleted or j.user.is_bot:
-                        continue
-                    admin_list.append(
-                        (
-                            j.user.id,
-                            f"@{j.user.username}"
-                            if j.user.username
-                            else j.user.first_name,
-                        ),
+            all_chats = (chatdb.list_chats()) or []  # Get list of all chats
+            LOGGER.info(all_chats)
+            LOGGER.info(f"{len(all_chats)} chats loaded from database.")
+
+            for chat_id in all_chats:
+                admin_list = []
+                try:
+                    async for j in self.iter_chat_members(
+                        chat_id=chat_id,
+                        filter="administrators",
+                    ):
+                        if j.user.is_deleted or j.user.is_bot:
+                            continue
+                        admin_list.append(
+                            (
+                                j.user.id,
+                                f"@{j.user.username}"
+                                if j.user.username
+                                else j.user.first_name,
+                            ),
+                        )
+                    admin_list = sorted(admin_list, key=lambda x: x[1])
+                    ADMIN_CACHE[chat_id] = admin_list  # Remove the last space
+
+                    LOGGER.info(
+                        f"Set {len(admin_list)} admins for {chat_id}\n- {admin_list}",
                     )
-                admin_list = sorted(admin_list, key=lambda x: x[1])
-                ADMIN_CACHE[chat_id] = admin_list  # Remove the last space
+                except PeerIdInvalid:
+                    pass
+                except RPCError as ef:
+                    LOGGER.error(ef)
 
-                LOGGER.info(
-                    f"Set {len(admin_list)} admins for {chat_id}\n- {admin_list}",
-                )
-            except PeerIdInvalid:
-                pass
-            except RPCError as ef:
-                LOGGER.error(ef)
-
-        end = time()
-        LOGGER.info(
-            ("Set admin list cache!\n" f"Time Taken: {round(end - begin, 2)} seconds."),
-        )
+            end = time()
+            LOGGER.info(
+                (
+                    "Set admin list cache!\n"
+                    f"Time Taken: {round(end - begin, 2)} seconds."
+                ),
+            )
 
     async def start(self):
         """Start the bot."""
