@@ -39,17 +39,17 @@ from alita import (
     LOGGER,
     MESSAGE_DUMP,
     NO_LOAD,
-    SUPPORT_STAFF,
     TOKEN,
     WORKERS,
     get_self,
     load_cmds,
 )
+from alita.database import MongoDB
 from alita.database.chats_db import Chats
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
+from alita.utils.admin_cache import ADMIN_CACHE
 from alita.utils.paste import paste
-from alita.utils.redis_helper import RedisHelper, setup_redis
 
 chatdb = Chats()
 
@@ -82,7 +82,9 @@ class Alita(Client):
         )
 
     async def get_admins(self):
-        """Cache all admins from chats in Redis DB."""
+        """Cache all admins from chats in local DB."""
+        global ADMIN_CACHE
+
         LOGGER.info("Begin caching admins...")
         begin = time()
 
@@ -90,14 +92,8 @@ class Alita(Client):
         LOGGER.info(all_chats)
         LOGGER.info(f"{len(all_chats)} chats loaded from database.")
 
-        try:
-            ADMINDICT = await RedisHelper.get_key("ADMINDICT")
-        except Exception as ef:
-            LOGGER.error(f"Unable to get ADMINDICT!\nError: {ef}")
-            ADMINDICT = {}
-
         for chat_id in all_chats:
-            adminlist = []
+            admin_list = []
             try:
                 async for j in self.iter_chat_members(
                     chat_id=chat_id,
@@ -105,7 +101,7 @@ class Alita(Client):
                 ):
                     if j.user.is_deleted or j.user.is_bot:
                         continue
-                    adminlist.append(
+                    admin_list.append(
                         (
                             j.user.id,
                             f"@{j.user.username}"
@@ -113,28 +109,21 @@ class Alita(Client):
                             else j.user.first_name,
                         ),
                     )
-                adminlist = sorted(adminlist, key=lambda x: x[1])
-                ADMINDICT[str(chat_id)] = adminlist  # Remove the last space
+                admin_list = sorted(admin_list, key=lambda x: x[1])
+                ADMIN_CACHE[chat_id] = admin_list  # Remove the last space
 
                 LOGGER.info(
-                    f"Set {len(adminlist)} admins for {chat_id}\n- {adminlist}",
+                    f"Set {len(admin_list)} admins for {chat_id}\n- {admin_list}",
                 )
             except PeerIdInvalid:
                 pass
             except RPCError as ef:
                 LOGGER.error(ef)
 
-        try:
-            await RedisHelper.set_key("ADMINDICT", ADMINDICT)
-            end = time()
-            LOGGER.info(
-                (
-                    "Set admin list cache!\n"
-                    f"Time Taken: {round(end - begin, 2)} seconds."
-                ),
-            )
-        except Exception as ef:
-            LOGGER.error(f"Could not set ADMINDICT in Redis Cache!\nError: {ef}")
+        end = time()
+        LOGGER.info(
+            ("Set admin list cache!\n" f"Time Taken: {round(end - begin, 2)} seconds."),
+        )
 
     async def start(self):
         """Start the bot."""
@@ -149,22 +138,6 @@ class Alita(Client):
         lang_status = len(lang_dict) >= 1
         LOGGER.info(f"Loading Languages: {lang_status}")
 
-        # Redis Content Setup!
-        redis_client = await setup_redis()
-        if redis_client:
-            LOGGER.info("Redis Connected: True")
-            await self.get_admins()  # Load admins in cache
-            await RedisHelper.set_key("BOT_ID", meh.id)
-            await RedisHelper.set_key("BOT_USERNAME", meh.username)
-            await RedisHelper.set_key("BOT_NAME", meh.first_name)
-            await RedisHelper.set_key(
-                "SUPPORT_STAFF",
-                SUPPORT_STAFF,
-            )  # Load SUPPORT_STAFF in cache
-        else:
-            LOGGER.error("Redis Connected: False")
-        # Redis Content Setup!
-
         # Show in Log that bot has started
         LOGGER.info(
             f"Pyrogram v{__version__}\n(Layer - {layer}) started on {BOT_USERNAME}\n"
@@ -173,10 +146,8 @@ class Alita(Client):
 
         # Get cmds and keys
         cmd_list = await load_cmds(await all_plugins())
-        redis_keys = ", ".join(await RedisHelper.allkeys())
 
         LOGGER.info(f"Plugins Loaded: {cmd_list}")
-        LOGGER.info(f"Redis Keys Loaded: {redis_keys}")
 
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!
@@ -186,8 +157,6 @@ class Alita(Client):
                 f"\n<b>Python:</b> <u>{python_version()}</u>\n"
                 "\n<b>Loaded Plugins:</b>\n"
                 f"<i>{cmd_list}</i>\n"
-                "\n<b>Redis Keys Loaded:</b>\n"
-                f"<i>{redis_keys}</i>"
             ),
         )
 
@@ -212,5 +181,5 @@ class Alita(Client):
             ),
         )
         await super().stop()
-        await RedisHelper.close()  # Close redis connection
+        MongoDB.close()
         LOGGER.info("Bot Stopped.\nkthxbye!")

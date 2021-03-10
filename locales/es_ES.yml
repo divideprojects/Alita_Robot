@@ -122,7 +122,6 @@ strings:
         ¡Conozco administradores de {len_admins}!
 
         {admindict}
-      admins_in_cache: "Hay {len_admins} administradores en mi caché de Redis."
       alladmins_btn: "Todos los administradores"
       getting_admins: "Obteniendo todos los administradores en mi caché ..."
     bot_ip: |-
@@ -136,12 +135,6 @@ strings:
 
         Nombre del chat | ID de chat | Los miembros cuentan
     execute_cmd_err: "¡Ejecute el código correctamente!"
-    flush_redis:
-      flush_failed: |-
-        ¡No se pudo vaciar la base de datos de redis!
-        Error: {ef}.
-      flushed_redis: "¡Redis limpiado con éxito!"
-      flushing_redis: "Vaciado de la base de datos de Redis ..."
     restarting: Reiniciando ...
     speedtest:
       speedtest_txt: |-

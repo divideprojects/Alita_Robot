@@ -351,7 +351,6 @@ strings:
         There are <b>{len_admins}</b> admins whom I know!
 
         <code>{admindict}</code>
-      admins_in_cache: "There are <b>{len_admins}</b> admins in my Redis cache."
       alladmins_btn: "All Admins"
       getting_admins: "Getting all admins in my cache..."
     bot_ip: |-
@@ -365,12 +364,6 @@ strings:
 
         <b>Chat name | Chat ID | Members count</b>
     execute_cmd_err: "Please execute the code correctly!"
-    flush_redis:
-      flush_failed: |-
-        Failed to flush redis database!
-        <b>Error:</b> {ef}
-      flushed_redis: "Flushed Redis successfully!"
-      flushing_redis: "Flushing Redis Database..."
     restarting: Restarting...
     speedtest:
       speedtest_txt: |-

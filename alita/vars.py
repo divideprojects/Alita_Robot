@@ -36,10 +36,6 @@ class Config:
     SUDO_USERS = [int(i) for i in load_var("SUDO_USERS", "").split()]
     WHITELIST_USERS = [int(i) for i in load_var("WHITELIST_USERS", "").split()]
     DB_URI = load_var("DB_URI")
-    REDIS_HOST = load_var("REDIS_HOST")
-    REDIS_PORT = load_var("REDIS_PORT")
-    REDIS_PASS = load_var("REDIS_PASS")
-    REDIS_DB = load_var("REDIS_DB", 0)
     NO_LOAD = load_var("NO_LOAD", "").split()
     PREFIX_HANDLER = load_var("PREFIX_HANDLER", "/").split()
     SUPPORT_GROUP = load_var("SUPPORT_GROUP")
@@ -64,9 +60,6 @@ class Development:
     SUDO_USERS = []
     WHITELIST_USERS = []
     DB_URI = "postgres://username:password@postgresdb:5432/database_name"
-    REDIS_HOST = "REDIS_HOST"
-    REDIS_PORT = "REDIS_PORT"  # int type
-    REDIS_PASS = "REDIS_PASS"
     NO_LOAD = []
     PREFIX_HANDLER = ["!", "/"]
     SUPPORT_GROUP = "SUPPORT_GROUP"

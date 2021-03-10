@@ -82,6 +82,7 @@ class MongoDB:
         return result.modified_count, new_document
 
     # Close connection
+    @staticmethod
     def close(self):
         _ = self
         return mongodb_client.close()

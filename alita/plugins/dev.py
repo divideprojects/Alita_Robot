@@ -43,7 +43,6 @@ from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import dev_filter, sudo_filter
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
-from alita.utils.redis_helper import RedisHelper
 
 # initialise database
 chatdb = Chats()
@@ -319,97 +318,6 @@ async def chats(c: Alita, m: Message):
 async def uptime(_, m: Message):
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
     await m.reply_text((tlang(m, "dev.uptime")).format(uptime=up), quote=True)
-    return
-
-
-@Alita.on_message(filters.command("alladmins", DEV_PREFIX_HANDLER) & dev_filter)
-async def list_all_admins(_, m: Message):
-
-    replymsg = await m.reply_text(
-        (tlang(m, "dev.alladmins.getting_admins")),
-        quote=True,
-    )
-    len_admins = 0  # Total number of admins
-
-    admindict = await RedisHelper.get_key("ADMINDICT")
-
-    for i in list(admindict.values()):
-        len_admins += len(i)
-
-    try:
-        await replymsg.edit_text(
-            (tlang(m, "dev.alladmins.admins_i_know_str")).format(
-                len_admins=len_admins,
-                admindict=str(admindict),
-            ),
-        )
-    except MessageTooLong:
-        raw = (await paste(admindict))[1]
-        with BytesIO(
-            str.encode(remove_markdown_and_html(dumps(admindict, indent=2))),
-        ) as f:
-            f.name = "allAdmins.txt"
-            await m.reply_document(
-                document=f,
-                caption=(tlang(m, "dev.alladmins.admins_in_cache")).format(
-                    len_admins=len_admins,
-                ),
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                (tlang(m, "dev.alladmins.alladmins_btn")),
-                                url=raw,
-                            ),
-                        ],
-                    ],
-                ),
-            )
-        await replymsg.delete()
-
-    return
-
-
-@Alita.on_message(filters.command("rediskeys", DEV_PREFIX_HANDLER) & dev_filter)
-async def show_redis_keys(_, m: Message):
-    txt_dict = {}
-    replymsg = await m.reply_text("Fetching Redis Keys...", quote=True)
-    keys = await RedisHelper.allkeys()
-    for i in keys:
-        txt_dict[i] = await RedisHelper.get_key(str(i))
-    try:
-        if not txt_dict:
-            return replymsg.edit_text("No keys stored in redis!")
-        await replymsg.edit_text(str(txt_dict))
-    except MessageTooLong:
-        raw = (await paste(txt_dict))[1]
-        with BytesIO(
-            str.encode(remove_markdown_and_html(dumps(txt_dict, indent=2))),
-        ) as f:
-            f.name = "redisKeys.txt"
-            await m.reply_document(
-                document=f,
-                caption="Here are all the Redis Keys I know.",
-                reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("Redis Keys", url=raw)]],
-                ),
-            )
-        await replymsg.delete()
-    return
-
-
-@Alita.on_message(filters.command("flushredis", DEV_PREFIX_HANDLER) & dev_filter)
-async def flush_redis(_, m: Message):
-    replymsg = await m.reply_text(
-        (tlang(m, "dev.flush_redis.flushing_redis")),
-        quote=True,
-    )
-    try:
-        await RedisHelper.flushredis()
-        await replymsg.edit_text(tlang(m, "dev.flush_redis.flushed_redis"))
-    except Exception as ef:
-        LOGGER.error(ef)
-        await replymsg.edit_text(tlang(m, "dev.flush_redis.flush_failed"))
     return
 
 

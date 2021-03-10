@@ -63,7 +63,6 @@ Help us bring more languages to the bot by contributing to the project on [Crowd
 
 ## Requirements
 - You need to have a *Mongo Database* (Cluster Preferred)
-- You also need *Redis Database*
 - Linux machine (Ubuntu/Denain-based OS Preferred)
 
 

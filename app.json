@@ -36,26 +36,6 @@
          "required": true,
          "value": "1198820588"
       },
-      "REDIS_HOST": {
-         "description": "Host/link of redis database",
-         "required": true,
-         "value": ""
-      },
-      "REDIS_PORT": {
-         "description": "Port of redis database.",
-         "required": true,
-         "value": ""
-      },
-      "REDIS_PASS": {
-         "description": "Password of redis database.",
-         "required": true,
-         "value": ""
-      },
-      "REDIS_DB": {
-         "description": "Your username without the @",
-         "required": true,
-         "value": "0"
-      },
       "SUPPORT_CHAT": {
          "description": "Your Telegram support group chat username where user's can contact in case of a problem..",
          "required": true,
