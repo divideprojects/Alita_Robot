@@ -35,15 +35,8 @@ from alita.utils.custom_filters import admin_filter
 # initialise
 db = Langs()
 
-__PLUGIN__ = "Language"
-
-__help__ = """
-Not able to change language of the bot?
-Easily change by using this module!
-
-Just type /lang and use inline keyboard to choose a language \
-for yourself or your group.
-"""
+__PLUGIN__ = "plugins.language.main"
+__help__ = "plugins.language.help"
 
 
 async def gen_langs_kb():

@@ -54,6 +54,7 @@ lang_dict = cache_localizations(lang_files)
 def tlang(m, user_msg):
     """Main function for getting the string of preferred language."""
     with LANG_LOCK:
+        default_lang = "en"
 
         m_args = user_msg.split(".")  # Split in a list
 
@@ -65,15 +66,23 @@ def tlang(m, user_msg):
         try:
             lang = db.get_lang(m.chat.id)
         except Exception as ef:
-            LOGGER.error(ef)
-            lang = "en"
+            LOGGER.error(f"Lang Error: {ef}")
+            lang = default_lang
+
+        # Raise exception if lang_code not found
+        if lang not in ENABLED_LOCALES:
+            LOGGER.error("Non-enabled localeused by user!")
+            lang = default_lang
 
         # Get lang
         m_args.insert(0, lang)
         m_args.insert(1, "strings")
 
-        # Raise exception if lang_code not found
-        if lang not in ENABLED_LOCALES:
-            raise Exception("Unknown Language Code found!")
+        try:
+            txt = reduce(getitem, m_args, lang_dict)
+        except KeyError:
+            m_args.pop(0)
+            m_args.insert(0, default_lang)
+            txt = reduce(getitem, m_args, lang_dict)
 
-        return reduce(getitem, m_args, lang_dict)
+        return txt

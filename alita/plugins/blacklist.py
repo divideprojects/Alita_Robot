@@ -34,30 +34,9 @@ from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.parser import mention_html
 
-__PLUGIN__ = "Blacklist"
+__PLUGIN__ = "plugins.blacklist.main"
+__help__ = "plugins.blacklist.help"
 
-__help__ = """
-Want to restrict certain words or sentences in your group?
-
-Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, \
-the message will immediately be deleted. A good combo is sometimes to pair this up with warn filters!
-**NOTE:** blacklists do not affect group admins.
- × /blacklist: View the current blacklisted words.
-
-**Admin only:**
- × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different \
-lines will allow you to add muser_listtiple triggers.
- × /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove \
-muser_listtiple triggers at once.
- × /rmblacklist <triggers>: Same as above.
- × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'
- Default is 'kick', which will kick the user on typing blacklist word.
-
-**Owner Only**
- × /rmallblacklist: Removes all the blacklists from the current chat.
-
-**Note:** Can only add or remove one blacklist at a time!
-"""
 
 # Initialise
 db = Blacklist()

@@ -30,7 +30,11 @@ from alita.bot_class import Alita
 from alita.tr_engine import tlang
 
 
-async def gen_cmds_kb():
+async def gen_cmds_kb(m):
+    """Generate language keyboard!"""
+    if isinstance(m, CallbackQuery):
+        m = m.message
+
     cmds = sorted(list(HELP_COMMANDS.keys()))
     kb = []
 
@@ -39,7 +43,7 @@ async def gen_cmds_kb():
             cmd = cmds[0]
             a = [
                 InlineKeyboardButton(
-                    f"{cmd.capitalize()}",
+                    tlang(m, cmd),
                     callback_data=f"get_mod.{cmd.lower()}",
                 ),
             ]
@@ -48,7 +52,7 @@ async def gen_cmds_kb():
             cmd = cmds[0]
             a.append(
                 InlineKeyboardButton(
-                    f"{cmd.capitalize()}",
+                    tlang(m, cmd),
                     callback_data=f"get_mod.{cmd.lower()}",
                 ),
             )
@@ -57,7 +61,7 @@ async def gen_cmds_kb():
             cmd = cmds[0]
             a.append(
                 InlineKeyboardButton(
-                    f"{cmd.capitalize()}",
+                    tlang(m, cmd),
                     callback_data=f"get_mod.{cmd.lower()}",
                 ),
             )
@@ -146,7 +150,7 @@ async def commands_menu(_, q: CallbackQuery):
 
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            *(await gen_cmds_kb()),
+            *(await gen_cmds_kb(q)),
             [
                 InlineKeyboardButton(
                     f"« {(tlang(q, 'general.back_btn'))}",
@@ -171,7 +175,7 @@ async def help_menu(_, m: Message):
         help_option = (m.text.split(None, 1)[1]).lower()
         help_cmd_keys = sorted([i.lower() for i in list(HELP_COMMANDS.keys())])
         if help_option in help_cmd_keys:
-            help_msg = HELP_COMMANDS[help_option]
+            help_msg = tlang(m, HELP_COMMANDS[help_option])
 
         if m.chat.type == "private":
             await m.reply_text(
@@ -206,7 +210,7 @@ async def help_menu(_, m: Message):
         if m.chat.type == "private":
             keyboard = InlineKeyboardMarkup(
                 inline_keyboard=[
-                    *(await gen_cmds_kb()),
+                    *(await gen_cmds_kb(m)),
                     [
                         InlineKeyboardButton(
                             f"« {(tlang(m, 'general.back_btn'))}",
@@ -240,7 +244,7 @@ async def help_menu(_, m: Message):
 @Alita.on_callback_query(filters.regex("^get_mod."))
 async def get_module_info(_, q: CallbackQuery):
 
-    module = q.data.split(".")[1]
+    module = q.data.split(".", 1)[1]
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -251,8 +255,9 @@ async def get_module_info(_, q: CallbackQuery):
             ],
         ],
     )
+    help_msg = tlang(q, HELP_COMMANDS[module])
     await q.message.edit_text(
-        HELP_COMMANDS[module],
+        help_msg,
         parse_mode="markdown",
         reply_markup=keyboard,
     )

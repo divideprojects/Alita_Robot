@@ -35,23 +35,8 @@ from alita.utils.custom_filters import admin_filter, invite_filter, promote_filt
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
-__PLUGIN__ = "Admin"
-__help__ = """
-Lazy to promote or demote someone for admins? Want to see basic information about chat? \
-All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
-done easily using the bot.
-
-**User Commands:**
- × /adminlist: List all admins in the current chat.
-
-**Admin only:**
- × /invitelink: Gets private chat's invitelink.
- × /promote: Promotes the user replied to or tagged.
- × /demote: Demotes the user replied to or tagged.
-
-An example of promoting someone to admins:
-`/promote @username`; this promotes a user to admin.
-"""
+__PLUGIN__ = "plugins.admin.main"
+__help__ = "plugins.admin.help"
 
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)

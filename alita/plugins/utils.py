@@ -45,20 +45,8 @@ from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 from alita.utils.paste import paste
 
-__PLUGIN__ = "Utils"
-
-__help__ = """
-Some utils provided by bot to make your tasks easy!
-
- × /id: Get the current group id. If used by replying to a message, get that user's id.
- × /info: Get information about a user.
- × /ping - Get ping time of bot to telegram server.
- × /gifid: Reply to a gif to me to tell you its file ID.
- × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
- × /github <username>: Search for the user using github api!
- × /lyrics <song>: Get the lyrics of the song you specify!
- × /weebify <text> or a reply to message: To weebify the m.
-"""
+__PLUGIN__ = "plugins.utils.main"
+__help__ = "plugins.utils.help"
 
 
 @Alita.on_message(

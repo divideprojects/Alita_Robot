@@ -27,14 +27,8 @@ from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 
-__PLUGIN__ = "Purges"
-
-__help__ = """
-Want to delete messages in you group?
-
- × /purge: Deletes messages upto replied message.
- × /del: Deletes a single message, used as a reply to message.
-"""
+__PLUGIN__ = "plugins.purges.main"
+__help__ = "plugins.purges.help"
 
 
 @Alita.on_message(

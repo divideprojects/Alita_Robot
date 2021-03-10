@@ -143,4 +143,6 @@ async def load_cmds(all_plugins):
 
     LOGGER.info(f"Not loading Plugins - {', '.join(Config.NO_LOAD)}")
 
-    return ", ".join(list(HELP_COMMANDS.keys()))
+    return ", ".join(
+        [(i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())],
+    )

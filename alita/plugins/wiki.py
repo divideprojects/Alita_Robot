@@ -28,14 +28,8 @@ from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.utils.clean_file import remove_markdown_and_html
 
-__PLUGIN__ = "Wikipedia"
-
-__help__ = """
-Search Wikipedia on the go in your group!
-
-**Available commands:**
- × /wiki <query>: wiki your query.
-"""
+__PLUGIN__ = "plugins.wiki.main"
+__help__ = "plugins.wiki.help"
 
 
 @Alita.on_message(filters.command("wiki", PREFIX_HANDLER))

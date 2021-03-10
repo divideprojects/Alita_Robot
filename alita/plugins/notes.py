@@ -36,45 +36,8 @@ from alita.utils.string import build_keyboard, parse_button
 # Initialise
 db = Notes()
 
-__PLUGIN__ = "Notes"
-__help__ = """
-Save a note, get that, even you can delete that note.
-This note only avaiable for yourself only!
-Also notes support inline button powered by inline query assistant bot.
-
-**Save Note**
- × /save <note>
-Save a note, you can get or delete that later.
-
-**Get Note**
- × /get <note>
-Get that note, if avaiable.
-
-**Delete Note**
- × /clear <note>
-Delete that note, if avaiable.
-
- × /clearall
-Clears all notes in the chat!
-**NOTE:** Can only be used by owner of chat!
-
-**All Notes**
- × /saved
- or
- × /notes
-Get all your notes, if too much notes, please use this in your saved message instead!
-
-
-── **Note Format** ──
--> **Button**
-`[Button Text](buttonurl:t.me/DivideProjects)`
--> **Bold**
-`**Bold**`
--> __Italic__
-`__Italic__`
--> `Code`
-`Code` (grave accent)
-"""
+__PLUGIN__ = "plugins.notes.main"
+__help__ = "plugins.notes.help"
 
 
 async def send_cmd(client: Alita, msgtype):

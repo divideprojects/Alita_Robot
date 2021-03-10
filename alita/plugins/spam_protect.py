@@ -9,15 +9,8 @@ from alita.utils.custom_filters import admin_filter
 # Initialise
 db = SpamProtect()
 
-__PLUGIN__ = "Spam Protect"
-__help__ = """
-Spammers joining your group?
-No problem at all, here you can find all the options to protect your groups from raids and scums!
-
-**Admin Only:**
- × /cas <on/off>: Turns on or off the CAS check for group.
- × /underattack <on/off>: Kick all the new users on entry!
-"""
+__PLUGIN__ = "plugins.spam_protect.main"
+__help__ = "plugins.spam_protect.help"
 
 
 @Alita.on_message(

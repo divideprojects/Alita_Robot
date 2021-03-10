@@ -27,18 +27,8 @@ from alita.utils.custom_filters import restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
-__PLUGIN__ = "Muting"
-__help__ = """
-Want someone to keep quite for a while in the group?
-Mute plugin is here to help, mute or unmute any user easily!
-
-**Admin only:**
- × /mute: Mute the user replied to or mentioned.
- × /unmute: Unmutes the user mentioned or replied to.
-
-An example of promoting someone to admins:
-`/mute @username`; this mutes a user.
-"""
+__PLUGIN__ = "plugins.muting.main"
+__help__ = "plugins.muting.help"
 
 
 @Alita.on_message(

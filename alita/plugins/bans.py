@@ -43,17 +43,8 @@ from alita.utils.custom_filters import owner_filter, restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
-__PLUGIN__ = "Bans"
-__help__ = """
-Someone annoying entered your group?
-Want to ban/restriction him/her?
-This is the plugin for you, easily kick, ban and unban members in a group.
-
-**Admin only:**
- × /kick: Kick the user replied or tagged.
- × /ban: Bans the user replied to or tagged.
- × /unban: Unbans the user replied to or tagged.
-"""
+__PLUGIN__ = "plugins.bans.main"
+__help__ = "plugins.bans.help"
 
 
 @Alita.on_message(

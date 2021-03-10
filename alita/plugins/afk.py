@@ -28,24 +28,11 @@ from alita.tr_engine import tlang
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
-__PLUGIN__ = "AFK"
-
-__help__ = """
-Module for enabling auto replies when you are AFK.
-When enabled,
-anyone who mentions you will be replied with a message saying that
-you are AFK.
-
-**Setting AFK Status**
- × /afk <reason>
-
-Enable auto replies when you are AFK.
-To stop it, send message to any group.
-* Reason is optional
-"""
-
 # Initialise
 db = AFK()
+
+__PLUGIN__ = "plugins.afk.main"
+__help__ = "plugins.afk.help"
 
 
 @Alita.on_message(

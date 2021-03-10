@@ -25,15 +25,8 @@ from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 
-__PLUGIN__ = "Pins"
-__help__ = """
-Here you find find all help related to groups pins and how to manage them via me.
-
-**Admin Cmds:**
- × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
- × /unpin: Unpins the last pinned message.
- × /unpinall: Unpins all the pinned message in the current chat.
-"""
+__PLUGIN__ = "plugins.pins.main"
+__help__ = "plugins.pins.help"
 
 
 @Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group & admin_filter)
