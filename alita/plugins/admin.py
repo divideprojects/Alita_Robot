@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from traceback import print_exc
+from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import (
@@ -94,7 +94,7 @@ async def adminlist_show(_, m: Message):
                 ),
             )
             LOGGER.error(ef)
-        print_exc()
+        LOGGER.error(format_exc())
 
     return
 

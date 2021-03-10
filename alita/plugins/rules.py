@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from traceback import print_exc
+from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import UserIsBlocked
@@ -89,7 +89,7 @@ async def get_rules(c: Alita, m: Message):
             return
         except Exception as ef:
             LOGGER.error(ef)
-            print_exc()
+            LOGGER.error(format_exc())
 
         await m.reply_text(
             (tlang(m, "rules.sent_pm_rules")),

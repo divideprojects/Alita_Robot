@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from traceback import print_exc
+from traceback import format_exc
 
 from regex import search
 
@@ -28,7 +28,7 @@ async def regex_searcher(regex_string, string):
     except TimeoutError:
         return False
     except Exception:
-        print_exc()
+        LOGGER.error(format_exc())
         return False
 
     return re_search

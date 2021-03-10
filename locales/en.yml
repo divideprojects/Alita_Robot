@@ -408,7 +408,10 @@ strings:
     something_wrong: "Something went wrong!"
   langs:
     changed: "Language changed to <code>{lang_code}</code>"
-    changelang: "Here you can change language for the bot."
+    changelang: |-
+      Here you can change language for the bot.
+
+      You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
     correct_usage: |-
       <b>Correct Usage:</b>
       /lang or /setlang language-code

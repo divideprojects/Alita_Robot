@@ -17,7 +17,7 @@
 
 
 from asyncio import sleep
-from traceback import print_exc
+from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import BadRequest, ChatWriteForbidden, RPCError, Unauthorized
@@ -279,5 +279,5 @@ async def db_clean_callbackAction(c: Alita, q: CallbackQuery):
             )
     except Exception as ef:
         LOGGER.error(f"Error while cleaning db:\n{ef}")
-        print_exc()
+        LOGGER.error(format_exc())
     return

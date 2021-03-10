@@ -19,6 +19,9 @@ RUN apt-get update && \
     git \
     neofetch
 
+# Clear apt lists
+RUN rm /var/lib/apt/lists/*
+
 # Enter Workplace
 WORKDIR /app/
 

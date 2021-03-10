@@ -20,7 +20,7 @@ from html import escape
 from io import BytesIO
 from os import remove
 from time import time
-from traceback import print_exc
+from traceback import format_exc
 
 from gpytranslate import Translator
 from pyrogram import filters
@@ -262,7 +262,7 @@ async def my_info(c: Alita, m: Message):
                 )
     except Exception as ef:
         LOGGER.error(f"Error: {ef}")
-        print_exc()
+        LOGGER.error(format_exc())
 
     await infoMsg.edit_text(text, parse_mode="html", disable_web_page_preview=True)
 

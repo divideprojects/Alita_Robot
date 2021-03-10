@@ -17,7 +17,7 @@
 
 
 from threading import RLock
-from traceback import print_exc
+from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
@@ -75,7 +75,7 @@ async def admin_check_func(_, __, m):
             user = await m.chat.get_member(m.from_user.id)
             if user.status in ("creator", "administrator"):
                 return True
-            print_exc()
+            LOGGER.error(format_exc())
 
         if m.from_user.id in admin_list:
             return True
