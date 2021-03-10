@@ -236,8 +236,8 @@ strings:
   admin:
     adminlist:
       adminstr: "Administrátoři v <b>{chat_title}</b>:\n"
-      note_cached: "These are cached values!"
-      note_updated: "Jedná se o hodnoty mezi sebou!"
+      note_cached: "<i>Note:</i> These are cached values!"
+      note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "V této konverzaci znovu načetli všechny administrátory!"
       use_admin_cache: "Chcete-li znovu načíst administrátory, použijte /admincache."
     ban:
@@ -351,7 +351,6 @@ strings:
         Existuje <b>{len_admins}</b> admins, které znám!
 
         <code>{admindict}</code>
-      admins_in_cache: "Ve své mezipaměti Redis je položka <b>{len_admins}</b> admins v mé mezipaměti Redis."
       alladmins_btn: "Všichni administrátoři"
       getting_admins: "Získání všech administrátorů v mezipaměti ..."
     bot_ip: |-
@@ -365,12 +364,6 @@ strings:
 
         <b>Název konverzace | Konverzační ID | Počet členů</b>
     execute_cmd_err: "Spusťte kód správně!"
-    flush_redis:
-      flush_failed: |-
-        Nepodařilo se vyprázdnit databázi Redis!
-        <b>Chyba:</b> {ef}
-      flushed_redis: "Dokument byl úspěšně vyprázdněna!"
-      flushing_redis: "Vyprázdnění databáze Redis ..."
     restarting: Restartování ...
     speedtest:
       speedtest_txt: |-
@@ -400,9 +393,9 @@ strings:
     no_perm_admin: "K tomu nemám svolení."
     no_results: "Nebyly nalezeny žádné výsledky."
     some_error: |-
-      Vyskytla se chyba, hlášení pro @{SUPPORT_GROUP}
+      Some error occured, report to @{SUPPORT_GROUP}
 
-      <b>Chyba:</b> {ef}
+      <b>Error:</b> <code>{ef}</code>
     something_wrong: "Něco se pokazilo!"
   langs:
     changed: "Jazyk změněn na <code>{lang_code}</code>"
