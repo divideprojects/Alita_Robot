@@ -77,9 +77,10 @@ async def admin_check_func(_, __, m):
 
         if m.from_user.id in admin_list:
             return True
-        else:
-            await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
-            return False
+
+        await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
+
+    return False
 
 
 async def owner_check_func(_, __, m):

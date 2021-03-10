@@ -103,6 +103,8 @@ strings:
 
         Just type /lang and use inline keyboard to choose a language \
         for yourself or your group.
+
+        You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
     locks:
       main: "Locks"
       help: |-
@@ -293,6 +295,9 @@ strings:
     user_now_afk: "User {user} is now afk!"
   antispam:
     gban:
+      gban_error_log: |-
+        <b>Gban Watcher Error!</b>
+        <b>Chat:</b> {chat_id}\n<b>Error:</b> <code>{ef}</code>
       added_to_watch: |-
         Added {first_name} to Global Ban List.
         They will now be banned in all groups where I'm admin!
@@ -338,6 +343,10 @@ strings:
 
       To get unbanned, appeal at @{SUPPORT_GROUP}
   blacklist:
+    bl_watcher:
+      action_kick: "Kicked {user} for using a blacklisted word!"
+      action_ban: "Banned {user} for using a blacklisted word!"
+      action_mute: "Muted {user} for using a blacklisted word!"
     action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
     action_set: "Set action for blacklist for this to <b>{action}</b>"
     added_blacklist: "Added <b>{trigger}</b> in blacklist words!"

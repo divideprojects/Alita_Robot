@@ -50,9 +50,9 @@ async def get_rules(c: Alita, m: Message):
         )
         return
 
-    priv_rules = db.get_privrules(m.chat.id)
+    priv_rules_status = db.get_privrules(m.chat.id)
 
-    if not priv_rules:
+    if not priv_rules_status:
         await m.reply_text(
             (tlang(m, "rules.get_rules")).format(
                 chat=m.chat.title,
@@ -129,7 +129,7 @@ async def priv_rules(_, m: Message):
             db.set_privrules(chat_id, False)
             msg = tlang(m, "rules.priv_rules.turned_off").format(chat_name=m.chat.title)
         else:
-            msg = tlang("m,rules.priv_rules.no_option")
+            msg = tlang(m, "rules.priv_rules.no_option")
         await m.reply_text(msg)
     elif len(m.text.split()) == 1:
         curr_pref = db.get_privrules(m.chat.id)

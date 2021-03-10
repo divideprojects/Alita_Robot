@@ -16,8 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from time import time
 from threading import RLock
+from time import time
 
 from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
@@ -40,11 +40,12 @@ gban_db = GBan()
 # Initialize threading
 WATCHER_LOCK = RLock()
 
+
 @Alita.on_message(filters.group, group=2)
 async def aio_watcher(c: Alita, m: Message):
     if not m.from_user:
         return
-    
+
     with WATCHER_LOCK:
         await gban_watcher(c, m)
         await bl_watcher(c, m)
@@ -80,7 +81,10 @@ async def gban_watcher(c: Alita, m: Message):
             except RPCError as ef:
                 await c.send_message(
                     MESSAGE_DUMP,
-                    f"<b>Gban Watcher Error!</b>\n<b>Chat:</b> {m.chat.id}\n<b>Error:</b> <code>{ef}</code>",
+                    tlang(m, "antispam.gban.gban_error_log").format(
+                        chat_id=m.chat.id,
+                        ef=ef,
+                    ),
                 )
     except AttributeError:
         pass  # Skip attribute errors!
@@ -94,9 +98,12 @@ async def bl_watcher(_, m: Message):
         if action == "kick":
             (await m.chat.kick_member(m.from_user.id, int(time() + 45)))
             await m.reply_text(
-                (
-                    f"Kicked {m.from_user.username if m.from_user.username else m.from_user.first_name}"
-                    " for using a blacklisted word!"
+                tlang(m, "blacklist.bl_watcher.action_kick").format(
+                    user=(
+                        m.from_user.username
+                        if m.from_user.username
+                        else ("<b>" + m.from_user.first_name + "</b>")
+                    ),
                 ),
             )
         elif action == "ban":
@@ -106,9 +113,12 @@ async def bl_watcher(_, m: Message):
                 )
             )
             await m.reply_text(
-                (
-                    f"Banned {m.from_user.username if m.from_user.username else m.from_user.first_name}"
-                    " for using a blacklisted word!"
+                tlang(m, "blacklist.bl_watcher.action_ban").format(
+                    user=(
+                        m.from_user.username
+                        if m.from_user.username
+                        else ("<b>" + m.from_user.first_name + "</b>")
+                    ),
                 ),
             )
         elif action == "mute":
@@ -131,9 +141,12 @@ async def bl_watcher(_, m: Message):
                 )
             )
             await m.reply_text(
-                (
-                    f"Muted {m.from_user.username if m.from_user.username else m.from_user.first_name}"
-                    " for using a blacklisted word!"
+                tlang(m, "blacklist.bl_watcher.action_mute").format(
+                    user=(
+                        m.from_user.username
+                        if m.from_user.username
+                        else ("<b>" + m.from_user.first_name + "</b>")
+                    ),
                 ),
             )
         elif action == "none":
