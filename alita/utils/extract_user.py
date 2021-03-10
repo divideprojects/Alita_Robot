@@ -50,11 +50,12 @@ async def extract_user(c, m) -> Tuple[int, str]:
         else:
             user_id = m.command[1]
             try:
-                print(db.get_user_info(user_id))
-                user = db.get_user_info(user_id)
+                print(type(user_id))
+                print(db.get_user_info(int(user_id)))
+                user = db.get_user_info(int(user_id))
                 user_first_name = user.name
             except Exception as ef:
-                user_first_name = (await c.get_users(user_id)).first_name
+                user_first_name = (await c.get_users(int(user_id))).first_name
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
 
