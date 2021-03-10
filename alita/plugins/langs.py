@@ -61,7 +61,7 @@ async def gen_langs_kb():
             )
             langs.pop(0)
         kb.append(a)
-    kb.append(InlineKeyboardButton("Help us with translations! 🌎", url="https://crowdin.com/project/alita_robot",))
+    kb.append([InlineKeyboardButton("Help us with translations! 🌎", url="https://crowdin.com/project/alita_robot")])
     return kb
 
 
