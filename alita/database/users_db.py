@@ -58,6 +58,9 @@ class Users:
         with INSERTION_LOCK:
             return self.collection.find_all()
 
-    def get_user_info(self, user_id):
+    def get_user_info(self, user_id: int):
         with INSERTION_LOCK:
-            return self.collection.find_one({"_id": user_id})
+            curr = self.collection.find_one({"_id": user_id})
+            if curr:
+                return curr
+            return {}
