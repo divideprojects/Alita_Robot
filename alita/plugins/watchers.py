@@ -42,11 +42,10 @@ WATCHER_LOCK = RLock()
 
 @Alita.on_message(filters.group, group=2)
 async def aio_watcher(c: Alita, m: Message):
+    if not m.from_user:
+        return
+    
     with WATCHER_LOCK:
-
-        if not m.from_user:
-            return
-
         await gban_watcher(c, m)
         await bl_watcher(c, m)
 
