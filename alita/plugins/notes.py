@@ -86,8 +86,9 @@ async def save_note(_, m: Message):
 async def get_note_func(c: Alita, m: Message, note: str):
 
     getnotes = db.get_note(m.chat.id, note)
+    all_notes = db.get_all_notes(m.chat.id)
 
-    if note not in getnotes:
+    if note not in all_notes:
         await m.reply_text("Note does not exists!")
         return
 
