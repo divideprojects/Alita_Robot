@@ -28,6 +28,7 @@ async def extract_user(c, m) -> Tuple[int, str]:
 
     if m.reply_to_message:
         user_id = m.reply_to_message.from_user.id
+        user_first_name = m.reply_to_message.from_user.first_name
 
     elif len(m.command) > 1:
         if len(m.entities) > 1:
@@ -43,7 +44,11 @@ async def extract_user(c, m) -> Tuple[int, str]:
                 user_first_name = user_id
         else:
             user_id = m.command[1]
-            user_first_name = user_id
-
+            try:
+                user_first_name = (await c.get_users(user_id)).first_name
+            except Exception as ef:
+                user_first_name = user_id
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
 
     return user_id, user_first_name
