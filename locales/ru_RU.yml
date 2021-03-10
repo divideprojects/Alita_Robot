@@ -103,6 +103,8 @@ strings:
 
         Just type /lang and use inline keyboard to choose a language \
         for yourself or your group.
+
+        You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
     locks:
       main: "Блокировки"
       help: |-
@@ -293,6 +295,9 @@ strings:
     user_now_afk: "Пользователь {user} сейчас аф!"
   antispam:
     gban:
+      gban_error_log: |-
+        <b>Гребан Ватчер Ошибка!</b>
+        <b>Чат:</b> {chat_id}\n<b>Ошибка:</b> <code>{ef}</code>
       added_to_watch: |-
         Добавлено {first_name} в список Global Ban List.
         Они будут запрещены во всех группах, где я являюсь администратором!
@@ -338,6 +343,10 @@ strings:
 
       Чтобы получить незапрещенный, привлекай @{SUPPORT_GROUP}
   blacklist:
+    bl_watcher:
+      action_kick: "Пинка {user} за использование черного списка слов!"
+      action_ban: "Запрет {user} за использование черного списка слов!"
+      action_mute: "Заглушила {user} за использование черного списка слов!"
     action_get: "Текущее действие для черных списков в этом чате- <i><b>{action}</b></i>"
     action_set: "Задать действие для черного списка для этого значения: <b>{action}</b>"
     added_blacklist: "Добавлено <b>{trigger}</b> в черном списке!"
@@ -399,7 +408,10 @@ strings:
     something_wrong: "Что-то не так!"
   langs:
     changed: "Язык изменен на <code>{lang_code}</code>"
-    changelang: "Здесь вы можете изменить язык для бота."
+    changelang: |-
+      Here you can change language for the bot.
+
+      You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
     correct_usage: |-
       <b>Правильное использование:</b>
       /lang или /setlang-код языка
