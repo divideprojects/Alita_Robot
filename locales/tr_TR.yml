@@ -236,8 +236,8 @@ strings:
   admin:
     adminlist:
       adminstr: "<b>{chat_title}</b>içinde yöneticiler:\n"
-      note_cached: "These are cached values!"
-      note_updated: "Bunlar güncel değerler!"
+      note_cached: "<i>Note:</i> These are cached values!"
+      note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "Bu sohbetteki tüm yöneticiler yeniden yüklendi!"
       use_admin_cache: "Administrator 'ı yeniden yüklemek için /admincache kullanın!"
     ban:
@@ -351,7 +351,6 @@ strings:
         <b>{len_admins}</b> admins biliyorum ki ben biliyorum!
 
         <code>{admindict}</code>
-      admins_in_cache: "Redis önbelleğimde <b>{len_admins}</b> admins vardır."
       alladmins_btn: "Tüm Yöneticiler"
       getting_admins: "Önbellekteki tüm yöneticiler alınıyor ..."
     bot_ip: |-
@@ -365,12 +364,6 @@ strings:
 
         <b>Sohbet adı | Sohbet Tanıtıcısı | Üyeler sayısı</b>
     execute_cmd_err: "Lütfen kodu doğru olarak yürütün!"
-    flush_redis:
-      flush_failed: |-
-        Redis veritabanı temizlenemedi!
-        <b>Hata:</b> {ef}
-      flushed_redis: "Düzeltme Reddi başarıyla tamamlandı!"
-      flushing_redis: "Reis Veritabanı Akışlanıyor ..."
     restarting: Yeniden başlatılıyor ...
     speedtest:
       speedtest_txt: |-
@@ -400,9 +393,9 @@ strings:
     no_perm_admin: "Bunu yapmak için iznim yok."
     no_results: "Sonuç bulunamadı."
     some_error: |-
-      Bir hata oluştu, @{SUPPORT_GROUP}
+      Some error occured, report to @{SUPPORT_GROUP}
 
-      <b>ile ilgili rapor oluştu Hata:</b> {ef}
+      <b>Error:</b> <code>{ef}</code>
     something_wrong: "Bir şeyler ters gitti!"
   langs:
     changed: "Dil, <code>{lang_code}</code> olarak değiştirildi"
