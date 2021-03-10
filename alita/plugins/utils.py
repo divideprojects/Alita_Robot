@@ -245,25 +245,6 @@ async def my_info(c: Alita, m: Message):
     elif user.id in WHITELIST_USERS:
         text += tlang(m, "utils.user_info.support_user.whitelist")
 
-    try:
-        user_member = await m.chat.get_member(user.id)
-        if user_member.status == "administrator":
-            result = await AioHttp.post(
-                (
-                    f"https://api.telegram.org/bot{TOKEN}/"
-                    f"getChatMember?chat_id={m.chat.id}&user_id={user.id}"
-                ),
-            )
-            result = result.json()["result"]
-            if "custom_title" in result.keys():
-                custom_title = result["custom_title"]
-                text += (tlang(m, "utils.user_info.custom_title")).format(
-                    custom_title=custom_title,
-                )
-    except Exception as ef:
-        LOGGER.error(f"Error: {ef}")
-        LOGGER.error(format_exc())
-
     await infoMsg.edit_text(text, parse_mode="html", disable_web_page_preview=True)
 
     return

@@ -83,14 +83,14 @@ async def save_note(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("get", PREFIX_HANDLER) & filters.group)
-async def get_note(c: Alita, m: Message):
-    if len(m.text.split()) >= 2:
-        note = m.text.split()[1]
-    else:
-        await m.reply_text("Give me a note tag!")
+async def get_note_func(c: Alita, m: Message, note: str):
 
     getnotes = db.get_note(m.chat.id, note)
+
+    if note not in getnotes:
+        await m.reply_text("Note does not exists!")
+        return
+
     msgtype = getnotes["msgtype"]
     if not getnotes:
         await m.reply_text("This note does not exist!")
@@ -141,6 +141,24 @@ async def get_note(c: Alita, m: Message):
                 getnotes["fileid"],
                 caption=teks,
             )
+    return
+
+
+@Alita.on_message(filters.regex(r"^#[^\s]+") & filters.group)
+async def hash_get(c: Alita, m: Message):
+    note = m.text[1:]
+    await get_note_func(c, m, note)
+    return
+
+
+@Alita.on_message(filters.command("get", PREFIX_HANDLER) & filters.group)
+async def get_note(c: Alita, m: Message):
+    if len(m.text.split()) >= 2:
+        note = m.text.split()[1]
+    else:
+        await m.reply_text("Give me a note tag!")
+        return
+    await get_note_func(c, m, note)
     return
 
 

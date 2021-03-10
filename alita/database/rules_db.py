@@ -74,15 +74,15 @@ class Rules:
 
     def count_chats(self):
         with INSERTION_LOCK:
-            return self.collection.count()
+            return self.collection.count({"rules": {"$regex": ".*"}})
 
     def count_privrules_chats(self):
         with INSERTION_LOCK:
-            return len(self.collection.find_all({"privrules": True}))
+            return self.collection.count({"privrules": True})
 
     def count_grouprules_chats(self):
         with INSERTION_LOCK:
-            return len(self.collection.find_all({"privrules": False}))
+            return self.collection.count({"privrules": False})
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):

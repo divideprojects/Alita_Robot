@@ -16,7 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from traceback import format_exc
 from typing import Tuple
+
+from alita import LOGGER
 
 
 async def extract_user(c, m) -> Tuple[int, str]:
@@ -24,23 +27,22 @@ async def extract_user(c, m) -> Tuple[int, str]:
     user_id = None
     user_first_name = None
 
-    if m.reply_to_message:
+    if m.reply_to_message.from_user:
         user_id = m.reply_to_message.from_user.id
         user_first_name = m.reply_to_message.from_user.first_name
 
-    elif m.command and len(m.command) > 1:
-        if m.entities:
-            if len(m.entities) > 1:
-                required_entity = m.entities[1]
-                if required_entity.type == "text_mention":
-                    user_id = required_entity.user.id
-                    user_first_name = required_entity.user.first_name
-                elif required_entity.type == "mention":
-                    user_id = m.text[
-                        required_entity.offset : required_entity.offset
-                        + required_entity.length
-                    ]
-                    user_first_name = user_id
+    elif len(m.command) > 1:
+        if len(m.entities) > 1:
+            required_entity = m.entities[1]
+            if required_entity.type == "text_mention":
+                user_id = required_entity.user.id
+                user_first_name = required_entity.user.first_name
+            elif required_entity.type == "mention":
+                user_id = m.text[
+                    required_entity.offset : required_entity.offset
+                    + required_entity.length
+                ]
+                user_first_name = user_id
         else:
             user_id = m.command[1]
             user_first_name = user_id
@@ -49,8 +51,12 @@ async def extract_user(c, m) -> Tuple[int, str]:
         user_id = m.from_user.id
         user_first_name = m.from_user.first_name
 
-    user = await c.get_users(user_id)
-    user_id = user.id
-    user_first_name = user.first_name
+    try:
+        user = await c.get_users(user_id)
+        user_id = user.id
+        user_first_name = user.first_name
+    except Exception as ef:
+        LOGGER.error(ef)
+        LOGGER.error(format_exc())
 
     return user_id, user_first_name
