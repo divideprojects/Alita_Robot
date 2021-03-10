@@ -25,14 +25,9 @@ from alita import LOGGER
 async def extract_user(c, m) -> Tuple[int, str]:
     """Extract the user from the provided message."""
     user_id = None
-    user_first_name = None
 
-    try:
-        if m.reply_to_message.from_user:
-            user_id = m.reply_to_message.from_user.id
-            user_first_name = m.reply_to_message.from_user.first_name
-    except AttributeError:
-        pass
+    if m.reply_to_message.from_user:
+        user_id = m.reply_to_message.from_user.id
 
     if len(m.command) > 1:
         if len(m.entities) > 1:
@@ -50,16 +45,5 @@ async def extract_user(c, m) -> Tuple[int, str]:
             user_id = m.command[1]
             user_first_name = user_id
 
-    else:
-        user_id = m.from_user.id
-        user_first_name = m.from_user.first_name
-
-    try:
-        user = await c.get_users(user_id)
-        user_id = user.id
-        user_first_name = user.first_name
-    except Exception as ef:
-        LOGGER.error(ef)
-        LOGGER.error(format_exc())
 
     return user_id, user_first_name
