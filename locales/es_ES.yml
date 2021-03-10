@@ -236,8 +236,8 @@ strings:
   admin:
     adminlist:
       adminstr: "Admins en <b>{chat_title}</b>:\n"
-      note_cached: "These are cached values!"
-      note_updated: "¡Estos son valores actualizados!"
+      note_cached: "<i>Note:</i> These are cached values!"
+      note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "¡Recargué a todos los administradores en este chat!"
       use_admin_cache: "¡Utiliza /admincache para recargar administradores!"
     ban:
@@ -351,7 +351,6 @@ strings:
         Hay <b>{len_admins}</b> admins a los que sé!
 
         <code>{admindict}</code>
-      admins_in_cache: "Hay <b>{len_admins}</b> admins en mi caché de Redis."
       alladmins_btn: "Todos los administradores"
       getting_admins: "Obteniendo todos los administradores en mi caché ..."
     bot_ip: |-
@@ -365,12 +364,6 @@ strings:
 
         <b>Nombre de conversación | ID de conversación | Número de miembros</b>
     execute_cmd_err: "¡Ejecute el código correctamente!"
-    flush_redis:
-      flush_failed: |-
-        No se ha podido vaciar la base de datos redis!
-        <b>Error:</b> {ef}
-      flushed_redis: "¡Redis limpiado con éxito!"
-      flushing_redis: "Vaciado de la base de datos de Redis ..."
     restarting: Reiniciando ...
     speedtest:
       speedtest_txt: |-
@@ -400,9 +393,9 @@ strings:
     no_perm_admin: "No tengo permiso para hacer eso"
     no_results: "No se han encontrado resultados."
     some_error: |-
-      Se ha producido algún error, informe a @{SUPPORT_GROUP}
+      Some error occured, report to @{SUPPORT_GROUP}
 
-      <b>Error:</b> {ef}
+      <b>Error:</b> <code>{ef}</code>
     something_wrong: "¡Algo salió mal!"
   langs:
     changed: "Idioma cambiado a <code>{lang_code}</code>"
