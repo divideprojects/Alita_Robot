@@ -26,10 +26,10 @@ async def extract_user(c, m) -> Tuple[int, str]:
     """Extract the user from the provided message."""
     user_id = None
 
-    if m.reply_to_message.from_user:
+    if m.reply_to_message:
         user_id = m.reply_to_message.from_user.id
 
-    if len(m.command) > 1:
+    elif len(m.command) > 1:
         if len(m.entities) > 1:
             required_entity = m.entities[1]
             if required_entity.type == "text_mention":
