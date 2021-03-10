@@ -4,6 +4,235 @@ main:
   language_flag: "🇺🇸"
   language_name: Английский
 strings:
+  plugins:
+    admin:
+      main: "Admin"
+      help: |-
+        Lazy to promote or demote someone for admins? Want to see basic information about chat? \
+        All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
+        done easily using the bot.
+
+        **User Commands:**
+        × /adminlist: List all admins in the current chat.
+
+        **Admin only:**
+        × /invitelink: Gets private chat's invitelink.
+        × /promote: Promotes the user replied to or tagged.
+        × /demote: Demotes the user replied to or tagged.
+
+        An example of promoting someone to admins:
+        `/promote @username`; this promotes a user to admin.
+    afk:
+      main: "AFK"
+      help: |-
+        Module for enabling auto replies when you are AFK.
+        When enabled,
+        anyone who mentions you will be replied with a message saying that
+        you are AFK.
+
+        **Setting AFK Status**
+        × /afk <reason>
+
+        Enable auto replies when you are AFK.
+        To stop it, send message to any group.
+        * Reason is optional
+    approve:
+      main: "AFK"
+      help: |-
+        Sometimes, you might trust a user not to send unwanted content.
+        Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
+        That's what approvals are for - approve trustworthy users to allow them to send stuff without restrictions!
+
+        **Admin commands:**
+        × /approval: Check a user's approval status in this chat.
+        × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
+        × /unapprove: Unapprove of a user. They will now be subject to blocklists.
+        × /approved: List all approved users.
+        × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
+    bans:
+      main: "Bans"
+      help: |-
+        Someone annoying entered your group?
+        Want to ban/restriction him/her?
+        This is the plugin for you, easily kick, ban and unban members in a group.
+
+        **Admin only:**
+        × /kick: Kick the user replied or tagged.
+        × /ban: Bans the user replied to or tagged.
+        × /unban: Unbans the user replied to or tagged.
+    blacklist:
+      main: "Blacklist"
+      help: |-
+        Want to restrict certain words or sentences in your group?
+
+        Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, \
+        the message will immediately be deleted. A good combo is sometimes to pair this up with warn filters!
+        **NOTE:** blacklists do not affect group admins.
+        × /blacklist: View the current blacklisted words.
+
+        **Admin only:**
+        × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different \
+        lines will allow you to add muser_listtiple triggers.
+        × /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove \
+        muser_listtiple triggers at once.
+        × /rmblacklist <triggers>: Same as above.
+        × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'
+        Default is 'kick', which will kick the user on typing blacklist word.
+
+        **Owner Only**
+        × /rmallblacklist: Removes all the blacklists from the current chat.
+
+        **Note:** Can only add or remove one blacklist at a time!
+    fun:
+      main: "Fun"
+      help: |-
+        × /runs: reply a random string from an array of replies.
+        × /slap: slap a user, or get slapped if not a reply.
+        × /shrug : get shrug XD.
+        × /decide : Randomly answers yes/no/maybe
+        × /toss : Tosses A coin
+        × /bluetext : check urself :V
+        × /roll : Roll a dice.
+        × /react : Random Reaction
+        × /shout <keyword>: write anything you want to give loud shout.
+    language:
+      main: "Язык"
+      help: |-
+        Not able to change language of the bot?
+        Easily change by using this module!
+
+        Just type /lang and use inline keyboard to choose a language \
+        for yourself or your group.
+    locks:
+      main: "Locks"
+      help: |-
+        Use this to lock group permissions.
+        Allows you to lock and unlock permission types in the chat.
+
+        **Usage:**
+        × /lock <type>: Lock Chat permission.
+        × /unlock <type>: Unlock Chat permission.
+        × /locks: View Chat permission.
+        × /locktypes: Check available lock types!
+    muting:
+      main: "Muting"
+      help: |-
+        Want someone to keep quite for a while in the group?
+        Mute plugin is here to help, mute or unmute any user easily!
+
+        **Admin only:**
+        × /mute: Mute the user replied to or mentioned.
+        × /unmute: Unmutes the user mentioned or replied to.
+
+        An example of promoting someone to admins:
+        `/mute @username`; this mutes a user.
+    notes:
+      main: "Notes"
+      help: |-
+        Save a note, get that, even you can delete that note.
+        This note only avaiable for yourself only!
+        Also notes support inline button powered by inline query assistant bot.
+
+        **Save Note**
+        × /save <note>
+        Save a note, you can get or delete that later.
+
+        **Get Note**
+        × /get <note>
+        Get that note, if avaiable.
+
+        **Delete Note**
+        × /clear <note>
+        Delete that note, if avaiable.
+
+        × /clearall
+        Clears all notes in the chat!
+        **NOTE:** Can only be used by owner of chat!
+
+        **All Notes**
+        × /saved
+        or
+        × /notes
+        Get all your notes, if too much notes, please use this in your saved message instead!
+
+
+        ── **Note Format** ──
+        -> **Button**
+        `[Button Text](buttonurl:t.me/DivideProjects)`
+        -> **Bold**
+        `**Bold**`
+        -> __Italic__
+        `__Italic__`
+        -> `Code`
+        `Code` (grave accent)
+    pins:
+      main: "Pins"
+      help: |-
+        Here you find find all help related to groups pins and how to manage them via me.
+
+        **Admin Cmds:**
+        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
+        × /unpin: Unpins the last pinned message.
+        × /unpinall: Unpins all the pinned message in the current chat.
+    purges:
+      main: "Purges"
+      help: |-
+        Want to delete messages in you group?
+
+        × /purge: Deletes messages upto replied message.
+        × /del: Deletes a single message, used as a reply to message.
+    reporting:
+      main: "Reporting"
+      help: |-
+        × /report <reason>: reply to a message to report it to admins.
+        - @admin: reply to a message to report it to admins.
+        **NOTE:** Neither of these will get triggered if used by admins.
+
+        **Admins Only:**
+        × /reports <on/off>: change report setting, or view current status.
+        - If done in PM, toggles your status.
+        - If in group, toggles that groups's status.
+    rules:
+      main: "Rules"
+      help: |-
+        Set rules for you chat so that members know what to do and \
+        what not to do in your group!
+
+        × /rules: get the rules for current chat.
+
+        **Admin only:**
+        × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
+        × /clearrules: Clear the rules for this chat.
+        × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
+    spam_protect:
+      main: "Spam Protect"
+      help: |-
+        Spammers joining your group?
+        No problem at all, here you can find all the options to protect your groups from raids and scums!
+
+        **Admin Only:**
+        × /cas <on/off>: Turns on or off the CAS check for group.
+        × /underattack <on/off>: Kick all the new users on entry!
+    utils:
+      main: "Utils"
+      help: |-
+        Some utils provided by bot to make your tasks easy!
+
+        × /id: Get the current group id. If used by replying to a message, get that user's id.
+        × /info: Get information about a user.
+        × /ping - Get ping time of bot to telegram server.
+        × /gifid: Reply to a gif to me to tell you its file ID.
+        × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
+        × /github <username>: Search for the user using github api!
+        × /lyrics <song>: Get the lyrics of the song you specify!
+        × /weebify <text> or a reply to message: To weebify the text.
+    wiki:
+      main: "Wikipedia"
+      help: |-
+        Search Wikipedia on the go in your group!
+
+        **Available commands:**
+        × /wiki <query>: wiki your query.
   admin:
     adminlist:
       adminstr: "Администраторы в <b>{chat_title}</b>:\n"
