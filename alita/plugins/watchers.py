@@ -168,7 +168,7 @@ async def bl_watcher(_, m: Message):
         app_users = app_db.list_approved(m.chat.id)
 
         for i in app_users:
-            approved_users.append(int(i["user_id"]))
+            approved_users.append(int(i[1]))
 
         async for i in m.chat.iter_members(filter="administrators"):
             approved_users.append(i.user.id)
