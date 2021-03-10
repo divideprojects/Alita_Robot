@@ -6,7 +6,7 @@ main:
 strings:
   plugins:
     admin:
-      main: "Admin"
+      main: "प्रशासक"
       help: |-
         Lazy to promote or demote someone for admins? Want to see basic information about chat? \
         All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
@@ -23,7 +23,7 @@ strings:
         An example of promoting someone to admins:
         `/promote @username`; this promotes a user to admin.
     afk:
-      main: "AFK"
+      main: "एएफके"
       help: |-
         Module for enabling auto replies when you are AFK.
         When enabled,
@@ -37,7 +37,7 @@ strings:
         To stop it, send message to any group.
         * Reason is optional
     approve:
-      main: "AFK"
+      main: "एएफके"
       help: |-
         Sometimes, you might trust a user not to send unwanted content.
         Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
@@ -50,7 +50,7 @@ strings:
         × /approved: List all approved users.
         × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
     bans:
-      main: "Bans"
+      main: "प्रतिबंध"
       help: |-
         Someone annoying entered your group?
         Want to ban/restriction him/her?
@@ -61,7 +61,7 @@ strings:
         × /ban: Bans the user replied to or tagged.
         × /unban: Unbans the user replied to or tagged.
     blacklist:
-      main: "Blacklist"
+      main: "ब्लैकलिस्ट"
       help: |-
         Want to restrict certain words or sentences in your group?
 
@@ -84,7 +84,7 @@ strings:
 
         **Note:** Can only add or remove one blacklist at a time!
     fun:
-      main: "Fun"
+      main: "मजेदार"
       help: |-
         × /runs: reply a random string from an array of replies.
         × /slap: slap a user, or get slapped if not a reply.
@@ -104,7 +104,7 @@ strings:
         Just type /lang and use inline keyboard to choose a language \
         for yourself or your group.
     locks:
-      main: "Locks"
+      main: "तालाबंद"
       help: |-
         Use this to lock group permissions.
         Allows you to lock and unlock permission types in the chat.
@@ -115,7 +115,7 @@ strings:
         × /locks: View Chat permission.
         × /locktypes: Check available lock types!
     muting:
-      main: "Muting"
+      main: "उत्तोर"
       help: |-
         Want someone to keep quite for a while in the group?
         Mute plugin is here to help, mute or unmute any user easily!
@@ -127,7 +127,7 @@ strings:
         An example of promoting someone to admins:
         `/mute @username`; this mutes a user.
     notes:
-      main: "Notes"
+      main: "नोट्स"
       help: |-
         Save a note, get that, even you can delete that note.
         This note only avaiable for yourself only!
@@ -166,7 +166,7 @@ strings:
         -> `Code`
         `Code` (grave accent)
     pins:
-      main: "Pins"
+      main: "पिन"
       help: |-
         Here you find find all help related to groups pins and how to manage them via me.
 
@@ -175,14 +175,14 @@ strings:
         × /unpin: Unpins the last pinned message.
         × /unpinall: Unpins all the pinned message in the current chat.
     purges:
-      main: "Purges"
+      main: "पुर्वहार"
       help: |-
         Want to delete messages in you group?
 
         × /purge: Deletes messages upto replied message.
         × /del: Deletes a single message, used as a reply to message.
     reporting:
-      main: "Reporting"
+      main: "रिपोर्टिंग"
       help: |-
         × /report <reason>: reply to a message to report it to admins.
         - @admin: reply to a message to report it to admins.
@@ -193,7 +193,7 @@ strings:
         - If done in PM, toggles your status.
         - If in group, toggles that groups's status.
     rules:
-      main: "Rules"
+      main: "नियम"
       help: |-
         Set rules for you chat so that members know what to do and \
         what not to do in your group!
@@ -205,7 +205,7 @@ strings:
         × /clearrules: Clear the rules for this chat.
         × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
     spam_protect:
-      main: "Spam Protect"
+      main: "स्पैम रक्षा"
       help: |-
         Spammers joining your group?
         No problem at all, here you can find all the options to protect your groups from raids and scums!
@@ -214,7 +214,7 @@ strings:
         × /cas <on/off>: Turns on or off the CAS check for group.
         × /underattack <on/off>: Kick all the new users on entry!
     utils:
-      main: "Utils"
+      main: "उपयोगितावाद"
       help: |-
         Some utils provided by bot to make your tasks easy!
 
@@ -227,7 +227,7 @@ strings:
         × /lyrics <song>: Get the lyrics of the song you specify!
         × /weebify <text> or a reply to message: To weebify the text.
     wiki:
-      main: "Wikipedia"
+      main: "विकिपीडिया"
       help: |-
         Search Wikipedia on the go in your group!
 
