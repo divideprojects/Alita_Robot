@@ -27,9 +27,12 @@ async def extract_user(c, m) -> Tuple[int, str]:
     user_id = None
     user_first_name = None
 
-    if m.reply_to_message.from_user:
-        user_id = m.reply_to_message.from_user.id
-        user_first_name = m.reply_to_message.from_user.first_name
+    try:
+        if m.reply_to_message.from_user:
+            user_id = m.reply_to_message.from_user.id
+            user_first_name = m.reply_to_message.from_user.first_name
+    except AttributeError:
+        pass
 
     elif len(m.command) > 1:
         if len(m.entities) > 1:
