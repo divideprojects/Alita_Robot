@@ -74,7 +74,6 @@ async def adminlist_show(_, m: Message):
                         ("@" + i.user.username)
                         if i.user.username
                         else i.user.first_name,
-                    ),
                 )
             admin_list = sorted(admin_list, key=lambda x: x[1])
             note = tlang(m, "admin.adminlist.note_updated")
