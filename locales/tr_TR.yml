@@ -7,7 +7,7 @@ strings:
   admin:
     adminlist:
       adminstr: "<b>{chat_title}</b>içinde yöneticiler:\n"
-      cached_values: "Bunlar önbelleğe alınmış değerlerdir!"
+      note_cached: "These are cached values!"
       note_updated: "Bunlar güncel değerler!"
       reloaded_admins: "Bu sohbetteki tüm yöneticiler yeniden yüklendi!"
       use_admin_cache: "Administrator 'ı yeniden yüklemek için /admincache kullanın!"
