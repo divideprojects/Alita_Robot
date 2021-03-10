@@ -6,62 +6,62 @@ main:
 strings:
   plugins:
     admin:
-      main: "Admin"
+      main: "Администратор"
       help: |-
-        Lazy to promote or demote someone for admins? Want to see basic information about chat? \
-        All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
-        done easily using the bot.
+        Лениво продвигать или понижавать кого-то для администраторов? Хотите увидеть основную информацию о чате? \
+        Все вещи о чате, например, списки администраторов, закрепляющие или захватывая ссылку на приглашение, могут быть \
+        легко использовать бот.
 
-        **User Commands:**
-        × /adminlist: List all admins in the current chat.
+        ** Команды пользователей: **
+        × /adminlist: Показать все администраторы в текущем чате.
 
-        **Admin only:**
-        × /invitelink: Gets private chat's invitelink.
-        × /promote: Promotes the user replied to or tagged.
-        × /demote: Demotes the user replied to or tagged.
+        ** Только админ: **
+        × /invitelink: Получает invitelink частного чата.
+        × /movate: Промо-акции, на которые пользователь ответил или пометил.
+        × /demote: Демоны, на которые пользователь ответил или пометил.
 
-        An example of promoting someone to admins:
-        `/promote @username`; this promotes a user to admin.
+        Пример продвижения пользователя к администраторам:
+        `/srimd @username`; это позволяет пользователю быть администратором.
     afk:
       main: "AFK"
       help: |-
-        Module for enabling auto replies when you are AFK.
-        When enabled,
-        anyone who mentions you will be replied with a message saying that
-        you are AFK.
+        Модуль для включения автоматических ответов при активации AFK.
+        При включенном,
+        любому, кто упоминает вас, будет отведать сообщение о том, что
+        вы AFK.
 
-        **Setting AFK Status**
+        ** Установка AFK Status * *
         × /afk <reason>
 
-        Enable auto replies when you are AFK.
-        To stop it, send message to any group.
-        * Reason is optional
+        Включить автоматические ответы при помощи AFK.
+        Чтобы остановить его, отправте сообщение в любую группу.
+        * Необязательный параметр Reason
     approve:
       main: "AFK"
       help: |-
-        Sometimes, you might trust a user not to send unwanted content.
-        Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
-        That's what approvals are for - approve trustworthy users to allow them to send stuff without restrictions!
+        Иногда можно доверять пользователю не отправлять нежелательное содержимое.
+        Может быть недостаточно для того, чтобы сделать их админом, но у вас могут быть замки, черные списки и противопаводка, не обращающие на них внимание.
+        Вот какие утверждения предназначены для утверждения доверенных пользователей, чтобы они могли отправлять вещи без ограничений!
 
-        **Admin commands:**
-        × /approval: Check a user's approval status in this chat.
-        × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-        × /unapprove: Unapprove of a user. They will now be subject to blocklists.
-        × /approved: List all approved users.
-        × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
+        ** Команды администрирования: **
+        × /approlation: Проверьте состояние утверждения пользователя в этом чате.
+        × /утвердить: Утвердить пользователя. Замки, черные списки и антипотоп больше к ним не обращаются.
+        × /unapproft: Неутверждение пользователя. Теперь они будут подлежать блокспискам.
+        × /утвержденный: список всех утвержденных пользователей.
+        × /unapproveall: Неутверждение пользователей *ALL* в чате. Это невозможно отменить!
     bans:
-      main: "Bans"
+      main: "Запреты"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        Кто-то раздражал вашу группу?
+        Хотите запретить или запретить его?
+        Это плагин для вас, легко пинать, запрещать и запрещать членов в группе.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /ban: Bans the user replied to or tagged.
-        × /unban: Unbans the user replied to or tagged.
+        ** Только админ: **
+        × /kick: Kick пользователь ответил или пометил.
+        × /ban: Банны, на которые пользователь ответил или пометил.
+        × /unban: Запреты, на которые пользователь ответил или пометил.
     blacklist:
-      main: "Blacklist"
+      main: "Черный список"
       help: |-
         Want to restrict certain words or sentences in your group?
 
@@ -84,17 +84,17 @@ strings:
 
         **Note:** Can only add or remove one blacklist at a time!
     fun:
-      main: "Fun"
+      main: "Весело"
       help: |-
-        × /runs: reply a random string from an array of replies.
-        × /slap: slap a user, or get slapped if not a reply.
-        × /shrug : get shrug XD.
-        × /decide : Randomly answers yes/no/maybe
-        × /toss : Tosses A coin
-        × /bluetext : check urself :V
-        × /roll : Roll a dice.
-        × /react : Random Reaction
-        × /shout <keyword>: write anything you want to give loud shout.
+        × /выполняется: ответьте на случайную строку из массива ответов.
+        × /slap: пощечину пользователя или получите пощечину, если не ответ.
+        × /кустарник: получить кустарник XD.
+        × /решить: случайные ответы да/нет/может быть,
+        × /toss: Tosses A монета
+        × /blutext: check urself :V
+        × /roll: Roll a dice.
+        × /среагировать: Случайная Реакция
+        × /крик <keyword>: напишите что угодно, чтобы громко кричать.
     language:
       main: "Язык"
       help: |-
@@ -104,30 +104,30 @@ strings:
         Just type /lang and use inline keyboard to choose a language \
         for yourself or your group.
     locks:
-      main: "Locks"
+      main: "Блокировки"
       help: |-
-        Use this to lock group permissions.
-        Allows you to lock and unlock permission types in the chat.
+        Позволяет заблокировать права доступа группы.
+        Позволяет заблокировать и разблокировать типы разрешений в чате.
 
-        **Usage:**
+        ** Usage:**
         × /lock <type>: Lock Chat permission.
-        × /unlock <type>: Unlock Chat permission.
-        × /locks: View Chat permission.
-        × /locktypes: Check available lock types!
+        × /unlock <type>: Разблокировать разрешение Разговор.
+        × /locks: Просмотр разрешения на разговор.
+        × /locktypes: Проверьте доступные типы блокировок!
     muting:
-      main: "Muting"
+      main: "Мутирование"
       help: |-
-        Want someone to keep quite for a while in the group?
-        Mute plugin is here to help, mute or unmute any user easily!
+        Хочешь, чтобы кто-нибудь хранил это время в группе?
+        Mute plugin here to help, mute or unmute any user bid!
 
-        **Admin only:**
-        × /mute: Mute the user replied to or mentioned.
-        × /unmute: Unmutes the user mentioned or replied to.
+        ** Admin only: **
+        × /mute: Mute пользователь ответил или упомянул.
+        × /unmute: Отпутывает указанный пользователь или отвечает на него.
 
-        An example of promoting someone to admins:
-        `/mute @username`; this mutes a user.
+        Пример продвижения пользователя в admins:
+        `/mute @username`; этот пользователь может отключить пользователя.
     notes:
-      main: "Notes"
+      main: "Примечания"
       help: |-
         Save a note, get that, even you can delete that note.
         This note only avaiable for yourself only!
@@ -166,78 +166,78 @@ strings:
         -> `Code`
         `Code` (grave accent)
     pins:
-      main: "Pins"
+      main: "Контакты"
       help: |-
-        Here you find find all help related to groups pins and how to manage them via me.
+        Здесь вы найдете любую помощь, связанную с группами и как управлять ими через меня.
 
-        **Admin Cmds:**
-        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
-        × /unpin: Unpins the last pinned message.
-        × /unpinall: Unpins all the pinned message in the current chat.
+        ** admin cmds: **
+        × /pin: в режиме без вывода сообщений в ответ на сообщение добавляется слово " loud `, ` notify ` или ` alert ` для предоставления пользователям уведомлений.
+        × /unpin: Отмена последнего закрепленного сообщения.
+        × /unpinall: Отбивает все закрепленные сообщения в текущем чате.
     purges:
-      main: "Purges"
+      main: "Очистила"
       help: |-
-        Want to delete messages in you group?
+        Хотите удалить сообщения в группе?
 
-        × /purge: Deletes messages upto replied message.
-        × /del: Deletes a single message, used as a reply to message.
+        × /purge: Удаляет сообщение в ответ на сообщение.
+        × /del: Удаляет одно сообщение, используемое в качестве ответа на сообщение.
     reporting:
-      main: "Reporting"
+      main: "Отчетность"
       help: |-
-        × /report <reason>: reply to a message to report it to admins.
-        - @admin: reply to a message to report it to admins.
-        **NOTE:** Neither of these will get triggered if used by admins.
+        × /report <reason>: ответ на сообщение об этом администратору.
+        - @admin: ответ на сообщение об этом администратору.
+        **ПРИМЕЧАНИЕ: ** Ни одно из этих действий не будет инициировано администратором.
 
-        **Admins Only:**
-        × /reports <on/off>: change report setting, or view current status.
-        - If done in PM, toggles your status.
-        - If in group, toggles that groups's status.
+        ** Только администраторы: **
+        × /repores <on/off>: изменение параметров отчета или просмотр текущего состояния.
+        -Если выполняется в ПТОиР, то переключится на состояние.
+        -Если в группе, то переключится на состояние групп.
     rules:
-      main: "Rules"
+      main: "Правила"
       help: |-
-        Set rules for you chat so that members know what to do and \
-        what not to do in your group!
+        Установите правила для чата, чтобы члены знали, что делать и \
+        что не делать в вашей группе!
 
-        × /rules: get the rules for current chat.
+        × /править: получить правила для текущего разговора.
 
-        **Admin only:**
-        × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
-        × /clearrules: Clear the rules for this chat.
-        × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
+        ** Только админ: **
+        × /setrules <rules>: Задать правила для этого разговора, также работает как ответ на сообщение.
+        × /clearrules: Очистить правила для этого разговора.
+        × /privrules <on/yes/no/off>: Включить/выключить опцию отправки правил для ПТОиР пользователя или группы.
     spam_protect:
-      main: "Spam Protect"
+      main: "Защита спама"
       help: |-
-        Spammers joining your group?
-        No problem at all, here you can find all the options to protect your groups from raids and scums!
+        Спаммерс присоединится к вашей группе?
+        Нет проблем вообще, здесь вы можете найти все варианты защиты ваших групп от рейдов и скусов!
 
-        **Admin Only:**
-        × /cas <on/off>: Turns on or off the CAS check for group.
-        × /underattack <on/off>: Kick all the new users on entry!
+        ** Только админ: **
+        × /кас <on/off>: Включаем или выключаем проверку CAS для группы.
+        × /underak <on/off>: Kick все новые пользователи на входе!
     utils:
       main: "Utils"
       help: |-
-        Some utils provided by bot to make your tasks easy!
+        Некоторые утилит, предоставляемые ботом для облегчения задач!
 
-        × /id: Get the current group id. If used by replying to a message, get that user's id.
-        × /info: Get information about a user.
-        × /ping - Get ping time of bot to telegram server.
-        × /gifid: Reply to a gif to me to tell you its file ID.
-        × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
-        × /github <username>: Search for the user using github api!
-        × /lyrics <song>: Get the lyrics of the song you specify!
-        × /weebify <text> or a reply to message: To weebify the text.
+        × /id: Получить ИД текущей группы. При ответе на сообщение получите ИД пользователя.
+        × /info: Получить информацию о пользователе.
+        × /ping-Получить ping-время от бота на сервер Telegram.
+        × /gifid: Ответить на gif для того, чтобы я сказал вам свой ID файла.
+        × /tr <language>: Переводя текст, а затем ответы на вас с языком, на котором вы есть, работает как ответ на м.
+        × /github <username>: Поиск пользователя using github api!
+        × //лирика <song>: Получить текст песни вы указываете!
+        × /weebify <text> или ответ на сообщение: Чтобы увлажнять текст.
     wiki:
-      main: "Wikipedia"
+      main: "википедия"
       help: |-
-        Search Wikipedia on the go in your group!
+        Поиск в Википедии на заезде в вашей группе!
 
-        **Available commands:**
-        × /wiki <query>: wiki your query.
+        ** Доступные команды: **
+        × /википедия <query>: вики Ваш запрос.
   admin:
     adminlist:
       adminstr: "Администраторы в <b>{chat_title}</b>:\n"
-      note_cached: "<i>Note:</i> These are cached values!"
-      note_updated: "<i>Note:</i> These are up-to-date values!"
+      note_cached: "<i>Примечание:</i> Это кэшированные значения!"
+      note_updated: "<i>Примечание:</i> Это актуальное значение!"
       reloaded_admins: "Перезагрузить все администраторы в этом чате!"
       use_admin_cache: "Используйте /admincache для перезагрузки администраторов!"
     ban:
@@ -393,9 +393,9 @@ strings:
     no_perm_admin: "У меня нет разрешения на это."
     no_results: "Результаты не найдены."
     some_error: |-
-      Some error occured, report to @{SUPPORT_GROUP}
+      Произошла ошибка, отчет в @{SUPPORT_GROUP}
 
-      <b>Error:</b> <code>{ef}</code>
+      <b>Ошибка:</b> <code>{ef}</code>
     something_wrong: "Что-то не так!"
   langs:
     changed: "Язык изменен на <code>{lang_code}</code>"
@@ -506,39 +506,39 @@ strings:
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
-      custom_title: "This user holds the title <b>{custom_title}</b> here."
+      custom_title: "Этот пользователь имеет заголовок <b>{custom_title}</b> здесь."
       getting_info: "Получение информации о пользователе ..."
       info_text:
         last_name: |-
 
-          <b>Last Name:</b> {user_lname}
+          <b>фамилия:</b> {user_lname}
         main: |-
           <b>Характеристики:</b>
           <b>ИД:</b> <code>{user_id}</code>
           <b>Имя:</b> {user_name}
         perma_link: |-
 
-          <b>Permanent User Link:</b> {perma_link}
+          <b>Постоянная ссылка на пользователя:</b> {perma_link}
         username: |-
 
-          <b>Username:</b> @{username}
+          <b>Имя пользователя:</b> @{username}
       support_user:
         dev: |-
 
 
-          This member is one of my Developers ⚡️
+          Этот элемент является одним из моих разработчиков ⚡️
         owner: |-
 
 
-          This person is my Owner, I would never do anything against them!
+          Этот человек-мой владелец, я бы никогда ничего против них не с# делал!
         sudo: |-
 
 
-          This user is one of my Sudos, he has powers which are approximately same to owner!
+          Этот пользователь-один из моих Sudos, у него есть полномочия, которые примерно одинаковы для владельца!
         whitelist: |-
 
 
-          This person is 'Whitelist User', they cannot be banned!
+          Этот пользователь 'Whitelist User' не может быть запрещен!
     weebify:
       weebified_string: |-
         <b>Неочищенная строка:</b>
