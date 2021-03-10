@@ -75,7 +75,7 @@ class Alita(Client):
         super().__init__(
             name,
             plugins=dict(root=f"{name}.plugins", exclude=NO_LOAD),
-            workdir=f"{name}.SESSION",
+            workdir=f"{name}/SESSION",
             api_id=APP_ID,
             api_hash=API_HASH,
             bot_token=TOKEN,
