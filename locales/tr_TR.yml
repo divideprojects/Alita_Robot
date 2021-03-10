@@ -103,6 +103,8 @@ strings:
 
         Yalnızca /lang yazın ve kendiniz ya da grubunuz için bir dil \
         seçmek için yerleşik klavye kullanın.
+
+         [Crowdin](https: //crowdin.com/project/alita_robot) 'a yardım ederek bot' u daha fazla dile getirmemize yardımcı olabilirsiniz
     locks:
       main: "Kilitler"
       help: |-
@@ -293,6 +295,9 @@ strings:
     user_now_afk: "{user} kullanıcısı artık afk!"
   antispam:
     gban:
+      gban_error_log: |-
+        <b>Gban Watcher Hatası!</b>
+        <b>Sohbet:</b> {chat_id}\n<b>Hata:</b> <code>{ef}</code>
       added_to_watch: |-
         Küresel Yasak Listesine {first_name} eklendi.
         Şu anda yöneticim olduğum tüm gruplarda yasaklanacaklar!
@@ -338,6 +343,10 @@ strings:
 
       yasaksız çıkmak için @{SUPPORT_GROUP} tarihinde itiraz
   blacklist:
+    bl_watcher:
+      action_kick: "Kara listeye bir kelime kullanmak için {user} 'ye tekme attım!"
+      action_ban: "Kara listeye girmeyen bir kelimeyi kullanmak için {user} yasaklandı!"
+      action_mute: "Kara listeye girilmiş bir sözcük kullanmak için {user} kapatılan!"
     action_get: "Bu sohbetteki kara listelere ilişkin geçerli eylem <i><b>{action}</b></i>"
     action_set: "Bunun için kara listeye ilişkin eylemi <b>{action}</b> olarak ayarlayın"
     added_blacklist: "Kara liste kelimelerindeki <b>{trigger}</b> eklendi!"
@@ -399,7 +408,10 @@ strings:
     something_wrong: "Bir şeyler ters gitti!"
   langs:
     changed: "Dil, <code>{lang_code}</code> olarak değiştirildi"
-    changelang: "Burada, robot için dil değiştirebilirsin."
+    changelang: |-
+      Here you can change language for the bot.
+
+      You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
     correct_usage: |-
       <b>Doğru Kullanım Kullanımı:</b>
       /lang ya da /setlang dili-kodu
