@@ -34,7 +34,7 @@ async def extract_user(c, m) -> Tuple[int, str]:
     except AttributeError:
         pass
 
-    elif len(m.command) > 1:
+    if len(m.command) > 1:
         if len(m.entities) > 1:
             required_entity = m.entities[1]
             if required_entity.type == "text_mention":
