@@ -7,7 +7,7 @@ strings:
   admin:
     adminlist:
       adminstr: "Admins in <b>{chat_title}</b>:\n"
-      cached_values: "ये कैच्ड मान हैं!"
+      note_cached: "These are cached values!"
       note_updated: "ये अद्यतन मूल्य हैं!"
       reloaded_admins: "इस चैट में सभी एडीएम को फिर से लोड करें!"
       use_admin_cache: "/admincache को पुनः लोड करने के लिए प्रयोग करें!"
