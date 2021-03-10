@@ -57,6 +57,6 @@ async def get_stats(_, m: Message):
         f"    <b>CAS Enabled:</b> {(spamdb.get_cas_enabled_chats_num())} chats\n"
         f"    <b>UnderAttack Enabled:</b> {(spamdb.get_attack_enabled_chats_num())} chats\n"
     )
-    await replymsg.edit_text(rply, quote=True, parse_mode="html")
+    await replymsg.edit_text(rply, parse_mode="html")
 
     return
