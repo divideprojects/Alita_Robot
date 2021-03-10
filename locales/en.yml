@@ -236,8 +236,8 @@ strings:
   admin:
     adminlist:
       adminstr: "Admins in <b>{chat_title}</b>:\n"
-      note_cached: "These are cached values!"
-      note_updated: "These are up-to-date values!"
+      note_cached: "<i>Note:</i> These are cached values!"
+      note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "Reloaded all admins in this chat!"
       use_admin_cache: "Use /admincache to reload admins!"
     ban:
@@ -395,7 +395,7 @@ strings:
     some_error: |-
       Some error occured, report to @{SUPPORT_GROUP}
 
-      <b>Error:</b> {ef}
+      <b>Error:</b> <code>{ef}</code>
     something_wrong: "Something went wrong!"
   langs:
     changed: "Language changed to <code>{lang_code}</code>"

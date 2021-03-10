@@ -210,8 +210,8 @@ async def my_info(c: Alita, m: Message):
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
-                ef=f"<code>{ef}</code>",
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
             ),
         )
         return

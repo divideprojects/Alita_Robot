@@ -78,7 +78,7 @@ async def adminlist_show(_, m: Message):
             except PeerIdInvalid:
                 pass
 
-        await m.reply_text(f"{adminstr}\n\n<i>Note: {note}</i>")
+        await m.reply_text(adminstr + "\n" + note)
 
     except Exception as ef:
         if str(ef) == str(m.chat.id):
@@ -87,8 +87,8 @@ async def adminlist_show(_, m: Message):
             ef = str(ef) + f"{admin_list}\n"
             await m.reply_text(
                 (tlang(m, "general.some_error")).format(
-                    SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
-                    ef=f"<code>{ef}</code>",
+                    SUPPORT_GROUP=SUPPORT_GROUP,
+                    ef=ef,
                 ),
             )
             LOGGER.error(ef)
@@ -119,8 +119,8 @@ async def reload_admins(_, m: Message):
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
-                ef=f"<code>{ef}</code>",
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
             ),
         )
         LOGGER.error(ef)
@@ -187,8 +187,8 @@ async def promote_usr(c: Alita, m: Message):
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
-                ef=f"<code>{ef}</code>",
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
             ),
         )
         LOGGER.error(ef)
@@ -250,8 +250,8 @@ async def demote_usr(c: Alita, m: Message):
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
-                ef=f"<code>{ef}</code>",
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
             ),
         )
         LOGGER.error(ef)
@@ -281,8 +281,8 @@ async def get_invitelink(c: Alita, m: Message):
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
-                ef=f"<code>{ef}</code>",
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
             ),
         )
         LOGGER.error(ef)

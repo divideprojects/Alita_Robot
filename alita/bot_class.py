@@ -138,6 +138,9 @@ class Alita(Client):
         lang_status = len(lang_dict) >= 1
         LOGGER.info(f"Loading Languages: {lang_status}")
 
+        # Cache admins
+        await self.get_admins()
+
         # Show in Log that bot has started
         LOGGER.info(
             f"Pyrogram v{__version__}\n(Layer - {layer}) started on {BOT_USERNAME}\n"

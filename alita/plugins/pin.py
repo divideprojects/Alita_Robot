@@ -54,8 +54,8 @@ async def pin_message(c: Alita, m: Message):
         except RPCError as ef:
             await m.reply_text(
                 (tlang(m, "general.some_error")).format(
-                    SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
-                    ef=f"<code>{ef}</code>",
+                    SUPPORT_GROUP=SUPPORT_GROUP,
+                    ef=ef,
                 ),
             )
             LOGGER.error(ef)
@@ -83,8 +83,8 @@ async def unpin_message(c: Alita, m: Message):
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
-                ef=f"<code>{ef}</code>",
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
             ),
         )
         LOGGER.error(ef)
@@ -107,8 +107,8 @@ async def unpinall_message(c: Alita, m: Message):
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=f"@{SUPPORT_GROUP}",
-                ef=f"<code>{ef}</code>",
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
             ),
         )
         LOGGER.error(ef)

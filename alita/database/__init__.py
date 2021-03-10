@@ -83,8 +83,7 @@ class MongoDB:
 
     # Close connection
     @staticmethod
-    def close(self):
-        _ = self
+    def close():
         return mongodb_client.close()
 
 
