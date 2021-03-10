@@ -57,6 +57,10 @@ async def extract_user(c, m) -> Tuple[int, str]:
                 user_first_name = (await c.get_users(int(user_id))).first_name
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
+    else:
+        user_id = m.from_user.id
+        user_first_name = m.from_user.first_name
+
 
     print(user_id, user_first_name)
     return user_id, user_first_name
