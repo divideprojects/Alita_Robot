@@ -57,3 +57,7 @@ class Users:
     def list_users(self):
         with INSERTION_LOCK:
             return self.collection.find_all()
+
+    def get_user_info(self, user_id):
+        with INSERTION_LOCK:
+            return self.collection.find({"user_id": user_id})
