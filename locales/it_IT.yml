@@ -7,7 +7,7 @@ strings:
   admin:
     adminlist:
       adminstr: "Adatto nel <b>{chat_title}</b>:\n"
-      cached_values: "Questi sono valori cadetti!"
+      note_cached: "These are cached values!"
       note_updated: "Questi sono valori aggiornati!"
       reloaded_admins: "Ricaricati tutti gli admins in questa chat!"
       use_admin_cache: "Usa /admincache per ricaricare gli admins!"
