@@ -17,6 +17,7 @@
 
 
 from time import time
+from threading import RLock
 
 from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
@@ -36,14 +37,17 @@ bl_db = Blacklist()
 app_db = Approve()
 gban_db = GBan()
 
+# Initialize threading
+WATCHER_LOCK = RLock()
 
 @Alita.on_message(filters.group, group=2)
 async def aio_watcher(c: Alita, m: Message):
     if not m.from_user:
         return
-
-    await gban_watcher(c, m)
-    await bl_watcher(c, m)
+    
+    with WATCHER_LOCK:
+        await gban_watcher(c, m)
+        await bl_watcher(c, m)
 
 
 async def gban_watcher(c: Alita, m: Message):
