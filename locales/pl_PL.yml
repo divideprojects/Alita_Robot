@@ -7,7 +7,7 @@ strings:
   admin:
     adminlist:
       adminstr: "Admins w <b>{chat_title}</b>:\n"
-      cached_values: "Są to wartości buforowane!"
+      note_cached: "These are cached values!"
       note_updated: "Są to aktualne wartości!"
       reloaded_admins: "Ponownie załadowano wszystkich administratorów w tej rozmowie sieciowej!"
       use_admin_cache: "Użyj komendy /admincache, aby przeładować admins!"
