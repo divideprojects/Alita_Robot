@@ -236,8 +236,8 @@ strings:
   admin:
     adminlist:
       adminstr: "Администраторы в <b>{chat_title}</b>:\n"
-      note_cached: "These are cached values!"
-      note_updated: "Это актуальное значение!"
+      note_cached: "<i>Note:</i> These are cached values!"
+      note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "Перезагрузить все администраторы в этом чате!"
       use_admin_cache: "Используйте /admincache для перезагрузки администраторов!"
     ban:
@@ -351,7 +351,6 @@ strings:
         Есть <b>{len_admins}</b> админов которых я знаю!
 
         <code>{admindict}</code>
-      admins_in_cache: "В моем кэше Redis есть <b>{len_admins}</b> admins."
       alladmins_btn: "Все администраторы"
       getting_admins: "Получение всех администраторов в моем кэше ..."
     bot_ip: |-
@@ -365,12 +364,6 @@ strings:
 
         <b>Имя чата | ID чата | Число членов</b>
     execute_cmd_err: "Пожалуйста, выполните код правильно!"
-    flush_redis:
-      flush_failed: |-
-        Не удалось очистить базу данных redis!
-        <b>Ошибка:</b> {ef}
-      flushed_redis: "Сброс выполнен успешно!"
-      flushing_redis: "Очистка базы данных Redis ..."
     restarting: Перезапуск ...
     speedtest:
       speedtest_txt: |-
@@ -400,9 +393,9 @@ strings:
     no_perm_admin: "У меня нет разрешения на это."
     no_results: "Результаты не найдены."
     some_error: |-
-      Произошла некоторая ошибка, отчёт в @{SUPPORT_GROUP}
+      Some error occured, report to @{SUPPORT_GROUP}
 
-      <b>Ошибка:</b> {ef}
+      <b>Error:</b> <code>{ef}</code>
     something_wrong: "Что-то не так!"
   langs:
     changed: "Язык изменен на <code>{lang_code}</code>"
