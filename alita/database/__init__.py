@@ -16,16 +16,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from threading import local
-
 from pymongo import MongoClient
 
-from alita import DB_URI
+from alita import DB_NAME, DB_URI
 
 # Client to connect to mongodb
 mongodb_client = MongoClient(DB_URI)
 
-db = mongodb_client.alita_robot
+db = mongodb_client[DB_NAME]
 
 
 class MongoDB:
