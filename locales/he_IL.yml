@@ -6,7 +6,7 @@ main:
 strings:
   plugins:
     admin:
-      main: "Admin"
+      main: "מנהלה"
       help: |-
         Lazy to promote or demote someone for admins? Want to see basic information about chat? \
         All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
@@ -23,45 +23,45 @@ strings:
         An example of promoting someone to admins:
         `/promote @username`; this promotes a user to admin.
     afk:
-      main: "AFK"
+      main: "אפק"
       help: |-
-        Module for enabling auto replies when you are AFK.
-        When enabled,
-        anyone who mentions you will be replied with a message saying that
-        you are AFK.
+        מודול עבור הפעלת תשובות אוטומטית כאשר אתם AFK.
+        כאשר אפשרות זו מופעלת,
+        כל מי שמזכיר לכם יהיה ענו עם הודעה המציינת ש-
+        אתם AFK.
 
-        **Setting AFK Status**
+        ** הגדרת מצב AFK * *
         × /afk <reason>
 
-        Enable auto replies when you are AFK.
-        To stop it, send message to any group.
-        * Reason is optional
+        הפעלת תשובות אוטומטית כאשר אתם AFK.
+        כדי לעצור אותו, לשלוח הודעה לכל קבוצה.
+        * סיבה היא אופציונלית
     approve:
-      main: "AFK"
+      main: "אפק"
       help: |-
-        Sometimes, you might trust a user not to send unwanted content.
-        Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
-        That's what approvals are for - approve trustworthy users to allow them to send stuff without restrictions!
+        לפעמים, ניתן לסמוך על משתמש שלא לשלוח תוכן לא רצוי.
+        אולי לא מספיק כדי להפוך אותם מנהל, אבל אתה יכול להיות בסדר עם מנעולים, בלאק רשימות,
+        זה מה שאישורים הם עבור-לאשר משתמשים אמינים כדי לאפשר להם לשלוח דברים ללא הגבלות!
 
-        **Admin commands:**
-        × /approval: Check a user's approval status in this chat.
-        × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-        × /unapprove: Unapprove of a user. They will now be subject to blocklists.
-        × /approved: List all approved users.
-        × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
+        ** פקודות מנהלה: **
+        × /אישור: בדקו את מצב האישור של המשתמש בצ ' אט זה.
+        × /לאשר: אישור של משתמש. מנעולים, רשימות שחורות, ואנטי-שיטפון לא יחולו עליהם יותר.
+        × /ללא אישור: Unapprove של משתמש. כעת הם יהיו כפופים לחסימה.
+        × /מאושר: רשימה של כל המשתמשים שאושרו.
+        × /unמאשרים: Unapprove *ALL* משתמשים בצ ' אט. לא ניתן לבטל פעולה זו!
     bans:
-      main: "Bans"
+      main: "בינס"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        מישהו מעצבן נכנס לקבוצה שלך?
+        רוצה לאסור/להגביל אותו /לה?
+        זהו התוסף עבורכם, בעיטה בקלות, איסור ואוסור חברים בקבוצה.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /ban: Bans the user replied to or tagged.
-        × /unban: Unbans the user replied to or tagged.
+        ** מנהלה בלבד: **
+        × /בעיטה: בעט המשתמש השיב או מתויג.
+        × /ban: Bans המשתמש השיב או מתויג.
+        × /unban: Unbans שהמשתמש השיב או מתויג.
     blacklist:
-      main: "Blacklist"
+      main: "רשימה שחורה"
       help: |-
         Want to restrict certain words or sentences in your group?
 
@@ -84,50 +84,50 @@ strings:
 
         **Note:** Can only add or remove one blacklist at a time!
     fun:
-      main: "Fun"
+      main: "כיף"
       help: |-
-        × /runs: reply a random string from an array of replies.
-        × /slap: slap a user, or get slapped if not a reply.
-        × /shrug : get shrug XD.
-        × /decide : Randomly answers yes/no/maybe
-        × /toss : Tosses A coin
-        × /bluetext : check urself :V
-        × /roll : Roll a dice.
-        × /react : Random Reaction
-        × /shout <keyword>: write anything you want to give loud shout.
+        × /ריצות: תשובה למחרוזת אקראית מערך תשובות.
+        × /סטירה: לסטור למשתמש, או לקבל סטירה אם לא תשובה.
+        × /shהשטיח: לקבל שטיח XD
+        × /להחליט: רנדומלי תשובות כן/לא/אולי
+        × /לזרוק: Tosses A המטבע
+        × /bluetext: בדקו את עצמכם :V
+        × /רול: לגלגל קוביות.
+        ×/להגיב: קריאה אקראית
+        ×/לצעוק <keyword>: לכתוב כל דבר שאתה רוצה לתת צעקה קולנית.
     language:
       main: "שפה"
       help: |-
-        Not able to change language of the bot?
-        Easily change by using this module!
+        לא מסוגל לשנות את השפה של הרובוט?
+        בקלות באמצעות מודול זה!
 
-        Just type /lang and use inline keyboard to choose a language \
-        for yourself or your group.
+        רק סוג /lang והשתמשו במקלדת בשורה כדי לבחור שפה\
+        עבור עצמכם או עבור הקבוצה שלכם.
     locks:
-      main: "Locks"
+      main: "נעילות"
       help: |-
-        Use this to lock group permissions.
-        Allows you to lock and unlock permission types in the chat.
+        השתמשו באפשרות זו כדי לנעול הרשאות קבוצה.
+        מאפשר לכם לנעול ולשחרר סוגי הרשאות בצ ' אט.
 
-        **Usage:**
-        × /lock <type>: Lock Chat permission.
-        × /unlock <type>: Unlock Chat permission.
-        × /locks: View Chat permission.
-        × /locktypes: Check available lock types!
+        ** **
+        × /נעילה <type>: נעילת הרשאת צ ' אט.
+        × /ביטול נעילה של <type>: שחרור נעילת צ ' אט.
+        × /ננעל: הצגת הרשאת צ ' אט.
+        × /לוקווד: בדקו את סוגי הנעילה הזמינים!
     muting:
-      main: "Muting"
+      main: "מוטינג"
       help: |-
-        Want someone to keep quite for a while in the group?
-        Mute plugin is here to help, mute or unmute any user easily!
+        רוצה מישהו לשמור די לזמן מה בקבוצה?
+        תוסף Mute הוא כאן כדי לסייע, להשתיק או לבטל את השתקה של כל משתמש בקלות!
 
-        **Admin only:**
-        × /mute: Mute the user replied to or mentioned.
-        × /unmute: Unmutes the user mentioned or replied to.
+        ** Admin בלבד: **
+        × /מושתק: מוטה המשתמש השיב או הוזכר.
+        × /ביטול השתקה: ביטול השתקת המשתמש שהוזכר או השיב לו.
 
-        An example of promoting someone to admins:
-        `/mute @username`; this mutes a user.
+        דוגמה לקידום מישהו לאדימים:
+        /מושתת @username`; פעולה זו משתלמת משתמש.
     notes:
-      main: "Notes"
+      main: "הערות"
       help: |-
         Save a note, get that, even you can delete that note.
         This note only avaiable for yourself only!
@@ -166,53 +166,53 @@ strings:
         -> `Code`
         `Code` (grave accent)
     pins:
-      main: "Pins"
+      main: "פיני"
       help: |-
-        Here you find find all help related to groups pins and how to manage them via me.
+        כאן תוכלו למצוא את כל העזרה הקשורה לסיכות קבוצות ואיך לנהל אותן באמצעות.
 
-        **Admin Cmds:**
-        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
-        × /unpin: Unpins the last pinned message.
-        × /unpinall: Unpins all the pinned message in the current chat.
+        ** Cmds מנהלן: **
+        × /פין: בסיכות סילוניות ההודעה ענתה - 'הוספה' ' ', ` 'התרעה' או 'התרעה' כדי לתת הודעה למשתמשים.
+        × /unpin: ביטול נעיצת ההודעה המוצמדת האחרונה.
+        × /unpinall: ביטול נעיצת כל ההודעה הנעוץ בצ ' אט הנוכחי.
     purges:
-      main: "Purges"
+      main: "מחיקה לצמיתות"
       help: |-
-        Want to delete messages in you group?
+        רוצים למחוק הודעות בקבוצה?
 
-        × /purge: Deletes messages upto replied message.
-        × /del: Deletes a single message, used as a reply to message.
+        × /מחיקה לצמיתות: מחיקת הודעות שעליהן ענתה הודעה.
+        × /דל: מחיקת הודעה אחת, המשמשת כתשובה להודעה.
     reporting:
-      main: "Reporting"
+      main: "דיווח"
       help: |-
-        × /report <reason>: reply to a message to report it to admins.
-        - @admin: reply to a message to report it to admins.
-        **NOTE:** Neither of these will get triggered if used by admins.
+        /דוח <reason>: תשובה להודעה כדי לדווח על כך.
+        - @admin: תשובה להודעה כדי לדווח על כך.
+        הערה: ** אף אחד מאלה לא יופעל אם נעשה שימוש על ידי admins.
 
-        **Admins Only:**
-        × /reports <on/off>: change report setting, or view current status.
-        - If done in PM, toggles your status.
-        - If in group, toggles that groups's status.
+        ** Admins בלבד: **
+        × /דוחות <on/off>: שינוי הגדרת הדוח או הצגת המצב הנוכחי.
+        -אם נעשה בתחזוקה מונעת, מיתוג המצב שלכם.
+        -אם בקבוצה, מיתוג מצב הקבוצות.
     rules:
-      main: "Rules"
+      main: "כללים"
       help: |-
-        Set rules for you chat so that members know what to do and \
-        what not to do in your group!
+        הגדירו כללים לצ 'אט כדי שחברים יידעו מה לעשות ו -\
+        מה לא לעשות בקבוצה שלכם!
 
-        × /rules: get the rules for current chat.
+        × /כללים: לקבל את הכללים עבור הצ' אט הנוכחי.
 
-        **Admin only:**
-        × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
-        × /clearrules: Clear the rules for this chat.
-        × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
+        ** מנהלה בלבד: **
+        × /setrules <rules>: הגדרת הכללים עבור צ ' אט זה, גם פועלת כתשובה להודעה.
+        × /ברורים: ניקוי הכללים עבור צ ' אט זה.
+        × /אברי מין <on/yes/no/off>: הפעלת האפשרות לשלוח את הכללים לתחזוקה מונעת של משתמש או קבוצה.
     spam_protect:
-      main: "Spam Protect"
+      main: "הגנה על Spam"
       help: |-
-        Spammers joining your group?
-        No problem at all, here you can find all the options to protect your groups from raids and scums!
+        ספגתים מצטרפים אל הקבוצה שלך?
+        אין בעיה בכלל, כאן תוכלו למצוא את כל האפשרויות כדי להגן על הקבוצות שלכם מפני פשיטות וחיפוש.
 
-        **Admin Only:**
-        × /cas <on/off>: Turns on or off the CAS check for group.
-        × /underattack <on/off>: Kick all the new users on entry!
+        ** Admin בלבד: **
+        × /cas <on/off>: הפעלה או השבתה של בדיקת CAS עבור קבוצה.
+        × /underלהתקפה <on/off>: לבעוט את כל המשתמשים החדשים ברשומה!
     utils:
       main: "Utils"
       help: |-
@@ -227,17 +227,17 @@ strings:
         × /lyrics <song>: Get the lyrics of the song you specify!
         × /weebify <text> or a reply to message: To weebify the text.
     wiki:
-      main: "Wikipedia"
+      main: "ויקיפדיה"
       help: |-
-        Search Wikipedia on the go in your group!
+        חפשו בוויקיפדיה בקבוצה שלכם!
 
-        **Available commands:**
-        × /wiki <query>: wiki your query.
+        ** פקודות זמינות:
+        × /ויקי <query>: ויקי השאילתה שלכם.
   admin:
     adminlist:
       adminstr: "כתובות <b>{chat_title}</b>:\n"
-      note_cached: "<i>Note:</i> These are cached values!"
-      note_updated: "<i>Note:</i> These are up-to-date values!"
+      note_cached: "<i>הערה:</i> אלה ערכים מוטמנים!"
+      note_updated: "<i>הערה:</i> אלה הם ערכים מעודכנים!"
       reloaded_admins: "נטענו את כל המנהלים בצ ' אט זה!"
       use_admin_cache: "השתמשו ב - /admincache כדי לטעון מחדש את המנהלים!"
     ban:
@@ -506,39 +506,39 @@ strings:
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
-      custom_title: "This user holds the title <b>{custom_title}</b> here."
+      custom_title: "משתמש זה מחזיק את הכותרת <b>{custom_title}</b> כאן."
       getting_info: "פרטי המשתמש מקבלים ..."
       info_text:
         last_name: |-
 
-          <b>Last Name:</b> {user_lname}
+          <b>שם משפחה:</b> {user_lname}
         main: |-
           <b>Characteristics:</b>
           <b>ID:</b> <code>{user_id}</code>
           <b>First Name:</b> {user_name}
         perma_link: |-
 
-          <b>Permanent User Link:</b> {perma_link}
+          <b>קישור משתמש קבוע:</b> {perma_link}
         username: |-
 
-          <b>Username:</b> @{username}
+          <b>שם משתמש:</b> @{username}
       support_user:
         dev: |-
 
 
-          This member is one of my Developers ⚡️
+          חבר זה הוא אחד המתפתחים שלי ⚡️
         owner: |-
 
 
-          This person is my Owner, I would never do anything against them!
+          אדם זה הוא הבעלים שלי, אני לעולם לא אעשה שום דבר נגדם!
         sudo: |-
 
 
-          This user is one of my Sudos, he has powers which are approximately same to owner!
+          משתמש זה הוא אחד הסודוס שלי, יש לו כוחות שהם בערך אותו לבעלים!
         whitelist: |-
 
 
-          This person is 'Whitelist User', they cannot be banned!
+          אדם זה הוא 'משתמש רשימה לבנה', לא ניתן להחרים אותם!
     weebify:
       weebified_string: |-
         <b>מחרוזת שבועות:</b>
