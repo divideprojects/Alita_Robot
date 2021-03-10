@@ -20,6 +20,11 @@ from traceback import format_exc
 from typing import Tuple
 
 from alita import LOGGER
+from alita.database.users_db import Users
+
+
+# Initialize
+db = Users()
 
 
 async def extract_user(c, m) -> Tuple[int, str]:
@@ -45,10 +50,15 @@ async def extract_user(c, m) -> Tuple[int, str]:
         else:
             user_id = m.command[1]
             try:
-                user_first_name = (await c.get_users(user_id)).first_name
+                user_first_name = db.get_user_info(user_id)
             except Exception as ef:
-                user_first_name = user_id
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
+                try:
+                    user_first_name = (await c.get_users(user_id)).first_name
+                except Exception as ef2:
+                    user_first_name = user_id
+                    LOGGER.error(ef2)
+                    LOGGER.error(format_exc())
 
     return user_id, user_first_name
