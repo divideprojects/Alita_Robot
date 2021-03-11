@@ -456,7 +456,7 @@ strings:
     antichannelpin:
       current_status: "Current AntiChannelPin status: {status}"
       turned_on: "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
-      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
+      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will stay pinned!"
     no_pin_msg: "Odpovězte na zprávu, na kterou chcete přidržet ..."
     no_rights_pin: "Nemám dost práv na brož zprávy."
     no_rights_unpin: "Nemám dost práv na odblokování zpráv."
