@@ -227,14 +227,13 @@ async def bl_watcher(_, m: Message):
 
 
 async def bl_chats_watcher(c: Alita, m: Message):
-    if m.chat:
-        if m.chat.id in BLACKLIST_CHATS:
-            await c.send_message(
-                m.chat.id,
-                (
-                    "This is a blacklisted group!\nFor Support,"
-                    f"Join {SUPPORT_GROUP}\nI'm out of here!"
-                ),
-            )
-            await c.leave_chat(m.chat.id)
+    if m.chat and (m.chat.id in BLACKLIST_CHATS):
+        await c.send_message(
+            m.chat.id,
+            (
+                "This is a blacklisted group!\nFor Support,"
+                f"Join {SUPPORT_GROUP}\nI'm out of here!"
+            ),
+        )
+        await c.leave_chat(m.chat.id)
     return

@@ -30,7 +30,7 @@ __help__ = "plugins.pins.help"
 
 
 @Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group & admin_filter)
-async def pin_message(c: Alita, m: Message):
+async def pin_message(_, m: Message):
 
     pin_args = m.text.split(None, 1)
     if m.reply_to_message:

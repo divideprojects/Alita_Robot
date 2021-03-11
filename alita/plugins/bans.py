@@ -28,7 +28,6 @@ from pyrogram.errors import (
     RPCError,
     UserNotParticipant,
 )
-from pyrogram.methods.chats import iter_chat_members
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
