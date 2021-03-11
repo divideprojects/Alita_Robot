@@ -456,7 +456,7 @@ strings:
     antichannelpin:
       current_status: "Current AntiChannelPin status: {status}"
       turned_on: "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
-      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
+      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will stay pinned!"
     no_pin_msg: "Rispondi a un messaggio a cui vuoi pin ..."
     no_rights_pin: "Non ho abbastanza diritti per pin i messaggi."
     no_rights_unpin: "Non ho abbastanza diritti per sbloccare i messaggi."
