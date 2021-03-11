@@ -33,7 +33,7 @@ async def admin_cache_reload(m):
     with THREAD_LOCK:
         global ADMIN_CACHE
         try:
-            admin_list = [user[0] for user in ADMIN_CACHE[m.chat.id]]
+            admin_list = [user[0] for user in ADMIN_CACHE[str(m.chat.id)]]
             return admin_list
         except KeyError:
             LOGGER.info(f"Loading admins for chat {m.chat.id}")
@@ -47,7 +47,7 @@ async def admin_cache_reload(m):
                         else i.user.first_name,
                     ),
                 )
-            ADMIN_CACHE[m.chat.id] = admin_list
+            ADMIN_CACHE[str(m.chat.id)] = admin_list
             admin_list = [user[0] for user in admin_list]
 
         return False

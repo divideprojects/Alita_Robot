@@ -26,12 +26,13 @@ from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, MESSAGE_DUMP, SUPPORT_GROUP
 from alita.bot_class import Alita
+from alita.database.antichannelpin import AntiChannelPin
 from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.group_blacklist import BLACKLIST_CHATS
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE
+from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
 from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
 
@@ -39,6 +40,7 @@ from alita.utils.regex_utils import regex_searcher
 bl_db = Blacklist()
 app_db = Approve()
 gban_db = GBan()
+antichannel_db = AntiChannelPin()
 
 # Initialize threading
 WATCHER_LOCK = RLock()
@@ -56,6 +58,7 @@ async def aio_watcher(c: Alita, m: Message):
         await gban_watcher(c, m)
         await bl_chats_watcher(c, m)
         await bl_watcher(c, m)
+        await antipin_watcher(c, m)
 
 
 async def gban_watcher(c: Alita, m: Message):
@@ -199,8 +202,11 @@ async def bl_watcher(_, m: Message):
             approved_users.append(int(i[0]))  # 0 - user_id
 
         # Get admins from admin_cache, reduces api calls
-        for i in [user[0] for user in ADMIN_CACHE[m.chat.id]]:
-            approved_users.append(i.user.id)
+        try:
+            for i in [user[0] for user in ADMIN_CACHE[str(m.chat.id)]]:
+                approved_users.append(i.user.id)
+        except KeyError:
+            await admin_cache_reload(m)
 
         BLACKLIST_PRUNE_USERS[m.chat.id] = approved_users
 
@@ -236,4 +242,21 @@ async def bl_chats_watcher(c: Alita, m: Message):
             ),
         )
         await c.leave_chat(m.chat.id)
+    return
+
+
+async def antipin_watcher(c: Alita, m: Message):
+    try:
+        if m.forward_from_chat.type == "channel":
+            msg_id = m.message_id
+            antipin_status = antichannel_db.check_antipin(m.chat.id)
+            if antipin_status:
+                # Unpin the message
+                await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
+    except Exception as ef:
+        if "'NoneType' object has no attribute 'type'" == str(ef):
+            return
+        LOGGER.error(ef)
+        pass
+
     return
