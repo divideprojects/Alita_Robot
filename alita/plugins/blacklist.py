@@ -77,10 +77,20 @@ async def add_blacklist(_, m: Message):
 
     if len(m.text.split()) >= 2:
         bl_word = (m.text.split(None, 1)[1]).lower()
+        all_blacklisted = db.get_blacklists(m.chat.id)
+
+        if bl_word in all_blacklisted:
+            await m.reply_text(
+                (tlang(m, "blacklist.already_exists")).format(
+                    trigger=bl_word,
+                ),
+            )
+            return
+
         db.add_blacklist(m.chat.id, bl_word)
         await m.reply_text(
             (tlang(m, "blacklist.added_blacklist")).format(
-                trigger=f"<code>{bl_word}</code>",
+                trigger=bl_word,
             ),
         )
         return
@@ -95,11 +105,11 @@ async def add_blacklist(_, m: Message):
 )
 async def rm_blacklist(_, m: Message):
 
-    chat_bl = db.get_blacklists(m.chat.id)
     if not len(m.text.split()) >= 2:
         await m.reply_text(tlang(m, "general.check_help"))
         return
 
+    chat_bl = db.get_blacklists(m.chat.id)
     bl_word = (m.text.split(None, 1)[1]).lower()
     if bl_word not in chat_bl:
         await m.reply_text(

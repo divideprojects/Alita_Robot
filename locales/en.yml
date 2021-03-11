@@ -77,7 +77,7 @@ strings:
         muser_listtiple triggers at once.
         × /rmblacklist <triggers>: Same as above.
         × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'
-        Default is 'kick', which will kick the user on typing blacklist word.
+        Default is 'none', which will delete the users message on typing a blacklist word.
 
         **Owner Only**
         × /rmallblacklist: Removes all the blacklists from the current chat.
@@ -237,7 +237,9 @@ strings:
         × /wiki <query>: wiki your query.
   admin:
     adminlist:
-      adminstr: "Admins in <b>{chat_title}</b>:\n"
+      adminstr: |-
+        Admins in <b>{chat_title}</b>:
+
       note_cached: "<i>Note:</i> These are cached values!"
       note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "Reloaded all admins in this chat!"
@@ -302,7 +304,8 @@ strings:
     gban:
       gban_error_log: |-
         <b>Gban Watcher Error!</b>
-        <b>Chat:</b> {chat_id}\n<b>Error:</b> <code>{ef}</code>
+        <b>Chat:</b> <code>{chat_id}</code>
+        <b>Error:</b> <code>{ef}</code>
       added_to_watch: |-
         Added {first_name} to Global Ban List.
         They will now be banned in all groups where I'm admin!
@@ -326,7 +329,9 @@ strings:
         <b>Reason:</b> <code>{gban_reason}</code>
 
         <b>Appeal Chat:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: "Here are all the globally banned geys!\n"
+    here_gbanned_start: |-
+      Here are all the globally banned geys!
+
     none_gbanned: "There aren't any gbanned users...!"
     num_gbans: "Number of people gbanned: <code>{count}</code>"
     part_of_support: "This user is part of my Support!, Can't ban our own!"
@@ -352,10 +357,13 @@ strings:
       action_kick: "Kicked {user} for using a blacklisted word!"
       action_ban: "Banned {user} for using a blacklisted word!"
       action_mute: "Muted {user} for using a blacklisted word!"
+    already_exists: "The word <code>{trigger}</code> is already blacklisted!"
     action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
     action_set: "Set action for blacklist for this to <b>{action}</b>"
-    added_blacklist: "Added <b>{trigger}</b> in blacklist words!"
-    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n"
+    added_blacklist: "Added <code>{trigger}</code> in blacklist words!"
+    curr_blacklist_initial: |-
+      Current Blacklisted words in <b>{chat_title}</b>:
+
     no_bl_found: "No blacklist <b>{bl_word}</b> found!"
     no_blacklist: "There are no blacklisted messages in <b>{chat_title}</b>!"
     rm_blacklist: "Removed <b>{bl_word}</b> from blacklist words!"

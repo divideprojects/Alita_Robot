@@ -127,6 +127,9 @@ class Blacklist:
             )
             return "none"
 
+    def count_action_bl_all(self, action: str):
+        return self.collection.count({"action": action})
+
     def rm_all_blacklist(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_one({"_id": chat_id})
