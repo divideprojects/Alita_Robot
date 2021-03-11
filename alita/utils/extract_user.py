@@ -43,8 +43,9 @@ async def extract_user(c, m) -> Tuple[int, str]:
                 user_first_name = required_entity.user.first_name
             elif required_entity.type == "mention":
                 user_found = m.text[
-                    required_entity.offset : required_entity.offset
-                    + required_entity.length
+                    required_entity.offset : (
+                        required_entity.offset + required_entity.length
+                    )
                 ]
                 try:
                     user = db.get_user_info(user_found)
@@ -60,6 +61,26 @@ async def extract_user(c, m) -> Tuple[int, str]:
                     LOGGER.error(ef)
                     LOGGER.error(format_exc())
 
+            # new long user_ids are identified as phone_number
+            elif required_entity.type == "phone_number":
+                user_found = m.text[
+                    required_entity.offset : (
+                        required_entity.offset + required_entity.length
+                    )
+                ]
+                try:
+                    user = db.get_user_info(user_found)
+                    user_id = user["_id"]
+                    user_first_name = user["name"]
+                except KeyError:
+                    user = await c.get_users(user_found)
+                    user_id = user.id
+                    user_first_name = user.first_name
+                except Exception as ef:
+                    user_id = user_found
+                    user_first_name = user_found
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
         else:
             user_id = int(m.command[1])
             try:
