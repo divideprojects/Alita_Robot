@@ -103,7 +103,7 @@ async def get_note_func(c: Alita, m: Message, note: str):
         button = InlineKeyboardMarkup(button) if button else None
         if button:
             try:
-                await m.reply_text(teks, reply_markup=button)
+                await m.reply_text(teks, reply_markup=button, disable_web_page_preview=True)
                 return
             except RPCError as ef:
                 await m.reply_text("An error has occured! Cannot parse note.")
