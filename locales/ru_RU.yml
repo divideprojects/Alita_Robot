@@ -170,12 +170,13 @@ strings:
     pins:
       main: "Контакты"
       help: |-
-        Здесь вы найдете любую помощь, связанную с группами и как управлять ими через меня.
+        Here you find find all help related to groups pins and how to manage them via me.
 
-        ** admin cmds: **
-        × /pin: в режиме без вывода сообщений в ответ на сообщение добавляется слово " loud `, ` notify ` или ` alert ` для предоставления пользователям уведомлений.
-        × /unpin: Отмена последнего закрепленного сообщения.
-        × /unpinall: Отбивает все закрепленные сообщения в текущем чате.
+        **Admin Cmds:**
+        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
+        × /unpin: Unpins the last pinned message.
+        × /unpinall: Unpins all the pinned message in the current chat.
+        × /antichannelpin <on/off>: Toogle antichannelpin status
     purges:
       main: "Очистила"
       help: |-
@@ -452,6 +453,10 @@ strings:
       <b>Invite Users:</b> {vinvite}
       <b>Pin Messages:</b> {vpin}
   pin:
+    antichannelpin:
+      current_status: "Current AntiChannelPin status: {status}"
+      turned_on: "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
+      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
     no_pin_msg: "Ответить на сообщение, на которое вы хотите закрепить ..."
     no_rights_pin: "У меня недостаточно прав для закрепления сообщений."
     no_rights_unpin: "У меня недостаточно прав, чтобы открепить сообщения."
