@@ -10,8 +10,8 @@ git:
 # Only build these branches
 branches:
   only:
-  - main
-  - production
+    - beta
+    - production
 
 # Python Versions
 python:
