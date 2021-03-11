@@ -103,7 +103,11 @@ async def get_note_func(c: Alita, m: Message, note: str):
         button = InlineKeyboardMarkup(button) if button else None
         if button:
             try:
-                await m.reply_text(teks, reply_markup=button, disable_web_page_preview=True)
+                await m.reply_text(
+                    teks,
+                    reply_markup=button,
+                    disable_web_page_preview=True,
+                )
                 return
             except RPCError as ef:
                 await m.reply_text("An error has occured! Cannot parse note.")
@@ -147,6 +151,11 @@ async def get_note_func(c: Alita, m: Message, note: str):
 
 @Alita.on_message(filters.regex(r"^#[^\s]+") & filters.group)
 async def hash_get(c: Alita, m: Message):
+
+    # If not from user, then return
+    if not m.from_user:
+        return
+
     note = m.text[1:]
     await get_note_func(c, m, note)
     return
@@ -155,7 +164,7 @@ async def hash_get(c: Alita, m: Message):
 @Alita.on_message(filters.command("get", PREFIX_HANDLER) & filters.group)
 async def get_note(c: Alita, m: Message):
     if len(m.text.split()) >= 2:
-        note = m.text.split()[1]
+        note = (m.text.split())[1]
     else:
         await m.reply_text("Give me a note tag!")
         return

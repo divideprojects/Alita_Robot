@@ -107,12 +107,14 @@ async def get_note_type(m):
         data_type = Types.TEXT
 
     elif m.reply_to_message:
+
         if m.reply_to_message.text:
             text = m.reply_to_message.text.markdown
         elif m.reply_to_message.caption:
             text = m.reply_to_message.caption.markdown
         else:
             text = ""
+
         if len(args) >= 2 and m.reply_to_message.text:  # not caption, text
             data_type = Types.TEXT
 
