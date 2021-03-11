@@ -456,7 +456,7 @@ strings:
     antichannelpin:
       current_status: "Current AntiChannelPin status: {status}"
       turned_on: "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
-      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
+      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will stay pinned!"
     no_pin_msg: "قم بالرد على الرسالة التي تريد تحديد المساحة الخاصة بها ..."
     no_rights_pin: "ليس لدي ما يكفي من الحقوق لتوجيه الرسائل."
     no_rights_unpin: "ليس لدي ما يكفي من الحقوق لرسائل unpin."
