@@ -134,7 +134,7 @@ async def anti_channel_pin(_, m: Message):
         status = antichanneldb.check_antipin(m.chat.id)
         await m.reply_text(
             tlang(m, "pin.antichannelpin.current_status").format(
-                status=status["status"],
+                status=status,
             ),
         )
         return
