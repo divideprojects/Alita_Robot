@@ -29,6 +29,7 @@ from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
+from alita.database.group_blacklist import BLACKLIST_CHATS
 from alita.tr_engine import tlang
 from alita.utils.admin_cache import ADMIN_CACHE
 from alita.utils.parser import mention_html
@@ -53,6 +54,7 @@ async def aio_watcher(c: Alita, m: Message):
 
     with WATCHER_LOCK:
         await gban_watcher(c, m)
+        await bl_chats_watcher(c, m)
         await bl_watcher(c, m)
 
 
@@ -222,3 +224,17 @@ async def bl_watcher(_, m: Message):
 
     except AttributeError:
         pass  # Skip attribute errors!
+
+
+async def bl_chats_watcher(c: Alita, m: Message):
+    if m.chat:
+        if m.chat.id in BLACKLIST_CHATS:
+            await c.send_message(
+                m.chat.id,
+                (
+                    "This is a blacklisted group!\nFor Support,"
+                    f"Join {SUPPORT_GROUP}\nI'm out of here!"
+                ),
+            )
+            await c.leave_chat(m.chat.id)
+    return
