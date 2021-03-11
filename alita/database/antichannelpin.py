@@ -44,7 +44,7 @@ class AntiChannelPin:
 
     def count_antipin_chats(self):
         with INSERTION_LOCK:
-            return self.collection.count()
+            return self.collection.count({"status": True})
 
     def list_antipin_chats(self):
         with INSERTION_LOCK:
