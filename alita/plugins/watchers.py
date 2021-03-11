@@ -254,7 +254,7 @@ async def antipin_watcher(c: Alita, m: Message):
                 # Unpin the message
                 await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
     except Exception as ef:
-        if "'NoneType' object has no attribute 'type'" == str(ef):
+        if str(ef) == "'NoneType' object has no attribute 'type'":
             return
         LOGGER.error(ef)
         pass
