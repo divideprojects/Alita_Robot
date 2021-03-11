@@ -170,12 +170,13 @@ strings:
     pins:
       main: "Sabitler"
       help: |-
-        Burada, grup iğnelleriyle ilgili tüm yardımı ve bunları benim aracımla nasıl yönetebildiğinizi bulabilirsiniz.
+        Here you find find all help related to groups pins and how to manage them via me.
 
-        ** Admin Cmds: **
-        × /pin: İletinin yanıtlanan iğneleri, kullanıcılara notificaton vermek için ' sesli `, ` notify ` veya ` alert ` şeklinde yanıtlandı.
-        × /unpin: Son sabitlenen iletinin iğneleri kaldırın.
-        × /unpinall: Geçerli sohbette, sabitlenmiş tüm iletinin iğneleri kaldırır.
+        **Admin Cmds:**
+        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
+        × /unpin: Unpins the last pinned message.
+        × /unpinall: Unpins all the pinned message in the current chat.
+        × /antichannelpin <on/off>: Toogle antichannelpin status
     purges:
       main: "Aralıklar"
       help: |-
@@ -452,6 +453,10 @@ strings:
       <b>Invite Users:</b> {vinvite}
       <b>Pin Messages:</b> {vpin}
   pin:
+    antichannelpin:
+      current_status: "Current AntiChannelPin status: {status}"
+      turned_on: "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
+      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
     no_pin_msg: "Sabitlemek istediğiniz bir iletiyi yanıtlayın ..."
     no_rights_pin: "Mesaj atmaya yetecek kadar haklarım yok."
     no_rights_unpin: "Mesajlarımı kaldırmak için yeterli hakkım yok."
