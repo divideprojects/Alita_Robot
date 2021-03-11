@@ -17,7 +17,7 @@
 
 
 import sys
-from asyncio import create_subprocess_shell, subprocess
+from asyncio import create_subprocess_shell, sleep, subprocess
 from io import BytesIO, StringIO
 from time import gmtime, strftime, time
 from traceback import format_exc
@@ -26,6 +26,7 @@ from pyrogram import filters
 from pyrogram.errors import (
     ChannelPrivate,
     ChatAdminRequired,
+    FloodWait,
     MessageTooLong,
     PeerIdInvalid,
     RPCError,
@@ -274,12 +275,12 @@ async def chats(c: Alita, m: Message):
         MESSAGE_DUMP,
         f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    all_chats = (chatdb.list_chats()) or []
+    all_chats = (chatdb.get_all_chats()) or {}
     chatfile = tlang(m, "dev.chatlist.header")
     P = 1
     for chat in all_chats:
         try:
-            chat_info = await c.get_chat(int(chat["chat_id"]))
+            chat_info = await c.get_chat(chat["_id"])
             chat_members = chat_info.members_count
             try:
                 invitelink = chat_info.invite_link
@@ -288,7 +289,7 @@ async def chats(c: Alita, m: Message):
             chatfile += "{}. {} | {} | {} | {}\n".format(
                 P,
                 chat["chat_name"],
-                chat["chat_id"],
+                chat["_id"],
                 chat_members,
                 invitelink,
             )
@@ -296,9 +297,13 @@ async def chats(c: Alita, m: Message):
         except ChatAdminRequired:
             pass
         except ChannelPrivate:
-            chatdb.remove_chat(chat.chat_id)
+            chatdb.remove_chat(chat["_id"])
         except PeerIdInvalid:
-            LOGGER.warning(f"Peer  not found {chat.chat_id}")
+            LOGGER.warning(f"Peer  not found {chat['_id']}")
+        except FloodWait as ef:
+            LOGGER.error("FloodWait required, Sleeping for 60s")
+            LOGGER.error(ef)
+            sleep(60)
         except RPCError as ef:
             LOGGER.error(ef)
             await m.reply_text(f"**Error:**\n{ef}")

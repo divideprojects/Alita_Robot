@@ -188,7 +188,7 @@ async def github(_, m: Message):
         f"\n**Company:** `{company}`\n**Created at:** `{created_at}`"
     )
 
-    await m.reply_text(REPLY)
+    await m.reply_text(REPLY, quote=True)
 
     return
 
@@ -197,20 +197,15 @@ async def github(_, m: Message):
     filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def my_info(c: Alita, m: Message):
-    infoMsg = await m.reply_text(
-        f"<code>{(tlang(m, 'utils.user_info.getting_info'))}</code>",
-    )
+    infoMsg = await m.reply_text((tlang(m, "utils.user_info.getting_info")), quote=True)
     try:
         user_id = (await extract_user(c, m))[0]
     except PeerIdInvalid:
-        await m.reply_text(tlang(m, "utils.user_info.peer_id_error"))
+        await infoMsg.edit_text(tlang(m, "utils.user_info.peer_id_error"))
         return
     except ValueError as ef:
         if "Peer id invalid" in str(ef):
-            await infoMsg.edit_text(
-                tlang(m, "utils.user_info.id_not_found"),
-                quote=True,
-            )
+            await infoMsg.edit_text(tlang(m, "utils.user_info.id_not_found"))
         return
     try:
         user = await c.get_users(user_id)

@@ -82,6 +82,10 @@ class Chats:
                 chat_list.append(chat["_id"])
             return chat_list
 
+    def get_all_chats(self):
+        with INSERTION_LOCK:
+            return self.collection.find_all()
+
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:

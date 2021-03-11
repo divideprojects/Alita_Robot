@@ -269,6 +269,7 @@ async def get_invitelink(c: Alita, m: Message):
                 chat_name=m.chat.id,
                 link=link,
             ),
+            disable_web_page_preview=True,
         )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
