@@ -49,7 +49,7 @@ async def get_stats(_, m: Message):
     replymsg = await m.reply_text("<b><i>Fetching Stats...</i></b>", quote=True)
     rply = (
         f"<b>Users:</b> <code>{(userdb.count_users())}</code> in <code>{(chatdb.count_chats())}</code> chats\n"
-        f"<b>Anti Channel Pin:</b> {(antichanneldb.count_antipin_chats())}\n"
+        f"<b>Anti Channel Pin:</b> Enabled in <code>{(antichanneldb.count_antipin_chats())}</code> chats\n"
         f"<b>Blacklists:</b> <code>{(bldb.count_blacklists_all())}</code> in <code>{(bldb.count_blackists_chats())}</code> chats\n"
         f"    <b>Action Specific:</b>\n"
         f"        <b>None:</b> {(bldb.count_action_bl_all('none'))}\n"
