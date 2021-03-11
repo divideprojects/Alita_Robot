@@ -70,7 +70,7 @@ async def save_note(_, m: Message):
         )
         return
 
-    if data_type == Types.TEXT:
+    if data_type == Types.TEXT or text != "":
         teks, _ = await parse_button(text)
         if not teks:
             await m.reply_text(
@@ -98,7 +98,7 @@ async def get_note_func(c: Alita, m: Message, note: str):
         return
 
     if msgtype == Types.TEXT:
-        teks, button = await parse_button(getnotes.get("note_value"))
+        teks, button = await parse_button(getnotes["note_value"])
         button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
         if button:
@@ -118,7 +118,6 @@ async def get_note_func(c: Alita, m: Message, note: str):
             return
     elif msgtype in (
         Types.STICKER,
-        Types.VOICE,
         Types.VIDEO_NOTE,
         Types.CONTACT,
         Types.ANIMATED_STICKER,
@@ -126,18 +125,23 @@ async def get_note_func(c: Alita, m: Message, note: str):
         await (await send_cmd(c, msgtype))(m.chat.id, getnotes["fileid"])
     else:
         if getnotes["note_value"]:
-            teks, button = await parse_button(getnotes.get("note_value"))
+            teks, button = await parse_button(getnotes["note_value"])
             button = await build_keyboard(button)
             button = InlineKeyboardMarkup(button) if button else None
         else:
-            teks = None
+            teks = ""
             button = None
         if button:
             try:
-                await m.reply_text(teks, reply_markup=button)
+                await (await send_cmd(c, msgtype))(
+                    m.chat.id,
+                    getnotes["fileid"],
+                    caption=teks,
+                    reply_markup=button,
+                )
                 return
             except RPCError as ef:
-                await m.reply_text("An error has accured! Cannot parse note.")
+                await m.reply_text(teks, reply_markup=button)
                 LOGGER.error(ef)
                 return
         else:
@@ -156,7 +160,10 @@ async def hash_get(c: Alita, m: Message):
     if not m.from_user:
         return
 
-    note = m.text[1:]
+    try:
+        note = m.text[1:]
+    except TypeError:
+        return
     await get_note_func(c, m, note)
     return
 
