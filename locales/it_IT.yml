@@ -170,12 +170,13 @@ strings:
     pins:
       main: "Piedini"
       help: |-
-        Qui trovate trovare tutto l'aiuto relativo ai gruppi di piedini e come gestirli tramite me.
+        Here you find find all help related to groups pins and how to manage them via me.
 
-        ** Admin Cmds: **
-        × /pin: Silente pins il messaggio ha risposto ad - aggiungi ` ad alta ` `, ` notifica ` o ` avviso ` per dare notifica agli utenti.
-        × /unpin: Sblocca l'ultimo messaggio bloccato.
-        × /unpinall: Unpin tutto il messaggio pinzato nella chat corrente.
+        **Admin Cmds:**
+        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
+        × /unpin: Unpins the last pinned message.
+        × /unpinall: Unpins all the pinned message in the current chat.
+        × /antichannelpin <on/off>: Toogle antichannelpin status
     purges:
       main: "Purghe"
       help: |-
@@ -452,6 +453,10 @@ strings:
       <b>Invite Users:</b> {vinvite}
       <b>Pin Messages:</b> {vpin}
   pin:
+    antichannelpin:
+      current_status: "Current AntiChannelPin status: {status}"
+      turned_on: "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
+      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
     no_pin_msg: "Rispondi a un messaggio a cui vuoi pin ..."
     no_rights_pin: "Non ho abbastanza diritti per pin i messaggi."
     no_rights_unpin: "Non ho abbastanza diritti per sbloccare i messaggi."
