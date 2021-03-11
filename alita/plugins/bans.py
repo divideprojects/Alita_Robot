@@ -75,12 +75,12 @@ async def kick_usr(c: Alita, m: Message):
 
     try:
         # Check if user is banned or not
-        banned_users = []
-        async for i in m.chat.iter_members(filter="kicked"):
-            banned_users.append(i.user.id)
-        if user_id in banned_users:
-            await m.reply_text(tlang(m, "admin.kick.user_already_banned"))
-            return
+        # banned_users = []
+        # async for i in m.chat.iter_members(filter="kicked"):
+        #     banned_users.append(i.user.id)
+        # if user_id in banned_users:
+        #     await m.reply_text(tlang(m, "admin.kick.user_already_banned"))
+        #     return
         await m.chat.kick_member(user_id, int(time() + 45))
         await m.reply_text(
             (tlang(m, "admin.kick.kicked_user")).format(
@@ -128,12 +128,12 @@ async def ban_usr(c: Alita, m: Message):
 
     try:
         # Check if user is banned or not
-        banned_users = []
-        async for i in m.chat.iter_members(filter="kicked"):
-            banned_users.append(i.user.id)
-        if user_id in banned_users:
-            await m.reply_text(tlang(m, "admin.ban.user_already_banned"))
-            return
+        # banned_users = []
+        # async for i in m.chat.iter_members(filter="kicked"):
+        #     banned_users.append(i.user.id)
+        # if user_id in banned_users:
+        #     await m.reply_text(tlang(m, "admin.kick.user_already_banned"))
+        #     return
         await m.chat.kick_member(user_id)
         await m.reply_text(
             (tlang(m, "admin.ban.banned_user")).format(
