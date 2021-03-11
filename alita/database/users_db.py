@@ -66,7 +66,7 @@ class Users:
                 user_id = user_id.replace("@", "")
                 curr = self.collection.find_one({"username": user_id})
             else:
-                pass
+                curr = None
             if curr:
                 return curr
             return {}

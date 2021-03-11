@@ -45,6 +45,7 @@ class Config:
     VERSION = load_var("VERSION")
     DEV_PREFIX_HANDLER = load_var("DEV_PREFIX_HANDLER", ">").split()
     WORKERS = int(load_var("WORKERS", 16))
+    LOAD_ADMINS = bool(load_var("LOAD_ADMINS"), True)
 
 
 class Development:
@@ -70,3 +71,4 @@ class Development:
     VERSION = "VERSION"
     DEV_PREFIX_HANDLER = ">"
     WORKERS = 8
+    LOAD_ADMINS = True

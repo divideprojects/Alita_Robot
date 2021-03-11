@@ -25,6 +25,8 @@ INSERTION_LOCK = RLock()
 
 BLACKLIST_CHATS = []
 
+chatdb = Chats()
+
 
 class GroupBlacklist:
     """Class to blacklist chats where bot will exit."""
@@ -35,10 +37,10 @@ class GroupBlacklist:
     def add_chat(self, chat_id: int):
         with INSERTION_LOCK:
             global BLACKLIST_CHATS
-            Chats().remove_chat(chat_id)  # Delete chat from database
+            chatdb.remove_chat(chat_id)  # Delete chat from database
             BLACKLIST_CHATS.append(chat_id)
             BLACKLIST_CHATS.sort()
-            return self.collection.insert_one({"_id": chat_id})
+            return self.collection.insert_one({"_id": chat_id, "blacklist": True})
 
     def remove_chat(self, chat_id: int):
         with INSERTION_LOCK:
@@ -53,4 +55,23 @@ class GroupBlacklist:
                 BLACKLIST_CHATS.sort()
                 return BLACKLIST_CHATS
             except Exception:
-                return self.collection.find_all()
+                BLACKLIST_CHATS = []
+                all_chats = self.collection.find_all()
+                for chat in all_chats:
+                    BLACKLIST_CHATS.append(chat["_id"])
+                return BLACKLIST_CHATS
+
+    def get_from_db(self):
+        return self.collection.find_all()
+
+
+def __load_group_blacklist():
+    global BLACKLIST_CHATS
+    db = GroupBlacklist()
+    chats = db.get_from_db() or []
+    for chat in chats:
+        BLACKLIST_CHATS.append(chat["_id"])
+    BLACKLIST_CHATS.sort()
+
+
+__load_group_blacklist()

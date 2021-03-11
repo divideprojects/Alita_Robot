@@ -35,6 +35,7 @@ from alita import (
     API_HASH,
     APP_ID,
     BOT_USERNAME,
+    LOAD_ADMINS,
     LOG_DATETIME,
     LOGFILE,
     LOGGER,
@@ -154,7 +155,9 @@ class Alita(Client):
         LOGGER.info(f"Loading Languages: {lang_status}")
 
         # Cache admins
-        await self.get_admins()
+        LOGGER.info(f"Loading Admins (Caching): {LOAD_ADMINS}")
+        if LOAD_ADMINS:
+            await self.get_admins()
 
         # Show in Log that bot has started
         LOGGER.info(

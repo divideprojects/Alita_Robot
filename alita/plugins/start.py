@@ -17,7 +17,7 @@
 
 
 from pyrogram import filters
-from pyrogram.errors import MessageNotModified, UserIsBlocked
+from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -31,7 +31,7 @@ from alita.tr_engine import tlang
 
 
 async def gen_cmds_kb(m):
-    """Generate language keyboard!"""
+    """Generate the keyboard for languages."""
     if isinstance(m, CallbackQuery):
         m = m.message
 
@@ -71,6 +71,7 @@ async def gen_cmds_kb(m):
 
 
 async def gen_start_kb(q):
+    """Generate keyboard with start menu options."""
 
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -159,10 +160,16 @@ async def commands_menu(_, q: CallbackQuery):
             ],
         ],
     )
-    await q.message.edit_text(
-        (tlang(q, "general.commands_available")),
-        reply_markup=keyboard,
-    )
+    try:
+        await q.message.edit_text(
+            (tlang(q, "general.commands_available")),
+            reply_markup=keyboard,
+        )
+    except QueryIdInvalid:
+        await q.message.reply_text(
+            (tlang(q, "general.commands_available")),
+            reply_markup=keyboard,
+        )
     await q.answer()
     return
 

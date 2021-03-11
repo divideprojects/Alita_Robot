@@ -83,8 +83,10 @@ async def unblacklist_chat(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("blchatlist", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(
+    filters.command(["blchatlist", "blchats"], DEV_PREFIX_HANDLER) & dev_filter,
+)
 async def list_blacklist_chats(_, m: Message):
-    bl_chats = db.list_all_chats()
+    bl_chats = db.list_all_chats() or []
     await m.reply_text("These Chats are Blacklisted:\n" + "\n".join(bl_chats))
     return
