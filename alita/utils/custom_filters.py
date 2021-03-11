@@ -41,7 +41,6 @@ async def sudo_check_func(_, __, m):
 
 async def admin_check_func(_, __, m):
     """Check if user is Admin or not."""
-    global ADMIN_CACHE
 
     if isinstance(m, CallbackQuery):
         m = m.message

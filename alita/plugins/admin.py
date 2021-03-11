@@ -32,7 +32,7 @@ from pyrogram.types import Message
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_check
+from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
 from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -104,20 +104,7 @@ async def adminlist_show(_, m: Message):
 )
 async def reload_admins(_, m: Message):
     try:
-        global ADMIN_CACHE
-        admin_list = []
-        async for i in m.chat.iter_members(filter="administrators"):
-            if (
-                i.user.is_deleted or i.user.is_bot
-            ):  # Don't cache deleted users and bots!
-                continue
-            admin_list.append(
-                (
-                    i.user.id,
-                    ("@" + i.user.username) if i.user.username else i.user.first_name,
-                ),
-            )
-        ADMIN_CACHE[m.chat.id] = admin_list
+        await admin_cache_reload(m)
         await m.reply_text(tlang(m, "admin.adminlist.reloaded_admins"))
     except RPCError as ef:
         await m.reply_text(

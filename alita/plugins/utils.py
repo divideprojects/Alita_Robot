@@ -20,7 +20,6 @@ from html import escape
 from io import BytesIO
 from os import remove
 from time import time
-from traceback import format_exc
 
 from gpytranslate import Translator
 from pyrogram import filters
@@ -30,12 +29,10 @@ from tswift import Song
 
 from alita import (
     DEV_USERS,
-    LOGGER,
     OWNER_ID,
     PREFIX_HANDLER,
     SUDO_USERS,
     SUPPORT_GROUP,
-    TOKEN,
     WHITELIST_USERS,
 )
 from alita.bot_class import Alita
