@@ -199,7 +199,7 @@ async def bl_watcher(_, m: Message):
             approved_users.append(int(i[0]))  # 0 - user_id
 
         # Get admins from admin_cache, reduces api calls
-        for i in [user[0] for user in ADMIN_CACHE[m.cha.id]]:
+        for i in [user[0] for user in ADMIN_CACHE[m.chat.id]]:
             approved_users.append(i.user.id)
 
         BLACKLIST_PRUNE_USERS[m.chat.id] = approved_users

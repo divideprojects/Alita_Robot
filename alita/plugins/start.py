@@ -25,7 +25,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import BOT_USERNAME, HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
+from alita import HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 
@@ -73,15 +73,15 @@ async def gen_cmds_kb(m):
 async def gen_start_kb(q):
     """Generate keyboard with start menu options."""
 
+    from alita import BOT_USERNAME
+
     keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
+        [
             [
                 InlineKeyboardButton(
                     f"📚 {(tlang(q, 'start.commands_btn'))}",
                     callback_data="commands",
                 ),
-            ]
-            + [
                 InlineKeyboardButton(
                     f"ℹ️ {(tlang(q, 'start.infos_btn'))}",
                     callback_data="infos",
@@ -92,8 +92,6 @@ async def gen_start_kb(q):
                     f"🌐 {(tlang(q, 'start.language_btn'))}",
                     callback_data="chlang",
                 ),
-            ]
-            + [
                 InlineKeyboardButton(
                     f"➕ {(tlang(q, 'start.add_chat_btn'))}",
                     url=f"https://t.me/{BOT_USERNAME}?startgroup=new",
@@ -177,6 +175,8 @@ async def commands_menu(_, q: CallbackQuery):
 @Alita.on_message(filters.command("help", PREFIX_HANDLER))
 async def help_menu(_, m: Message):
 
+    from alita import BOT_USERNAME
+
     if len(m.text.split()) >= 2:
 
         help_option = (m.text.split(None, 1)[1]).lower()
@@ -256,7 +256,7 @@ async def get_module_info(_, q: CallbackQuery):
 
     module = q.data.split(".", 1)[1]
     keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
+        [
             [
                 InlineKeyboardButton(
                     "« " + (tlang(q, "general.back_btn")),
