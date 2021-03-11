@@ -112,7 +112,15 @@ class Alita(Client):
                                 else j.user.first_name,
                             ),
                         )
-                except (PeerIdInvalid, ChannelInvalid):
+                except PeerIdInvalid:
+                    # Didn't meet group or saw any message from it
+                    continue
+                except ChannelInvalid:
+                    # Bot removed from that group
+                    chatdb.remove_chat(chat_id)
+                    LOGGER.warning(
+                        f"Removing chat {chat_id} from database as I'm not in it!",
+                    )
                     continue
                 except RPCError as ef:
                     LOGGER.error(ef)

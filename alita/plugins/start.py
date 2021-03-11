@@ -177,7 +177,8 @@ async def help_menu(_, m: Message):
             [i.split(".")[1].lower() for i in list(HELP_COMMANDS.keys())],
         )
         if help_option in help_cmd_keys:
-            help_msg = tlang(m, HELP_COMMANDS[help_option])
+            help_option_value = HELP_COMMANDS[f"plugins.{help_option}.main"]
+            help_msg = tlang(m, help_option_value)
 
         if m.chat.type == "private":
             await m.reply_text(

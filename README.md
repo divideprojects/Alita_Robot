@@ -51,9 +51,11 @@ This runs the stable version, aka [production](https://github.com/Divkix/Alita_R
 Beta Version: [@AlitaBetaBot](https://t.me/AlitaBetaBot)</br>
 This runs on beta version, which is from [main](https://github.com/Divkix/Alita_Robot/tree/main) branch.
 
-Alita is currently available in 2 Languages as of now:
+Alita is currently available in 4 Languages as of now:
 - **US English**
 - **Spanish**
+- **French**
+- **German**
 
 More languages can be managed in the _locales_ folder.
 

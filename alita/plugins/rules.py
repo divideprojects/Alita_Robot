@@ -60,6 +60,7 @@ async def get_rules(c: Alita, m: Message):
                 chat=m.chat.title,
                 rules=rules,
             ),
+            disable_web_page_preview=True,
         )
     else:
         try:
@@ -69,6 +70,7 @@ async def get_rules(c: Alita, m: Message):
                     chat=m.chat.title,
                     rules=rules,
                 ),
+                disable_web_page_preview=True,
             )
         except UserIsBlocked:
             pm_kb = InlineKeyboardMarkup(

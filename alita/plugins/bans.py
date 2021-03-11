@@ -28,6 +28,7 @@ from pyrogram.errors import (
     RPCError,
     UserNotParticipant,
 )
+from pyrogram.methods.chats import iter_chat_members
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -74,6 +75,13 @@ async def kick_usr(c: Alita, m: Message):
         return
 
     try:
+        # Check if user is banned or not
+        banned_users = []
+        async for i in m.chat.iter_members(filter="kicked"):
+            banned_users.append(i.user.id)
+        if user_id in banned_users:
+            await m.reply_text(tlang(m, "admin.kick.user_already_banned"))
+            return
         await m.chat.kick_member(user_id, int(time() + 45))
         await m.reply_text(
             (tlang(m, "admin.kick.kicked_user")).format(
@@ -120,6 +128,13 @@ async def ban_usr(c: Alita, m: Message):
         return
 
     try:
+        # Check if user is banned or not
+        banned_users = []
+        async for i in m.chat.iter_members(filter="kicked"):
+            banned_users.append(i.user.id)
+        if user_id in banned_users:
+            await m.reply_text(tlang(m, "admin.ban.user_already_banned"))
+            return
         await m.chat.kick_member(user_id)
         await m.reply_text(
             (tlang(m, "admin.ban.banned_user")).format(
@@ -158,6 +173,15 @@ async def unban_usr(c: Alita, m: Message):
     user_id, user_first_name = await extract_user(c, m)
 
     try:
+
+        # Check if user is banned or not
+        banned_users = []
+        async for i in m.chat.iter_members(filter="kicked"):
+            banned_users.append(i.user.id)
+        if user_id not in banned_users:
+            await m.reply_text(tlang(m, "admin.unban.user_not_banned"))
+            return
+
         await m.chat.unban_member(user_id)
         await m.reply_text(
             (tlang(m, "admin.unban.unbanned_user")).format(

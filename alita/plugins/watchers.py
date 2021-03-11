@@ -30,6 +30,7 @@ from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.tr_engine import tlang
+from alita.utils.admin_cache import ADMIN_CACHE
 from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
 
@@ -40,6 +41,9 @@ gban_db = GBan()
 
 # Initialize threading
 WATCHER_LOCK = RLock()
+
+
+BLACKLIST_PRUNE_USERS = {}
 
 
 @Alita.on_message(filters.group, group=2)
@@ -94,6 +98,7 @@ async def gban_watcher(c: Alita, m: Message):
 
 
 async def bl_watcher(_, m: Message):
+    global BLACKLIST_PRUNE_USERS
 
     # TODO - Add warn option when Warn db is added!!
     async def perform_action_blacklist(m: Message, action: str):
@@ -164,16 +169,40 @@ async def bl_watcher(_, m: Message):
     action = bl_db.get_action(m.chat.id)
 
     try:
+        # TODO - Cache approved users and admins in BLACKLIST_PRUNE_USERS
+        # If user_id in approved_users list, return and don't delete the message
+        # try:
+        #     approved_users = BLACKLIST_PRUNE_USERS[m.chat.id]
+        # except KeyError:
+        #     # If the chat_id is not found in BLACKLIST_PRUNE_USERS dictionary
+
+        #     approved_users = []
+
+        #     # Get approved users
+        #     app_users = app_db.list_approved(m.chat.id)
+        #     for i in app_users:
+        #         approved_users.append(int(i[0]))  # 0 - user_id
+
+        #     # Get admins from admin_cache, reduces api calls
+        #     for i in [user[0] for user in ADMIN_CACHE[m.cha.id]]:
+        #         approved_users.append(i.user.id)
+
+        #     BLACKLIST_PRUNE_USERS[m.chat.id] = approved_users
+
         approved_users = []
+
+        # Get approved users
         app_users = app_db.list_approved(m.chat.id)
-
         for i in app_users:
-            approved_users.append(int(i[1]))
+            approved_users.append(int(i[0]))  # 0 - user_id
 
-        async for i in m.chat.iter_members(filter="administrators"):
+        # Get admins from admin_cache, reduces api calls
+        for i in [user[0] for user in ADMIN_CACHE[m.cha.id]]:
             approved_users.append(i.user.id)
 
-        # If user_id in approved_users list, return and don't delete the message
+        BLACKLIST_PRUNE_USERS[m.chat.id] = approved_users
+
+        # Don't do anything to approved users!
         if m.from_user.id in approved_users:
             return
 

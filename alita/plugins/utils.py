@@ -200,7 +200,18 @@ async def my_info(c: Alita, m: Message):
     infoMsg = await m.reply_text(
         f"<code>{(tlang(m, 'utils.user_info.getting_info'))}</code>",
     )
-    user_id = (await extract_user(c, m))[0]
+    try:
+        user_id = (await extract_user(c, m))[0]
+    except PeerIdInvalid:
+        await m.reply_text(tlang(m, "utils.user_info.peer_id_error"))
+        return
+    except ValueError as ef:
+        if "Peer id invalid" in str(ef):
+            await infoMsg.edit_text(
+                tlang(m, "utils.user_info.id_not_found"),
+                quote=True,
+            )
+        return
     try:
         user = await c.get_users(user_id)
     except PeerIdInvalid:
