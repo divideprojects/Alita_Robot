@@ -32,7 +32,7 @@ from pyrogram.types import Message
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE
+from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_check
 from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -135,6 +135,10 @@ async def reload_admins(_, m: Message):
 )
 async def promote_usr(c: Alita, m: Message):
 
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text(tlang(m, "admin.promote.no_target"))
+        return
+
     user_id, user_first_name = await extract_user(c, m)
     try:
         await m.chat.promote_member(
@@ -203,6 +207,10 @@ async def promote_usr(c: Alita, m: Message):
     filters.command("demote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
 async def demote_usr(c: Alita, m: Message):
+
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text(tlang(m, "admin.demote.no_target"))
+        return
 
     user_id, user_first_name = await extract_user(c, m)
     try:

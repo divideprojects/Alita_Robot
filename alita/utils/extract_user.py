@@ -22,7 +22,6 @@ from typing import Tuple
 from alita import LOGGER
 from alita.database.users_db import Users
 
-
 # Initialize
 db = Users()
 
@@ -43,24 +42,35 @@ async def extract_user(c, m) -> Tuple[int, str]:
                 user_id = required_entity.user.id
                 user_first_name = required_entity.user.first_name
             elif required_entity.type == "mention":
-                user_id = m.text[
+                user_found = m.text[
                     required_entity.offset : required_entity.offset
                     + required_entity.length
                 ]
-                user_first_name = user_id
+                try:
+                    user = db.get_user_info(user_found)
+                    user_id = user["_id"]
+                    user_first_name = user["name"]
+                except KeyError:
+                    user = await c.get_users(user_found)
+                    user_id = user.id
+                    user_first_name = user.first_name
+                except Exception as ef:
+                    user_id = user_found
+                    user_first_name = user_found
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
+
         else:
-            user_id = m.command[1]
+            user_id = int(m.command[1])
             try:
-                user = db.get_user_info(int(user_id))
-                user_first_name = user['name']
+                user_first_name = db.get_user_info(int(user_id))["name"]
             except Exception as ef:
                 user_first_name = (await c.get_users(int(user_id))).first_name
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
+
     else:
         user_id = m.from_user.id
         user_first_name = m.from_user.first_name
 
-
-    print(user_id, user_first_name)
     return user_id, user_first_name

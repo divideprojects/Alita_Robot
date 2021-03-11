@@ -27,7 +27,7 @@ from threading import RLock
 from time import time
 
 from pyrogram import Client, __version__
-from pyrogram.errors import PeerIdInvalid, RPCError
+from pyrogram.errors import ChannelInvalid, PeerIdInvalid, RPCError
 from pyrogram.raw.all import layer
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -112,16 +112,17 @@ class Alita(Client):
                                 else j.user.first_name,
                             ),
                         )
-                    admin_list = sorted(admin_list, key=lambda x: x[1])
-                    ADMIN_CACHE[chat_id] = admin_list  # Remove the last space
-
-                    LOGGER.info(
-                        f"Set {len(admin_list)} admins for {chat_id}\n- {admin_list}",
-                    )
-                except PeerIdInvalid:
-                    pass
+                except (PeerIdInvalid, ChannelInvalid):
+                    continue
                 except RPCError as ef:
                     LOGGER.error(ef)
+
+                admin_list = sorted(admin_list, key=lambda x: x[1])
+                ADMIN_CACHE[chat_id] = admin_list  # Remove the last space
+
+                LOGGER.info(
+                    f"Set {len(admin_list)} admins for {chat_id}\n- {admin_list}",
+                )
 
             end = time()
             LOGGER.info(

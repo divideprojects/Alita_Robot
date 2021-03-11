@@ -243,6 +243,7 @@ strings:
       reloaded_admins: "Reloaded all admins in this chat!"
       use_admin_cache: "Use /admincache to reload admins!"
     ban:
+      no_target: "I can't ban nothing!"
       admin_cannot_ban: 'This user is an admin, I cannot ban them!"'
       ban_all: "Are you sure you want to ban all members in this group?"
       banned_user: "{admin} banned {banned} in chat <b>{chat_title}</b>!"
@@ -250,12 +251,14 @@ strings:
       bot_no_right: "I don't have enough rights to ban this user."
       owner_cannot_ban: "This person created the group, how can I ban them?"
     demote:
+      no_target: "I can't demote nothing!"
       bot_no_right: "I don't have enough rights to demote this user."
       demoted_user: "{demoter} demoted {demoted} in chat <b>{chat_title}</b>!"
     invitelink: |-
       Invite Link for Chat <b>{chat_name}</b>:
       {link}
     kick:
+      no_target: "I can't kick nothing!"
       admin_cannot_kick: 'This user is an admin, I cannot kick them!"'
       bot_no_right: "I don't have enough rights to kick this user."
       kicked_user: "{admin} kicked {kicked} in chat <b>{chat_title}<b>!"
@@ -270,11 +273,13 @@ strings:
     no_user_invite_perm: "You don't have permissions to invite users."
     not_admin: "I'm not admin or I don't have rights."
     promote:
+      no_target: "I can't promote nothing!"
       bot_no_right: "I don't have enough rights to promote this user."
       no_promote_perm: "You don't have permission to promote members!"
       promoted_user: "{promoter} promoted {promoted} in chat <b>{chat_title}</b>!"
     support_cannot_restrict: "This user is in my support staff, cannot restrict them."
     unban:
+      no_target: "I can't unban nothing!"
       bot_no_right: "I don't have enough rights to unban this user."
       unbanned_user: "{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
     unmute:
