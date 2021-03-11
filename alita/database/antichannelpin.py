@@ -31,7 +31,10 @@ class AntiChannelPin:
 
     def check_antipin(self, chat_id: int):
         with INSERTION_LOCK:
-            return self.collection.find_one({"_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id})
+            if curr:
+                return True
+            return False
 
     def toggle_antipin(self, chat_id: int, status: bool = False):
         with INSERTION_LOCK:
