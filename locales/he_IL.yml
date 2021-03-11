@@ -1,12 +1,12 @@
 ---
 main:
-  lang_sample: "US English"
+  lang_sample: "אנגלית ארה \" ב"
   language_flag: "🇺🇸"
-  language_name: English
+  language_name: אנגלית
 strings:
   plugins:
     admin:
-      main: "Admin"
+      main: "מנהלה"
       help: |-
         Lazy to promote or demote someone for admins? Want to see basic information about chat? \
         All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
@@ -23,45 +23,45 @@ strings:
         An example of promoting someone to admins:
         `/promote @username`; this promotes a user to admin.
     afk:
-      main: "AFK"
+      main: "אפק"
       help: |-
-        Module for enabling auto replies when you are AFK.
-        When enabled,
-        anyone who mentions you will be replied with a message saying that
-        you are AFK.
+        מודול עבור הפעלת תשובות אוטומטית כאשר אתם AFK.
+        כאשר אפשרות זו מופעלת,
+        כל מי שמזכיר לכם יהיה ענו עם הודעה המציינת ש-
+        אתם AFK.
 
-        **Setting AFK Status**
+        ** הגדרת מצב AFK * *
         × /afk <reason>
 
-        Enable auto replies when you are AFK.
-        To stop it, send message to any group.
-        * Reason is optional
+        הפעלת תשובות אוטומטית כאשר אתם AFK.
+        כדי לעצור אותו, לשלוח הודעה לכל קבוצה.
+        * סיבה היא אופציונלית
     approve:
-      main: "AFK"
+      main: "אפק"
       help: |-
-        Sometimes, you might trust a user not to send unwanted content.
-        Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
-        That's what approvals are for - approve trustworthy users to allow them to send stuff without restrictions!
+        לפעמים, ניתן לסמוך על משתמש שלא לשלוח תוכן לא רצוי.
+        אולי לא מספיק כדי להפוך אותם מנהל, אבל אתה יכול להיות בסדר עם מנעולים, בלאק רשימות,
+        זה מה שאישורים הם עבור-לאשר משתמשים אמינים כדי לאפשר להם לשלוח דברים ללא הגבלות!
 
-        **Admin commands:**
-        × /approval: Check a user's approval status in this chat.
-        × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-        × /unapprove: Unapprove of a user. They will now be subject to blocklists.
-        × /approved: List all approved users.
-        × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
+        ** פקודות מנהלה: **
+        × /אישור: בדקו את מצב האישור של המשתמש בצ ' אט זה.
+        × /לאשר: אישור של משתמש. מנעולים, רשימות שחורות, ואנטי-שיטפון לא יחולו עליהם יותר.
+        × /ללא אישור: Unapprove של משתמש. כעת הם יהיו כפופים לחסימה.
+        × /מאושר: רשימה של כל המשתמשים שאושרו.
+        × /unמאשרים: Unapprove *ALL* משתמשים בצ ' אט. לא ניתן לבטל פעולה זו!
     bans:
-      main: "Bans"
+      main: "בינס"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        מישהו מעצבן נכנס לקבוצה שלך?
+        רוצה לאסור/להגביל אותו /לה?
+        זהו התוסף עבורכם, בעיטה בקלות, איסור ואוסור חברים בקבוצה.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /ban: Bans the user replied to or tagged.
-        × /unban: Unbans the user replied to or tagged.
+        ** מנהלה בלבד: **
+        × /בעיטה: בעט המשתמש השיב או מתויג.
+        × /ban: Bans המשתמש השיב או מתויג.
+        × /unban: Unbans שהמשתמש השיב או מתויג.
     blacklist:
-      main: "Blacklist"
+      main: "רשימה שחורה"
       help: |-
         Want to restrict certain words or sentences in your group?
 
@@ -84,52 +84,52 @@ strings:
 
         **Note:** Can only add or remove one blacklist at a time!
     fun:
-      main: "Fun"
+      main: "כיף"
       help: |-
-        × /runs: reply a random string from an array of replies.
-        × /slap: slap a user, or get slapped if not a reply.
-        × /shrug : get shrug XD.
-        × /decide : Randomly answers yes/no/maybe
-        × /toss : Tosses A coin
-        × /bluetext : check urself :V
-        × /roll : Roll a dice.
-        × /react : Random Reaction
-        × /shout <keyword>: write anything you want to give loud shout.
+        × /ריצות: תשובה למחרוזת אקראית מערך תשובות.
+        × /סטירה: לסטור למשתמש, או לקבל סטירה אם לא תשובה.
+        × /shהשטיח: לקבל שטיח XD
+        × /להחליט: רנדומלי תשובות כן/לא/אולי
+        × /לזרוק: Tosses A המטבע
+        × /bluetext: בדקו את עצמכם :V
+        × /רול: לגלגל קוביות.
+        ×/להגיב: קריאה אקראית
+        ×/לצעוק <keyword>: לכתוב כל דבר שאתה רוצה לתת צעקה קולנית.
     language:
-      main: "Language"
+      main: "שפה"
       help: |-
-        Not able to change language of the bot?
-        Easily change by using this module!
+        לא מסוגל לשנות את השפה של הרובוט?
+        בקלות באמצעות מודול זה!
 
-        Just type /lang and use inline keyboard to choose a language \
-        for yourself or your group.
+        רק סוג /lang והשתמשו במקלדת בשורה כדי לבחור שפה\
+        עבור עצמכם או עבור הקבוצה שלכם.
 
-        You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
+        אתה יכול לעזור לנו להביא את בוט ליותר שפות על ידי עזרה [Crowdin](https: //crowdin.com/project/alita_robot)
     locks:
-      main: "Locks"
+      main: "נעילות"
       help: |-
-        Use this to lock group permissions.
-        Allows you to lock and unlock permission types in the chat.
+        השתמשו באפשרות זו כדי לנעול הרשאות קבוצה.
+        מאפשר לכם לנעול ולשחרר סוגי הרשאות בצ ' אט.
 
-        **Usage:**
-        × /lock <type>: Lock Chat permission.
-        × /unlock <type>: Unlock Chat permission.
-        × /locks: View Chat permission.
-        × /locktypes: Check available lock types!
+        ** **
+        × /נעילה <type>: נעילת הרשאת צ ' אט.
+        × /ביטול נעילה של <type>: שחרור נעילת צ ' אט.
+        × /ננעל: הצגת הרשאת צ ' אט.
+        × /לוקווד: בדקו את סוגי הנעילה הזמינים!
     muting:
-      main: "Muting"
+      main: "מוטינג"
       help: |-
-        Want someone to keep quite for a while in the group?
-        Mute plugin is here to help, mute or unmute any user easily!
+        רוצה מישהו לשמור די לזמן מה בקבוצה?
+        תוסף Mute הוא כאן כדי לסייע, להשתיק או לבטל את השתקה של כל משתמש בקלות!
 
-        **Admin only:**
-        × /mute: Mute the user replied to or mentioned.
-        × /unmute: Unmutes the user mentioned or replied to.
+        ** Admin בלבד: **
+        × /מושתק: מוטה המשתמש השיב או הוזכר.
+        × /ביטול השתקה: ביטול השתקת המשתמש שהוזכר או השיב לו.
 
-        An example of promoting someone to admins:
-        `/mute @username`; this mutes a user.
+        דוגמה לקידום מישהו לאדימים:
+        /מושתת @username`; פעולה זו משתלמת משתמש.
     notes:
-      main: "Notes"
+      main: "הערות"
       help: |-
         Save a note, get that, even you can delete that note.
         This note only avaiable for yourself only!
@@ -168,53 +168,53 @@ strings:
         -> `Code`
         `Code` (grave accent)
     pins:
-      main: "Pins"
+      main: "פיני"
       help: |-
-        Here you find find all help related to groups pins and how to manage them via me.
+        כאן תוכלו למצוא את כל העזרה הקשורה לסיכות קבוצות ואיך לנהל אותן באמצעות.
 
-        **Admin Cmds:**
-        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
-        × /unpin: Unpins the last pinned message.
-        × /unpinall: Unpins all the pinned message in the current chat.
+        ** Cmds מנהלן: **
+        × /פין: בסיכות סילוניות ההודעה ענתה - 'הוספה' ' ', ` 'התרעה' או 'התרעה' כדי לתת הודעה למשתמשים.
+        × /unpin: ביטול נעיצת ההודעה המוצמדת האחרונה.
+        × /unpinall: ביטול נעיצת כל ההודעה הנעוץ בצ ' אט הנוכחי.
     purges:
-      main: "Purges"
+      main: "מחיקה לצמיתות"
       help: |-
-        Want to delete messages in you group?
+        רוצים למחוק הודעות בקבוצה?
 
-        × /purge: Deletes messages upto replied message.
-        × /del: Deletes a single message, used as a reply to message.
+        × /מחיקה לצמיתות: מחיקת הודעות שעליהן ענתה הודעה.
+        × /דל: מחיקת הודעה אחת, המשמשת כתשובה להודעה.
     reporting:
-      main: "Reporting"
+      main: "דיווח"
       help: |-
-        × /report <reason>: reply to a message to report it to admins.
-        - @admin: reply to a message to report it to admins.
-        **NOTE:** Neither of these will get triggered if used by admins.
+        /דוח <reason>: תשובה להודעה כדי לדווח על כך.
+        - @admin: תשובה להודעה כדי לדווח על כך.
+        הערה: ** אף אחד מאלה לא יופעל אם נעשה שימוש על ידי admins.
 
-        **Admins Only:**
-        × /reports <on/off>: change report setting, or view current status.
-        - If done in PM, toggles your status.
-        - If in group, toggles that groups's status.
+        ** Admins בלבד: **
+        × /דוחות <on/off>: שינוי הגדרת הדוח או הצגת המצב הנוכחי.
+        -אם נעשה בתחזוקה מונעת, מיתוג המצב שלכם.
+        -אם בקבוצה, מיתוג מצב הקבוצות.
     rules:
-      main: "Rules"
+      main: "כללים"
       help: |-
-        Set rules for you chat so that members know what to do and \
-        what not to do in your group!
+        הגדירו כללים לצ 'אט כדי שחברים יידעו מה לעשות ו -\
+        מה לא לעשות בקבוצה שלכם!
 
-        × /rules: get the rules for current chat.
+        × /כללים: לקבל את הכללים עבור הצ' אט הנוכחי.
 
-        **Admin only:**
-        × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
-        × /clearrules: Clear the rules for this chat.
-        × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
+        ** מנהלה בלבד: **
+        × /setrules <rules>: הגדרת הכללים עבור צ ' אט זה, גם פועלת כתשובה להודעה.
+        × /ברורים: ניקוי הכללים עבור צ ' אט זה.
+        × /אברי מין <on/yes/no/off>: הפעלת האפשרות לשלוח את הכללים לתחזוקה מונעת של משתמש או קבוצה.
     spam_protect:
-      main: "Spam Protect"
+      main: "הגנה על Spam"
       help: |-
-        Spammers joining your group?
-        No problem at all, here you can find all the options to protect your groups from raids and scums!
+        ספגתים מצטרפים אל הקבוצה שלך?
+        אין בעיה בכלל, כאן תוכלו למצוא את כל האפשרויות כדי להגן על הקבוצות שלכם מפני פשיטות וחיפוש.
 
-        **Admin Only:**
-        × /cas <on/off>: Turns on or off the CAS check for group.
-        × /underattack <on/off>: Kick all the new users on entry!
+        ** Admin בלבד: **
+        × /cas <on/off>: הפעלה או השבתה של בדיקת CAS עבור קבוצה.
+        × /underלהתקפה <on/off>: לבעוט את כל המשתמשים החדשים ברשומה!
     utils:
       main: "Utils"
       help: |-
@@ -229,76 +229,76 @@ strings:
         × /lyrics <song>: Get the lyrics of the song you specify!
         × /weebify <text> or a reply to message: To weebify the text.
     wiki:
-      main: "Wikipedia"
+      main: "ויקיפדיה"
       help: |-
-        Search Wikipedia on the go in your group!
+        חפשו בוויקיפדיה בקבוצה שלכם!
 
-        **Available commands:**
-        × /wiki <query>: wiki your query.
+        ** פקודות זמינות:
+        × /ויקי <query>: ויקי השאילתה שלכם.
   admin:
     adminlist:
       adminstr: |-
-        Admins in <b>{chat_title}</b>:
-      note_cached: "<i>Note:</i> These are cached values!"
-      note_updated: "<i>Note:</i> These are up-to-date values!"
-      reloaded_admins: "Reloaded all admins in this chat!"
-      use_admin_cache: "Use /admincache to reload admins!"
+        דקות <b>{chat_title}</b>:
+      note_cached: "<i>הערה:</i> אלה ערכים מוטמנים!"
+      note_updated: "<i>הערה:</i> אלה הם ערכים מעודכנים!"
+      reloaded_admins: "נטענו את כל כתובות השיחה בצ ' אט זה!"
+      use_admin_cache: "השתמשו ב - /adminבמטמון כדי לטעון מחדש את admins!"
     ban:
-      no_target: "I can't ban nothing!"
-      admin_cannot_ban: 'This user is an admin, I cannot ban them!"'
-      ban_all: "Are you sure you want to ban all members in this group?"
-      banned_user: "{admin} banned {banned} in chat <b>{chat_title}</b>!"
-      banning_all: "Banning All Members..."
-      bot_no_right: "I don't have enough rights to ban this user."
-      owner_cannot_ban: "This person created the group, how can I ban them?"
+      user_already_banned: "This user is already banned, no use banning them again!"
+      no_target: "אני לא יכול לאסור על כלום!"
+      admin_cannot_ban: 'משתמש זה הוא מנהלן, אני לא יכול לאסור אותם!"'
+      ban_all: "אתם בטוחים שברצונכם לאסור את כל החברים בקבוצה זו?"
+      banned_user: "{admin} אסר {banned} בצ ' אט <b>{chat_title}</b>!"
+      banning_all: "בנינג כל החברים ..."
+      bot_no_right: "אין לי מספיק זכויות כדי לאסור את המשתמש הזה."
     demote:
-      no_target: "I can't demote nothing!"
-      bot_no_right: "I don't have enough rights to demote this user."
-      demoted_user: "{demoter} demoted {demoted} in chat <b>{chat_title}</b>!"
+      no_target: "אני לא יכול להסיג שום דבר!"
+      bot_no_right: "אין לי מספיק זכויות כדי להסיג את המשתמש הזה."
+      demoted_user: "{demoter} בדרגה {demoted} בצ ' אט <b>{chat_title}</b>!"
     invitelink: |-
-      Invite Link for Chat <b>{chat_name}</b>:
+      הזמנת קישור לצ ' אט <b>{chat_name}</b>:
       {link}
     kick:
-      no_target: "I can't kick nothing!"
-      admin_cannot_kick: 'This user is an admin, I cannot kick them!"'
-      bot_no_right: "I don't have enough rights to kick this user."
-      kicked_user: "{admin} kicked {kicked} in chat <b>{chat_title}<b>!"
-      owner_cannot_kick: "This person created the group, how can I kick them?"
+      user_already_banned: "This user is already banned, no use kicking them!"
+      no_target: "אני לא יכול לבעוט בכלום!"
+      admin_cannot_kick: 'משתמש זה הוא מנהלן, אני לא יכול לבעוט בהם!"'
+      bot_no_right: "אין לי מספיק זכויות כדי לבעוט את המשתמש הזה."
+      kicked_user: "{admin} בעט {kicked} בצ ' אט <b>{chat_title}<b>!"
     mute:
-      admin_cannot_mute: 'This user is an admin, I cannot mute them!"'
-      bot_no_right: "I don't have enough rights to mute this user."
-      muted_user: "Muted {user}!"
-      owner_cannot_mute: "This person created the group, how can I mute them?"
-    no_invite_perm: "I don't have permission for invite link!"
-    no_restrict_perm: "You don't have permissions to restrict members!"
-    no_user_invite_perm: "You don't have permissions to invite users."
-    not_admin: "I'm not admin or I don't have rights."
+      admin_cannot_mute: 'משתמש זה הוא מנהלן, אני לא יכול להשתיק אותם!"'
+      bot_no_right: "אין לי מספיק זכויות להשתיק את המשתמש הזה."
+      muted_user: "Admin {admin} muted {user}!"
+    no_invite_perm: "אין לי אישור להזמין את הקישור!"
+    no_restrict_perm: "אין לכם הרשאות להגביל את החברים!"
+    no_user_invite_perm: "אין לכם הרשאות להזמין משתמשים."
+    not_admin: "אני לא מנהל או אין לי זכויות."
     promote:
-      no_target: "I can't promote nothing!"
-      bot_no_right: "I don't have enough rights to promote this user."
-      no_promote_perm: "You don't have permission to promote members!"
-      promoted_user: "{promoter} promoted {promoted} in chat <b>{chat_title}</b>!"
-    support_cannot_restrict: "This user is in my support staff, cannot restrict them."
+      no_target: "אני לא יכול לקדם שום דבר!"
+      bot_no_right: "אין לי מספיק זכויות כדי לקדם את המשתמש הזה."
+      no_promote_perm: "אין לך רשות לקדם חברים!"
+      promoted_user: "{promoter} קידמו {promoted} בצ ' אט <b>{chat_title}</b>!"
+    support_cannot_restrict: "משתמש זה נמצא בצוות התמיכה שלי, לא יכול להגביל אותם."
     unban:
-      no_target: "I can't unban nothing!"
-      bot_no_right: "I don't have enough rights to unban this user."
-      unbanned_user: "{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
+      user_not_banned: "How can I unban a user who is not banned?"
+      no_target: "אני לא יכול לבטל שום דבר!"
+      bot_no_right: "אין לי מספיק זכויות כדי לשחרר את המשתמש הזה."
+      unbanned_user: "{admin} unאסרו {unbanned} בצ ' אט <b>{chat_title}</b>!"
     unmute:
-      bot_no_right: "I don't have enough rights to unmute this user."
-      unmuted_user: "Unmuted {user}!"
-    user_admin_invalid: "Cannot act on this user, maybe I wasn't the one who changed their permissions."
+      bot_no_right: "אין לי מספיק זכויות כדי לבטל את השתקה של משתמש זה."
+      unmuted_user: "Admin {admin} unmuted {user}!"
+    user_admin_invalid: "לא יכול לפעול על משתמש זה, אולי לא אני זה ששינה את ההרשאות שלהם."
   afk:
     error_check_afk: |-
-      Error while checking afk
+      שגיאה במהלך בדיקת afk
       {ef}
     no_longer_afk: |-
-      {first_name} is no longer Afk!
-      Was AFK for <code>{since}</code>
-    reason: "<b>Reason:</b> {res}"
+      {first_name} הוא כבר לא אפק!
+      היה AFK עבור <code>{since}</code>
+    reason: "<b>סיבה:</b> {res}"
     user_afk: |-
-      {first_name} is Afk!
-      <b>Since:</b> <code>{since}</code>
-    user_now_afk: "User {user} is now afk!"
+      {first_name} הוא אפק!
+      <b>מאז:</b> <code>{since}</code>
+    user_now_afk: "משתמש {user} הוא עכשיו afk!"
   antispam:
     gban:
       gban_error_log: |-
@@ -306,12 +306,12 @@ strings:
         <b>Chat:</b> <code>{chat_id}</code>
         <b>Error:</b> <code>{ef}</code>
       added_to_watch: |-
-        Added {first_name} to Global Ban List.
-        They will now be banned in all groups where I'm admin!
-      enter_reason: "Please enter a reason to gban user!"
+        הוסיף {first_name} לרשימת Ban גלובלי.
+        הם עכשיו להיות אסורים בכל הקבוצות שבו אני מנהל!
+      enter_reason: "נא לציין סיבה למשתמש gban!"
       how_to: |-
-        <b>How to gban?</b>
-        <b>Answer:</b> <code>/gban user_id reason</code>
+        <b>איך gban?</b>
+        <b>תשובה:</b> <code>/gban user_id מהסיבה</code>
       log_msg: |-
         #GBAN
         <b>Originated from:</b> {chat_id}
@@ -322,18 +322,18 @@ strings:
       not_self: |-
         You can't gban me nigga!
         Nice Try...!
-      updated_reason: "Updated Gban reason to: <code>{gban_reason}</code>."
+      updated_reason: "הסיבה לכך היא: <code>{gban_reason}</code>."
       user_added_to_watch: |-
         You have been added to my global ban list!
         <b>Reason:</b> <code>{gban_reason}</code>
 
         <b>Appeal Chat:</b> @{SUPPORT_GROUP}
     here_gbanned_start: |-
-      Here are all the globally banned geys!
-    none_gbanned: "There aren't any gbanned users...!"
-    num_gbans: "Number of people gbanned: <code>{count}</code>"
-    part_of_support: "This user is part of my Support!, Can't ban our own!"
-    pass_user_id: "Pass a user id or username as an argument!"
+      הנה כל הגייז ' ים שהוחרמו באופן גלובלי!
+    none_gbanned: "אין שום משתמשים אסורים ...!"
+    num_gbans: "מספר האנשים הגורו: <code>{count}</code>"
+    part_of_support: "משתמש זה הוא חלק מהתמיכה שלי, לא יכול לאסור את שלנו!"
+    pass_user_id: "העבירו זיהוי משתמש או שם משתמש כארגומנט!"
     ungban:
       log_msg: |-
         #UNGBAN
@@ -342,48 +342,48 @@ strings:
         <b>UnGbanned User:</b> {ungbanned_user}
         <b>UnGbanned User ID:</b> {ungbanned_user_id}
         <b>Event Stamp:</b> {time}
-      non_gbanned: "User is not gbanned!"
-      not_self: "Nice Try...!"
-      removed_from_list: "Removed {first_name} from Global Ban List."
-      user_removed_from_list: "You have been removed from my global ban list!"
+      non_gbanned: "המשתמש אינו מוחרם!"
+      not_self: "ניסיון יפה ...!"
+      removed_from_list: "{first_name} מתוך רשימת Ban גלובלית."
+      user_removed_from_list: "הוציאו אותך מרשימת האיסור העולמית שלי!"
     watcher_banned: |-
-      This user ({user_gbanned}) has been banned globally!
+      משתמש זה ({user_gbanned})
 
-      To get unbanned, appeal at @{SUPPORT_GROUP}
+      כדי לקבל לא אסור, לערער על{SUPPORT_GROUP}
   blacklist:
     bl_watcher:
-      action_kick: "Kicked {user} for using a blacklisted word!"
-      action_ban: "Banned {user} for using a blacklisted word!"
-      action_mute: "Muted {user} for using a blacklisted word!"
-    already_exists: "The word <code>{trigger}</code> is already blacklisted!"
-    action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
-    action_set: "Set action for blacklist for this to <b>{action}</b>"
-    added_blacklist: "Added <code>{trigger}</code> in blacklist words!"
+      action_kick: "בעט {user} לשימוש במילה שחורה!"
+      action_ban: "בנד {user} לשימוש במילה שחורה!"
+      action_mute: "מושתק {user} לשימוש במילה שחורה!"
+    already_exists: "המילה <code>{trigger}</code> כבר ברשימה השחורה!"
+    action_get: "הפעולה הנוכחית עבור רשימות שחורות בצ ' אט זה היא <i><b>{action}</b></i>"
+    action_set: "הגדרת פעולה עבור הרשימה השחורה עבור <b>{action}</b>"
+    added_blacklist: "נוסף <code>{trigger}</code> במילות הרשימה השחורה!"
     curr_blacklist_initial: |-
-      Current Blacklisted words in <b>{chat_title}</b>:
-    no_bl_found: "No blacklist <b>{bl_word}</b> found!"
-    no_blacklist: "There are no blacklisted messages in <b>{chat_title}</b>!"
-    rm_blacklist: "Removed <b>{bl_word}</b> from blacklist words!"
+      מילים שחורות נוכחיות <b>{chat_title}</b>:
+    no_bl_found: "אין רשימה שחורה <b>{bl_word}</b> נמצאו!"
+    no_blacklist: "אין הודעות שחורות <b>{chat_title}</b>!"
+    rm_blacklist: "<b>{bl_word}</b> ממילות הרשימה השחורה!"
   dev:
     alladmins:
       admins_i_know_str: |-
-        There are <b>{len_admins}</b> admins whom I know!
+        יש <b>{len_admins}</b> admins
 
         <code>{admindict}</code>
-      alladmins_btn: "All Admins"
-      getting_admins: "Getting all admins in my cache..."
+      alladmins_btn: "כל Admins"
+      getting_admins: "קבלת כל admins במטמון שלי ..."
     bot_ip: |-
-      <b>Bot IP Address:</b>
+      <b>Bot כתובת IP:</b>
       <code>{ip}</code>
     chatlist:
-      chats_in_db: "Here is the list of chats in my Database."
-      exporting: "Exporting Charlist..."
+      chats_in_db: "להלן רשימת שיחות הצ ' אט במסד הנתונים שלי."
+      exporting: "יצוא רשימת תרשימים ..."
       header: |
-        List of chats in my database.
+        רשימת שיחות צ ' אט במסד הנתונים שלי.
 
-        <b>Chat name | Chat ID | Members count</b>
-    execute_cmd_err: "Please execute the code correctly!"
-    restarting: Restarting...
+        <b>שם צ 'אט | זיהוי צ' אט | מספר חברים</b>
+    execute_cmd_err: "נא לבצע את הקוד כהלכה!"
+    restarting: מתחיל מחדש ...
     speedtest:
       speedtest_txt: |-
         Speedtest
@@ -393,50 +393,50 @@ strings:
         <b>Ping:</b> <code>{ping}</code> ms
         <b>Download:</b> <code>{download}</code> Mbps
         <b>Upload:</b> <code>{upload}</code> Mbps
-      start_speedtest: "Calculating my speed..."
+      start_speedtest: "חישוב המהירות שלי ..."
     uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
-    back_btn: Back
-    check_help: "Please check help on how to use this this command."
-    close_btn: Close
+    back_btn: חזרה
+    check_help: "בדקו את העזרה לשימוש בפקודה זו."
+    close_btn: קרוב
     commands_available: |-
-      Hey There! My name is Alita.
-      I'm here to help you manage your groups!
-      Commands available:
-      × /start: Start the bot
-      × /help: Give's you this message.
-      × /donate: Information related about how to donate to my owner!
+      היי שם! שמי אליטה.
+      אני כאן כדי לעזור לכם לנהל את הקבוצות שלכם.
+      פקודות זמינות:
+      × /התחלה: הפעילו את הרובוט
+      × /help:
+      × /לתרום: מידע הקשור כיצד לתרום לבעלים שלי!
 
-      All commands can either be used with / or !.
-    no_admin_cmd_perm: "You cannot use an admin command!"
-    no_perm_admin: "I don't have permission to do that"
-    no_results: "No results found."
+      כל הפקודות יכולות להיות בשימוש עם/או!.
+    no_admin_cmd_perm: "אינכם יכולים להשתמש בפקודת מנהלן!"
+    no_perm_admin: "אין לי אישור לעשות את זה."
+    no_results: "לא נמצאו תוצאות."
     some_error: |-
       Some error occured, report to @{SUPPORT_GROUP}
 
       <b>Error:</b> <code>{ef}</code>
-    something_wrong: "Something went wrong!"
+    something_wrong: "משהו השתבש!"
   langs:
-    changed: "Language changed to <code>{lang_code}</code>"
+    changed: "השפה השתנתה ל- <code>{lang_code}</code>"
     changelang: |-
-      Here you can change language for the bot.
+      כאן אתה יכול לשנות את השפה עבור הרובוט.
 
-      You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
+      אתה יכול לעזור לנו להביא את בוט ליותר שפות על ידי עזרה [Crowdin](https: //crowdin.com/project/alita_robot)
     correct_usage: |-
-      <b>Correct Usage:</b>
-      /lang or /setlang language-code
+      <b>שימוש נכון:</b>
+      /lang או /setlang - קוד
   locks:
-    check_perm_msg: "Checking Chat permissions..."
+    check_perm_msg: "בדיקת הרשאות צ ' אט ..."
     invalid_lock: |-
-      Invalid Lock Type!
+      סוג נעילה לא חוקי!
 
-      Use /locktypes to get the lock types
-    lock_all: "Locked <b>all</b> permission from this Chat!"
-    locked_perm: "Locked <b>{perm}</b> for this Chat."
-    locks_perm_sp: "Specify a permission to lock!"
-    unlock_all: "Unlocked <b>all</b> permission from this Chat!"
-    unlocked_perm: "Unlocked <b>{uperm}</b> for this Chat."
-    unlocks_perm.sp_perm: "Specify a permission to unlock!"
+      שימוש/לוקווד כדי לקבל את סוגי הנעילה
+    lock_all: "נעול <b>כל</b> הרשאות מצ ' אט זה!"
+    locked_perm: "נעול <b>{perm}</b> עבור צ ' אט זה."
+    locks_perm_sp: "ציינו הרשאה לנעול!"
+    unlock_all: "שחררו את <b>כל</b> הרשאות מצ ' אט זה!"
+    unlocked_perm: "לא נעול <b>{uperm}</b> עבור צ ' אט זה."
+    unlocks_perm.sp_perm: "ציינו הרשאה לביטול נעילה!"
     view_perm: |-
       CHAT PERMISSIONS:
 
@@ -452,39 +452,39 @@ strings:
       <b>Invite Users:</b> {vinvite}
       <b>Pin Messages:</b> {vpin}
   pin:
-    no_pin_msg: "Reply to a message to which you want to pin..."
-    no_rights_pin: "I don't have enough rights to pin messages."
-    no_rights_unpin: "I don't have enough rights to unpin messages."
-    pinned_msg: "Pinned message!"
-    reply_to_unpin: "Idk what do you want to unpin, reply to a message to unpin it."
-    unpinned_all_msg: "Unpinned all messages in this chat."
-    unpinned_last_msg: "Unpinned last message."
+    no_pin_msg: "תשובה להודעה שאליה ברצונכם לנעוץ ..."
+    no_rights_pin: "אין לי מספיק זכויות כדי להצמיד הודעות."
+    no_rights_unpin: "אין לי מספיק זכויות כדי לשחרר הודעות."
+    pinned_msg: "I have Pinned [this message]({message_link})!"
+    reply_to_unpin: "אידג ' ק, מה אתה רוצה לשחרר, לענות על הודעה לשחרר את זה."
+    unpinned_all_msg: "שחררו את כל ההודעות בצ ' אט זה."
+    unpinned_last_msg: "הודעה אחרונה לא מוצמדת."
   purge:
-    deleting: "Incinerating these useless messages..."
-    err_basic: "Cannot purge messages in a basic group"
-    old_msg_err: "Cannot delete all messages. The messages may be too old, I might not have delete rights, or this might not be a supergroup."
-    purge_msg_count: "Deleted <i>{msg_count}</i> messages"
-    what_del: "What do you wanna delete?"
+    deleting: "מקרין הודעות חסרות תועלת אלה ..."
+    err_basic: "לא ניתן למחוק לצמיתות הודעות בקבוצה בסיסית."
+    old_msg_err: "לא ניתן למחוק את כל ההודעות. ייתכן שההודעות ישנות מדי, ייתכן שאין לי זכויות מחיקה, או שזו אינה קבוצת עליונות."
+    purge_msg_count: "נמחק <i>{msg_count}</i> הודעות"
+    what_del: "מה אתה רוצה למחוק?"
   rules:
     priv_rules:
-      no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
-      turned_on: "Private Rules have been turned <b>on</b> for chat <b>{chat_name}</b>"
-      turned_off: "Private Rules have been turned <b>off</b> for chat <b>{chat_name}</b>"
-      current_preference: "Current Preference for Private rules in this chat is: <b>{current_option}</b>"
-    clear_rules: "Are you sure you want to clear rules?"
-    cleared: "Successfully cleared rules for this group!"
+      no_option: "אפשרות זו אינה חוקית, בחרו מ- <code>על</code>, <code>כן</code>, <code>את</code>, <code>ללא</code>"
+      turned_on: "כללים פרטיים הפכו <b>על</b> עבור צ ' אט <b>{chat_name}</b>"
+      turned_off: "כללים פרטיים הפכו <b>את</b> עבור צ ' אט <b>{chat_name}</b>"
+      current_preference: "העדפה נוכחית עבור כללים פרטיים בצ ' אט זה הוא: <b>{current_option}</b>"
+    clear_rules: "אתם בטוחים שברצונכם לנקות את הכללים?"
+    cleared: "הכללים נוקינו בהצלחה עבור קבוצה זו!"
     get_rules: |-
-      Rules for <b>{chat}:</b>
+      כללים עבור <b>{chat}:</b>
 
       {rules}
-    no_rules: "The Admins for this group have not setup rules!"
-    pm_me: "First PM me and then get the rules!"
-    sent_pm_rules: "I've messaged you the rules"
-    set_rules: "Successfully set rules for this group."
+    no_rules: "ל-Admins עבור קבוצה זו לא הוגדרו כללים!"
+    pm_me: "קודם PM אותי ולאחר מכן לקבל את הכללים!"
+    sent_pm_rules: "שלחתי לך הודעה על החוקים."
+    set_rules: "כללים הוגדרו בהצלחה עבור קבוצה זו."
   start:
-    add_chat_btn: "Add to a chat"
-    commands_btn: Commands
-    group: "I'm alive :3"
+    add_chat_btn: "הוספה לצ ' אט"
+    commands_btn: פקודות
+    group: "אני חי: 3"
     info_page: |-
       • @Alita_Robot
 
@@ -492,76 +492,78 @@ strings:
 
       <b>Developers:</b> [Divkix](https://github.com/Divkix)
       <b>Owner:</b> [{Owner}](tg://user?id={ID})
-    infos_btn: Info
-    language_btn: Language
-    pm_for_help: "Contact me in PM to get the list of possible commands."
-    private: "Hello! I'm Alita_Robot. To discover more about my functions, click on the buttons below."
-    public_help: "Press the button below to get help for <i>{help_option}</i>"
-    source_code: "Source Code"
+    infos_btn: מידע
+    language_btn: שפה
+    pm_for_help: "פנו אליי בתחזוקה המונעת כדי לקבל את רשימת הפקודות האפשריות."
+    private: "הלו! אני אליט_רובוט. כדי לגלות עוד על הפונקציות שלי, לחצו על הלחצנים למטה."
+    public_help: "לחצו על הלחצן למטה כדי לקבל עזרה עבור <i>{help_option}</i>"
+    source_code: "קוד מקור"
   utils:
     gif_id:
-      reply_gif: "Please reply to a gif to get its ID."
+      reply_gif: "נא להשיב על gif כדי לקבל את הזיהוי שלו."
     id:
-      group_id: "This Groups ID is <code>{group_id}</code>"
+      group_id: "זיהוי קבוצות זה הוא <code>{group_id}</code>"
       id_main: |-
-        Original Sender - {orig_sender} (<code>{orig_id}</code>)
-        Forwarder - {fwd_sender} (<code>{fwd_id}</code>)
-      my_id: "Your ID is <code>{my_id}</code>."
+        שולח מקורי- {orig_sender} (<code>{orig_id}</code>)
+        Forwarder- {fwd_sender} (<code>{fwd_id}</code>)
+      my_id: "זיהוי שלך הוא <code>{my_id}</code>."
     no_user_db: |-
-      Failed to get user
-      Peer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!
+      כשל בקבלת המשתמש
+      זיהוי משתמש לא חוקי, לא ראיתי משתמש זה בכל מקום מוקדם יותר, אולי שם המשתמש יסייע לכם להכיר אותם!
     paste:
-      nekobin_btn: NekoBin
-      pasted_nekobin: "Pasted to NekoBin!"
-      pasting: Pasting...
+      nekobin_btn: Nekoהסל
+      pasted_nekobin: "הוא הדביק את Nekoהסל!"
+      pasting: הדבקת ...
     ping:
-      pinging: Pinging...
+      pinging: פינג ...
     song:
-      no_lyrics_found: "Couldn't find any lyrics for that song!"
-      no_song_given: "You haven't specified which song to look for!"
-      searching: "Finding lyrics for <code>{song_name}<code>..."
-      song_not_found: "Song not found!"
+      no_lyrics_found: "לא הצלחתי למצוא מילים לשיר הזה!"
+      no_song_given: "לא ציינתם איזה שיר לחפש!"
+      searching: "מציאת מילים עבור <code>{song_name}<code>..."
+      song_not_found: "השיר לא נמצא!"
     translate:
-      translate_usage: "Usage: /tr <language> text for translation (Can be also used in reply to a message)."
-      translating: Translating...
+      translate_usage: "שימוש: /tr <language> תמליל לתרגום (ניתן להשתמש גם בתשובה להודעה)."
+      translating: תרגום ...
       translation: |-
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
-      getting_info: "Getting user information..."
+      id_not_found: "User not found, please check the ID again"
+      peer_id_error: "I haven't seen this user, mind forwarding one of their messages so I can recognize them?"
+      getting_info: "פרטי המשתמש מקבלים ..."
       info_text:
         last_name: |-
 
-          <b>Last Name:</b> {user_lname}
+          <b>שם משפחה:</b> {user_lname}
         main: |-
           <b>Characteristics:</b>
           <b>ID:</b> <code>{user_id}</code>
           <b>First Name:</b> {user_name}
         perma_link: |-
 
-          <b>Permanent User Link:</b> {perma_link}
+          <b>קישור משתמש קבוע:</b> {perma_link}
         username: |-
 
-          <b>Username:</b> @{username}
+          <b>שם משתמש:</b> @{username}
       support_user:
         dev: |-
 
 
-          This member is one of my Developers ⚡️
+          חבר זה הוא אחד המתפתחים שלי ⚡️
         owner: |-
 
 
-          This person is my Owner, I would never do anything against them!
+          אדם זה הוא הבעלים שלי, אני לעולם לא אעשה שום דבר נגדם!
         sudo: |-
 
 
-          This user is one of my Sudos, he has powers which are approximately same to owner!
+          משתמש זה הוא אחד הסודוס שלי, יש לו כוחות שהם בערך אותו לבעלים!
         whitelist: |-
 
 
-          This person is 'Whitelist User', they cannot be banned!
+          אדם זה הוא 'משתמש רשימה לבנה', לא ניתן להחרים אותם!
     weebify:
       weebified_string: |-
-        <b>Weebified String:</b>
+        <b>מחרוזת שבועות:</b>
         {string}
-      weebify_what: "What am I supposed to Weebify?"
+      weebify_what: "מה אני אמור לעשות לוויביפי?"
