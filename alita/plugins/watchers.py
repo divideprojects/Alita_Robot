@@ -257,6 +257,5 @@ async def antipin_watcher(c: Alita, m: Message):
         if str(ef) == "'NoneType' object has no attribute 'type'":
             return
         LOGGER.error(ef)
-        pass
 
     return
