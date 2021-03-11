@@ -2,21 +2,22 @@
    "name": "Alita_Robot",
    "description": "Alita is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers.",
    "keywords": [
-      "telegram",
+      "telegram bot",
       "group bot",
       "group",
       "manager",
       "alita",
-      "Alita Robot"
+      "alita_robot"
    ],
    "repository": "https://github.com/Divkix/Alita_Robot",
+   "stack": "container",
    "env": {
       "TOKEN": {
          "description": "Your telegram bot token, get from @Botfather in telegram.",
          "required": true,
          "value": ""
       },
-      "APp_ID": {
+      "APP_ID": {
          "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
          "required": true,
          "value": ""
@@ -27,10 +28,15 @@
          "value": ""
       },
       "DB_URI": {
-         "description": "Your postgres sql db, empty this field if you dont have one.",
+         "description": "Your MongoDB connection string.",
          "required": true,
-         "value": "sqldbtype://username:pw@hostname:port/db_name"
+         "value": ""
       },
+      "DB_NAME": {
+         "description": "Your MongoDB database name.",
+         "required": true,
+         "value": "alita_robot"
+      }
       "OWNER_ID": {
          "description": "Your user ID as an integer.",
          "required": true,
@@ -54,7 +60,7 @@
       "DEV_PREFIX_HANDLER": {
          "description": "Handler for executing dev commands",
          "required": true,
-         "value": "-xyz"
+         "value": ">"
       },
       "PREFIX_HANDLER": {
          "description": "Something like '/' to execute commands.",
@@ -94,5 +100,11 @@
          "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
          "value": "True"
       }
-   }
+    }
+     "formation": {
+       "worker": {
+       "quantity": 1,
+       "size": "free"
+    }
+  }
 }
