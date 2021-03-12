@@ -71,14 +71,14 @@ async def report_setting(_, m: Message):
                 await m.reply_text(
                     "Turned on reporting! Admins who have turned on reports will be notified when /report "
                     "or @admin is called.",
-                    reply_to_message_id=m.message_id,
+                    quote=True,
                 )
 
             elif args[1] in ("no", "off"):
                 db.set_settings(m.chat.id, False)
                 await m.reply_text(
                     "Turned off reporting! No admins will be notified on /report or @admin.",
-                    reply_to_message_id=m.message_id,
+                    quote=True,
                 )
         else:
             await m.reply_text(

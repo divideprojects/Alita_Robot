@@ -211,6 +211,7 @@ async def my_info(c: Alita, m: Message):
         user = await c.get_users(user_id)
     except PeerIdInvalid:
         await m.reply_text(tlang(m, "utils.no_user_db"))
+        return
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(

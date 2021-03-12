@@ -118,14 +118,14 @@ async def start(_, m: Message):
             await m.reply_text(
                 (tlang(m, "start.private")),
                 reply_markup=(await gen_start_kb(m)),
-                reply_to_message_id=m.message_id,
+                quote=True,
             )
         except UserIsBlocked:
             LOGGER.warning(f"Bot blocked by {m.from_user.id}")
     else:
         await m.reply_text(
             (tlang(m, "start.group")),
-            reply_to_message_id=m.message_id,
+            quote=True,
         )
     return
 

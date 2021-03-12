@@ -48,7 +48,7 @@ async def get_rules(c: Alita, m: Message):
     if not rules:
         await m.reply_text(
             (tlang(m, "rules.no_rules")),
-            reply_to_message_id=m.message_id,
+            quote=True,
         )
         return
 
@@ -85,7 +85,7 @@ async def get_rules(c: Alita, m: Message):
             )
             await m.reply_text(
                 (tlang(m, "rules.pm_me")),
-                reply_to_message_id=m.message_id,
+                quote=True,
                 reply_markup=pm_kb,
             )
             return
@@ -95,7 +95,7 @@ async def get_rules(c: Alita, m: Message):
 
         await m.reply_text(
             (tlang(m, "rules.sent_pm_rules")),
-            reply_to_message_id=m.message_id,
+            quote=True,
         )
 
 
