@@ -265,7 +265,7 @@ strings:
     mute:
       admin_cannot_mute: 'Tento uživatel je administrátorem, nemohu je ztlumit! "'
       bot_no_right: "Nemám dost práv na umlčení tohoto uživatele."
-      muted_user: "Admin {admin} muted {user}!"
+      muted_user: "Admin {admin} muted {muted}!"
     no_invite_perm: "Nemám svolení k pozvání na pozvání!"
     no_restrict_perm: "Nemáte oprávnění omezit členy!"
     no_user_invite_perm: "Nemáte oprávnění zvát uživatele."
@@ -283,7 +283,7 @@ strings:
       unbanned_user: "{admin} unzakázaných {unbanned} v konverzaci <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "Nemám dost práv na zrušení ztlumení tohoto uživatele."
-      unmuted_user: "Admin {admin} unmuted {user}!"
+      unmuted_user: "Admin {admin} unmuted {unmuted}!"
     user_admin_invalid: "Nelze na tomto uživateli působit, možná jsem to nebyl já, kdo změnil jejich oprávnění."
   afk:
     error_check_afk: |-
