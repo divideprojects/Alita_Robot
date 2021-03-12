@@ -267,7 +267,7 @@ strings:
     mute:
       admin_cannot_mute: 'Cet utilisateur est un administrateur, je ne peux pas les muter ! "'
       bot_no_right: "Je n'ai pas assez de droits pour muter cet utilisateur."
-      muted_user: "Admin {admin} muté {user}!"
+      muted_user: "Admin {admin} muté {muted}!"
       owner_cannot_mute: "Cette personne a créé le groupe, comment puis-je les muter?"
     no_invite_perm: "Je n'ai pas la permission d'inviter le lien !"
     no_restrict_perm: "Vous n'êtes pas autorisé à restreindre les membres !"
@@ -285,7 +285,7 @@ strings:
       unbanned_user: "{admin} non interdit {unbanned} en chat <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "Je n'ai pas assez de droits pour démuter cet utilisateur."
-      unmuted_user: "Admin {admin} unmuté {user}!"
+      unmuted_user: "Admin {admin} unmuté {unmuted}!"
     user_admin_invalid: "Impossible d'agir sur cet utilisateur, peut-être que je n'étais pas celui qui a changé d'autorisation."
   afk:
     error_check_afk: |-

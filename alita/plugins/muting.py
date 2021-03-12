@@ -98,7 +98,7 @@ async def unmute_usr(c: Alita, m: Message):
         await m.reply_text(
             (tlang(m, "admin.unmute.unmuted_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-                muted=(await mention_html(user_first_name, user_id)),
+                unmuted=(await mention_html(user_first_name, user_id)),
             ),
         )
     except ChatAdminRequired:
