@@ -143,6 +143,10 @@ strings:
         × /get <note>
         Get that note, if avaiable.
 
+        **Get Note in Raw format**
+        × /get <note> noformat or /get <note> raw
+        Get that note in raw format, so you can edit and update it.
+
         **Delete Note**
         × /clear <note>
         Delete that note, if avaiable.
@@ -161,6 +165,8 @@ strings:
         ── **Note Format** ──
         -> **Button**
         `[Button Text](buttonurl:t.me/DivideProjects)`
+        -> **For Another button in same line**
+        [Button2](buttonurl:t.me/DivideProjectsDiscussion:same)
         -> **Bold**
         `**Bold**`
         -> __Italic__
