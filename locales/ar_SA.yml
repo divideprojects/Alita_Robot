@@ -265,7 +265,7 @@ strings:
     mute:
       admin_cannot_mute: 'هذا المستخدم هو موجه النظام ، لا يمكنني اخفاء صوتهم ! "'
       bot_no_right: "ليس لدي حقوق كافية لأخرس هذا المستخدم"
-      muted_user: "Admin {admin} muted {user}!"
+      muted_user: "Admin {admin} muted {muted}!"
     no_invite_perm: "! ليس لدي إذن للدعوة للربط"
     no_restrict_perm: "لا يتوافر لديك تصاريح لتقييد الأعضاء !"
     no_user_invite_perm: "لا يتوافر لديك تصاريح لدعوة مستخدمين."
@@ -283,7 +283,7 @@ strings:
       unbanned_user: "{admin} غير محظور {unbanned} في المحادثة <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "ليس لدي ما يكفي من الحقوق للغاء اخفاء صوت هذا المستخدم."
-      unmuted_user: "Admin {admin} unmuted {user}!"
+      unmuted_user: "Admin {admin} unmuted {unmuted}!"
     user_admin_invalid: "لا يمكن التصرف على هذا المستخدم ، ربما لم أكن الشخص الذي قام بتغيير التصاريح الخاصة به."
   afk:
     error_check_afk: |-
