@@ -21,6 +21,7 @@ from pyrogram.types import Message
 
 from alita import DEV_PREFIX_HANDLER
 from alita.bot_class import Alita
+from alita.database import db
 from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
@@ -64,6 +65,8 @@ async def get_stats(_, m: Message):
         "<b>Spam Protection:</b>\n"
         f"    <b>CAS Enabled:</b> {(spamdb.get_cas_enabled_chats_num())} chats\n"
         f"    <b>UnderAttack Enabled:</b> {(spamdb.get_attack_enabled_chats_num())} chats\n"
+        f"\n<b>Database Stats:</b>\n"
+        f"<code>{(db.command('dbstats'))}</code>"
     )
     await replymsg.edit_text(rply, parse_mode="html")
 
