@@ -131,42 +131,48 @@ strings:
     notes:
       main: "Notas"
       help: |-
-        Guarda una nota, obtén eso, incluso puedes borrar esa nota.
-        ¡Esta nota solo está disponible para ti solamente!
-        También nota el botón de soporte en línea desarrollado por el bot de asistente de consulta en línea.
+        Save a note, get that, even you can delete that note.
+        This note only avaiable for yourself only!
+        Also notes support inline button powered by inline query assistant bot.
 
-        **Guardar nota**
+        **Save Note**
         × /save <note>
-        Guardar una nota, puedes obtenerla o eliminarla más tarde.
+        Save a note, you can get or delete that later.
 
-        **Obtén nota**
+        **Get Note**
         × /get <note>
-        Obtén esa nota, si está disponible.
+        Get that note, if avaiable.
 
-        **Eliminar nota**
+        **Get Note in Raw format**
+        × /get <note> noformat or /get <note> raw
+        Get that note in raw format, so you can edit and update it.
+
+        **Delete Note**
         × /clear <note>
-        Eliminar esa nota, si está disponible.
+        Delete that note, if avaiable.
 
         × /clearall
-        Limpia todas las notas en el chat
-        **NOTA:** ¡Solo puede ser usado por el dueño del chat!
+        Clears all notes in the chat!
+        **NOTE:** Can only be used by owner of chat!
 
-        **Todas las notas**
-        × /guardado
-        o
-        × /notas
-        Obtener todas sus notas, si hay demasiadas notas, por favor use esto en su mensaje guardado en su lugar!
+        **All Notes**
+        × /saved
+        or
+        × /notes
+        Get all your notes, if too much notes, please use this in your saved message instead!
 
 
-        → **Formato de Nota **** →
-        -> **Botón**
-        `[Texto del botón](buttonurl:t. e/DivideProjects)`
+        ── **Note Format** ──
+        -> **Button**
+        `[Button Text](buttonurl:t.me/DivideProjects)`
+        -> **For Another button in same line**
+        [Button2](buttonurl:t.me/DivideProjectsDiscussion:same)
         -> **Bold**
         `**Bold**`
         -> __Italic__
         `__Italic__`
         -> `Code`
-        `Code` (acento grave)
+        `Code` (grave accent)
     pins:
       main: "Pines"
       help: |-
