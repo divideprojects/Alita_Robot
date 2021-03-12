@@ -265,7 +265,7 @@ strings:
     mute:
       admin_cannot_mute: 'משתמש זה הוא מנהלן, אני לא יכול להשתיק אותם!"'
       bot_no_right: "אין לי מספיק זכויות להשתיק את המשתמש הזה."
-      muted_user: "Admin {admin} muted {user}!"
+      muted_user: "Admin {admin} muted {muted}!"
     no_invite_perm: "אין לי אישור להזמין את הקישור!"
     no_restrict_perm: "אין לכם הרשאות להגביל את החברים!"
     no_user_invite_perm: "אין לכם הרשאות להזמין משתמשים."
@@ -283,7 +283,7 @@ strings:
       unbanned_user: "{admin} unאסרו {unbanned} בצ ' אט <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "אין לי מספיק זכויות כדי לבטל את השתקה של משתמש זה."
-      unmuted_user: "Admin {admin} unmuted {user}!"
+      unmuted_user: "Admin {admin} unmuted {unmuted}!"
     user_admin_invalid: "לא יכול לפעול על משתמש זה, אולי לא אני זה ששינה את ההרשאות שלהם."
   afk:
     error_check_afk: |-
