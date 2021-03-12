@@ -265,7 +265,7 @@ strings:
     mute:
       admin_cannot_mute: 'Ten użytkownik jest administratorem, nie mogę ich wyciszyć! "'
       bot_no_right: "Nie mam wystarczających praw do wyciszenia tego użytkownika."
-      muted_user: "Admin {admin} muted {user}!"
+      muted_user: "Admin {admin} muted {muted}!"
     no_invite_perm: "Nie mam pozwolenia na zaproszenie link!"
     no_restrict_perm: "Nie masz uprawnień, aby ograniczyć liczbę członków!"
     no_user_invite_perm: "Nie masz uprawnień do zapraszania użytkowników."
@@ -283,7 +283,7 @@ strings:
       unbanned_user: "{admin} niezakazane {unbanned} w czacie <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "Nie mam wystarczających praw, aby anulować wyciszenie tego użytkownika."
-      unmuted_user: "Admin {admin} unmuted {user}!"
+      unmuted_user: "Admin {admin} unmuted {unmuted}!"
     user_admin_invalid: "Nie mogę działać na tego użytkownika, może nie byłem tym, który zmienił swoje uprawnienia."
   afk:
     error_check_afk: |-
