@@ -177,7 +177,6 @@ async def get_raw_note(c: Alita, m: Message, note: str):
     if msgtype == Types.TEXT:
         teks = getnotes["note_value"]
         await m.reply_text(teks, parse_mode=None)
-        return
     elif msgtype in (
         Types.STICKER,
         Types.VIDEO_NOTE,
