@@ -213,15 +213,6 @@ strings:
         × /setrules <rules>: Ustaw reguły dla tej rozmowy sieciowej, działa również jako odpowiedź na komunikat.
         × /clearrules: Wyczyść reguły dla tej rozmowy sieciowej.
         × /privrules <on/yes/no/off>: Włącza/wyłącza opcję wysyłania reguł do KZ użytkownika lub grupy.
-    spam_protect:
-      main: "Chroń przed"
-      help: |-
-        Spamerzy dołączają do swojej grupy?
-        Brak problemu w ogóle, tutaj można znaleźć wszystkie opcje, aby chronić swoje grupy przed raikami i scumami!
-
-        ** Admin Tylko: **
-        × /cas <on/off>: Włącza lub wyłącza sprawdzanie CAS dla grupy.
-        × /underattack <on/off>: Kick wszystkich nowych użytkowników na wejściu!
     utils:
       main: "Utils"
       help: |-
