@@ -265,7 +265,7 @@ strings:
     mute:
       admin_cannot_mute: 'यह उपयोगकर्ता एक व्यवस्थापक है, मैं उन लोगों को मौन नहीं कर सकता! "'
       bot_no_right: "मेरे पास इस उपयोगकर्ता को मूक करने के लिए पर्याप्त अधिकार नहीं है."
-      muted_user: "Admin {admin} muted {user}!"
+      muted_user: "Admin {admin} muted {muted}!"
     no_invite_perm: "मैं लिंक आमंत्रित करने के लिए अनुमति नहीं है!"
     no_restrict_perm: "आप सदस्यों को प्रतिबंधित करने की अनुमति नहीं है!"
     no_user_invite_perm: "आपके पास उपयोगकर्ताओं को आमंत्रित करने की अनुमति नहीं है."
@@ -283,7 +283,7 @@ strings:
       unbanned_user: "{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "मेरे पास इस उपयोगकर्ता को अमूक करने के लिए पर्याप्त अधिकार नहीं है."
-      unmuted_user: "Admin {admin} unmuted {user}!"
+      unmuted_user: "Admin {admin} unmuted {unmuted}!"
     user_admin_invalid: "इस उपयोगकर्ता पर कार्य नहीं कर सकता, शायद मैं एक नहीं था जो अपनी अनुमति बदल दिया है."
   afk:
     error_check_afk: |-
