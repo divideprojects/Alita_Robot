@@ -22,6 +22,7 @@ from pyrogram.types import Message
 from alita import DEV_PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database import db
+from alita.database.antichannelpin import AntiChannelPin
 from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
@@ -30,7 +31,6 @@ from alita.database.notes_db import Notes
 from alita.database.rules_db import Rules
 from alita.database.spam_protect_db import SpamProtect
 from alita.database.users_db import Users
-from alita.database.antichannelpin import AntiChannelPin
 from alita.utils.custom_filters import dev_filter
 
 # initialise

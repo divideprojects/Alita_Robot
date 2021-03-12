@@ -40,7 +40,7 @@ class Reporting:
     def set_settings(self, chat_id: int, status: bool = True):
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
-            curr_settings = (self.collection.find_one({"_id": chat_id}))
+            curr_settings = self.collection.find_one({"_id": chat_id})
             if curr_settings:
                 return self.collection.update(
                     {"_id": chat_id},
@@ -53,7 +53,7 @@ class Reporting:
     def get_settings(self, chat_id: int):
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
-            curr_settings = (self.collection.find_one({"_id": chat_id}))
+            curr_settings = self.collection.find_one({"_id": chat_id})
             if curr_settings:
                 return curr_settings["status"]
             self.collection.insert_one(

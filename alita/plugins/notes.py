@@ -62,7 +62,13 @@ async def send_cmd(client: Alita, msgtype):
 )
 async def save_note(_, m: Message):
 
+    existing_notes = db.get_all_notes(m.chat.id)
+
     note_name, text, data_type, content = await get_note_type(m)
+
+    if note_name in existing_notes:
+        await m.reply_text(f"This note ({note_name}) already exists!")
+        return
 
     if not note_name:
         await m.reply_text(
@@ -79,7 +85,9 @@ async def save_note(_, m: Message):
             return
 
     db.save_note(m.chat.id, note_name, text, data_type, content)
-    await m.reply_text(f"Saved note <code>{note_name}</code>!\nGet it with <code>/get {note_name}</code> or <code>#{note_name}</code>")
+    await m.reply_text(
+        f"Saved note <code>{note_name}</code>!\nGet it with <code>/get {note_name}</code> or <code>#{note_name}</code>",
+    )
     return
 
 
@@ -153,6 +161,48 @@ async def get_note_func(c: Alita, m: Message, note: str):
     return
 
 
+async def get_raw_note(c: Alita, m: Message, note: str):
+    getnotes = db.get_note(m.chat.id, note)
+    all_notes = db.get_all_notes(m.chat.id)
+
+    if note not in all_notes:
+        await m.reply_text("This note does not exists!")
+        return
+
+    msgtype = getnotes["msgtype"]
+    if not getnotes:
+        await m.reply_text("<b>Error:</b> Cannot find a type for this note!!")
+        return
+
+    if msgtype == Types.TEXT:
+        teks = getnotes["note_value"]
+        await m.reply_text(teks, parse_mode=None)
+        return
+    elif msgtype in (
+        Types.STICKER,
+        Types.VIDEO_NOTE,
+        Types.CONTACT,
+        Types.ANIMATED_STICKER,
+    ):
+        await (await send_cmd(c, msgtype))(
+            m.chat.id,
+            getnotes["fileid"],
+            parse_mode=None,
+        )
+    else:
+        if getnotes["note_value"]:
+            teks = getnotes["note_value"]
+        else:
+            teks = ""
+        await (await send_cmd(c, msgtype))(
+            m.chat.id,
+            getnotes["fileid"],
+            caption=teks,
+            parse_mode=None,
+        )
+    return
+
+
 @Alita.on_message(filters.regex(r"^#[^\s]+") & filters.group)
 async def hash_get(c: Alita, m: Message):
 
@@ -170,12 +220,16 @@ async def hash_get(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("get", PREFIX_HANDLER) & filters.group)
 async def get_note(c: Alita, m: Message):
-    if len(m.text.split()) >= 2:
+    if len(m.text.split()) == 2:
         note = (m.text.split())[1]
+        await get_note_func(c, m, note)
+    elif len(m.text.split()) == 3 and (m.text.split())[2] in ("noformat", "raw"):
+        note = (m.text.split())[1]
+        await get_raw_note(c, m, note)
     else:
         await m.reply_text("Give me a note tag!")
         return
-    await get_note_func(c, m, note)
+
     return
 
 
