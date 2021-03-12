@@ -265,7 +265,7 @@ strings:
     mute:
       admin_cannot_mute: 'Этот пользователь-администратор, я не могу их отключить! "'
       bot_no_right: "У меня недостаточно прав на то, чтобы отключить этого пользователя."
-      muted_user: "Admin {admin} muted {user}!"
+      muted_user: "Admin {admin} muted {muted}!"
     no_invite_perm: "У меня нет разрешения на приглашение."
     no_restrict_perm: "У вас нет разрешений на ограничение элементов!"
     no_user_invite_perm: "У вас нет разрешений на приглашение пользователей."
@@ -283,7 +283,7 @@ strings:
       unbanned_user: "{admin} без запретов {unbanned} в чате <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "У меня недостаточно прав, чтобы отмутировать этого пользователя."
-      unmuted_user: "Admin {admin} unmuted {user}!"
+      unmuted_user: "Admin {admin} unmuted {unmuted}!"
     user_admin_invalid: "Не может действовать на этом пользователе, может быть, я не был тем, кто изменил свои права доступа."
   afk:
     error_check_afk: |-
