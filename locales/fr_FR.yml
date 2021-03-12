@@ -131,36 +131,42 @@ strings:
     notes:
       main: "Notes"
       help: |-
-        Enregistrez une note, obtenez cela, même vous pouvez supprimer cette note.
-        Cette note n'est disponible que pour vous !
-        Notez également que le bouton en ligne est alimenté par l'assistant de requête en ligne.
+        Save a note, get that, even you can delete that note.
+        This note only avaiable for yourself only!
+        Also notes support inline button powered by inline query assistant bot.
 
-        **Enregistrer la note**
+        **Save Note**
         × /save <note>
-        Enregistrer une note, vous pouvez l'obtenir ou la supprimer plus tard.
+        Save a note, you can get or delete that later.
 
         **Get Note**
         × /get <note>
-        Obtenez cette note, si disponible.
+        Get that note, if avaiable.
 
-        **Supprimer la note**
+        **Get Note in Raw format**
+        × /get <note> noformat or /get <note> raw
+        Get that note in raw format, so you can edit and update it.
+
+        **Delete Note**
         × /clear <note>
-        Supprimez cette note, si disponible.
+        Delete that note, if avaiable.
 
         × /clearall
-        Efface toutes les notes dans le chat!
-        **NOTE:** Ne peut être utilisé que par le propriétaire du chat!
+        Clears all notes in the chat!
+        **NOTE:** Can only be used by owner of chat!
 
-        **Toutes les notes**
+        **All Notes**
         × /saved
-        ou
+        or
         × /notes
-        Obtenez toutes vos notes, si trop de notes, veuillez utiliser ceci dans votre message enregistré à la place!
+        Get all your notes, if too much notes, please use this in your saved message instead!
 
 
-        ─ **Format de note** ─
-        -> **Bouton**
-        `[Texte du bouton](buttonurl:t. e/DivideProjects)`
+        ── **Note Format** ──
+        -> **Button**
+        `[Button Text](buttonurl:t.me/DivideProjects)`
+        -> **For Another button in same line**
+        [Button2](buttonurl:t.me/DivideProjectsDiscussion:same)
         -> **Bold**
         `**Bold**`
         -> __Italic__
