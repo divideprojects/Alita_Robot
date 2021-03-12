@@ -79,7 +79,7 @@ async def save_note(_, m: Message):
             return
 
     db.save_note(m.chat.id, note_name, text, data_type, content)
-    await m.reply_text(f"Saved note <code>{note_name}</code>!")
+    await m.reply_text(f"Saved note <code>{note_name}</code>!\Get it with <code>/get {note_name}</code> or <code>#{note_name}</code>")
     return
 
 
@@ -89,12 +89,12 @@ async def get_note_func(c: Alita, m: Message, note: str):
     all_notes = db.get_all_notes(m.chat.id)
 
     if note not in all_notes:
-        await m.reply_text("Note does not exists!")
+        await m.reply_text("This note does not exists!")
         return
 
     msgtype = getnotes["msgtype"]
     if not getnotes:
-        await m.reply_text("This note does not exist!")
+        await m.reply_text("<b>Error:</b> Cannot find a type for this note!!")
         return
 
     if msgtype == Types.TEXT:
