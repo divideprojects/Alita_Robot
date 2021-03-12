@@ -213,15 +213,6 @@ strings:
         × /setrules <rules>: Nastavení pravidel pro tuto konverzaci bude také fungovat jako odpověď na zprávu.
         × /clearrules: Vymažte pravidla pro tuto konverzaci.
         × /privrules <on/yes/no/off>: Zapne nebo vypne volbu odeslání pravidel do PÚ uživatele nebo skupiny.
-    spam_protect:
-      main: "Ochrana nevyžádané pošty"
-      help: |-
-        Kladiva se připojí k vaší skupině?
-        Žádný problém, zde můžete najít všechny možnosti ochrany své skupiny od razie a pracích!
-
-        ** Pouze pro administrátora: **
-        × /cas <on/off>: Zapíná nebo vypíná kontrolu skupiny CAS.
-        × /underattack <on/off>: Kick all the new users on entry!
     utils:
       main: "Využky"
       help: |-
