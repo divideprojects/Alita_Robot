@@ -213,15 +213,6 @@ strings:
         × /setrules <rules>: Configure as regras para este chat, também funciona como uma resposta a uma mensagem.
         × /clearrules: Limpar as regras para este bate-papo.
         × /privregras <on/yes/no/off>: Turnas on / off a opção de enviar as regras para PM de usuário ou grupo.
-    spam_protect:
-      main: "Spam Protect"
-      help: |-
-        Spammers se juntam ao seu grupo?
-        Sem problema algum, aqui você pode encontrar todas as opções para proteger seus grupos de raides e scums!
-
-        ** Admin Apenas: **
-        × /cas <on/off>: Turns on ou off a CAS check for group.
-        × /underattack <on/off>: Kick todos os novos usuários na entrada!
     utils:
       main: "Utils"
       help: |-
