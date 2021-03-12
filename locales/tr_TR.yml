@@ -265,7 +265,7 @@ strings:
     mute:
       admin_cannot_mute: 'Bu kullanıcı bir yöneticidir, onları susturamam! "'
       bot_no_right: "Bu kullanıcının sesini kapatmak için yeterli haklara sahip değilim."
-      muted_user: "Admin {admin} muted {user}!"
+      muted_user: "Admin {admin} muted {muted}!"
     no_invite_perm: "Link davet etmek için iznim yok!"
     no_restrict_perm: "Üyeleri kısıtlamak için izniniz yok!"
     no_user_invite_perm: "Kullanıcıları davet etme izniniz yok."
@@ -283,7 +283,7 @@ strings:
       unbanned_user: "{admin} yasaksız {unbanned} sohpet <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "Bu kullanıcının sesini açmak için yeterli haklara sahip değilim."
-      unmuted_user: "Admin {admin} unmuted {user}!"
+      unmuted_user: "Admin {admin} unmuted {unmuted}!"
     user_admin_invalid: "Bu kullanıcı üzerinde işlem yapamazsınız, belki de izinlerini değiştiren kişi ben değildim."
   afk:
     error_check_afk: |-
