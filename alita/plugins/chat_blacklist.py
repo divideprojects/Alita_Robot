@@ -30,6 +30,8 @@ from alita.utils.custom_filters import dev_filter
 # initialise database
 db = GroupBlacklist()
 
+__PLUGIN__ = "Chat Blacklist"
+
 
 @Alita.on_message(filters.command("blchat", DEV_PREFIX_HANDLER) & dev_filter)
 async def blacklist_chat(c: Alita, m: Message):
@@ -86,7 +88,15 @@ async def unblacklist_chat(c: Alita, m: Message):
 @Alita.on_message(
     filters.command(["blchatlist", "blchats"], DEV_PREFIX_HANDLER) & dev_filter,
 )
-async def list_blacklist_chats(_, m: Message):
+async def list_blacklist_chats(c: Alita, m: Message):
     bl_chats = db.list_all_chats() or []
-    await m.reply_text("These Chats are Blacklisted:\n" + "\n".join(bl_chats))
+    lst = []
+    for chat in bl_chats:
+        z = await c.get_chat(chat)
+        name = z["chat_name"]
+        lst.append((chat, name))
+    await m.reply_text(
+        "These Chats are Blacklisted:\n"
+        + "\n".join([f"{i[0]} - {i[1]}" for i in bl_chats]),
+    )
     return

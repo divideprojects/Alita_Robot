@@ -149,7 +149,11 @@ async def get_note_func(c: Alita, m: Message, note: str):
                 )
                 return
             except RPCError as ef:
-                await m.reply_text(teks, reply_markup=button)
+                await m.reply_text(
+                    teks,
+                    reply_markup=button,
+                    disable_web_page_preview=True,
+                )
                 LOGGER.error(ef)
                 return
         else:

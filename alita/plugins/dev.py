@@ -299,7 +299,7 @@ async def chats(c: Alita, m: Message):
         except ChannelPrivate:
             chatdb.remove_chat(chat["_id"])
         except PeerIdInvalid:
-            LOGGER.warning(f"Peer  not found {chat['_id']}")
+            LOGGER.warning(f"Peer not found {chat['_id']}")
         except FloodWait as ef:
             LOGGER.error("FloodWait required, Sleeping for 60s")
             LOGGER.error(ef)
