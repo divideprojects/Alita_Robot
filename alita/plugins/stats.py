@@ -29,7 +29,6 @@ from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
 from alita.database.notes_db import Notes
 from alita.database.rules_db import Rules
-from alita.database.spam_protect_db import SpamProtect
 from alita.database.users_db import Users
 from alita.utils.custom_filters import dev_filter
 
@@ -41,7 +40,6 @@ rulesdb = Rules()
 userdb = Users()
 appdb = Approve()
 chatdb = Chats()
-spamdb = SpamProtect()
 antichanneldb = AntiChannelPin()
 
 
@@ -62,9 +60,6 @@ async def get_stats(_, m: Message):
         f"<b>Notes:</b> <code>{(notesdb.count_all_notes())}</code> in <code>{(notesdb.count_notes_chats())}</code> chats\n"
         f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
         f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
-        "<b>Spam Protection:</b>\n"
-        f"    <b>CAS Enabled:</b> {(spamdb.get_cas_enabled_chats_num())} chats\n"
-        f"    <b>UnderAttack Enabled:</b> {(spamdb.get_attack_enabled_chats_num())} chats\n"
         f"\n<b>Database Stats:</b>\n"
         f"<code>{(db.command('dbstats'))}</code>"
     )
