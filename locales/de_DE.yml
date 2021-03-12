@@ -131,42 +131,48 @@ strings:
     notes:
       main: "Anmerkungen"
       help: |-
-        Speichere eine Notiz, erhalte das, auch du kannst diese Notiz löschen.
-        Diese Notiz ist nur für dich selbst verfügbar!
-        Notiert auch, dass der Inline-Button über einen Inline-Abfrageassistenten gesteuert wird.
+        Save a note, get that, even you can delete that note.
+        This note only avaiable for yourself only!
+        Also notes support inline button powered by inline query assistant bot.
 
-        **Speichere Notiz**
+        **Save Note**
         × /save <note>
-        Speichere eine Notiz, die du später erhalten oder löschen kannst.
+        Save a note, you can get or delete that later.
 
-        **Erhalte Notiz**
+        **Get Note**
         × /get <note>
-        Erhalte diese Notiz, falls verfügbar.
+        Get that note, if avaiable.
 
-        **Lösche Notiz**
-        × /leere <note>
-        Lösche diese Notiz, falls verfügbar.
+        **Get Note in Raw format**
+        × /get <note> noformat or /get <note> raw
+        Get that note in raw format, so you can edit and update it.
+
+        **Delete Note**
+        × /clear <note>
+        Delete that note, if avaiable.
 
         × /clearall
-        Löscht alle Notizen im Chat!
-        **NOTE:** Kann nur vom Chat-Besitzer benutzt werden!
+        Clears all notes in the chat!
+        **NOTE:** Can only be used by owner of chat!
 
-        **Alle Notizen**
-        × /save
-        oder
+        **All Notes**
+        × /saved
+        or
         × /notes
-        Holen Sie sich alle Ihre Notizen, wenn zu viele Notizen, bitte verwenden Sie dies in Ihrer gespeicherten Nachricht!
+        Get all your notes, if too much notes, please use this in your saved message instead!
 
 
-        ″ <unk> **Notizformatier** 本<unk>
+        ── **Note Format** ──
         -> **Button**
-        `[Button Text](buttonurl:t. e/DivideProjects)`
+        `[Button Text](buttonurl:t.me/DivideProjects)`
+        -> **For Another button in same line**
+        [Button2](buttonurl:t.me/DivideProjectsDiscussion:same)
         -> **Bold**
         `**Bold**`
         -> __Italic__
         `__Italic__`
         -> `Code`
-        `Code` (schwerer Akzent)
+        `Code` (grave accent)
     pins:
       main: "Kontaktstifte"
       help: |-
