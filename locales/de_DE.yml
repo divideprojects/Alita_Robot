@@ -265,7 +265,7 @@ strings:
     mute:
       admin_cannot_mute: 'Dieser Benutzer ist ein Admin, ich kann sie nicht stumm machen! "'
       bot_no_right: "Ich habe nicht genug Rechte, um diesen Nutzer stumm zu machen."
-      muted_user: "Admin {admin} muted {user}!"
+      muted_user: "Admin {admin} muted {muted}!"
     no_invite_perm: "Ich habe keine Erlaubnis zum Einladen von Links!"
     no_restrict_perm: "Sie haben keine Berechtigungen zum Beschränken von Mitgliedern!"
     no_user_invite_perm: "Sie verfügen nicht über Berechtigungen, um Benutzer einzuladen."
@@ -283,7 +283,7 @@ strings:
       unbanned_user: "{admin} ungebannt {unbanned} im Chat <b>{chat_title}</b>!"
     unmute:
       bot_no_right: "Ich habe nicht genug Rechte, um diesen Benutzer zu entmuten."
-      unmuted_user: "Admin {admin} unmuted {user}!"
+      unmuted_user: "Admin {admin} unmuted {unmuted}!"
     user_admin_invalid: "Kann nicht auf diesen Benutzer handeln, vielleicht war ich nicht derjenige, der seine Berechtigungen geändert hat."
   afk:
     error_check_afk: |-
