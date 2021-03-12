@@ -213,15 +213,6 @@ strings:
         × /setrules <rules>: Définissez les règles pour cette discussion, également en tant que réponse à un message.
         × /clearrules: Effacer les règles pour cette discussion.
         × /privrules <on/yes/no/off>: Turns on / off the option to send the rules to PM of user or group.
-    spam_protect:
-      main: "Spam Protect"
-      help: |-
-        Les spammeurs rejoignant votre groupe?
-        Pas de problème du tout, ici vous pouvez trouver toutes les options pour protéger vos groupes contre les raids et les scommes !
-
-        ** Admin seulement: **
-        × /cas <on/off>: Active ou désactive le contrôle CAS pour le groupe.
-        × /underattaque <on/off>: Kick tous les nouveaux utilisateurs à l'entrée !
     utils:
       main: "Utils"
       help: |-
