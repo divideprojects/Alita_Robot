@@ -187,7 +187,6 @@ async def get_raw_note(c: Alita, m: Message, note: str):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
             getnotes["fileid"],
-            parse_mode=None,
         )
     else:
         if getnotes["note_value"]:
