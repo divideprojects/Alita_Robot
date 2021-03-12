@@ -213,15 +213,6 @@ strings:
         × /setrles <rules>: Bu sohbete ilişkin kuralları ayarlayın, ayrıca bir iletinin yanıtı olarak da çalışır.
         × /clearrules: Bu sohbete ilişkin kuralları temizleyin.
         × /privrules <on/yes/no/off>: Kuralları kullanıcının ya da grubun Koruyucu Bakımlarına gönderme seçeneği geçerli/kapalı.
-    spam_protect:
-      main: "İstenmeyen E"
-      help: |-
-        Spammers grubunuza katılıyor mu?
-        Hiçbir sorun yok. burada, gruplarınızı baskınlardan ve scums ' lardan korumak için tüm seçenekleri bulabilirsiniz!
-
-        ** Admin Only: **
-        × /cas <on/off>: Grup için CAS denetimini açar ya da kapatır.
-        × /underattack <on/off>: giriş üzerine tüm yeni kullanıcıları tekmele!
     utils:
       main: "Utillar"
       help: |-
