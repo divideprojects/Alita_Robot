@@ -159,14 +159,6 @@ async def report_watcher(c: Alita, m: Message):
                 try:
                     if not m.chat.username:
                         await c.send_message(admin.user.id, msg + link)
-
-                        if should_forward:
-                            await m.reply_to_message.forward(admin.user.id)
-
-                            if (
-                                len(m.text.split()) > 1
-                            ):  # If user is giving a reason, send his message too
-                                await m.forward(admin.user.id)
                     else:
                         await c.send_message(
                             admin.user.id,
@@ -174,13 +166,14 @@ async def report_watcher(c: Alita, m: Message):
                             reply_markup=reply_markup,
                         )
 
-                        if should_forward:
-                            await m.reply_to_message.forward(admin.user.id)
+                    if should_forward:
+                        await m.reply_to_message.forward(admin.user.id)
 
-                            if (
-                                len(m.text.split()) > 1
-                            ):  # If user is giving a reason, send his message too
-                                await m.forward(admin.user.id)
+                        if (
+                            len(m.text.split()) > 1
+                        ):  # If user is giving a reason, send his message too
+                            # await m.forward(admin.user.id)
+                            pass
 
                 except (Unauthorized, MessageIdInvalid):
                     pass
