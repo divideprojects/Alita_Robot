@@ -174,12 +174,12 @@ async def unban_usr(c: Alita, m: Message):
     try:
 
         # Check if user is banned or not
-        banned_users = []
-        async for i in m.chat.iter_members(filter="kicked"):
-            banned_users.append(i.user.id)
-        if user_id not in banned_users:
-            await m.reply_text(tlang(m, "admin.unban.user_not_banned"))
-            return
+        # banned_users = []
+        # async for i in m.chat.iter_members(filter="kicked"):
+        #     banned_users.append(i.user.id)
+        # if user_id not in banned_users:
+        #     await m.reply_text(tlang(m, "admin.unban.user_not_banned"))
+        #     return
 
         await m.chat.unban_member(user_id)
         await m.reply_text(
