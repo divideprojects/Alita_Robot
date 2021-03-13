@@ -92,6 +92,9 @@ async def report_watcher(c: Alita, m: Message):
     if m.chat.type != "supergroup":
         return
 
+    if not m.from_user:
+        return
+
     me = await c.get_me()
 
     if (m.chat and m.reply_to_message) and (db.get_settings(m.chat.id)):
@@ -142,8 +145,8 @@ async def report_watcher(c: Alita, m: Message):
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
         else:
-            msg = f"{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in '{chat_name}'!"
-            link = ""
+            msg = f"{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in '{chat_name}'!\n"
+            link = f"\nLink:\nhttps://t.me/c/{str(m.chat.id).replace('-100','')}/{m.reply_to_message.message_id}"  # message link for private chat
             should_forward = True
 
         for admin in admin_list:
