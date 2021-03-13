@@ -133,13 +133,13 @@ async def report_watcher(c: Alita, m: Message):
                     ),
                     InlineKeyboardButton(
                         "⛔️ Ban",
-                        callback_data=f"report_{m.chat.id}=banned={reported_user.id}={reported_user.first_name}",
+                        callback_data=f"report_{m.chat.id}=ban={reported_user.id}={reported_user.first_name}",
                     ),
                 ],
                 [
                     InlineKeyboardButton(
                         "❎ Delete Message",
-                        callback_data=f"report_{m.chat.id}=delete={reported_user.id}={m.reply_to_message.message_id}",
+                        callback_data=f"report_{m.chat.id}=del={reported_user.id}={m.reply_to_message.message_id}",
                     ),
                 ],
             ]
@@ -206,14 +206,14 @@ async def report_buttons(c: Alita, q: CallbackQuery):
                 f"🛑 Failed to Kick\n<b>Error:</b>\n</code>{err}</code>",
                 show_alert=True,
             )
-    elif action == "banned":
+    elif action == "ban":
         try:
             await c.kick_chat_member(chat_id, user_id)
             await q.answer("✅ Succesfully Banned")
             return
         except RPCError as err:
             await q.answer(f"🛑 Failed to Ban\n<b>Error:</b>\n`{err}`", show_alert=True)
-    elif action == "delete":
+    elif action == "del":
         try:
             await c.delete_messages(chat_id, message_id_or_name)
             await q.answer("✅ Message Deleted")
@@ -223,4 +223,5 @@ async def report_buttons(c: Alita, q: CallbackQuery):
                 f"🛑 Failed to delete message!\n<b>Error:</b>\n`{err}`",
                 show_alert=True,
             )
+    await q.answer()
     return
