@@ -19,7 +19,7 @@
 from time import time
 
 from pyrogram import filters
-from pyrogram.errors import BadRequest, MessageIdInvalid, RPCError, Unauthorized
+from pyrogram.errors import BadRequest, MessageIdInvalid, RPCError, Unauthorized, UserIsBlocked, PeerIdInvalid
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -172,10 +172,9 @@ async def report_watcher(c: Alita, m: Message):
                         if (
                             len(m.text.split()) > 1
                         ):  # If user is giving a reason, send his message too
-                            # await m.forward(admin.user.id)
-                            pass
+                            await m.forward(admin.user.id)
 
-                except (Unauthorized, MessageIdInvalid):
+                except (Unauthorized, UserIsBlocked, PeerIdInvalid):
                     pass
                 except BadRequest:
                     LOGGER.exception("Exception while reporting user")
