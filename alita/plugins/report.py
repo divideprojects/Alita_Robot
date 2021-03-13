@@ -16,10 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from html import escape
+from time import time
 
 from pyrogram import filters
-from pyrogram.errors import BadRequest, RPCError, Unauthorized
+from pyrogram.errors import BadRequest, MessageIdInvalid, RPCError, Unauthorized
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -30,7 +30,7 @@ from pyrogram.types import (
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.reporting_db import Reporting
-from alita.utils.admin_check import admin_check
+from alita.utils.custom_filters import admin_filter
 from alita.utils.parser import mention_html
 
 #  initialise
@@ -40,7 +40,9 @@ __PLUGIN__ = "plugins.reporting.main"
 __help__ = "plugins.reporting.help"
 
 
-@Alita.on_message(filters.command("reports", PREFIX_HANDLER))
+@Alita.on_message(
+    filters.command("reports", PREFIX_HANDLER) & (filters.private | admin_filter),
+)
 async def report_setting(_, m: Message):
     args = m.text.split()
 
@@ -59,12 +61,7 @@ async def report_setting(_, m: Message):
             await m.reply_text(
                 f"Your current report preference is: `{(db.get_settings(m.chat.id))}`",
             )
-
     else:
-        if not (await admin_check(m)):
-            await m.delete()
-            return
-
         if len(args) >= 2:
             if args[1] in ("yes", "on", "true"):
                 db.set_settings(m.chat.id, True)
@@ -86,37 +83,37 @@ async def report_setting(_, m: Message):
             )
 
 
-# TODO - Fix this
-@Alita.on_message(filters.command("report", PREFIX_HANDLER))
-async def report(c: Alita, m: Message):
+@Alita.on_message(
+    (filters.command("report", PREFIX_HANDLER) | filters.regex(r"(?i)@admin(s)?"))
+    & filters.group,
+)
+async def report_watcher(c: Alita, m: Message):
+
+    if m.chat.type != "supergroup":
+        return
+
     me = await c.get_me()
 
-    if m.chat and m.reply_to_message and db.chat_should_report(m.chat.id):
+    if (m.chat and m.reply_to_message) and (db.get_settings(m.chat.id)):
         reported_user = m.reply_to_message.from_user
         chat_name = m.chat.title or m.chat.username
         admin_list = await c.get_chat_members(m.chat.id, filter="administrators")
-
-        if m.from_user.id == reported_user.id:
-            await m.reply_text(
-                "Uh yeah, Sure sure...you don't need to report yourself!",
-            )
-            return
 
         if reported_user.id == me.id:
             await m.reply_text("Nice try.")
             return
 
         if reported_user.id in SUPPORT_STAFF:
-            await m.reply_text("Uh? You reporting whitelisted users?")
+            await m.reply_text("Uh? You reporting my support team?")
             return
 
-        if m.chat.username and m.chat.type == "supergroup":
-
+        if m.chat.username:
             msg = (
-                f"<b>⚠️ Report: </b>{escape(m.chat.title)}\n"
+                f"<b>⚠️ Report: </b>{m.chat.title}\n"
                 f"<b> • Report by:</b> {(await mention_html(m.from_user.first_name, m.from_user.id))} (<code>{m.from_user.id}</code>)\n"
                 f"<b> • Reported user:</b> {(await mention_html(reported_user.first_name, reported_user.id))} (<code>{reported_user.id}</code>)\n"
             )
+
             link = f'<b> • Reported message:</b> <a href="https://t.me/{m.chat.username}/{m.reply_to_message.message_id}">click here</a>'
             should_forward = False
             keyboard = [
@@ -145,26 +142,18 @@ async def report(c: Alita, m: Message):
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
         else:
-            msg = f'{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in f"{escape(chat_name)}"!'
+            msg = f"{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in '{chat_name}'!"
             link = ""
             should_forward = True
 
         for admin in admin_list:
-            if admin.user.is_bot:  # can't message bots
+            if (
+                admin.user.is_bot or admin.user.is_deleted
+            ):  # can't message bots or deleted accounts
                 continue
 
-            if db.user_should_report(admin.user.id):
+            if db.get_settings(admin.user.id):
                 try:
-                    if not m.chat.type == "supergroup":
-                        await c.send_message(admin.user.id, msg + link)
-
-                        if should_forward:
-                            await m.reply_to_message.forward(admin.user.id)
-
-                            if (
-                                len(m.text.split()) > 1
-                            ):  # If user is giving a reason, send his message too
-                                await m.reply_to_message.forward(admin.user.id)
                     if not m.chat.username:
                         await c.send_message(admin.user.id, msg + link)
 
@@ -175,8 +164,7 @@ async def report(c: Alita, m: Message):
                                 len(m.text.split()) > 1
                             ):  # If user is giving a reason, send his message too
                                 await m.forward(admin.user.id)
-
-                    if m.chat.username and m.chat.type == "supergroup":
+                    else:
                         await c.send_message(
                             admin.user.id,
                             msg + link,
@@ -191,7 +179,7 @@ async def report(c: Alita, m: Message):
                             ):  # If user is giving a reason, send his message too
                                 await m.forward(admin.user.id)
 
-                except Unauthorized:
+                except (Unauthorized, MessageIdInvalid):
                     pass
                 except BadRequest:
                     LOGGER.exception("Exception while reporting user")
@@ -206,24 +194,30 @@ async def report(c: Alita, m: Message):
 @Alita.on_callback_query(filters.regex("^report_"))
 async def report_buttons(c: Alita, q: CallbackQuery):
     splitter = q.data.replace("report_", "").split("=")
-    if splitter[1] == "kick":
+    chat_id = splitter[0]
+    action = splitter[1]
+    user_id = splitter[2]
+    message_id_or_name = splitter[3]
+    if action == "kick":
         try:
-            await c.kick_chat_member(splitter[0], splitter[2])
-            await c.unban_chat_member(splitter[0], splitter[2])
+            await c.kick_chat_member(chat_id, user_id, until_date=(time() + 45))
             await q.answer("✅ Succesfully kicked")
             return
         except RPCError as err:
-            await q.answer(f"🛑 Failed to Kick\n<b>Error:</b>\n`{err}`", show_alert=True)
-    elif splitter[1] == "banned":
+            await q.answer(
+                f"🛑 Failed to Kick\n<b>Error:</b>\n</code>{err}</code>",
+                show_alert=True,
+            )
+    elif action == "banned":
         try:
-            await c.kick_chat_member(splitter[0], splitter[2])
+            await c.kick_chat_member(chat_id, user_id)
             await q.answer("✅ Succesfully Banned")
             return
         except RPCError as err:
             await q.answer(f"🛑 Failed to Ban\n<b>Error:</b>\n`{err}`", show_alert=True)
-    elif splitter[1] == "delete":
+    elif action == "delete":
         try:
-            await c.delete_messages(splitter[0], splitter[3])
+            await c.delete_messages(chat_id, message_id_or_name)
             await q.answer("✅ Message Deleted")
             return
         except RPCError as err:
