@@ -23,10 +23,8 @@ from traceback import format_exc
 from pyrogram import filters
 from pyrogram.errors import (
     ChatAdminRequired,
-    RightForbidden,
     RPCError,
-    UserAdminInvalid,
-)
+    UserAdminInvalid)
 from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, MESSAGE_DUMP, SUPPORT_GROUP
