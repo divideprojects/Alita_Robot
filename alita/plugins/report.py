@@ -167,12 +167,14 @@ async def report_watcher(c: Alita, m: Message):
                         )
 
                     if should_forward:
-                        await c.forward_messages(chat_id=admin.user.id, from_chat_id=m.chat.id, message_ids=m.reply_to_message.message_id)
+                        if m.reply_to_message.message_id:
+                            await c.forward_messages(chat_id=admin.user.id, from_chat_id=m.chat.id, message_ids=m.reply_to_message.message_id)
 
                         if (
                             len(m.text.split()) > 1
                         ):  # If user is giving a reason, send his message too
-                            await c.forward_messages(chat_id=admin.user.id, from_chat_id=m.chat.id, message_ids=m.message_id)
+                            if m.message_id:
+                                await c.forward_messages(chat_id=admin.user.id, from_chat_id=m.chat.id, message_ids=m.message_id)
 
 
                 except (Unauthorized, UserIsBlocked, PeerIdInvalid):
