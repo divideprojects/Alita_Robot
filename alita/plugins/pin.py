@@ -22,7 +22,7 @@ from pyrogram.types import Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
-from alita.database.antichannelpin import AntiChannelPin
+from alita.database.antichannelpin_db import AntiChannelPin
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 

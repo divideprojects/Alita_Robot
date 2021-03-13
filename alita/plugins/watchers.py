@@ -21,15 +21,12 @@ from time import time
 from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import (
-    ChatAdminRequired,
-    RPCError,
-    UserAdminInvalid)
+from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
 from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, MESSAGE_DUMP, SUPPORT_GROUP
 from alita.bot_class import Alita
-from alita.database.antichannelpin import AntiChannelPin
+from alita.database.antichannelpin_db import AntiChannelPin
 from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
