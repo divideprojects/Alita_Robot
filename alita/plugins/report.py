@@ -17,16 +17,10 @@
 
 
 from time import time
+from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import (
-    BadRequest,
-    MessageIdInvalid,
-    PeerIdInvalid,
-    RPCError,
-    Unauthorized,
-    UserIsBlocked,
-)
+from pyrogram.errors import PeerIdInvalid, RPCError, Unauthorized, UserIsBlocked
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -55,13 +49,14 @@ async def report_setting(_, m: Message):
 
     if m.chat.type == "private":
         if len(args) >= 2:
-            if args[1] in ("yes", "on", "true"):
+            option = args[1].lower()
+            if option in ("yes", "on", "true"):
                 db.set_settings(m.chat.id, True)
                 await m.reply_text(
                     "Turned on reporting! You'll be notified whenever anyone reports something in groups you are admin.",
                 )
 
-            elif args[1] in ("no", "off", "false"):
+            elif option in ("no", "off", "false"):
                 db.set_settings(m.chat.id, False)
                 await m.reply_text("Turned off reporting! You wont get any reports.")
         else:
@@ -70,7 +65,8 @@ async def report_setting(_, m: Message):
             )
     else:
         if len(args) >= 2:
-            if args[1] in ("yes", "on", "true"):
+            option = args[1].lower()
+            if option in ("yes", "on", "true"):
                 db.set_settings(m.chat.id, True)
                 await m.reply_text(
                     "Turned on reporting! Admins who have turned on reports will be notified when /report "
@@ -78,7 +74,7 @@ async def report_setting(_, m: Message):
                     quote=True,
                 )
 
-            elif args[1] in ("no", "off"):
+            elif option in ("no", "off", "false"):
                 db.set_settings(m.chat.id, False)
                 await m.reply_text(
                     "Turned off reporting! No admins will be notified on /report or @admin.",
@@ -105,6 +101,7 @@ async def report_watcher(c: Alita, m: Message):
     me = await c.get_me()
 
     if (m.chat and m.reply_to_message) and (db.get_settings(m.chat.id)):
+        reported_msg_id = m.reply_to_message.message_id
         reported_user = m.reply_to_message.from_user
         chat_name = m.chat.title or m.chat.username
         admin_list = await c.get_chat_members(m.chat.id, filter="administrators")
@@ -124,37 +121,40 @@ async def report_watcher(c: Alita, m: Message):
                 f"<b> • Reported user:</b> {(await mention_html(reported_user.first_name, reported_user.id))} (<code>{reported_user.id}</code>)\n"
             )
 
-            link = f'<b> • Reported message:</b> <a href="https://t.me/{m.chat.username}/{m.reply_to_message.message_id}">click here</a>'
             should_forward = False
-            keyboard = [
+        else:
+            msg = f"{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in '{chat_name}'!\n"
+            should_forward = True
+
+        link_chat_id = str(m.chat.id).replace("-100", "")
+        link = f"https://t.me/c/{link_chat_id}/{reported_msg_id}"  # message link
+
+        reply_markup = InlineKeyboardMarkup(
+            [
                 [
                     InlineKeyboardButton(
                         "➡ Message",
-                        url=f"https://t.me/{m.chat.username}/{m.reply_to_message.message_id}",
+                        url=link,
                     ),
                 ],
                 [
                     InlineKeyboardButton(
                         "⚠ Kick",
-                        callback_data=f"report_{m.chat.id}=kick={reported_user.id}={reported_user.first_name}",
+                        callback_data=f"report_{m.chat.id}=kick={reported_user.id}={reported_msg_id}",
                     ),
                     InlineKeyboardButton(
                         "⛔️ Ban",
-                        callback_data=f"report_{m.chat.id}=ban={reported_user.id}={reported_user.first_name}",
+                        callback_data=f"report_{m.chat.id}=ban={reported_user.id}={reported_msg_id}",
                     ),
                 ],
                 [
                     InlineKeyboardButton(
                         "❎ Delete Message",
-                        callback_data=f"report_{m.chat.id}=del={reported_user.id}={m.reply_to_message.message_id}",
+                        callback_data=f"report_{m.chat.id}=del={reported_user.id}={reported_msg_id}",
                     ),
                 ],
-            ]
-            reply_markup = InlineKeyboardMarkup(keyboard)
-        else:
-            msg = f"{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in '{chat_name}'!\n"
-            link = f"\nLink:\nhttps://t.me/c/{str(m.chat.id).replace('-100','')}/{m.reply_to_message.message_id}"  # message link for private chat
-            should_forward = True
+            ],
+        )
 
         for admin in admin_list:
             if (
@@ -165,39 +165,39 @@ async def report_watcher(c: Alita, m: Message):
             if db.get_settings(admin.user.id):
                 try:
                     if not m.chat.username:
-                        await c.send_message(admin.user.id, msg + link)
+                        await c.send_message(
+                            admin.user.id,
+                            msg + link,
+                            disable_web_page_preview=True,
+                        )
                     else:
                         await c.send_message(
                             admin.user.id,
                             msg + link,
                             reply_markup=reply_markup,
+                            disable_web_page_preview=True,
                         )
 
                     if should_forward:
-                        if m.reply_to_message.message_id:
-                            await c.forward_messages(
-                                chat_id=admin.user.id,
-                                from_chat_id=m.chat.id,
-                                message_ids=m.reply_to_message.message_id,
-                            )
+                        # forward the reported message
+                        await m.reply_to_message.forward(admin.user.id)
 
-                        if (
-                            len(m.text.split()) > 1
-                        ):  # If user is giving a reason, send his message too
-                            if m.message_id:
-                                await c.forward_messages(
-                                    chat_id=admin.user.id,
-                                    from_chat_id=m.chat.id,
-                                    message_ids=m.message_id,
-                                )
+                        if len(m.text.split()) > 1:
+                            # If user is giving a reason, send his message too
+                            await m.forward(admin.user.id)
 
                 except (Unauthorized, UserIsBlocked, PeerIdInvalid):
                     pass
-                except BadRequest:
-                    LOGGER.exception("Exception while reporting user")
+                except RPCError as ef:
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
 
-        await m.reply_to_message.reply_text(
-            f"{(await mention_html(m.from_user.first_name, m.from_user.id))} reported the message to the admins.",
+        await m.reply_text(
+            (
+                f"{(await mention_html(m.from_user.first_name, m.from_user.id))} "
+                "reported the message to the admins."
+            ),
+            quote=True,
         )
         return
     return
@@ -205,11 +205,11 @@ async def report_watcher(c: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^report_"))
 async def report_buttons(c: Alita, q: CallbackQuery):
-    splitter = q.data.replace("report_", "").split("=")
-    chat_id = splitter[0]
-    action = splitter[1]
-    user_id = splitter[2]
-    message_id_or_name = splitter[3]
+    splitter = str(q.data).replace("report_", "").split("=")
+    chat_id = int(splitter[0])
+    action = str(splitter[1])
+    user_id = int(splitter[2])
+    message_id = int(splitter[3])
     if action == "kick":
         try:
             await c.kick_chat_member(chat_id, user_id, until_date=(time() + 45))
@@ -229,7 +229,7 @@ async def report_buttons(c: Alita, q: CallbackQuery):
             await q.answer(f"🛑 Failed to Ban\n<b>Error:</b>\n`{err}`", show_alert=True)
     elif action == "del":
         try:
-            await c.delete_messages(chat_id, message_id_or_name)
+            await c.delete_messages(chat_id, message_id)
             await q.answer("✅ Message Deleted")
             return
         except RPCError as err:

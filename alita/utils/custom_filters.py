@@ -129,7 +129,7 @@ async def promote_check_func(_, __, m):
         status = True
     else:
         status = False
-        await m.reply_text(tlang(m, "admin.no_promote_demote_perm"))
+        await m.reply_text(tlang(m, "admin.no_promote_perm"))
 
     return status
 
