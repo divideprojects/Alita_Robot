@@ -37,7 +37,7 @@ strings:
         Bunu durdurmak için, herhangi bir gruba ileti gönderin.
         * Neden isteğe bağlıdır
     approve:
-      main: "AFK"
+      main: "Approve"
       help: |-
         Bazen, bir kullanıcının istenmeyen içerik göndermemesine güvenebilirsiniz.
         belki onları admin yapmak için yeterli olmayabilir ama kilitler, kara listeler ve antissel onlara başvurmamakla iyi olabilirsin.
