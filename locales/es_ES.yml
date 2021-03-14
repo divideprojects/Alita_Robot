@@ -37,7 +37,7 @@ strings:
         Para detenerlo, enviar mensaje a cualquier grupo.
         * La razón es opcional
     approve:
-      main: "AFK"
+      main: "Approve"
       help: |-
         A veces, puede confiar en que un usuario no envíe contenido no deseado.
         Tal vez no sea suficiente para hacerlos admin, pero es posible que estés bien con cerraduras, listas negras y antiinundaciones que no se aplican a ellos.
