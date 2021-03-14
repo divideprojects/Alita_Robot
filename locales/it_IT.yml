@@ -37,7 +37,7 @@ strings:
         Per fermarlo, inviare messaggio a qualsiasi gruppo.
         * La ragione è facoltativa
     approve:
-      main: "AFK"
+      main: "Approve"
       help: |-
         A volte, potresti fidarti di un utente per non inviare contenuti indesiderati.
         Forse non abbastanza per renderli admin, ma potreste stare bene con le serrature, le blacklist e l'antiinondazione che non si applicano a loro.
