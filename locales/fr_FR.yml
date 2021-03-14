@@ -37,7 +37,7 @@ strings:
         Pour l'arrêter, envoyez un message à n'importe quel groupe.
         * La raison est facultative
     approve:
-      main: "AFK"
+      main: "Approve"
       help: |-
         Parfois, vous pouvez faire confiance à un utilisateur pour ne pas envoyer de contenu indésirable.
         Peut-être pas assez pour les faire admin, mais vous pourriez être ok avec des verrous, des listes noires et des anti-inondation ne s'appliquant pas à eux.
