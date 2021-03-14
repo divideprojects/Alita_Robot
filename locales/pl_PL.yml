@@ -37,7 +37,7 @@ strings:
         Aby go zatrzymać, wyślij wiadomość do dowolnej grupy.
         * Przyczyna jest opcjonalna
     approve:
-      main: "AFK"
+      main: "Approve"
       help: |-
         Czasami użytkownik może zaufać użytkownikowi, że nie wysyła niechcianej treści.
         Może nie wystarczy, aby je admin, ale może być ok z zamkami, czarnych list, i przeciwpowodziowe nie aplikować do nich.
