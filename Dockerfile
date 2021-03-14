@@ -14,9 +14,7 @@ RUN apt update && \
     python3-dev \
     python3-lxml \
     gcc \
-    clang \
     make \
-    git \
     neofetch
 
 # Clear apt lists
@@ -31,5 +29,5 @@ COPY . .
 # Install dependencies
 RUN make install
 
-# Run the bots
+# Run the bot
 CMD ["make", "run"]
