@@ -69,7 +69,7 @@ async def adminlist_show(_, m: Message):
 
         adminstr = (tlang(m, "admin.adminlist.adminstr")).format(
             chat_title=m.chat.title,
-        )
+        ) + "\n\n"
 
         for i in admin_list:
             try:

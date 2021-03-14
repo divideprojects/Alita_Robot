@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from traceback import format_exc
+
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import (
@@ -91,17 +93,10 @@ async def save_note(_, m: Message):
     return
 
 
-async def get_note_func(c: Alita, m: Message, note: str):
-
-    getnotes = db.get_note(m.chat.id, note)
-    all_notes = db.get_all_notes(m.chat.id)
-
-    if note not in all_notes:
-        await m.reply_text("This note does not exists!")
-        return
-
+async def get_note_func(c: Alita, m: Message, getnotes):
+    """Get the note in normal mode, with parsing enabled."""
     msgtype = getnotes["msgtype"]
-    if not getnotes:
+    if not msgtype:
         await m.reply_text("<b>Error:</b> Cannot find a type for this note!!")
         return
 
@@ -120,6 +115,7 @@ async def get_note_func(c: Alita, m: Message, note: str):
             except RPCError as ef:
                 await m.reply_text("An error has occured! Cannot parse note.")
                 LOGGER.error(ef)
+                LOGGER.error(format_exc())
                 return
         else:
             await m.reply_text(teks)
@@ -155,6 +151,7 @@ async def get_note_func(c: Alita, m: Message, note: str):
                     disable_web_page_preview=True,
                 )
                 LOGGER.error(ef)
+                LOGGER.error(format_exc())
                 return
         else:
             await (await send_cmd(c, msgtype))(
@@ -166,6 +163,7 @@ async def get_note_func(c: Alita, m: Message, note: str):
 
 
 async def get_raw_note(c: Alita, m: Message, note: str):
+    """Get the note in raw format, so it can updated by just copy and pasting."""
     getnotes = db.get_note(m.chat.id, note)
     all_notes = db.get_all_notes(m.chat.id)
 
@@ -216,7 +214,15 @@ async def hash_get(c: Alita, m: Message):
         note = m.text[1:]
     except TypeError:
         return
-    await get_note_func(c, m, note)
+
+    all_notes = db.get_all_notes(m.chat.id)
+
+    if note not in all_notes:
+        # Because  - don't reply to all messages starting with #
+        return
+
+    getnotes = db.get_note(m.chat.id, note)
+    await get_note_func(c, m, getnotes)
     return
 
 
@@ -224,7 +230,15 @@ async def hash_get(c: Alita, m: Message):
 async def get_note(c: Alita, m: Message):
     if len(m.text.split()) == 2:
         note = (m.text.split())[1]
-        await get_note_func(c, m, note)
+        all_notes = db.get_all_notes(m.chat.id)
+
+        if note not in all_notes:
+            await m.reply_text("This note does not exists!")
+            return
+
+        getnotes = db.get_note(m.chat.id, note)
+
+        await get_note_func(c, m, getnotes)
     elif len(m.text.split()) == 3 and (m.text.split())[2] in ("noformat", "raw"):
         note = (m.text.split())[1]
         await get_raw_note(c, m, note)
