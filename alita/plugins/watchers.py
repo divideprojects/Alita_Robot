@@ -62,48 +62,50 @@ async def aio_watcher(c: Alita, m: Message):
 
 
 async def gban_watcher(c: Alita, m: Message):
+    if not m.from_user:
+        return
     try:
+        _banned = gban_db.check_gban(m.from_user.id)
+    except Exception as ef:
+        LOGGER.error(ef)
+        LOGGER.error(format_exc())
+        return
+    if _banned:
         try:
-            _banned = gban_db.check_gban(m.from_user.id)
-        except Exception as ef:
-            LOGGER.error(ef)
-            LOGGER.error(format_exc())
+            await m.chat.kick_member(m.from_user.id)
+            await m.delete(m.message_id)  # Delete users message!
+            await m.reply_text(
+                (tlang(m, "antispam.watcher_banned")).format(
+                    user_gbanned=(
+                        await mention_html(m.from_user.first_name, m.from_user.id)
+                    ),
+                    SUPPORT_GROUP=SUPPORT_GROUP,
+                ),
+            )
+            LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
             return
-        if _banned:
-            try:
-                await m.chat.kick_member(m.from_user.id)
-                await m.delete(m.message_id)  # Delete users message!
-                await m.reply_text(
-                    (tlang(m, "antispam.watcher_banned")).format(
-                        user_gbanned=(
-                            await mention_html(m.from_user.first_name, m.from_user.id)
-                        ),
-                        SUPPORT_GROUP=SUPPORT_GROUP,
-                    ),
-                )
-                LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
-                return
-            except (ChatAdminRequired, UserAdminInvalid):
-                # Bot not admin in group and hence cannot ban users!
-                # TO-DO - Improve Error Detection
-                LOGGER.info(
-                    f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})",
-                )
-            except RPCError as ef:
-                await c.send_message(
-                    MESSAGE_DUMP,
-                    tlang(m, "antispam.gban.gban_error_log").format(
-                        chat_id=m.chat.id,
-                        ef=ef,
-                    ),
-                )
-    except AttributeError:
-        pass  # Skip attribute errors!
+        except (ChatAdminRequired, UserAdminInvalid):
+            # Bot not admin in group and hence cannot ban users!
+            # TO-DO - Improve Error Detection
+            LOGGER.info(
+                f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})",
+            )
+        except RPCError as ef:
+            await c.send_message(
+                MESSAGE_DUMP,
+                tlang(m, "antispam.gban.gban_error_log").format(
+                    chat_id=m.chat.id,
+                    ef=ef,
+                ),
+            )
     return
 
 
 async def bl_watcher(_, m: Message):
     global BLACKLIST_PRUNE_USERS
+
+    if not m.from_user:
+        return
 
     # TODO - Add warn option when Warn db is added!!
     async def perform_action_blacklist(m: Message, action: str):
@@ -173,63 +175,59 @@ async def bl_watcher(_, m: Message):
     # Get action for blacklist
     action = bl_db.get_action(m.chat.id)
 
+    # TODO - Cache approved users and admins in BLACKLIST_PRUNE_USERS
+    # If user_id in approved_users list, return and don't delete the message
+    # try:
+    #     approved_users = BLACKLIST_PRUNE_USERS[m.chat.id]
+    # except KeyError:
+    #     # If the chat_id is not found in BLACKLIST_PRUNE_USERS dictionary
+
+    #     approved_users = []
+
+    #     # Get approved users
+    #     app_users = app_db.list_approved(m.chat.id)
+    #     for i in app_users:
+    #         approved_users.append(int(i[0]))  # 0 - user_id
+
+    #     # Get admins from admin_cache, reduces api calls
+    #     for i in [user[0] for user in ADMIN_CACHE[m.cha.id]]:
+    #         approved_users.append(i.user.id)
+
+    #     BLACKLIST_PRUNE_USERS[m.chat.id] = approved_users
+
+    approved_users = []
+
+    # Get approved users
+    app_users = app_db.list_approved(m.chat.id)
+    for i in app_users:
+        approved_users.append(int(i[0]))  # 0 - user_id
+
+    # Get admins from admin_cache, reduces api calls
     try:
-        # TODO - Cache approved users and admins in BLACKLIST_PRUNE_USERS
-        # If user_id in approved_users list, return and don't delete the message
-        # try:
-        #     approved_users = BLACKLIST_PRUNE_USERS[m.chat.id]
-        # except KeyError:
-        #     # If the chat_id is not found in BLACKLIST_PRUNE_USERS dictionary
+        for i in [user[0] for user in ADMIN_CACHE[m.chat.id]]:
+            approved_users.append(i.user.id)
+    except KeyError:
+        await admin_cache_reload(m)
 
-        #     approved_users = []
+    BLACKLIST_PRUNE_USERS[m.chat.id] = approved_users
 
-        #     # Get approved users
-        #     app_users = app_db.list_approved(m.chat.id)
-        #     for i in app_users:
-        #         approved_users.append(int(i[0]))  # 0 - user_id
+    # Don't do anything to approved users!
+    if m.from_user.id in BLACKLIST_PRUNE_USERS[m.chat.id]:
+        return
 
-        #     # Get admins from admin_cache, reduces api calls
-        #     for i in [user[0] for user in ADMIN_CACHE[m.cha.id]]:
-        #         approved_users.append(i.user.id)
-
-        #     BLACKLIST_PRUNE_USERS[m.chat.id] = approved_users
-
-        approved_users = []
-
-        # Get approved users
-        app_users = app_db.list_approved(m.chat.id)
-        for i in app_users:
-            approved_users.append(int(i[0]))  # 0 - user_id
-
-        # Get admins from admin_cache, reduces api calls
-        try:
-            for i in [user[0] for user in ADMIN_CACHE[m.chat.id]]:
-                approved_users.append(i.user.id)
-        except KeyError:
-            await admin_cache_reload(m)
-
-        BLACKLIST_PRUNE_USERS[m.chat.id] = approved_users
-
-        # Don't do anything to approved users!
-        if m.from_user.id in approved_users:
-            return
-
-        if m.text:
-            for trigger in chat_blacklists:
-                pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
-                match = await regex_searcher(pattern, m.text.lower())
-                if not match:
-                    continue
-                if match:
-                    try:
-                        await perform_action_blacklist(m, action)
-                        await m.delete()
-                    except RPCError as ef:
-                        LOGGER.info(ef)
-                    break
-
-    except AttributeError:
-        pass  # Skip attribute errors!
+    if m.text:
+        for trigger in chat_blacklists:
+            pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
+            match = await regex_searcher(pattern, m.text.lower())
+            if not match:
+                continue
+            if match:
+                try:
+                    await perform_action_blacklist(m, action)
+                    await m.delete()
+                except RPCError as ef:
+                    LOGGER.info(ef)
+                break
 
 
 async def bl_chats_watcher(c: Alita, m: Message):
@@ -237,8 +235,9 @@ async def bl_chats_watcher(c: Alita, m: Message):
         await c.send_message(
             m.chat.id,
             (
-                "This is a blacklisted group!\nFor Support,"
-                f"Join {SUPPORT_GROUP}\nI'm out of here!"
+                "This is a blacklisted group!\n"
+                f"For Support, Join {SUPPORT_GROUP}\n"
+                "Now, I'm out of here!"
             ),
         )
         await c.leave_chat(m.chat.id)
