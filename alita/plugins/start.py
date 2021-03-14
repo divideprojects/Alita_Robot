@@ -108,12 +108,65 @@ async def gen_start_kb(q):
     return keyboard
 
 
+async def get_help_msg(m, help_option: str):
+    """Helper function for getting help_msg and it's keyboard."""
+    help_msg = None
+    help_kb = None
+
+    if help_option == "help":
+        help_msg = tlang(m, "general.commands_available")
+        help_kb = InlineKeyboardMarkup(
+            [
+                *(await gen_cmds_kb(m)),
+                [
+                    InlineKeyboardButton(
+                        f"« {(tlang(m, 'general.back_btn'))}",
+                        callback_data="start_back",
+                    ),
+                ],
+            ],
+        )
+    else:
+        help_cmd_keys = sorted(
+            [i.split(".")[1].lower() for i in list(HELP_COMMANDS.keys())],
+        )
+        if help_option in help_cmd_keys:
+            help_option_value = HELP_COMMANDS[f"plugins.{help_option}.main"]
+            help_msg = tlang(m, help_option_value)
+            help_kb = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            f"« {(tlang(m, 'general.back_btn'))}",
+                            callback_data="commands",
+                        ),
+                    ],
+                ],
+            )
+
+    return help_msg, help_kb
+
+
 @Alita.on_message(
     filters.command("start", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def start(_, m: Message):
 
     if m.chat.type == "private":
+        if len(m.text.split()) > 1:
+            help_option = (m.text.split(None, 1)[1]).lower()
+            help_msg, help_kb = await get_help_msg(m, help_option)
+
+            if help_msg is None:
+                return
+
+            await m.reply_text(
+                help_msg,
+                parse_mode="markdown",
+                reply_markup=help_kb,
+                quote=True,
+            )
+            return
         try:
             await m.reply_text(
                 (tlang(m, "start.private")),
@@ -178,29 +231,16 @@ async def help_menu(_, m: Message):
     from alita import BOT_USERNAME
 
     if len(m.text.split()) >= 2:
-
         help_option = (m.text.split(None, 1)[1]).lower()
-        help_cmd_keys = sorted(
-            [i.split(".")[1].lower() for i in list(HELP_COMMANDS.keys())],
-        )
-        if help_option in help_cmd_keys:
-            help_option_value = HELP_COMMANDS[f"plugins.{help_option}.main"]
-            help_msg = tlang(m, help_option_value)
-
+        help_msg, help_kb = await get_help_msg(m, help_option)
+        if help_msg is None:
+            return
         if m.chat.type == "private":
             await m.reply_text(
                 help_msg,
                 parse_mode="markdown",
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                f"« {(tlang(m, 'general.back_btn'))}",
-                                callback_data="commands",
-                            ),
-                        ],
-                    ],
-                ),
+                reply_markup=help_kb,
+                quote=True,
             )
         else:
             await m.reply_text(

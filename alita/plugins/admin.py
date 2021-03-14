@@ -127,6 +127,7 @@ async def promote_usr(c: Alita, m: Message):
         return
 
     user_id, user_first_name = await extract_user(c, m)
+
     try:
         await m.chat.promote_member(
             user_id=user_id,
@@ -171,7 +172,7 @@ async def promote_usr(c: Alita, m: Message):
                 ("@" + u.user.username) if u.user.username else u.user.first_name,
             ],
         )
-        admin_list = admin_list = sorted(admin_list, key=lambda x: x[1])
+        admin_list = sorted(admin_list, key=lambda x: x[1])
         ADMIN_CACHE[m.chat.id] = admin_list
 
     except ChatAdminRequired:
@@ -236,7 +237,7 @@ async def demote_usr(c: Alita, m: Message):
                         else i.user.first_name,
                     ],
                 )
-            admin_list = admin_list = sorted(admin_list, key=lambda x: x[1])
+            admin_list = sorted(admin_list, key=lambda x: x[1])
             ADMIN_CACHE[m.chat.id] = admin_list
 
     except ChatAdminRequired:
