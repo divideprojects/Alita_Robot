@@ -43,7 +43,7 @@ async def mute_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         return
 
-    if user_id in [i[0] for i in ADMIN_CACHE[str(m.chat.id)]]:
+    if user_id in [i[0] for i in ADMIN_CACHE[m.chat.id]]:
         await m.reply_text(tlang(m, "admin.mute.admin_cannot_mute"))
         return
 

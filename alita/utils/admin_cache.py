@@ -25,7 +25,7 @@ from alita import LOGGER
 
 THREAD_LOCK = RLock()
 
-# admins stay cached for one hour
+# admins stay cached for 30 mins
 ADMIN_CACHE = TTLCache(maxsize=512, ttl=(60 * 30), timer=perf_counter)
 
 
@@ -33,7 +33,7 @@ async def admin_cache_reload(m):
     with THREAD_LOCK:
         global ADMIN_CACHE
         try:
-            admin_list = [user[0] for user in ADMIN_CACHE[str(m.chat.id)]]
+            admin_list = [user[0] for user in ADMIN_CACHE[m.chat.id]]
         except KeyError:
             LOGGER.info(f"Loading admins for chat {m.chat.id}")
             admin_list = []
@@ -48,7 +48,7 @@ async def admin_cache_reload(m):
                         else i.user.first_name,
                     ),
                 )
-            ADMIN_CACHE[str(m.chat.id)] = admin_list
+            ADMIN_CACHE[m.chat.id] = admin_list
             admin_list = [user[0] for user in admin_list]
 
         return admin_list

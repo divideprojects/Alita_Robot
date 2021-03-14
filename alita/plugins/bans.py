@@ -69,7 +69,7 @@ async def kick_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         return
 
-    if user_id in [i[0] for i in ADMIN_CACHE[str(m.chat.id)]]:
+    if user_id in [i[0] for i in ADMIN_CACHE[m.chat.id]]:
         await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
         return
 
@@ -122,7 +122,7 @@ async def ban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         return
 
-    if user_id in [i[0] for i in ADMIN_CACHE[str(m.chat.id)]]:
+    if user_id in [i[0] for i in ADMIN_CACHE[m.chat.id]]:
         await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
         return
 

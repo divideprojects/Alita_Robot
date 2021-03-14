@@ -203,7 +203,7 @@ async def bl_watcher(_, m: Message):
 
         # Get admins from admin_cache, reduces api calls
         try:
-            for i in [user[0] for user in ADMIN_CACHE[str(m.chat.id)]]:
+            for i in [user[0] for user in ADMIN_CACHE[m.chat.id]]:
                 approved_users.append(i.user.id)
         except KeyError:
             await admin_cache_reload(m)

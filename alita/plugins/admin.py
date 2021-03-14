@@ -46,7 +46,7 @@ async def adminlist_show(_, m: Message):
     global ADMIN_CACHE
     try:
         try:
-            admin_list = ADMIN_CACHE[str(m.chat.id)]
+            admin_list = ADMIN_CACHE[m.chat.id]
             note = tlang(m, "admin.adminlist.note_cached")
         except KeyError:
             admin_list = []
@@ -65,7 +65,7 @@ async def adminlist_show(_, m: Message):
                 )
             admin_list = sorted(admin_list, key=lambda x: x[1])
             note = tlang(m, "admin.adminlist.note_updated")
-            ADMIN_CACHE[str(m.chat.id)] = admin_list
+            ADMIN_CACHE[m.chat.id] = admin_list
 
         adminstr = (tlang(m, "admin.adminlist.adminstr")).format(
             chat_title=m.chat.title,
@@ -147,7 +147,7 @@ async def promote_usr(c: Alita, m: Message):
         # ----- Add admin to temp cache -----
         try:
             global ADMIN_CACHE
-            admin_list = ADMIN_CACHE[str(m.chat.id)]  # Load Admins from cached list
+            admin_list = ADMIN_CACHE[m.chat.id]  # Load Admins from cached list
         except KeyError:
             admin_list = []
             async for i in m.chat.iter_members(filter="administrators"):
@@ -172,7 +172,7 @@ async def promote_usr(c: Alita, m: Message):
             ],
         )
         admin_list = admin_list = sorted(admin_list, key=lambda x: x[1])
-        ADMIN_CACHE[str(m.chat.id)] = admin_list
+        ADMIN_CACHE[m.chat.id] = admin_list
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -220,7 +220,7 @@ async def demote_usr(c: Alita, m: Message):
         # ----- Remove admin from cache -----
         try:
             global ADMIN_CACHE
-            admin_list = ADMIN_CACHE[str(m.chat.id)]
+            admin_list = ADMIN_CACHE[m.chat.id]
             user = next(user for user in admin_list if user[0] == user_id)
             admin_list.remove(user)
         except (KeyError, StopIteration):
@@ -237,7 +237,7 @@ async def demote_usr(c: Alita, m: Message):
                     ],
                 )
             admin_list = admin_list = sorted(admin_list, key=lambda x: x[1])
-            ADMIN_CACHE[str(m.chat.id)] = admin_list
+            ADMIN_CACHE[m.chat.id] = admin_list
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
