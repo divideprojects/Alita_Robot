@@ -166,7 +166,7 @@ strings:
         -> **Button**
         `[Button Text](buttonurl:t.me/DivideProjects)`
         -> **For Another button in same line**
-        [Button2](buttonurl:t.me/DivideProjectsDiscussion:same)
+        `[Button2](buttonurl:t.me/DivideProjectsDiscussion:same)`
         -> **Bold**
         `**Bold**`
         -> __Italic__
