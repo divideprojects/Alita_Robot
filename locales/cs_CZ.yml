@@ -37,7 +37,7 @@ strings:
         To stop it, send message to any group.
         * Reason is optional
     approve:
-      main: "AFKSKÝ"
+      main: "Approve"
       help: |-
         Někdy můžete uživateli důvěřovat, že neodešle nežádoucí obsah.
         Možná to není dost na to, aby se jim admin, ale můžete být v pořádku s zámky, seznamy černých listin a protipovodně, které se na ně nevztahují.
