@@ -37,7 +37,7 @@ strings:
         Para pará-lo, envie mensagem para qualquer grupo.
         * Razão é opcional
     approve:
-      main: "AFK"
+      main: "Approve"
       help: |-
         Às vezes, você pode confiar em um usuário não enviar conteúdo não desejado.
         Talvez não o suficiente para torná-los admin, mas você pode estar ok com bloqueios, listas negras e antienchentes não se aplicando a eles.
