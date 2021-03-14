@@ -37,7 +37,7 @@ strings:
         Um es zu stoppen, senden Sie eine Nachricht an eine beliebige Gruppe.
         * Grund ist optional
     approve:
-      main: "AFK"
+      main: "Approve"
       help: |-
         Manchmal können Sie einem Benutzer vertrauen, dass er nicht unerwünschte Inhalte sendet.
         Vielleicht nicht genug, um sie Admin zu machen, aber Sie könnten in Ordnung sein mit Schlössern, Blacklists und Antiflut, die nicht auf sie angewendet werden.
