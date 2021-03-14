@@ -60,9 +60,9 @@ class Users:
 
     def get_user_info(self, user_id):
         with INSERTION_LOCK:
-            if isinstance(user_id, int) and not user_id.startswith("@"):
+            if isinstance(user_id, int) and not str(user_id).startswith("@"):
                 curr = self.collection.find_one({"_id": user_id})
-            elif isinstance(user_id, str) and user_id.startswith("@"):
+            elif isinstance(user_id, str) and str(user_id).startswith("@"):
                 user_id = user_id.replace("@", "")
                 curr = self.collection.find_one({"username": user_id})
             else:
