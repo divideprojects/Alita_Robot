@@ -164,19 +164,12 @@ async def report_watcher(c: Alita, m: Message):
 
             if db.get_settings(admin.user.id):
                 try:
-                    if not m.chat.username:
-                        await c.send_message(
-                            admin.user.id,
-                            msg + link,
-                            disable_web_page_preview=True,
-                        )
-                    else:
-                        await c.send_message(
-                            admin.user.id,
-                            msg + link,
-                            reply_markup=reply_markup,
-                            disable_web_page_preview=True,
-                        )
+                    await c.send_message(
+                        admin.user.id,
+                        msg,
+                        reply_markup=reply_markup,
+                        disable_web_page_preview=True,
+                    )
 
                     if should_forward:
                         # forward the reported message
