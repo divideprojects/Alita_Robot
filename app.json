@@ -12,8 +12,8 @@
    "repository": "https://github.com/Divkix/Alita_Robot",
    "stack": "container",
    "env": {
-      "TOKEN": {
-         "description": "Your telegram bot token, get from @Botfather in telegram.",
+      "STRING_SESSION": {
+         "description": "Your telegram bot string session, get from @Botfather in telegram and then export it's session.",
          "required": true,
          "value": ""
       },
@@ -100,11 +100,11 @@
          "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
          "value": true
       }
-    },
-     "formation": {
-       "worker": {
-       "quantity": 1,
-       "size": "free"
-    }
-  }
+   },
+   "formation": {
+      "worker": {
+         "quantity": 1,
+         "size": "free"
+      }
+   }
 }

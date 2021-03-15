@@ -27,7 +27,7 @@ class Config:
     """Config class for variables."""
 
     LOGGER = True
-    TOKEN = load_var("TOKEN")
+    STRING_SESSION = load_var("STRING_SESSION")
     APP_ID = int(load_var("APP_ID"))
     API_HASH = load_var("API_HASH")
     OWNER_ID = int(load_var("OWNER_ID"))
@@ -53,11 +53,11 @@ class Development:
 
     # Fill in these vars if you want to use Traditional method of deploying
     LOGGER = True
-    TOKEN = "YOUR TOKEN"
+    STRING_SESSION = "YOUR STRING_SESSION"
     APP_ID = 12345  # Your APP_ID from Telegram
     API_HASH = "YOUR TOKEN"  # Your APP_HASH from Telegram
     OWNER_ID = "YOUR TOKEN"
-    MESSAGE_DUMP = "YOUR TOKEN"  # Your Bot Token from BotFather in Telegram
+    MESSAGE_DUMP = "YOUR GROUP_ID"  # Your Private Group ID
     DEV_USERS = []
     SUDO_USERS = []
     WHITELIST_USERS = []

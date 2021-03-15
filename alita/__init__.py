@@ -69,7 +69,7 @@ except Exception as ef:
 
 
 # Account Related
-TOKEN = Config.TOKEN
+STRING_SESSION = Config.STRING_SESSION
 APP_ID = Config.APP_ID
 API_HASH = Config.API_HASH
 

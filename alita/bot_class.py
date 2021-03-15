@@ -41,7 +41,7 @@ from alita import (
     LOGGER,
     MESSAGE_DUMP,
     NO_LOAD,
-    TOKEN,
+    STRING_SESSION,
     WORKERS,
     get_self,
     load_cmds,
@@ -69,18 +69,11 @@ class Alita(Client):
     def __init__(self):
         name = self.__class__.__name__.lower()
 
-        # Make a temporary direcory for storing session file
-        session_dir = f"{name}/SESSION"
-        if not path.isdir(session_dir):
-            makedirs(session_dir)
-
         super().__init__(
-            name,
+            STRING_SESSION,
             plugins=dict(root=f"{name}.plugins", exclude=NO_LOAD),
-            workdir=session_dir,
             api_id=APP_ID,
             api_hash=API_HASH,
-            bot_token=TOKEN,
             workers=WORKERS,
         )
 
