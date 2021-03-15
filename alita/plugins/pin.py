@@ -158,7 +158,7 @@ async def anti_channel_pin(_, m: Message):
 @Alita.on_message(
     filters.command("permapin", PREFIX_HANDLER) & filters.group & admin_filter,
 )
-async def perma_pin(_, m: Message):
+async def perma_pin(c: Alita, m: Message):
     if m.reply_to_message:
         z = await m.reply_to_message.copy(m.chat.id)
         await c.pin_chat_message(m.chat.id, z.message_id)
