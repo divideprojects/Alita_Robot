@@ -24,7 +24,7 @@ from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
 from pyrogram.types import ChatPermissions, Message
 
-from alita import LOGGER, MESSAGE_DUMP, SUPPORT_GROUP
+from alita import LOGGER, MESSAGE_DUMP
 from alita.bot_class import Alita
 from alita.database.antichannelpin_db import AntiChannelPin
 from alita.database.antispam_db import GBan
@@ -62,6 +62,8 @@ async def aio_watcher(c: Alita, m: Message):
 
 
 async def gban_watcher(c: Alita, m: Message):
+    from alita import SUPPORT_GROUP
+
     if not m.from_user:
         return
     try:
@@ -231,12 +233,14 @@ async def bl_watcher(_, m: Message):
 
 
 async def bl_chats_watcher(c: Alita, m: Message):
+    from alita import SUPPORT_GROUP
+
     if m.chat and (m.chat.id in BLACKLIST_CHATS):
         await c.send_message(
             m.chat.id,
             (
                 "This is a blacklisted group!\n"
-                f"For Support, Join {SUPPORT_GROUP}\n"
+                f"For Support, Join @{SUPPORT_GROUP}\n"
                 "Now, I'm out of here!"
             ),
         )

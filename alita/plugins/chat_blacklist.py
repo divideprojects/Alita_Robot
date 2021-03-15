@@ -49,7 +49,7 @@ async def blacklist_chat(c: Alita, m: Message):
                 )
             except RPCError as ef:
                 LOGGER.error(ef)
-                LOGGER.error(format_exc)
+                LOGGER.error(format_exc())
         await replymsg.edit_text(
             f"Added the following chats to Blacklist.\n<code>{', '.join(chat_ids)}</code>.",
         )
@@ -78,7 +78,7 @@ async def unblacklist_chat(c: Alita, m: Message):
                 )
             except RPCError as ef:
                 LOGGER.error(ef)
-                LOGGER.error(format_exc)
+                LOGGER.error(format_exc())
         await replymsg.edit_text(
             f"Removed the following chats to Blacklist.\n<code>{', '.join(chat_ids)}</code>.",
         )
@@ -88,15 +88,14 @@ async def unblacklist_chat(c: Alita, m: Message):
 @Alita.on_message(
     filters.command(["blchatlist", "blchats"], DEV_PREFIX_HANDLER) & dev_filter,
 )
-async def list_blacklist_chats(c: Alita, m: Message):
-    bl_chats = db.list_all_chats() or []
-    lst = []
-    for chat in bl_chats:
-        z = await c.get_chat(chat)
-        name = z["chat_name"]
-        lst.append((chat, name))
-    await m.reply_text(
-        "These Chats are Blacklisted:\n"
-        + "\n".join([f"{i[0]} - {i[1]}" for i in bl_chats]),
-    )
+async def list_blacklist_chats(_, m: Message):
+    bl_chats = db.list_all_chats()
+    if bl_chats:
+        txt = (
+            "These Chats are Blacklisted:\n"
+            + "\n".join([f"<code>{i}</code>" for i in bl_chats]),
+        )
+    else:
+        txt = "No chats are currently blacklisted!"
+    await m.reply_text(txt)
     return
