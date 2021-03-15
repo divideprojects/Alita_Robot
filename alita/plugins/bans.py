@@ -22,7 +22,12 @@ from time import time
 from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
+from pyrogram.errors import (
+    ChatAdminRequired,
+    RightForbidden,
+    RPCError,
+    UserNotParticipant,
+)
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -39,6 +44,7 @@ from alita import (
 )
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
+from alita.utils.admin_cache import ADMIN_CACHE
 from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import owner_filter, restrict_filter
 from alita.utils.extract_user import extract_user
@@ -53,20 +59,28 @@ __help__ = "plugins.bans.help"
 )
 async def kick_usr(c: Alita, m: Message):
 
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text(tlang(m, "admin.kick.no_target"))
+        return
+
     user_id, user_first_name = await extract_user(c, m)
-    user = await m.chat.get_member(user_id)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         return
-    if user.status == "administrator":
+
+    if user_id in [i[0] for i in ADMIN_CACHE[m.chat.id]]:
         await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
-        return
-    if user.status == "creator":
-        await m.reply_text(tlang(m, "admin.kick.owner_cannot_kick"))
         return
 
     try:
+        # Check if user is banned or not
+        # banned_users = []
+        # async for i in m.chat.iter_members(filter="kicked"):
+        #     banned_users.append(i.user.id)
+        # if user_id in banned_users:
+        #     await m.reply_text(tlang(m, "admin.kick.user_already_banned"))
+        #     return
         await m.chat.kick_member(user_id, int(time() + 45))
         await m.reply_text(
             (tlang(m, "admin.kick.kicked_user")).format(
@@ -79,6 +93,8 @@ async def kick_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
+    except UserNotParticipant:
+        await m.reply_text("How can I kick a member who is not in this chat?")
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
@@ -96,20 +112,28 @@ async def kick_usr(c: Alita, m: Message):
 )
 async def ban_usr(c: Alita, m: Message):
 
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text(tlang(m, "admin.ban.no_target"))
+        return
+
     user_id, user_first_name = await extract_user(c, m)
-    user = await m.chat.get_member(user_id)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         return
-    if user.status == "administrator":
-        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
-        return
-    if user.status == "creator":
-        await m.reply_text(tlang(m, "admin.ban.owner_cannot_ban"))
+
+    if user_id in [i[0] for i in ADMIN_CACHE[m.chat.id]]:
+        await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
         return
 
     try:
+        # Check if user is banned or not
+        # banned_users = []
+        # async for i in m.chat.iter_members(filter="kicked"):
+        #     banned_users.append(i.user.id)
+        # if user_id in banned_users:
+        #     await m.reply_text(tlang(m, "admin.kick.user_already_banned"))
+        #     return
         await m.chat.kick_member(user_id)
         await m.reply_text(
             (tlang(m, "admin.ban.banned_user")).format(
@@ -122,6 +146,8 @@ async def ban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
+    except UserNotParticipant:
+        await m.reply_text("How can I ban a member who is not in this chat?")
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
@@ -139,9 +165,22 @@ async def ban_usr(c: Alita, m: Message):
 )
 async def unban_usr(c: Alita, m: Message):
 
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text(tlang(m, "admin.unban.no_target"))
+        return
+
     user_id, user_first_name = await extract_user(c, m)
 
     try:
+
+        # Check if user is banned or not
+        # banned_users = []
+        # async for i in m.chat.iter_members(filter="kicked"):
+        #     banned_users.append(i.user.id)
+        # if user_id not in banned_users:
+        #     await m.reply_text(tlang(m, "admin.unban.user_not_banned"))
+        #     return
+
         await m.chat.unban_member(user_id)
         await m.reply_text(
             (tlang(m, "admin.unban.unbanned_user")).format(

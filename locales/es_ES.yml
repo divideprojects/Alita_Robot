@@ -4,14 +4,247 @@ main:
   language_flag: "🇪🇸"
   language_name: Spanish
 strings:
+  plugins:
+    admin:
+      main: "Administrador"
+      help: |-
+        ¿Perezoso para promover o degradar a alguien para administradores? ¿Desea ver información básica sobre el chat? \
+        Todas las cosas sobre chatroom como las listas de administración, la fijación o el acaparamiento de un enlace de invitación pueden ser \
+        hecho fácilmente utilizando el bot.
+
+        ** Mandatos de usuario: **
+        × /adminlist: Listar todos los administradores en la conversación actual.
+
+        ** Sólo administrador: **
+        × /invitelink: Obtiene el invitado de chat privado.
+        × /promote: Promociona el usuario que responde o codifica.
+        × /demote: Demotes que el usuario ha respondido o etiquetado.
+
+        Un ejemplo de la promoción de alguien a los administradores:
+        `/promocione @username; esto promueve un usuario a admin.
+    afk:
+      main: "AFK"
+      help: |-
+        Módulo para la habilitación de respuestas automáticas cuando usted es AFK.
+        Cuando está habilitado,
+        cualquiera que mencione usted será respondido con un mensaje que dice que
+        usted es AFK.
+
+        ** Configuración del estado de AFK * *
+        × /afk <reason>
+
+        Habilitar las respuestas automáticas cuando usted es AFK.
+        Para detenerlo, enviar mensaje a cualquier grupo.
+        * La razón es opcional
+    approve:
+      main: "AFK"
+      help: |-
+        A veces, puede confiar en que un usuario no envíe contenido no deseado.
+        Tal vez no sea suficiente para hacerlos admin, pero es posible que estés bien con cerraduras, listas negras y antiinundaciones que no se aplican a ellos.
+        Eso es lo que las aprobaciones son para-aprobar usuarios confiables para permitirles enviar cosas sin restricciones!
+
+        ** Mandatos de administración: **
+        × /aprobación: Compruebe el estado de aprobación de un usuario en este chat.
+        × /aprobar: Aprobar de un usuario. Ya no se les aplicará cerraduras, listas negras y antiinundaciones.
+        × /unapprove: Desaprobación de un usuario. Ahora estarán sujetos a listas de bloques.
+        × /aprobado: Listar todos los usuarios aprobados.
+        × /unapprovedall: Desaprobar usuarios *ALL* en una conversación. ¡Esto no se puede deshacer!
+    bans:
+      main: "Prohibiciones"
+      help: |-
+        Alguien molesto entró en su grupo?
+        ¿Quieres prohibir/restringirla?
+        Este es el plugin para usted, fácilmente patear, prohibir y desbanar a los miembros en un grupo.
+
+        ** Sólo administrador: **
+        × /kick: Kick el usuario respondió o etiquetó.
+        × /ban: Bans al que el usuario respondió o etiquetó.
+        × /unban: Unbans the user respondied to or tagged.
+    blacklist:
+      main: "Lista negra"
+      help: |-
+        ¿Quieres restringir ciertas palabras o frases en tu grupo?
+
+        Las listas negras se utilizan para evitar que ciertos activadores se digan en un grupo. Cada vez que se mencione el activador,
+        el mensaje será eliminado inmediatamente. ¡Una buena combinación a veces es emparejar esto con filtros de advertencia!
+        **NOTA:** listas negras no afectan a los administradores de grupo.
+        × /blacklist: Ver las palabras actuales en la lista negra.
+
+        **Solo administrador:**
+        × /addblacklist <triggers>: Añadir un gatillo a la lista negra. Cada línea se considera un disparador, por lo que usando diferentes líneas
+        le permitirá añadir los disparadores muser_listtiple.
+        × /unblacklist <triggers>: Quitar los disparadores de la lista negra. La misma lógica de nueva línea se aplica aquí, así que puede quitar
+        muser_listtiple disparadores a la vez.
+        × /rmblacklist <triggers>: Igual que arriba.
+        × /blaction <action>: Esta acción ocurrirá cuando el usuario use una palabra en la lista negra. Elija de - 'kick', 'banear', 'silenciar', 'advertir'
+        Por defecto es 'ninguno', que eliminará el mensaje de los usuarios al escribir una palabra en la lista negra.
+
+        **Solo propietario**
+        × /rmallblacklist: Elimina todas las listas negras del chat actual.
+
+        **Nota:** ¡Solo puede añadir o quitar una lista negra a la vez!
+    fun:
+      main: "Diversión"
+      help: |-
+        × /runs: responder una serie aleatoria de una matriz de respuestas.
+        × /bofetada: bofetear a un usuario, o recibir una bofetada si no es una respuesta.
+        × /encoge: get encoge XD.
+        × /decida: Respuestas al azar sí/no/tal vez
+        × /toss: Tosses A coin
+        × /bluetext: check urself :V
+        × /roll: Roll a dice.
+        × /react: Reacción aleatoria
+        × /grito <keyword>: escribe cualquier cosa que quieras dar fuerte grito.
+    language:
+      main: "Lengua"
+      help: |-
+        ¿No es capaz de cambiar el idioma del bot?
+        ¡Puede cambiar fácilmente utilizando este módulo!
+
+        Sólo escriba /lang y utilice el teclado en línea para elegir un idioma \
+        para usted o su grupo.
+
+        Puede ayudarnos a llevar el bot a más idiomas ayudando en el [Crowdin](https: //crowdin.com/project/alita_robot)
+    locks:
+      main: "Cerraduras"
+      help: |-
+        Utilice esta opción para bloquear permisos de grupo.
+        Permite bloquear y desbloquear tipos de permisos en el chat.
+
+        ** Uso:**
+        × /lock <type>: Permiso de chat de bloqueo.
+        × /unlock <type>: Desbloquear el permiso de Chat.
+        × /bloqueos: Ver permiso de conversación.
+        × /locktypes: Compruebe los tipos de bloqueo disponibles.
+    muting:
+      main: "Mutando"
+      help: |-
+        ¿Quieres que alguien se mantenga bastante durante un tiempo en el grupo?
+        El plugin Mute está aquí para ayudar, silenciar o dessilenciar cualquier usuario fácilmente!
+
+        ** Sólo administrador: **
+        × /mute: Mute el usuario respondió o mencionó.
+        × /unmute: Unmutes al usuario mencionado o respondido.
+
+        Un ejemplo de promoción de alguien a los administradores:
+        `/mute @username"; esto mute a un usuario.
+    notes:
+      main: "Notas"
+      help: |-
+        Guarda una nota, obtén eso, incluso puedes borrar esa nota.
+        ¡Esta nota solo está disponible para ti solamente!
+        También nota el botón de soporte en línea desarrollado por el bot de asistente de consulta en línea.
+
+        **Guardar nota**
+        × /save <note>
+        Guardar una nota, puedes obtenerla o eliminarla más tarde.
+
+        **Obtén nota**
+        × /get <note>
+        Obtén esa nota, si está disponible.
+
+        **Eliminar nota**
+        × /clear <note>
+        Eliminar esa nota, si está disponible.
+
+        × /clearall
+        Limpia todas las notas en el chat
+        **NOTA:** ¡Solo puede ser usado por el dueño del chat!
+
+        **Todas las notas**
+        × /guardado
+        o
+        × /notas
+        Obtener todas sus notas, si hay demasiadas notas, por favor use esto en su mensaje guardado en su lugar!
+
+
+        → **Formato de Nota **** →
+        -> **Botón**
+        `[Texto del botón](buttonurl:t. e/DivideProjects)`
+        -> **Bold**
+        `**Bold**`
+        -> __Italic__
+        `__Italic__`
+        -> `Code`
+        `Code` (acento grave)
+    pins:
+      main: "Pines"
+      help: |-
+        Aquí encuentras toda la ayuda relacionada con los pines de los grupos y cómo gestionarlos a través de mí.
+
+        ** Cmds admin: **
+        × /pin: En silencio, el mensaje responde a-add ` loud `, ` notify ` o ` alert ` para dar notificatón a los usuarios.
+        × /unpin: Unpins el último mensaje marcado.
+        × /unpinall: Unpins todo el mensaje marcado en el chat actual.
+    purges:
+      main: "Purgas"
+      help: |-
+        ¿Desea suprimir mensajes en el grupo?
+
+        × /purge: Suprime los mensajes del upto del mensaje de respuesta.
+        × /del: Suprime un solo mensaje, utilizado como respuesta al mensaje.
+    reporting:
+      main: "Información"
+      help: |-
+        × /report <reason>: responda a un mensaje para informarlo a los administradores.
+        - @admin: responda a un mensaje para informarlo a los administradores.
+        **NOTA: ** Ninguno de estos se activará si lo utilizan los administradores.
+
+        ** Admins Only: **
+        × /reports <on/off>: change report setting, or view current status.
+        -Si se hace en PM, conmuta su estado.
+        -Si está en grupo, conmuta el estado de los grupos.
+    rules:
+      main: "Normas"
+      help: |-
+        Establezca reglas para el chat para que los miembros sepan qué hacer y \
+        lo que no debe hacer en su grupo!
+
+        × /rules: obtener las reglas para el chat actual.
+
+        ** Sólo administrador: **
+        × /setrules <rules>: Establezca las reglas para este chat, también funciona como respuesta a un mensaje.
+        × /clearrules: Borrar las reglas para este chat.
+        × /privreglas <on/yes/no/off>: Activa/desactiva la opción de enviar las reglas a PM de usuario o grupo.
+    spam_protect:
+      main: "Protección contra spam"
+      help: |-
+        ¿Los spammers uniéndose a su grupo
+        No hay problema en absoluto, aquí puede encontrar todas las opciones para proteger a sus grupos de las redadas y los scouts!
+
+        ** Sólo Admin: **
+        × /cas <on/off>: Activa o desactiva el cheque de la CAS para el grupo.
+        × /subataque <on/off>: ¡Kick todos los nuevos usuarios en la entrada!
+    utils:
+      main: "Utils"
+      help: |-
+        Algunos utils proporcionados por bot para que sus tareas sean fáciles!
+
+        × /id: Obtener el ID de grupo actual. Si se utiliza respondiendo a un mensaje, obtenga el ID del usuario.
+        × /info: Obtenga información sobre un usuario.
+        × /ping-Obtener tiempo de ping del bot al servidor de Telegram.
+        × /gifid: Responder a un gif a mí para que le diga su ID de archivo.
+        × /tr <language>: Translora el texto y luego te responde con el idioma que has especificado, funciona como respuesta a m.
+        × /github <username>: Buscar el usuario utilizando la api github!
+        × /letra <song>: Obtenga la letra de la canción que especifique!
+        × /webify <text> o una respuesta al mensaje: Para desmalezar el texto.
+    wiki:
+      main: "Wikipedia"
+      help: |-
+        Buscar en Wikipedia en el grupo!
+
+        ** Mandatos disponibles: **
+        × /wiki <query>: wiki de su consulta.
   admin:
     adminlist:
-      adminstr: "Administradores en {chat_title}:"
-      cached_values: "¡Estos son valores almacenados en caché!"
+      adminstr: |-
+        Administradores en {chat_title}:
+      note_cached: "<i>Nota:</i> Estos son valores en caché!"
       note_updated: "¡Estos son valores actualizados!"
       reloaded_admins: "¡Recargué a todos los administradores en este chat!"
       use_admin_cache: "¡Utiliza /admincache para recargar administradores!"
     ban:
+      no_target: "¡No puedo prohibir nada!"
       admin_cannot_ban: 'Este usuario es un administrador, ¡no puedo prohibirlo! "'
       ban_all: "¿Estás seguro de que deseas prohibir a todos los miembros de este grupo?"
       banned_user: "¡{admin} prohibido {banned} en el chat {chat_title}!"
@@ -19,12 +252,14 @@ strings:
       bot_no_right: "No tengo suficientes derechos para prohibir a este usuario."
       owner_cannot_ban: "Esta persona creó el grupo, ¿cómo puedo prohibirla?"
     demote:
+      no_target: "¡No puedo degradar nada!"
       bot_no_right: "No tengo suficientes derechos para degradar a este usuario."
       demoted_user: "¡{demoter} degradado {demoted} en el chat {chat_title}!"
     invitelink: |-
       Enlace de invitación para chat {chat_name}:
       {link}
     kick:
+      no_target: "¡No puedo patear nada!"
       admin_cannot_kick: 'Este usuario es un administrador, ¡no puedo patearlo! "'
       bot_no_right: "No tengo suficientes derechos para expulsar a este usuario."
       kicked_user: "¡{admin} pateó {kicked} en el chat {chat_title}!"
@@ -32,23 +267,25 @@ strings:
     mute:
       admin_cannot_mute: '¡Este usuario es un administrador, no puedo silenciarlo! "'
       bot_no_right: "No tengo suficientes derechos para silenciar a este usuario."
-      muted_user: "¡Silenciado a {user}!"
+      muted_user: "¡Admin {admin} silenciado a {muted}!"
       owner_cannot_mute: "Esta persona creó el grupo, ¿cómo puedo silenciarlos?"
     no_invite_perm: "¡No tengo permiso para el enlace de invitación!"
     no_restrict_perm: "¡No tienes permisos para restringir miembros!"
     no_user_invite_perm: "No tienes permisos para invitar usuarios."
     not_admin: "No soy administrador o no tengo derechos."
     promote:
+      no_target: "¡No puedo promover nada!"
       bot_no_right: "No tengo suficientes derechos para promocionar a este usuario."
       no_promote_perm: "¡No tienes permiso para promocionar miembros!"
       promoted_user: "¡{promoter} promovió {promoted} en el chat {chat_title}!"
     support_cannot_restrict: "Este usuario está en mi personal de soporte, no puede restringirlos."
     unban:
+      no_target: "¡No puedo desprohibir nada!"
       bot_no_right: "No tengo suficientes derechos para desbloquear a este usuario."
       unbanned_user: "¡{admin} desbanned {unbanned} en el chat {chat_title}!"
     unmute:
       bot_no_right: "No tengo suficientes derechos para activar el sonido de este usuario."
-      unmuted_user: "¡{user} desactivado!"
+      unmuted_user: "¡Admin {admin} desactivado {unmuted}!"
     user_admin_invalid: "No puedo actuar sobre este usuario, tal vez no fui yo quien cambió sus permisos."
   afk:
     error_check_afk: |-
@@ -64,6 +301,10 @@ strings:
     user_now_afk: "¡El usuario {user} ahora está afk!"
   antispam:
     gban:
+      gban_error_log: |-
+        <b>Gban Watcher Error!</b>
+        <b>Chat:</b> <code>{chat_id}</code>
+        <b>Error:</b> <code>{ef}</code>
       added_to_watch: |-
         Se agregó {first_name} a la lista global de prohibición.
         ¡Ahora estarán prohibidos en todos los grupos en los que soy administrador!
@@ -87,7 +328,9 @@ strings:
         Razón: "{gban_reason}"
 
         Chat de apelación: @ {SUPPORT_GROUP}
-    here_gbanned_start: "¡Aquí están todos los géys prohibidos a nivel mundial!\n"
+    here_gbanned_start: |-
+      ¡Aquí están todos los géys prohibidos a nivel mundial!
+
     none_gbanned: "¡No hay usuarios con gbanned ...!"
     num_gbans: "Número de personas con gban {count}"
     part_of_support: "¡Este usuario es parte de mi Soporte! ¡No podemos prohibir el nuestro!"
@@ -109,10 +352,17 @@ strings:
 
       Para obtener una apelación no prohibida en @ {SUPPORT_GROUP}
   blacklist:
+    bl_watcher:
+      action_kick: "Pateado {user} por usar una palabra en la lista negra!"
+      action_ban: "¡Prohibido el {user} por usar una palabra en la lista negra!"
+      action_mute: "¡Amutado {user} por usar una palabra en la lista negra!"
+    already_exists: "La palabra <code>{trigger}</code> ya está en la lista negra!"
     action_get: "La acción actual para las listas negras en este chat es {action}"
     action_set: "Establecer la acción de la lista negra para esto en {action}"
     added_blacklist: "¡Se agregó {trigger} en palabras de la lista negra!"
-    curr_blacklist_initial: "Palabras actuales incluidas en la lista negra en {chat_title}:\n"
+    curr_blacklist_initial: |-
+      Palabras actuales incluidas en la lista negra en {chat_title}:
+
     no_bl_found: "¡No se encontró ninguna lista negra {bl_word}!"
     no_blacklist: "¡No hay mensajes en la lista negra en {chat_title}!"
     rm_blacklist: "¡Se eliminó {bl_word} de las palabras de la lista negra!"
@@ -170,7 +420,8 @@ strings:
     something_wrong: "¡Algo salió mal!"
   langs:
     changed: "El idioma cambió a {lang_code}"
-    changelang: "Aquí puede cambiar el idioma del bot."
+    changelang: |-
+      Aquí puede cambiar el idioma del bot.
     correct_usage: |-
       Uso Correcto:
       /lang o /setlang código de idioma
@@ -215,6 +466,11 @@ strings:
     purge_msg_count: "Mensajes {msg_count} eliminados"
     what_del: "¿Qué quieres borrar?"
   rules:
+    priv_rules:
+      no_option: "Opción no válida, elija entre <code>el</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
+      turned_on: "Las reglas privadas se han convertido en <b>en</b> para el chat <b>{chat_name}</b>"
+      turned_off: "Las reglas privadas se han convertido en <b>de</b> para el chat <b>{chat_name}</b>"
+      current_preference: "La preferencia actual para las reglas privadas en este chat es: <b>{current_option}</b>"
     clear_rules: "¿Estás seguro de que quieres aclarar las reglas?"
     cleared: "¡Reglas completas para este grupo!"
     get_rules: |-
@@ -272,10 +528,6 @@ strings:
         Idioma: {from_lang} -> {to_lang}
         Traducción: {traducción}
     user_info:
-      custom_title: |-
-
-
-        Este usuario tiene el título {custom_title} aquí.
       getting_info: "Obteniendo información de usuario ..."
       info_text:
         last_name: |-

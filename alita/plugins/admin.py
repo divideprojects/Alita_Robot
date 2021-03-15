@@ -32,7 +32,7 @@ from pyrogram.types import Message
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE
+from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
 from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -69,7 +69,7 @@ async def adminlist_show(_, m: Message):
 
         adminstr = (tlang(m, "admin.adminlist.adminstr")).format(
             chat_title=m.chat.title,
-        )
+        ) + "\n\n"
 
         for i in admin_list:
             try:
@@ -104,20 +104,7 @@ async def adminlist_show(_, m: Message):
 )
 async def reload_admins(_, m: Message):
     try:
-        global ADMIN_CACHE
-        admin_list = []
-        async for i in m.chat.iter_members(filter="administrators"):
-            if (
-                i.user.is_deleted or i.user.is_bot
-            ):  # Don't cache deleted users and bots!
-                continue
-            admin_list.append(
-                (
-                    i.user.id,
-                    ("@" + i.user.username) if i.user.username else i.user.first_name,
-                ),
-            )
-        ADMIN_CACHE[m.chat.id] = admin_list
+        await admin_cache_reload(m)
         await m.reply_text(tlang(m, "admin.adminlist.reloaded_admins"))
     except RPCError as ef:
         await m.reply_text(
@@ -135,7 +122,12 @@ async def reload_admins(_, m: Message):
 )
 async def promote_usr(c: Alita, m: Message):
 
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text(tlang(m, "admin.promote.no_target"))
+        return
+
     user_id, user_first_name = await extract_user(c, m)
+
     try:
         await m.chat.promote_member(
             user_id=user_id,
@@ -180,7 +172,7 @@ async def promote_usr(c: Alita, m: Message):
                 ("@" + u.user.username) if u.user.username else u.user.first_name,
             ],
         )
-        admin_list = admin_list = sorted(admin_list, key=lambda x: x[1])
+        admin_list = sorted(admin_list, key=lambda x: x[1])
         ADMIN_CACHE[m.chat.id] = admin_list
 
     except ChatAdminRequired:
@@ -203,6 +195,10 @@ async def promote_usr(c: Alita, m: Message):
     filters.command("demote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
 async def demote_usr(c: Alita, m: Message):
+
+    if len(m.text.split()) == 1 and not m.reply_to_message:
+        await m.reply_text(tlang(m, "admin.demote.no_target"))
+        return
 
     user_id, user_first_name = await extract_user(c, m)
     try:
@@ -241,7 +237,7 @@ async def demote_usr(c: Alita, m: Message):
                         else i.user.first_name,
                     ],
                 )
-            admin_list = admin_list = sorted(admin_list, key=lambda x: x[1])
+            admin_list = sorted(admin_list, key=lambda x: x[1])
             ADMIN_CACHE[m.chat.id] = admin_list
 
     except ChatAdminRequired:
@@ -274,6 +270,7 @@ async def get_invitelink(c: Alita, m: Message):
                 chat_name=m.chat.id,
                 link=link,
             ),
+            disable_web_page_preview=True,
         )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))

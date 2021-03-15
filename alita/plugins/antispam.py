@@ -171,7 +171,7 @@ async def gban_count(_, m: Message):
     filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter,
 )
 async def gban_list(_, m: Message):
-    banned_users = db.list_collection()
+    banned_users = db.list_gbans()
 
     if not banned_users:
         await m.reply_text(tlang(m, "antispam.none_gbanned"))

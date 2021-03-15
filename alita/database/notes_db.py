@@ -101,7 +101,11 @@ class Notes:
 
     def count_all_notes(self):
         with INSERTION_LOCK:
-            return len(self.collection.find_all())
+            return self.collection.count()
+
+    def count_notes_type(self, ntype):
+        with INSERTION_LOCK:
+            return self.collection.count({"msgtype": ntype})
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):

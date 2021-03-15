@@ -83,29 +83,3 @@ class MongoDB:
     @staticmethod
     def close():
         return mongodb_client.close()
-
-
-# class LocalDict:
-#     """Class to manage local storage dictionary in bot."""
-
-#     def __init__(self, local_list=None) -> None:
-#         if local_list is None:
-#             local_list = []
-#         self.local_list = local_list
-
-#     def insert_one(self, data):
-#         (self.local_list).append(data)
-#         return self.local_list
-
-#     def delete(self, query):
-#         data_dict = next(data for data in self.local_list if data["chat_id"] == query)
-#         indice = self.local_list.index(data_dict)
-#         self.local_list.pop(indice)
-#         return self.local_list
-
-#     def update(self, query: dict, updated_data: dict):
-#         indice = self.local_list.index(query)
-#         (self.local_list[indice]).update(updated_data)
-#         return self.local_list
-
-#     def

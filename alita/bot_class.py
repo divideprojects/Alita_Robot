@@ -27,7 +27,7 @@ from threading import RLock
 from time import time
 
 from pyrogram import Client, __version__
-from pyrogram.errors import PeerIdInvalid, RPCError
+from pyrogram.errors import ChannelInvalid, PeerIdInvalid, RPCError
 from pyrogram.raw.all import layer
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -35,6 +35,7 @@ from alita import (
     API_HASH,
     APP_ID,
     BOT_USERNAME,
+    LOAD_ADMINS,
     LOG_DATETIME,
     LOGFILE,
     LOGGER,
@@ -69,14 +70,14 @@ class Alita(Client):
         name = self.__class__.__name__.lower()
 
         # Make a temporary direcory for storing session file
-        SESSION_DIR = f"{name}/SESSION"
-        if not path.isdir(SESSION_DIR):
-            makedirs(SESSION_DIR)
+        session_dir = f"{name}/SESSION"
+        if not path.isdir(session_dir):
+            makedirs(session_dir)
 
         super().__init__(
             name,
-            plugins=dict(root=f"{name}/plugins", exclude=NO_LOAD),
-            workdir=SESSION_DIR,
+            plugins=dict(root=f"{name}.plugins", exclude=NO_LOAD),
+            workdir=session_dir,
             api_id=APP_ID,
             api_hash=API_HASH,
             bot_token=TOKEN,
@@ -113,16 +114,25 @@ class Alita(Client):
                                 else j.user.first_name,
                             ),
                         )
-                    admin_list = sorted(admin_list, key=lambda x: x[1])
-                    ADMIN_CACHE[chat_id] = admin_list  # Remove the last space
-
-                    LOGGER.info(
-                        f"Set {len(admin_list)} admins for {chat_id}\n- {admin_list}",
-                    )
                 except PeerIdInvalid:
-                    pass
+                    # Didn't meet group or saw any message from it
+                    continue
+                except ChannelInvalid:
+                    # Bot removed from that group
+                    chatdb.remove_chat(chat_id)
+                    LOGGER.warning(
+                        f"Removing chat {chat_id} from database as I'm not in it!",
+                    )
+                    continue
                 except RPCError as ef:
                     LOGGER.error(ef)
+
+                admin_list = sorted(admin_list, key=lambda x: x[1])
+                ADMIN_CACHE[chat_id] = admin_list  # Remove the last space
+
+                LOGGER.info(
+                    f"Set {len(admin_list)} admins for {chat_id}\n- {admin_list}",
+                )
 
             end = time()
             LOGGER.info(
@@ -146,7 +156,9 @@ class Alita(Client):
         LOGGER.info(f"Loading Languages: {lang_status}")
 
         # Cache admins
-        await self.get_admins()
+        LOGGER.info(f"Loading Admins (Caching): {LOAD_ADMINS}")
+        if LOAD_ADMINS:
+            await self.get_admins()
 
         # Show in Log that bot has started
         LOGGER.info(

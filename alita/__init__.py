@@ -77,6 +77,7 @@ API_HASH = Config.API_HASH
 MESSAGE_DUMP = Config.MESSAGE_DUMP
 SUPPORT_GROUP = Config.SUPPORT_GROUP
 SUPPORT_CHANNEL = Config.SUPPORT_CHANNEL
+LOAD_ADMINS = Config.LOAD_ADMINS
 
 # Users Config
 OWNER_ID = Config.OWNER_ID
@@ -138,7 +139,7 @@ async def load_cmds(all_plugins):
                 "Can't have two plugins with the same name! Please change one",
             )
 
-    LOGGER.info(f"Not loading Plugins - {', '.join(Config.NO_LOAD)}")
+    LOGGER.info(f"Not loading Plugins - {NO_LOAD}")
 
     return ", ".join(
         [(i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())],

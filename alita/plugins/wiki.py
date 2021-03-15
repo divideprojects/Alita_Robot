@@ -60,7 +60,7 @@ async def wiki(_, m: Message):
                 f.name = "result.txt"
                 await m.reply_document(
                     document=f,
-                    reply_to_message_id=m.message_id,
+                    quote=True,
                     parse_mode="html",
                 )
 

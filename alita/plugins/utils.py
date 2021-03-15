@@ -20,7 +20,6 @@ from html import escape
 from io import BytesIO
 from os import remove
 from time import time
-from traceback import format_exc
 
 from gpytranslate import Translator
 from pyrogram import filters
@@ -30,12 +29,10 @@ from tswift import Song
 
 from alita import (
     DEV_USERS,
-    LOGGER,
     OWNER_ID,
     PREFIX_HANDLER,
     SUDO_USERS,
     SUPPORT_GROUP,
-    TOKEN,
     WHITELIST_USERS,
 )
 from alita.bot_class import Alita
@@ -191,7 +188,7 @@ async def github(_, m: Message):
         f"\n**Company:** `{company}`\n**Created at:** `{created_at}`"
     )
 
-    await m.reply_text(REPLY)
+    await m.reply_text(REPLY, quote=True)
 
     return
 
@@ -200,14 +197,21 @@ async def github(_, m: Message):
     filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def my_info(c: Alita, m: Message):
-    infoMsg = await m.reply_text(
-        f"<code>{(tlang(m, 'utils.user_info.getting_info'))}</code>",
-    )
-    user_id = (await extract_user(c, m))[0]
+    infoMsg = await m.reply_text((tlang(m, "utils.user_info.getting_info")), quote=True)
+    try:
+        user_id = (await extract_user(c, m))[0]
+    except PeerIdInvalid:
+        await infoMsg.edit_text(tlang(m, "utils.user_info.peer_id_error"))
+        return
+    except ValueError as ef:
+        if "Peer id invalid" in str(ef):
+            await infoMsg.edit_text(tlang(m, "utils.user_info.id_not_found"))
+        return
     try:
         user = await c.get_users(user_id)
     except PeerIdInvalid:
         await m.reply_text(tlang(m, "utils.no_user_db"))
+        return
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
@@ -244,25 +248,6 @@ async def my_info(c: Alita, m: Message):
         text += tlang(m, "utils.user_info.support_user.sudo")
     elif user.id in WHITELIST_USERS:
         text += tlang(m, "utils.user_info.support_user.whitelist")
-
-    try:
-        user_member = await m.chat.get_member(user.id)
-        if user_member.status == "administrator":
-            result = await AioHttp.post(
-                (
-                    f"https://api.telegram.org/bot{TOKEN}/"
-                    f"getChatMember?chat_id={m.chat.id}&user_id={user.id}"
-                ),
-            )
-            result = result.json()["result"]
-            if "custom_title" in result.keys():
-                custom_title = result["custom_title"]
-                text += (tlang(m, "utils.user_info.custom_title")).format(
-                    custom_title=custom_title,
-                )
-    except Exception as ef:
-        LOGGER.error(f"Error: {ef}")
-        LOGGER.error(format_exc())
 
     await infoMsg.edit_text(text, parse_mode="html", disable_web_page_preview=True)
 

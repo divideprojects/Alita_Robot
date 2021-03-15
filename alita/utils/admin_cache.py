@@ -16,9 +16,34 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from threading import RLock
 from time import perf_counter
 
 from cachetools import TTLCache
 
-# admins stay cached for one hour
-ADMIN_CACHE = TTLCache(maxsize=512, ttl=(60 * 60), timer=perf_counter)
+from alita import LOGGER
+
+THREAD_LOCK = RLock()
+
+# admins stay cached for 30 mins
+ADMIN_CACHE = TTLCache(maxsize=512, ttl=(60 * 30), timer=perf_counter)
+
+
+async def admin_cache_reload(m):
+    with THREAD_LOCK:
+        global ADMIN_CACHE
+        LOGGER.info(f"Loading admins for chat {m.chat.id}")
+        admin_list = []
+        async for i in m.chat.iter_members(filter="administrators"):
+            if i.user.is_bot or i.user.is_deleted:
+                continue
+            admin_list.append(
+                (
+                    i.user.id,
+                    ("@" + i.user.username) if i.user.username else i.user.first_name,
+                ),
+            )
+        ADMIN_CACHE[m.chat.id] = admin_list
+        admin_list = [user[0] for user in admin_list]
+
+        return admin_list

@@ -23,6 +23,7 @@ from pyrogram.types import ChatPermissions, Message
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
+from alita.utils.admin_cache import ADMIN_CACHE
 from alita.utils.custom_filters import restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -37,16 +38,13 @@ __help__ = "plugins.muting.help"
 async def mute_usr(c: Alita, m: Message):
 
     user_id, user_first_name = await extract_user(c, m)
-    user = await m.chat.get_member(user_id)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         return
-    if user.status == "administrator":
+
+    if user_id in [i[0] for i in ADMIN_CACHE[m.chat.id]]:
         await m.reply_text(tlang(m, "admin.mute.admin_cannot_mute"))
-        return
-    if user.status == "creator":
-        await m.reply_text(tlang(m, "admin.mute.owner_cannot_mute"))
         return
 
     try:
@@ -68,7 +66,8 @@ async def mute_usr(c: Alita, m: Message):
         )
         await m.reply_text(
             (tlang(m, "admin.mute.muted_user")).format(
-                user=(await mention_html(user_first_name, user_id)),
+                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                muted=(await mention_html(user_first_name, user_id)),
             ),
         )
     except ChatAdminRequired:
@@ -98,7 +97,8 @@ async def unmute_usr(c: Alita, m: Message):
         await m.chat.restrict_member(user_id, m.chat.permissions)
         await m.reply_text(
             (tlang(m, "admin.unmute.unmuted_user")).format(
-                user=(await mention_html(user_first_name, user_id)),
+                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                unmuted=(await mention_html(user_first_name, user_id)),
             ),
         )
     except ChatAdminRequired:

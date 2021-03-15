@@ -22,15 +22,19 @@ from pyrogram.types import Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
+from alita.database.antichannelpin_db import AntiChannelPin
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 
 __PLUGIN__ = "plugins.pins.main"
 __help__ = "plugins.pins.help"
 
+# Initialize
+antichanneldb = AntiChannelPin()
+
 
 @Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group & admin_filter)
-async def pin_message(c: Alita, m: Message):
+async def pin_message(_, m: Message):
 
     pin_args = m.text.split(None, 1)
     if m.reply_to_message:
@@ -40,12 +44,17 @@ async def pin_message(c: Alita, m: Message):
             if len(pin_args) >= 2 and pin_args[1] in ["alert", "notify", "loud"]:
                 disable_notification = False
 
-            await c.pin_chat_message(
-                m.chat.id,
-                m.reply_to_message.message_id,
+            await m.reply_to_message.pin(
                 disable_notification=disable_notification,
             )
-            await m.reply_text(tlang(m, "pin.pinned_msg"))
+            if (str(m.chat.id)).startswith("-100"):
+                link_chat_id = (str(m.chat.id)).replace("-100", "")
+            message_link = (
+                f"https://t.me/c/{link_chat_id}/{m.reply_to_message.message_id}"
+            )
+            await m.reply_text(
+                tlang(m, "pin.pinned_msg").format(message_link=message_link),
+            )
 
         except ChatAdminRequired:
             await m.reply_text(tlang(m, "admin.not_admin"))
@@ -113,4 +122,34 @@ async def unpinall_message(c: Alita, m: Message):
         )
         LOGGER.error(ef)
 
+    return
+
+
+@Alita.on_message(
+    filters.command("antichannelpin", PREFIX_HANDLER) & filters.group & admin_filter,
+)
+async def anti_channel_pin(_, m: Message):
+
+    if len(m.text.split()) == 1:
+        status = antichanneldb.check_antipin(m.chat.id)
+        await m.reply_text(
+            tlang(m, "pin.antichannelpin.current_status").format(
+                status=status,
+            ),
+        )
+        return
+
+    if len(m.text.split()) == 2:
+        if m.command[1] in ("yes", "on"):
+            status = True
+            msg = tlang(m, "pin.antichannelpin.turned_on")
+        elif m.command[1] in ("no", "off"):
+            status = False
+            msg = tlang(m, "pin.antichannelpin.turned_off")
+        else:
+            await m.reply_text(tlang(m, "pin.general.check_help"))
+            return
+
+    antichanneldb.toggle_antipin(m.chat.id, status)
+    await m.reply_text(msg)
     return

@@ -77,6 +77,13 @@ class Approve:
                     return "Not Approved"
 
                 users.remove(user)
+
+                # If the list is emptied, then delete it
+                if not users:
+                    return self.collection.delete_one(
+                        {"_id": chat_id},
+                    )
+
                 return self.collection.update(
                     {"_id": chat_id},
                     {

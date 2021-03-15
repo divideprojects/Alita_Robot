@@ -16,17 +16,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from threading import RLock
 from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
 
-from alita import DEV_USERS, OWNER_ID, SUDO_USERS
+from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE
-
-THREAD_LOCK = RLock()
+from alita.utils.admin_cache import admin_cache_reload
 
 SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
 DEV_LEVEL = DEV_USERS + [int(OWNER_ID)]
@@ -44,7 +41,6 @@ async def sudo_check_func(_, __, m):
 
 async def admin_check_func(_, __, m):
     """Check if user is Admin or not."""
-    global ADMIN_CACHE
 
     if isinstance(m, CallbackQuery):
         m = m.message
@@ -53,34 +49,19 @@ async def admin_check_func(_, __, m):
     if m.from_user.id in SUDO_LEVEL:
         return True
 
-    with THREAD_LOCK:
-        try:
-            admin_list = [user[0] for user in ADMIN_CACHE[m.chat.id]]
-        except KeyError:
-            admins_list = []
-            async for i in m.chat.iter_members(filter="administrators"):
-                admins_list.append(
-                    (
-                        i.user.id,
-                        ("@" + i.user.username)
-                        if i.user.username
-                        else i.user.first_name,
-                    ),
-                )
-            ADMIN_CACHE[m.chat.id] = admins_list
-        except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
-            if ("The chat_id" or "belongs to a user") in ef:
-                return True
-        except Exception as ef:
-            user = await m.chat.get_member(m.from_user.id)
-            if user.status in ("creator", "administrator"):
-                return True
-            LOGGER.error(format_exc())
-
-        if m.from_user.id in admin_list:
+    try:
+        return await admin_cache_reload(m)
+    except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
+        if ("The chat_id" or "belongs to a user") in ef:
             return True
+        return False
+    except Exception as ef:
+        user = await m.chat.get_member(m.from_user.id)
+        if user.status in ("creator", "administrator"):
+            return True
+        LOGGER.error(format_exc())
 
-        await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
+    await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
 
     return False
 
@@ -93,6 +74,7 @@ async def owner_check_func(_, __, m):
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:
         return True
+
     user = await m.chat.get_member(m.from_user.id)
 
     if user.status == "creator":
@@ -113,9 +95,12 @@ async def restrict_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
+    await admin_cache_reload(m)
+
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:
         return True
+
     user = await m.chat.get_member(m.from_user.id)
 
     if user.can_restrict_members or user.status == "creator":
@@ -132,16 +117,19 @@ async def promote_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
+    await admin_cache_reload(m)
+
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:
         return True
+
     user = await m.chat.get_member(m.from_user.id)
 
     if user.can_promote_members or user.status == "creator":
         status = True
     else:
         status = False
-        await m.reply_text(tlang(m, "admin.no_promote_demote_perm"))
+        await m.reply_text(tlang(m, "admin.promote.no_promote_perm"))
 
     return status
 
@@ -150,6 +138,8 @@ async def invite_check_func(_, __, m):
     """Check if user can invite users or not."""
     if isinstance(m, CallbackQuery):
         m = m.message
+
+    await admin_cache_reload(m)
 
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:
