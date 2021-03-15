@@ -20,8 +20,6 @@ import uvloop
 
 # Install uvloop
 uvloop.install()
-
-from os import makedirs, path
 from platform import python_version
 from threading import RLock
 from time import time
