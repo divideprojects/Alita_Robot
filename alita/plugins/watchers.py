@@ -228,7 +228,8 @@ async def bl_watcher(_, m: Message):
                     await perform_action_blacklist(m, action)
                     await m.delete()
                 except RPCError as ef:
-                    LOGGER.info(ef)
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
                 break
 
 
@@ -250,7 +251,7 @@ async def bl_chats_watcher(c: Alita, m: Message):
 
 async def antipin_watcher(c: Alita, m: Message):
     try:
-        if m.forward_from_chat and not m.from_user:
+        if str(m.forward_from_chat.type).lower() == "channel":
             msg_id = m.message_id
             antipin_status = antichannel_db.check_antipin(m.chat.id)
             if antipin_status:
@@ -260,5 +261,6 @@ async def antipin_watcher(c: Alita, m: Message):
         if str(ef) == "'NoneType' object has no attribute 'type'":
             return
         LOGGER.error(ef)
+        LOGGER.error(format_exc())
 
     return
