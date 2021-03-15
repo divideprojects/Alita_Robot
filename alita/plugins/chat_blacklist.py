@@ -93,7 +93,7 @@ async def list_blacklist_chats(c: Alita, m: Message):
     lst = []
     for chat in bl_chats:
         z = await c.get_chat(chat)
-        name = z["chat_name"]
+        name = z["title"]
         lst.append((chat, name))
     await m.reply_text(
         "These Chats are Blacklisted:\n"
