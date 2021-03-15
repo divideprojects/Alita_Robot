@@ -163,7 +163,7 @@ async def perma_pin(c: Alita, m: Message):
         z = await m.reply_to_message.copy(m.chat.id)
         await c.pin_chat_message(m.chat.id, z.message_id)
     elif len(m.text.split()) > 1:
-        z = m.reply_text(m.text.split(None, 1)[1])
+        z = await m.reply_text(m.text.split(None, 1)[1])
         await c.pin_chat_message(m.chat.id, z.message_id)
     else:
         await m.reply_text("Reply to a message or enter text to pin it.")
