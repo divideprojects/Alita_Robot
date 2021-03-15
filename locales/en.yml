@@ -183,7 +183,7 @@ strings:
         × /unpin: Unpins the last pinned message.
         × /unpinall: Unpins all the pinned message in the current chat.
         × /antichannelpin <on/off>: Toogle antichannelpin status.
-        × /permapin: Pin a custom messages via bot. This message can contain markdown, and can be used in replies to the media include additional buttons and text.
+        × /permapin `<text>`: Pin a custom messages via bot. This message can contain markdown, and can be used in replies to the media include additional buttons and text.
 
     purges:
       main: "Purges"
