@@ -97,6 +97,6 @@ async def list_blacklist_chats(c: Alita, m: Message):
         lst.append((chat, name))
     await m.reply_text(
         "These Chats are Blacklisted:\n"
-        + "\n".join([f"{i[0]} - {i[1]}" for i in bl_chats]),
+        + "\n".join([f"{i[0]} - {i[1]}" for i in lst]),
     )
     return
