@@ -250,7 +250,7 @@ async def bl_chats_watcher(c: Alita, m: Message):
 
 async def antipin_watcher(c: Alita, m: Message):
     try:
-        if m.forward_from_chat.type == "channel":
+        if m.forward_from_chat and not m.from_user:
             msg_id = m.message_id
             antipin_status = antichannel_db.check_antipin(m.chat.id)
             if antipin_status:
