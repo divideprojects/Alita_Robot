@@ -52,14 +52,16 @@ strings:
     bans:
       main: "Yasaklar"
       help: |-
-        Sinir bozucu biri sizin grubunuza mı girdi?
-        Onu yasaklamak/yasaklamak istiyor musunuz?
-        bu eklenti, bir gruptaki üyelerin kolayca tekme, yasak ve yasaksız üye olmalarının eklentidir.
+        Someone annoying entered your group?
+        Want to ban/restriction him/her?
+        This is the plugin for you, easily kick, ban and unban members in a group.
 
-        ** Yalnızca yönetici: **
-        × /kick: Kullanıcı yanıtlıyor ya da imlenmiş.
-        × /ban: Kullanıcının yanıtlanması ya da etiketlenen kullanıcılar.
-        × /unban: Kullanıcının yanıtlanması ya da etiketlenmemeleri yasaktır.
+        **Admin only:**
+        × /kick: Kick the user replied or tagged.
+        × /skick: Kick the user replied or tagged and delete the kick messsage.
+        × /ban: Bans the user replied to or tagged.
+        × /sban: Kick the user replied or tagged and delete the ban messsage.
+        × /unban: Unbans the user replied to or tagged.
     blacklist:
       main: "Kara Liste"
       help: |-
