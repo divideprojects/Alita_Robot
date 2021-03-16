@@ -44,7 +44,7 @@ approvedb = Approve()
 reportdb = Reporting()
 
 
-@Alita.on_message(filters.group, group=-1)
+@Alita.on_message(filters.group, group=6)
 async def initial_works(_, m: Message):
     try:
         if m.migrate_to_chat_id or m.migrate_from_chat_id:
