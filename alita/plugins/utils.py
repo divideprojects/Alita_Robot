@@ -166,7 +166,6 @@ async def github(_, m: Message):
     else:
         await m.reply_text(
             f"Usage: `{PREFIX_HANDLER}github <username>`",
-            parse_mode="md",
         )
         return
 
@@ -184,8 +183,11 @@ async def github(_, m: Message):
 
     REPLY = (
         f"**GitHub Info for** `{username}`"
-        f"\n**Username:** `{name}`\n**Bio:** `{bio}`\n**URL:** {url}"
-        f"\n**Company:** `{company}`\n**Created at:** `{created_at}`"
+        f"\n**Name:** `{name}`\n"
+        f"**Bio:** `{bio}`\n"
+        f"**URL:** {url}"
+        f"\n**Company:** `{company}`\n"
+        f"**Created at:** `{created_at}`"
     )
 
     await m.reply_text(REPLY, quote=True)

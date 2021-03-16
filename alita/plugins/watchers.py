@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from threading import RLock
 from time import time
 from traceback import format_exc
 
@@ -42,30 +41,24 @@ app_db = Approve()
 gban_db = GBan()
 antichannel_db = AntiChannelPin()
 
-# Initialize threading
-WATCHER_LOCK = RLock()
-
 
 BLACKLIST_PRUNE_USERS = {}
 
 
 @Alita.on_message(filters.group, group=2)
 async def aio_watcher(c: Alita, m: Message):
-    if not m.from_user:
-        return
 
-    with WATCHER_LOCK:
-        await gban_watcher(c, m)
-        await bl_chats_watcher(c, m)
-        await bl_watcher(c, m)
+    if not m.from_user:
         await antipin_watcher(c, m)
+        await bl_chats_watcher(c, m)
+    else:
+        await gban_watcher(c, m)
+        await bl_watcher(c, m)
 
 
 async def gban_watcher(c: Alita, m: Message):
     from alita import SUPPORT_GROUP
 
-    if not m.from_user:
-        return
     try:
         _banned = gban_db.check_gban(m.from_user.id)
     except Exception as ef:
@@ -105,9 +98,6 @@ async def gban_watcher(c: Alita, m: Message):
 
 async def bl_watcher(_, m: Message):
     global BLACKLIST_PRUNE_USERS
-
-    if not m.from_user:
-        return
 
     # TODO - Add warn option when Warn db is added!!
     async def perform_action_blacklist(m: Message, action: str):
