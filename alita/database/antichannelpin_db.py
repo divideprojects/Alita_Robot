@@ -19,6 +19,8 @@
 from threading import RLock
 from traceback import format_exc
 
+from typing_extensions import Annotated
+
 from alita import LOGGER
 from alita.database import MongoDB
 
@@ -45,18 +47,21 @@ class AntiChannelPin:
 
             return False
 
-    def toggle_antipin(self, chat_id: int, status: bool = False):
+    def set_on(self, chat_id: int):
         global ANTIPIN_CHATS
         with INSERTION_LOCK:
-            if self.check_antipin(chat_id):
-                if status:
-                    if not chat_id in ANTIPIN_CHATS:
-                        ANTIPIN_CHATS.append(chat_id)
-                else:
-                    ANTIPIN_CHATS.remove(chat_id)
-                return self.collection.update({"_id": chat_id}, {"status": status})
-            ANTIPIN_CHATS.append(chat_id)
-            return self.collection.insert_one({"_id": chat_id, "status": status})
+            if not chat_id in ANTIPIN_CHATS:
+                ANTIPIN_CHATS.append(chat_id)
+                return self.collection.insert_one({"_id": chat_id}, {"status": True})
+            return
+
+    def set_off(self, chat_id: int):
+        global ANTIPIN_CHATS
+        with INSERTION_LOCK:
+            if chat_id in ANTIPIN_CHATS:
+                ANTIPIN_CHATS.remove(chat_id)
+                return self.collection.insert_one({"_id": chat_id}, {"status": False})
+            return
 
     def count_antipin_chats(self):
         with INSERTION_LOCK:

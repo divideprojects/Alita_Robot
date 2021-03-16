@@ -141,16 +141,15 @@ async def anti_channel_pin(_, m: Message):
 
     if len(m.text.split()) == 2:
         if m.command[1] in ("yes", "on"):
-            status = True
+            antichanneldb.set_on(m.chat.id)
             msg = tlang(m, "pin.antichannelpin.turned_on")
         elif m.command[1] in ("no", "off"):
-            status = False
+            antichanneldb.set_on(m.chat.id)
             msg = tlang(m, "pin.antichannelpin.turned_off")
         else:
             await m.reply_text(tlang(m, "pin.general.check_help"))
             return
 
-    antichanneldb.toggle_antipin(m.chat.id, status)
     await m.reply_text(msg)
     return
 
