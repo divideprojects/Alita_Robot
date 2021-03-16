@@ -37,7 +37,7 @@ strings:
         Um es zu stoppen, senden Sie eine Nachricht an eine beliebige Gruppe.
         * Grund ist optional
     approve:
-      main: "Approve"
+      main: "AFK"
       help: |-
         Manchmal können Sie einem Benutzer vertrauen, dass er nicht unerwünschte Inhalte sendet.
         Vielleicht nicht genug, um sie Admin zu machen, aber Sie könnten in Ordnung sein mit Schlössern, Blacklists und Antiflut, die nicht auf sie angewendet werden.
@@ -131,58 +131,51 @@ strings:
     notes:
       main: "Anmerkungen"
       help: |-
-        Save a note, get that, even you can delete that note.
-        This note only avaiable for yourself only!
-        Also notes support inline button powered by inline query assistant bot.
+        Speichere eine Notiz, erhalte das, auch du kannst diese Notiz löschen.
+        Diese Notiz ist nur für dich selbst verfügbar!
+        Notiert auch, dass der Inline-Button über einen Inline-Abfrageassistenten gesteuert wird.
 
-        **Save Note**
+        **Speichere Notiz**
         × /save <note>
-        Save a note, you can get or delete that later.
+        Speichere eine Notiz, die du später erhalten oder löschen kannst.
 
-        **Get Note**
+        **Erhalte Notiz**
         × /get <note>
-        Get that note, if avaiable.
+        Erhalte diese Notiz, falls verfügbar.
 
-        **Get Note in Raw format**
-        × /get <note> noformat or /get <note> raw
-        Get that note in raw format, so you can edit and update it.
-
-        **Delete Note**
-        × /clear <note>
-        Delete that note, if avaiable.
+        **Lösche Notiz**
+        × /leere <note>
+        Lösche diese Notiz, falls verfügbar.
 
         × /clearall
-        Clears all notes in the chat!
-        **NOTE:** Can only be used by owner of chat!
+        Löscht alle Notizen im Chat!
+        **NOTE:** Kann nur vom Chat-Besitzer benutzt werden!
 
-        **All Notes**
-        × /saved
-        or
+        **Alle Notizen**
+        × /save
+        oder
         × /notes
-        Get all your notes, if too much notes, please use this in your saved message instead!
+        Holen Sie sich alle Ihre Notizen, wenn zu viele Notizen, bitte verwenden Sie dies in Ihrer gespeicherten Nachricht!
 
 
-        ── **Note Format** ──
+        ″ <unk> **Notizformatier** 本<unk>
         -> **Button**
-        `[Button Text](buttonurl:t.me/DivideProjects)`
-        -> **For Another button in same line**
-        `[Button2](buttonurl:t.me/DivideProjectsDiscussion:same)`
+        `[Button Text](buttonurl:t. e/DivideProjects)`
         -> **Bold**
         `**Bold**`
         -> __Italic__
         `__Italic__`
         -> `Code`
-        `Code` (grave accent)
+        `Code` (schwerer Akzent)
     pins:
       main: "Kontaktstifte"
       help: |-
-        Here you find find all help related to groups pins and how to manage them via me.
+        Hier finden Sie alle Hilfe zu Gruppenpins und wie Sie sie über mich verwalten können.
 
-        **Admin Cmds:**
-        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
-        × /unpin: Unpins the last pinned message.
-        × /unpinall: Unpins all the pinned message in the current chat.
-        × /antichannelpin <on/off>: Toogle antichannelpin status
+        ** Admin Cmds: **
+        × /pin: Unbeaufsichtigt setzt die Nachricht auf-add ` loud `, ` notify ` or ` alert ` to give notificaton to users.
+        × /unpin: Die letzte gepinnte Nachricht wird rückgängig gemacht.
+        × /unpinall: Im aktuellen Chat werden alle gepinnten Nachrichten entfernt.
     purges:
       main: "Purges"
       help: |-
@@ -457,7 +450,7 @@ strings:
     no_pin_msg: "Auf eine Nachricht antworten, an die Sie die Nachricht senden möchten ..."
     no_rights_pin: "Ich habe nicht genug Rechte, um Nachrichten zu heften."
     no_rights_unpin: "Ich habe nicht genug Rechte, um Nachrichten zu entsenden."
-    pinned_msg: "I have Pinned [this message]({message_link})!"
+    pinned_msg: "Gepinnte Nachricht!"
     reply_to_unpin: "Idk, was wollen Sie aufheben, Antwort auf eine Nachricht, um sie zu entnagen."
     unpinned_all_msg: "Alle Nachrichten in diesem Chat werden entpinnt."
     unpinned_last_msg: "Die letzte Nachricht wird entpinnt."
