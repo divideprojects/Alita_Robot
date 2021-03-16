@@ -36,12 +36,16 @@ from alita import (
     WHITELIST_USERS,
 )
 from alita.bot_class import Alita
+from alita.database.antispam_db import GBan
+from alita.plugins.watchers import gban_watcher
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 from alita.utils.paste import paste
+
+gban_db = GBan()
 
 __PLUGIN__ = "plugins.utils.main"
 __help__ = "plugins.utils.help"
@@ -223,6 +227,8 @@ async def my_info(c: Alita, m: Message):
         )
         return
 
+    gbanned, reason_gban = gban_db.get_gban(user_id)
+
     text = (tlang(m, "utils.user_info.info_text.main")).format(
         user_id=user.id,
         user_name=escape(user.first_name),
@@ -241,6 +247,9 @@ async def my_info(c: Alita, m: Message):
     text += (tlang(m, "utils.user_info.info_text.perma_link")).format(
         perma_link=(await mention_html("Click Here", user.id)),
     )
+
+    if gbanned:
+        text += f"\nThis user is Globally banned beacuse: {reason_gban}\n"
 
     if user.id == OWNER_ID:
         text += tlang(m, "utils.user_info.support_user.owner")

@@ -26,7 +26,7 @@ from pyrogram.types import ChatPermissions, Message
 from alita import LOGGER, MESSAGE_DUMP
 from alita.bot_class import Alita
 from alita.database.antichannelpin_db import AntiChannelPin
-from alita.database.antispam_db import GBan
+from alita.database.antispam_db import ANTISPAM_BANNED, GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.group_blacklist import BLACKLIST_CHATS
@@ -188,14 +188,7 @@ async def bl_watcher(_, m: Message):
     return
 
 
-@Alita.on_message(filters.group, group=12)
-async def aio_watcher(c: Alita, m: Message):
-
-    if m.from_user:
-        await gban_watcher(c, m)
-    return
-
-
+@Alita.on_message(filters.user(ANTISPAM_BANNED) & filters.group)
 async def gban_watcher(c: Alita, m: Message):
     from alita import SUPPORT_GROUP
 
