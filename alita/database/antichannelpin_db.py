@@ -17,10 +17,14 @@
 
 
 from threading import RLock
+from traceback import format_exc
 
+from alita import LOGGER
 from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
+
+ANTIPIN_CHATS = []
 
 
 class AntiChannelPin:
@@ -31,21 +35,54 @@ class AntiChannelPin:
 
     def check_antipin(self, chat_id: int):
         with INSERTION_LOCK:
+
+            if chat_id in ANTIPIN_CHATS:
+                return True
+
             curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 return True
+
             return False
 
     def toggle_antipin(self, chat_id: int, status: bool = False):
+        global ANTIPIN_CHATS
         with INSERTION_LOCK:
             if self.check_antipin(chat_id):
+                if status:
+                    if not chat_id in ANTIPIN_CHATS:
+                        ANTIPIN_CHATS.append(chat_id)
+                else:
+                    ANTIPIN_CHATS.remove(chat_id)
                 return self.collection.update({"_id": chat_id}, {"status": status})
+            ANTIPIN_CHATS.append(chat_id)
             return self.collection.insert_one({"_id": chat_id, "status": status})
 
     def count_antipin_chats(self):
         with INSERTION_LOCK:
-            return self.collection.count({"status": True})
+            try:
+                return len(ANTIPIN_CHATS)
+            except Exception as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+                return self.collection.count({"status": True})
 
     def list_antipin_chats(self):
         with INSERTION_LOCK:
-            return self.collection.find_all({"status": True})
+            try:
+                return ANTIPIN_CHATS
+            except Exception as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+                return self.collection.find_all({"status": True})
+
+
+def __load_antichannelpin_chats():
+    global ANTIPIN_CHATS
+    db = AntiChannelPin()
+    antipin_chats = db.list_antipin_chats()
+    for chat in antipin_chats:
+        ANTIPIN_CHATS.append(chat["_id"])
+
+
+__load_antichannelpin_chats()
