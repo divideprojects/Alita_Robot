@@ -25,7 +25,6 @@ from threading import RLock
 from time import time
 
 from pyrogram import Client, __version__
-from pyrogram.errors import ChannelInvalid, PeerIdInvalid, RPCError
 from pyrogram.raw.all import layer
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -33,7 +32,6 @@ from alita import (
     API_HASH,
     APP_ID,
     BOT_USERNAME,
-    LOAD_ADMINS,
     LOG_DATETIME,
     LOGFILE,
     LOGGER,
@@ -75,64 +73,6 @@ class Alita(Client):
             workers=WORKERS,
         )
 
-    async def get_admins(self):
-        """Cache all admins from chats in local DB."""
-        with INITIAL_LOCK:
-
-            global ADMIN_CACHE
-
-            LOGGER.info("Begin caching admins...")
-            begin = time()
-
-            all_chats = (chatdb.list_chats()) or []  # Get list of all chats
-            LOGGER.info(all_chats)
-            LOGGER.info(f"{len(all_chats)} chats loaded from database.")
-
-            for chat_id in all_chats:
-                admin_list = []
-                try:
-                    async for j in self.iter_chat_members(
-                        chat_id=chat_id,
-                        filter="administrators",
-                    ):
-                        if j.user.is_deleted or j.user.is_bot:
-                            continue
-                        admin_list.append(
-                            (
-                                j.user.id,
-                                f"@{j.user.username}"
-                                if j.user.username
-                                else j.user.first_name,
-                            ),
-                        )
-                except PeerIdInvalid:
-                    # Didn't meet group or saw any message from it
-                    continue
-                except ChannelInvalid:
-                    # Bot removed from that group
-                    chatdb.remove_chat(chat_id)
-                    LOGGER.warning(
-                        f"Removing chat {chat_id} from database as I'm not in it!",
-                    )
-                    continue
-                except RPCError as ef:
-                    LOGGER.error(ef)
-
-                admin_list = sorted(admin_list, key=lambda x: x[1])
-                ADMIN_CACHE[chat_id] = admin_list  # Remove the last space
-
-                LOGGER.info(
-                    f"Set {len(admin_list)} admins for {chat_id}\n- {admin_list}",
-                )
-
-            end = time()
-            LOGGER.info(
-                (
-                    "Set admin list cache!\n"
-                    f"Time Taken: {round(end - begin, 2)} seconds."
-                ),
-            )
-
     async def start(self):
         """Start the bot."""
         await super().start()
@@ -145,11 +85,6 @@ class Alita(Client):
         # Load Languages
         lang_status = len(lang_dict) >= 1
         LOGGER.info(f"Loading Languages: {lang_status}")
-
-        # Cache admins
-        LOGGER.info(f"Loading Admins (Caching): {LOAD_ADMINS}")
-        if LOAD_ADMINS:
-            await self.get_admins()
 
         # Show in Log that bot has started
         LOGGER.info(
