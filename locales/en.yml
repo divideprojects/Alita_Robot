@@ -58,7 +58,9 @@ strings:
 
         **Admin only:**
         × /kick: Kick the user replied or tagged.
+        × /skick: Kick the user replied or tagged and delete the kick messsage.
         × /ban: Bans the user replied to or tagged.
+        × /sban: Kick the user replied or tagged and delete the ban messsage.
         × /unban: Unbans the user replied to or tagged.
     blacklist:
       main: "Blacklist"
