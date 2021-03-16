@@ -374,4 +374,3 @@ async def chat_broadcast(c: Alita, m: Message):
             )
 
     return
-    
