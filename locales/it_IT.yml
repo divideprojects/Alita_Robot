@@ -52,14 +52,16 @@ strings:
     bans:
       main: "Divieti"
       help: |-
-        Qualcuno fastoso è entrato nel tuo gruppo?
-        Vuoi vietare / restringerla?
-        Questo è il plugin per te, facilmente calcio, divieto e sblocco dei membri in un gruppo.
+        Someone annoying entered your group?
+        Want to ban/restriction him/her?
+        This is the plugin for you, easily kick, ban and unban members in a group.
 
-        ** Solo Admin: **
-        × /kick: Kick l'utente ha risposto o taggato.
-        × /ban: Bani l'utente ha risposto o taggato.
-        × /unban: Unbani l'utente ha risposto o etichettato.
+        **Admin only:**
+        × /kick: Kick the user replied or tagged.
+        × /skick: Kick the user replied or tagged and delete the kick messsage.
+        × /ban: Bans the user replied to or tagged.
+        × /sban: Kick the user replied or tagged and delete the ban messsage.
+        × /unban: Unbans the user replied to or tagged.
     blacklist:
       main: "Lista nera"
       help: |-
