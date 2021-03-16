@@ -1,29 +1,29 @@
 ---
 main:
-  lang_sample: "انجليزي أمريكي"
+  lang_sample: "US English"
   language_flag: "🇺🇸"
-  language_name: الإنكليزية
+  language_name: English
 strings:
   plugins:
     admin:
-      main: "اداري"
+      main: "Admin"
       help: |-
-        Lazy لترقية أو عرض شخص لموجه النظام ؟ هل تريد مشاهدة معلومات أساسية عن المحادثة ؟ \
-        كل الأشياء الخاصة بغرفة المحادثة مثل كشوف الادارة ، أو الفوز أو الحصول على وصلة دعوة يمكن أن تكون \
-        قم بها بسهولة باستخدام الروبوت.
+        Lazy to promote or demote someone for admins? Want to see basic information about chat? \
+        All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
+        done easily using the bot.
 
-        ** أوامر المستخدم : **
-        × /adminlist : كشف بكل admins في المحادثة الحالية.
+        **User Commands:**
+        × /adminlist: List all admins in the current chat.
 
-        ** Admin فقط : **
-        × /invitelink : Gets الخاصة بالمحادثة الخاصة بالمحادثة الخاصة.
-        × / ترقية : يتم ترقيها للمستخدم الذي قام بالرد عليه أو تعليمه.
-        × /demote : يجب أن يقوم المستخدم بالرد على أو تعليم شارة.
+        **Admin only:**
+        × /invitelink: Gets private chat's invitelink.
+        × /promote: Promotes the user replied to or tagged.
+        × /demote: Demotes the user replied to or tagged.
 
-        مثال لترقية شخص ما الى admins :
-        R/ترقية @username' ; يؤدي ذلك الى ترقية المستخدم الى موجه النظام.
+        An example of promoting someone to admins:
+        `/promote @username`; this promotes a user to admin.
     afk:
-      main: "أفك"
+      main: "AFK"
       help: |-
         Module for enabling auto replies when you are AFK.
         When enabled,
@@ -39,29 +39,29 @@ strings:
     approve:
       main: "Approve"
       help: |-
-        في بعض الأحيان ، قد تثق في أن المستخدم لا يقوم بارسال محتويات غير مرغوب فيها.
-        ربما ليس بما فيه الكفاية لجعلهم admin ، ولكن قد تكون على ما يرام مع الأقفال ، والقوائم السوداء ، ومكافحة الفيضانات لا ينطبق عليها.
-        هذا هو ما تكون الموافقة عليه بالنسبة للمستخدمين الموثوق بهم للسماح لهم بارسال الاشياء بدون قيود !
+        Sometimes, you might trust a user not to send unwanted content.
+        Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
+        That's what approvals are for - approve trustworthy users to allow them to send stuff without restrictions!
 
-        ** أوامر الادارة : **
-        × / موافقة : قم بالتحقق من حالة الموافقة الخاصة بالمستخدم في هذه المحادثة.
-        × / موافقة : موافقة على المستخدم. الأقفال ، القوائم السوداء ، ومكافحة الفيضانات لن ينطبق عليهم بعد الآن.
-        × / عدم الموافقة : الغاء الموافقة على المستخدم. وسيخضعون الآن للحصار.
-        × /معتمد : يقوم بعرض كل المستخدمين الذين تم الموافقة عليهم.
-        × /unappeopeالكل : لا يتم اعتماد مستخدمي *ALL* في المحادثة. لا يمكن التراجع عن هذا !
+        **Admin commands:**
+        × /approval: Check a user's approval status in this chat.
+        × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
+        × /unapprove: Unapprove of a user. They will now be subject to blocklists.
+        × /approved: List all approved users.
+        × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
     bans:
-      main: "وحدات Bans"
+      main: "Bans"
       help: |-
-        شخص مزعج دخل مجموعتك ؟
-        هل تريد حظر / تقييدها ؟
-        هذا هو plugin بالنسبة لك ، وركلة بسهولة وحظر والغاء حظر العناصر في المجموعة.
+        Someone annoying entered your group?
+        Want to ban/restriction him/her?
+        This is the plugin for you, easily kick, ban and unban members in a group.
 
-        ** Admin فقط : **
-        × /ksk : Kick قام المستخدم بالرد أو الشارة.
-        × /الحظر : Bans الذي قام المستخدم بالرد عليه أو تعليمه.
-        × /unban : الغاء الحظر الذي قام المستخدم بالرد عليه أو تعليمه.
+        **Admin only:**
+        × /kick: Kick the user replied or tagged.
+        × /ban: Bans the user replied to or tagged.
+        × /unban: Unbans the user replied to or tagged.
     blacklist:
-      main: "القائمة السوداء"
+      main: "Blacklist"
       help: |-
         Want to restrict certain words or sentences in your group?
 
@@ -84,50 +84,50 @@ strings:
 
         **Note:** Can only add or remove one blacklist at a time!
     fun:
-      main: "المرح"
+      main: "Fun"
       help: |-
-        × /runs : الرد على مجموعة حروف عشوائية من خلال مجموعة من الردود.
-        x / صفعة : صفعة لمستخدم ، أو يتم الحصول على صفعة اذا لم يكن رد.
-        × /shrobros : الحصول على shساط XD.
-        × /not :
-        × /tros : tsemes A
-        × /bluetext : kcept urself :V
+        × /runs: reply a random string from an array of replies.
+        × /slap: slap a user, or get slapped if not a reply.
+        × /shrug : get shrug XD.
+        × /decide : Randomly answers yes/no/maybe
+        × /toss : Tosses A coin
+        × /bluetext : check urself :V
         × /roll : Roll a dice.
-        × /action : Random Reaction
-        × /صيحة <keyword>: قم بكتابة أي شيء تريده لكي تصرخ بصوت عال.
+        × /react : Random Reaction
+        × /shout <keyword>: write anything you want to give loud shout.
     language:
-      main: "اللغة"
+      main: "Language"
       help: |-
-        غير قادر على تغيير لغة الروبوت ؟
-        تغيير بسهولة باستخدام وحدة البرامج هذه !
+        Not able to change language of the bot?
+        Easily change by using this module!
 
-        فقط أدخل /lang واستخدم لوحة المفاتيح الحالية لاختيار لغة \
-        لنفسك أو للمجموعة الخاصة بك.
+        Just type /lang and use inline keyboard to choose a language \
+        for yourself or your group.
 
-        يمكنك مساعدتنا في احضار آلي للغات الأكثر عن طريق المساعدة في [Crowdin](https : //crowdin.com/project/alita_robot)
+        You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
     locks:
-      main: "اقفال"
+      main: "Locks"
       help: |-
-        استخدم هذا الاختيار لاقفال تصاريح المجموعة.
-        يسمح لك باقفال والغاء اقفال أنواع التصاريح في المحادثة.
+        Use this to lock group permissions.
+        Allows you to lock and unlock permission types in the chat.
 
-        ** Usage:**
-        × /lock <type>: اقفال تصريح المحادثة.
-        × /unlock <type>: الغاء اقفال تصريح المحادثة.
-        × /locks : مشاهدة تصريح المحادثة.
-        × /lockypes : تحقق من أنواع الاقفال المتاحة !
+        **Usage:**
+        × /lock <type>: Lock Chat permission.
+        × /unlock <type>: Unlock Chat permission.
+        × /locks: View Chat permission.
+        × /locktypes: Check available lock types!
     muting:
-      main: "اخفاء الصوت"
+      main: "Muting"
       help: |-
-        هل تريد أن يبقى شخص ما لفترة من الوقت في المجموعة ؟
-        Mute plugin موجود هنا لمساعدة أو اخفاء أو الغاء اخفاء صوت أي مستخدم بسهولة !
+        Want someone to keep quite for a while in the group?
+        Mute plugin is here to help, mute or unmute any user easily!
 
-        ** اداري فقط : **
-        × / اخفاء الصوت : اخفاء صوت المستخدم له أو ذكره.
-        × /unاخفاء : سيتم الغاء اخفاء الصوت الذي قام المستخدم بالاشارة اليه أو الرد عليه.
+        **Admin only:**
+        × /mute: Mute the user replied to or mentioned.
+        × /unmute: Unmutes the user mentioned or replied to.
 
-        مثال لترقية شخص ما الى admins :
-        الى /اخفاء صوت @username' ؛ هذا سيقوم باخفاء صوت مستخدم.
+        An example of promoting someone to admins:
+        `/mute @username`; this mutes a user.
     notes:
       main: "Notes"
       help: |-
@@ -174,7 +174,7 @@ strings:
         -> `Code`
         `Code` (grave accent)
     pins:
-      main: "بينز"
+      main: "Pins"
       help: |-
         Here you find find all help related to groups pins and how to manage them via me.
 
@@ -182,37 +182,38 @@ strings:
         × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
         × /unpin: Unpins the last pinned message.
         × /unpinall: Unpins all the pinned message in the current chat.
-        × /antichannelpin <on/off>: Toogle antichannelpin status
+        × /antichannelpin <on/off>: Toogle antichannelpin status.
+        × /permapin `<text>`: Pin a custom messages via bot. This message can contain markdown, and can be used in replies to the media include additional buttons and text.
     purges:
-      main: "تحث"
+      main: "Purges"
       help: |-
-        هل تريد حذف الرسائل في المجموعة الخاصة بك ؟
+        Want to delete messages in you group?
 
-        × / ازالة : يتم حذف الرسائل التي تم الرد عليها للرسالة التي تم الرد عليها.
-        × /del : لحذف رسالة واحدة ، يتم استخدامها كرد على الرسالة.
+        × /purge: Deletes messages upto replied message.
+        × /del: Deletes a single message, used as a reply to message.
     reporting:
-      main: "التقارير"
+      main: "Reporting"
       help: |-
-        × /report <reason>: قم بالرد على رسالة للابلاغ عنها الى admins.
-        - @admin: قم بالرد على رسالة للابلاغ عنها الى admins.
-        ***NOTE : ** لن يتم اطلاق أيا منهما اذا تم استخدامه بواسطة admins.
+        × /report <reason>: reply to a message to report it to admins.
+        - @admin: reply to a message to report it to admins.
+        **NOTE:** Neither of these will get triggered if used by admins.
 
-        ** Admins فقط : **
-        × /report <on/off>: تغيير محددات التقرير ، أو مشاهدة الحالة الحالية.
-        -اذا تم تنفيذه في أمر الصيانة الوقائية ، يقوم بتبديل الحالة الخاصة بك.
-        -اذا كان في المجموعة ، يقوم بتبديل حالة المجموعات.
+        **Admins Only:**
+        × /reports <on/off>: change report setting, or view current status.
+        - If done in PM, toggles your status.
+        - If in group, toggles that groups's status.
     rules:
-      main: "القواعد"
+      main: "Rules"
       help: |-
-        قم بتحديد القواعد لاجراء المحادثة بحيث يقوم الأعضاء بمعرفة ما يجب القيام به و \
-        ما الذي لا يجب القيام به في المجموعة الخاصة بك !
+        Set rules for you chat so that members know what to do and \
+        what not to do in your group!
 
-        x /rules : الحصول على القواعد للمحادثة الحالية.
+        × /rules: get the rules for current chat.
 
-        ** موجه فقط : **
-        × /setprules <rules>: قم بتحديد القواعد لهذه المحادثة ، ويعمل أيضا كرد على رسالة.
-        × /clearrules : قم باخلاء القواعد لهذه المحادثة.
-        × /privles <on/yes/no/off>: يقوم بتشغيل / ايقاف تشغيل الاختيار الخاص بارسال القواعد الى PM للمستخدم أو المجموعة.
+        **Admin only:**
+        × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
+        × /clearrules: Clear the rules for this chat.
+        × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
     utils:
       main: "Utils"
       help: |-
@@ -227,76 +228,76 @@ strings:
         × /lyrics <song>: Get the lyrics of the song you specify!
         × /weebify <text> or a reply to message: To weebify the text.
     wiki:
-      main: "ويكيبيديا"
+      main: "Wikipedia"
       help: |-
-        قم بالبحث في موقع ويكيبيديا في المجموعة الخاصة بك !
+        Search Wikipedia on the go in your group!
 
-        ** الأوامر المتاحة : **
-        x /wiki <query>: صفحة wiki الخاصة بك.
+        **Available commands:**
+        × /wiki <query>: wiki your query.
   admin:
     adminlist:
       adminstr: |-
         Admins in <b>{chat_title}</b>:
-      note_cached: "<i>ملحوظة :</i> هذه هي قيم تم تخزينها بالذاكرة الوسيطة !"
-      note_updated: "<i>ملحوظة :</i> هذه قيم حديثة !"
-      reloaded_admins: "تم اعادة تحميل كل admins في هذه المحادثة !"
-      use_admin_cache: "استخدم /admincache لاعادة تحميل admins !"
+      note_cached: "<i>Note:</i> These are cached values!"
+      note_updated: "<i>Note:</i> These are up-to-date values!"
+      reloaded_admins: "Reloaded all admins in this chat!"
+      use_admin_cache: "Use /admincache to reload admins!"
     ban:
       user_already_banned: "This user is already banned, no use banning them again!"
-      no_target: "لا يمكنني حظر أي شيء"
-      admin_cannot_ban: 'هذا المستخدم هو موجه النظام ، لا يمكنني منعهم ! "'
-      ban_all: "هل أنت متأكد من أنك تريد حظر كل العناصر الموجودة في هذه المجموعة ؟"
-      banned_user: "{admin} تم حظر {banned} في المحادثة <b>{chat_title}</b>!"
-      banning_all: "حظر كل العناصر ..."
-      bot_no_right: "ليس لدي ما يكفي من الحقوق لحظر هذا المستخدم"
+      no_target: "I can't ban nothing!"
+      admin_cannot_ban: 'This user is an admin, I cannot ban them!"'
+      ban_all: "Are you sure you want to ban all members in this group?"
+      banned_user: "{admin} banned {banned} in chat <b>{chat_title}</b>!"
+      banning_all: "Banning All Members..."
+      bot_no_right: "I don't have enough rights to ban this user."
     demote:
-      no_target: "! لا يمكنني تخفيض أي شيء"
-      bot_no_right: "ليس لدي ما يكفي من الحقوق لتخفيض هذا المستخدم."
-      demoted_user: "{demoter} خفضت رتبته الى {demoted} في المحادثة <b>{chat_title}</b>!"
+      no_target: "I can't demote nothing!"
+      bot_no_right: "I don't have enough rights to demote this user."
+      demoted_user: "{demoter} demoted {demoted} in chat <b>{chat_title}</b>!"
     invitelink: |-
-      دعوة وصلة للمحادثة <b>{chat_name}</b>:
+      Invite Link for Chat <b>{chat_name}</b>:
       {link}
     kick:
       user_already_banned: "This user is already banned, no use kicking them!"
-      no_target: "! لا يمكنني ركل شيء"
-      admin_cannot_kick: 'هذا المستخدم هو موجه النظام ، لا أستطيع أن ركلة لهم ! "'
-      bot_no_right: "ليس لدي ما يكفي من الحقوق لركل هذا المستخدم."
-      kicked_user: "{admin} قامت بركل {kicked} في المحادثة <b>{chat_title}<b>!"
+      no_target: "I can't kick nothing!"
+      admin_cannot_kick: 'This user is an admin, I cannot kick them!"'
+      bot_no_right: "I don't have enough rights to kick this user."
+      kicked_user: "{admin} kicked {kicked} in chat <b>{chat_title}<b>!"
     mute:
-      admin_cannot_mute: 'هذا المستخدم هو موجه النظام ، لا يمكنني اخفاء صوتهم ! "'
-      bot_no_right: "ليس لدي حقوق كافية لأخرس هذا المستخدم"
+      admin_cannot_mute: 'This user is an admin, I cannot mute them!"'
+      bot_no_right: "I don't have enough rights to mute this user."
       muted_user: "Admin {admin} muted {muted}!"
-    no_invite_perm: "! ليس لدي إذن للدعوة للربط"
-    no_restrict_perm: "لا يتوافر لديك تصاريح لتقييد الأعضاء !"
-    no_user_invite_perm: "لا يتوافر لديك تصاريح لدعوة مستخدمين."
-    not_admin: "أنا لست مدير أو ليس لدي حقوق"
+    no_invite_perm: "I don't have permission for invite link!"
+    no_restrict_perm: "You don't have permissions to restrict members!"
+    no_user_invite_perm: "You don't have permissions to invite users."
+    not_admin: "I'm not admin or I don't have rights."
     promote:
-      no_target: "! لا يمكنني الترويج لأي شيء"
-      bot_no_right: "ليس لدي ما يكفي من الحقوق لتعزيز هذا المستخدم"
-      no_promote_perm: "لا يتوافر لديك تصريح لترقية الأعضاء !"
-      promoted_user: "{promoter} قامت بترقية {promoted} في المحادثة <b>{chat_title}</b>!"
-    support_cannot_restrict: "هذا المستخدم في موظفي الدعم الخاص بي ، لا يمكنه تقييدهم."
+      no_target: "I can't promote nothing!"
+      bot_no_right: "I don't have enough rights to promote this user."
+      no_promote_perm: "You don't have permission to promote members!"
+      promoted_user: "{promoter} promoted {promoted} in chat <b>{chat_title}</b>!"
+    support_cannot_restrict: "This user is in my support staff, cannot restrict them."
     unban:
       user_not_banned: "How can I unban a user who is not banned?"
-      no_target: "! لا يمكنني منع أي شيء"
-      bot_no_right: "ليس لدي ما يكفي من الحقوق لحظر هذا المستخدم"
-      unbanned_user: "{admin} غير محظور {unbanned} في المحادثة <b>{chat_title}</b>!"
+      no_target: "I can't unban nothing!"
+      bot_no_right: "I don't have enough rights to unban this user."
+      unbanned_user: "{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
     unmute:
-      bot_no_right: "ليس لدي ما يكفي من الحقوق للغاء اخفاء صوت هذا المستخدم."
+      bot_no_right: "I don't have enough rights to unmute this user."
       unmuted_user: "Admin {admin} unmuted {unmuted}!"
-    user_admin_invalid: "لا يمكن التصرف على هذا المستخدم ، ربما لم أكن الشخص الذي قام بتغيير التصاريح الخاصة به."
+    user_admin_invalid: "Cannot act on this user, maybe I wasn't the one who changed their permissions."
   afk:
     error_check_afk: |-
-      حدث خطأ أثناء التحقق من afk
+      Error while checking afk
       {ef}
     no_longer_afk: |-
-      {first_name} لم تعد Afk !
-      كانت AFK ل <code>{since}</code>
-    reason: "<b>السبب :</b> {res}"
+      {first_name} is no longer Afk!
+      Was AFK for <code>{since}</code>
+    reason: "<b>Reason:</b> {res}"
     user_afk: |-
-      {first_name} هو Afk !
-      <b>منذ :</b> <code>{since}</code>
-    user_now_afk: "المستخدم {user} هو الآن afk !"
+      {first_name} is Afk!
+      <b>Since:</b> <code>{since}</code>
+    user_now_afk: "User {user} is now afk!"
   antispam:
     gban:
       gban_error_log: |-
@@ -304,12 +305,12 @@ strings:
         <b>Chat:</b> <code>{chat_id}</code>
         <b>Error:</b> <code>{ef}</code>
       added_to_watch: |-
-        تم اضافتها من {first_name} الى كشف الحظر الشامل.
-        سيتم حظرهم الآن في كل المجموعات حيث أكون admin !
-      enter_reason: "برجاء ادخال سبب الى مستخدم gban !"
+        Added {first_name} to Global Ban List.
+        They will now be banned in all groups where I'm admin!
+      enter_reason: "Please enter a reason to gban user!"
       how_to: |-
-        <b>كيف تحبان ؟</b>
-        <b>الاجابة :</b> <code>/gban user_id السبب</code>
+        <b>How to gban?</b>
+        <b>Answer:</b> <code>/gban user_id reason</code>
       log_msg: |-
         #GBAN
         <b>Originated from:</b> {chat_id}
@@ -318,20 +319,20 @@ strings:
         <b>Gbanned User ID:</b> {gban_user_id}
         <b>Event Stamp:</b> {time}
       not_self: |-
-        لا يمكنك أن تحريمني الزنوج
-        محاولة لطيفة
-      updated_reason: "تم تحديث سبب غبان إلى : <code>{gban_reason}</code>."
+        You can't gban me nigga!
+        Nice Try...!
+      updated_reason: "Updated Gban reason to: <code>{gban_reason}</code>."
       user_added_to_watch: |-
         You have been added to my global ban list!
         <b>Reason:</b> <code>{gban_reason}</code>
 
         <b>Appeal Chat:</b> @{SUPPORT_GROUP}
     here_gbanned_start: |-
-      وهنا جميع المهايس المحظورة عالميا !
-    none_gbanned: "ليس هناك أي مستخدمين محرمة ... !"
-    num_gbans: "عدد الأشخاص المحدبين : <code>{count}</code>"
-    part_of_support: "هذا المستخدم هو جزء من دعمي ! ، لا يمكنني منعنا من ذلك !"
-    pass_user_id: "قم بتمرير هوية مستخدم أو اسم مستخدم كمتغير مستقل !"
+      Here are all the globally banned geys!
+    none_gbanned: "There aren't any gbanned users...!"
+    num_gbans: "Number of people gbanned: <code>{count}</code>"
+    part_of_support: "This user is part of my Support!, Can't ban our own!"
+    pass_user_id: "Pass a user id or username as an argument!"
     ungban:
       log_msg: |-
         #UNGBAN
@@ -340,48 +341,48 @@ strings:
         <b>UnGbanned User:</b> {ungbanned_user}
         <b>UnGbanned User ID:</b> {ungbanned_user_id}
         <b>Event Stamp:</b> {time}
-      non_gbanned: "المستخدم ليس gمحظور !"
-      not_self: "لطيفة محاولة ... !"
-      removed_from_list: "تم ازالته من {first_name} من كشف الحظر الشامل."
-      user_removed_from_list: "لقد تم حذفك من قائمة الحظر العالمية الخاصة بي !"
+      non_gbanned: "User is not gbanned!"
+      not_self: "Nice Try...!"
+      removed_from_list: "Removed {first_name} from Global Ban List."
+      user_removed_from_list: "You have been removed from my global ban list!"
     watcher_banned: |-
-      هذا المستخدم ({user_gbanned}) تم حظره عالميا !
+      This user ({user_gbanned}) has been banned globally!
 
-      للحصول على غير محظور ، استئناف عند @{SUPPORT_GROUP}
+      To get unbanned, appeal at @{SUPPORT_GROUP}
   blacklist:
     bl_watcher:
-      action_kick: "تم الضغط على {user} لاستخدام كلمة مدرجة في القائمة السوداء !"
-      action_ban: "(denned {user} ) لاستخدام كلمة مدرجة في القائمة السوداء !"
-      action_mute: "تم اخفاء {user} لاستخدام كلمة مدرجة في القائمة السوداء !"
-    already_exists: "يتم وضع الكلمة <code>{trigger}</code> بالفعل على القائمة السوداء !"
-    action_get: "والإجراء الحالي للقوائم السوداء في هذه المحادثة هو <i><b>{action}</b></i>"
-    action_set: "قم بتحديد التصرف للقائمة السوداء لهذا الى <b>{action}</b>"
-    added_blacklist: "تم اضافته <code>{trigger}</code> بكلمات سوداء !"
+      action_kick: "Kicked {user} for using a blacklisted word!"
+      action_ban: "Banned {user} for using a blacklisted word!"
+      action_mute: "Muted {user} for using a blacklisted word!"
+    already_exists: "The word <code>{trigger}</code> is already blacklisted!"
+    action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
+    action_set: "Set action for blacklist for this to <b>{action}</b>"
+    added_blacklist: "Added <code>{trigger}</code> in blacklist words!"
     curr_blacklist_initial: |-
-      الكلمات Blackالمدرجة الحالية في <b>{chat_title}</b>:
-    no_bl_found: "لم يتم ايجاد أي قائمة سوداء <b>{bl_word}</b>!"
-    no_blacklist: "لا توجد رسائل مدرجة في القائمة السوداء في <b>{chat_title}</b>!"
-    rm_blacklist: "تم ازالة <b>{bl_word}</b> من كلمات سوداء !"
+      Current Blacklisted words in <b>{chat_title}</b>:
+    no_bl_found: "No blacklist <b>{bl_word}</b> found!"
+    no_blacklist: "There are no blacklisted messages in <b>{chat_title}</b>!"
+    rm_blacklist: "Removed <b>{bl_word}</b> from blacklist words!"
   dev:
     alladmins:
       admins_i_know_str: |-
         There are <b>{len_admins}</b> admins whom I know!
 
         <code>{admindict}</code>
-      alladmins_btn: "كل الأدمينز"
-      getting_admins: "الحصول على كل admins في الذاكرة الوسيطة الخاصة بي ..."
+      alladmins_btn: "All Admins"
+      getting_admins: "Getting all admins in my cache..."
     bot_ip: |-
-      <b>Boot IP Address :</b>
+      <b>Bot IP Address:</b>
       <code>{ip}</code>
     chatlist:
-      chats_in_db: "فيما يلي كشف بالمحادثات في قاعدة البيانات الخاصة بي."
-      exporting: "تصدير كشف المخططات ..."
+      chats_in_db: "Here is the list of chats in my Database."
+      exporting: "Exporting Charlist..."
       header: |
-        كشف بالمحادثات في قاعدة البيانات الخاصة بي.
+        List of chats in my database.
 
-        <b>اسم المحادثة | كود المحادثة | عدد الأعضاء</b>
-    execute_cmd_err: "برجاء تنفيذ الكود بطريقة صحيحة !"
-    restarting: جاري اعادة البدء ...
+        <b>Chat name | Chat ID | Members count</b>
+    execute_cmd_err: "Please execute the code correctly!"
+    restarting: Restarting...
     speedtest:
       speedtest_txt: |-
         Speedtest
@@ -391,50 +392,50 @@ strings:
         <b>Ping:</b> <code>{ping}</code> ms
         <b>Download:</b> <code>{download}</code> Mbps
         <b>Upload:</b> <code>{upload}</code> Mbps
-      start_speedtest: "... حساب سرعتي"
-    uptime: "<b>Uptime :<b> <code>{uptime}</code>"
+      start_speedtest: "Calculating my speed..."
+    uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
-    back_btn: للخلف
-    check_help: "برجاء التحقق من المساعدة عن كيفية استخدام هذا الأمر."
-    close_btn: اغلاق
+    back_btn: Back
+    check_help: "Please check help on how to use this this command."
+    close_btn: Close
     commands_available: |-
-      مهلا هناك ! اسمي هو أليتا.
-      أنا هنا لمساعدتك في ادارة المجموعات الخاصة بك !
-      الأوامر المتاحة :
-      × / start : بدء تشغيل الروبوت
-      × /help : اعطيك هذه الرسالة.
-      × /التبرع : معلومات متعلقة بكيفية التبرع لمالك !
+      Hey There! My name is Alita.
+      I'm here to help you manage your groups!
+      Commands available:
+      × /start: Start the bot
+      × /help: Give's you this message.
+      × /donate: Information related about how to donate to my owner!
 
-      يمكن استخدام كل الأوامر مع / أو !.
-    no_admin_cmd_perm: "لا يمكنك استخدام أمر admin !"
-    no_perm_admin: "ليس لدي تصريح للقيام بذلك"
-    no_results: "لم يتم ايجاد نتائج."
+      All commands can either be used with / or !.
+    no_admin_cmd_perm: "You cannot use an admin command!"
+    no_perm_admin: "I don't have permission to do that"
+    no_results: "No results found."
     some_error: |-
       Some error occured, report to @{SUPPORT_GROUP}
 
       <b>Error:</b> <code>{ef}</code>
-    something_wrong: "حدث شيء خاطئ !"
+    something_wrong: "Something went wrong!"
   langs:
-    changed: "تم تغيير اللغة الى <code>{lang_code}</code>"
+    changed: "Language changed to <code>{lang_code}</code>"
     changelang: |-
-      هنا يمكنك تغيير اللغة للروبوت.
+      Here you can change language for the bot.
 
-      يمكنك مساعدتنا في احضار آلي للغات أكثر عن طريق المساعدة في [Crowdin](https : //crowdin.com/project/alita_robot)
+      You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
     correct_usage: |-
-      <b>الاستخدام الصحيح :</b>
+      <b>Correct Usage:</b>
       /lang or /setlang language-code
   locks:
-    check_perm_msg: "التحقق من تصاريح المحادثة ..."
+    check_perm_msg: "Checking Chat permissions..."
     invalid_lock: |-
-      نوع اقفال غير صحيح !
+      Invalid Lock Type!
 
-      استخدم /locktypes للحصول على أنواع الاقفال
-    lock_all: "تم اقفال <b>كل تصاريح</b> من هذه المحادثة !"
-    locked_perm: "تم اقفال <b>{perm}</b> لهذه المحادثة."
-    locks_perm_sp: "حدد تصريح للاقفال !"
-    unlock_all: "الغاء اقفال <b>كل</b> تصريح من هذه المحادثة !"
-    unlocked_perm: "تم الغاء اقفال <b>{uperm}</b> لهذه المحادثة."
-    unlocks_perm.sp_perm: "قم بتحديد تصريح للغاء الاقفال !"
+      Use /locktypes to get the lock types
+    lock_all: "Locked <b>all</b> permission from this Chat!"
+    locked_perm: "Locked <b>{perm}</b> for this Chat."
+    locks_perm_sp: "Specify a permission to lock!"
+    unlock_all: "Unlocked <b>all</b> permission from this Chat!"
+    unlocked_perm: "Unlocked <b>{uperm}</b> for this Chat."
+    unlocks_perm.sp_perm: "Specify a permission to unlock!"
     view_perm: |-
       CHAT PERMISSIONS:
 
@@ -454,39 +455,39 @@ strings:
       current_status: "Current AntiChannelPin status: {status}"
       turned_on: "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
       turned_off: "Turned off AntiChannelPin, now all message pinned by channel will stay pinned!"
-    no_pin_msg: "قم بالرد على الرسالة التي تريد تحديد المساحة الخاصة بها ..."
-    no_rights_pin: "ليس لدي ما يكفي من الحقوق لتوجيه الرسائل."
-    no_rights_unpin: "ليس لدي ما يكفي من الحقوق لرسائل unpin."
+    no_pin_msg: "Reply to a message to which you want to pin..."
+    no_rights_pin: "I don't have enough rights to pin messages."
+    no_rights_unpin: "I don't have enough rights to unpin messages."
     pinned_msg: "I have Pinned [this message]({message_link})!"
-    reply_to_unpin: "قم بتحديد ما اذا كنت تريد الغاء تثبيتها ، قم بالرد على الرسالة للغاء تثبيتها."
-    unpinned_all_msg: "قم بالغاء الحاق كل الرسائل في هذه المحادثة."
-    unpinned_last_msg: ". الرسالة الأخيرة غير معلقة"
+    reply_to_unpin: "Idk what do you want to unpin, reply to a message to unpin it."
+    unpinned_all_msg: "Unpinned all messages in this chat."
+    unpinned_last_msg: "Unpinned last message."
   purge:
-    deleting: "... قم بإين ـ دار هذه الرسائل العديمة الفائدة"
-    err_basic: "لا يمكن اخلاء الرسائل في مجموعة أساسية"
-    old_msg_err: "لا يمكن حذف كل الرسائل. قد تكون الرسائل قديمة جدا ، وقد لا أكون قد قمت بحذف حقوق ، أو قد لا يكون هذا مجموعة مميزة."
-    purge_msg_count: "تم حذف <i>{msg_count}رسائل</i>"
-    what_del: "ماذا تريد أن تحذف ؟"
+    deleting: "Incinerating these useless messages..."
+    err_basic: "Cannot purge messages in a basic group"
+    old_msg_err: "Cannot delete all messages. The messages may be too old, I might not have delete rights, or this might not be a supergroup."
+    purge_msg_count: "Deleted <i>{msg_count}</i> messages"
+    what_del: "What do you wanna delete?"
   rules:
     priv_rules:
       no_option: "Option not valid, choose from <code>on</code>, <code>yes</code>, <code>off</code>, <code>no</code>"
-      turned_on: "تم تشغيل القواعد الخاصة <b>على</b> للمحادثة <b>{chat_name}</b>"
-      turned_off: "تم تشغيل القواعد الخاصة <b>من</b> للمحادثة <b>{chat_name}</b>"
-      current_preference: "التفضيلات الحالية للقواعد الخاصة في هذه المحادثة هي : <b>{current_option}</b>"
-    clear_rules: "هل أنت متأكد من أنك تريد ازالة القواعد ؟"
-    cleared: "تم محو القواعد لهذه المجموعة بنجاح !"
+      turned_on: "Private Rules have been turned <b>on</b> for chat <b>{chat_name}</b>"
+      turned_off: "Private Rules have been turned <b>off</b> for chat <b>{chat_name}</b>"
+      current_preference: "Current Preference for Private rules in this chat is: <b>{current_option}</b>"
+    clear_rules: "Are you sure you want to clear rules?"
+    cleared: "Successfully cleared rules for this group!"
     get_rules: |-
-      قواعد بالنسبة الى <b>{chat}:</b>
+      Rules for <b>{chat}:</b>
 
       {rules}
-    no_rules: "لا تحتوي Admins لهذه المجموعة على قواعد الاعداد !"
-    pm_me: "أولا رئيس الوزراء لي وبعد ذلك الحصول على القواعد !"
-    sent_pm_rules: "لقد قمت بالعبث لك القواعد"
-    set_rules: "تم بنجاح تحديد قواعد لهذه المجموعة."
+    no_rules: "The Admins for this group have not setup rules!"
+    pm_me: "First PM me and then get the rules!"
+    sent_pm_rules: "I've messaged you the rules"
+    set_rules: "Successfully set rules for this group."
   start:
-    add_chat_btn: "اضافة الى محادثة"
-    commands_btn: الأوامر
-    group: "أنا على قيد الحياة : 3"
+    add_chat_btn: "Add to a chat"
+    commands_btn: Commands
+    group: "I'm alive :3"
     info_page: |-
       • @Alita_Robot
 
@@ -494,78 +495,78 @@ strings:
 
       <b>Developers:</b> [Divkix](https://github.com/Divkix)
       <b>Owner:</b> [{Owner}](tg://user?id={ID})
-    infos_btn: المعلومات
-    language_btn: اللغة
-    pm_for_help: "اتصل بي في أمر الصيانة الوقائية للحصول على كشف بالأوامر الممكنة."
-    private: "مرحبا ! أنا آلي ait_Robot. لاكتشاف المزيد عن الوظائف الخاصة بي ، اضغط على الاختيارات التالية."
-    public_help: "اضغط على الاختيار بأسفل للحصول على مساعدة عن <i>{help_option}</i>"
-    source_code: "كود المصدر"
+    infos_btn: Info
+    language_btn: Language
+    pm_for_help: "Contact me in PM to get the list of possible commands."
+    private: "Hello! I'm Alita_Robot. To discover more about my functions, click on the buttons below."
+    public_help: "Press the button below to get help for <i>{help_option}</i>"
+    source_code: "Source Code"
   utils:
     gif_id:
-      reply_gif: "برجاء الرد على gif للحصول على الكود الخاص به."
+      reply_gif: "Please reply to a gif to get its ID."
     id:
-      group_id: "هوية المجموعات هذه هي <code>{group_id}</code>"
+      group_id: "This Groups ID is <code>{group_id}</code>"
       id_main: |-
-        الراسل الأصلي- {orig_sender} (<code>{orig_id}</code>)
-        Forwarder- {fwd_sender} (<code>{fwd_id}</code>)
-      my_id: "الكود الخاص بك هو <code>{my_id}</code>."
+        Original Sender - {orig_sender} (<code>{orig_id}</code>)
+        Forwarder - {fwd_sender} (<code>{fwd_id}</code>)
+      my_id: "Your ID is <code>{my_id}</code>."
     no_user_db: |-
-      فشل في الحصول على مستخدم
-      Peer ID غير صحيح ، لم يسبق لي أن شاهدت هذا المستخدم في أي وقت سابق ، ولربما سيساعدك اسم المستخدم في معرفتهم !
+      Failed to get user
+      Peer ID invalid, I haven't seen this user anywhere earlier, maybe username would help to know them!
     paste:
-      nekobin_btn: نيكوبين
-      pasted_nekobin: "! (صدأ إلى (نيكوبين"
-      pasting: لصق ...
+      nekobin_btn: NekoBin
+      pasted_nekobin: "Pasted to NekoBin!"
+      pasting: Pasting...
     ping:
-      pinging: ... تتشبث
+      pinging: Pinging...
     song:
-      no_lyrics_found: "لا يمكن العثور على أي كلمات لتلك الأغنية !"
-      no_song_given: "أنت لم تحدد أي أغنية للبحث عنها !"
-      searching: "ايجاد كلمات بالنسبة الى <code>{song_name}<code>..."
-      song_not_found: "الأغنية غير موجودة !"
+      no_lyrics_found: "Couldn't find any lyrics for that song!"
+      no_song_given: "You haven't specified which song to look for!"
+      searching: "Finding lyrics for <code>{song_name}<code>..."
+      song_not_found: "Song not found!"
     translate:
-      translate_usage: "الاستخدام : /tr <language> نص للترجمة (يمكن استخدامه أيضا في الرد على رسالة)."
-      translating: ترجمة ...
+      translate_usage: "Usage: /tr <language> text for translation (Can be also used in reply to a message)."
+      translating: Translating...
       translation: |-
         <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Translation:</b> <code>{translation}</code>
     user_info:
       id_not_found: "User not found, please check the ID again"
       peer_id_error: "I haven't seen this user, mind forwarding one of their messages so I can recognize them?"
-      getting_info: "الحصول على معلومات المستخدم ..."
+      getting_info: "Getting user information..."
       info_text:
         last_name: |-
 
-          <b>الاسم الأخير :</b> {user_lname}
+          <b>Last Name:</b> {user_lname}
         main: |-
           <b>Characteristics:</b>
           <b>ID:</b> <code>{user_id}</code>
           <b>First Name:</b> {user_name}
         perma_link: |-
 
-          <b>وصلة المستخدم الدائم :</b> {perma_link}
+          <b>Permanent User Link:</b> {perma_link}
         username: |-
 
-          <b>اسم المستخدم :</b> @{username}
+          <b>Username:</b> @{username}
       support_user:
         dev: |-
 
 
-          هذا العضو هو أحد مطوري البرامج الخاصة بي ⚡️
+          This member is one of my Developers ⚡️
         owner: |-
 
 
-          هذا الشخص هو صاحبي ، أنا لن أفعل أي شيء ضدهم !
+          This person is my Owner, I would never do anything against them!
         sudo: |-
 
 
-          هذا المستخدم هو أحد المهام الخاصة بي ، لديه الصلاحيات والتي هي نفسها تقريبا للمالك !
+          This user is one of my Sudos, he has powers which are approximately same to owner!
         whitelist: |-
 
 
-          هذا الشخص هو 'مستخدم Whitelist' ، لا يمكن منعهم !
+          This person is 'Whitelist User', they cannot be banned!
     weebify:
       weebified_string: |-
-        <b>مجموعة الحروف التي تم تعديلها :</b>
+        <b>Weebified String:</b>
         {string}
-      weebify_what: "ما الذي يفترض بي أن أفاويه ؟"
+      weebify_what: "What am I supposed to Weebify?"
