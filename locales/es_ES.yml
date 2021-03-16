@@ -235,7 +235,7 @@ strings:
       reloaded_admins: "¡Recargué a todos los administradores en este chat!"
       use_admin_cache: "¡Utiliza /admincache para recargar administradores!"
     ban:
-      user_already_banned: "This user is already banned, no use banning them again!"
+      user_already_banned: "Este usuario ya está prohibido, ¡no utilizar de nuevo prohibirlos!"
       no_target: "¡No puedo prohibir nada!"
       admin_cannot_ban: 'Este usuario es un administrador, ¡no puedo prohibirlo! "'
       ban_all: "¿Estás seguro de que deseas prohibir a todos los miembros de este grupo?"
@@ -250,7 +250,7 @@ strings:
       Enlace de invitación para chat {chat_name}:
       {link}
     kick:
-      user_already_banned: "This user is already banned, no use kicking them!"
+      user_already_banned: "¡Este usuario ya está prohibido, no sirve para patearlos!"
       no_target: "¡No puedo patear nada!"
       admin_cannot_kick: 'Este usuario es un administrador, ¡no puedo patearlo! "'
       bot_no_right: "No tengo suficientes derechos para expulsar a este usuario."
@@ -270,7 +270,7 @@ strings:
       promoted_user: "¡{promoter} promovió {promoted} en el chat {chat_title}!"
     support_cannot_restrict: "Este usuario está en mi personal de soporte, no puede restringirlos."
     unban:
-      user_not_banned: "How can I unban a user who is not banned?"
+      user_not_banned: "¿Cómo puedo desprohibir a un usuario que no está prohibido?"
       no_target: "¡No puedo desprohibir nada!"
       bot_no_right: "No tengo suficientes derechos para desbloquear a este usuario."
       unbanned_user: "¡{admin} desbanned {unbanned} en el chat {chat_title}!"
@@ -442,9 +442,9 @@ strings:
       Mensajes de PIN: {vpin}
   pin:
     antichannelpin:
-      current_status: "Current AntiChannelPin status: {status}"
-      turned_on: "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
-      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will stay pinned!"
+      current_status: "Estado actual de AntiChannelPin: {status}"
+      turned_on: "Activado AntiChannelPin, ahora todo el mensaje marcado por el canal se desinmovilizará automáticamente."
+      turned_off: "Desactivado AntiChannelPin, ahora todo el mensaje marcado por el canal permanecerá marcado!"
     no_pin_msg: "Responder a un mensaje al que desea fijar ..."
     no_rights_pin: "No tengo suficientes derechos para fijar mensajes."
     no_rights_unpin: "No tengo suficientes derechos para desanclar mensajes."
@@ -521,8 +521,8 @@ strings:
         Idioma: {from_lang} -> {to_lang}
         Traducción: {traducción}
     user_info:
-      id_not_found: "User not found, please check the ID again"
-      peer_id_error: "I haven't seen this user, mind forwarding one of their messages so I can recognize them?"
+      id_not_found: "No se ha encontrado el usuario, compruebe el ID de nuevo"
+      peer_id_error: "No he visto a este usuario, ¿reenviar uno de sus mensajes para que pueda reconocerlos?"
       getting_info: "Obteniendo información de usuario ..."
       info_text:
         last_name: |-
