@@ -52,14 +52,16 @@ strings:
     bans:
       main: "Prohibiciones"
       help: |-
-        Alguien molesto entró en su grupo?
-        ¿Quieres prohibir/restringirla?
-        Este es el plugin para usted, fácilmente patear, prohibir y desbanar a los miembros en un grupo.
+        Someone annoying entered your group?
+        Want to ban/restriction him/her?
+        This is the plugin for you, easily kick, ban and unban members in a group.
 
-        ** Sólo administrador: **
-        × /kick: Kick el usuario respondió o etiquetó.
-        × /ban: Bans al que el usuario respondió o etiquetó.
-        × /unban: Unbans the user respondied to or tagged.
+        **Admin only:**
+        × /kick: Kick the user replied or tagged.
+        × /skick: Kick the user replied or tagged and delete the kick messsage.
+        × /ban: Bans the user replied to or tagged.
+        × /sban: Kick the user replied or tagged and delete the ban messsage.
+        × /unban: Unbans the user replied to or tagged.
     blacklist:
       main: "Lista negra"
       help: |-
