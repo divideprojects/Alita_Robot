@@ -364,6 +364,7 @@ async def chat_broadcast(c: Alita, m: Message):
             err_str += ef
             continue
 
+    await exmsg.edit_text("Done broadcasting ✅")
     if err_str:
         with BytesIO(str.encode(remove_markdown_and_html(chatfile))) as f:
             f.name = "error_broadcast.txt"
