@@ -45,57 +45,21 @@ antichannel_db = AntiChannelPin()
 BLACKLIST_PRUNE_USERS = {}
 
 
-@Alita.on_message(filters.group, group=2)
-async def aio_watcher(c: Alita, m: Message):
-
-    if not m.from_user:
-        await antipin_watcher(c, m)
-        await bl_chats_watcher(c, m)
-    else:
-        await gban_watcher(c, m)
-        await bl_watcher(c, m)
-
-
-async def gban_watcher(c: Alita, m: Message):
-    from alita import SUPPORT_GROUP
-
+@Alita.on_message(filters.linked_channel)
+async def antichanpin(c: Alita, m: Message):
     try:
-        _banned = gban_db.check_gban(m.from_user.id)
+        msg_id = m.message_id
+        antipin_status = antichannel_db.check_antipin(m.chat.id)
+        if antipin_status:
+            await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
     except Exception as ef:
         LOGGER.error(ef)
         LOGGER.error(format_exc())
-        return
-    if _banned:
-        try:
-            await m.chat.kick_member(m.from_user.id)
-            await m.delete(m.message_id)  # Delete users message!
-            await m.reply_text(
-                (tlang(m, "antispam.watcher_banned")).format(
-                    user_gbanned=(
-                        await mention_html(m.from_user.first_name, m.from_user.id)
-                    ),
-                    SUPPORT_GROUP=SUPPORT_GROUP,
-                ),
-            )
-            LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
-            return
-        except (ChatAdminRequired, UserAdminInvalid):
-            # Bot not admin in group and hence cannot ban users!
-            # TO-DO - Improve Error Detection
-            LOGGER.info(
-                f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})",
-            )
-        except RPCError as ef:
-            await c.send_message(
-                MESSAGE_DUMP,
-                tlang(m, "antispam.gban.gban_error_log").format(
-                    chat_id=m.chat.id,
-                    ef=ef,
-                ),
-            )
+
     return
 
 
+@Alita.on_message(filters.text & filters.group)
 async def bl_watcher(_, m: Message):
     global BLACKLIST_PRUNE_USERS
 
@@ -221,36 +185,69 @@ async def bl_watcher(_, m: Message):
                     LOGGER.error(ef)
                     LOGGER.error(format_exc())
                 break
-
-
-async def bl_chats_watcher(c: Alita, m: Message):
-    from alita import SUPPORT_GROUP
-
-    if m.chat and (m.chat.id in BLACKLIST_CHATS):
-        await c.send_message(
-            m.chat.id,
-            (
-                "This is a blacklisted group!\n"
-                f"For Support, Join @{SUPPORT_GROUP}\n"
-                "Now, I'm out of here!"
-            ),
-        )
-        await c.leave_chat(m.chat.id)
     return
 
 
-async def antipin_watcher(c: Alita, m: Message):
+@Alita.on_message(filters.group, group=12)
+async def aio_watcher(c: Alita, m: Message):
+
+    if m.from_user:
+        await gban_watcher(c, m)
+    return
+
+
+async def gban_watcher(c: Alita, m: Message):
+    from alita import SUPPORT_GROUP
+
     try:
-        if str(m.forward_from_chat.type).lower() == "channel":
-            msg_id = m.message_id
-            antipin_status = antichannel_db.check_antipin(m.chat.id)
-            if antipin_status:
-                # Unpin the message
-                await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
+        _banned = gban_db.check_gban(m.from_user.id)
     except Exception as ef:
-        if str(ef) == "'NoneType' object has no attribute 'type'":
-            return
         LOGGER.error(ef)
         LOGGER.error(format_exc())
+        return
 
+    if _banned:
+        try:
+            await m.chat.kick_member(m.from_user.id)
+            await m.delete(m.message_id)  # Delete users message!
+            await m.reply_text(
+                (tlang(m, "antispam.watcher_banned")).format(
+                    user_gbanned=(
+                        await mention_html(m.from_user.first_name, m.from_user.id)
+                    ),
+                    SUPPORT_GROUP=SUPPORT_GROUP,
+                ),
+            )
+            LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
+            return
+        except (ChatAdminRequired, UserAdminInvalid):
+            # Bot not admin in group and hence cannot ban users!
+            # TO-DO - Improve Error Detection
+            LOGGER.info(
+                f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})",
+            )
+        except RPCError as ef:
+            await c.send_message(
+                MESSAGE_DUMP,
+                tlang(m, "antispam.gban.gban_error_log").format(
+                    chat_id=m.chat.id,
+                    ef=ef,
+                ),
+            )
+    return
+
+
+@Alita.on_message(filters.chat(BLACKLIST_CHATS))
+async def bl_chats_watcher(c: Alita, m: Message):
+    from alita import SUPPORT_GROUP
+
+    await c.send_message(
+        m.chat.id,
+        (
+            "This is a blacklisted group!\n"
+            f"For Support, Join @{SUPPORT_GROUP}\n"
+            "Now, I'm outta here!"
+        ),
+    )
+    await c.leave_chat(m.chat.id)
     return
