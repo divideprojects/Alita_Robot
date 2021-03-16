@@ -52,14 +52,16 @@ strings:
     bans:
       main: "בינס"
       help: |-
-        מישהו מעצבן נכנס לקבוצה שלך?
-        רוצה לאסור/להגביל אותו /לה?
-        זהו התוסף עבורכם, בעיטה בקלות, איסור ואוסור חברים בקבוצה.
+        Someone annoying entered your group?
+        Want to ban/restriction him/her?
+        This is the plugin for you, easily kick, ban and unban members in a group.
 
-        ** מנהלה בלבד: **
-        × /בעיטה: בעט המשתמש השיב או מתויג.
-        × /ban: Bans המשתמש השיב או מתויג.
-        × /unban: Unbans שהמשתמש השיב או מתויג.
+        **Admin only:**
+        × /kick: Kick the user replied or tagged.
+        × /skick: Kick the user replied or tagged and delete the kick messsage.
+        × /ban: Bans the user replied to or tagged.
+        × /sban: Kick the user replied or tagged and delete the ban messsage.
+        × /unban: Unbans the user replied to or tagged.
     blacklist:
       main: "רשימה שחורה"
       help: |-
