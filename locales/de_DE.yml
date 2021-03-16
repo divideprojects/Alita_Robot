@@ -235,7 +235,7 @@ strings:
       reloaded_admins: "Alle Admins in diesem Chat neu geladen!"
       use_admin_cache: "Verwenden Sie /admincache, um Admins erneut zu laden!"
     ban:
-      user_already_banned: "This user is already banned, no use banning them again!"
+      user_already_banned: "Dieser Benutzer ist bereits gebannt, kein Gebrauch, der sie wieder verbietet!"
       no_target: "Ich kann nichts verbieten!"
       admin_cannot_ban: 'Dieser Benutzer ist ein Admin, ich kann sie nicht verbieten! "'
       ban_all: "Sind Sie sicher, dass Sie alle Mitglieder in dieser Gruppe verbieten möchten?"
@@ -250,7 +250,7 @@ strings:
       Link zum Chat einladen <b>{chat_name}</b>:
       {link}
     kick:
-      user_already_banned: "This user is already banned, no use kicking them!"
+      user_already_banned: "Dieser Benutzer ist bereits gebannt, keine Verwendung wird gestartet!"
       no_target: "Ich kann nichts antreten!"
       admin_cannot_kick: 'Dieser Benutzer ist ein Admin, ich kann sie nicht antreten! "'
       bot_no_right: "Ich habe nicht genug Rechte, um diesen Benutzer zu kicken."
@@ -270,7 +270,7 @@ strings:
       promoted_user: "{promoter} gefördert {promoted} im Chat <b>{chat_title}</b>!"
     support_cannot_restrict: "Dieser Benutzer ist in meinem Support-Personal, kann sie nicht einschränken."
     unban:
-      user_not_banned: "How can I unban a user who is not banned?"
+      user_not_banned: "Wie kann ich einen Benutzer, der nicht gebannt ist, aussagen?"
       no_target: "Ich kann nichts unverbieten!"
       bot_no_right: "Ich habe nicht genug Rechte, um diesen Nutzer zu entbannen."
       unbanned_user: "{admin} ungebannt {unbanned} im Chat <b>{chat_title}</b>!"
@@ -444,9 +444,9 @@ strings:
       <b>Nachrichten anheben:</b> {vpin}
   pin:
     antichannelpin:
-      current_status: "Current AntiChannelPin status: {status}"
-      turned_on: "Turned on AntiChannelPin, now all message pinned by channel will be unpinned automtically!"
-      turned_off: "Turned off AntiChannelPin, now all message pinned by channel will stay pinned!"
+      current_status: "Aktueller AntiChannelPin Status: {status}"
+      turned_on: "Aktiviert AntiChannelPin, jetzt werden alle Nachrichten, die von Kanal gepinnt werden, automatisch entpinnt!"
+      turned_off: "Deaktivieren Sie AntiChannelPin, jetzt wird alle Nachrichten, die von Kanal gepinnt werden, gepinnt bleiben!"
     no_pin_msg: "Auf eine Nachricht antworten, an die Sie die Nachricht senden möchten ..."
     no_rights_pin: "Ich habe nicht genug Rechte, um Nachrichten zu heften."
     no_rights_unpin: "Ich habe nicht genug Rechte, um Nachrichten zu entsenden."
@@ -523,8 +523,8 @@ strings:
         <b>Sprache:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Übersetzung:</b> <code>{translation}</code>
     user_info:
-      id_not_found: "User not found, please check the ID again"
-      peer_id_error: "I haven't seen this user, mind forwarding one of their messages so I can recognize them?"
+      id_not_found: "Benutzer nicht gefunden, überprüfen Sie die ID erneut."
+      peer_id_error: "Ich habe diesen Benutzer nicht gesehen, Verstand, eine ihrer Nachrichten weiterzuleiten, damit ich sie erkennen kann?"
       getting_info: "Benutzerinformationen werden abgerufen ..."
       info_text:
         last_name: |-
