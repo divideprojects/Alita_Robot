@@ -22,10 +22,13 @@ RUN rm -rf /var/lib/apt/lists/*
 WORKDIR /app/
 
 # Copy folder
-RUN git clone https://github.com/Divkix/Alita_Robot.git .
+COPY . .
 
 # Install dependencies
-RUN make docker
+RUN pip3 install --upgrade pip
+RUN rm -r /opt/bitnami/python/lib/python3.9/site-packages/setuptools*
+RUN pip3 install -U setuptools
+RUN make install
 
 # Run the bot
 CMD ["make", "run"]
