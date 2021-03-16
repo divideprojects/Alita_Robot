@@ -37,7 +37,7 @@ strings:
         Para detenerlo, enviar mensaje a cualquier grupo.
         * La razón es opcional
     approve:
-      main: "Approve"
+      main: "AFK"
       help: |-
         A veces, puede confiar en que un usuario no envíe contenido no deseado.
         Tal vez no sea suficiente para hacerlos admin, pero es posible que estés bien con cerraduras, listas negras y antiinundaciones que no se aplican a ellos.
@@ -131,58 +131,51 @@ strings:
     notes:
       main: "Notas"
       help: |-
-        Save a note, get that, even you can delete that note.
-        This note only avaiable for yourself only!
-        Also notes support inline button powered by inline query assistant bot.
+        Guarda una nota, obtén eso, incluso puedes borrar esa nota.
+        ¡Esta nota solo está disponible para ti solamente!
+        También nota el botón de soporte en línea desarrollado por el bot de asistente de consulta en línea.
 
-        **Save Note**
+        **Guardar nota**
         × /save <note>
-        Save a note, you can get or delete that later.
+        Guardar una nota, puedes obtenerla o eliminarla más tarde.
 
-        **Get Note**
+        **Obtén nota**
         × /get <note>
-        Get that note, if avaiable.
+        Obtén esa nota, si está disponible.
 
-        **Get Note in Raw format**
-        × /get <note> noformat or /get <note> raw
-        Get that note in raw format, so you can edit and update it.
-
-        **Delete Note**
+        **Eliminar nota**
         × /clear <note>
-        Delete that note, if avaiable.
+        Eliminar esa nota, si está disponible.
 
         × /clearall
-        Clears all notes in the chat!
-        **NOTE:** Can only be used by owner of chat!
+        Limpia todas las notas en el chat
+        **NOTA:** ¡Solo puede ser usado por el dueño del chat!
 
-        **All Notes**
-        × /saved
-        or
-        × /notes
-        Get all your notes, if too much notes, please use this in your saved message instead!
+        **Todas las notas**
+        × /guardado
+        o
+        × /notas
+        Obtener todas sus notas, si hay demasiadas notas, por favor use esto en su mensaje guardado en su lugar!
 
 
-        ── **Note Format** ──
-        -> **Button**
-        `[Button Text](buttonurl:t.me/DivideProjects)`
-        -> **For Another button in same line**
-        `[Button2](buttonurl:t.me/DivideProjectsDiscussion:same)`
+        → **Formato de Nota **** →
+        -> **Botón**
+        `[Texto del botón](buttonurl:t. e/DivideProjects)`
         -> **Bold**
         `**Bold**`
         -> __Italic__
         `__Italic__`
         -> `Code`
-        `Code` (grave accent)
+        `Code` (acento grave)
     pins:
       main: "Pines"
       help: |-
-        Here you find find all help related to groups pins and how to manage them via me.
+        Aquí encuentras toda la ayuda relacionada con los pines de los grupos y cómo gestionarlos a través de mí.
 
-        **Admin Cmds:**
-        × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
-        × /unpin: Unpins the last pinned message.
-        × /unpinall: Unpins all the pinned message in the current chat.
-        × /antichannelpin <on/off>: Toogle antichannelpin status
+        ** Cmds admin: **
+        × /pin: En silencio, el mensaje responde a-add ` loud `, ` notify ` o ` alert ` para dar notificatón a los usuarios.
+        × /unpin: Unpins el último mensaje marcado.
+        × /unpinall: Unpins todo el mensaje marcado en el chat actual.
     purges:
       main: "Purgas"
       help: |-
@@ -265,7 +258,7 @@ strings:
     mute:
       admin_cannot_mute: '¡Este usuario es un administrador, no puedo silenciarlo! "'
       bot_no_right: "No tengo suficientes derechos para silenciar a este usuario."
-      muted_user: "Admin {admin} muted {muted}!"
+      muted_user: "¡Admin {admin} silenciado a {muted}!"
     no_invite_perm: "¡No tengo permiso para el enlace de invitación!"
     no_restrict_perm: "¡No tienes permisos para restringir miembros!"
     no_user_invite_perm: "No tienes permisos para invitar usuarios."
@@ -283,7 +276,7 @@ strings:
       unbanned_user: "¡{admin} desbanned {unbanned} en el chat {chat_title}!"
     unmute:
       bot_no_right: "No tengo suficientes derechos para activar el sonido de este usuario."
-      unmuted_user: "Admin {admin} unmuted {unmuted}!"
+      unmuted_user: "¡Admin {admin} desactivado {unmuted}!"
     user_admin_invalid: "No puedo actuar sobre este usuario, tal vez no fui yo quien cambió sus permisos."
   afk:
     error_check_afk: |-
@@ -328,7 +321,6 @@ strings:
         Chat de apelación: @ {SUPPORT_GROUP}
     here_gbanned_start: |-
       ¡Aquí están todos los géys prohibidos a nivel mundial!
-
     none_gbanned: "¡No hay usuarios con gbanned ...!"
     num_gbans: "Número de personas con gban {count}"
     part_of_support: "¡Este usuario es parte de mi Soporte! ¡No podemos prohibir el nuestro!"
@@ -360,7 +352,6 @@ strings:
     added_blacklist: "¡Se agregó {trigger} en palabras de la lista negra!"
     curr_blacklist_initial: |-
       Palabras actuales incluidas en la lista negra en {chat_title}:
-
     no_bl_found: "¡No se encontró ninguna lista negra {bl_word}!"
     no_blacklist: "¡No hay mensajes en la lista negra en {chat_title}!"
     rm_blacklist: "¡Se eliminó {bl_word} de las palabras de la lista negra!"
@@ -457,7 +448,7 @@ strings:
     no_pin_msg: "Responder a un mensaje al que desea fijar ..."
     no_rights_pin: "No tengo suficientes derechos para fijar mensajes."
     no_rights_unpin: "No tengo suficientes derechos para desanclar mensajes."
-    pinned_msg: "I have Pinned [this message]({message_link})!"
+    pinned_msg: "Mensaje fijado"
     reply_to_unpin: "Si sabes qué quieres desanclar, responde a un mensaje para desanclarlo."
     unpinned_all_msg: "Desanclado todos los mensajes en este chat."
     unpinned_last_msg: "Último mensaje no fijado."
