@@ -5,6 +5,12 @@ install:
 	@pip3 install --upgrade pip setuptools
 	@pip3 install --upgrade -r requirements.txt
 
+docker:
+	@pip3 install --upgrade pip
+	@rm -r /opt/bitnami/python/lib/python3.9/site-packages/setuptools*
+	@pip3 install -U setuptools
+	@make install
+
 dev-install:
 	@pip3 install --upgrade pip setuptools
 	@pip3 install --upgrade -r requirements-dev.txt
@@ -24,9 +30,3 @@ ci:
 	@pip3 install --upgrade pip setuptools
 	@pip3 install --upgrade -r requirements-dev.txt
 	@pre-commit
-
-docker:
-	@pip3 install --upgrade pip
-	@rm -r /opt/bitnami/python/lib/python3.9/site-packages/setuptools*
-	@pip3 install -U setuptools
-	@make install
