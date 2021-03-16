@@ -344,3 +344,33 @@ async def leave_chat(c: Alita, m: Message):
         LOGGER.error(ef)
         await replymsg.edit_text(f"Failed to leave chat!\nError: <code>{ef}</code>.")
     return
+
+
+@Alita.on_message(filters.command("chatbroadcast", DEV_PREFIX_HANDLER) & dev_filter)
+async def chat_broadcast(c: Alita, m: Message):
+    if m.reply_to_message:
+        msg = m.reply_to_message.text.markdown
+    else:
+        await m.reply_text("Reply to a message to broadcast it")
+        return
+
+    exmsg = await m.reply_text("Started broadcasting!")
+    all_chats = (chatdb.get_all_chats()) or {}
+
+    for chat in all_chats:
+        try:
+            await c.send_message(chat["_id"], msg)
+        except RPCError as ef:
+            err_str += ef
+            continue
+
+    if err_str:
+        with BytesIO(str.encode(remove_markdown_and_html(chatfile))) as f:
+            f.name = "error_broadcast.txt"
+            await m.reply_document(
+                document=f,
+                caption="Broadcast Error",
+            )
+
+    return
+    
