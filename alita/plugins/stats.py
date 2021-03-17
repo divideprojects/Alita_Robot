@@ -27,7 +27,7 @@ from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
-from alita.database.notes_db import Notes
+from alita.database.notes_db import Notes, NotesSettings
 from alita.database.rules_db import Rules
 from alita.database.users_db import Users
 from alita.utils.custom_filters import dev_filter
@@ -41,6 +41,7 @@ userdb = Users()
 appdb = Approve()
 chatdb = Chats()
 antichanneldb = AntiChannelPin()
+notesettings_db = NotesSettings()
 
 
 @Alita.on_message(filters.command("stats", DEV_PREFIX_HANDLER) & dev_filter)
@@ -58,6 +59,7 @@ async def get_stats(_, m: Message):
         f"<b>Rules:</b> Set in <code>{(rulesdb.count_chats())}</code> chats\n"
         f"    <b>Private Rules:</b> {(rulesdb.count_privrules_chats())} chats\n"
         f"<b>Notes:</b> <code>{(notesdb.count_all_notes())}</code> in <code>{(notesdb.count_notes_chats())}</code> chats\n"
+        f"    <b>PrivateNotes:</b> {(notesettings_db.count_chats())} chats\n"
         f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
         f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
         f"\n<b>Database Stats:</b>\n"

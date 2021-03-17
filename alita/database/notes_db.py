@@ -145,6 +145,12 @@ class NotesSettings:
         self.collection.update({"_id": chat_id}, {"privatenotes": False})
         return False
 
+    def list_chats(self):
+        return self.collection.find_all({"privatenotes": True})
+
+    def count_chats(self):
+        return len(self.collection.find_all({"privatenotes": True}))
+
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:

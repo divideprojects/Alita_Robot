@@ -19,6 +19,8 @@
 from threading import RLock
 from traceback import format_exc
 
+from pymongo.errors import DuplicateKeyError
+
 from alita import LOGGER
 from alita.database import MongoDB
 
@@ -51,7 +53,6 @@ class AntiChannelPin:
             if not chat_id in ANTIPIN_CHATS:
                 ANTIPIN_CHATS.append(chat_id)
                 return self.collection.insert_one({"_id": chat_id, "status": True})
-            return
 
     def set_off(self, chat_id: int):
         global ANTIPIN_CHATS
@@ -70,14 +71,18 @@ class AntiChannelPin:
                 LOGGER.error(format_exc())
                 return self.collection.count({"status": True})
 
-    def list_antipin_chats(self):
+    def load_chats_from_db(self, query):
+        with INSERTION_LOCK:
+            return self.collection.find_all(query)
+
+    def list_antipin_chats(self, query):
         with INSERTION_LOCK:
             try:
                 return ANTIPIN_CHATS
             except Exception as ef:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
-                return self.collection.find_all({"status": True})
+                return self.collection.find_all(query)
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
@@ -94,7 +99,7 @@ class AntiChannelPin:
 def __load_antichannelpin_chats():
     global ANTIPIN_CHATS
     db = AntiChannelPin()
-    antipin_chats = db.list_antipin_chats()
+    antipin_chats = db.load_chats_from_db({"status": True})
     for chat in antipin_chats:
         ANTIPIN_CHATS.append(chat["_id"])
 
