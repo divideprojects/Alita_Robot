@@ -21,17 +21,10 @@ from time import time
 from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import (
-    ChatAdminRequired,
-    RightForbidden,
-    RPCError)
+from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
 from pyrogram.types import Message
 
-from alita import (
-    LOGGER,
-    PREFIX_HANDLER,
-    SUPPORT_GROUP,
-    SUPPORT_STAFF)
+from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.admin_cache import ADMIN_CACHE
@@ -117,7 +110,7 @@ async def skick_usr(c: Alita, m: Message):
         return
 
     try:
-        await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
+        await c.kick_chat_member(m.chat.id, user_id, int(time() + 15))
         await m.delete()
     except ChatAdminRequired:
         mymsg = await m.reply_text(tlang(m, "admin.not_admin"))

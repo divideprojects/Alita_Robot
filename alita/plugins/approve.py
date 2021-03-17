@@ -58,6 +58,7 @@ async def approve_user(c: Alita, m: Message):
     except UserNotParticipant:
         await m.reply_text("This user is not in this chat!")
         return
+
     except RPCError as ef:
         await m.reply_text(
             f"<b>Error</b>: <code>{ef}</code>\nReport it to @{SUPPORT_GROUP}",
@@ -177,7 +178,7 @@ async def check_approved(_, m: Message):
             db.remove_approve(chat.id, user_id)
             continue
         except PeerIdInvalid:
-            continue
+            pass
         msg += f"- `{user_id}`: {user_name}\n"
     await m.reply_text(msg)
     return
@@ -198,7 +199,7 @@ async def check_approval(c: Alita, m: Message):
         return
     if check_approve:
         await m.reply_text(
-            f"{(await mention_html(user_first_name, user_id))} is an approved user. Locks, antiflood, and blocklists won't apply to them.",
+            f"{(await mention_html(user_first_name, user_id))} is an approved user. Locks, antiflood, and blacklists won't apply to them.",
         )
     else:
         await m.reply_text(
