@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from hashlib import md5
 from threading import RLock
 
 from alita.database import MongoDB
@@ -42,11 +43,13 @@ class Notes:
             )
             if curr:
                 return False
+            hash_gen = md5((note_name + note_value + str(chat_id)).encode()).hexdigest()
             return self.collection.insert_one(
                 {
                     "chat_id": chat_id,
                     "note_name": note_name,
                     "note_value": note_value,
+                    "hash": hash_gen,
                     "msgtype": msgtype,
                     "fileid": fileid,
                 },
@@ -60,6 +63,9 @@ class Notes:
             if curr:
                 return curr
             return "Note does not exist!"
+
+    def get_note_by_hash(self, note_hash: str):
+        return self.collection.find_one({"hash": note_hash})
 
     def get_all_notes(self, chat_id: int):
         with INSERTION_LOCK:

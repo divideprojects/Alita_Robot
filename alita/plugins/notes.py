@@ -66,7 +66,7 @@ async def save_note(_, m: Message):
 
     existing_notes = db.get_all_notes(m.chat.id)
 
-    note_name, text, data_type, content = await get_note_type(m)
+    note_name, text, msg_id, data_type, content = await get_note_type(m)
 
     if note_name in existing_notes:
         await m.reply_text(f"This note ({note_name}) already exists!")
@@ -86,7 +86,7 @@ async def save_note(_, m: Message):
             )
             return
 
-    db.save_note(m.chat.id, note_name, text, data_type, content)
+    db.save_note(m.chat.id, note_name, text, msg_id, data_type, content)
     await m.reply_text(
         f"Saved note <code>{note_name}</code>!\nGet it with <code>/get {note_name}</code> or <code>#{note_name}</code>",
     )
@@ -164,12 +164,13 @@ async def get_note_func(c: Alita, m: Message, getnotes):
 
 async def get_raw_note(c: Alita, m: Message, note: str):
     """Get the note in raw format, so it can updated by just copy and pasting."""
-    getnotes = db.get_note(m.chat.id, note)
     all_notes = db.get_all_notes(m.chat.id)
 
     if note not in all_notes:
         await m.reply_text("This note does not exists!")
         return
+
+    getnotes = db.get_note(m.chat.id, note)
 
     msgtype = getnotes["msgtype"]
     if not getnotes:

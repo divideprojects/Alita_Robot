@@ -105,8 +105,10 @@ async def get_note_type(m):
     if len(args) >= 3:
         text = args[2]
         data_type = Types.TEXT
+        message_id = m.message_id
 
     elif m.reply_to_message:
+        message_id = m.reply_to_message.message_id
 
         if m.reply_to_message.text:
             text = m.reply_to_message.text.markdown
@@ -154,9 +156,9 @@ async def get_note_type(m):
             data_type = Types.ANIMATION
 
     else:
-        return None, None, None, None
+        return None, None, None, None, None
 
-    return note_name, text, data_type, content
+    return note_name, text, message_id, data_type, content
 
 
 async def get_welcome_type(m):
