@@ -302,7 +302,7 @@ async def priv_notes(_, m: Message):
 
 
 @Alita.on_message(filters.command(["notes", "saved"], PREFIX_HANDLER) & filters.group)
-async def local_notes(c: Alita, m: Message):
+async def local_notes(_, m: Message):
     getnotes = db.get_all_notes(m.chat.id)
     if not getnotes:
         await m.reply_text(f"There are no notes in <b>{m.chat.title}</b>.")

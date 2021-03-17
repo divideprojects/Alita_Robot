@@ -37,7 +37,7 @@ __help__ = "plugins.rules.help"
 
 
 @Alita.on_message(filters.command("rules", PREFIX_HANDLER) & filters.group)
-async def get_rules(c: Alita, m: Message):
+async def get_rules(_, m: Message):
 
     chat_id = m.chat.id
     rules = db.get_rules(chat_id)
