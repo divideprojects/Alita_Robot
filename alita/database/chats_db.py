@@ -40,12 +40,14 @@ class Chats:
                 users_old = curr["users"]
                 users_old.append(user_id)
                 users = list(set(users_old))
+                members_count = len(users)
                 return self.collection.update(
                     {"_id": chat_id},
                     {
                         "_id": chat_id,
                         "chat_name": chat_name,
                         "users": users,
+                        "members_count": members_count,
                     },
                 )
             return self.collection.insert_one(
@@ -53,6 +55,7 @@ class Chats:
                     "_id": chat_id,
                     "chat_name": chat_name,
                     "users": [user_id],
+                    "members_count": 1,
                 },
             )
 
