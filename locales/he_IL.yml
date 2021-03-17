@@ -52,16 +52,16 @@ strings:
     bans:
       main: "בינס"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        מישהו מעצבן נכנס לקבוצה שלך?
+        רוצה לאסור/להגביל אותו /לה?
+        זהו התוסף עבורכם, בעיטה בקלות, איסור ואוסור חברים בקבוצה.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /skick: Kick the user replied or tagged and delete the kick messsage.
-        × /ban: Bans the user replied to or tagged.
-        × /sban: Kick the user replied or tagged and delete the ban messsage.
-        × /unban: Unbans the user replied to or tagged.
+        ** מנהלה בלבד: **
+        × /בעיטה: בעט המשתמש השיב או מתויג.
+        × /skick: לבעוט במשתמש השיב או מתויג ולמחוק את מרווה הבעיטה.
+        × /ban: Bans המשתמש השיב או מתויג.
+        × /sban: לבעוט את המשתמש השיב או מתויג ולמחוק את מרווה החרם.
+        × /unban: Unbans המשתמש השיב או מתויג.
     blacklist:
       main: "רשימה שחורה"
       help: |-
@@ -240,7 +240,7 @@ strings:
         × /ויקי <query>: ויקי השאילתה שלכם.
   admin:
     adminlist:
-      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
+      adminstr: "כתובות <b>{chat_title}</b>:\n\n"
       note_cached: "<i>הערה:</i> אלה ערכים מוטמנים!"
       note_updated: "<i>הערה:</i> אלה הם ערכים מעודכנים!"
       reloaded_admins: "נטענו את כל כתובות השיחה בצ ' אט זה!"
@@ -360,7 +360,7 @@ strings:
     action_get: "הפעולה הנוכחית עבור רשימות שחורות בצ ' אט זה היא <i><b>{action}</b></i>"
     action_set: "הגדרת פעולה עבור הרשימה השחורה עבור <b>{action}</b>"
     added_blacklist: "נוסף <code>{trigger}</code> במילות הרשימה השחורה!"
-    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
+    curr_blacklist_initial: "מילים שחורות נוכחיות <b>{chat_title}</b>:\n\n"
     no_bl_found: "אין רשימה שחורה <b>{bl_word}</b> נמצאו!"
     no_blacklist: "אין הודעות שחורות <b>{chat_title}</b>!"
     rm_blacklist: "<b>{bl_word}</b> ממילות הרשימה השחורה!"
@@ -390,13 +390,13 @@ strings:
     uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
     donate_owner: |-
-      Hey Thanks for your thought of donating me!
-      When you donate, all the fund goes towards my development which makes on fast and responsive.
-      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+      היי תודה על המחשבה שלך לתרום אותי!
+      כאשר אתה תורם, כל הקרן הולכת לכיוון הפיתוח שלי אשר עושה על מהירות ומגיב.
+      התרומה שלך אולי גם לי להביא לי תכונה חדשה או שתיים, אשר לא יכולתי לקבל עקב מגבלות שרת.
 
-      All the fund would be put into my services such as database, storage and hosting!
+      כל הקרן תהיה לשים לתוך השירותים שלי כגון מסד נתונים, אחסון ואירוח!
 
-      You can donate by contacting my owner here: @DivideProjectsBot
+      אתה יכול לתרום על ידי יצירת קשר עם הבעלים שלי @DivideProjectsBot :
     back_btn: חזרה
     check_help: "בדקו את העזרה לשימוש בפקודה זו."
     close_btn: קרוב
