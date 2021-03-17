@@ -152,7 +152,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
             rply += f"- [{note[0]}](https://t.me/{BOT_USERNAME}?start=note_{chat_id}_{note[1]})\n"
         await m.reply_text(rply, disable_web_page_preview=True)
         return
-    elif len(help_lst) == 3:
+    if len(help_lst) == 3:
         note_hash = help_option.split("_")[2]
         getnotes = notes_db.get_note_by_hash(note_hash)
     else:
@@ -290,7 +290,7 @@ async def start(c: Alita, m: Message):
             if help_option.startswith("note"):
                 await get_private_note(c, m, help_option)
                 return
-            elif help_option.startswith("rules"):
+            if help_option.startswith("rules"):
                 await get_private_rules(c, m, help_option)
                 return
 
