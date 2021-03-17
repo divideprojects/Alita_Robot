@@ -19,5 +19,5 @@
 from alita.tr_engine.tr_engine import lang_dict, tlang
 
 
-def useless_func():
+async def useless_func():
     return lang_dict, tlang

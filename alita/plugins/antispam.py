@@ -183,7 +183,7 @@ async def gban_list(_, m: Message):
         if user["reason"]:
             banfile += f"Reason: {user['reason']}\n"
 
-    with BytesIO(str.encode(remove_markdown_and_html(banfile))) as f:
+    with BytesIO(str.encode(await remove_markdown_and_html(banfile))) as f:
         f.name = "gbanlist.txt"
         await m.reply_document(
             document=f,

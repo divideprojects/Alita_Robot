@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def remove_markdown_and_html(text):
+async def remove_markdown_and_html(text):
     clean_html = (
         text.replace("<code>", "")
         .replace("</code>", "")

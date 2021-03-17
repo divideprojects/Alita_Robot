@@ -33,17 +33,14 @@ async def admin_cache_reload(m):
     with THREAD_LOCK:
         global ADMIN_CACHE
         LOGGER.info(f"Loading admins for chat {m.chat.id}")
-        admin_list = []
-        async for i in m.chat.iter_members(filter="administrators"):
-            if i.user.is_bot or i.user.is_deleted:
-                continue
-            admin_list.append(
-                (
-                    i.user.id,
-                    ("@" + i.user.username) if i.user.username else i.user.first_name,
-                ),
+        admin_list = [
+            (
+                z.user.id,
+                ("@" + z.user.username) if z.user.username else z.user.first_name,
             )
+            async for z in m.chat.iter_members(filter="administrators")
+            if not (z.user.is_bot or z.user.is_deleted)
+        ]
         ADMIN_CACHE[m.chat.id] = admin_list
-        admin_list = [user[0] for user in admin_list]
 
         return admin_list

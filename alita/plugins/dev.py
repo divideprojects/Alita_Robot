@@ -138,7 +138,7 @@ async def neofetch_stats(_, m: Message):
     try:
         await m.reply_text(OUTPUT, quote=True)
     except MessageTooLong:
-        with BytesIO(str.encode(remove_markdown_and_html(OUTPUT))) as f:
+        with BytesIO(str.encode(await remove_markdown_and_html(OUTPUT))) as f:
             f.name = "neofetch.txt"
             await m.reply_document(document=f, caption="neofetch result")
         await m.delete()
@@ -190,7 +190,7 @@ async def evaluate_code(c: Alita, m: Message):
     try:
         await sm.edit(final_output)
     except MessageTooLong:
-        with BytesIO(str.encode(remove_markdown_and_html(final_output))) as f:
+        with BytesIO(str.encode(await remove_markdown_and_html(final_output))) as f:
             f.name = "py.txt"
             await m.reply_document(
                 document=f,
@@ -242,7 +242,7 @@ async def execution(_, m: Message):
     try:
         await sm.edit_text(OUTPUT)
     except MessageTooLong:
-        with BytesIO(str.encode(remove_markdown_and_html(OUTPUT))) as f:
+        with BytesIO(str.encode(await remove_markdown_and_html(OUTPUT))) as f:
             f.name = "sh.txt"
             await m.reply_document(
                 document=f,
@@ -309,7 +309,7 @@ async def chats(c: Alita, m: Message):
             LOGGER.error(ef)
             await m.reply_text(f"**Error:**\n{ef}")
 
-    with BytesIO(str.encode(remove_markdown_and_html(chatfile))) as f:
+    with BytesIO(str.encode(await remove_markdown_and_html(chatfile))) as f:
         f.name = "chatlist.txt"
         await m.reply_document(
             document=f,
@@ -368,7 +368,7 @@ async def chat_broadcast(c: Alita, m: Message):
 
     await exmsg.edit_text("Done broadcasting ✅")
     if err_str:
-        with BytesIO(str.encode(remove_markdown_and_html(err_str))) as f:
+        with BytesIO(str.encode(await remove_markdown_and_html(err_str))) as f:
             f.name = "error_broadcast.txt"
             await m.reply_document(
                 document=f,

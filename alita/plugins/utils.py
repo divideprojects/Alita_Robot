@@ -87,7 +87,7 @@ async def wiki(_, m: Message):
         try:
             await m.reply_text(result, parse_mode="html", disable_web_page_preview=True)
         except MessageTooLong:
-            with BytesIO(str.encode(remove_markdown_and_html(result))) as f:
+            with BytesIO(str.encode(await remove_markdown_and_html(result))) as f:
                 f.name = "result.txt"
                 await m.reply_document(
                     document=f,
@@ -121,7 +121,7 @@ async def get_lyrics(_, m: Message):
     try:
         await em.edit_text(reply)
     except MessageTooLong:
-        with BytesIO(str.encode(remove_markdown_and_html(reply))) as f:
+        with BytesIO(str.encode(await remove_markdown_and_html(reply))) as f:
             f.name = "lyrics.txt"
             await m.reply_document(
                 document=f,

@@ -49,21 +49,7 @@ async def adminlist_show(_, m: Message):
             admin_list = ADMIN_CACHE[m.chat.id]
             note = tlang(m, "admin.adminlist.note_cached")
         except KeyError:
-            admin_list = []
-            async for i in m.chat.iter_members(
-                filter="administrators",
-            ):
-                if i.user.is_deleted or i.user.is_bot:
-                    continue  # We don't need deleted accounts or bot accounts
-                admin_list.append(
-                    (
-                        i.user.id,
-                        ("@" + i.user.username)
-                        if i.user.username
-                        else i.user.first_name,
-                    ),
-                )
-            admin_list = sorted(admin_list, key=lambda x: x[1])
+            await admin_cache_reload(m)
             note = tlang(m, "admin.adminlist.note_updated")
             ADMIN_CACHE[m.chat.id] = admin_list
 
@@ -148,32 +134,9 @@ async def promote_usr(c: Alita, m: Message):
         # ----- Add admin to temp cache -----
         try:
             global ADMIN_CACHE
-            admin_list = ADMIN_CACHE[m.chat.id]  # Load Admins from cached list
+            ADMIN_CACHE[m.chat.id]  # Load Admins from cached list
         except KeyError:
-            admin_list = []
-            async for i in m.chat.iter_members(filter="administrators"):
-                if (
-                    i.user.is_deleted or i.user.is_bot
-                ):  # Don't cache deleted users and bots!
-                    continue
-                admin_list.append(
-                    (
-                        i.user.id,
-                        ("@" + i.user.username)
-                        if i.user.username
-                        else i.user.first_name,
-                    ),
-                )
-
-        u = await m.chat.get_member(user_id)
-        admin_list.append(
-            [
-                u.user.id,
-                ("@" + u.user.username) if u.user.username else u.user.first_name,
-            ],
-        )
-        admin_list = sorted(admin_list, key=lambda x: x[1])
-        ADMIN_CACHE[m.chat.id] = admin_list
+            await admin_cache_reload(m)
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -225,20 +188,7 @@ async def demote_usr(c: Alita, m: Message):
             user = next(user for user in admin_list if user[0] == user_id)
             admin_list.remove(user)
         except (KeyError, StopIteration):
-            admin_list = []
-            async for i in m.chat.iter_members(filter="administrators"):
-                if i.user.is_deleted or i.user.is_bot:
-                    continue
-                admin_list.append(
-                    [
-                        i.user.id,
-                        ("@" + i.user.username)
-                        if i.user.username
-                        else i.user.first_name,
-                    ],
-                )
-            admin_list = sorted(admin_list, key=lambda x: x[1])
-            ADMIN_CACHE[m.chat.id] = admin_list
+            await admin_cache_reload(m)
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
