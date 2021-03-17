@@ -42,5 +42,6 @@ async def admin_cache_reload(m):
             if not (z.user.is_bot or z.user.is_deleted)
         ]
         ADMIN_CACHE[m.chat.id] = admin_list
+        LOGGER.info("Loaded!!")
 
         return admin_list

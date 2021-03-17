@@ -49,7 +49,7 @@ async def adminlist_show(_, m: Message):
             admin_list = ADMIN_CACHE[m.chat.id]
             note = tlang(m, "admin.adminlist.note_cached")
         except KeyError:
-            await admin_cache_reload(m)
+            admin_list = await admin_cache_reload(m)
             note = tlang(m, "admin.adminlist.note_updated")
             ADMIN_CACHE[m.chat.id] = admin_list
 
@@ -64,7 +64,7 @@ async def adminlist_show(_, m: Message):
                 )
                 adminstr += f"- {mention}\n"
             except PeerIdInvalid:
-                pass
+                continue
 
         await m.reply_text(adminstr + "\n" + note)
 
@@ -185,7 +185,7 @@ async def demote_usr(c: Alita, m: Message):
         try:
             global ADMIN_CACHE
             admin_list = ADMIN_CACHE[m.chat.id]
-            user = next(user for user in admin_list if user[0] == user_id)
+            user = next(user for user in set(admin_list) if user[0] == user_id)
             admin_list.remove(user)
         except (KeyError, StopIteration):
             await admin_cache_reload(m)

@@ -35,7 +35,7 @@ class Blacklist:
             if curr:
                 triggers_old = curr["triggers"]
                 triggers_old.append(trigger)
-                triggers = list(dict.fromkeys(triggers_old))
+                triggers = list(set(triggers_old))
                 return self.collection.update(
                     {"_id": chat_id},
                     {
@@ -60,7 +60,7 @@ class Blacklist:
                     triggers_old.remove(trigger)
                 except ValueError:
                     return False
-                triggers = list(dict.fromkeys(triggers_old))
+                triggers = list(set(triggers_old))
                 return self.collection.update(
                     {"_id": chat_id},
                     {

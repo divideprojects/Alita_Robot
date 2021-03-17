@@ -84,7 +84,7 @@ DEV_USERS = Config.DEV_USERS
 SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 SUPPORT_STAFF = list(
-    dict.fromkeys([OWNER_ID] + SUDO_USERS + DEV_USERS + WHITELIST_USERS),
+    set([OWNER_ID] + SUDO_USERS + DEV_USERS + WHITELIST_USERS),
 )  # Remove duplicates!
 
 # Plugins, DB and Workers

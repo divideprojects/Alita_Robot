@@ -106,7 +106,7 @@ class Notes:
             chats_ids = []
             for chat in notes:
                 chats_ids.append(chat["chat_id"])
-            return len(list(dict.fromkeys(chats_ids)))
+            return len(set(chats_ids))
 
     def count_all_notes(self):
         with INSERTION_LOCK:

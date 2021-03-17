@@ -37,7 +37,9 @@ class Approve:
             if curr_approve:
                 try:
                     return next(
-                        user for user in curr_approve["users"] if user[0] == user_id
+                        user
+                        for user in set(curr_approve["users"])
+                        if user[0] == user_id
                     )
                 except StopIteration:
                     return False
@@ -50,7 +52,7 @@ class Approve:
             if curr:
                 users_old = curr["users"]
                 users_old.append((user_id, user_name))
-                users = list(dict.fromkeys(users_old))  # Remove duplicates
+                users = list(set(users_old))  # Remove duplicates
                 return self.collection.update(
                     {"_id": chat_id},
                     {
@@ -72,7 +74,7 @@ class Approve:
                 users = curr["users"]
 
                 try:
-                    user = next(user for user in users if user[0] == user_id)
+                    user = next(user for user in set(users) if user[0] == user_id)
                 except StopIteration:
                     return "Not Approved"
 
