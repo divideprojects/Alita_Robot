@@ -58,7 +58,9 @@ strings:
 
         ** Admin seulement: **
         × /kick: Kick l'utilisateur a répondu ou balisé.
-        × /ban: Bans l'utilisateur a répondu à ou marqué.
+        × /skick: Kick l'utilisateur a répondu ou a marqué et supprimé le coup de pied.
+        × /ban: Bans l'utilisateur a répondu ou balisé.
+        × /sban: Kick l'utilisateur a répondu ou a étiqueté et supprimé le message d'interdiction.
         × /unban: Unbans l'utilisateur a répondu ou balisé.
     blacklist:
       main: "Liste noire"
@@ -143,6 +145,10 @@ strings:
         × /get <note>
         Obtenez cette note, si disponible.
 
+        **Get Note in Raw format**
+        × /get <note> noformat ou /get <note> raw
+        Get this note in raw format, pour que vous puissiez le modifier et le mettre à jour.
+
         **Supprimer la note**
         × /clear <note>
         Supprimez cette note, si disponible.
@@ -157,10 +163,14 @@ strings:
         × /notes
         Obtenez toutes vos notes, si trop de notes, veuillez utiliser ceci dans votre message enregistré à la place!
 
+        × /privaterules <on/yes/no/off>: activer ou désactiver les règles privées, empêche le spam dans le chat lorsque les gens utilisent la commande de notes.
+
 
         ─ **Format de note** ─
         -> **Bouton**
-        `[Texte du bouton](buttonurl:t. e/DivideProjects)`
+        `[Texte du bouton](buttonurl:t.me/DivideProjects)`
+        -> **Pour un autre bouton dans la même ligne**
+        `[Button2](buttonurl:t. e/DivideProjectsDiscussion:same)`
         -> **Bold**
         `**Bold**`
         -> __Italic__
@@ -206,15 +216,6 @@ strings:
         × /setrules <rules>: Définissez les règles pour cette discussion, également en tant que réponse à un message.
         × /clearrules: Effacer les règles pour cette discussion.
         × /privrules <on/yes/no/off>: Turns on / off the option to send the rules to PM of user or group.
-    spam_protect:
-      main: "Spam Protect"
-      help: |-
-        Les spammeurs rejoignant votre groupe?
-        Pas de problème du tout, ici vous pouvez trouver toutes les options pour protéger vos groupes contre les raids et les scommes !
-
-        ** Admin seulement: **
-        × /cas <on/off>: Active ou désactive le contrôle CAS pour le groupe.
-        × /underattaque <on/off>: Kick tous les nouveaux utilisateurs à l'entrée !
     utils:
       main: "Utils"
       help: |-
@@ -237,20 +238,19 @@ strings:
         × /wiki <query>: wiki votre requête.
   admin:
     adminlist:
-      adminstr: |-
-        Admins en <b>{chat_title}</b>:
+      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Note:</i> Ces valeurs sont mises en cache !"
       note_updated: "<i>Note:</i> Ces valeurs sont à jour !"
       reloaded_admins: "Rechargé tous les administrateurs dans cette discussion !"
       use_admin_cache: "Utilisez /admincache pour recharger les administrateurs !"
     ban:
+      user_already_banned: "Cet utilisateur est déjà interdit, aucune utilisation les interdire à nouveau !"
       no_target: "Je ne peux rien interdire !"
       admin_cannot_ban: 'Cet utilisateur est un administrateur, je ne peux pas les interdire ! "'
       ban_all: "Etes-vous sûr de vouloir interdire tous les membres de ce groupe?"
       banned_user: "{admin} interdit {banned} dans la discussion <b>{chat_title}</b>!"
       banning_all: "Interdiction de tous les membres ..."
       bot_no_right: "Je n'ai pas assez de droits pour interdire cet utilisateur."
-      owner_cannot_ban: "Cette personne a créé le groupe, comment puis-je les interdire?"
     demote:
       no_target: "Je ne peux rien dénoter !"
       bot_no_right: "Je n'ai pas assez de droits pour dénoter cet utilisateur."
@@ -259,16 +259,15 @@ strings:
       Inviter un lien pour la discussion <b>{chat_name}</b>:
       {link}
     kick:
+      user_already_banned: "Cet utilisateur est déjà interdit, sans les utiliser !"
       no_target: "Je ne peux rien donner !"
       admin_cannot_kick: 'Cet utilisateur est un administrateur, je ne peux pas les lancer ! "'
       bot_no_right: "Je n'ai pas assez de droits pour donner un coup de pied à cet utilisateur."
       kicked_user: "{admin} lancé {kicked} en chat <b>{chat_title}<b>!"
-      owner_cannot_kick: "Cette personne a créé le groupe, comment puis-je les lancer?"
     mute:
       admin_cannot_mute: 'Cet utilisateur est un administrateur, je ne peux pas les muter ! "'
       bot_no_right: "Je n'ai pas assez de droits pour muter cet utilisateur."
       muted_user: "Admin {admin} muté {muted}!"
-      owner_cannot_mute: "Cette personne a créé le groupe, comment puis-je les muter?"
     no_invite_perm: "Je n'ai pas la permission d'inviter le lien !"
     no_restrict_perm: "Vous n'êtes pas autorisé à restreindre les membres !"
     no_user_invite_perm: "Vous n'êtes pas autorisé à inviter des utilisateurs."
@@ -280,6 +279,7 @@ strings:
       promoted_user: "{promoter} promu {promoted} dans la discussion <b>{chat_title}</b>!"
     support_cannot_restrict: "Cet utilisateur est dans mon personnel de support, ne peut pas les restreindre."
     unban:
+      user_not_banned: "Comment puis-je interdire à un utilisateur qui n'est pas interdit?"
       no_target: "Je ne peux rien interdire !"
       bot_no_right: "Je n'ai pas assez de droits pour interdire cet utilisateur."
       unbanned_user: "{admin} non interdit {unbanned} en chat <b>{chat_title}</b>!"
@@ -328,8 +328,7 @@ strings:
         <b>Raison:</b> <code>{gban_reason}</code>
 
         <b>Discussion d'appel:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: |-
-      Voici toutes les geys interdites à l'échelle mondiale !
+    here_gbanned_start: "Voici toutes les geys interdites à l'échelle mondiale !\n\n"
     none_gbanned: "Il n'y a pas d'utilisateurs ginterdits ... !"
     num_gbans: "Nombre de personnes ginterdites: <code>{count}</code>"
     part_of_support: "Cet utilisateur fait partie de mon Support !, ne peux pas nous interdire !"
@@ -359,19 +358,11 @@ strings:
     action_get: "L'action en cours pour les listes noires dans cette discussion est <i><b>{action}</b></i>"
     action_set: "Définir une action pour la liste noire à <b>{action}</b>"
     added_blacklist: "Ajouté <code>{trigger}</code> dans la liste noire !"
-    curr_blacklist_initial: |-
-      Les mots Blackrépertoriés actuels dans <b>{chat_title}</b>:
+    curr_blacklist_initial: "Les mots Blackrépertoriés actuels dans <b>{chat_title}</b>:\n\n"
     no_bl_found: "No blacklist <b>{bl_word}</b> found !"
     no_blacklist: "Il n'y a pas de messages sur la liste noire dans <b>{chat_title}</b>!"
     rm_blacklist: "Supprimé <b>{bl_word}</b> de la liste noire !"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        Il y a <b>{len_admins}</b> admins que je connais !
-
-        <code>{admindict}</code>
-      alladmins_btn: "Tous les administrateurs"
-      getting_admins: "Obtention de tous les administrateurs dans ma mémoire cache ..."
     bot_ip: |-
       <b>Bot IP Adresse:</b>
       <code>{ip}</code>
@@ -396,6 +387,14 @@ strings:
       start_speedtest: "Calcul de ma vitesse ..."
     uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
+    donate_owner: |-
+      Hey Merci pour votre pensée de me faire don de moi !
+      Quand vous faites un don, tout le fonds va vers mon développement qui fait vite et réagissant.
+      Votre don pourrait aussi me trouver une nouvelle fonction ou deux, ce que je n'ai pas pu obtenir en raison des limitations du serveur.
+
+      Tous les fonds seraient mis dans mes services tels que base de données, stockage et hébergement !
+
+      Vous pouvez faire un don en contactant mon propriétaire ici: @DivideProjectsBot
     back_btn: Précédent
     check_help: "Vérifiez l'aide sur l'utilisation de cette commande."
     close_btn: Fermer
@@ -452,6 +451,10 @@ strings:
       <b>Inviter des utilisateurs: </b> {vinvite}
       <b>Messages d'épinglage: </b> {vpin}
   pin:
+    antichannelpin:
+      current_status: "Statut actuel AntiChannelPin: {status}"
+      turned_on: "Turned on AntiChannelPin, maintenant tous les messages réservés par le canal seront débloquant automatiquement !"
+      turned_off: "Turned off AntiChannelPin, maintenant tous les messages épinglisés par le canal resteront coincés !"
     no_pin_msg: "Réponse à un message auquel vous voulez épinglez ..."
     no_rights_pin: "Je n'ai pas assez de droits pour épinglette des messages."
     no_rights_unpin: "Je n'ai pas assez de droits pour ne pas épinglette de messages."
@@ -528,6 +531,8 @@ strings:
         <b>Langue:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
         <b>Traduction:</b> <code>{translation}</code>
     user_info:
+      id_not_found: "Utilisateur introuvable, vérifiez à nouveau l'ID"
+      peer_id_error: "Je n'ai pas vu cet utilisateur, l'esprit de transmettre un de ses messages pour que je puisse les reconnaître?"
       getting_info: "Obtention des informations utilisateur ..."
       info_text:
         last_name: |-

@@ -58,7 +58,9 @@ strings:
 
         ** Sólo administrador: **
         × /kick: Kick el usuario respondió o etiquetó.
+        × /skick: Kick el usuario respondió o etiquetó y borró el mensaje de patada.
         × /ban: Bans al que el usuario respondió o etiquetó.
+        × /sban: Kick el usuario respondió o etiquetó y borró el mensaje de prohibición.
         × /unban: Unbans the user respondied to or tagged.
     blacklist:
       main: "Lista negra"
@@ -143,24 +145,32 @@ strings:
         × /get <note>
         Obtén esa nota, si está disponible.
 
+        **Obtén una nota en formato Raw**
+        × /get <note> noformat o /get <note> raw
+        Obtén esa nota en formato crudo, para que puedas editarlo y actualizarlo.
+
         **Eliminar nota**
         × /clear <note>
         Eliminar esa nota, si está disponible.
 
         × /clearall
-        Limpia todas las notas en el chat
-        **NOTA:** ¡Solo puede ser usado por el dueño del chat!
+        Limpia todas las notas en el chat!
+        **NOTA:** ¡Sólo puede ser utilizado por el dueño del chat!
 
         **Todas las notas**
-        × /guardado
+        × /saved
         o
         × /notas
         Obtener todas sus notas, si hay demasiadas notas, por favor use esto en su mensaje guardado en su lugar!
 
+        × /privaterules <on/yes/no/off>: Si activar o desactivar las reglas privadas, previene el spam en el chat cuando la gente usa el comando de notas.
 
-        → **Formato de Nota **** →
+
+        → **Formato de nota** →
         -> **Botón**
-        `[Texto del botón](buttonurl:t. e/DivideProjects)`
+        `[Texto del botón](buttonurl:t.me/DivideProjects)`
+        -> **Para otro botón en la misma línea**
+        `[Button2](buttonurl:t. e/DivideProjectsDiscussion:same)`
         -> **Bold**
         `**Bold**`
         -> __Italic__
@@ -206,15 +216,6 @@ strings:
         × /setrules <rules>: Establezca las reglas para este chat, también funciona como respuesta a un mensaje.
         × /clearrules: Borrar las reglas para este chat.
         × /privreglas <on/yes/no/off>: Activa/desactiva la opción de enviar las reglas a PM de usuario o grupo.
-    spam_protect:
-      main: "Protección contra spam"
-      help: |-
-        ¿Los spammers uniéndose a su grupo
-        No hay problema en absoluto, aquí puede encontrar todas las opciones para proteger a sus grupos de las redadas y los scouts!
-
-        ** Sólo Admin: **
-        × /cas <on/off>: Activa o desactiva el cheque de la CAS para el grupo.
-        × /subataque <on/off>: ¡Kick todos los nuevos usuarios en la entrada!
     utils:
       main: "Utils"
       help: |-
@@ -237,20 +238,19 @@ strings:
         × /wiki <query>: wiki de su consulta.
   admin:
     adminlist:
-      adminstr: |-
-        Administradores en {chat_title}:
+      adminstr: "Admins en <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Nota:</i> Estos son valores en caché!"
       note_updated: "¡Estos son valores actualizados!"
       reloaded_admins: "¡Recargué a todos los administradores en este chat!"
       use_admin_cache: "¡Utiliza /admincache para recargar administradores!"
     ban:
+      user_already_banned: "Este usuario ya está prohibido, ¡no utilizar de nuevo prohibirlos!"
       no_target: "¡No puedo prohibir nada!"
       admin_cannot_ban: 'Este usuario es un administrador, ¡no puedo prohibirlo! "'
       ban_all: "¿Estás seguro de que deseas prohibir a todos los miembros de este grupo?"
       banned_user: "¡{admin} prohibido {banned} en el chat {chat_title}!"
       banning_all: "Prohibir a todos los miembros ..."
       bot_no_right: "No tengo suficientes derechos para prohibir a este usuario."
-      owner_cannot_ban: "Esta persona creó el grupo, ¿cómo puedo prohibirla?"
     demote:
       no_target: "¡No puedo degradar nada!"
       bot_no_right: "No tengo suficientes derechos para degradar a este usuario."
@@ -259,16 +259,15 @@ strings:
       Enlace de invitación para chat {chat_name}:
       {link}
     kick:
+      user_already_banned: "¡Este usuario ya está prohibido, no sirve para patearlos!"
       no_target: "¡No puedo patear nada!"
       admin_cannot_kick: 'Este usuario es un administrador, ¡no puedo patearlo! "'
       bot_no_right: "No tengo suficientes derechos para expulsar a este usuario."
       kicked_user: "¡{admin} pateó {kicked} en el chat {chat_title}!"
-      owner_cannot_kick: "Esta persona creó el grupo, ¿cómo puedo patearlos?"
     mute:
       admin_cannot_mute: '¡Este usuario es un administrador, no puedo silenciarlo! "'
       bot_no_right: "No tengo suficientes derechos para silenciar a este usuario."
       muted_user: "¡Admin {admin} silenciado a {muted}!"
-      owner_cannot_mute: "Esta persona creó el grupo, ¿cómo puedo silenciarlos?"
     no_invite_perm: "¡No tengo permiso para el enlace de invitación!"
     no_restrict_perm: "¡No tienes permisos para restringir miembros!"
     no_user_invite_perm: "No tienes permisos para invitar usuarios."
@@ -280,6 +279,7 @@ strings:
       promoted_user: "¡{promoter} promovió {promoted} en el chat {chat_title}!"
     support_cannot_restrict: "Este usuario está en mi personal de soporte, no puede restringirlos."
     unban:
+      user_not_banned: "¿Cómo puedo desprohibir a un usuario que no está prohibido?"
       no_target: "¡No puedo desprohibir nada!"
       bot_no_right: "No tengo suficientes derechos para desbloquear a este usuario."
       unbanned_user: "¡{admin} desbanned {unbanned} en el chat {chat_title}!"
@@ -328,9 +328,7 @@ strings:
         Razón: "{gban_reason}"
 
         Chat de apelación: @ {SUPPORT_GROUP}
-    here_gbanned_start: |-
-      ¡Aquí están todos los géys prohibidos a nivel mundial!
-
+    here_gbanned_start: "¡Aquí están todas las geys prohibidas globalmente!\n\n"
     none_gbanned: "¡No hay usuarios con gbanned ...!"
     num_gbans: "Número de personas con gban {count}"
     part_of_support: "¡Este usuario es parte de mi Soporte! ¡No podemos prohibir el nuestro!"
@@ -360,20 +358,11 @@ strings:
     action_get: "La acción actual para las listas negras en este chat es {action}"
     action_set: "Establecer la acción de la lista negra para esto en {action}"
     added_blacklist: "¡Se agregó {trigger} en palabras de la lista negra!"
-    curr_blacklist_initial: |-
-      Palabras actuales incluidas en la lista negra en {chat_title}:
-
+    curr_blacklist_initial: "Palabras actuales de Blacklisten en <b>{chat_title}</b>:\n\n"
     no_bl_found: "¡No se encontró ninguna lista negra {bl_word}!"
     no_blacklist: "¡No hay mensajes en la lista negra en {chat_title}!"
     rm_blacklist: "¡Se eliminó {bl_word} de las palabras de la lista negra!"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        ¡Conozco administradores de {len_admins}!
-
-        {admindict}
-      alladmins_btn: "Todos los administradores"
-      getting_admins: "Obteniendo todos los administradores en mi caché ..."
     bot_ip: |-
       Dirección IP del bot:
       {ip}
@@ -398,6 +387,14 @@ strings:
       start_speedtest: "Calculando mi velocidad ..."
     uptime: "Tiempo de actividad: {tiempo de actividad}"
   general:
+    donate_owner: |-
+      Hey Gracias por su pensamiento de donarme!
+      Cuando usted dona, todo el fondo va hacia mi desarrollo que hace en rápido y sensible.
+      Tu donación también podría hacerme una nueva característica o dos, que no era capaz de obtener debido a las limitaciones del servidor.
+
+      Todo el fondo sería puesto en mis servicios como la base de datos, almacenamiento y alojamiento!
+
+      Usted puede donar contactando a mi propietario aquí: @DivideProjectsBot
     back_btn: atrás
     check_help: "Consulte la ayuda sobre cómo utilizar este comando."
     close_btn: Cerrar
@@ -452,6 +449,10 @@ strings:
       Invitar usuarios: {vinvite}
       Mensajes de PIN: {vpin}
   pin:
+    antichannelpin:
+      current_status: "Estado actual de AntiChannelPin: {status}"
+      turned_on: "Activado AntiChannelPin, ahora todo el mensaje marcado por el canal se desinmovilizará automáticamente."
+      turned_off: "Desactivado AntiChannelPin, ahora todo el mensaje marcado por el canal permanecerá marcado!"
     no_pin_msg: "Responder a un mensaje al que desea fijar ..."
     no_rights_pin: "No tengo suficientes derechos para fijar mensajes."
     no_rights_unpin: "No tengo suficientes derechos para desanclar mensajes."
@@ -528,6 +529,8 @@ strings:
         Idioma: {from_lang} -> {to_lang}
         Traducción: {traducción}
     user_info:
+      id_not_found: "No se ha encontrado el usuario, compruebe el ID de nuevo"
+      peer_id_error: "No he visto a este usuario, ¿reenviar uno de sus mensajes para que pueda reconocerlos?"
       getting_info: "Obteniendo información de usuario ..."
       info_text:
         last_name: |-
