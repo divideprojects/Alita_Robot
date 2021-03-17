@@ -163,6 +163,8 @@ strings:
         × /notes
         Get all your notes, if too much notes, please use this in your saved message instead!
 
+        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
+
 
         ── **Note Format** ──
         -> **Button**
@@ -238,8 +240,7 @@ strings:
         × /википедия <query>: вики Ваш запрос.
   admin:
     adminlist:
-      adminstr: |-
-        Администраторы в <b>{chat_title}</b>:
+      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Примечание:</i> Это кэшированные значения!"
       note_updated: "<i>Примечание:</i> Это актуальное значение!"
       reloaded_admins: "Перезагрузить все администраторы в этом чате!"
@@ -329,8 +330,7 @@ strings:
         <b>Причина:</b> <code>{gban_reason}</code>
 
         <b>Обращение чат:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: |-
-      Здесь все глобально запрещенные геи!
+    here_gbanned_start: "Here are all the globally banned geys!\n\n"
     none_gbanned: "Нет никаких запрещёных пользователей ...!"
     num_gbans: "Число лиц, которым запрещен въезд: <code>{count}</code>"
     part_of_support: "Этот пользователь входит в мою поддержку!"
@@ -360,19 +360,11 @@ strings:
     action_get: "Текущее действие для черных списков в этом чате- <i><b>{action}</b></i>"
     action_set: "Задать действие для черного списка для этого значения: <b>{action}</b>"
     added_blacklist: "Добавлено <code>{trigger}</code> в черном списке!"
-    curr_blacklist_initial: |-
-      Текущие слова Blacklawords в <b>{chat_title}</b>:
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     no_bl_found: "Нет черного списка <b>{bl_word}</b> найден!"
     no_blacklist: "Нет сообщений в черном списке в <b>{chat_title}</b>!"
     rm_blacklist: "Удален <b>{bl_word}</b> из черного списка!"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        Есть <b>{len_admins}</b> админов которых я знаю!
-
-        <code>{admindict}</code>
-      alladmins_btn: "Все администраторы"
-      getting_admins: "Получение всех администраторов в моем кэше ..."
     bot_ip: |-
       <b>IP-адрес бота:</b>
       <code>{ip}</code>
@@ -397,6 +389,14 @@ strings:
       start_speedtest: "Вычислить скорость ..."
     uptime: "<b>Время работы:<b> <code>{uptime}</code>"
   general:
+    donate_owner: |-
+      Hey Thanks for your thought of donating me!
+      When you donate, all the fund goes towards my development which makes on fast and responsive.
+      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+      All the fund would be put into my services such as database, storage and hosting!
+
+      You can donate by contacting my owner here: @DivideProjectsBot
     back_btn: Назад
     check_help: "Проверьте, как использовать эту команду."
     close_btn: Закрыть
