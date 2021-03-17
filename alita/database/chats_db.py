@@ -63,7 +63,7 @@ class Chats:
         with INSERTION_LOCK:
             curr = self.collection.find_one({"_id": chat_id})
             if curr:
-                return len(curr["users"])
+                return curr["members_count"]
             return 0
 
     def chat_members(self, chat_id: int):

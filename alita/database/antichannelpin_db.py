@@ -18,6 +18,7 @@
 
 from threading import RLock
 from traceback import format_exc
+
 from pymongo.errors import DuplicateKeyError
 
 from alita import LOGGER
@@ -79,8 +80,10 @@ class AntiChannelPin:
                 query = {}
             return self.collection.find_all(query)
 
-    def list_antipin_chats(self, query):
+    def list_antipin_chats(self, query=None):
         with INSERTION_LOCK:
+            if query is None:
+                query = {}
             try:
                 return ANTIPIN_CHATS
             except Exception as ef:

@@ -39,7 +39,7 @@ class Approve:
                     return next(
                         user for user in curr_approve["users"] if user[0] == user_id
                     )
-                except Exception:
+                except StopIteration:
                     return False
 
             return False
@@ -73,7 +73,7 @@ class Approve:
 
                 try:
                     user = next(user for user in users if user[0] == user_id)
-                except Exception:
+                except StopIteration:
                     return "Not Approved"
 
                 users.remove(user)
