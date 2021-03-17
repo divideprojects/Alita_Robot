@@ -163,6 +163,8 @@ strings:
         × /notes
         Get all your notes, if too much notes, please use this in your saved message instead!
 
+        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
+
 
         ── **Note Format** ──
         -> **Button**
@@ -238,8 +240,7 @@ strings:
         × /wiki <query>: wiki your query.
   admin:
     adminlist:
-      adminstr: |-
-        Administrátoři v <b>{chat_title}</b>:
+      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Poznámka:</i> Jedná se o hodnoty uložené v mezipaměti!"
       note_updated: "<i>Poznámka:</i> Jedná se o hodnoty typu '-to-to-date'!"
       reloaded_admins: "V této konverzaci znovu načetli všechny administrátory!"
@@ -329,8 +330,7 @@ strings:
         <b>Příčina:</b> <code>{gban_reason}</code>
 
         <b>Kasační konverzace:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: |-
-      Zde jsou všechny globálně zakázané geyse!
+    here_gbanned_start: "Here are all the globally banned geys!\n\n"
     none_gbanned: "Nejsou tu žádní zakázaní uživatelé ...!"
     num_gbans: "Počet osob, které jsou zakázanou: <code>{count}</code>"
     part_of_support: "Tento uživatel je součástí mé podpory!, nemohu zakázat naše vlastní!"
@@ -360,19 +360,11 @@ strings:
     action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
     action_set: "Nastavit akci pro černou listinu pro tuto hodnotu na <b>{action}</b>"
     added_blacklist: "Přidán <code>{trigger}</code> v seznamu zakázaných slov!"
-    curr_blacklist_initial: |-
-      Aktuální černá uvedená slova v <b>{chat_title}</b>:
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     no_bl_found: "Nebyla nalezena žádná černá listina <b>{bl_word}</b>!"
     no_blacklist: "Ve formátu <b>{chat_title}</b> nejsou k dispozici žádné zprávy o zakázaných adres."
     rm_blacklist: "Odstraněno <b>{bl_word}</b> ze seznamu zakázaných slov!"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        Existuje <b>{len_admins}</b> admins, které znám!
-
-        <code>{admindict}</code>
-      alladmins_btn: "Všichni administrátoři"
-      getting_admins: "Získání všech administrátorů v mezipaměti ..."
     bot_ip: |-
       <b>Bot IP adresa:</b>
       <code>{ip}</code>
@@ -397,6 +389,14 @@ strings:
       start_speedtest: "Výpočet rychlosti ..."
     uptime: "<b>Doba provozu:<b> <code>{uptime}</code>"
   general:
+    donate_owner: |-
+      Hey Thanks for your thought of donating me!
+      When you donate, all the fund goes towards my development which makes on fast and responsive.
+      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+      All the fund would be put into my services such as database, storage and hosting!
+
+      You can donate by contacting my owner here: @DivideProjectsBot
     back_btn: Zadní
     check_help: "Prosím, zkontrolujte nápovědu, jak tento příkaz použít."
     close_btn: Zavřeno
