@@ -156,6 +156,14 @@ async def report_watcher(c: Alita, m: Message):
             ],
         )
 
+        await m.reply_text(
+            (
+                f"{(await mention_html(m.from_user.first_name, m.from_user.id))} "
+                "reported the message to the admins."
+            ),
+            quote=True,
+        )
+
         for admin in admin_list:
             if (
                 admin.user.is_bot or admin.user.is_deleted
@@ -184,15 +192,6 @@ async def report_watcher(c: Alita, m: Message):
                 except RPCError as ef:
                     LOGGER.error(ef)
                     LOGGER.error(format_exc())
-
-        await m.reply_text(
-            (
-                f"{(await mention_html(m.from_user.first_name, m.from_user.id))} "
-                "reported the message to the admins."
-            ),
-            quote=True,
-        )
-        return
     return
 
 

@@ -18,6 +18,7 @@
 
 from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
+from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
@@ -74,6 +75,8 @@ async def mute_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
+    except UserNotParticipant:
+        await m.reply_text("How can I mute a user who is not a part of this chat?")
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
@@ -103,6 +106,8 @@ async def unmute_usr(c: Alita, m: Message):
         )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
+    except UserNotParticipant:
+        await m.reply_text("How can I unmute a user who is not a part of this chat?")
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.unmute.bot_no_right"))
     except RPCError as ef:
