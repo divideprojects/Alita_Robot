@@ -37,7 +37,6 @@ from alita import (
 )
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
-from alita.plugins.watchers import gban_watcher
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.clean_file import remove_markdown_and_html

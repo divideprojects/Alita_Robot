@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from hashlib import new
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
