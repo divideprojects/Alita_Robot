@@ -133,42 +133,50 @@ strings:
     notes:
       main: "Anmerkungen"
       help: |-
-        Speichere eine Notiz, erhalte das, auch du kannst diese Notiz löschen.
-        Diese Notiz ist nur für dich selbst verfügbar!
-        Notiert auch, dass der Inline-Button über einen Inline-Abfrageassistenten gesteuert wird.
+        Save a note, get that, even you can delete that note.
+        This note only avaiable for yourself only!
+        Also notes support inline button powered by inline query assistant bot.
 
-        **Speichere Notiz**
+        **Save Note**
         × /save <note>
-        Speichere eine Notiz, die du später erhalten oder löschen kannst.
+        Save a note, you can get or delete that later.
 
-        **Erhalte Notiz**
+        **Get Note**
         × /get <note>
-        Erhalte diese Notiz, falls verfügbar.
+        Get that note, if avaiable.
 
-        **Lösche Notiz**
-        × /leere <note>
-        Lösche diese Notiz, falls verfügbar.
+        **Get Note in Raw format**
+        × /get <note> noformat or /get <note> raw
+        Get that note in raw format, so you can edit and update it.
+
+        **Delete Note**
+        × /clear <note>
+        Delete that note, if avaiable.
 
         × /clearall
-        Löscht alle Notizen im Chat!
-        **NOTE:** Kann nur vom Chat-Besitzer benutzt werden!
+        Clears all notes in the chat!
+        **NOTE:** Can only be used by owner of chat!
 
-        **Alle Notizen**
-        × /save
-        oder
+        **All Notes**
+        × /saved
+        or
         × /notes
-        Holen Sie sich alle Ihre Notizen, wenn zu viele Notizen, bitte verwenden Sie dies in Ihrer gespeicherten Nachricht!
+        Get all your notes, if too much notes, please use this in your saved message instead!
+
+        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
 
 
-        ″ <unk> **Notizformatier** 本<unk>
+        ── **Note Format** ──
         -> **Button**
-        `[Button Text](buttonurl:t. e/DivideProjects)`
+        `[Button Text](buttonurl:t.me/DivideProjects)`
+        -> **For Another button in same line**
+        `[Button2](buttonurl:t.me/DivideProjectsDiscussion:same)`
         -> **Bold**
         `**Bold**`
         -> __Italic__
         `__Italic__`
         -> `Code`
-        `Code` (schwerer Akzent)
+        `Code` (grave accent)
     pins:
       main: "Kontaktstifte"
       help: |-
@@ -230,8 +238,7 @@ strings:
         × /wiki <query>: wiki your query.
   admin:
     adminlist:
-      adminstr: |-
-        Admins in <b>{chat_title}</b>:
+      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Hinweis:</i> Dies sind zwischengespeicherte Werte!"
       note_updated: "<i>Hinweis:</i> Dies sind Werte für das Up-to-date!"
       reloaded_admins: "Alle Admins in diesem Chat neu geladen!"
@@ -321,8 +328,7 @@ strings:
         <b>Grund:</b> <code>{gban_reason}</code>
 
         <b>Appell Chat:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: |-
-      Hier sind alle global verbotenen Geys!
+    here_gbanned_start: "Here are all the globally banned geys!\n\n"
     none_gbanned: "Es gibt keine vergeblichen Nutzer ...!"
     num_gbans: "Zahl der gebannten Personen: <code>{count}</code>"
     part_of_support: "Dieser Benutzer ist Teil meiner Unterstützung!, kann unser eigenes nicht verbieten!"
@@ -352,19 +358,11 @@ strings:
     action_get: "Die aktuelle Aktion für Blacklists in diesem Chat ist <i><b>{action}</b></i>"
     action_set: "Aktion für die schwarze Liste für dieses auf den Wert <b>{action}</b> festlegen"
     added_blacklist: "Hinzugefügt <code>{trigger}</code> in blacklist words!"
-    curr_blacklist_initial: |-
-      Aktuelle Blacklist-Wörter in <b>{chat_title}</b>:
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     no_bl_found: "Es wurde keine Blacklist <b>{bl_word}</b> gefunden!"
     no_blacklist: "Es gibt keine Blacklist-Nachrichten in <b>{chat_title}</b>!"
     rm_blacklist: "Entfernen <b>{bl_word}</b> aus Blacklist-Wörtern!"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        Es gibt <b>{len_admins}</b> Admins, die ich kenne!
-
-        <code>{admindict}</code>
-      alladmins_btn: "Alle Admins"
-      getting_admins: "Alle Admins in meinem Cache werden abgerufen ..."
     bot_ip: |-
       <b>Bot IP-Adresse:</b>
       <code>{ip}</code>
@@ -389,6 +387,14 @@ strings:
       start_speedtest: "Meine Geschwindigkeit wird berechnet ..."
     uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
+    donate_owner: |-
+      Hey Thanks for your thought of donating me!
+      When you donate, all the fund goes towards my development which makes on fast and responsive.
+      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+      All the fund would be put into my services such as database, storage and hosting!
+
+      You can donate by contacting my owner here: @DivideProjectsBot
     back_btn: Zurück
     check_help: "Bitte prüfen Sie, wie Sie diesen Befehl verwenden können."
     close_btn: Schließen
