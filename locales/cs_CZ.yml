@@ -52,16 +52,16 @@ strings:
     bans:
       main: "Banány"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        Někdo otravnej vstoupila do tvé skupiny?
+        Chcete zákaz/omezení zakázat/zrušit?
+        Jedná se o modul plug-in pro vás, snadno kopu, zákaz a zrušení zákazu členů ve skupině.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /skick: Kick the user replied or tagged and delete the kick messsage.
-        × /ban: Bans the user replied to or tagged.
-        × /sban: Kick the user replied or tagged and delete the ban messsage.
-        × /unban: Unbans the user replied to or tagged.
+        ** Pouze administrátor: **
+        × /kick: Kick, který uživatel odpověděl nebo označil.
+        × /skick: Kick uživatel odpověděl nebo označil a vymazal tu kopačku zpráv.
+        × /ban: Brány, na které uživatel odpověděl nebo který byl označen.
+        × /sban: Kick uživatel odpověděl nebo označil a vymazal zákaz zprávy.
+        × /unban: Zruší označení zákazů, které uživatel odpověděl nebo označil.
     blacklist:
       main: "Seznam zakázaných položek"
       help: |-
@@ -240,7 +240,7 @@ strings:
         × /wiki <query>: wiki your query.
   admin:
     adminlist:
-      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
+      adminstr: "Administrátoři v <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Poznámka:</i> Jedná se o hodnoty uložené v mezipaměti!"
       note_updated: "<i>Poznámka:</i> Jedná se o hodnoty typu '-to-to-date'!"
       reloaded_admins: "V této konverzaci znovu načetli všechny administrátory!"
@@ -330,7 +330,7 @@ strings:
         <b>Příčina:</b> <code>{gban_reason}</code>
 
         <b>Kasační konverzace:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: "Here are all the globally banned geys!\n\n"
+    here_gbanned_start: "Zde jsou všechny globálně zakázané geys!\n\n"
     none_gbanned: "Nejsou tu žádní zakázaní uživatelé ...!"
     num_gbans: "Počet osob, které jsou zakázanou: <code>{count}</code>"
     part_of_support: "Tento uživatel je součástí mé podpory!, nemohu zakázat naše vlastní!"
@@ -360,7 +360,7 @@ strings:
     action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
     action_set: "Nastavit akci pro černou listinu pro tuto hodnotu na <b>{action}</b>"
     added_blacklist: "Přidán <code>{trigger}</code> v seznamu zakázaných slov!"
-    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
+    curr_blacklist_initial: "Aktuální černá uvedená slova v <b>{chat_title}</b>:\n\n"
     no_bl_found: "Nebyla nalezena žádná černá listina <b>{bl_word}</b>!"
     no_blacklist: "Ve formátu <b>{chat_title}</b> nejsou k dispozici žádné zprávy o zakázaných adres."
     rm_blacklist: "Odstraněno <b>{bl_word}</b> ze seznamu zakázaných slov!"
@@ -391,12 +391,12 @@ strings:
   general:
     donate_owner: |-
       Hey Thanks for your thought of donating me!
-      When you donate, all the fund goes towards my development which makes on fast and responsive.
-      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+      When you daruse, all the fund goes towards my development which makes on fast and responsive.
+      Váš dar by mi mohl také sehnat novou funkci nebo dvě věci, které jsem se nemohl dostat kvůli omezením serveru.
 
-      All the fund would be put into my services such as database, storage and hosting!
+      Veškerý fond by byl vložen do mé služby, jako je databáze, úložiště a hostování!
 
-      You can donate by contacting my owner here: @DivideProjectsBot
+      Můžete darovat, obraťte se na mého vlastníka zde: @DivideProjectsBot
     back_btn: Zadní
     check_help: "Prosím, zkontrolujte nápovědu, jak tento příkaz použít."
     close_btn: Zavřeno
