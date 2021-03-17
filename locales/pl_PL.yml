@@ -163,6 +163,8 @@ strings:
         × /notes
         Get all your notes, if too much notes, please use this in your saved message instead!
 
+        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
+
 
         ── **Note Format** ──
         -> **Button**
@@ -238,8 +240,7 @@ strings:
         × /wiki <query>: wiki Twoje zapytanie.
   admin:
     adminlist:
-      adminstr: |-
-        Admins w <b>{chat_title}</b>:
+      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Uwaga:</i> Są to wartości buforowane!"
       note_updated: "<i>Uwaga:</i> Są to aktualne wartości!"
       reloaded_admins: "Ponownie załadowano wszystkich administratorów w tej rozmowie sieciowej!"
@@ -329,8 +330,7 @@ strings:
         <b>Powód:</b> <code>{gban_reason}</code>
 
         <b>Czat odwoławczy:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: |-
-      Oto wszystkie globalnie zakazane geje!
+    here_gbanned_start: "Here are all the globally banned geys!\n\n"
     none_gbanned: "Nie ma żadnych zakazanych użytkowników ...!"
     num_gbans: "Liczba osób gzabronione: <code>{count}</code>"
     part_of_support: "Ten użytkownik jest częścią mojego wsparcia!, Can't ban our own!"
@@ -360,19 +360,11 @@ strings:
     action_get: "Bieżące działanie dla czarnych list w tej rozmowie to <i><b>{action}</b></i>"
     action_set: "Ustaw działanie dla czarnej listy dla tej opcji na <b>{action}</b>"
     added_blacklist: "Dodano <code>{trigger}</code> w czarnej liście słów!"
-    curr_blacklist_initial: |-
-      Aktualne słowa Blackwymienionego w <b>{chat_title}</b>:
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     no_bl_found: "Nie znaleziono czarnej listy <b>{bl_word}</b>!"
     no_blacklist: "Brak wiadomości z czarnej listy w <b>{chat_title}</b>!"
     rm_blacklist: "Usunięto <b>{bl_word}</b> z czarnej listy słów!"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        Tam jest <b>{len_admins}</b> admins kogo znam!
-
-        <code>{admindict}</code>
-      alladmins_btn: "Wszyscy administratorzy"
-      getting_admins: "Pobieranie wszystkich adminów w mojej pamięci podręcznej ..."
     bot_ip: |-
       <b>Bot Adres IP:</b>
       <code>{ip}</code>
@@ -397,6 +389,14 @@ strings:
       start_speedtest: "Obliczanie mojej prędkości ..."
     uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
+    donate_owner: |-
+      Hey Thanks for your thought of donating me!
+      When you donate, all the fund goes towards my development which makes on fast and responsive.
+      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+      All the fund would be put into my services such as database, storage and hosting!
+
+      You can donate by contacting my owner here: @DivideProjectsBot
     back_btn: Wstecz
     check_help: "Informacje na temat używania tej komendy można znaleźć w pomocy."
     close_btn: Zamknij
