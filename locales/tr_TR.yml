@@ -163,6 +163,8 @@ strings:
         × /notes
         Get all your notes, if too much notes, please use this in your saved message instead!
 
+        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
+
 
         ── **Note Format** ──
         -> **Button**
@@ -238,8 +240,7 @@ strings:
         × /viki <query>: vikipedi sorgunuz.
   admin:
     adminlist:
-      adminstr: |-
-        <b>{chat_title}</b> içinde yöneticiler:
+      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Not:</i> Bunlar önbelleğe alınmış değerlerdir!"
       note_updated: "<i>Not:</i> bunlar güncel değerlerdir!"
       reloaded_admins: "Bu sohbetteki tüm yöneticiler yeniden yüklendi!"
@@ -329,8 +330,7 @@ strings:
         <b>neden:</b> <code>{gban_reason}</code>
 
         <b>temyiz sohbet:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: |-
-      Tüm küresel yasaklı gayler burada!
+    here_gbanned_start: "Here are all the globally banned geys!\n\n"
     none_gbanned: "Hiç yasaklı kullanıcı yok ...!"
     num_gbans: "Yasaklanan kişi sayısı: <code>{count}</code>"
     part_of_support: "Bu kullanıcı benim desteğimin bir parçası! Kendi başımızı bile çekemez!"
@@ -360,19 +360,11 @@ strings:
     action_get: "Bu sohbetteki kara listelere ilişkin geçerli eylem <i><b>{action}</b></i>"
     action_set: "Bunun için kara listeye ilişkin eylemi <b>{action}</b> olarak ayarlayın"
     added_blacklist: "Kara liste kelimelerindeki <code>{trigger}</code> eklendi!"
-    curr_blacklist_initial: |-
-      <b>{chat_title}</b> içindeki şu anki Blacklisteli sözcükler:
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     no_bl_found: "blacklist <b>{bl_word}</b> bulundu!"
     no_blacklist: "<b>{chat_title}</b> içinde kara listelenmiş mesaj yok!"
     rm_blacklist: "Kara liste sözcüklerinden <b>{bl_word}</b> çıkarıldı!"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        <b>{len_admins}</b> admins biliyorum ki ben biliyorum!
-
-        <code>{admindict}</code>
-      alladmins_btn: "Tüm Yöneticiler"
-      getting_admins: "Önbellekteki tüm yöneticiler alınıyor ..."
     bot_ip: |-
       <b>Bot IP Adresi:</b>
       <code>{ip}</code>
@@ -397,6 +389,14 @@ strings:
       start_speedtest: "Hızımı hesaplıyor ..."
     uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
+    donate_owner: |-
+      Hey Thanks for your thought of donating me!
+      When you donate, all the fund goes towards my development which makes on fast and responsive.
+      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+      All the fund would be put into my services such as database, storage and hosting!
+
+      You can donate by contacting my owner here: @DivideProjectsBot
     back_btn: Geri
     check_help: "Lütfen bu komutun nasıl kullanılacağı konusunda yardımı denetleyin."
     close_btn: Kapat
