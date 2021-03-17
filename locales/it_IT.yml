@@ -52,16 +52,16 @@ strings:
     bans:
       main: "Divieti"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        Qualcuno fastoso è entrato nel tuo gruppo?
+        Vuoi vietare / restringerla?
+        Questo è il plugin per te, facilmente calcio, divieto e sblocco dei membri in un gruppo.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /skick: Kick the user replied or tagged and delete the kick messsage.
-        × /ban: Bans the user replied to or tagged.
-        × /sban: Kick the user replied or tagged and delete the ban messsage.
-        × /unban: Unbans the user replied to or tagged.
+        ** Solo Admin: **
+        × /kick: Kick l'utente ha risposto o taggato.
+        × /skick: Kick l'utente ha risposto o etichettato ed elimina il messaggero calcio.
+        × /ban: Bani l'utente ha risposto o taggato.
+        × /sban: Kick l'utente ha risposto o etichettato ed elimina il messaggero di divieto.
+        × /unban: Unbani l'utente ha risposto o etichettato.
     blacklist:
       main: "Lista nera"
       help: |-
@@ -240,7 +240,7 @@ strings:
         × /wiki <query>: wiki la tua query.
   admin:
     adminlist:
-      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
+      adminstr: "Adatto nel <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Nota:</i> Questi sono valori memorizzati nella cache!"
       note_updated: "<i>Nota:</i> Questi sono valori aggiornati!"
       reloaded_admins: "Ricaricati tutti gli admins in questa chat!"
@@ -330,7 +330,7 @@ strings:
         <b>Reason:</b> <code>{gban_reason}</code>
 
         <b>Appello Chat:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: "Here are all the globally banned geys!\n\n"
+    here_gbanned_start: "Ecco tutte le geie globalmente vietate!\n\n"
     none_gbanned: "Non ci sono utenti gvietati ...!"
     num_gbans: "Numero di persone vietate: <code>{count}</code>"
     part_of_support: "Questo utente fa parte del mio Supporto!, Can't ban nostro!"
@@ -360,7 +360,7 @@ strings:
     action_get: "L'azione attuale per le blacklist in questa chat è <i><b>{action}</b></i>"
     action_set: "Set action per la lista nera per questo a <b>{action}</b>"
     added_blacklist: "Aggiunto <code>{trigger}</code> in parole blacklist!"
-    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
+    curr_blacklist_initial: "Attuali parole Blackelencate nel <b>{chat_title}</b>:\n\n"
     no_bl_found: "Nessun blacklist <b>{bl_word}</b> trovato!"
     no_blacklist: "Non ci sono messaggi di blacklist nel <b>{chat_title}</b>!"
     rm_blacklist: "Rimosso <b>{bl_word}</b> dalle parole blacklist!"
@@ -390,13 +390,13 @@ strings:
     uptime: "<b>Aggiornamenti:<b> <code>{uptime}</code>"
   general:
     donate_owner: |-
-      Hey Thanks for your thought of donating me!
-      When you donate, all the fund goes towards my development which makes on fast and responsive.
-      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+      Ciao Grazie per il tuo pensiero di donarmi!
+      Quando donerai, tutto il fondo va verso il mio sviluppo che rende veloce e rispondente.
+      La tua donazione potrebbe anche farmi ottenere una nuova funzione o due, che non ero in grado di ottenere a causa dei limiti del server.
 
-      All the fund would be put into my services such as database, storage and hosting!
+      Tutto il fondo verrebbe messo nei miei servizi come database, storage e hosting!
 
-      You can donate by contacting my owner here: @DivideProjectsBot
+      Si può donare contattando il mio proprietario qui: @DivideProjectsBot
     back_btn: Indietro
     check_help: "Si prega di verificare l'aiuto su come utilizzare questo comando."
     close_btn: Chiudi
