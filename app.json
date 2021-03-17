@@ -20,17 +20,17 @@
       "APP_ID": {
          "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
          "required": true,
-         "value": ""
+         "value": "12345"
       },
       "API_HASH": {
          "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
          "required": true,
-         "value": ""
+         "value": "testinghash123"
       },
       "DB_URI": {
          "description": "Your MongoDB connection string.",
          "required": true,
-         "value": ""
+         "value": "put it here"
       },
       "DB_NAME": {
          "description": "Your MongoDB database name.",
@@ -45,7 +45,7 @@
       "SUPPORT_CHAT": {
          "description": "Your Telegram support group chat username where user's can contact in case of a problem..",
          "required": true,
-         "value": "DraXCommunity"
+         "value": "DivideProjects"
       },
       "MESSAGE_DUMP": {
          "description": "Event logs channel where bot will send updates.",
@@ -65,7 +65,7 @@
       "PREFIX_HANDLER": {
          "description": "Something like '/' to execute commands.",
          "required": true,
-         "value": "/"
+         "value": "/ !"
       },
       "DEV_USERS": {
          "description": "ID of users who are Devs of your bot (can use /py etc.). If you are a noob and would come and bother Saitama support then keep the current ID's here at they are and add yours.",
@@ -74,7 +74,7 @@
       },
       "SUPPORT_CHANNEL": {
          "description": "Channel where bot uodates will be posted!",
-         "value": ""
+         "value": "AlitaUpdates"
       },
       "SUDO_USERS": {
          "description": "A space separated list of user IDs who you want to assign as sudo users.",
@@ -84,12 +84,12 @@
       "WHITELIST_USERS": {
          "description": "A space separated list of user IDs whitelisted, cannot be restricted..",
          "required": false,
-         "value": "615304572"
+         "value": ""
       },
       "ENABLED_LOCALES": {
          "description": "A space separated list of language which should be enabled in bot.",
          "required": false,
-         "value": ""
+         "value": "en"
       },
       "WORKERS": {
          "description": "Number of workers to eun the bot.",
@@ -98,7 +98,8 @@
       },
       "ENV": {
          "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
-         "value": true
+         "required": true,
+         "value": "ANYTHING"
       }
    },
    "formation": {
