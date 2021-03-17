@@ -219,23 +219,17 @@ strings:
     utils:
       main: "Utils"
       help: |-
-        Quelques utils fournis par bot pour faciliter vos tâches !
+        Some utils provided by bot to make your tasks easy!
 
-        × /id: Obtenez l'ID de groupe en cours. S'il est utilisé en répondant à un message, obtenez l'ID de cet utilisateur.
-        × /info: Obtenez des informations sur un utilisateur.
-        × /ping-Temps de ping-ping pour le serveur de télégramme.
-        × /gifid: Réponse à un gif pour que je vous dise son ID de dossier.
-        × /tr <language>: Traduction du texte, puis réponse à vous avec la langue que vous avez indiquée, fonctionne comme une réponse à m.
-        × /github <username>: Search for the user using github api !
-        × /paroles <song>: Get the paroles of the song you spécification !
+        × /id: Get the current group id. If used by replying to a message, get that user's id.
+        × /info: Get information about a user.
+        × /ping - Get ping time of bot to telegram server.
+        × /gifid: Reply to a gif to me to tell you its file ID.
+        × /wiki: <query>: wiki your query.
+        × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
+        × /github <username>: Search for the user using github api!
+        × /lyrics <song>: Get the lyrics of the song you specify!
         × /weebify <text> or a reply to message: To weebify the text.
-    wiki:
-      main: "Wikipedia"
-      help: |-
-        Recherchez Wikipédia dans votre groupe !
-
-        ** Commandes disponibles: **
-        × /wiki <query>: wiki votre requête.
   admin:
     adminlist:
       adminstr: "Admins in <b>{chat_title}</b>:\n\n"
