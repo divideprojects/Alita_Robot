@@ -221,23 +221,17 @@ strings:
     utils:
       main: "Utillar"
       help: |-
-        robot tarafından görevlerinizi kolay hale getirmek için sağlanan bazı utillar!
+        Some utils provided by bot to make your tasks easy!
 
-        × /id: mevcut grup kimliğini alın. Bir iletiyi yanıtlayarak kullanılırsa, o kullanıcının kimliğini alın.
-        × /info: Bir kullanıcıyla ilgili bilgileri alın.
-        × /ping-Ping-ping time of bot to telgraf server.
-        × /gifid: size dosya tanıtıcısını anlatmak için bana bir gif ' i yanıtlayın.
-        × /tr <language>: metni tercüme eder ve daha sonra size belirtmiş olduğunuz dili ile size cevap verir, m cevap olarak çalışır.
-        × /github <username>: gisub api kullanarak kullanıcıyı arayın!
-        × /şarkı sözleri <song>: belirttiğiniz şarkının sözlerini alın!
-        × /weebify <text> ya da mesaja cevap yazın: to weothy the text.
-    wiki:
-      main: "Vikipedi"
-      help: |-
-        grubunuzda gittigidiyor 'da wikipedia' da arama yapın!
-
-        ** kullanılabilir komutlar: **
-        × /viki <query>: vikipedi sorgunuz.
+        × /id: Get the current group id. If used by replying to a message, get that user's id.
+        × /info: Get information about a user.
+        × /ping - Get ping time of bot to telegram server.
+        × /gifid: Reply to a gif to me to tell you its file ID.
+        × /wiki: <query>: wiki your query.
+        × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
+        × /github <username>: Search for the user using github api!
+        × /lyrics <song>: Get the lyrics of the song you specify!
+        × /weebify <text> or a reply to message: To weebify the text.
   admin:
     adminlist:
       adminstr: "<b>{chat_title}</b>içinde yöneticiler:\n\n"
