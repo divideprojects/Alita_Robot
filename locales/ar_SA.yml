@@ -163,6 +163,8 @@ strings:
         × /notes
         Get all your notes, if too much notes, please use this in your saved message instead!
 
+        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
+
 
         ── **Note Format** ──
         -> **Button**
@@ -238,8 +240,7 @@ strings:
         x /wiki <query>: صفحة wiki الخاصة بك.
   admin:
     adminlist:
-      adminstr: |-
-        Admins in <b>{chat_title}</b>:
+      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
       note_cached: "<i>ملحوظة :</i> هذه هي قيم تم تخزينها بالذاكرة الوسيطة !"
       note_updated: "<i>ملحوظة :</i> هذه قيم حديثة !"
       reloaded_admins: "تم اعادة تحميل كل admins في هذه المحادثة !"
@@ -329,8 +330,7 @@ strings:
         <b>Reason:</b> <code>{gban_reason}</code>
 
         <b>Appeal Chat:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: |-
-      وهنا جميع المهايس المحظورة عالميا !
+    here_gbanned_start: "Here are all the globally banned geys!\n\n"
     none_gbanned: "ليس هناك أي مستخدمين محرمة ... !"
     num_gbans: "عدد الأشخاص المحدبين : <code>{count}</code>"
     part_of_support: "هذا المستخدم هو جزء من دعمي ! ، لا يمكنني منعنا من ذلك !"
@@ -360,19 +360,11 @@ strings:
     action_get: "والإجراء الحالي للقوائم السوداء في هذه المحادثة هو <i><b>{action}</b></i>"
     action_set: "قم بتحديد التصرف للقائمة السوداء لهذا الى <b>{action}</b>"
     added_blacklist: "تم اضافته <code>{trigger}</code> بكلمات سوداء !"
-    curr_blacklist_initial: |-
-      الكلمات Blackالمدرجة الحالية في <b>{chat_title}</b>:
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     no_bl_found: "لم يتم ايجاد أي قائمة سوداء <b>{bl_word}</b>!"
     no_blacklist: "لا توجد رسائل مدرجة في القائمة السوداء في <b>{chat_title}</b>!"
     rm_blacklist: "تم ازالة <b>{bl_word}</b> من كلمات سوداء !"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        There are <b>{len_admins}</b> admins whom I know!
-
-        <code>{admindict}</code>
-      alladmins_btn: "كل الأدمينز"
-      getting_admins: "الحصول على كل admins في الذاكرة الوسيطة الخاصة بي ..."
     bot_ip: |-
       <b>Boot IP Address :</b>
       <code>{ip}</code>
@@ -397,6 +389,14 @@ strings:
       start_speedtest: "... حساب سرعتي"
     uptime: "<b>Uptime :<b> <code>{uptime}</code>"
   general:
+    donate_owner: |-
+      Hey Thanks for your thought of donating me!
+      When you donate, all the fund goes towards my development which makes on fast and responsive.
+      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+      All the fund would be put into my services such as database, storage and hosting!
+
+      You can donate by contacting my owner here: @DivideProjectsBot
     back_btn: للخلف
     check_help: "برجاء التحقق من المساعدة عن كيفية استخدام هذا الأمر."
     close_btn: اغلاق
