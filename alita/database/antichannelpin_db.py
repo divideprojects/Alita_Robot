@@ -18,7 +18,6 @@
 
 from threading import RLock
 from traceback import format_exc
-
 from pymongo.errors import DuplicateKeyError
 
 from alita import LOGGER
@@ -52,7 +51,10 @@ class AntiChannelPin:
         with INSERTION_LOCK:
             if not chat_id in ANTIPIN_CHATS:
                 ANTIPIN_CHATS.append(chat_id)
-                return self.collection.insert_one({"_id": chat_id, "status": True})
+                try:
+                    return self.collection.insert_one({"_id": chat_id, "status": True})
+                except DuplicateKeyError:
+                    return self.collection.update({"_id": chat_id}, {"status": True})
 
     def set_off(self, chat_id: int):
         global ANTIPIN_CHATS
@@ -71,8 +73,10 @@ class AntiChannelPin:
                 LOGGER.error(format_exc())
                 return self.collection.count({"status": True})
 
-    def load_chats_from_db(self, query):
+    def load_chats_from_db(self, query=None):
         with INSERTION_LOCK:
+            if query is None:
+                query = {}
             return self.collection.find_all(query)
 
     def list_antipin_chats(self, query):
