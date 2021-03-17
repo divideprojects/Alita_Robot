@@ -37,9 +37,7 @@ class Approve:
             if curr_approve:
                 try:
                     return next(
-                        user
-                        for user in set(curr_approve["users"])
-                        if user[0] == user_id
+                        user for user in curr_approve["users"] if user[0] == user_id
                     )
                 except StopIteration:
                     return False
@@ -74,7 +72,7 @@ class Approve:
                 users = curr["users"]
 
                 try:
-                    user = next(user for user in set(users) if user[0] == user_id)
+                    user = next(user for user in users if user[0] == user_id)
                 except StopIteration:
                     return "Not Approved"
 
