@@ -26,15 +26,12 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
-
-import alita
 from alita import HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
 from alita.bot_class import Alita
 from alita.database.notes_db import Notes
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
-from alita.utils.msg_types import Types, get_note_type
-from alita.utils.parser import mention_html
+from alita.utils.msg_types import Types
 from alita.utils.string import build_keyboard, parse_button
 
 # Initialize
