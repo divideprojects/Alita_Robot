@@ -52,16 +52,16 @@ strings:
     bans:
       main: "Bans"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        Quelqu'un a embêter votre groupe?
+        Vous voulez l'interdire / la restreindre?
+        C'est le plugin pour vous, facilement bottant, bannis et bannis les membres d'un groupe.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /skick: Kick the user replied or tagged and delete the kick messsage.
-        × /ban: Bans the user replied to or tagged.
-        × /sban: Kick the user replied or tagged and delete the ban messsage.
-        × /unban: Unbans the user replied to or tagged.
+        ** Admin seulement: **
+        × /kick: Kick l'utilisateur a répondu ou balisé.
+        × /skick: Kick l'utilisateur a répondu ou a marqué et supprimé le coup de pied.
+        × /ban: Bans l'utilisateur a répondu ou balisé.
+        × /sban: Kick l'utilisateur a répondu ou a étiqueté et supprimé le message d'interdiction.
+        × /unban: Unbans l'utilisateur a répondu ou balisé.
     blacklist:
       main: "Liste noire"
       help: |-
@@ -133,44 +133,44 @@ strings:
     notes:
       main: "Notes"
       help: |-
-        Save a note, get that, even you can delete that note.
-        This note only avaiable for yourself only!
-        Also notes support inline button powered by inline query assistant bot.
+        Enregistrez une note, obtenez cela, même vous pouvez supprimer cette note.
+        Cette note n'est disponible que pour vous !
+        Notez également que le bouton en ligne est alimenté par l'assistant de requête en ligne.
 
-        **Save Note**
+        **Enregistrer la note**
         × /save <note>
-        Save a note, you can get or delete that later.
+        Enregistrer une note, vous pouvez l'obtenir ou la supprimer plus tard.
 
         **Get Note**
         × /get <note>
-        Get that note, if avaiable.
+        Obtenez cette note, si disponible.
 
         **Get Note in Raw format**
-        × /get <note> noformat or /get <note> raw
-        Get that note in raw format, so you can edit and update it.
+        × /get <note> noformat ou /get <note> raw
+        Get this note in raw format, pour que vous puissiez le modifier et le mettre à jour.
 
-        **Delete Note**
+        **Supprimer la note**
         × /clear <note>
-        Delete that note, if avaiable.
+        Supprimez cette note, si disponible.
 
         × /clearall
-        Clears all notes in the chat!
-        **NOTE:** Can only be used by owner of chat!
+        Efface toutes les notes dans le chat!
+        **NOTE:** Ne peut être utilisé que par le propriétaire du chat!
 
-        **All Notes**
+        **Toutes les notes**
         × /saved
-        or
+        ou
         × /notes
-        Get all your notes, if too much notes, please use this in your saved message instead!
+        Obtenez toutes vos notes, si trop de notes, veuillez utiliser ceci dans votre message enregistré à la place!
 
-        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
+        × /privaterules <on/yes/no/off>: activer ou désactiver les règles privées, empêche le spam dans le chat lorsque les gens utilisent la commande de notes.
 
 
-        ── **Note Format** ──
-        -> **Button**
-        `[Button Text](buttonurl:t.me/DivideProjects)`
-        -> **For Another button in same line**
-        `[Button2](buttonurl:t.me/DivideProjectsDiscussion:same)`
+        ─ **Format de note** ─
+        -> **Bouton**
+        `[Texte du bouton](buttonurl:t.me/DivideProjects)`
+        -> **Pour un autre bouton dans la même ligne**
+        `[Button2](buttonurl:t. e/DivideProjectsDiscussion:same)`
         -> **Bold**
         `**Bold**`
         -> __Italic__
@@ -328,7 +328,7 @@ strings:
         <b>Raison:</b> <code>{gban_reason}</code>
 
         <b>Discussion d'appel:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: "Here are all the globally banned geys!\n\n"
+    here_gbanned_start: "Voici toutes les geys interdites à l'échelle mondiale !\n\n"
     none_gbanned: "Il n'y a pas d'utilisateurs ginterdits ... !"
     num_gbans: "Nombre de personnes ginterdites: <code>{count}</code>"
     part_of_support: "Cet utilisateur fait partie de mon Support !, ne peux pas nous interdire !"
@@ -358,7 +358,7 @@ strings:
     action_get: "L'action en cours pour les listes noires dans cette discussion est <i><b>{action}</b></i>"
     action_set: "Définir une action pour la liste noire à <b>{action}</b>"
     added_blacklist: "Ajouté <code>{trigger}</code> dans la liste noire !"
-    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
+    curr_blacklist_initial: "Les mots Blackrépertoriés actuels dans <b>{chat_title}</b>:\n\n"
     no_bl_found: "No blacklist <b>{bl_word}</b> found !"
     no_blacklist: "Il n'y a pas de messages sur la liste noire dans <b>{chat_title}</b>!"
     rm_blacklist: "Supprimé <b>{bl_word}</b> de la liste noire !"
@@ -388,13 +388,13 @@ strings:
     uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
     donate_owner: |-
-      Hey Thanks for your thought of donating me!
-      When you donate, all the fund goes towards my development which makes on fast and responsive.
-      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+      Hey Merci pour votre pensée de me faire don de moi !
+      Quand vous faites un don, tout le fonds va vers mon développement qui fait vite et réagissant.
+      Votre don pourrait aussi me trouver une nouvelle fonction ou deux, ce que je n'ai pas pu obtenir en raison des limitations du serveur.
 
-      All the fund would be put into my services such as database, storage and hosting!
+      Tous les fonds seraient mis dans mes services tels que base de données, stockage et hébergement !
 
-      You can donate by contacting my owner here: @DivideProjectsBot
+      Vous pouvez faire un don en contactant mon propriétaire ici: @DivideProjectsBot
     back_btn: Précédent
     check_help: "Vérifiez l'aide sur l'utilisation de cette commande."
     close_btn: Fermer
