@@ -10,6 +10,7 @@ from pyrogram.types import (
 
 from alita import HELP_COMMANDS, LOGGER
 from alita.bot_class import Alita
+from alita.database.chats_db import Chats
 from alita.database.notes_db import Notes
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
@@ -19,6 +20,7 @@ from alita.utils.string import build_keyboard, parse_button
 # Initialize
 rules_db = Rules()
 notes_db = Notes()
+chats_db = Chats()
 
 
 async def send_cmd(client: Alita, msgtype):
@@ -121,12 +123,13 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
     from alita import BOT_USERNAME
 
     help_lst = m.text.split("_")
-    chat_id = help_lst[1]
+    chat_id = int(help_lst[1])
 
     if len(help_lst) == 2:
         chat_id = help_option.replace("notes_", "")
-        all_notes = notes_db.get_all_notes(int(chat_id))
-        rply = "Notes in Chat:\n\n"
+        all_notes = notes_db.get_all_notes(chat_id)
+        chat_title = chats_db.get_chat_info(chat_id)["chat_title"]
+        rply = f"Notes in {chat_title}:\n\n"
         for note in all_notes:
             rply += f"- [{note[0]}](https://t.me/{BOT_USERNAME}?start=note_{chat_id}_{note[1]})\n"
         await m.reply_text(rply, disable_web_page_preview=True, quote=True)
@@ -213,11 +216,12 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
 
 
 async def get_private_rules(_, m: Message, help_option: str):
-    chat_id = help_option.split("_")[1]
-    rules = rules_db.get_rules(int(chat_id))
+    chat_id = int(help_option.split("_")[1])
+    rules = rules_db.get_rules(chat_id)
+    chat_title = chats_db.get_chat_info(chat_id)["chat_title"]
     await m.reply_text(
         (tlang(m, "rules.get_rules")).format(
-            chat=m.chat.title,
+            chat=chat_title,
             rules=rules,
         ),
         quote=True,
