@@ -52,7 +52,7 @@ class AntiChannelPin:
         with INSERTION_LOCK:
             if not chat_id in ANTIPIN_CHATS:
                 ANTIPIN_CHATS.append(chat_id)
-                return self.collection.insert_one({"_id": chat_id}, {"status": True})
+                return self.collection.insert_one({"_id": chat_id, "status": True})
             return
 
     def set_off(self, chat_id: int):
@@ -60,7 +60,7 @@ class AntiChannelPin:
         with INSERTION_LOCK:
             if chat_id in ANTIPIN_CHATS:
                 ANTIPIN_CHATS.remove(chat_id)
-                return self.collection.delete_one({"_id": chat_id}, {"status": False})
+                return self.collection.delete_one({"_id": chat_id})
             return
 
     def count_antipin_chats(self):

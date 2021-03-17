@@ -238,7 +238,7 @@ async def get_private_rules(_, m: Message, help_option: str):
     return
 
 
-async def get_help_msg(_, m, help_option: str):
+async def get_help_msg(m, help_option: str):
     """Helper function for getting help_msg and it's keyboard."""
 
     help_msg = None
