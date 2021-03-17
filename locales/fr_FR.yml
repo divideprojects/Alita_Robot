@@ -133,36 +133,44 @@ strings:
     notes:
       main: "Notes"
       help: |-
-        Enregistrez une note, obtenez cela, même vous pouvez supprimer cette note.
-        Cette note n'est disponible que pour vous !
-        Notez également que le bouton en ligne est alimenté par l'assistant de requête en ligne.
+        Save a note, get that, even you can delete that note.
+        This note only avaiable for yourself only!
+        Also notes support inline button powered by inline query assistant bot.
 
-        **Enregistrer la note**
+        **Save Note**
         × /save <note>
-        Enregistrer une note, vous pouvez l'obtenir ou la supprimer plus tard.
+        Save a note, you can get or delete that later.
 
         **Get Note**
         × /get <note>
-        Obtenez cette note, si disponible.
+        Get that note, if avaiable.
 
-        **Supprimer la note**
+        **Get Note in Raw format**
+        × /get <note> noformat or /get <note> raw
+        Get that note in raw format, so you can edit and update it.
+
+        **Delete Note**
         × /clear <note>
-        Supprimez cette note, si disponible.
+        Delete that note, if avaiable.
 
         × /clearall
-        Efface toutes les notes dans le chat!
-        **NOTE:** Ne peut être utilisé que par le propriétaire du chat!
+        Clears all notes in the chat!
+        **NOTE:** Can only be used by owner of chat!
 
-        **Toutes les notes**
+        **All Notes**
         × /saved
-        ou
+        or
         × /notes
-        Obtenez toutes vos notes, si trop de notes, veuillez utiliser ceci dans votre message enregistré à la place!
+        Get all your notes, if too much notes, please use this in your saved message instead!
+
+        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
 
 
-        ─ **Format de note** ─
-        -> **Bouton**
-        `[Texte du bouton](buttonurl:t. e/DivideProjects)`
+        ── **Note Format** ──
+        -> **Button**
+        `[Button Text](buttonurl:t.me/DivideProjects)`
+        -> **For Another button in same line**
+        `[Button2](buttonurl:t.me/DivideProjectsDiscussion:same)`
         -> **Bold**
         `**Bold**`
         -> __Italic__
@@ -230,8 +238,7 @@ strings:
         × /wiki <query>: wiki votre requête.
   admin:
     adminlist:
-      adminstr: |-
-        Admins en <b>{chat_title}</b>:
+      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Note:</i> Ces valeurs sont mises en cache !"
       note_updated: "<i>Note:</i> Ces valeurs sont à jour !"
       reloaded_admins: "Rechargé tous les administrateurs dans cette discussion !"
@@ -321,8 +328,7 @@ strings:
         <b>Raison:</b> <code>{gban_reason}</code>
 
         <b>Discussion d'appel:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: |-
-      Voici toutes les geys interdites à l'échelle mondiale !
+    here_gbanned_start: "Here are all the globally banned geys!\n\n"
     none_gbanned: "Il n'y a pas d'utilisateurs ginterdits ... !"
     num_gbans: "Nombre de personnes ginterdites: <code>{count}</code>"
     part_of_support: "Cet utilisateur fait partie de mon Support !, ne peux pas nous interdire !"
@@ -352,19 +358,11 @@ strings:
     action_get: "L'action en cours pour les listes noires dans cette discussion est <i><b>{action}</b></i>"
     action_set: "Définir une action pour la liste noire à <b>{action}</b>"
     added_blacklist: "Ajouté <code>{trigger}</code> dans la liste noire !"
-    curr_blacklist_initial: |-
-      Les mots Blackrépertoriés actuels dans <b>{chat_title}</b>:
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     no_bl_found: "No blacklist <b>{bl_word}</b> found !"
     no_blacklist: "Il n'y a pas de messages sur la liste noire dans <b>{chat_title}</b>!"
     rm_blacklist: "Supprimé <b>{bl_word}</b> de la liste noire !"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        Il y a <b>{len_admins}</b> admins que je connais !
-
-        <code>{admindict}</code>
-      alladmins_btn: "Tous les administrateurs"
-      getting_admins: "Obtention de tous les administrateurs dans ma mémoire cache ..."
     bot_ip: |-
       <b>Bot IP Adresse:</b>
       <code>{ip}</code>
@@ -389,6 +387,14 @@ strings:
       start_speedtest: "Calcul de ma vitesse ..."
     uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
+    donate_owner: |-
+      Hey Thanks for your thought of donating me!
+      When you donate, all the fund goes towards my development which makes on fast and responsive.
+      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+      All the fund would be put into my services such as database, storage and hosting!
+
+      You can donate by contacting my owner here: @DivideProjectsBot
     back_btn: Précédent
     check_help: "Vérifiez l'aide sur l'utilisation de cette commande."
     close_btn: Fermer
