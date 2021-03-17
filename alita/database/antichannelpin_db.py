@@ -19,8 +19,6 @@
 from threading import RLock
 from traceback import format_exc
 
-from typing_extensions import Annotated
-
 from alita import LOGGER
 from alita.database import MongoDB
 

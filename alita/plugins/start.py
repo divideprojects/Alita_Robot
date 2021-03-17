@@ -26,15 +26,12 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
-
-import alita
 from alita import HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
 from alita.bot_class import Alita
 from alita.database.notes_db import Notes
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
-from alita.utils.msg_types import Types, get_note_type
-from alita.utils.parser import mention_html
+from alita.utils.msg_types import Types
 from alita.utils.string import build_keyboard, parse_button
 
 # Initialize
@@ -147,12 +144,12 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
     if len(help_lst) == 2:
         chat_id = help_option.replace("notes_", "")
         all_notes = notes_db.get_all_notes(int(chat_id))
-        rply = f"Notes in Chat:\n\n"
+        rply = "Notes in Chat:\n\n"
         for note in all_notes:
             rply += f"- [{note[0]}](https://t.me/{BOT_USERNAME}?start=note_{chat_id}_{note[1]})\n"
         await m.reply_text(rply, disable_web_page_preview=True)
         return
-    elif len(help_lst) == 3:
+    if len(help_lst) == 3:
         note_hash = help_option.split("_")[2]
         getnotes = notes_db.get_note_by_hash(note_hash)
     else:
@@ -290,7 +287,7 @@ async def start(c: Alita, m: Message):
             if help_option.startswith("note"):
                 await get_private_note(c, m, help_option)
                 return
-            elif help_option.startswith("rules"):
+            if help_option.startswith("rules"):
                 await get_private_rules(c, m, help_option)
                 return
 

@@ -22,7 +22,6 @@ import uvloop
 uvloop.install()
 from platform import python_version
 from threading import RLock
-from time import time
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
@@ -46,7 +45,6 @@ from alita.database import MongoDB
 from alita.database.chats_db import Chats
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
-from alita.utils.admin_cache import ADMIN_CACHE
 from alita.utils.paste import paste
 
 chatdb = Chats()

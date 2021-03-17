@@ -24,7 +24,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import LOGGER, PREFIX_HANDLER
+from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang

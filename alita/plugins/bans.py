@@ -17,7 +17,6 @@
 
 
 from asyncio import sleep
-from io import BytesIO
 from time import time
 from traceback import format_exc
 
@@ -25,23 +24,18 @@ from pyrogram import filters
 from pyrogram.errors import (
     ChatAdminRequired,
     RightForbidden,
-    RPCError,
-    UserNotParticipant,
-)
+    RPCError)
 from pyrogram.types import Message
 
 from alita import (
-    DEV_PREFIX_HANDLER,
     LOGGER,
     PREFIX_HANDLER,
     SUPPORT_GROUP,
-    SUPPORT_STAFF,
-)
+    SUPPORT_STAFF)
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.admin_cache import ADMIN_CACHE
-from alita.utils.clean_file import remove_markdown_and_html
-from alita.utils.custom_filters import owner_filter, restrict_filter
+from alita.utils.custom_filters import restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
