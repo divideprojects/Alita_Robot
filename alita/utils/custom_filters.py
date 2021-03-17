@@ -95,8 +95,6 @@ async def restrict_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    await admin_cache_reload(m)
-
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:
         return True
@@ -138,8 +136,6 @@ async def invite_check_func(_, __, m):
     """Check if user can invite users or not."""
     if isinstance(m, CallbackQuery):
         m = m.message
-
-    await admin_cache_reload(m)
 
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:
