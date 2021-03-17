@@ -16,8 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from traceback import format_exc
+
 from pyrogram import filters
-from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
+from pyrogram.errors import MessageNotModified, QueryIdInvalid, RPCError, UserIsBlocked
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -25,9 +27,19 @@ from pyrogram.types import (
     Message,
 )
 
+import alita
 from alita import HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
 from alita.bot_class import Alita
+from alita.database.notes_db import Notes
+from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
+from alita.utils.msg_types import Types, get_note_type
+from alita.utils.parser import mention_html
+from alita.utils.string import build_keyboard, parse_button
+
+# Initialize
+rules_db = Rules()
+notes_db = Notes()
 
 
 async def gen_cmds_kb(m):
@@ -108,8 +120,127 @@ async def gen_start_kb(q):
     return keyboard
 
 
-async def get_help_msg(m, help_option: str):
+async def send_cmd(client: Alita, msgtype):
+    GET_FORMAT = {
+        Types.TEXT.value: client.send_message,
+        Types.DOCUMENT.value: client.send_document,
+        Types.PHOTO.value: client.send_photo,
+        Types.VIDEO.value: client.send_video,
+        Types.STICKER.value: client.send_sticker,
+        Types.AUDIO.value: client.send_audio,
+        Types.VOICE.value: client.send_voice,
+        Types.VIDEO_NOTE.value: client.send_video_note,
+        Types.ANIMATION.value: client.send_animation,
+        Types.ANIMATED_STICKER.value: client.send_sticker,
+        Types.CONTACT: client.send_contact,
+    }
+    return GET_FORMAT[msgtype]
+
+
+async def get_private_note(c: Alita, m: Message, help_option: str):
+    """Get the note in pm of user, with parsing enabled."""
+    from alita import BOT_USERNAME
+
+    help_lst = m.text.split("_")
+    chat_id = help_lst[1]
+
+    if len(help_lst) == 2:
+        chat_id = help_option.replace("notes_", "")
+        all_notes = notes_db.get_all_notes(int(chat_id))
+        rply = f"Notes in Chat:\n\n"
+        for note in all_notes:
+            rply += f"- [{note[0]}](https://t.me/{BOT_USERNAME}?start=note_{chat_id}_{note[1]})\n"
+        await m.reply_text(rply, disable_web_page_preview=True)
+        return
+    elif len(help_lst) == 3:
+        note_hash = help_option.split("_")[2]
+        getnotes = notes_db.get_note_by_hash(note_hash)
+    else:
+        return
+
+    msgtype = getnotes["msgtype"]
+    if not msgtype:
+        await m.reply_text("<b>Error:</b> Cannot find a type for this note!!")
+        return
+
+    if msgtype == Types.TEXT:
+        teks, button = await parse_button(getnotes["note_value"])
+        button = await build_keyboard(button)
+        button = InlineKeyboardMarkup(button) if button else None
+        if button:
+            try:
+                await m.reply_text(
+                    teks,
+                    reply_markup=button,
+                    disable_web_page_preview=True,
+                )
+                return
+            except RPCError as ef:
+                await m.reply_text("An error has occured! Cannot parse note.")
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+                return
+        else:
+            await m.reply_text(teks)
+            return
+    elif msgtype in (
+        Types.STICKER,
+        Types.VIDEO_NOTE,
+        Types.CONTACT,
+        Types.ANIMATED_STICKER,
+    ):
+        await (await send_cmd(c, msgtype))(m.chat.id, getnotes["fileid"])
+    else:
+        if getnotes["note_value"]:
+            teks, button = await parse_button(getnotes["note_value"])
+            button = await build_keyboard(button)
+            button = InlineKeyboardMarkup(button) if button else None
+        else:
+            teks = ""
+            button = None
+        if button:
+            try:
+                await (await send_cmd(c, msgtype))(
+                    m.chat.id,
+                    getnotes["fileid"],
+                    caption=teks,
+                    reply_markup=button,
+                )
+                return
+            except RPCError as ef:
+                await m.reply_text(
+                    teks,
+                    reply_markup=button,
+                    disable_web_page_preview=True,
+                )
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+                return
+        else:
+            await (await send_cmd(c, msgtype))(
+                m.chat.id,
+                getnotes["fileid"],
+                caption=teks,
+            )
+    return
+
+
+async def get_private_rules(_, m: Message, help_option: str):
+    chat_id = help_option.split("_")[1]
+    rules = rules_db.get_rules(int(chat_id))
+    await m.reply_text(
+        (tlang(m, "rules.get_rules")).format(
+            chat=m.chat.title,
+            rules=rules,
+        ),
+        disable_web_page_preview=True,
+    )
+    return
+
+
+async def get_help_msg(_, m, help_option: str):
     """Helper function for getting help_msg and it's keyboard."""
+
     help_msg = None
     help_kb = None
 
@@ -150,11 +281,19 @@ async def get_help_msg(m, help_option: str):
 @Alita.on_message(
     filters.command("start", PREFIX_HANDLER) & (filters.group | filters.private),
 )
-async def start(_, m: Message):
+async def start(c: Alita, m: Message):
 
     if m.chat.type == "private":
         if len(m.text.split()) > 1:
             help_option = (m.text.split(None, 1)[1]).lower()
+
+            if help_option.startswith("note"):
+                await get_private_note(c, m, help_option)
+                return
+            elif help_option.startswith("rules"):
+                await get_private_rules(c, m, help_option)
+                return
+
             help_msg, help_kb = await get_help_msg(m, help_option)
 
             if help_msg is None:

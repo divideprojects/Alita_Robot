@@ -16,18 +16,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from hashlib import new
+
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
 from alita import LOGGER
 from alita.bot_class import Alita
+from alita.database.antichannelpin_db import AntiChannelPin
 from alita.database.antiflood_db import AntiFlood
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
 from alita.database.lang_db import Langs
-from alita.database.notes_db import Notes
+from alita.database.notes_db import Notes, NotesSettings
 from alita.database.reporting_db import Reporting
 from alita.database.rules_db import Rules
 from alita.database.users_db import Users
@@ -42,6 +45,8 @@ bldb = Blacklist()
 flooddb = AntiFlood()
 approvedb = Approve()
 reportdb = Reporting()
+notes_settings = NotesSettings()
+antipindb = AntiChannelPin()
 
 
 @Alita.on_message(filters.group, group=6)
@@ -131,4 +136,6 @@ async def migrate_chat(old_chat, new_chat):
     flooddb.migrate_chat(old_chat, new_chat)
     approvedb.migrate_chat(old_chat, new_chat)
     reportdb.migrate_chat(old_chat, new_chat)
+    notes_settings.migrate_chat(old_chat, new_chat)
+    antipindb.migrate_chat(old_chat, new_chat)
     LOGGER.info("Successfully migrated!")

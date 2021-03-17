@@ -16,10 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from traceback import format_exc
-
 from pyrogram import filters
-from pyrogram.errors import UserIsBlocked
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -27,7 +24,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import BOT_USERNAME, LOGGER, PREFIX_HANDLER
+from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
@@ -54,49 +51,34 @@ async def get_rules(c: Alita, m: Message):
 
     priv_rules_status = db.get_privrules(m.chat.id)
 
-    if not priv_rules_status:
-        await m.reply_text(
-            (tlang(m, "rules.get_rules")).format(
-                chat=m.chat.title,
-                rules=rules,
-            ),
-            disable_web_page_preview=True,
-        )
-    else:
-        try:
-            await c.send_message(
-                m.from_user.id,
-                (tlang(m, "rules.get_rules")).format(
-                    chat=m.chat.title,
-                    rules=rules,
-                ),
-                disable_web_page_preview=True,
-            )
-        except UserIsBlocked:
-            pm_kb = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            "PM",
-                            url=f"https://t.me/{BOT_USERNAME}?start",
-                        ),
-                    ],
-                ],
-            )
-            await m.reply_text(
-                (tlang(m, "rules.pm_me")),
-                quote=True,
-                reply_markup=pm_kb,
-            )
-            return
-        except Exception as ef:
-            LOGGER.error(ef)
-            LOGGER.error(format_exc())
+    if priv_rules_status:
+        from alita import BOT_USERNAME
 
-        await m.reply_text(
-            (tlang(m, "rules.sent_pm_rules")),
-            quote=True,
+        pm_kb = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Rules",
+                        url=f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
+                    ),
+                ],
+            ],
         )
+        await m.reply_text(
+            (tlang(m, "rules.pm_me")),
+            quote=True,
+            reply_markup=pm_kb,
+        )
+        return
+
+    await m.reply_text(
+        (tlang(m, "rules.get_rules")).format(
+            chat=m.chat.title,
+            rules=rules,
+        ),
+        disable_web_page_preview=True,
+    )
+    return
 
 
 @Alita.on_message(
@@ -120,7 +102,9 @@ async def set_rules(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("privrules", PREFIX_HANDLER) & filters.group & admin_filter,
+    filters.command(["privrules", "privaterules"], PREFIX_HANDLER)
+    & filters.group
+    & admin_filter,
 )
 async def priv_rules(_, m: Message):
 

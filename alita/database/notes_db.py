@@ -18,6 +18,7 @@
 
 from hashlib import md5
 from threading import RLock
+from time import time
 
 from alita.database import MongoDB
 from alita.utils.msg_types import Types
@@ -43,7 +44,9 @@ class Notes:
             )
             if curr:
                 return False
-            hash_gen = md5((note_name + note_value + str(chat_id)).encode()).hexdigest()
+            hash_gen = md5(
+                (note_name + note_value + str(chat_id) + str(int(time()))).encode(),
+            ).hexdigest()
             return self.collection.insert_one(
                 {
                     "chat_id": chat_id,
@@ -72,7 +75,7 @@ class Notes:
             curr = self.collection.find_all({"chat_id": chat_id})
             note_list = []
             for note in curr:
-                note_list.append(note["note_name"])
+                note_list.append((note["note_name"], note["hash"]))
             note_list.sort()
             return note_list
 
@@ -112,6 +115,35 @@ class Notes:
     def count_notes_type(self, ntype):
         with INSERTION_LOCK:
             return self.collection.count({"msgtype": ntype})
+
+    # Migrate if chat id changes!
+    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+        with INSERTION_LOCK:
+
+            old_chat_db = self.collection.find_one({"_id": old_chat_id})
+            if old_chat_db:
+                new_data = old_chat_db.update({"_id": new_chat_id})
+                self.collection.delete_one({"_id": old_chat_id})
+                self.collection.insert_one(new_data)
+            return
+
+
+class NotesSettings:
+    def __init__(self) -> None:
+        self.collection = MongoDB("notes_settings")
+
+    def set_privatenotes(self, chat_id: int, status: bool = False):
+        curr = self.collection.find_one({"_id": chat_id})
+        if curr:
+            self.collection.update({"_id": chat_id}, {"privatenotes": status})
+        return self.collection.insert_one({"_id": chat_id, "privatenotes": status})
+
+    def get_privatenotes(self, chat_id: int):
+        curr = self.collection.find_one({"_id": chat_id})
+        if curr:
+            return curr["privatenotes"]
+        self.collection.update({"_id": chat_id}, {"privatenotes": False})
+        return False
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):

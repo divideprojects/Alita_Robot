@@ -27,7 +27,7 @@ class Reporting:
     """Class for managing report settings of users and groups."""
 
     def __init__(self) -> None:
-        self.collection = MongoDB("reporting_settings")
+        self.collection = MongoDB("reporting")
 
     def get_chat_type(self, chat_id: int):
         _ = self
