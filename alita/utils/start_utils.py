@@ -129,7 +129,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
         rply = "Notes in Chat:\n\n"
         for note in all_notes:
             rply += f"- [{note[0]}](https://t.me/{BOT_USERNAME}?start=note_{chat_id}_{note[1]})\n"
-        await m.reply_text(rply, disable_web_page_preview=True)
+        await m.reply_text(rply, disable_web_page_preview=True, quote=True)
         return
     if len(help_lst) == 3:
         note_hash = help_option.split("_")[2]
@@ -139,7 +139,10 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
 
     msgtype = getnotes["msgtype"]
     if not msgtype:
-        await m.reply_text("<b>Error:</b> Cannot find a type for this note!!")
+        await m.reply_text(
+            "<b>Error:</b> Cannot find a type for this note!!",
+            quote=True,
+        )
         return
 
     if msgtype == Types.TEXT:
@@ -152,15 +155,19 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
                     teks,
                     reply_markup=button,
                     disable_web_page_preview=True,
+                    quote=True,
                 )
                 return
             except RPCError as ef:
-                await m.reply_text("An error has occured! Cannot parse note.")
+                await m.reply_text(
+                    "An error has occured! Cannot parse note.",
+                    quote=True,
+                )
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
                 return
         else:
-            await m.reply_text(teks)
+            await m.reply_text(teks, quote=True)
             return
     elif msgtype in (
         Types.STICKER,
@@ -189,6 +196,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
             except RPCError as ef:
                 await m.reply_text(
                     teks,
+                    quote=True,
                     reply_markup=button,
                     disable_web_page_preview=True,
                 )
@@ -212,6 +220,7 @@ async def get_private_rules(_, m: Message, help_option: str):
             chat=m.chat.title,
             rules=rules,
         ),
+        quote=True,
         disable_web_page_preview=True,
     )
     return
