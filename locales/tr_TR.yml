@@ -234,7 +234,7 @@ strings:
         × /weebify <text> or a reply to message: To weebify the text.
   admin:
     adminlist:
-      adminstr: "<b>{chat_title}</b>içinde yöneticiler:\n\n"
+      adminstr: "Admins in <b>{chat_title}</b>:"
       note_cached: "<i>Not:</i> Bunlar önbelleğe alınmış değerlerdir!"
       note_updated: "<i>Not:</i> bunlar güncel değerlerdir!"
       reloaded_admins: "Bu sohbetteki tüm yöneticiler yeniden yüklendi!"
