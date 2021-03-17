@@ -52,16 +52,16 @@ strings:
     bans:
       main: "وحدات Bans"
       help: |-
-        Someone annoying entered your group?
-        Want to ban/restriction him/her?
-        This is the plugin for you, easily kick, ban and unban members in a group.
+        شخص مزعج دخل مجموعتك ؟
+        هل تريد حظر / تقييدها ؟
+        هذا هو plugin بالنسبة لك ، وركلة بسهولة وحظر والغاء حظر العناصر في المجموعة.
 
-        **Admin only:**
-        × /kick: Kick the user replied or tagged.
-        × /skick: Kick the user replied or tagged and delete the kick messsage.
-        × /ban: Bans the user replied to or tagged.
-        × /sban: Kick the user replied or tagged and delete the ban messsage.
-        × /unban: Unbans the user replied to or tagged.
+        ** Admin فقط : **
+        × /ksk : Kick قام المستخدم بالرد أو الشارة.
+        × /skick : Kick قام المستخدم بالرد أو قم بتعليم وحذف الرسالة الخاصة ببدء الرسالة.
+        × /الحظر : Bans الذي قام المستخدم بالرد عليه أو تعليمه.
+        × /sban : Kick قام المستخدم بالرد أو قم بتعليم رسالة الحظر وقم بحذفها.
+        × /unban : الغاء الحظر الذي قام المستخدم بالرد عليه أو تعليمه.
     blacklist:
       main: "القائمة السوداء"
       help: |-
@@ -330,7 +330,7 @@ strings:
         <b>Reason:</b> <code>{gban_reason}</code>
 
         <b>Appeal Chat:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: "Here are all the globally banned geys!\n\n"
+    here_gbanned_start: "وهنا جميع المهايات المحظورة عالميا !\n\n"
     none_gbanned: "ليس هناك أي مستخدمين محرمة ... !"
     num_gbans: "عدد الأشخاص المحدبين : <code>{count}</code>"
     part_of_support: "هذا المستخدم هو جزء من دعمي ! ، لا يمكنني منعنا من ذلك !"
@@ -360,7 +360,7 @@ strings:
     action_get: "والإجراء الحالي للقوائم السوداء في هذه المحادثة هو <i><b>{action}</b></i>"
     action_set: "قم بتحديد التصرف للقائمة السوداء لهذا الى <b>{action}</b>"
     added_blacklist: "تم اضافته <code>{trigger}</code> بكلمات سوداء !"
-    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
+    curr_blacklist_initial: "الكلمات المدرجة في القائمة السوداء الحالية في <b>{chat_title}</b>:\n\n"
     no_bl_found: "لم يتم ايجاد أي قائمة سوداء <b>{bl_word}</b>!"
     no_blacklist: "لا توجد رسائل مدرجة في القائمة السوداء في <b>{chat_title}</b>!"
     rm_blacklist: "تم ازالة <b>{bl_word}</b> من كلمات سوداء !"
@@ -390,13 +390,13 @@ strings:
     uptime: "<b>Uptime :<b> <code>{uptime}</code>"
   general:
     donate_owner: |-
-      Hey Thanks for your thought of donating me!
-      When you donate, all the fund goes towards my development which makes on fast and responsive.
-      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+      شكرا لتفكيرك في التبرع بي !
+      عندما تتبرع ، كل الأموال تذهب نحو تطويري الذي يجعلها سريعة وسريعة الاستجابة.
+      تبرعك قد يحصل لي أيضا على ميزة جديدة أو اثنتين لم أكن قادرا على الحصول عليها بسبب قيود الخادم.
 
-      All the fund would be put into my services such as database, storage and hosting!
+      سيتم وضع كل الصندوق في الخدمات الخاصة بي مثل قاعدة البيانات والتخزين والاستضافة !
 
-      You can donate by contacting my owner here: @DivideProjectsBot
+      يمكنك التبرع من خلال الاتصال بمالكي هنا : @DivideProjectsBot
     back_btn: للخلف
     check_help: "برجاء التحقق من المساعدة عن كيفية استخدام هذا الأمر."
     close_btn: اغلاق
