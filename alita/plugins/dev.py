@@ -24,14 +24,13 @@ from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import (
+    ChannelInvalid,
     ChannelPrivate,
     ChatAdminRequired,
     FloodWait,
     MessageTooLong,
     PeerIdInvalid,
     RPCError,
-    ChannelIdInvalid,
-    ChannelInvalid
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from speedtest import Speedtest
@@ -298,7 +297,7 @@ async def chats(c: Alita, m: Message):
             P += 1
         except ChatAdminRequired:
             pass
-        except (ChannelPrivate, ChannelIdInvalid, ChannelInvalid):
+        except (ChannelPrivate, ChannelInvalid):
             chatdb.remove_chat(chat["_id"])
         except PeerIdInvalid:
             LOGGER.warning(f"Peer not found {chat['_id']}")
@@ -358,6 +357,7 @@ async def chat_broadcast(c: Alita, m: Message):
 
     exmsg = await m.reply_text("Started broadcasting!")
     all_chats = (chatdb.get_all_chats()) or {}
+    err_str = ""
 
     for chat in all_chats:
         try:
@@ -368,7 +368,7 @@ async def chat_broadcast(c: Alita, m: Message):
 
     await exmsg.edit_text("Done broadcasting ✅")
     if err_str:
-        with BytesIO(str.encode(remove_markdown_and_html(chatfile))) as f:
+        with BytesIO(str.encode(remove_markdown_and_html(err_str))) as f:
             f.name = "error_broadcast.txt"
             await m.reply_document(
                 document=f,
