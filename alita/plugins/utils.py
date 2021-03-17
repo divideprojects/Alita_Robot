@@ -26,6 +26,8 @@ from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from tswift import Song
+from wikipedia import summary
+from wikipedia.exceptions import DisambiguationError, PageError
 
 from alita import (
     DEV_USERS,
@@ -58,6 +60,41 @@ async def ping(_, m: Message):
     replymsg = await m.reply_text((tlang(m, "utils.ping.pinging")), quote=True)
     delta_ping = time() - start
     await replymsg.edit_text(f"**Pong!**\n{delta_ping * 1000:.3f} ms")
+    return
+
+
+@Alita.on_message(filters.command("wiki", PREFIX_HANDLER))
+async def wiki(_, m: Message):
+    if m.reply_to_message:
+        search = m.reply_to_message.text
+    else:
+        search = m.text.split(None, 1)[1]
+    try:
+        res = summary(search)
+    except DisambiguationError as de:
+        await m.reply_text(
+            f"Disambiguated pages found! Adjust your query accordingly.\n<i>{de}</i>",
+            parse_mode="html",
+        )
+        return
+    except PageError as pe:
+        await m.reply_text(f"<code>{pe}</code>", parse_mode="html")
+        return
+    if res:
+        result = f"<b>{search}</b>\n\n"
+        result += f"<i>{res}</i>\n"
+        result += f"""<a href="https://en.wikipedia.org/wiki/{search.replace(" ", "%20")}">Read more...</a>"""
+        try:
+            await m.reply_text(result, parse_mode="html", disable_web_page_preview=True)
+        except MessageTooLong:
+            with BytesIO(str.encode(remove_markdown_and_html(result))) as f:
+                f.name = "result.txt"
+                await m.reply_document(
+                    document=f,
+                    quote=True,
+                    parse_mode="html",
+                )
+
     return
 
 

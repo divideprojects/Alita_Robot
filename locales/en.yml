@@ -228,17 +228,11 @@ strings:
         × /info: Get information about a user.
         × /ping - Get ping time of bot to telegram server.
         × /gifid: Reply to a gif to me to tell you its file ID.
+        × /wiki: <query>: wiki your query.
         × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
         × /github <username>: Search for the user using github api!
         × /lyrics <song>: Get the lyrics of the song you specify!
         × /weebify <text> or a reply to message: To weebify the text.
-    wiki:
-      main: "Wikipedia"
-      help: |-
-        Search Wikipedia on the go in your group!
-
-        **Available commands:**
-        × /wiki <query>: wiki your query.
   admin:
     adminlist:
       adminstr: "Admins in <b>{chat_title}</b>:\n\n"
