@@ -30,6 +30,8 @@ from pyrogram.errors import (
     MessageTooLong,
     PeerIdInvalid,
     RPCError,
+    ChannelIdInvalid,
+    ChannelInvalid
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from speedtest import Speedtest
@@ -296,7 +298,7 @@ async def chats(c: Alita, m: Message):
             P += 1
         except ChatAdminRequired:
             pass
-        except ChannelPrivate:
+        except (ChannelPrivate, ChannelIdInvalid, ChannelInvalid):
             chatdb.remove_chat(chat["_id"])
         except PeerIdInvalid:
             LOGGER.warning(f"Peer not found {chat['_id']}")
