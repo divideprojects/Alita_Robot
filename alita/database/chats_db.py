@@ -39,7 +39,7 @@ class Chats:
             if curr:
                 users_old = curr["users"]
                 users_old.append(user_id)
-                users = list(dict.fromkeys(users_old))
+                users = list(set(users_old))
                 return self.collection.update(
                     {"_id": chat_id},
                     {
