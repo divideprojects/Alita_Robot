@@ -26,6 +26,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
+
 from alita import HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
 from alita.bot_class import Alita
 from alita.database.notes_db import Notes
@@ -273,6 +274,14 @@ async def get_help_msg(m, help_option: str):
             )
 
     return help_msg, help_kb
+
+
+@Alita.on_message(
+    filters.command("donate", PREFIX_HANDLER) & (filters.group | filters.private),
+)
+async def donate(_, m: Message):
+    await m.reply_text(tlang(m, "general.donate_owner"))
+    return
 
 
 @Alita.on_message(

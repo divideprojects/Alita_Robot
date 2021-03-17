@@ -163,6 +163,8 @@ strings:
         × /notes
         Get all your notes, if too much notes, please use this in your saved message instead!
 
+        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
+
 
         ── **Note Format** ──
         -> **Button**
@@ -239,9 +241,7 @@ strings:
         × /wiki <query>: wiki your query.
   admin:
     adminlist:
-      adminstr: |-
-        Admins in <b>{chat_title}</b>:
-
+      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
       note_cached: "<i>Note:</i> These are cached values!"
       note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "Reloaded all admins in this chat!"
@@ -331,9 +331,7 @@ strings:
         <b>Reason:</b> <code>{gban_reason}</code>
 
         <b>Appeal Chat:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: |-
-      Here are all the globally banned geys!
-
+    here_gbanned_start: "Here are all the globally banned geys!\n\n"
     none_gbanned: "There aren't any gbanned users...!"
     num_gbans: "Number of people gbanned: <code>{count}</code>"
     part_of_support: "This user is part of my Support!, Can't ban our own!"
@@ -363,20 +361,11 @@ strings:
     action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
     action_set: "Set action for blacklist for this to <b>{action}</b>"
     added_blacklist: "Added <code>{trigger}</code> in blacklist words!"
-    curr_blacklist_initial: |-
-      Current Blacklisted words in <b>{chat_title}</b>:
-
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     no_bl_found: "No blacklist <b>{bl_word}</b> found!"
     no_blacklist: "There are no blacklisted messages in <b>{chat_title}</b>!"
     rm_blacklist: "Removed <b>{bl_word}</b> from blacklist words!"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        There are <b>{len_admins}</b> admins whom I know!
-
-        <code>{admindict}</code>
-      alladmins_btn: "All Admins"
-      getting_admins: "Getting all admins in my cache..."
     bot_ip: |-
       <b>Bot IP Address:</b>
       <code>{ip}</code>
@@ -401,6 +390,14 @@ strings:
       start_speedtest: "Calculating my speed..."
     uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
+    donate_owner: |-
+      Hey Thanks for your thought of donating me!
+      When you donate, all the fund goes towards my development which makes on fast and responsive.
+      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+      All the fund would be put into my services such as database, storage and hosting!
+
+      You can donate by contacting my owner here: @DivideProjectsBot
     back_btn: Back
     check_help: "Please check help on how to use this this command."
     close_btn: Close
