@@ -163,6 +163,8 @@ strings:
         × /notes
         Get all your notes, if too much notes, please use this in your saved message instead!
 
+        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
+
 
         ── **Note Format** ──
         -> **Button**
@@ -238,8 +240,7 @@ strings:
         × /ויקי <query>: ויקי השאילתה שלכם.
   admin:
     adminlist:
-      adminstr: |-
-        דקות <b>{chat_title}</b>:
+      adminstr: "Admins in <b>{chat_title}</b>:\n\n"
       note_cached: "<i>הערה:</i> אלה ערכים מוטמנים!"
       note_updated: "<i>הערה:</i> אלה הם ערכים מעודכנים!"
       reloaded_admins: "נטענו את כל כתובות השיחה בצ ' אט זה!"
@@ -329,8 +330,7 @@ strings:
         <b>Reason:</b> <code>{gban_reason}</code>
 
         <b>Appeal Chat:</b> @{SUPPORT_GROUP}
-    here_gbanned_start: |-
-      הנה כל הגייז ' ים שהוחרמו באופן גלובלי!
+    here_gbanned_start: "Here are all the globally banned geys!\n\n"
     none_gbanned: "אין שום משתמשים אסורים ...!"
     num_gbans: "מספר האנשים הגורו: <code>{count}</code>"
     part_of_support: "משתמש זה הוא חלק מהתמיכה שלי, לא יכול לאסור את שלנו!"
@@ -360,19 +360,11 @@ strings:
     action_get: "הפעולה הנוכחית עבור רשימות שחורות בצ ' אט זה היא <i><b>{action}</b></i>"
     action_set: "הגדרת פעולה עבור הרשימה השחורה עבור <b>{action}</b>"
     added_blacklist: "נוסף <code>{trigger}</code> במילות הרשימה השחורה!"
-    curr_blacklist_initial: |-
-      מילים שחורות נוכחיות <b>{chat_title}</b>:
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
     no_bl_found: "אין רשימה שחורה <b>{bl_word}</b> נמצאו!"
     no_blacklist: "אין הודעות שחורות <b>{chat_title}</b>!"
     rm_blacklist: "<b>{bl_word}</b> ממילות הרשימה השחורה!"
   dev:
-    alladmins:
-      admins_i_know_str: |-
-        יש <b>{len_admins}</b> admins
-
-        <code>{admindict}</code>
-      alladmins_btn: "כל Admins"
-      getting_admins: "קבלת כל admins במטמון שלי ..."
     bot_ip: |-
       <b>Bot כתובת IP:</b>
       <code>{ip}</code>
@@ -397,6 +389,14 @@ strings:
       start_speedtest: "חישוב המהירות שלי ..."
     uptime: "<b>Uptime:<b> <code>{uptime}</code>"
   general:
+    donate_owner: |-
+      Hey Thanks for your thought of donating me!
+      When you donate, all the fund goes towards my development which makes on fast and responsive.
+      Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
+
+      All the fund would be put into my services such as database, storage and hosting!
+
+      You can donate by contacting my owner here: @DivideProjectsBot
     back_btn: חזרה
     check_help: "בדקו את העזרה לשימוש בפקודה זו."
     close_btn: קרוב
