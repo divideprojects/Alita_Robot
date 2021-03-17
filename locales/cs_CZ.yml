@@ -221,23 +221,17 @@ strings:
     utils:
       main: "Využky"
       help: |-
-        Některé utily poskytované botem, aby se vaše úlohy snadno!
+        Some utils provided by bot to make your tasks easy!
 
-        × /id: Získat aktuální ID skupiny. If used by replying to a message, get that user's id.
+        × /id: Get the current group id. If used by replying to a message, get that user's id.
         × /info: Get information about a user.
-        × /ping-Získání času příkazu ping robot na telegram serveru.
-        × /gifid: Reply to gif to me to tell you its file ID.
+        × /ping - Get ping time of bot to telegram server.
+        × /gifid: Reply to a gif to me to tell you its file ID.
+        × /wiki: <query>: wiki your query.
         × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
-        × /github <username>: Hledat uživatele pomocí github api!
+        × /github <username>: Search for the user using github api!
         × /lyrics <song>: Get the lyrics of the song you specify!
         × /weebify <text> or a reply to message: To weebify the text.
-    wiki:
-      main: "Wikipedie"
-      help: |-
-        Prohledat Wikipedii ve vaší skupině!
-
-        ** Dostupné příkazy: **
-        × /wiki <query>: wiki your query.
   admin:
     adminlist:
       adminstr: "Administrátoři v <b>{chat_title}</b>:\n\n"
