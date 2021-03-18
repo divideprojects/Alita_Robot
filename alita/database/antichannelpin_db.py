@@ -19,8 +19,6 @@
 from threading import RLock
 from traceback import format_exc
 
-from pymongo.errors import DuplicateKeyError
-
 from alita import LOGGER
 from alita.database import MongoDB
 

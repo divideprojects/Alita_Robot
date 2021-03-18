@@ -16,10 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import MessageNotModified, QueryIdInvalid, RPCError, UserIsBlocked
+from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
