@@ -38,6 +38,9 @@ class Chats:
             curr = self.collection.find_one({"_id": chat_id})
             if curr:
                 users_old = curr["users"]
+                if user_id in set(users_old):
+                # If user already in list, return
+                    return
                 users_old.append(user_id)
                 users = list(set(users_old))
                 members_count = len(users)
