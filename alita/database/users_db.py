@@ -33,7 +33,7 @@ class Users:
         with INSERTION_LOCK:
             curr = self.collection.find_one({"_id": user_id})
             if curr:
-                if user_id == curr["user_id"] and name == curr["name"] and username == curr["username"]:
+                if user_id == curr["_id"] and name == curr["name"] and username == curr["username"]:
                 # Prevent additional queries
                     return
                 return self.collection.update(
