@@ -134,7 +134,7 @@ async def promote_usr(c: Alita, m: Message):
         # ----- Add admin to temp cache -----
         try:
             global ADMIN_CACHE
-            ADMIN_CACHE[m.chat.id]  # Load Admins from cached list
+            _ = ADMIN_CACHE[m.chat.id]  # Load Admins from cached list
         except KeyError:
             await admin_cache_reload(m)
 
