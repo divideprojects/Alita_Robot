@@ -135,7 +135,7 @@ class NotesSettings:
     def set_privatenotes(self, chat_id: int, status: bool = False):
         curr = self.collection.find_one({"_id": chat_id})
         if curr:
-            self.collection.update({"_id": chat_id}, {"privatenotes": status})
+            return self.collection.update({"_id": chat_id}, {"privatenotes": status})
         return self.collection.insert_one({"_id": chat_id, "privatenotes": status})
 
     def get_privatenotes(self, chat_id: int):
