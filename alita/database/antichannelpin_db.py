@@ -26,7 +26,7 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-ANTIPIN_CHATS = []
+ANTIPIN_CHATS = set()
 
 
 class AntiChannelPin:
@@ -51,11 +51,8 @@ class AntiChannelPin:
         global ANTIPIN_CHATS
         with INSERTION_LOCK:
             if not chat_id in ANTIPIN_CHATS:
-                ANTIPIN_CHATS.append(chat_id)
-                try:
-                    return self.collection.insert_one({"_id": chat_id, "status": True})
-                except DuplicateKeyError:
-                    return self.collection.update({"_id": chat_id}, {"status": True})
+                ANTIPIN_CHATS.add(chat_id)
+                return self.collection.insert_one({"_id": chat_id, "status": True})
 
     def set_off(self, chat_id: int):
         global ANTIPIN_CHATS
@@ -74,16 +71,12 @@ class AntiChannelPin:
                 LOGGER.error(format_exc())
                 return self.collection.count({"status": True})
 
-    def load_chats_from_db(self, query=None):
+    def load_chats_from_db(self, query):
         with INSERTION_LOCK:
-            if query is None:
-                query = {}
             return self.collection.find_all(query)
 
-    def list_antipin_chats(self, query=None):
+    def list_antipin_chats(self, query):
         with INSERTION_LOCK:
-            if query is None:
-                query = {}
             try:
                 return ANTIPIN_CHATS
             except Exception as ef:
@@ -108,7 +101,7 @@ def __load_antichannelpin_chats():
     db = AntiChannelPin()
     antipin_chats = db.load_chats_from_db({"status": True})
     for chat in antipin_chats:
-        ANTIPIN_CHATS.append(chat["_id"])
+        ANTIPIN_CHATS.add(chat["_id"])
 
 
 __load_antichannelpin_chats()
