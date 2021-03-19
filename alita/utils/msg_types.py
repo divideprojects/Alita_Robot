@@ -18,6 +18,8 @@
 
 from enum import IntEnum, unique
 
+from pyrogram.types import Message
+
 
 @unique
 class Types(IntEnum):
@@ -34,65 +36,7 @@ class Types(IntEnum):
     CONTACT = 11
 
 
-async def get_message_type(m):
-    """Get type of message."""
-    if m.text or m.caption:
-        content = None
-        message_type = Types.TEXT
-    elif m.sticker:
-        content = m.sticker.file_id
-        message_type = Types.STICKER
-
-    elif m.document:
-        if m.document.mime_type == "application/x-bad-tgsticker":
-            message_type = Types.ANIMATED_STICKER
-        else:
-            message_type = Types.DOCUMENT
-        content = m.document.file_id
-
-    elif m.photo:
-        content = m.photo.file_id  # last elem = best quality
-        message_type = Types.PHOTO
-
-    elif m.audio:
-        content = m.audio.file_id
-        message_type = Types.AUDIO
-
-    elif m.voice:
-        content = m.voice.file_id
-        message_type = Types.VOICE
-
-    elif m.video:
-        content = m.video.file_id
-        message_type = Types.VIDEO
-
-    elif m.video_note:
-        content = m.video_note.file_id
-        message_type = Types.VIDEO_NOTE
-
-    elif m.animation:
-        content = m.animation.file_id
-        message_type = Types.ANIMATION
-
-    # TODO
-    # elif m.contact:
-    # 	content = m.contact.phone_number
-    # 	# text = None
-    # 	message_type = Types.CONTACT
-
-    # TODO
-    # elif m.animated_sticker:
-    # 	content = m.animation.file_id
-    # 	text = None
-    # 	message_type = Types.ANIMATED_STICKER
-
-    else:
-        return None, None
-
-    return content, message_type
-
-
-async def get_note_type(m):
+async def get_note_type(m: Message):
     """Get type of note."""
     if len(m.text.split()) <= 1:
         return None, None, None, None
@@ -159,33 +103,37 @@ async def get_note_type(m):
     return note_name, text, data_type, content
 
 
-async def get_welcome_type(m):
-    """Get type of welcome."""
+async def get_filter_type(m: Message):
+    """Get filter type."""
+
+    if len(m.text.split()) <= 1:
+        return None, None, None, None
+
     data_type = None
     content = None
+    raw_text = m.text.markdown if m.text else m.caption.markdown
+    args = raw_text.split(None, 2)
 
-    if m.reply_to_message:
+    if not m.reply_to_message and m.text and len(m.text.split()) >= 3:
+        content = None
+        text = m.text.split(None, 2)[2]
+        data_type = Types.TEXT
+
+    elif m.reply_to_message:
+
         if m.reply_to_message.text:
             text = m.reply_to_message.text.markdown
         elif m.reply_to_message.caption:
             text = m.reply_to_message.caption.markdown
         else:
-            text = None
-    else:
-        text = m.text.split(None, 1)
+            text = ""
 
-    if m.reply_to_message:
-        if m.reply_to_message.text:
-            text = m.reply_to_message.text.markdown
+        if len(args) >= 2 and m.reply_to_message.text:  # not caption, text
             data_type = Types.TEXT
 
         elif m.reply_to_message.sticker:
-            if m.reply_to_message.document.mime_type == "application/x-tgsticker":
-                data_type = Types.ANIMATED_STICKER
-            else:
-                data_type = Types.STICKER
             content = m.reply_to_message.sticker.file_id
-            text = None
+            data_type = Types.STICKER
 
         elif m.reply_to_message.document:
             if m.reply_to_message.document.mime_type == "application/x-bad-tgsticker":
@@ -193,47 +141,34 @@ async def get_welcome_type(m):
             else:
                 data_type = Types.DOCUMENT
             content = m.reply_to_message.document.file_id
-        # text = m.reply_to_message.caption
 
         elif m.reply_to_message.photo:
-            content = m.reply_to_message.photo[-1].file_id
-            # text = m.reply_to_message.caption
+            content = m.reply_to_message.photo.file_id  # last elem = best quality
             data_type = Types.PHOTO
 
         elif m.reply_to_message.audio:
             content = m.reply_to_message.audio.file_id
-            # text = m.reply_to_message.caption
             data_type = Types.AUDIO
 
         elif m.reply_to_message.voice:
             content = m.reply_to_message.voice.file_id
-            text = None
             data_type = Types.VOICE
 
         elif m.reply_to_message.video:
             content = m.reply_to_message.video.file_id
-            # text = m.reply_to_message.caption
             data_type = Types.VIDEO
 
         elif m.reply_to_message.video_note:
             content = m.reply_to_message.video_note.file_id
-            text = None
             data_type = Types.VIDEO_NOTE
 
         elif m.reply_to_message.animation:
             content = m.reply_to_message.animation.file_id
-            # text = None
             data_type = Types.ANIMATION
 
     else:
-        if m.caption:
-            text = m.caption.split(None, 1)
-            if len(text) >= 2:
-                text = m.caption.markdown.split(None, 1)[1]
-        elif m.text:
-            text = m.text.split(None, 1)
-            if len(text) >= 2:
-                text = m.text.markdown.split(None, 1)[1]
-        data_type = Types.TEXT
+        text = None
+        data_type = None
+        content = None
 
     return text, data_type, content
