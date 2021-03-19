@@ -85,6 +85,20 @@ strings:
         × /rmallblacklist: Removes all the blacklists from the current chat.
 
         **Note:** Can only add or remove one blacklist at a time!
+    filters:
+      main: "Filters"
+      help: |-
+        • /filters: List all active filters saved in the chat.
+        **Admin only:**
+        • /filter <keyword> <reply message>: Add a filter to this chat. The bot will now reply that message whenever 'keyword'\
+        is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker. NOTE: all filter \
+        keywords are in lowercase. If you want your keyword to be a sentence, use quotes. eg: /filter "hey there" How you \
+        doin?
+        *Example:*
+        `/filter "filtername" Reply
+        • /stop <filter keyword>: Stop that filter.
+        **Chat creator only:**
+        • /removeallfilters: Remove all chat filters at once.
     fun:
       main: "Fun"
       help: |-
