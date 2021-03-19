@@ -43,12 +43,12 @@ async def purge(c: Alita, m: Message):
     dm = await m.reply_text(tlang(m, "purge.deleting"))
 
     if m.reply_to_message:
-        message_ids = (i for i in range(m.reply_to_message.message_id, m.message_id))
+        message_ids = {i for i in range(m.reply_to_message.message_id, m.message_id)}
 
         try:
             await c.delete_messages(
                 chat_id=m.chat.id,
-                message_ids=message_ids,
+                message_ids=list(message_ids),
                 revoke=True,
             )
             await m.delete()
@@ -56,7 +56,7 @@ async def purge(c: Alita, m: Message):
             await dm.edit_text(tlang(m, "purge.old_msg_err"))
             return
 
-        count_del_msg = len(set(message_ids))
+        count_del_msg = len(message_ids)
 
         await dm.edit(
             (tlang(m, "purge.purge_msg_count")).format(
