@@ -41,7 +41,7 @@ async def purge(c: Alita, m: Message):
         return
 
     if m.reply_to_message:
-        message_ids = {i for i in range(m.reply_to_message.message_id, m.message_id)}
+        message_ids = set(range(m.reply_to_message.message_id, m.message_id))
 
         try:
             await c.delete_messages(
