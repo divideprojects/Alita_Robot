@@ -133,10 +133,14 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                     teks,
                     reply_markup=button,
                     disable_web_page_preview=True,
+                    quote=True,
                 )
                 return
             except RPCError as ef:
-                await m.reply_text("An error has occured! Cannot parse note.")
+                await m.reply_text(
+                    "An error has occured! Cannot parse note.",
+                    quote=True,
+                )
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
                 return
@@ -149,7 +153,11 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         Types.CONTACT,
         Types.ANIMATED_STICKER,
     ):
-        await (await send_cmd(c, msgtype))(m.chat.id, getnotes["fileid"])
+        await (await send_cmd(c, msgtype))(
+            m.chat.id,
+            getnotes["fileid"],
+            reply_to_message_id=m.message_id,
+        )
     else:
         if getnotes["note_value"]:
             teks, button = await parse_button(getnotes["note_value"])
@@ -165,6 +173,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                     getnotes["fileid"],
                     caption=teks,
                     reply_markup=button,
+                    reply_to_message_id=m.message_id,
                 )
                 return
             except RPCError as ef:
@@ -172,6 +181,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                     teks,
                     reply_markup=button,
                     disable_web_page_preview=True,
+                    reply_to_message_id=m.message_id,
                 )
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
@@ -202,7 +212,7 @@ async def get_raw_note(c: Alita, m: Message, note: str):
 
     if msgtype == Types.TEXT:
         teks = getnotes["note_value"]
-        await m.reply_text(teks, parse_mode=None)
+        await m.reply_text(teks, parse_mode=None, quote=True)
     elif msgtype in (
         Types.STICKER,
         Types.VIDEO_NOTE,
@@ -212,6 +222,7 @@ async def get_raw_note(c: Alita, m: Message, note: str):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
             getnotes["fileid"],
+            reply_to_message_id=m.message_id,
         )
     else:
         if getnotes["note_value"]:

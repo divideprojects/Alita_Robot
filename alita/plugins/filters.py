@@ -269,7 +269,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
 
     if msgtype == Types.TEXT:
         teks = getnotes["filter_reply"]
-        await m.reply_text(teks, parse_mode=None, quote=True)
+        await m.reply_text(teks, quote=True)
     elif msgtype in (
         Types.STICKER,
         Types.VIDEO_NOTE,
