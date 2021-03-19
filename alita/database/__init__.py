@@ -18,12 +18,16 @@
 
 from pymongo import MongoClient
 
-from alita import DB_NAME, DB_URI
+from alita import DB_NAME, DB_URI, LOGGER
 
 # Client to connect to mongodb
 mongodb_client = MongoClient(DB_URI)
+if mongodb_client:
+    LOGGER.info("Established connection to MongoDB!")
 
 db = mongodb_client[DB_NAME]
+if db:
+    LOGGER.info(f"Connected to '{DB_NAME}' database")
 
 
 class MongoDB:
