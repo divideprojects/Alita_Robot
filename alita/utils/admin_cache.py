@@ -35,8 +35,7 @@ async def admin_cache_reload(m):
     start = time()
     with THREAD_LOCK:
 
-        global ADMIN_CACHE
-        global TEMP_ADMIN_CACHE_BLOCK
+        global ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK
 
         if m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()):
             if TEMP_ADMIN_CACHE_BLOCK[m.chat.id] in ("autoblock", "manualblock"):
