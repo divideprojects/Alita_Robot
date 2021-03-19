@@ -56,7 +56,7 @@ async def purge(c: Alita, m: Message):
             await dm.edit_text(tlang(m, "purge.old_msg_err"))
             return
 
-        count_del_msg = len(message_ids)
+        count_del_msg = len(set(message_ids))
 
         await dm.edit(
             (tlang(m, "purge.purge_msg_count")).format(
