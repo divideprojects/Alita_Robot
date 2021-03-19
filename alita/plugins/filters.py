@@ -116,7 +116,7 @@ async def add_filter(_, m: Message):
         keyword = extracted[0].lower()
 
     if keyword in all_filters:
-        await m.reply_text(f"Filter {keyword} already exists!")
+        await m.reply_text(f"Filter <code>{keyword}</code> already exists!")
         return
 
     teks, msgtype, file_id = await get_filter_type(m)
@@ -167,7 +167,7 @@ async def add_filter(_, m: Message):
     add = db.save_filter(m.chat.id, keyword, teks, msgtype, file_id)
     if add:
         await m.reply_text(
-            f"Saved filter '{keyword}' in <b>{m.chat.title}</b>!",
+            f"Saved filter '<code>{keyword}</code>' in <b>{m.chat.title}</b>!",
         )
     await m.stop_propagation()
 
