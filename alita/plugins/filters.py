@@ -253,6 +253,10 @@ async def rm_allbl_callback(_, q: CallbackQuery):
 
 @Alita.on_message(filters.text & filters.group, group=6)
 async def filters_watcher(c: Alita, m: Message):
+
+    if not m.from_user:
+        return
+
     chat_filters = db.get_all_filters(m.chat.id)
     for trigger in chat_filters:
         pattern = r"( |^|[^\w])" + re_escape(trigger) + r"( |$|[^\w])"

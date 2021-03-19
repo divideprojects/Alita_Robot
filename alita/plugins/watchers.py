@@ -65,6 +65,9 @@ async def antichanpin(c: Alita, m: Message):
 async def bl_watcher(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
 
+    if not m.from_user:
+        return
+
     # TODO - Add warn option when Warn db is added!!
     async def perform_action_blacklist(m: Message, action: str):
         if action == "kick":
