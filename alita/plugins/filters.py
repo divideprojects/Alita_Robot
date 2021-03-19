@@ -65,7 +65,7 @@ async def send_cmd(client: Alita, msgtype):
 @Alita.on_message(
     filters.command("filters", PREFIX_HANDLER) & filters.group & admin_filter,
 )
-async def view_blacklist(_, m: Message):
+async def view_filters(_, m: Message):
 
     filters_chat = f"Filters in <b>{m.chat.title}</b>:\n"
     all_filters = set(db.get_all_filters(m.chat.id))
@@ -204,7 +204,9 @@ async def stop_filter(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("rmallfilters", PREFIX_HANDLER) & filters.group & owner_filter,
+    filters.command(["rmallfilters", "removeallfilters"], PREFIX_HANDLER)
+    & filters.group
+    & owner_filter,
 )
 async def rm_allfilters(_, m: Message):
 
@@ -243,7 +245,7 @@ async def rm_allbl_callback(_, q: CallbackQuery):
             ),
         )
         return
-    db.rm_all_blacklist(q.message.chat.id)
+    db.rm_all_filters(q.message.chat.id)
     await q.message.delete()
     await q.answer("Cleared all Filters!", show_alert=True)
     return
