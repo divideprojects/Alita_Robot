@@ -40,8 +40,6 @@ async def purge(c: Alita, m: Message):
         await m.reply_text(tlang(m, "purge.err_basic"))
         return
 
-    dm = await m.reply_text(tlang(m, "purge.deleting"))
-
     if m.reply_to_message:
         message_ids = {i for i in range(m.reply_to_message.message_id, m.message_id)}
 
@@ -53,18 +51,18 @@ async def purge(c: Alita, m: Message):
             )
             await m.delete()
         except MessageDeleteForbidden:
-            await dm.edit_text(tlang(m, "purge.old_msg_err"))
+            await m.reply_text(tlang(m, "purge.old_msg_err"))
             return
 
         count_del_msg = len(message_ids)
 
-        await dm.edit(
+        z = await m.reply_text(
             (tlang(m, "purge.purge_msg_count")).format(
                 msg_count=count_del_msg,
             ),
         )
         await sleep(3)
-        await dm.delete()
+        await z.delete()
         return
     await m.reply_text("Reply to a message to start purge.")
     return
