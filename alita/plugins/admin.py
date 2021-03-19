@@ -129,11 +129,7 @@ async def promote_usr(c: Alita, m: Message):
         )
 
         # ----- Add admin to temp cache -----
-        try:
-            global ADMIN_CACHE
-            _ = ADMIN_CACHE[m.chat.id]  # Load Admins from cached list
-        except KeyError:
-            await admin_cache_reload(m)
+        await admin_cache_reload(m)
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -184,6 +180,7 @@ async def demote_usr(c: Alita, m: Message):
             admin_list = ADMIN_CACHE[m.chat.id]
             user = next(user for user in admin_list if user[0] == user_id)
             admin_list.remove(user)
+            ADMIN_CACHE[m.chat.id] = admin_list
         except (KeyError, StopIteration):
             await admin_cache_reload(m)
 

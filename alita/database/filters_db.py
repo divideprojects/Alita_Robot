@@ -17,7 +17,10 @@
 
 
 from threading import RLock
+from time import time
+from traceback import format_exc
 
+from alita import LOGGER
 from alita.database import MongoDB
 from alita.utils.msg_types import Types
 
@@ -38,7 +41,32 @@ class Filters:
         msgtype: int = Types.TEXT,
         fileid="",
     ):
+        global FILTER_CACHE
         with INSERTION_LOCK:
+
+            # local dict update
+            try:
+                curr_filters = FILTER_CACHE[chat_id]
+            except KeyError:
+                curr_filters = []
+
+            try:
+                keywords = {i["keyword"] for i in curr_filters}
+            except KeyError:
+                keywords = set()
+
+            if keyword not in keywords:
+                curr_filters.append(
+                    {
+                        "chat_id": chat_id,
+                        "keyword": keyword,
+                        "filter_reply": filter_reply,
+                        "msgtype": msgtype,
+                        "fileid": fileid,
+                    },
+                )
+
+            # Database update
             curr = self.collection.find_one(
                 {"chat_id": chat_id, "keyword": keyword},
             )
@@ -56,18 +84,41 @@ class Filters:
 
     def get_filter(self, chat_id: int, keyword: str):
         with INSERTION_LOCK:
+            try:
+                curr = next(
+                    next(
+                        i
+                        for i in FILTER_CACHE[chat_id]
+                        if FILTER_CACHE[chat_id][num]["keyword"] == keyword
+                    )
+                    for num in range(len(FILTER_CACHE[chat_id]))
+                )
+                if curr:
+                    return curr
+            except KeyError:
+                pass
+            except Exception as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+
             curr = self.collection.find_one(
                 {"chat_id": chat_id, "keyword": keyword},
             )
             if curr:
                 return curr
-            return "Filter does not exist!"
 
-    def get_filter_by_hash(self, filter_hash: str):
-        return self.collection.find_one({"hash": filter_hash})
+            return "Filter does not exist!"
 
     def get_all_filters(self, chat_id: int):
         with INSERTION_LOCK:
+            try:
+                return [i["keyword"] for i in FILTER_CACHE[chat_id]]
+            except KeyError:
+                pass
+            except Exception as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+
             curr = self.collection.find_all({"chat_id": chat_id})
             if curr:
                 filter_list = {i["keyword"] for i in curr}
@@ -75,7 +126,25 @@ class Filters:
             return []
 
     def rm_filter(self, chat_id: int, keyword: str):
+        global FILTER_CACHE
         with INSERTION_LOCK:
+            try:
+                FILTER_CACHE[chat_id].remove(
+                    next(
+                        next(
+                            i
+                            for i in FILTER_CACHE[chat_id]
+                            if FILTER_CACHE[chat_id][num]["keyword"] == keyword
+                        )
+                        for num in range(len(FILTER_CACHE[chat_id]))
+                    ),
+                )
+            except KeyError:
+                pass
+            except Exception as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+
             curr = self.collection.find_one(
                 {"chat_id": chat_id, "keyword": keyword},
             )
@@ -85,11 +154,33 @@ class Filters:
             return False
 
     def rm_all_filters(self, chat_id: int):
+        global FILTER_CACHE
         with INSERTION_LOCK:
+            try:
+                del FILTER_CACHE[chat_id]
+            except KeyError:
+                pass
+            except Exception as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+
             return self.collection.delete_one({"chat_id": chat_id})
 
     def count_filters_all(self):
         with INSERTION_LOCK:
+            try:
+                return len(
+                    [
+                        [i["keyword"] for i in FILTER_CACHE[chat_id]]
+                        for chat_id in set(FILTER_CACHE.keys())
+                    ],
+                )
+            except KeyError:
+                pass
+            except Exception as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+
             curr = self.collection.find_all()
             if curr:
                 return len(curr)
@@ -97,24 +188,73 @@ class Filters:
 
     def count_filters_chats(self):
         with INSERTION_LOCK:
+            try:
+                return len(set(FILTER_CACHE.keys()))
+            except Exception as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
             filters = self.collection.find_all()
             chats_ids = {i["chat_id"] for i in filters}
             return len(chats_ids)
 
     def count_all_filters(self):
         with INSERTION_LOCK:
+            try:
+                return len(
+                    [
+                        [i["keyword"] for i in FILTER_CACHE[chat_id]]
+                        for chat_id in set(FILTER_CACHE.keys())
+                    ],
+                )
+            except KeyError:
+                pass
+            except Exception as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
             return self.collection.count()
 
     def count_filter_type(self, ntype):
         with INSERTION_LOCK:
             return self.collection.count({"msgtype": ntype})
 
+    def load_from_db(self):
+        with INSERTION_LOCK:
+            return self.collection.find_all()
+
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
+            # Update locally
+            try:
+                old_db_local = FILTER_CACHE[old_chat_id]
+                del FILTER_CACHE[old_chat_id]
+                FILTER_CACHE[new_chat_id] = old_db_local
+            except KeyError:
+                pass
+
+            # Update in db
             old_chat_db = self.collection.find_one({"_id": old_chat_id})
             if old_chat_db:
                 new_data = old_chat_db.update({"_id": new_chat_id})
                 self.collection.delete_one({"_id": old_chat_id})
                 self.collection.insert_one(new_data)
             return
+
+
+def __load_filters_cache():
+    global FILTER_CACHE
+    start = time()
+    db = Filters()
+    all_filters = db.load_from_db()
+    for i in all_filters:
+        del i["_id"]
+
+    chat_ids = {i["chat_id"] for i in all_filters}
+    FILTER_CACHE = {
+        chat: [filt for filt in all_filters if filt["chat_id"] == chat]
+        for chat in chat_ids
+    }
+    LOGGER.info(f"Loaded Filters Local Cache in {round((time()-start),2)}s")
+
+
+__load_filters_cache()
