@@ -22,7 +22,6 @@ from pyrogram import filters
 from pyrogram.errors import (
     ChatAdminInviteRequired,
     ChatAdminRequired,
-    PeerIdInvalid,
     RightForbidden,
     RPCError,
     UserAdminInvalid,
