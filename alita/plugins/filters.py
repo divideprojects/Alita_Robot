@@ -110,8 +110,7 @@ async def add_filter(_, m: Message):
                 "Please provide keyword for this filter to reply with!",
             )
             return
-        else:
-            keyword = args[1]
+        keyword = args[1]
     else:
         extracted = await split_quotes(args[1])
         keyword = extracted[0].lower()
