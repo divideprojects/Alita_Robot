@@ -27,7 +27,7 @@ COPY . .
 # Install dependencies
 RUN pip3 install --upgrade pip
 RUN rm -r /opt/bitnami/python/lib/python3.9/site-packages/setuptools*
-RUN pip3 install -U setuptools
+RUN pip3 install --upgrade setuptools
 RUN make install
 
 # Run the bot

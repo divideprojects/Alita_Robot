@@ -25,27 +25,20 @@ class AioHttp:
     @staticmethod
     async def get_json(link):
         """Get JSON data from the provided link."""
-        async with ClientSession() as session:
-            async with session.get(link) as resp:
+        async with ClientSession() as sess:
+            async with sess.get(link) as resp:
                 return await resp.json(), resp
 
     @staticmethod
     async def get_text(link):
         """Get Text data from the provided link."""
-        async with ClientSession() as session:
-            async with session.get(link) as resp:
+        async with ClientSession() as sess:
+            async with sess.get(link) as resp:
                 return await resp.text(), resp
 
     @staticmethod
     async def get_raw(link):
         """Get RAW data from the provided link."""
-        async with ClientSession() as session:
-            async with session.get(link) as resp:
+        async with ClientSession() as sess:
+            async with sess.get(link) as resp:
                 return await resp.read(), resp
-
-    @staticmethod
-    async def post(link):
-        """Post the data to the provided link."""
-        async with ClientSession() as session:
-            async with session.post(link) as resp:
-                return resp

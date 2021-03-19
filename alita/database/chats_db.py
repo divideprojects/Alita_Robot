@@ -39,7 +39,7 @@ class Chats:
             if curr:
                 users_old = curr["users"]
                 if user_id in set(users_old):
-                # If user already in list, return
+                    # If user already in list, return
                     return
                 users_old.append(user_id)
                 users = list(set(users_old))
@@ -78,15 +78,15 @@ class Chats:
 
     def count_chats(self):
         with INSERTION_LOCK:
-            return self.collection.count()
+            return self.collection.count() or 0
 
     def list_chats(self):
         with INSERTION_LOCK:
             chats = self.collection.find_all()
-            chat_list = []
+            chat_list = set()
             for chat in chats:
-                chat_list.append(chat["_id"])
-            return chat_list
+                chat_list.add(chat["_id"])
+            return list(chat_list)
 
     def get_all_chats(self):
         with INSERTION_LOCK:

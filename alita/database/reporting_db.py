@@ -17,10 +17,14 @@
 
 
 from threading import RLock
+from time import time
 
+from alita import LOGGER
 from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
+
+REPORTING_CACHE = {}
 
 
 class Reporting:
@@ -38,36 +42,88 @@ class Reporting:
         return chat_type
 
     def set_settings(self, chat_id: int, status: bool = True):
+        global REPORTING_CACHE
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
+
+            if chat_id in set(REPORTING_CACHE.keys()):
+                REPORTING_CACHE[chat_id]["status"] = status
+
             curr_settings = self.collection.find_one({"_id": chat_id})
             if curr_settings:
                 return self.collection.update(
                     {"_id": chat_id},
                     {"status": status},
                 )
+
+            REPORTING_CACHE[chat_id] = {
+                "chat_type": chat_type,
+                "status": status,
+            }
             return self.collection.insert_one(
                 {"_id": chat_id, "chat_type": chat_type, "status": status},
             )
 
     def get_settings(self, chat_id: int):
+        global REPORTING_CACHE
         with INSERTION_LOCK:
             chat_type = self.get_chat_type(chat_id)
+
+            if (chat_id in set(REPORTING_CACHE.keys())) and (
+                REPORTING_CACHE[chat_id]["status"]
+            ):
+                return REPORTING_CACHE[chat_id]["status"]
+
             curr_settings = self.collection.find_one({"_id": chat_id})
             if curr_settings:
                 return curr_settings["status"]
+
+            REPORTING_CACHE[chat_id] = {
+                "chat_type": chat_type,
+                "status": True,
+            }
             self.collection.insert_one(
                 {"_id": chat_id, "chat_type": chat_type, "status": True},
             )
             return True
 
+    def load_from_db(self):
+        return self.collection.find_all() or []
+
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
+        global REPORTING_CACHE
         with INSERTION_LOCK:
+            # Update locally
+            try:
+                old_db_local = REPORTING_CACHE[old_chat_id]
+                del REPORTING_CACHE[old_chat_id]
+                REPORTING_CACHE[new_chat_id] = old_db_local
+            except KeyError:
+                return
 
+            # Update in db
             old_chat_db = self.collection.find_one({"_id": old_chat_id})
             if old_chat_db:
                 new_data = old_chat_db.update({"_id": new_chat_id})
                 self.collection.delete_one({"_id": old_chat_id})
                 self.collection.insert_one(new_data)
             return
+
+
+def __load_all_reporting_settings():
+    global REPORTING_CACHE
+    start = time()
+    db = Reporting()
+    data = db.load_from_db()
+    REPORTING_CACHE = {
+        int(chat["_id"]): {
+            "chat_type": chat["chat_type"],
+            "status": chat["status"],
+        }
+        for chat in data
+    }
+    LOGGER.info(f"Loaded Reporting Local Cache in {round((time()-start),2)}s")
+
+
+__load_all_reporting_settings()

@@ -25,8 +25,8 @@ from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
 from alita.tr_engine import tlang
 from alita.utils.admin_cache import admin_cache_reload
 
-SUDO_LEVEL = set((SUDO_USERS + DEV_USERS + [int(OWNER_ID)]))
-DEV_LEVEL = set((DEV_USERS + [int(OWNER_ID)]))
+SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
+DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
 
 
 async def dev_check_func(_, __, m):

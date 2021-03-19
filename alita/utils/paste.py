@@ -23,8 +23,8 @@ async def paste(content):
     """Paste the provided content to nekobin."""
     content = str(content)
     NEKOBIN_URL = "https://nekobin.com/"
-    async with ClientSession() as ses:
-        async with ses.post(
+    async with ClientSession() as sess:
+        async with sess.post(
             NEKOBIN_URL + "api/documents",
             json={"content": content},
         ) as resp:

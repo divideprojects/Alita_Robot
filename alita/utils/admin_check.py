@@ -43,7 +43,7 @@ async def admin_check(m) -> bool:
     admin_strings = ("creator", "administrator")
 
     if user.status not in admin_strings:
-        reply = ("Nigga, you're not admin, don't try this explosive shit.",)
+        reply = "Nigga, you're not admin, don't try this explosive shit."
         try:
             await m.edit_text(reply)
         except Exception as ef:

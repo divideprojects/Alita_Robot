@@ -135,10 +135,14 @@ async def load_cmds(all_plugins):
                 continue
         else:
             raise Exception(
-                "Can't have two plugins with the same name! Please change one",
+                (
+                    "Can't have two plugins with the same name! Please change one\n"
+                    f"Plugin Name: {imported_module.__name__}"
+                ),
             )
 
-    LOGGER.info(f"Not loading Plugins - {NO_LOAD}")
+    if NO_LOAD:
+        LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
     return ", ".join(
         [(i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())],

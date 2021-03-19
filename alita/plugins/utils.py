@@ -313,6 +313,11 @@ async def weebify(_, m: Message):
         args = m.text.split(None, 1)[1]
     if m.reply_to_message and len(m.text.split()) == 1:
         args = m.reply_to_message.text
+    else:
+        await m.reply_text(
+            "Please reply to a message or enter text after command to weebify it.",
+        )
+        return
     if not args:
         await m.reply_text(tlang(m, "utils.weebify.weebify_what"))
         return

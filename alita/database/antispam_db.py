@@ -18,6 +18,7 @@
 
 from datetime import datetime
 from threading import RLock
+from time import time
 from traceback import format_exc
 
 from alita import LOGGER
@@ -26,7 +27,7 @@ from alita.database import MongoDB
 INSERTION_LOCK = RLock()
 
 
-ANTISPAM_BANNED = []
+ANTISPAM_BANNED = set()
 
 
 class GBan:
@@ -51,7 +52,7 @@ class GBan:
 
             # If not already gbanned, then add to gban
             time_rn = datetime.now()
-            ANTISPAM_BANNED.append(user_id)
+            ANTISPAM_BANNED.add(user_id)
             return self.collection.insert_one(
                 {
                     "_id": user_id,
@@ -80,7 +81,6 @@ class GBan:
 
     def update_gban_reason(self, user_id: int, reason: str):
         with INSERTION_LOCK:
-
             return self.collection.update(
                 {"_id": user_id},
                 {"reason": reason},
@@ -95,10 +95,14 @@ class GBan:
                 LOGGER.error(format_exc())
                 return self.collection.count()
 
+    def load_from_db(self):
+        with INSERTION_LOCK:
+            return self.collection.find_all()
+
     def list_gbans(self):
         with INSERTION_LOCK:
             try:
-                return ANTISPAM_BANNED
+                return list(ANTISPAM_BANNED)
             except Exception as ef:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
@@ -107,10 +111,11 @@ class GBan:
 
 def __load_antispam_users():
     global ANTISPAM_BANNED
+    start = time()
     db = GBan()
-    users = db.list_gbans()
-    for user in users:
-        ANTISPAM_BANNED.append(user["_id"])
+    users = db.load_from_db()
+    ANTISPAM_BANNED = {i["_id"] for i in users}
+    LOGGER.info(f"Loaded AntispamBanned Local Cache in {round((time()-start),2)}s")
 
 
 __load_antispam_users()

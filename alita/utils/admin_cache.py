@@ -17,7 +17,7 @@
 
 
 from threading import RLock
-from time import perf_counter
+from time import perf_counter, time
 
 from cachetools import TTLCache
 
@@ -30,9 +30,9 @@ ADMIN_CACHE = TTLCache(maxsize=512, ttl=(60 * 30), timer=perf_counter)
 
 
 async def admin_cache_reload(m):
+    start = time()
     with THREAD_LOCK:
         global ADMIN_CACHE
-        LOGGER.info(f"Loading admins for chat {m.chat.id}")
         admin_list = [
             (
                 z.user.id,
@@ -42,6 +42,8 @@ async def admin_cache_reload(m):
             if not (z.user.is_bot or z.user.is_deleted)
         ]
         ADMIN_CACHE[m.chat.id] = admin_list
-        LOGGER.info("Loaded!!")
+        LOGGER.info(
+            f"Loaded admins for chat {m.chat.id} in {round((time()-start), 2)}s",
+        )
 
         return admin_list

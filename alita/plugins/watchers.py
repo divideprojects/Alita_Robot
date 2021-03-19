@@ -188,7 +188,7 @@ async def bl_watcher(_, m: Message):
     return
 
 
-@Alita.on_message(filters.user(ANTISPAM_BANNED) & filters.group)
+@Alita.on_message(filters.user(list(ANTISPAM_BANNED)) & filters.group)
 async def gban_watcher(c: Alita, m: Message):
     from alita import SUPPORT_GROUP
 

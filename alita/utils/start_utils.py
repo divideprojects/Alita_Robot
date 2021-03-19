@@ -122,16 +122,17 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
     """Get the note in pm of user, with parsing enabled."""
     from alita import BOT_USERNAME
 
-    help_lst = m.text.split("_")
+    help_lst = help_option.split("_")
     chat_id = int(help_lst[1])
 
     if len(help_lst) == 2:
-        chat_id = help_option.replace("notes_", "")
+        # chat_id = int(help_option.replace("notes_", ""))
         all_notes = notes_db.get_all_notes(chat_id)
-        chat_title = chats_db.get_chat_info(chat_id)["chat_title"]
+        chat_title = chats_db.get_chat_info(chat_id)["chat_name"]
         rply = f"Notes in {chat_title}:\n\n"
         for note in all_notes:
             rply += f"- [{note[0]}](https://t.me/{BOT_USERNAME}?start=note_{chat_id}_{note[1]})\n"
+        rply += "You can retrieve these notes by tapping on the notename."
         await m.reply_text(rply, disable_web_page_preview=True, quote=True)
         return
     if len(help_lst) == 3:
@@ -170,7 +171,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
                 LOGGER.error(format_exc())
                 return
         else:
-            await m.reply_text(teks, quote=True)
+            await m.reply_text(teks, quote=True, disable_web_page_preview=True)
             return
     elif msgtype in (
         Types.STICKER,
@@ -218,7 +219,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
 async def get_private_rules(_, m: Message, help_option: str):
     chat_id = int(help_option.split("_")[1])
     rules = rules_db.get_rules(chat_id)
-    chat_title = chats_db.get_chat_info(chat_id)["chat_title"]
+    chat_title = chats_db.get_chat_info(chat_id)["chat_name"]
     await m.reply_text(
         (tlang(m, "rules.get_rules")).format(
             chat=chat_title,

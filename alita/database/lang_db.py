@@ -17,7 +17,9 @@
 
 
 from threading import RLock
+from time import time
 
+from alita import LOGGER
 from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
@@ -111,12 +113,14 @@ class Langs:
 
 def __load_all_langs():
     global LANG_DATA
+    start = time()
     db = Langs()
-    for chat in db.get_all_langs():
-        chat_id = chat["_id"]
-        chat_type = chat["chat_type"]
-        lang = chat["lang"]
-        LANG_DATA[chat_id] = {"lang": lang, "chat_type": chat_type}
+    langs_data = db.get_all_langs()
+    LANG_DATA = {
+        int(chat["_id"]): {"lang": chat["lang"], "chat_type": chat["chat_type"]}
+        for chat in langs_data
+    }
+    LOGGER.info(f"Loaded Lang Local Cache in {round((time()-start),2)}s")
 
 
 __load_all_langs()

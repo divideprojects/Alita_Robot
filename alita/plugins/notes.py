@@ -141,7 +141,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                 LOGGER.error(format_exc())
                 return
         else:
-            await m.reply_text(teks)
+            await m.reply_text(teks, quote=True, disable_web_page_preview=True)
             return
     elif msgtype in (
         Types.STICKER,
