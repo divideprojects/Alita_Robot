@@ -65,6 +65,7 @@ class Filters:
                         "fileid": fileid,
                     },
                 )
+                FILTER_CACHE[chat_id] = curr_filters
 
             # Database update
             curr = self.collection.find_one(
