@@ -27,6 +27,7 @@ from alita.database.antiflood_db import AntiFlood
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
+from alita.database.filters_db import Filters
 from alita.database.lang_db import Langs
 from alita.database.notes_db import Notes, NotesSettings
 from alita.database.reporting_db import Reporting
@@ -45,6 +46,7 @@ approvedb = Approve()
 reportdb = Reporting()
 notes_settings = NotesSettings()
 antipindb = AntiChannelPin()
+fldb = Filters()
 
 
 @Alita.on_message(filters.group, group=6)
@@ -136,4 +138,5 @@ def migrate_chat(old_chat, new_chat):
     reportdb.migrate_chat(old_chat, new_chat)
     notes_settings.migrate_chat(old_chat, new_chat)
     antipindb.migrate_chat(old_chat, new_chat)
+    fldb.migrate_chat(old_chat, new_chat)
     LOGGER.info("Successfully migrated!")

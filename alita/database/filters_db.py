@@ -26,7 +26,7 @@ INSERTION_LOCK = RLock()
 
 class Filters:
     def __init__(self) -> None:
-        self.collection = MongoDB("notchat_filterses")
+        self.collection = MongoDB("chat_filters")
 
     def save_filter(
         self,
@@ -59,7 +59,7 @@ class Filters:
             )
             if curr:
                 return curr
-            return "NoFilterte does not exist!"
+            return "Filter does not exist!"
 
     def get_filter_by_hash(self, filter_hash: str):
         return self.collection.find_one({"hash": filter_hash})
@@ -67,11 +67,10 @@ class Filters:
     def get_all_filters(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.collection.find_all({"chat_id": chat_id})
-            filter_list = []
-            for filt in curr:
-                filter_list.append(filt["keyword"])
-            filter_list.sort()
-            return filter_list
+            if curr:
+                filter_list = {i["keyword"] for i in curr}
+                return list(filter_list)
+            return []
 
     def rm_filter(self, chat_id: int, keyword: str):
         with INSERTION_LOCK:
@@ -87,9 +86,9 @@ class Filters:
         with INSERTION_LOCK:
             return self.collection.delete_one({"chat_id": chat_id})
 
-    def count_filters(self, chat_id: int):
+    def count_filters_all(self):
         with INSERTION_LOCK:
-            curr = self.collection.find_all({"chat_id": chat_id})
+            curr = self.collection.find_all()
             if curr:
                 return len(curr)
             return 0
@@ -97,10 +96,8 @@ class Filters:
     def count_filters_chats(self):
         with INSERTION_LOCK:
             filters = self.collection.find_all()
-            chats_ids = []
-            for chat in filters:
-                chats_ids.append(chat["chat_id"])
-            return len(list(dict.fromkeys(chats_ids)))
+            chats_ids = {i["chat_id"] for i in filters}
+            return len(chats_ids)
 
     def count_all_filters(self):
         with INSERTION_LOCK:
@@ -113,10 +110,9 @@ class Filters:
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-
             old_chat_db = self.collection.find_one({"_id": old_chat_id})
             if old_chat_db:
                 new_data = old_chat_db.update({"_id": new_chat_id})
                 self.collection.delete_one({"_id": old_chat_id})
                 self.collection.insert_one(new_data)
-            return
+        return

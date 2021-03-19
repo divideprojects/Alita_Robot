@@ -27,6 +27,7 @@ from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
+from alita.database.filters_db import Filters
 from alita.database.notes_db import Notes, NotesSettings
 from alita.database.rules_db import Rules
 from alita.database.users_db import Users
@@ -40,6 +41,7 @@ rulesdb = Rules()
 userdb = Users()
 appdb = Approve()
 chatdb = Chats()
+fldb = Filters()
 antichanneldb = AntiChannelPin()
 notesettings_db = NotesSettings()
 
@@ -50,6 +52,7 @@ async def get_stats(_, m: Message):
     rply = (
         f"<b>Users:</b> <code>{(userdb.count_users())}</code> in <code>{(chatdb.count_chats())}</code> chats\n"
         f"<b>Anti Channel Pin:</b> Enabled in <code>{(antichanneldb.count_antipin_chats())}</code> chats\n"
+        f"<b>Filters:</b> <code>{(fldb.count_filters_all())}</code> in <code>{(fldb.count_filters_chats())}</code> chats\n"
         f"<b>Blacklists:</b> <code>{(bldb.count_blacklists_all())}</code> in <code>{(bldb.count_blackists_chats())}</code> chats\n"
         f"    <b>Action Specific:</b>\n"
         f"        <b>None:</b> <code>{(bldb.count_action_bl_all('none'))}</code> chats\n"
@@ -59,7 +62,7 @@ async def get_stats(_, m: Message):
         f"<b>Rules:</b> Set in <code>{(rulesdb.count_chats())}</code> chats\n"
         f"    <b>Private Rules:</b> {(rulesdb.count_privrules_chats())} chats\n"
         f"<b>Notes:</b> <code>{(notesdb.count_all_notes())}</code> in <code>{(notesdb.count_notes_chats())}</code> chats\n"
-        f"    <b>PrivateNotes:</b> {(notesettings_db.count_chats())} chats\n"
+        f"    <b>Private Notes:</b> <code>{(notesettings_db.count_chats())}</code> chats\n"
         f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
         f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
         f"\n<b>Database Stats:</b>\n"

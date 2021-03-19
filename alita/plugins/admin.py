@@ -57,14 +57,13 @@ async def adminlist_show(_, m: Message):
             chat_title=m.chat.title,
         ) + "\n\n"
 
-        for i in admin_list:
-            try:
-                mention = (
-                    i[1] if i[1].startswith("@") else (await mention_html(i[1], i[0]))
-                )
-                adminstr += f"- {mention}\n"
-            except PeerIdInvalid:
-                continue
+        for admin in admin_list:
+            mention = (
+                admin[1]
+                if admin[1].startswith("@")
+                else (await mention_html(admin[1], admin[0]))
+            )
+            adminstr += f"- {mention}\n"
 
         await m.reply_text(adminstr + "\n" + note)
 

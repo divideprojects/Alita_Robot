@@ -67,8 +67,8 @@ async def send_cmd(client: Alita, msgtype):
 )
 async def view_blacklist(_, m: Message):
 
-    filters_chat = f"Filters in {m.chat.title}"
-    all_filters = db.get_all_filters(m.chat.id)
+    filters_chat = f"Filters in <b>{m.chat.title}</b>:\n"
+    all_filters = set(db.get_all_filters(m.chat.id))
 
     if not all_filters:
         await m.reply_text(f"There are no filters in {m.chat.title}")
@@ -90,6 +90,13 @@ async def view_blacklist(_, m: Message):
 async def add_filter(_, m: Message):
 
     args = m.text.split(None, 1)
+    all_filters = set(db.get_all_filters(m.chat.id))
+
+    if len(all_filters) >= 50:
+        await m.reply_text(
+            "Only 50 filters allowed per chat!\nTo  add more filters, remove the existing ones.",
+        )
+        return
 
     if not m.reply_to_message and len(args) < 2:
         await m.reply_text(
@@ -108,6 +115,10 @@ async def add_filter(_, m: Message):
     else:
         extracted = await split_quotes(args[1])
         keyword = extracted[0].lower()
+
+    if keyword in all_filters:
+        await m.reply_text(f"Filter {keyword} already exists!")
+        return
 
     teks, msgtype, file_id = await get_filter_type(m)
 
