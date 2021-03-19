@@ -86,17 +86,10 @@ class Filters:
     def get_filter(self, chat_id: int, keyword: str):
         with INSERTION_LOCK:
             try:
-                curr = next(
-                    next(
-                        i
-                        for i in FILTER_CACHE[chat_id]
-                        if FILTER_CACHE[chat_id][num]["keyword"] == keyword
-                    )
-                    for num in range(len(FILTER_CACHE[chat_id]))
-                )
+                curr = next(i for i in FILTER_CACHE[chat_id] if i["keyword"] == keyword)
                 if curr:
                     return curr
-            except KeyError:
+            except (KeyError, StopIteration):
                 pass
             except Exception as ef:
                 LOGGER.error(ef)
@@ -170,12 +163,12 @@ class Filters:
     def count_filters_all(self):
         with INSERTION_LOCK:
             try:
-                return len(
-                    [
-                        [i["keyword"] for i in FILTER_CACHE[chat_id]]
-                        for chat_id in set(FILTER_CACHE.keys())
-                    ],
-                )
+                x = []
+                _ = [
+                    [x.append(i["keyword"]) for i in FILTER_CACHE[chat_id]]
+                    for chat_id in set(FILTER_CACHE.keys())
+                ]
+                return len(x)
             except KeyError:
                 pass
             except Exception as ef:

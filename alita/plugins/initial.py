@@ -49,7 +49,7 @@ antipindb = AntiChannelPin()
 fldb = Filters()
 
 
-@Alita.on_message(filters.group, group=6)
+@Alita.on_message(filters.group, group=4)
 async def initial_works(_, m: Message):
     try:
         if m.migrate_to_chat_id or m.migrate_from_chat_id:

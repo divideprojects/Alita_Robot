@@ -249,7 +249,7 @@ async def rm_allbl_callback(_, q: CallbackQuery):
     return
 
 
-@Alita.on_message(filters.text & filters.group, group=11)
+@Alita.on_message(filters.text & filters.group, group=6)
 async def filters_watcher(c: Alita, m: Message):
     chat_filters = db.get_all_filters(m.chat.id)
     for trigger in chat_filters:

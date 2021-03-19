@@ -32,7 +32,11 @@ from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.group_blacklist import BLACKLIST_CHATS
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
+from alita.utils.admin_cache import (
+    ADMIN_CACHE,
+    TEMP_ADMIN_CACHE_BLOCK,
+    admin_cache_reload,
+)
 from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
 
@@ -41,9 +45,6 @@ bl_db = Blacklist()
 app_db = Approve()
 gban_db = GBan()
 antichannel_db = AntiChannelPin()
-
-
-BLACKLIST_PRUNE_USERS = {}
 
 
 @Alita.on_message(filters.linked_channel)
@@ -60,9 +61,9 @@ async def antichanpin(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.text & filters.group)
+@Alita.on_message(filters.text & filters.group, group=5)
 async def bl_watcher(_, m: Message):
-    global BLACKLIST_PRUNE_USERS
+    global TEMP_ADMIN_CACHE_BLOCK
 
     # TODO - Add warn option when Warn db is added!!
     async def perform_action_blacklist(m: Message, action: str):
@@ -129,63 +130,36 @@ async def bl_watcher(_, m: Message):
     if not chat_blacklists:
         return
 
-    # Get action for blacklist
-    action = bl_db.get_action(m.chat.id)
-
-    # TODO - Cache approved users and admins in BLACKLIST_PRUNE_USERS
-    # If user_id in approved_users list, return and don't delete the message
-    # try:
-    #     approved_users = BLACKLIST_PRUNE_USERS[m.chat.id]
-    # except KeyError:
-    #     # If the chat_id is not found in BLACKLIST_PRUNE_USERS dictionary
-
-    #     approved_users = []
-
-    #     # Get approved users
-    #     app_users = app_db.list_approved(m.chat.id)
-    #     for i in app_users:
-    #         approved_users.append(int(i[0]))  # 0 - user_id
-
-    #     # Get admins from admin_cache, reduces api calls
-    #     for i in [user[0] for user in ADMIN_CACHE[m.cha.id]]:
-    #         approved_users.append(i.user.id)
-
-    #     BLACKLIST_PRUNE_USERS[m.chat.id] = approved_users
-
-    approved_users = []
-
-    # Get approved users
-    app_users = app_db.list_approved(m.chat.id)
-    for i in app_users:
-        approved_users.append(int(i[0]))  # 0 - user_id
-
     # Get admins from admin_cache, reduces api calls
     try:
-        for i in [user[0] for user in (i for i in ADMIN_CACHE[m.chat.id])]:
-            approved_users.append(i)
+        admin_ids = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
-        await admin_cache_reload(m)
+        TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "blacklistwatcher"
+        admin_ids = await admin_cache_reload(m)
 
-    BLACKLIST_PRUNE_USERS[m.chat.id] = approved_users
-
-    # Don't do anything to approved users!
-    if m.from_user.id in BLACKLIST_PRUNE_USERS[m.chat.id]:
+    if m.from_user.id in admin_ids:
         return
 
-    if m.text:
-        for trigger in chat_blacklists:
-            pattern = r"( |^|[^\w])" + re_escape(trigger) + r"( |$|[^\w])"
-            match = await regex_searcher(pattern, m.text.lower())
-            if not match:
-                continue
-            if match:
-                try:
-                    await perform_action_blacklist(m, action)
-                    await m.delete()
-                except RPCError as ef:
-                    LOGGER.error(ef)
-                    LOGGER.error(format_exc())
-                break
+    # Get approved user from cache/database
+    app_users = app_db.list_approved(m.chat.id)
+    if m.from_user.id in {i[0] for i in app_users}:
+        return
+
+    # Get action for blacklist
+    action = bl_db.get_action(m.chat.id)
+    for trigger in chat_blacklists:
+        pattern = r"( |^|[^\w])" + re_escape(trigger) + r"( |$|[^\w])"
+        match = await regex_searcher(pattern, m.text.lower())
+        if not match:
+            continue
+        if match:
+            try:
+                await perform_action_blacklist(m, action)
+                await m.delete()
+            except RPCError as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+            break
     return
 
 

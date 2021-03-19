@@ -30,14 +30,21 @@ from pyrogram.types import Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
+from alita.database.approve_db import Approve
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
+from alita.utils.admin_cache import (
+    ADMIN_CACHE,
+    TEMP_ADMIN_CACHE_BLOCK,
+    admin_cache_reload,
+)
 from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 __PLUGIN__ = "plugins.admin.main"
 __help__ = "plugins.admin.help"
+
+app_db = Approve()
 
 
 @Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
@@ -86,8 +93,16 @@ async def adminlist_show(_, m: Message):
     filters.command("admincache", PREFIX_HANDLER) & filters.group & admin_filter,
 )
 async def reload_admins(_, m: Message):
+    global TEMP_ADMIN_CACHE_BLOCK
+
+    if m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()):
+        if TEMP_ADMIN_CACHE_BLOCK[m.chat.id] == "manualblock":
+            await m.reply_text("Can only reload admin cache once per 10 mins!")
+            return
+
     try:
         await admin_cache_reload(m)
+        TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "manualblock"
         await m.reply_text(tlang(m, "admin.adminlist.reloaded_admins"))
     except RPCError as ef:
         await m.reply_text(
@@ -104,6 +119,7 @@ async def reload_admins(_, m: Message):
     filters.command("promote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
 async def promote_usr(c: Alita, m: Message):
+    global TEMP_ADMIN_CACHE_BLOCK
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
@@ -120,6 +136,11 @@ async def promote_usr(c: Alita, m: Message):
             can_invite_users=True,
             can_pin_messages=True,
         )
+
+        # If user is approved, disapprove them as they willbe promoted and get even more rights
+        if app_db.check_approve(m.chat.id, user_id):
+            app_db.remove_approve(m.chat.id, user_id)
+
         await m.reply_text(
             (tlang(m, "admin.promote.promoted_user")).format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -129,6 +150,7 @@ async def promote_usr(c: Alita, m: Message):
         )
 
         # ----- Add admin to temp cache -----
+        TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "promote"
         await admin_cache_reload(m)
 
     except ChatAdminRequired:
@@ -182,6 +204,7 @@ async def demote_usr(c: Alita, m: Message):
             admin_list.remove(user)
             ADMIN_CACHE[m.chat.id] = admin_list
         except (KeyError, StopIteration):
+            TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "demote"
             await admin_cache_reload(m)
 
     except ChatAdminRequired:
