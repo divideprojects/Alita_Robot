@@ -16,24 +16,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from alita.utils.regex_utils import regex_searcher
 from html import escape
 from traceback import format_exc
+
 from pyrogram import filters
+from pyrogram.errors import RPCError
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     Message,
 )
-from pyrogram.errors import RPCError
 
 from alita import PREFIX_HANDLER
-from alita.bot_class import Alita, LOGGER
+from alita.bot_class import LOGGER, Alita
 from alita.database.filters_db import Filters
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.msg_types import Types, get_filter_type
 from alita.utils.parser import mention_html
+from alita.utils.regex_utils import regex_searcher
 from alita.utils.string import parse_button, split_quotes
 
 __PLUGIN__ = "plugins.filters.main"
@@ -156,7 +157,7 @@ async def add_filter(_, m: Message):
     add = db.save_filter(m.chat.id, keyword, teks, msgtype, file_id)
     if add:
         await m.reply_text(
-            f"Saved filter '{keyword}' in <b>{m.chat.title}<b>!",
+            f"Saved filter '{keyword}' in <b>{m.chat.title}</b>!",
         )
     await m.stop_propagation()
 
@@ -241,51 +242,55 @@ async def rm_allbl_callback(_, q: CallbackQuery):
 @Alita.on_message(filters.text & filters.group, group=11)
 async def filters_watcher(c: Alita, m: Message):
     chat_filters = db.get_all_filters(m.chat.id)
-    if m.text:
-        for trigger in chat_filters:
-            pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
-            match = await regex_searcher(pattern, m.text.lower())
-            if not match:
-                continue
-            if match:
-                try:
-                    getnotes = db.get_filter(m.chat.id, trigger)
-                    msgtype = getnotes["msgtype"]
-                    if not getnotes:
-                        await m.reply_text(
-                            "<b>Error:</b> Cannot find a type for this note!!",
-                            quote=True,
-                        )
-                        return
+    for trigger in chat_filters:
+        pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
+        match = await regex_searcher(pattern, m.text.lower())
+        if not match:
+            continue
+        try:
+            await send_filter_reply(c, m, trigger)
+        except RPCError as ef:
+            LOGGER.error(ef)
+            LOGGER.error(format_exc())
+        break
+    return
 
-                    if msgtype == Types.TEXT:
-                        teks = getnotes["filter_reply"]
-                        await m.reply_text(teks, parse_mode=None, quote=True)
-                    elif msgtype in (
-                        Types.STICKER,
-                        Types.VIDEO_NOTE,
-                        Types.CONTACT,
-                        Types.ANIMATED_STICKER,
-                    ):
-                        await (await send_cmd(c, msgtype))(
-                            m.chat.id,
-                            getnotes["fileid"],
-                            reply_to_message_id=m.message_id,
-                        )
-                    else:
-                        if getnotes["filter_reply"]:
-                            teks = getnotes["filter_reply"]
-                        else:
-                            teks = ""
-                        await (await send_cmd(c, msgtype))(
-                            m.chat.id,
-                            getnotes["fileid"],
-                            caption=teks,
-                            parse_mode=None,
-                            reply_to_message_id=m.message_id,
-                        )
-                except RPCError as ef:
-                    LOGGER.error(ef)
-                    LOGGER.error(format_exc())
-                break
+
+async def send_filter_reply(c: Alita, m: Message, trigger: str):
+    """Reply with assigned filter for the trigger"""
+    getnotes = db.get_filter(m.chat.id, trigger)
+    msgtype = getnotes["msgtype"]
+    if not getnotes:
+        await m.reply_text(
+            "<b>Error:</b> Cannot find a type for this note!!",
+            quote=True,
+        )
+        return
+
+    if msgtype == Types.TEXT:
+        teks = getnotes["filter_reply"]
+        await m.reply_text(teks, parse_mode=None, quote=True)
+    elif msgtype in (
+        Types.STICKER,
+        Types.VIDEO_NOTE,
+        Types.CONTACT,
+        Types.ANIMATED_STICKER,
+    ):
+        await (await send_cmd(c, msgtype))(
+            m.chat.id,
+            getnotes["fileid"],
+            reply_to_message_id=m.message_id,
+        )
+    else:
+        if getnotes["filter_reply"]:
+            teks = getnotes["filter_reply"]
+        else:
+            teks = ""
+        await (await send_cmd(c, msgtype))(
+            m.chat.id,
+            getnotes["fileid"],
+            caption=teks,
+            parse_mode=None,
+            reply_to_message_id=m.message_id,
+        )
     return
