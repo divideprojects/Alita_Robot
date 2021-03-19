@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from html import escape
 from traceback import format_exc
 
 from pyrogram import filters
@@ -75,7 +74,7 @@ async def view_blacklist(_, m: Message):
         return
 
     filters_chat += "\n".join(
-        [f" • <code>{escape(i)}</code>" for i in all_filters],
+        [f" • <code>{i}</code>" for i in all_filters],
     )
 
     await m.reply_text(filters_chat)
@@ -190,7 +189,7 @@ async def stop_filter(_, m: Message):
         await m.reply_text("No filters active here!")
         return
 
-    for keyword in chat_filters:
+    for keyword in set(chat_filters):
         if keyword == args[1]:
             db.rm_filter(m.chat.id, args[1])
             await m.reply_text(

@@ -21,6 +21,7 @@ from io import BytesIO
 from traceback import format_exc
 
 from pyrogram import filters
+from pyrogram.errors import MessageTooLong, PeerIdInvalid, UserIsBlocked
 from pyrogram.types import Message
 
 from alita import (
@@ -33,6 +34,7 @@ from alita import (
 )
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
+from alita.database.users_db import Users
 from alita.tr_engine import tlang
 from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import sudo_filter
@@ -41,6 +43,7 @@ from alita.utils.parser import mention_html
 
 # Initialize
 db = GBan()
+user_db = Users()
 
 
 @Alita.on_message(filters.command(["gban", "globalban"], PREFIX_HANDLER) & sudo_filter)
@@ -101,6 +104,12 @@ async def gban(c: Alita, m: Message):
                 SUPPORT_GROUP=SUPPORT_GROUP,
             ),
         )
+    except UserIsBlocked:
+        LOGGER.error("Could not send PM Message, user blocked bot")
+    except PeerIdInvalid:
+        LOGGER.error(
+            "Haven't seen this user anywhere, mind forwarding one of their messages to me?",
+        )
     except Exception as ef:  # TO DO: Improve Error Detection
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -158,7 +167,11 @@ async def ungban(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["numgbans", "countgbans"], PREFIX_HANDLER) & sudo_filter,
+    filters.command(
+        ["numgbans", "countgbans", "gbancount", "gbanscount"],
+        PREFIX_HANDLER,
+    )
+    & sudo_filter,
 )
 async def gban_count(_, m: Message):
     await m.reply_text(
@@ -171,7 +184,7 @@ async def gban_count(_, m: Message):
     filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter,
 )
 async def gban_list(_, m: Message):
-    banned_users = db.list_gbans()
+    banned_users = db.load_from_db()
 
     if not banned_users:
         await m.reply_text(tlang(m, "antispam.none_gbanned"))
@@ -179,15 +192,18 @@ async def gban_list(_, m: Message):
 
     banfile = tlang(m, "antispam.here_gbanned_start")
     for user in banned_users:
-        banfile += f"[x] {user['name']} - {user['user_id']}\n"
+        banfile += f"[x] <b>{user_db.get_user_info(user['_id'])['name']}</b> - <code>{user['_id']}</code>\n"
         if user["reason"]:
-            banfile += f"Reason: {user['reason']}\n"
+            banfile += f"<b>Reason:</b> {user['reason']}\n"
 
-    with BytesIO(str.encode(await remove_markdown_and_html(banfile))) as f:
-        f.name = "gbanlist.txt"
-        await m.reply_document(
-            document=f,
-            caption=banfile,
-        )
+    try:
+        await m.reply_text(banfile)
+    except MessageTooLong:
+        with BytesIO(str.encode(await remove_markdown_and_html(banfile))) as f:
+            f.name = "gbanlist.txt"
+            await m.reply_document(
+                document=f,
+                caption=tlang(m, "antispam.here_gbanned_start"),
+            )
 
         return

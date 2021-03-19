@@ -98,11 +98,15 @@ class Langs:
         global LANG_DATA
         with INSERTION_LOCK:
 
-            old_chat_local = self.get_grp(chat_id=old_chat_id)
-            if old_chat_local:
-                lang_dict = LANG_DATA[old_chat_id]
-                del LANG_DATA[old_chat_id]
-                LANG_DATA[new_chat_id] = lang_dict
+            try:
+                old_chat_local = self.get_grp(chat_id=old_chat_id)
+                if old_chat_local:
+                    lang_dict = LANG_DATA[old_chat_id]
+                    del LANG_DATA[old_chat_id]
+                    LANG_DATA[new_chat_id] = lang_dict
+            except KeyError:
+                pass
+
             old_chat_db = self.collection.find_one({"_id": old_chat_id})
             if old_chat_db:
                 new_data = old_chat_db.update({"_id": new_chat_id})

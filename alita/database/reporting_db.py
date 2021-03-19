@@ -100,7 +100,7 @@ class Reporting:
                 del REPORTING_CACHE[old_chat_id]
                 REPORTING_CACHE[new_chat_id] = old_db_local
             except KeyError:
-                return
+                pass
 
             # Update in db
             old_chat_db = self.collection.find_one({"_id": old_chat_id})

@@ -23,6 +23,8 @@ from alita.utils.msg_types import Types
 
 INSERTION_LOCK = RLock()
 
+FILTER_CACHE = {}
+
 
 class Filters:
     def __init__(self) -> None:

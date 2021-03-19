@@ -50,7 +50,6 @@ async def adminlist_show(_, m: Message):
         except KeyError:
             admin_list = await admin_cache_reload(m)
             note = tlang(m, "admin.adminlist.note_updated")
-            ADMIN_CACHE[m.chat.id] = admin_list
 
         adminstr = (tlang(m, "admin.adminlist.adminstr")).format(
             chat_title=m.chat.title,
