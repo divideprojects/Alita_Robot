@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from re import escape as re_escape
 from time import time
 from traceback import format_exc
 
@@ -173,7 +174,7 @@ async def bl_watcher(_, m: Message):
 
     if m.text:
         for trigger in chat_blacklists:
-            pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
+            pattern = r"( |^|[^\w])" + re_escape(trigger) + r"( |$|[^\w])"
             match = await regex_searcher(pattern, m.text.lower())
             if not match:
                 continue

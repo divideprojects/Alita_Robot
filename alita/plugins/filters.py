@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from re import escape as re_escape
 from traceback import format_exc
 
 from pyrogram import filters
@@ -252,7 +253,7 @@ async def rm_allbl_callback(_, q: CallbackQuery):
 async def filters_watcher(c: Alita, m: Message):
     chat_filters = db.get_all_filters(m.chat.id)
     for trigger in chat_filters:
-        pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
+        pattern = r"( |^|[^\w])" + re_escape(trigger) + r"( |$|[^\w])"
         match = await regex_searcher(pattern, m.text.lower())
         if not match:
             continue

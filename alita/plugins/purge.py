@@ -39,40 +39,34 @@ async def purge(c: Alita, m: Message):
     if m.chat.type != "supergroup":
         await m.reply_text(tlang(m, "purge.err_basic"))
         return
+
     dm = await m.reply_text(tlang(m, "purge.deleting"))
 
-    message_ids = []
-
     if m.reply_to_message:
-        for a_msg in range(m.reply_to_message.message_id, m.message_id):
-            message_ids.append(a_msg)
+        message_ids = (i for i in range(m.reply_to_message.message_id, m.message_id))
 
-    if (
-        not m.reply_to_message
-        and len(m.text.split()) == 2
-        and isinstance(m.text.split()[1], int)
-    ):
-        c_msg_id = m.message_id
-        first_msg = (m.message_id) - (m.text.split()[1])
-        for a_msg in range(first_msg, c_msg_id):
-            message_ids.append(a_msg)
+        try:
+            await c.delete_messages(
+                chat_id=m.chat.id,
+                message_ids=message_ids,
+                revoke=True,
+            )
+            await m.delete()
+        except MessageDeleteForbidden:
+            await dm.edit_text(tlang(m, "purge.old_msg_err"))
+            return
 
-    try:
-        await c.delete_messages(chat_id=m.chat.id, message_ids=message_ids, revoke=True)
-        await m.delete()
-    except MessageDeleteForbidden:
-        await dm.edit_text(tlang(m, "purge.old_msg_err"))
+        count_del_msg = len(message_ids)
+
+        await dm.edit(
+            (tlang(m, "purge.purge_msg_count")).format(
+                msg_count=count_del_msg,
+            ),
+        )
+        await sleep(3)
+        await dm.delete()
         return
-
-    count_del_msg = len(message_ids)
-
-    await dm.edit(
-        (tlang(m, "purge.purge_msg_count")).format(
-            msg_count=count_del_msg,
-        ),
-    )
-    await sleep(3)
-    await dm.delete()
+    await m.reply_text("Reply to a message to start purge.")
     return
 
 
