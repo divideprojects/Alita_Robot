@@ -20,7 +20,6 @@ from html import escape
 from io import BytesIO
 from os import remove
 from time import time
-from traceback import format_exc
 
 from gpytranslate import Translator
 from pyrogram import filters
