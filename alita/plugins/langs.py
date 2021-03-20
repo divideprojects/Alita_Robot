@@ -76,7 +76,7 @@ async def gen_langs_kb():
 async def chlang_callback(_, q: CallbackQuery):
 
     keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
+        [
             *(await gen_langs_kb()),
             [
                 InlineKeyboardButton(
@@ -111,7 +111,7 @@ async def set_lang_callback(_, q: CallbackQuery):
 
     if q.message.chat.type == "private":
         keyboard = InlineKeyboardMarkup(
-            inline_keyboard=[
+            [
                 [
                     InlineKeyboardButton(
                         f"« {(tlang(q, 'general.back_btn'))}",
@@ -121,16 +121,7 @@ async def set_lang_callback(_, q: CallbackQuery):
             ],
         )
     else:
-        keyboard = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [
-                    InlineKeyboardButton(
-                        f"❌ {(tlang(q, 'general.close_btn'))}",
-                        callback_data="close",
-                    ),
-                ],
-            ],
-        )
+        keyboard = None
     await q.message.edit_text(
         f"🌐 {((tlang(q, 'langs.changed')).format(lang_code=lang_code))}",
         reply_markup=keyboard,
@@ -142,11 +133,27 @@ async def set_lang_callback(_, q: CallbackQuery):
 @Alita.on_message(
     filters.command(["lang", "setlang"], PREFIX_HANDLER)
     & ((admin_filter & filters.group) | filters.private),
+    group=7,
 )
 async def set_lang(_, m: Message):
 
-    if len(m.text.split()) >= 2:
+    args = m.text.split()
+
+    if len(args) > 2:
         await m.reply_text(tlang(m, "langs.correct_usage"))
+        return
+    if len(args) == 2:
+        lang_code = args[1]
+        avail_langs = set(lang_dict.keys())
+        if lang_code not in avail_langs:
+            await m.reply_text(
+                f"Please choose a valid language code from: {', '.join(avail_langs)}",
+            )
+            return
+        db.set_lang(m.chat.id, lang_code)
+        await m.reply_text(
+            f"🌐 {((tlang(m, 'langs.changed')).format(lang_code=lang_code))}",
+        )
         return
     await m.reply_text(
         (tlang(m, "langs.changelang")),
