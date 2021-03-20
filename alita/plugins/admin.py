@@ -106,7 +106,7 @@ async def reload_admins(_, m: Message):
             return
 
     try:
-        await admin_cache_reload(m)
+        await admin_cache_reload(m, "admincache")
         TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "manualblock"
         await m.reply_text(tlang(m, "admin.adminlist.reloaded_admins"))
         LOGGER.info(f"Admincache cmd use in {m.chat.id} by {m.from_user.id}")
