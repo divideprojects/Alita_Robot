@@ -166,6 +166,7 @@ async def id_info(c: Alita, m: Message):
                 user = await c.get_users(user_id)
             except PeerIdInvalid:
                 await m.reply_text(tlang(m, "utils.no_user_db"))
+                return
 
             await m.reply_text(
                 f"{(await mention_html(user.first_name, user.id))}'s ID is <code>{user.id}</code>.",
@@ -312,12 +313,6 @@ async def my_info(c: Alita, m: Message):
     return
 
 
-# Use split to convert to list
-# Not using list itself becuase black changes it to long format...
-normiefont = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split()
-weebyfont = "卂 乃 匚 刀 乇 下 厶 卄 工 丁 长 乚 从 𠘨 口 尸 㔿 尺 丂 丅 凵 リ 山 乂 丫 乙".split()
-
-
 @Alita.on_message(filters.command("weebify", PREFIX_HANDLER))
 async def weebify(_, m: Message):
     if len(m.text.split()) >= 2:
@@ -332,6 +327,12 @@ async def weebify(_, m: Message):
     if not args:
         await m.reply_text(tlang(m, "utils.weebify.weebify_what"))
         return
+
+    # Use split to convert to list
+    # Not using list itself becuase black changes it to long format...
+    normiefont = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split()
+    weebyfont = "卂 乃 匚 刀 乇 下 厶 卄 工 丁 长 乚 从 𠘨 口 尸 㔿 尺 丂 丅 凵 リ 山 乂 丫 乙".split()
+
     string = "  ".join(args).lower()
     for normiecharacter in string:
         if normiecharacter in normiefont:
