@@ -42,7 +42,7 @@ __help__ = "plugins.muting.help"
 )
 async def mute_usr(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
@@ -103,7 +103,7 @@ async def mute_usr(c: Alita, m: Message):
 )
 async def unmute_usr(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
 
     try:
         await m.chat.restrict_member(user_id, m.chat.permissions)

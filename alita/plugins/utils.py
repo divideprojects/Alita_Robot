@@ -20,6 +20,7 @@ from html import escape
 from io import BytesIO
 from os import remove
 from time import time
+from traceback import format_exc
 
 from gpytranslate import Translator
 from pyrogram import filters
@@ -31,6 +32,7 @@ from wikipedia.exceptions import DisambiguationError, PageError
 
 from alita import (
     DEV_USERS,
+    LOGGER,
     OWNER_ID,
     PREFIX_HANDLER,
     SUDO_USERS,
@@ -39,6 +41,7 @@ from alita import (
 )
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
+from alita.database.users_db import Users
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.clean_file import remove_markdown_and_html
@@ -47,6 +50,7 @@ from alita.utils.parser import mention_html
 from alita.utils.paste import paste
 
 gban_db = GBan()
+user_db = Users()
 
 __PLUGIN__ = "plugins.utils.main"
 __help__ = "plugins.utils.help"
@@ -239,22 +243,34 @@ async def github(_, m: Message):
     filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def my_info(c: Alita, m: Message):
-    infoMsg = await m.reply_text((tlang(m, "utils.user_info.getting_info")), quote=True)
     try:
         user_id = (await extract_user(c, m))[0]
     except PeerIdInvalid:
-        await infoMsg.edit_text(tlang(m, "utils.user_info.peer_id_error"))
+        await m.reply_text(tlang(m, "utils.user_info.peer_id_error"))
         return
     except ValueError as ef:
         if "Peer id invalid" in str(ef):
-            await infoMsg.edit_text(tlang(m, "utils.user_info.id_not_found"))
+            await m.reply_text(tlang(m, "utils.user_info.id_not_found"))
         return
     try:
+        user = user_db.get_user_info(user_id)
+        name = user["name"]
+        user_name = user["username"]
+        user_id = user["_id"]
+    except KeyError:
+        LOGGER.warning(f"Calling api to fetch info adbout user {user_id}")
         user = await c.get_users(user_id)
+        name = (
+            escape(user["first_name"] + " " + user["last_name"])
+            if user["last_name"]
+            else user["first_name"]
+        )
+        user_name = user["username"]
+        user_id = user["id"]
     except PeerIdInvalid:
         await m.reply_text(tlang(m, "utils.no_user_db"))
         return
-    except RPCError as ef:
+    except (RPCError, Exception) as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=SUPPORT_GROUP,
@@ -266,37 +282,32 @@ async def my_info(c: Alita, m: Message):
     gbanned, reason_gban = gban_db.get_gban(user_id)
 
     text = (tlang(m, "utils.user_info.info_text.main")).format(
-        user_id=user.id,
-        user_name=escape(user.first_name),
+        user_id=user_id,
+        user_name=name,
     )
 
-    if user.last_name:
-        text += (tlang(m, "utils.user_info.info_text.last_name")).format(
-            user_lname=escape(user.last_name),
-        )
-
-    if user.username:
+    if user_name:
         text += (tlang(m, "utils.user_info.info_text.username")).format(
-            username=escape(user.username),
+            username=user_name,
         )
 
     text += (tlang(m, "utils.user_info.info_text.perma_link")).format(
-        perma_link=(await mention_html("Click Here", user.id)),
+        perma_link=(await mention_html("Click Here", user_id)),
     )
 
     if gbanned:
         text += f"\nThis user is Globally banned beacuse: {reason_gban}\n"
 
-    if user.id == OWNER_ID:
+    if user_id == OWNER_ID:
         text += tlang(m, "utils.user_info.support_user.owner")
-    elif user.id in DEV_USERS:
+    elif user_id in DEV_USERS:
         text += tlang(m, "utils.user_info.support_user.dev")
-    elif user.id in SUDO_USERS:
+    elif user_id in SUDO_USERS:
         text += tlang(m, "utils.user_info.support_user.sudo")
-    elif user.id in WHITELIST_USERS:
+    elif user_id in WHITELIST_USERS:
         text += tlang(m, "utils.user_info.support_user.whitelist")
 
-    await infoMsg.edit_text(text, parse_mode="html", disable_web_page_preview=True)
+    await m.reply_text(text, parse_mode="html", disable_web_page_preview=True)
 
     return
 

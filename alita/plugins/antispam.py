@@ -57,7 +57,7 @@ async def gban(c: Alita, m: Message):
         await m.reply_text(tlang(m, "antispam.gban.enter_reason"))
         return
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
 
     if m.reply_to_message:
         gban_reason = m.text.split(None, 1)[1]
@@ -126,7 +126,7 @@ async def ungban(c: Alita, m: Message):
         await m.reply_text(tlang(m, "antispam.pass_user_id"))
         return
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "antispam.part_of_support"))

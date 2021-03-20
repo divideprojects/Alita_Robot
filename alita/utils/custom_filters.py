@@ -51,7 +51,8 @@ async def admin_check_func(_, __, m):
 
     try:
         return m.from_user.id in {i[0] for i in (await admin_cache_reload(m))}
-    except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
+    except ValueError as ef:
+        # To make language selection work in private chat of user, i.e. PM
         if ("The chat_id" or "belongs to a user") in ef:
             return True
         return False

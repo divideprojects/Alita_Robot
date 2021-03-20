@@ -47,7 +47,7 @@ async def approve_user(c: Alita, m: Message):
 
     chat_title = m.chat.title
     chat_id = m.chat.id
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
     if not user_id:
         await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!",
@@ -113,7 +113,7 @@ async def disapprove_user(c: Alita, m: Message):
 
     chat_title = m.chat.title
     chat_id = m.chat.id
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
     already_approved = db.check_approve(chat_id, user_id)
     if not user_id:
         await m.reply_text(
@@ -189,7 +189,7 @@ async def check_approved(_, m: Message):
 )
 async def check_approval(c: Alita, m: Message):
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
     check_approve = db.check_approve(m.chat.id, user_id)
 
     if not user_id:

@@ -45,7 +45,7 @@ async def kick_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.kick.no_target"))
         return
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
@@ -156,7 +156,7 @@ async def ban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.ban.no_target"))
         return
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
@@ -263,7 +263,7 @@ async def unban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.unban.no_target"))
         return
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
 
     try:
         await m.chat.unban_member(user_id)

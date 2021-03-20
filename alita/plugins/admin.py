@@ -121,12 +121,13 @@ async def reload_admins(_, m: Message):
     filters.command("promote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
 async def promote_usr(c: Alita, m: Message):
+    global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
         return
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, user_name = await extract_user(c, m)
 
     try:
         await m.chat.promote_member(
@@ -151,7 +152,10 @@ async def promote_usr(c: Alita, m: Message):
             app_db.remove_approve(m.chat.id, user_id)
 
         # ----- Add admin to temp cache -----
-        await admin_cache_reload(m, "promote")
+        inp1 = user_name if user_name else user_first_name
+        admins_group = ADMIN_CACHE[m.chat.id]
+        admins_group.append((user_id, inp1))
+        ADMIN_CACHE[m.chat.id] = admins_group
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -179,7 +183,7 @@ async def demote_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.demote.no_target"))
         return
 
-    user_id, user_first_name = await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
     try:
         await m.chat.promote_member(
             user_id=user_id,
