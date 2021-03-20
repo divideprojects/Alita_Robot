@@ -48,7 +48,7 @@ class Chats:
                 users_old = chat["users"]
                 if user_id in set(users_old):
                     # If user_id already exists, return
-                    return
+                    return "user already exists in chat users"
                 users_old.append(user_id)
                 users = list(set(users_old))
                 CHATS_CACHE[chat_id] = {

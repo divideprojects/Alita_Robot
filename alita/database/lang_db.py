@@ -59,7 +59,7 @@ class Langs:
                     {"_id": chat_id},
                     {"lang": lang},
                 )
-                return
+                return "Updated language"
 
             LANG_DATA[chat_id] = {"chat_type": chat_type, "lang": lang}
             return self.collection.insert_one(

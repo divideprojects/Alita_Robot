@@ -60,6 +60,7 @@ class AntiChannelPin:
                         {"_id": chat_id},
                         {"status": True},
                     )
+            return "Already exists"
 
     def set_off(self, chat_id: int):
         global ANTIPIN_CHATS
@@ -67,7 +68,7 @@ class AntiChannelPin:
             if chat_id in ANTIPIN_CHATS:
                 ANTIPIN_CHATS.remove(chat_id)
                 return self.collection.delete_one({"_id": chat_id})
-            return
+            return "Not enabled antichannelpin"
 
     def count_antipin_chats(self):
         with INSERTION_LOCK:

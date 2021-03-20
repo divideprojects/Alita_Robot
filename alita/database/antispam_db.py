@@ -70,7 +70,7 @@ class GBan:
                 ANTISPAM_BANNED.remove(user_id)
                 return self.collection.delete_one({"_id": user_id})
 
-            return
+            return "User not gbanned!"
 
     def get_gban(self, user_id: int):
         if self.check_gban(user_id):

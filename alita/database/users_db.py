@@ -42,7 +42,7 @@ class Users:
                 user = USERS_CACHE[user_id]
                 if name == user["name"] and username == user["username"]:
                     # No additional Database queries
-                    return
+                    return "No change detected!"
                 USERS_CACHE[user_id] = {"username": username, "name": name}
             except KeyError:
                 pass

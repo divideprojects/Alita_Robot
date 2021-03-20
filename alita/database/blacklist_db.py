@@ -59,7 +59,7 @@ class Blacklist:
                 try:
                     triggers_old.remove(trigger)
                 except ValueError:
-                    return False
+                    return "Trigger not found"
                 triggers = list(set(triggers_old))
                 return self.collection.update(
                     {"_id": chat_id},

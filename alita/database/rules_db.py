@@ -112,7 +112,7 @@ class Rules:
             curr_rules = self.collection.find_one({"_id": chat_id})
             if curr_rules:
                 return self.collection.delete_one({"_id": chat_id})
-            return
+            return "Rules not found!"
 
     def count_chats(self):
         with INSERTION_LOCK:
