@@ -32,11 +32,7 @@ from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.group_blacklist import BLACKLIST_CHATS
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import (
-    ADMIN_CACHE,
-    TEMP_ADMIN_CACHE_BLOCK,
-    admin_cache_reload,
-)
+from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
 from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
 
@@ -63,7 +59,6 @@ async def antichanpin(c: Alita, m: Message):
 
 @Alita.on_message(filters.text & filters.group, group=5)
 async def bl_watcher(_, m: Message):
-    global TEMP_ADMIN_CACHE_BLOCK
 
     if not m.from_user:
         return
@@ -137,8 +132,7 @@ async def bl_watcher(_, m: Message):
     try:
         admin_ids = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
-        TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "blacklistwatcher"
-        admin_ids = await admin_cache_reload(m)
+        admin_ids = await admin_cache_reload(m, "blacklistwatcher")
 
     if m.from_user.id in admin_ids:
         return

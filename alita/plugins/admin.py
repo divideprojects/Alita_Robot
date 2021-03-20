@@ -55,20 +55,22 @@ async def adminlist_show(_, m: Message):
             admin_list = ADMIN_CACHE[m.chat.id]
             note = tlang(m, "admin.adminlist.note_cached")
         except KeyError:
-            admin_list = await admin_cache_reload(m)
+            admin_list = await admin_cache_reload(m, "adminlist")
             note = tlang(m, "admin.adminlist.note_updated")
 
         adminstr = (tlang(m, "admin.adminlist.adminstr")).format(
             chat_title=m.chat.title,
         ) + "\n\n"
 
-        for admin in admin_list:
-            mention = (
+        mention = [
+            (
                 admin[1]
                 if admin[1].startswith("@")
                 else (await mention_html(admin[1], admin[0]))
             )
-            adminstr += f"- {mention}\n"
+            for admin in admin_list
+        ]
+        adminstr += f"\n".join(f"- {i}" for i in mention)
 
         await m.reply_text(adminstr + "\n" + note)
 
@@ -119,7 +121,6 @@ async def reload_admins(_, m: Message):
     filters.command("promote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
 async def promote_usr(c: Alita, m: Message):
-    global TEMP_ADMIN_CACHE_BLOCK
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
@@ -137,10 +138,6 @@ async def promote_usr(c: Alita, m: Message):
             can_pin_messages=True,
         )
 
-        # If user is approved, disapprove them as they willbe promoted and get even more rights
-        if app_db.check_approve(m.chat.id, user_id):
-            app_db.remove_approve(m.chat.id, user_id)
-
         await m.reply_text(
             (tlang(m, "admin.promote.promoted_user")).format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -149,9 +146,12 @@ async def promote_usr(c: Alita, m: Message):
             ),
         )
 
+        # If user is approved, disapprove them as they willbe promoted and get even more rights
+        if app_db.check_approve(m.chat.id, user_id):
+            app_db.remove_approve(m.chat.id, user_id)
+
         # ----- Add admin to temp cache -----
-        TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "promote"
-        await admin_cache_reload(m)
+        await admin_cache_reload(m, "promote")
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -173,6 +173,7 @@ async def promote_usr(c: Alita, m: Message):
     filters.command("demote", PREFIX_HANDLER) & filters.group & promote_filter,
 )
 async def demote_usr(c: Alita, m: Message):
+    global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.demote.no_target"))
@@ -188,13 +189,6 @@ async def demote_usr(c: Alita, m: Message):
             can_invite_users=False,
             can_pin_messages=False,
         )
-        await m.reply_text(
-            (tlang(m, "admin.demote.demoted_user")).format(
-                demoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
-                demoted=(await mention_html(user_first_name, user_id)),
-                chat_title=m.chat.title,
-            ),
-        )
 
         # ----- Remove admin from cache -----
         try:
@@ -204,8 +198,15 @@ async def demote_usr(c: Alita, m: Message):
             admin_list.remove(user)
             ADMIN_CACHE[m.chat.id] = admin_list
         except (KeyError, StopIteration):
-            TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "demote"
-            await admin_cache_reload(m)
+            await admin_cache_reload(m, "demote")
+
+        await m.reply_text(
+            (tlang(m, "admin.demote.demoted_user")).format(
+                demoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                demoted=(await mention_html(user_first_name, user_id)),
+                chat_title=m.chat.title,
+            ),
+        )
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))

@@ -50,7 +50,7 @@ async def admin_check_func(_, __, m):
         return True
 
     try:
-        return await admin_cache_reload(m)
+        return m.from_user.id in {i[0] for i in (await admin_cache_reload(m))}
     except ValueError as ef:  # To make language selection work in private chat of user, i.e. PM
         if ("The chat_id" or "belongs to a user") in ef:
             return True
@@ -115,7 +115,7 @@ async def promote_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    await admin_cache_reload(m)
+    await admin_cache_reload(m, "promote")
 
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:

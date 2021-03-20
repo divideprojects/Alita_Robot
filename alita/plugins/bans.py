@@ -27,7 +27,7 @@ from pyrogram.types import Message
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE
+from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
 from alita.utils.custom_filters import restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -51,7 +51,12 @@ async def kick_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         return
 
-    if user_id in {i[0] for i in ADMIN_CACHE[m.chat.id]}:
+    try:
+        admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admins_group = await admin_cache_reload(m, "kick")
+
+    if user_id in admins_group:
         await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
         return
 
@@ -102,7 +107,12 @@ async def skick_usr(c: Alita, m: Message):
         await mymsg.delete()
         return
 
-    if user_id in {i[0] for i in ADMIN_CACHE[m.chat.id]}:
+    try:
+        admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admins_group = await admin_cache_reload(m, "skick")
+
+    if user_id in admins_group:
         mymsg = await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
         sleep(3)
         await m.delete()
@@ -152,8 +162,13 @@ async def ban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         return
 
-    if user_id in {i[0] for i in ADMIN_CACHE[m.chat.id]}:
-        await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
+    try:
+        admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admins_group = await admin_cache_reload(m, "ban")
+
+    if user_id in admins_group:
+        await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
         return
 
     try:
@@ -202,7 +217,12 @@ async def sban_usr(c: Alita, m: Message):
         await mymsg.delete()
         return
 
-    if user_id in {i[0] for i in ADMIN_CACHE[m.chat.id]}:
+    try:
+        admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admins_group = await admin_cache_reload(m, "sban")
+
+    if user_id in admins_group:
         mymsg = await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
         sleep(3)
         await m.delete()
