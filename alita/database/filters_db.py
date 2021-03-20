@@ -86,7 +86,11 @@ class Filters:
     def get_filter(self, chat_id: int, keyword: str):
         with INSERTION_LOCK:
             try:
-                curr = next(i for i in FILTER_CACHE[chat_id] if i["keyword"] == keyword)
+                curr = next(
+                    i
+                    for i in FILTER_CACHE[chat_id]
+                    if keyword in i["keyword"].split("|")
+                )
                 if curr:
                     return curr
             except (KeyError, StopIteration):
@@ -96,7 +100,7 @@ class Filters:
                 LOGGER.error(format_exc())
 
             curr = self.collection.find_one(
-                {"chat_id": chat_id, "keyword": keyword},
+                {"chat_id": chat_id, "keyword": {"$regex": fr"\|?{keyword}\|?"}},
             )
             if curr:
                 return curr
@@ -125,12 +129,9 @@ class Filters:
             try:
                 FILTER_CACHE[chat_id].remove(
                     next(
-                        next(
-                            i
-                            for i in FILTER_CACHE[chat_id]
-                            if FILTER_CACHE[chat_id][num]["keyword"] == keyword
-                        )
-                        for num in range(len(FILTER_CACHE[chat_id]))
+                        i
+                        for i in FILTER_CACHE[chat_id]
+                        if keyword in i["keyword"].split("|")
                     ),
                 )
             except KeyError:
@@ -140,11 +141,12 @@ class Filters:
                 LOGGER.error(format_exc())
 
             curr = self.collection.find_one(
-                {"chat_id": chat_id, "keyword": keyword},
+                {"chat_id": chat_id, "keyword": {"$regex": fr"\|?{keyword}\|?"}},
             )
             if curr:
                 self.collection.delete_one(curr)
                 return True
+
             return False
 
     def rm_all_filters(self, chat_id: int):
@@ -163,12 +165,12 @@ class Filters:
     def count_filters_all(self):
         with INSERTION_LOCK:
             try:
-                x = []
-                _ = [
-                    [x.append(i["keyword"]) for i in FILTER_CACHE[chat_id]]
-                    for chat_id in set(FILTER_CACHE.keys())
-                ]
-                return len(x)
+                return len(
+                    [
+                        [i["keyword"] for i in FILTER_CACHE[chat_id]]
+                        for chat_id in set(FILTER_CACHE.keys())
+                    ],
+                )
             except KeyError:
                 pass
             except Exception as ef:

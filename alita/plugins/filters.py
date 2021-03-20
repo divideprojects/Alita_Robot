@@ -70,14 +70,18 @@ async def view_filters(_, m: Message):
     LOGGER.info(f"{m.from_user.id} checking filters in {m.chat.id}")
 
     filters_chat = f"Filters in <b>{m.chat.title}</b>:\n"
-    all_filters = set(db.get_all_filters(m.chat.id))
+    all_filters = db.get_all_filters(m.chat.id)
+    actual_filters = [j for i in all_filters for j in i.split("|")]
 
-    if not all_filters:
+    if not actual_filters:
         await m.reply_text(f"There are no filters in {m.chat.title}")
         return
 
     filters_chat += "\n".join(
-        [f" • <code>{i}</code>" for i in all_filters],
+        [
+            f" • {' | '.join([f'<code>{i}</code>' for i in i.split('|')])}"
+            for i in all_filters
+        ],
     )
 
     await m.reply_text(filters_chat)
@@ -92,7 +96,8 @@ async def view_filters(_, m: Message):
 async def add_filter(_, m: Message):
 
     args = m.text.split(None, 1)
-    all_filters = set(db.get_all_filters(m.chat.id))
+    all_filters = db.get_all_filters(m.chat.id)
+    actual_filters = {j for i in all_filters for j in i.split("|")}
 
     if len(all_filters) >= 50:
         await m.reply_text(
@@ -117,9 +122,10 @@ async def add_filter(_, m: Message):
         extracted = await split_quotes(args[1])
         keyword = extracted[0].lower()
 
-    if keyword in all_filters:
-        await m.reply_text(f"Filter <code>{keyword}</code> already exists!")
-        return
+    for k in keyword.split("|"):
+        if k in actual_filters:
+            await m.reply_text(f"Filter <code>{k}</code> already exists!")
+            return
 
     teks, msgtype, file_id = await get_filter_type(m)
 
@@ -170,7 +176,7 @@ async def add_filter(_, m: Message):
     LOGGER.info(f"{m.from_user.id} added new filter ({keyword}) in {m.chat.id}")
     if add:
         await m.reply_text(
-            f"Saved filter '<code>{keyword}</code>' in <b>{m.chat.title}</b>!",
+            f"Saved filter for '<code>{', '.join(keyword.split('|'))}</code>' in <b>{m.chat.title}</b>!",
         )
     await m.stop_propagation()
 
@@ -188,23 +194,25 @@ async def stop_filter(_, m: Message):
         return
 
     chat_filters = db.get_all_filters(m.chat.id)
+    act_filters = {j for i in chat_filters for j in i.split("|")}
 
     if not chat_filters:
         await m.reply_text("No filters active here!")
         return
 
-    for keyword in set(chat_filters):
+    for keyword in act_filters:
         if keyword == args[1]:
             db.rm_filter(m.chat.id, args[1])
             LOGGER.info(f"{m.from_user.id} removed filter ({keyword}) in {m.chat.id}")
             await m.reply_text(
-                f"Okay, I'll stop replying to that filter in <b>{m.chat.title}</b>.",
+                f"Okay, I'll stop replying to that filter and it's aliases in <b>{m.chat.title}</b>.",
             )
             await m.stop_propagation()
 
     await m.reply_text(
         "That's not a filter - Click: /filters to get currently active filters.",
     )
+    await m.stop_propagation()
 
 
 @Alita.on_message(
@@ -237,7 +245,7 @@ async def rm_allfilters(_, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^rm_allfilters."))
-async def rm_allbl_callback(_, q: CallbackQuery):
+async def rm_allfilters_callback(_, q: CallbackQuery):
     user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
     user_status = (await q.message.chat.get_member(user_id)).status
@@ -263,7 +271,9 @@ async def filters_watcher(c: Alita, m: Message):
         return
 
     chat_filters = db.get_all_filters(m.chat.id)
-    for trigger in chat_filters:
+    actual_filters = {j for i in chat_filters for j in i.split("|")}
+
+    for trigger in actual_filters:
         pattern = r"( |^|[^\w])" + re_escape(trigger) + r"( |$|[^\w])"
         match = await regex_searcher(pattern, m.text.lower())
         if not match:
