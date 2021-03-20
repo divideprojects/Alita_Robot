@@ -13,7 +13,7 @@
    "stack": "container",
    "env": {
       "STRING_SESSION": {
-         "description": "Your telegram bot string session, get from @Botfather in telegram and then export it's session.",
+         "description": "Your telegram bot string session, get from @Botfather in telegram and then export it's session  using pyrogram.",
          "required": true,
          "value": ""
       },
