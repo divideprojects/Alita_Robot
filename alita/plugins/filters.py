@@ -99,9 +99,9 @@ async def add_filter(_, m: Message):
     all_filters = db.get_all_filters(m.chat.id)
     actual_filters = {j for i in all_filters for j in i.split("|")}
 
-    if len(all_filters) >= 50:
+    if (len(all_filters) >= 50) and (len(actual_filters) >= 120):
         await m.reply_text(
-            "Only 50 filters allowed per chat!\nTo  add more filters, remove the existing ones.",
+            "Only 50 filters and 120 aliases are allowed per chat!\nTo  add more filters, remove the existing ones.",
         )
         return
 
