@@ -10,7 +10,7 @@ git:
 # Only build these branches
 branches:
   only:
-    - beta
+    - main
     - production
 
 # Python Versions
