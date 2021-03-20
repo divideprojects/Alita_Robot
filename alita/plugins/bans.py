@@ -49,6 +49,9 @@ async def kick_usr(c: Alita, m: Message):
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        LOGGER.info(
+            f"{m.from_user.id} trying to kick {user_id} (SUPPORT_STAFF) in {m.chat.id}",
+        )
         return
 
     try:
@@ -62,6 +65,7 @@ async def kick_usr(c: Alita, m: Message):
 
     try:
         await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
+        LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
         await m.reply_text(
             (tlang(m, "admin.kick.kicked_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -105,6 +109,9 @@ async def skick_usr(c: Alita, m: Message):
         sleep(3)
         await m.delete()
         await mymsg.delete()
+        LOGGER.info(
+            f"{m.from_user.id} trying to skick {user_id} (SUPPORT_STAFF) in {m.chat.id}",
+        )
         return
 
     try:
@@ -121,6 +128,7 @@ async def skick_usr(c: Alita, m: Message):
 
     try:
         await c.kick_chat_member(m.chat.id, user_id, int(time() + 15))
+        LOGGER.info(f"{m.from_user.id} skicked {user_id} in {m.chat.id}")
         await m.delete()
     except ChatAdminRequired:
         mymsg = await m.reply_text(tlang(m, "admin.not_admin"))
@@ -160,6 +168,9 @@ async def ban_usr(c: Alita, m: Message):
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        LOGGER.info(
+            f"{m.from_user.id} trying to ban {user_id} (SUPPORT_STAFF) in {m.chat.id}",
+        )
         return
 
     try:
@@ -173,6 +184,7 @@ async def ban_usr(c: Alita, m: Message):
 
     try:
         await c.kick_chat_member(m.chat.id, user_id)
+        LOGGER.info(f"{m.from_user.id} banned {user_id} in {m.chat.id}")
         await m.reply_text(
             (tlang(m, "admin.ban.banned_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -215,6 +227,9 @@ async def sban_usr(c: Alita, m: Message):
         sleep(3)
         await m.delete()
         await mymsg.delete()
+        LOGGER.info(
+            f"{m.from_user.id} trying to sban {user_id} (SUPPORT_STAFF) in {m.chat.id}",
+        )
         return
 
     try:
@@ -231,6 +246,7 @@ async def sban_usr(c: Alita, m: Message):
 
     try:
         await c.kick_chat_member(m.chat.id, user_id)
+        LOGGER.info(f"{m.from_user.id} sbanned {user_id} in {m.chat.id}")
         await m.delete()
     except ChatAdminRequired:
         mymsg = await m.reply_text(tlang(m, "admin.not_admin"))

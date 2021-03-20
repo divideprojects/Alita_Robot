@@ -87,6 +87,7 @@ async def gban(c: Alita, m: Message):
             first_name=user_first_name,
         ),
     )
+    LOGGER.info(f"{m.from_user.id} gbanned {user_id} from {m.chat.id}")
     log_msg = (tlang(m, "antispam.gban.log_msg")).format(
         chat_id=m.chat.id,
         ban_admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -143,6 +144,7 @@ async def ungban(c: Alita, m: Message):
                 first_name=user_first_name,
             ),
         )
+        LOGGER.info(f"{m.from_user.id} ungbanned {user_id} from {m.chat.id}")
         log_msg = (tlang(m, "amtispam.ungban.log_msg")).format(
             chat_id=m.chat.id,
             ungban_admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -177,6 +179,7 @@ async def gban_count(_, m: Message):
     await m.reply_text(
         (tlang(m, "antispam.num_gbans")).format(count=(db.count_gbans())),
     )
+    LOGGER.info(f"{m.from_user.id} counting gbans in {m.chat.id}")
     return
 
 
@@ -206,4 +209,6 @@ async def gban_list(_, m: Message):
                 caption=tlang(m, "antispam.here_gbanned_start"),
             )
 
-        return
+    LOGGER.info(f"{m.from_user.id} exported gbanlist in {m.chat.id}")
+
+    return

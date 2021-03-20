@@ -26,7 +26,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import PREFIX_HANDLER
+from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
@@ -47,6 +47,8 @@ app_db = Approve()
     filters.command("blacklist", PREFIX_HANDLER) & filters.group & admin_filter,
 )
 async def view_blacklist(_, m: Message):
+
+    LOGGER.info(f"{m.from_user.id} checking blacklists in {m.chat.id}")
 
     chat_title = m.chat.title
     blacklists_chat = (tlang(m, "blacklist.curr_blacklist_initial")).format(
@@ -88,6 +90,7 @@ async def add_blacklist(_, m: Message):
             return
 
         db.add_blacklist(m.chat.id, bl_word)
+        LOGGER.info(f"{m.from_user.id} added new blacklist ({bl_word}) in {m.chat.id}")
         await m.reply_text(
             (tlang(m, "blacklist.added_blacklist")).format(
                 trigger=bl_word,
@@ -120,6 +123,7 @@ async def rm_blacklist(_, m: Message):
         return
 
     db.remove_blacklist(m.chat.id, bl_word)
+    LOGGER.info(f"{m.from_user.id} removed blacklist ({bl_word}) in {m.chat.id}")
     await m.reply_text(
         (tlang(m, "blacklist.rm_blacklist")).format(
             bl_word=f"<code>{bl_word}</code>",
@@ -134,11 +138,13 @@ async def set_bl_action(_, m: Message):
     if len(m.text.split()) == 2:
         action = m.text.split(None, 1)[1]
         db.set_action(m.chat.id, action)
+        LOGGER.info(f"{m.from_user.id} set blacklist action to {action} in {m.chat.id}")
         await m.reply_text(
             (tlang(m, "blacklist.action_set")).format(action=action),
         )
     elif len(m.text.split()) == 1:
         action = db.get_action(m.chat.id)
+        LOGGER.info(f"{m.from_user.id} checking blacklist action in {m.chat.id}")
         await m.reply_text(
             (tlang(m, "blacklist.action_get")).format(action=action),
         )
@@ -190,5 +196,6 @@ async def rm_allbl_callback(_, q: CallbackQuery):
         return
     db.rm_all_blacklist(q.message.chat.id)
     await q.message.delete()
+    LOGGER.info(f"{user_id} removed all blacklists in {q.message.chat.id}")
     await q.answer("Cleared all Blacklists!", show_alert=True)
     return

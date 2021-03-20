@@ -73,6 +73,7 @@ async def adminlist_show(_, m: Message):
         adminstr += "\n".join(f"- {i}" for i in mention)
 
         await m.reply_text(adminstr + "\n\n" + note)
+        LOGGER.info(f"Adminlist cmd use in {m.chat.id} by {m.from_user.id}")
 
     except Exception as ef:
         if str(ef) == str(m.chat.id):
@@ -108,6 +109,7 @@ async def reload_admins(_, m: Message):
         await admin_cache_reload(m)
         TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "manualblock"
         await m.reply_text(tlang(m, "admin.adminlist.reloaded_admins"))
+        LOGGER.info(f"Admincache cmd use in {m.chat.id} by {m.from_user.id}")
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
@@ -140,6 +142,7 @@ async def promote_usr(c: Alita, m: Message):
             can_invite_users=True,
             can_pin_messages=True,
         )
+        LOGGER.info(f"{m.from_user.id} promoted {user_id} in {m.chat.id}")
 
         await m.reply_text(
             (tlang(m, "admin.promote.promoted_user")).format(
@@ -195,6 +198,7 @@ async def demote_usr(c: Alita, m: Message):
             can_invite_users=False,
             can_pin_messages=False,
         )
+        LOGGER.info(f"{m.from_user.id} demoted {user_id} in {m.chat.id}")
 
         # ----- Remove admin from cache -----
         try:
@@ -246,6 +250,7 @@ async def get_invitelink(c: Alita, m: Message):
             ),
             disable_web_page_preview=True,
         )
+        LOGGER.info(f"{m.from_user.id} exported invitl link in {m.chat.id}")
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except ChatAdminInviteRequired:

@@ -67,6 +67,8 @@ async def send_cmd(client: Alita, msgtype):
 )
 async def view_filters(_, m: Message):
 
+    LOGGER.info(f"{m.from_user.id} checking filters in {m.chat.id}")
+
     filters_chat = f"Filters in <b>{m.chat.title}</b>:\n"
     all_filters = set(db.get_all_filters(m.chat.id))
 
@@ -165,6 +167,7 @@ async def add_filter(_, m: Message):
         return
 
     add = db.save_filter(m.chat.id, keyword, teks, msgtype, file_id)
+    LOGGER.info(f"{m.from_user.id} added new filter ({keyword}) in {m.chat.id}")
     if add:
         await m.reply_text(
             f"Saved filter '<code>{keyword}</code>' in <b>{m.chat.title}</b>!",
@@ -193,6 +196,7 @@ async def stop_filter(_, m: Message):
     for keyword in set(chat_filters):
         if keyword == args[1]:
             db.rm_filter(m.chat.id, args[1])
+            LOGGER.info(f"{m.from_user.id} removed filter ({keyword}) in {m.chat.id}")
             await m.reply_text(
                 f"Okay, I'll stop replying to that filter in <b>{m.chat.title}</b>.",
             )
@@ -247,6 +251,7 @@ async def rm_allbl_callback(_, q: CallbackQuery):
         return
     db.rm_all_filters(q.message.chat.id)
     await q.message.delete()
+    LOGGER.info(f"{user_id} removed all filter from {q.message.chat.id}")
     await q.answer("Cleared all Filters!", show_alert=True)
     return
 
@@ -264,7 +269,8 @@ async def filters_watcher(c: Alita, m: Message):
         if not match:
             continue
         try:
-            await send_filter_reply(c, m, trigger)
+            msgtype = await send_filter_reply(c, m, trigger)
+            LOGGER.info(f"Replied with {msgtype} to {trigger} in {m.chat.id}")
         except RPCError as ef:
             LOGGER.error(ef)
             LOGGER.error(format_exc())
@@ -309,4 +315,4 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
             parse_mode=None,
             reply_to_message_id=m.message_id,
         )
-    return
+    return msgtype
