@@ -127,4 +127,4 @@ def __load_all_langs():
     LOGGER.info(f"Loaded Lang Local Cache in {round((time()-start),2)}s")
 
 
-__load_all_langs()
+# __load_all_langs()

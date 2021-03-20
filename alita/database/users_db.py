@@ -126,4 +126,4 @@ def __load_users_cache():
     LOGGER.info(f"Loaded Users Local Cache in {round((time()-start),2)}s")
 
 
-__load_users_cache()
+# __load_users_cache()

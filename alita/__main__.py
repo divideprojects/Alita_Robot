@@ -16,7 +16,32 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from alita import LOGGER
 from alita.bot_class import Alita
+from alita.database.antichannelpin_db import __load_antichannelpin_chats
+from alita.database.antispam_db import __load_antispam_users
+from alita.database.chats_db import __load_chats_cache
+from alita.database.filters_db import __load_filters_cache
+from alita.database.lang_db import __load_all_langs
+from alita.database.reporting_db import __load_all_reporting_settings
+from alita.database.rules_db import __load_all_rules
+from alita.database.users_db import __load_users_cache
+
+
+def load_caches():
+    # Load local cache dictionaries
+    LOGGER.info("Starting to load Local Caches!")
+    __load_all_langs()
+    __load_chats_cache()
+    __load_antispam_users()
+    __load_users_cache()
+    __load_filters_cache()
+    __load_all_rules()
+    __load_antichannelpin_chats()
+    __load_all_reporting_settings()
+    LOGGER.info("Succefully loaded Local Caches!\n")
+
 
 if __name__ == "__main__":
+    load_caches()
     Alita().run()

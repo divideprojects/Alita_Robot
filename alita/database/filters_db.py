@@ -251,4 +251,4 @@ def __load_filters_cache():
     LOGGER.info(f"Loaded Filters Local Cache in {round((time()-start),2)}s")
 
 
-__load_filters_cache()
+# __load_filters_cache()

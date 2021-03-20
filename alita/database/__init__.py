@@ -87,3 +87,11 @@ class MongoDB:
     @staticmethod
     def close():
         return mongodb_client.close()
+
+
+def __connect_first():
+    _ = MongoDB("test")
+    LOGGER.info("Initialized Database!")
+
+
+__connect_first()

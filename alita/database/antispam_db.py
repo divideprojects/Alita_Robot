@@ -118,4 +118,4 @@ def __load_antispam_users():
     LOGGER.info(f"Loaded AntispamBanned Local Cache in {round((time()-start),2)}s")
 
 
-__load_antispam_users()
+# __load_antispam_users()

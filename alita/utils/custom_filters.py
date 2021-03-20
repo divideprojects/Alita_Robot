@@ -23,7 +23,7 @@ from pyrogram.types import CallbackQuery
 
 from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import admin_cache_reload
+from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
 
 SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
 DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
@@ -50,7 +50,9 @@ async def admin_check_func(_, __, m):
         return True
 
     try:
-        return m.from_user.id in {i[0] for i in (await admin_cache_reload(m))}
+        return m.from_user.id in {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        return m.from_user.id in {i[0] for i in await admin_cache_reload(m)}
     except ValueError as ef:
         # To make language selection work in private chat of user, i.e. PM
         if ("The chat_id" or "belongs to a user") in ef:
@@ -116,7 +118,7 @@ async def promote_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    await admin_cache_reload(m, "promote")
+    # await admin_cache_reload(m, "promote")
 
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in DEV_LEVEL:

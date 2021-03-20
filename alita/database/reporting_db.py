@@ -126,4 +126,4 @@ def __load_all_reporting_settings():
     LOGGER.info(f"Loaded Reporting Local Cache in {round((time()-start),2)}s")
 
 
-__load_all_reporting_settings()
+# __load_all_reporting_settings()

@@ -28,7 +28,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import Message
 
-from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
+from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.tr_engine import tlang
@@ -72,7 +72,7 @@ async def adminlist_show(_, m: Message):
         ]
         adminstr += "\n".join(f"- {i}" for i in mention)
 
-        await m.reply_text(adminstr + "\n" + note)
+        await m.reply_text(adminstr + "\n\n" + note)
 
     except Exception as ef:
         if str(ef) == str(m.chat.id):
@@ -97,7 +97,9 @@ async def adminlist_show(_, m: Message):
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
 
-    if m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()):
+    if (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys())) and (
+        m.from_user.id not in SUPPORT_STAFF
+    ):
         if TEMP_ADMIN_CACHE_BLOCK[m.chat.id] == "manualblock":
             await m.reply_text("Can only reload admin cache once per 10 mins!")
             return

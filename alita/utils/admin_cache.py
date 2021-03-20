@@ -40,8 +40,12 @@ async def admin_cache_reload(m: Message, status=None):
         if status is not None:
             TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = status
 
-        if TEMP_ADMIN_CACHE_BLOCK[m.chat.id] in ("autoblock", "manualblock"):
-            return
+        try:
+            if TEMP_ADMIN_CACHE_BLOCK[m.chat.id] in ("autoblock", "manualblock"):
+                return
+        except KeyError:
+            # Because it might be first time when admn_list is being reloaded
+            pass
 
         admin_list = [
             (

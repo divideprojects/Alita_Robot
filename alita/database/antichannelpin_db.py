@@ -119,4 +119,4 @@ def __load_antichannelpin_chats():
     LOGGER.info(f"Loaded AntiChannelPin Local Cache in {round((time()-start),2)}s")
 
 
-__load_antichannelpin_chats()
+# __load_antichannelpin_chats()

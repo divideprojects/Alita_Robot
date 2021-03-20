@@ -68,6 +68,12 @@ except Exception as ef:
     sysexit(1)
 
 
+LOGGER.info("------------------------")
+LOGGER.info("|      Alita_Robot     |")
+LOGGER.info("------------------------")
+LOGGER.info("Version: " + Config.VERSION)
+LOGGER.info("Owner: " + str(Config.OWNER_ID) + "\n")
+
 # Account Related
 STRING_SESSION = Config.STRING_SESSION
 APP_ID = Config.APP_ID
@@ -84,7 +90,7 @@ DEV_USERS = Config.DEV_USERS
 SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 SUPPORT_STAFF = list(
-    set([OWNER_ID] + SUDO_USERS + DEV_USERS + WHITELIST_USERS),
+    set([int(OWNER_ID)] + SUDO_USERS + DEV_USERS + WHITELIST_USERS),
 )  # Remove duplicates!
 
 # Plugins, DB and Workers

@@ -181,4 +181,4 @@ def __load_all_rules():
     LOGGER.info(f"Loaded Rules Local Cache in {round((time()-start),2)}s")
 
 
-__load_all_rules()
+# __load_all_rules()
