@@ -70,7 +70,7 @@ async def adminlist_show(_, m: Message):
             )
             for admin in admin_list
         ]
-        adminstr += f"\n".join(f"- {i}" for i in mention)
+        adminstr += "\n".join(f"- {i}" for i in mention)
 
         await m.reply_text(adminstr + "\n" + note)
 
