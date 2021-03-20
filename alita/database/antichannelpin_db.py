@@ -116,7 +116,7 @@ def __load_antichannelpin_chats():
     db = AntiChannelPin()
     antipin_chats = db.load_chats_from_db({"status": True})
     ANTIPIN_CHATS = {i["_id"] for i in antipin_chats}
-    LOGGER.info(f"Loaded AntiChannelPin Local Cache in {round((time()-start),2)}s")
+    LOGGER.info(f"Loaded AntiChannelPin Local Cache in {round((time()-start),3)}s")
 
 
 # __load_antichannelpin_chats()

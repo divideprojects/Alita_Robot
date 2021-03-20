@@ -185,7 +185,7 @@ def __load_chats_cache():
         }
         for chat in chats
     }
-    LOGGER.info(f"Loaded Chats Local Cache in {round((time()-start),2)}s")
+    LOGGER.info(f"Loaded Chats Local Cache in {round((time()-start),3)}s")
 
 
 # __load_chats_cache()

@@ -47,6 +47,9 @@ async def pin_message(_, m: Message):
             await m.reply_to_message.pin(
                 disable_notification=disable_notification,
             )
+            LOGGER.info(
+                f"{m.from_user.id} pinned msgid-{m.reply_to_message.message_id} in {m.chat.id}",
+            )
             if (str(m.chat.id)).startswith("-100"):
                 link_chat_id = (str(m.chat.id)).replace("-100", "")
             message_link = (
@@ -82,6 +85,9 @@ async def unpin_message(c: Alita, m: Message):
     try:
         if m.reply_to_message:
             await c.unpin_chat_message(m.chat.id, m.reply_to_message.message_id)
+            LOGGER.info(
+                f"{m.from_user.id} unpinned msgid-{m.reply_to_message.message_id} in {m.chat.id}",
+            )
             await m.reply_text(tlang(m, "pin.unpinned_last_msg"))
         else:
             await m.reply_text(tlang(m, "pin.reply_to_unpin"))
@@ -108,6 +114,7 @@ async def unpinall_message(c: Alita, m: Message):
 
     try:
         await c.unpin_all_chat_messages(m.chat.id)
+        LOGGER.info(f"{m.from_user.id} unpinned all messages in {m.chat.id}")
         await m.reply_text(tlang(m, "pin.unpinned_all_msg"))
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.notadmin"))
@@ -140,11 +147,13 @@ async def anti_channel_pin(_, m: Message):
         return
 
     if len(m.text.split()) == 2:
-        if m.command[1] in ("yes", "on"):
+        if m.command[1] in ("yes", "on", "false"):
             antichanneldb.set_on(m.chat.id)
+            LOGGER.info(f"{m.from_user.id} enabled antichannelpin in {m.chat.id}")
             msg = tlang(m, "pin.antichannelpin.turned_on")
-        elif m.command[1] in ("no", "off"):
+        elif m.command[1] in ("no", "off", "true"):
             antichanneldb.set_on(m.chat.id)
+            LOGGER.info(f"{m.from_user.id} disabled antichannelpin in {m.chat.id}")
             msg = tlang(m, "pin.antichannelpin.turned_off")
         else:
             await m.reply_text(tlang(m, "pin.general.check_help"))
@@ -159,6 +168,7 @@ async def anti_channel_pin(_, m: Message):
 )
 async def perma_pin(c: Alita, m: Message):
     if m.reply_to_message:
+        LOGGER.info(f"{m.from_user.id} used permampin in {m.chat.id}")
         z = await m.reply_to_message.copy(m.chat.id)
         await c.pin_chat_message(m.chat.id, z.message_id)
     elif len(m.text.split()) > 1:

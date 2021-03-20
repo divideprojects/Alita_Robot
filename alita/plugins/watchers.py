@@ -50,6 +50,7 @@ async def antichanpin(c: Alita, m: Message):
         antipin_status = antichannel_db.check_antipin(m.chat.id)
         if antipin_status:
             await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
+            LOGGER.info(f"msgid-{m.message_id} unpinned in {m.chat.id}")
     except Exception as ef:
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -152,6 +153,9 @@ async def bl_watcher(_, m: Message):
         if match:
             try:
                 await perform_action_blacklist(m, action)
+                LOGGER.info(
+                    f"{m.from_user.id} {action}ed for using blacklisted word {trigger} in {m.chat.id}",
+                )
                 await m.delete()
             except RPCError as ef:
                 LOGGER.error(ef)
@@ -183,7 +187,7 @@ async def gban_watcher(c: Alita, m: Message):
                     SUPPORT_GROUP=SUPPORT_GROUP,
                 ),
             )
-            LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id}")
+            LOGGER.info(f"Banned user {m.from_user.id} in {m.chat.id} due to antispam")
             return
         except (ChatAdminRequired, UserAdminInvalid):
             # Bot not admin in group and hence cannot ban users!
@@ -215,4 +219,5 @@ async def bl_chats_watcher(c: Alita, m: Message):
         ),
     )
     await c.leave_chat(m.chat.id)
+    LOGGER.info(f"Joined and Left blacklisted chat {m.chat.id}")
     return

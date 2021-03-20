@@ -41,6 +41,7 @@ from alita.utils.start_utils import (
     filters.command("donate", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def donate(_, m: Message):
+    LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
     await m.reply_text(tlang(m, "general.donate_owner"))
     return
 
@@ -58,6 +59,7 @@ async def start(c: Alita, m: Message):
                 await get_private_note(c, m, help_option)
                 return
             if help_option.startswith("rules"):
+                LOGGER.info(f"{m.from_user.id} fetched privaterules in {m.chat.id}")
                 await get_private_rules(c, m, help_option)
                 return
 
@@ -141,6 +143,9 @@ async def help_menu(_, m: Message):
         help_msg, help_kb = await get_help_msg(m, help_option)
         if help_msg is None:
             return
+        LOGGER.info(
+            f"{m.from_user.id} fetched help for {help_option} text in {m.chat.id}",
+        )
         if m.chat.type == "private":
             await m.reply_text(
                 help_msg,

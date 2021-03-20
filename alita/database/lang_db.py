@@ -124,7 +124,7 @@ def __load_all_langs():
         int(chat["_id"]): {"lang": chat["lang"], "chat_type": chat["chat_type"]}
         for chat in langs_data
     }
-    LOGGER.info(f"Loaded Lang Local Cache in {round((time()-start),2)}s")
+    LOGGER.info(f"Loaded Lang Local Cache in {round((time()-start),3)}s")
 
 
 # __load_all_langs()

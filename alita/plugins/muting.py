@@ -45,6 +45,9 @@ async def mute_usr(c: Alita, m: Message):
     user_id, user_first_name, _ = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
+        LOGGER.info(
+            f"{m.from_user.id} trying to mute {user_id} (SUPPORT_STAFF) in {m.chat.id}",
+        )
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
         return
 
@@ -74,6 +77,7 @@ async def mute_usr(c: Alita, m: Message):
                 can_pin_messages=False,
             ),
         )
+        LOGGER.info(f"{m.from_user.id} muted {user_id} in {m.chat.id}")
         await m.reply_text(
             (tlang(m, "admin.mute.muted_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -107,6 +111,7 @@ async def unmute_usr(c: Alita, m: Message):
 
     try:
         await m.chat.restrict_member(user_id, m.chat.permissions)
+        LOGGER.info(f"{m.from_user.id} unmuted {user_id} in {m.chat.id}")
         await m.reply_text(
             (tlang(m, "admin.unmute.unmuted_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),

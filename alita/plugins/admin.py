@@ -157,10 +157,13 @@ async def promote_usr(c: Alita, m: Message):
             app_db.remove_approve(m.chat.id, user_id)
 
         # ----- Add admin to temp cache -----
-        inp1 = user_name if user_name else user_first_name
-        admins_group = ADMIN_CACHE[m.chat.id]
-        admins_group.append((user_id, inp1))
-        ADMIN_CACHE[m.chat.id] = admins_group
+        try:
+            inp1 = user_name if user_name else user_first_name
+            admins_group = ADMIN_CACHE[m.chat.id]
+            admins_group.append((user_id, inp1))
+            ADMIN_CACHE[m.chat.id] = admins_group
+        except KeyError:
+            await admin_cache_reload(m, "promote_key_error")
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -208,7 +211,7 @@ async def demote_usr(c: Alita, m: Message):
             admin_list.remove(user)
             ADMIN_CACHE[m.chat.id] = admin_list
         except (KeyError, StopIteration):
-            await admin_cache_reload(m, "demote")
+            await admin_cache_reload(m, "demote_key_stopiter_error")
 
         await m.reply_text(
             (tlang(m, "admin.demote.demoted_user")).format(

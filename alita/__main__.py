@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from time import time
+
 from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.antichannelpin_db import __load_antichannelpin_chats
@@ -30,6 +32,7 @@ from alita.database.users_db import __load_users_cache
 
 def load_caches():
     # Load local cache dictionaries
+    start = time()
     LOGGER.info("Starting to load Local Caches!")
     __load_all_langs()
     __load_chats_cache()
@@ -39,7 +42,7 @@ def load_caches():
     __load_all_rules()
     __load_antichannelpin_chats()
     __load_all_reporting_settings()
-    LOGGER.info("Succefully loaded Local Caches!\n")
+    LOGGER.info(f"Succefully loaded Local Caches in {round((time()-start),3)}s\n")
 
 
 if __name__ == "__main__":

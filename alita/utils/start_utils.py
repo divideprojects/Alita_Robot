@@ -213,6 +213,9 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
                 getnotes["fileid"],
                 caption=teks,
             )
+    LOGGER.info(
+        f"{m.from_user.id} fetched privatenote {note_hash} (type - {getnotes}) in {m.chat.id}",
+    )
     return
 
 
@@ -267,5 +270,7 @@ async def get_help_msg(m, help_option: str):
                     ],
                 ],
             )
-
+            LOGGER.info(
+                f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
+            )
     return help_msg, help_kb

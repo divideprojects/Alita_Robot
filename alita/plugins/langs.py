@@ -26,8 +26,9 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import PREFIX_HANDLER
+from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
+from alita.database import lang_db
 from alita.database.lang_db import Langs
 from alita.tr_engine import lang_dict, tlang
 from alita.utils.custom_filters import admin_filter
@@ -151,6 +152,7 @@ async def set_lang(_, m: Message):
             )
             return
         db.set_lang(m.chat.id, lang_code)
+        LOGGER.info(f"{m.from_user.id} change language to {lang_code} in {m.chat.id}")
         await m.reply_text(
             f"🌐 {((tlang(m, 'langs.changed')).format(lang_code=lang_code))}",
         )

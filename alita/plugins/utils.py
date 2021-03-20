@@ -59,6 +59,7 @@ __help__ = "plugins.utils.help"
     filters.command("ping", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def ping(_, m: Message):
+    LOGGER.info(f"{m.from_user.id} used ping cmd in {m.chat.id}")
     start = time()
     replymsg = await m.reply_text((tlang(m, "utils.ping.pinging")), quote=True)
     delta_ping = time() - start
@@ -68,6 +69,7 @@ async def ping(_, m: Message):
 
 @Alita.on_message(filters.command("wiki", PREFIX_HANDLER))
 async def wiki(_, m: Message):
+    LOGGER.info(f"{m.from_user.id} used wiki cmd in {m.chat.id}")
     if m.reply_to_message:
         search = m.reply_to_message.text
     else:
@@ -105,6 +107,7 @@ async def wiki(_, m: Message):
     filters.command("lyrics", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def get_lyrics(_, m: Message):
+    LOGGER.info(f"{m.from_user.id} used lyrics cmd in {m.chat.id}")
     query = m.text.split(None, 1)[1]
     song = ""
     if not query:
@@ -137,6 +140,7 @@ async def get_lyrics(_, m: Message):
     filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def id_info(c: Alita, m: Message):
+    LOGGER.info(f"{m.from_user.id} used id cmd in {m.chat.id}")
 
     if m.chat.type == "supergroup" and not m.reply_to_message:
         await m.reply_text((tlang(m, "utils.id.group_id")).format(group_id=m.chat.id))
@@ -192,6 +196,7 @@ async def id_info(c: Alita, m: Message):
 )
 async def get_gifid(_, m: Message):
     if m.reply_to_message and m.reply_to_message.animation:
+        LOGGER.info(f"{m.from_user.id} used gifid cmd in {m.chat.id}")
         await m.reply_text(
             f"Gif ID:\n<code>{m.reply_to_message.animation.file_id}</code>",
             parse_mode="html",
@@ -207,6 +212,7 @@ async def get_gifid(_, m: Message):
 async def github(_, m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(None, 1)[1]
+        LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
     else:
         await m.reply_text(
             f"Usage: `{PREFIX_HANDLER}github <username>`",
@@ -280,6 +286,7 @@ async def my_info(c: Alita, m: Message):
         return
 
     gbanned, reason_gban = gban_db.get_gban(user_id)
+    LOGGER.info(f"{m.from_user.id} used info cmd for {user_id} in {m.chat.id}")
 
     text = (tlang(m, "utils.user_info.info_text.main")).format(
         user_id=user_id,
@@ -341,6 +348,7 @@ async def weebify(_, m: Message):
     await m.reply_text(
         (tlang(m, "utils.weebify.weebified_string").format(string=string)),
     )
+    LOGGER.info(f"{m.from_user.id} weebified '{args}' in {m.chat.id}")
 
     return
 
@@ -376,6 +384,7 @@ async def paste_it(_, m: Message):
             ],
         ),
     )
+    LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
 
     return
 
@@ -419,3 +428,4 @@ async def translate(_, m: Message):
     await m.reply_text(
         f"**Translated:** from {detectlang} to {target_lang} \n```{tekstr.text}```",
     )
+    LOGGER.info(f"{m.from_user.id} used translate cmd in {m.chat.id}")

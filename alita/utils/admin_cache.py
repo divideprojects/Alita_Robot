@@ -57,7 +57,7 @@ async def admin_cache_reload(m: Message, status=None):
         ]
         ADMIN_CACHE[m.chat.id] = admin_list
         LOGGER.info(
-            f"Loaded admins for chat {m.chat.id} in {round((time()-start), 2)}s",
+            f"Loaded admins for chat {m.chat.id} in {round((time()-start),3)}s due to '{status}'",
         )
         TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "autoblock"
 

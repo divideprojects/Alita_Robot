@@ -103,6 +103,7 @@ async def lock_perm(c: Alita, m: Message):
     if lock_type == "all":
         try:
             await c.set_chat_permissions(chat_id, ChatPermissions())
+            LOGGER.info(f"{m.from_user.id} locked all permissions in {m.chat.id}")
             await prevent_approved(m)  # Don't lock permissions for approved users!
             await m.reply_text("🔒 " + (tlang(m, "locks.lock_all")))
         except ChatAdminRequired:
@@ -174,6 +175,7 @@ async def lock_perm(c: Alita, m: Message):
                 can_pin_messages=pin,
             ),
         )
+        LOGGER.info(f"{m.from_user.id} locked selected permissions in {m.chat.id}")
         await prevent_approved(m)  # Don't lock permissions for approved users!
         await m.reply_text(
             "🔒 " + (tlang(m, "locks.locked_perm").format(perm=perm)),
@@ -238,6 +240,7 @@ async def view_locks(_, m: Message):
                 vinvite=vinvite,
                 vpin=vpin,
             )
+            LOGGER.info(f"{m.from_user.id} used locks cmd in {m.chat.id}")
             await chkmsg.edit_text(permission_view_str)
 
         except RPCError as e_f:
@@ -309,6 +312,7 @@ async def unlock_perm(c: Alita, m: Message):
                     can_add_web_page_previews=True,
                 ),
             )
+            LOGGER.info(f"{m.from_user.id} unlocked all permissions in {m.chat.id}")
             await prevent_approved(m)  # Don't lock permissions for approved users!
             await m.reply_text("🔓 " + (tlang(m, "locks.unlock_all")))
         except ChatAdminRequired:
@@ -364,6 +368,7 @@ async def unlock_perm(c: Alita, m: Message):
         return
 
     try:
+        LOGGER.info(f"{m.from_user.id} unlocked selected permissions in {m.chat.id}")
         await c.set_chat_permissions(
             chat_id,
             ChatPermissions(

@@ -33,6 +33,7 @@ __help__ = "plugins.purges.help"
 
 @Alita.on_message(
     filters.command("purge", PREFIX_HANDLER) & filters.group & admin_filter,
+    group=8,
 )
 async def purge(c: Alita, m: Message):
 
@@ -70,7 +71,7 @@ async def purge(c: Alita, m: Message):
 
 @Alita.on_message(
     filters.command("del", PREFIX_HANDLER) & filters.group & admin_filter,
-    group=8,
+    group=9,
 )
 async def del_msg(c: Alita, m: Message):
 

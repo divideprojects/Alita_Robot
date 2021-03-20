@@ -9,9 +9,7 @@ repos:
         - id: check-json
         - id: check-yaml
         - id: check-ast
-        - id: check-toml
         - id: check-merge-conflict
-        - id: check-yaml
 
     - repo: https://github.com/psf/black
       rev: 20.8b1

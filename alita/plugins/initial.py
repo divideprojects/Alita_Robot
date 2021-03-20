@@ -127,7 +127,7 @@ async def initial_works(_, m: Message):
 
 
 def migrate_chat(old_chat, new_chat):
-    LOGGER.info(f"Migrating from {old_chat} to {new_chat}")
+    LOGGER.info(f"Migrating from {old_chat} to {new_chat}...")
     userdb.migrate_chat(old_chat, new_chat)
     langdb.migrate_chat(old_chat, new_chat)
     ruledb.migrate_chat(old_chat, new_chat)
@@ -139,4 +139,4 @@ def migrate_chat(old_chat, new_chat):
     notes_settings.migrate_chat(old_chat, new_chat)
     antipindb.migrate_chat(old_chat, new_chat)
     fldb.migrate_chat(old_chat, new_chat)
-    LOGGER.info("Successfully migrated!")
+    LOGGER.info(f"Successfully migrated from {old_chat} to {new_chat}!")

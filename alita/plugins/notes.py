@@ -18,6 +18,7 @@
 
 from traceback import format_exc
 
+from pymongo.common import validate_non_negative_int_or_basestring
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import (
@@ -88,6 +89,7 @@ async def save_note(_, m: Message):
             return
 
     db.save_note(m.chat.id, note_name, text, data_type, content)
+    LOGGER.info(f"{m.from_user.id} saved note ({note_name}) in {m.chat.id}")
     await m.reply_text(
         f"Saved note <code>{note_name}</code>!\nGet it with <code>/get {note_name}</code> or <code>#{note_name}</code>",
     )
@@ -192,6 +194,9 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                 getnotes["fileid"],
                 caption=teks,
             )
+    LOGGER.info(
+        f"{m.from_user.id} fetched note {note_name} (type - {getnotes}) in {m.chat.id}",
+    )
     return
 
 
@@ -235,6 +240,9 @@ async def get_raw_note(c: Alita, m: Message, note: str):
             caption=teks,
             parse_mode=None,
         )
+    LOGGER.info(
+        f"{m.from_user.id} fetched raw note {note} (type - {getnotes}) in {m.chat.id}",
+    )
     return
 
 
@@ -295,9 +303,11 @@ async def priv_notes(_, m: Message):
         option = (m.text.split())[1]
         if option in ("on", "yes"):
             db_settings.set_privatenotes(chat_id, True)
+            LOGGER.info(f"{m.from_user.id} enabled privatenotes in {m.chat.id}")
             msg = "Set private notes to On"
         elif option in ("off", "no"):
             db_settings.set_privatenotes(chat_id, False)
+            LOGGER.info(f"{m.from_user.id} disabled privatenotes in {m.chat.id}")
             msg = "Set private notes to Off"
         else:
             msg = "Enter correct option"
@@ -305,6 +315,7 @@ async def priv_notes(_, m: Message):
     elif len(m.text.split()) == 1:
         curr_pref = db_settings.get_privatenotes(m.chat.id)
         msg = msg = f"Private Notes: {curr_pref}"
+        LOGGER.info(f"{m.from_user.id} fetched privatenotes preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
         await m.replt_text("Check help on how to use this command!")
@@ -314,6 +325,7 @@ async def priv_notes(_, m: Message):
 
 @Alita.on_message(filters.command(["notes", "saved"], PREFIX_HANDLER) & filters.group)
 async def local_notes(_, m: Message):
+    LOGGER.info(f"{m.from_user.id} listed all notes in {m.chat.id}")
     getnotes = db.get_all_notes(m.chat.id)
     if not getnotes:
         await m.reply_text(f"There are no notes in <b>{m.chat.title}</b>.")
@@ -359,6 +371,7 @@ async def clear_note(_, m: Message):
 
     note = m.text.split()[1]
     getnote = db.rm_note(m.chat.id, note)
+    LOGGER.info(f"{m.from_user.id} cleared note ({note}) in {m.chat.id}")
     if not getnote:
         await m.reply_text("This note does not exist!")
         return
@@ -408,6 +421,7 @@ async def clearallnotes_callback(_, q: CallbackQuery):
         )
         return
     db.rm_all_notes(q.message.chat.id)
+    LOGGER.info(f"{user_id} removed all notes in {q.message.chat.id}")
     await q.message.delete()
     await q.answer("Cleared all notes!", show_alert=True)
     return

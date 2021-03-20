@@ -24,7 +24,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import PREFIX_HANDLER
+from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
@@ -41,6 +41,7 @@ async def get_rules(_, m: Message):
 
     chat_id = m.chat.id
     rules = db.get_rules(chat_id)
+    LOGGER.info(f"{m.from_user.id} fetched rules in {m.chat.id}")
 
     if not rules:
         await m.reply_text(
@@ -97,6 +98,7 @@ async def set_rules(_, m: Message):
         await m.reply_text("Rules truncated to 3950 characters!")
 
     db.set_rules(chat_id, rules)
+    LOGGER.info(f"{m.from_user.id} set rules in {m.chat.id}")
     await m.reply_text(tlang(m, "rules.set_rules"))
     return
 
@@ -113,9 +115,11 @@ async def priv_rules(_, m: Message):
         option = (m.text.split())[1]
         if option in ("on", "yes"):
             db.set_privrules(chat_id, True)
+            LOGGER.info(f"{m.from_user.id} enabled privaterules in {m.chat.id}")
             msg = tlang(m, "rules.priv_rules.turned_on").format(chat_name=m.chat.title)
         elif option in ("off", "no"):
             db.set_privrules(chat_id, False)
+            LOGGER.info(f"{m.from_user.id} disbaled privaterules in {m.chat.id}")
             msg = tlang(m, "rules.priv_rules.turned_off").format(chat_name=m.chat.title)
         else:
             msg = tlang(m, "rules.priv_rules.no_option")
@@ -125,6 +129,7 @@ async def priv_rules(_, m: Message):
         msg = tlang(m, "rules.priv_rules.current_preference").format(
             current_option=curr_pref,
         )
+        LOGGER.info(f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
         await m.replt_text(tlang(m, "general.check_help"))
@@ -147,7 +152,10 @@ async def clear_rules(_, m: Message):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("⚠️ Confirm", callback_data="clear.rules"),
+                    InlineKeyboardButton(
+                        "⚠️ Confirm",
+                        callback_data=f"clear.rules.{m.from_user.id}",
+                    ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
                 ],
             ],
@@ -156,9 +164,11 @@ async def clear_rules(_, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^clear.rules$") & admin_filter)
+@Alita.on_callback_query(filters.regex("^clear.rules.") & admin_filter)
 async def clearrules_callback(_, q: CallbackQuery):
+    user_id = q.data.split(".")[-1]
     db.clear_rules(q.message.chat.id)
     await q.message.edit_text(tlang(q, "rules.cleared"))
+    LOGGER.info(f"{user_id} cleared rules in {q.message.chat.id}")
     await q.answer("Rules for the chat have been cleared!", show_alert=True)
     return

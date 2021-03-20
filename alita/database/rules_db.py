@@ -178,7 +178,7 @@ def __load_all_rules():
         }
         for chat in data
     }
-    LOGGER.info(f"Loaded Rules Local Cache in {round((time()-start),2)}s")
+    LOGGER.info(f"Loaded Rules Local Cache in {round((time()-start),3)}s")
 
 
 # __load_all_rules()
