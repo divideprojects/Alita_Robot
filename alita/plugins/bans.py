@@ -21,7 +21,7 @@ from time import time
 from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
+from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError, UserAdminInvalid
 from pyrogram.types import Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
@@ -75,6 +75,8 @@ async def kick_usr(c: Alita, m: Message):
         )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
+    except UserAdminInvalid:
+        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
     except RPCError as ef:
@@ -132,6 +134,11 @@ async def skick_usr(c: Alita, m: Message):
         await m.delete()
     except ChatAdminRequired:
         mymsg = await m.reply_text(tlang(m, "admin.not_admin"))
+        sleep(3)
+        await m.delete()
+        await mymsg.delete()
+    except UserAdminInvalid:
+        mymsg = await m.reply_text(tlang(m, "admin.user_admin_invalid"))
         sleep(3)
         await m.delete()
         await mymsg.delete()
@@ -194,6 +201,8 @@ async def ban_usr(c: Alita, m: Message):
         )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
+    except UserAdminInvalid:
+        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
@@ -250,6 +259,11 @@ async def sban_usr(c: Alita, m: Message):
         await m.delete()
     except ChatAdminRequired:
         mymsg = await m.reply_text(tlang(m, "admin.not_admin"))
+        sleep(3)
+        await m.delete()
+        await mymsg.delete()
+    except UserAdminInvalid:
+        mymsg = await m.reply_text(tlang(m, "admin.user_admin_invalid"))
         sleep(3)
         await m.delete()
         await mymsg.delete()
