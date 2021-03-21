@@ -181,6 +181,8 @@ async def promote_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.promote.bot_no_right"))
+    except UserAdminInvalid:
+        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RPCError as ef:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
