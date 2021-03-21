@@ -250,18 +250,18 @@ async def rm_allfilters(_, m: Message):
 async def rm_allfilters_callback(_, q: CallbackQuery):
     user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
-    user_status = (await q.m.chat.get_member(user_id)).status
+    user_status = (await q.message.chat.get_member(user_id)).status
     if user_status != "creator":
-        await q.m.edit(
+        await q.message.edit(
             (
                 f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
                 "Stay in your limits!"
             ),
         )
         return
-    db.rm_all_filters(q.m.chat.id)
-    await q.m.delete()
-    LOGGER.info(f"{user_id} removed all filter from {q.m.chat.id}")
+    db.rm_all_filters(q.message.chat.id)
+    await q.message.delete()
+    LOGGER.info(f"{user_id} removed all filter from {q.message.chat.id}")
     await q.answer("Cleared all Filters!", show_alert=True)
     return
 

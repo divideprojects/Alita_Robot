@@ -167,8 +167,12 @@ class Filters:
             try:
                 return len(
                     [
-                        [i["keyword"] for i in FILTER_CACHE[chat_id]]
-                        for chat_id in set(FILTER_CACHE.keys())
+                        j
+                        for i in (
+                            (i["keyword"] for i in FILTER_CACHE[chat_id])
+                            for chat_id in set(FILTER_CACHE.keys())
+                        )
+                        for j in i
                     ],
                 )
             except KeyError:
@@ -180,6 +184,33 @@ class Filters:
             curr = self.collection.find_all()
             if curr:
                 return len(curr)
+            return 0
+
+    def count_filter_aliases(self):
+        with INSERTION_LOCK:
+            try:
+                return len(
+                    [
+                        j.split("|")
+                        for i in (
+                            (i["keyword"] for i in FILTER_CACHE[chat_id])
+                            for chat_id in set(FILTER_CACHE.keys())
+                        )
+                        for j in i
+                        if len(j.split("|")) >= 2
+                    ],
+                )
+            except KeyError:
+                pass
+            except Exception as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+
+            curr = self.collection.find_all()
+            if curr:
+                return len(
+                    [z for z in (i["keyword"].split("|") for i in curr) if len(z) >= 2],
+                )
             return 0
 
     def count_filters_chats(self):
@@ -198,7 +229,7 @@ class Filters:
             try:
                 return len(
                     [
-                        [i["keyword"] for i in FILTER_CACHE[chat_id]]
+                        (i["keyword"] for i in FILTER_CACHE[chat_id])
                         for chat_id in set(FILTER_CACHE.keys())
                     ],
                 )
@@ -242,10 +273,12 @@ def __load_filters_cache():
     start = time()
     db = Filters()
     all_filters = db.load_from_db()
+
+    chat_ids = {i["chat_id"] for i in all_filters}
+
     for i in all_filters:
         del i["_id"]
 
-    chat_ids = {i["chat_id"] for i in all_filters}
     FILTER_CACHE = {
         chat: [filt for filt in all_filters if filt["chat_id"] == chat]
         for chat in chat_ids
