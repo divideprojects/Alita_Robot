@@ -62,15 +62,18 @@ async def adminlist_show(_, m: Message):
             chat_title=m.chat.title,
         ) + "\n\n"
 
+        # format is like: (user_id, username/name,anonyamous or not)
         mention = [
             (
                 admin[1]
                 if admin[1].startswith("@")
                 else (await mention_html(admin[1], admin[0]))
             )
-            for admin in admin_list if not admin[2]
+            for admin in admin_list
+            if not admin[2]
         ]
-        adminstr += "\n".join(f"- {i}" for i in mention)
+        mention.sort(key=lambda x: x[1])
+        adminstr += "\n".join([f"- {i}" for i in mention])
 
         await m.reply_text(adminstr + "\n\n" + note)
         LOGGER.info(f"Adminlist cmd use in {m.chat.id} by {m.from_user.id}")
@@ -86,7 +89,8 @@ async def adminlist_show(_, m: Message):
                     ef=ef,
                 ),
             )
-            LOGGER.error(ef)
+
+        LOGGER.error(ef)
         LOGGER.error(format_exc())
 
     return
@@ -118,6 +122,7 @@ async def reload_admins(_, m: Message):
             ),
         )
         LOGGER.error(ef)
+        LOGGER.error(format_exc())
     return
 
 
@@ -132,6 +137,13 @@ async def promote_usr(c: Alita, m: Message):
         return
 
     user_id, user_first_name, user_name = await extract_user(c, m)
+
+    # If user is alreay admin
+    if user_id in {i[0] for i in ADMIN_CACHE[m.chat.id]}:
+        await m.reply_text(
+            "This user is already an admin, how am I supposed to re-promote them?",
+        )
+        return
 
     try:
         await m.chat.promote_member(
@@ -177,6 +189,7 @@ async def promote_usr(c: Alita, m: Message):
             ),
         )
         LOGGER.error(ef)
+        LOGGER.error(format_exc())
 
     return
 
@@ -192,6 +205,14 @@ async def demote_usr(c: Alita, m: Message):
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
+
+    # If user not alreay admin
+    if user_id not in {i[0] for i in ADMIN_CACHE[m.chat.id]}:
+        await m.reply_text(
+            "This user is already an admin, how am I supposed to re-promote them?",
+        )
+        return
+
     try:
         await m.chat.promote_member(
             user_id=user_id,
@@ -235,6 +256,7 @@ async def demote_usr(c: Alita, m: Message):
             ),
         )
         LOGGER.error(ef)
+        LOGGER.error(format_exc())
 
     return
 
@@ -268,5 +290,6 @@ async def get_invitelink(c: Alita, m: Message):
             ),
         )
         LOGGER.error(ef)
+        LOGGER.error(format_exc())
 
     return
