@@ -279,7 +279,7 @@ async def chats(c: Alita, m: Message):
     all_chats = (chatdb.get_all_chats()) or {}
     chatfile = tlang(m, "dev.chatlist.header")
     P = 1
-    for chat in all_chats:
+    for chat, val in all_chats:
         try:
             chat_info = await c.get_chat(chat["_id"])
             chat_members = chat_info.members_count
@@ -289,8 +289,8 @@ async def chats(c: Alita, m: Message):
                 invitelink = "No Link!"
             chatfile += "{}. {} | {} | {} | {}\n".format(
                 P,
-                chat["chat_name"],
-                chat["_id"],
+                val["chat_name"],
+                chat,
                 chat_members,
                 invitelink,
             )
@@ -356,12 +356,12 @@ async def chat_broadcast(c: Alita, m: Message):
         return
 
     exmsg = await m.reply_text("Started broadcasting!")
-    all_chats = (chatdb.get_all_chats()) or {}
+    all_chats = (chatdb.list_chats()) or {}
     err_str = ""
 
     for chat in all_chats:
         try:
-            await c.send_message(chat["_id"], msg)
+            await c.send_message(chat, msg)
         except RPCError as ef:
             LOGGER.error(ef)
             continue
