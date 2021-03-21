@@ -8,9 +8,8 @@ strings:
     admin:
       main: "Admin"
       help: |-
-        Lazy to promote or demote someone for admins? Want to see basic information about chat? \
-        All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be \
-        done easily using the bot.
+        Lazy to promote or demote someone for admins? Want to see basic information about chat?
+        All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be done easily using the bot.
 
         **User Commands:**
         × /adminlist: List all admins in the current chat.
@@ -21,7 +20,7 @@ strings:
         × /demote: Demotes the user replied to or tagged.
 
         An example of promoting someone to admins:
-        `/promote @username`; this promotes a user to admin.
+        `/promote @username`: this promotes a user to admin.
     afk:
       main: "AFK"
       help: |-
@@ -67,18 +66,15 @@ strings:
       help: |-
         Want to restrict certain words or sentences in your group?
 
-        Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, \
-        the message will immediately be deleted. A good combo is sometimes to pair this up with warn filters!
+        Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, that message will immediately be deleted.
+        A good combo is sometimes to pair this up with warn filters!
         **NOTE:** blacklists do not affect group admins.
         × /blacklist: View the current blacklisted words.
 
         **Admin only:**
-        × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different \
-        lines will allow you to add muser_listtiple triggers.
-        × /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove \
-        muser_listtiple triggers at once.
-        × /rmblacklist <triggers>: Same as above.
-        × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'
+        × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different lines will allow you to add multiple triggers.
+        × /unblacklist <triggers> or /rmblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove multiple triggers at once.
+        × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'.
         Default is 'none', which will delete the users message on typing a blacklist word.
 
         **Owner Only**
@@ -91,10 +87,9 @@ strings:
         • /filters: List all active filters saved in the chat.
 
         **Admin only:**
-        • /filter <keyword> <reply message>: Add a filter to this chat. The bot will now reply that message whenever 'keyword'\
-        is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker. NOTE: all filter \
-        keywords are in lowercase. If you want your keyword to be a sentence, use quotes. eg: /filter "hey there" How you \
-        doin?
+        • /filter <keyword> <reply message>: Add a filter to this chat. The bot will now reply that message whenever 'keyword'
+        is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker. NOTE: all filter keywords are in lowercase.
+        If you want your keyword to be a sentence, use quotes. eg: /filter "hey there" How ar you doin?
         **Example:**
         `/filter "filtername" Reply Text`
 
@@ -130,8 +125,7 @@ strings:
         Not able to change language of the bot?
         Easily change by using this module!
 
-        Just type /lang and use inline keyboard to choose a language \
-        for yourself or your group.
+        Just type /lang and use inline keyboard to choose a language for yourself or your group.
 
         You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
     locks:
@@ -237,8 +231,7 @@ strings:
     rules:
       main: "Rules"
       help: |-
-        Set rules for you chat so that members know what to do and \
-        what not to do in your group!
+        Set rules for you chat so that members know what to do and what not to do in your group!
 
         × /rules: get the rules for current chat.
 
@@ -256,7 +249,7 @@ strings:
         × /ping - Get ping time of bot to telegram server.
         × /gifid: Reply to a gif to me to tell you its file ID.
         × /wiki: <query>: wiki your query.
-        × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to m.
+        × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
         × /github <username>: Search for the user using github api!
         × /lyrics <song>: Get the lyrics of the song you specify!
         × /weebify <text> or a reply to message: To weebify the text.
@@ -428,7 +421,7 @@ strings:
       Commands available:
        × /start: Start the bot
        × /help: Give's you this message.
-       × /donate: Information related about how to donate to my owner!
+       × /donate: Information related about how to help my creater!
 
       All commands can either be used with / or !.
     no_admin_cmd_perm: "You cannot use an admin command!"
