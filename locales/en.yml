@@ -65,15 +65,15 @@ strings:
       help: |-
         Want to restrict certain words or sentences in your group?
 
-        Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, \
+        Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned,
         the message will immediately be deleted. A good combo is sometimes to pair this up with warn filters!
         **NOTE:** blacklists do not affect group admins.
         × /blacklist: View the current blacklisted words.
 
         **Admin only:**
-        × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different \
+        × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different
         lines will allow you to add muser_listtiple triggers.
-        × /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove \
+        × /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove 
         muser_listtiple triggers at once.
         × /rmblacklist <triggers>: Same as above.
         × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'
@@ -101,8 +101,7 @@ strings:
         Not able to change language of the bot?
         Easily change by using this module!
 
-        Just type /lang and use inline keyboard to choose a language \
-        for yourself or your group.
+        Just type /lang and use inline keyboard to choose a language for yourself or your group.
 
         You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
     locks:
@@ -205,8 +204,7 @@ strings:
     rules:
       main: "Rules"
       help: |-
-        Set rules for you chat so that members know what to do and \
-        what not to do in your group!
+        Set rules for you chat so that members know what to do and what not to do in your group!
 
         × /rules: get the rules for current chat.
 
