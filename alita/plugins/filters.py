@@ -18,6 +18,7 @@
 
 from html import escape
 from re import escape as re_escape
+from secrets import choice
 from traceback import format_exc
 
 from pyrogram import filters
@@ -279,7 +280,9 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
     msgtype = getfilter["msgtype"]
 
     try:
-        filter_reply = getfilter["filter_reply"]
+        # support for random filter texts
+        filter_reply = getfilter["filter_reply"].split("%%%")
+        filter_reply = choice(filter_reply)
     except KeyError:
         filter_reply = ""
 
