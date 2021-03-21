@@ -68,7 +68,7 @@ async def adminlist_show(_, m: Message):
                 if admin[1].startswith("@")
                 else (await mention_html(admin[1], admin[0]))
             )
-            for admin in admin_list
+            for admin in admin_list if not admin[2]
         ]
         adminstr += "\n".join(f"- {i}" for i in mention)
 
