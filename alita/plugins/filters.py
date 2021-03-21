@@ -224,7 +224,7 @@ async def rm_allfilters(_, m: Message):
 
     all_bls = db.get_all_filters(m.chat.id)
     if not all_bls:
-        await m.reply_text("No notes are filters in this chat")
+        await m.reply_text("No filters to stop in this chat.")
         return
 
     await m.reply_text(
