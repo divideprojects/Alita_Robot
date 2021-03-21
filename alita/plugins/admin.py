@@ -226,7 +226,6 @@ async def demote_usr(c: Alita, m: Message):
 
         # ----- Remove admin from cache -----
         try:
-            global ADMIN_CACHE
             admin_list = ADMIN_CACHE[m.chat.id]
             user = next(user for user in admin_list if user[0] == user_id)
             admin_list.remove(user)

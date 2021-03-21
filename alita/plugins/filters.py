@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from html import escape
 from re import escape as re_escape
 from traceback import format_exc
 
@@ -35,7 +36,7 @@ from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.msg_types import Types, get_filter_type
 from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
-from alita.utils.string import parse_button, split_quotes
+from alita.utils.string import escape_invalid_curly_brackets, parse_button, split_quotes
 
 __PLUGIN__ = "plugins.filters.main"
 __help__ = "plugins.filters.help"
@@ -138,10 +139,10 @@ async def add_filter(_, m: Message):
             return
 
     elif m.reply_to_message and len(args) >= 2:
-        if m.reply_to_message.text:
-            text_to_parsing = m.reply_to_message.text
-        elif m.reply_to_message.caption:
-            text_to_parsing = m.reply_to_message.caption
+        if m.reply_to_m.text:
+            text_to_parsing = m.reply_to_m.text
+        elif m.reply_to_m.caption:
+            text_to_parsing = m.reply_to_m.caption
         else:
             text_to_parsing = ""
         teks, _ = await parse_button(text_to_parsing)
@@ -154,15 +155,15 @@ async def add_filter(_, m: Message):
 
     elif m.reply_to_message:
 
-        if m.reply_to_message.text:
-            text_to_parsing = m.reply_to_message.text
-        elif m.reply_to_message.caption:
-            text_to_parsing = m.reply_to_message.caption
+        if m.reply_to_m.text:
+            text_to_parsing = m.reply_to_m.text
+        elif m.reply_to_m.caption:
+            text_to_parsing = m.reply_to_m.caption
         else:
             text_to_parsing = ""
 
         teks, _ = await parse_button(text_to_parsing)
-        if (m.reply_to_message.text or m.reply_to_message.caption) and not teks:
+        if (m.reply_to_m.text or m.reply_to_m.caption) and not teks:
             await m.reply_text(
                 "There is no filter message - You can't JUST have buttons, you need a message to go with it!",
             )
@@ -248,20 +249,96 @@ async def rm_allfilters(_, m: Message):
 async def rm_allfilters_callback(_, q: CallbackQuery):
     user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
-    user_status = (await q.message.chat.get_member(user_id)).status
+    user_status = (await q.m.chat.get_member(user_id)).status
     if user_status != "creator":
-        await q.message.edit(
+        await q.m.edit(
             (
                 f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
                 "Stay in your limits!"
             ),
         )
         return
-    db.rm_all_filters(q.message.chat.id)
-    await q.message.delete()
-    LOGGER.info(f"{user_id} removed all filter from {q.message.chat.id}")
+    db.rm_all_filters(q.m.chat.id)
+    await q.m.delete()
+    LOGGER.info(f"{user_id} removed all filter from {q.m.chat.id}")
     await q.answer("Cleared all Filters!", show_alert=True)
     return
+
+
+async def send_filter_reply(c: Alita, m: Message, trigger: str):
+    """Reply with assigned filter for the trigger"""
+    getfilter = db.get_filter(m.chat.id, trigger)
+
+    if not getfilter:
+        await m.reply_text(
+            "<b>Error:</b> Cannot find a type for this note!!",
+            quote=True,
+        )
+        return
+
+    msgtype = getfilter["msgtype"]
+
+    try:
+        filter_reply = getfilter["filter_reply"]
+    except KeyError:
+        filter_reply = ""
+
+    parse_words = [
+        "first",
+        "last",
+        "fullname",
+        "username",
+        "id",
+        "chatname",
+        "mention",
+    ]
+    teks = await escape_invalid_curly_brackets(filter_reply, parse_words)
+    if teks:
+        teks = teks.format(
+            first=escape(m.from_user.first_name),
+            last=escape(m.from_user.last_name or m.from_user.first_name),
+            fullname=" ".join(
+                [
+                    escape(m.from_user.first_name),
+                    escape(m.from_user.last_name),
+                ]
+                if m.from_user.last_name
+                else [escape(m.from_user.first_name)],
+            ),
+            username="@" + escape(m.from_user.username)
+            if m.from_user.username
+            else (await mention_html(m.from_user.first_name, m.from_user.id)),
+            mention=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            chatname=escape(m.chat.title)
+            if m.chat.type != "private"
+            else escape(m.from_user.first_name),
+            id=m.from_user.id,
+        )
+    else:
+        teks = ""
+
+    if msgtype == Types.TEXT:
+        await m.reply_text(teks, quote=True)
+    elif msgtype in (
+        Types.STICKER,
+        Types.VIDEO_NOTE,
+        Types.CONTACT,
+        Types.ANIMATED_STICKER,
+    ):
+        await (await send_cmd(c, msgtype))(
+            m.chat.id,
+            getfilter["fileid"],
+            reply_to_message_id=m.message_id,
+        )
+    else:
+        await (await send_cmd(c, msgtype))(
+            m.chat.id,
+            getfilter["fileid"],
+            caption=teks,
+            parse_mode=None,
+            reply_to_message_id=m.message_id,
+        )
+    return msgtype
 
 
 @Alita.on_message(filters.text & filters.group, group=6)
@@ -276,53 +353,14 @@ async def filters_watcher(c: Alita, m: Message):
     for trigger in actual_filters:
         pattern = r"( |^|[^\w])" + re_escape(trigger) + r"( |$|[^\w])"
         match = await regex_searcher(pattern, m.text.lower())
-        if not match:
-            continue
-        try:
-            msgtype = await send_filter_reply(c, m, trigger)
-            LOGGER.info(f"Replied with {msgtype} to {trigger} in {m.chat.id}")
-        except RPCError as ef:
-            LOGGER.error(ef)
-            LOGGER.error(format_exc())
-        break
-    return
-
-
-async def send_filter_reply(c: Alita, m: Message, trigger: str):
-    """Reply with assigned filter for the trigger"""
-    getnotes = db.get_filter(m.chat.id, trigger)
-    msgtype = getnotes["msgtype"]
-    if not getnotes:
-        await m.reply_text(
-            "<b>Error:</b> Cannot find a type for this note!!",
-            quote=True,
-        )
-        return
-
-    if msgtype == Types.TEXT:
-        teks = getnotes["filter_reply"]
-        await m.reply_text(teks, quote=True)
-    elif msgtype in (
-        Types.STICKER,
-        Types.VIDEO_NOTE,
-        Types.CONTACT,
-        Types.ANIMATED_STICKER,
-    ):
-        await (await send_cmd(c, msgtype))(
-            m.chat.id,
-            getnotes["fileid"],
-            reply_to_message_id=m.message_id,
-        )
-    else:
-        if getnotes["filter_reply"]:
-            teks = getnotes["filter_reply"]
+        if match:
+            try:
+                msgtype = await send_filter_reply(c, m, trigger)
+                LOGGER.info(f"Replied with {msgtype} to {trigger} in {m.chat.id}")
+            except RPCError as ef:
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+            break
         else:
-            teks = ""
-        await (await send_cmd(c, msgtype))(
-            m.chat.id,
-            getnotes["fileid"],
-            caption=teks,
-            parse_mode=None,
-            reply_to_message_id=m.message_id,
-        )
-    return msgtype
+            continue
+    return
