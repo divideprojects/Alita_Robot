@@ -272,7 +272,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
 
     if not getfilter:
         await m.reply_text(
-            "<b>Error:</b> Cannot find a type for this note!!",
+            "<b>Error:</b> Cannot find a type for this filter!!",
             quote=True,
         )
         return
