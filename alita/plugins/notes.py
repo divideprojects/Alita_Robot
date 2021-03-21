@@ -69,6 +69,7 @@ async def save_note(_, m: Message):
     existing_notes = [i[0] for i in db.get_all_notes(m.chat.id)]
 
     note_name, text, data_type, content = await get_note_type(m)
+    note_name = note_name.lower()
 
     if note_name in existing_notes:
         await m.reply_text(f"This note ({note_name}) already exists!")
@@ -254,7 +255,7 @@ async def hash_get(c: Alita, m: Message):
         return
 
     try:
-        note = m.text[1:]
+        note = (m.text[1:]).lower()
     except TypeError:
         return
 
@@ -273,7 +274,7 @@ async def hash_get(c: Alita, m: Message):
 async def get_note(c: Alita, m: Message):
     if len(m.text.split()) == 2:
         priv_notes_status = db_settings.get_privatenotes(m.chat.id)
-        note = (m.text.split())[1]
+        note = ((m.text.split())[1]).lower()
         all_notes = [i[0] for i in db.get_all_notes(m.chat.id)]
 
         if note not in all_notes:
@@ -282,7 +283,7 @@ async def get_note(c: Alita, m: Message):
 
         await get_note_func(c, m, note, priv_notes_status)
     elif len(m.text.split()) == 3 and (m.text.split())[2] in ("noformat", "raw"):
-        note = (m.text.split())[1]
+        note = ((m.text.split())[1]).lower()
         await get_raw_note(c, m, note)
     else:
         await m.reply_text("Give me a note tag!")
