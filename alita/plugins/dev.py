@@ -363,7 +363,7 @@ async def chat_broadcast(c: Alita, m: Message):
         try:
             await c.send_message(chat["_id"], msg)
         except RPCError as ef:
-            err_str += ef
+            LOGGER.error(ef)
             continue
 
     await exmsg.edit_text("Done broadcasting ✅")
