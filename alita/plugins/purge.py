@@ -22,7 +22,7 @@ from pyrogram import filters
 from pyrogram.errors import MessageDeleteForbidden
 from pyrogram.types import Message
 
-from alita import PREFIX_HANDLER
+from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
@@ -54,6 +54,13 @@ async def purge(c: Alita, m: Message):
         except MessageDeleteForbidden:
             await m.reply_text(tlang(m, "purge.old_msg_err"))
             return
+        except RPCError as ef:
+            await m.reply_text(
+                (tlang(m, "general.some_error")).format(
+                    SUPPORT_GROUP=SUPPORT_GROUP,
+                    ef=ef,
+                ),
+            )
 
         count_del_msg = len(message_ids)
 
