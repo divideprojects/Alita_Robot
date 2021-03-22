@@ -60,7 +60,7 @@ async def initial_works(_, m: Message):
                 old_chat = m.migrate_from_chat_id
                 new_chat = m.chat.id
             try:
-                migrate_chat(old_chat, new_chat)
+                await migrate_chat(old_chat, new_chat)
             except RPCError as ef:
                 LOGGER.error(ef)
                 return
@@ -126,7 +126,7 @@ async def initial_works(_, m: Message):
     return
 
 
-def migrate_chat(old_chat, new_chat):
+async def migrate_chat(old_chat, new_chat):
     LOGGER.info(f"Migrating from {old_chat} to {new_chat}...")
     userdb.migrate_chat(old_chat, new_chat)
     langdb.migrate_chat(old_chat, new_chat)

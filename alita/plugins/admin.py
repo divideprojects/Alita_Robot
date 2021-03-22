@@ -139,7 +139,14 @@ async def promote_usr(c: Alita, m: Message):
     user_id, user_first_name, user_name = await extract_user(c, m)
 
     # If user is alreay admin
-    if user_id in {i[0] for i in ADMIN_CACHE[m.chat.id]}:
+    try:
+        admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admin_list = {
+            i[0] for i in (await admin_cache_reload(m, "promote_cache_update"))
+        }
+
+    if user_id in admin_list:
         await m.reply_text(
             "This user is already an admin, how am I supposed to re-promote them?",
         )
@@ -209,7 +216,14 @@ async def demote_usr(c: Alita, m: Message):
     user_id, user_first_name, _ = await extract_user(c, m)
 
     # If user not alreay admin
-    if user_id not in {i[0] for i in ADMIN_CACHE[m.chat.id]}:
+    try:
+        admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admin_list = {
+            i[0] for i in (await admin_cache_reload(m, "demote_cache_update"))
+        }
+
+    if user_id in admin_list:
         await m.reply_text(
             "This user is already an admin, how am I supposed to re-promote them?",
         )

@@ -125,7 +125,7 @@ async def dkick_usr(c: Alita, m: Message):
         return
 
     try:
-        await c.delete_message(m.chat.id, m.reply_to_message.message_id)
+        await c.delete_messages(m.chat.id, m.reply_to_message.message_id)
         await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
         LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
         await m.reply_text(
@@ -307,7 +307,7 @@ async def dban_usr(c: Alita, m: Message):
         return
 
     try:
-        await c.delete_message(m.chat.id, m.reply_to_message.message_id)
+        await c.delete_messages(m.chat.id, m.reply_to_message.message_id)
         await c.kick_chat_member(m.chat.id, user_id)
         LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
         await m.reply_text(
