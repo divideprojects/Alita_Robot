@@ -75,14 +75,15 @@ async def purge(c: Alita, m: Message):
 )
 async def del_msg(c: Alita, m: Message):
 
+    if m.chat.type != "supergroup":
+        return
+
     if m.reply_to_message:
-        if m.chat.type != "supergroup":
-            return
+       await m.delete()
         await c.delete_messages(
             chat_id=m.chat.id,
             message_ids=m.reply_to_message.message_id,
         )
-        await m.delete()
     else:
         await m.reply_text(tlang(m, "purge.what_del"))
     return
