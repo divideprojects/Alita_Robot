@@ -77,28 +77,35 @@ async def view_blacklist(_, m: Message):
 )
 async def add_blacklist(_, m: Message):
 
-    if len(m.text.split()) >= 2:
-        bl_word = (m.text.split(None, 1)[1]).lower()
-        all_blacklisted = db.get_blacklists(m.chat.id)
-
-        if bl_word in all_blacklisted:
-            await m.reply_text(
-                (tlang(m, "blacklist.already_exists")).format(
-                    trigger=bl_word,
-                ),
-            )
-            return
-
-        db.add_blacklist(m.chat.id, bl_word)
-        LOGGER.info(f"{m.from_user.id} added new blacklist ({bl_word}) in {m.chat.id}")
-        await m.reply_text(
-            (tlang(m, "blacklist.added_blacklist")).format(
-                trigger=bl_word,
-            ),
-        )
+    if not len(m.text.split()) >= 2:
+        await m.reply_text(tlang(m, "general.check_help"))
         return
-    await m.reply_text(tlang(m, "general.check_help"))
-    return
+
+    bl_words = ((m.text.split(None, 1)[1]).lower()).split()
+    all_blacklisted = db.get_blacklists(m.chat.id)
+    already_added_words, rep_text = [], ""
+
+    for bl_word in bl_words:
+        if bl_word in all_blacklisted:
+            already_added_words.append(bl_word)
+            continue
+        db.add_blacklist(m.chat.id, bl_word)
+
+    if already_added_words:
+        rep_text = (
+            ", ".join([f"<code>{i}</code>" for i in bl_words])
+            + " already added in blacklist, skipped them!"
+        )
+    LOGGER.info(f"{m.from_user.id} added new blacklists ({bl_words}) in {m.chat.id}")
+    await m.reply_text(
+        (
+            (tlang(m, "blacklist.added_blacklist")).format(
+                trigger=", ".join(bl_words),
+            )
+            + f"\n{rep_text}"
+        ),
+    )
+    await m.stop_propagation()
 
 
 @Alita.on_message(
@@ -113,24 +120,35 @@ async def rm_blacklist(_, m: Message):
         return
 
     chat_bl = db.get_blacklists(m.chat.id)
-    bl_word = (m.text.split(None, 1)[1]).lower()
-    if bl_word not in chat_bl:
-        await m.reply_text(
-            (tlang(m, "blacklist.no_bl_found")).format(
-                bl_word=f"<code>{bl_word}</code>",
-            ),
-        )
-        return
+    non_found_words, rep_text = [], ""
+    bl_words = ((m.text.split(None, 1)[1]).lower()).split()
 
-    db.remove_blacklist(m.chat.id, bl_word)
-    LOGGER.info(f"{m.from_user.id} removed blacklist ({bl_word}) in {m.chat.id}")
+    for bl_word in bl_words:
+        print(bl_word)
+        if bl_word not in chat_bl:
+            non_found_words.append(bl_word)
+            continue
+        db.remove_blacklist(m.chat.id, bl_word)
+
+    if non_found_words:
+        rep_text = (
+            "Could not find "
+            + ", ".join([f"<code>{i}</code>" for i in non_found_words])
+            + " in blcklisted words, skipped them."
+        )
+
+    LOGGER.info(f"{m.from_user.id} removed blacklists ({bl_word}) in {m.chat.id}")
     await m.reply_text(
-        (tlang(m, "blacklist.rm_blacklist")).format(
-            bl_word=f"<code>{bl_word}</code>",
+        (
+            (tlang(m, "blacklist.rm_blacklist")).format(
+                bl_word=f"<code>{bl_word}</code>",
+            )
+            + f"\n{rep_text}"
+            if rep_text
+            else ""
         ),
     )
-
-    return
+    await m.stop_propagation()
 
 
 @Alita.on_message(filters.command("blaction", PREFIX_HANDLER) & filters.group)
@@ -138,7 +156,9 @@ async def set_bl_action(_, m: Message):
     if len(m.text.split()) == 2:
         action = m.text.split(None, 1)[1]
         db.set_action(m.chat.id, action)
-        LOGGER.info(f"{m.from_user.id} set blacklist action to {action} in {m.chat.id}")
+        LOGGER.info(
+            f"{m.from_user.id} set blacklist action to '{action}' in {m.chat.id}",
+        )
         await m.reply_text(
             (tlang(m, "blacklist.action_set")).format(action=action),
         )

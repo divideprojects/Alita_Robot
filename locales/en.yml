@@ -60,8 +60,8 @@ strings:
         × /blacklist: View the current blacklisted words.
 
         **Admin only:**
-        × /addblacklist <trigger>: Add a trigger to the blacklist. Each line is considered one.
-        × /unblacklist <trigger> or /rmblacklist <trigger>: Remove trigger from the blacklist.
+        × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different lines will allow you to add multiple triggers.
+        × /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove multiple triggers at once.
         × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'.
         Default is 'none', which will delete the users message on typing a blacklist word.
 
