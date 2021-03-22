@@ -160,6 +160,7 @@ async def promote_usr(c: Alita, m: Message):
             can_restrict_members=True,
             can_invite_users=True,
             can_pin_messages=True,
+            can_manage_voice_chats=False,
         )
         LOGGER.info(f"{m.from_user.id} promoted {user_id} in {m.chat.id}")
 
