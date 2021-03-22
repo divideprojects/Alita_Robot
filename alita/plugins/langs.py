@@ -28,7 +28,6 @@ from pyrogram.types import (
 
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.database import lang_db
 from alita.database.lang_db import Langs
 from alita.tr_engine import lang_dict, tlang
 from alita.utils.custom_filters import admin_filter
