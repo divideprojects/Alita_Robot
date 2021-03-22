@@ -21,20 +21,6 @@ strings:
 
         An example of promoting someone to admins:
         `/promote @username`: this promotes a user to admin.
-    afk:
-      main: "AFK"
-      help: |-
-        Module for enabling auto replies when you are AFK.
-        When enabled,
-        anyone who mentions you will be replied with a message saying that
-        you are AFK.
-
-        **Setting AFK Status**
-        × /afk <reason>
-
-        Enable auto replies when you are AFK.
-        To stop it, send message to any group.
-        * Reason is optional
     approve:
       main: "Approve"
       help: |-
@@ -57,9 +43,11 @@ strings:
 
         **Admin only:**
         × /kick: Kick the user replied or tagged.
-        × /skick: Kick the user replied or tagged and delete the kick messsage.
+        × /skick: Kick the user replied or tagged and delete your messsage.
+        × /dkick: Kick the user replied and delete their message.
         × /ban: Bans the user replied to or tagged.
-        × /sban: Kick the user replied or tagged and delete the ban messsage.
+        × /sban: Bans the user replied or tagged and delete your messsage.
+        × /dban: Bans the user replied and delete their message.
         × /unban: Unbans the user replied to or tagged.
     blacklist:
       main: "Blacklist"
@@ -72,8 +60,8 @@ strings:
         × /blacklist: View the current blacklisted words.
 
         **Admin only:**
-        × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different lines will allow you to add multiple triggers.
-        × /unblacklist <triggers> or /rmblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove multiple triggers at once.
+        × /addblacklist <trigger>: Add a trigger to the blacklist. Each line is considered one.
+        × /unblacklist <trigger> or /rmblacklist <trigger>: Remove trigger from the blacklist.
         × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'.
         Default is 'none', which will delete the users message on typing a blacklist word.
 
@@ -88,8 +76,9 @@ strings:
 
         **Admin only:**
         • /filter <keyword> <reply message>: Add a filter to this chat. The bot will now reply that message whenever 'keyword'
-        is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker. NOTE: all filter keywords are in lowercase.
-        If you want your keyword to be a sentence, use quotes. eg: /filter "hey there" How ar you doin?
+        is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker.
+
+        If you want your keyword to be a sentence, use quotes. eg: /filter "hey there" How are you doin?
         **Example:**
         `/filter "filtername" Reply Text`
 
@@ -107,6 +96,7 @@ strings:
 
         **Note:**
         Currently there is a limit of 50 filters and 120 aliases per chat.
+        All filter keywords are in lowercase.
     fun:
       main: "Fun"
       help: |-
@@ -209,7 +199,6 @@ strings:
         × /unpinall: Unpins all the pinned message in the current chat.
         × /antichannelpin <on/off>: Toogle antichannelpin status.
         × /permapin `<text>`: Pin a custom messages via bot. This message can contain markdown, and can be used in replies to the media include additional buttons and text.
-
     purges:
       main: "Purges"
       help: |-
@@ -280,7 +269,7 @@ strings:
       no_target: "I can't kick nothing!"
       admin_cannot_kick: 'This user is an admin, I cannot kick them!"'
       bot_no_right: "I don't have enough rights to kick this user."
-      kicked_user: "{admin} kicked {kicked} in chat <b>{chat_title}<b>!"
+      kicked_user: "{admin} kicked {kicked} in chat <b>{chat_title}</b>!"
     mute:
       admin_cannot_mute: 'This user is an admin, I cannot mute them!"'
       bot_no_right: "I don't have enough rights to mute this user."
@@ -402,7 +391,7 @@ strings:
         <b>Download:</b> <code>{download}</code> Mbps
         <b>Upload:</b> <code>{upload}</code> Mbps
       start_speedtest: "Calculating my speed..."
-    uptime: "<b>Uptime:<b> <code>{uptime}</code>"
+    uptime: "<b>Uptime:</b> <code>{uptime}</code>"
   general:
     donate_owner: |-
       Hey Thanks for your thought of donating me!
