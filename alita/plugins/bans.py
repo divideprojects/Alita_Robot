@@ -93,6 +93,62 @@ async def kick_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(
+    filters.command("dkick", PREFIX_HANDLER) & filters.group & restrict_filter,
+)
+async def dkick_usr(c: Alita, m: Message):
+d
+    if (len(m.text.split()) >= 1) or (not m.reply_to_message):
+        await m.reply_text("Reply to a message to delete it and ban the user")
+        return
+
+    user_id, user_first_name, _ =  await extract_user(c, m)
+
+    if user_id in SUPPORT_STAFF:
+        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        LOGGER.info(
+            f"{m.from_user.id} trying to kick {user_id} (SUPPORT_STAFF) in {m.chat.id}",
+        )
+        return
+
+    try:
+        admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admins_group = await admin_cache_reload(m, "kick")
+
+    if user_id in admins_group:
+        await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
+        return
+
+    try:
+        await c.delete_message(m.chat.id, m.reply_to_message.message_id)
+        await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
+        LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
+        await m.reply_text(
+            (tlang(m, "admin.kick.kicked_user")).format(
+                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                kicked=(await mention_html(user_first_name, user_id)),
+                chat_title=m.chat.title,
+            ),
+        )
+    except ChatAdminRequired:
+        await m.reply_text(tlang(m, "admin.not_admin"))
+    except UserAdminInvalid:
+        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+    except RightForbidden:
+        await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
+    except RPCError as ef:
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
+        LOGGER.error(ef)
+        LOGGER.error(format_exc())
+
+    return
+
+@Alita.on_message(
     filters.command("skick", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
 async def skick_usr(c: Alita, m: Message):
@@ -214,6 +270,62 @@ async def ban_usr(c: Alita, m: Message):
         )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
+    return
+
+@Alita.on_message(
+    filters.command("dban", PREFIX_HANDLER) & filters.group & restrict_filter,
+)
+async def dban_usr(c: Alita, m: Message):
+d
+    if (len(m.text.split()) >= 1) or (not m.reply_to_message):
+        await m.reply_text("Reply to a message to delete it and ban the user")
+        return
+
+    user_id, user_first_name, _ =  await extract_user(c, m)
+
+    if user_id in SUPPORT_STAFF:
+        await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
+        LOGGER.info(
+            f"{m.from_user.id} trying to kick {user_id} (SUPPORT_STAFF) in {m.chat.id}",
+        )
+        return
+
+    try:
+        admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admins_group = await admin_cache_reload(m, "kick")
+
+    if user_id in admins_group:
+        await m.reply_text(tlang(m, "admin.kick.admin_cannot_kick"))
+        return
+
+    try:
+        await c.delete_message(m.chat.id, m.reply_to_message.message_id)
+        await c.kick_chat_member(m.chat.id, user_id)
+        LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
+        await m.reply_text(
+            (tlang(m, "admin.ban.banned_user")).format(
+                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                kicked=(await mention_html(user_first_name, user_id)),
+                chat_title=m.chat.title,
+            ),
+        )
+    except ChatAdminRequired:
+        await m.reply_text(tlang(m, "admin.not_admin"))
+    except UserAdminInvalid:
+        await m.reply_text(tlang(m, "admin.user_admin_invalid"))
+    except RightForbidden:
+        await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
+    except RPCError as ef:
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
+        LOGGER.error(ef)
+        LOGGER.error(format_exc())
+
     return
 
 
