@@ -224,9 +224,9 @@ async def demote_usr(c: Alita, m: Message):
             i[0] for i in (await admin_cache_reload(m, "demote_cache_update"))
         }
 
-    if user_id in admin_list:
+    if user_id not in admin_list:
         await m.reply_text(
-            "This user is already an admin, how am I supposed to re-promote them?",
+            "This user is not an admin, how am I supposed to re-demote them?",
         )
         return
 
@@ -238,6 +238,7 @@ async def demote_usr(c: Alita, m: Message):
             can_restrict_members=False,
             can_invite_users=False,
             can_pin_messages=False,
+            can_manage_voice_chats=False,
         )
         LOGGER.info(f"{m.from_user.id} demoted {user_id} in {m.chat.id}")
 
