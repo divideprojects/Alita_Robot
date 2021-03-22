@@ -79,7 +79,7 @@ async def del_msg(c: Alita, m: Message):
         return
 
     if m.reply_to_message:
-       await m.delete()
+        await m.delete()
         await c.delete_messages(
             chat_id=m.chat.id,
             message_ids=m.reply_to_message.message_id,

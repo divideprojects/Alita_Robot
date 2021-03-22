@@ -21,7 +21,12 @@ from time import time
 from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError, UserAdminInvalid
+from pyrogram.errors import (
+    ChatAdminRequired,
+    RightForbidden,
+    RPCError,
+    UserAdminInvalid,
+)
 from pyrogram.types import Message
 
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
@@ -96,12 +101,12 @@ async def kick_usr(c: Alita, m: Message):
     filters.command("dkick", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
 async def dkick_usr(c: Alita, m: Message):
-d
-    if (len(m.text.split()) >= 1) or (not m.reply_to_message):
+
+    if (len(m.text.split()) > 1) or (not m.reply_to_message):
         await m.reply_text("Reply to a message to delete it and ban the user")
         return
 
-    user_id, user_first_name, _ =  await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
@@ -147,6 +152,7 @@ d
         LOGGER.error(format_exc())
 
     return
+
 
 @Alita.on_message(
     filters.command("skick", PREFIX_HANDLER) & filters.group & restrict_filter,
@@ -272,16 +278,17 @@ async def ban_usr(c: Alita, m: Message):
         LOGGER.error(format_exc())
     return
 
+
 @Alita.on_message(
     filters.command("dban", PREFIX_HANDLER) & filters.group & restrict_filter,
 )
 async def dban_usr(c: Alita, m: Message):
-d
-    if (len(m.text.split()) >= 1) or (not m.reply_to_message):
+
+    if (len(m.text.split()) > 1) or (not m.reply_to_message):
         await m.reply_text("Reply to a message to delete it and ban the user")
         return
 
-    user_id, user_first_name, _ =  await extract_user(c, m)
+    user_id, user_first_name, _ = await extract_user(c, m)
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
