@@ -364,6 +364,5 @@ async def filters_watcher(c: Alita, m: Message):
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
             break
-        else:
-            continue
+        continue
     return
