@@ -137,11 +137,11 @@ async def rm_blacklist(_, m: Message):
             + " in blcklisted words, skipped them."
         )
 
-    LOGGER.info(f"{m.from_user.id} removed blacklists ({bl_word}) in {m.chat.id}")
+    LOGGER.info(f"{m.from_user.id} removed blacklists ({bl_words}) in {m.chat.id}")
     await m.reply_text(
         (
             (tlang(m, "blacklist.rm_blacklist")).format(
-                bl_word=f"<code>{bl_word}</code>",
+                bl_word=f"<code>{bl_words}</code>",
             )
             + f"\n{rep_text}"
             if rep_text
