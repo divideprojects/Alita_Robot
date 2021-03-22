@@ -19,7 +19,7 @@
 from asyncio import sleep
 
 from pyrogram import filters
-from pyrogram.errors import MessageDeleteForbidden
+from pyrogram.errors import MessageDeleteForbidden, RPCError
 from pyrogram.types import Message
 
 from alita import PREFIX_HANDLER, SUPPORT_GROUP
