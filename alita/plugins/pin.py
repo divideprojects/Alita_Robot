@@ -26,9 +26,6 @@ from alita.database.antichannelpin_db import AntiChannelPin
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 
-__PLUGIN__ = "plugins.pins.main"
-__help__ = "plugins.pins.help"
-
 # Initialize
 antichanneldb = AntiChannelPin()
 
@@ -178,3 +175,8 @@ async def perma_pin(_, m: Message):
         await m.reply_text("Reply to a message or enter text to pin it.")
 
     return
+
+
+__PLUGIN__ = "plugins.pins.main"
+__help__ = "plugins.pins.help"
+__alt_name__ = ["pin", "unpin"]

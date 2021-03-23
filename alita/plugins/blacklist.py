@@ -34,10 +34,6 @@ from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.parser import mention_html
 
-__PLUGIN__ = "plugins.blacklist.main"
-__help__ = "plugins.blacklist.help"
-
-
 # Initialise
 db = Blacklist()
 app_db = Approve()
@@ -218,3 +214,8 @@ async def rm_allbl_callback(_, q: CallbackQuery):
     LOGGER.info(f"{user_id} removed all blacklists in {q.message.chat.id}")
     await q.answer("Cleared all Blacklists!", show_alert=True)
     return
+
+
+__PLUGIN__ = "plugins.blacklist.main"
+__help__ = "plugins.blacklist.help"
+__alt_name__ = ["blacklists", "blaction"]

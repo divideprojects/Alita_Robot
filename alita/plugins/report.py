@@ -37,9 +37,6 @@ from alita.utils.parser import mention_html
 #  initialise
 db = Reporting()
 
-__PLUGIN__ = "plugins.reporting.main"
-__help__ = "plugins.reporting.help"
-
 
 @Alita.on_message(
     filters.command("reports", PREFIX_HANDLER) & (filters.private | admin_filter),
@@ -239,3 +236,8 @@ async def report_buttons(c: Alita, q: CallbackQuery):
             )
     await q.answer()
     return
+
+
+__PLUGIN__ = "plugins.reporting.main"
+__help__ = "plugins.reporting.help"
+__alt_name__ = ["reports", "report"]

@@ -32,9 +32,6 @@ from alita.utils.custom_filters import admin_filter
 
 db = Rules()
 
-__PLUGIN__ = "plugins.rules.main"
-__help__ = "plugins.rules.help"
-
 
 @Alita.on_message(filters.command("rules", PREFIX_HANDLER) & filters.group)
 async def get_rules(_, m: Message):
@@ -172,3 +169,8 @@ async def clearrules_callback(_, q: CallbackQuery):
     LOGGER.info(f"{user_id} cleared rules in {q.message.chat.id}")
     await q.answer("Rules for the chat have been cleared!", show_alert=True)
     return
+
+
+__PLUGIN__ = "plugins.rules.main"
+__help__ = "plugins.rules.help"
+__alt_name__ = ["rule"]

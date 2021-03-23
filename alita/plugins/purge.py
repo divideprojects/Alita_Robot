@@ -27,9 +27,6 @@ from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter
 
-__PLUGIN__ = "plugins.purges.main"
-__help__ = "plugins.purges.help"
-
 
 @Alita.on_message(
     filters.command("purge", PREFIX_HANDLER) & filters.group & admin_filter,
@@ -94,3 +91,8 @@ async def del_msg(c: Alita, m: Message):
     else:
         await m.reply_text(tlang(m, "purge.what_del"))
     return
+
+
+__PLUGIN__ = "plugins.purges.main"
+__help__ = "plugins.purges.help"
+__alt_name__ = ["purge", "del"]

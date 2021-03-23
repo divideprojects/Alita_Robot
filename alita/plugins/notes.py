@@ -40,9 +40,6 @@ from alita.utils.string import build_keyboard, parse_button
 db = Notes()
 db_settings = NotesSettings()
 
-__PLUGIN__ = "plugins.notes.main"
-__help__ = "plugins.notes.help"
-
 
 @Alita.on_message(
     filters.command("save", PREFIX_HANDLER) & filters.group & admin_filter,
@@ -412,3 +409,8 @@ async def clearallnotes_callback(_, q: CallbackQuery):
     await q.message.delete()
     await q.answer("Cleared all notes!", show_alert=True)
     return
+
+
+__PLUGIN__ = "plugins.notes.main"
+__help__ = "plugins.notes.help"
+__alt_name__ = ["groupnotes", "snips"]

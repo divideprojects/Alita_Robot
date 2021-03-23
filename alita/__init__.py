@@ -148,6 +148,9 @@ async def load_cmds(all_plugins):
                 HELP_COMMANDS[plugin_name]["buttons"] = imported_module.__buttons__
             if hasattr(imported_module, "__alt_name__"):
                 HELP_COMMANDS[plugin_name]["alt_cmds"] = imported_module.__alt_name__
+
+            # Add the plugin name to cmd list
+            (HELP_COMMANDS[plugin_name]["alt_cmds"]).append(plugin_name.split(".")[1])
         else:
             raise Exception(
                 (
