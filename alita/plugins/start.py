@@ -208,8 +208,8 @@ async def get_module_info(_, q: CallbackQuery):
 
     module = q.data.split(".", 1)[1]
     help_msg = tlang(q, HELP_COMMANDS[module]["help_msg"])
-    btns = HELP_COMMANDS[module]["buttons"]
-    btns.append(
+    temp_kb = HELP_COMMANDS[module]["buttons"]
+    temp_kb.append(
         [
             InlineKeyboardButton(
                 "« " + (tlang(q, "general.back_btn")),
@@ -217,6 +217,8 @@ async def get_module_info(_, q: CallbackQuery):
             ),
         ],
     )
+    btns = [i for i in temp_kb]
+    temp_kb.pop()
     await q.message.edit_text(
         help_msg,
         parse_mode="markdown",
