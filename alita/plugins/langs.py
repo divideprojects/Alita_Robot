@@ -35,9 +35,6 @@ from alita.utils.custom_filters import admin_filter
 # initialise
 db = Langs()
 
-__PLUGIN__ = "plugins.language.main"
-__help__ = "plugins.language.help"
-
 
 async def gen_langs_kb():
     langs = list(lang_dict.keys())
@@ -171,3 +168,7 @@ __buttons__ = [
         ),
     ],
 ]
+
+__PLUGIN__ = "plugins.language.main"
+__help__ = "plugins.language.help"
+__alt_name__ = ["lang", "langs", "languages"]

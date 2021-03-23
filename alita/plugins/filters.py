@@ -40,10 +40,6 @@ from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
 from alita.utils.string import escape_invalid_curly_brackets, parse_button, split_quotes
 
-__PLUGIN__ = "plugins.filters.main"
-__help__ = "plugins.filters.help"
-
-
 # Initialise
 db = Filters()
 
@@ -351,3 +347,7 @@ async def filters_watcher(c: Alita, m: Message):
             break
         continue
     return
+
+
+__PLUGIN__ = "plugins.filters.main"
+__help__ = "plugins.filters.help"

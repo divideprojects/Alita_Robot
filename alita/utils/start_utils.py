@@ -1,3 +1,21 @@
+# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
+#
+# This file is part of Alita_Robot.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 from traceback import format_exc
 
 from pyrogram.errors import RPCError
@@ -226,37 +244,46 @@ async def get_help_msg(m, help_option: str):
 
     help_msg = None
     help_kb = None
+    help_cmd_keys = sorted(
+        [
+            k
+            for j in [HELP_COMMANDS[i]["alt_cmds"] for i in list(HELP_COMMANDS.keys())]
+            for k in j
+        ],
+    )
 
-    if help_option == "help":
-        help_msg = tlang(m, "general.commands_available")
-        help_kb = InlineKeyboardMarkup(
+    if help_option in help_cmd_keys:
+        help_option_value = next(
+            HELP_COMMANDS[i]["help_msg"]
+            for i in HELP_COMMANDS
+            if help_option in HELP_COMMANDS[i]["alt_cmds"]
+        )
+        help_kb = next(
+            HELP_COMMANDS[i]["buttons"]
+            for i in HELP_COMMANDS
+            if help_option in HELP_COMMANDS[i]["alt_cmds"]
+        ) + [
             [
-                *(await gen_cmds_kb(m)),
-                [
-                    InlineKeyboardButton(
-                        f"« {(tlang(m, 'general.back_btn'))}",
-                        callback_data="start_back",
-                    ),
-                ],
+                InlineKeyboardButton(
+                    "« " + (tlang(m, "general.back_btn")),
+                    callback_data="commands",
+                ),
             ],
+        ]
+        help_msg = tlang(m, help_option_value)
+        LOGGER.info(
+            f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
         )
     else:
-        help_cmd_keys = sorted(
-            [i.split(".")[1].lower() for i in list(HELP_COMMANDS.keys())],
-        )
-        if help_option in help_cmd_keys:
-            help_option_value = HELP_COMMANDS[f"plugins.{help_option}.main"]["help_msg"]
-            help_kb = HELP_COMMANDS[f"plugins.{help_option}.main"]["buttons"] + [
-                [
-                    InlineKeyboardButton(
-                        "« " + (tlang(m, "general.back_btn")),
-                        callback_data="commands",
-                    ),
-                ],
-            ]
-            help_msg = tlang(m, help_option_value)
-            LOGGER.info(
-                f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
-            )
+        help_msg = tlang(m, "general.commands_available")
+        help_kb = [
+            *(await gen_cmds_kb(m)),
+            [
+                InlineKeyboardButton(
+                    f"« {(tlang(m, 'general.back_btn'))}",
+                    callback_data="start_back",
+                ),
+            ],
+        ]
 
     return help_msg, help_kb

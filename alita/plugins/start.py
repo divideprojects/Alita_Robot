@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import pyrogram
 from pyrogram import filters
 from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
 from pyrogram.types import (
@@ -142,8 +141,11 @@ async def help_menu(_, m: Message):
     if len(m.text.split()) >= 2:
         help_option = (m.text.split(None, 1)[1]).lower()
         help_msg, help_kb = await get_help_msg(m, help_option)
-        if help_msg is None:
+
+        if not help_msg:
+            LOGGER.error(f"No help_msg found for help_option - {help_option}!!")
             return
+
         LOGGER.info(
             f"{m.from_user.id} fetched help for {help_option} text in {m.chat.id}",
         )
@@ -151,7 +153,7 @@ async def help_menu(_, m: Message):
             await m.reply_text(
                 help_msg,
                 parse_mode="markdown",
-                reply_markup=help_kb,
+                reply_markup=InlineKeyboardMarkup(help_kb),
                 quote=True,
             )
         else:

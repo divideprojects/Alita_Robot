@@ -28,9 +28,6 @@ from alita.tr_engine import tlang
 from alita.utils import fun_strings
 from alita.utils.extract_user import extract_user
 
-__PLUGIN__ = "plugins.fun.main"
-__help__ = "plugins.fun.help"
-
 
 @Alita.on_message(filters.command("shout", PREFIX_HANDLER))
 async def fun_shout(_, m: Message):
@@ -135,3 +132,7 @@ async def fun_table(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     await reply_text(choice(fun_strings.REACTIONS))
     return
+
+
+__PLUGIN__ = "plugins.fun.main"
+__help__ = "plugins.fun.help"
