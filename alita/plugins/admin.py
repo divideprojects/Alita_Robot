@@ -41,9 +41,6 @@ from alita.utils.custom_filters import admin_filter, invite_filter, promote_filt
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
-__PLUGIN__ = "plugins.admin.main"
-__help__ = "plugins.admin.help"
-
 app_db = Approve()
 
 
@@ -310,3 +307,7 @@ async def get_invitelink(c: Alita, m: Message):
         LOGGER.error(format_exc())
 
     return
+
+
+__PLUGIN__ = "plugins.admin.main"
+__help__ = "plugins.admin.help"

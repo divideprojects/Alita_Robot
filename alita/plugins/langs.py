@@ -35,9 +35,6 @@ from alita.utils.custom_filters import admin_filter
 # initialise
 db = Langs()
 
-__PLUGIN__ = "plugins.language.main"
-__help__ = "plugins.language.help"
-
 
 async def gen_langs_kb():
     langs = list(lang_dict.keys())
@@ -161,3 +158,17 @@ async def set_lang(_, m: Message):
         reply_markup=InlineKeyboardMarkup([*(await gen_langs_kb())]),
     )
     return
+
+
+__buttons__ = [
+    [
+        InlineKeyboardButton(
+            "🌎 Help us with translations!",
+            url="https://crowdin.com/project/alita_robot",
+        ),
+    ],
+]
+
+__PLUGIN__ = "plugins.language.main"
+__help__ = "plugins.language.help"
+__alt_name__ = ["lang", "langs", "languages"]

@@ -97,6 +97,12 @@ strings:
         **Note:**
         Currently there is a limit of 50 filters and 120 aliases per chat.
         All filter keywords are in lowercase.
+    formatting:
+      main: "Formatting"
+      help: |-
+        Formatting
+
+        Alita supports a large number of formatting options to make your messages more expressive. Take a look by clicking the buttons below!
     fun:
       main: "Fun"
       help: |-

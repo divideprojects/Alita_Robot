@@ -36,9 +36,6 @@ from alita.utils.parser import mention_html
 # Initialise
 db = Approve()
 
-__PLUGIN__ = "plugins.approve.main"
-__help__ = "plugins.approve.help"
-
 
 @Alita.on_message(
     filters.command("approve", PREFIX_HANDLER) & filters.group & admin_filter,
@@ -264,3 +261,8 @@ async def unapproveall_callback(_, q: CallbackQuery):
     LOGGER.info(f"{user_id} disapproved all users in {q.message.chat.id}")
     await q.answer("Disapproved all users!", show_alert=True)
     return
+
+
+__PLUGIN__ = "plugins.approve.main"
+__help__ = "plugins.approve.help"
+__alt_name__ = ["approved"]

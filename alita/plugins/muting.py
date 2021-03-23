@@ -33,9 +33,6 @@ from alita.utils.custom_filters import restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
-__PLUGIN__ = "plugins.muting.main"
-__help__ = "plugins.muting.help"
-
 
 @Alita.on_message(
     filters.command("mute", PREFIX_HANDLER) & filters.group & restrict_filter,
@@ -133,3 +130,8 @@ async def unmute_usr(c: Alita, m: Message):
         )
         LOGGER.error(ef)
     return
+
+
+__PLUGIN__ = "plugins.muting.main"
+__help__ = "plugins.muting.help"
+__alt_name__ = ["mute", "unmute"]

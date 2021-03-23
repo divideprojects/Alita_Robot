@@ -51,9 +51,6 @@ from alita.utils.paste import paste
 gban_db = GBan()
 user_db = Users()
 
-__PLUGIN__ = "plugins.utils.main"
-__help__ = "plugins.utils.help"
-
 
 @Alita.on_message(
     filters.command("ping", PREFIX_HANDLER) & (filters.group | filters.private),
@@ -429,3 +426,8 @@ async def translate(_, m: Message):
         f"<b>Translated:</b> from {detectlang} to {target_lang} \n<code>``{tekstr.text}``</code>",
     )
     LOGGER.info(f"{m.from_user.id} used translate cmd in {m.chat.id}")
+
+
+__PLUGIN__ = "plugins.utils.main"
+__help__ = "plugins.utils.help"
+__alt_name__ = ["util", "misc", "tools"]

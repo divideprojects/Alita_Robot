@@ -65,13 +65,13 @@ async def start(c: Alita, m: Message):
 
             help_msg, help_kb = await get_help_msg(m, help_option)
 
-            if help_msg is None:
+            if not help_msg:
                 return
 
             await m.reply_text(
                 help_msg,
                 parse_mode="markdown",
-                reply_markup=help_kb,
+                reply_markup=InlineKeyboardMarkup(help_kb),
                 quote=True,
             )
             return
@@ -141,8 +141,11 @@ async def help_menu(_, m: Message):
     if len(m.text.split()) >= 2:
         help_option = (m.text.split(None, 1)[1]).lower()
         help_msg, help_kb = await get_help_msg(m, help_option)
-        if help_msg is None:
+
+        if not help_msg:
+            LOGGER.error(f"No help_msg found for help_option - {help_option}!!")
             return
+
         LOGGER.info(
             f"{m.from_user.id} fetched help for {help_option} text in {m.chat.id}",
         )
@@ -150,7 +153,7 @@ async def help_menu(_, m: Message):
             await m.reply_text(
                 help_msg,
                 parse_mode="markdown",
-                reply_markup=help_kb,
+                reply_markup=InlineKeyboardMarkup(help_kb),
                 quote=True,
             )
         else:
@@ -206,21 +209,19 @@ async def help_menu(_, m: Message):
 async def get_module_info(_, q: CallbackQuery):
 
     module = q.data.split(".", 1)[1]
-    keyboard = InlineKeyboardMarkup(
+    help_msg = tlang(q, HELP_COMMANDS[module]["help_msg"])
+    help_kb = HELP_COMMANDS[module]["buttons"] + [
         [
-            [
-                InlineKeyboardButton(
-                    "« " + (tlang(q, "general.back_btn")),
-                    callback_data="commands",
-                ),
-            ],
+            InlineKeyboardButton(
+                "« " + (tlang(q, "general.back_btn")),
+                callback_data="commands",
+            ),
         ],
-    )
-    help_msg = tlang(q, HELP_COMMANDS[module])
+    ]
     await q.message.edit_text(
         help_msg,
         parse_mode="markdown",
-        reply_markup=keyboard,
+        reply_markup=InlineKeyboardMarkup(help_kb),
     )
     await q.answer()
     return

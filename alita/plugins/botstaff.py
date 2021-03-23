@@ -32,8 +32,6 @@ from alita.bot_class import Alita
 from alita.utils.custom_filters import dev_filter
 from alita.utils.parser import mention_html
 
-__PLUGIN__ = "Botstaff"
-
 
 @Alita.on_message(filters.command("botstaff", DEV_PREFIX_HANDLER) & dev_filter)
 async def botstaff(c: Alita, m: Message):

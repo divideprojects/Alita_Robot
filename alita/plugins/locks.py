@@ -31,9 +31,6 @@ from alita.utils.custom_filters import admin_filter
 # initialise
 app_db = Approve()
 
-__PLUGIN__ = "plugins.locks.main"
-__help__ = "plugins.locks.help"
-
 
 @Alita.on_message(filters.command("locktypes", PREFIX_HANDLER) & filters.group)
 async def lock_types(_, m: Message):
@@ -421,3 +418,8 @@ async def prevent_approved(m: Message):
         await sleep(0.1)
 
     return
+
+
+__PLUGIN__ = "plugins.locks.main"
+__help__ = "plugins.locks.help"
+__alt_name__ = ["grouplock", "lock", "grouplocks"]

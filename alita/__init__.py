@@ -127,23 +127,35 @@ async def load_cmds(all_plugins):
     for single in all_plugins:
         # If plugin in NO_LOAD, skip the plugin
         if single.lower() in [i.lower() for i in Config.NO_LOAD]:
+            LOGGER.warning(f"Not loading '{single}' s it's added in NO_LOAD list")
             continue
+
         imported_module = imp_mod("alita.plugins." + single)
         if not hasattr(imported_module, "__PLUGIN__"):
-            imported_module.__PLUGIN__ = imported_module.__name__
+            continue
 
-        if not imported_module.__PLUGIN__.lower() in HELP_COMMANDS:
-            if hasattr(imported_module, "__help__") and imported_module.__help__:
-                HELP_COMMANDS[
-                    imported_module.__PLUGIN__.lower()
-                ] = imported_module.__help__
-            else:
-                continue
+        plugin_name = imported_module.__PLUGIN__.lower()
+
+        if not plugin_name in HELP_COMMANDS:
+            HELP_COMMANDS[plugin_name] = {
+                "help_msg": "",
+                "buttons": [],
+                "alt_cmds": [],
+            }
+            if hasattr(imported_module, "__help__"):
+                HELP_COMMANDS[plugin_name]["help_msg"] = imported_module.__help__
+            if hasattr(imported_module, "__buttons__"):
+                HELP_COMMANDS[plugin_name]["buttons"] = imported_module.__buttons__
+            if hasattr(imported_module, "__alt_name__"):
+                HELP_COMMANDS[plugin_name]["alt_cmds"] = imported_module.__alt_name__
+
+            # Add the plugin name to cmd list
+            (HELP_COMMANDS[plugin_name]["alt_cmds"]).append(plugin_name.split(".")[1])
         else:
             raise Exception(
                 (
                     "Can't have two plugins with the same name! Please change one\n"
-                    f"Plugin Name: {imported_module.__name__}"
+                    f"Error while importing '{imported_module.__name__}'"
                 ),
             )
 

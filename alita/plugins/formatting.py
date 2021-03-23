@@ -26,69 +26,66 @@ from pyrogram.types import (
 
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
-
-__PLUGIN__ = "Formatting"
-__help__ = """
-Formatting
-
-Alita supports a large number of formatting options to make your messages more expressive. Take a look by clicking the buttons below!
-"""
+from alita.tr_engine import tlang
 
 md_formatting_str = """
-**Markdown Formatting**
+<b>Markdown Formatting</b>
 
 You can format your message using **bold**, __italics__, --underline--, and much more. Go ahead and experiment!
 
-**Supported markdown**:
-- ``code words``: Backticks are used for monospace fonts. Shows as: `code words`.
-- `__italic words__`: Underscores are used for italic fonts. Shows as: __italic words__.
-- `*bold words*`: Asterisks are used for bold fonts. Shows as: **bold words**.
-- `~strikethrough~`: Tildes are used for strikethrough. Shows as: ~~strikethrough~~.
-- `[hyperlink](example.com)`: This is the formatting used for hyperlinks. Shows as: [hyperlink](https://example.com/).
-- `[My button](buttonurl://example.com)`: This is the formatting used for creating buttons. This example will create a button named "My button" which opens `example.com` when clicked.
-If you would like to send buttons on the same row, use the `:same` formatting. EG:
-`[button 1](buttonurl://example.com)`
-`[button 2](buttonurl://example.com:same)`
-`[button 3](buttonurl://example.com)`
+<b>Supported markdown</b>:
+- <code>code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
+- <code>__italic words__</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
+- <code>**bold words**</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
+- <code>~~strikethrough~~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
+- <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href="https://example.com/">hyperlink</a>.
+- <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+If you would like to send buttons on the same row, use the <code>:same</code> formatting.
+
+<b>Example:</b>
+<code>[button 1](buttonurl://example.com)</code>
+<code>[button 2](buttonurl://example.com:same)</code>
+<code>[button 3](buttonurl://example.com)</code>
 This will show button 1 and 2 on the same line, with 3 underneath.
 """
 
 filling_str = """
-**Fillings**
+<b>Fillings</b>
 
 You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
 
-Supported fillings:
-- {first}: The user's first name.
-- {last}: The user's last name.
-- {fullname}: The user's full name.
-- {username}: The user's username. If they don't have one, mentions the user instead.
-- {mention}: Mentions the user with their firstname.
-- {id}: The user's ID.
-- {chatname}: The chat's name.
+<b>Supported fillings:</b>
+- <code>{first}</code>: The user's first name.
+- <code>{last}</code>: The user's last name.
+- <code>{fullname}</code>: The user's full name.
+- <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
+- <code>{mention}</code>: Mentions the user with their firstname.
+- <code>{id}</code>: The user's ID.
+- <code>{chatname}</code>: The chat's name.
 """
 
 random_content_str = """
-Random Content
+<b>Random Content</b>
 
 Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
 
 How to use random contents:
 - %%%: This separator can be used to add "random" replies to the bot.
 For example:
-hello
+<code>hello
 %%%
-how are you
-This will randomly choose between sending the first message, "hello", or the second message, "how are you". Use this to make Rose feel a bit more customised! (only works in notes/filters/greetings)
+how are you</code>
+This will randomly choose between sending the first message, "hello", or the second message, "how are you".
+Use this to make Alita feel a bit more customised! (only works in filters/notes)
 
 Example welcome message::
 - Every time a new user joins, they'll be presented with one of the three messages shown here.
 -> /filter "hey"
-hello there {first}!
+hello there <code>{first}</code>!
 %%%
-Ooooh, {first} how are you?
+Ooooh, <code>{first}</code> how are you?
 %%%
-Sup? {first}"""
+Sup? <code>{first}</code>"""
 
 
 async def gen_formatting_kb(m):
@@ -107,6 +104,12 @@ async def gen_formatting_kb(m):
                     callback_data="formatting.random_content",
                 ),
             ],
+            [
+                InlineKeyboardButton(
+                    ("« " + (tlang(m, "general.back_btn"))),
+                    callback_data="commands",
+                ),
+            ],
         ],
     )
     return keyboard
@@ -123,24 +126,59 @@ async def markdownhelp(_, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^formatting."))
-async def get_formatting_info(c: Alita, q: CallbackQuery):
+async def get_formatting_info(_, q: CallbackQuery):
     cmd = q.data.split(".")[1]
-    kb = InlineKeyboardMarkup([[InlineKeyboardButton("back.formatting")]])
+    kb = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    (tlang(q, "general.back_btn")),
+                    callback_data="back.formatting",
+                ),
+            ],
+        ],
+    )
 
     if cmd == "md_formatting":
-        await q.message.edit_text(md_formatting_str, reply_markup=kb)
+        await q.message.edit_text(md_formatting_str, reply_markup=kb, parse_mode="html")
     elif cmd == "fillings":
-        await q.message.edit_text(filling_str, reply_markup=kb)
+        await q.message.edit_text(filling_str, reply_markup=kb, parse_mode="html")
     elif cmd == "random_content":
-        await q.message.edit_text(random_content_str, reply_markup=kb)
+        await q.message.edit_text(
+            random_content_str,
+            reply_markup=kb,
+            parse_mode="html",
+        )
 
     await q.answer()
     return
 
 
 @Alita.on_callback_query(filters.regex("^back."))
-async def send_mod_help(c: Alita, q: CallbackQuery):
-    await q.message.delete()
-    await markdownhelp(c, q)
+async def send_mod_help(_, q: CallbackQuery):
+    await q.message.edit_text(
+        (tlang(q, "start.private")),
+        reply_markup=(await gen_formatting_kb(q.message)),
+    )
     await q.answer()
     return
+
+
+__PLUGIN__ = "plugins.formatting.main"
+__help__ = "plugins.formatting.help"
+__alt_name__ = ["formatting", "markdownhelp", "markdown"]
+__buttons__ = [
+    [
+        InlineKeyboardButton(
+            "Markdown Formatting",
+            callback_data="formatting.md_formatting",
+        ),
+        InlineKeyboardButton("Fillings", callback_data="formatting.fillings"),
+    ],
+    [
+        InlineKeyboardButton(
+            "Random Content",
+            callback_data="formatting.random_content",
+        ),
+    ],
+]
