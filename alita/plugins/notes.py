@@ -115,7 +115,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         if len(tmp_text) > 1:
             text = choice(tmp_text)
         else:
-            text = tmp_text
+            text = tmp_text[0]
         teks, button = await parse_button(text)
         button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
