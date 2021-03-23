@@ -63,7 +63,7 @@ async def ping(_, m: Message):
     start = time()
     replymsg = await m.reply_text((tlang(m, "utils.ping.pinging")), quote=True)
     delta_ping = time() - start
-    await replymsg.edit_text(f"**Pong!**\n{delta_ping * 1000:.3f} ms")
+    await replymsg.edit_text(f"<b>Pong!</b>\n{delta_ping * 1000:.3f} ms")
     return
 
 
@@ -215,14 +215,14 @@ async def github(_, m: Message):
         LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
     else:
         await m.reply_text(
-            f"Usage: `{PREFIX_HANDLER}github <username>`",
+            f"Usage: <code>{PREFIX_HANDLER}github <username></code>",
         )
         return
 
     URL = f"https://api.github.com/users/{username}"
     result, resp = await AioHttp.get_json(URL)
     if resp.status == 404:
-        await m.reply_text(f"`{username} not found`", parse_mode="md")
+        await m.reply_text(f"<code>{username}</code> not found")
         return
 
     url = result.get("html_url", None)
@@ -232,12 +232,12 @@ async def github(_, m: Message):
     created_at = result.get("created_at", "Not Found")
 
     REPLY = (
-        f"**GitHub Info for** `{username}`"
-        f"\n**Name:** `{name}`\n"
-        f"**Bio:** `{bio}`\n"
-        f"**URL:** {url}"
-        f"\n**Company:** `{company}`\n"
-        f"**Created at:** `{created_at}`"
+        f"<b>GitHub Info for</b> <code>{username}</code>"
+        f"\n<b>Name:</b> <code>{name}</code>\n"
+        f"<b>Bio:</b> <code>{bio}</code>\n"
+        f"<b>URL:</b> {url}"
+        f"\n<b>Company:</b> <code>{company}</code>\n"
+        f"<b>Created at:</b> <code>{created_at}</code>"
     )
 
     await m.reply_text(REPLY, quote=True)
@@ -396,7 +396,7 @@ async def translate(_, m: Message):
     if m.reply_to_message and (m.reply_to_message.text or m.reply_to_message.caption):
         if len(m.text.split()) == 1:
             await m.reply_text(
-                "Provide lang code.\n[Available options](https://telegra.ph/Lang-Codes-11-08).\n**Usage:** `/tr en`",
+                "Provide lang code.\n[Available options](https://telegra.ph/Lang-Codes-11-08).\n<b>Usage:</b> <code>/tr en</code>",
             )
             return
         target_lang = m.text.split()[1]
@@ -408,12 +408,12 @@ async def translate(_, m: Message):
         try:
             tekstr = await trl(text, targetlang=target_lang)
         except ValueError as err:
-            await m.reply_text(f"Error: `{str(err)}`")
+            await m.reply_text(f"Error: <code>{str(err)}</code>")
             return
     else:
         if len(m.text.split()) <= 2:
             await m.reply_text(
-                "Provide lang code.\n[Available options](https://telegra.ph/Lang-Codes-11-08).\n**Usage:** `/tr en`",
+                "Provide lang code.\n[Available options](https://telegra.ph/Lang-Codes-11-08).\n<b>Usage:</b> <code>/tr en</code>",
             )
             return
         target_lang = m.text.split(None, 2)[1]
@@ -422,10 +422,10 @@ async def translate(_, m: Message):
         try:
             tekstr = await trl(text, targetlang=target_lang)
         except ValueError as err:
-            await m.reply_text("Error: `{}`".format(str(err)))
+            await m.reply_text("Error: <code>{}</code>".format(str(err)))
             return
 
     await m.reply_text(
-        f"**Translated:** from {detectlang} to {target_lang} \n```{tekstr.text}```",
+        f"<b>Translated:</b> from {detectlang} to {target_lang} \n<code>``{tekstr.text}``</code>",
     )
     LOGGER.info(f"{m.from_user.id} used translate cmd in {m.chat.id}")
