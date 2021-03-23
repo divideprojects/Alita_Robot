@@ -265,7 +265,8 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
 
     try:
         # support for random filter texts
-        filter_reply = getfilter["filter_reply"].split("%%%")
+        splitter = "%%%"
+        filter_reply = getfilter["filter_reply"].split(splitter)
         filter_reply = choice(filter_reply)
     except KeyError:
         filter_reply = ""

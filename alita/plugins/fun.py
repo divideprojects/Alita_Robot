@@ -71,7 +71,8 @@ async def fun_slap(c: Alita, m: Message):
 
     if user_id == me.id:
         temp = choice(fun_strings.SLAP_ALITA_TEMPLATES)
-        return
+    else:
+        temp = choice(fun_strings.SLAP_TEMPLATES)
 
     if user_id:
         slapped_user = await c.get_users(user_id)
@@ -82,7 +83,6 @@ async def fun_slap(c: Alita, m: Message):
         user1 = me.first_name
         user2 = curr_user
 
-    temp = choice(fun_strings.SLAP_ALITA_TEMPLATES)
     item = choice(fun_strings.ITEMS)
     hit = choice(fun_strings.HIT)
     throw = choice(fun_strings.THROW)

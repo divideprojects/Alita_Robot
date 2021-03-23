@@ -83,11 +83,14 @@ async def save_note(_, m: Message):
 async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
     """Get the note in normal mode, with parsing enabled."""
 
+    reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
+    reply_msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+
     if priv_notes_status:
         from alita import BOT_USERNAME
 
         note_hash = [i[1] for i in db.get_all_notes(m.chat.id) if i[0] == note_name][0]
-        await m.reply_text(
+        await reply_text(
             f"Click on the button to get the note {note_name}",
             reply_markup=InlineKeyboardMarkup(
                 [
@@ -106,7 +109,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
 
     msgtype = getnotes["msgtype"]
     if not msgtype:
-        await m.reply_text("<b>Error:</b> Cannot find a type for this note!!")
+        await reply_text("<b>Error:</b> Cannot find a type for this note!!")
         return
 
     if msgtype == Types.TEXT:
@@ -115,7 +118,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         button = InlineKeyboardMarkup(button) if button else None
         if button:
             try:
-                await m.reply_text(
+                await reply_text(
                     teks,
                     reply_markup=button,
                     disable_web_page_preview=True,
@@ -123,7 +126,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                 )
                 return
             except RPCError as ef:
-                await m.reply_text(
+                await reply_text(
                     "An error has occured! Cannot parse note.",
                     quote=True,
                 )
@@ -131,7 +134,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                 LOGGER.error(format_exc())
                 return
         else:
-            await m.reply_text(teks, quote=True, disable_web_page_preview=True)
+            await reply_text(teks, quote=True, disable_web_page_preview=True)
             return
     elif msgtype in (
         Types.STICKER,
@@ -142,7 +145,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
             getnotes["fileid"],
-            reply_to_message_id=m.message_id,
+            reply_to_message_id=reply_msg_id,
         )
     else:
         if getnotes["note_value"]:
@@ -159,7 +162,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                     getnotes["fileid"],
                     caption=teks,
                     reply_markup=button,
-                    reply_to_message_id=m.message_id,
+                    reply_to_message_id=reply_msg_id,
                 )
                 return
             except RPCError as ef:
@@ -167,7 +170,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                     teks,
                     reply_markup=button,
                     disable_web_page_preview=True,
-                    reply_to_message_id=m.message_id,
+                    reply_to_message_id=reply_msg_id,
                 )
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
