@@ -14,6 +14,7 @@ from alita.database.chats_db import Chats
 from alita.database.notes_db import Notes
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
+from alita.utils.cmd_senders import send_cmd
 from alita.utils.msg_types import Types
 from alita.utils.string import build_keyboard, parse_button
 
@@ -21,23 +22,6 @@ from alita.utils.string import build_keyboard, parse_button
 rules_db = Rules()
 notes_db = Notes()
 chats_db = Chats()
-
-
-async def send_cmd(client: Alita, msgtype):
-    GET_FORMAT = {
-        Types.TEXT.value: client.send_message,
-        Types.DOCUMENT.value: client.send_document,
-        Types.PHOTO.value: client.send_photo,
-        Types.VIDEO.value: client.send_video,
-        Types.STICKER.value: client.send_sticker,
-        Types.AUDIO.value: client.send_audio,
-        Types.VOICE.value: client.send_voice,
-        Types.VIDEO_NOTE.value: client.send_video_note,
-        Types.ANIMATION.value: client.send_animation,
-        Types.ANIMATED_STICKER.value: client.send_sticker,
-        Types.CONTACT: client.send_contact,
-    }
-    return GET_FORMAT[msgtype]
 
 
 async def gen_cmds_kb(m):

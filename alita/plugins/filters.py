@@ -33,6 +33,7 @@ from pyrogram.types import (
 from alita import PREFIX_HANDLER
 from alita.bot_class import LOGGER, Alita
 from alita.database.filters_db import Filters
+from alita.utils.cmd_senders import send_cmd
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.msg_types import Types, get_filter_type
 from alita.utils.parser import mention_html
@@ -45,23 +46,6 @@ __help__ = "plugins.filters.help"
 
 # Initialise
 db = Filters()
-
-
-async def send_cmd(client: Alita, msgtype):
-    GET_FORMAT = {
-        Types.TEXT.value: client.send_message,
-        Types.DOCUMENT.value: client.send_document,
-        Types.PHOTO.value: client.send_photo,
-        Types.VIDEO.value: client.send_video,
-        Types.STICKER.value: client.send_sticker,
-        Types.AUDIO.value: client.send_audio,
-        Types.VOICE.value: client.send_voice,
-        Types.VIDEO_NOTE.value: client.send_video_note,
-        Types.ANIMATION.value: client.send_animation,
-        Types.ANIMATED_STICKER.value: client.send_sticker,
-        Types.CONTACT: client.send_contact,
-    }
-    return GET_FORMAT[msgtype]
 
 
 @Alita.on_message(
