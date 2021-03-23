@@ -72,6 +72,3 @@ def __load_group_blacklist():
     for chat in chats:
         BLACKLIST_CHATS.append(chat["_id"])
     BLACKLIST_CHATS.sort()
-
-
-__load_group_blacklist()

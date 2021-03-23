@@ -107,7 +107,6 @@ class AntiChannelPin:
                 new_data = old_chat_db.update({"_id": new_chat_id})
                 self.collection.delete_one({"_id": old_chat_id})
                 self.collection.insert_one(new_data)
-            return
 
 
 def __load_antichannelpin_chats():
@@ -117,6 +116,3 @@ def __load_antichannelpin_chats():
     antipin_chats = db.load_chats_from_db({"status": True})
     ANTIPIN_CHATS = {i["_id"] for i in antipin_chats}
     LOGGER.info(f"Loaded AntiChannelPin Local Cache in {round((time()-start),3)}s")
-
-
-# __load_antichannelpin_chats()

@@ -163,7 +163,6 @@ class Rules:
                 new_data = old_chat_db.update({"_id": new_chat_id})
                 self.collection.delete_one({"_id": old_chat_id})
                 self.collection.insert_one(new_data)
-            return
 
 
 def __load_all_rules():
@@ -179,6 +178,3 @@ def __load_all_rules():
         for chat in data
     }
     LOGGER.info(f"Loaded Rules Local Cache in {round((time()-start),3)}s")
-
-
-# __load_all_rules()

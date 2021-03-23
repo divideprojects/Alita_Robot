@@ -320,7 +320,7 @@ async def my_info(c: Alita, m: Message):
 async def weebify(_, m: Message):
     if len(m.text.split()) >= 2:
         args = m.text.split(None, 1)[1]
-    if m.reply_to_message and len(m.text.split()) == 1:
+    elif m.reply_to_message and len(m.text.split()) == 1:
         args = m.reply_to_message.text
     else:
         await m.reply_text(

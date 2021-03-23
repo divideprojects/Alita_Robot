@@ -125,7 +125,6 @@ class Notes:
                 new_data = old_chat_db.update({"_id": new_chat_id})
                 self.collection.delete_one({"_id": old_chat_id})
                 self.collection.insert_one(new_data)
-            return
 
 
 class NotesSettings:
@@ -160,4 +159,3 @@ class NotesSettings:
                 new_data = old_chat_db.update({"_id": new_chat_id})
                 self.collection.delete_one({"_id": old_chat_id})
                 self.collection.insert_one(new_data)
-            return

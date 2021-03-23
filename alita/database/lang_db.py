@@ -112,7 +112,6 @@ class Langs:
                 new_data = old_chat_db.update({"_id": new_chat_id})
                 self.collection.delete_one({"_id": old_chat_id})
                 self.collection.insert_one(new_data)
-            return
 
 
 def __load_all_langs():
@@ -125,6 +124,3 @@ def __load_all_langs():
         for chat in langs_data
     }
     LOGGER.info(f"Loaded Lang Local Cache in {round((time()-start),3)}s")
-
-
-# __load_all_langs()

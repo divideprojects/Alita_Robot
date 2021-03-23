@@ -50,19 +50,16 @@ async def admin_check_func(_, __, m):
         return True
 
     try:
-        return m.from_user.id in {i[0] for i in ADMIN_CACHE[m.chat.id]}
+        admin_group = m.from_user.id in {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
-        return m.from_user.id in {i[0] for i in await admin_cache_reload(m)}
+        admin_group = {i[0] for i in await admin_cache_reload(m)}
     except ValueError as ef:
         # To make language selection work in private chat of user, i.e. PM
         if ("The chat_id" or "belongs to a user") in ef:
             return True
-        return False
-    except Exception as ef:
-        user = await m.chat.get_member(m.from_user.id)
-        if user.status in ("creator", "administrator"):
-            return True
-        LOGGER.error(format_exc())
+
+    if m.from_user.id in admin_group:
+        return True
 
     await m.reply_text(tlang(m, "general.no_admin_cmd_perm"))
 

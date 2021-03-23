@@ -24,6 +24,7 @@ from alita.database.antichannelpin_db import __load_antichannelpin_chats
 from alita.database.antispam_db import __load_antispam_users
 from alita.database.chats_db import __load_chats_cache
 from alita.database.filters_db import __load_filters_cache
+from alita.database.group_blacklist import __load_group_blacklist
 from alita.database.lang_db import __load_all_langs
 from alita.database.reporting_db import __load_all_reporting_settings
 from alita.database.rules_db import __load_all_rules
@@ -42,6 +43,7 @@ def load_caches():
     __load_all_rules()
     __load_antichannelpin_chats()
     __load_all_reporting_settings()
+    __load_group_blacklist()
     LOGGER.info(f"Succefully loaded Local Caches in {round((time()-start),3)}s\n")
 
 

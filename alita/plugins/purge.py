@@ -30,7 +30,6 @@ from alita.utils.custom_filters import admin_filter
 
 @Alita.on_message(
     filters.command("purge", PREFIX_HANDLER) & filters.group & admin_filter,
-    group=8,
 )
 async def purge(c: Alita, m: Message):
 

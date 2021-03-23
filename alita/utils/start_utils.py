@@ -128,7 +128,6 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
     chat_id = int(help_lst[1])
 
     if len(help_lst) == 2:
-        # chat_id = int(help_option.replace("notes_", ""))
         all_notes = notes_db.get_all_notes(chat_id)
         chat_title = chats_db.get_chat_info(chat_id)["chat_name"]
         rply = f"Notes in {chat_title}:\n\n"
