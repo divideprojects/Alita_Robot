@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from secrets import choice
 from traceback import format_exc
 
 from pyrogram import filters
@@ -88,12 +89,12 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
 
         note_hash = [i[1] for i in db.get_all_notes(m.chat.id) if i[0] == note_name][0]
         await reply_text(
-            f"Click on the button to get the note {note_name}",
+            f"Click on the button to get the note <code>{note_name}</code>",
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(
-                            "Note",
+                            "Click Me!",
                             url=f"https://t.me/{BOT_USERNAME}?start=note_{m.chat.id}_{note_hash}",
                         ),
                     ],
@@ -110,7 +111,12 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         return
 
     if msgtype == Types.TEXT:
-        teks, button = await parse_button(getnotes["note_value"])
+        tmp_text = (getnotes["note_value"]).split("%%%")
+        if len(tmp_text) > 1:
+            text = choice(tmp_text)
+        else:
+            text = tmp_text
+        teks, button = await parse_button(text)
         button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
         if button:
@@ -323,7 +329,7 @@ async def local_notes(_, m: Message):
             [
                 [
                     InlineKeyboardButton(
-                        "Notes",
+                        "All Notes",
                         url=f"https://t.me/{BOT_USERNAME}?start=notes_{m.chat.id}",
                     ),
                 ],
