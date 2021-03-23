@@ -43,6 +43,7 @@ from alita.utils.parser import mention_html
 
 __PLUGIN__ = "plugins.admin.main"
 __help__ = "plugins.admin.help"
+__alt_name__ = ["admin"]
 
 app_db = Approve()
 

@@ -242,11 +242,25 @@ async def get_help_msg(m, help_option: str):
         )
     else:
         help_cmd_keys = sorted(
-            [i.split(".")[1].lower() for i in list(HELP_COMMANDS.keys())],
+            [
+                k
+                for j in [
+                    HELP_COMMANDS[i]["alt_cmds"] for i in list(HELP_COMMANDS.keys())
+                ]
+                for k in j
+            ],
         )
         if help_option in help_cmd_keys:
-            help_option_value = HELP_COMMANDS[f"plugins.{help_option}.main"]["help_msg"]
-            help_kb = HELP_COMMANDS[f"plugins.{help_option}.main"]["buttons"] + [
+            help_option_value = next(
+                HELP_COMMANDS[i]["help_msg"]
+                for i in list(HELP_COMMANDS.keys())
+                if help_option in HELP_COMMANDS[i]["alt_cmds"]
+            )
+            help_kb = next(
+                HELP_COMMANDS[i]["buttons"]
+                for i in list(HELP_COMMANDS.keys())
+                if help_option in HELP_COMMANDS[i]["alt_cmds"]
+            ) + [
                 [
                     InlineKeyboardButton(
                         "« " + (tlang(m, "general.back_btn")),

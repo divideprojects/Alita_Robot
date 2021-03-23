@@ -142,8 +142,11 @@ async def help_menu(_, m: Message):
     if len(m.text.split()) >= 2:
         help_option = (m.text.split(None, 1)[1]).lower()
         help_msg, help_kb = await get_help_msg(m, help_option)
-        if help_msg is None:
+        print(help_kb)
+
+        if not help_msg:
             return
+
         LOGGER.info(
             f"{m.from_user.id} fetched help for {help_option} text in {m.chat.id}",
         )

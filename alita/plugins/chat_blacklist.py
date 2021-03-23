@@ -30,8 +30,6 @@ from alita.utils.custom_filters import dev_filter
 # initialise database
 db = GroupBlacklist()
 
-__PLUGIN__ = "Chat Blacklist"
-
 
 @Alita.on_message(filters.command("blchat", DEV_PREFIX_HANDLER) & dev_filter)
 async def blacklist_chat(c: Alita, m: Message):
