@@ -133,10 +133,21 @@ async def load_cmds(all_plugins):
             imported_module.__PLUGIN__ = imported_module.__name__
 
         if not imported_module.__PLUGIN__.lower() in HELP_COMMANDS:
-            if hasattr(imported_module, "__help__") and imported_module.__help__:
-                HELP_COMMANDS[
-                    imported_module.__PLUGIN__.lower()
-                ] = imported_module.__help__
+            if hasattr(imported_module, "__help__") and not hasattr(
+                imported_module,
+                "__buttons__",
+            ):
+                HELP_COMMANDS[imported_module.__PLUGIN__.lower()] = {
+                    "help_msg": imported_module.__help__,
+                    "buttons": [],
+                }
+            elif (
+                hasattr(imported_module, "__buttons__") and imported_module.__buttons__
+            ) and (hasattr(imported_module, "__help__") and imported_module.__help__):
+                HELP_COMMANDS[imported_module.__PLUGIN__.lower()] = {
+                    "help_msg": imported_module.__help__,
+                    "buttons": imported_module.__buttons__,
+                }
             else:
                 continue
         else:

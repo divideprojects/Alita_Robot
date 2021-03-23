@@ -124,7 +124,6 @@ async def rm_blacklist(_, m: Message):
     bl_words = ((m.text.split(None, 1)[1]).lower()).split()
 
     for bl_word in bl_words:
-        print(bl_word)
         if bl_word not in chat_bl:
             non_found_words.append(bl_word)
             continue

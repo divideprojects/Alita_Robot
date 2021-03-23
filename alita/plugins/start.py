@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import pyrogram
 from pyrogram import filters
 from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
 from pyrogram.types import (
@@ -65,13 +66,13 @@ async def start(c: Alita, m: Message):
 
             help_msg, help_kb = await get_help_msg(m, help_option)
 
-            if help_msg is None:
+            if not help_msg:
                 return
 
             await m.reply_text(
                 help_msg,
                 parse_mode="markdown",
-                reply_markup=help_kb,
+                reply_markup=InlineKeyboardMarkup(help_kb),
                 quote=True,
             )
             return
@@ -206,21 +207,20 @@ async def help_menu(_, m: Message):
 async def get_module_info(_, q: CallbackQuery):
 
     module = q.data.split(".", 1)[1]
-    keyboard = InlineKeyboardMarkup(
+    help_msg = tlang(q, HELP_COMMANDS[module]["help_msg"])
+    btns = HELP_COMMANDS[module]["buttons"]
+    btns.append(
         [
-            [
-                InlineKeyboardButton(
-                    "« " + (tlang(q, "general.back_btn")),
-                    callback_data="commands",
-                ),
-            ],
+            InlineKeyboardButton(
+                "« " + (tlang(q, "general.back_btn")),
+                callback_data="commands",
+            ),
         ],
     )
-    help_msg = tlang(q, HELP_COMMANDS[module])
     await q.message.edit_text(
         help_msg,
         parse_mode="markdown",
-        reply_markup=keyboard,
+        reply_markup=InlineKeyboardMarkup(btns),
     )
     await q.answer()
     return

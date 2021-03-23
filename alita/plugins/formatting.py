@@ -26,13 +26,7 @@ from pyrogram.types import (
 
 from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
-
-__PLUGIN__ = "Formatting"
-__help__ = """
-Formatting
-
-Alita supports a large number of formatting options to make your messages more expressive. Take a look by clicking the buttons below!
-"""
+from alita.tr_engine import tlang
 
 md_formatting_str = """
 **Markdown Formatting**
@@ -107,6 +101,12 @@ async def gen_formatting_kb(m):
                     callback_data="formatting.random_content",
                 ),
             ],
+            [
+                InlineKeyboardButton(
+                    ("« " + (tlang(m, "general.back_btn"))),
+                    callback_data="commands",
+                ),
+            ],
         ],
     )
     return keyboard
@@ -123,9 +123,11 @@ async def markdownhelp(_, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^formatting."))
-async def get_formatting_info(c: Alita, q: CallbackQuery):
+async def get_formatting_info(_, q: CallbackQuery):
     cmd = q.data.split(".")[1]
-    kb = InlineKeyboardMarkup([[InlineKeyboardButton("back.formatting")]])
+    kb = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("Back", callback_data="back.formatting")]],
+    )
 
     if cmd == "md_formatting":
         await q.message.edit_text(md_formatting_str, reply_markup=kb)
@@ -139,8 +141,29 @@ async def get_formatting_info(c: Alita, q: CallbackQuery):
 
 
 @Alita.on_callback_query(filters.regex("^back."))
-async def send_mod_help(c: Alita, q: CallbackQuery):
-    await q.message.delete()
-    await markdownhelp(c, q)
+async def send_mod_help(_, q: CallbackQuery):
+    await q.message.edit_text(
+        (tlang(q, "start.private")),
+        reply_markup=(await gen_formatting_kb(q.message)),
+    )
     await q.answer()
     return
+
+
+__PLUGIN__ = "plugins.formatting.main"
+__help__ = "plugins.formatting.help"
+__buttons__ = [
+    [
+        InlineKeyboardButton(
+            "Markdown Formatting",
+            callback_data="formatting.md_formatting",
+        ),
+        InlineKeyboardButton("Fillings", callback_data="formatting.fillings"),
+    ],
+    [
+        InlineKeyboardButton(
+            "Random Content",
+            callback_data="formatting.random_content",
+        ),
+    ],
+]

@@ -245,19 +245,21 @@ async def get_help_msg(m, help_option: str):
             [i.split(".")[1].lower() for i in list(HELP_COMMANDS.keys())],
         )
         if help_option in help_cmd_keys:
-            help_option_value = HELP_COMMANDS[f"plugins.{help_option}.main"]
-            help_msg = tlang(m, help_option_value)
-            help_kb = InlineKeyboardMarkup(
+            help_option_value = HELP_COMMANDS[f"plugins.{help_option}.main"]["help_msg"]
+            temp_kb = HELP_COMMANDS[f"plugins.{help_option}.main"]["buttons"]
+            temp_kb.append(
                 [
-                    [
-                        InlineKeyboardButton(
-                            f"« {(tlang(m, 'general.back_btn'))}",
-                            callback_data="commands",
-                        ),
-                    ],
+                    InlineKeyboardButton(
+                        "« " + (tlang(m, "general.back_btn")),
+                        callback_data="commands",
+                    ),
                 ],
             )
+            help_kb = [i for i in temp_kb]
+            temp_kb.pop()
+            help_msg = tlang(m, help_option_value)
             LOGGER.info(
                 f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
             )
+
     return help_msg, help_kb

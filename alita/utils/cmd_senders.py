@@ -1,4 +1,4 @@
-from alita import Alita
+from alita.bot_class import Alita
 from alita.utils.msg_types import Types
 
 

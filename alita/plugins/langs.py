@@ -161,3 +161,13 @@ async def set_lang(_, m: Message):
         reply_markup=InlineKeyboardMarkup([*(await gen_langs_kb())]),
     )
     return
+
+
+__buttons__ = [
+    [
+        InlineKeyboardButton(
+            "🌎 Help us with translations!",
+            url="https://crowdin.com/project/alita_robot",
+        ),
+    ],
+]
