@@ -504,7 +504,7 @@ strings:
     unlocked_perm: "Unlocked <b>{uperm}</b> for this Chat."
     unlocks_perm.sp_perm: "Specify a permission to unlock!"
     view_perm: |-
-      CHAT PERMISSIONS:
+      <b>Chat Permissions:</b>
 
       <b>Send Messages:</b> {vmsg}
       <b>Send Media:</b> {vmedia}

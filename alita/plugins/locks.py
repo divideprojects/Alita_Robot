@@ -34,23 +34,22 @@ app_db = Approve()
 
 @Alita.on_message(filters.command("locktypes", PREFIX_HANDLER) & filters.group)
 async def lock_types(_, m: Message):
-    locktypes_str = (
-        "**Lock Types:**\n"
-        " - `all` = Everything\n"
-        " - `msg` = Messages\n"
-        " - `media` = Media, such as photo and video.\n"
-        " - `polls` = Polls\n"
-        " - `invite` = Add users to group\n"
-        " - `pin` = Pin Messages\n"
-        " - `info` = Change Group Info\n"
-        " - `webprev` = Web Page Previews\n"
-        " - `inlinebots` = Inline bots\n"
-        " - `animations` = Animations\n"
-        " - `games` = Game Bots\n"
-        " - `stickers` = Stickers"
-    )
     await m.reply_text(
-        locktypes_str,
+        (
+            "**Lock Types:**\n"
+            " - `all` = Everything\n"
+            " - `msg` = Messages\n"
+            " - `media` = Media, such as Photo and Video.\n"
+            " - `polls` = Polls\n"
+            " - `invite` = Add users to Group\n"
+            " - `pin` = Pin Messages\n"
+            " - `info` = Change Group Info\n"
+            " - `webprev` = Web Page Previews\n"
+            " - `inlinebots`, `inline` = Inline bots\n"
+            " - `animations` = Animations\n"
+            " - `games` = Game Bots\n"
+            " - `stickers` = Stickers"
+        ),
     )
     return
 
@@ -127,7 +126,7 @@ async def lock_perm(c: Alita, m: Message):
         games = False
         perm = "games"
 
-    elif lock_type == "inlinebots":
+    elif lock_type in ("inlinebots", "inline"):
         inlinebots = False
         perm = "inline bots"
 
@@ -336,7 +335,7 @@ async def unlock_perm(c: Alita, m: Message):
         ugames = True
         uperm = "games"
 
-    elif unlock_type == "inlinebots":
+    elif unlock_type in ("inlinebots", "inline"):
         uinlinebots = True
         uperm = "inline bots"
 
