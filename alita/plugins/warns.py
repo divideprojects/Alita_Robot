@@ -62,7 +62,7 @@ async def warn(c: Alita, m: Message):
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
-        admins_group = await admin_cache_reload(m, "warn")
+        admins_group = {i[0] for i in (await admin_cache_reload(m, "warn_user"))}
 
     if user_id in admins_group:
         await m.reply_text("This user is admin in this chat, I can't warn them!")
@@ -140,7 +140,7 @@ async def reset_warn(c: Alita, m: Message):
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
-        admins_group = await admin_cache_reload(m, "warn")
+        admins_group = {i[0] for i in (await admin_cache_reload(m, "reset_warns"))}
 
     if user_id in admins_group:
         await m.reply_text("This user is admin in this chat, I can't warn them!")
@@ -172,7 +172,7 @@ async def list_warns(c: Alita, m: Message):
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
-        admins_group = await admin_cache_reload(m, "list_warns")
+        admins_group = {i[0] for i in (await admin_cache_reload(m, "warns"))}
 
     if user_id in admins_group:
         await m.reply_text(
@@ -187,7 +187,7 @@ async def list_warns(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("rmwarn", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(filters.command(["rmwarn, "removewarn"], PREFIX_HANDLER) & restrict_filter)
 async def remove_warn(c: Alita, m: Message):
 
     if not len(m.command) > 1 and not m.reply_to_message:
@@ -208,7 +208,7 @@ async def remove_warn(c: Alita, m: Message):
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
-        admins_group = await admin_cache_reload(m, "list_warns")
+        admins_group = {i[0] for i in (await admin_cache_reload(m, "rmwarn"))}
 
     if user_id in admins_group:
         await m.reply_text(
@@ -237,9 +237,7 @@ async def remove_last_warn_btn(_, q: CallbackQuery):
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[q.message.chat.id]}
     except KeyError:
-        admins_group = {
-            i[0] for i in (await admin_cache_reload(q, "warn_remove_button"))
-        }
+        admins_group = {i[0] for i in (await admin_cache_reload(m, "warn_btn"))}
 
     if not q.from_user.id in admins_group:
         await q.answer("You are not allowed to use this!", show_alert=True)
