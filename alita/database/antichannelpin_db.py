@@ -92,8 +92,10 @@ class Pins:
                 LOGGER.error(format_exc())
                 return self.collection.count({atype: True})
 
-    def load_chats_from_db(self, query):
+    def load_chats_from_db(self, query=None):
         with INSERTION_LOCK:
+            if query is None:
+                query = {}
             return self.collection.find_all(query)
 
     def list_chats(self, query):
@@ -114,6 +116,9 @@ class Pins:
             if old_chat_id in (PINS_CACHE["antichannelpin"]):
                 (PINS_CACHE["antichannelpin"]).remove(old_chat_id)
                 (PINS_CACHE["antichannelpin"]).add(new_chat_id)
+            if old_chat_id in (PINS_CACHE["cleanlinked"]):
+                (PINS_CACHE["cleanlinked"]).remove(old_chat_id)
+                (PINS_CACHE["cleanlinked"]).add(new_chat_id)
 
             old_chat_db = self.collection.find_one({"_id": old_chat_id})
             if old_chat_db:
@@ -126,7 +131,7 @@ def __load_antichannelpin_chats():
     global PINS_CACHE
     start = time()
     db = Pins()
-    antipin_chats = db.load_chats_from_db({"status": True})
+    antipin_chats = db.load_chats_from_db()
     PINS_CACHE["antichannelpin"] = {
         i["_id"] for i in antipin_chats if i["antichannelpin"]
     }
@@ -137,7 +142,7 @@ def __load_cleanlinked_chats():
     global PINS_CACHE
     start = time()
     db = Pins()
-    cleanlinked_chats = db.load_chats_from_db({"status": True})
+    cleanlinked_chats = db.load_chats_from_db()
     PINS_CACHE["cleanlinked"] = {
         i["_id"] for i in cleanlinked_chats if i["cleanlinked"]
     }
