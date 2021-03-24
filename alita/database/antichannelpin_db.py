@@ -27,80 +27,93 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-ANTIPIN_CHATS = set()
+PINS_CACHE = {}
 
 
-class AntiChannelPin:
+class Pins:
     """Class for managing antichannelpins in chats."""
 
     def __init__(self) -> None:
         self.collection = MongoDB("antichannelpin")
 
-    def check_antipin(self, chat_id: int):
+    def check_status(self, chat_id: int, atype: str):
         with INSERTION_LOCK:
 
-            if chat_id in ANTIPIN_CHATS:
+            if chat_id in (PINS_CACHE[atype]):
                 return True
 
-            curr = self.collection.find_one({"_id": chat_id})
+            curr = self.collection.find_one({"_id": chat_id, atype: True})
             if curr:
                 return True
 
             return False
 
-    def set_on(self, chat_id: int):
+    def get_current_stngs(self, chat_id: int):
+        with INSERTION_LOCK:
+            curr = self.collection.find_one({"_id": chat_id})
+            if curr:
+                return curr
+
+            curr = {"_id": chat_id, "antichannelpin": False, "cleanlinked": False}
+            self.collection.insert_one(curr)
+            return curr
+
+    def set_on(self, chat_id: int, atype: str):
         global ANTIPIN_CHATS
         with INSERTION_LOCK:
-            if chat_id not in ANTIPIN_CHATS:
-                ANTIPIN_CHATS.add(chat_id)
+            otype = "cleanlinked" if atype == "antichannelpin" else "antichannelpin"
+            if chat_id not in (PINS_CACHE[atype]):
+                (PINS_CACHE[atype]).add(chat_id)
                 try:
-                    return self.collection.insert_one({"_id": chat_id, "status": True})
+                    return self.collection.insert_one(
+                        {"_id": chat_id, atype: True, otype: False},
+                    )
                 except DuplicateKeyError:
                     return self.collection.update(
                         {"_id": chat_id},
-                        {"status": True},
+                        {atype: True, otype: False},
                     )
             return "Already exists"
 
-    def set_off(self, chat_id: int):
+    def set_off(self, chat_id: int, atype: str):
         global ANTIPIN_CHATS
         with INSERTION_LOCK:
-            if chat_id in ANTIPIN_CHATS:
-                ANTIPIN_CHATS.remove(chat_id)
-                return self.collection.delete_one({"_id": chat_id})
-            return "Not enabled antichannelpin"
+            if chat_id in (PINS_CACHE[atype]):
+                (PINS_CACHE[atype]).remove(chat_id)
+                return self.collection.update({"_id": chat_id}, {atype: False})
+            return f"{atype} not enabled"
 
-    def count_antipin_chats(self):
+    def count_chats(self, atype):
         with INSERTION_LOCK:
             try:
-                return len(ANTIPIN_CHATS)
+                return len(PINS_CACHE[atype])
             except Exception as ef:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
-                return self.collection.count({"status": True})
+                return self.collection.count({atype: True})
 
     def load_chats_from_db(self, query):
         with INSERTION_LOCK:
             return self.collection.find_all(query)
 
-    def list_antipin_chats(self, query):
+    def list_chats(self, query):
         with INSERTION_LOCK:
             try:
-                return ANTIPIN_CHATS
+                return PINS_CACHE[query]
             except Exception as ef:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
-                return self.collection.find_all(query)
+                return self.collection.find_all({query: True})
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        global ANTIPIN_CHATS
+        global PINS_CACHE
         with INSERTION_LOCK:
 
             # Update locally
-            if old_chat_id in ANTIPIN_CHATS:
-                ANTIPIN_CHATS.remove(old_chat_id)
-                ANTIPIN_CHATS.add(new_chat_id)
+            if old_chat_id in (PINS_CACHE["antichannelpin"]):
+                (PINS_CACHE["antichannelpin"]).remove(old_chat_id)
+                (PINS_CACHE["antichannelpin"]).add(new_chat_id)
 
             old_chat_db = self.collection.find_one({"_id": old_chat_id})
             if old_chat_db:
@@ -110,9 +123,22 @@ class AntiChannelPin:
 
 
 def __load_antichannelpin_chats():
-    global ANTIPIN_CHATS
+    global PINS_CACHE
     start = time()
-    db = AntiChannelPin()
+    db = Pins()
     antipin_chats = db.load_chats_from_db({"status": True})
-    ANTIPIN_CHATS = {i["_id"] for i in antipin_chats}
+    PINS_CACHE["antichannelpin"] = {
+        i["_id"] for i in antipin_chats if i["antichannelpin"]
+    }
     LOGGER.info(f"Loaded AntiChannelPin Local Cache in {round((time()-start),3)}s")
+
+
+def __load_cleanlinked_chats():
+    global PINS_CACHE
+    start = time()
+    db = Pins()
+    cleanlinked_chats = db.load_chats_from_db({"status": True})
+    PINS_CACHE["cleanlinked"] = {
+        i["_id"] for i in cleanlinked_chats if i["cleanlinked"]
+    }
+    LOGGER.info(f"Loaded CleanLinked Local Cache in {round((time()-start),3)}s")

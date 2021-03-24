@@ -154,19 +154,15 @@ strings:
         This note only avaiable for yourself only!
         Also notes support inline button powered by inline query assistant bot.
 
-        **Save Note**
         × /save <note>
         Save a note, you can get or delete that later.
 
-        **Get Note**
         × /get <note>
         Get that note, if avaiable.
 
-        **Get Note in Raw format**
         × /get <note> noformat or /get <note> raw
         Get that note in raw format, so you can edit and update it.
 
-        **Delete Note**
         × /clear <note>
         Delete that note, if avaiable.
 
@@ -174,14 +170,10 @@ strings:
         Clears all notes in the chat!
         **NOTE:** Can only be used by owner of chat!
 
-        **All Notes**
-        × /saved
-        or
-        × /notes
+        × /saved or /notes
         Get all your notes, if too much notes, please use this in your saved message instead!
 
         × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
-
 
         ── **Note Format** ──
         Check /markdownhelp for help related to formatting!
@@ -194,7 +186,8 @@ strings:
         × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
         × /unpin: Unpins the last pinned message.
         × /unpinall: Unpins all the pinned message in the current chat.
-        × /antichannelpin <on/off>: Toogle antichannelpin status.
+        × /antichannelpin <on/off/yes/no>: Toggle antichannelpin status. All the messages from linked channel will be unpinned if enabled!
+        × /cleanlinked <on/off/yes/no>: Toggle cleanlinked status. All the messages from linked channel will be deleted if enabled!
         × /permapin `<text>`: Pin a custom messages via bot. This message can contain markdown, and can be used in replies to the media include additional buttons and text.
     purges:
       main: "Purges"

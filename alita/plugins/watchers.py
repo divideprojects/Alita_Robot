@@ -26,7 +26,7 @@ from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
 from alita.bot_class import Alita
-from alita.database.antichannelpin_db import AntiChannelPin
+from alita.database.antichannelpin_db import Pins
 from alita.database.antispam_db import ANTISPAM_BANNED, GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
@@ -41,19 +41,22 @@ from alita.utils.regex_utils import regex_searcher
 bl_db = Blacklist()
 app_db = Approve()
 gban_db = GBan()
-antichannel_db = AntiChannelPin()
+pins_db = Pins()
 warns_db = Warns()
 warns_settings_db = WarnSettings()
 
 
 @Alita.on_message(filters.linked_channel)
-async def antichanpin(c: Alita, m: Message):
+async def antichanpin_cleanlinked(c: Alita, m: Message):
     try:
         msg_id = m.message_id
-        antipin_status = antichannel_db.check_antipin(m.chat.id)
-        if antipin_status:
+        curr = pins_db.get_current_stngs(m.chat.id)
+        if curr["antichannelpin"]:
             await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
             LOGGER.info(f"AntiChannelPin: msgid-{m.message_id} unpinned in {m.chat.id}")
+        if curr["cleanlinked"]:
+            await c.delete_messages(m.chat.id, msg_id)
+            LOGGER.info(f"CleanLinked: msgid-{m.message_id} cleaned in {m.chat.id}")
     except Exception as ef:
         LOGGER.error(ef)
         LOGGER.error(format_exc())

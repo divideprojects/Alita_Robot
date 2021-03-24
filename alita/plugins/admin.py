@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from re import I
 from traceback import format_exc
 
 from pyrogram import filters

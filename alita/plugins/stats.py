@@ -22,7 +22,7 @@ from pyrogram.types import Message
 from alita import DEV_PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database import db
-from alita.database.antichannelpin_db import AntiChannelPin
+from alita.database.antichannelpin_db import Pins
 from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
@@ -43,7 +43,7 @@ userdb = Users()
 appdb = Approve()
 chatdb = Chats()
 fldb = Filters()
-antichanneldb = AntiChannelPin()
+pinsdb = Pins()
 notesettings_db = NotesSettings()
 warns_db = Warns()
 warns_settings_db = WarnSettings()
@@ -54,7 +54,8 @@ async def get_stats(_, m: Message):
     replymsg = await m.reply_text("<b><i>Fetching Stats...</i></b>", quote=True)
     rply = (
         f"<b>Users:</b> <code>{(userdb.count_users())}</code> in <code>{(chatdb.count_chats())}</code> chats\n"
-        f"<b>Anti Channel Pin:</b> <code>{(antichanneldb.count_antipin_chats())}</code> enabled chats\n"
+        f"<b>Anti Channel Pin:</b> <code>{(pinsdb.count_chats('antichannelpin'))}</code> enabled chats\n"
+        f"<b>Clean Linked:</b> <code>{(pinsdb.count_chats('cleanlinked'))}</code> enabled chats\n"
         f"<b>Filters:</b> <code>{(fldb.count_filters_all())}</code> in <code>{(fldb.count_filters_chats())}</code> chats\n"
         f"    <b>Aliases:</b> <code>{(fldb.count_filter_aliases())}</code>\n"
         f"<b>Blacklists:</b> <code>{(bldb.count_blacklists_all())}</code> in <code>{(bldb.count_blackists_chats())}</code> chats\n"

@@ -20,7 +20,10 @@ from time import time
 
 from alita import LOGGER
 from alita.bot_class import Alita
-from alita.database.antichannelpin_db import __load_antichannelpin_chats
+from alita.database.antichannelpin_db import (
+    __load_antichannelpin_chats,
+    __load_cleanlinked_chats,
+)
 from alita.database.antispam_db import __load_antispam_users
 from alita.database.chats_db import __load_chats_cache
 from alita.database.filters_db import __load_filters_cache
@@ -36,6 +39,7 @@ def load_caches():
     start = time()
     LOGGER.info("Starting to load Local Caches!")
     __load_all_langs()
+    __load_cleanlinked_chats()
     __load_chats_cache()
     __load_antispam_users()
     __load_users_cache()
