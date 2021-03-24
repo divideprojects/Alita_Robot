@@ -51,7 +51,7 @@ async def warn(c: Alita, m: Message):
 
     if m.reply_to_message and len(m.reply_to_message.text.split()) >= 2:
         reason = m.text.split(None, 1)[1]
-    elif m.text.split() >= 3:
+    elif len(m.text.split()) >= 3:
         reason = m.text.split(None, 2)[2]
     else:
         reason = None
