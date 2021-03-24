@@ -247,7 +247,7 @@ async def github(_, m: Message):
 )
 async def my_info(c: Alita, m: Message):
     try:
-        user_id = (await extract_user(c, m))[0]
+        user_id, name, user_name = await extract_user(c, m)
     except PeerIdInvalid:
         await m.reply_text(tlang(m, "utils.user_info.peer_id_error"))
         return
@@ -256,12 +256,12 @@ async def my_info(c: Alita, m: Message):
             await m.reply_text(tlang(m, "utils.user_info.id_not_found"))
         return
     try:
-        user = user_db.get_user_info(user_id)
+        user = user_db.get_user_info(int(user_id))
         name = user["name"]
         user_name = user["username"]
         user_id = user["_id"]
     except KeyError:
-        LOGGER.warning(f"Calling api to fetch info adbout user {user_id}")
+        LOGGER.warning(f"Calling api to fetch info about user {user_id}")
         user = await c.get_users(user_id)
         name = (
             escape(user["first_name"] + " " + user["last_name"])

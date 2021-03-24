@@ -42,6 +42,13 @@ async def mute_usr(c: Alita, m: Message):
         await m.reply_text("I can't mute nothing!")
         return
 
+    if m.reply_to_message and len(m.text.split()) >= 2:
+        reason = m.text.split(None, 1)[1]
+    elif not m.reply_to_message and len(m.text.split()) >= 3:
+        reason = m.text.split(None, 2)[2]
+    else:
+        reason = None
+
     user_id, user_first_name, _ = await extract_user(c, m)
 
     if user_id == BOT_ID:
@@ -82,12 +89,13 @@ async def mute_usr(c: Alita, m: Message):
             ),
         )
         LOGGER.info(f"{m.from_user.id} muted {user_id} in {m.chat.id}")
-        await m.reply_text(
-            (tlang(m, "admin.mute.muted_user")).format(
-                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-                muted=(await mention_html(user_first_name, user_id)),
-            ),
+        txt = (tlang(m, "admin.mute.muted_user")).format(
+            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            muted=(await mention_html(user_first_name, user_id)),
         )
+        if reason:
+            txt += f"\n<b>Reason</b>: {reason}"
+        await m.reply_text(txt)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:

@@ -85,9 +85,9 @@ async def add_filter(_, m: Message):
         )
         return
 
-    if not m.reply_to_message and len(args) < 2:
+    if not m.reply_to_message and len(args) <= 2:
         await m.reply_text(
-            "Please provide keyword for this filter to reply with!",
+            "Please provide statement for this filter to reply with!",
         )
         return
 

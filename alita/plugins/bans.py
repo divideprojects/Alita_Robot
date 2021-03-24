@@ -16,8 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from asyncio import sleep
-from re import I
 from time import time
 from traceback import format_exc
 
@@ -49,6 +47,13 @@ async def kick_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.kick.no_target"))
         return
+
+    if m.reply_to_message and len(m.text.split()) >= 2:
+        reason = m.text.split(None, 1)[1]
+    elif not m.reply_to_message and len(m.text.split()) >= 3:
+        reason = m.text.split(None, 2)[2]
+    else:
+        reason = None
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
@@ -83,13 +88,13 @@ async def kick_usr(c: Alita, m: Message):
                 await m.reply_text("Reply to a message to delete it and kick the user!")
                 return
             await m.reply_to_message.delete()
-        await m.reply_text(
-            (tlang(m, "admin.kick.kicked_user")).format(
-                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-                kicked=(await mention_html(user_first_name, user_id)),
-                chat_title=m.chat.title,
-            ),
+        txt = (tlang(m, "admin.kick.kicked_user")).format(
+            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            kicked=(await mention_html(user_first_name, user_id)),
+            chat_title=m.chat.title,
         )
+        txt += f"\n<b>Reason</b>: {reason}" if reason else ""
+        await m.reply_text(txt)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -122,6 +127,13 @@ async def ban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
         return
+
+    if m.reply_to_message and len(m.text.split()) >= 2:
+        reason = m.text.split(None, 1)[1]
+    elif not m.reply_to_message and len(m.text.split()) >= 3:
+        reason = m.text.split(None, 2)[2]
+    else:
+        reason = None
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
@@ -156,13 +168,13 @@ async def ban_usr(c: Alita, m: Message):
                 await m.reply_text("Reply to a message to delete it and ban the user!")
                 return
             await m.reply_to_message.delete()
-        await m.reply_text(
-            (tlang(m, "admin.ban.banned_user")).format(
-                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-                banned=(await mention_html(user_first_name, user_id)),
-                chat_title=m.chat.title,
-            ),
+        txt = (tlang(m, "admin.ban.banned_user")).format(
+            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            banned=(await mention_html(user_first_name, user_id)),
+            chat_title=m.chat.title,
         )
+        txt += f"\n<b>Reason</b>: {reason}" if reason else ""
+        await m.reply_text(txt)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:

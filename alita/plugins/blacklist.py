@@ -144,7 +144,7 @@ async def rm_blacklist(_, m: Message):
 async def set_bl_action(_, m: Message):
     if len(m.text.split()) == 2:
         action = m.text.split(None, 1)[1]
-        valid_actions = ("ban", "kick", "mute", "warn")
+        valid_actions = ("ban", "kick", "mute", "warn", "none")
         if action not in valid_actions:
             await m.reply_text(
                 "Choose a valid blacklist action from "

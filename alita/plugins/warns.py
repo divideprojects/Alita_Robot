@@ -96,7 +96,10 @@ async def warn(c: Alita, m: Message):
             action = "muted"
         await m.reply_text(
             (
-                f"Warnings {num}/{warn_settings['warn_limit']}\n"
+                f"Warnings {num}/{warn_settings['warn_limit']}!"
+                f"\n<b>Reason for last warn</b>:\n{reason}"
+                if reason
+                else "\n"
                 f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
             ),
         )
@@ -122,8 +125,10 @@ async def warn(c: Alita, m: Message):
             await m.reply_text("Reply to a message to delete it and ban the user!")
             return
         await m.reply_to_message.delete()
+    txt = f"{(await mention_html(user_first_name, user_id))} has {num} warnings!"
+    txt += f"\n<b>Reason for last warn</b>:\n{reason}" if reason else ""
     await m.reply_text(
-        f"{(await mention_html(user_first_name, user_id))} has {num} warnings!",
+        txt,
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -323,8 +328,8 @@ async def get_settings(_, m: Message):
 
 @Alita.on_message(filters.command("warnmode", PREFIX_HANDLER) & admin_filter)
 async def warnmode(_, m: Message):
-    if len(m.command) > 1:
-        wm = m.command[1]
+    if len(m.text.split()) > 1:
+        wm = (m.text.split(None, 1)[1]).lower()
         if wm not in ("kick", "ban", "mute"):
             await m.reply_text(
                 (
@@ -343,8 +348,8 @@ async def warnmode(_, m: Message):
 
 @Alita.on_message(filters.command("warnlimit", PREFIX_HANDLER) & admin_filter)
 async def warnlimit(_, m: Message):
-    if len(m.command) > 1:
-        wl = int(m.text.split(None, 1)[1])
+    if len(m.text.split()) > 1:
+        wl = int(m.text.split(None, 1)[1]).lower()
         if not isinstance(wl, int):
             await m.reply_text("Warn Limit can only be a number!")
             return

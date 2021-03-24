@@ -31,6 +31,7 @@ from alita.database.filters_db import Filters
 from alita.database.notes_db import Notes, NotesSettings
 from alita.database.rules_db import Rules
 from alita.database.users_db import Users
+from alita.database.warns_db import Warns, WarnSettings
 from alita.utils.custom_filters import dev_filter
 
 # initialise
@@ -44,6 +45,8 @@ chatdb = Chats()
 fldb = Filters()
 antichanneldb = AntiChannelPin()
 notesettings_db = NotesSettings()
+warns_db = Warns()
+warns_settings_db = WarnSettings()
 
 
 @Alita.on_message(filters.command("stats", DEV_PREFIX_HANDLER) & dev_filter)
@@ -61,7 +64,13 @@ async def get_stats(_, m: Message):
         f"        <b>Warn:</b> <code>{(bldb.count_action_bl_all('warn'))}</code> chats\n"
         f"        <b>Ban</b> <code>{(bldb.count_action_bl_all('ban'))}</code> chats\n"
         f"<b>Rules:</b> Set in <code>{(rulesdb.count_chats())}</code> chats\n"
-        f"    <b>Private Rules:</b> {(rulesdb.count_privrules_chats())} chats\n"
+        f"    <b>Private Rules:</b> <code>{(rulesdb.count_privrules_chats())}</code> chats\n"
+        f"<b>Warns:</b> <code>{(warns_db.count_warned_users())}</code> in <code>{(warns_db.count_all_chats_using_warns())}</code> chats\n"
+        f"    <b>Users Warned:</b> <code>{(warns_db.count_warned_users())}</code>\n"
+        f"    <b>Action Specific:</b>\n"
+        f"        <b>Kick</b>: <code>{(warns_settings_db.count_action_chats('kick'))}</code>\n"
+        f"        <b>Mute</b>: <code>{(warns_settings_db.count_action_chats('mute'))}</code>\n"
+        f"        <b>Ban</b>: <code>{warns_settings_db.count_action_chats('ban')}</code>\n"
         f"<b>Notes:</b> <code>{(notesdb.count_all_notes())}</code> in <code>{(notesdb.count_notes_chats())}</code> chats\n"
         f"    <b>Private Notes:</b> <code>{(notesettings_db.count_chats())}</code> chats\n"
         f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
