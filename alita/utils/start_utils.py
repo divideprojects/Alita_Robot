@@ -26,7 +26,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import HELP_COMMANDS, LOGGER
+from alita import HELP_COMMANDS, LOGGER, SUPPORT_CHANNEL, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.database.chats_db import Chats
 from alita.database.notes_db import Notes
@@ -91,12 +91,18 @@ async def gen_start_kb(q):
         [
             [
                 InlineKeyboardButton(
-                    f"📚 {(tlang(q, 'start.commands_btn'))}",
-                    callback_data="commands",
+                    f"➕ {(tlang(q, 'start.add_chat_btn'))}",
+                    url=f"https://t.me/{BOT_USERNAME}?startgroup=new",
                 ),
                 InlineKeyboardButton(
-                    f"ℹ️ {(tlang(q, 'start.infos_btn'))}",
-                    callback_data="infos",
+                    f"{(tlang(q, 'start.support_group'))} 👥",
+                    url=f"https://t.me/{SUPPORT_GROUP}",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    f"📚 {(tlang(q, 'start.commands_btn'))}",
+                    callback_data="commands",
                 ),
             ],
             [
@@ -104,12 +110,6 @@ async def gen_start_kb(q):
                     f"🌐 {(tlang(q, 'start.language_btn'))}",
                     callback_data="chlang",
                 ),
-                InlineKeyboardButton(
-                    f"➕ {(tlang(q, 'start.add_chat_btn'))}",
-                    url=f"https://t.me/{BOT_USERNAME}?startgroup=new",
-                ),
-            ],
-            [
                 InlineKeyboardButton(
                     f"🗃️ {(tlang(q, 'start.source_code'))}",
                     url="https://github.com/Divkix/Alita_Robot",

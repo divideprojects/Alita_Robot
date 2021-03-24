@@ -553,7 +553,7 @@ strings:
     set_rules: "Successfully set rules for this group."
   start:
     add_chat_btn: "Add to a chat"
-    commands_btn: Commands
+    commands_btn: Commands & Help
     group: "I'm alive :3"
     info_page: |-
       • @Alita_Robot
@@ -562,10 +562,15 @@ strings:
 
       <b>Developers:</b> [Divkix](https://github.com/Divkix)
       <b>Owner:</b> [{Owner}](tg://user?id={ID})
-    infos_btn: Info
+    support_group: Support
     language_btn: Language
     pm_for_help: "Contact me in PM to get the list of possible commands."
-    private: "Hello! I'm Alita_Robot. To discover more about my functions, click on the buttons below."
+    private: |-
+      Hey there! My name is Alita ✨.
+      I'm here to help you manage your groups!
+      Hit /help to find out more about how to use me to my full potential.
+
+      Join my [News Channel](http://t.me/AlitaRobotUpdates) to get information on all the latest updates.
     public_help: "Press the button below to get help for <i>{help_option}</i>"
     source_code: "Source Code"
   utils:

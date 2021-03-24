@@ -106,7 +106,7 @@ async def get_formatting_info(_, q: CallbackQuery):
 @Alita.on_callback_query(filters.regex("^back."))
 async def send_mod_help(_, q: CallbackQuery):
     await q.message.edit_text(
-        (tlang(q, "start.private")),
+        (tlang(q, "plugins.formatting.help")),
         reply_markup=(await gen_formatting_kb(q.message)),
     )
     await q.answer()

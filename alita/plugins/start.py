@@ -73,6 +73,7 @@ async def start(c: Alita, m: Message):
                 parse_mode="markdown",
                 reply_markup=InlineKeyboardMarkup(help_kb),
                 quote=True,
+                disable_web_page_preview=True,
             )
             return
         try:
@@ -80,6 +81,7 @@ async def start(c: Alita, m: Message):
                 (tlang(m, "start.private")),
                 reply_markup=(await gen_start_kb(m)),
                 quote=True,
+                disable_web_page_preview=True,
             )
         except UserIsBlocked:
             LOGGER.warning(f"Bot blocked by {m.from_user.id}")
@@ -222,38 +224,6 @@ async def get_module_info(_, q: CallbackQuery):
         help_msg,
         parse_mode="markdown",
         reply_markup=InlineKeyboardMarkup(help_kb),
-    )
-    await q.answer()
-    return
-
-
-@Alita.on_callback_query(filters.regex("^infos$"))
-async def infos(c: Alita, q: CallbackQuery):
-
-    _owner = await c.get_users(OWNER_ID)
-    res = (tlang(q, "start.info_page")).format(
-        Owner=(
-            f"{_owner.first_name} + {_owner.last_name}"
-            if _owner.last_name
-            else _owner.first_name
-        ),
-        ID=OWNER_ID,
-        version=VERSION,
-    )
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    f"« {(tlang(q, 'general.back_btn'))}",
-                    callback_data="start_back",
-                ),
-            ],
-        ],
-    )
-    await q.message.edit_text(
-        res,
-        reply_markup=keyboard,
-        disable_web_page_preview=True,
     )
     await q.answer()
     return
