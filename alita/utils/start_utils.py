@@ -145,6 +145,10 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
     else:
         return
 
+    if not getnotes:
+        await m.reply_text("Note does not exist", quote=True)
+        return
+
     msgtype = getnotes["msgtype"]
     if not msgtype:
         await m.reply_text(
