@@ -159,7 +159,7 @@ async def ban_usr(c: Alita, m: Message):
         await m.reply_text(
             (tlang(m, "admin.ban.banned_user")).format(
                 admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-                kicked=(await mention_html(user_first_name, user_id)),
+                banned=(await mention_html(user_first_name, user_id)),
                 chat_title=m.chat.title,
             ),
         )
