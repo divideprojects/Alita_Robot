@@ -26,7 +26,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import HELP_COMMANDS, LOGGER, SUPPORT_CHANNEL, SUPPORT_GROUP
+from alita import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.database.chats_db import Chats
 from alita.database.notes_db import Notes
