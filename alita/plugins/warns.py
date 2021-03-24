@@ -79,7 +79,7 @@ async def warn(c: Alita, m: Message):
     warn_settings = warn_settings_db.get_warnings_settings(m.chat.id)
     if num >= warn_settings["warn_limit"]:
         if warn_settings["warn_mode"] == "kick":
-            await m.chat.kick_member(user_id, until_date=int(time() + 15))
+            await m.chat.kick_member(user_id, until_date=int(time() + 45))
             action = "kicked"
         elif warn_settings["warn_mode"] == "ban":
             await m.chat.kick_member(user_id)
@@ -288,7 +288,7 @@ async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
         )
     if action == "kick":
         try:
-            await c.kick_chat_member(chat_id, user_id, until_date=int(time() + 15))
+            await c.kick_chat_member(chat_id, user_id, until_date=int(time() + 45))
             await q.message.edit_text(
                 f"Kicked by {(await mention_html(q.from_user.first_name, q.from_user.id))}",
             )
