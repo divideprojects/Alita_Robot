@@ -49,6 +49,13 @@ warn_settings_db = WarnSettings()
 async def warn(c: Alita, m: Message):
     from alita import BOT_ID, BOT_USERNAME
 
+    if m.reply_to_message and len(m.reply_to_message.text.split()) >= 2:
+        reason = m.text.split(None, 1)[1]
+    elif m.text.split() >= 3:
+        reason = m.text.split(None, 2)[2]
+    else:
+        reason = None
+
     if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
@@ -75,7 +82,7 @@ async def warn(c: Alita, m: Message):
         await m.reply_text("This user is admin in this chat, I can't warn them!")
         return
 
-    _, num = warn_db.warn_user(m.chat.id, user_id)
+    _, num = warn_db.warn_user(m.chat.id, user_id, reason)
     warn_settings = warn_settings_db.get_warnings_settings(m.chat.id)
     if num >= warn_settings["warn_limit"]:
         if warn_settings["warn_mode"] == "kick":
