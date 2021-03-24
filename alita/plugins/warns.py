@@ -92,19 +92,23 @@ async def warn(c: Alita, m: Message):
     if rules:
         kb = [
             InlineKeyboardButton(
-                "Remove Warn!",
-                callback_data=f"remove_warn.{user_id}",
+                "Remove Warn ❌",
+                callback_data=f"warn.remove.{user_id}",
             ),
             InlineKeyboardButton(
-                "Rules",
+                "Rules 📋",
                 url=f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
             ),
         ]
     else:
         kb = [
             InlineKeyboardButton(
-                "Remove Warn!",
-                callback_data=f"remove_warn.{user_id}",
+                "Remove Warn ❌",
+                callback_data=f"warn.remove.{user_id}",
+            ),
+            InlineKeyboardButton(
+                "Kick ⚠️",
+                callback_data=f"warn.kick.{user_id}",
             ),
         ]
 
@@ -227,7 +231,7 @@ async def remove_warn(c: Alita, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^remove_warn."))
+@Alita.on_callback_query(filters.regex("^warn."))
 async def remove_last_warn_btn(_, q: CallbackQuery):
 
     try:
@@ -242,20 +246,24 @@ async def remove_last_warn_btn(_, q: CallbackQuery):
         return
 
     args = q.data.split(".")
-    user_id = int(args[1])
+    action = args[1]
+    user_id = int(args[2])
     chat_id = int(q.message.chat.id)
 
-    _, num_warns = db.remove_warn(chat_id, user_id)
+    if action == "remove":
 
-    if not num_warns:
-        num_warns = 0
-
-    await q.message.edit_text(
-        (
-            f"Warn removed by {(await mention_html(q.from_user.first_name,q.from_user.id))}\n"
-            f"<b>Current warnings:</b> {num_warns}"
-        ),
-    )
+        _, num_warns = db.remove_warn(chat_id, user_id)
+        if not num_warns:
+            num_warns = 0
+        await q.message.edit_text(
+            (
+                f"Warn removed by {(await mention_html(q.from_user.first_name,q.from_user.id))}\n"
+                f"<b>Current warnings:</b> {num_warns}"
+            ),
+        )
+    elif action == "kick":
+        await q.message.chat.kick_member(user_id, (time()+5))
+        await q.message.edit_text(f"Kicked by {(await mention_html(q.from_user.first_name,q.from_user.id))}")
 
     await q.answer()
     return
