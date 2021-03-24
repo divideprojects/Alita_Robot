@@ -239,6 +239,27 @@ strings:
         × /github <username>: Search for the user using github api!
         × /lyrics <song>: Get the lyrics of the song you specify!
         × /weebify <text> or a reply to message: To weebify the text.
+    warnings:
+      main: "Warnings"
+      help: |-
+        Keep your members in check with warnings; stop them getting out of control!
+
+        If you're looking for automated warnings, go read about the blacklist module.
+
+        Admin commands:
+        - /warn <reason>: Warn a user.
+        - /dwarn <reason>: Warn a user by reply, and delete their message.
+        - /swarn <reason>: Silently warn a user, and delete your message.
+        - /warns: See a user's warnings.
+        - /rmwarn: Remove a user's latest warning.
+        - /resetwarn: Reset all of a user's warnings to 0.
+        - /warnings: Get the chat's warning settings.
+        - /setwarnmode `<ban/kick/mute>``: Set the chat's warn mode.
+        - /setwarnlimit `<number>``: Set the number of warnings before users are punished.
+
+        Examples:
+        - Warn a user.
+        -> `/warn @user`
   admin:
     adminlist:
       adminstr: "Admins in <b>{chat_title}</b>:"

@@ -118,10 +118,10 @@ async def add_filter(_, m: Message):
             return
 
     elif m.reply_to_message and len(args) >= 2:
-        if m.reply_to_m.text:
-            text_to_parsing = m.reply_to_m.text
-        elif m.reply_to_m.caption:
-            text_to_parsing = m.reply_to_m.caption
+        if m.reply_to_message.text:
+            text_to_parsing = m.reply_to_message.text
+        elif m.reply_to_message.caption:
+            text_to_parsing = m.reply_to_message.caption
         else:
             text_to_parsing = ""
         teks, _ = await parse_button(text_to_parsing)
@@ -134,15 +134,15 @@ async def add_filter(_, m: Message):
 
     elif m.reply_to_message:
 
-        if m.reply_to_m.text:
-            text_to_parsing = m.reply_to_m.text
-        elif m.reply_to_m.caption:
-            text_to_parsing = m.reply_to_m.caption
+        if m.reply_to_message.text:
+            text_to_parsing = m.reply_to_message.text
+        elif m.reply_to_message.caption:
+            text_to_parsing = m.reply_to_message.caption
         else:
             text_to_parsing = ""
 
         teks, _ = await parse_button(text_to_parsing)
-        if (m.reply_to_m.text or m.reply_to_m.caption) and not teks:
+        if (m.reply_to_message.text or m.reply_to_message.caption) and not teks:
             await m.reply_text(
                 "There is no filter message - You can't JUST have buttons, you need a message to go with it!",
             )

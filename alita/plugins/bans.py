@@ -74,22 +74,22 @@ async def kick_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
+        await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
         if m.text.split()[0] == "/skick":
             await m.delete()
+            return
         elif m.text.split()[0] == "/dkick":
             if not m.reply_to_message:
                 await m.reply_text("Reply to a message to delete it and kick the user!")
                 return
             await m.reply_to_message.delete()
-        elif m.text.split()[0] == "/kick":
-            await m.reply_text(
-                (tlang(m, "admin.kick.kicked_user")).format(
-                    admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-                    kicked=(await mention_html(user_first_name, user_id)),
-                    chat_title=m.chat.title,
-                ),
-            )
-        await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
+        await m.reply_text(
+            (tlang(m, "admin.kick.kicked_user")).format(
+                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                kicked=(await mention_html(user_first_name, user_id)),
+                chat_title=m.chat.title,
+            ),
+        )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -147,22 +147,22 @@ async def ban_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} banned {user_id} in {m.chat.id}")
+        await c.kick_chat_member(m.chat.id, user_id)
         if m.text.split()[0] == "/sban":
             await m.delete()
+            return
         elif m.text.split()[0] == "/dban":
             if not m.reply_to_message:
                 await m.reply_text("Reply to a message to delete it and ban the user!")
                 return
             await m.reply_to_message.delete()
-        elif m.text.split()[0] == "/ban":
-            await m.reply_text(
-                (tlang(m, "admin.ban.banned_user")).format(
-                    admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-                    kicked=(await mention_html(user_first_name, user_id)),
-                    chat_title=m.chat.title,
-                ),
-            )
-        await c.kick_chat_member(m.chat.id, user_id)
+        await m.reply_text(
+            (tlang(m, "admin.ban.banned_user")).format(
+                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                kicked=(await mention_html(user_first_name, user_id)),
+                chat_title=m.chat.title,
+            ),
+        )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:

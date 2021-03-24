@@ -43,7 +43,9 @@ rules_db = Rules()
 warn_settings_db = WarnSettings()
 
 
-@Alita.on_message(filters.command("warn", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(
+    filters.command(["warn", "swarn", "dwarn"], PREFIX_HANDLER) & restrict_filter,
+)
 async def warn(c: Alita, m: Message):
     from alita import BOT_ID, BOT_USERNAME
 
@@ -105,6 +107,14 @@ async def warn(c: Alita, m: Message):
             callback_data=f"warn.kick.{user_id}",
         )
 
+    if m.text.split()[0] == "/swarn":
+        await m.delete()
+        return
+    elif m.text.split()[0] == "/dwarn":
+        if not m.reply_to_message:
+            await m.reply_text("Reply to a message to delete it and ban the user!")
+            return
+        await m.reply_to_message.delete()
     await m.reply_text(
         f"{(await mention_html(user_first_name, user_id))} has {num} warnings!",
         reply_markup=InlineKeyboardMarkup(
@@ -297,8 +307,8 @@ async def get_settings(_, m: Message):
     await m.reply_text(
         (
             "This group has these following settings:\n"
-            f"<b>Warn Limit:</b> {settings['warn_limit']}\n"
-            f"<b>Warn Mode:</b> {settings['warn_mode']}"
+            f"<b>Warn Limit:</b> <code>{settings['warn_limit']}</code>\n"
+            f"<b>Warn Mode:</b> <code>{settings['warn_mode']}</code>"
         ),
     )
     return
@@ -327,18 +337,18 @@ async def warnmode(_, m: Message):
 @Alita.on_message(filters.command("warnlimit", PREFIX_HANDLER) & admin_filter)
 async def warnlimit(_, m: Message):
     if len(m.command) > 1:
-        wl = int(m.command[1])
+        wl = int(m.text.split(None, 1)[1])
         if not isinstance(wl, int):
             await m.reply_text("Warn Limit can only be a number!")
             return
         warnlimit = warn_settings_db.set_warnlimit(m.chat.id, wl)
-        await m.reply_text(f" Warn Limit has been set to: {warnlimit}")
+        await m.reply_text(f"Warn Limit has been set to: {warnlimit}")
         return
     warnlimit = warn_settings_db.get_warnlimit(m.chat.id)
     await m.reply_text(f"This chats current Warn Limit is: {warnlimit}")
     return
 
 
-# __PLUGIN__ = "plugins.warnings.main"
-# __help__ = "plugins.warnings.help"
-# __alt_name__ = ["warn", "warning"]
+__PLUGIN__ = "plugins.warnings.main"
+__help__ = "plugins.warnings.help"
+__alt_name__ = ["warn", "warning"]
