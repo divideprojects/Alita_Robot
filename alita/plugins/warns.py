@@ -19,6 +19,7 @@
 from time import time
 
 from pyrogram import filters
+from pyrogram.errors import RPCError
 from pyrogram.types import (
     CallbackQuery,
     ChatPermissions,
@@ -76,7 +77,7 @@ async def warn(c: Alita, m: Message):
     warn_settings = warn_settings_db.get_warnings_settings(m.chat.id)
     if num >= warn_settings["warn_limit"]:
         if warn_settings["warn_mode"] == "kick":
-            await m.chat.kick_member(user_id, until_date=(time() + 15))
+            await m.chat.kick_member(user_id, until_date=int(time() + 15))
             action = "kicked"
         elif warn_settings["warn_mode"] == "ban":
             await m.chat.kick_member(user_id)
@@ -251,7 +252,7 @@ async def remove_warn(c: Alita, m: Message):
 
 
 @Alita.on_callback_query(filters.regex("^warn."))
-async def remove_last_warn_btn(_, q: CallbackQuery):
+async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
 
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[q.message.chat.id]}
@@ -275,11 +276,16 @@ async def remove_last_warn_btn(_, q: CallbackQuery):
                 f"<b>Current Warnings:</b> {num_warns}"
             ),
         )
-    elif action == "kick":
-        await q.message.chat.kick_member(user_id, (time() + 5))
-        await q.message.edit_text(
-            f"Kicked by {(await mention_html(q.from_user.first_name, q.from_user.id))}",
-        )
+    if action == "kick":
+        try:
+            await c.kick_chat_member(chat_id, user_id, until_date=int(time() + 15))
+            await q.message.edit_text(
+                f"Kicked by {(await mention_html(q.from_user.first_name, q.from_user.id))}",
+            )
+        except RPCError as err:
+            await q.message.edit_text(
+                f"🛑 Failed to Kick\n<b>Error:</b>\n</code>{err}</code>",
+            )
 
     await q.answer()
     return

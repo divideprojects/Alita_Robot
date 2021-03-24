@@ -202,14 +202,14 @@ async def report_watcher(c: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^report_"))
 async def report_buttons(c: Alita, q: CallbackQuery):
-    splitter = str(q.data).replace("report_", "").split("=")
+    splitter = (str(q.data).replace("report_", "")).split("=")
     chat_id = int(splitter[0])
     action = str(splitter[1])
     user_id = int(splitter[2])
     message_id = int(splitter[3])
     if action == "kick":
         try:
-            await c.kick_chat_member(chat_id, user_id, until_date=(time() + 45))
+            await c.kick_chat_member(chat_id, user_id, until_date=int(time() + 15))
             await q.answer("✅ Succesfully kicked")
             return
         except RPCError as err:
