@@ -60,13 +60,15 @@ async def save_note(_, m: Message):
         )
         return
 
-    if data_type == Types.TEXT or text != "":
-        teks, _ = await parse_button(text)
-        if not teks:
-            await m.reply_text(
-                f"<code>{m.text}</code>\n\nError: There is no text in here!",
-            )
-            return
+    if (
+        (not m.reply_to_message)
+        and (data_type == Types.TEXT)
+        and (not len(m.command) > 2)
+    ):
+        await m.reply_text(
+            f"<code>{m.text}</code>\n\nError: There is no text in here!",
+        )
+        return
 
     db.save_note(m.chat.id, note_name, text, data_type, content)
     LOGGER.info(f"{m.from_user.id} saved note ({note_name}) in {m.chat.id}")

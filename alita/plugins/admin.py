@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from re import I
 from traceback import format_exc
 
 from pyrogram import filters
@@ -127,6 +128,8 @@ async def reload_admins(_, m: Message):
     filters.command("promote", PREFIX_HANDLER) & promote_filter,
 )
 async def promote_usr(c: Alita, m: Message):
+    from alita import BOT_ID
+
     global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -134,6 +137,10 @@ async def promote_usr(c: Alita, m: Message):
         return
 
     user_id, user_first_name, user_name = await extract_user(c, m)
+
+    if user_id == BOT_ID:
+        await m.reply_text("Huh, how can I even promote myself?")
+        return
 
     # If user is alreay admin
     try:
@@ -205,6 +212,8 @@ async def promote_usr(c: Alita, m: Message):
     filters.command("demote", PREFIX_HANDLER) & promote_filter,
 )
 async def demote_usr(c: Alita, m: Message):
+    from alita import BOT_ID
+
     global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -212,6 +221,10 @@ async def demote_usr(c: Alita, m: Message):
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
+
+    if user_id == BOT_ID:
+        await m.reply_text("Get an admin to demote me!")
+        return
 
     # If user not alreay admin
     try:

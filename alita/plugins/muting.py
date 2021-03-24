@@ -36,12 +36,17 @@ from alita.utils.parser import mention_html
 
 @Alita.on_message(filters.command("mute", PREFIX_HANDLER) & restrict_filter)
 async def mute_usr(c: Alita, m: Message):
+    from alita import BOT_ID
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text("I can't mute nothing!")
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
+
+    if user_id == BOT_ID:
+        await m.reply_text("Huh, why would I mute myself?")
+        return
 
     if user_id in SUPPORT_STAFF:
         LOGGER.info(
@@ -103,12 +108,17 @@ async def mute_usr(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("unmute", PREFIX_HANDLER) & restrict_filter)
 async def unmute_usr(c: Alita, m: Message):
+    from alita import BOT_ID
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text("I can't unmute nothing!")
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
+
+    if user_id == BOT_ID:
+        await m.reply_text("Huh, why would I unmute myself if you are using me?")
+        return
 
     try:
         await m.chat.restrict_member(user_id, m.chat.permissions)

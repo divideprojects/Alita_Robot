@@ -37,20 +37,24 @@ from alita.utils.custom_filters import admin_filter, restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
-db = Warns()
+warn_db = Warns()
 rules_db = Rules()
-warn_sdb = WarnSettings()
+warn_settings_db = WarnSettings()
 
 
 @Alita.on_message(filters.command("warn", PREFIX_HANDLER) & restrict_filter)
 async def warn(c: Alita, m: Message):
-    from alita import BOT_USERNAME
+    from alita import BOT_ID, BOT_USERNAME
 
     if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
+
+    if user_id == BOT_ID:
+        await m.reply_text("Huh, why would I warn myself?")
+        return
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(tlang(m, "admin.support_cannot_restrict"))
@@ -68,8 +72,8 @@ async def warn(c: Alita, m: Message):
         await m.reply_text("This user is admin in this chat, I can't warn them!")
         return
 
-    _, num = db.warn_user(m.chat.id, user_id)
-    warn_settings = warn_sdb.get_warnings_settings(m.chat.id)
+    _, num = warn_db.warn_user(m.chat.id, user_id)
+    warn_settings = warn_settings_db.get_warnings_settings(m.chat.id)
     if num >= warn_settings["warn_limit"]:
         if warn_settings["warn_mode"] == "kick":
             await m.chat.kick_member(user_id, until_date=(time() + 15))
@@ -83,50 +87,53 @@ async def warn(c: Alita, m: Message):
         await m.reply_text(
             (
                 f"Warnings {num}/{warn_settings['warn_limit']}\n"
-                f"{(await mention_html(user_first_name, user_id))} has been <b>{action}</b>!"
+                f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
             ),
         )
         return
 
     rules = rules_db.get_rules(m.chat.id)
     if rules:
-        kb = [
-            InlineKeyboardButton(
-                "Remove Warn ❌",
-                callback_data=f"warn.remove.{user_id}",
-            ),
-            InlineKeyboardButton(
-                "Rules 📋",
-                url=f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
-            ),
-        ]
+        kb = InlineKeyboardButton(
+            "Rules 📋",
+            url=f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
+        )
     else:
-        kb = [
-            InlineKeyboardButton(
-                "Remove Warn ❌",
-                callback_data=f"warn.remove.{user_id}",
-            ),
-            InlineKeyboardButton(
-                "Kick ⚠️",
-                callback_data=f"warn.kick.{user_id}",
-            ),
-        ]
+        kb = InlineKeyboardButton(
+            "Kick ⚠️",
+            callback_data=f"warn.kick.{user_id}",
+        )
 
     await m.reply_text(
         f"{(await mention_html(user_first_name, user_id))} has {num} warnings!",
-        reply_markup=InlineKeyboardMarkup([kb]),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Remove Warn ❌",
+                        callback_data=f"warn.remove.{user_id}",
+                    ),
+                ]
+                + [kb],
+            ],
+        ),
     )
     return
 
 
 @Alita.on_message(filters.command("resetwarns", PREFIX_HANDLER) & restrict_filter)
 async def reset_warn(c: Alita, m: Message):
+    from alita import BOT_ID
 
     if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
+
+    if user_id == BOT_ID:
+        await m.reply_text("Huh, why would I warn myself?")
+        return
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text(
@@ -146,7 +153,7 @@ async def reset_warn(c: Alita, m: Message):
         await m.reply_text("This user is admin in this chat, I can't warn them!")
         return
 
-    db.reset_warns(m.chat.id, user_id)
+    warn_db.reset_warns(m.chat.id, user_id)
     await m.reply_text(
         f"Warnings have been reset for {(await mention_html(user_first_name,user_id))}",
     )
@@ -155,12 +162,17 @@ async def reset_warn(c: Alita, m: Message):
 
 @Alita.on_message(filters.command("warns", PREFIX_HANDLER) & restrict_filter)
 async def list_warns(c: Alita, m: Message):
+    from alita import BOT_ID
 
     if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
+
+    if user_id == BOT_ID:
+        await m.reply_text("Huh, why would I warn myself?")
+        return
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user has no warns!")
@@ -180,15 +192,18 @@ async def list_warns(c: Alita, m: Message):
         )
         return
 
-    warns, num_warns = db.get_warns(m.chat.id, user_id)
+    warns, num_warns = warn_db.get_warns(m.chat.id, user_id)
     msg = f"{(await mention_html(user_first_name,user_id))} has <b>{num_warns}</b> warns!\n\n<b>Reasons:</b>\n"
     msg += "\n".join([f"- {i}" for i in warns])
     await m.reply_text(msg)
     return
 
 
-@Alita.on_message(filters.command(["rmwarn, "removewarn"], PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(
+    filters.command(["rmwarn", "removewarn"], PREFIX_HANDLER) & restrict_filter,
+)
 async def remove_warn(c: Alita, m: Message):
+    from alita import BOT_ID
 
     if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text(
@@ -197,6 +212,10 @@ async def remove_warn(c: Alita, m: Message):
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
+
+    if user_id == BOT_ID:
+        await m.reply_text("Huh, why would I warn myself?")
+        return
 
     if user_id in SUPPORT_STAFF:
         await m.reply_text("This user has no warns!")
@@ -216,12 +235,12 @@ async def remove_warn(c: Alita, m: Message):
         )
         return
 
-    warns, _ = db.get_warns(m.chat.id, user_id)
+    warns, _ = warn_db.get_warns(m.chat.id, user_id)
     if not warns:
         await m.reply_text("This user has no warnings!")
         return
 
-    _, num_warns = db.remove_warn(m.chat.id, user_id)
+    _, num_warns = warn_db.remove_warn(m.chat.id, user_id)
     await m.reply_text(
         (
             f"{(await mention_html(user_first_name,user_id))} now has <b>{num_warns}</b> warnings!\n"
@@ -237,7 +256,7 @@ async def remove_last_warn_btn(_, q: CallbackQuery):
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[q.message.chat.id]}
     except KeyError:
-        admins_group = {i[0] for i in (await admin_cache_reload(m, "warn_btn"))}
+        admins_group = {i[0] for i in (await admin_cache_reload(q, "warn_btn"))}
 
     if not q.from_user.id in admins_group:
         await q.answer("You are not allowed to use this!", show_alert=True)
@@ -249,19 +268,18 @@ async def remove_last_warn_btn(_, q: CallbackQuery):
     chat_id = int(q.message.chat.id)
 
     if action == "remove":
-
-        _, num_warns = db.remove_warn(chat_id, user_id)
-        if not num_warns:
-            num_warns = 0
+        _, num_warns = warn_db.remove_warn(chat_id, user_id)
         await q.message.edit_text(
             (
-                f"Warn removed by {(await mention_html(q.from_user.first_name,q.from_user.id))}\n"
-                f"<b>Current warnings:</b> {num_warns}"
+                f"Warn removed by {(await mention_html(q.from_user.first_name, q.from_user.id))}\n"
+                f"<b>Current Warnings:</b> {num_warns}"
             ),
         )
     elif action == "kick":
-        await q.message.chat.kick_member(user_id, (time()+5))
-        await q.message.edit_text(f"Kicked by {(await mention_html(q.from_user.first_name,q.from_user.id))}")
+        await q.message.chat.kick_member(user_id, (time() + 5))
+        await q.message.edit_text(
+            f"Kicked by {(await mention_html(q.from_user.first_name, q.from_user.id))}",
+        )
 
     await q.answer()
     return
@@ -269,7 +287,7 @@ async def remove_last_warn_btn(_, q: CallbackQuery):
 
 @Alita.on_message(filters.command("warnings", PREFIX_HANDLER) & admin_filter)
 async def get_settings(_, m: Message):
-    settings = warn_sdb.get_warnings_settings(m.chat.id)
+    settings = warn_settings_db.get_warnings_settings(m.chat.id)
     await m.reply_text(
         (
             "This group has these following settings:\n"
@@ -292,10 +310,10 @@ async def warnmode(_, m: Message):
                 ),
             )
             return
-        warnmode = warn_sdb.set_warnmode(m.chat.id, wm)
+        warnmode = warn_settings_db.set_warnmode(m.chat.id, wm)
         await m.reply_text(f"Warn Mode has been set to: {warnmode}")
         return
-    warnmode = warn_sdb.get_warnmode(m.chat.id)
+    warnmode = warn_settings_db.get_warnmode(m.chat.id)
     await m.reply_text(f"This chats current Warn Mode is: {warnmode}")
     return
 
@@ -303,14 +321,14 @@ async def warnmode(_, m: Message):
 @Alita.on_message(filters.command("warnlimit", PREFIX_HANDLER) & admin_filter)
 async def warnlimit(_, m: Message):
     if len(m.command) > 1:
-        wl = m.command[1]
+        wl = int(m.command[1])
         if not isinstance(wl, int):
             await m.reply_text("Warn Limit can only be a number!")
             return
-        warnlimit = warn_sdb.set_warnlimit(m.chat.id, wl)
+        warnlimit = warn_settings_db.set_warnlimit(m.chat.id, wl)
         await m.reply_text(f" Warn Limit has been set to: {warnlimit}")
         return
-    warnlimit = warn_sdb.get_warnlimit(m.chat.id)
+    warnlimit = warn_settings_db.get_warnlimit(m.chat.id)
     await m.reply_text(f"This chats current Warn Limit is: {warnlimit}")
     return
 

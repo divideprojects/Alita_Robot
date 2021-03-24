@@ -65,7 +65,7 @@ class Warns:
                 )
                 return curr_warns, num_warns
 
-            return False, False
+            return [], 0
 
     def reset_warns(self, chat_id: int, user_id: int):
         with INSERTION_LOCK:

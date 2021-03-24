@@ -57,7 +57,7 @@ async def admin_cache_reload(m, status=None):
                 z.is_anonymous,
             )
             async for z in m.chat.iter_members(filter="administrators")
-            if not (z.user.is_bot or z.user.is_deleted)
+            if not z.user.is_deleted
         ]
         ADMIN_CACHE[m.chat.id] = admin_list
         LOGGER.info(
