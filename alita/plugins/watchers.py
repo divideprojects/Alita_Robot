@@ -24,13 +24,14 @@ from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
 from pyrogram.types import ChatPermissions, Message
 
-from alita import LOGGER, MESSAGE_DUMP
+from alita import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.antichannelpin_db import AntiChannelPin
 from alita.database.antispam_db import ANTISPAM_BANNED, GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.group_blacklist import BLACKLIST_CHATS
+from alita.database.warns_db import Warns, WarnSettings
 from alita.tr_engine import tlang
 from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
 from alita.utils.parser import mention_html
@@ -41,6 +42,8 @@ bl_db = Blacklist()
 app_db = Approve()
 gban_db = GBan()
 antichannel_db = AntiChannelPin()
+warns_db = Warns()
+warns_settings_db = WarnSettings()
 
 
 @Alita.on_message(filters.linked_channel)
@@ -50,7 +53,7 @@ async def antichanpin(c: Alita, m: Message):
         antipin_status = antichannel_db.check_antipin(m.chat.id)
         if antipin_status:
             await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
-            LOGGER.info(f"msgid-{m.message_id} unpinned in {m.chat.id}")
+            LOGGER.info(f"AntiChannelPin: msgid-{m.message_id} unpinned in {m.chat.id}")
     except Exception as ef:
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -64,8 +67,7 @@ async def bl_watcher(_, m: Message):
     if not m.from_user:
         return
 
-    # TODO - Add warn option when Warn db is added!!
-    async def perform_action_blacklist(m: Message, action: str):
+    async def perform_action_blacklist(m: Message, action: str, trigger: str):
         if action == "kick":
             (await m.chat.kick_member(m.from_user.id, int(time() + 45)))
             await m.reply_text(
@@ -120,8 +122,40 @@ async def bl_watcher(_, m: Message):
                     ),
                 ),
             )
-        elif action == "none":
-            return
+        elif action == "warn":
+            warn_settings = warns_settings_db.get_warnings_settings(m.chat.id)
+            warn_reason = f"Using blacklisted word <code>{trigger}</code>"
+            _, num = warns_db.warn_user(m.chat.id, m.from_user.id, warn_reason)
+            if num >= warn_settings["warn_limit"]:
+                if warn_settings["warn_mode"] == "kick":
+                    await m.chat.kick_member(m.from_user.id, until_date=(time() + 15))
+                    action = "kicked"
+                elif warn_settings["warn_mode"] == "ban":
+                    await m.chat.kick_member(m.from_user.id)
+                    action = "banned"
+                elif warn_settings["warn_mode"] == "mute":
+                    await m.chat.restrict_member(m.from_user.id, ChatPermissions())
+                    action = "muted"
+                await m.reply_text(
+                    (
+                        f"Warnings {num}/{warn_settings['warn_limit']}\n"
+                        f"{(await mention_html(m.from_user.first_name, m.from_user.id))} has been <b>{action}!</b>"
+                    ),
+                )
+                return
+            await m.reply_text(
+                (
+                    f"{(await mention_html(m.from_user.first_name, m.from_user.id))} warned {num}/{warn_settings['warn_limit']}\n"
+                    f"Last warn was:\n{warn_reason}"
+                ),
+            )
+        else:
+            # for none action
+            pass
+        return
+
+    if m.from_user.id in SUPPORT_STAFF:
+        # Don't work on Support Staff!
         return
 
     # If no blacklists, then return
@@ -152,7 +186,7 @@ async def bl_watcher(_, m: Message):
             continue
         if match:
             try:
-                await perform_action_blacklist(m, action)
+                await perform_action_blacklist(m, action, trigger)
                 LOGGER.info(
                     f"{m.from_user.id} {action}ed for using blacklisted word {trigger} in {m.chat.id}",
                 )

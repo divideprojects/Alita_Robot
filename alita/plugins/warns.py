@@ -160,7 +160,7 @@ async def reset_warn(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("warns", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(filters.command("warns", PREFIX_HANDLER) & filters.group)
 async def list_warns(c: Alita, m: Message):
     from alita import BOT_ID
 
@@ -291,8 +291,8 @@ async def get_settings(_, m: Message):
     await m.reply_text(
         (
             "This group has these following settings:\n"
-            f"Warn Limit: {settings['warn_limit']}\n"
-            f"Warn Mode: {settings['warn_mode']}"
+            f"<b>Warn Limit:</b> {settings['warn_limit']}\n"
+            f"<b>Warn Mode:</b> {settings['warn_mode']}"
         ),
     )
     return
