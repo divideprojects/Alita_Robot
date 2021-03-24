@@ -20,7 +20,7 @@ from threading import RLock
 from time import perf_counter, time
 
 from cachetools import TTLCache
-from pyrogram.types import Message
+from pyrogram.types import CallbackQuery
 
 from alita import LOGGER
 
@@ -32,9 +32,12 @@ ADMIN_CACHE = TTLCache(maxsize=512, ttl=(60 * 30), timer=perf_counter)
 TEMP_ADMIN_CACHE_BLOCK = TTLCache(maxsize=512, ttl=(60 * 10), timer=perf_counter)
 
 
-async def admin_cache_reload(m: Message, status=None):
+async def admin_cache_reload(m, status=None):
     start = time()
     with THREAD_LOCK:
+
+        if isinstance(m, CallbackQuery):
+            m = m.message
 
         global ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK
         if status is not None:

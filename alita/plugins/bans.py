@@ -23,6 +23,7 @@ from traceback import format_exc
 from pyrogram import filters
 from pyrogram.errors import (
     ChatAdminRequired,
+    PeerIdInvalid,
     RightForbidden,
     RPCError,
     UserAdminInvalid,
@@ -75,6 +76,10 @@ async def kick_usr(c: Alita, m: Message):
         )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
+    except PeerIdInvalid:
+        await m.reply_text(
+            "I havenot seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
+        )
     except UserAdminInvalid:
         await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RightForbidden:
@@ -127,6 +132,10 @@ async def dkick_usr(c: Alita, m: Message):
                 kicked=(await mention_html(user_first_name, user_id)),
                 chat_title=m.chat.title,
             ),
+        )
+    except PeerIdInvalid:
+        await m.reply_text(
+            "I havenot seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
         )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -187,6 +196,13 @@ async def skick_usr(c: Alita, m: Message):
         await m.delete()
     except ChatAdminRequired:
         mymsg = await m.reply_text(tlang(m, "admin.not_admin"))
+        sleep(3)
+        await m.delete()
+        await mymsg.delete()
+    except PeerIdInvalid:
+        mymsg = await m.reply_text(
+            "I havenot seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
+        )
         sleep(3)
         await m.delete()
         await mymsg.delete()
@@ -252,6 +268,10 @@ async def ban_usr(c: Alita, m: Message):
         )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
+    except PeerIdInvalid:
+        await m.reply_text(
+            "I havenot seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
+        )
     except UserAdminInvalid:
         await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RightForbidden:
@@ -363,6 +383,13 @@ async def sban_usr(c: Alita, m: Message):
         await m.delete()
     except ChatAdminRequired:
         mymsg = await m.reply_text(tlang(m, "admin.not_admin"))
+        sleep(3)
+        await m.delete()
+        await mymsg.delete()
+    except PeerIdInvalid:
+        mymsg = await m.reply_text(
+            "I havenot seen this user yet...!\nMind forwarding one of their message so I can recognize them?",
+        )
         sleep(3)
         await m.delete()
         await mymsg.delete()
