@@ -49,9 +49,9 @@ warn_settings_db = WarnSettings()
 async def warn(c: Alita, m: Message):
     from alita import BOT_ID, BOT_USERNAME
 
-    if m.reply_to_message and len(m.reply_to_message.text.split()) >= 2:
+    if m.reply_to_message and len(m.text.split()) >= 2:
         reason = m.text.split(None, 1)[1]
-    elif len(m.text.split()) >= 3:
+    elif not m.reply_to_message len(m.text.split()) >= 3:
         reason = m.text.split(None, 2)[2]
     else:
         reason = None
@@ -212,7 +212,7 @@ async def list_warns(c: Alita, m: Message):
 
     warns, num_warns = warn_db.get_warns(m.chat.id, user_id)
     msg = f"{(await mention_html(user_first_name,user_id))} has <b>{num_warns}</b> warns!\n\n<b>Reasons:</b>\n"
-    msg += "\n".join([f"- {i}" for i in warns])
+    msg += "\n".join([("- No reason" if i is None else f" - {i}") for i in warns])
     await m.reply_text(msg)
     return
 
