@@ -184,16 +184,7 @@ strings:
 
 
         ── **Note Format** ──
-        -> **Button**
-        `[Button Text](buttonurl:t.me/DivideProjects)`
-        -> **For Another button in same line**
-        `[Button2](buttonurl:t.me/DivideProjectsDiscussion:same)`
-        -> **Bold**
-        `**Bold**`
-        -> __Italic__
-        `__Italic__`
-        -> `Code`
-        `Code` (grave accent)
+        Check /markdownhelp for help related to formatting!
     pins:
       main: "Pins"
       help: |-

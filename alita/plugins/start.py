@@ -25,7 +25,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import HELP_COMMANDS, LOGGER, OWNER_ID, PREFIX_HANDLER, VERSION
+from alita import HELP_COMMANDS, LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.start_utils import (
@@ -100,6 +100,7 @@ async def start_back(_, q: CallbackQuery):
         await q.message.edit_text(
             (tlang(q, "start.private")),
             reply_markup=(await gen_start_kb(q.message)),
+            disable_web_page_preview=True,
         )
     except MessageNotModified:
         pass
@@ -126,6 +127,8 @@ async def commands_menu(_, q: CallbackQuery):
             (tlang(q, "general.commands_available")),
             reply_markup=keyboard,
         )
+    except MessageNotModified:
+        pass
     except QueryIdInvalid:
         await q.message.reply_text(
             (tlang(q, "general.commands_available")),
@@ -149,7 +152,7 @@ async def help_menu(_, m: Message):
             return
 
         LOGGER.info(
-            f"{m.from_user.id} fetched help for {help_option} text in {m.chat.id}",
+            f"{m.from_user.id} fetched help for '{help_option}' text in {m.chat.id}",
         )
         if m.chat.type == "private":
             await m.reply_text(
@@ -157,6 +160,7 @@ async def help_menu(_, m: Message):
                 parse_mode="markdown",
                 reply_markup=InlineKeyboardMarkup(help_kb),
                 quote=True,
+                disable_web_page_preview=True,
             )
         else:
             await m.reply_text(
@@ -175,7 +179,7 @@ async def help_menu(_, m: Message):
     else:
         if m.chat.type == "private":
             keyboard = InlineKeyboardMarkup(
-                inline_keyboard=[
+                [
                     *(await gen_cmds_kb(m)),
                     [
                         InlineKeyboardButton(

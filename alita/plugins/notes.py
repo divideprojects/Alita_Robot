@@ -42,9 +42,7 @@ db = Notes()
 db_settings = NotesSettings()
 
 
-@Alita.on_message(
-    filters.command("save", PREFIX_HANDLER) & filters.group & admin_filter,
-)
+@Alita.on_message(filters.command("save", PREFIX_HANDLER) & admin_filter)
 async def save_note(_, m: Message):
 
     existing_notes = [i[0] for i in db.get_all_notes(m.chat.id)]
@@ -282,9 +280,7 @@ async def get_note(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["privnotes", "privatenotes"], PREFIX_HANDLER)
-    & filters.group
-    & admin_filter,
+    filters.command(["privnotes", "privatenotes"], PREFIX_HANDLER) & admin_filter,
 )
 async def priv_notes(_, m: Message):
 
@@ -350,9 +346,7 @@ async def local_notes(_, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("clear", PREFIX_HANDLER) & filters.group & admin_filter,
-)
+@Alita.on_message(filters.command("clear", PREFIX_HANDLER) & admin_filter)
 async def clear_note(_, m: Message):
 
     if len(m.text.split()) <= 1:
@@ -370,9 +364,7 @@ async def clear_note(_, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("clearall", PREFIX_HANDLER) & filters.group & owner_filter,
-)
+@Alita.on_message(filters.command("clearall", PREFIX_HANDLER) & owner_filter)
 async def clear_allnote(_, m: Message):
 
     all_notes = [i[0] for i in db.get_all_notes(m.chat.id)]

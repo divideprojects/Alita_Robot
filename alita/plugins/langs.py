@@ -128,7 +128,7 @@ async def set_lang_callback(_, q: CallbackQuery):
 
 @Alita.on_message(
     filters.command(["lang", "setlang"], PREFIX_HANDLER)
-    & ((admin_filter & filters.group) | filters.private),
+    & (admin_filter | filters.private),
     group=7,
 )
 async def set_lang(_, m: Message):
@@ -159,6 +159,9 @@ async def set_lang(_, m: Message):
     return
 
 
+__PLUGIN__ = "plugins.language.main"
+__help__ = "plugins.language.help"
+__alt_name__ = ["lang", "langs", "languages"]
 __buttons__ = [
     [
         InlineKeyboardButton(
@@ -167,7 +170,3 @@ __buttons__ = [
         ),
     ],
 ]
-
-__PLUGIN__ = "plugins.language.main"
-__help__ = "plugins.language.help"
-__alt_name__ = ["lang", "langs", "languages"]

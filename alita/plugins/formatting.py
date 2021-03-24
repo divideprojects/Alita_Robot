@@ -57,11 +57,14 @@ async def gen_formatting_kb(m):
 
 
 @Alita.on_message(
-    filters.command(["markdownhelp", "formatting"], PREFIX_HANDLER)
-    & (filters.group | filters.private),
+    filters.command(["markdownhelp", "formatting"], PREFIX_HANDLER) & filters.private,
 )
 async def markdownhelp(_, m: Message):
-    await m.reply_text(__help__, quote=True, reply_markup=(await gen_formatting_kb(m)))
+    await m.reply_text(
+        tlang(m, __help__),
+        quote=True,
+        reply_markup=(await gen_formatting_kb(m)),
+    )
     LOGGER.info(f"{m.from_user.id} used cmd '{m.command[0]}' in {m.chat.id}")
     return
 

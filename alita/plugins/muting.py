@@ -34,9 +34,7 @@ from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 
-@Alita.on_message(
-    filters.command("mute", PREFIX_HANDLER) & filters.group & restrict_filter,
-)
+@Alita.on_message(filters.command("mute", PREFIX_HANDLER) & restrict_filter)
 async def mute_usr(c: Alita, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
@@ -99,9 +97,7 @@ async def mute_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("unmute", PREFIX_HANDLER) & filters.group & restrict_filter,
-)
+@Alita.on_message(filters.command("unmute", PREFIX_HANDLER) & restrict_filter)
 async def unmute_usr(c: Alita, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)

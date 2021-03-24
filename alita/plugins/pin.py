@@ -30,7 +30,7 @@ from alita.utils.custom_filters import admin_filter
 antichanneldb = AntiChannelPin()
 
 
-@Alita.on_message(filters.command("pin", PREFIX_HANDLER) & filters.group & admin_filter)
+@Alita.on_message(filters.command("pin", PREFIX_HANDLER) & admin_filter)
 async def pin_message(_, m: Message):
 
     pin_args = m.text.split(None, 1)
@@ -74,9 +74,7 @@ async def pin_message(_, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("unpin", PREFIX_HANDLER) & filters.group & admin_filter,
-)
+@Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & admin_filter)
 async def unpin_message(c: Alita, m: Message):
 
     try:
@@ -104,9 +102,7 @@ async def unpin_message(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("unpinall", PREFIX_HANDLER) & filters.group & admin_filter,
-)
+@Alita.on_message(filters.command("unpinall", PREFIX_HANDLER) & admin_filter)
 async def unpinall_message(c: Alita, m: Message):
 
     try:
@@ -129,9 +125,7 @@ async def unpinall_message(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("antichannelpin", PREFIX_HANDLER) & filters.group & admin_filter,
-)
+@Alita.on_message(filters.command("antichannelpin", PREFIX_HANDLER) & admin_filter)
 async def anti_channel_pin(_, m: Message):
 
     if len(m.text.split()) == 1:
@@ -160,9 +154,7 @@ async def anti_channel_pin(_, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("permapin", PREFIX_HANDLER) & filters.group & admin_filter,
-)
+@Alita.on_message(filters.command("permapin", PREFIX_HANDLER) & admin_filter)
 async def perma_pin(_, m: Message):
     if m.reply_to_message:
         LOGGER.info(f"{m.from_user.id} used permampin in {m.chat.id}")

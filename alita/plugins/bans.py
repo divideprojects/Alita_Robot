@@ -38,9 +38,7 @@ from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 
-@Alita.on_message(
-    filters.command("kick", PREFIX_HANDLER) & filters.group & restrict_filter,
-)
+@Alita.on_message(filters.command("kick", PREFIX_HANDLER) & restrict_filter)
 async def kick_usr(c: Alita, m: Message):
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -94,9 +92,7 @@ async def kick_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("dkick", PREFIX_HANDLER) & filters.group & restrict_filter,
-)
+@Alita.on_message(filters.command("dkick", PREFIX_HANDLER) & restrict_filter)
 async def dkick_usr(c: Alita, m: Message):
 
     if (len(m.text.split()) > 1) or (not m.reply_to_message):
@@ -151,9 +147,7 @@ async def dkick_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("skick", PREFIX_HANDLER) & filters.group & restrict_filter,
-)
+@Alita.on_message(filters.command("skick", PREFIX_HANDLER) & restrict_filter)
 async def skick_usr(c: Alita, m: Message):
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -221,9 +215,7 @@ async def skick_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("ban", PREFIX_HANDLER) & filters.group & restrict_filter,
-)
+@Alita.on_message(filters.command("ban", PREFIX_HANDLER) & restrict_filter)
 async def ban_usr(c: Alita, m: Message):
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -276,9 +268,7 @@ async def ban_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("dban", PREFIX_HANDLER) & filters.group & restrict_filter,
-)
+@Alita.on_message(filters.command("dban", PREFIX_HANDLER) & restrict_filter)
 async def dban_usr(c: Alita, m: Message):
 
     if (len(m.text.split()) > 1) or (not m.reply_to_message):
@@ -333,9 +323,7 @@ async def dban_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("sban", PREFIX_HANDLER) & filters.group & restrict_filter,
-)
+@Alita.on_message(filters.command("sban", PREFIX_HANDLER) & restrict_filter)
 async def sban_usr(c: Alita, m: Message):
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -400,9 +388,7 @@ async def sban_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("unban", PREFIX_HANDLER) & filters.group & restrict_filter,
-)
+@Alita.on_message(filters.command("unban", PREFIX_HANDLER) & restrict_filter)
 async def unban_usr(c: Alita, m: Message):
 
     if len(m.text.split()) == 1 and not m.reply_to_message:

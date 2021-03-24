@@ -45,7 +45,7 @@ db = Filters()
 
 
 @Alita.on_message(
-    filters.command("filters", PREFIX_HANDLER) & filters.group & admin_filter,
+    filters.command("filters", PREFIX_HANDLER) & admin_filter,
 )
 async def view_filters(_, m: Message):
 
@@ -71,9 +71,7 @@ async def view_filters(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["addfilter", "filter"], PREFIX_HANDLER)
-    & filters.group
-    & admin_filter,
+    filters.command(["addfilter", "filter"], PREFIX_HANDLER) & admin_filter,
 )
 async def add_filter(_, m: Message):
 
@@ -164,9 +162,7 @@ async def add_filter(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["rmfilter", "stop", "unfilter"], PREFIX_HANDLER)
-    & filters.group
-    & admin_filter,
+    filters.command(["rmfilter", "stop", "unfilter"], PREFIX_HANDLER) & admin_filter,
 )
 async def stop_filter(_, m: Message):
     args = m.command
@@ -199,7 +195,6 @@ async def stop_filter(_, m: Message):
 
 @Alita.on_message(
     filters.command(["rmallfilters", "removeallfilters"], PREFIX_HANDLER)
-    & filters.group
     & owner_filter,
 )
 async def rm_allfilters(_, m: Message):

@@ -38,7 +38,7 @@ db = Approve()
 
 
 @Alita.on_message(
-    filters.command("approve", PREFIX_HANDLER) & filters.group & admin_filter,
+    filters.command("approve", PREFIX_HANDLER) & admin_filter,
 )
 async def approve_user(c: Alita, m: Message):
 
@@ -103,9 +103,7 @@ async def approve_user(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["disapprove", "unapprove"], PREFIX_HANDLER)
-    & filters.group
-    & admin_filter,
+    filters.command(["disapprove", "unapprove"], PREFIX_HANDLER) & admin_filter,
 )
 async def disapprove_user(c: Alita, m: Message):
 
@@ -157,9 +155,7 @@ async def disapprove_user(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("approved", PREFIX_HANDLER) & filters.group & admin_filter,
-)
+@Alita.on_message(filters.command("approved", PREFIX_HANDLER) & admin_filter)
 async def check_approved(_, m: Message):
 
     chat = m.chat
@@ -185,9 +181,7 @@ async def check_approved(_, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("approval", PREFIX_HANDLER) & filters.group & admin_filter,
-)
+@Alita.on_message(filters.command("approval", PREFIX_HANDLER) & admin_filter)
 async def check_approval(c: Alita, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)

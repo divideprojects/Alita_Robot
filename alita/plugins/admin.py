@@ -94,7 +94,7 @@ async def adminlist_show(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("admincache", PREFIX_HANDLER) & filters.group & admin_filter,
+    filters.command("admincache", PREFIX_HANDLER) & admin_filter,
 )
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
@@ -124,7 +124,7 @@ async def reload_admins(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("promote", PREFIX_HANDLER) & filters.group & promote_filter,
+    filters.command("promote", PREFIX_HANDLER) & promote_filter,
 )
 async def promote_usr(c: Alita, m: Message):
     global ADMIN_CACHE
@@ -202,7 +202,7 @@ async def promote_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command("demote", PREFIX_HANDLER) & filters.group & promote_filter,
+    filters.command("demote", PREFIX_HANDLER) & promote_filter,
 )
 async def demote_usr(c: Alita, m: Message):
     global ADMIN_CACHE
@@ -276,7 +276,7 @@ async def demote_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command("invitelink", PREFIX_HANDLER) & filters.group & invite_filter,
+    filters.command("invitelink", PREFIX_HANDLER) & invite_filter,
 )
 async def get_invitelink(c: Alita, m: Message):
 

@@ -79,9 +79,7 @@ async def get_rules(_, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("setrules", PREFIX_HANDLER) & filters.group & admin_filter,
-)
+@Alita.on_message(filters.command("setrules", PREFIX_HANDLER) & admin_filter)
 async def set_rules(_, m: Message):
 
     chat_id = m.chat.id
@@ -101,9 +99,7 @@ async def set_rules(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["privrules", "privaterules"], PREFIX_HANDLER)
-    & filters.group
-    & admin_filter,
+    filters.command(["privrules", "privaterules"], PREFIX_HANDLER) & admin_filter,
 )
 async def priv_rules(_, m: Message):
 
@@ -134,9 +130,7 @@ async def priv_rules(_, m: Message):
     return
 
 
-@Alita.on_message(
-    filters.command("clearrules", PREFIX_HANDLER) & filters.group & admin_filter,
-)
+@Alita.on_message(filters.command("clearrules", PREFIX_HANDLER) & admin_filter)
 async def clear_rules(_, m: Message):
 
     rules = db.get_rules(m.chat.id)

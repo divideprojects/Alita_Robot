@@ -151,7 +151,9 @@ async def load_cmds(all_plugins):
 
             try:
                 # Add the plugin name to cmd list
-                (HELP_COMMANDS[plugin_name]["alt_cmds"]).append(plugin_name.split(".")[1])
+                (HELP_COMMANDS[plugin_name]["alt_cmds"]).append(
+                    plugin_name.split(".")[1],
+                )
             except IndexError:
                 LOGGER.error(f"Not loading plugin '{plugin_name}' due to invalid name!")
                 continue
