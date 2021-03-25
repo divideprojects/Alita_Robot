@@ -19,7 +19,7 @@ strings:
         × /promote: Promotes the user replied to or tagged.
         × /demote: Demotes the user replied to or tagged.
 
-        An example of promoting someone to admins:
+        **Example:**
         `/promote @username`: this promotes a user to admin.
     approve:
       main: "Approve"
@@ -34,6 +34,9 @@ strings:
         × /unapprove: Unapprove of a user. They will now be subject to blocklists.
         × /approved: List all approved users.
         × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
+        
+        **Example:**
+        `/approve @username`: this approves a user in the chat.
     bans:
       main: "Bans"
       help: |-
@@ -49,6 +52,9 @@ strings:
         × /sban: Bans the user replied or tagged and delete your messsage.
         × /dban: Bans the user replied and delete their message.
         × /unban: Unbans the user replied to or tagged.
+        
+        **Example:**
+        `/ban @username`: this bans a user in the chat.
     blacklist:
       main: "Blacklist"
       help: |-
@@ -69,6 +75,9 @@ strings:
         × /rmallblacklist: Removes all the blacklists from the current chat.
 
         **Note:** Can only add or remove one blacklist at a time!
+        
+        **Example:**
+        `/addblacklist hello`: this adds the word 'hello' as blacklist in the chat.
     filters:
       main: "Filters"
       help: |-
@@ -135,6 +144,9 @@ strings:
         × /unlock `<type>`: Unlock Chat permission.
         × /locks: View Chat permission.
         × /locktypes: Check available lock types!
+        
+        **Example:**
+        `/lock media`: this locks all the media messages in the chat.
     muting:
       main: "Muting"
       help: |-
@@ -145,7 +157,7 @@ strings:
         × /mute: Mute the user replied to or mentioned.
         × /unmute: Unmutes the user mentioned or replied to.
 
-        An example of promoting someone to admins:
+        **Example:**
         `/mute @username`; this mutes a user.
     notes:
       main: "Notes"
@@ -196,6 +208,9 @@ strings:
 
         × /purge: Deletes messages upto replied message.
         × /del: Deletes a single message, used as a reply to message.
+        
+        **Example:**
+        `/purge <as a reply to message>: this will delete all the messages till the one you replied.
     reporting:
       main: "Reporting"
       help: |-
@@ -231,6 +246,9 @@ strings:
         × /github `<username>`: Search for the user using github api!
         × /lyrics `<song>`: Get the lyrics of the song you specify!
         × /weebify `<text>` or `<reply to message>`: To weebify the text.
+        
+        **Example:**
+        `/info @username`: this fetches the information about a user from the database.
     warnings:
       main: "Warnings"
       help: |-
@@ -250,8 +268,7 @@ strings:
         - /setwarnlimit `<number>``: Set the number of warnings before users are punished.
 
         Examples:
-        - Warn a user.
-        -> `/warn @user`
+        `/warn @user`: this warns a user in the chat.
   admin:
     adminlist:
       adminstr: "Admins in <b>{chat_title}</b>:"
