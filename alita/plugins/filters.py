@@ -91,14 +91,13 @@ async def add_filter(_, m: Message):
         )
         return
 
-    if m.reply_to_message:
-        if len(args) < 2:
-            await m.reply_text("Please provide keyword for this filter to reply with!")
-            return
-        keyword = args[1]
-    else:
-        extracted = await split_quotes(args[1])
-        keyword = extracted[0].lower()
+    if m.reply_to_message and len(args) < 2:
+        await m.reply_text("Please provide keyword for this filter to reply with!")
+        return
+
+
+    extracted = await split_quotes(args[1])
+    keyword = extracted[0].lower()
 
     for k in keyword.split("|"):
         if k in actual_filters:
