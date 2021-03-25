@@ -122,7 +122,7 @@ async def warn(c: Alita, m: Message):
     if m.text.split()[0] == "/swarn":
         await m.delete()
         return
-    elif m.text.split()[0] == "/dwarn":
+    if m.text.split()[0] == "/dwarn":
         if not m.reply_to_message:
             await m.reply_text("Reply to a message to delete it and ban the user!")
             return

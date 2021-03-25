@@ -83,7 +83,7 @@ async def kick_usr(c: Alita, m: Message):
         if m.text.split()[0] == "/skick":
             await m.delete()
             return
-        elif m.text.split()[0] == "/dkick":
+        if m.text.split()[0] == "/dkick":
             if not m.reply_to_message:
                 await m.reply_text("Reply to a message to delete it and kick the user!")
                 return
@@ -163,7 +163,7 @@ async def ban_usr(c: Alita, m: Message):
         if m.text.split()[0] == "/sban":
             await m.delete()
             return
-        elif m.text.split()[0] == "/dban":
+        if m.text.split()[0] == "/dban":
             if not m.reply_to_message:
                 await m.reply_text("Reply to a message to delete it and ban the user!")
                 return

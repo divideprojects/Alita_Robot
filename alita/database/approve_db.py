@@ -60,10 +60,9 @@ class Approve:
 
             if user_id in {i[0] for i in APPROVE_CACHE[chat_id]}:
                 return True
-            else:
-                users_old = APPROVE_CACHE[chat_id]
-                users_old.add((user_id, user_name))
-                APPROVE_CACHE[chat_id] = users_old
+            users_old = APPROVE_CACHE[chat_id]
+            users_old.add((user_id, user_name))
+            APPROVE_CACHE[chat_id] = users_old
 
             curr = self.collection.find_one({"_id": chat_id})
             if curr:
