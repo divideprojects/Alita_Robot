@@ -148,7 +148,7 @@ class Approve:
     def count_all_approved(self):
         with INSERTION_LOCK:
             try:
-                return len({i for i in list(ADMIN_CACHE.keys)})
+                return len({i for i in list(ADMIN_CACHE.keys())})
             except KeyError:
                 pass
             except Exception as ef:

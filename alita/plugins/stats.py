@@ -67,7 +67,7 @@ async def get_stats(_, m: Message):
         f"<b>Rules:</b> Set in <code>{(rulesdb.count_chats())}</code> chats\n"
         f"    <b>Private Rules:</b> <code>{(rulesdb.count_privrules_chats())}</code> chats\n"
         f"<b>Warns:</b> <code>{(warns_db.count_warned_users())}</code> in <code>{(warns_db.count_all_chats_using_warns())}</code> chats\n"
-        f"    <b>Users Warned:</b> <code>{(warns_db.count_warned_users())}</code>\n"
+        f"    <b>Users Warned:</b> <code>{(warns_db.count_warned_users())}</code> users\n"
         f"    <b>Action Specific:</b>\n"
         f"        <b>Kick</b>: <code>{(warns_settings_db.count_action_chats('kick'))}</code>\n"
         f"        <b>Mute</b>: <code>{(warns_settings_db.count_action_chats('mute'))}</code>\n"

@@ -38,7 +38,11 @@ from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.msg_types import Types, get_filter_type
 from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
-from alita.utils.string import escape_invalid_curly_brackets, parse_button, split_quotes
+from alita.utils.string import (
+    escape_mentions_using_curly_brackets,
+    parse_button,
+    split_quotes,
+)
 
 # Initialise
 db = Filters()
@@ -63,7 +67,6 @@ async def view_filters(_, m: Message):
             for i in all_filters
         ],
     )
-
     await m.reply_text(filters_chat)
     return
 
@@ -249,6 +252,9 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
         return
 
     msgtype = getfilter["msgtype"]
+    if not msgtype:
+        await m.reply_text("<b>Error:</b> Cannot find a type for this filter!!")
+        return
 
     try:
         # support for random filter texts
@@ -267,33 +273,11 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
         "chatname",
         "mention",
     ]
-    teks = await escape_invalid_curly_brackets(filter_reply, parse_words)
-    if teks:
-        teks = teks.format(
-            first=escape(m.from_user.first_name),
-            last=escape(m.from_user.last_name or m.from_user.first_name),
-            fullname=" ".join(
-                [
-                    escape(m.from_user.first_name),
-                    escape(m.from_user.last_name),
-                ]
-                if m.from_user.last_name
-                else [escape(m.from_user.first_name)],
-            ),
-            username="@" + escape(m.from_user.username)
-            if m.from_user.username
-            else (await mention_html(m.from_user.first_name, m.from_user.id)),
-            mention=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            chatname=escape(m.chat.title)
-            if m.chat.type != "private"
-            else escape(m.from_user.first_name),
-            id=m.from_user.id,
-        )
-    else:
-        teks = ""
+    text = await escape_mentions_using_curly_brackets(m, filter_reply, parse_words)
 
     if msgtype == Types.TEXT:
-        await m.reply_text(teks, quote=True)
+        await m.reply_text(text, quote=True)
+
     elif msgtype in (
         Types.STICKER,
         Types.VIDEO_NOTE,
@@ -309,8 +293,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
             getfilter["fileid"],
-            caption=teks,
-            parse_mode=None,
+            caption=text,
             reply_to_message_id=m.message_id,
         )
     return msgtype

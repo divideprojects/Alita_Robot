@@ -304,18 +304,6 @@ strings:
       bot_no_right: "I don't have enough rights to unmute this user."
       unmuted_user: "Admin {admin} unmuted {unmuted}!"
     user_admin_invalid: "Cannot act on this user, maybe I wasn't the one who changed their permissions."
-  afk:
-    error_check_afk: |-
-      Error while checking afk
-      {ef}
-    no_longer_afk: |-
-      {first_name} is no longer Afk!
-      Was AFK for <code>{since}</code>
-    reason: "<b>Reason:</b> {res}"
-    user_afk: |-
-      {first_name} is Afk!
-      <b>Since:</b> <code>{since}</code>
-    user_now_afk: "User {user} is now afk!"
   formatting:
     md_help: |-
       <b>Markdown Formatting</b>
@@ -340,6 +328,7 @@ strings:
       <b>Fillings</b>
 
       You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
+      You can use these to mention a user in notes too!
 
       <b>Supported fillings:</b>
       - <code>{first}</code>: The user's first name.

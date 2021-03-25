@@ -16,10 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from html import escape
 from re import compile as compilere
 from time import time
 
-from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, Message
+
+from alita.utils.parser import mention_html
 
 BTN_URL_REGEX = compilere(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
 
@@ -128,6 +131,39 @@ async def escape_invalid_curly_brackets(text: str, valids: list) -> str:
         idx += 1
 
     return new_text
+
+
+async def escape_mentions_using_curly_brackets(
+    m: Message,
+    text: str,
+    parse_words: list,
+):
+    teks = await escape_invalid_curly_brackets(text, parse_words)
+    if teks:
+        teks = teks.format(
+            first=escape(m.from_user.first_name),
+            last=escape(m.from_user.last_name or m.from_user.first_name),
+            fullname=" ".join(
+                [
+                    escape(m.from_user.first_name),
+                    escape(m.from_user.last_name),
+                ]
+                if m.from_user.last_name
+                else [escape(m.from_user.first_name)],
+            ),
+            username="@" + escape(m.from_user.username)
+            if m.from_user.username
+            else (await mention_html(m.from_user.first_name, m.from_user.id)),
+            mention=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            chatname=escape(m.chat.title)
+            if m.chat.type != "private"
+            else escape(m.from_user.first_name),
+            id=m.from_user.id,
+        )
+    else:
+        teks = ""
+
+    return teks
 
 
 async def split_quotes(text: str):

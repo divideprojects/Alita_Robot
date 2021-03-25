@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from html import escape
 from secrets import choice
 from traceback import format_exc
 
@@ -35,7 +36,11 @@ from alita.utils.cmd_senders import send_cmd
 from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.msg_types import Types, get_note_type
 from alita.utils.parser import mention_html
-from alita.utils.string import build_keyboard, parse_button
+from alita.utils.string import (
+    build_keyboard,
+    escape_mentions_using_curly_brackets,
+    parse_button,
+)
 
 # Initialise
 db = Notes()
@@ -110,12 +115,27 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         await reply_text("<b>Error:</b> Cannot find a type for this note!!")
         return
 
+    try:
+        # support for random notes texts
+        splitter = "%%%"
+        note_reply = getnotes["note_value"].split(splitter)
+        note_reply = choice(note_reply)
+    except KeyError:
+        note_reply = ""
+
+    parse_words = [
+        "first",
+        "last",
+        "fullname",
+        "username",
+        "id",
+        "chatname",
+        "mention",
+    ]
+    text = await escape_mentions_using_curly_brackets(m, note_reply, parse_words)
+
     if msgtype == Types.TEXT:
-        tmp_text = (getnotes["note_value"]).split("%%%")
-        if len(tmp_text) > 1:
-            text = choice(tmp_text)
-        else:
-            text = tmp_text[0]
+
         teks, button = await parse_button(text)
         button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
@@ -152,7 +172,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         )
     else:
         if getnotes["note_value"]:
-            teks, button = await parse_button(getnotes["note_value"])
+            teks, button = await parse_button(text)
             button = await build_keyboard(button)
             button = InlineKeyboardMarkup(button) if button else None
         else:
@@ -251,7 +271,7 @@ async def hash_get(c: Alita, m: Message):
     all_notes = [i[0] for i in db.get_all_notes(m.chat.id)]
 
     if note not in all_notes:
-        # Because  - don't reply to all messages starting with #
+        # don't reply to all messages starting with #
         return
 
     priv_notes_status = db_settings.get_privatenotes(m.chat.id)

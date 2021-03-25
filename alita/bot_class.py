@@ -16,10 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import uvloop
+from uvloop import install
 
 # Install uvloop
-uvloop.install()
+install()
+
+
 from platform import python_version
 from threading import RLock
 
