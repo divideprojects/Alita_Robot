@@ -26,7 +26,6 @@ from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
 from alita.bot_class import Alita
-from alita.database import blacklist_db
 from alita.database.antichannelpin_db import Pins
 from alita.database.antispam_db import ANTISPAM_BANNED, GBan
 from alita.database.approve_db import Approve
