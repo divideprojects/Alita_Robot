@@ -59,7 +59,7 @@ class Pins:
             return curr
 
     def set_on(self, chat_id: int, atype: str):
-        global ANTIPIN_CHATS
+        global PINS_CACHE
         with INSERTION_LOCK:
             otype = "cleanlinked" if atype == "antichannelpin" else "antichannelpin"
             if chat_id not in (PINS_CACHE[atype]):
@@ -76,7 +76,7 @@ class Pins:
             return "Already exists"
 
     def set_off(self, chat_id: int, atype: str):
-        global ANTIPIN_CHATS
+        global PINS_CACHE
         with INSERTION_LOCK:
             if chat_id in (PINS_CACHE[atype]):
                 (PINS_CACHE[atype]).remove(chat_id)
@@ -127,23 +127,15 @@ class Pins:
                 self.collection.insert_one(new_data)
 
 
-def __load_antichannelpin_chats():
+def __load_pins_chats():
     global PINS_CACHE
     start = time()
     db = Pins()
-    antipin_chats = db.load_chats_from_db()
+    all_chats = db.load_chats_from_db()
     PINS_CACHE["antichannelpin"] = {
-        i["_id"] for i in antipin_chats if i["antichannelpin"]
+        i["_id"] for i in all_chats if i["antichannelpin"]
     }
-    LOGGER.info(f"Loaded AntiChannelPin Local Cache in {round((time()-start),3)}s")
-
-
-def __load_cleanlinked_chats():
-    global PINS_CACHE
-    start = time()
-    db = Pins()
-    cleanlinked_chats = db.load_chats_from_db()
     PINS_CACHE["cleanlinked"] = {
-        i["_id"] for i in cleanlinked_chats if i["cleanlinked"]
+        i["_id"] for i in all_chats if i["cleanlinked"]
     }
-    LOGGER.info(f"Loaded CleanLinked Local Cache in {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded Pins Local Cache in {round((time()-start),3)}s")
