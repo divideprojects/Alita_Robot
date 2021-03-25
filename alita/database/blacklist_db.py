@@ -48,6 +48,7 @@ class Blacklist:
                     "_id": chat_id,
                     "triggers": [trigger],
                     "action": "none",
+                    "reason": "Automated blacklisted word",
                 },
             )
 
@@ -93,7 +94,7 @@ class Blacklist:
                     num += 1
             return num
 
-    def set_action(self, chat_id: int, action: int):
+    def set_action(self, chat_id: int, action: str):
         with INSERTION_LOCK:
 
             if action not in ("kick", "mute", "ban", "warn", "none"):
@@ -110,6 +111,7 @@ class Blacklist:
                     "_id": chat_id,
                     "triggers": [],
                     "action": action,
+                    "reason": "Automated blacklisted word",
                 },
             )
 
@@ -123,9 +125,43 @@ class Blacklist:
                     "_id": chat_id,
                     "triggers": [],
                     "action": "none",
+                    "reason": "Automated blacklisted word",
                 },
             )
-            return "none"
+            return "Automated blacklisted word"
+
+    def set_reason(self, chat_id: int, reason: str):
+        with INSERTION_LOCK:
+
+            curr = self.collection.find_one({"_id": chat_id})
+            if curr:
+                return self.collection.update(
+                    {"_id": chat_id},
+                    {"_id": chat_id, "reason": reason},
+                )
+            return self.collection.insert_one(
+                {
+                    "_id": chat_id,
+                    "triggers": [],
+                    "action": "none",
+                    "reason": reason,
+                },
+            )
+
+    def get_reason(self, chat_id: int):
+        with INSERTION_LOCK:
+            curr = self.collection.find_one({"_id": chat_id})
+            if curr:
+                return curr["reason"] or "none"
+            self.collection.insert_one(
+                {
+                    "_id": chat_id,
+                    "triggers": [],
+                    "action": "none",
+                    "reason": "Automated blacklistwd word",
+                },
+            )
+            return "Automated blacklisted word"
 
     def count_action_bl_all(self, action: str):
         return self.collection.count({"action": action})

@@ -44,9 +44,7 @@ from alita.utils.string import escape_invalid_curly_brackets, parse_button, spli
 db = Filters()
 
 
-@Alita.on_message(
-    filters.command("filters", PREFIX_HANDLER) & admin_filter,
-)
+@Alita.on_message(filters.command("filters", PREFIX_HANDLER) & filters.group)
 async def view_filters(_, m: Message):
 
     LOGGER.info(f"{m.from_user.id} checking filters in {m.chat.id}")
@@ -85,24 +83,17 @@ async def add_filter(_, m: Message):
         )
         return
 
-    if not m.reply_to_message and len(args) <= 2:
+    if not m.reply_to_message and len(m.text.split()) < 3:
         await m.reply_text(
-            "Please provide statement for this filter to reply with!",
+            "Please provide keyboard keyword for this filter to reply with!",
         )
         return
 
     if m.reply_to_message:
         if len(args) < 2:
-            await m.reply_text(
-                "Please provide keyword for this filter to reply with!",
-            )
+            await m.reply_text("Please provide keyword for this filter to reply with!")
             return
-        if len(args[1].split()) >= 2:
-            if '|' in (args[1].split()[1]).lower():
-                extracted = await split_quotes((args[1].split()[1]).lower())
-                keyword = extracted[0].lower()
-        else:
-            keyword = args[1].lower()
+        keyword = args[1]
     else:
         extracted = await split_quotes(args[1])
         keyword = extracted[0].lower()
@@ -114,7 +105,7 @@ async def add_filter(_, m: Message):
 
     teks, msgtype, file_id = await get_filter_type(m)
 
-    if not m.reply_to_message and len(args) >= 2:
+    if not m.reply_to_message and len(m.text.split()) >= 2:
         teks, _ = await parse_button(extracted[1])
         if not teks:
             await m.reply_text(
@@ -122,7 +113,7 @@ async def add_filter(_, m: Message):
             )
             return
 
-    elif m.reply_to_message and len(args) >= 2:
+    elif m.reply_to_message and len(m.text.split()) >= 2:
         if m.reply_to_message.text:
             text_to_parsing = m.reply_to_message.text
         elif m.reply_to_message.caption:
@@ -133,7 +124,7 @@ async def add_filter(_, m: Message):
 
     elif not teks and not msgtype:
         await m.reply_text(
-            "Please provide keyword for this filter reply with!",
+            'Please provide keyword for this filter reply with!\nEnclose filter in <code>"double quotes"</code>',
         )
         return
 

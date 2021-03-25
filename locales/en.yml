@@ -431,9 +431,9 @@ strings:
     action_set: "Set action for blacklist for this to <b>{action}</b>"
     added_blacklist: "Added <code>{trigger}</code> in blacklist words!"
     curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
-    no_bl_found: "No blacklist <b>{bl_word}</b> found!"
+    no_bl_found: "No blacklist <b>{bl_words}</b> found!"
     no_blacklist: "There are no blacklisted messages in <b>{chat_title}</b>!"
-    rm_blacklist: "Removed <b>{bl_word}</b> from blacklist words!"
+    rm_blacklist: "Removed <b>{bl_words}</b> from blacklist words!"
   dev:
     bot_ip: |-
       <b>Bot IP Address:</b>

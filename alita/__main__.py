@@ -22,6 +22,7 @@ from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.antichannelpin_db import __load_pins_chats
 from alita.database.antispam_db import __load_antispam_users
+from alita.database.approve_db import __load_approve_cache
 from alita.database.chats_db import __load_chats_cache
 from alita.database.filters_db import __load_filters_cache
 from alita.database.group_blacklist import __load_group_blacklist
@@ -41,6 +42,7 @@ def load_caches():
     __load_users_cache()
     __load_filters_cache()
     __load_all_rules()
+    __load_approve_cache()
     __load_pins_chats()
     __load_all_reporting_settings()
     __load_group_blacklist()

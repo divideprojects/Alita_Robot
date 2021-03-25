@@ -26,6 +26,7 @@ from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
 from alita.bot_class import Alita
+from alita.database import blacklist_db
 from alita.database.antichannelpin_db import Pins
 from alita.database.antispam_db import ANTISPAM_BANNED, GBan
 from alita.database.approve_db import Approve
@@ -127,7 +128,7 @@ async def bl_watcher(_, m: Message):
             )
         elif action == "warn":
             warn_settings = warns_settings_db.get_warnings_settings(m.chat.id)
-            warn_reason = f"Using blacklisted word <code>{trigger}</code>"
+            warn_reason = bl_db.get_reason(m.chat.id)
             _, num = warns_db.warn_user(m.chat.id, m.from_user.id, warn_reason)
             if num >= warn_settings["warn_limit"]:
                 if warn_settings["warn_mode"] == "kick":
@@ -152,7 +153,7 @@ async def bl_watcher(_, m: Message):
             await m.reply_text(
                 (
                     f"{(await mention_html(m.from_user.first_name, m.from_user.id))} warned {num}/{warn_settings['warn_limit']}\n"
-                    f"Last warn was:\n{warn_reason}"
+                    f"Last warn was for:\n<i>{warn_reason}</i>"
                 ),
             )
         else:
