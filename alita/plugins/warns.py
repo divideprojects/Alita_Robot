@@ -291,7 +291,7 @@ async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
     user_id = int(args[2])
     chat_id = int(q.message.chat.id)
     user = users_db.get_user_info(int(user_id))
-    user_first_name: user["name"]
+    user_first_name = user["name"]
 
     if action == "remove":
         _, num_warns = warn_db.remove_warn(chat_id, user_id)
