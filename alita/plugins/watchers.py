@@ -78,7 +78,7 @@ async def bl_watcher(_, m: Message):
                     user=(
                         m.from_user.username
                         if m.from_user.username
-                        else ("<b>" + m.from_user.first_name + "</b>")
+                        else f"<b>{m.from_user.first_name}</b>"
                     ),
                 ),
             )
@@ -93,7 +93,7 @@ async def bl_watcher(_, m: Message):
                     user=(
                         m.from_user.username
                         if m.from_user.username
-                        else ("<b>" + m.from_user.first_name + "</b>")
+                        else f"<b>{m.from_user.first_name}</b>"
                     ),
                 ),
             )
@@ -121,7 +121,7 @@ async def bl_watcher(_, m: Message):
                     user=(
                         m.from_user.username
                         if m.from_user.username
-                        else ("<b>" + m.from_user.first_name + "</b>")
+                        else f"<b>{m.from_user.first_name}</b>"
                     ),
                 ),
             )
