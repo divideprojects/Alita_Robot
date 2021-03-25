@@ -53,6 +53,16 @@ async def extract_user(c, m) -> Tuple[int, str, str]:
                 ]
 
                 try:
+                    user_found = int(user_found)
+                except (ValueError, Exception) as ef:
+                    if "invalid literal for int() with base 10:" in str(ef):
+                        user_found = str(user_found)
+                    else:
+                        user_found = user_found
+                        LOGGER.error(ef)
+                        LOGGER.error(format_exc())
+
+                try:
                     user = db.get_user_info(user_found)
                     user_id = user["_id"]
                     user_first_name = user["name"]
@@ -72,13 +82,21 @@ async def extract_user(c, m) -> Tuple[int, str, str]:
 
         else:
             try:
-                user_id = int(m.command[1])
+                user_id = int(m.text.split()[1])
+            except (ValueError, Exception) as ef:
+                if "invalid literal for int() with base 10:" in str(ef):
+                    user_id = str(m.text.split()[1])
+                else:
+                    user_id = m.text.split()[1]
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
+            try:
                 user = db.get_user_info(user_id)
                 user_first_name = user["name"]
                 user_name = user["username"]
             except Exception as ef:
-                user_id = m.command[1]
-                user = await c.get_users(m.command[1])
+                user_id = m.text.split()[1]
+                user = await c.get_users(user_id)
                 user_first_name = user.first_name
                 user_name = user.username
                 LOGGER.error(ef)

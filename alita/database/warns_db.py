@@ -83,10 +83,6 @@ class Warns:
                 return curr["warns"], len(curr["warns"])
             return [], 0
 
-    def count_warned_users(self):
-        with INSERTION_LOCK:
-            return self.collection.count()
-
     def count_all_chats_using_warns(self):
         with INSERTION_LOCK:
             curr = self.collection.find_all()
@@ -166,5 +162,5 @@ class WarnSettings:
 
             return 3
 
-    def count_action_chats(self, mode):
+    def count_action_chats(self, mode: str):
         return self.collection.count({"warn_mode": mode})

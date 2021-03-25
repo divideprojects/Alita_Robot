@@ -69,7 +69,7 @@ async def pin_message(_, m: Message):
             )
             LOGGER.error(ef)
     else:
-        await m.reply_text(tlang(m, "admin.nopinmsg"))
+        await m.reply_text("Reply to a message to pin it!")
 
     return
 

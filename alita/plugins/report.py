@@ -234,7 +234,6 @@ async def report_buttons(c: Alita, q: CallbackQuery):
                 f"🛑 Failed to delete message!\n<b>Error:</b>\n`{err}`",
                 show_alert=True,
             )
-    await q.answer()
     return
 
 

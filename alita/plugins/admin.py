@@ -67,7 +67,7 @@ async def adminlist_show(_, m: Message):
                 else (await mention_html(admin[1], admin[0]))
             )
             for admin in admin_list
-            if not admin[2]
+            if not admin[2]  # if non-anonyamous admin
         ]
         mention.sort(key=lambda x: x[1])
         adminstr += "\n".join([f"- {i}" for i in mention])
@@ -86,7 +86,6 @@ async def adminlist_show(_, m: Message):
                     ef=ef,
                 ),
             )
-
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -301,7 +300,7 @@ async def get_invitelink(c: Alita, m: Message):
             ),
             disable_web_page_preview=True,
         )
-        LOGGER.info(f"{m.from_user.id} exported invitl link in {m.chat.id}")
+        LOGGER.info(f"{m.from_user.id} exported invite link in {m.chat.id}")
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except ChatAdminInviteRequired:
