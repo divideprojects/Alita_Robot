@@ -100,8 +100,8 @@ async def add_filter(_, m: Message):
         if '|' in (args[1].split()[1]).lower():
             extracted = await split_quotes((args[1].split()[1]).lower())
             keyword = extracted[0].lower()
-         else:
-             keyword = (args[1].split()[1]).lower()
+        else:
+            keyword = (args[1].split()[1]).lower()
     else:
         extracted = await split_quotes(args[1])
         keyword = extracted[0].lower()
