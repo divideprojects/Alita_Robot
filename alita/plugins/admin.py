@@ -174,6 +174,11 @@ async def promote_usr(c: Alita, m: Message):
             ),
         )
 
+        if len(m.text.split()) == 3 and not m.reply_to_message:
+            await c.set_administrator_title(m.chat.id, user_id, m.text.split()[2])
+        elif len(m.text.split()) == 2 and m.reply_to_message:
+            await c.set_administrator_title(m.chat.id, user_id, m.text.split()[1])
+
         # If user is approved, disapprove them as they willbe promoted and get even more rights
         if app_db.check_approve(m.chat.id, user_id):
             app_db.remove_approve(m.chat.id, user_id)
@@ -284,7 +289,6 @@ async def demote_usr(c: Alita, m: Message):
         LOGGER.error(format_exc())
 
     return
-
 
 @Alita.on_message(
     filters.command("invitelink", PREFIX_HANDLER) & invite_filter,
