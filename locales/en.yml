@@ -225,7 +225,6 @@ strings:
 
         × /id: Get the current group id. If used by replying to a message, get that user's id.
         × /info: Get information about a user.
-        × /ping - Get ping time of bot to telegram server.
         × /gifid: Reply to a gif to me to tell you its file ID.
         × /wiki: `<query>`: wiki your query.
         × /tr `<language>`: Translates the text and then replies to you with the language you have specifed, works as a reply to message.

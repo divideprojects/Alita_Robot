@@ -52,18 +52,6 @@ gban_db = GBan()
 user_db = Users()
 
 
-@Alita.on_message(
-    filters.command("ping", PREFIX_HANDLER) & (filters.group | filters.private),
-)
-async def ping(_, m: Message):
-    LOGGER.info(f"{m.from_user.id} used ping cmd in {m.chat.id}")
-    start = time()
-    replymsg = await m.reply_text((tlang(m, "utils.ping.pinging")), quote=True)
-    delta_ping = time() - start
-    await replymsg.edit_text(f"<b>Pong!</b>\n{delta_ping * 1000:.3f} ms")
-    return
-
-
 @Alita.on_message(filters.command("wiki", PREFIX_HANDLER))
 async def wiki(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used wiki cmd in {m.chat.id}")
