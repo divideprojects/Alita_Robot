@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from html import escape
 from re import escape as re_escape
 from secrets import choice
 from traceback import format_exc
