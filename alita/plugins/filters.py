@@ -97,11 +97,12 @@ async def add_filter(_, m: Message):
                 "Please provide keyword for this filter to reply with!",
             )
             return
-        if '|' in (args[1].split()[1]).lower():
-            extracted = await split_quotes((args[1].split()[1]).lower())
-            keyword = extracted[0].lower()
+        if len(args[1].split()) >= 2:
+            if '|' in (args[1].split()[1]).lower():
+                extracted = await split_quotes((args[1].split()[1]).lower())
+                keyword = extracted[0].lower()
         else:
-            keyword = (args[1].split()[1]).lower()
+            keyword = args[1].lower()
     else:
         extracted = await split_quotes(args[1])
         keyword = extracted[0].lower()
