@@ -63,13 +63,14 @@ class Approve:
         global APPROVE_CACHE
         with INSERTION_LOCK:
 
-           try:
+            try:
                 users = list(APPROVE_CACHE[chat_id])
             except KeyError:
                 return True
 
             if user_id in {i[0] for i in users}:
                 return True
+
             users_old = APPROVE_CACHE[chat_id]
             users_old.add((user_id, user_name))
             APPROVE_CACHE[chat_id] = users_old
