@@ -40,9 +40,9 @@ def command(
 ):
     from alita import BOT_USERNAME
 
-    async def func(flt, _: Alita, message: Message):
-        text: str = message.text or message.caption
-        message.command = None
+    async def func(flt, _: Alita, m: Message):
+        text: str = m.text or m.caption
+        m.command = None
         if not text:
             return False
         regex = "^({prefix})+\\b({regex})\\b(\\b@{bot_name}\\b)?(.*)".format(
@@ -52,9 +52,9 @@ def command(
         )
         matches = re.search(re.compile(regex), text)
         if matches:
-            message.command = [matches.group(2)]
+            m.command = [matches.group(2)]
             for arg in shlex.split(matches.group(4).strip()):
-                message.command.append(arg)
+                m.command.append(arg)
             return True
         else:
             return False
