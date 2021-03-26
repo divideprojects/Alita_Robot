@@ -34,7 +34,7 @@ strings:
         × /unapprove: Unapprove of a user. They will now be subject to blocklists.
         × /approved: List all approved users.
         × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
-        
+
         **Example:**
         `/approve @username`: this approves a user in the chat.
     bans:
@@ -52,7 +52,7 @@ strings:
         × /sban: Bans the user replied or tagged and delete your messsage.
         × /dban: Bans the user replied and delete their message.
         × /unban: Unbans the user replied to or tagged.
-        
+
         **Example:**
         `/ban @username`: this bans a user in the chat.
     blacklist:
@@ -75,7 +75,7 @@ strings:
         × /rmallblacklist: Removes all the blacklists from the current chat.
 
         **Note:** Can only add or remove one blacklist at a time!
-        
+
         **Example:**
         `/addblacklist hello`: this adds the word 'hello' as blacklist in the chat.
     filters:
@@ -144,7 +144,7 @@ strings:
         × /unlock `<type>`: Unlock Chat permission.
         × /locks: View Chat permission.
         × /locktypes: Check available lock types!
-        
+
         **Example:**
         `/lock media`: this locks all the media messages in the chat.
     muting:
@@ -208,7 +208,7 @@ strings:
 
         × /purge: Deletes messages upto replied message.
         × /del: Deletes a single message, used as a reply to message.
-        
+
         **Example:**
         `/purge <as a reply to message>: this will delete all the messages till the one you replied.
     reporting:
@@ -246,7 +246,7 @@ strings:
         × /github `<username>`: Search for the user using github api!
         × /lyrics `<song>`: Get the lyrics of the song you specify!
         × /weebify `<text>` or `<reply to message>`: To weebify the text.
-        
+
         **Example:**
         `/info @username`: this fetches the information about a user from the database.
     warnings:

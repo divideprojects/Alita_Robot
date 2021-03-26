@@ -95,7 +95,6 @@ async def add_filter(_, m: Message):
         await m.reply_text("Please provide keyword for this filter to reply with!")
         return
 
-
     extracted = await split_quotes(args[1])
     keyword = extracted[0].lower()
 
@@ -191,7 +190,10 @@ async def stop_filter(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["rmallfilters", "removeallfilters", "stopall", "stopallfilters"], PREFIX_HANDLER)
+    filters.command(
+        ["rmallfilters", "removeallfilters", "stopall", "stopallfilters"],
+        PREFIX_HANDLER,
+    )
     & owner_filter,
 )
 async def rm_allfilters(_, m: Message):

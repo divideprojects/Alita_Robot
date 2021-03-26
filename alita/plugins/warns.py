@@ -105,7 +105,7 @@ async def warn(c: Alita, m: Message):
                 f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
             ),
         )
-        return
+        await m.stop_propagation()
 
     rules = rules_db.get_rules(m.chat.id)
     if rules:
@@ -121,11 +121,11 @@ async def warn(c: Alita, m: Message):
 
     if m.text.split()[0] == "/swarn":
         await m.delete()
-        return
+        await m.stop_propagation()
     if m.text.split()[0] == "/dwarn":
         if not m.reply_to_message:
             await m.reply_text("Reply to a message to delete it and ban the user!")
-            return
+            await m.stop_propagation()
         await m.reply_to_message.delete()
     txt = f"{(await mention_html(user_first_name, user_id))} has {num} warnings!"
     txt += f"\n<b>Reason for last warn</b>:\n{reason}" if reason else ""
@@ -143,7 +143,7 @@ async def warn(c: Alita, m: Message):
             ],
         ),
     )
-    return
+    await m.stop_propagation()
 
 
 @Alita.on_message(filters.command("resetwarns", PREFIX_HANDLER) & restrict_filter)
