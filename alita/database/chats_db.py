@@ -61,12 +61,15 @@ class Chats:
             # Databse Cache
             curr = self.collection.find_one({"_id": chat_id})
             if curr:
+                users_old = curr["users"]
+                users_old.append(user_id)
+                users = list(set(users_old))
                 return self.collection.update(
                     {"_id": chat_id},
                     {
                         "_id": chat_id,
                         "chat_name": chat_name,
-                        "addToSet": {"users": user_id},
+                        "users": users,
                     },
                 )
 
@@ -174,5 +177,11 @@ def __load_chats_cache():
     start = time()
     db = Chats()
     chats = db.load_from_db()
-    CHATS_CACHE = {int(chat["_id"]): chat for chat in chats}
+    CHATS_CACHE = {
+        int(chat["_id"]): {
+            "chat_name": chat["chat_name"],
+            "users": chat["users"],
+        }
+        for chat in chats
+    }
     LOGGER.info(f"Loaded Chats Cache - {round((time()-start),3)}s")

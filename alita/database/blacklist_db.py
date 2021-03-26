@@ -33,18 +33,20 @@ class Blacklist:
         with INSERTION_LOCK:
             curr = self.collection.find_one({"_id": chat_id})
             if curr:
-
+                triggers_old = curr["triggers"]
+                triggers_old.append(trigger)
+                triggers = list(set(triggers_old))
                 return self.collection.update(
                     {"_id": chat_id},
                     {
                         "_id": chat_id,
-                        "$addToSet": {"triggers": trigger},
+                        "triggers": triggers,
                     },
                 )
             return self.collection.insert_one(
                 {
                     "_id": chat_id,
-                    "$addToSet": {"triggers": trigger},
+                    "triggers": [trigger],
                     "action": "none",
                     "reason": "Automated blacklisted word",
                 },
