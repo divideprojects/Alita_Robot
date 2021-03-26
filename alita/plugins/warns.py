@@ -34,7 +34,7 @@ from alita.database.rules_db import Rules
 from alita.database.users_db import Users
 from alita.database.warns_db import Warns, WarnSettings
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
+from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 from alita.utils.custom_filters import admin_filter, restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html

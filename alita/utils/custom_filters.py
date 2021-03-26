@@ -16,13 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
 
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
+from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 
 SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
 DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])

@@ -32,7 +32,7 @@ from pyrogram.types import Message
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
+from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 from alita.utils.custom_filters import restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html

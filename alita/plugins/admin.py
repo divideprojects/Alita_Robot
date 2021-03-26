@@ -32,11 +32,7 @@ from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import (
-    ADMIN_CACHE,
-    TEMP_ADMIN_CACHE_BLOCK,
-    admin_cache_reload,
-)
+from alita.utils.caching import ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload
 from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -289,6 +285,7 @@ async def demote_usr(c: Alita, m: Message):
         LOGGER.error(format_exc())
 
     return
+
 
 @Alita.on_message(
     filters.command("invitelink", PREFIX_HANDLER) & invite_filter,

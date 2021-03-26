@@ -22,7 +22,7 @@ from traceback import format_exc
 
 from alita import LOGGER
 from alita.database import MongoDB
-from alita.utils.admin_cache import ADMIN_CACHE
+from alita.utils.caching import ADMIN_CACHE
 
 INSERTION_LOCK = RLock()
 

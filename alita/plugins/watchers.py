@@ -33,7 +33,7 @@ from alita.database.blacklist_db import Blacklist
 from alita.database.group_blacklist import BLACKLIST_CHATS
 from alita.database.warns_db import Warns, WarnSettings
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import ADMIN_CACHE, admin_cache_reload
+from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
 
