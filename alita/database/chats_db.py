@@ -61,15 +61,12 @@ class Chats:
             # Databse Cache
             curr = self.collection.find_one({"_id": chat_id})
             if curr:
-                users_old = curr["users"]
-                users_old.append(user_id)
-                users = list(set(users_old))
                 return self.collection.update(
                     {"_id": chat_id},
                     {
                         "_id": chat_id,
                         "chat_name": chat_name,
-                        "users": users,
+                        "addToSet": {"users": user_id},
                     },
                 )
 

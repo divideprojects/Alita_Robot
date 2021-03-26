@@ -77,14 +77,11 @@ class Approve:
 
             curr = self.collection.find_one({"_id": chat_id})
             if curr:
-                users_old = curr["users"]
-                users_old.append((user_id, user_name))
-                users = list(set(users_old))  # Remove duplicates
                 return self.collection.update(
                     {"_id": chat_id},
                     {
                         "_id": chat_id,
-                        "users": users,
+                        "$addToSet": {"users": (user_id, user_name)},
                     },
                 )
 
@@ -92,7 +89,7 @@ class Approve:
             return self.collection.insert_one(
                 {
                     "_id": chat_id,
-                    "users": [(user_id, user_name)],
+                    "$addToSet": {"users": (user_id, user_name)},
                 },
             )
 
