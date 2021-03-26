@@ -38,7 +38,12 @@ class Approve:
     def check_approve(self, chat_id: int, user_id: int):
         with INSERTION_LOCK:
 
-            if user_id in {i[0] for i in APPROVE_CACHE[chat_id]}:
+            try:
+                users = list(APPROVE_CACHE[chat_id])
+            except KeyError:
+                return True
+
+            if user_id in {i[0] for i in users}:
                 return True
 
             curr_approve = self.collection.find_one(
@@ -58,7 +63,12 @@ class Approve:
         global APPROVE_CACHE
         with INSERTION_LOCK:
 
-            if user_id in {i[0] for i in APPROVE_CACHE[chat_id]}:
+           try:
+                users = list(APPROVE_CACHE[chat_id])
+            except KeyError:
+                return True
+
+            if user_id in {i[0] for i in users}:
                 return True
             users_old = APPROVE_CACHE[chat_id]
             users_old.add((user_id, user_name))
@@ -89,7 +99,10 @@ class Approve:
         global APPROVE_CACHE
         with INSERTION_LOCK:
 
-            users = list(APPROVE_CACHE[chat_id])
+            try:
+                users = list(APPROVE_CACHE[chat_id])
+            except KeyError:
+                return True
             try:
                 user = next(user for user in users if user[0] == user_id)
                 users.remove(user)
