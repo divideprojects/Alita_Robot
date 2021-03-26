@@ -289,28 +289,24 @@ async def chats(c: Alita, m: Message):
     all_chats = (chatdb.get_all_chats()) or {}
     chatfile = tlang(m, "dev.chatlist.header")
     P = 1
-    for chat, val in all_chats:
+    for chat, val in all_chats.items():
         try:
-            chat_info = await c.get_chat(chat["_id"])
+            chat_info = await c.get_chat(chat)
             chat_members = chat_info.members_count
             try:
                 invitelink = chat_info.invite_link
             except KeyError:
                 invitelink = "No Link!"
-            chatfile += "{}. {} | {} | {} | {}\n".format(
-                P,
-                val["chat_name"],
-                chat,
-                chat_members,
-                invitelink,
+            chatfile += (
+                f"{P}. {val['chat_name']} | {chat} | {chat_members} | {invitelink}\n"
             )
             P += 1
         except ChatAdminRequired:
             pass
         except (ChannelPrivate, ChannelInvalid):
-            chatdb.remove_chat(chat["_id"])
+            chatdb.remove_chat(chat)
         except PeerIdInvalid:
-            LOGGER.warning(f"Peer not found {chat['_id']}")
+            LOGGER.warning(f"Peer not found {chat}")
         except FloodWait as ef:
             LOGGER.error("FloodWait required, Sleeping for 60s")
             LOGGER.error(ef)
@@ -367,16 +363,18 @@ async def chat_broadcast(c: Alita, m: Message):
 
     exmsg = await m.reply_text("Started broadcasting!")
     all_chats = (chatdb.list_chats()) or {}
-    err_str = ""
+    err_str, done_broadcast = "", 0
 
     for chat in all_chats:
         try:
             await c.send_message(chat, msg)
+            done_broadcast += 1
         except RPCError as ef:
             LOGGER.error(ef)
+            err_str += str(ef)
             continue
 
-    await exmsg.edit_text("Done broadcasting ✅")
+    await exmsg.edit_text("Done broadcasting ✅\nSent message to {} chats")
     if err_str:
         with BytesIO(str.encode(await remove_markdown_and_html(err_str))) as f:
             f.name = "error_broadcast.txt"

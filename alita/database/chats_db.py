@@ -177,11 +177,5 @@ def __load_chats_cache():
     start = time()
     db = Chats()
     chats = db.load_from_db()
-    CHATS_CACHE = {
-        int(chat["_id"]): {
-            "chat_name": chat["chat_name"],
-            "users": chat["users"],
-        }
-        for chat in chats
-    }
+    CHATS_CACHE = {int(chat["_id"]): chat for chat in chats}
     LOGGER.info(f"Loaded Chats Cache - {round((time()-start),3)}s")

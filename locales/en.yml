@@ -486,7 +486,7 @@ strings:
       Commands available:
        × /start: Start the bot
        × /help: Give's you this message.
-       × /donate: Information related on how to support my creater!
+       × /donate: Information related on how to support my creator!
 
       All commands can either be used with / or !.
     no_admin_cmd_perm: "You cannot use an admin command!"
