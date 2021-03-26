@@ -432,7 +432,12 @@ strings:
       action_ban: "Banned {user} for using a blacklisted word!"
       action_mute: "Muted {user} for using a blacklisted word!"
     already_exists: "The word <code>{trigger}</code> is already blacklisted!"
-    action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
+    action_get: |-
+      The current action for blacklists in this chat is <i><b>{action}</b></i>
+      All blacklist modes delete the message containing blacklist word.
+
+      If you want to change this, you need to specify a new action instead of it.
+      Possible actions are: <code>none</code>/<code>warn</code>/<code>mute</code>/<code>ban</code>
     action_set: "Set action for blacklist for this to <b>{action}</b>"
     added_blacklist: "Added <code>{trigger}</code> in blacklist words!"
     curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"

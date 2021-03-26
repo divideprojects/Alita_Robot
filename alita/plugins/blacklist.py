@@ -161,7 +161,8 @@ async def rm_blacklist(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["blaction", "blacklistaction"], PREFIX_HANDLER) & restrict_filter,
+    filters.command(["blaction", "blacklistaction", "blacklistmode"], PREFIX_HANDLER)
+    & restrict_filter,
 )
 async def set_bl_action(_, m: Message):
     if len(m.text.split()) == 2:
