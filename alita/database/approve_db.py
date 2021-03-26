@@ -229,4 +229,4 @@ def __load_approve_cache():
     all_approved = db.load_from_db()
 
     APPROVE_CACHE = {chat["_id"]: chat["users"] for chat in all_approved}
-    LOGGER.info(f"Loaded Approve Local Cache in {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded Approve Cache - {round((time()-start),3)}s")

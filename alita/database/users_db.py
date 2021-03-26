@@ -123,4 +123,4 @@ def __load_users_cache():
         }
         for user in users
     }
-    LOGGER.info(f"Loaded Users Local Cache in {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded Users Cache - {round((time()-start),3)}s")

@@ -134,4 +134,4 @@ def __load_pins_chats():
     all_chats = db.load_chats_from_db()
     PINS_CACHE["antichannelpin"] = {i["_id"] for i in all_chats if i["antichannelpin"]}
     PINS_CACHE["cleanlinked"] = {i["_id"] for i in all_chats if i["cleanlinked"]}
-    LOGGER.info(f"Loaded Pins Local Cache in {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded Pins Cache - {round((time()-start),3)}s")

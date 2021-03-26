@@ -16,8 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from datetime import time
 from threading import RLock
 
+from alita import LOGGER
 from alita.database import MongoDB
 from alita.database.chats_db import Chats
 
@@ -67,8 +69,10 @@ class GroupBlacklist:
 
 def __load_group_blacklist():
     global BLACKLIST_CHATS
+    start = time()
     db = GroupBlacklist()
     chats = db.get_from_db() or []
     for chat in chats:
         BLACKLIST_CHATS.append(chat["_id"])
     BLACKLIST_CHATS.sort()
+    LOGGER.info(f"Loaded GroupBlacklist Cache - {round((time()-start),3)}s")

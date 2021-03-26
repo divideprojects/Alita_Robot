@@ -286,4 +286,4 @@ def __load_filters_cache():
         chat: [filt for filt in all_filters if filt["chat_id"] == chat]
         for chat in chat_ids
     }
-    LOGGER.info(f"Loaded Filters Local Cache in {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded Filters Cache - {round((time()-start),3)}s")

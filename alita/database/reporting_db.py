@@ -122,4 +122,4 @@ def __load_all_reporting_settings():
         }
         for chat in data
     }
-    LOGGER.info(f"Loaded Reporting Local Cache in {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded Reporting Cache - {round((time()-start),3)}s")
