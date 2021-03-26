@@ -16,10 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import uvloop
+from uvloop import install
 
 # Install uvloop
-uvloop.install()
+install()
+
+
 from platform import python_version
 from threading import RLock
 
@@ -86,9 +88,9 @@ class Alita(Client):
 
         # Show in Log that bot has started
         LOGGER.info(
-            f"Pyrogram v{__version__}\n(Layer - {layer}) started on {BOT_USERNAME}\n"
-            f"Python Version: {python_version()}",
+            f"\nPyrogram v{__version__} (Layer - {layer}) started on {meh.username}",
         )
+        LOGGER.info(f"Python Version: {python_version()}\n")
 
         # Get cmds and keys
         cmd_list = await load_cmds(await all_plugins())

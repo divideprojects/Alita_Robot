@@ -22,7 +22,7 @@ from pyrogram.types import Message
 
 from alita import LOGGER
 from alita.bot_class import Alita
-from alita.database.antichannelpin_db import AntiChannelPin
+from alita.database.antichannelpin_db import Pins
 from alita.database.antiflood_db import AntiFlood
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
@@ -45,7 +45,7 @@ flooddb = AntiFlood()
 approvedb = Approve()
 reportdb = Reporting()
 notes_settings = NotesSettings()
-antipindb = AntiChannelPin()
+pins_db = Pins()
 fldb = Filters()
 
 
@@ -137,6 +137,6 @@ async def migrate_chat(old_chat, new_chat):
     approvedb.migrate_chat(old_chat, new_chat)
     reportdb.migrate_chat(old_chat, new_chat)
     notes_settings.migrate_chat(old_chat, new_chat)
-    antipindb.migrate_chat(old_chat, new_chat)
+    pins_db.migrate_chat(old_chat, new_chat)
     fldb.migrate_chat(old_chat, new_chat)
     LOGGER.info(f"Successfully migrated from {old_chat} to {new_chat}!")

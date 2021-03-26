@@ -145,7 +145,7 @@ async def clear_rules(_, m: Message):
                 [
                     InlineKeyboardButton(
                         "⚠️ Confirm",
-                        callback_data=f"clear.rules.{m.from_user.id}",
+                        callback_data=f"clear_rules",
                     ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
                 ],
@@ -155,12 +155,11 @@ async def clear_rules(_, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^clear.rules.") & admin_filter)
+@Alita.on_callback_query(filters.regex("^clear_rules$"))
 async def clearrules_callback(_, q: CallbackQuery):
-    user_id = q.data.split(".")[-1]
     db.clear_rules(q.message.chat.id)
     await q.message.edit_text(tlang(q, "rules.cleared"))
-    LOGGER.info(f"{user_id} cleared rules in {q.message.chat.id}")
+    LOGGER.info(f"{q.from_user.id} cleared rules in {q.message.chat.id}")
     await q.answer("Rules for the chat have been cleared!", show_alert=True)
     return
 

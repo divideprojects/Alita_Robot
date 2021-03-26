@@ -115,4 +115,4 @@ def __load_antispam_users():
     db = GBan()
     users = db.load_from_db()
     ANTISPAM_BANNED = {i["_id"] for i in users}
-    LOGGER.info(f"Loaded AntispamBanned Local Cache in {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded AntispamBanned Cache - {round((time()-start),3)}s")

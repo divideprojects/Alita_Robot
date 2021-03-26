@@ -55,7 +55,7 @@ class Development:
     STRING_SESSION = "YOUR STRING_SESSION"
     APP_ID = 12345  # Your APP_ID from Telegram
     API_HASH = "YOUR TOKEN"  # Your APP_HASH from Telegram
-    OWNER_ID = "YOUR TOKEN"
+    OWNER_ID = 12345  # Your telegram user id
     MESSAGE_DUMP = "YOUR GROUP_ID"  # Your Private Group ID
     DEV_USERS = []
     SUDO_USERS = []
@@ -66,7 +66,7 @@ class Development:
     PREFIX_HANDLER = ["!", "/"]
     SUPPORT_GROUP = "SUPPORT_GROUP"
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
-    ENABLED_LOCALES = "ENABLED_LOCALES"
+    ENABLED_LOCALES = ["ENABLED_LOCALES"]
     VERSION = "VERSION"
-    DEV_PREFIX_HANDLER = ">"
+    DEV_PREFIX_HANDLER = "?"
     WORKERS = 8

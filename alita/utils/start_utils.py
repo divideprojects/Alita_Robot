@@ -145,6 +145,10 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
     else:
         return
 
+    if not getnotes:
+        await m.reply_text("Note does not exist", quote=True)
+        return
+
     msgtype = getnotes["msgtype"]
     if not msgtype:
         await m.reply_text(
@@ -252,11 +256,12 @@ async def get_help_msg(m, help_option: str):
     )
 
     if help_option in help_cmd_keys:
-        help_option_value = next(
-            HELP_COMMANDS[i]["help_msg"]
+        help_option_name = next(
+            HELP_COMMANDS[i]
             for i in HELP_COMMANDS
             if help_option in HELP_COMMANDS[i]["alt_cmds"]
         )
+        help_option_value = help_option_name["help_msg"]
         help_kb = next(
             HELP_COMMANDS[i]["buttons"]
             for i in HELP_COMMANDS
@@ -269,7 +274,10 @@ async def get_help_msg(m, help_option: str):
                 ),
             ],
         ]
-        help_msg = tlang(m, help_option_value)
+        help_msg = (
+            f"**{(tlang(m, (help_option_name['help_msg']).replace('.help', '.main')))}:**\n\n"
+            + tlang(m, help_option_value)
+        )
         LOGGER.info(
             f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
         )

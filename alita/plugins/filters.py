@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from html import escape
 from re import escape as re_escape
 from secrets import choice
 from traceback import format_exc
@@ -38,15 +37,17 @@ from alita.utils.custom_filters import admin_filter, owner_filter
 from alita.utils.msg_types import Types, get_filter_type
 from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
-from alita.utils.string import escape_invalid_curly_brackets, parse_button, split_quotes
+from alita.utils.string import (
+    escape_mentions_using_curly_brackets,
+    parse_button,
+    split_quotes,
+)
 
 # Initialise
 db = Filters()
 
 
-@Alita.on_message(
-    filters.command("filters", PREFIX_HANDLER) & admin_filter,
-)
+@Alita.on_message(filters.command("filters", PREFIX_HANDLER) & filters.group)
 async def view_filters(_, m: Message):
 
     LOGGER.info(f"{m.from_user.id} checking filters in {m.chat.id}")
@@ -65,7 +66,6 @@ async def view_filters(_, m: Message):
             for i in all_filters
         ],
     )
-
     await m.reply_text(filters_chat)
     return
 
@@ -85,22 +85,18 @@ async def add_filter(_, m: Message):
         )
         return
 
-    if not m.reply_to_message and len(args) < 2:
+    if not m.reply_to_message and len(m.text.split()) < 3:
         await m.reply_text(
             "Please provide keyboard keyword for this filter to reply with!",
         )
         return
 
-    if m.reply_to_message:
-        if len(args) < 2:
-            await m.reply_text(
-                "Please provide keyword for this filter to reply with!",
-            )
-            return
-        keyword = args[1]
-    else:
-        extracted = await split_quotes(args[1])
-        keyword = extracted[0].lower()
+    if m.reply_to_message and len(args) < 2:
+        await m.reply_text("Please provide keyword for this filter to reply with!")
+        return
+
+    extracted = await split_quotes(args[1])
+    keyword = extracted[0].lower()
 
     for k in keyword.split("|"):
         if k in actual_filters:
@@ -109,7 +105,7 @@ async def add_filter(_, m: Message):
 
     teks, msgtype, file_id = await get_filter_type(m)
 
-    if not m.reply_to_message and len(args) >= 2:
+    if not m.reply_to_message and len(m.text.split()) >= 2:
         teks, _ = await parse_button(extracted[1])
         if not teks:
             await m.reply_text(
@@ -117,32 +113,32 @@ async def add_filter(_, m: Message):
             )
             return
 
-    elif m.reply_to_message and len(args) >= 2:
-        if m.reply_to_m.text:
-            text_to_parsing = m.reply_to_m.text
-        elif m.reply_to_m.caption:
-            text_to_parsing = m.reply_to_m.caption
+    elif m.reply_to_message and len(m.text.split()) >= 2:
+        if m.reply_to_message.text:
+            text_to_parsing = m.reply_to_message.text
+        elif m.reply_to_message.caption:
+            text_to_parsing = m.reply_to_message.caption
         else:
             text_to_parsing = ""
         teks, _ = await parse_button(text_to_parsing)
 
     elif not teks and not msgtype:
         await m.reply_text(
-            "Please provide keyword for this filter reply with!",
+            'Please provide keyword for this filter reply with!\nEnclose filter in <code>"double quotes"</code>',
         )
         return
 
     elif m.reply_to_message:
 
-        if m.reply_to_m.text:
-            text_to_parsing = m.reply_to_m.text
-        elif m.reply_to_m.caption:
-            text_to_parsing = m.reply_to_m.caption
+        if m.reply_to_message.text:
+            text_to_parsing = m.reply_to_message.text
+        elif m.reply_to_message.caption:
+            text_to_parsing = m.reply_to_message.caption
         else:
             text_to_parsing = ""
 
         teks, _ = await parse_button(text_to_parsing)
-        if (m.reply_to_m.text or m.reply_to_m.caption) and not teks:
+        if (m.reply_to_message.text or m.reply_to_message.caption) and not teks:
             await m.reply_text(
                 "There is no filter message - You can't JUST have buttons, you need a message to go with it!",
             )
@@ -194,7 +190,10 @@ async def stop_filter(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["rmallfilters", "removeallfilters"], PREFIX_HANDLER)
+    filters.command(
+        ["rmallfilters", "removeallfilters", "stopall", "stopallfilters"],
+        PREFIX_HANDLER,
+    )
     & owner_filter,
 )
 async def rm_allfilters(_, m: Message):
@@ -235,7 +234,7 @@ async def rm_allfilters_callback(_, q: CallbackQuery):
         )
         return
     db.rm_all_filters(q.message.chat.id)
-    await q.message.delete()
+    await q.message.edit_text("Cleared all filters for {q.message.chat.id}")
     LOGGER.info(f"{user_id} removed all filter from {q.message.chat.id}")
     await q.answer("Cleared all Filters!", show_alert=True)
     return
@@ -253,6 +252,9 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
         return
 
     msgtype = getfilter["msgtype"]
+    if not msgtype:
+        await m.reply_text("<b>Error:</b> Cannot find a type for this filter!!")
+        return
 
     try:
         # support for random filter texts
@@ -271,33 +273,11 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
         "chatname",
         "mention",
     ]
-    teks = await escape_invalid_curly_brackets(filter_reply, parse_words)
-    if teks:
-        teks = teks.format(
-            first=escape(m.from_user.first_name),
-            last=escape(m.from_user.last_name or m.from_user.first_name),
-            fullname=" ".join(
-                [
-                    escape(m.from_user.first_name),
-                    escape(m.from_user.last_name),
-                ]
-                if m.from_user.last_name
-                else [escape(m.from_user.first_name)],
-            ),
-            username="@" + escape(m.from_user.username)
-            if m.from_user.username
-            else (await mention_html(m.from_user.first_name, m.from_user.id)),
-            mention=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            chatname=escape(m.chat.title)
-            if m.chat.type != "private"
-            else escape(m.from_user.first_name),
-            id=m.from_user.id,
-        )
-    else:
-        teks = ""
+    text = await escape_mentions_using_curly_brackets(m, filter_reply, parse_words)
 
     if msgtype == Types.TEXT:
-        await m.reply_text(teks, quote=True)
+        await m.reply_text(text, quote=True)
+
     elif msgtype in (
         Types.STICKER,
         Types.VIDEO_NOTE,
@@ -313,8 +293,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
             getfilter["fileid"],
-            caption=teks,
-            parse_mode=None,
+            caption=text,
             reply_to_message_id=m.message_id,
         )
     return msgtype

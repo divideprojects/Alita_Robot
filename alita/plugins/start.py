@@ -215,7 +215,12 @@ async def help_menu(_, m: Message):
 async def get_module_info(_, q: CallbackQuery):
 
     module = q.data.split(".", 1)[1]
-    help_msg = tlang(q, HELP_COMMANDS[module]["help_msg"])
+
+    help_msg = f"**{(tlang(q, str(module)))}:**\n\n" + tlang(
+        q,
+        HELP_COMMANDS[module]["help_msg"],
+    )
+
     help_kb = HELP_COMMANDS[module]["buttons"] + [
         [
             InlineKeyboardButton(

@@ -191,13 +191,17 @@ class Filters:
             try:
                 return len(
                     [
-                        j.split("|")
-                        for i in (
-                            (i["keyword"] for i in FILTER_CACHE[chat_id])
-                            for chat_id in set(FILTER_CACHE.keys())
-                        )
-                        for j in i
-                        if len(j.split("|")) >= 2
+                        i
+                        for j in [
+                            j.split("|")
+                            for i in (
+                                (i["keyword"] for i in FILTER_CACHE[chat_id])
+                                for chat_id in set(FILTER_CACHE.keys())
+                            )
+                            for j in i
+                            if len(j.split("|")) >= 2
+                        ]
+                        for i in j
                     ],
                 )
             except KeyError:
@@ -282,4 +286,4 @@ def __load_filters_cache():
         chat: [filt for filt in all_filters if filt["chat_id"] == chat]
         for chat in chat_ids
     }
-    LOGGER.info(f"Loaded Filters Local Cache in {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded Filters Cache - {round((time()-start),3)}s")

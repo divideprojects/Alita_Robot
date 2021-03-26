@@ -37,7 +37,7 @@ async def extract_user(c, m) -> Tuple[int, str, str]:
         user_first_name = m.reply_to_message.from_user.first_name
         user_name = m.reply_to_message.from_user.username
 
-    elif len(m.command) > 1:
+    elif len(m.text.split()) > 1:
         if len(m.entities) > 1:
             required_entity = m.entities[1]
             if required_entity.type == "text_mention":
@@ -51,6 +51,16 @@ async def extract_user(c, m) -> Tuple[int, str, str]:
                         required_entity.offset + required_entity.length
                     )
                 ]
+
+                try:
+                    user_found = int(user_found)
+                except (ValueError, Exception) as ef:
+                    if "invalid literal for int() with base 10:" in str(ef):
+                        user_found = str(user_found)
+                    else:
+                        user_found = user_found
+                        LOGGER.error(ef)
+                        LOGGER.error(format_exc())
 
                 try:
                     user = db.get_user_info(user_found)
@@ -71,13 +81,24 @@ async def extract_user(c, m) -> Tuple[int, str, str]:
                     LOGGER.error(format_exc())
 
         else:
-            user_id = int(m.command[1])
+            try:
+                user_id = int(m.text.split()[1])
+            except (ValueError, Exception) as ef:
+                if "invalid literal for int() with base 10:" in str(ef):
+                    user_id = str(m.text.split()[1])
+                else:
+                    user_id = m.text.split()[1]
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
             try:
                 user = db.get_user_info(user_id)
                 user_first_name = user["name"]
                 user_name = user["username"]
             except Exception as ef:
-                user_first_name = (await c.get_users(user_id)).first_name
+                user_id = m.text.split()[1]
+                user = await c.get_users(user_id)
+                user_first_name = user.first_name
+                user_name = user.username
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
 

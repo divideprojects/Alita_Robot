@@ -39,7 +39,7 @@ db = Blacklist()
 app_db = Approve()
 
 
-@Alita.on_message(filters.command("blacklist", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(filters.command("blacklist", PREFIX_HANDLER) & filters.group)
 async def view_blacklist(_, m: Message):
 
     LOGGER.info(f"{m.from_user.id} checking blacklists in {m.chat.id}")
@@ -92,12 +92,31 @@ async def add_blacklist(_, m: Message):
     await m.reply_text(
         (
             (tlang(m, "blacklist.added_blacklist")).format(
-                trigger=", ".join(bl_words),
+                trigger=", ".join([f"<code>{i}</code>" for i in bl_words]),
             )
-            + f"\n{rep_text}"
+            + (f"\n{rep_text}" if rep_text else "")
         ),
     )
     await m.stop_propagation()
+
+
+@Alita.on_message(
+    filters.command(["blwarning", "blreason", "blacklistreason"], PREFIX_HANDLER)
+    & restrict_filter,
+)
+async def blacklistreason(_, m: Message):
+    if len(m.text.split()) == 1:
+        curr = db.get_reason(m.chat.id)
+        await m.reply_text(
+            f"The current reason for blacklists warn is:\n<code>{curr}</code>",
+        )
+    else:
+        reason = m.text.split(None, 1)[1]
+        db.set_reason(m.chat.id, reason)
+        await m.reply_text(
+            f"Updated reason for blacklists warn is:\n<code>{reason}</code>",
+        )
+    return
 
 
 @Alita.on_message(
@@ -119,6 +138,9 @@ async def rm_blacklist(_, m: Message):
             continue
         db.remove_blacklist(m.chat.id, bl_word)
 
+    if non_found_words == bl_words:
+        return await m.reply_text("Blacklists not found!")
+
     if non_found_words:
         rep_text = (
             "Could not find "
@@ -130,20 +152,28 @@ async def rm_blacklist(_, m: Message):
     await m.reply_text(
         (
             (tlang(m, "blacklist.rm_blacklist")).format(
-                bl_word=f"<code>{bl_words}</code>",
+                bl_words=", ".join([f"<code>{i}</code>" for i in bl_words]),
             )
-            + f"\n{rep_text}"
-            if rep_text
-            else ""
+            + (f"\n{rep_text}" if rep_text else "")
         ),
     )
     await m.stop_propagation()
 
 
-@Alita.on_message(filters.command("blaction", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(
+    filters.command(["blaction", "blacklistaction", "blacklistmode"], PREFIX_HANDLER)
+    & restrict_filter,
+)
 async def set_bl_action(_, m: Message):
     if len(m.text.split()) == 2:
         action = m.text.split(None, 1)[1]
+        valid_actions = ("ban", "kick", "mute", "warn", "none")
+        if action not in valid_actions:
+            await m.reply_text(
+                "Choose a valid blacklist action from "
+                + ", ".join([f"<code>{i}</code>" for i in valid_actions]),
+            )
+            return
         db.set_action(m.chat.id, action)
         LOGGER.info(
             f"{m.from_user.id} set blacklist action to '{action}' in {m.chat.id}",

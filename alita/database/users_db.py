@@ -95,11 +95,11 @@ class Users:
 
     def get_user_info(self, user_id):
         with INSERTION_LOCK:
-            if isinstance(user_id, int) and not str(user_id).startswith("@"):
+            if isinstance(user_id, int):
                 curr = self.collection.find_one({"_id": user_id})
-            elif isinstance(user_id, str) and str(user_id).startswith("@"):
-                user_id = user_id.replace("@", "")
-                curr = self.collection.find_one({"username": user_id})
+            elif isinstance(user_id, str):
+                # user_id[1:] because we don't want the '@' in username
+                curr = self.collection.find_one({"username": user_id[1:]})
             else:
                 curr = None
             if curr:
@@ -123,4 +123,4 @@ def __load_users_cache():
         }
         for user in users
     }
-    LOGGER.info(f"Loaded Users Local Cache in {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded Users Cache - {round((time()-start),3)}s")

@@ -32,11 +32,7 @@ from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.tr_engine import tlang
-from alita.utils.admin_cache import (
-    ADMIN_CACHE,
-    TEMP_ADMIN_CACHE_BLOCK,
-    admin_cache_reload,
-)
+from alita.utils.caching import ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload
 from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
@@ -67,7 +63,7 @@ async def adminlist_show(_, m: Message):
                 else (await mention_html(admin[1], admin[0]))
             )
             for admin in admin_list
-            if not admin[2]
+            if not admin[2]  # if non-anonyamous admin
         ]
         mention.sort(key=lambda x: x[1])
         adminstr += "\n".join([f"- {i}" for i in mention])
@@ -86,7 +82,6 @@ async def adminlist_show(_, m: Message):
                     ef=ef,
                 ),
             )
-
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -127,6 +122,8 @@ async def reload_admins(_, m: Message):
     filters.command("promote", PREFIX_HANDLER) & promote_filter,
 )
 async def promote_usr(c: Alita, m: Message):
+    from alita import BOT_ID
+
     global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -134,6 +131,10 @@ async def promote_usr(c: Alita, m: Message):
         return
 
     user_id, user_first_name, user_name = await extract_user(c, m)
+
+    if user_id == BOT_ID:
+        await m.reply_text("Huh, how can I even promote myself?")
+        return
 
     # If user is alreay admin
     try:
@@ -168,6 +169,11 @@ async def promote_usr(c: Alita, m: Message):
                 chat_title=m.chat.title,
             ),
         )
+
+        if len(m.text.split()) == 3 and not m.reply_to_message:
+            await c.set_administrator_title(m.chat.id, user_id, m.text.split()[2])
+        elif len(m.text.split()) == 2 and m.reply_to_message:
+            await c.set_administrator_title(m.chat.id, user_id, m.text.split()[1])
 
         # If user is approved, disapprove them as they willbe promoted and get even more rights
         if app_db.check_approve(m.chat.id, user_id):
@@ -205,6 +211,8 @@ async def promote_usr(c: Alita, m: Message):
     filters.command("demote", PREFIX_HANDLER) & promote_filter,
 )
 async def demote_usr(c: Alita, m: Message):
+    from alita import BOT_ID
+
     global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -212,6 +220,10 @@ async def demote_usr(c: Alita, m: Message):
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
+
+    if user_id == BOT_ID:
+        await m.reply_text("Get an admin to demote me!")
+        return
 
     # If user not alreay admin
     try:
@@ -289,7 +301,7 @@ async def get_invitelink(c: Alita, m: Message):
             ),
             disable_web_page_preview=True,
         )
-        LOGGER.info(f"{m.from_user.id} exported invitl link in {m.chat.id}")
+        LOGGER.info(f"{m.from_user.id} exported invite link in {m.chat.id}")
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except ChatAdminInviteRequired:

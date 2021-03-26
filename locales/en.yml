@@ -19,7 +19,7 @@ strings:
         × /promote: Promotes the user replied to or tagged.
         × /demote: Demotes the user replied to or tagged.
 
-        An example of promoting someone to admins:
+        **Example:**
         `/promote @username`: this promotes a user to admin.
     approve:
       main: "Approve"
@@ -34,6 +34,9 @@ strings:
         × /unapprove: Unapprove of a user. They will now be subject to blocklists.
         × /approved: List all approved users.
         × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
+
+        **Example:**
+        `/approve @username`: this approves a user in the chat.
     bans:
       main: "Bans"
       help: |-
@@ -49,6 +52,9 @@ strings:
         × /sban: Bans the user replied or tagged and delete your messsage.
         × /dban: Bans the user replied and delete their message.
         × /unban: Unbans the user replied to or tagged.
+
+        **Example:**
+        `/ban @username`: this bans a user in the chat.
     blacklist:
       main: "Blacklist"
       help: |-
@@ -60,22 +66,25 @@ strings:
         × /blacklist: View the current blacklisted words.
 
         **Admin only:**
-        × /addblacklist <triggers>: Add a trigger to the blacklist. Each line is considered one trigger, so using different lines will allow you to add multiple triggers.
-        × /unblacklist <triggers>: Remove triggers from the blacklist. Same newline logic applies here, so you can remove multiple triggers at once.
-        × /blaction <action>: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'.
+        × /addblacklist `<triggers>`: Add a trigger to the blacklist. Each line is considered one trigger, so using different lines will allow you to add multiple triggers.
+        × /unblacklist `<triggers>`: Remove triggers from the blacklist. Same newline logic applies here, so you can remove multiple triggers at once.
+        × /blaction `<action>`: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'.
         Default is 'none', which will delete the users message on typing a blacklist word.
 
         **Owner Only**
         × /rmallblacklist: Removes all the blacklists from the current chat.
 
         **Note:** Can only add or remove one blacklist at a time!
+
+        **Example:**
+        `/addblacklist hello`: this adds the word 'hello' as blacklist in the chat.
     filters:
       main: "Filters"
       help: |-
         • /filters: List all active filters saved in the chat.
 
         **Admin only:**
-        • /filter <keyword> <reply message>: Add a filter to this chat. The bot will now reply that message whenever 'keyword'
+        • /filter "`<keyword>`" `<reply message>`: Add a filter to this chat. The bot will now reply that message whenever 'keyword'
         is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker.
 
         If you want your keyword to be a sentence, use quotes. eg: /filter "hey there" How are you doin?
@@ -87,7 +96,7 @@ strings:
         `/filter "filtername1|filtername2" Reply Text`
         Using the you can make a single filter work on 2 filternames without manually adding another one.
 
-        • /stop <filter keyword>: Stop that filter.
+        • /stop `<filter keyword>`: Stop that filter.
         **Note:** For filters with aliases, if you stop one alias, the filter will stop working on other aliases too.
         **For Example:** If you stop the "filtername1" from above example, the bot will not respond to "filtername2".
 
@@ -114,7 +123,7 @@ strings:
         × /bluetext : check urself :V
         × /roll : Roll a dice.
         × /react : Random Reaction
-        × /shout <keyword>: write anything you want to give loud shout.
+        × /shout `<keyword>`: write anything you want to give loud shout.
     language:
       main: "Language"
       help: |-
@@ -131,10 +140,13 @@ strings:
         Allows you to lock and unlock permission types in the chat.
 
         **Usage:**
-        × /lock <type>: Lock Chat permission.
-        × /unlock <type>: Unlock Chat permission.
+        × /lock `<type>`: Lock Chat permission.
+        × /unlock `<type>`: Unlock Chat permission.
         × /locks: View Chat permission.
         × /locktypes: Check available lock types!
+
+        **Example:**
+        `/lock media`: this locks all the media messages in the chat.
     muting:
       main: "Muting"
       help: |-
@@ -145,43 +157,35 @@ strings:
         × /mute: Mute the user replied to or mentioned.
         × /unmute: Unmutes the user mentioned or replied to.
 
-        An example of promoting someone to admins:
+        **Example:**
         `/mute @username`; this mutes a user.
     notes:
       main: "Notes"
       help: |-
         Save a note, get that, even you can delete that note.
-        This note only avaiable for yourself only!
-        Also notes support inline button powered by inline query assistant bot.
+        This note only avaiable for your whole group!
+        Only admins can save and deletenotes, anyone can get them.
 
-        **Save Note**
-        × /save <note>
+        × /save `<notename>` <`note content or reply to message>`
         Save a note, you can get or delete that later.
 
-        **Get Note**
-        × /get <note>
+        × /get `<note>` or #<note>
         Get that note, if avaiable.
 
-        **Get Note in Raw format**
-        × /get <note> noformat or /get <note> raw
+        × /get `<note>` noformat or /get `<note>` raw
         Get that note in raw format, so you can edit and update it.
 
-        **Delete Note**
-        × /clear <note>
+        × /clear `<note>`
         Delete that note, if avaiable.
 
         × /clearall
         Clears all notes in the chat!
         **NOTE:** Can only be used by owner of chat!
 
-        **All Notes**
-        × /saved
-        or
-        × /notes
+        × /saved or /notes
         Get all your notes, if too much notes, please use this in your saved message instead!
 
-        × /privaterules <on/yes/no/off>: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
-
+        × /privatenotes `<on/yes/no/off>`: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
 
         ── **Note Format** ──
         Check /markdownhelp for help related to formatting!
@@ -194,7 +198,8 @@ strings:
         × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
         × /unpin: Unpins the last pinned message.
         × /unpinall: Unpins all the pinned message in the current chat.
-        × /antichannelpin <on/off>: Toogle antichannelpin status.
+        × /antichannelpin `<on/off/yes/no>`: Toggle antichannelpin status. All the messages from linked channel will be unpinned if enabled!
+        × /cleanlinked `<on/off/yes/no>`: Toggle cleanlinked status. All the messages from linked channel will be deleted if enabled!
         × /permapin `<text>`: Pin a custom messages via bot. This message can contain markdown, and can be used in replies to the media include additional buttons and text.
     purges:
       main: "Purges"
@@ -203,15 +208,18 @@ strings:
 
         × /purge: Deletes messages upto replied message.
         × /del: Deletes a single message, used as a reply to message.
+
+        **Example:**
+        `/purge <as a reply to message>: this will delete all the messages till the one you replied.
     reporting:
       main: "Reporting"
       help: |-
-        × /report <reason>: reply to a message to report it to admins.
+        × /report `<reason>`: reply to a message to report it to admins.
         - @admin: reply to a message to report it to admins.
         **NOTE:** Neither of these will get triggered if used by admins.
 
         **Admins Only:**
-        × /reports <on/off>: change report setting, or view current status.
+        × /reports `<on/off/yes/no>`: change report setting, or view current status.
           - If done in PM, toggles your status.
           - If in group, toggles that groups's status.
     rules:
@@ -222,9 +230,9 @@ strings:
         × /rules: get the rules for current chat.
 
         **Admin only:**
-        × /setrules <rules>: Set the rules for this chat, also works as a reply to a message.
+        × /setrules `<rules>`: Set the rules for this chat, also works as a reply to a message.
         × /clearrules: Clear the rules for this chat.
-        × /privrules <on/yes/no/off>: Turns on/off the option to send the rules to PM of user or group.
+        × /privrules `<on/yes/no/off>`: Turns on/off the option to send the rules to PM of user or group.
     utils:
       main: "Utils"
       help: |-
@@ -232,13 +240,35 @@ strings:
 
         × /id: Get the current group id. If used by replying to a message, get that user's id.
         × /info: Get information about a user.
-        × /ping - Get ping time of bot to telegram server.
         × /gifid: Reply to a gif to me to tell you its file ID.
-        × /wiki: <query>: wiki your query.
-        × /tr <language>: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
-        × /github <username>: Search for the user using github api!
-        × /lyrics <song>: Get the lyrics of the song you specify!
-        × /weebify <text> or a reply to message: To weebify the text.
+        × /wiki: `<query>`: wiki your query.
+        × /tr `<language>`: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
+        × /github `<username>`: Search for the user using github api!
+        × /lyrics `<song>`: Get the lyrics of the song you specify!
+        × /weebify `<text>` or `<reply to message>`: To weebify the text.
+
+        **Example:**
+        `/info @username`: this fetches the information about a user from the database.
+    warnings:
+      main: "Warnings"
+      help: |-
+        Keep your members in check with warnings; stop them getting out of control!
+
+        If you're looking for automated warnings, go read about the blacklist module.
+
+        Admin commands:
+        - /warn `<reason>`: Warn a user.
+        - /dwarn `<reason>`: Warn a user by reply, and delete their message.
+        - /swarn `<reason>`: Silently warn a user, and delete your message.
+        - /warns: See a user's warnings.
+        - /rmwarn: Remove a user's latest warning.
+        - /resetwarn: Reset all of a user's warnings to 0.
+        - /warnings: Get the chat's warning settings.
+        - /setwarnmode `<ban/kick/mute>`: Set the chat's warn mode.
+        - /setwarnlimit `<number>`: Set the number of warnings before users are punished.
+
+        Examples:
+        `/warn @user`: this warns a user in the chat.
   admin:
     adminlist:
       adminstr: "Admins in <b>{chat_title}</b>:"
@@ -290,18 +320,6 @@ strings:
       bot_no_right: "I don't have enough rights to unmute this user."
       unmuted_user: "Admin {admin} unmuted {unmuted}!"
     user_admin_invalid: "Cannot act on this user, maybe I wasn't the one who changed their permissions."
-  afk:
-    error_check_afk: |-
-      Error while checking afk
-      {ef}
-    no_longer_afk: |-
-      {first_name} is no longer Afk!
-      Was AFK for <code>{since}</code>
-    reason: "<b>Reason:</b> {res}"
-    user_afk: |-
-      {first_name} is Afk!
-      <b>Since:</b> <code>{since}</code>
-    user_now_afk: "User {user} is now afk!"
   formatting:
     md_help: |-
       <b>Markdown Formatting</b>
@@ -326,6 +344,7 @@ strings:
       <b>Fillings</b>
 
       You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
+      You can use these to mention a user in notes too!
 
       <b>Supported fillings:</b>
       - <code>{first}</code>: The user's first name.
@@ -413,13 +432,18 @@ strings:
       action_ban: "Banned {user} for using a blacklisted word!"
       action_mute: "Muted {user} for using a blacklisted word!"
     already_exists: "The word <code>{trigger}</code> is already blacklisted!"
-    action_get: "The current action for blacklists in this chat is <i><b>{action}</b></i>"
+    action_get: |-
+      The current action for blacklists in this chat is <i><b>{action}</b></i>
+      All blacklist modes delete the message containing blacklist word.
+
+      If you want to change this, you need to specify a new action instead of it.
+      Possible actions are: <code>none</code>/<code>warn</code>/<code>mute</code>/<code>ban</code>
     action_set: "Set action for blacklist for this to <b>{action}</b>"
     added_blacklist: "Added <code>{trigger}</code> in blacklist words!"
     curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
-    no_bl_found: "No blacklist <b>{bl_word}</b> found!"
+    no_bl_found: "No blacklist <b>{bl_words}</b> found!"
     no_blacklist: "There are no blacklisted messages in <b>{chat_title}</b>!"
-    rm_blacklist: "Removed <b>{bl_word}</b> from blacklist words!"
+    rm_blacklist: "Removed <b>{bl_words}</b> from blacklist words!"
   dev:
     bot_ip: |-
       <b>Bot IP Address:</b>
@@ -462,7 +486,7 @@ strings:
       Commands available:
        × /start: Start the bot
        × /help: Give's you this message.
-       × /donate: Information related about how to help my creater!
+       × /donate: Information related on how to support my creater!
 
       All commands can either be used with / or !.
     no_admin_cmd_perm: "You cannot use an admin command!"
@@ -632,5 +656,5 @@ strings:
     weebify:
       weebified_string: |-
         <b>Weebified String:</b>
-        {string}
+        <code>{string}</code>
       weebify_what: "What am I supposed to Weebify?"
