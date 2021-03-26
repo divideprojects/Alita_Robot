@@ -41,7 +41,7 @@ from alita.database.chats_db import Chats
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.clean_file import remove_markdown_and_html
-from alita.utils.custom_filters import dev_filter, sudo_filter
+from alita.utils.custom_filters import command, dev_filter, sudo_filter
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
 
@@ -49,7 +49,7 @@ from alita.utils.paste import paste
 chatdb = Chats()
 
 
-@Alita.on_message(filters.command("ping", DEV_PREFIX_HANDLER) & sudo_filter)
+@Alita.on_message(command("ping", DEV_PREFIX_HANDLER) & sudo_filter)
 async def ping(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used ping cmd in {m.chat.id}")
     start = time()
@@ -59,7 +59,7 @@ async def ping(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("logs", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command("logs", DEV_PREFIX_HANDLER) & dev_filter)
 async def send_log(c: Alita, m: Message):
 
     replymsg = await m.reply_text("Sending logs...!")
@@ -81,7 +81,7 @@ async def send_log(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("ginfo", DEV_PREFIX_HANDLER) & sudo_filter)
+@Alita.on_message(command("ginfo", DEV_PREFIX_HANDLER) & sudo_filter)
 async def group_info(c: Alita, m: Message):
 
     if not len(m.text.split()) == 2:
@@ -105,7 +105,7 @@ async def group_info(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("speedtest", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command("speedtest", DEV_PREFIX_HANDLER) & dev_filter)
 async def test_speed(c: Alita, m: Message):
 
     await c.send_message(
@@ -128,7 +128,7 @@ async def test_speed(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("neofetch", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command("neofetch", DEV_PREFIX_HANDLER) & dev_filter)
 async def neofetch_stats(_, m: Message):
     cmd = "neofetch --stdout"
 
@@ -155,7 +155,7 @@ async def neofetch_stats(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command(["eval", "py"], DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command(["eval", "py"], DEV_PREFIX_HANDLER) & dev_filter)
 async def evaluate_code(c: Alita, m: Message):
 
     if len(m.text.split()) == 1:
@@ -218,7 +218,7 @@ async def aexec(code, c, m):
     return await locals()["__aexec"](c, m)
 
 
-@Alita.on_message(filters.command(["exec", "sh"], DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command(["exec", "sh"], DEV_PREFIX_HANDLER) & dev_filter)
 async def execution(_, m: Message):
 
     if len(m.text.split()) == 1:
@@ -264,7 +264,7 @@ async def execution(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("ip", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command("ip", DEV_PREFIX_HANDLER) & dev_filter)
 async def public_ip(c: Alita, m: Message):
 
     ip = (await AioHttp.get_text("https://api.ipify.org"))[0]
@@ -279,7 +279,7 @@ async def public_ip(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("chatlist", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command("chatlist", DEV_PREFIX_HANDLER) & dev_filter)
 async def chats(c: Alita, m: Message):
     exmsg = await m.reply_text(tlang(m, "dev.chatlist.exporting"))
     await c.send_message(
@@ -325,14 +325,14 @@ async def chats(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("uptime", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command("uptime", DEV_PREFIX_HANDLER) & dev_filter)
 async def uptime(_, m: Message):
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
     await m.reply_text((tlang(m, "dev.uptime")).format(uptime=up), quote=True)
     return
 
 
-@Alita.on_message(filters.command("leavechat", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command("leavechat", DEV_PREFIX_HANDLER) & dev_filter)
 async def leave_chat(c: Alita, m: Message):
     if len(m.text.split()) != 2:
         await m.reply_text("Supply a chat id which I should leave!", quoet=True)
@@ -353,7 +353,7 @@ async def leave_chat(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("chatbroadcast", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command("chatbroadcast", DEV_PREFIX_HANDLER) & dev_filter)
 async def chat_broadcast(c: Alita, m: Message):
     if m.reply_to_message:
         msg = m.reply_to_message.text.markdown

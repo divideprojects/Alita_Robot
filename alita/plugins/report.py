@@ -31,7 +31,7 @@ from pyrogram.types import (
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.reporting_db import Reporting
-from alita.utils.custom_filters import admin_filter
+from alita.utils.custom_filters import admin_filter, command
 from alita.utils.parser import mention_html
 
 #  initialise
@@ -39,7 +39,7 @@ db = Reporting()
 
 
 @Alita.on_message(
-    filters.command("reports", PREFIX_HANDLER) & (filters.private | admin_filter),
+    command("reports", PREFIX_HANDLER) & (filters.private | admin_filter),
 )
 async def report_setting(_, m: Message):
     args = m.text.split()
@@ -88,7 +88,7 @@ async def report_setting(_, m: Message):
 
 
 @Alita.on_message(
-    (filters.command("report", PREFIX_HANDLER) | filters.regex(r"(?i)@admin(s)?"))
+    (command("report", PREFIX_HANDLER) | filters.regex(r"(?i)@admin(s)?"))
     & filters.group,
 )
 async def report_watcher(c: Alita, m: Message):

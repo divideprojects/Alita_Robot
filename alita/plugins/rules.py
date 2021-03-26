@@ -28,12 +28,12 @@ from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
-from alita.utils.custom_filters import admin_filter
+from alita.utils.custom_filters import admin_filter, command
 
 db = Rules()
 
 
-@Alita.on_message(filters.command("rules", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(command("rules", PREFIX_HANDLER) & filters.group)
 async def get_rules(_, m: Message):
 
     chat_id = m.chat.id
@@ -79,7 +79,7 @@ async def get_rules(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("setrules", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("setrules", PREFIX_HANDLER) & admin_filter)
 async def set_rules(_, m: Message):
 
     chat_id = m.chat.id
@@ -99,7 +99,7 @@ async def set_rules(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["privrules", "privaterules"], PREFIX_HANDLER) & admin_filter,
+    command(["privrules", "privaterules"], PREFIX_HANDLER) & admin_filter,
 )
 async def priv_rules(_, m: Message):
 
@@ -130,7 +130,7 @@ async def priv_rules(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("clearrules", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("clearrules", PREFIX_HANDLER) & admin_filter)
 async def clear_rules(_, m: Message):
 
     rules = db.get_rules(m.chat.id)

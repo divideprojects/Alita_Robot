@@ -30,7 +30,7 @@ from alita import LOGGER, PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database.lang_db import Langs
 from alita.tr_engine import lang_dict, tlang
-from alita.utils.custom_filters import admin_filter
+from alita.utils.custom_filters import admin_filter, command
 
 # initialise
 db = Langs()
@@ -127,8 +127,7 @@ async def set_lang_callback(_, q: CallbackQuery):
 
 
 @Alita.on_message(
-    filters.command(["lang", "setlang"], PREFIX_HANDLER)
-    & (admin_filter | filters.private),
+    command(["lang", "setlang"], PREFIX_HANDLER) & (admin_filter | filters.private),
     group=7,
 )
 async def set_lang(_, m: Message):

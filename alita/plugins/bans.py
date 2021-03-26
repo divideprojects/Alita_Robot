@@ -19,7 +19,6 @@
 from time import time
 from traceback import format_exc
 
-from pyrogram import filters
 from pyrogram.errors import (
     ChatAdminRequired,
     PeerIdInvalid,
@@ -33,13 +32,13 @@ from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
-from alita.utils.custom_filters import restrict_filter
+from alita.utils.custom_filters import command, restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 
 @Alita.on_message(
-    filters.command(["kick", "skick", "dkick"], PREFIX_HANDLER) & restrict_filter,
+    command(["kick", "skick", "dkick"], PREFIX_HANDLER) & restrict_filter,
 )
 async def kick_usr(c: Alita, m: Message):
     from alita import BOT_ID
@@ -119,7 +118,7 @@ async def kick_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["ban", "sban", "dban"], PREFIX_HANDLER) & restrict_filter,
+    command(["ban", "sban", "dban"], PREFIX_HANDLER) & restrict_filter,
 )
 async def ban_usr(c: Alita, m: Message):
     from alita import BOT_ID
@@ -197,7 +196,7 @@ async def ban_usr(c: Alita, m: Message):
     await m.stop_propagation()
 
 
-@Alita.on_message(filters.command("unban", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(command("unban", PREFIX_HANDLER) & restrict_filter)
 async def unban_usr(c: Alita, m: Message):
 
     if len(m.text.split()) == 1 and not m.reply_to_message:

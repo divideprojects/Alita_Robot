@@ -18,17 +18,16 @@
 
 from asyncio import sleep
 
-from pyrogram import filters
 from pyrogram.errors import MessageDeleteForbidden, RPCError
 from pyrogram.types import Message
 
 from alita import PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.custom_filters import admin_filter
+from alita.utils.custom_filters import admin_filter, command
 
 
-@Alita.on_message(filters.command("purge", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("purge", PREFIX_HANDLER) & admin_filter)
 async def purge(c: Alita, m: Message):
 
     if m.chat.type != "supergroup":
@@ -79,7 +78,7 @@ async def purge(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command("del", PREFIX_HANDLER) & admin_filter,
+    command("del", PREFIX_HANDLER) & admin_filter,
     group=9,
 )
 async def del_msg(c: Alita, m: Message):

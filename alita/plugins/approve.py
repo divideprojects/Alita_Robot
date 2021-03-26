@@ -29,7 +29,7 @@ from pyrogram.types import (
 from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
-from alita.utils.custom_filters import admin_filter, owner_filter
+from alita.utils.custom_filters import admin_filter, command, owner_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
@@ -38,7 +38,7 @@ db = Approve()
 
 
 @Alita.on_message(
-    filters.command("approve", PREFIX_HANDLER) & admin_filter,
+    command("approve", PREFIX_HANDLER) & admin_filter,
 )
 async def approve_user(c: Alita, m: Message):
 
@@ -103,7 +103,7 @@ async def approve_user(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["disapprove", "unapprove"], PREFIX_HANDLER) & admin_filter,
+    command(["disapprove", "unapprove"], PREFIX_HANDLER) & admin_filter,
 )
 async def disapprove_user(c: Alita, m: Message):
 
@@ -155,7 +155,7 @@ async def disapprove_user(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("approved", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("approved", PREFIX_HANDLER) & admin_filter)
 async def check_approved(_, m: Message):
 
     chat = m.chat
@@ -181,7 +181,7 @@ async def check_approved(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("approval", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("approval", PREFIX_HANDLER) & admin_filter)
 async def check_approval(c: Alita, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
@@ -205,7 +205,7 @@ async def check_approval(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command("unapproveall", PREFIX_HANDLER) & filters.group & owner_filter,
+    command("unapproveall", PREFIX_HANDLER) & filters.group & owner_filter,
 )
 async def unapproveall_users(_, m: Message):
 

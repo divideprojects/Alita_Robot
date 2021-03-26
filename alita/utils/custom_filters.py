@@ -17,14 +17,60 @@
 
 
 from pyrogram import filters
-from pyrogram.types import CallbackQuery
+from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
+from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 
 SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
 DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
+
+
+import re
+import shlex
+from typing import List
+
+
+def command(
+    commands: str or List[str],
+    prefixes: str or List[str] = "/",
+    case_sensitive: bool = False,
+):
+    from alita import BOT_USERNAME
+
+    async def func(flt, _: Alita, message: Message):
+        text: str = message.text or message.caption
+        message.command = None
+        if not text:
+            return False
+        regex = "^({prefix})+\\b({regex})\\b(\\b@{bot_name}\\b)?(.*)".format(
+            prefix="|".join(re.escape(x) for x in flt.prefixes),
+            regex="|".join(flt.commands),
+            bot_name=BOT_USERNAME,
+        )
+        matches = re.search(re.compile(regex), text)
+        if matches:
+            message.command = [matches.group(2)]
+            for arg in shlex.split(matches.group(4).strip()):
+                message.command.append(arg)
+            return True
+        else:
+            return False
+
+    commands = commands if type(commands) is list else [commands]
+    commands = {c if case_sensitive else c.lower() for c in commands}
+    prefixes = [] if prefixes is None else prefixes
+    prefixes = prefixes if type(prefixes) is list else [prefixes]
+    prefixes = set(prefixes) if prefixes else {""}
+    return filters.create(
+        func,
+        "CustomCommandFilter",
+        commands=commands,
+        prefixes=prefixes,
+        case_sensitive=case_sensitive,
+    )
 
 
 async def dev_check_func(_, __, m):

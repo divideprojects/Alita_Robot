@@ -20,7 +20,6 @@ from datetime import datetime
 from io import BytesIO
 from traceback import format_exc
 
-from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, UserIsBlocked
 from pyrogram.types import Message
 
@@ -37,7 +36,7 @@ from alita.database.antispam_db import GBan
 from alita.database.users_db import Users
 from alita.tr_engine import tlang
 from alita.utils.clean_file import remove_markdown_and_html
-from alita.utils.custom_filters import sudo_filter
+from alita.utils.custom_filters import command, sudo_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
@@ -46,7 +45,7 @@ db = GBan()
 user_db = Users()
 
 
-@Alita.on_message(filters.command(["gban", "globalban"], PREFIX_HANDLER) & sudo_filter)
+@Alita.on_message(command(["gban", "globalban"], PREFIX_HANDLER) & sudo_filter)
 async def gban(c: Alita, m: Message):
 
     if len(m.text.split()) == 1:
@@ -118,8 +117,7 @@ async def gban(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["ungban", "unglobalban", "globalunban"], PREFIX_HANDLER)
-    & sudo_filter,
+    command(["ungban", "unglobalban", "globalunban"], PREFIX_HANDLER) & sudo_filter,
 )
 async def ungban(c: Alita, m: Message):
 
@@ -169,7 +167,7 @@ async def ungban(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command(
+    command(
         ["numgbans", "countgbans", "gbancount", "gbanscount"],
         PREFIX_HANDLER,
     )
@@ -184,7 +182,7 @@ async def gban_count(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter,
+    command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter,
 )
 async def gban_list(_, m: Message):
     banned_users = db.load_from_db()

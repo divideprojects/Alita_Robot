@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
@@ -29,11 +28,11 @@ from alita import (
     WHITELIST_USERS,
 )
 from alita.bot_class import Alita
-from alita.utils.custom_filters import dev_filter
+from alita.utils.custom_filters import command, dev_filter
 from alita.utils.parser import mention_html
 
 
-@Alita.on_message(filters.command("botstaff", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command("botstaff", DEV_PREFIX_HANDLER) & dev_filter)
 async def botstaff(c: Alita, m: Message):
     try:
         owner = await c.get_users(OWNER_ID)

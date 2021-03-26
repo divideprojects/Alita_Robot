@@ -31,7 +31,7 @@ from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.tr_engine import tlang
-from alita.utils.custom_filters import owner_filter, restrict_filter
+from alita.utils.custom_filters import command, owner_filter, restrict_filter
 from alita.utils.parser import mention_html
 
 # Initialise
@@ -39,7 +39,7 @@ db = Blacklist()
 app_db = Approve()
 
 
-@Alita.on_message(filters.command("blacklist", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(command("blacklist", PREFIX_HANDLER) & filters.group)
 async def view_blacklist(_, m: Message):
 
     LOGGER.info(f"{m.from_user.id} checking blacklists in {m.chat.id}")
@@ -66,7 +66,7 @@ async def view_blacklist(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("addblacklist", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(command("addblacklist", PREFIX_HANDLER) & restrict_filter)
 async def add_blacklist(_, m: Message):
 
     if not len(m.text.split()) >= 2:
@@ -101,7 +101,7 @@ async def add_blacklist(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["blwarning", "blreason", "blacklistreason"], PREFIX_HANDLER)
+    command(["blwarning", "blreason", "blacklistreason"], PREFIX_HANDLER)
     & restrict_filter,
 )
 async def blacklistreason(_, m: Message):
@@ -120,7 +120,7 @@ async def blacklistreason(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["rmblacklist", "unblacklist"], PREFIX_HANDLER) & restrict_filter,
+    command(["rmblacklist", "unblacklist"], PREFIX_HANDLER) & restrict_filter,
 )
 async def rm_blacklist(_, m: Message):
 
@@ -161,7 +161,7 @@ async def rm_blacklist(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["blaction", "blacklistaction", "blacklistmode"], PREFIX_HANDLER)
+    command(["blaction", "blacklistaction", "blacklistmode"], PREFIX_HANDLER)
     & restrict_filter,
 )
 async def set_bl_action(_, m: Message):
@@ -194,7 +194,7 @@ async def set_bl_action(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("rmallblacklist", PREFIX_HANDLER) & owner_filter,
+    command("rmallblacklist", PREFIX_HANDLER) & owner_filter,
 )
 async def rm_allblacklist(_, m: Message):
 

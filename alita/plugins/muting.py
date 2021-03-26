@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import filters
 from pyrogram.errors import (
     ChatAdminRequired,
     RightForbidden,
@@ -29,12 +28,12 @@ from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
-from alita.utils.custom_filters import restrict_filter
+from alita.utils.custom_filters import command, restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 
-@Alita.on_message(filters.command("mute", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(command("mute", PREFIX_HANDLER) & restrict_filter)
 async def mute_usr(c: Alita, m: Message):
     from alita import BOT_ID
 
@@ -114,7 +113,7 @@ async def mute_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unmute", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(command("unmute", PREFIX_HANDLER) & restrict_filter)
 async def unmute_usr(c: Alita, m: Message):
     from alita import BOT_ID
 

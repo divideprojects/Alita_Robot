@@ -43,6 +43,7 @@ from alita.database.users_db import Users
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.clean_file import remove_markdown_and_html
+from alita.utils.custom_filters import command
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 from alita.utils.paste import paste
@@ -51,7 +52,7 @@ gban_db = GBan()
 user_db = Users()
 
 
-@Alita.on_message(filters.command("wiki", PREFIX_HANDLER))
+@Alita.on_message(command("wiki", PREFIX_HANDLER))
 async def wiki(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used wiki cmd in {m.chat.id}")
     if m.reply_to_message:
@@ -88,7 +89,7 @@ async def wiki(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("lyrics", PREFIX_HANDLER) & (filters.group | filters.private),
+    command("lyrics", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def get_lyrics(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used lyrics cmd in {m.chat.id}")
@@ -121,7 +122,7 @@ async def get_lyrics(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("id", PREFIX_HANDLER) & (filters.group | filters.private),
+    command("id", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def id_info(c: Alita, m: Message):
     LOGGER.info(f"{m.from_user.id} used id cmd in {m.chat.id}")
@@ -176,7 +177,7 @@ async def id_info(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command("gifid", PREFIX_HANDLER) & (filters.group | filters.private),
+    command("gifid", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def get_gifid(_, m: Message):
     if m.reply_to_message and m.reply_to_message.animation:
@@ -191,7 +192,7 @@ async def get_gifid(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("github", PREFIX_HANDLER) & (filters.group | filters.private),
+    command("github", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def github(_, m: Message):
     if len(m.text.split()) == 2:
@@ -230,7 +231,7 @@ async def github(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("info", PREFIX_HANDLER) & (filters.group | filters.private),
+    command("info", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def my_info(c: Alita, m: Message):
     try:
@@ -303,7 +304,7 @@ async def my_info(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("weebify", PREFIX_HANDLER))
+@Alita.on_message(command("weebify", PREFIX_HANDLER))
 async def weebify(_, m: Message):
     if len(m.text.split()) >= 2:
         args = m.text.split(None, 1)[1]
@@ -337,7 +338,7 @@ async def weebify(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("paste", PREFIX_HANDLER))
+@Alita.on_message(command("paste", PREFIX_HANDLER))
 async def paste_it(_, m: Message):
 
     replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")), quote=True)
@@ -373,7 +374,7 @@ async def paste_it(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("tr", PREFIX_HANDLER))
+@Alita.on_message(command("tr", PREFIX_HANDLER))
 async def translate(_, m: Message):
 
     trl = Translator()

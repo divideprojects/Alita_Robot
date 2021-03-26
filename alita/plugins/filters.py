@@ -33,7 +33,7 @@ from alita import PREFIX_HANDLER
 from alita.bot_class import LOGGER, Alita
 from alita.database.filters_db import Filters
 from alita.utils.cmd_senders import send_cmd
-from alita.utils.custom_filters import admin_filter, owner_filter
+from alita.utils.custom_filters import admin_filter, command, owner_filter
 from alita.utils.msg_types import Types, get_filter_type
 from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
@@ -47,7 +47,7 @@ from alita.utils.string import (
 db = Filters()
 
 
-@Alita.on_message(filters.command("filters", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(command("filters", PREFIX_HANDLER) & filters.group)
 async def view_filters(_, m: Message):
 
     LOGGER.info(f"{m.from_user.id} checking filters in {m.chat.id}")
@@ -71,7 +71,7 @@ async def view_filters(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["addfilter", "filter"], PREFIX_HANDLER) & admin_filter,
+    command(["addfilter", "filter"], PREFIX_HANDLER) & admin_filter,
 )
 async def add_filter(_, m: Message):
 
@@ -158,7 +158,7 @@ async def add_filter(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(["rmfilter", "stop", "unfilter"], PREFIX_HANDLER) & admin_filter,
+    command(["rmfilter", "stop", "unfilter"], PREFIX_HANDLER) & admin_filter,
 )
 async def stop_filter(_, m: Message):
     args = m.command
@@ -190,7 +190,7 @@ async def stop_filter(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command(
+    command(
         ["rmallfilters", "removeallfilters", "stopall", "stopallfilters"],
         PREFIX_HANDLER,
     )

@@ -18,15 +18,14 @@
 
 from time import time
 
-from pyrogram import filters
 from pyrogram.types import Message
 
 from alita import DEV_PREFIX_HANDLER
 from alita.bot_class import Alita
-from alita.utils.custom_filters import sudo_filter
+from alita.utils.custom_filters import command, sudo_filter
 
 
-@Alita.on_message(filters.command("test", DEV_PREFIX_HANDLER) & sudo_filter, group=15)
+@Alita.on_message(command("test", DEV_PREFIX_HANDLER) & sudo_filter, group=15)
 async def test_bot(_, m: Message):
     start = time()
     replymsg = await m.reply_text("Calculating...")

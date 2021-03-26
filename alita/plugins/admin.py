@@ -33,14 +33,19 @@ from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload
-from alita.utils.custom_filters import admin_filter, invite_filter, promote_filter
+from alita.utils.custom_filters import (
+    admin_filter,
+    command,
+    invite_filter,
+    promote_filter,
+)
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 app_db = Approve()
 
 
-@Alita.on_message(filters.command("adminlist", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(command("adminlist", PREFIX_HANDLER) & filters.group)
 async def adminlist_show(_, m: Message):
     global ADMIN_CACHE
     try:
@@ -89,7 +94,7 @@ async def adminlist_show(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("admincache", PREFIX_HANDLER) & admin_filter,
+    command("admincache", PREFIX_HANDLER) & admin_filter,
 )
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
@@ -119,7 +124,7 @@ async def reload_admins(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("promote", PREFIX_HANDLER) & promote_filter,
+    command("promote", PREFIX_HANDLER) & promote_filter,
 )
 async def promote_usr(c: Alita, m: Message):
     from alita import BOT_ID
@@ -208,7 +213,7 @@ async def promote_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command("demote", PREFIX_HANDLER) & promote_filter,
+    command("demote", PREFIX_HANDLER) & promote_filter,
 )
 async def demote_usr(c: Alita, m: Message):
     from alita import BOT_ID
@@ -288,7 +293,7 @@ async def demote_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    filters.command("invitelink", PREFIX_HANDLER) & invite_filter,
+    command("invitelink", PREFIX_HANDLER) & invite_filter,
 )
 async def get_invitelink(c: Alita, m: Message):
 

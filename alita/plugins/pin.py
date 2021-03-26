@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
 from pyrogram.types import Message
 
@@ -24,13 +23,13 @@ from alita import LOGGER, PREFIX_HANDLER, SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.database.antichannelpin_db import Pins
 from alita.tr_engine import tlang
-from alita.utils.custom_filters import admin_filter
+from alita.utils.custom_filters import admin_filter, command
 
 # Initialize
 pinsdb = Pins()
 
 
-@Alita.on_message(filters.command("pin", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("pin", PREFIX_HANDLER) & admin_filter)
 async def pin_message(_, m: Message):
 
     pin_args = m.text.split(None, 1)
@@ -74,7 +73,7 @@ async def pin_message(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unpin", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("unpin", PREFIX_HANDLER) & admin_filter)
 async def unpin_message(c: Alita, m: Message):
 
     try:
@@ -102,7 +101,7 @@ async def unpin_message(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("unpinall", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("unpinall", PREFIX_HANDLER) & admin_filter)
 async def unpinall_message(c: Alita, m: Message):
 
     try:
@@ -125,7 +124,7 @@ async def unpinall_message(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.command("antichannelpin", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("antichannelpin", PREFIX_HANDLER) & admin_filter)
 async def anti_channel_pin(_, m: Message):
 
     if len(m.text.split()) == 1:
@@ -154,7 +153,7 @@ async def anti_channel_pin(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("cleanlinked", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("cleanlinked", PREFIX_HANDLER) & admin_filter)
 async def clean_linked(_, m: Message):
 
     if len(m.text.split()) == 1:
@@ -183,7 +182,7 @@ async def clean_linked(_, m: Message):
     return
 
 
-@Alita.on_message(filters.command("permapin", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("permapin", PREFIX_HANDLER) & admin_filter)
 async def perma_pin(_, m: Message):
     if m.reply_to_message:
         LOGGER.info(f"{m.from_user.id} used permampin in {m.chat.id}")

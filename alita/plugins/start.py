@@ -38,7 +38,7 @@ from alita.utils.start_utils import (
 
 
 @Alita.on_message(
-    filters.command("donate", PREFIX_HANDLER) & (filters.group | filters.private),
+    command("donate", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def donate(_, m: Message):
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
@@ -47,7 +47,7 @@ async def donate(_, m: Message):
 
 
 @Alita.on_message(
-    filters.command("start", PREFIX_HANDLER) & (filters.group | filters.private),
+    command("start", PREFIX_HANDLER) & (filters.group | filters.private),
 )
 async def start(c: Alita, m: Message):
 
@@ -138,7 +138,7 @@ async def commands_menu(_, q: CallbackQuery):
     return
 
 
-@Alita.on_message(filters.command("help", PREFIX_HANDLER))
+@Alita.on_message(command("help", PREFIX_HANDLER))
 async def help_menu(_, m: Message):
 
     from alita import BOT_USERNAME

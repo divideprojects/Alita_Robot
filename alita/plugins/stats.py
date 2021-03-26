@@ -32,7 +32,7 @@ from alita.database.notes_db import Notes, NotesSettings
 from alita.database.rules_db import Rules
 from alita.database.users_db import Users
 from alita.database.warns_db import Warns, WarnSettings
-from alita.utils.custom_filters import dev_filter
+from alita.utils.custom_filters import command, dev_filter
 
 # initialise
 bldb = Blacklist()
@@ -49,7 +49,7 @@ warns_db = Warns()
 warns_settings_db = WarnSettings()
 
 
-@Alita.on_message(filters.command("stats", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(command("stats", DEV_PREFIX_HANDLER) & dev_filter)
 async def get_stats(_, m: Message):
     replymsg = await m.reply_text("<b><i>Fetching Stats...</i></b>", quote=True)
     rply = (
