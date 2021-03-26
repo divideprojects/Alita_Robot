@@ -88,9 +88,9 @@ class Alita(Client):
 
         # Show in Log that bot has started
         LOGGER.info(
-            f"Pyrogram v{__version__} (Layer - {layer}) started on {meh.username}",
+            f"\nPyrogram v{__version__} (Layer - {layer}) started on {meh.username}",
         )
-        LOGGER.info(f"Python Version: {python_version()}")
+        LOGGER.info(f"Python Version: {python_version()}\n")
 
         # Get cmds and keys
         cmd_list = await load_cmds(await all_plugins())

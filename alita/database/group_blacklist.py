@@ -16,8 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from datetime import time
 from threading import RLock
+from time import time
 
 from alita import LOGGER
 from alita.database import MongoDB
