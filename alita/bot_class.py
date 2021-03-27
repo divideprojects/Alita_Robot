@@ -33,7 +33,6 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from alita import (
     API_HASH,
     APP_ID,
-    BOT_USERNAME,
     LOG_DATETIME,
     LOGFILE,
     LOGGER,
@@ -43,8 +42,7 @@ from alita import (
     UPTIME,
     WORKERS,
     get_self,
-    load_cmds,
-)
+    load_cmds)
 from alita.database import MongoDB
 from alita.database.chats_db import Chats
 from alita.plugins import all_plugins
