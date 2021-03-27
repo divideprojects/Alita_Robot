@@ -16,10 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from typing import List
+
 from aiohttp import ClientSession
 
 
-async def paste(content):
+async def paste(content: str):
     """Paste the provided content to nekobin."""
     content = str(content)
     NEKOBIN_URL = "https://nekobin.com/"

@@ -16,11 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-async def remove_markdown_and_html(text: str):
+async def remove_markdown_and_html(text: str) -> str:
     return await clean_markdown(await clean_html(text))
 
 
-async def clean_html(text: str):
+async def clean_html(text: str) -> str:
     return (
         text.replace("<code>", "")
         .replace("</code>", "")
@@ -33,5 +33,5 @@ async def clean_html(text: str):
     )
 
 
-async def clean_markdown(text: str):
+async def clean_markdown(text: str) -> str:
     return text.replace("`", "").replace("**", "").replace("__", "")

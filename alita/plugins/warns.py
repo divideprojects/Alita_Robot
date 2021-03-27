@@ -282,7 +282,7 @@ async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
     except KeyError:
         admins_group = {i[0] for i in (await admin_cache_reload(q, "warn_btn"))}
 
-    if not q.from_user.id in admins_group:
+    if q.from_user.id not in admins_group:
         await q.answer("You are not allowed to use this!", show_alert=True)
         return
 
@@ -347,11 +347,11 @@ async def warnmode(_, m: Message):
                 ),
             )
             return
-        warnmode = warn_settings_db.set_warnmode(m.chat.id, wm)
-        await m.reply_text(f"Warn Mode has been set to: {warnmode}")
+        warnmode_var = warn_settings_db.set_warnmode(m.chat.id, wm)
+        await m.reply_text(f"Warn Mode has been set to: {warnmode_var}")
         return
-    warnmode = warn_settings_db.get_warnmode(m.chat.id)
-    await m.reply_text(f"This chats current Warn Mode is: {warnmode}")
+    warnmode_var = warn_settings_db.get_warnmode(m.chat.id)
+    await m.reply_text(f"This chats current Warn Mode is: {warnmode_var}")
     return
 
 
@@ -362,11 +362,11 @@ async def warnlimit(_, m: Message):
         if not isinstance(wl, int):
             await m.reply_text("Warn Limit can only be a number!")
             return
-        warnlimit = warn_settings_db.set_warnlimit(m.chat.id, wl)
-        await m.reply_text(f"Warn Limit has been set to: {warnlimit}")
+        warnlimit_var = warn_settings_db.set_warnlimit(m.chat.id, wl)
+        await m.reply_text(f"Warn Limit has been set to: {warnlimit_var}")
         return
-    warnlimit = warn_settings_db.get_warnlimit(m.chat.id)
-    await m.reply_text(f"This chats current Warn Limit is: {warnlimit}")
+    warnlimit_var = warn_settings_db.get_warnlimit(m.chat.id)
+    await m.reply_text(f"This chats current Warn Limit is: {warnlimit_var}")
     return
 
 

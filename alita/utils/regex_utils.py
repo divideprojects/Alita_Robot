@@ -23,7 +23,7 @@ from regex import search
 from alita import LOGGER
 
 
-async def regex_searcher(regex_string, string):
+async def regex_searcher(regex_string: str, string: str) -> str:
     """Search for Regex in string."""
     try:
         re_search = search(regex_string, string, timeout=6)
@@ -36,7 +36,7 @@ async def regex_searcher(regex_string, string):
     return re_search
 
 
-async def infinite_loop_check(regex_string):
+async def infinite_loop_check(regex_string: str) -> bool:
     """Clear Regex in string."""
     loop_matches = (
         r"\((.{1,}[\+\*]){1,}\)[\+\*]."

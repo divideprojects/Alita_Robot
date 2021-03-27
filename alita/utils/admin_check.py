@@ -26,7 +26,7 @@ SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
 DEV_LEVEL = DEV_USERS + [int(OWNER_ID)]
 
 
-async def admin_check(m) -> bool:
+async def admin_check(m: Message or CallbackQuery) -> bool:
     """Checks if user is admin or not."""
     if isinstance(m, Message):
         user_id = m.from_user.id
@@ -55,7 +55,7 @@ async def admin_check(m) -> bool:
     return True
 
 
-async def owner_check(m) -> bool:
+async def owner_check(m: Message or CallbackQuery) -> bool:
     """Checks if user is owner or not."""
     if isinstance(m, Message):
         user_id = m.from_user.id

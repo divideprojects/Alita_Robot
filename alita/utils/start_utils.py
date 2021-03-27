@@ -42,7 +42,7 @@ notes_db = Notes()
 chats_db = Chats()
 
 
-async def gen_cmds_kb(m):
+async def gen_cmds_kb(m: Message or CallbackQuery):
     """Generate the keyboard for languages."""
     if isinstance(m, CallbackQuery):
         m = m.message
@@ -82,7 +82,7 @@ async def gen_cmds_kb(m):
     return kb
 
 
-async def gen_start_kb(q):
+async def gen_start_kb(q: Message or CallbackQuery):
     """Generate keyboard with start menu options."""
 
     from alita import BOT_USERNAME

@@ -17,17 +17,18 @@
 
 
 from html import escape
-from re import compile as compilere
+from re import compile as compile_re
 from time import time
+from typing import List
 
 from pyrogram.types import InlineKeyboardButton, Message
 
 from alita.utils.parser import mention_html
 
-BTN_URL_REGEX = compilere(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
+BTN_URL_REGEX = compile_re(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
 
 
-async def extract_time(m, time_val):
+async def extract_time(m: Message, time_val: str):
     """Extract time from message."""
     if any(time_val.endswith(unit) for unit in ("m", "h", "d")):
         unit = time_val[-1]
@@ -52,7 +53,7 @@ async def extract_time(m, time_val):
     return ""
 
 
-async def parse_button(text):
+async def parse_button(text: str):
     """Parse button from text."""
     markdown_note = text
     prev = 0
@@ -99,7 +100,7 @@ SMART_CLOSE = "”"
 START_CHAR = ("'", '"', SMART_OPEN)
 
 
-async def escape_invalid_curly_brackets(text: str, valids: list) -> str:
+async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
     new_text = ""
     idx = 0
     while idx < len(text):
@@ -108,23 +109,26 @@ async def escape_invalid_curly_brackets(text: str, valids: list) -> str:
                 idx += 2
                 new_text += "{{{{"
                 continue
-            success = False
-            for v in valids:
-                if text[idx:].startswith("{" + v + "}"):
-                    success = True
-                    break
-            if success:
-                new_text += text[idx : idx + len(v) + 2]
-                idx += len(v) + 2
-                continue
-            new_text += "{{"
+            else:
+                success = False
+                for v in valids:
+                    if text[idx:].startswith("{" + v + "}"):
+                        success = True
+                        break
+                if success:
+                    new_text += text[idx : idx + len(v) + 2]
+                    idx += len(v) + 2
+                    continue
+                else:
+                    new_text += "{{"
 
         elif text[idx] == "}":
             if idx + 1 < len(text) and text[idx + 1] == "}":
                 idx += 2
                 new_text += "}}}}"
                 continue
-            new_text += "}}"
+            else:
+                new_text += "}}"
 
         else:
             new_text += text[idx]
@@ -137,7 +141,7 @@ async def escape_mentions_using_curly_brackets(
     m: Message,
     text: str,
     parse_words: list,
-):
+) -> str:
     teks = await escape_invalid_curly_brackets(text, parse_words)
     if teks:
         teks = teks.format(

@@ -136,7 +136,7 @@ async def load_cmds(all_plugins):
 
         plugin_name = imported_module.__PLUGIN__.lower()
 
-        if not plugin_name in HELP_COMMANDS:
+        if plugin_name not in HELP_COMMANDS:
             HELP_COMMANDS[plugin_name] = {
                 "help_msg": "",
                 "buttons": [],

@@ -19,14 +19,17 @@
 from traceback import format_exc
 from typing import Tuple
 
+from pyrogram.types.messages_and_media.message import Message
+
 from alita import LOGGER
+from alita.bot_class import Alita
 from alita.database.users_db import Users
 
 # Initialize
 db = Users()
 
 
-async def extract_user(c, m) -> Tuple[int, str, str]:
+async def extract_user(c: Alita, m: Message) -> Tuple[int, str, str]:
     """Extract the user from the provided message."""
     user_id = None
     user_first_name = None
