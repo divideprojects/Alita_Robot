@@ -42,7 +42,8 @@ from alita import (
     UPTIME,
     WORKERS,
     get_self,
-    load_cmds)
+    load_cmds,
+)
 from alita.database import MongoDB
 from alita.database.chats_db import Chats
 from alita.plugins import all_plugins
