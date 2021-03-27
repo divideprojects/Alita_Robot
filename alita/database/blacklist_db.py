@@ -18,6 +18,7 @@
 
 from threading import RLock
 
+from alita import LOGGER
 from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
@@ -26,162 +27,105 @@ INSERTION_LOCK = RLock()
 class Blacklist:
     """Class to manage database for blacklists for chats."""
 
-    def __init__(self) -> None:
-        self.collection = MongoDB("blacklists")
+    # Database name to connect to to preform operations
+    db_name = "blacklists"
 
-    def add_blacklist(self, chat_id: int, trigger: str):
-        with INSERTION_LOCK:
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                triggers_old = curr["triggers"]
-                triggers_old.append(trigger)
-                triggers = list(set(triggers_old))
-                return self.collection.update(
-                    {"_id": chat_id},
-                    {
-                        "_id": chat_id,
-                        "triggers": triggers,
-                    },
-                )
-            return self.collection.insert_one(
-                {
-                    "_id": chat_id,
-                    "triggers": [trigger],
-                    "action": "none",
-                    "reason": "Automated blacklisted word",
-                },
-            )
+    def __init__(self, chat_id: int) -> None:
+        self.collection = MongoDB(self.db_name)
+        self.chat_id = chat_id
+        self.chat_info = self.__ensure_in_db()
 
-    def remove_blacklist(self, chat_id: int, trigger: str):
+    def check_word_blacklist_status(self, word: str):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                triggers_old = curr["triggers"]
-                try:
-                    triggers_old.remove(trigger)
-                except ValueError:
-                    return "Trigger not found"
-                triggers = list(set(triggers_old))
+            bl_words = self.chat_info["triggers"]
+            return bool(word in bl_words)
+
+    def add_blacklist(self, trigger: str):
+        with INSERTION_LOCK:
+            if not self.check_word_blacklist_status():
                 return self.collection.update(
-                    {"_id": chat_id},
+                    {"_id": self.chat_id},
                     {
-                        "_id": chat_id,
-                        "triggers": triggers,
+                        "_id": self.chat_id,
+                        "triggers": self.chat_info["triggers"] + [trigger],
                     },
                 )
 
-    def get_blacklists(self, chat_id: int):
+    def remove_blacklist(self, trigger: str):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                return curr["triggers"]
-            return []
+            if self.check_word_blacklist_status():
+                self.chat_info["triggers"].remove(trigger)
+                return self.collection.update(
+                    {"_id": self.chat_id},
+                    {
+                        "_id": self.chat_id,
+                        "triggers": self.chat_info["triggers"],
+                    },
+                )
+
+    def get_blacklists(self):
+        with INSERTION_LOCK:
+            return self.chat_info["triggers"]
 
     def count_blacklists_all(self):
         with INSERTION_LOCK:
             curr = self.collection.find_all()
-            num = 0
-            for chat in curr:
-                num += len(chat["triggers"])
-            return num
+            return sum(len(chat["triggers"]) for chat in curr)
 
     def count_blackists_chats(self):
         with INSERTION_LOCK:
             curr = self.collection.find_all()
-            num = 0
-            for chat in curr:
-                if chat["triggers"]:
-                    num += 1
-            return num
+            return sum([1 for chat in curr if chat["triggers"]])
 
-    def set_action(self, chat_id: int, action: str):
+    def set_action(self, action: str):
         with INSERTION_LOCK:
-
-            if action not in ("kick", "mute", "ban", "warn", "none"):
-                return "invalid action"
-
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                return self.collection.update(
-                    {"_id": chat_id},
-                    {"_id": chat_id, "action": action},
-                )
-            return self.collection.insert_one(
-                {
-                    "_id": chat_id,
-                    "triggers": [],
-                    "action": action,
-                    "reason": "Automated blacklisted word",
-                },
+            return self.collection.update(
+                {"_id": self.chat_id},
+                {"_id": self.chat_id, "action": action},
             )
 
-    def get_action(self, chat_id: int):
+    def get_action(self):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                return curr["action"] or "none"
-            self.collection.insert_one(
-                {
-                    "_id": chat_id,
-                    "triggers": [],
-                    "action": "none",
-                    "reason": "Automated blacklisted word",
-                },
-            )
-            return "Automated blacklisted word"
+            return self.chat_info["action"]
 
-    def set_reason(self, chat_id: int, reason: str):
+    def set_reason(self, reason: str):
         with INSERTION_LOCK:
-
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                return self.collection.update(
-                    {"_id": chat_id},
-                    {"_id": chat_id, "reason": reason},
-                )
-            return self.collection.insert_one(
-                {
-                    "_id": chat_id,
-                    "triggers": [],
-                    "action": "none",
-                    "reason": reason,
-                },
+            return self.collection.update(
+                {"_id": self.chat_id},
+                {"_id": self.chat_id, "reason": reason},
             )
 
-    def get_reason(self, chat_id: int):
+    def get_reason(self):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                return curr["reason"] or "none"
-            self.collection.insert_one(
-                {
-                    "_id": chat_id,
-                    "triggers": [],
-                    "action": "none",
-                    "reason": "Automated blacklistwd word",
-                },
-            )
-            return "Automated blacklisted word"
+            return self.chat_info["reason"]
 
     def count_action_bl_all(self, action: str):
         return self.collection.count({"action": action})
 
-    def rm_all_blacklist(self, chat_id: int):
+    def rm_all_blacklist(self):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                self.collection.update(
-                    {"_id": chat_id},
-                    {"triggers": []},
-                )
-            return False
+            return self.collection.update(
+                {"_id": self.chat_id},
+                {"triggers": []},
+            )
+
+    def __ensure_in_db(self):
+        chat_data = self.collection.find_one({"_id": self.chat_id})
+        if not chat_data:
+            new_data = new_data = {
+                "_id": self.chat_id,
+                "triggers": [],
+                "action": "none",
+                "reason": "Automated blacklisted word",
+            }
+            self.collection.insert_one(new_data)
+            LOGGER.info(f"Initialized Blacklist Document for chat {self.chat_id}")
+            return new_data
+        return chat_data
 
     # Migrate if chat id changes!
-    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        with INSERTION_LOCK:
-
-            old_chat_db = self.collection.find_one({"_id": old_chat_id})
-            if old_chat_db:
-                new_data = old_chat_db.update({"_id": new_chat_id})
-                self.collection.delete_one({"_id": old_chat_id})
-                self.collection.insert_one(new_data)
+    def migrate_chat(self, new_chat_id: int):
+        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        new_data = old_chat_db.update({"_id": new_chat_id})
+        self.collection.delete_one({"_id": self.chat_id})
+        self.collection.insert_one(new_data)

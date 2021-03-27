@@ -17,216 +17,84 @@
 
 
 from threading import RLock
-from time import time
-from traceback import format_exc
 
 from alita import LOGGER
 from alita.database import MongoDB
-from alita.utils.caching import ADMIN_CACHE
 
 INSERTION_LOCK = RLock()
-
-APPROVE_CACHE = {}
 
 
 class Approve:
     """Class for managing Approves in Chats in Bot."""
 
-    def __init__(self) -> None:
-        self.collection = MongoDB("approve")
+    # Database name to connect to to preform operations
+    db_name = "approve"
 
-    def check_approve(self, chat_id: int, user_id: int):
+    def __init__(self, chat_id: int) -> None:
+        self.collection = MongoDB(self.db_name)
+        self.chat_id = chat_id
+        self.chat_info = self.__ensure_in_db()
+
+    def check_approve(self, user_id: int):
         with INSERTION_LOCK:
+            chat_approved = self.chat_info["users"]
+            return bool(user_id in chat_approved.keys())
 
-            try:
-                users = list(APPROVE_CACHE[chat_id])
-            except KeyError:
-                return True
-
-            if user_id in {i[0] for i in users}:
-                return True
-
-            curr_approve = self.collection.find_one(
-                {"_id": chat_id},
-            )
-            if curr_approve:
-                try:
-                    return next(
-                        user for user in curr_approve["users"] if user[0] == user_id
-                    )
-                except StopIteration:
-                    return False
-
-            return False
-
-    def add_approve(self, chat_id: int, user_id: int, user_name: str):
-        global APPROVE_CACHE
+    def add_approve(self, user_id: int, user_name: str):
         with INSERTION_LOCK:
-
-            try:
-                users = list(APPROVE_CACHE[chat_id])
-            except KeyError:
-                return True
-
-            if user_id in {i[0] for i in users}:
-                return True
-
-            users_old = APPROVE_CACHE[chat_id]
-            users_old.add((user_id, user_name))
-            APPROVE_CACHE[chat_id] = users_old
-
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                users_old = curr["users"]
-                users_old.append((user_id, user_name))
-                users = list(set(users_old))  # Remove duplicates
+            new_user_data = {user_id: user_name}
+            if not self.check_approve(user_id):
                 return self.collection.update(
-                    {"_id": chat_id},
-                    {
-                        "_id": chat_id,
-                        "users": users,
-                    },
+                    {"_id": self.chat_id},
+                    {"users": self.chat_info["users"] | new_user_data},
                 )
+            return True
 
-            APPROVE_CACHE[chat_id] = {user_id, user_name}
-            return self.collection.insert_one(
-                {
-                    "_id": chat_id,
-                    "users": [(user_id, user_name)],
-                },
-            )
-
-    def remove_approve(self, chat_id: int, user_id: int):
-        global APPROVE_CACHE
+    def remove_approve(self, user_id: int):
         with INSERTION_LOCK:
+            if self.check_approve(user_id):
+                users = self.chat_info["users"].pop(user_id)
+                return self.collection.update({"_id": self.chat_id}, {"users": users})
+            return True
 
-            try:
-                users = list(APPROVE_CACHE[chat_id])
-            except KeyError:
-                return True
-            try:
-                user = next(user for user in users if user[0] == user_id)
-                users.remove(user)
-                ADMIN_CACHE[chat_id] = users
-            except StopIteration:
-                pass
-
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                users = curr["users"]
-                try:
-                    user = next(user for user in users if user[0] == user_id)
-                except StopIteration:
-                    return "Not Approved"
-
-                users.remove(user)
-
-                # If the list is emptied, then delete it
-                if not users:
-                    return self.collection.delete_one(
-                        {"_id": chat_id},
-                    )
-
-                return self.collection.update(
-                    {"_id": chat_id},
-                    {
-                        "_id": chat_id,
-                        "users": users,
-                    },
-                )
-            return "Not approved"
-
-    def unapprove_all(self, chat_id: int):
-        global APPROVE_CACHE
+    def unapprove_all(self):
         with INSERTION_LOCK:
-            del APPROVE_CACHE[chat_id]
             return self.collection.delete_one(
-                {"_id": chat_id},
+                {"_id": self.chat_id},
             )
 
-    def list_approved(self, chat_id: int):
+    def list_approved(self):
         with INSERTION_LOCK:
-            try:
-                return APPROVE_CACHE[chat_id]
-            except KeyError:
-                pass
-            except Exception as ef:
-                curr = self.collection.find_one({"_id": chat_id})
-                if curr:
-                    return curr["users"]
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-            return []
+            return self.chat_info["users"].items()
 
     def count_all_approved(self):
         with INSERTION_LOCK:
-            try:
-                return len(set(list(ADMIN_CACHE.keys())))
-            except KeyError:
-                pass
-            except Exception as ef:
-                num = 0
-                curr = self.collection.find_all()
-                if curr:
-                    for chat in curr:
-                        users = chat["users"]
-                        num += len(users)
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-
-            return num
+            curr = self.collection.find_all()
+            return sum([len(set(chat["users"].keys())) for chat in curr])
 
     def count_approved_chats(self):
         with INSERTION_LOCK:
-            try:
-                return len(list(APPROVE_CACHE.keys()))
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                return (self.collection.count()) or 0
+            return (self.collection.count()) or 0
 
-    def count_approved(self, chat_id: int):
+    def count_approved(self):
         with INSERTION_LOCK:
-            try:
-                return len(APPROVE_CACHE[chat_id])
-            except KeyError:
-                pass
-            except Exception as ef:
-                all_app = self.collection.find_one({"_id": chat_id})
-                if all_app:
-                    return len(all_app["users"]) or 0
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-            return 0
+            return len(self.chat_info["users"])
 
     def load_from_db(self):
         return self.collection.find_all()
 
     # Migrate if chat id changes!
-    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        global APPROVE_CACHE
-        with INSERTION_LOCK:
+    def migrate_chat(self, new_chat_id: int):
+        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        new_data = old_chat_db.update({"_id": new_chat_id})
+        self.collection.delete_one({"_id": self.chat_id})
+        self.collection.insert_one(new_data)
 
-            # Update locally
-            try:
-                old_db_local = APPROVE_CACHE[old_chat_id]
-                del APPROVE_CACHE[old_chat_id]
-                APPROVE_CACHE[new_chat_id] = old_db_local
-            except KeyError:
-                pass
-
-            old_chat_db = self.collection.find_one({"_id": old_chat_id})
-            if old_chat_db:
-                new_data = old_chat_db.update({"_id": new_chat_id})
-                self.collection.delete_one({"_id": old_chat_id})
-                self.collection.insert_one(new_data)
-
-
-def __load_approve_cache():
-    global APPROVE_CACHE
-    start = time()
-    db = Approve()
-    all_approved = db.load_from_db()
-
-    APPROVE_CACHE = {chat["_id"]: chat["users"] for chat in all_approved}
-    LOGGER.info(f"Loaded Approve Cache - {round((time()-start),3)}s")
+    def __ensure_in_db(self):
+        chat_data = self.collection.find_one({"_id": self.chat_id})
+        if not chat_data:
+            new_data = {"_id": self.chat_id, "users": {}}
+            self.collection.insert_one(new_data)
+            LOGGER.info(f"Initialized Pins Document for chat {self.chat_id}")
+            return new_data
+        return chat_data

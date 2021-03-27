@@ -27,111 +27,79 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-PINS_CACHE = {}
-
 
 class Pins:
     """Class for managing antichannelpins in chats."""
 
-    def __init__(self) -> None:
-        self.collection = MongoDB("antichannelpin")
+    # Database name to connect to to preform operations
+    db_name = "antichannelpin"
 
-    def check_status(self, chat_id: int, atype: str):
+    def __init__(self, chat_id: int) -> None:
+        self.collection = MongoDB()
+        self.chat_id = chat_id
+        self.chat_info = self.__ensure_in_db(self.db_name)
+
+    def get_settings(self):
         with INSERTION_LOCK:
+            return self.chat_info
 
-            if chat_id in (PINS_CACHE[atype]):
-                return True
-
-            curr = self.collection.find_one({"_id": chat_id, atype: True})
-            if curr:
-                return True
-
-            return False
-
-    def get_current_stngs(self, chat_id: int):
+    def antichannelpin_on(self):
         with INSERTION_LOCK:
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                return curr
+            return self.set_on("antichannelpin")
 
-            curr = {"_id": chat_id, "antichannelpin": False, "cleanlinked": False}
-            self.collection.insert_one(curr)
-            return curr
+    def cleanlinked_on(self):
+        with INSERTION_LOCK:
+            return self.set_on("cleanlinked")
 
-    def set_on(self, chat_id: int, atype: str):
+    def antichannelpin_off(self):
+        with INSERTION_LOCK:
+            return self.set_off("antichannelpin")
+
+    def cleanlinked_of(self):
+        with INSERTION_LOCK:
+            return self.set_off("cleanlinked")
+
+    def set_on(self, atype: str):
+        with INSERTION_LOCK:
+            otype = "cleanlinked" if atype == "antichannelpin" else "antichannelpin"
+            return self.collection.update(
+                {"_id": self.chat_id},
+                {atype: True, otype: False},
+            )
+
+    def set_off(self, atype: str):
         global PINS_CACHE
         with INSERTION_LOCK:
             otype = "cleanlinked" if atype == "antichannelpin" else "antichannelpin"
-            if chat_id not in (PINS_CACHE[atype]):
-                (PINS_CACHE[atype]).add(chat_id)
-                try:
-                    return self.collection.insert_one(
-                        {"_id": chat_id, atype: True, otype: False},
-                    )
-                except DuplicateKeyError:
-                    return self.collection.update(
-                        {"_id": chat_id},
-                        {atype: True, otype: False},
-                    )
-            return "Already exists"
+            return self.collection.update(
+                {"_id": self.chat_id},
+                {atype: False, otype: False},
+            )
 
-    def set_off(self, chat_id: int, atype: str):
-        global PINS_CACHE
+    def count_chats(self, atype: str):
         with INSERTION_LOCK:
-            if chat_id in (PINS_CACHE[atype]):
-                (PINS_CACHE[atype]).remove(chat_id)
-                return self.collection.update({"_id": chat_id}, {atype: False})
-            return f"{atype} not enabled"
+            return self.collection.count({atype: True})
 
-    def count_chats(self, atype):
+    def list_chats(self, query: str):
         with INSERTION_LOCK:
-            try:
-                return len(PINS_CACHE[atype])
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                return self.collection.count({atype: True})
-
-    def load_chats_from_db(self, query=None):
-        with INSERTION_LOCK:
-            if query is None:
-                query = {}
-            return self.collection.find_all(query)
-
-    def list_chats(self, query):
-        with INSERTION_LOCK:
-            try:
-                return PINS_CACHE[query]
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                return self.collection.find_all({query: True})
+            return self.collection.find_all({query: True})
 
     # Migrate if chat id changes!
-    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        global PINS_CACHE
-        with INSERTION_LOCK:
+    def migrate_chat(self, new_chat_id: int):
+        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        new_data = old_chat_db.update({"_id": new_chat_id})
+        self.collection.delete_one({"_id": self.chat_id})
+        self.collection.insert_one(new_data)
 
-            # Update locally
-            if old_chat_id in (PINS_CACHE["antichannelpin"]):
-                (PINS_CACHE["antichannelpin"]).remove(old_chat_id)
-                (PINS_CACHE["antichannelpin"]).add(new_chat_id)
-            if old_chat_id in (PINS_CACHE["cleanlinked"]):
-                (PINS_CACHE["cleanlinked"]).remove(old_chat_id)
-                (PINS_CACHE["cleanlinked"]).add(new_chat_id)
-
-            old_chat_db = self.collection.find_one({"_id": old_chat_id})
-            if old_chat_db:
-                new_data = old_chat_db.update({"_id": new_chat_id})
-                self.collection.delete_one({"_id": old_chat_id})
-                self.collection.insert_one(new_data)
-
-
-def __load_pins_chats():
-    global PINS_CACHE
-    start = time()
-    db = Pins()
-    all_chats = db.load_chats_from_db()
-    PINS_CACHE["antichannelpin"] = {i["_id"] for i in all_chats if i["antichannelpin"]}
-    PINS_CACHE["cleanlinked"] = {i["_id"] for i in all_chats if i["cleanlinked"]}
-    LOGGER.info(f"Loaded Pins Cache - {round((time()-start),3)}s")
+    def __ensure_in_db(self):
+        chat_data = self.collection.find_one({"_id": self.chat_id})
+        if not chat_data:
+            new_data = {
+                "_id": self.chat_id,
+                "antichannelpin": False,
+                "cleanlinked": False,
+            }
+            self.collection.insert_one(new_data)
+            LOGGER.info(f"Initialized Pins Document for chat {self.chat_id}")
+            return new_data
+        return chat_data
