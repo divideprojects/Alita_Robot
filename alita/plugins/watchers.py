@@ -191,7 +191,7 @@ async def bl_watcher(_, m: Message):
             continue
         if match:
             try:
-                await perform_action_blacklist(m, action, trigger)
+                await perform_action_blacklist(m, action)
                 LOGGER.info(
                     f"{m.from_user.id} {action}ed for using blacklisted word {trigger} in {m.chat.id}",
                 )
