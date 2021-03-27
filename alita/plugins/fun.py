@@ -20,8 +20,6 @@ from html import escape
 from secrets import choice
 
 from pyrogram.types import Message
-
-from alita import PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils import fun_strings

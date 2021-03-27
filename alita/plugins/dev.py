@@ -21,8 +21,6 @@ from asyncio import create_subprocess_shell, sleep, subprocess
 from io import BytesIO, StringIO
 from time import gmtime, strftime, time
 from traceback import format_exc
-
-from pyrogram import filters
 from pyrogram.errors import (
     ChannelInvalid,
     ChannelPrivate,

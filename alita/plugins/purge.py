@@ -21,7 +21,7 @@ from asyncio import sleep
 from pyrogram.errors import MessageDeleteForbidden, RPCError
 from pyrogram.types import Message
 
-from alita import PREFIX_HANDLER, SUPPORT_GROUP
+from alita import SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, command
