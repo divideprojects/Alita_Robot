@@ -21,7 +21,7 @@ from asyncio import sleep
 from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatPermissions, Message
 
-from alita import LOGGER, PREFIX_HANDLER
+from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.tr_engine import tlang
@@ -31,7 +31,7 @@ from alita.utils.custom_filters import admin_filter, command, restrict_filter
 app_db = Approve()
 
 
-@Alita.on_message(command("locktypes", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("locktypes") & admin_filter)
 async def lock_types(_, m: Message):
     await m.reply_text(
         (
@@ -53,7 +53,7 @@ async def lock_types(_, m: Message):
     return
 
 
-@Alita.on_message(command("lock", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(command("lock") & restrict_filter)
 async def lock_perm(c: Alita, m: Message):
 
     msg = ""
@@ -178,7 +178,7 @@ async def lock_perm(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(command("locks", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(command("locks") & restrict_filter)
 async def view_locks(_, m: Message):
 
     (
@@ -241,7 +241,7 @@ async def view_locks(_, m: Message):
     return
 
 
-@Alita.on_message(command("unlock", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(command("unlock") & restrict_filter)
 async def unlock_perm(c: Alita, m: Message):
 
     (

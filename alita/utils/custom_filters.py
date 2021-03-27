@@ -16,11 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import filters
+from re import compile as compile_re
+from re import escape, search
+from shlex import split
+from typing import List
+
+from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
-from alita import DEV_USERS, OWNER_ID, SUDO_USERS
-from alita.bot_class import Alita
+from alita import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 
@@ -28,33 +32,28 @@ SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
 DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
 
 
-import re
-import shlex
-from typing import List
-
-
 def command(
     commands: str or List[str],
-    prefixes: str or List[str] = "/",
+    prefixes: str or List[str] = PREFIX_HANDLER,
     case_sensitive: bool = False,
 ):
     from alita import BOT_USERNAME
 
-    async def func(flt, _: Alita, message: Message):
-        text: str = message.text or message.caption
-        message.command = None
+    async def func(flt, _, m: Message):
+        text: str = m.text or m.caption
+        m.command = None
         if not text:
             return False
         regex = "^({prefix})+\\b({regex})\\b(\\b@{bot_name}\\b)?(.*)".format(
-            prefix="|".join(re.escape(x) for x in flt.prefixes),
+            prefix="|".join(escape(x) for x in flt.prefixes),
             regex="|".join(flt.commands),
             bot_name=BOT_USERNAME,
         )
-        matches = re.search(re.compile(regex), text)
+        matches = search(compile_re(regex), text)
         if matches:
-            message.command = [matches.group(2)]
-            for arg in shlex.split(matches.group(4).strip()):
-                message.command.append(arg)
+            m.command = [matches.group(2)]
+            for arg in split(matches.group(4).strip()):
+                m.command.append(arg)
             return True
         else:
             return False
@@ -64,7 +63,7 @@ def command(
     prefixes = [] if prefixes is None else prefixes
     prefixes = prefixes if type(prefixes) is list else [prefixes]
     prefixes = set(prefixes) if prefixes else {""}
-    return filters.create(
+    return create(
         func,
         "CustomCommandFilter",
         commands=commands,
@@ -73,17 +72,17 @@ def command(
     )
 
 
-async def dev_check_func(_, __, m):
+async def dev_check_func(_, __, m: Message):
     """Check if user is Dev or not."""
     return bool(m.from_user.id in DEV_USERS or m.from_user.id == int(OWNER_ID))
 
 
-async def sudo_check_func(_, __, m):
+async def sudo_check_func(_, __, m: Message):
     """Check if user is Sudo or not."""
     return bool(m.from_user.id in SUDO_LEVEL)
 
 
-async def admin_check_func(_, __, m):
+async def admin_check_func(_, __, m: Message or CallbackQuery):
     """Check if user is Admin or not."""
 
     if isinstance(m, CallbackQuery):
@@ -115,7 +114,7 @@ async def admin_check_func(_, __, m):
     return False
 
 
-async def owner_check_func(_, __, m):
+async def owner_check_func(_, __, m: Message or CallbackQuery):
     """Check if user is Owner or not."""
 
     if isinstance(m, CallbackQuery):
@@ -143,7 +142,7 @@ async def owner_check_func(_, __, m):
     return status
 
 
-async def restrict_check_func(_, __, m):
+async def restrict_check_func(_, __, m: Message or CallbackQuery):
     """Check if user can restrict users or not."""
 
     if isinstance(m, CallbackQuery):
@@ -191,7 +190,7 @@ async def promote_check_func(_, __, m):
     return status
 
 
-async def invite_check_func(_, __, m):
+async def invite_check_func(_, __, m: Message or CallbackQuery):
     """Check if user can invite users or not."""
 
     if isinstance(m, CallbackQuery):
@@ -215,10 +214,10 @@ async def invite_check_func(_, __, m):
     return status
 
 
-dev_filter = filters.create(dev_check_func)
-sudo_filter = filters.create(sudo_check_func)
-admin_filter = filters.create(admin_check_func)
-owner_filter = filters.create(owner_check_func)
-restrict_filter = filters.create(restrict_check_func)
-promote_filter = filters.create(promote_check_func)
-invite_filter = filters.create(invite_check_func)
+dev_filter = create(dev_check_func)
+sudo_filter = create(sudo_check_func)
+admin_filter = create(admin_check_func)
+owner_filter = create(owner_check_func)
+restrict_filter = create(restrict_check_func)
+promote_filter = create(promote_check_func)
+invite_filter = create(invite_check_func)

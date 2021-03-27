@@ -25,7 +25,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import HELP_COMMANDS, LOGGER, PREFIX_HANDLER
+from alita import HELP_COMMANDS, LOGGER
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import command
@@ -39,7 +39,7 @@ from alita.utils.start_utils import (
 
 
 @Alita.on_message(
-    command("donate", PREFIX_HANDLER) & (filters.group | filters.private),
+    command("donate") & (filters.group | filters.private),
 )
 async def donate(_, m: Message):
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
@@ -48,7 +48,7 @@ async def donate(_, m: Message):
 
 
 @Alita.on_message(
-    command("start", PREFIX_HANDLER) & (filters.group | filters.private),
+    command("start") & (filters.group | filters.private),
 )
 async def start(c: Alita, m: Message):
 
@@ -139,7 +139,7 @@ async def commands_menu(_, q: CallbackQuery):
     return
 
 
-@Alita.on_message(command("help", PREFIX_HANDLER))
+@Alita.on_message(command("help"))
 async def help_menu(_, m: Message):
 
     from alita import BOT_USERNAME

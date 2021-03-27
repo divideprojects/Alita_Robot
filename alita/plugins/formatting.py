@@ -24,7 +24,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import LOGGER, PREFIX_HANDLER
+from alita import LOGGER
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import command
@@ -58,7 +58,7 @@ async def gen_formatting_kb(m):
 
 
 @Alita.on_message(
-    command(["markdownhelp", "formatting"], PREFIX_HANDLER) & filters.private,
+    command(["markdownhelp", "formatting"]) & filters.private,
 )
 async def markdownhelp(_, m: Message):
     await m.reply_text(

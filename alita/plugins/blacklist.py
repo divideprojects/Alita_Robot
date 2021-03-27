@@ -26,7 +26,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import LOGGER, PREFIX_HANDLER
+from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
@@ -39,7 +39,7 @@ db = Blacklist()
 app_db = Approve()
 
 
-@Alita.on_message(command("blacklist", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(command("blacklist") & filters.group)
 async def view_blacklist(_, m: Message):
 
     LOGGER.info(f"{m.from_user.id} checking blacklists in {m.chat.id}")
@@ -66,7 +66,7 @@ async def view_blacklist(_, m: Message):
     return
 
 
-@Alita.on_message(command("addblacklist", PREFIX_HANDLER) & restrict_filter)
+@Alita.on_message(command("addblacklist") & restrict_filter)
 async def add_blacklist(_, m: Message):
 
     if not len(m.text.split()) >= 2:
@@ -101,8 +101,7 @@ async def add_blacklist(_, m: Message):
 
 
 @Alita.on_message(
-    command(["blwarning", "blreason", "blacklistreason"], PREFIX_HANDLER)
-    & restrict_filter,
+    command(["blwarning", "blreason", "blacklistreason"]) & restrict_filter,
 )
 async def blacklistreason(_, m: Message):
     if len(m.text.split()) == 1:
@@ -120,7 +119,7 @@ async def blacklistreason(_, m: Message):
 
 
 @Alita.on_message(
-    command(["rmblacklist", "unblacklist"], PREFIX_HANDLER) & restrict_filter,
+    command(["rmblacklist", "unblacklist"]) & restrict_filter,
 )
 async def rm_blacklist(_, m: Message):
 
@@ -161,8 +160,7 @@ async def rm_blacklist(_, m: Message):
 
 
 @Alita.on_message(
-    command(["blaction", "blacklistaction", "blacklistmode"], PREFIX_HANDLER)
-    & restrict_filter,
+    command(["blaction", "blacklistaction", "blacklistmode"]) & restrict_filter,
 )
 async def set_bl_action(_, m: Message):
     if len(m.text.split()) == 2:
@@ -194,7 +192,7 @@ async def set_bl_action(_, m: Message):
 
 
 @Alita.on_message(
-    command("rmallblacklist", PREFIX_HANDLER) & owner_filter,
+    command("rmallblacklist") & owner_filter,
 )
 async def rm_allblacklist(_, m: Message):
 

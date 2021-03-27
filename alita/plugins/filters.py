@@ -47,7 +47,7 @@ from alita.utils.string import (
 db = Filters()
 
 
-@Alita.on_message(command("filters", PREFIX_HANDLER) & filters.group)
+@Alita.on_message(command("filters") & filters.group)
 async def view_filters(_, m: Message):
 
     LOGGER.info(f"{m.from_user.id} checking filters in {m.chat.id}")
@@ -71,7 +71,7 @@ async def view_filters(_, m: Message):
 
 
 @Alita.on_message(
-    command(["addfilter", "filter"], PREFIX_HANDLER) & admin_filter,
+    command(["addfilter", "filter"]) & admin_filter,
 )
 async def add_filter(_, m: Message):
 
@@ -158,7 +158,7 @@ async def add_filter(_, m: Message):
 
 
 @Alita.on_message(
-    command(["rmfilter", "stop", "unfilter"], PREFIX_HANDLER) & admin_filter,
+    command(["rmfilter", "stop", "unfilter"]) & admin_filter,
 )
 async def stop_filter(_, m: Message):
     args = m.command

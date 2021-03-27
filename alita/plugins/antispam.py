@@ -45,7 +45,7 @@ db = GBan()
 user_db = Users()
 
 
-@Alita.on_message(command(["gban", "globalban"], PREFIX_HANDLER) & sudo_filter)
+@Alita.on_message(command(["gban", "globalban"]) & sudo_filter)
 async def gban(c: Alita, m: Message):
 
     if len(m.text.split()) == 1:
@@ -117,7 +117,7 @@ async def gban(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command(["ungban", "unglobalban", "globalunban"], PREFIX_HANDLER) & sudo_filter,
+    command(["ungban", "unglobalban", "globalunban"]) & sudo_filter,
 )
 async def ungban(c: Alita, m: Message):
 
@@ -182,7 +182,7 @@ async def gban_count(_, m: Message):
 
 
 @Alita.on_message(
-    command(["gbanlist", "globalbanlist"], PREFIX_HANDLER) & sudo_filter,
+    command(["gbanlist", "globalbanlist"]) & sudo_filter,
 )
 async def gban_list(_, m: Message):
     banned_users = db.load_from_db()

@@ -28,7 +28,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import LOGGER, PREFIX_HANDLER, SUPPORT_STAFF
+from alita import LOGGER, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.reporting_db import Reporting
 from alita.utils.custom_filters import admin_filter, command
@@ -39,7 +39,7 @@ db = Reporting()
 
 
 @Alita.on_message(
-    command("reports", PREFIX_HANDLER) & (filters.private | admin_filter),
+    command("reports") & (filters.private | admin_filter),
 )
 async def report_setting(_, m: Message):
     args = m.text.split()
@@ -88,8 +88,7 @@ async def report_setting(_, m: Message):
 
 
 @Alita.on_message(
-    (command("report", PREFIX_HANDLER) | filters.regex(r"(?i)@admin(s)?"))
-    & filters.group,
+    (command("report") | filters.regex(r"(?i)@admin(s)?")) & filters.group,
 )
 async def report_watcher(c: Alita, m: Message):
 
@@ -122,10 +121,8 @@ async def report_watcher(c: Alita, m: Message):
                 f"<b> • Reported user:</b> {(await mention_html(reported_user.first_name, reported_user.id))} (<code>{reported_user.id}</code>)\n"
             )
 
-            should_forward = False
         else:
             msg = f"{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in '{chat_name}'!\n"
-            should_forward = True
 
         link_chat_id = str(m.chat.id).replace("-100", "")
         link = f"https://t.me/c/{link_chat_id}/{reported_msg_id}"  # message link

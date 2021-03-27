@@ -24,6 +24,7 @@ install()
 
 from platform import python_version
 from threading import RLock
+from time import time
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
@@ -39,6 +40,7 @@ from alita import (
     MESSAGE_DUMP,
     NO_LOAD,
     STRING_SESSION,
+    UPTIME,
     WORKERS,
     get_self,
     load_cmds,
@@ -84,11 +86,11 @@ class Alita(Client):
 
         # Load Languages
         lang_status = len(lang_dict) >= 1
-        LOGGER.info(f"Loading Languages: {lang_status}")
+        LOGGER.info(f"Loading Languages: {lang_status}\n")
 
         # Show in Log that bot has started
         LOGGER.info(
-            f"\nPyrogram v{__version__} (Layer - {layer}) started on {meh.username}",
+            f"Pyrogram v{__version__} (Layer - {layer}) started on {meh.username}",
         )
         LOGGER.info(f"Python Version: {python_version()}\n")
 
@@ -112,7 +114,8 @@ class Alita(Client):
 
     async def stop(self):
         """Stop the bot and send a message to MESSAGE_DUMP telling that the bot has stopped."""
-        LOGGER.info("Uploading logs before stopping...!")
+        runtime = time() - UPTIME
+        LOGGER.info("Uploading logs before stopping...!\n")
         with open(LOGFILE) as f:
             txt = f.read()
             neko, raw = await paste(txt)
@@ -121,7 +124,7 @@ class Alita(Client):
             MESSAGE_DUMP,
             document=LOGFILE,
             caption=(
-                f"Bot Stopped!\n\nLogs for last run, pasted to [NekoBin]({neko}) as "
+                f"Bot Stopped!\n\nUptime: {runtime}Logs for last run, pasted to [NekoBin]({neko}) as "
                 f"well as uploaded a file here.\n<code>{LOG_DATETIME}</code>"
             ),
             reply_markup=InlineKeyboardMarkup(
@@ -130,4 +133,8 @@ class Alita(Client):
         )
         await super().stop()
         MongoDB.close()
-        LOGGER.info("Bot Stopped.\nkthxbye!")
+        LOGGER.info(
+            f"""Bot Stopped.
+        Logs have been uploaded to the MESSAGE_DUMP Group!
+        Runtime: {runtime}""",
+        )

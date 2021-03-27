@@ -27,7 +27,7 @@ from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, command
 
 
-@Alita.on_message(command("purge", PREFIX_HANDLER) & admin_filter)
+@Alita.on_message(command("purge") & admin_filter)
 async def purge(c: Alita, m: Message):
 
     if m.chat.type != "supergroup":
@@ -78,7 +78,7 @@ async def purge(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command("del", PREFIX_HANDLER) & admin_filter,
+    command("del") & admin_filter,
     group=9,
 )
 async def del_msg(c: Alita, m: Message):
