@@ -51,10 +51,14 @@ users_db = Users()
 async def warn(c: Alita, m: Message):
     from alita import BOT_ID, BOT_USERNAME
 
-    if m.reply_to_message and len(m.text.split()) >= 2:
-        reason = m.text.split(None, 1)[1]
-    elif not m.reply_to_message and len(m.text.split()) >= 3:
-        reason = m.text.split(None, 2)[2]
+    if m.reply_to_message:
+        r_id = m.reply_to_message.message_id
+        if len(m.text.split()) >= 2:
+            reason = m.text.split(None, 1)[1]
+    elif not m.reply_to_message:
+        r_id = m.message_id
+        if len(m.text.split()) >= 3:
+            reason = m.text.split(None, 2)[2]
     else:
         reason = None
 
@@ -104,6 +108,7 @@ async def warn(c: Alita, m: Message):
                 else "\n"
                 f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
             ),
+            reply_to_message_id=r_id
         )
         await m.stop_propagation()
 
@@ -142,6 +147,7 @@ async def warn(c: Alita, m: Message):
                 + [kb],
             ],
         ),
+        reply_to_message_id=r_id
     )
     await m.stop_propagation()
 
