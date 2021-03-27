@@ -91,6 +91,10 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
     if m.chat.type != "supergroup":
         return False
 
+    # Telegram and GroupAnonyamousBot
+    if m.from_user.id in [777000, 1087968824]:
+        return True
+
     # Bypass the bot devs, sudos and owner
     if m.from_user.id in SUDO_LEVEL:
         return True
