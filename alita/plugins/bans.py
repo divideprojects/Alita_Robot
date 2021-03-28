@@ -56,6 +56,7 @@ async def kick_usr(c: Alita, m: Message):
         if len(m.text.split()) >= 3:
             reason = m.text.split(None, 2)[2]
     else:
+        r_id = m.message_id
         reason = None
 
     user_id, user_first_name, _ = await extract_user(c, m)

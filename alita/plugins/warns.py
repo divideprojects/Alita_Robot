@@ -108,7 +108,7 @@ async def warn(c: Alita, m: Message):
                 else "\n"
                 f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
             ),
-            reply_to_message_id=r_id
+            reply_to_message_id=r_id,
         )
         await m.stop_propagation()
 
@@ -147,7 +147,7 @@ async def warn(c: Alita, m: Message):
                 + [kb],
             ],
         ),
-        reply_to_message_id=r_id
+        reply_to_message_id=r_id,
     )
     await m.stop_propagation()
 
