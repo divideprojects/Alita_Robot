@@ -234,7 +234,7 @@ async def rm_allfilters_callback(_, q: CallbackQuery):
         )
         return
     db.rm_all_filters(q.message.chat.id)
-    await q.message.edit_text("Cleared all filters for {q.message.chat.id}")
+    await q.message.edit_text(f"Cleared all filters in {q.message.chat.title}")
     LOGGER.info(f"{user_id} removed all filter from {q.message.chat.id}")
     await q.answer("Cleared all Filters!", show_alert=True)
     return
