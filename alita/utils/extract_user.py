@@ -60,6 +60,7 @@ async def extract_user(c: Alita, m: Message) -> Tuple[int, str, str]:
                 except (ValueError, Exception) as ef:
                     if "invalid literal for int() with base 10:" in str(ef):
                         user_found = str(user_found)
+                    else:
                         LOGGER.error(ef)
                         LOGGER.error(format_exc())
 
