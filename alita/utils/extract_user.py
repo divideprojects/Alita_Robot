@@ -25,9 +25,6 @@ from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.users_db import Users
 
-# Initialize
-db = Users()
-
 
 async def extract_user(c: Alita, m: Message) -> Tuple[int, str, str]:
     """Extract the user from the provided message."""
@@ -93,7 +90,7 @@ async def extract_user(c: Alita, m: Message) -> Tuple[int, str, str]:
                     LOGGER.error(ef)
                     LOGGER.error(format_exc())
             try:
-                user = db.get_user_info(user_id)
+                user = Users.get_user_info(user_id)
                 user_first_name = user["name"]
                 user_name = user["username"]
             except Exception as ef:

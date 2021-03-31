@@ -64,6 +64,10 @@ async def save_note(_, m: Message):
         )
         return
 
+    if note_name.startswith("<") or note_name.startswith(">"):
+        await m.reply_text("Cannot save a note which starts with '<' or '>'")
+        return
+
     if (
         (not m.reply_to_message)
         and (data_type == Types.TEXT)
