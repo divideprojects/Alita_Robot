@@ -74,7 +74,7 @@ def command(
 
 async def dev_check_func(_, __, m: Message):
     """Check if user is Dev or not."""
-    return bool(m.from_user.id in DEV_USERS or m.from_user.id == int(OWNER_ID))
+    return bool(m.from_user.id in DEV_LEVEL)
 
 
 async def sudo_check_func(_, __, m: Message):
