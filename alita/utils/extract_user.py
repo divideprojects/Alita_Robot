@@ -62,7 +62,7 @@ async def extract_user(c: Alita, m: Message) -> Tuple[int, str, str]:
                         LOGGER.error(format_exc())
 
                 try:
-                    user = db.get_user_info(user_found)
+                    user = Users.get_user_info(user_found)
                     user_id = user["_id"]
                     user_first_name = user["name"]
                     user_name = user["username"]

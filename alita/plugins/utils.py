@@ -243,7 +243,7 @@ async def my_info(c: Alita, m: Message):
             await m.reply_text(tlang(m, "utils.user_info.id_not_found"))
         return
     try:
-        user = Users().get_user_info(int(user_id))
+        user = Users.get_user_info(int(user_id))
         name = user["name"]
         user_name = user["username"]
         user_id = user["_id"]

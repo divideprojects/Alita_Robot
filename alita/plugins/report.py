@@ -85,9 +85,7 @@ async def report_setting(_, m: Message):
             )
 
 
-@Alita.on_message(
-    (command("report") | filters.regex(r"(?i)@admin(s)?")) & filters.group,
-)
+@Alita.on_message(command("report") & filters.group)
 async def report_watcher(c: Alita, m: Message):
 
     if m.chat.type != "supergroup":

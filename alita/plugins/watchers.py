@@ -38,10 +38,7 @@ from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
 
 # Initialise
-bl_db = Blacklist()
-app_db = Approve()
 gban_db = GBan()
-pins_db = Pins()
 warns_db = Warns()
 warns_settings_db = WarnSettings()
 
@@ -50,7 +47,8 @@ warns_settings_db = WarnSettings()
 async def antichanpin_cleanlinked(c: Alita, m: Message):
     try:
         msg_id = m.message_id
-        curr = pins_db.get_current_stngs(m.chat.id)
+        pins_db = Pins(m.chat.id)
+        curr = pins_db.get_settings()
         if curr["antichannelpin"]:
             await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
             LOGGER.info(f"AntiChannelPin: msgid-{m.message_id} unpinned in {m.chat.id}")
@@ -69,6 +67,8 @@ async def bl_watcher(_, m: Message):
 
     if not m.from_user:
         return
+
+    bl_db = Blacklist(m.chat.id)
 
     async def perform_action_blacklist(m: Message, action: str):
         if action == "kick":
@@ -126,7 +126,7 @@ async def bl_watcher(_, m: Message):
             )
         elif action == "warn":
             warn_settings = warns_settings_db.get_warnings_settings(m.chat.id)
-            warn_reason = bl_db.get_reason(m.chat.id)
+            warn_reason = bl_db.get_reason()
             _, num = warns_db.warn_user(m.chat.id, m.from_user.id, warn_reason)
             if num >= warn_settings["warn_limit"]:
                 if warn_settings["warn_mode"] == "kick":
@@ -164,7 +164,7 @@ async def bl_watcher(_, m: Message):
         return
 
     # If no blacklists, then return
-    chat_blacklists = bl_db.get_blacklists(m.chat.id)
+    chat_blacklists = bl_db.get_blacklists()
     if not chat_blacklists:
         return
 
@@ -178,12 +178,12 @@ async def bl_watcher(_, m: Message):
         return
 
     # Get approved user from cache/database
-    app_users = app_db.list_approved(m.chat.id)
+    app_users = Approve(m.chat.id).list_approved()
     if m.from_user.id in {i[0] for i in app_users}:
         return
 
     # Get action for blacklist
-    action = bl_db.get_action(m.chat.id)
+    action = bl_db.get_action()
     for trigger in chat_blacklists:
         pattern = r"( |^|[^\w])" + re_escape(trigger) + r"( |$|[^\w])"
         match = await regex_searcher(pattern, m.text.lower())

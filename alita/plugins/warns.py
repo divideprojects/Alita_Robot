@@ -40,9 +40,7 @@ from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 warn_db = Warns()
-rules_db = Rules()
 warn_settings_db = WarnSettings()
-users_db = Users()
 
 
 @Alita.on_message(
@@ -112,7 +110,7 @@ async def warn(c: Alita, m: Message):
         )
         await m.stop_propagation()
 
-    rules = rules_db.get_rules(m.chat.id)
+    rules = Rules(m.chat.id).get_rules()
     if rules:
         kb = InlineKeyboardButton(
             "Rules 📋",
@@ -296,7 +294,7 @@ async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
     action = args[1]
     user_id = int(args[2])
     chat_id = int(q.message.chat.id)
-    user = users_db.get_user_info(int(user_id))
+    user = Users.get_user_info(int(user_id))
     user_first_name = user["name"]
 
     if action == "remove":

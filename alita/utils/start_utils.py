@@ -37,9 +37,7 @@ from alita.utils.msg_types import Types
 from alita.utils.string import build_keyboard, parse_button
 
 # Initialize
-rules_db = Rules()
 notes_db = Notes()
-chats_db = Chats()
 
 
 async def gen_cmds_kb(m: Message or CallbackQuery):
@@ -129,7 +127,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
 
     if len(help_lst) == 2:
         all_notes = notes_db.get_all_notes(chat_id)
-        chat_title = chats_db.get_chat_info(chat_id)["chat_name"]
+        chat_title = Chats.get_chat_info(chat_id)["chat_name"]
         rply = f"Notes in {chat_title}:\n\n"
         for note in all_notes:
             note_name = note[0]
@@ -229,8 +227,8 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
 
 async def get_private_rules(_, m: Message, help_option: str):
     chat_id = int(help_option.split("_")[1])
-    rules = rules_db.get_rules(chat_id)
-    chat_title = chats_db.get_chat_info(chat_id)["chat_name"]
+    rules = Rules(chat_id).get_rules()
+    chat_title = Chats.get_chat_info(chat_id)["chat_name"]
     await m.reply_text(
         (tlang(m, "rules.get_rules")).format(
             chat=chat_title,

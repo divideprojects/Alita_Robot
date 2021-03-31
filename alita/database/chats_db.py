@@ -41,15 +41,19 @@ class Chats:
     def update_chat(self, chat_name: str, user_id: int):
         with INSERTION_LOCK:
 
-            if chat_name == self.chat_info["chat_name"] and self.user_is_in_chat():
+            if chat_name == self.chat_info["chat_name"] and self.user_is_in_chat(
+                user_id,
+            ):
                 return True
-            elif chat_name != self.chat_info["chat_name"] and self.user_is_in_chat():
+            elif chat_name != self.chat_info["chat_name"] and self.user_is_in_chat(
+                user_id,
+            ):
                 return self.collection.update(
                     {"_id": self.chat_id},
                     {"chat_name": chat_name},
                 )
-            elif (
-                chat_name == self.chat_info["chat_name"] and not self.user_is_in_chat()
+            elif chat_name == self.chat_info["chat_name"] and not self.user_is_in_chat(
+                user_id,
             ):
                 self.chat_info["users"].append(user_id)
                 return self.collection.update(
@@ -128,3 +132,25 @@ class Chats:
         new_data = old_chat_db.update({"_id": new_chat_id})
         self.collection.insert_one(new_data)
         self.collection.delete_one({"_id": self.chat_id})
+
+    @staticmethod
+    def repair_db(collection):
+        all_data = collection.find_all()
+        keys = {"chat_name": "", "users": []}
+        for data in all_data:
+            for key, val in keys.items():
+                try:
+                    _ = data[key]
+                except KeyError:
+                    LOGGER.warning(
+                        f"Repairing Chats Database - setting '{key}:{val}' for {data['_id']}",
+                    )
+                    collection.update({"_id": data["_id"]}, {key: val})
+
+
+def __check_db_status():
+    collection = MongoDB(Chats.db_name)
+    Chats.repair_db(collection)
+
+
+__check_db_status()

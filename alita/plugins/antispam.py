@@ -42,7 +42,6 @@ from alita.utils.parser import mention_html
 
 # Initialize
 db = GBan()
-user_db = Users()
 
 
 @Alita.on_message(command(["gban", "globalban"]) & sudo_filter)
@@ -193,7 +192,7 @@ async def gban_list(_, m: Message):
 
     banfile = tlang(m, "antispam.here_gbanned_start")
     for user in banned_users:
-        banfile += f"[x] <b>{user_db.get_user_info(user['_id'])['name']}</b> - <code>{user['_id']}</code>\n"
+        banfile += f"[x] <b>{Users.get_user_info(user['_id'])['name']}</b> - <code>{user['_id']}</code>\n"
         if user["reason"]:
             banfile += f"<b>Reason:</b> {user['reason']}\n"
 

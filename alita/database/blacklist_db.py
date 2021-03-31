@@ -42,7 +42,7 @@ class Blacklist:
 
     def add_blacklist(self, trigger: str):
         with INSERTION_LOCK:
-            if not self.check_word_blacklist_status():
+            if not self.check_word_blacklist_status(trigger):
                 return self.collection.update(
                     {"_id": self.chat_id},
                     {
@@ -53,7 +53,7 @@ class Blacklist:
 
     def remove_blacklist(self, trigger: str):
         with INSERTION_LOCK:
-            if self.check_word_blacklist_status():
+            if self.check_word_blacklist_status(trigger):
                 self.chat_info["triggers"].remove(trigger)
                 return self.collection.update(
                     {"_id": self.chat_id},
@@ -136,3 +136,29 @@ class Blacklist:
         new_data = old_chat_db.update({"_id": new_chat_id})
         self.collection.insert_one(new_data)
         self.collection.delete_one({"_id": self.chat_id})
+
+    @staticmethod
+    def repair_db(collection):
+        all_data = collection.find_all()
+        keys = {
+            "triggers": [],
+            "action": "none",
+            "reason": "Automated blacklisted word",
+        }
+        for data in all_data:
+            for key, val in keys.items():
+                try:
+                    _ = data[key]
+                except KeyError:
+                    LOGGER.warning(
+                        f"Repairing Blacklist Database - setting '{key}:{val}' for {data['_id']}",
+                    )
+                    collection.update({"_id": data["_id"]}, {key: val})
+
+
+def __check_db_status():
+    collection = MongoDB(Blacklist.db_name)
+    Blacklist.repair_db(collection)
+
+
+__check_db_status()

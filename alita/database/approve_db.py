@@ -38,7 +38,7 @@ class Approve:
     def check_approve(self, user_id: int):
         with INSERTION_LOCK:
             chat_approved = self.chat_info["users"]
-            return bool(user_id in chat_approved.keys())
+            return bool(user_id in chat_approved)
 
     def add_approve(self, user_id: int, user_name: str):
         with INSERTION_LOCK:
@@ -65,14 +65,14 @@ class Approve:
 
     def list_approved(self):
         with INSERTION_LOCK:
-            return self.chat_info["users"].items()
+            return self.chat_info["users"]
 
     @staticmethod
     def count_all_approved():
         with INSERTION_LOCK:
             collection = MongoDB(Approve.db_name)
             curr = collection.find_all()
-            return sum([len(list(chat["users"].keys())) for chat in curr])
+            return sum([len([chat["users"] for chat in curr])])
 
     @staticmethod
     def count_approved_chats():
@@ -90,7 +90,7 @@ class Approve:
     def __ensure_in_db(self):
         chat_data = self.collection.find_one({"_id": self.chat_id})
         if not chat_data:
-            new_data = {"_id": self.chat_id, "users": {}}
+            new_data = {"_id": self.chat_id, "users": []}
             self.collection.insert_one(new_data)
             LOGGER.info(f"Initialized Pins Document for chat {self.chat_id}")
             return new_data
@@ -102,3 +102,25 @@ class Approve:
         new_data = old_chat_db.update({"_id": new_chat_id})
         self.collection.insert_one(new_data)
         self.collection.delete_one({"_id": self.chat_id})
+
+    @staticmethod
+    def repair_db(collection):
+        all_data = collection.find_all()
+        keys = {"users": []}
+        for data in all_data:
+            for key, val in keys.items():
+                try:
+                    _ = data[key]
+                except KeyError:
+                    LOGGER.warning(
+                        f"Repairing Approve Database - setting '{key}:{val}' for {data['_id']}",
+                    )
+                    collection.update({"_id": data["_id"]}, {key: val})
+
+
+def __check_db_status():
+    collection = MongoDB(Approve.db_name)
+    Approve.repair_db(collection)
+
+
+__check_db_status()

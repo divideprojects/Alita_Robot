@@ -49,7 +49,7 @@ async def get_stats(_, m: Message):
     pinsdb = Pins
     notesettings_db = NotesSettings()
     warns_db = Warns()
-    warns_settings_db = WarnSettings
+    warns_settings_db = WarnSettings()
 
     replymsg = await m.reply_text("<b><i>Fetching Stats...</i></b>", quote=True)
     rply = (
@@ -64,7 +64,7 @@ async def get_stats(_, m: Message):
         f"        <b>Kick</b> <code>{(bldb.count_action_bl_all('kick'))}</code> chats\n"
         f"        <b>Warn:</b> <code>{(bldb.count_action_bl_all('warn'))}</code> chats\n"
         f"        <b>Ban</b> <code>{(bldb.count_action_bl_all('ban'))}</code> chats\n"
-        f"<b>Rules:</b> Set in <code>{(rulesdb.count_chats())}</code> chats\n"
+        f"<b>Rules:</b> Set in <code>{(rulesdb.count_chats_with_rules())}</code> chats\n"
         f"    <b>Private Rules:</b> <code>{(rulesdb.count_privrules_chats())}</code> chats\n"
         f"<b>Warns:</b> <code>{(warns_db.count_warned_users())}</code> in <code>{(warns_db.count_all_chats_using_warns())}</code> chats\n"
         f"    <b>Users Warned:</b> <code>{(warns_db.count_warned_users())}</code> users\n"

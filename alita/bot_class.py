@@ -50,7 +50,6 @@ from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
 from alita.utils.paste import paste
 
-chatdb = Chats()
 INITIAL_LOCK = RLock()
 
 # Check if MESSAGE_DUMP is correct

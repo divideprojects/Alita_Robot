@@ -58,18 +58,35 @@ async def adminlist_show(_, m: Message):
             chat_title=m.chat.title,
         ) + "\n\n"
 
+        bot_admins = [i for i in admin_list if (i[1].lower()).endswith("bot")]
+        user_admins = [i for i in admin_list if not (i[1].lower()).endswith("bot")]
+
         # format is like: (user_id, username/name,anonyamous or not)
-        mention = [
+        mention_users = [
             (
                 admin[1]
                 if admin[1].startswith("@")
                 else (await mention_html(admin[1], admin[0]))
             )
-            for admin in admin_list
+            for admin in user_admins
             if not admin[2]  # if non-anonyamous admin
         ]
-        mention.sort(key=lambda x: x[1])
-        adminstr += "\n".join([f"- {i}" for i in mention])
+        mention_users.sort(key=lambda x: x[1])
+
+        mention_bots = [
+            (
+                admin[1]
+                if admin[1].startswith("@")
+                else (await mention_html(admin[1], admin[0]))
+            )
+            for admin in bot_admins
+        ]
+        mention_bots.sort(key=lambda x: x[1])
+
+        adminstr += "<b>User Admins:</b>\n"
+        adminstr += "\n".join([f"- {i}" for i in mention_users])
+        adminstr += "\n\n<b>Bots:</b>\n"
+        adminstr += "\n".join([f"- {i}" for i in mention_bots])
 
         await m.reply_text(adminstr + "\n\n" + note)
         LOGGER.info(f"Adminlist cmd use in {m.chat.id} by {m.from_user.id}")
@@ -119,6 +136,26 @@ async def reload_admins(_, m: Message):
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
+
+
+@Alita.on_message(filters.regex(r"(?i)@admin(s)?") & filters.group)
+async def tag_admins(_, m: Message):
+
+    try:
+        admin_list = ADMIN_CACHE[m.chat.id]
+    except KeyError:
+        admin_list = await admin_cache_reload(m, "adminlist")
+
+    user_admins = [i for i in admin_list if not (i[1].lower()).endswith("bot")]
+    mention_users = [(await mention_html("\u2063", admin[0])) for admin in user_admins]
+    mention_users.sort(key=lambda x: x[1])
+    mention_str = "".join(mention_users)
+    await m.reply_text(
+        (
+            f"{(await mention_html(m.from_user.first_name, m.from_user.id))}"
+            f" reported the message to admins!{mention_str}"
+        ),
+    )
 
 
 @Alita.on_message(

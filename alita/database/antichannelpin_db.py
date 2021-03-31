@@ -33,7 +33,7 @@ class Pins:
     def __init__(self, chat_id: int) -> None:
         self.collection = MongoDB(self.db_name)
         self.chat_id = chat_id
-        self.chat_info = self.__ensure_in_db(self.db_name)
+        self.chat_info = self.__ensure_in_db()
 
     def get_settings(self):
         with INSERTION_LOCK:
@@ -111,20 +111,23 @@ class Pins:
             return collection.findall()
 
     @staticmethod
-    def __repair_db(collection):
+    def repair_db(collection):
         all_data = collection.find_all()
-        keys = ("antichannelpin", "cleanlinked")
+        keys = {"antichannelpin": False, "cleanlinked": False}
         for data in all_data:
-            for key in keys:
+            for key, val in keys.items():
                 try:
                     _ = data[key]
                 except KeyError:
-                    collection.update({"_id": data["_id"], key: False})
+                    LOGGER.warning(
+                        f"Repairing Pins Database - setting '{key}:{val}' for {data['_id']}",
+                    )
+                    collection.update({"_id": data["_id"]}, {key: val})
 
 
 def __check_db_status():
     collection = MongoDB(Pins.db_name)
-    Pins.__repair_db(collection)
+    Pins.repair_db(collection)
 
 
 __check_db_status()

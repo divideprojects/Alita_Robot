@@ -113,3 +113,32 @@ class Greetings:
             LOGGER.info(f"Initialized Greetings Document for chat {self.chat_id}")
             return new_data
         return chat_data
+
+    @staticmethod
+    def repair_db(collection):
+        all_data = collection.find_all()
+        keys = {
+            "cleanwelcome": False,
+            "cleanservice": False,
+            "goodbye_text": "Sad to see you leave {first}.\nTake Care!",
+            "welcome_text": "Hey {first}, welcome to {group}!",
+            "welcome": True,
+            "goodbye": True,
+        }
+        for data in all_data:
+            for key, val in keys.items():
+                try:
+                    _ = data[key]
+                except KeyError:
+                    LOGGER.warning(
+                        f"Repairing Greeting Database - setting '{key}:{val}' for {data['_id']}",
+                    )
+                    collection.update({"_id": data["_id"]}, {key: val})
+
+
+def __check_db_status():
+    collection = MongoDB(Greetings.db_name)
+    Greetings.repair_db(collection)
+
+
+__check_db_status()

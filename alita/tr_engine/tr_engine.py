@@ -32,7 +32,6 @@ from alita.database.lang_db import Langs
 
 # Initialise
 LANG_LOCK = RLock()
-db = Langs()
 
 
 def cache_localizations(files):
@@ -65,7 +64,7 @@ def tlang(m, user_msg):
 
         # Get language of user from database, default = 'en' (English)
         try:
-            lang = db.get_lang(m.chat.id)
+            lang = Langs(m.chat.id).get_lang()
         except Exception as ef:
             LOGGER.error(f"Lang Error: {ef}")
             lang = default_lang
@@ -73,7 +72,7 @@ def tlang(m, user_msg):
 
         # Raise exception if lang_code not found
         if lang not in ENABLED_LOCALES:
-            LOGGER.error("Non-enabled localeused by user!")
+            LOGGER.error("Non-enabled locale used by user!")
             lang = default_lang
 
         # Get lang

@@ -64,7 +64,7 @@ class Reporting:
     def __ensure_in_db(self):
         chat_data = self.collection.find_one({"_id": self.chat_id})
         if not chat_data:
-            chat_type = self.get_chat_type(self.chat_id)
+            chat_type = self.get_chat_type()
             new_data = {"_id": self.chat_id, "status": True, "chat_type": chat_type}
             self.collection.insert_one(new_data)
             LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
@@ -77,3 +77,25 @@ class Reporting:
         new_data = old_chat_db.update({"_id": new_chat_id})
         self.collection.insert_one(new_data)
         self.collection.delete_one({"_id": self.chat_id})
+
+    @staticmethod
+    def repair_db(collection):
+        all_data = collection.find_all()
+        keys = {"status": True, "chat_type": ""}
+        for data in all_data:
+            for key, val in keys.items():
+                try:
+                    _ = data[key]
+                except KeyError:
+                    LOGGER.warning(
+                        f"Repairing Reporting Database - setting '{key}:{val}' for {data['_id']}",
+                    )
+                    collection.update({"_id": data["_id"]}, {key: val})
+
+
+def __check_db_status():
+    collection = MongoDB(Reporting.db_name)
+    Reporting.repair_db(collection)
+
+
+__check_db_status()
