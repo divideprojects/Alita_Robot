@@ -115,6 +115,7 @@ class Rules:
 
 
 def __check_db_status():
+    LOGGER.info("Starting Rules Database Repair...")
     collection = MongoDB(Rules.db_name)
     Rules.repair_db(collection)
 

@@ -119,6 +119,7 @@ class Approve:
 
 
 def __check_db_status():
+    LOGGER.info("Starting Approve Database Repair...")
     collection = MongoDB(Approve.db_name)
     Approve.repair_db(collection)
 

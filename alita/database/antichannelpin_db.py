@@ -126,6 +126,7 @@ class Pins:
 
 
 def __check_db_status():
+    LOGGER.info("Starting Pins Database Repair...")
     collection = MongoDB(Pins.db_name)
     Pins.repair_db(collection)
 

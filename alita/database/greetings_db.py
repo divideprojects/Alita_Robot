@@ -137,6 +137,7 @@ class Greetings:
 
 
 def __check_db_status():
+    LOGGER.info("Starting Geeetings Database Repair...")
     collection = MongoDB(Greetings.db_name)
     Greetings.repair_db(collection)
 

@@ -92,6 +92,7 @@ class Langs:
 
 
 def __check_db_status():
+    LOGGER.info("Starting Langs Database Repair...")
     collection = MongoDB(Langs.db_name)
     Langs.repair_db(collection)
 

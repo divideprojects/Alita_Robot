@@ -116,6 +116,7 @@ class Users:
 
 
 def __check_db_status():
+    LOGGER.info("Starting Users Database Repair...")
     collection = MongoDB(Users.db_name)
     Users.repair_db(collection)
 

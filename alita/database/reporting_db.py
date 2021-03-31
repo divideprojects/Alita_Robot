@@ -94,6 +94,7 @@ class Reporting:
 
 
 def __check_db_status():
+    LOGGER.info("Starting Reports Database Repair...")
     collection = MongoDB(Reporting.db_name)
     Reporting.repair_db(collection)
 

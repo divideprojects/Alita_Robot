@@ -149,6 +149,7 @@ class Chats:
 
 
 def __check_db_status():
+    LOGGER.info("Starting Chats Database Repair...")
     collection = MongoDB(Chats.db_name)
     Chats.repair_db(collection)
 

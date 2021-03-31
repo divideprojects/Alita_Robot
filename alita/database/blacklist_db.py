@@ -157,6 +157,7 @@ class Blacklist:
 
 
 def __check_db_status():
+    LOGGER.info("Starting Blacklists Database Repair...")
     collection = MongoDB(Blacklist.db_name)
     Blacklist.repair_db(collection)
 
