@@ -19,11 +19,11 @@
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import Message
+from pyrogram.types.user_and_chats.user import User
 
 from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.antichannelpin_db import Pins
-from alita.database.antiflood_db import AntiFlood
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
@@ -34,45 +34,28 @@ from alita.database.reporting_db import Reporting
 from alita.database.rules_db import Rules
 from alita.database.users_db import Users
 
-# Initialise
-langdb = Langs()
-notedb = Notes()
-ruledb = Rules()
-userdb = Users()
-chatdb = Chats()
-bldb = Blacklist()
-flooddb = AntiFlood()
-approvedb = Approve()
-reportdb = Reporting()
-notes_settings = NotesSettings()
-pins_db = Pins()
-fldb = Filters()
-
 
 @Alita.on_message(filters.group, group=4)
 async def initial_works(_, m: Message):
+    chatdb = Chats(m.chat.id)
     try:
         if m.migrate_to_chat_id or m.migrate_from_chat_id:
             if m.migrate_to_chat_id:
-                old_chat = m.chat.id
                 new_chat = m.migrate_to_chat_id
             elif m.migrate_from_chat_id:
-                old_chat = m.migrate_from_chat_id
                 new_chat = m.chat.id
             try:
-                await migrate_chat(old_chat, new_chat)
+                await migrate_chat(m, new_chat)
             except RPCError as ef:
                 LOGGER.error(ef)
                 return
         else:
             if m.reply_to_message and not m.forward_from:
                 chatdb.update_chat(
-                    m.chat.id,
                     m.chat.title,
                     m.reply_to_message.from_user.id,
                 )
-                userdb.update_user(
-                    m.reply_to_message.from_user.id,
+                Users(m.reply_to_message.from_user.id).update_user(
                     (
                         f"{m.reply_to_message.from_user.first_name} {m.reply_to_message.from_user.last_name}"
                         if m.reply_to_message.from_user.last_name
@@ -82,12 +65,10 @@ async def initial_works(_, m: Message):
                 )
             elif m.forward_from and not m.reply_to_message:
                 chatdb.update_chat(
-                    m.chat.id,
                     m.chat.title,
                     m.forward_from.id,
                 )
-                userdb.update_user(
-                    m.forward_from.id,
+                Users(m.forward_from.id).update_user(
                     (
                         f"{m.forward_from.first_name} {m.forward_from.last_name}"
                         if m.forward_from.last_name
@@ -97,12 +78,10 @@ async def initial_works(_, m: Message):
                 )
             elif m.reply_to_message and m.forward_from:
                 chatdb.update_chat(
-                    m.chat.id,
                     m.chat.title,
                     m.reply_to_message.forward_from.id,
                 )
-                userdb.update_user(
-                    m.forward_from.id,
+                Users(m.forward_from.id).update_user(
                     (
                         f"{m.reply_to_message.forward_from.first_name} {m.reply_to_message.forward_from.last_name}"
                         if m.reply_to_message.forward_from.last_name
@@ -111,9 +90,8 @@ async def initial_works(_, m: Message):
                     m.forward_from.username,
                 )
             else:
-                chatdb.update_chat(m.chat.id, m.chat.title, m.from_user.id)
-                userdb.update_user(
-                    m.from_user.id,
+                chatdb.update_chat(m.chat.title, m.from_user.id)
+                Users(m.from_user.id).update_user(
                     (
                         f"{m.from_user.first_name} {m.from_user.last_name}"
                         if m.from_user.last_name
@@ -126,17 +104,28 @@ async def initial_works(_, m: Message):
     return
 
 
-async def migrate_chat(old_chat, new_chat):
-    LOGGER.info(f"Migrating from {old_chat} to {new_chat}...")
-    userdb.migrate_chat(old_chat, new_chat)
-    langdb.migrate_chat(old_chat, new_chat)
-    ruledb.migrate_chat(old_chat, new_chat)
-    bldb.migrate_chat(old_chat, new_chat)
-    notedb.migrate_chat(old_chat, new_chat)
-    flooddb.migrate_chat(old_chat, new_chat)
-    approvedb.migrate_chat(old_chat, new_chat)
-    reportdb.migrate_chat(old_chat, new_chat)
-    notes_settings.migrate_chat(old_chat, new_chat)
-    pins_db.migrate_chat(old_chat, new_chat)
-    fldb.migrate_chat(old_chat, new_chat)
-    LOGGER.info(f"Successfully migrated from {old_chat} to {new_chat}!")
+async def migrate_chat(m, new_chat):
+    LOGGER.info(f"Migrating from {m.chat.id} to {new_chat}...")
+    langdb = Langs(m.chat.id)
+    notedb = Notes(m.chat.id)
+    ruledb = Rules(m.chat.id)
+    userdb = Users(m.chat.id)
+    chatdb = Chats(m.chat.id)
+    bldb = Blacklist(m.chat.id)
+    approvedb = Approve(m.chat.id)
+    reportdb = Reporting(m.chat.id)
+    notes_settings = NotesSettings(m.chat.id)
+    pins_db = Pins(m.chat.id)
+    fldb = Filters(m.chat.id)
+    chatdb.migrate_chat(new_chat)
+    userdb.migrate_chat(new_chat)
+    langdb.migrate_chat(new_chat)
+    ruledb.migrate_chat(new_chat)
+    bldb.migrate_chat(new_chat)
+    notedb.migrate_chat(new_chat)
+    approvedb.migrate_chat(new_chat)
+    reportdb.migrate_chat(new_chat)
+    notes_settings.migrate_chat(new_chat)
+    pins_db.migrate_chat(new_chat)
+    fldb.migrate_chat(new_chat)
+    LOGGER.info(f"Successfully migrated from {m.chat.id} to {new_chat}!")

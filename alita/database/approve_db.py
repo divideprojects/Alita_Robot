@@ -67,14 +67,18 @@ class Approve:
         with INSERTION_LOCK:
             return self.chat_info["users"].items()
 
-    def count_all_approved(self):
+    @staticmethod
+    def count_all_approved():
         with INSERTION_LOCK:
-            curr = self.collection.find_all()
-            return sum([len(set(chat["users"].keys())) for chat in curr])
+            collection = MongoDB(Approve.db_name)
+            curr = collection.find_all()
+            return sum([len(list(chat["users"].keys())) for chat in curr])
 
-    def count_approved_chats(self):
+    @staticmethod
+    def count_approved_chats():
         with INSERTION_LOCK:
-            return (self.collection.count()) or 0
+            collection = MongoDB(Approve.db_name)
+            return collection.count() or 0
 
     def count_approved(self):
         with INSERTION_LOCK:
@@ -82,13 +86,6 @@ class Approve:
 
     def load_from_db(self):
         return self.collection.find_all()
-
-    # Migrate if chat id changes!
-    def migrate_chat(self, new_chat_id: int):
-        old_chat_db = self.collection.find_one({"_id": self.chat_id})
-        new_data = old_chat_db.update({"_id": new_chat_id})
-        self.collection.delete_one({"_id": self.chat_id})
-        self.collection.insert_one(new_data)
 
     def __ensure_in_db(self):
         chat_data = self.collection.find_one({"_id": self.chat_id})
@@ -98,3 +95,10 @@ class Approve:
             LOGGER.info(f"Initialized Pins Document for chat {self.chat_id}")
             return new_data
         return chat_data
+
+    # Migrate if chat id changes!
+    def migrate_chat(self, new_chat_id: int):
+        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        new_data = old_chat_db.update({"_id": new_chat_id})
+        self.collection.insert_one(new_data)
+        self.collection.delete_one({"_id": self.chat_id})

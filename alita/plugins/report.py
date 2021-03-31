@@ -34,28 +34,26 @@ from alita.database.reporting_db import Reporting
 from alita.utils.custom_filters import admin_filter, command
 from alita.utils.parser import mention_html
 
-#  initialise
-db = Reporting()
-
 
 @Alita.on_message(
     command("reports") & (filters.private | admin_filter),
 )
 async def report_setting(_, m: Message):
     args = m.text.split()
+    db = Reporting(m.chat.id)
 
     if m.chat.type == "private":
         if len(args) >= 2:
             option = args[1].lower()
             if option in ("yes", "on", "true"):
-                db.set_settings(m.chat.id, True)
+                db.set_settings(True)
                 LOGGER.info(f"{m.from_user.id} enabled reports for them")
                 await m.reply_text(
                     "Turned on reporting! You'll be notified whenever anyone reports something in groups you are admin.",
                 )
 
             elif option in ("no", "off", "false"):
-                db.set_settings(m.chat.id, False)
+                db.set_settings(False)
                 LOGGER.info(f"{m.from_user.id} disabled reports for them")
                 await m.reply_text("Turned off reporting! You wont get any reports.")
         else:
@@ -66,7 +64,7 @@ async def report_setting(_, m: Message):
         if len(args) >= 2:
             option = args[1].lower()
             if option in ("yes", "on", "true"):
-                db.set_settings(m.chat.id, True)
+                db.set_settings(True)
                 LOGGER.info(f"{m.from_user.id} enabled reports in {m.chat.id}")
                 await m.reply_text(
                     "Turned on reporting! Admins who have turned on reports will be notified when /report "
@@ -75,7 +73,7 @@ async def report_setting(_, m: Message):
                 )
 
             elif option in ("no", "off", "false"):
-                db.set_settings(m.chat.id, False)
+                db.set_settings(False)
                 LOGGER.info(f"{m.from_user.id} disabled reports in {m.chat.id}")
                 await m.reply_text(
                     "Turned off reporting! No admins will be notified on /report or @admin.",
@@ -99,8 +97,9 @@ async def report_watcher(c: Alita, m: Message):
         return
 
     me = await c.get_me()
+    db = Reporting(m.chat.id)
 
-    if (m.chat and m.reply_to_message) and (db.get_settings(m.chat.id)):
+    if (m.chat and m.reply_to_message) and (db.get_settings()):
         reported_msg_id = m.reply_to_message.message_id
         reported_user = m.reply_to_message.from_user
         chat_name = m.chat.title or m.chat.username
@@ -171,7 +170,7 @@ async def report_watcher(c: Alita, m: Message):
             ):  # can't message bots or deleted accounts
                 continue
 
-            if db.get_settings(admin.user.id):
+            if Reporting(admin.user.id).get_settings():
                 try:
                     await c.send_message(
                         admin.user.id,

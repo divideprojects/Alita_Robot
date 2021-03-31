@@ -17,8 +17,6 @@
 
 
 from threading import RLock
-from time import time
-from traceback import format_exc
 
 from alita import LOGGER
 from alita.database import MongoDB
@@ -31,150 +29,72 @@ RULES_CACHE = {}
 class Rules:
     """Class for rules for chats in bot."""
 
-    def __init__(self) -> None:
-        self.collection = MongoDB("rules")
+    db_name = "rules"
 
-    def get_rules(self, chat_id: int):
-        global RULES_CACHE
+    def __init__(self, chat_id: int) -> None:
+        self.collection = MongoDB(self.db_name)
+        self.chat_id = chat_id
+        self.chat_info = self.__ensure_in_db()
+
+    def get_rules(self):
         with INSERTION_LOCK:
+            return self.chat_info["rules"]
 
-            if (chat_id in set(RULES_CACHE.keys())) and (RULES_CACHE[chat_id]["rules"]):
-                return RULES_CACHE[chat_id]["rules"]
-
-            rules = self.collection.find_one({"_id": chat_id})
-            if rules:
-                return rules["rules"]
-            return None
-
-    def set_rules(self, chat_id: int, rules: str, privrules: bool = False):
-        global RULES_CACHE
+    def set_rules(self, rules: str):
         with INSERTION_LOCK:
+            self.chat_info["rules"] = rules
+            self.collection.update({"_id": self.chat_id}, {"rules": rules})
 
-            if chat_id in set(RULES_CACHE.keys()):
-                RULES_CACHE[chat_id]["rules"] = rules
-
-            curr_rules = self.collection.find_one({"_id": chat_id})
-            if curr_rules:
-                return self.collection.update(
-                    {"_id": chat_id},
-                    {"rules": rules},
-                )
-
-            RULES_CACHE[chat_id] = {"rules": rules, "privrules": privrules}
-            return self.collection.insert_one(
-                {"_id": chat_id, "rules": rules, "privrules": privrules},
-            )
-
-    def get_privrules(self, chat_id: int):
-        global RULES_CACHE
+    def get_privrules(self):
         with INSERTION_LOCK:
+            return self.chat_info["privrules"]
 
-            if (chat_id in set(RULES_CACHE.keys())) and (
-                RULES_CACHE[chat_id]["privrules"]
-            ):
-                return RULES_CACHE[chat_id]["privrules"]
-
-            curr_rules = self.collection.find_one({"_id": chat_id})
-            if curr_rules:
-                return curr_rules["privrules"]
-
-            RULES_CACHE[chat_id] = {"privrules": False, "rules": ""}
-            return self.collection.insert_one(
-                {"_id": chat_id, "rules": "", "privrules": False},
-            )
-
-    def set_privrules(self, chat_id: int, privrules: bool):
-        global RULES_CACHE
+    def set_privrules(self, privrules: bool):
         with INSERTION_LOCK:
+            self.chat_info["privrules"] = privrules
+            self.collection.update({"_id": self.chat_id}, {"privrules": privrules})
 
-            if chat_id in set(RULES_CACHE.keys()):
-                RULES_CACHE[chat_id]["privrules"] = privrules
-
-            curr_rules = self.collection.find_one({"_id": chat_id})
-            if curr_rules:
-                return self.collection.update(
-                    {"_id": chat_id},
-                    {"privrules": privrules},
-                )
-
-            RULES_CACHE[chat_id] = {"rules": "", "privrules": privrules}
-            return self.collection.insert_one(
-                {"_id": chat_id, "rules": "", "privrules": privrules},
-            )
-
-    def clear_rules(self, chat_id: int):
-        global RULES_CACHE
+    def clear_rules(self):
         with INSERTION_LOCK:
+            return self.collection.delete_one({"_id": self.chat_id})
 
-            if chat_id in set(RULES_CACHE.keys()):
-                del RULES_CACHE[chat_id]
-
-            curr_rules = self.collection.find_one({"_id": chat_id})
-            if curr_rules:
-                return self.collection.delete_one({"_id": chat_id})
-            return "Rules not found!"
-
-    def count_chats(self):
+    @staticmethod
+    def count_chats_with_rules():
         with INSERTION_LOCK:
-            try:
-                return len([i for i in RULES_CACHE if RULES_CACHE[i]["rules"]])
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-            return self.collection.count({"rules": {"$regex": ".*"}})
+            collection = MongoDB(Rules.db_name)
+            return collection.count({"rules": {"$regex": ".*"}})
 
-    def count_privrules_chats(self):
+    @staticmethod
+    def count_privrules_chats():
         with INSERTION_LOCK:
-            try:
-                return len([i for i in RULES_CACHE if RULES_CACHE[i]["privrules"]])
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                return self.collection.count({"privrules": True})
+            collection = MongoDB(Rules.db_name)
+            return collection.count({"privrules": True})
 
-    def count_grouprules_chats(self):
+    @staticmethod
+    def count_grouprules_chats():
         with INSERTION_LOCK:
-            try:
-                return len([i for i in RULES_CACHE if not RULES_CACHE[i]["privrules"]])
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                return self.collection.count({"privrules": True})
+            collection = MongoDB(Rules.db_name)
+            return collection.count({"privrules": False})
 
-    def load_from_db(self):
-        return self.collection.find_all()
+    @staticmethod
+    def load_from_db():
+        with INSERTION_LOCK:
+            collection = MongoDB(Rules.db_name)
+            return collection.find_all()
+
+    def __ensure_in_db(self):
+        chat_data = self.collection.find_one({"_id": self.chat_id})
+        if not chat_data:
+            chat_type = self.get_chat_type(self.chat_id)
+            new_data = {"_id": self.chat_id, "status": True, "chat_type": chat_type}
+            self.collection.insert_one(new_data)
+            LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
+            return new_data
+        return chat_data
 
     # Migrate if chat id changes!
-    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        global RULES_CACHE
-        with INSERTION_LOCK:
-
-            # Update locally
-            try:
-                old_db_local = RULES_CACHE[old_chat_id]
-                del RULES_CACHE[old_chat_id]
-                RULES_CACHE[new_chat_id] = old_db_local
-            except KeyError:
-                pass
-
-            # Update in db
-            old_chat_db = self.collection.find_one({"_id": old_chat_id})
-            if old_chat_db:
-                new_data = old_chat_db.update({"_id": new_chat_id})
-                self.collection.delete_one({"_id": old_chat_id})
-                self.collection.insert_one(new_data)
-
-
-def __load_all_rules():
-    global RULES_CACHE
-    start = time()
-    db = Rules()
-    data = db.load_from_db()
-    RULES_CACHE = {
-        int(chat["_id"]): {
-            "rules": chat["rules"],
-            "privrules": chat["privrules"],
-        }
-        for chat in data
-    }
-    LOGGER.info(f"Loaded Rules Cache - {round((time()-start),3)}s")
+    def migrate_chat(self, new_chat_id: int):
+        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        new_data = old_chat_db.update({"_id": new_chat_id})
+        self.collection.insert_one(new_data)
+        self.collection.delete_one({"_id": self.chat_id})

@@ -17,10 +17,6 @@
 
 
 from threading import RLock
-from time import time
-from traceback import format_exc
-
-from pymongo.errors import DuplicateKeyError
 
 from alita import LOGGER
 from alita.database import MongoDB
@@ -35,7 +31,7 @@ class Pins:
     db_name = "antichannelpin"
 
     def __init__(self, chat_id: int) -> None:
-        self.collection = MongoDB()
+        self.collection = MongoDB(self.db_name)
         self.chat_id = chat_id
         self.chat_info = self.__ensure_in_db(self.db_name)
 
@@ -55,7 +51,7 @@ class Pins:
         with INSERTION_LOCK:
             return self.set_off("antichannelpin")
 
-    def cleanlinked_of(self):
+    def cleanlinked_off(self):
         with INSERTION_LOCK:
             return self.set_off("cleanlinked")
 
@@ -68,28 +64,12 @@ class Pins:
             )
 
     def set_off(self, atype: str):
-        global PINS_CACHE
         with INSERTION_LOCK:
             otype = "cleanlinked" if atype == "antichannelpin" else "antichannelpin"
             return self.collection.update(
                 {"_id": self.chat_id},
                 {atype: False, otype: False},
             )
-
-    def count_chats(self, atype: str):
-        with INSERTION_LOCK:
-            return self.collection.count({atype: True})
-
-    def list_chats(self, query: str):
-        with INSERTION_LOCK:
-            return self.collection.find_all({query: True})
-
-    # Migrate if chat id changes!
-    def migrate_chat(self, new_chat_id: int):
-        old_chat_db = self.collection.find_one({"_id": self.chat_id})
-        new_data = old_chat_db.update({"_id": new_chat_id})
-        self.collection.delete_one({"_id": self.chat_id})
-        self.collection.insert_one(new_data)
 
     def __ensure_in_db(self):
         chat_data = self.collection.find_one({"_id": self.chat_id})
@@ -103,3 +83,48 @@ class Pins:
             LOGGER.info(f"Initialized Pins Document for chat {self.chat_id}")
             return new_data
         return chat_data
+
+    # Migrate if chat id changes!
+    def migrate_chat(self, new_chat_id: int):
+        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        new_data = old_chat_db.update({"_id": new_chat_id})
+        self.collection.insert_one(new_data)
+        self.collection.delete_one({"_id": self.chat_id})
+
+    # ----- Static Methods -----
+    @staticmethod
+    def count_chats(atype: str):
+        with INSERTION_LOCK:
+            collection = MongoDB(Pins.db_name)
+            return collection.count({atype: True})
+
+    @staticmethod
+    def list_chats(query: str):
+        with INSERTION_LOCK:
+            collection = MongoDB(Pins.db_name)
+            return collection.find_all({query: True})
+
+    @staticmethod
+    def load_from_db():
+        with INSERTION_LOCK:
+            collection = MongoDB(Pins.db_name)
+            return collection.findall()
+
+    @staticmethod
+    def __repair_db(collection):
+        all_data = collection.find_all()
+        keys = ("antichannelpin", "cleanlinked")
+        for data in all_data:
+            for key in keys:
+                try:
+                    _ = data[key]
+                except KeyError:
+                    collection.update({"_id": data["_id"], key: False})
+
+
+def __check_db_status():
+    collection = MongoDB(Pins.db_name)
+    Pins.__repair_db(collection)
+
+
+__check_db_status()

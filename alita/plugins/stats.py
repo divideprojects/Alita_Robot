@@ -33,23 +33,24 @@ from alita.database.users_db import Users
 from alita.database.warns_db import Warns, WarnSettings
 from alita.utils.custom_filters import command, dev_filter
 
-# initialise
-bldb = Blacklist()
-gbandb = GBan()
-notesdb = Notes()
-rulesdb = Rules()
-userdb = Users()
-appdb = Approve()
-chatdb = Chats()
-fldb = Filters()
-pinsdb = Pins()
-notesettings_db = NotesSettings()
-warns_db = Warns()
-warns_settings_db = WarnSettings()
-
 
 @Alita.on_message(command("stats", DEV_PREFIX_HANDLER) & dev_filter)
 async def get_stats(_, m: Message):
+
+    # initialise
+    bldb = Blacklist
+    gbandb = GBan()
+    notesdb = Notes()
+    rulesdb = Rules
+    userdb = Users
+    appdb = Approve
+    chatdb = Chats
+    fldb = Filters()
+    pinsdb = Pins
+    notesettings_db = NotesSettings()
+    warns_db = Warns()
+    warns_settings_db = WarnSettings
+
     replymsg = await m.reply_text("<b><i>Fetching Stats...</i></b>", quote=True)
     rply = (
         f"<b>Users:</b> <code>{(userdb.count_users())}</code> in <code>{(chatdb.count_chats())}</code> chats\n"

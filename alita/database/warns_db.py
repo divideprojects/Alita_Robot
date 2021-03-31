@@ -22,8 +22,6 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-WARNS_CACHE = {}
-
 
 class Warns:
     def __init__(self) -> None:

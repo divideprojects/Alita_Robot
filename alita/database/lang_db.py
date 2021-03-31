@@ -17,110 +17,61 @@
 
 
 from threading import RLock
-from time import time
 
 from alita import LOGGER
 from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-LANG_DATA = {}
-
 
 class Langs:
     """Class for language options in bot."""
 
-    def __init__(self) -> None:
-        self.collection = MongoDB("langs")
+    db_name = "langs"
 
-    def get_chat_type(self, chat_id: int):
-        _ = self
-        if str(chat_id).startswith("-100"):
+    def __init__(self, chat_id: int) -> None:
+        self.collection = MongoDB(self.db_name)
+        self.chat_id = chat_id
+        self.chat_info = self.__ensure_in_db()
+
+    def get_chat_type(self):
+        if str(self.chat_id).startswith("-100"):
             chat_type = "supergroup"
         else:
             chat_type = "user"
         return chat_type
 
-    def set_lang(self, chat_id: int, lang):
+    def set_lang(self, lang: str):
         with INSERTION_LOCK:
-
-            global LANG_DATA
-            chat_type = self.get_chat_type(chat_id)
-            if chat_id in list(LANG_DATA.keys()):
-                try:
-                    lang_dict = (LANG_DATA[chat_id]).update({"lang": lang})
-                    (LANG_DATA[chat_id]).update(lang_dict)
-                except Exception:
-                    pass
-
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                self.collection.update(
-                    {"_id": chat_id},
-                    {"lang": lang},
-                )
-                return "Updated language"
-
-            LANG_DATA[chat_id] = {"chat_type": chat_type, "lang": lang}
-            return self.collection.insert_one(
-                {"_id": chat_id, "chat_type": chat_type, "lang": lang},
+            self.chat_info["lang"] = lang
+            return self.collection.update(
+                {"_id": self.chat_id},
+                {"lang": self.chat_info["lang"]},
             )
 
-    def get_lang(self, chat_id: int):
+    def get_lang(self):
         with INSERTION_LOCK:
+            return self.chat_info["lang"]
 
-            global LANG_DATA
-            chat_type = self.get_chat_type(chat_id)
+    @staticmethod
+    def load_from_db():
+        with INSERTION_LOCK:
+            collection = MongoDB(Langs.db_name)
+            return collection.find_all()
 
-            try:
-                lang_dict = LANG_DATA[chat_id]
-                if lang_dict:
-                    user_lang = lang_dict["lang"]
-                    return user_lang
-            except Exception:
-                pass
-
-            curr_lang = self.collection.find_one({"_id": chat_id})
-            if curr_lang:
-                return curr_lang["lang"]
-
-            LANG_DATA[chat_id] = {"chat_type": chat_type, "lang": "en"}
-            self.collection.insert_one(
-                {"_id": chat_id, "chat_type": chat_type, "lang": "en"},
-            )
-            return "en"  # default lang
-
-    def get_all_langs(self):
-        return self.collection.find_all()
+    def __ensure_in_db(self):
+        chat_data = self.collection.find_one({"_id": self.chat_id})
+        if not chat_data:
+            chat_type = self.get_chat_type(self.chat_id)
+            new_data = {"_id": self.chat_id, "lang": "en", "chat_type": chat_type}
+            self.collection.insert_one(new_data)
+            LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
+            return new_data
+        return chat_data
 
     # Migrate if chat id changes!
-    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        global LANG_DATA
-        with INSERTION_LOCK:
-
-            try:
-                old_chat_local = self.get_grp(chat_id=old_chat_id)
-                if old_chat_local:
-                    lang_dict = LANG_DATA[old_chat_id]
-                    del LANG_DATA[old_chat_id]
-                    LANG_DATA[new_chat_id] = lang_dict
-            except KeyError:
-                pass
-
-            old_chat_db = self.collection.find_one({"_id": old_chat_id})
-            if old_chat_db:
-                new_data = old_chat_db.update({"_id": new_chat_id})
-                self.collection.delete_one({"_id": old_chat_id})
-                self.collection.insert_one(new_data)
-
-
-def __load_all_langs():
-    global LANG_DATA
-    start = time()
-    db = Langs()
-    langs_data = db.get_all_langs()
-    LANG_DATA = {
-        int(chat["_id"]): {"lang": chat["lang"], "chat_type": chat["chat_type"]}
-        for chat in langs_data
-    }
-    LOGGER.info(f"Loaded Lang Cache - {round((time()-start),3)}s")
+    def migrate_chat(self, new_chat_id: int):
+        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        new_data = old_chat_db.update({"_id": new_chat_id})
+        self.collection.insert_one(new_data)
+        self.collection.delete_one({"_id": self.chat_id})

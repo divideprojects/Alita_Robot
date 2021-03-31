@@ -25,9 +25,6 @@ from alita.database.antichannelpin_db import Pins
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, command
 
-# Initialize
-pinsdb = Pins()
-
 
 @Alita.on_message(command("pin") & admin_filter)
 async def pin_message(_, m: Message):
@@ -127,8 +124,10 @@ async def unpinall_message(c: Alita, m: Message):
 @Alita.on_message(command("antichannelpin") & admin_filter)
 async def anti_channel_pin(_, m: Message):
 
+    pinsdb = Pins(m.chat.id)
+
     if len(m.text.split()) == 1:
-        status = pinsdb.check_status(m.chat.id, "antichannelpin")
+        status = pinsdb.get_settings["antichannelpin"]
         await m.reply_text(
             tlang(m, "pin.antichannelpin.current_status").format(
                 status=status,
@@ -137,12 +136,12 @@ async def anti_channel_pin(_, m: Message):
         return
 
     if len(m.text.split()) == 2:
-        if m.command[1] in ("yes", "on", "false"):
-            pinsdb.set_on(m.chat.id, "antichannelpin")
+        if m.command[1] in ("yes", "on", "true"):
+            pinsdb.antichannelpin_on()
             LOGGER.info(f"{m.from_user.id} enabled antichannelpin in {m.chat.id}")
             msg = tlang(m, "pin.antichannelpin.turned_on")
-        elif m.command[1] in ("no", "off", "true"):
-            pinsdb.set_on(m.chat.id, "antichannelpin")
+        elif m.command[1] in ("no", "off", "false"):
+            pinsdb.antichannelpin_off()
             LOGGER.info(f"{m.from_user.id} disabled antichannelpin in {m.chat.id}")
             msg = tlang(m, "pin.antichannelpin.turned_off")
         else:
@@ -156,8 +155,10 @@ async def anti_channel_pin(_, m: Message):
 @Alita.on_message(command("cleanlinked") & admin_filter)
 async def clean_linked(_, m: Message):
 
+    pinsdb = Pins(m.chat.id)
+
     if len(m.text.split()) == 1:
-        status = pinsdb.check_status(m.chat.id, "cleanlinked")
+        status = pinsdb.get_settings["cleanlinked"]
         await m.reply_text(
             tlang(m, "pin.antichannelpin.current_status").format(
                 status=status,
@@ -166,12 +167,12 @@ async def clean_linked(_, m: Message):
         return
 
     if len(m.text.split()) == 2:
-        if m.command[1] in ("yes", "on", "false"):
-            pinsdb.set_on(m.chat.id, "cleanlinked")
+        if m.command[1] in ("yes", "on", "true"):
+            pinsdb.cleanlinked_on()
             LOGGER.info(f"{m.from_user.id} enabled CleanLinked in {m.chat.id}")
             msg = "Turned on CleanLinked! Now all the messages from linked channel will be deleted!"
-        elif m.command[1] in ("no", "off", "true"):
-            pinsdb.set_on(m.chat.id, "cleanlinked")
+        elif m.command[1] in ("no", "off", "false"):
+            pinsdb.cleanlinked_off()
             LOGGER.info(f"{m.from_user.id} disabled CleanLinked in {m.chat.id}")
             msg = "Turned off CleanLinked! Messages from linked channel will not be deleted!"
         else:

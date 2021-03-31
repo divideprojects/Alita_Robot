@@ -32,9 +32,6 @@ from alita.database.lang_db import Langs
 from alita.tr_engine import lang_dict, tlang
 from alita.utils.custom_filters import admin_filter, command
 
-# initialise
-db = Langs()
-
 
 async def gen_langs_kb():
     langs = list(lang_dict.keys())
@@ -102,7 +99,7 @@ async def set_lang_callback(_, q: CallbackQuery):
 
     lang_code = q.data.split(".")[1]
 
-    db.set_lang(q.message.chat.id, lang_code)
+    Langs(q.message.chat.id).set_lang(lang_code)
     await sleep(0.1)
 
     if q.message.chat.type == "private":
@@ -145,7 +142,7 @@ async def set_lang(_, m: Message):
                 f"Please choose a valid language code from: {', '.join(avail_langs)}",
             )
             return
-        db.set_lang(m.chat.id, lang_code)
+        Langs(m.chat.id).set_lang(lang_code)
         LOGGER.info(f"{m.from_user.id} change language to {lang_code} in {m.chat.id}")
         await m.reply_text(
             f"🌐 {((tlang(m, 'langs.changed')).format(lang_code=lang_code))}",

@@ -49,7 +49,6 @@ from alita.utils.parser import mention_html
 from alita.utils.paste import paste
 
 gban_db = GBan()
-user_db = Users()
 
 
 @Alita.on_message(command("wiki"))
@@ -244,7 +243,7 @@ async def my_info(c: Alita, m: Message):
             await m.reply_text(tlang(m, "utils.user_info.id_not_found"))
         return
     try:
-        user = user_db.get_user_info(int(user_id))
+        user = Users().get_user_info(int(user_id))
         name = user["name"]
         user_name = user["username"]
         user_id = user["_id"]

@@ -17,7 +17,6 @@
 
 
 from threading import RLock
-from time import time
 
 from alita import LOGGER
 from alita.database import MongoDB
@@ -30,96 +29,51 @@ REPORTING_CACHE = {}
 class Reporting:
     """Class for managing report settings of users and groups."""
 
-    def __init__(self) -> None:
-        self.collection = MongoDB("reporting")
+    db_name = "reporting"
 
-    def get_chat_type(self, chat_id: int):
-        _ = self
-        if str(chat_id).startswith("-100"):
+    def __init__(self, chat_id: int) -> None:
+        self.collection = MongoDB(self.db_name)
+        self.chat_id = chat_id
+        self.chat_info = self.__ensure_in_db()
+
+    def get_chat_type(self):
+        if str(self.chat_id).startswith("-100"):
             chat_type = "supergroup"
         else:
             chat_type = "user"
         return chat_type
 
-    def set_settings(self, chat_id: int, status: bool = True):
-        global REPORTING_CACHE
+    def set_settings(self, status: bool = True):
         with INSERTION_LOCK:
-            chat_type = self.get_chat_type(chat_id)
-
-            if chat_id in set(REPORTING_CACHE.keys()):
-                REPORTING_CACHE[chat_id]["status"] = status
-
-            curr_settings = self.collection.find_one({"_id": chat_id})
-            if curr_settings:
-                return self.collection.update(
-                    {"_id": chat_id},
-                    {"status": status},
-                )
-
-            REPORTING_CACHE[chat_id] = {
-                "chat_type": chat_type,
-                "status": status,
-            }
-            return self.collection.insert_one(
-                {"_id": chat_id, "chat_type": chat_type, "status": status},
+            self.chat_info["status"] = status
+            return self.collection.update(
+                {"_id": self.chat_id},
+                {"status": self.chat_info["status"]},
             )
 
-    def get_settings(self, chat_id: int):
-        global REPORTING_CACHE
+    def get_settings(self):
         with INSERTION_LOCK:
-            chat_type = self.get_chat_type(chat_id)
+            return self.chat_info["status"]
 
-            if (chat_id in set(REPORTING_CACHE.keys())) and (
-                REPORTING_CACHE[chat_id]["status"]
-            ):
-                return REPORTING_CACHE[chat_id]["status"]
+    @staticmethod
+    def load_from_db():
+        with INSERTION_LOCK:
+            collection = MongoDB(Reporting.db_name)
+            return collection.find_all() or []
 
-            curr_settings = self.collection.find_one({"_id": chat_id})
-            if curr_settings:
-                return curr_settings["status"]
-
-            REPORTING_CACHE[chat_id] = {
-                "chat_type": chat_type,
-                "status": True,
-            }
-            self.collection.insert_one(
-                {"_id": chat_id, "chat_type": chat_type, "status": True},
-            )
-            return True
-
-    def load_from_db(self):
-        return self.collection.find_all() or []
+    def __ensure_in_db(self):
+        chat_data = self.collection.find_one({"_id": self.chat_id})
+        if not chat_data:
+            chat_type = self.get_chat_type(self.chat_id)
+            new_data = {"_id": self.chat_id, "status": True, "chat_type": chat_type}
+            self.collection.insert_one(new_data)
+            LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
+            return new_data
+        return chat_data
 
     # Migrate if chat id changes!
-    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        global REPORTING_CACHE
-        with INSERTION_LOCK:
-            # Update locally
-            try:
-                old_db_local = REPORTING_CACHE[old_chat_id]
-                del REPORTING_CACHE[old_chat_id]
-                REPORTING_CACHE[new_chat_id] = old_db_local
-            except KeyError:
-                pass
-
-            # Update in db
-            old_chat_db = self.collection.find_one({"_id": old_chat_id})
-            if old_chat_db:
-                new_data = old_chat_db.update({"_id": new_chat_id})
-                self.collection.delete_one({"_id": old_chat_id})
-                self.collection.insert_one(new_data)
-
-
-def __load_all_reporting_settings():
-    global REPORTING_CACHE
-    start = time()
-    db = Reporting()
-    data = db.load_from_db()
-    REPORTING_CACHE = {
-        int(chat["_id"]): {
-            "chat_type": chat["chat_type"],
-            "status": chat["status"],
-        }
-        for chat in data
-    }
-    LOGGER.info(f"Loaded Reporting Cache - {round((time()-start),3)}s")
+    def migrate_chat(self, new_chat_id: int):
+        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        new_data = old_chat_db.update({"_id": new_chat_id})
+        self.collection.insert_one(new_data)
+        self.collection.delete_one({"_id": self.chat_id})

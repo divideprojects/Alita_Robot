@@ -44,9 +44,6 @@ from alita.utils.custom_filters import command, dev_filter, sudo_filter
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
 
-# initialise database
-chatdb = Chats()
-
 
 @Alita.on_message(command("ping", DEV_PREFIX_HANDLER) & sudo_filter)
 async def ping(_, m: Message):
@@ -285,27 +282,25 @@ async def chats(c: Alita, m: Message):
         MESSAGE_DUMP,
         f"#CHATLIST\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
-    all_chats = (chatdb.get_all_chats()) or {}
+    all_chats = (Chats.list_chats_full()) or {}
     chatfile = tlang(m, "dev.chatlist.header")
     P = 1
-    for chat, val in all_chats.items():
+    for chat in all_chats:
         try:
-            chat_info = await c.get_chat(chat)
+            chat_info = await c.get_chat(chat["_id"])
             chat_members = chat_info.members_count
             try:
                 invitelink = chat_info.invite_link
             except KeyError:
                 invitelink = "No Link!"
-            chatfile += (
-                f"{P}. {val['chat_name']} | {chat} | {chat_members} | {invitelink}\n"
-            )
+            chatfile += f"{P}. {chat['chat_name']} | {chat['_id']} | {chat_members} | {invitelink}\n"
             P += 1
         except ChatAdminRequired:
             pass
         except (ChannelPrivate, ChannelInvalid):
-            chatdb.remove_chat(chat)
+            Chats.remove_chat(chat["_id"])
         except PeerIdInvalid:
-            LOGGER.warning(f"Peer not found {chat}")
+            LOGGER.warning(f"Peer not found {chat['_id']}")
         except FloodWait as ef:
             LOGGER.error("FloodWait required, Sleeping for 60s")
             LOGGER.error(ef)
@@ -361,7 +356,7 @@ async def chat_broadcast(c: Alita, m: Message):
         return
 
     exmsg = await m.reply_text("Started broadcasting!")
-    all_chats = (chatdb.list_chats()) or {}
+    all_chats = (Chats.list_chats_by_id()) or {}
     err_str, done_broadcast = "", 0
 
     for chat in all_chats:

@@ -17,171 +17,114 @@
 
 
 from threading import RLock
-from time import time
-from traceback import format_exc
 
 from alita import LOGGER
 from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-CHATS_CACHE = {}
-
 
 class Chats:
     """Class to manage users for bot."""
 
-    def __init__(self) -> None:
-        self.collection = MongoDB("chats")
+    # Database name to connect to to preform operations
+    db_name = "chats"
 
-    def remove_chat(self, chat_id: int):
+    def __init__(self, chat_id: int) -> None:
+        self.collection = MongoDB(self.db_name)
+        self.chat_id = chat_id
+        self.chat_info = self.__ensure_in_db()
+
+    def user_is_in_chat(self, user_id: int):
+        return bool(user_id in set(self.chat_info["users"]))
+
+    def update_chat(self, chat_name: str, user_id: int):
         with INSERTION_LOCK:
-            self.collection.delete_one({"_id": chat_id})
 
-    def update_chat(self, chat_id: int, chat_name: str, user_id: int):
-        global CHATS_CACHE
-        with INSERTION_LOCK:
-
-            # Local Cache
-            try:
-                chat = CHATS_CACHE[chat_id]
-                users_old = chat["users"]
-                if user_id in set(users_old):
-                    # If user_id already exists, return
-                    return "user already exists in chat users"
-                users_old.append(user_id)
-                users = list(set(users_old))
-                CHATS_CACHE[chat_id] = {
-                    "chat_name": chat_name,
-                    "users": users,
-                }
-            except KeyError:
-                pass
-
-            # Databse Cache
-            curr = self.collection.find_one({"_id": chat_id})
-            if curr:
-                users_old = curr["users"]
+            if chat_name == self.chat_info["chat_name"] and self.user_is_in_chat():
+                return True
+            elif chat_name != self.chat_info["chat_name"] and self.user_is_in_chat():
+                return self.collection.update(
+                    {"_id": self.chat_id},
+                    {"chat_name": chat_name},
+                )
+            elif (
+                chat_name == self.chat_info["chat_name"] and not self.user_is_in_chat()
+            ):
+                self.chat_info["users"].append(user_id)
+                return self.collection.update(
+                    {"_id": self.chat_id},
+                    {"users": self.chat_info["users"]},
+                )
+            else:
+                users_old = self.chat_info["users"]
                 users_old.append(user_id)
                 users = list(set(users_old))
                 return self.collection.update(
-                    {"_id": chat_id},
+                    {"_id": self.chat_id},
                     {
-                        "_id": chat_id,
+                        "_id": self.chat_id,
                         "chat_name": chat_name,
                         "users": users,
                     },
                 )
 
-            CHATS_CACHE[chat_id] = {
-                "chat_name": chat_name,
-                "users": [user_id],
-            }
-            return self.collection.insert_one(
-                {
-                    "_id": chat_id,
-                    "chat_name": chat_name,
-                    "users": [user_id],
-                },
-            )
-
-    def count_chat_users(self, chat_id: int):
+    def count_chat_users(self):
         with INSERTION_LOCK:
-            try:
-                return len(CHATS_CACHE[chat_id]["users"])
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                curr = self.collection.find_one({"_id": chat_id})
-                if curr:
-                    return len(curr["users"])
-            return 0
+            return len(self.chat_info["users"]) or 0
 
-    def chat_members(self, chat_id: int):
+    def chat_members(self):
         with INSERTION_LOCK:
-            try:
-                return CHATS_CACHE[chat_id]["users"]
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                curr = self.collection.find_one({"_id": chat_id})
-                if curr:
-                    return curr["users"]
-            return []
+            return self.chat_info["users"]
 
-    def count_chats(self):
+    @staticmethod
+    def remove_chat(chat_id: int):
         with INSERTION_LOCK:
-            try:
-                return len(CHATS_CACHE)
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                return self.collection.count() or 0
+            collection = MongoDB(Chats.db_name)
+            collection.delete_one({"_id": chat_id})
 
-    def list_chats(self):
+    @staticmethod
+    def count_chats():
         with INSERTION_LOCK:
-            try:
-                return list(CHATS_CACHE.keys())
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                chats = self.collection.find_all()
-                chat_list = {i["_id"] for i in chats}
-                return list(chat_list)
+            collection = MongoDB(Chats.db_name)
+            return collection.count() or 0
 
-    def get_all_chats(self):
+    @staticmethod
+    def list_chats_by_id():
         with INSERTION_LOCK:
-            try:
-                return CHATS_CACHE
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                return self.collection.find_all()
+            collection = MongoDB(Chats.db_name)
+            chats = collection.find_all()
+            chat_list = {i["_id"] for i in chats}
+            return list(chat_list)
 
-    def get_chat_info(self, chat_id: int):
+    @staticmethod
+    def list_chats_full():
         with INSERTION_LOCK:
-            try:
-                return CHATS_CACHE[chat_id]
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                return self.collection.find_one({"_id": chat_id})
+            collection = MongoDB(Chats.db_name)
+            return collection.find_all()
+
+    @staticmethod
+    def get_chat_info(chat_id: int):
+        with INSERTION_LOCK:
+            collection = MongoDB(Chats.db_name)
+            return collection.find_one({"_id": chat_id})
 
     def load_from_db(self):
         with INSERTION_LOCK:
             return self.collection.find_all()
 
+    def __ensure_in_db(self):
+        chat_data = self.collection.find_one({"_id": self.chat_id})
+        if not chat_data:
+            new_data = {"_id": self.chat_id, "chat_name": "", "users": []}
+            self.collection.insert_one(new_data)
+            LOGGER.info(f"Initialized Chats Document for chat {self.chat_id}")
+            return new_data
+        return chat_data
+
     # Migrate if chat id changes!
-    def migrate_chat(self, old_chat_id: int, new_chat_id: int):
-        global CHATS_CACHE
-        with INSERTION_LOCK:
-
-            # Update locally
-            try:
-                old_db_local = CHATS_CACHE[old_chat_id]
-                del CHATS_CACHE[old_chat_id]
-                CHATS_CACHE[new_chat_id] = old_db_local
-            except KeyError:
-                pass
-
-            # Update in db
-            old_chat_db = self.collection.find_one({"_id": old_chat_id})
-            if old_chat_db:
-                new_data = old_chat_db.update({"_id": new_chat_id})
-                self.collection.delete_one({"_id": old_chat_id})
-                self.collection.insert_one(new_data)
-
-
-def __load_chats_cache():
-    global CHATS_CACHE
-    start = time()
-    db = Chats()
-    chats = db.load_from_db()
-    CHATS_CACHE = {
-        int(chat["_id"]): {
-            "chat_name": chat["chat_name"],
-            "users": chat["users"],
-        }
-        for chat in chats
-    }
-    LOGGER.info(f"Loaded Chats Cache - {round((time()-start),3)}s")
+    def migrate_chat(self, new_chat_id: int):
+        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        new_data = old_chat_db.update({"_id": new_chat_id})
+        self.collection.insert_one(new_data)
+        self.collection.delete_one({"_id": self.chat_id})

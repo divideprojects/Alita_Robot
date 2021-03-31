@@ -27,9 +27,6 @@ from alita.database.approve_db import Approve
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, command, restrict_filter
 
-# initialise
-app_db = Approve()
-
 
 @Alita.on_message(command("locktypes") & admin_filter)
 async def lock_types(_, m: Message):
@@ -385,7 +382,7 @@ async def unlock_perm(c: Alita, m: Message):
 
 
 async def prevent_approved(m: Message):
-    approved_users = app_db.list_approved(m.chat.id)
+    approved_users = Approve(m.chat.id).list_approved()
     ul = []
     for user in approved_users:
         ul.append(user["user_id"])

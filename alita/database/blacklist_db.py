@@ -67,14 +67,18 @@ class Blacklist:
         with INSERTION_LOCK:
             return self.chat_info["triggers"]
 
-    def count_blacklists_all(self):
+    @staticmethod
+    def count_blacklists_all():
         with INSERTION_LOCK:
-            curr = self.collection.find_all()
+            collection = MongoDB(Blacklist.db_name)
+            curr = collection.find_all()
             return sum(len(chat["triggers"]) for chat in curr)
 
-    def count_blackists_chats(self):
+    @staticmethod
+    def count_blackists_chats():
         with INSERTION_LOCK:
-            curr = self.collection.find_all()
+            collection = MongoDB(Blacklist.db_name)
+            curr = collection.find_all()
             return sum([1 for chat in curr if chat["triggers"]])
 
     def set_action(self, action: str):
@@ -99,8 +103,11 @@ class Blacklist:
         with INSERTION_LOCK:
             return self.chat_info["reason"]
 
-    def count_action_bl_all(self, action: str):
-        return self.collection.count({"action": action})
+    @staticmethod
+    def count_action_bl_all(action: str):
+        with INSERTION_LOCK:
+            collection = MongoDB(Blacklist.db_name)
+            return collection.count({"action": action})
 
     def rm_all_blacklist(self):
         with INSERTION_LOCK:
@@ -127,5 +134,5 @@ class Blacklist:
     def migrate_chat(self, new_chat_id: int):
         old_chat_db = self.collection.find_one({"_id": self.chat_id})
         new_data = old_chat_db.update({"_id": new_chat_id})
-        self.collection.delete_one({"_id": self.chat_id})
         self.collection.insert_one(new_data)
+        self.collection.delete_one({"_id": self.chat_id})

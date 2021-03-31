@@ -17,110 +17,86 @@
 
 
 from threading import RLock
-from time import time
-from traceback import format_exc
 
 from alita import LOGGER
 from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-USERS_CACHE = {}
-
 
 class Users:
     """Class to manage users for bot."""
 
-    def __init__(self) -> None:
-        self.collection = MongoDB("users")
+    db_name = "users"
 
-    def update_user(self, user_id: int, name: str, username: str = None):
-        global USERS_CACHE
+    def __init__(self, user_id: int) -> None:
+        self.collection = MongoDB(self.db_name)
+        self.user_id = user_id
+        self.user_info = self.__ensure_in_db()
+
+    def update_user(self, name: str, username: str = None):
         with INSERTION_LOCK:
-
-            try:
-                user = USERS_CACHE[user_id]
-                if name == user["name"] and username == user["username"]:
-                    # No additional Database queries
-                    return "No change detected!"
-                USERS_CACHE[user_id] = {"username": username, "name": name}
-            except KeyError:
-                pass
-
-            curr = self.collection.find_one({"_id": user_id})
-            if curr:
-                if (name == curr["name"]) and (username == curr["username"]):
-                    # Prevent additional queries
-                    return
-                return self.collection.update(
-                    {"_id": user_id},
-                    {"username": username, "name": name},
-                )
-
-            USERS_CACHE[user_id] = {"username": username, "name": name}
-            return self.collection.insert_one(
-                {"_id": user_id, "username": username, "name": name},
+            if (
+                name == self.user_info["name"]
+                and username == self.user_info["username"]
+            ):
+                return True
+            return self.collection.update(
+                {"_id": self.user_id},
+                {"username": username, "name": name},
             )
 
-    def delete_user(self, user_id: int):
-        global USERS_CACHE
+    def delete_user(self):
         with INSERTION_LOCK:
-            if user_id in set(USERS_CACHE.keys()):
-                del USERS_CACHE[user_id]
+            return self.collection.delete_one(
+                {"_id": self.user_id},
+            )
 
-            curr = self.collection.find_one({"_id": user_id})
-            if curr:
-                return self.collection.delete_one(
-                    {"_id": user_id},
-                )
-            return True
-
-    def count_users(self):
+    @staticmethod
+    def count_users():
         with INSERTION_LOCK:
-            try:
-                len(USERS_CACHE)
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-            return self.collection.count()
+            collection = MongoDB(Users.db_name)
+            return collection.count()
 
-    def list_users(self):
+    def get_my_info(self):
         with INSERTION_LOCK:
-            try:
-                return list(USERS_CACHE.keys())
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                return self.collection.find_all()
+            return self.user_id
 
-    def get_user_info(self, user_id):
+    @staticmethod
+    def list_users():
         with INSERTION_LOCK:
+            collection = MongoDB(Users.db_name)
+            return collection.find_all()
+
+    @staticmethod
+    def get_user_info(user_id: int or str):
+        with INSERTION_LOCK:
+            collection = MongoDB(Users.db_name)
             if isinstance(user_id, int):
-                curr = self.collection.find_one({"_id": user_id})
+                curr = collection.find_one({"_id": user_id})
             elif isinstance(user_id, str):
-                # user_id[1:] because we don't want the '@' in username
-                curr = self.collection.find_one({"username": user_id[1:]})
+                # user_id[1:] because we don't want the '@' in the username search!
+                curr = collection.find_one({"username": user_id[1:]})
             else:
                 curr = None
+
             if curr:
                 return curr
+
             return {}
 
-    def load_from_db(self):
+    @staticmethod
+    def load_from_db():
         with INSERTION_LOCK:
-            return self.collection.find_all()
+            collection = MongoDB(Users.db_name)
+            return collection.find_all()
 
-
-def __load_users_cache():
-    global USERS_CACHE
-    start = time()
-    db = Users()
-    users = db.load_from_db()
-    USERS_CACHE = {
-        int(user["_id"]): {
-            "username": user["username"],
-            "name": user["name"],
-        }
-        for user in users
-    }
-    LOGGER.info(f"Loaded Users Cache - {round((time()-start),3)}s")
+    def __ensure_in_db(self):
+        chat_data = self.collection.find_one({"_id": self.chat_id})
+        if not chat_data:
+            chat_type = self.get_chat_type(self.chat_id)
+            new_data = {"_id": self.chat_id, "status": True, "chat_type": chat_type}
+            self.collection.insert_one(new_data)
+            LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
+            return new_data
+        return chat_data

@@ -42,8 +42,6 @@ from alita.utils.custom_filters import (
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
-app_db = Approve()
-
 
 @Alita.on_message(command("adminlist") & filters.group)
 async def adminlist_show(_, m: Message):
@@ -181,8 +179,8 @@ async def promote_usr(c: Alita, m: Message):
             await c.set_administrator_title(m.chat.id, user_id, m.text.split()[1])
 
         # If user is approved, disapprove them as they willbe promoted and get even more rights
-        if app_db.check_approve(m.chat.id, user_id):
-            app_db.remove_approve(m.chat.id, user_id)
+        if Approve(m.chat.id).check_approve(user_id):
+            Approve(m.chat.id).remove_approve(user_id)
 
         # ----- Add admin to temp cache -----
         try:
