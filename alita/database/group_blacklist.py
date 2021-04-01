@@ -65,7 +65,7 @@ class GroupBlacklist:
         return self.collection.find_all()
 
 
-def __load_group_blacklist():
+def __pre_req_group_blacklist():
     global BLACKLIST_CHATS
     start = time()
     db = GroupBlacklist()

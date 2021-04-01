@@ -17,6 +17,7 @@
 
 
 from threading import RLock
+from time import time
 
 from alita import LOGGER
 from alita.database import MongoDB
@@ -156,10 +157,9 @@ class Blacklist:
                     collection.update({"_id": data["_id"]}, {key: val})
 
 
-def __check_db_status():
+def __pre_req_blacklists():
+    start = time()
     LOGGER.info("Starting Blacklists Database Repair...")
     collection = MongoDB(Blacklist.db_name)
     Blacklist.repair_db(collection)
-
-
-__check_db_status()
+    LOGGER.info(f"Done in {round((time()-start),3)}s!")

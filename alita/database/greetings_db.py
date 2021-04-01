@@ -17,6 +17,7 @@
 
 
 from threading import RLock
+from time import time
 
 from alita import LOGGER
 from alita.database import MongoDB
@@ -136,10 +137,9 @@ class Greetings:
                     collection.update({"_id": data["_id"]}, {key: val})
 
 
-def __check_db_status():
+def __pre_req_greetings():
+    start = time()
     LOGGER.info("Starting Geeetings Database Repair...")
     collection = MongoDB(Greetings.db_name)
     Greetings.repair_db(collection)
-
-
-__check_db_status()
+    LOGGER.info(f"Done in {round((time()-start),3)}s!")

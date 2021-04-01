@@ -17,6 +17,7 @@
 
 
 from threading import RLock
+from time import time
 
 from alita import LOGGER
 from alita.database import MongoDB
@@ -53,8 +54,14 @@ class Approve:
     def remove_approve(self, user_id: int):
         with INSERTION_LOCK:
             if self.check_approve(user_id):
-                users = self.chat_info["users"].pop(user_id)
-                return self.collection.update({"_id": self.chat_id}, {"users": users})
+                user_full = next(
+                    i for i in self.chat_info["users"] if user_id in i.keys()
+                )  # Get full dictionary of user
+                self.chat_info["users"].pop(user_full)
+                return self.collection.update(
+                    {"_id": self.chat_id},
+                    {"users": self.chat_info["users"]},
+                )
             return True
 
     def unapprove_all(self):
@@ -66,19 +73,6 @@ class Approve:
     def list_approved(self):
         with INSERTION_LOCK:
             return self.chat_info["users"]
-
-    @staticmethod
-    def count_all_approved():
-        with INSERTION_LOCK:
-            collection = MongoDB(Approve.db_name)
-            curr = collection.find_all()
-            return sum([len([chat["users"] for chat in curr])])
-
-    @staticmethod
-    def count_approved_chats():
-        with INSERTION_LOCK:
-            collection = MongoDB(Approve.db_name)
-            return collection.count() or 0
 
     def count_approved(self):
         with INSERTION_LOCK:
@@ -104,6 +98,19 @@ class Approve:
         self.collection.delete_one({"_id": self.chat_id})
 
     @staticmethod
+    def count_all_approved():
+        with INSERTION_LOCK:
+            collection = MongoDB(Approve.db_name)
+            curr = collection.find_all()
+            return sum([len([chat["users"] for chat in curr])])
+
+    @staticmethod
+    def count_approved_chats():
+        with INSERTION_LOCK:
+            collection = MongoDB(Approve.db_name)
+            return collection.count() or 0
+
+    @staticmethod
     def repair_db(collection):
         all_data = collection.find_all()
         keys = {"users": []}
@@ -118,10 +125,9 @@ class Approve:
                     collection.update({"_id": data["_id"]}, {key: val})
 
 
-def __check_db_status():
+def __pre_req_approve():
+    start = time()
     LOGGER.info("Starting Approve Database Repair...")
     collection = MongoDB(Approve.db_name)
     Approve.repair_db(collection)
-
-
-__check_db_status()
+    LOGGER.info(f"Done in {round((time()-start),3)}s!")

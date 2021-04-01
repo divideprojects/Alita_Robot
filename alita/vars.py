@@ -45,6 +45,7 @@ class Config:
     VERSION = load_var("VERSION")
     DEV_PREFIX_HANDLER = load_var("DEV_PREFIX_HANDLER", ">").split()
     WORKERS = int(load_var("WORKERS", 16))
+    LOG_CHANNEL = int(load_var("LOG_CHANNEL", -100))
 
 
 class Development:
@@ -56,7 +57,7 @@ class Development:
     APP_ID = 12345  # Your APP_ID from Telegram
     API_HASH = "YOUR TOKEN"  # Your APP_HASH from Telegram
     OWNER_ID = 12345  # Your telegram user id
-    MESSAGE_DUMP = "YOUR GROUP_ID"  # Your Private Group ID
+    MESSAGE_DUMP = -100  # Your Private Group ID
     DEV_USERS = []
     SUDO_USERS = []
     WHITELIST_USERS = []
@@ -70,3 +71,4 @@ class Development:
     VERSION = "VERSION"
     DEV_PREFIX_HANDLER = "?"
     WORKERS = 8
+    LOG_CHANNEL = -100

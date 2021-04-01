@@ -109,7 +109,7 @@ class GBan:
             return self.collection.find_all()
 
 
-def __load_antispam_users():
+def __pre_req_antispam_users():
     global ANTISPAM_BANNED
     start = time()
     db = GBan()

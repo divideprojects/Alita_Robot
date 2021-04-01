@@ -26,11 +26,11 @@ from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
 from alita.bot_class import Alita
-from alita.database.antichannelpin_db import Pins
 from alita.database.antispam_db import ANTISPAM_BANNED, GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.group_blacklist import BLACKLIST_CHATS
+from alita.database.pins_db import Pins
 from alita.database.warns_db import Warns, WarnSettings
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
@@ -55,6 +55,12 @@ async def antichanpin_cleanlinked(c: Alita, m: Message):
         if curr["cleanlinked"]:
             await c.delete_messages(m.chat.id, msg_id)
             LOGGER.info(f"CleanLinked: msgid-{m.message_id} cleaned in {m.chat.id}")
+    except ChatAdminRequired:
+        await m.reply_text(
+            "Disabled antichannelpin as I don't have enough admin rights!",
+        )
+        pins_db.antichannelpin_off()
+        LOGGER.warning(f"Disabled antichannelpin in {m.chat.id} as bot is not admin.")
     except Exception as ef:
         LOGGER.error(ef)
         LOGGER.error(format_exc())

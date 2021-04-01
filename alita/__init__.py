@@ -46,7 +46,7 @@ basicConfig(
 getLogger("pyrogram").setLevel(WARNING)
 LOGGER = getLogger(__name__)
 
-# if version < 3.6, stop bot.
+# if version < 3.9, stop bot.
 if version_info[0] < 3 or version_info[1] < 7:
     LOGGER.error(
         (
@@ -71,8 +71,9 @@ except Exception as ef:
 LOGGER.info("------------------------")
 LOGGER.info("|      Alita_Robot     |")
 LOGGER.info("------------------------")
-LOGGER.info("Version: " + Config.VERSION)
-LOGGER.info("Owner: " + str(Config.OWNER_ID) + "\n")
+LOGGER.info(f"Version: {Config.VERSION}")
+LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
+LOGGER.info("Source Code: https://github.com/Divkix/Alita_Robot\n")
 
 # Account Related
 STRING_SESSION = Config.STRING_SESSION
@@ -83,6 +84,7 @@ API_HASH = Config.API_HASH
 MESSAGE_DUMP = Config.MESSAGE_DUMP
 SUPPORT_GROUP = Config.SUPPORT_GROUP
 SUPPORT_CHANNEL = Config.SUPPORT_CHANNEL
+LOG_CHANNEL = Config.LOG_CHANNEL
 
 # Users Config
 OWNER_ID = Config.OWNER_ID
@@ -91,7 +93,7 @@ SUDO_USERS = Config.SUDO_USERS
 WHITELIST_USERS = Config.WHITELIST_USERS
 SUPPORT_STAFF = list(
     set([int(OWNER_ID)] + SUDO_USERS + DEV_USERS + WHITELIST_USERS),
-)  # Remove duplicates!
+)  # Remove duplicates by using a set
 
 # Plugins, DB and Workers
 DB_URI = Config.DB_URI
@@ -168,6 +170,9 @@ async def load_cmds(all_plugins):
     if NO_LOAD:
         LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
-    return ", ".join(
-        [(i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())],
+    return (
+        ", ".join(
+            [(i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())],
+        )
+        + "\n"
     )

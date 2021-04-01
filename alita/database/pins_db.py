@@ -125,10 +125,7 @@ class Pins:
                     collection.update({"_id": data["_id"]}, {key: val})
 
 
-def __check_db_status():
+def __pre_req_pins_chats():
     LOGGER.info("Starting Pins Database Repair...")
     collection = MongoDB(Pins.db_name)
     Pins.repair_db(collection)
-
-
-__check_db_status()

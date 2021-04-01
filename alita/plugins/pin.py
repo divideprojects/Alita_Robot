@@ -21,7 +21,7 @@ from pyrogram.types import Message
 
 from alita import LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
-from alita.database.antichannelpin_db import Pins
+from alita.database.pins_db import Pins
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, command
 
@@ -145,7 +145,7 @@ async def anti_channel_pin(_, m: Message):
             LOGGER.info(f"{m.from_user.id} disabled antichannelpin in {m.chat.id}")
             msg = tlang(m, "pin.antichannelpin.turned_off")
         else:
-            await m.reply_text(tlang(m, "pin.general.check_help"))
+            await m.reply_text(tlang(m, "general.check_help"))
             return
 
     await m.reply_text(msg)
@@ -176,7 +176,7 @@ async def clean_linked(_, m: Message):
             LOGGER.info(f"{m.from_user.id} disabled CleanLinked in {m.chat.id}")
             msg = "Turned off CleanLinked! Messages from linked channel will not be deleted!"
         else:
-            await m.reply_text(tlang(m, "pin.general.check_help"))
+            await m.reply_text(tlang(m, "general.check_help"))
             return
 
     await m.reply_text(msg)

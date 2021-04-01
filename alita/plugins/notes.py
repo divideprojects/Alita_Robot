@@ -206,6 +206,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                 m.chat.id,
                 getnotes["fileid"],
                 caption=teks,
+                reply_to_message_id=reply_msg_id,
             )
     LOGGER.info(
         f"{m.from_user.id} fetched note {note_name} (type - {getnotes}) in {m.chat.id}",
@@ -222,6 +223,7 @@ async def get_raw_note(c: Alita, m: Message, note: str):
         return
 
     getnotes = db.get_note(m.chat.id, note)
+    msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
 
     msgtype = getnotes["msgtype"]
     if not getnotes:
@@ -230,7 +232,7 @@ async def get_raw_note(c: Alita, m: Message, note: str):
 
     if msgtype == Types.TEXT:
         teks = getnotes["note_value"]
-        await m.reply_text(teks, parse_mode=None, quote=True)
+        await m.reply_text(teks, parse_mode=None, reply_to_message_id=msg_id)
     elif msgtype in (
         Types.STICKER,
         Types.VIDEO_NOTE,
@@ -240,7 +242,7 @@ async def get_raw_note(c: Alita, m: Message, note: str):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
             getnotes["fileid"],
-            reply_to_message_id=m.message_id,
+            reply_to_message_id=msg_id,
         )
     else:
         if getnotes["note_value"]:
@@ -252,6 +254,7 @@ async def get_raw_note(c: Alita, m: Message, note: str):
             getnotes["fileid"],
             caption=teks,
             parse_mode=None,
+            reply_to_message_id=msg_id,
         )
     LOGGER.info(
         f"{m.from_user.id} fetched raw note {note} (type - {getnotes}) in {m.chat.id}",
@@ -342,6 +345,8 @@ async def local_notes(_, m: Message):
         await m.reply_text(f"There are no notes in <b>{m.chat.title}</b>.")
         return
 
+    msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+
     curr_pref = db_settings.get_privatenotes(m.chat.id)
     if curr_pref:
         from alita import BOT_USERNAME
@@ -367,7 +372,7 @@ async def local_notes(_, m: Message):
     for x in getnotes:
         rply += f"- <code>{x[0]}</code>\n"
 
-    await m.reply_text(rply)
+    await m.reply_text(rply, reply_to_message_id=msg_id)
     return
 
 

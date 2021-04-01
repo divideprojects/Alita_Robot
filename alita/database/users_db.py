@@ -17,6 +17,7 @@
 
 
 from threading import RLock
+from time import time
 
 from alita import LOGGER
 from alita.database import MongoDB
@@ -60,7 +61,7 @@ class Users:
 
     def get_my_info(self):
         with INSERTION_LOCK:
-            return self.user_id
+            return self.user_info
 
     @staticmethod
     def list_users():
@@ -85,25 +86,25 @@ class Users:
 
             return {}
 
+    def __ensure_in_db(self):
+        chat_data = self.collection.find_one({"_id": self.user_id})
+        if not chat_data:
+            new_data = {"_id": self.user_id, "username": "", "name": "unknown_till_now"}
+            self.collection.insert_one(new_data)
+            LOGGER.info(f"Initialized User Document for {self.user_id}")
+            return new_data
+        return chat_data
+
     @staticmethod
     def load_from_db():
         with INSERTION_LOCK:
             collection = MongoDB(Users.db_name)
             return collection.find_all()
 
-    def __ensure_in_db(self):
-        chat_data = self.collection.find_one({"_id": self.chat_id})
-        if not chat_data:
-            new_data = {"_id": self.chat_id, "username": "", "name": ""}
-            self.collection.insert_one(new_data)
-            LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
-            return new_data
-        return chat_data
-
     @staticmethod
     def repair_db(collection):
         all_data = collection.find_all()
-        keys = {"username": "", "name": ""}
+        keys = {"username": "", "name": "unknown_till_now"}
         for data in all_data:
             for key, val in keys.items():
                 try:
@@ -115,10 +116,9 @@ class Users:
                     collection.update({"_id": data["_id"]}, {key: val})
 
 
-def __check_db_status():
+def __pre_req_users():
+    start = time()
     LOGGER.info("Starting Users Database Repair...")
     collection = MongoDB(Users.db_name)
     Users.repair_db(collection)
-
-
-__check_db_status()
+    LOGGER.info(f"Done in {round((time()-start),3)}s!")

@@ -25,7 +25,7 @@ from alita.bot_class import Alita
 from alita.utils.custom_filters import command, sudo_filter
 
 
-@Alita.on_message(command("test", DEV_PREFIX_HANDLER) & sudo_filter, group=15)
+@Alita.on_message(command("test", DEV_PREFIX_HANDLER) & sudo_filter)
 async def test_bot(_, m: Message):
     start = time()
     replymsg = await m.reply_text("Calculating...")

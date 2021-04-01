@@ -168,7 +168,7 @@ async def check_approved(_, m: Message):
         await m.reply_text(f"No users are approved in {chat_title}.")
         return
 
-    for user_id, user_name in approved_people:
+    for user_id, user_name in approved_people.items():
         try:
             await chat.get_member(user_id)  # Check if user is in chat or not
         except UserNotParticipant:

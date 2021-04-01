@@ -271,7 +271,7 @@ class Filters:
                 self.collection.insert_one(new_data)
 
 
-def __load_filters_cache():
+def __pre_req_filters():
     global FILTER_CACHE
     start = time()
     db = Filters()

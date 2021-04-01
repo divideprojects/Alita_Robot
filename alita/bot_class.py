@@ -24,7 +24,7 @@ install()
 
 from platform import python_version
 from threading import RLock
-from time import time
+from time import gmtime, strftime, time
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
@@ -33,6 +33,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from alita import (
     API_HASH,
     APP_ID,
+    LOG_CHANNEL,
     LOG_DATETIME,
     LOGFILE,
     LOGGER,
@@ -45,7 +46,6 @@ from alita import (
     load_cmds,
 )
 from alita.database import MongoDB
-from alita.database.chats_db import Chats
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
 from alita.utils.paste import paste
@@ -108,31 +108,44 @@ class Alita(Client):
             ),
         )
 
-        LOGGER.info("Bot Started Successfully!")
+        LOGGER.info("Bot Started Successfully!\n")
 
     async def stop(self):
         """Stop the bot and send a message to MESSAGE_DUMP telling that the bot has stopped."""
-        runtime = time() - UPTIME
+        runtime = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
         LOGGER.info("Uploading logs before stopping...!\n")
         with open(LOGFILE) as f:
             txt = f.read()
             neko, raw = await paste(txt)
-        # Send Logs to MESSAGE-DUMP
+        # Send Logs to MESSAGE_DUMP and LOG_CHANNEL
         await self.send_document(
             MESSAGE_DUMP,
             document=LOGFILE,
             caption=(
-                f"Bot Stopped!\n\nUptime: {runtime}Logs for last run, pasted to [NekoBin]({neko}) as "
-                f"well as uploaded a file here.\n<code>{LOG_DATETIME}</code>"
+                "Bot Stopped!\n\n"
+                f"Uptime: {runtime}\n"
+                f"Logs for last run, pasted to [NekoBin]({neko}) as well as uploaded a file here.\n"
+                f"<code>{LOG_DATETIME}</code>"
             ),
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Raw Logs", url=raw)]],
+                [
+                    [InlineKeyboardButton("Raw Logs", url=raw)],
+                    [InlineKeyboardButton("Neko", url=neko)],
+                ],
             ),
         )
+        if LOG_CHANNEL:
+            # LOG_CHANNEL is not necessary
+            await self.send_document(
+                LOG_CHANNEL,
+                document=LOGFILE,
+                caption=f"Uptime: {runtime}\n[NekoBin]({neko})\n[Raw]({raw})",
+            )
         await super().stop()
         MongoDB.close()
         LOGGER.info(
             f"""Bot Stopped.
-        Logs have been uploaded to the MESSAGE_DUMP Group!
-        Runtime: {runtime}""",
+            Logs have been uploaded to the MESSAGE_DUMP Group!
+            Runtime: {runtime}s\n
+        """,
         )
