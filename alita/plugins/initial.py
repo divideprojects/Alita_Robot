@@ -27,8 +27,7 @@ from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
 from alita.database.filters_db import Filters
 from alita.database.lang_db import Langs
-
-# from alita.database.notes_db import Notes, NotesSettings
+from alita.database.notes_db import Notes, NotesSettings
 from alita.database.pins_db import Pins
 from alita.database.reporting_db import Reporting
 from alita.database.rules_db import Rules
@@ -107,25 +106,25 @@ async def initial_works(_, m: Message):
 async def migrate_chat(m: Message, new_chat: int) -> None:
     LOGGER.info(f"Migrating from {m.chat.id} to {new_chat}...")
     langdb = Langs(m.chat.id)
-    # notedb = Notes(m.chat.id)
+    notedb = Notes()
     ruledb = Rules(m.chat.id)
     userdb = Users(m.chat.id)
     chatdb = Chats(m.chat.id)
     bldb = Blacklist(m.chat.id)
     approvedb = Approve(m.chat.id)
     reportdb = Reporting(m.chat.id)
-    # notes_settings = NotesSettings(m.chat.id)
+    notes_settings = NotesSettings()
     pins_db = Pins(m.chat.id)
-    fldb = Filters(m.chat.id)
+    fldb = Filters()
     chatdb.migrate_chat(new_chat)
     userdb.migrate_chat(new_chat)
     langdb.migrate_chat(new_chat)
     ruledb.migrate_chat(new_chat)
     bldb.migrate_chat(new_chat)
-    # notedb.migrate_chat(new_chat)
+    notedb.migrate_chat(m.chat.id, new_chat)
     approvedb.migrate_chat(new_chat)
     reportdb.migrate_chat(new_chat)
-    # notes_settings.migrate_chat(new_chat)
+    notes_settings.migrate_chat(m.chat.id, new_chat)
     pins_db.migrate_chat(new_chat)
-    fldb.migrate_chat(new_chat)
+    fldb.migrate_chat(m.chat.id, new_chat)
     LOGGER.info(f"Successfully migrated from {m.chat.id} to {new_chat}!")

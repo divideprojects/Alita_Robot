@@ -131,9 +131,9 @@ async def bl_watcher(_, m: Message):
         elif action == "warn":
             warns_settings_db = WarnSettings(m.chat.id)
             warns_db = Warns(m.chat.id)
-            warn_settings = warns_settings_db.get_warnings_settings(m.chat.id)
+            warn_settings = warns_settings_db.get_warnings_settings()
             warn_reason = bl_db.get_reason()
-            _, num = warns_db.warn_user(m.chat.id, m.from_user.id, warn_reason)
+            _, num = warns_db.warn_user(m.from_user.id, warn_reason)
             if num >= warn_settings["warn_limit"]:
                 if warn_settings["warn_mode"] == "kick":
                     await m.chat.kick_member(

@@ -32,7 +32,6 @@ class Warns:
     def __init__(self, chat_id: int) -> None:
         self.collection = MongoDB(Warns.db_name)
         self.chat_id = chat_id
-        self.chat_info = self.__ensure_in_db()
 
     def __ensure_in_db(self, user_id: int):
         chat_data = self.collection.find_one(

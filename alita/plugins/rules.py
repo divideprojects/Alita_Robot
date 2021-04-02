@@ -102,7 +102,6 @@ async def set_rules(_, m: Message):
 )
 async def priv_rules(_, m: Message):
 
-    chat_id = m.chat.id
     db = Rules(m.chat.id)
     if len(m.text.split()) == 2:
         option = (m.text.split())[1]

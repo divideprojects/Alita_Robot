@@ -58,7 +58,7 @@ async def report_setting(_, m: Message):
                 await m.reply_text("Turned off reporting! You wont get any reports.")
         else:
             await m.reply_text(
-                f"Your current report preference is: `{(db.get_settings(m.chat.id))}`",
+                f"Your current report preference is: `{(db.get_settings())}`",
             )
     else:
         if len(args) >= 2:
@@ -81,7 +81,7 @@ async def report_setting(_, m: Message):
                 )
         else:
             await m.reply_text(
-                f"This group's current setting is: `{(db.get_settings(m.chat.id))}`",
+                f"This group's current setting is: `{(db.get_settings())}`",
             )
 
 
