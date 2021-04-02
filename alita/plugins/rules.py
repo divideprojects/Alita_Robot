@@ -146,7 +146,7 @@ async def clear_rules(_, m: Message):
                 [
                     InlineKeyboardButton(
                         "⚠️ Confirm",
-                        callback_data=f"clear_rules",
+                        callback_data="clear_rules",
                     ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
                 ],
