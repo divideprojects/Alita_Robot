@@ -385,7 +385,7 @@ async def prevent_approved(m: Message):
     approved_users = Approve(m.chat.id).list_approved()
     ul = []
     for user in approved_users:
-        ul.append(user["user_id"])
+        ul.append(user[0])
     for i in ul:
         await m.chat.restrict_member(
             user_id=i,

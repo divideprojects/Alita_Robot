@@ -38,16 +38,16 @@ class Approve:
 
     def check_approve(self, user_id: int):
         with INSERTION_LOCK:
-            chat_approved = self.chat_info["users"]
+            chat_approved = self.chat_info["users"].keys()
             return bool(user_id in chat_approved)
 
     def add_approve(self, user_id: int, user_name: str):
         with INSERTION_LOCK:
-            new_user_data = {user_id: user_name}
+            self.chat_info["users"].append((user_id, user_name))
             if not self.check_approve(user_id):
                 return self.collection.update(
                     {"_id": self.chat_id},
-                    {"users": self.chat_info["users"] | new_user_data},
+                    {"users": self.chat_info["users"]},
                 )
             return True
 
@@ -55,8 +55,8 @@ class Approve:
         with INSERTION_LOCK:
             if self.check_approve(user_id):
                 user_full = next(
-                    i for i in self.chat_info["users"] if user_id in i.keys()
-                )  # Get full dictionary of user
+                    user for user in self.chat_info["users"] if user[0] == user_id
+                )
                 self.chat_info["users"].pop(user_full)
                 return self.collection.update(
                     {"_id": self.chat_id},
@@ -84,9 +84,9 @@ class Approve:
     def __ensure_in_db(self):
         chat_data = self.collection.find_one({"_id": self.chat_id})
         if not chat_data:
-            new_data = {"_id": self.chat_id, "users": []}
+            new_data = {"_id": self.chat_id, "users": ()}
             self.collection.insert_one(new_data)
-            LOGGER.info(f"Initialized Pins Document for chat {self.chat_id}")
+            LOGGER.info(f"Initialized Approve Document for chat {self.chat_id}")
             return new_data
         return chat_data
 

@@ -256,7 +256,7 @@ async def unapproveall_callback(_, q: CallbackQuery):
     db.unapprove_all()
     for i in approved_people:
         await q.message.chat.restrict_member(
-            user_id=i,
+            user_id=i[0],
             permissions=q.message.chat.permissions,
         )
     await q.message.delete()
