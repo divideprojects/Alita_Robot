@@ -31,10 +31,10 @@ from alita.database.pins_db import Pins
 from alita.database.rules_db import Rules
 from alita.database.users_db import Users
 from alita.database.warns_db import Warns, WarnSettings
-from alita.utils.custom_filters import command, dev_filter
+from alita.utils.custom_filters import dev_command
 
 
-@Alita.on_message(command("stats", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(dev_command("stats"))
 async def get_stats(_, m: Message):
 
     # initialise

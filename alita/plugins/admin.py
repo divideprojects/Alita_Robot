@@ -33,12 +33,7 @@ from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload
-from alita.utils.custom_filters import (
-    admin_filter,
-    command,
-    invite_filter,
-    promote_filter,
-)
+from alita.utils.custom_filters import DEV_LEVEL, admin_filter, command, promote_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
@@ -328,9 +323,21 @@ async def demote_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command("invitelink") & invite_filter,
+    command("invitelink"),
 )
 async def get_invitelink(c: Alita, m: Message):
+
+    # Bypass the bot devs, sudos and owner
+    if m.from_user.id in DEV_LEVEL:
+        pass
+    else:
+        user = await m.chat.get_member(m.from_user.id)
+
+        if user.can_invite_users or user.status == "creator":
+            pass
+        else:
+            await m.reply_text(tlang(m, "admin.no_user_invite_perm"))
+            return False
 
     try:
         link = await c.export_chat_invite_link(m.chat.id)

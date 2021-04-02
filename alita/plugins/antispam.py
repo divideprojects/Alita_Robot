@@ -36,7 +36,7 @@ from alita.database.antispam_db import GBan
 from alita.database.users_db import Users
 from alita.tr_engine import tlang
 from alita.utils.clean_file import remove_markdown_and_html
-from alita.utils.custom_filters import command, sudo_filter
+from alita.utils.custom_filters import sudo_command
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
@@ -44,7 +44,7 @@ from alita.utils.parser import mention_html
 db = GBan()
 
 
-@Alita.on_message(command(["gban", "globalban"]) & sudo_filter)
+@Alita.on_message(sudo_command(["gban", "globalban"]))
 async def gban(c: Alita, m: Message):
 
     if len(m.text.split()) == 1:
@@ -116,7 +116,7 @@ async def gban(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command(["ungban", "unglobalban", "globalunban"]) & sudo_filter,
+    sudo_command(["ungban", "unglobalban", "globalunban"]),
 )
 async def ungban(c: Alita, m: Message):
 
@@ -166,11 +166,10 @@ async def ungban(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command(
+    sudo_command(
         ["numgbans", "countgbans", "gbancount", "gbanscount"],
         PREFIX_HANDLER,
-    )
-    & sudo_filter,
+    ),
 )
 async def gban_count(_, m: Message):
     await m.reply_text(
@@ -181,7 +180,7 @@ async def gban_count(_, m: Message):
 
 
 @Alita.on_message(
-    command(["gbanlist", "globalbanlist"]) & sudo_filter,
+    sudo_command(["gbanlist", "globalbanlist"]),
 )
 async def gban_list(_, m: Message):
     banned_users = db.load_from_db()

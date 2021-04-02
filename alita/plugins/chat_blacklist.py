@@ -24,13 +24,13 @@ from pyrogram.types import Message
 from alita import DEV_PREFIX_HANDLER, LOGGER
 from alita.bot_class import Alita
 from alita.database.group_blacklist import GroupBlacklist
-from alita.utils.custom_filters import command, dev_filter
+from alita.utils.custom_filters import dev_command
 
 # initialise database
 db = GroupBlacklist()
 
 
-@Alita.on_message(command("blchat", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(dev_command("blchat"))
 async def blacklist_chat(c: Alita, m: Message):
     if len(m.text.split()) >= 2:
         chat_ids = m.text.split()[1:]
@@ -55,7 +55,7 @@ async def blacklist_chat(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command(["rmblchat", "unblchat"], DEV_PREFIX_HANDLER) & dev_filter,
+    dev_command(["rmblchat", "unblchat"]),
 )
 async def unblacklist_chat(c: Alita, m: Message):
     if len(m.text.split()) >= 2:
@@ -85,7 +85,7 @@ async def unblacklist_chat(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command(["blchatlist", "blchats"], DEV_PREFIX_HANDLER) & dev_filter,
+    dev_command(["blchatlist", "blchats"]),
 )
 async def list_blacklist_chats(_, m: Message):
     bl_chats = db.list_all_chats()

@@ -19,20 +19,13 @@
 from pyrogram.errors import RPCError
 from pyrogram.types import Message
 
-from alita import (
-    DEV_PREFIX_HANDLER,
-    DEV_USERS,
-    LOGGER,
-    OWNER_ID,
-    SUDO_USERS,
-    WHITELIST_USERS,
-)
+from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, WHITELIST_USERS
 from alita.bot_class import Alita
-from alita.utils.custom_filters import command, dev_filter
+from alita.utils.custom_filters import dev_command
 from alita.utils.parser import mention_html
 
 
-@Alita.on_message(command("botstaff", DEV_PREFIX_HANDLER) & dev_filter)
+@Alita.on_message(dev_command("botstaff"))
 async def botstaff(c: Alita, m: Message):
     try:
         owner = await c.get_users(OWNER_ID)

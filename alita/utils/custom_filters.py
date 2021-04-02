@@ -24,7 +24,7 @@ from typing import List
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
-from alita import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
+from alita import DEV_PREFIX_HANDLER, DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 
@@ -40,6 +40,10 @@ def command(
     from alita import BOT_USERNAME
 
     async def func(flt, _, m: Message):
+
+        if not m.from_user:
+            return False
+
         text: str = m.text or m.caption
         m.command = None
         if not text:
@@ -65,21 +69,107 @@ def command(
     prefixes = set(prefixes) if prefixes else {""}
     return create(
         func,
-        "CustomCommandFilter",
+        "NormalCommandFilter",
         commands=commands,
         prefixes=prefixes,
         case_sensitive=case_sensitive,
     )
 
 
-async def dev_check_func(_, __, m: Message):
-    """Check if user is Dev or not."""
-    return bool(m.from_user.id in DEV_LEVEL)
+def dev_command(
+    commands: str or List[str],
+    prefixes: str or List[str] = DEV_PREFIX_HANDLER,
+    case_sensitive: bool = False,
+):
+    from alita import BOT_USERNAME
+
+    async def func(flt, _, m: Message):
+
+        if not m.from_user:
+            return False
+
+        # Only devs allowed to use this...!
+        if m.from_user.id not in DEV_LEVEL:
+            return False
+
+        text: str = m.text or m.caption
+        m.command = None
+        if not text:
+            return False
+        regex = "^({prefix})+\\b({regex})\\b(\\b@{bot_name}\\b)?(.*)".format(
+            prefix="|".join(escape(x) for x in flt.prefixes),
+            regex="|".join(flt.commands),
+            bot_name=BOT_USERNAME,
+        )
+        matches = search(compile_re(regex), text)
+        if matches:
+            m.command = [matches.group(2)]
+            for arg in split(matches.group(4).strip()):
+                m.command.append(arg)
+            return True
+        else:
+            return False
+
+    commands = commands if type(commands) is list else [commands]
+    commands = {c if case_sensitive else c.lower() for c in commands}
+    prefixes = [] if prefixes is None else prefixes
+    prefixes = prefixes if type(prefixes) is list else [prefixes]
+    prefixes = set(prefixes) if prefixes else {""}
+    return create(
+        func,
+        "DevCommandFilter",
+        commands=commands,
+        prefixes=prefixes,
+        case_sensitive=case_sensitive,
+    )
 
 
-async def sudo_check_func(_, __, m: Message):
-    """Check if user is Sudo or not."""
-    return bool(m.from_user.id in SUDO_LEVEL)
+def sudo_command(
+    commands: str or List[str],
+    prefixes: str or List[str] = DEV_PREFIX_HANDLER,
+    case_sensitive: bool = False,
+):
+    from alita import BOT_USERNAME
+
+    async def func(flt, _, m: Message):
+
+        if not m.from_user:
+            return False
+
+        # Only devs allowed to use this...!
+        if m.from_user.id not in SUDO_LEVEL:
+            return False
+
+        text: str = m.text or m.caption
+        m.command = None
+        if not text:
+            return False
+        regex = "^({prefix})+\\b({regex})\\b(\\b@{bot_name}\\b)?(.*)".format(
+            prefix="|".join(escape(x) for x in flt.prefixes),
+            regex="|".join(flt.commands),
+            bot_name=BOT_USERNAME,
+        )
+        matches = search(compile_re(regex), text)
+        if matches:
+            m.command = [matches.group(2)]
+            for arg in split(matches.group(4).strip()):
+                m.command.append(arg)
+            return True
+        else:
+            return False
+
+    commands = commands if type(commands) is list else [commands]
+    commands = {c if case_sensitive else c.lower() for c in commands}
+    prefixes = [] if prefixes is None else prefixes
+    prefixes = prefixes if type(prefixes) is list else [prefixes]
+    prefixes = set(prefixes) if prefixes else {""}
+    return create(
+        func,
+        "SudoCommandFilter",
+        commands=commands,
+        prefixes=prefixes,
+        case_sensitive=case_sensitive,
+    )
 
 
 async def admin_check_func(_, __, m: Message or CallbackQuery):
@@ -194,34 +284,7 @@ async def promote_check_func(_, __, m):
     return status
 
 
-async def invite_check_func(_, __, m: Message or CallbackQuery):
-    """Check if user can invite users or not."""
-
-    if isinstance(m, CallbackQuery):
-        m = m.message
-
-    if m.chat.type != "supergroup":
-        return False
-
-    # Bypass the bot devs, sudos and owner
-    if m.from_user.id in DEV_LEVEL:
-        return True
-
-    user = await m.chat.get_member(m.from_user.id)
-
-    if user.can_invite_users or user.status == "creator":
-        status = True
-    else:
-        status = False
-        await m.reply_text(tlang(m, "admin.no_user_invite_perm"))
-
-    return status
-
-
-dev_filter = create(dev_check_func)
-sudo_filter = create(sudo_check_func)
 admin_filter = create(admin_check_func)
 owner_filter = create(owner_check_func)
 restrict_filter = create(restrict_check_func)
 promote_filter = create(promote_check_func)
-invite_filter = create(invite_check_func)
