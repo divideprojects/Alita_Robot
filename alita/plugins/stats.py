@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from pyrogram.filters import reply_filter
 from pyrogram.types import Message
 
 from alita import DEV_PREFIX_HANDLER
@@ -48,8 +49,8 @@ async def get_stats(_, m: Message):
     fldb = Filters()
     pinsdb = Pins
     notesettings_db = NotesSettings()
-    warns_db = Warns()
-    warns_settings_db = WarnSettings()
+    warns_db = Warns
+    warns_settings_db = WarnSettings
 
     replymsg = await m.reply_text("<b><i>Fetching Stats...</i></b>", quote=True)
     rply = (
@@ -66,7 +67,7 @@ async def get_stats(_, m: Message):
         f"        <b>Ban</b> <code>{(bldb.count_action_bl_all('ban'))}</code> chats\n"
         f"<b>Rules:</b> Set in <code>{(rulesdb.count_chats_with_rules())}</code> chats\n"
         f"    <b>Private Rules:</b> <code>{(rulesdb.count_privrules_chats())}</code> chats\n"
-        f"<b>Warns:</b> <code>{(warns_db.count_warned_users())}</code> in <code>{(warns_db.count_all_chats_using_warns())}</code> chats\n"
+        f"<b>Warns:</b> <code>{(warns_db.count_warns_total())}</code> in <code>{(warns_db.count_all_chats_using_warns())}</code> chats\n"
         f"    <b>Users Warned:</b> <code>{(warns_db.count_warned_users())}</code> users\n"
         f"    <b>Action Specific:</b>\n"
         f"        <b>Kick</b>: <code>{(warns_settings_db.count_action_chats('kick'))}</code>\n"
@@ -76,9 +77,13 @@ async def get_stats(_, m: Message):
         f"    <b>Private Notes:</b> <code>{(notesettings_db.count_chats())}</code> chats\n"
         f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
         f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
-        f"\n<b>Database Stats:</b>\n"
-        f"<code>{(db.command('dbstats'))}</code>"
     )
     await replymsg.edit_text(rply, parse_mode="html")
+    return
 
+
+@Alita.on_message(dev_command("dbstats"))
+async def get_dbstats(_, m: Message):
+    db_stats = f"\n<b>Database Stats:</b>\n<code>{(db.command('dbstats'))}</code>"
+    await m.reply_text(db_stats, parse_mode="html")
     return

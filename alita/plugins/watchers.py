@@ -39,8 +39,6 @@ from alita.utils.regex_utils import regex_searcher
 
 # Initialise
 gban_db = GBan()
-warns_db = Warns()
-warns_settings_db = WarnSettings()
 
 
 @Alita.on_message(filters.linked_channel)
@@ -131,6 +129,8 @@ async def bl_watcher(_, m: Message):
                 ),
             )
         elif action == "warn":
+            warns_settings_db = WarnSettings(m.chat.id)
+            warns_db = Warns(m.chat.id)
             warn_settings = warns_settings_db.get_warnings_settings(m.chat.id)
             warn_reason = bl_db.get_reason()
             _, num = warns_db.warn_user(m.chat.id, m.from_user.id, warn_reason)

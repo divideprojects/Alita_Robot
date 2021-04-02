@@ -32,6 +32,7 @@ from alita.database.pins_db import __pre_req_pins_chats
 from alita.database.reporting_db import __pre_req_all_reporting_settings
 from alita.database.rules_db import __pre_req_all_rules
 from alita.database.users_db import __pre_req_users
+from alita.database.warns_db import __pre_req_warns
 
 
 def pre_req_all():
@@ -47,6 +48,7 @@ def pre_req_all():
     __pre_req_filters()
     __pre_req_all_rules()
     __pre_req_approve()
+    __pre_req_warns()
     __pre_req_pins_chats()
     __pre_req_all_reporting_settings()
     __pre_req_group_blacklist()

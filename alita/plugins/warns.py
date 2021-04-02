@@ -39,9 +39,6 @@ from alita.utils.custom_filters import admin_filter, command, restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
-warn_db = Warns()
-warn_settings_db = WarnSettings()
-
 
 @Alita.on_message(
     command(["warn", "swarn", "dwarn"]) & restrict_filter,
@@ -86,8 +83,11 @@ async def warn(c: Alita, m: Message):
         await m.reply_text("This user is admin in this chat, I can't warn them!")
         return
 
-    _, num = warn_db.warn_user(m.chat.id, user_id, reason)
-    warn_settings = warn_settings_db.get_warnings_settings(m.chat.id)
+    warn_db = Warns(m.chat.id)
+    warn_settings_db = WarnSettings(m.chat.id)
+
+    _, num = warn_db.warn_user(user_id, reason)
+    warn_settings = warn_settings_db.get_warnings_settings()
     if num >= warn_settings["warn_limit"]:
         if warn_settings["warn_mode"] == "kick":
             await m.chat.kick_member(user_id, until_date=int(time() + 45))
@@ -182,7 +182,8 @@ async def reset_warn(c: Alita, m: Message):
         await m.reply_text("This user is admin in this chat, I can't warn them!")
         return
 
-    warn_db.reset_warns(m.chat.id, user_id)
+    warn_db = Warns(m.chat.id)
+    warn_db.reset_warns(user_id)
     await m.reply_text(
         f"Warnings have been reset for {(await mention_html(user_first_name,user_id))}",
     )
@@ -217,7 +218,8 @@ async def list_warns(c: Alita, m: Message):
         )
         return
 
-    warns, num_warns = warn_db.get_warns(m.chat.id, user_id)
+    warn_db = Warns(m.chat.id)
+    warns, num_warns = warn_db.get_warns(user_id)
     if not warns:
         await m.reply_text("This user has no warns!")
         return
@@ -263,12 +265,13 @@ async def remove_warn(c: Alita, m: Message):
         )
         return
 
-    warns, _ = warn_db.get_warns(m.chat.id, user_id)
+    warn_db = Warns(m.chat.id)
+    warns, _ = warn_db.get_warns(user_id)
     if not warns:
         await m.reply_text("This user has no warnings!")
         return
 
-    _, num_warns = warn_db.remove_warn(m.chat.id, user_id)
+    _, num_warns = warn_db.remove_warn(user_id)
     await m.reply_text(
         (
             f"{(await mention_html(user_first_name,user_id))} now has <b>{num_warns}</b> warnings!\n"
@@ -298,7 +301,8 @@ async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
     user_first_name = user["name"]
 
     if action == "remove":
-        _, num_warns = warn_db.remove_warn(chat_id, user_id)
+        warn_db = Warns(q.message.chat.id)
+        _, num_warns = warn_db.remove_warn(user_id)
         await q.message.edit_text(
             (
                 f"Admin {(await mention_html(q.from_user.first_name, q.from_user.id))} "
@@ -328,7 +332,8 @@ async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
 
 @Alita.on_message(command("warnings") & admin_filter)
 async def get_settings(_, m: Message):
-    settings = warn_settings_db.get_warnings_settings(m.chat.id)
+    warn_settings_db = WarnSettings(m.chat.id)
+    settings = warn_settings_db.get_warnings_settings()
     await m.reply_text(
         (
             "This group has these following settings:\n"
@@ -341,6 +346,7 @@ async def get_settings(_, m: Message):
 
 @Alita.on_message(command("warnmode") & admin_filter)
 async def warnmode(_, m: Message):
+    warn_settings_db = WarnSettings(m.chat.id)
     if len(m.text.split()) > 1:
         wm = (m.text.split(None, 1)[1]).lower()
         if wm not in ("kick", "ban", "mute"):
@@ -351,25 +357,26 @@ async def warnmode(_, m: Message):
                 ),
             )
             return
-        warnmode_var = warn_settings_db.set_warnmode(m.chat.id, wm)
+        warnmode_var = warn_settings_db.set_warnmode(wm)
         await m.reply_text(f"Warn Mode has been set to: {warnmode_var}")
         return
-    warnmode_var = warn_settings_db.get_warnmode(m.chat.id)
+    warnmode_var = warn_settings_db.get_warnmode()
     await m.reply_text(f"This chats current Warn Mode is: {warnmode_var}")
     return
 
 
 @Alita.on_message(command("warnlimit") & admin_filter)
 async def warnlimit(_, m: Message):
+    warn_settings_db = WarnSettings(m.chat.id)
     if len(m.text.split()) > 1:
         wl = int(m.text.split(None, 1)[1]).lower()
         if not isinstance(wl, int):
             await m.reply_text("Warn Limit can only be a number!")
             return
-        warnlimit_var = warn_settings_db.set_warnlimit(m.chat.id, wl)
+        warnlimit_var = warn_settings_db.set_warnlimit(wl)
         await m.reply_text(f"Warn Limit has been set to: {warnlimit_var}")
         return
-    warnlimit_var = warn_settings_db.get_warnlimit(m.chat.id)
+    warnlimit_var = warn_settings_db.get_warnlimit()
     await m.reply_text(f"This chats current Warn Limit is: {warnlimit_var}")
     return
 

@@ -86,7 +86,6 @@ class Rules:
     def __ensure_in_db(self):
         chat_data = self.collection.find_one({"_id": self.chat_id})
         if not chat_data:
-            chat_type = self.get_chat_type()
             new_data = {"_id": self.chat_id, "privrules": False, "rules": ""}
             self.collection.insert_one(new_data)
             LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
