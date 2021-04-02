@@ -232,7 +232,7 @@ async def rm_allbl_callback(_, q: CallbackQuery):
     user_id = q.data.split(".")[-2]
     name = q.data.split(".")[-1]
 
-    db = Blacklist(m.chat.id)
+    db = Blacklist(q.message.chat.id)
 
     user_status = (await q.message.chat.get_member(user_id)).status
     if user_status != "creator":

@@ -42,42 +42,48 @@ notes_db = Notes()
 
 async def gen_cmds_kb(m: Message or CallbackQuery):
     """Generate the keyboard for languages."""
+
     if isinstance(m, CallbackQuery):
         m = m.message
 
     cmds = sorted(list(HELP_COMMANDS.keys()))
-    kb = []
+    kb = [
+        InlineKeyboardButton(tlang(m, cmd), callback_data=f"get_mod.{cmd.lower()}")
+        for cmd in cmds
+    ]
 
-    while cmds:
-        if cmds:
-            cmd = cmds[0]
-            a = [
-                InlineKeyboardButton(
-                    tlang(m, cmd),
-                    callback_data=f"get_mod.{cmd.lower()}",
-                ),
-            ]
-            cmds.pop(0)
-        if cmds:
-            cmd = cmds[0]
-            a.append(
-                InlineKeyboardButton(
-                    tlang(m, cmd),
-                    callback_data=f"get_mod.{cmd.lower()}",
-                ),
-            )
-            cmds.pop(0)
-        if cmds:
-            cmd = cmds[0]
-            a.append(
-                InlineKeyboardButton(
-                    tlang(m, cmd),
-                    callback_data=f"get_mod.{cmd.lower()}",
-                ),
-            )
-            cmds.pop(0)
-        kb.append(a)
-    return kb
+    return [kb[i : i + 3] for i in range(0, len(kb), 3)]
+
+    # while cmds:
+    #     if cmds:
+    #         cmd = cmds[0]
+    #         a = [
+    #             InlineKeyboardButton(
+    #                 tlang(m, cmd),
+    #                 callback_data=f"get_mod.{cmd.lower()}",
+    #             ),
+    #         ]
+    #         cmds.pop(0)
+    #     if cmds:
+    #         cmd = cmds[0]
+    #         a.append(
+    #             InlineKeyboardButton(
+    #                 tlang(m, cmd),
+    #                 callback_data=f"get_mod.{cmd.lower()}",
+    #             ),
+    #         )
+    #         cmds.pop(0)
+    #     if cmds:
+    #         cmd = cmds[0]
+    #         a.append(
+    #             InlineKeyboardButton(
+    #                 tlang(m, cmd),
+    #                 callback_data=f"get_mod.{cmd.lower()}",
+    #             ),
+    #         )
+    #         cmds.pop(0)
+    #     kb.append(a)
+    # return kb
 
 
 async def gen_start_kb(q: Message or CallbackQuery):
@@ -240,7 +246,7 @@ async def get_private_rules(_, m: Message, help_option: str):
     return
 
 
-async def get_help_msg(m, help_option: str):
+async def get_help_msg(m: Message or CallbackQuery, help_option: str):
     """Helper function for getting help_msg and it's keyboard."""
 
     help_msg = None

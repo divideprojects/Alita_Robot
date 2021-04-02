@@ -210,7 +210,7 @@ strings:
         × /del: Deletes a single message, used as a reply to message.
 
         **Example:**
-        `/purge <as a reply to message>: this will delete all the messages till the one you replied.
+        `/purge <as a reply to message>`: this will delete all the messages till the one you replied.
     reporting:
       main: "Reporting"
       help: |-
