@@ -63,7 +63,7 @@ async def fun_slap(c: Alita, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
 
     curr_user = escape(m.from_user.first_name)
-    user_id = (await extract_user(c, m))[0]
+    user_id, _, _ = await extract_user(c, m)
 
     if user_id == me.id:
         temp = choice(fun_strings.SLAP_ALITA_TEMPLATES)

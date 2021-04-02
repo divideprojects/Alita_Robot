@@ -35,6 +35,7 @@ from alita import (
     PREFIX_HANDLER,
     SUDO_USERS,
     SUPPORT_GROUP,
+    SUPPORT_STAFF,
     WHITELIST_USERS,
 )
 from alita.bot_class import Alita
@@ -87,6 +88,27 @@ async def wiki(_, m: Message):
     return
 
 
+@Alita.on_message(command("gdpr"))
+async def gdpr_remove(_, m: Message):
+
+    if m.from_user.id in SUPPORT_STAFF:
+        await m.reply_text(
+            "You're in my support staff, I cannot do that unless you are no longer a part of it!",
+        )
+        return
+
+    Users(m.from_user.id).delete_user()
+    await m.reply_text(
+        "Your personal data has been deleted.\n"
+        "Note that this will not unban you from any chats, as that is telegram data, not Alita data."
+        " Flooding, warns, and gbans are also preserved, as of "
+        "[this](https://ico.org.uk/for-organisations/guide-to-the-general-data-protection-regulation-gdpr/individual-rights/right-to-erasure/),"
+        " which clearly states that the right to erasure does not apply 'for the performance of a task carried out in the public interest', "
+        "as is the case for the aforementioned pieces of data.",
+    )
+    return
+
+
 @Alita.on_message(
     command("lyrics") & (filters.group | filters.private),
 )
@@ -134,7 +156,7 @@ async def id_info(c: Alita, m: Message):
         await m.reply_text((tlang(m, "utils.id.my_id")).format(my_id=m.chat.id))
         return
 
-    user_id = (await extract_user(c, m))[0]
+    user_id, _, _ = await extract_user(c, m)
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
             user1 = m.reply_to_m.from_user

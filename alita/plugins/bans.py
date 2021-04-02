@@ -51,10 +51,14 @@ async def kick_usr(c: Alita, m: Message):
         r_id = m.reply_to_message.message_id
         if len(m.text.split()) >= 2:
             reason = m.text.split(None, 1)[1]
+        else:
+            reason = None
     elif not m.reply_to_message:
         r_id = m.message_id
         if len(m.text.split()) >= 3:
             reason = m.text.split(None, 2)[2]
+        else:
+            reason = None
     else:
         r_id = m.message_id
         reason = None
@@ -86,6 +90,8 @@ async def kick_usr(c: Alita, m: Message):
         await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
         if m.text.split()[0] == "/skick":
             await m.delete()
+            if m.reply_to_message:
+                await m.reply_to_message.delete()
             await m.stop_propagation()
         if m.text.split()[0] == "/dkick":
             if not m.reply_to_message:
@@ -170,6 +176,8 @@ async def ban_usr(c: Alita, m: Message):
         await c.kick_chat_member(m.chat.id, user_id)
         if m.text.split()[0] == "/sban":
             await m.delete()
+            if m.reply_to_message:
+                await m.reply_to_message.delete()
             await m.stop_propagation()
         if m.text.split()[0] == "/dban":
             if not m.reply_to_message:
