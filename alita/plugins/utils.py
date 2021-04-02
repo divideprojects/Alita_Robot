@@ -106,7 +106,7 @@ async def gdpr_remove(_, m: Message):
         " which clearly states that the right to erasure does not apply 'for the performance of a task carried out in the public interest', "
         "as is the case for the aforementioned pieces of data.",
     )
-    return
+    await m.stop_propagation()
 
 
 @Alita.on_message(
