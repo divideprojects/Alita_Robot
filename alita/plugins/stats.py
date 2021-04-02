@@ -16,10 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram.filters import reply_filter
 from pyrogram.types import Message
-
-from alita import DEV_PREFIX_HANDLER
 from alita.bot_class import Alita
 from alita.database import db
 from alita.database.antispam_db import GBan
