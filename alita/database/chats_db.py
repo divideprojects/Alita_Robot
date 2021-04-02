@@ -46,14 +46,16 @@ class Chats:
                 user_id,
             ):
                 return True
-            elif chat_name != self.chat_info["chat_name"] and self.user_is_in_chat(
+
+            if chat_name != self.chat_info["chat_name"] and self.user_is_in_chat(
                 user_id,
             ):
                 return self.collection.update(
                     {"_id": self.chat_id},
                     {"chat_name": chat_name},
                 )
-            elif chat_name == self.chat_info["chat_name"] and not self.user_is_in_chat(
+
+            if chat_name == self.chat_info["chat_name"] and not self.user_is_in_chat(
                 user_id,
             ):
                 self.chat_info["users"].append(user_id)
@@ -61,18 +63,18 @@ class Chats:
                     {"_id": self.chat_id},
                     {"users": self.chat_info["users"]},
                 )
-            else:
-                users_old = self.chat_info["users"]
-                users_old.append(user_id)
-                users = list(set(users_old))
-                return self.collection.update(
-                    {"_id": self.chat_id},
-                    {
-                        "_id": self.chat_id,
-                        "chat_name": chat_name,
-                        "users": users,
-                    },
-                )
+
+            users_old = self.chat_info["users"]
+            users_old.append(user_id)
+            users = list(set(users_old))
+            return self.collection.update(
+                {"_id": self.chat_id},
+                {
+                    "_id": self.chat_id,
+                    "chat_name": chat_name,
+                    "users": users,
+                },
+            )
 
     def count_chat_users(self):
         with INSERTION_LOCK:
