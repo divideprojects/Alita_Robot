@@ -59,8 +59,7 @@ def command(
             for arg in split(matches.group(4).strip()):
                 m.command.append(arg)
             return True
-        else:
-            return False
+        return False
 
     commands = commands if type(commands) is list else [commands]
     commands = {c if case_sensitive else c.lower() for c in commands}
@@ -107,8 +106,7 @@ def dev_command(
             for arg in split(matches.group(4).strip()):
                 m.command.append(arg)
             return True
-        else:
-            return False
+        return False
 
     commands = commands if type(commands) is list else [commands]
     commands = {c if case_sensitive else c.lower() for c in commands}
@@ -155,8 +153,7 @@ def sudo_command(
             for arg in split(matches.group(4).strip()):
                 m.command.append(arg)
             return True
-        else:
-            return False
+        return False
 
     commands = commands if type(commands) is list else [commands]
     commands = {c if case_sensitive else c.lower() for c in commands}
