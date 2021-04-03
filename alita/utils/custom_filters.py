@@ -77,7 +77,7 @@ def command(
 
 def dev_command(
     commands: str or List[str],
-    prefixes: str or List[str] = DEV_PREFIX_HANDLER + PREFIX_HANDLER,
+    prefixes: str or List[str] = [DEV_PREFIX_HANDLER] + PREFIX_HANDLER,
     case_sensitive: bool = False,
 ):
     from alita import BOT_USERNAME
@@ -124,7 +124,7 @@ def dev_command(
 
 def sudo_command(
     commands: str or List[str],
-    prefixes: str or List[str] = DEV_PREFIX_HANDLER + PREFIX_HANDLER,
+    prefixes: str or List[str] = [DEV_PREFIX_HANDLER] + PREFIX_HANDLER,
     case_sensitive: bool = False,
 ):
     from alita import BOT_USERNAME
