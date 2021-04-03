@@ -18,13 +18,11 @@
 
 from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
 from pyrogram.filters import regex
-from pyrogram.types import Message
-from pyrogram.types.bots_and_keyboards.callback_query import CallbackQuery
-from pyrogram.types.bots_and_keyboards.inline_keyboard_button import (
+from pyrogram.types import (
+    CallbackQuery,
     InlineKeyboardButton,
-)
-from pyrogram.types.bots_and_keyboards.inline_keyboard_markup import (
     InlineKeyboardMarkup,
+    Message,
 )
 
 from alita import LOGGER, SUPPORT_GROUP
