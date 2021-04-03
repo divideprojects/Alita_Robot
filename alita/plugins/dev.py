@@ -361,7 +361,7 @@ async def chat_broadcast(c: Alita, m: Message):
 
     for chat in all_chats:
         try:
-            await c.send_message(chat, msg)
+            await c.send_message(chat, msg, disable_web_page_preview=True)
             done_broadcast += 1
         except RPCError as ef:
             LOGGER.error(ef)
