@@ -363,12 +363,16 @@ async def chat_broadcast(c: Alita, m: Message):
         try:
             await c.send_message(chat, msg, disable_web_page_preview=True)
             done_broadcast += 1
+            await sleep(0.1)
         except RPCError as ef:
             LOGGER.error(ef)
             err_str += str(ef)
             continue
 
-    await exmsg.edit_text("Done broadcasting ✅\nSent message to {} chats")
+    await exmsg.edit_text(
+        f"Done broadcasting ✅\nSent message to {done_broadcast} chats",
+    )
+
     if err_str:
         with BytesIO(str.encode(await remove_markdown_and_html(err_str))) as f:
             f.name = "error_broadcast.txt"
