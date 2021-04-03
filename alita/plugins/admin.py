@@ -133,7 +133,7 @@ async def reload_admins(_, m: Message):
     return
 
 
-@Alita.on_message(filters.regex(r"(?i)@admin(s)?") & filters.group)
+@Alita.on_message(filters.regex(r"^(?i)@admin(s)?") & filters.group)
 async def tag_admins(_, m: Message):
 
     try:
