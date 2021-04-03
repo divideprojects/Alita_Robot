@@ -86,20 +86,21 @@ async def extract_user(c: Alita, m: Message) -> Tuple[int, str, str]:
                 if "invalid literal for int() with base 10:" in str(ef):
                     user_id = str(m.text.split()[1])
                 else:
-                    user_id = m.text.split()[1]
+                    user_id = m.text.split()[1] if user_id.startwith("@") else None
                     LOGGER.error(ef)
                     LOGGER.error(format_exc())
-            try:
-                user = Users.get_user_info(user_id)
-                user_first_name = user["name"]
-                user_name = user["username"]
-            except Exception as ef:
-                user_id = m.text.split()[1]
-                user = await c.get_users(user_id)
-                user_first_name = user.first_name
-                user_name = user.username
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
+
+            if user_id is not None:
+                try:
+                    user = Users.get_user_info(user_id)
+                    user_first_name = user["name"]
+                    user_name = user["username"]
+                except Exception as ef:
+                    user = await c.get_users(user_id)
+                    user_first_name = user.first_name
+                    user_name = user.username
+                    LOGGER.error(ef)
+                    LOGGER.error(format_exc())
 
     else:
         user_id = m.from_user.id
