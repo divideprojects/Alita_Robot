@@ -53,7 +53,7 @@ class Warns:
         with INSERTION_LOCK:
             self.user_info = self.__ensure_in_db(user_id)
             warns = self.user_info["warns"] + [warn_reason]
-            num_warns = len(self.user_info["warns"])
+            num_warns = len(warns)
             self.collection.update(
                 {"chat_id": self.chat_id, "user_id": user_id},
                 {"warns": warns, "num_warns": num_warns},
