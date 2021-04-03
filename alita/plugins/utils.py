@@ -114,8 +114,13 @@ async def gdpr_remove(_, m: Message):
     command("lyrics") & (filters.group | filters.private),
 )
 async def get_lyrics(_, m: Message):
-    LOGGER.info(f"{m.from_user.id} used lyrics cmd in {m.chat.id}")
+
+    if len(m.text.split()) <= 1:
+        await m.reply_text(tlang(m, "general.check_help"))
+        return
+
     query = m.text.split(None, 1)[1]
+    LOGGER.info(f"{m.from_user.id} used lyrics cmd in {m.chat.id}")
     song = ""
     if not query:
         await m.edit_text(tlang(m, "utils.song.no_song_given"))
