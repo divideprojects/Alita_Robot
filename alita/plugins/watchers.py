@@ -178,7 +178,7 @@ async def bl_watcher(_, m: Message):
     try:
         admin_ids = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
-        admin_ids = await admin_cache_reload(m, "blacklistwatcher")
+        admin_ids = await admin_cache_reload(m, "blacklist_watcher")
 
     if m.from_user.id in admin_ids:
         return
