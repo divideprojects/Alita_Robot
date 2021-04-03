@@ -409,7 +409,7 @@ async def clear_allnote(_, m: Message):
                 [
                     InlineKeyboardButton(
                         "⚠️ Confirm",
-                        callback_data=f"clear_notes.{m.from_user.id}.{m.from_user.first_name}",
+                        callback_data="clear_notes",
                     ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
                 ],
@@ -419,10 +419,10 @@ async def clear_allnote(_, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^clear_notes."))
+@Alita.on_callback_query(filters.regex("^clear_notes$"))
 async def clearallnotes_callback(_, q: CallbackQuery):
-    user_id = q.data.split(".")[-2]
-    name = q.data.split(".")[-1]
+    user_id = q.from_user.id
+    name = q.from_user.first_name
     user_status = (await q.message.chat.get_member(user_id)).status
     if user_status != "creator":
         await q.message.edit(

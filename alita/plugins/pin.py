@@ -30,6 +30,7 @@ from alita.bot_class import Alita
 from alita.database.pins_db import Pins
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, command
+from alita.utils.parser import mention_html
 
 
 @Alita.on_message(command("pin") & admin_filter)
@@ -123,6 +124,17 @@ async def unpinall_message(_, m: Message):
 
 @Alita.on_callback_query(regex("^unpin_all_in_this_chat$"))
 async def unpinall_calllback(c: Alita, q: CallbackQuery):
+    user_id = q.from_user.id
+    name = q.from_user.first_name
+    user_status = (await q.message.chat.get_member(user_id)).status
+    if user_status != "creator":
+        await q.message.edit(
+            (
+                f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
+                "Stay in your limits!"
+            ),
+        )
+        return
     try:
         await c.unpin_all_chat_messages(q.message.chat.id)
         LOGGER.info(f"{q.from_user.id} unpinned all messages in {q.message.chat.id}")
