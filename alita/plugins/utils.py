@@ -105,6 +105,7 @@ async def gdpr_remove(_, m: Message):
         "[this](https://ico.org.uk/for-organisations/guide-to-the-general-data-protection-regulation-gdpr/individual-rights/right-to-erasure/),"
         " which clearly states that the right to erasure does not apply 'for the performance of a task carried out in the public interest', "
         "as is the case for the aforementioned pieces of data.",
+        disable_web_page_preview=True,
     )
     await m.stop_propagation()
 
