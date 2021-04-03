@@ -64,7 +64,7 @@ async def kick_usr(c: Alita, m: Message):
     user_id, user_first_name, _ = await extract_user(c, m)
 
     if not user_id:
-        await m.reply_text("Cannot find user to ban")
+        await m.reply_text("Cannot find user to kick")
         return
 
     if user_id == BOT_ID:
