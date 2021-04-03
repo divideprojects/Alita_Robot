@@ -17,7 +17,15 @@
 
 
 from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
+from pyrogram.filters import regex
 from pyrogram.types import Message
+from pyrogram.types.bots_and_keyboards.callback_query import CallbackQuery
+from pyrogram.types.bots_and_keyboards.inline_keyboard_button import (
+    InlineKeyboardButton,
+)
+from pyrogram.types.bots_and_keyboards.inline_keyboard_markup import (
+    InlineKeyboardMarkup,
+)
 
 from alita import LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
@@ -99,25 +107,40 @@ async def unpin_message(c: Alita, m: Message):
 
 
 @Alita.on_message(command("unpinall") & admin_filter)
-async def unpinall_message(c: Alita, m: Message):
+async def unpinall_message(_, m: Message):
 
+    await m.reply_text(
+        "Do you really want to unpin all messages in this chat?",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton("Yes", callback_data="unpin_all_in_this_chat"),
+                    InlineKeyboardButton("No", callback_data="close"),
+                ],
+            ],
+        ),
+    )
+    return
+
+
+@Alita.on_callback_query(regex("^unpin_all_in_this_chat$"))
+async def unpinall_calllback(c: Alita, q: CallbackQuery):
     try:
-        await c.unpin_all_chat_messages(m.chat.id)
-        LOGGER.info(f"{m.from_user.id} unpinned all messages in {m.chat.id}")
-        await m.reply_text(tlang(m, "pin.unpinned_all_msg"))
+        await c.unpin_all_chat_messages(q.message.chat.id)
+        LOGGER.info(f"{q.from_user.id} unpinned all messages in {q.message.chat.id}")
+        await q.message.edit_text(tlang(q, "pin.unpinned_all_msg"))
     except ChatAdminRequired:
-        await m.reply_text(tlang(m, "admin.notadmin"))
+        await q.message.edit_text(tlang(q, "admin.notadmin"))
     except RightForbidden:
-        await m.reply_text(tlang(m, "pin.no_rights_unpin"))
+        await q.message.edit_text(tlang(q, "pin.no_rights_unpin"))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
+        await q.message.edit_text(
+            (tlang(q, "general.some_error")).format(
                 SUPPORT_GROUP=SUPPORT_GROUP,
                 ef=ef,
             ),
         )
         LOGGER.error(ef)
-
     return
 
 
