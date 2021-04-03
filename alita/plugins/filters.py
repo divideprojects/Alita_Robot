@@ -192,7 +192,6 @@ async def stop_filter(_, m: Message):
 @Alita.on_message(
     command(
         ["rmallfilters", "removeallfilters", "stopall", "stopallfilters"],
-        PREFIX_HANDLER,
     )
     & owner_filter,
 )

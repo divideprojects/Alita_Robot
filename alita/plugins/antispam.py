@@ -23,14 +23,7 @@ from traceback import format_exc
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, UserIsBlocked
 from pyrogram.types import Message
 
-from alita import (
-    BOT_ID,
-    LOGGER,
-    MESSAGE_DUMP,
-    PREFIX_HANDLER,
-    SUPPORT_GROUP,
-    SUPPORT_STAFF,
-)
+from alita import BOT_ID, LOGGER, MESSAGE_DUMP, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
 from alita.database.users_db import Users
@@ -166,10 +159,7 @@ async def ungban(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    sudo_command(
-        ["numgbans", "countgbans", "gbancount", "gbanscount"],
-        PREFIX_HANDLER,
-    ),
+    sudo_command(["numgbans", "countgbans", "gbancount", "gbanscount"]),
 )
 async def gban_count(_, m: Message):
     await m.reply_text(
