@@ -182,7 +182,7 @@ async def check_approved(_, m: Message):
     return
 
 
-@Alita.on_message(command("approval") & admin_filter)
+@Alita.on_message(command("approval") & filters.group)
 async def check_approval(c: Alita, m: Message):
 
     db = Approve(m.chat.id)
