@@ -38,8 +38,7 @@ class Approve:
 
     def check_approve(self, user_id: int):
         with INSERTION_LOCK:
-            chat_approved = self.chat_info["users"].keys()
-            return bool(user_id in chat_approved)
+            return bool(user_id in self.chat_info["users"])
 
     def add_approve(self, user_id: int, user_name: str):
         with INSERTION_LOCK:
