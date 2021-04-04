@@ -327,7 +327,7 @@ strings:
       You can format your message using **bold**, __italics__, --underline--, and much more. Go ahead and experiment!
 
       <b>Supported markdown</b>:
-      - <code>code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
+      - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
       - <code>__italic words__</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
       - <code>**bold words**</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
       - <code>~~strikethrough~~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
