@@ -165,8 +165,8 @@ async def id_info(c: Alita, m: Message):
     user_id, _, _ = await extract_user(c, m)
     if user_id:
         if m.reply_to_message and m.reply_to_message.forward_from:
-            user1 = m.reply_to_m.from_user
-            user2 = m.reply_to_m.forward_from
+            user1 = m.reply_to_message.from_user
+            user2 = m.reply_to_message.forward_from
             await m.reply_text(
                 (tlang(m, "utils.id.id_main")).format(
                     orig_sender=(await mention_html(user2.first_name, user2.id)),
