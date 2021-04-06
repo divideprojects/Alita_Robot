@@ -108,7 +108,8 @@ class Blacklist:
     def count_action_bl_all(action: str):
         with INSERTION_LOCK:
             collection = MongoDB(Blacklist.db_name)
-            return collection.count({"action": action})
+            all_data = collection.find_all({"action": action})
+            return sum([1 for i in all_data if len(i["triggers"]) >= 1])
 
     def rm_all_blacklist(self):
         with INSERTION_LOCK:
