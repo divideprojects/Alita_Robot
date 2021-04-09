@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from secrets import choice
 from traceback import format_exc
 
 from pyrogram.errors import RPCError
@@ -34,7 +35,11 @@ from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
 from alita.utils.cmd_senders import send_cmd
 from alita.utils.msg_types import Types
-from alita.utils.string import build_keyboard, parse_button
+from alita.utils.string import (
+    build_keyboard,
+    escape_mentions_using_curly_brackets,
+    parse_button,
+)
 
 # Initialize
 notes_db = Notes()
@@ -161,8 +166,28 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
         )
         return
 
+    try:
+        # support for random notes texts
+        splitter = "%%%"
+        note_reply = getnotes["note_value"].split(splitter)
+        note_reply = choice(note_reply)
+    except KeyError:
+        note_reply = ""
+
+    parse_words = [
+        "first",
+        "last",
+        "fullname",
+        "username",
+        "id",
+        "chatname",
+        "mention",
+    ]
+    text = await escape_mentions_using_curly_brackets(m, note_reply, parse_words)
+
     if msgtype == Types.TEXT:
-        teks, button = await parse_button(getnotes["note_value"])
+
+        teks, button = await parse_button(text)
         button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
         if button:
