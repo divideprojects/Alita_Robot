@@ -194,6 +194,7 @@ async def promote_usr(c: Alita, m: Message):
             can_invite_users=True,
             can_pin_messages=True,
             can_manage_voice_chats=False,
+            can_manage_chat=True,
         )
         LOGGER.info(f"{m.from_user.id} promoted {user_id} in {m.chat.id}")
 
@@ -277,12 +278,7 @@ async def demote_usr(c: Alita, m: Message):
     try:
         await m.chat.promote_member(
             user_id=user_id,
-            can_change_info=False,
-            can_delete_messages=False,
-            can_restrict_members=False,
-            can_invite_users=False,
-            can_pin_messages=False,
-            can_manage_voice_chats=False,
+            can_manage_chat=False
         )
         LOGGER.info(f"{m.from_user.id} demoted {user_id} in {m.chat.id}")
 
