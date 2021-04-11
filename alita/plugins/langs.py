@@ -90,6 +90,10 @@ async def chlang_callback(_, q: CallbackQuery):
 @Alita.on_callback_query(filters.regex("^close$"), group=3)
 async def close_btn_callback(_, q: CallbackQuery):
     await q.message.delete()
+    try:
+        await q.message.reply_to_message.delete()
+    except Exception as ef:
+        LOGGER.error(f"Error: Cannot delete message\n{ef}")
     await q.answer()
     return
 

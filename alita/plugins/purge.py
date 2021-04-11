@@ -37,12 +37,12 @@ async def purge(c: Alita, m: Message):
     if m.reply_to_message:
         message_ids = list(range(m.reply_to_message.message_id, m.message_id))
 
-        def divide_chunks(l, n):
+        def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
                 yield l[i : i + n]
 
         # Dielete messages in chunks of 100 messages
-        m_list = list(divide_chunks(message_ids, 100))
+        m_list = list(divide_chunks(message_ids))
 
         try:
             for plist in m_list:

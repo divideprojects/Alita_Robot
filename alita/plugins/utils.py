@@ -125,6 +125,7 @@ async def get_lyrics(_, m: Message):
     if not query:
         await m.edit_text(tlang(m, "utils.song.no_song_given"))
         return
+
     em = await m.reply_text(
         (tlang(m, "utils.song.searching").format(song_name=query)),
     )
