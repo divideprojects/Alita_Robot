@@ -38,6 +38,7 @@ from alita.utils.msg_types import Types, get_filter_type
 from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
 from alita.utils.string import (
+    build_keyboard,
     escape_mentions_using_curly_brackets,
     parse_button,
     split_quotes,
@@ -66,7 +67,7 @@ async def view_filters(_, m: Message):
             for i in all_filters
         ],
     )
-    await m.reply_text(filters_chat)
+    await m.reply_text(filters_chat, disable_web_page_preview=True)
     return
 
 
@@ -209,7 +210,7 @@ async def rm_allfilters(_, m: Message):
                 [
                     InlineKeyboardButton(
                         "⚠️ Confirm",
-                        callback_data=f"rm_allfilters.{m.from_user.id}.{m.from_user.first_name}",
+                        callback_data=f"rm_allfilters",
                     ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
                 ],
@@ -219,10 +220,10 @@ async def rm_allfilters(_, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^rm_allfilters."))
+@Alita.on_callback_query(filters.regex("^rm_allfilters$"))
 async def rm_allfilters_callback(_, q: CallbackQuery):
-    user_id = q.data.split(".")[-2]
-    name = q.data.split(".")[-1]
+    user_id = q.from_user.id
+    name = q.from_user.first_name
     user_status = (await q.message.chat.get_member(user_id)).status
     if user_status != "creator":
         await q.message.edit(
@@ -233,7 +234,7 @@ async def rm_allfilters_callback(_, q: CallbackQuery):
         )
         return
     db.rm_all_filters(q.message.chat.id)
-    await q.message.edit_text("Cleared all filters for {q.message.chat.id}")
+    await q.message.edit_text(f"Cleared all filters for {q.message.chat.id}")
     LOGGER.info(f"{user_id} removed all filter from {q.message.chat.id}")
     await q.answer("Cleared all Filters!", show_alert=True)
     return
@@ -275,7 +276,29 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
     text = await escape_mentions_using_curly_brackets(m, filter_reply, parse_words)
 
     if msgtype == Types.TEXT:
-        await m.reply_text(text, quote=True)
+        teks, button = await parse_button(text)
+        button = await build_keyboard(button)
+        button = InlineKeyboardMarkup(button) if button else None
+        if button:
+            try:
+                await m.reply_text(
+                    teks,
+                    reply_markup=button,
+                    disable_web_page_preview=True,
+                    quote=True,
+                )
+                return
+            except RPCError as ef:
+                await m.reply_text(
+                    "An error has occured! Cannot parse note.",
+                    quote=True,
+                )
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+                return
+        else:
+            await m.reply_text(teks, quote=True, disable_web_page_preview=True)
+            return
 
     elif msgtype in (
         Types.STICKER,

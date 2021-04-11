@@ -87,7 +87,7 @@ async def chlang_callback(_, q: CallbackQuery):
     return
 
 
-@Alita.on_callback_query(filters.regex("^close$"))
+@Alita.on_callback_query(filters.regex("^close$"), group=3)
 async def close_btn_callback(_, q: CallbackQuery):
     await q.message.delete()
     await q.answer()

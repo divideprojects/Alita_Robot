@@ -31,6 +31,7 @@ from alita.database.pins_db import Pins
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, command
 from alita.utils.parser import mention_html
+from alita.utils.string import build_keyboard, parse_button
 
 
 @Alita.on_message(command("pin") & admin_filter)
@@ -50,11 +51,16 @@ async def pin_message(_, m: Message):
             LOGGER.info(
                 f"{m.from_user.id} pinned msgid-{m.reply_to_message.message_id} in {m.chat.id}",
             )
-            if (str(m.chat.id)).startswith("-100"):
+            if m.chat.username:
+                link_chat_id = m.chat.username
+                message_link = (
+                    f"https://t.me/{link_chat_id}/{m.reply_to_message.message_id}"
+                )
+            elif (str(m.chat.id)).startswith("-100"):
                 link_chat_id = (str(m.chat.id)).replace("-100", "")
-            message_link = (
-                f"https://t.me/c/{link_chat_id}/{m.reply_to_message.message_id}"
-            )
+                message_link = (
+                    f"https://t.me/c/{link_chat_id}/{m.reply_to_message.message_id}"
+                )
             await m.reply_text(
                 tlang(m, "pin.pinned_msg").format(message_link=message_link),
             )
@@ -218,16 +224,20 @@ async def clean_linked(_, m: Message):
 
 @Alita.on_message(command("permapin") & admin_filter)
 async def perma_pin(_, m: Message):
-    if m.reply_to_message:
+    if m.reply_to_message or len(m.text.split()) > 1:
         LOGGER.info(f"{m.from_user.id} used permampin in {m.chat.id}")
-        z = await m.reply_to_message.copy(m.chat.id)
-        await z.pin()
-    elif len(m.text.split()) > 1:
-        z = await m.reply_text(m.text.split(None, 1)[1])
+        if m.reply_to_message:
+            text = m.reply_to_message.text
+        elif len(m.text.split()) > 1:
+            text = m.text.split()[1]
+        teks, button = await parse_button(text)
+        button = await build_keyboard(button)
+        button = InlineKeyboardMarkup(button) if button else None
+        z = await m.reply_text(teks, reply_markup=button)
         await z.pin()
     else:
         await m.reply_text("Reply to a message or enter text to pin it.")
-
+    await m.delete()
     return
 
 

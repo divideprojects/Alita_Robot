@@ -217,7 +217,7 @@ async def rm_allblacklist(_, m: Message):
                 [
                     InlineKeyboardButton(
                         "⚠️ Confirm",
-                        callback_data=f"rm_allbl.{m.from_user.id}.{m.from_user.first_name}",
+                        callback_data=f"rm_allblacklist",
                     ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
                 ],
@@ -227,10 +227,10 @@ async def rm_allblacklist(_, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^rm_allbl."))
+@Alita.on_callback_query(filters.regex("^rm_allblacklist$"))
 async def rm_allbl_callback(_, q: CallbackQuery):
-    user_id = q.data.split(".")[-2]
-    name = q.data.split(".")[-1]
+    user_id = q.from_user.id
+    name = q.from_user.first_name
 
     db = Blacklist(q.message.chat.id)
 

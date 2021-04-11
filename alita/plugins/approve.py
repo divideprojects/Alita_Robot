@@ -226,7 +226,7 @@ async def unapproveall_users(_, m: Message):
                 [
                     InlineKeyboardButton(
                         "⚠️ Confirm",
-                        callback_data=f"unapprove_all.{m.from_user.id}.{m.from_user.first_name}",
+                        callback_data=f"unapprove_all",
                     ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close"),
                 ],
@@ -236,13 +236,11 @@ async def unapproveall_users(_, m: Message):
     return
 
 
-@Alita.on_callback_query(filters.regex("^unapprove_all."))
+@Alita.on_callback_query(filters.regex("^unapprove_all$"))
 async def unapproveall_callback(_, q: CallbackQuery):
-    user_id = q.data.split(".")[-2]
-    name = q.data.split(".")[-1]
-
+    user_id = q.from_user.id
+    name = q.from_user.first_name
     db = Approve(q.message.chat.id)
-
     approved_people = db.list_approved()
     user_status = (await q.message.chat.get_member(user_id)).status
     if user_status != "creator":

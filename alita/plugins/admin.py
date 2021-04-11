@@ -276,10 +276,7 @@ async def demote_usr(c: Alita, m: Message):
         return
 
     try:
-        await m.chat.promote_member(
-            user_id=user_id,
-            can_manage_chat=False
-        )
+        await m.chat.promote_member(user_id=user_id, can_manage_chat=False)
         LOGGER.info(f"{m.from_user.id} demoted {user_id} in {m.chat.id}")
 
         # ----- Remove admin from cache -----
