@@ -48,7 +48,7 @@ async def extract_time(m: Message, time_val: str):
             return ""
         return bantime
     await m.reply(
-        "Invalid time type specified. Needed m, h, or s. got: {}".format(time_val[-1]),
+        f"Invalid time type specified. Needed m, h, or s. got: {time_val[-1]}",
     )
     return ""
 

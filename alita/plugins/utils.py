@@ -435,7 +435,7 @@ async def translate(_, m: Message):
         try:
             tekstr = await trl(text, targetlang=target_lang)
         except ValueError as err:
-            await m.reply_text("Error: <code>{}</code>".format(str(err)))
+            await m.reply_text(f"Error: <code>{str(err)}</code>")
             return
 
     await m.reply_text(
