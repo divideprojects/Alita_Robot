@@ -170,7 +170,7 @@ async def anti_channel_pin(_, m: Message):
     pinsdb = Pins(m.chat.id)
 
     if len(m.text.split()) == 1:
-        status = pinsdb.get_settings["antichannelpin"]
+        status = pinsdb.get_settings()["antichannelpin"]
         await m.reply_text(
             tlang(m, "pin.antichannelpin.current_status").format(
                 status=status,
@@ -201,7 +201,7 @@ async def clean_linked(_, m: Message):
     pinsdb = Pins(m.chat.id)
 
     if len(m.text.split()) == 1:
-        status = pinsdb.get_settings["cleanlinked"]
+        status = pinsdb.get_settings()["cleanlinked"]
         await m.reply_text(
             tlang(m, "pin.antichannelpin.current_status").format(
                 status=status,
