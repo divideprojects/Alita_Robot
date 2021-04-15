@@ -35,6 +35,7 @@ from alita.utils.custom_filters import admin_filter, command
 async def get_rules(_, m: Message):
 
     db = Rules(m.chat.id)
+    msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
 
     rules = db.get_rules()
     LOGGER.info(f"{m.from_user.id} fetched rules in {m.chat.id}")
@@ -65,6 +66,7 @@ async def get_rules(_, m: Message):
             (tlang(m, "rules.pm_me")),
             quote=True,
             reply_markup=pm_kb,
+            reply_to_message_id=msg_id,
         )
         return
 
@@ -74,6 +76,7 @@ async def get_rules(_, m: Message):
             rules=rules,
         ),
         disable_web_page_preview=True,
+        reply_to_message_id=msg_id,
     )
     return
 

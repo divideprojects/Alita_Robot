@@ -196,20 +196,30 @@ async def promote_usr(c: Alita, m: Message):
             can_manage_voice_chats=False,
             can_manage_chat=True,
         )
-        LOGGER.info(f"{m.from_user.id} promoted {user_id} in {m.chat.id}")
+
+        title = "admin"  # Deafult title
+        if len(m.text.split()) == 3 and not m.reply_to_message:
+            title = m.text.split()[2]
+        elif len(m.text.split()) == 2 and m.reply_to_message:
+            title = m.text.split()[1]
+        if len(title) > 16:
+            title = title[0:15]  # trim title to 15 characters
+
+        await c.set_administrator_title(m.chat.id, user_id, title)
+
+        LOGGER.info(
+            f"{m.from_user.id} promoted {user_id} in {m.chat.id} with title '{title}'"
+        )
 
         await m.reply_text(
             (tlang(m, "admin.promote.promoted_user")).format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
-                chat_title=m.chat.title,
+                chat_title=m.chat.title + f"\nTitle set to {title}"
+                if title != "admin"
+                else "",
             ),
         )
-
-        if len(m.text.split()) == 3 and not m.reply_to_message:
-            await c.set_administrator_title(m.chat.id, user_id, m.text.split()[2])
-        elif len(m.text.split()) == 2 and m.reply_to_message:
-            await c.set_administrator_title(m.chat.id, user_id, m.text.split()[1])
 
         # If user is approved, disapprove them as they willbe promoted and get even more rights
         if Approve(m.chat.id).check_approve(user_id):
