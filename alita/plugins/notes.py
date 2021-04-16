@@ -370,7 +370,7 @@ async def local_notes(_, m: Message):
 
     rply = f"Notes in <b>{m.chat.title}</b>:\n"
     for x in getnotes:
-        rply += f"- <code>{x[0]}</code>\n"
+        rply += f"- <code>#{x[0]}</code>\n"
 
     await m.reply_text(rply, reply_to_message_id=msg_id)
     return
