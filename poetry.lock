@@ -298,15 +298,15 @@ license = ["editdistance-s"]
 
 [[package]]
 name = "idna"
-version = "3.1"
+version = "2.10"
 description = "Internationalized Domain Names in Applications (IDNA)"
 category = "main"
 optional = false
-python-versions = ">=3.4"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "importlib-metadata"
-version = "3.10.0"
+version = "3.10.1"
 description = "Read metadata from Python packages"
 category = "dev"
 optional = false
@@ -536,14 +536,20 @@ python-versions = "*"
 
 [[package]]
 name = "requests"
-version = "2.15.1"
+version = "2.25.1"
 description = "Python HTTP for Humans."
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[package.dependencies]
+certifi = ">=2017.4.17"
+chardet = ">=3.0.2,<5"
+idna = ">=2.5,<3"
+urllib3 = ">=1.21.1,<1.27"
 
 [package.extras]
-security = ["cryptography (>=1.3.4)", "idna (>=2.0.0)", "pyOpenSSL (>=0.14)"]
+security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
@@ -646,6 +652,19 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "urllib3"
+version = "1.26.4"
+description = "HTTP library with thread-safe connection pooling, file post, and more."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
+
+[package.extras]
+secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
+socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
+brotli = ["brotlipy (>=0.6.0)"]
+
+[[package]]
 name = "uvloop"
 version = "0.15.2"
 description = "Fast implementation of asyncio event loop on top of libuv"
@@ -725,7 +744,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "5e374e28ff6030ed847cb676ab1af9ce993342d6bb6a26f6ef0cbfc635abacd7"
+content-hash = "60dc2f7ff66b666fda837516eb922c81c40a6ab0eeaecd88b5195229609b1b65"
 
 [metadata.files]
 aiodns = [
@@ -935,12 +954,12 @@ identify = [
     {file = "identify-2.2.3.tar.gz", hash = "sha256:4537474817e0bbb8cea3e5b7504b7de6d44e3f169a90846cbc6adb0fc8294502"},
 ]
 idna = [
-    {file = "idna-3.1-py3-none-any.whl", hash = "sha256:5205d03e7bcbb919cc9c19885f9920d622ca52448306f2377daede5cf3faac16"},
-    {file = "idna-3.1.tar.gz", hash = "sha256:c5b02147e01ea9920e6b0a3f1f7bb833612d507592c837a6c49552768f4054e1"},
+    {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
+    {file = "idna-2.10.tar.gz", hash = "sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"},
 ]
 importlib-metadata = [
-    {file = "importlib_metadata-3.10.0-py3-none-any.whl", hash = "sha256:d2d46ef77ffc85cbf7dac7e81dd663fde71c45326131bea8033b9bad42268ebe"},
-    {file = "importlib_metadata-3.10.0.tar.gz", hash = "sha256:c9db46394197244adf2f0b08ec5bc3cf16757e9590b02af1fca085c16c0d600a"},
+    {file = "importlib_metadata-3.10.1-py3-none-any.whl", hash = "sha256:2ec0faae539743ae6aaa84b49a169670a465f7f5d64e6add98388cc29fd1f2f6"},
+    {file = "importlib_metadata-3.10.1.tar.gz", hash = "sha256:c9356b657de65c53744046fa8f7358afe0714a1af7d570c00c3835c2d724a7c1"},
 ]
 isort = [
     {file = "isort-5.8.0-py3-none-any.whl", hash = "sha256:2bb1680aad211e3c9944dbce1d4ba09a989f04e238296c87fe2139faa26d655d"},
@@ -1267,8 +1286,8 @@ regex = [
     {file = "regex-2021.4.4.tar.gz", hash = "sha256:52ba3d3f9b942c49d7e4bc105bb28551c44065f139a65062ab7912bef10c9afb"},
 ]
 requests = [
-    {file = "requests-2.15.1-py2.py3-none-any.whl", hash = "sha256:ff753b2196cd18b1bbeddc9dcd5c864056599f7a7d9a4fb5677e723efa2b7fb9"},
-    {file = "requests-2.15.1.tar.gz", hash = "sha256:e5659b9315a0610505e050bb7190bf6fa2ccee1ac295f2b760ef9d8a03ebbb2e"},
+    {file = "requests-2.25.1-py2.py3-none-any.whl", hash = "sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"},
+    {file = "requests-2.25.1.tar.gz", hash = "sha256:27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804"},
 ]
 rfc3986 = [
     {file = "rfc3986-1.4.0-py2.py3-none-any.whl", hash = "sha256:af9147e9aceda37c91a05f4deb128d4b4b49d6b199775fd2d2927768abdc8f50"},
@@ -1392,6 +1411,10 @@ ujson = [
     {file = "ujson-4.0.2-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:b5c70704962cf93ec6ea3271a47d952b75ae1980d6c56b8496cec2a722075939"},
     {file = "ujson-4.0.2-cp39-cp39-win_amd64.whl", hash = "sha256:aad6d92f4d71e37ea70e966500f1951ecd065edca3a70d3861b37b176dd6702c"},
     {file = "ujson-4.0.2.tar.gz", hash = "sha256:c615a9e9e378a7383b756b7e7a73c38b22aeb8967a8bfbffd4741f7ffd043c4d"},
+]
+urllib3 = [
+    {file = "urllib3-1.26.4-py2.py3-none-any.whl", hash = "sha256:2f4da4594db7e1e110a944bb1b551fdf4e6c136ad42e4234131391e21eb5b0df"},
+    {file = "urllib3-1.26.4.tar.gz", hash = "sha256:e7b021f7241115872f92f43c6508082facffbd1c048e3c6e2bb9c2a157e28937"},
 ]
 uvloop = [
     {file = "uvloop-0.15.2-cp37-cp37m-macosx_10_14_x86_64.whl", hash = "sha256:19fa1d56c91341318ac5d417e7b61c56e9a41183946cc70c411341173de02c69"},
