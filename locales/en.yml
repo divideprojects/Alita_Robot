@@ -264,8 +264,8 @@ strings:
         - /rmwarn: Remove a user's latest warning.
         - /resetwarn: Reset all of a user's warnings to 0.
         - /warnings: Get the chat's warning settings.
-        - /setwarnmode `<ban/kick/mute>`: Set the chat's warn mode.
-        - /setwarnlimit `<number>`: Set the number of warnings before users are punished.
+        - /warnmode `<ban/kick/mute>`: Set the chat's warn mode.
+        - /warnlimit `<number>`: Set the number of warnings before users are punished.
 
         Examples:
         `/warn @user`: this warns a user in the chat.
