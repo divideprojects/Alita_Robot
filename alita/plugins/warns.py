@@ -373,7 +373,7 @@ async def warnmode(_, m: Message):
 async def warnlimit(_, m: Message):
     warn_settings_db = WarnSettings(m.chat.id)
     if len(m.text.split()) > 1:
-        wl = int(m.text.split(None, 1)[1]).lower()
+        wl = int(m.text.split(None, 1)[1])
         if not isinstance(wl, int):
             await m.reply_text("Warn Limit can only be a number!")
             return
