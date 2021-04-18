@@ -98,7 +98,8 @@ async def unpin_message(c: Alita, m: Message):
             )
             await m.reply_text(tlang(m, "pin.unpinned_last_msg"))
         else:
-            await m.reply_text(tlang(m, "pin.reply_to_unpin"))
+            await c.unpin_chat_message(m.chat.id)
+            await m.reply_text(tlang(m, "Unpinned last pinned message!"))
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:

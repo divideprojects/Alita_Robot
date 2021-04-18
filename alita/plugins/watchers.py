@@ -161,7 +161,7 @@ async def bl_watcher(_, m: Message):
                 ),
             )
         else:
-            # for none action
+            # for none action, as that's default
             pass
         return
 
