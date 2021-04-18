@@ -411,7 +411,7 @@ async def clear_allnote(_, m: Message):
                         "⚠️ Confirm",
                         callback_data="clear_notes",
                     ),
-                    InlineKeyboardButton("❌ Cancel", callback_data="close"),
+                    InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
                 ],
             ],
         ),

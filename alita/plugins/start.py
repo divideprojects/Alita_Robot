@@ -36,6 +36,7 @@ from alita.utils.start_utils import (
     get_private_note,
     get_private_rules,
 )
+from alita.utils.string import mention_html
 
 
 @Alita.on_message(
@@ -44,6 +45,18 @@ from alita.utils.start_utils import (
 async def donate(_, m: Message):
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
     await m.reply_text(tlang(m, "general.donate_owner"))
+    return
+
+
+@Alita.on_callback_query(filters.regex("^close_admin$"))
+async def close_admin_callback(_, q: CallbackQuery):
+    user_id = q.from_user.id
+    user_status = (await q.message.chat.get_member(user_id)).status
+    if user_status != "creator":
+        await q.answer("Only group creator can use this!", show_alert=True)
+        return
+    await q.message.edit_text("Closed!")
+    await q.answer("Closed menu!", show_alert=True)
     return
 
 
@@ -56,7 +69,9 @@ async def start(c: Alita, m: Message):
         if len(m.text.split()) > 1:
             help_option = (m.text.split(None, 1)[1]).lower()
 
-            if help_option.startswith("note") and (not help_option in ("note", "notes")):
+            if help_option.startswith("note") and (
+                not help_option in ("note", "notes")
+            ):
                 await get_private_note(c, m, help_option)
                 return
             if help_option.startswith("rules"):

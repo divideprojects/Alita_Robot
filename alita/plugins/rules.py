@@ -151,7 +151,7 @@ async def clear_rules(_, m: Message):
                         "⚠️ Confirm",
                         callback_data="clear_rules",
                     ),
-                    InlineKeyboardButton("❌ Cancel", callback_data="close"),
+                    InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
                 ],
             ],
         ),

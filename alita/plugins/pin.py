@@ -124,7 +124,7 @@ async def unpinall_message(_, m: Message):
             [
                 [
                     InlineKeyboardButton("Yes", callback_data="unpin_all_in_this_chat"),
-                    InlineKeyboardButton("No", callback_data="close"),
+                    InlineKeyboardButton("No", callback_data="close_admin"),
                 ],
             ],
         ),

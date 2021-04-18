@@ -208,7 +208,7 @@ async def promote_usr(c: Alita, m: Message):
         await c.set_administrator_title(m.chat.id, user_id, title)
 
         LOGGER.info(
-            f"{m.from_user.id} promoted {user_id} in {m.chat.id} with title '{title}'"
+            f"{m.from_user.id} promoted {user_id} in {m.chat.id} with title '{title}'",
         )
 
         await m.reply_text(
