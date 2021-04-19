@@ -25,3 +25,7 @@ ci:
 	@pip3 install --upgrade pip setuptools wheel
 	@pip3 install --upgrade -r requirements-dev.txt
 	@pre-commit
+
+clean:
+	@rm -rf alita/logs
+	@pyclean .
