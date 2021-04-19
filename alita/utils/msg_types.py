@@ -38,8 +38,10 @@ class Types(IntEnum):
 
 async def get_note_type(m: Message):
     """Get type of note."""
+
     if len(m.text.split()) <= 1:
         return None, None, None, None
+
     data_type = None
     content = None
     raw_text = m.text.markdown if m.text else m.caption.markdown

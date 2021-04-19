@@ -49,7 +49,7 @@ db_settings = NotesSettings()
 @Alita.on_message(command("save") & admin_filter)
 async def save_note(_, m: Message):
 
-    existing_notes = [i[0] for i in db.get_all_notes(m.chat.id)]
+    existing_notes = {i[0] for i in db.get_all_notes(m.chat.id)}
 
     note_name, text, data_type, content = await get_note_type(m)
     note_name = note_name.lower()
@@ -95,7 +95,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
     if priv_notes_status:
         from alita import BOT_USERNAME
 
-        note_hash = [i[1] for i in db.get_all_notes(m.chat.id) if i[0] == note_name][0]
+        note_hash = next(i[1] for i in db.get_all_notes(m.chat.id) if i[0] == note_name)
         await reply_text(
             f"Click on the button to get the note <code>{note_name}</code>",
             reply_markup=InlineKeyboardMarkup(
@@ -216,7 +216,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
 
 async def get_raw_note(c: Alita, m: Message, note: str):
     """Get the note in raw format, so it can updated by just copy and pasting."""
-    all_notes = [i[0] for i in db.get_all_notes(m.chat.id)]
+    all_notes = {i[0] for i in db.get_all_notes(m.chat.id)}
 
     if note not in all_notes:
         await m.reply_text("This note does not exists!")
@@ -274,7 +274,7 @@ async def hash_get(c: Alita, m: Message):
     except TypeError:
         return
 
-    all_notes = [i[0] for i in db.get_all_notes(m.chat.id)]
+    all_notes = {i[0] for i in db.get_all_notes(m.chat.id)}
 
     if note not in all_notes:
         # don't reply to all messages starting with #
@@ -290,7 +290,7 @@ async def get_note(c: Alita, m: Message):
     if len(m.text.split()) == 2:
         priv_notes_status = db_settings.get_privatenotes(m.chat.id)
         note = ((m.text.split())[1]).lower()
-        all_notes = [i[0] for i in db.get_all_notes(m.chat.id)]
+        all_notes = {i[0] for i in db.get_all_notes(m.chat.id)}
 
         if note not in all_notes:
             await m.reply_text("This note does not exists!")
@@ -397,7 +397,7 @@ async def clear_note(_, m: Message):
 @Alita.on_message(command("clearall") & owner_filter)
 async def clear_allnote(_, m: Message):
 
-    all_notes = [i[0] for i in db.get_all_notes(m.chat.id)]
+    all_notes = {i[0] for i in db.get_all_notes(m.chat.id)}
     if not all_notes:
         await m.reply_text("No notes are there in this chat")
         return

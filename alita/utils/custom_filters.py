@@ -56,10 +56,28 @@ def command(
         matches = search(compile_re(regex), text)
         if matches:
             m.command = [matches.group(2)]
-            for arg in split(matches.group(4).strip()):
+            matches = (matches.group(4)).replace(
+                "'",
+                "\\'",
+            )  # fix for shlex qoutation error, majorly in filters
+            for arg in split(matches.strip()):
                 m.command.append(arg)
             return True
         return False
+
+        # backup code incase something breaks!
+        # regex = "^({prefix})+\\b({regex})\\b(.*)".format(
+        #     prefix="|".join(escape(x) for x in flt.prefixes),
+        #     regex="|".join(flt.commands),
+        # )
+        # matches = search(compile_re(regex), text)
+        # if matches:
+        #     m.command = [matches.group(2)]
+        #     matches = (matches.group(3)).replace("'", "\\'")
+        #     for arg in split(matches.strip()):
+        #         m.command.append(arg)
+        #     return True
+        # return False
 
     commands = commands if type(commands) is list else [commands]
     commands = {c if case_sensitive else c.lower() for c in commands}
@@ -103,7 +121,11 @@ def dev_command(
         matches = search(compile_re(regex), text)
         if matches:
             m.command = [matches.group(2)]
-            for arg in split(matches.group(4).strip()):
+            matches = (matches.group(4)).replace(
+                "'",
+                "\\'",
+            )  # fix for shlex qoutation error, majorly in filters
+            for arg in split(matches.strip()):
                 m.command.append(arg)
             return True
         return False
