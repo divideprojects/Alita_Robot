@@ -409,6 +409,6 @@ async def prevent_approved(m: Message):
     return
 
 
-__PLUGIN__ = "plugins.locks.main"
-__help__ = "plugins.locks.help"
+__PLUGIN__ = "locks"
+
 __alt_name__ = ["grouplock", "lock", "grouplocks"]

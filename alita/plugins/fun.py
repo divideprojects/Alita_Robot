@@ -133,5 +133,4 @@ async def fun_table(_, m: Message):
     return
 
 
-__PLUGIN__ = "plugins.fun.main"
-__help__ = "plugins.fun.help"
+__PLUGIN__ = "fun"

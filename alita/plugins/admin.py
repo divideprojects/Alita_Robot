@@ -371,5 +371,4 @@ async def get_invitelink(c: Alita, m: Message):
     return
 
 
-__PLUGIN__ = "plugins.admin.main"
-__help__ = "plugins.admin.help"
+__PLUGIN__ = "admin"

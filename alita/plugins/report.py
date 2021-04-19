@@ -231,6 +231,6 @@ async def report_buttons(c: Alita, q: CallbackQuery):
     return
 
 
-__PLUGIN__ = "plugins.reporting.main"
-__help__ = "plugins.reporting.help"
+__PLUGIN__ = "reporting"
+
 __alt_name__ = ["reports", "report"]

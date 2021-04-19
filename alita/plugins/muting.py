@@ -163,6 +163,6 @@ async def unmute_usr(c: Alita, m: Message):
     return
 
 
-__PLUGIN__ = "plugins.muting.main"
-__help__ = "plugins.muting.help"
+__PLUGIN__ = "muting"
+
 __alt_name__ = ["mute", "unmute"]

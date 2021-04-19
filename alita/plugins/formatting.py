@@ -62,7 +62,7 @@ async def gen_formatting_kb(m):
 )
 async def markdownhelp(_, m: Message):
     await m.reply_text(
-        tlang(m, __help__),
+        tlang(m, f"plugins.{__PLUGIN__}.help"),
         quote=True,
         reply_markup=(await gen_formatting_kb(m)),
     )
@@ -117,8 +117,8 @@ async def send_mod_help(_, q: CallbackQuery):
     return
 
 
-__PLUGIN__ = "plugins.formatting.main"
-__help__ = "plugins.formatting.help"
+__PLUGIN__ = "formatting"
+
 __alt_name__ = ["formatting", "markdownhelp", "markdown"]
 __buttons__ = [
     [

@@ -137,28 +137,24 @@ async def load_cmds(all_plugins):
             continue
 
         plugin_name = imported_module.__PLUGIN__.lower()
+        plugin_dict_name = f"plugins.{plugin_name}.main"
 
-        if plugin_name not in HELP_COMMANDS:
-            HELP_COMMANDS[plugin_name] = {
+        if plugin_dict_name not in HELP_COMMANDS:
+            HELP_COMMANDS[plugin_dict_name] = {
                 "help_msg": "",
                 "buttons": [],
                 "alt_cmds": [],
             }
-            if hasattr(imported_module, "__help__"):
-                HELP_COMMANDS[plugin_name]["help_msg"] = imported_module.__help__
+            HELP_COMMANDS[plugin_dict_name]["help_msg"] = f"plugins.{plugin_name}.help"
             if hasattr(imported_module, "__buttons__"):
-                HELP_COMMANDS[plugin_name]["buttons"] = imported_module.__buttons__
+                HELP_COMMANDS[plugin_dict_name]["buttons"] = imported_module.__buttons__
             if hasattr(imported_module, "__alt_name__"):
-                HELP_COMMANDS[plugin_name]["alt_cmds"] = imported_module.__alt_name__
+                HELP_COMMANDS[plugin_dict_name][
+                    "alt_cmds"
+                ] = imported_module.__alt_name__
 
-            try:
-                # Add the plugin name to cmd list
-                (HELP_COMMANDS[plugin_name]["alt_cmds"]).append(
-                    plugin_name.split(".")[1],
-                )
-            except IndexError:
-                LOGGER.error(f"Not loading plugin '{plugin_name}' due to invalid name!")
-                continue
+            # Add the plugin name to cmd list
+            (HELP_COMMANDS[plugin_dict_name]["alt_cmds"]).append(plugin_name)
         else:
             raise Exception(
                 (

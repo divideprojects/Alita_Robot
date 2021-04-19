@@ -159,8 +159,8 @@ async def set_lang(_, m: Message):
     return
 
 
-__PLUGIN__ = "plugins.language.main"
-__help__ = "plugins.language.help"
+__PLUGIN__ = "language"
+
 __alt_name__ = ["lang", "langs", "languages"]
 __buttons__ = [
     [

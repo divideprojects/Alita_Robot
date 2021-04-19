@@ -263,6 +263,6 @@ async def unban_usr(c: Alita, m: Message):
     await m.stop_propagation()
 
 
-__PLUGIN__ = "plugins.bans.main"
-__help__ = "plugins.bans.help"
+__PLUGIN__ = "bans"
+
 __alt_name__ = ["ban", "unban", "kick"]

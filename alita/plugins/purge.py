@@ -97,6 +97,6 @@ async def del_msg(c: Alita, m: Message):
     return
 
 
-__PLUGIN__ = "plugins.purges.main"
-__help__ = "plugins.purges.help"
+__PLUGIN__ = "purges"
+
 __alt_name__ = ["purge", "del"]

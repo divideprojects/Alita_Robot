@@ -444,6 +444,5 @@ async def translate(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used translate cmd in {m.chat.id}")
 
 
-__PLUGIN__ = "plugins.utils.main"
-__help__ = "plugins.utils.help"
+__PLUGIN__ = "utils"
 __alt_name__ = ["util", "misc", "tools"]

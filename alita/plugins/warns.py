@@ -385,6 +385,6 @@ async def warnlimit(_, m: Message):
     return
 
 
-__PLUGIN__ = "plugins.warnings.main"
-__help__ = "plugins.warnings.help"
+__PLUGIN__ = "warnings"
+
 __alt_name__ = ["warn", "warning", "warns"]

@@ -168,6 +168,6 @@ async def clearrules_callback(_, q: CallbackQuery):
     return
 
 
-__PLUGIN__ = "plugins.rules.main"
-__help__ = "plugins.rules.help"
+__PLUGIN__ = "rules"
+
 __alt_name__ = ["rule"]

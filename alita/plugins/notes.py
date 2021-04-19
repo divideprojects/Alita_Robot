@@ -442,6 +442,6 @@ async def clearallnotes_callback(_, q: CallbackQuery):
     return
 
 
-__PLUGIN__ = "plugins.notes.main"
-__help__ = "plugins.notes.help"
+__PLUGIN__ = "notes"
+
 __alt_name__ = ["groupnotes", "snips"]

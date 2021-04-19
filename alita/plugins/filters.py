@@ -348,5 +348,4 @@ async def filters_watcher(c: Alita, m: Message):
     return
 
 
-__PLUGIN__ = "plugins.filters.main"
-__help__ = "plugins.filters.help"
+__PLUGIN__ = "filters"

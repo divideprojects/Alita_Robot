@@ -251,6 +251,6 @@ async def rm_allbl_callback(_, q: CallbackQuery):
     return
 
 
-__PLUGIN__ = "plugins.blacklist.main"
-__help__ = "plugins.blacklist.help"
+__PLUGIN__ = "blacklist"
+
 __alt_name__ = ["blacklists", "blaction"]
