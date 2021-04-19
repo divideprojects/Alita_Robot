@@ -34,27 +34,16 @@ from alita.utils.custom_filters import admin_filter, command
 
 
 async def gen_langs_kb():
-    langs = list(lang_dict.keys())
-    kb = []
-    while langs:
-        lang_main = lang_dict[langs[0]]["main"]
-        a = [
+    langs = sorted(list(lang_dict.keys()))
+    kb = [
+        [
             InlineKeyboardButton(
-                f"{lang_main['language_flag']} {lang_main['language_name']} ({lang_main['lang_sample']})",
-                callback_data=f"set_lang.{langs[0]}",
-            ),
-        ]
-        langs.pop(0)
-        if langs:
-            lang_main = lang_dict[langs[0]]["main"]
-            a.append(
-                InlineKeyboardButton(
-                    f"{lang_main['language_flag']} {lang_main['language_name']} ({lang_main['lang_sample']})",
-                    callback_data=f"set_lang.{langs[0]}",
-                ),
+                f"{lang_dict[lang]['main']['language_flag']} {lang_dict[lang]['main']['language_name']} ({lang_dict[lang]['main']['lang_sample']})",
+                callback_data=f"set_lang.{lang}",
             )
-            langs.pop(0)
-        kb.append(a)
+            for lang in langs
+        ],
+    ]
     kb.append(
         [
             InlineKeyboardButton(
@@ -69,19 +58,19 @@ async def gen_langs_kb():
 @Alita.on_callback_query(filters.regex("^chlang$"))
 async def chlang_callback(_, q: CallbackQuery):
 
+    kb = await gen_langs_kb()
+    kb.append(
+        [
+            InlineKeyboardButton(
+                f"« {(tlang(q, 'general.back_btn'))}",
+                callback_data="start_back",
+            ),
+        ],
+    )
+
     await q.message.edit_text(
         (tlang(q, "langs.changelang")),
-        reply_markup=InlineKeyboardMarkup(
-            [
-                *(await gen_langs_kb()),
-                [
-                    InlineKeyboardButton(
-                        f"« {(tlang(q, 'general.back_btn'))}",
-                        callback_data="start_back",
-                    ),
-                ],
-            ],
-        ),
+        reply_markup=InlineKeyboardMarkup(kb),
     )
     await q.answer()
     return
@@ -154,7 +143,7 @@ async def set_lang(_, m: Message):
         return
     await m.reply_text(
         (tlang(m, "langs.changelang")),
-        reply_markup=InlineKeyboardMarkup([*(await gen_langs_kb())]),
+        reply_markup=InlineKeyboardMarkup(await gen_langs_kb()),
     )
     return
 

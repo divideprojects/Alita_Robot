@@ -59,37 +59,6 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
 
     return [kb[i : i + 3] for i in range(0, len(kb), 3)]
 
-    # while cmds:
-    #     if cmds:
-    #         cmd = cmds[0]
-    #         a = [
-    #             InlineKeyboardButton(
-    #                 tlang(m, cmd),
-    #                 callback_data=f"get_mod.{cmd.lower()}",
-    #             ),
-    #         ]
-    #         cmds.pop(0)
-    #     if cmds:
-    #         cmd = cmds[0]
-    #         a.append(
-    #             InlineKeyboardButton(
-    #                 tlang(m, cmd),
-    #                 callback_data=f"get_mod.{cmd.lower()}",
-    #             ),
-    #         )
-    #         cmds.pop(0)
-    #     if cmds:
-    #         cmd = cmds[0]
-    #         a.append(
-    #             InlineKeyboardButton(
-    #                 tlang(m, cmd),
-    #                 callback_data=f"get_mod.{cmd.lower()}",
-    #             ),
-    #         )
-    #         cmds.pop(0)
-    #     kb.append(a)
-    # return kb
-
 
 async def gen_start_kb(q: Message or CallbackQuery):
     """Generate keyboard with start menu options."""
