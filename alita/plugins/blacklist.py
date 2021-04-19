@@ -230,17 +230,18 @@ async def rm_allblacklist(_, m: Message):
 @Alita.on_callback_query(filters.regex("^rm_allblacklist$"))
 async def rm_allbl_callback(_, q: CallbackQuery):
     user_id = q.from_user.id
-    name = q.from_user.first_name
-
     db = Blacklist(q.message.chat.id)
-
     user_status = (await q.message.chat.get_member(user_id)).status
+    if user_status not in {"creator", "administrator"}:
+        await q.answer(
+            "You're not even an admin, don't try this explosive shit!",
+            show_alert=True,
+        )
+        return
     if user_status != "creator":
-        await q.message.edit(
-            (
-                f"You're an admin {await mention_html(name, user_id)}, not owner!\n"
-                "Stay in your limits!"
-            ),
+        await q.answer(
+            "You're just an admin, not owner\nStay in your limits!",
+            show_alert=True,
         )
         return
     db.rm_all_blacklist()
