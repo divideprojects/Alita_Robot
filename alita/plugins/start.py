@@ -36,7 +36,6 @@ from alita.utils.start_utils import (
     get_private_note,
     get_private_rules,
 )
-from alita.utils.string import mention_html
 
 
 @Alita.on_message(

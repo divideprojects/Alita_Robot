@@ -28,14 +28,11 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
-
-from alita import PREFIX_HANDLER
 from alita.bot_class import LOGGER, Alita
 from alita.database.filters_db import Filters
 from alita.utils.cmd_senders import send_cmd
 from alita.utils.custom_filters import admin_filter, command, owner_filter
 from alita.utils.msg_types import Types, get_filter_type
-from alita.utils.parser import mention_html
 from alita.utils.regex_utils import regex_searcher
 from alita.utils.string import (
     build_keyboard,

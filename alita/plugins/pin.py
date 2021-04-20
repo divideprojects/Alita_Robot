@@ -30,7 +30,6 @@ from alita.bot_class import Alita
 from alita.database.pins_db import Pins
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, command
-from alita.utils.parser import mention_html
 from alita.utils.string import build_keyboard, parse_button
 
 

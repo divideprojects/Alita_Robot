@@ -31,7 +31,6 @@ from alita.bot_class import Alita
 from alita.database.blacklist_db import Blacklist
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import command, owner_filter, restrict_filter
-from alita.utils.parser import mention_html
 
 
 @Alita.on_message(command("blacklist") & filters.group)
