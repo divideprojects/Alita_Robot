@@ -21,10 +21,10 @@ from time import time
 from pyrogram.types import Message
 
 from alita.bot_class import Alita
-from alita.utils.custom_filters import sudo_command
+from alita.utils.custom_filters import command
 
 
-@Alita.on_message(sudo_command("test"))
+@Alita.on_message(command("test", sudo_cmd=True))
 async def test_bot(_, m: Message):
     start = time()
     replymsg = await m.reply_text("Calculating...")

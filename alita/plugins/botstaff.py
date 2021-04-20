@@ -21,11 +21,11 @@ from pyrogram.types import Message
 
 from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, WHITELIST_USERS
 from alita.bot_class import Alita
-from alita.utils.custom_filters import dev_command
+from alita.utils.custom_filters import command
 from alita.utils.parser import mention_html
 
 
-@Alita.on_message(dev_command("botstaff"))
+@Alita.on_message(command("botstaff", dev_cmd=True))
 async def botstaff(c: Alita, m: Message):
     try:
         owner = await c.get_users(OWNER_ID)

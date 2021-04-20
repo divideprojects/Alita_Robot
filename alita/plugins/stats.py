@@ -30,10 +30,10 @@ from alita.database.pins_db import Pins
 from alita.database.rules_db import Rules
 from alita.database.users_db import Users
 from alita.database.warns_db import Warns, WarnSettings
-from alita.utils.custom_filters import dev_command
+from alita.utils.custom_filters import command
 
 
-@Alita.on_message(dev_command("stats"))
+@Alita.on_message(command("stats", dev_cmd=True))
 async def get_stats(_, m: Message):
 
     # initialise
@@ -80,7 +80,7 @@ async def get_stats(_, m: Message):
     return
 
 
-@Alita.on_message(dev_command("dbstats"))
+@Alita.on_message(command("dbstats", dev_cmd=True))
 async def get_dbstats(_, m: Message):
     db_stats = f"\n<b>Database Stats:</b>\n<code>{(db.command('dbstats'))}</code>"
     await m.reply_text(db_stats, parse_mode="html")

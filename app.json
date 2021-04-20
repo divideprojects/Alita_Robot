@@ -57,11 +57,6 @@
          "required": false,
          "value": "Stable"
       },
-      "DEV_PREFIX_HANDLER": {
-         "description": "Handler for executing dev commands",
-         "required": true,
-         "value": ">"
-      },
       "PREFIX_HANDLER": {
          "description": "Something like '/' to execute commands.",
          "required": true,

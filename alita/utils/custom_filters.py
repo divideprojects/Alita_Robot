@@ -24,7 +24,7 @@ from typing import List
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
-from alita import DEV_PREFIX_HANDLER, DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
+from alita import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 
@@ -36,12 +36,22 @@ def command(
     commands: str or List[str],
     prefixes: str or List[str] = PREFIX_HANDLER,
     case_sensitive: bool = False,
+    dev_cmd: bool = False,
+    sudo_cmd: bool = False,
 ):
     from alita import BOT_USERNAME
 
     async def func(flt, _, m: Message):
 
         if not m.from_user:
+            return False
+
+        if dev_cmd and (m.from_user.id not in DEV_LEVEL):
+            # Only devs allowed to use this...!
+            return False
+
+        if sudo_cmd and (m.from_user.id not in SUDO_LEVEL):
+            # Only sudos and above allowed to use it
             return False
 
         text: str = m.text or m.caption
@@ -87,104 +97,6 @@ def command(
     return create(
         func,
         "NormalCommandFilter",
-        commands=commands,
-        prefixes=prefixes,
-        case_sensitive=case_sensitive,
-    )
-
-
-def dev_command(
-    commands: str or List[str],
-    prefixes: str or List[str] = DEV_PREFIX_HANDLER + PREFIX_HANDLER,
-    case_sensitive: bool = False,
-):
-    from alita import BOT_USERNAME
-
-    async def func(flt, _, m: Message):
-
-        if not m.from_user:
-            return False
-
-        # Only devs allowed to use this...!
-        if m.from_user.id not in DEV_LEVEL:
-            return False
-
-        text: str = m.text or m.caption
-        m.command = None
-        if not text:
-            return False
-        regex = "^({prefix})+\\b({regex})\\b(\\b@{bot_name}\\b)?(.*)".format(
-            prefix="|".join(escape(x) for x in flt.prefixes),
-            regex="|".join(flt.commands),
-            bot_name=BOT_USERNAME,
-        )
-        matches = search(compile_re(regex), text)
-        if matches:
-            m.command = [matches.group(2)]
-            matches = (matches.group(4)).replace(
-                "'",
-                "\\'",
-            )  # fix for shlex qoutation error, majorly in filters
-            for arg in split(matches.strip()):
-                m.command.append(arg)
-            return True
-        return False
-
-    commands = commands if type(commands) is list else [commands]
-    commands = {c if case_sensitive else c.lower() for c in commands}
-    prefixes = [] if prefixes is None else prefixes
-    prefixes = prefixes if type(prefixes) is list else [prefixes]
-    prefixes = set(prefixes) if prefixes else {""}
-    return create(
-        func,
-        "DevCommandFilter",
-        commands=commands,
-        prefixes=prefixes,
-        case_sensitive=case_sensitive,
-    )
-
-
-def sudo_command(
-    commands: str or List[str],
-    prefixes: str or List[str] = DEV_PREFIX_HANDLER + PREFIX_HANDLER,
-    case_sensitive: bool = False,
-):
-    from alita import BOT_USERNAME
-
-    async def func(flt, _, m: Message):
-
-        if not m.from_user:
-            return False
-
-        # Only devs allowed to use this...!
-        if m.from_user.id not in SUDO_LEVEL:
-            return False
-
-        text: str = m.text or m.caption
-        m.command = None
-        if not text:
-            return False
-        regex = "^({prefix})+\\b({regex})\\b(\\b@{bot_name}\\b)?(.*)".format(
-            prefix="|".join(escape(x) for x in flt.prefixes),
-            regex="|".join(flt.commands),
-            bot_name=BOT_USERNAME,
-        )
-        matches = search(compile_re(regex), text)
-        if matches:
-            m.command = [matches.group(2)]
-            for arg in split(matches.group(4).strip()):
-                m.command.append(arg)
-            return True
-        return False
-
-    commands = commands if type(commands) is list else [commands]
-    commands = {c if case_sensitive else c.lower() for c in commands}
-    prefixes = [] if prefixes is None else prefixes
-    prefixes = prefixes if type(prefixes) is list else [prefixes]
-    prefixes = set(prefixes) if prefixes else {""}
-    return create(
-        func,
-        "SudoCommandFilter",
         commands=commands,
         prefixes=prefixes,
         case_sensitive=case_sensitive,

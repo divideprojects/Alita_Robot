@@ -43,7 +43,6 @@ class Config:
     SUPPORT_CHANNEL = load_var("SUPPORT_CHANNEL")
     ENABLED_LOCALES = [str(i) for i in load_var("ENABLED_LOCALES", "").split()]
     VERSION = load_var("VERSION")
-    DEV_PREFIX_HANDLER = load_var("DEV_PREFIX_HANDLER", ">").split()
     WORKERS = int(load_var("WORKERS", 16))
     LOG_CHANNEL = int(load_var("LOG_CHANNEL", -100))
 
@@ -69,6 +68,5 @@ class Development:
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
     ENABLED_LOCALES = ["ENABLED_LOCALES"]
     VERSION = "VERSION"
-    DEV_PREFIX_HANDLER = "?"
     WORKERS = 8
     LOG_CHANNEL = -100

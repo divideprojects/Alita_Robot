@@ -34,18 +34,18 @@ from pyrogram.errors import (
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from speedtest import Speedtest
 
-from alita import DEV_PREFIX_HANDLER, LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
+from alita import LOGFILE, LOGGER, MESSAGE_DUMP, PREFIX_HANDLER, UPTIME
 from alita.bot_class import Alita
 from alita.database.chats_db import Chats
 from alita.tr_engine import tlang
 from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.clean_file import remove_markdown_and_html
-from alita.utils.custom_filters import dev_command, sudo_command
+from alita.utils.custom_filters import command
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
 
 
-@Alita.on_message(sudo_command("ping"))
+@Alita.on_message(command("ping", sudo_cmd=True))
 async def ping(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used ping cmd in {m.chat.id}")
     start = time()
@@ -55,7 +55,7 @@ async def ping(_, m: Message):
     return
 
 
-@Alita.on_message(dev_command("logs"))
+@Alita.on_message(command("logs", dev_cmd=True))
 async def send_log(c: Alita, m: Message):
 
     replymsg = await m.reply_text("Sending logs...!")
@@ -77,12 +77,12 @@ async def send_log(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(sudo_command("ginfo"))
+@Alita.on_message(command("ginfo", sudo_cmd=True))
 async def group_info(c: Alita, m: Message):
 
     if not len(m.text.split()) == 2:
         await m.reply_text(
-            f"It works like this: <code>{DEV_PREFIX_HANDLER} chat_id</code>",
+            f"It works like this: <code>{PREFIX_HANDLER} chat_id</code>",
         )
         return
 
@@ -101,7 +101,7 @@ async def group_info(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(dev_command("speedtest"))
+@Alita.on_message(command("speedtest", dev_cmd=True))
 async def test_speed(c: Alita, m: Message):
 
     await c.send_message(
@@ -124,7 +124,7 @@ async def test_speed(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(dev_command("neofetch"))
+@Alita.on_message(command("neofetch", dev_cmd=True))
 async def neofetch_stats(_, m: Message):
     cmd = "neofetch --stdout"
 
@@ -151,7 +151,7 @@ async def neofetch_stats(_, m: Message):
     return
 
 
-@Alita.on_message(dev_command(["eval", "py"]))
+@Alita.on_message(command(["eval", "py"], dev_cmd=True))
 async def evaluate_code(c: Alita, m: Message):
 
     if len(m.text.split()) == 1:
@@ -214,7 +214,7 @@ async def aexec(code, c, m):
     return await locals()["__aexec"](c, m)
 
 
-@Alita.on_message(dev_command(["exec", "sh"]))
+@Alita.on_message(command(["exec", "sh"], dev_cmd=True))
 async def execution(_, m: Message):
 
     if len(m.text.split()) == 1:
@@ -260,7 +260,7 @@ async def execution(_, m: Message):
     return
 
 
-@Alita.on_message(dev_command("ip"))
+@Alita.on_message(command("ip", dev_cmd=True))
 async def public_ip(c: Alita, m: Message):
 
     ip = (await AioHttp.get_text("https://api.ipify.org"))[0]
@@ -275,7 +275,7 @@ async def public_ip(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(dev_command("chatlist"))
+@Alita.on_message(command("chatlist", dev_cmd=True))
 async def chats(c: Alita, m: Message):
     exmsg = await m.reply_text(tlang(m, "dev.chatlist.exporting"))
     await c.send_message(
@@ -319,14 +319,14 @@ async def chats(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(dev_command("uptime"))
+@Alita.on_message(command("uptime", dev_cmd=True))
 async def uptime(_, m: Message):
     up = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
     await m.reply_text((tlang(m, "dev.uptime")).format(uptime=up), quote=True)
     return
 
 
-@Alita.on_message(dev_command("leavechat"))
+@Alita.on_message(command("leavechat", dev_cmd=True))
 async def leave_chat(c: Alita, m: Message):
     if len(m.text.split()) != 2:
         await m.reply_text("Supply a chat id which I should leave!", quoet=True)
@@ -347,7 +347,7 @@ async def leave_chat(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(dev_command("chatbroadcast"))
+@Alita.on_message(command("chatbroadcast", dev_cmd=True))
 async def chat_broadcast(c: Alita, m: Message):
     if m.reply_to_message:
         msg = m.reply_to_message.text.markdown
