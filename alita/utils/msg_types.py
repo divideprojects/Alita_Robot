@@ -38,7 +38,6 @@ class Types(IntEnum):
 
 async def get_note_type(m: Message):
     """Get type of note."""
-
     if len(m.text.split()) <= 1:
         return None, None, None, None
 
@@ -107,7 +106,6 @@ async def get_note_type(m: Message):
 
 async def get_filter_type(m: Message):
     """Get filter type."""
-
     if len(m.text.split()) <= 1:
         return None, None, None, None
 

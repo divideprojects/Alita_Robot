@@ -88,7 +88,6 @@ async def save_note(_, m: Message):
 
 async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
     """Get the note in normal mode, with parsing enabled."""
-
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
     reply_msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
 

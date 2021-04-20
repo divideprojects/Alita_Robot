@@ -193,7 +193,6 @@ def sudo_command(
 
 async def admin_check_func(_, __, m: Message or CallbackQuery):
     """Check if user is Admin or not."""
-
     if isinstance(m, CallbackQuery):
         m = m.message
 
@@ -229,7 +228,6 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
 
 async def owner_check_func(_, __, m: Message or CallbackQuery):
     """Check if user is Owner or not."""
-
     if isinstance(m, CallbackQuery):
         m = m.message
 
@@ -257,7 +255,6 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
 
 async def restrict_check_func(_, __, m: Message or CallbackQuery):
     """Check if user can restrict users or not."""
-
     if isinstance(m, CallbackQuery):
         m = m.message
 
@@ -281,7 +278,6 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
 
 async def promote_check_func(_, __, m):
     """Check if user can promote users or not."""
-
     if isinstance(m, CallbackQuery):
         m = m.message
 

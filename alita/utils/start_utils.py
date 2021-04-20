@@ -47,7 +47,6 @@ notes_db = Notes()
 
 async def gen_cmds_kb(m: Message or CallbackQuery):
     """Generate the keyboard for languages."""
-
     if isinstance(m, CallbackQuery):
         m = m.message
 
@@ -62,7 +61,6 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
 
 async def gen_start_kb(q: Message or CallbackQuery):
     """Generate keyboard with start menu options."""
-
     from alita import BOT_USERNAME
 
     keyboard = InlineKeyboardMarkup(
@@ -242,7 +240,6 @@ async def get_private_rules(_, m: Message, help_option: str):
 
 async def get_help_msg(m: Message or CallbackQuery, help_option: str):
     """Helper function for getting help_msg and it's keyboard."""
-
     help_msg = None
     help_kb = None
     help_cmd_keys = sorted(
