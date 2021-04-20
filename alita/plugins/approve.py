@@ -226,7 +226,7 @@ async def unapproveall_users(_, m: Message):
                 [
                     InlineKeyboardButton(
                         "⚠️ Confirm",
-                        callback_data=f"unapprove_all",
+                        callback_data="unapprove_all",
                     ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
                 ],

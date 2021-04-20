@@ -210,7 +210,7 @@ async def rm_allfilters(_, m: Message):
                 [
                     InlineKeyboardButton(
                         "⚠️ Confirm",
-                        callback_data=f"rm_allfilters",
+                        callback_data="rm_allfilters",
                     ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
                 ],
