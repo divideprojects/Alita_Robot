@@ -216,7 +216,7 @@ async def rm_allblacklist(_, m: Message):
                 [
                     InlineKeyboardButton(
                         "⚠️ Confirm",
-                        callback_data=f"rm_allblacklist",
+                        callback_data="rm_allblacklist",
                     ),
                     InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
                 ],
