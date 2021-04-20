@@ -79,7 +79,7 @@ async def start(c: Alita, m: Message):
             help_option = (m.text.split(None, 1)[1]).lower()
 
             if help_option.startswith("note") and (
-                not help_option in ("note", "notes")
+                help_option not in ("note", "notes")
             ):
                 await get_private_note(c, m, help_option)
                 return
