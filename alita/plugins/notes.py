@@ -34,7 +34,6 @@ from alita.database.notes_db import Notes, NotesSettings
 from alita.utils.cmd_senders import send_cmd
 from alita.utils.custom_filters import admin_filter, command, owner_filter
 from alita.utils.msg_types import Types, get_note_type
-from alita.utils.parser import mention_html
 from alita.utils.string import (
     build_keyboard,
     escape_mentions_using_curly_brackets,
