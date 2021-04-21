@@ -223,7 +223,9 @@ async def list_warns(c: Alita, m: Message):
         return
 
     warn_db = Warns(m.chat.id)
+    warn_settings_db = WarnSettings(m.chat.id)
     warns, num_warns = warn_db.get_warns(user_id)
+    warn_settings = warn_settings_db.get_warnings_settings()
     if not warns:
         await m.reply_text("This user has no warns!")
         return
