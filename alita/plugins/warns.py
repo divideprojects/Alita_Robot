@@ -134,7 +134,7 @@ async def warn(c: Alita, m: Message):
             await m.reply_text("Reply to a message to delete it and ban the user!")
             await m.stop_propagation()
         await m.reply_to_message.delete()
-    txt = f"{(await mention_html(user_first_name, user_id))} has {num} warnings!"
+    txt = f"{(await mention_html(user_first_name, user_id))} has {num}/{warn_settings['warn_limit']} warnings!"
     txt += f"\n<b>Reason for last warn</b>:\n{reason}" if reason else ""
     await m.reply_text(
         txt,
@@ -227,7 +227,7 @@ async def list_warns(c: Alita, m: Message):
     if not warns:
         await m.reply_text("This user has no warns!")
         return
-    msg = f"{(await mention_html(user_first_name,user_id))} has <b>{num_warns}</b> warns!\n\n<b>Reasons:</b>\n"
+    msg = f"{(await mention_html(user_first_name,user_id))} has <b>{num_warns}/{warn_settings['warn_limit']}</b> warns!\n\n<b>Reasons:</b>\n"
     msg += "\n".join([("- No reason" if i is None else f" - {i}") for i in warns])
     await m.reply_text(msg)
     return
@@ -334,7 +334,7 @@ async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
     return
 
 
-@Alita.on_message(command("warnings") & admin_filter)
+@Alita.on_message(command(["warnings", "warnsettings"]) & admin_filter)
 async def get_settings(_, m: Message):
     warn_settings_db = WarnSettings(m.chat.id)
     settings = warn_settings_db.get_warnings_settings()
