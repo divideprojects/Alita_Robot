@@ -126,6 +126,7 @@ class Blacklist:
                 "triggers": [],
                 "action": "none",
                 "reason": "Automated blacklisted word",
+                # "reason": "Automated blacklisted word: {{}}",
             }
             self.collection.insert_one(new_data)
             LOGGER.info(f"Initialized Blacklist Document for chat {self.chat_id}")
@@ -146,6 +147,7 @@ class Blacklist:
             "triggers": [],
             "action": "none",
             "reason": "Automated blacklisted word",
+            # "reason": "Automated blacklisted word: {{}}",
         }
         for data in all_data:
             for key, val in keys.items():
