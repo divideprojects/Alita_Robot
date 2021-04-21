@@ -74,7 +74,7 @@ async def bl_watcher(_, m: Message):
 
     bl_db = Blacklist(m.chat.id)
 
-    async def perform_action_blacklist(m: Message, action: str):
+    async def perform_action_blacklist(m: Message, action: str, trigger: str):
         if action == "kick":
             await m.chat.kick_member(m.from_user.id, int(time() + 45))
             await m.reply_text(
@@ -158,6 +158,7 @@ async def bl_watcher(_, m: Message):
                 (
                     f"{(await mention_html(m.from_user.first_name, m.from_user.id))} warned {num}/{warn_settings['warn_limit']}\n"
                     f"Last warn was for:\n<i>{warn_reason}</i>"
+                    # f"Last warn was for:\n<i>{warn_reason.format(trigger)}</i>"
                 ),
             )
         else:
@@ -197,7 +198,7 @@ async def bl_watcher(_, m: Message):
             continue
         if match:
             try:
-                await perform_action_blacklist(m, action)
+                await perform_action_blacklist(m, action, trigger)
                 LOGGER.info(
                     f"{m.from_user.id} {action}ed for using blacklisted word {trigger} in {m.chat.id}",
                 )
