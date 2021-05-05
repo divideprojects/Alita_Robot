@@ -27,7 +27,7 @@ uvloop = "^0.15.2"
 wikipedia = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
-black = "^21.4b2"
+black = "^21.5b0"
 isort = "^5.8.0"
 pre-commit = "^2.12.1"
 pyclean = "^2.0.0"
