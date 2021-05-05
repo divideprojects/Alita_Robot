@@ -136,6 +136,10 @@ async def reload_admins(_, m: Message):
 @Alita.on_message(filters.regex(r"^(?i)@admin(s)?") & filters.group)
 async def tag_admins(_, m: Message):
 
+    db = Reporting(m.chat.id)
+    if not db.get_settings():
+        return
+
     try:
         admin_list = ADMIN_CACHE[m.chat.id]
     except KeyError:
