@@ -29,7 +29,7 @@ wikipedia = "^1.4.0"
 [tool.poetry.dev-dependencies]
 black = "^21.5b1"
 isort = "^5.8.0"
-pre-commit = "^2.12.1"
+pre-commit = "^2.13.0"
 pyclean = "^2.0.0"
 pylint = "^2.8.2"
 
