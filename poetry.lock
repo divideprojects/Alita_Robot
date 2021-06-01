@@ -10,6 +10,14 @@ python-versions = "*"
 pycares = ">=4.0.0"
 
 [[package]]
+name = "aiofiles"
+version = "0.7.0"
+description = "File support for asyncio."
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[[package]]
 name = "aiohttp"
 version = "3.7.4.post0"
 description = "Async http client/server framework (asyncio)"
@@ -237,13 +245,14 @@ beautifulsoup4 = "*"
 
 [[package]]
 name = "gpytranslate"
-version = "1.0.3"
+version = "1.2.0"
 description = "A Python3 library for translating text using Google Translate API."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
+aiofiles = "*"
 httpx = "*"
 
 [[package]]
@@ -743,12 +752,16 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "c71e2acb3ad90e0aef57e17af04f47a7e562fe4bbf7d1ea4f7fd30d1eebf8db0"
+content-hash = "1a6312e7c5f9a20f86dc0b4bc8c645bfa5d459ee0c76ba2e483768006f43762e"
 
 [metadata.files]
 aiodns = [
     {file = "aiodns-3.0.0-py3-none-any.whl", hash = "sha256:2b19bc5f97e5c936638d28e665923c093d8af2bf3aa88d35c43417fa25d136a2"},
     {file = "aiodns-3.0.0.tar.gz", hash = "sha256:946bdfabe743fceeeb093c8a010f5d1645f708a241be849e17edfb0e49e08cd6"},
+]
+aiofiles = [
+    {file = "aiofiles-0.7.0-py3-none-any.whl", hash = "sha256:c67a6823b5f23fcab0a2595a289cec7d8c863ffcb4322fb8cd6b90400aedfdbc"},
+    {file = "aiofiles-0.7.0.tar.gz", hash = "sha256:a1c4fc9b2ff81568c83e21392a82f344ea9d23da906e4f6a52662764545e19d4"},
 ]
 aiohttp = [
     {file = "aiohttp-3.7.4.post0-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:3cf75f7cdc2397ed4442594b935a11ed5569961333d49b7539ea741be2cc79d5"},
@@ -946,8 +959,8 @@ google = [
     {file = "google-3.0.0.tar.gz", hash = "sha256:143530122ee5130509ad5e989f0512f7cb218b2d4eddbafbad40fd10e8d8ccbe"},
 ]
 gpytranslate = [
-    {file = "gpytranslate-1.0.3-py3-none-any.whl", hash = "sha256:970e2c180ab1bfb54cf268853ead19729e175ad6b3796bb827bb925a968c0318"},
-    {file = "gpytranslate-1.0.3.tar.gz", hash = "sha256:8167e72d9a9d48d876f7b1d78f3525ae699fca96c7e885895f6254c7cc7aed5e"},
+    {file = "gpytranslate-1.2.0-py3-none-any.whl", hash = "sha256:e06dd6e022f82d60afb1a772cf7b50cc6bba02ffa4f192108f882a1cc02ff2f0"},
+    {file = "gpytranslate-1.2.0.tar.gz", hash = "sha256:ac542f1fa796d89f168a1063b865d81de699602a87dcd343544e7c5aca11182d"},
 ]
 h11 = [
     {file = "h11-0.12.0-py3-none-any.whl", hash = "sha256:36a3cb8c0a032f56e2da7084577878a035d3b61d104230d4bd49c0c6b555a9c6"},
