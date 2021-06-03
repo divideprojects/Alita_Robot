@@ -243,11 +243,9 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
     help_msg = None
     help_kb = None
     help_cmd_keys = sorted(
-        [
-            k
-            for j in [HELP_COMMANDS[i]["alt_cmds"] for i in list(HELP_COMMANDS.keys())]
-            for k in j
-        ],
+        k
+        for j in [HELP_COMMANDS[i]["alt_cmds"] for i in list(HELP_COMMANDS.keys())]
+        for k in j
     )
 
     if help_option in help_cmd_keys:

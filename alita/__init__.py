@@ -76,7 +76,7 @@ LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
 LOGGER.info("Source Code: https://github.com/Divkix/Alita_Robot\n")
 
 # Account Related
-STRING_SESSION = Config.STRING_SESSION
+BOT_TOKEN = Config.BOT_TOKEN
 APP_ID = Config.APP_ID
 API_HASH = Config.API_HASH
 

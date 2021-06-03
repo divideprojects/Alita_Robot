@@ -101,14 +101,14 @@ class Approve:
         with INSERTION_LOCK:
             collection = MongoDB(Approve.db_name)
             all_data = collection.find_all()
-            return sum([len(i["users"]) for i in all_data if len(i["users"]) >= 1])
+            return sum(len(i["users"]) for i in all_data if len(i["users"]) >= 1)
 
     @staticmethod
     def count_approved_chats():
         with INSERTION_LOCK:
             collection = MongoDB(Approve.db_name)
             all_data = collection.find_all()
-            return sum([1 for i in all_data if len(i["users"]) >= 1])
+            return sum(1 for i in all_data if len(i["users"]) >= 1)
 
     @staticmethod
     def repair_db(collection):

@@ -10,10 +10,12 @@
       "alita_robot"
    ],
    "repository": "https://github.com/Divkix/Alita_Robot",
+   "website": "https://t.me/DivideProjects",
+   "success_url": "https://t.me/DivideProjects",
    "stack": "container",
    "env": {
-      "STRING_SESSION": {
-         "description": "Your telegram bot string session, get from @Botfather in telegram and then export it's session  using pyrogram.",
+      "BOT_TOKEN": {
+         "description": "Your telegram bot token, get from @Botfather in telegram.",
          "required": true,
          "value": ""
       },

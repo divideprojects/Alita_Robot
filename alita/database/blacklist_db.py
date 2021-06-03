@@ -80,7 +80,7 @@ class Blacklist:
         with INSERTION_LOCK:
             collection = MongoDB(Blacklist.db_name)
             curr = collection.find_all()
-            return sum([1 for chat in curr if chat["triggers"]])
+            return sum(1 for chat in curr if chat["triggers"])
 
     def set_action(self, action: str):
         with INSERTION_LOCK:
@@ -109,7 +109,7 @@ class Blacklist:
         with INSERTION_LOCK:
             collection = MongoDB(Blacklist.db_name)
             all_data = collection.find_all({"action": action})
-            return sum([1 for i in all_data if len(i["triggers"]) >= 1])
+            return sum(1 for i in all_data if len(i["triggers"]) >= 1)
 
     def rm_all_blacklist(self):
         with INSERTION_LOCK:

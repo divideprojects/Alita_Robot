@@ -18,7 +18,7 @@
 
 from uvloop import install
 
-# Install uvloop
+# Install uvloop to make bot faster
 install()
 
 
@@ -33,13 +33,13 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from alita import (
     API_HASH,
     APP_ID,
+    BOT_TOKEN,
     LOG_CHANNEL,
     LOG_DATETIME,
     LOGFILE,
     LOGGER,
     MESSAGE_DUMP,
     NO_LOAD,
-    STRING_SESSION,
     UPTIME,
     WORKERS,
     get_self,
@@ -66,7 +66,8 @@ class Alita(Client):
         name = self.__class__.__name__.lower()
 
         super().__init__(
-            STRING_SESSION,
+            "Alita_Robot",
+            bot_token=BOT_TOKEN,
             plugins=dict(root=f"{name}.plugins", exclude=NO_LOAD),
             api_id=APP_ID,
             api_hash=API_HASH,

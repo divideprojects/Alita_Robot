@@ -102,7 +102,7 @@ class Warns:
         with INSERTION_LOCK:
             collection = MongoDB(Warns.db_name)
             curr = collection.find_all()
-            return sum([i["num_warns"] for i in curr if i["num_warns"] >= 1])
+            return sum(i["num_warns"] for i in curr if i["num_warns"] >= 1)
 
     @staticmethod
     def repair_db(collection):
