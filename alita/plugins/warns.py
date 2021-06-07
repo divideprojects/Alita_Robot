@@ -20,13 +20,7 @@ from time import time
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import (
-    CallbackQuery,
-    ChatPermissions,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, ChatPermissions, Message
 
 from alita import LOGGER, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -116,15 +110,9 @@ async def warn(c: Alita, m: Message):
 
     rules = Rules(m.chat.id).get_rules()
     if rules:
-        kb = InlineKeyboardButton(
-            "Rules 📋",
-            url=f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
-        )
+        kb = ("Rules 📋", f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}", "url")
     else:
-        kb = InlineKeyboardButton(
-            "Kick ⚠️",
-            callback_data=f"warn.kick.{user_id}",
-        )
+        kb = ("Kick ⚠️", f"warn.kick.{user_id}")
 
     if m.text.split()[0] == "/swarn":
         await m.delete()
@@ -138,17 +126,7 @@ async def warn(c: Alita, m: Message):
     txt += f"\n<b>Reason for last warn</b>:\n{reason}" if reason else ""
     await m.reply_text(
         txt,
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "Remove Warn ❌",
-                        callback_data=f"warn.remove.{user_id}",
-                    ),
-                ]
-                + [kb],
-            ],
-        ),
+        reply_markup=([[("Remove Warn ❌", f"warn.remove.{user_id}")] + [kb]]),
         reply_to_message_id=r_id,
     )
     await m.stop_propagation()

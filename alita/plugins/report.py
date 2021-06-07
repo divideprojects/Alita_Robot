@@ -21,12 +21,8 @@ from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, RPCError, Unauthorized, UserIsBlocked
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import LOGGER, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -124,28 +120,23 @@ async def report_watcher(c: Alita, m: Message):
         link_chat_id = str(m.chat.id).replace("-100", "")
         link = f"https://t.me/c/{link_chat_id}/{reported_msg_id}"  # message link
 
-        reply_markup = InlineKeyboardMarkup(
+        reply_markup = ikb(
             [
+                [("➡ Message", link, "url")],
                 [
-                    InlineKeyboardButton(
-                        "➡ Message",
-                        url=link,
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
+                    (
                         "⚠ Kick",
-                        callback_data=f"report_{m.chat.id}=kick={reported_user.id}={reported_msg_id}",
+                        f"report_{m.chat.id}=kick={reported_user.id}={reported_msg_id}",
                     ),
-                    InlineKeyboardButton(
+                    (
                         "⛔️ Ban",
-                        callback_data=f"report_{m.chat.id}=ban={reported_user.id}={reported_msg_id}",
+                        f"report_{m.chat.id}=ban={reported_user.id}={reported_msg_id}",
                     ),
                 ],
                 [
-                    InlineKeyboardButton(
+                    (
                         "❎ Delete Message",
-                        callback_data=f"report_{m.chat.id}=del={reported_user.id}={reported_msg_id}",
+                        f"report_{m.chat.id}=del={reported_user.id}={reported_msg_id}",
                     ),
                 ],
             ],

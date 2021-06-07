@@ -17,12 +17,8 @@
 
 
 from pyrogram import filters
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -52,12 +48,13 @@ async def get_rules(_, m: Message):
     if priv_rules_status:
         from alita import BOT_USERNAME
 
-        pm_kb = InlineKeyboardMarkup(
+        pm_kb = ikb(
             [
                 [
-                    InlineKeyboardButton(
+                    (
                         "Rules",
-                        url=f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
+                        f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
+                        "url",
                     ),
                 ],
             ],
@@ -144,16 +141,8 @@ async def clear_rules(_, m: Message):
 
     await m.reply_text(
         (tlang(m, "rules.clear_rules")),
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "⚠️ Confirm",
-                        callback_data="clear_rules",
-                    ),
-                    InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
-                ],
-            ],
+        reply_markup=ikb(
+            [[("⚠️ Confirm", "clear_rules"), ("❌ Cancel", "close_admin")]],
         ),
     )
     return

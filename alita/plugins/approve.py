@@ -18,13 +18,8 @@
 
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
-from pyrogram.types import (
-    CallbackQuery,
-    ChatPermissions,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, ChatPermissions, Message
+from pyromod.helpers import ikb
 
 from alita import LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
@@ -221,16 +216,8 @@ async def unapproveall_users(_, m: Message):
 
     await m.reply_text(
         "Are you sure you want to remove everyone who is approved in this chat?",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "⚠️ Confirm",
-                        callback_data="unapprove_all",
-                    ),
-                    InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
-                ],
-            ],
+        reply_markup=ikb(
+            [[("⚠️ Confirm", "unapprove_all"), ("❌ Cancel", "close_admin")]],
         ),
     )
     return

@@ -23,7 +23,8 @@ from os import remove
 from gpytranslate import Translator
 from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from pyrogram.types import Message
+from pyromod.helpers import ikb
 from tswift import Song
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
@@ -386,16 +387,7 @@ async def paste_it(_, m: Message):
 
     await replymsg.edit_text(
         (tlang(m, "utils.paste.pasted_nekobin")),
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        (tlang(m, "utils.paste.nekobin_btn")),
-                        url=url,
-                    ),
-                ],
-            ],
-        ),
+        reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
     )
     LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
 

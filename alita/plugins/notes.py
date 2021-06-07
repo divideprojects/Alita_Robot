@@ -21,12 +21,8 @@ from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -96,12 +92,13 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         note_hash = next(i[1] for i in db.get_all_notes(m.chat.id) if i[0] == note_name)
         await reply_text(
             f"Click on the button to get the note <code>{note_name}</code>",
-            reply_markup=InlineKeyboardMarkup(
+            reply_markup=ikb(
                 [
                     [
-                        InlineKeyboardButton(
+                        (
                             "Click Me!",
-                            url=f"https://t.me/{BOT_USERNAME}?start=note_{m.chat.id}_{note_hash}",
+                            f"https://t.me/{BOT_USERNAME}?start=note_{m.chat.id}_{note_hash}",
+                            "url",
                         ),
                     ],
                 ],
@@ -139,7 +136,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
 
         teks, button = await parse_button(text)
         button = await build_keyboard(button)
-        button = InlineKeyboardMarkup(button) if button else None
+        button = ikb(button) if button else None
         if button:
             try:
                 await reply_text(
@@ -175,7 +172,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         if getnotes["note_value"]:
             teks, button = await parse_button(text)
             button = await build_keyboard(button)
-            button = InlineKeyboardMarkup(button) if button else None
+            button = ikb(button) if button else None
         else:
             teks = ""
             button = None
@@ -349,12 +346,13 @@ async def local_notes(_, m: Message):
     if curr_pref:
         from alita import BOT_USERNAME
 
-        pm_kb = InlineKeyboardMarkup(
+        pm_kb = ikb(
             [
                 [
-                    InlineKeyboardButton(
+                    (
                         "All Notes",
-                        url=f"https://t.me/{BOT_USERNAME}?start=notes_{m.chat.id}",
+                        f"https://t.me/{BOT_USERNAME}?start=notes_{m.chat.id}",
+                        "url",
                     ),
                 ],
             ],
@@ -402,16 +400,8 @@ async def clear_allnote(_, m: Message):
 
     await m.reply_text(
         "Are you sure you want to clear all notes?",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "⚠️ Confirm",
-                        callback_data="clear_notes",
-                    ),
-                    InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
-                ],
-            ],
+        reply_markup=ikb(
+            [[("⚠️ Confirm", "clear_notes"), ("❌ Cancel", "close_admin")]],
         ),
     )
     return

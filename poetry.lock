@@ -512,6 +512,24 @@ pyaes = "1.6.1"
 pysocks = "1.7.1"
 
 [[package]]
+name = "pyromod"
+version = "1.5"
+description = "A monkeypatcher add-on for Pyrogram"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+develop = false
+
+[package.dependencies]
+pyrogram = ">=1.0.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/usernein/pyromod"
+reference = "master"
+resolved_reference = "2d71f19a821355ff9a4e1cd9fdbbf2a0990b482a"
+
+[[package]]
 name = "pysocks"
 version = "1.7.1"
 description = "A Python SOCKS client module. See https://github.com/Anorov/PySocks for more information."
@@ -756,7 +774,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "1a6312e7c5f9a20f86dc0b4bc8c645bfa5d459ee0c76ba2e483768006f43762e"
+content-hash = "eacafcc9a1743922496f080e54ecc3860169a154806fadc2849b4352e23da834"
 
 [metadata.files]
 aiodns = [
@@ -1245,6 +1263,7 @@ pyrogram = [
     {file = "Pyrogram-1.2.9-py3-none-any.whl", hash = "sha256:85cacbcebb704f6d849ff52b07e1bb4972b4ff81216c3d45ed385e9a5ab057a7"},
     {file = "Pyrogram-1.2.9.tar.gz", hash = "sha256:0f207cac92f4a4d204037214a1ebb54ba272a9557a22633427880fdef844c012"},
 ]
+pyromod = []
 pysocks = [
     {file = "PySocks-1.7.1-py27-none-any.whl", hash = "sha256:08e69f092cc6dbe92a0fdd16eeb9b9ffbc13cadfe5ca4c7bd92ffb078b293299"},
     {file = "PySocks-1.7.1-py3-none-any.whl", hash = "sha256:2725bd0a9925919b9b51739eea5f9e2bae91e83288108a9ad338b2e3a4435ee5"},

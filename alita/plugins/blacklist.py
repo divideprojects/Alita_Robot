@@ -19,12 +19,8 @@
 from html import escape
 
 from pyrogram import filters
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -211,16 +207,8 @@ async def rm_allblacklist(_, m: Message):
 
     await m.reply_text(
         "Are you sure you want to clear all blacklists?",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "⚠️ Confirm",
-                        callback_data="rm_allblacklist",
-                    ),
-                    InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
-                ],
-            ],
+        reply_markup=ikb(
+            [[("⚠️ Confirm", "rm_allblacklist"), ("❌ Cancel", "close_admin")]],
         ),
     )
     return

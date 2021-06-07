@@ -31,7 +31,8 @@ from pyrogram.errors import (
     PeerIdInvalid,
     RPCError,
 )
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from pyrogram.types import Message
+from pyromod.helpers import ikb
 from speedtest import Speedtest
 
 from alita import LOGFILE, LOGGER, MESSAGE_DUMP, PREFIX_HANDLER, UPTIME
@@ -68,9 +69,7 @@ async def send_log(c: Alita, m: Message):
         raw = (await paste(f.read()))[1]
     await m.reply_document(
         document=LOGFILE,
-        reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Logs", url=raw)]],
-        ),
+        reply_markup=ikb([[("Logs", raw, "url")]]),
         quote=True,
     )
     await replymsg.delete()

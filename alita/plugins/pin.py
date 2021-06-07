@@ -18,12 +18,8 @@
 
 from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
 from pyrogram.filters import regex
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
@@ -120,14 +116,7 @@ async def unpinall_message(_, m: Message):
 
     await m.reply_text(
         "Do you really want to unpin all messages in this chat?",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton("Yes", callback_data="unpin_all_in_this_chat"),
-                    InlineKeyboardButton("No", callback_data="close_admin"),
-                ],
-            ],
-        ),
+        reply_markup=ikb([[("Yes", "unpin_all_in_this_chat"), ("No", "close_admin")]]),
     )
     return
 
@@ -239,7 +228,7 @@ async def perma_pin(_, m: Message):
             text = m.text.split(None, 1)[1]
         teks, button = await parse_button(text)
         button = await build_keyboard(button)
-        button = InlineKeyboardMarkup(button) if button else None
+        button = ikb(button) if button else None
         z = await m.reply_text(teks, reply_markup=button)
         await z.pin()
     else:

@@ -18,12 +18,8 @@
 
 from pyrogram import filters
 from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import HELP_COMMANDS, LOGGER
 from alita.bot_class import Alita
@@ -95,7 +91,7 @@ async def start(c: Alita, m: Message):
             await m.reply_text(
                 help_msg,
                 parse_mode="markdown",
-                reply_markup=InlineKeyboardMarkup(help_kb),
+                reply_markup=ikb(help_kb),
                 quote=True,
                 disable_web_page_preview=True,
             )
@@ -135,15 +131,10 @@ async def start_back(_, q: CallbackQuery):
 @Alita.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(_, q: CallbackQuery):
 
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
+    keyboard = ikb(
+        [
             *(await gen_cmds_kb(q)),
-            [
-                InlineKeyboardButton(
-                    f"« {(tlang(q, 'general.back_btn'))}",
-                    callback_data="start_back",
-                ),
-            ],
+            [(f"« {(tlang(q, 'general.back_btn'))}", "start_back")],
         ],
     )
     try:
@@ -182,49 +173,28 @@ async def help_menu(_, m: Message):
             await m.reply_text(
                 help_msg,
                 parse_mode="markdown",
-                reply_markup=InlineKeyboardMarkup(help_kb),
+                reply_markup=ikb(help_kb),
                 quote=True,
                 disable_web_page_preview=True,
             )
         else:
             await m.reply_text(
                 (tlang(m, "start.public_help").format(help_option=help_option)),
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                "Help",
-                                url=f"t.me/{BOT_USERNAME}?start={help_option}",
-                            ),
-                        ],
-                    ],
+                reply_markup=ikb(
+                    [[("Help", f"t.me/{BOT_USERNAME}?start={help_option}", "url")]],
                 ),
             )
     else:
         if m.chat.type == "private":
-            keyboard = InlineKeyboardMarkup(
+            keyboard = ikb(
                 [
                     *(await gen_cmds_kb(m)),
-                    [
-                        InlineKeyboardButton(
-                            f"« {(tlang(m, 'general.back_btn'))}",
-                            callback_data="start_back",
-                        ),
-                    ],
+                    [(f"« {(tlang(m, 'general.back_btn'))}", "start_back")],
                 ],
             )
             msg = tlang(m, "general.commands_available")
         else:
-            keyboard = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text="Help",
-                            url=f"t.me/{BOT_USERNAME}?start=help",
-                        ),
-                    ],
-                ],
-            )
+            keyboard = ikb([[("Help", f"t.me/{BOT_USERNAME}?start=help", "url")]])
             msg = tlang(m, "start.pm_for_help")
 
         await m.reply_text(
@@ -246,17 +216,12 @@ async def get_module_info(_, q: CallbackQuery):
     )
 
     help_kb = HELP_COMMANDS[module]["buttons"] + [
-        [
-            InlineKeyboardButton(
-                "« " + (tlang(q, "general.back_btn")),
-                callback_data="commands",
-            ),
-        ],
+        [("« " + (tlang(q, "general.back_btn")), "commands")],
     ]
     await q.message.edit_text(
         help_msg,
         parse_mode="markdown",
-        reply_markup=InlineKeyboardMarkup(help_kb),
+        reply_markup=ikb(help_kb),
     )
     await q.answer()
     return

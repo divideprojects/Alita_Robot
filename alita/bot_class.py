@@ -28,7 +28,7 @@ from time import gmtime, strftime, time
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyromod.helpers import ikb
 
 from alita import (
     API_HASH,
@@ -128,12 +128,7 @@ class Alita(Client):
                 f"Logs for last run, pasted to [NekoBin]({neko}) as well as uploaded a file here.\n"
                 f"<code>{LOG_DATETIME}</code>"
             ),
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [InlineKeyboardButton("Raw Logs", url=raw)],
-                    [InlineKeyboardButton("Neko", url=neko)],
-                ],
-            ),
+            reply_markup=ikb([[("Raw Logs", raw, "url")], [("Neko", neko, "url")]]),
         )
         if LOG_CHANNEL:
             # LOG_CHANNEL is not necessary

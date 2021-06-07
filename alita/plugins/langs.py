@@ -19,12 +19,8 @@
 from asyncio import sleep
 
 from pyrogram import filters
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -37,18 +33,19 @@ async def gen_langs_kb():
     langs = sorted(list(lang_dict.keys()))
     kb = [
         [
-            InlineKeyboardButton(
+            (
                 f"{lang_dict[lang]['main']['language_flag']} {lang_dict[lang]['main']['language_name']} ({lang_dict[lang]['main']['lang_sample']})",
-                callback_data=f"set_lang.{lang}",
+                f"set_lang.{lang}",
             )
             for lang in langs
         ],
     ]
     kb.append(
         [
-            InlineKeyboardButton(
+            (
                 "🌎 Help us with translations!",
-                url="https://crowdin.com/project/alita_robot",
+                "https://crowdin.com/project/alita_robot",
+                "url",
             ),
         ],
     )
@@ -59,18 +56,11 @@ async def gen_langs_kb():
 async def chlang_callback(_, q: CallbackQuery):
 
     kb = await gen_langs_kb()
-    kb.append(
-        [
-            InlineKeyboardButton(
-                f"« {(tlang(q, 'general.back_btn'))}",
-                callback_data="start_back",
-            ),
-        ],
-    )
+    kb.append([(f"« {(tlang(q, 'general.back_btn'))}", "start_back")])
 
     await q.message.edit_text(
         (tlang(q, "langs.changelang")),
-        reply_markup=InlineKeyboardMarkup(kb),
+        reply_markup=ikb(kb),
     )
     await q.answer()
     return
@@ -96,16 +86,7 @@ async def set_lang_callback(_, q: CallbackQuery):
     await sleep(0.1)
 
     if q.message.chat.type == "private":
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        f"« {(tlang(q, 'general.back_btn'))}",
-                        callback_data="start_back",
-                    ),
-                ],
-            ],
-        )
+        keyboard = ikb([[(f"« {(tlang(q, 'general.back_btn'))}", "start_back")]])
     else:
         keyboard = None
     await q.message.edit_text(
@@ -143,7 +124,7 @@ async def set_lang(_, m: Message):
         return
     await m.reply_text(
         (tlang(m, "langs.changelang")),
-        reply_markup=InlineKeyboardMarkup(await gen_langs_kb()),
+        reply_markup=ikb(await gen_langs_kb()),
     )
     return
 
@@ -153,9 +134,10 @@ __PLUGIN__ = "language"
 __alt_name__ = ["lang", "langs", "languages"]
 __buttons__ = [
     [
-        InlineKeyboardButton(
+        (
             "🌎 Help us with translations!",
-            url="https://crowdin.com/project/alita_robot",
+            "https://crowdin.com/project/alita_robot",
+            "url",
         ),
     ],
 ]
