@@ -26,9 +26,12 @@ from alita.utils.msg_types import Types
 INSERTION_LOCK = RLock()
 
 
-class Notes:
+class Notes(MongoDB):
+
+    db_name = "notes"
+
     def __init__(self) -> None:
-        self.collection = MongoDB("notes")
+        super().__init__(self.db_name)
 
     def save_note(
         self,
@@ -39,7 +42,7 @@ class Notes:
         fileid="",
     ):
         with INSERTION_LOCK:
-            curr = self.collection.find_one(
+            curr = self.find_one(
                 {"chat_id": chat_id, "note_name": note_name},
             )
             if curr:
@@ -47,7 +50,7 @@ class Notes:
             hash_gen = md5(
                 (note_name + note_value + str(chat_id) + str(int(time()))).encode(),
             ).hexdigest()
-            return self.collection.insert_one(
+            return self.insert_one(
                 {
                     "chat_id": chat_id,
                     "note_name": note_name,
@@ -60,7 +63,7 @@ class Notes:
 
     def get_note(self, chat_id: int, note_name: str):
         with INSERTION_LOCK:
-            curr = self.collection.find_one(
+            curr = self.find_one(
                 {"chat_id": chat_id, "note_name": note_name},
             )
             if curr:
@@ -68,11 +71,11 @@ class Notes:
             return "Note does not exist!"
 
     def get_note_by_hash(self, note_hash: str):
-        return self.collection.find_one({"hash": note_hash})
+        return self.find_one({"hash": note_hash})
 
     def get_all_notes(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_all({"chat_id": chat_id})
+            curr = self.find_all({"chat_id": chat_id})
             note_list = []
             for note in curr:
                 note_list.append((note["note_name"], note["hash"]))
@@ -81,28 +84,28 @@ class Notes:
 
     def rm_note(self, chat_id: int, note_name: str):
         with INSERTION_LOCK:
-            curr = self.collection.find_one(
+            curr = self.find_one(
                 {"chat_id": chat_id, "note_name": note_name},
             )
             if curr:
-                self.collection.delete_one(curr)
+                self.delete_one(curr)
                 return True
             return False
 
     def rm_all_notes(self, chat_id: int):
         with INSERTION_LOCK:
-            return self.collection.delete_one({"chat_id": chat_id})
+            return self.delete_one({"chat_id": chat_id})
 
     def count_notes(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.collection.find_all({"chat_id": chat_id})
+            curr = self.find_all({"chat_id": chat_id})
             if curr:
                 return len(curr)
             return 0
 
     def count_notes_chats(self):
         with INSERTION_LOCK:
-            notes = self.collection.find_all()
+            notes = self.find_all()
             chats_ids = []
             for chat in notes:
                 chats_ids.append(chat["chat_id"])
@@ -110,52 +113,54 @@ class Notes:
 
     def count_all_notes(self):
         with INSERTION_LOCK:
-            return self.collection.count()
+            return self.count()
 
     def count_notes_type(self, ntype):
         with INSERTION_LOCK:
-            return self.collection.count({"msgtype": ntype})
+            return self.count({"msgtype": ntype})
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
 
-            old_chat_db = self.collection.find_one({"_id": old_chat_id})
+            old_chat_db = self.find_one({"_id": old_chat_id})
             if old_chat_db:
                 new_data = old_chat_db.update({"_id": new_chat_id})
-                self.collection.delete_one({"_id": old_chat_id})
-                self.collection.insert_one(new_data)
+                self.delete_one({"_id": old_chat_id})
+                self.insert_one(new_data)
 
 
-class NotesSettings:
+class NotesSettings(MongoDB):
+    db_name = "notes_settings"
+
     def __init__(self) -> None:
-        self.collection = MongoDB("notes_settings")
+        super().__init__(self.db_name)
 
     def set_privatenotes(self, chat_id: int, status: bool = False):
-        curr = self.collection.find_one({"_id": chat_id})
+        curr = self.find_one({"_id": chat_id})
         if curr:
-            return self.collection.update({"_id": chat_id}, {"privatenotes": status})
-        return self.collection.insert_one({"_id": chat_id, "privatenotes": status})
+            return self.update({"_id": chat_id}, {"privatenotes": status})
+        return self.insert_one({"_id": chat_id, "privatenotes": status})
 
     def get_privatenotes(self, chat_id: int):
-        curr = self.collection.find_one({"_id": chat_id})
+        curr = self.find_one({"_id": chat_id})
         if curr:
             return curr["privatenotes"]
-        self.collection.update({"_id": chat_id}, {"privatenotes": False})
+        self.update({"_id": chat_id}, {"privatenotes": False})
         return False
 
     def list_chats(self):
-        return self.collection.find_all({"privatenotes": True})
+        return self.find_all({"privatenotes": True})
 
     def count_chats(self):
-        return len(self.collection.find_all({"privatenotes": True}))
+        return len(self.find_all({"privatenotes": True}))
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
 
-            old_chat_db = self.collection.find_one({"_id": old_chat_id})
+            old_chat_db = self.find_one({"_id": old_chat_id})
             if old_chat_db:
                 new_data = old_chat_db.update({"_id": new_chat_id})
-                self.collection.delete_one({"_id": old_chat_id})
-                self.collection.insert_one(new_data)
+                self.delete_one({"_id": old_chat_id})
+                self.insert_one(new_data)

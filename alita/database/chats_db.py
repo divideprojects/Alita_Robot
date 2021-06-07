@@ -25,14 +25,14 @@ from alita.database import MongoDB
 INSERTION_LOCK = RLock()
 
 
-class Chats:
+class Chats(MongoDB):
     """Class to manage users for bot."""
 
     # Database name to connect to to preform operations
     db_name = "chats"
 
     def __init__(self, chat_id: int) -> None:
-        self.collection = MongoDB(self.db_name)
+        super().__init__(self.db_name)
         self.chat_id = chat_id
         self.chat_info = self.__ensure_in_db()
 
@@ -50,7 +50,7 @@ class Chats:
             if chat_name != self.chat_info["chat_name"] and self.user_is_in_chat(
                 user_id,
             ):
-                return self.collection.update(
+                return self.update(
                     {"_id": self.chat_id},
                     {"chat_name": chat_name},
                 )
@@ -59,7 +59,7 @@ class Chats:
                 user_id,
             ):
                 self.chat_info["users"].append(user_id)
-                return self.collection.update(
+                return self.update(
                     {"_id": self.chat_id},
                     {"users": self.chat_info["users"]},
                 )
@@ -67,7 +67,7 @@ class Chats:
             users_old = self.chat_info["users"]
             users_old.append(user_id)
             users = list(set(users_old))
-            return self.collection.update(
+            return self.update(
                 {"_id": self.chat_id},
                 {
                     "_id": self.chat_id,
@@ -118,23 +118,23 @@ class Chats:
 
     def load_from_db(self):
         with INSERTION_LOCK:
-            return self.collection.find_all()
+            return self.find_all()
 
     def __ensure_in_db(self):
-        chat_data = self.collection.find_one({"_id": self.chat_id})
+        chat_data = self.find_one({"_id": self.chat_id})
         if not chat_data:
             new_data = {"_id": self.chat_id, "chat_name": "", "users": []}
-            self.collection.insert_one(new_data)
+            self.insert_one(new_data)
             LOGGER.info(f"Initialized Chats Document for chat {self.chat_id}")
             return new_data
         return chat_data
 
     # Migrate if chat id changes!
     def migrate_chat(self, new_chat_id: int):
-        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        old_chat_db = self.find_one({"_id": self.chat_id})
         new_data = old_chat_db.update({"_id": new_chat_id})
-        self.collection.insert_one(new_data)
-        self.collection.delete_one({"_id": self.chat_id})
+        self.insert_one(new_data)
+        self.delete_one({"_id": self.chat_id})
 
     @staticmethod
     def repair_db(collection):

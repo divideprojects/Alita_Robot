@@ -27,13 +27,13 @@ INSERTION_LOCK = RLock()
 RULES_CACHE = {}
 
 
-class Rules:
+class Rules(MongoDB):
     """Class for rules for chats in bot."""
 
     db_name = "rules"
 
     def __init__(self, chat_id: int) -> None:
-        self.collection = MongoDB(self.db_name)
+        super().__init__(self.db_name)
         self.chat_id = chat_id
         self.chat_info = self.__ensure_in_db()
 
@@ -44,7 +44,7 @@ class Rules:
     def set_rules(self, rules: str):
         with INSERTION_LOCK:
             self.chat_info["rules"] = rules
-            self.collection.update({"_id": self.chat_id}, {"rules": rules})
+            self.update({"_id": self.chat_id}, {"rules": rules})
 
     def get_privrules(self):
         with INSERTION_LOCK:
@@ -53,11 +53,11 @@ class Rules:
     def set_privrules(self, privrules: bool):
         with INSERTION_LOCK:
             self.chat_info["privrules"] = privrules
-            self.collection.update({"_id": self.chat_id}, {"privrules": privrules})
+            self.update({"_id": self.chat_id}, {"privrules": privrules})
 
     def clear_rules(self):
         with INSERTION_LOCK:
-            return self.collection.delete_one({"_id": self.chat_id})
+            return self.delete_one({"_id": self.chat_id})
 
     @staticmethod
     def count_chats_with_rules():
@@ -84,20 +84,20 @@ class Rules:
             return collection.find_all()
 
     def __ensure_in_db(self):
-        chat_data = self.collection.find_one({"_id": self.chat_id})
+        chat_data = self.find_one({"_id": self.chat_id})
         if not chat_data:
             new_data = {"_id": self.chat_id, "privrules": False, "rules": ""}
-            self.collection.insert_one(new_data)
+            self.insert_one(new_data)
             LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
             return new_data
         return chat_data
 
     # Migrate if chat id changes!
     def migrate_chat(self, new_chat_id: int):
-        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        old_chat_db = self.find_one({"_id": self.chat_id})
         new_data = old_chat_db.update({"_id": new_chat_id})
-        self.collection.insert_one(new_data)
-        self.collection.delete_one({"_id": self.chat_id})
+        self.insert_one(new_data)
+        self.delete_one({"_id": self.chat_id})
 
     @staticmethod
     def repair_db(collection):

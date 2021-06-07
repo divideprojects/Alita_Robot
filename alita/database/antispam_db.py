@@ -30,30 +30,34 @@ INSERTION_LOCK = RLock()
 ANTISPAM_BANNED = set()
 
 
-class GBan:
+class GBan(MongoDB):
     """Class for managing Gbans in bot."""
 
+    db_name = "gbans"
+
     def __init__(self) -> None:
-        self.collection = MongoDB("gbans")
+        super().__init__(self.db_name)
 
     def check_gban(self, user_id: int):
         with INSERTION_LOCK:
-            if user_id in ANTISPAM_BANNED:
-                return True
-            return bool(self.collection.find_one({"_id": user_id}))
+            return (
+                True
+                if user_id in ANTISPAM_BANNED
+                else bool(self.find_one({"_id": user_id}))
+            )
 
     def add_gban(self, user_id: int, reason: str, by_user: int):
         global ANTISPAM_BANNED
         with INSERTION_LOCK:
 
             # Check if  user is already gbanned or not
-            if self.collection.find_one({"_id": user_id}):
+            if self.find_one({"_id": user_id}):
                 return self.update_gban_reason(user_id, reason)
 
             # If not already gbanned, then add to gban
             time_rn = datetime.now()
             ANTISPAM_BANNED.add(user_id)
-            return self.collection.insert_one(
+            return self.insert_one(
                 {
                     "_id": user_id,
                     "reason": reason,
@@ -66,22 +70,22 @@ class GBan:
         global ANTISPAM_BANNED
         with INSERTION_LOCK:
             # Check if  user is already gbanned or not
-            if self.collection.find_one({"_id": user_id}):
+            if self.find_one({"_id": user_id}):
                 ANTISPAM_BANNED.remove(user_id)
-                return self.collection.delete_one({"_id": user_id})
+                return self.delete_one({"_id": user_id})
 
             return "User not gbanned!"
 
     def get_gban(self, user_id: int):
         if self.check_gban(user_id):
-            curr = self.collection.find_one({"_id": user_id})
+            curr = self.find_one({"_id": user_id})
             if curr:
                 return True, curr["reason"]
         return False, ""
 
     def update_gban_reason(self, user_id: int, reason: str):
         with INSERTION_LOCK:
-            return self.collection.update(
+            return self.update(
                 {"_id": user_id},
                 {"reason": reason},
             )
@@ -93,11 +97,11 @@ class GBan:
             except Exception as ef:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
-                return self.collection.count()
+                return self.count()
 
     def load_from_db(self):
         with INSERTION_LOCK:
-            return self.collection.find_all()
+            return self.find_all()
 
     def list_gbans(self):
         with INSERTION_LOCK:
@@ -106,7 +110,7 @@ class GBan:
             except Exception as ef:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
-            return self.collection.find_all()
+            return self.find_all()
 
 
 def __pre_req_antispam_users():

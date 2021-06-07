@@ -29,9 +29,12 @@ INSERTION_LOCK = RLock()
 FILTER_CACHE = {}
 
 
-class Filters:
+class Filters(MongoDB):
+
+    db_name = "chat_filters"
+
     def __init__(self) -> None:
-        self.collection = MongoDB("chat_filters")
+        super().__init__(self.db_name)
 
     def save_filter(
         self,
@@ -68,12 +71,12 @@ class Filters:
                 FILTER_CACHE[chat_id] = curr_filters
 
             # Database update
-            curr = self.collection.find_one(
+            curr = self.find_one(
                 {"chat_id": chat_id, "keyword": keyword},
             )
             if curr:
                 return False
-            return self.collection.insert_one(
+            return self.insert_one(
                 {
                     "chat_id": chat_id,
                     "keyword": keyword,
@@ -99,7 +102,7 @@ class Filters:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
 
-            curr = self.collection.find_one(
+            curr = self.find_one(
                 {"chat_id": chat_id, "keyword": {"$regex": fr"\|?{keyword}\|?"}},
             )
             if curr:
@@ -117,7 +120,7 @@ class Filters:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
 
-            curr = self.collection.find_all({"chat_id": chat_id})
+            curr = self.find_all({"chat_id": chat_id})
             if curr:
                 filter_list = {i["keyword"] for i in curr}
                 return list(filter_list)
@@ -140,11 +143,11 @@ class Filters:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
 
-            curr = self.collection.find_one(
+            curr = self.find_one(
                 {"chat_id": chat_id, "keyword": {"$regex": fr"\|?{keyword}\|?"}},
             )
             if curr:
-                self.collection.delete_one(curr)
+                self.delete_one(curr)
                 return True
 
             return False
@@ -160,7 +163,7 @@ class Filters:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
 
-            return self.collection.delete_one({"chat_id": chat_id})
+            return self.delete_one({"chat_id": chat_id})
 
     def count_filters_all(self):
         with INSERTION_LOCK:
@@ -181,7 +184,7 @@ class Filters:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
 
-            curr = self.collection.find_all()
+            curr = self.find_all()
             if curr:
                 return len(curr)
             return 0
@@ -210,7 +213,7 @@ class Filters:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
 
-            curr = self.collection.find_all()
+            curr = self.find_all()
             if curr:
                 return len(
                     [z for z in (i["keyword"].split("|") for i in curr) if len(z) >= 2],
@@ -224,7 +227,7 @@ class Filters:
             except Exception as ef:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
-            filters = self.collection.find_all()
+            filters = self.find_all()
             chats_ids = {i["chat_id"] for i in filters}
             return len(chats_ids)
 
@@ -242,15 +245,15 @@ class Filters:
             except Exception as ef:
                 LOGGER.error(ef)
                 LOGGER.error(format_exc())
-            return self.collection.count()
+            return self.count()
 
     def count_filter_type(self, ntype):
         with INSERTION_LOCK:
-            return self.collection.count({"msgtype": ntype})
+            return self.count({"msgtype": ntype})
 
     def load_from_db(self):
         with INSERTION_LOCK:
-            return self.collection.find_all()
+            return self.find_all()
 
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
@@ -264,11 +267,11 @@ class Filters:
                 pass
 
             # Update in db
-            old_chat_db = self.collection.find_one({"_id": old_chat_id})
+            old_chat_db = self.find_one({"_id": old_chat_id})
             if old_chat_db:
                 new_data = old_chat_db.update({"_id": new_chat_id})
-                self.collection.delete_one({"_id": old_chat_id})
-                self.collection.insert_one(new_data)
+                self.delete_one({"_id": old_chat_id})
+                self.insert_one(new_data)
 
 
 def __pre_req_filters():

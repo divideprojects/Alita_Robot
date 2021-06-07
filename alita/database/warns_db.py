@@ -25,7 +25,7 @@ from alita.database import MongoDB
 INSERTION_LOCK = RLock()
 
 
-class Warns:
+class Warns(MongoDB):
 
     db_name = "chat_warns"
 
@@ -34,7 +34,7 @@ class Warns:
         self.chat_id = chat_id
 
     def __ensure_in_db(self, user_id: int):
-        chat_data = self.collection.find_one(
+        chat_data = self.find_one(
             {"chat_id": self.chat_id, "user_id": user_id},
         )
         if not chat_data:
@@ -44,7 +44,7 @@ class Warns:
                 "warns": [],
                 "num_warns": 0,
             }
-            self.collection.insert_one(new_data)
+            self.insert_one(new_data)
             LOGGER.info(f"Initialized Warn Document for {user_id} in {self.chat_id}")
             return new_data
         return chat_data
@@ -54,7 +54,7 @@ class Warns:
             self.user_info = self.__ensure_in_db(user_id)
             warns = self.user_info["warns"] + [warn_reason]
             num_warns = len(warns)
-            self.collection.update(
+            self.update(
                 {"chat_id": self.chat_id, "user_id": user_id},
                 {"warns": warns, "num_warns": num_warns},
             )
@@ -65,7 +65,7 @@ class Warns:
             self.user_info = self.__ensure_in_db(user_id)
             curr_warns = self.user_info["warns"][:-1]
             num_warns = len(curr_warns)
-            self.collection.update(
+            self.update(
                 {"chat_id": self.chat_id, "user_id": user_id},
                 {"warns": curr_warns, "num_warns": num_warns},
             )
@@ -74,7 +74,7 @@ class Warns:
     def reset_warns(self, user_id: int):
         with INSERTION_LOCK:
             self.user_info = self.__ensure_in_db(user_id)
-            return self.collection.delete_one(
+            return self.delete_one(
                 {"chat_id": self.chat_id, "user_id": user_id},
             )
 
@@ -125,20 +125,20 @@ class Warns:
                     )
 
 
-class WarnSettings:
+class WarnSettings(MongoDB):
 
     db_name = "chat_warn_settings"
 
     def __init__(self, chat_id: int) -> None:
-        self.collection = MongoDB(WarnSettings.db_name)
+        super().__init__(self.db_name)
         self.chat_id = chat_id
         self.chat_info = self.__ensure_in_db()
 
     def __ensure_in_db(self):
-        chat_data = self.collection.find_one({"_id": self.chat_id})
+        chat_data = self.find_one({"_id": self.chat_id})
         if not chat_data:
             new_data = {"_id": self.chat_id, "warn_mode": "none", "warn_limit": 3}
-            self.collection.insert_one(new_data)
+            self.insert_one(new_data)
             LOGGER.info(f"Initialized Warn Settings Document for {self.chat_id}")
             return new_data
         return chat_data
@@ -149,7 +149,7 @@ class WarnSettings:
 
     def set_warnmode(self, warn_mode: str = "none"):
         with INSERTION_LOCK:
-            self.collection.update(
+            self.update(
                 {"_id": self.chat_id},
                 {"warn_mode": warn_mode},
             )
@@ -161,7 +161,7 @@ class WarnSettings:
 
     def set_warnlimit(self, warn_limit: int = 3):
         with INSERTION_LOCK:
-            self.collection.update(
+            self.update(
                 {"_id": self.chat_id},
                 {"warn_limit": warn_limit},
             )

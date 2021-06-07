@@ -28,11 +28,13 @@ INSERTION_LOCK = RLock()
 BLACKLIST_CHATS = []
 
 
-class GroupBlacklist:
+class GroupBlacklist(MongoDB):
     """Class to blacklist chats where bot will exit."""
 
+    db_name = "group_blacklists"
+
     def __init__(self) -> None:
-        self.collection = MongoDB("group_blacklists")
+        super().__init__(self.db_name)
 
     def add_chat(self, chat_id: int):
         with INSERTION_LOCK:
@@ -40,14 +42,14 @@ class GroupBlacklist:
             Chats.remove_chat(chat_id)  # Delete chat from database
             BLACKLIST_CHATS.append(chat_id)
             BLACKLIST_CHATS.sort()
-            return self.collection.insert_one({"_id": chat_id, "blacklist": True})
+            return self.insert_one({"_id": chat_id, "blacklist": True})
 
     def remove_chat(self, chat_id: int):
         with INSERTION_LOCK:
             global BLACKLIST_CHATS
             BLACKLIST_CHATS.remove(chat_id)
             BLACKLIST_CHATS.sort()
-            return self.collection.delete_one({"_id": chat_id})
+            return self.delete_one({"_id": chat_id})
 
     def list_all_chats(self):
         with INSERTION_LOCK:
@@ -56,13 +58,13 @@ class GroupBlacklist:
                 return BLACKLIST_CHATS
             except Exception:
                 bl_chats = []
-                all_chats = self.collection.find_all()
+                all_chats = self.find_all()
                 for chat in all_chats:
                     bl_chats.append(chat["_id"])
                 return bl_chats
 
     def get_from_db(self):
-        return self.collection.find_all()
+        return self.find_all()
 
 
 def __pre_req_group_blacklist():

@@ -28,13 +28,13 @@ INSERTION_LOCK = RLock()
 LANG_CACHE = {}
 
 
-class Langs:
+class Langs(MongoDB):
     """Class for language options in bot."""
 
     db_name = "langs"
 
     def __init__(self, chat_id: int) -> None:
-        self.collection = MongoDB(self.db_name)
+        super().__init__(self.db_name)
         self.chat_id = chat_id
         self.chat_info = self.__ensure_in_db()
 
@@ -50,7 +50,7 @@ class Langs:
             global LANG_CACHE
             LANG_CACHE[self.chat_id] = lang
             self.chat_info["lang"] = lang
-            return self.collection.update(
+            return self.update(
                 {"_id": self.chat_id},
                 {"lang": self.chat_info["lang"]},
             )
@@ -69,21 +69,21 @@ class Langs:
         try:
             chat_data = {"_id": self.chat_id, "lang": LANG_CACHE[self.chat_id]}
         except KeyError:
-            chat_data = self.collection.find_one({"_id": self.chat_id})
+            chat_data = self.find_one({"_id": self.chat_id})
         if not chat_data:
             chat_type = self.get_chat_type()
             new_data = {"_id": self.chat_id, "lang": "en", "chat_type": chat_type}
-            self.collection.insert_one(new_data)
+            self.insert_one(new_data)
             LOGGER.info(f"Initialized Language Document for chat {self.chat_id}")
             return new_data
         return chat_data
 
     # Migrate if chat id changes!
     def migrate_chat(self, new_chat_id: int):
-        old_chat_db = self.collection.find_one({"_id": self.chat_id})
+        old_chat_db = self.find_one({"_id": self.chat_id})
         new_data = old_chat_db.update({"_id": new_chat_id})
-        self.collection.insert_one(new_data)
-        self.collection.delete_one({"_id": self.chat_id})
+        self.insert_one(new_data)
+        self.delete_one({"_id": self.chat_id})
 
     @staticmethod
     def repair_db(collection):

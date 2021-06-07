@@ -25,14 +25,14 @@ from alita.database import MongoDB
 INSERTION_LOCK = RLock()
 
 
-class Greetings:
+class Greetings(MongoDB):
     """Class for managing antichannelpins in chats."""
 
     # Database name to connect to to preform operations
     db_name = "welcome_chats"
 
     def __init__(self, chat_id: int) -> None:
-        self.collection = MongoDB(self.db_name)
+        super().__init__(self.db_name)
         self.chat_id = chat_id
         self.chat_info = self.__ensure_in_db()
 
@@ -64,42 +64,42 @@ class Greetings:
     # Set settings in database
     def set_current_welcome_settings(self, status: bool):
         with INSERTION_LOCK:
-            return self.collection.update({"_id": self.chat_id}, {"welcome": status})
+            return self.update({"_id": self.chat_id}, {"welcome": status})
 
     def set_current_goodbye_settings(self, status: bool):
         with INSERTION_LOCK:
-            return self.collection.update({"_id": self.chat_id}, {"goodbye": status})
+            return self.update({"_id": self.chat_id}, {"goodbye": status})
 
     def set_welcome_text(self, welcome_text: str):
         with INSERTION_LOCK:
-            return self.collection.update(
+            return self.update(
                 {"_id": self.chat_id},
                 {"welcome_text": welcome_text},
             )
 
     def set_goodbye_text(self, goodbye_text: str):
         with INSERTION_LOCK:
-            return self.collection.update(
+            return self.update(
                 {"_id": self.chat_id},
                 {"goodbye_text": goodbye_text},
             )
 
     def set_current_cleanservice_settings(self, status: bool):
         with INSERTION_LOCK:
-            return self.collection.update(
+            return self.update(
                 {"_id": self.chat_id},
                 {"cleanservice": status},
             )
 
     def set_current_cleanwelcome_settings(self, status: bool):
         with INSERTION_LOCK:
-            return self.collection.update(
+            return self.update(
                 {"_id": self.chat_id},
                 {"cleanwelcome": status},
             )
 
     def __ensure_in_db(self):
-        chat_data = self.collection.find_one({"_id": self.chat_id})
+        chat_data = self.find_one({"_id": self.chat_id})
         if not chat_data:
             new_data = {
                 "_id": self.chat_id,
@@ -110,7 +110,7 @@ class Greetings:
                 "welcome": True,
                 "goodbye": True,
             }
-            self.collection.insert_one(new_data)
+            self.insert_one(new_data)
             LOGGER.info(f"Initialized Greetings Document for chat {self.chat_id}")
             return new_data
         return chat_data

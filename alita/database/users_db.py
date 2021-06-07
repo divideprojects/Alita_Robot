@@ -25,13 +25,13 @@ from alita.database import MongoDB
 INSERTION_LOCK = RLock()
 
 
-class Users:
+class Users(MongoDB):
     """Class to manage users for bot."""
 
     db_name = "users"
 
     def __init__(self, user_id: int) -> None:
-        self.collection = MongoDB(self.db_name)
+        super().__init__(self.db_name)
         self.user_id = user_id
         self.user_info = self.__ensure_in_db()
 
@@ -42,14 +42,14 @@ class Users:
                 and username == self.user_info["username"]
             ):
                 return True
-            return self.collection.update(
+            return self.update(
                 {"_id": self.user_id},
                 {"username": username, "name": name},
             )
 
     def delete_user(self):
         with INSERTION_LOCK:
-            return self.collection.delete_one(
+            return self.delete_one(
                 {"_id": self.user_id},
             )
 
@@ -87,10 +87,10 @@ class Users:
             return {}
 
     def __ensure_in_db(self):
-        chat_data = self.collection.find_one({"_id": self.user_id})
+        chat_data = self.find_one({"_id": self.user_id})
         if not chat_data:
             new_data = {"_id": self.user_id, "username": "", "name": "unknown_till_now"}
-            self.collection.insert_one(new_data)
+            self.insert_one(new_data)
             LOGGER.info(f"Initialized User Document for {self.user_id}")
             return new_data
         return chat_data
