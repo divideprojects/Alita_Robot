@@ -19,7 +19,7 @@
 from pyrogram.types import Message
 
 from alita.bot_class import Alita
-from alita.database import db
+from alita.database import MongoDB
 from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
@@ -82,6 +82,8 @@ async def get_stats(_, m: Message):
 
 @Alita.on_message(command("dbstats", dev_cmd=True))
 async def get_dbstats(_, m: Message):
-    db_stats = f"\n<b>Database Stats:</b>\n<code>{(db.command('dbstats'))}</code>"
+    db_stats = (
+        f"<b>Database Stats:</b>\n<code>{MongoDB('test').db_command('dbstats')}</code>"
+    )
     await m.reply_text(db_stats, parse_mode="html")
     return

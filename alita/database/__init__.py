@@ -20,21 +20,14 @@ from pymongo import MongoClient
 
 from alita import DB_NAME, DB_URI, LOGGER
 
-# Client to connect to mongodb
-mongodb_client = MongoClient(DB_URI)
-if mongodb_client:
-    LOGGER.info("Established connection to MongoDB!")
-
-db = mongodb_client[DB_NAME]
-if db:
-    LOGGER.info(f"Connected to '{DB_NAME}' database")
-
 
 class MongoDB:
     """Class for interacting with Bot database."""
 
     def __init__(self, collection) -> None:
-        self.collection = db[collection]
+        self._client = MongoClient(DB_URI)
+        self._db = self._client[DB_NAME]
+        self.collection = self._db[collection]
 
     # Insert one entry into collection
     def insert_one(self, document):
@@ -52,10 +45,8 @@ class MongoDB:
     def find_all(self, query=None):
         if query is None:
             query = {}
-        lst = []
-        for document in self.collection.find(query):
-            lst.append(document)
-        return lst
+        findall_res = [document for document in self.collection.find(query)]
+        return findall_res
 
     # Count entries from collection
     def count(self, query=None):
@@ -83,10 +74,11 @@ class MongoDB:
         new_document = self.collection.find_one(query)
         return result.modified_count, new_document
 
-    # Close connection
-    @staticmethod
-    def close():
-        return mongodb_client.close()
+    def db_command(self, command):
+        return self._db.command(command)
+
+    def close(self):
+        return self._client.close()
 
 
 def __connect_first():
