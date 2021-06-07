@@ -74,6 +74,8 @@ and click the below button!  <br />
 - Fill in all the variables in *Development* class, not *Config* class. **Sudo, Dev, Whitelist** users are optional!!
 - Run the bot using `python3 -m alita`
 
+**Note:** The traditional method currently only works on Linux OSes as a requirement [uvloop](https://pypi.org/project/uvloop/) requires linux api method which isn't provided by Windows!
+
 ### Docker
 
 - Clone the repo and enter into it
