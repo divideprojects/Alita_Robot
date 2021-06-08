@@ -43,10 +43,10 @@ from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
 from alita.database.users_db import Users
 from alita.tr_engine import tlang
-from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import command
 from alita.utils.extract_user import extract_user
+from alita.utils.http_helper import HTTPx
 from alita.utils.parser import mention_html
 from alita.utils.paste import paste
 
@@ -234,16 +234,17 @@ async def github(_, m: Message):
         return
 
     URL = f"https://api.github.com/users/{username}"
-    result, resp = await AioHttp.get_json(URL)
-    if resp.status == 404:
-        await m.reply_text(f"<code>{username}</code> not found")
+    r = await HTTPx.get(URL)
+    if r.status_code == 404:
+        await m.reply_text(f"<code>{username}</code> not found", quote=True)
         return
 
-    url = result.get("html_url", None)
-    name = result.get("name", None)
-    company = result.get("company", None)
-    bio = result.get("bio", None)
-    created_at = result.get("created_at", "Not Found")
+    r_json = r.json()
+    url = r_json.get("html_url", None)
+    name = r_json.get("name", None)
+    company = r_json.get("company", None)
+    bio = r_json.get("bio", None)
+    created_at = r_json.get("created_at", "Not Found")
 
     REPLY = (
         f"<b>GitHub Info for</b> <code>{username}</code>"
@@ -254,7 +255,7 @@ async def github(_, m: Message):
         f"<b>Created at:</b> <code>{created_at}</code>"
     )
 
-    await m.reply_text(REPLY, quote=True)
+    await m.reply_text(REPLY, quote=True, disable_web_page_preview=True)
 
     return
 

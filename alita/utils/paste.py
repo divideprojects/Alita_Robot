@@ -16,21 +16,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from typing import List
-
-from aiohttp import ClientSession
+from httpx import AsyncClient
 
 
 async def paste(content: str):
     """Paste the provided content to nekobin."""
     content = str(content)
     NEKOBIN_URL = "https://nekobin.com/"
-    async with ClientSession() as sess:
-        async with sess.post(
-            NEKOBIN_URL + "api/documents",
+    async with AsyncClient() as client:
+        async with client.post(
+            f"{NEKOBIN_URL}api/documents",
             json={"content": content},
         ) as resp:
-            if resp.status == 201:
+            if resp.status_code == 201:
                 response = await resp.json()
                 key = response["result"]["key"]
                 final_url = f"{NEKOBIN_URL}{key}.txt"
