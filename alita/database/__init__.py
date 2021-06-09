@@ -21,12 +21,12 @@ from pymongo import MongoClient
 from alita import DB_NAME, DB_URI, LOGGER
 
 alita_db_client = MongoClient(DB_URI)
+alita_main_db = alita_db_client[DB_NAME]
 
 class MongoDB:
     """Class for interacting with Bot database."""
 
     def __init__(self, collection) -> None:
-        self._db = alita_db_client[DB_NAME]
         self.collection = self._db[collection]
 
     # Insert one entry into collection
