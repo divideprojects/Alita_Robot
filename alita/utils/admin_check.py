@@ -54,6 +54,24 @@ async def admin_check(m: Message or CallbackQuery) -> bool:
 
     return True
 
+async def check_rights(m: Message or CallbackQuery, rights) -> bool:
+    """ Check Admin Rights """
+    if isinstance(m, Message):
+        user_id = m.from_user.id
+        chat_id = m.chat.id
+    if isinstance(m, CallbackQuery):
+        user_id = m.message.from_user.id
+        chat_id = m.message.chat.id
+
+    user = await app.get_chat_member(chat_id, user_id)
+    if user.status == "member":
+        return False
+    admin_strings = ("creator", "administrator")
+    if user.status in admin_strings:
+        if getattr(user, rights, None):
+            return True
+        return False
+    return False
 
 async def owner_check(m: Message or CallbackQuery) -> bool:
     """Checks if user is owner or not."""
