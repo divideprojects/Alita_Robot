@@ -59,9 +59,11 @@ async def check_rights(m: Message or CallbackQuery, rights) -> bool:
     if isinstance(m, Message):
         user_id = m.from_user.id
         chat_id = m.chat.id
+        app = m._client
     if isinstance(m, CallbackQuery):
         user_id = m.message.from_user.id
         chat_id = m.message.chat.id
+        app = m.message._client
 
     user = await app.get_chat_member(chat_id, user_id)
     if user.status == "member":
