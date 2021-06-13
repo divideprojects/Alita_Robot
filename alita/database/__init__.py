@@ -27,7 +27,7 @@ class MongoDB:
     """Class for interacting with Bot database."""
 
     def __init__(self, collection) -> None:
-        self.collection = self._db[collection]
+        self.collection = alita_main_db[collection]
 
     # Insert one entry into collection
     def insert_one(self, document):
