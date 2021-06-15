@@ -31,7 +31,7 @@ from alita.utils.custom_filters import admin_filter, command
 
 async def gen_langs_kb():
     langs = sorted(list(lang_dict.keys()))
-    kb = [
+    return [
         [
             (
                 f"{lang_dict[lang]['main']['language_flag']} {lang_dict[lang]['main']['language_name']} ({lang_dict[lang]['main']['lang_sample']})",
@@ -39,17 +39,14 @@ async def gen_langs_kb():
             )
             for lang in langs
         ],
-    ]
-    kb.append(
         [
             (
                 "🌎 Help us with translations!",
                 "https://crowdin.com/project/alita_robot",
                 "url",
-            ),
+            )
         ],
-    )
-    return kb
+    ]
 
 
 @Alita.on_callback_query(filters.regex("^chlang$"))

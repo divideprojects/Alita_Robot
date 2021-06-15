@@ -56,29 +56,28 @@ async def report_setting(_, m: Message):
             await m.reply_text(
                 f"Your current report preference is: `{(db.get_settings())}`",
             )
-    else:
-        if len(args) >= 2:
-            option = args[1].lower()
-            if option in ("yes", "on", "true"):
-                db.set_settings(True)
-                LOGGER.info(f"{m.from_user.id} enabled reports in {m.chat.id}")
-                await m.reply_text(
-                    "Turned on reporting! Admins who have turned on reports will be notified when /report "
-                    "or @admin is called.",
-                    quote=True,
-                )
-
-            elif option in ("no", "off", "false"):
-                db.set_settings(False)
-                LOGGER.info(f"{m.from_user.id} disabled reports in {m.chat.id}")
-                await m.reply_text(
-                    "Turned off reporting! No admins will be notified on /report or @admin.",
-                    quote=True,
-                )
-        else:
+    elif len(args) >= 2:
+        option = args[1].lower()
+        if option in ("yes", "on", "true"):
+            db.set_settings(True)
+            LOGGER.info(f"{m.from_user.id} enabled reports in {m.chat.id}")
             await m.reply_text(
-                f"This group's current setting is: `{(db.get_settings())}`",
+                "Turned on reporting! Admins who have turned on reports will be notified when /report "
+                "or @admin is called.",
+                quote=True,
             )
+
+        elif option in ("no", "off", "false"):
+            db.set_settings(False)
+            LOGGER.info(f"{m.from_user.id} disabled reports in {m.chat.id}")
+            await m.reply_text(
+                "Turned off reporting! No admins will be notified on /report or @admin.",
+                quote=True,
+            )
+    else:
+        await m.reply_text(
+            f"This group's current setting is: `{(db.get_settings())}`",
+        )
 
 
 @Alita.on_message(command("report") & filters.group)

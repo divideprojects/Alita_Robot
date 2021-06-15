@@ -39,65 +39,61 @@ async def initial_works(_, m: Message):
     chatdb = Chats(m.chat.id)
     try:
         if m.migrate_to_chat_id or m.migrate_from_chat_id:
-            if m.migrate_to_chat_id:
-                new_chat = m.migrate_to_chat_id
-            elif m.migrate_from_chat_id:
-                new_chat = m.chat.id
+            new_chat = m.migrate_to_chat_id or m.chat.id
             try:
                 await migrate_chat(m, new_chat)
             except RPCError as ef:
                 LOGGER.error(ef)
                 return
+        elif m.reply_to_message and not m.forward_from:
+            chatdb.update_chat(
+                m.chat.title,
+                m.reply_to_message.from_user.id,
+            )
+            Users(m.reply_to_message.from_user.id).update_user(
+                (
+                    f"{m.reply_to_message.from_user.first_name} {m.reply_to_message.from_user.last_name}"
+                    if m.reply_to_message.from_user.last_name
+                    else m.reply_to_message.from_user.first_name
+                ),
+                m.reply_to_message.from_user.username,
+            )
+        elif m.forward_from and not m.reply_to_message:
+            chatdb.update_chat(
+                m.chat.title,
+                m.forward_from.id,
+            )
+            Users(m.forward_from.id).update_user(
+                (
+                    f"{m.forward_from.first_name} {m.forward_from.last_name}"
+                    if m.forward_from.last_name
+                    else m.forward_from.first_name
+                ),
+                m.forward_from.username,
+            )
+        elif m.reply_to_message:
+            chatdb.update_chat(
+                m.chat.title,
+                m.reply_to_message.forward_from.id,
+            )
+            Users(m.forward_from.id).update_user(
+                (
+                    f"{m.reply_to_message.forward_from.first_name} {m.reply_to_message.forward_from.last_name}"
+                    if m.reply_to_message.forward_from.last_name
+                    else m.reply_to_message.forward_from.first_name
+                ),
+                m.forward_from.username,
+            )
         else:
-            if m.reply_to_message and not m.forward_from:
-                chatdb.update_chat(
-                    m.chat.title,
-                    m.reply_to_message.from_user.id,
-                )
-                Users(m.reply_to_message.from_user.id).update_user(
-                    (
-                        f"{m.reply_to_message.from_user.first_name} {m.reply_to_message.from_user.last_name}"
-                        if m.reply_to_message.from_user.last_name
-                        else m.reply_to_message.from_user.first_name
-                    ),
-                    m.reply_to_message.from_user.username,
-                )
-            elif m.forward_from and not m.reply_to_message:
-                chatdb.update_chat(
-                    m.chat.title,
-                    m.forward_from.id,
-                )
-                Users(m.forward_from.id).update_user(
-                    (
-                        f"{m.forward_from.first_name} {m.forward_from.last_name}"
-                        if m.forward_from.last_name
-                        else m.forward_from.first_name
-                    ),
-                    m.forward_from.username,
-                )
-            elif m.reply_to_message and m.forward_from:
-                chatdb.update_chat(
-                    m.chat.title,
-                    m.reply_to_message.forward_from.id,
-                )
-                Users(m.forward_from.id).update_user(
-                    (
-                        f"{m.reply_to_message.forward_from.first_name} {m.reply_to_message.forward_from.last_name}"
-                        if m.reply_to_message.forward_from.last_name
-                        else m.reply_to_message.forward_from.first_name
-                    ),
-                    m.forward_from.username,
-                )
-            else:
-                chatdb.update_chat(m.chat.title, m.from_user.id)
-                Users(m.from_user.id).update_user(
-                    (
-                        f"{m.from_user.first_name} {m.from_user.last_name}"
-                        if m.from_user.last_name
-                        else m.from_user.first_name
-                    ),
-                    m.from_user.username,
-                )
+            chatdb.update_chat(m.chat.title, m.from_user.id)
+            Users(m.from_user.id).update_user(
+                (
+                    f"{m.from_user.first_name} {m.from_user.last_name}"
+                    if m.from_user.last_name
+                    else m.from_user.first_name
+                ),
+                m.from_user.username,
+            )
     except AttributeError:
         pass  # Skip attribute errors!
     return

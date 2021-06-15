@@ -189,19 +189,18 @@ async def id_info(c: Alita, m: Message):
                 f"{(await mention_html(user.first_name, user.id))}'s ID is <code>{user.id}</code>.",
                 parse_mode="HTML",
             )
+    elif m.chat.type == "private":
+        await m.reply_text(
+            (tlang(m, "utils.id.my_id")).format(
+                my_id=f"<code>{m.chat.id}</code>",
+            ),
+        )
     else:
-        if m.chat.type == "private":
-            await m.reply_text(
-                (tlang(m, "utils.id.my_id")).format(
-                    my_id=f"<code>{m.chat.id}</code>",
-                ),
-            )
-        else:
-            await m.reply_text(
-                (tlang(m, "utils.id.group_id")).format(
-                    group_id=f"<code>{m.chat.id}</code>",
-                ),
-            )
+        await m.reply_text(
+            (tlang(m, "utils.id.group_id")).format(
+                group_id=f"<code>{m.chat.id}</code>",
+            ),
+        )
     return
 
 
@@ -410,12 +409,6 @@ async def translate(_, m: Message):
             text = m.reply_to_message.text
         else:
             text = m.reply_to_message.caption
-        detectlang = await trl.detect(text)
-        try:
-            tekstr = await trl(text, targetlang=target_lang)
-        except ValueError as err:
-            await m.reply_text(f"Error: <code>{str(err)}</code>")
-            return
     else:
         if len(m.text.split()) <= 2:
             await m.reply_text(
@@ -424,13 +417,12 @@ async def translate(_, m: Message):
             return
         target_lang = m.text.split(None, 2)[1]
         text = m.text.split(None, 2)[2]
-        detectlang = await trl.detect(text)
-        try:
-            tekstr = await trl(text, targetlang=target_lang)
-        except ValueError as err:
-            await m.reply_text(f"Error: <code>{str(err)}</code>")
-            return
-
+    detectlang = await trl.detect(text)
+    try:
+        tekstr = await trl(text, targetlang=target_lang)
+    except ValueError as err:
+        await m.reply_text(f"Error: <code>{str(err)}</code>")
+        return
     await m.reply_text(
         f"<b>Translated:</b> from {detectlang} to {target_lang} \n<code>``{tekstr.text}``</code>",
     )

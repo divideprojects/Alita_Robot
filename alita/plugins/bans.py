@@ -47,20 +47,15 @@ async def kick_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.kick.no_target"))
         await m.stop_propagation()
 
+    reason = None
     if m.reply_to_message:
         r_id = m.reply_to_message.message_id
-        reason = None
         if len(m.text.split()) >= 2:
             reason = m.text.split(None, 1)[1]
-    elif not m.reply_to_message:
-        r_id = m.message_id
-        reason = None
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
     else:
         r_id = m.message_id
-        reason = None
-
+        if len(m.text.split()) >= 3:
+            reason = m.text.split(None, 2)[2]
     user_id, user_first_name, _ = await extract_user(c, m)
 
     if not user_id:
@@ -140,20 +135,15 @@ async def ban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.ban.no_target"))
         await m.stop_propagation()
 
+    reason = None
     if m.reply_to_message:
         r_id = m.reply_to_message.message_id
-        reason = None
         if len(m.text.split()) >= 2:
             reason = m.text.split(None, 1)[1]
-    elif not m.reply_to_message:
-        r_id = m.message_id
-        reason = None
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
     else:
         r_id = m.message_id
-        reason = None
-
+        if len(m.text.split()) >= 3:
+            reason = m.text.split(None, 2)[2]
     user_id, user_first_name, _ = await extract_user(c, m)
 
     if not user_id:
