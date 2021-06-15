@@ -76,9 +76,7 @@ class Notes(MongoDB):
     def get_all_notes(self, chat_id: int):
         with INSERTION_LOCK:
             curr = self.find_all({"chat_id": chat_id})
-            note_list = []
-            for note in curr:
-                note_list.append((note["note_name"], note["hash"]))
+            note_list = [(note["note_name"], note["hash"]) for note in curr]
             note_list.sort()
             return note_list
 
@@ -106,9 +104,7 @@ class Notes(MongoDB):
     def count_notes_chats(self):
         with INSERTION_LOCK:
             notes = self.find_all()
-            chats_ids = []
-            for chat in notes:
-                chats_ids.append(chat["chat_id"])
+            chats_ids = [chat["chat_id"] for chat in notes]
             return len(set(chats_ids))
 
     def count_all_notes(self):

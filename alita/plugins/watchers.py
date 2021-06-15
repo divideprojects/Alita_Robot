@@ -79,13 +79,10 @@ async def bl_watcher(_, m: Message):
             await m.chat.kick_member(m.from_user.id, int(time() + 45))
             await m.reply_text(
                 tlang(m, "blacklist.bl_watcher.action_kick").format(
-                    user=(
-                        m.from_user.username
-                        if m.from_user.username
-                        else f"<b>{m.from_user.first_name}</b>"
-                    ),
-                ),
+                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>"
+                )
             )
+
         elif action == "ban":
             (
                 await m.chat.kick_member(
@@ -94,13 +91,10 @@ async def bl_watcher(_, m: Message):
             )
             await m.reply_text(
                 tlang(m, "blacklist.bl_watcher.action_ban").format(
-                    user=(
-                        m.from_user.username
-                        if m.from_user.username
-                        else f"<b>{m.from_user.first_name}</b>"
-                    ),
-                ),
+                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>"
+                )
             )
+
         elif action == "mute":
             await m.chat.restrict_member(
                 m.from_user.id,
@@ -121,13 +115,10 @@ async def bl_watcher(_, m: Message):
 
             await m.reply_text(
                 tlang(m, "blacklist.bl_watcher.action_mute").format(
-                    user=(
-                        m.from_user.username
-                        if m.from_user.username
-                        else f"<b>{m.from_user.first_name}</b>"
-                    ),
-                ),
+                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>"
+                )
             )
+
         elif action == "warn":
             warns_settings_db = WarnSettings(m.chat.id)
             warns_db = Warns(m.chat.id)
@@ -161,9 +152,6 @@ async def bl_watcher(_, m: Message):
                     f"Last warn was for:\n<i>{warn_reason.format(trigger)}</i>"
                 ),
             )
-        else:
-            # for none action, as that's default
-            pass
         return
 
     if m.from_user.id in SUPPORT_STAFF:

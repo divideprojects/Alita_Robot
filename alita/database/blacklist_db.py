@@ -109,7 +109,7 @@ class Blacklist(MongoDB):
         with INSERTION_LOCK:
             collection = MongoDB(Blacklist.db_name)
             all_data = collection.find_all({"action": action})
-            return sum(1 for i in all_data if len(i["triggers"]) >= 1)
+            return sum(len(i["triggers"]) >= 1 for i in all_data)
 
     def rm_all_blacklist(self):
         with INSERTION_LOCK:

@@ -27,7 +27,7 @@ from alita.utils.custom_filters import command
 
 
 async def gen_formatting_kb(m):
-    keyboard = ikb(
+    return ikb(
         [
             [
                 ("Markdown Formatting", "formatting.md_formatting"),
@@ -37,7 +37,6 @@ async def gen_formatting_kb(m):
             [(("« " + (tlang(m, "general.back_btn"))), "commands")],
         ],
     )
-    return keyboard
 
 
 @Alita.on_message(

@@ -24,8 +24,7 @@ from re import sub
 async def cleanhtml(raw_html: str) -> str:
     """Clean html data."""
     cleanr = compilere("<.*?>")
-    cleantext = sub(cleanr, "", raw_html)
-    return cleantext
+    return sub(cleanr, "", raw_html)
 
 
 async def escape_markdown(text: str) -> str:

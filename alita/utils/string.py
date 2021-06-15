@@ -109,11 +109,7 @@ async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
                 idx += 2
                 new_text += "{{{{"
             else:
-                success = False
-                for v in valids:
-                    if text[idx:].startswith("{" + v + "}"):
-                        success = True
-                        break
+                success = any(text[idx:].startswith("{" + v + "}") for v in valids)
                 if success:
                     new_text += text[idx : idx + len(v) + 2]
                     idx += len(v) + 2
@@ -194,10 +190,9 @@ async def split_quotes(text: str):
 
 async def remove_escapes(text: str) -> str:
     """Remove the escaped from message."""
-    counter = 0
     res = ""
     is_escaped = False
-    while counter < len(text):
+    for counter in range(len(text)):
         if is_escaped:
             res += text[counter]
             is_escaped = False
@@ -205,5 +200,4 @@ async def remove_escapes(text: str) -> str:
             is_escaped = True
         else:
             res += text[counter]
-        counter += 1
     return res

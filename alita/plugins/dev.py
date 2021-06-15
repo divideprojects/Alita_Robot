@@ -79,7 +79,7 @@ async def send_log(c: Alita, m: Message):
 @Alita.on_message(command("ginfo", sudo_cmd=True))
 async def group_info(c: Alita, m: Message):
 
-    if not len(m.text.split()) == 2:
+    if len(m.text.split()) != 2:
         await m.reply_text(
             f"It works like this: <code>{PREFIX_HANDLER} chat_id</code>",
         )

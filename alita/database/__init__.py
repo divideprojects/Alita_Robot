@@ -45,8 +45,7 @@ class MongoDB:
     def find_all(self, query=None):
         if query is None:
             query = {}
-        findall_res = [document for document in self.collection.find(query)]
-        return findall_res
+        return [document for document in self.collection.find(query)]
 
     # Count entries from collection
     def count(self, query=None):
@@ -57,8 +56,7 @@ class MongoDB:
     # Delete entry/entries from collection
     def delete_one(self, query):
         self.collection.delete_many(query)
-        after_delete = self.collection.count_documents({})
-        return after_delete
+        return self.collection.count_documents({})
 
     # Replace one entry in collection
     def replace(self, query, new_data):
