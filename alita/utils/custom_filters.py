@@ -58,7 +58,7 @@ def command(
         m.command = None
         if not text:
             return False
-        regex = r'(?i)^({prefix})({regex})(@{bot_name})?(\s.*)?$'.format(
+        regex = "^({prefix})+\\b({regex})\\b(\\b@{bot_name}\\b)?(.*)".format(
             prefix="|".join(escape(x) for x in flt.prefixes),
             regex="|".join(flt.commands),
             bot_name=BOT_USERNAME,
