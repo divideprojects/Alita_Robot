@@ -35,7 +35,8 @@ Alita is a Telegram Group managment bot made using **[Pyrogram](https://github.c
 - Frequently updated
 - Multi Language Support
 
-Can be found on Telegram as [@Alita_Robot](https://t.me/Alita_Robot)</br>
+Can be found on Telegram as [@Alita_Robot](https://t.me/Alita_Robot)
+</br>
 
 Alita is currently available in 1 Language as of now:
 - **US English**
@@ -61,20 +62,22 @@ It really motivates me to continue this project further.
 ### Deploy to Heroku
 - Get your `API_ID` and `API_HASH` from [here](https://my.telegram.org/)
 - Get your Bot Token from [@BotFather](https://t.me/BotFather)
-and click the below button!  <br />
+
+**Note:** By default the bot uses the default heroku-20 stack.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Divkix/Alita_Robot)
 
 ### Traditional
 
 - Install Python v3.7 or later from [Python's Website](https://python.org)
-- Install virtualenv using `python3 -m pip -U install virtualenv`.
+- Install virtualenv using `python3 -m pip -U install poetry`.
 - **Fork** or Clone the project using `git clone https://github.com/Divkix/Alita_Robot.git`
-- Install the requirements using `python3 -m pip install -r requirements.txt`
+- Install the requirements using `poetry install`
 - Fill in all the variables in *Development* class, not *Config* class. **Sudo, Dev, Whitelist** users are optional!!
+- Change to poetry shell by using: `poetry shell`
 - Run the bot using `python3 -m alita`
 
-**Note:** The traditional method currently only works on Linux OSes as a requirement [uvloop](https://pypi.org/project/uvloop/) requires linux api method which isn't provided by Windows!
+**Note:** The traditional method currently only works on Linux OSes as a requirement [uvloop](https://pypi.org/project/uvloop/) requires linux API method which isn't provided by Windows!
 
 ### Docker
 

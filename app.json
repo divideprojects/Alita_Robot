@@ -12,7 +12,6 @@
    "repository": "https://github.com/Divkix/Alita_Robot",
    "website": "https://t.me/DivideProjects",
    "success_url": "https://t.me/DivideProjects",
-   "stack": "container",
    "env": {
       "BOT_TOKEN": {
          "description": "Your telegram bot token, get from @Botfather in telegram.",
@@ -93,12 +92,30 @@
          "required": false,
          "value": "8"
       },
+      "POETRY_VERSION": {
+         "description": "Settings this will change poetry version. DO NOT CHANGE IF YOU DON'T KNOW WHAT YOURE DOING",
+         "required": true,
+         "value": "1.1.6"
+      },
+      "PYTHON_RUNTIME_VERSION": {
+         "description": "Settings this will change the python version. DO NOT CHANGE IF YOU DON'T KNOW WHAT YOURE DOING",
+         "required": true,
+         "value": "3.9.5"
+      },
       "ENV": {
          "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
          "required": true,
          "value": "ANYTHING"
       }
    },
+   "buildpacks": [
+    {
+      "url": "https://github.com/moneymeets/python-poetry-buildpack.git"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ],
    "formation": {
       "worker": {
          "quantity": 1,
