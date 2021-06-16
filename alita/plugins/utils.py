@@ -23,7 +23,8 @@ from os import remove
 from gpytranslate import Translator
 from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from pyrogram.types import Message
+from pyromod.helpers import ikb
 from tswift import Song
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
@@ -42,10 +43,10 @@ from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
 from alita.database.users_db import Users
 from alita.tr_engine import tlang
-from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import command
 from alita.utils.extract_user import extract_user
+from alita.utils.http_helper import HTTPx
 from alita.utils.parser import mention_html
 from alita.utils.paste import paste
 
@@ -188,19 +189,18 @@ async def id_info(c: Alita, m: Message):
                 f"{(await mention_html(user.first_name, user.id))}'s ID is <code>{user.id}</code>.",
                 parse_mode="HTML",
             )
+    elif m.chat.type == "private":
+        await m.reply_text(
+            (tlang(m, "utils.id.my_id")).format(
+                my_id=f"<code>{m.chat.id}</code>",
+            ),
+        )
     else:
-        if m.chat.type == "private":
-            await m.reply_text(
-                (tlang(m, "utils.id.my_id")).format(
-                    my_id=f"<code>{m.chat.id}</code>",
-                ),
-            )
-        else:
-            await m.reply_text(
-                (tlang(m, "utils.id.group_id")).format(
-                    group_id=f"<code>{m.chat.id}</code>",
-                ),
-            )
+        await m.reply_text(
+            (tlang(m, "utils.id.group_id")).format(
+                group_id=f"<code>{m.chat.id}</code>",
+            ),
+        )
     return
 
 
@@ -233,16 +233,17 @@ async def github(_, m: Message):
         return
 
     URL = f"https://api.github.com/users/{username}"
-    result, resp = await AioHttp.get_json(URL)
-    if resp.status == 404:
-        await m.reply_text(f"<code>{username}</code> not found")
+    r = await HTTPx.get(URL)
+    if r.status_code == 404:
+        await m.reply_text(f"<code>{username}</code> not found", quote=True)
         return
 
-    url = result.get("html_url", None)
-    name = result.get("name", None)
-    company = result.get("company", None)
-    bio = result.get("bio", None)
-    created_at = result.get("created_at", "Not Found")
+    r_json = r.json()
+    url = r_json.get("html_url", None)
+    name = r_json.get("name", None)
+    company = r_json.get("company", None)
+    bio = r_json.get("bio", None)
+    created_at = r_json.get("created_at", "Not Found")
 
     REPLY = (
         f"<b>GitHub Info for</b> <code>{username}</code>"
@@ -253,7 +254,7 @@ async def github(_, m: Message):
         f"<b>Created at:</b> <code>{created_at}</code>"
     )
 
-    await m.reply_text(REPLY, quote=True)
+    await m.reply_text(REPLY, quote=True, disable_web_page_preview=True)
 
     return
 
@@ -386,16 +387,7 @@ async def paste_it(_, m: Message):
 
     await replymsg.edit_text(
         (tlang(m, "utils.paste.pasted_nekobin")),
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        (tlang(m, "utils.paste.nekobin_btn")),
-                        url=url,
-                    ),
-                ],
-            ],
-        ),
+        reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
     )
     LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
 
@@ -417,12 +409,6 @@ async def translate(_, m: Message):
             text = m.reply_to_message.text
         else:
             text = m.reply_to_message.caption
-        detectlang = await trl.detect(text)
-        try:
-            tekstr = await trl(text, targetlang=target_lang)
-        except ValueError as err:
-            await m.reply_text(f"Error: <code>{str(err)}</code>")
-            return
     else:
         if len(m.text.split()) <= 2:
             await m.reply_text(
@@ -431,13 +417,12 @@ async def translate(_, m: Message):
             return
         target_lang = m.text.split(None, 2)[1]
         text = m.text.split(None, 2)[2]
-        detectlang = await trl.detect(text)
-        try:
-            tekstr = await trl(text, targetlang=target_lang)
-        except ValueError as err:
-            await m.reply_text(f"Error: <code>{str(err)}</code>")
-            return
-
+    detectlang = await trl.detect(text)
+    try:
+        tekstr = await trl(text, targetlang=target_lang)
+    except ValueError as err:
+        await m.reply_text(f"Error: <code>{str(err)}</code>")
+        return
     await m.reply_text(
         f"<b>Translated:</b> from {detectlang} to {target_lang} \n<code>``{tekstr.text}``</code>",
     )

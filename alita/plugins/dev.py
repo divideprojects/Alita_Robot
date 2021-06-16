@@ -31,16 +31,17 @@ from pyrogram.errors import (
     PeerIdInvalid,
     RPCError,
 )
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from pyrogram.types import Message
+from pyromod.helpers import ikb
 from speedtest import Speedtest
 
 from alita import LOGFILE, LOGGER, MESSAGE_DUMP, PREFIX_HANDLER, UPTIME
 from alita.bot_class import Alita
 from alita.database.chats_db import Chats
 from alita.tr_engine import tlang
-from alita.utils.aiohttp_helper import AioHttp
 from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import command
+from alita.utils.http_helper import HTTPx
 from alita.utils.parser import mention_markdown
 from alita.utils.paste import paste
 
@@ -68,9 +69,7 @@ async def send_log(c: Alita, m: Message):
         raw = (await paste(f.read()))[1]
     await m.reply_document(
         document=LOGFILE,
-        reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Logs", url=raw)]],
-        ),
+        reply_markup=ikb([[("Logs", raw, "url")]]),
         quote=True,
     )
     await replymsg.delete()
@@ -80,7 +79,7 @@ async def send_log(c: Alita, m: Message):
 @Alita.on_message(command("ginfo", sudo_cmd=True))
 async def group_info(c: Alita, m: Message):
 
-    if not len(m.text.split()) == 2:
+    if len(m.text.split()) != 2:
         await m.reply_text(
             f"It works like this: <code>{PREFIX_HANDLER} chat_id</code>",
         )
@@ -263,13 +262,13 @@ async def execution(_, m: Message):
 @Alita.on_message(command("ip", dev_cmd=True))
 async def public_ip(c: Alita, m: Message):
 
-    ip = (await AioHttp.get_text("https://api.ipify.org"))[0]
+    ip = await HTTPx.get("https://api.ipify.org")
     await c.send_message(
         MESSAGE_DUMP,
         f"#IP\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     await m.reply_text(
-        (tlang(m, "dev.bot_ip")).format(ip=f"<code>{ip}</code>"),
+        (tlang(m, "dev.bot_ip")).format(ip=f"<code>{ip.text}</code>"),
         quote=True,
     )
     return

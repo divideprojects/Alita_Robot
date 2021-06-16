@@ -138,23 +138,7 @@ async def load_cmds(all_plugins):
         plugin_name = imported_module.__PLUGIN__.lower()
         plugin_dict_name = f"plugins.{plugin_name}.main"
 
-        if plugin_dict_name not in HELP_COMMANDS:
-            HELP_COMMANDS[plugin_dict_name] = {
-                "help_msg": "",
-                "buttons": [],
-                "alt_cmds": [],
-            }
-            HELP_COMMANDS[plugin_dict_name]["help_msg"] = f"plugins.{plugin_name}.help"
-            if hasattr(imported_module, "__buttons__"):
-                HELP_COMMANDS[plugin_dict_name]["buttons"] = imported_module.__buttons__
-            if hasattr(imported_module, "__alt_name__"):
-                HELP_COMMANDS[plugin_dict_name][
-                    "alt_cmds"
-                ] = imported_module.__alt_name__
-
-            # Add the plugin name to cmd list
-            (HELP_COMMANDS[plugin_dict_name]["alt_cmds"]).append(plugin_name)
-        else:
+        if plugin_dict_name in HELP_COMMANDS:
             raise Exception(
                 (
                     "Can't have two plugins with the same name! Please change one\n"
@@ -162,12 +146,27 @@ async def load_cmds(all_plugins):
                 ),
             )
 
+        HELP_COMMANDS[plugin_dict_name] = {
+            "buttons": [],
+            "alt_cmds": [],
+            "help_msg": f"plugins.{plugin_name}.help",
+        }
+
+        if hasattr(imported_module, "__buttons__"):
+            HELP_COMMANDS[plugin_dict_name]["buttons"] = imported_module.__buttons__
+        if hasattr(imported_module, "__alt_name__"):
+            HELP_COMMANDS[plugin_dict_name][
+                "alt_cmds"
+            ] = imported_module.__alt_name__
+
+        # Add the plugin name to cmd list
+        (HELP_COMMANDS[plugin_dict_name]["alt_cmds"]).append(plugin_name)
     if NO_LOAD:
         LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
     return (
         ", ".join(
-            [(i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())],
+            (i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())
         )
         + "\n"
     )

@@ -92,9 +92,12 @@ async def list_blacklist_chats(_, m: Message):
     LOGGER.info(f"{m.from_user.id} checking group blacklists in {m.chat.id}")
     if bl_chats:
         txt = (
-            "These Chats are Blacklisted:\n"
-            + "\n".join([f"<code>{i}</code>" for i in bl_chats]),
+            (
+                "These Chats are Blacklisted:\n"
+                + "\n".join(f"<code>{i}</code>" for i in bl_chats)
+            ),
         )
+
     else:
         txt = "No chats are currently blacklisted!"
     await m.reply_text(txt)

@@ -19,12 +19,8 @@
 from html import escape
 
 from pyrogram import filters
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -55,8 +51,9 @@ async def view_blacklist(_, m: Message):
         return
 
     blacklists_chat += "\n".join(
-        [f" • <code>{escape(i)}</code>" for i in all_blacklisted],
+        f" • <code>{escape(i)}</code>" for i in all_blacklisted
     )
+
 
     await m.reply_text(blacklists_chat)
     return
@@ -67,7 +64,7 @@ async def add_blacklist(_, m: Message):
 
     db = Blacklist(m.chat.id)
 
-    if not len(m.text.split()) >= 2:
+    if len(m.text.split()) < 2:
         await m.reply_text(tlang(m, "general.check_help"))
         return
 
@@ -88,13 +85,12 @@ async def add_blacklist(_, m: Message):
         )
     LOGGER.info(f"{m.from_user.id} added new blacklists ({bl_words}) in {m.chat.id}")
     await m.reply_text(
-        (
-            (tlang(m, "blacklist.added_blacklist")).format(
-                trigger=", ".join([f"<code>{i}</code>" for i in bl_words]),
-            )
-            + (f"\n{rep_text}" if rep_text else "")
-        ),
+        (tlang(m, "blacklist.added_blacklist")).format(
+            trigger=", ".join(f"<code>{i}</code>" for i in bl_words)
+        )
+        + (f"\n{rep_text}" if rep_text else "")
     )
+
     await m.stop_propagation()
 
 
@@ -126,7 +122,7 @@ async def rm_blacklist(_, m: Message):
 
     db = Blacklist(m.chat.id)
 
-    if not len(m.text.split()) >= 2:
+    if len(m.text.split()) < 2:
         await m.reply_text(tlang(m, "general.check_help"))
         return
 
@@ -146,19 +142,18 @@ async def rm_blacklist(_, m: Message):
     if non_found_words:
         rep_text = (
             "Could not find "
-            + ", ".join([f"<code>{i}</code>" for i in non_found_words])
-            + " in blcklisted words, skipped them."
-        )
+            + ", ".join(f"<code>{i}</code>" for i in non_found_words)
+        ) + " in blcklisted words, skipped them."
+
 
     LOGGER.info(f"{m.from_user.id} removed blacklists ({bl_words}) in {m.chat.id}")
     await m.reply_text(
-        (
-            (tlang(m, "blacklist.rm_blacklist")).format(
-                bl_words=", ".join([f"<code>{i}</code>" for i in bl_words]),
-            )
-            + (f"\n{rep_text}" if rep_text else "")
-        ),
+        (tlang(m, "blacklist.rm_blacklist")).format(
+            bl_words=", ".join(f"<code>{i}</code>" for i in bl_words)
+        )
+        + (f"\n{rep_text}" if rep_text else "")
     )
+
     await m.stop_propagation()
 
 
@@ -174,9 +169,12 @@ async def set_bl_action(_, m: Message):
         valid_actions = ("ban", "kick", "mute", "warn", "none")
         if action not in valid_actions:
             await m.reply_text(
-                "Choose a valid blacklist action from "
-                + ", ".join([f"<code>{i}</code>" for i in valid_actions]),
+                (
+                    "Choose a valid blacklist action from "
+                    + ", ".join(f"<code>{i}</code>" for i in valid_actions)
+                )
             )
+
             return
         db.set_action(action)
         LOGGER.info(
@@ -211,16 +209,8 @@ async def rm_allblacklist(_, m: Message):
 
     await m.reply_text(
         "Are you sure you want to clear all blacklists?",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "⚠️ Confirm",
-                        callback_data="rm_allblacklist",
-                    ),
-                    InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
-                ],
-            ],
+        reply_markup=ikb(
+            [[("⚠️ Confirm", "rm_allblacklist"), ("❌ Cancel", "close_admin")]],
         ),
     )
     return

@@ -22,12 +22,8 @@ from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita.bot_class import LOGGER, Alita
 from alita.database.filters_db import Filters
@@ -203,16 +199,8 @@ async def rm_allfilters(_, m: Message):
 
     await m.reply_text(
         "Are you sure you want to clear all filters?",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "⚠️ Confirm",
-                        callback_data="rm_allfilters",
-                    ),
-                    InlineKeyboardButton("❌ Cancel", callback_data="close_admin"),
-                ],
-            ],
+        reply_markup=ikb(
+            [[("⚠️ Confirm", "rm_allfilters"), ("❌ Cancel", "close_admin")]],
         ),
     )
     return
@@ -279,7 +267,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
     if msgtype == Types.TEXT:
         teks, button = await parse_button(text)
         button = await build_keyboard(button)
-        button = InlineKeyboardMarkup(button) if button else None
+        button = ikb(button) if button else None
         if button:
             try:
                 await m.reply_text(

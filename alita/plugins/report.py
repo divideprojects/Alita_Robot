@@ -21,12 +21,8 @@ from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, RPCError, Unauthorized, UserIsBlocked
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import LOGGER, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -60,29 +56,28 @@ async def report_setting(_, m: Message):
             await m.reply_text(
                 f"Your current report preference is: `{(db.get_settings())}`",
             )
-    else:
-        if len(args) >= 2:
-            option = args[1].lower()
-            if option in ("yes", "on", "true"):
-                db.set_settings(True)
-                LOGGER.info(f"{m.from_user.id} enabled reports in {m.chat.id}")
-                await m.reply_text(
-                    "Turned on reporting! Admins who have turned on reports will be notified when /report "
-                    "or @admin is called.",
-                    quote=True,
-                )
-
-            elif option in ("no", "off", "false"):
-                db.set_settings(False)
-                LOGGER.info(f"{m.from_user.id} disabled reports in {m.chat.id}")
-                await m.reply_text(
-                    "Turned off reporting! No admins will be notified on /report or @admin.",
-                    quote=True,
-                )
-        else:
+    elif len(args) >= 2:
+        option = args[1].lower()
+        if option in ("yes", "on", "true"):
+            db.set_settings(True)
+            LOGGER.info(f"{m.from_user.id} enabled reports in {m.chat.id}")
             await m.reply_text(
-                f"This group's current setting is: `{(db.get_settings())}`",
+                "Turned on reporting! Admins who have turned on reports will be notified when /report "
+                "or @admin is called.",
+                quote=True,
             )
+
+        elif option in ("no", "off", "false"):
+            db.set_settings(False)
+            LOGGER.info(f"{m.from_user.id} disabled reports in {m.chat.id}")
+            await m.reply_text(
+                "Turned off reporting! No admins will be notified on /report or @admin.",
+                quote=True,
+            )
+    else:
+        await m.reply_text(
+            f"This group's current setting is: `{(db.get_settings())}`",
+        )
 
 
 @Alita.on_message(command("report") & filters.group)
@@ -124,28 +119,23 @@ async def report_watcher(c: Alita, m: Message):
         link_chat_id = str(m.chat.id).replace("-100", "")
         link = f"https://t.me/c/{link_chat_id}/{reported_msg_id}"  # message link
 
-        reply_markup = InlineKeyboardMarkup(
+        reply_markup = ikb(
             [
+                [("➡ Message", link, "url")],
                 [
-                    InlineKeyboardButton(
-                        "➡ Message",
-                        url=link,
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
+                    (
                         "⚠ Kick",
-                        callback_data=f"report_{m.chat.id}=kick={reported_user.id}={reported_msg_id}",
+                        f"report_{m.chat.id}=kick={reported_user.id}={reported_msg_id}",
                     ),
-                    InlineKeyboardButton(
+                    (
                         "⛔️ Ban",
-                        callback_data=f"report_{m.chat.id}=ban={reported_user.id}={reported_msg_id}",
+                        f"report_{m.chat.id}=ban={reported_user.id}={reported_msg_id}",
                     ),
                 ],
                 [
-                    InlineKeyboardButton(
+                    (
                         "❎ Delete Message",
-                        callback_data=f"report_{m.chat.id}=del={reported_user.id}={reported_msg_id}",
+                        f"report_{m.chat.id}=del={reported_user.id}={reported_msg_id}",
                     ),
                 ],
             ],

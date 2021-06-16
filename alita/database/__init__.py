@@ -20,14 +20,14 @@ from pymongo import MongoClient
 
 from alita import DB_NAME, DB_URI, LOGGER
 
+alita_db_client = MongoClient(DB_URI)
+alita_main_db = alita_db_client[DB_NAME]
 
 class MongoDB:
     """Class for interacting with Bot database."""
 
     def __init__(self, collection) -> None:
-        self._client = MongoClient(DB_URI)
-        self._db = self._client[DB_NAME]
-        self.collection = self._db[collection]
+        self.collection = alita_main_db[collection]
 
     # Insert one entry into collection
     def insert_one(self, document):
@@ -45,8 +45,7 @@ class MongoDB:
     def find_all(self, query=None):
         if query is None:
             query = {}
-        findall_res = [document for document in self.collection.find(query)]
-        return findall_res
+        return [document for document in self.collection.find(query)]
 
     # Count entries from collection
     def count(self, query=None):
@@ -57,8 +56,7 @@ class MongoDB:
     # Delete entry/entries from collection
     def delete_one(self, query):
         self.collection.delete_many(query)
-        after_delete = self.collection.count_documents({})
-        return after_delete
+        return self.collection.count_documents({})
 
     # Replace one entry in collection
     def replace(self, query, new_data):

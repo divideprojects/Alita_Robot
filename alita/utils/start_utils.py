@@ -20,12 +20,8 @@ from secrets import choice
 from traceback import format_exc
 
 from pyrogram.errors import RPCError
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
@@ -51,10 +47,7 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
         m = m.message
 
     cmds = sorted(list(HELP_COMMANDS.keys()))
-    kb = [
-        InlineKeyboardButton(tlang(m, cmd), callback_data=f"get_mod.{cmd.lower()}")
-        for cmd in cmds
-    ]
+    kb = [(tlang(m, cmd), f"get_mod.{cmd.lower()}") for cmd in cmds]
 
     return [kb[i : i + 3] for i in range(0, len(kb), 3)]
 
@@ -63,37 +56,31 @@ async def gen_start_kb(q: Message or CallbackQuery):
     """Generate keyboard with start menu options."""
     from alita import BOT_USERNAME
 
-    keyboard = InlineKeyboardMarkup(
+    return ikb(
         [
             [
-                InlineKeyboardButton(
+                (
                     f"➕ {(tlang(q, 'start.add_chat_btn'))}",
-                    url=f"https://t.me/{BOT_USERNAME}?startgroup=new",
+                    f"https://t.me/{BOT_USERNAME}?startgroup=new",
+                    "url",
                 ),
-                InlineKeyboardButton(
+                (
                     f"{(tlang(q, 'start.support_group'))} 👥",
-                    url=f"https://t.me/{SUPPORT_GROUP}",
+                    f"https://t.me/{SUPPORT_GROUP}",
+                    "url",
                 ),
             ],
+            [(f"📚 {(tlang(q, 'start.commands_btn'))}", "commands")],
             [
-                InlineKeyboardButton(
-                    f"📚 {(tlang(q, 'start.commands_btn'))}",
-                    callback_data="commands",
-                ),
-            ],
-            [
-                InlineKeyboardButton(
-                    f"🌐 {(tlang(q, 'start.language_btn'))}",
-                    callback_data="chlang",
-                ),
-                InlineKeyboardButton(
+                (f"🌐 {(tlang(q, 'start.language_btn'))}", "chlang"),
+                (
                     f"🗃️ {(tlang(q, 'start.source_code'))}",
-                    url="https://github.com/Divkix/Alita_Robot",
+                    "https://github.com/Divkix/Alita_Robot",
+                    "url",
                 ),
             ],
         ],
     )
-    return keyboard
 
 
 async def get_private_note(c: Alita, m: Message, help_option: str):
@@ -101,26 +88,26 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
     from alita import BOT_USERNAME
 
     help_lst = help_option.split("_")
-    chat_id = int(help_lst[1])
-
     if len(help_lst) == 2:
+        chat_id = int(help_lst[1])
+
         all_notes = notes_db.get_all_notes(chat_id)
         chat_title = Chats.get_chat_info(chat_id)["chat_name"]
         rply = f"Notes in {chat_title}:\n\n"
-        for note in all_notes:
-            note_name = note[0]
-            note_hash = note[1]
-            rply += f"- [{note_name}](https://t.me/{BOT_USERNAME}?start=note_{chat_id}_{note_hash})\n"
+        note_list = [
+            f"- [{note[0]}](https://t.me/{BOT_USERNAME}?start=note_{chat_id}_{note[1]})"
+            for note in all_notes
+        ]
+        rply = "\n".join(note_list)
         rply += "You can retrieve these notes by tapping on the notename."
         await m.reply_text(rply, disable_web_page_preview=True, quote=True)
         return
 
-    if len(help_lst) == 3:
-        note_hash = help_option.split("_")[2]
-        getnotes = notes_db.get_note_by_hash(note_hash)
-    else:
+    if len(help_lst) != 3:
         return
 
+    note_hash = help_option.split("_")[2]
+    getnotes = notes_db.get_note_by_hash(note_hash)
     if not getnotes:
         await m.reply_text("Note does not exist", quote=True)
         return
@@ -156,7 +143,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
 
         teks, button = await parse_button(text)
         button = await build_keyboard(button)
-        button = InlineKeyboardMarkup(button) if button else None
+        button = ikb(button) if button else None
         if button:
             try:
                 await m.reply_text(
@@ -188,7 +175,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
         if getnotes["note_value"]:
             teks, button = await parse_button(getnotes["note_value"])
             button = await build_keyboard(button)
-            button = InlineKeyboardMarkup(button) if button else None
+            button = ikb(button) if button else None
         else:
             teks = ""
             button = None
@@ -259,14 +246,7 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             HELP_COMMANDS[i]["buttons"]
             for i in HELP_COMMANDS
             if help_option in HELP_COMMANDS[i]["alt_cmds"]
-        ) + [
-            [
-                InlineKeyboardButton(
-                    "« " + (tlang(m, "general.back_btn")),
-                    callback_data="commands",
-                ),
-            ],
-        ]
+        ) + [[("« " + (tlang(m, "general.back_btn")), "commands")]]
         help_msg = (
             f"**{(tlang(m, (help_option_name['help_msg']).replace('.help', '.main')))}:**\n\n"
             + tlang(m, help_option_value)
@@ -278,12 +258,7 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
         help_msg = tlang(m, "general.commands_available")
         help_kb = [
             *(await gen_cmds_kb(m)),
-            [
-                InlineKeyboardButton(
-                    f"« {(tlang(m, 'general.back_btn'))}",
-                    callback_data="start_back",
-                ),
-            ],
+            [(f"« {(tlang(m, 'general.back_btn'))}", "start_back")],
         ]
 
     return help_msg, help_kb

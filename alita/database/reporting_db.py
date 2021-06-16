@@ -38,11 +38,7 @@ class Reporting(MongoDB):
         self.chat_info = self.__ensure_in_db()
 
     def get_chat_type(self):
-        if str(self.chat_id).startswith("-100"):
-            chat_type = "supergroup"
-        else:
-            chat_type = "user"
-        return chat_type
+        return "supergroup" if str(self.chat_id).startswith("-100") else "user"
 
     def set_settings(self, status: bool = True):
         with INSERTION_LOCK:

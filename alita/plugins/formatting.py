@@ -17,12 +17,8 @@
 
 
 from pyrogram import filters
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
+from pyromod.helpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -31,30 +27,16 @@ from alita.utils.custom_filters import command
 
 
 async def gen_formatting_kb(m):
-    keyboard = InlineKeyboardMarkup(
+    return ikb(
         [
             [
-                InlineKeyboardButton(
-                    "Markdown Formatting",
-                    callback_data="formatting.md_formatting",
-                ),
-                InlineKeyboardButton("Fillings", callback_data="formatting.fillings"),
+                ("Markdown Formatting", "formatting.md_formatting"),
+                ("Fillings", "formatting.fillings"),
             ],
-            [
-                InlineKeyboardButton(
-                    "Random Content",
-                    callback_data="formatting.random_content",
-                ),
-            ],
-            [
-                InlineKeyboardButton(
-                    ("« " + (tlang(m, "general.back_btn"))),
-                    callback_data="commands",
-                ),
-            ],
+            [("Random Content", "formatting.random_content")],
+            [(("« " + (tlang(m, "general.back_btn"))), "commands")],
         ],
     )
-    return keyboard
 
 
 @Alita.on_message(
@@ -73,16 +55,7 @@ async def markdownhelp(_, m: Message):
 @Alita.on_callback_query(filters.regex("^formatting."))
 async def get_formatting_info(_, q: CallbackQuery):
     cmd = q.data.split(".")[1]
-    kb = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(
-                    (tlang(q, "general.back_btn")),
-                    callback_data="back.formatting",
-                ),
-            ],
-        ],
-    )
+    kb = ikb([[((tlang(q, "general.back_btn")), "back.formatting")]])
 
     if cmd == "md_formatting":
         await q.message.edit_text(
@@ -122,16 +95,8 @@ __PLUGIN__ = "formatting"
 __alt_name__ = ["formatting", "markdownhelp", "markdown"]
 __buttons__ = [
     [
-        InlineKeyboardButton(
-            "Markdown Formatting",
-            callback_data="formatting.md_formatting",
-        ),
-        InlineKeyboardButton("Fillings", callback_data="formatting.fillings"),
+        ("Markdown Formatting", "formatting.md_formatting"),
+        ("Fillings", "formatting.fillings"),
     ],
-    [
-        InlineKeyboardButton(
-            "Random Content",
-            callback_data="formatting.random_content",
-        ),
-    ],
+    [("Random Content", "formatting.random_content")],
 ]
