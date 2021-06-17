@@ -31,7 +31,6 @@ from alita.utils.string import build_keyboard, parse_button
 
 @Alita.on_message(command("pin") & admin_filter)
 async def pin_message(_, m: Message):
-
     pin_args = m.text.split(None, 1)
     if m.reply_to_message:
         try:
@@ -84,7 +83,6 @@ async def pin_message(_, m: Message):
 
 @Alita.on_message(command("unpin") & admin_filter)
 async def unpin_message(c: Alita, m: Message):
-
     try:
         if m.reply_to_message:
             await c.unpin_chat_message(m.chat.id, m.reply_to_message.message_id)
@@ -113,7 +111,6 @@ async def unpin_message(c: Alita, m: Message):
 
 @Alita.on_message(command("unpinall") & admin_filter)
 async def unpinall_message(_, m: Message):
-
     await m.reply_text(
         "Do you really want to unpin all messages in this chat?",
         reply_markup=ikb([[("Yes", "unpin_all_in_this_chat"), ("No", "close_admin")]]),
@@ -158,7 +155,6 @@ async def unpinall_calllback(c: Alita, q: CallbackQuery):
 
 @Alita.on_message(command("antichannelpin") & admin_filter)
 async def anti_channel_pin(_, m: Message):
-
     pinsdb = Pins(m.chat.id)
 
     if len(m.text.split()) == 1:
@@ -189,7 +185,6 @@ async def anti_channel_pin(_, m: Message):
 
 @Alita.on_message(command("cleanlinked") & admin_filter)
 async def clean_linked(_, m: Message):
-
     pinsdb = Pins(m.chat.id)
 
     if len(m.text.split()) == 1:

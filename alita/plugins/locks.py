@@ -17,7 +17,6 @@
 
 
 from asyncio import sleep
-
 from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatPermissions, Message
 
@@ -52,7 +51,6 @@ async def lock_types(_, m: Message):
 
 @Alita.on_message(command("lock") & restrict_filter)
 async def lock_perm(c: Alita, m: Message):
-
     msg = ""
     media = ""
     stickers = ""
@@ -177,7 +175,6 @@ async def lock_perm(c: Alita, m: Message):
 
 @Alita.on_message(command("locks") & restrict_filter)
 async def view_locks(_, m: Message):
-
     (
         v_perm,
         vmsg,
@@ -240,7 +237,6 @@ async def view_locks(_, m: Message):
 
 @Alita.on_message(command("unlock") & restrict_filter)
 async def unlock_perm(c: Alita, m: Message):
-
     (
         umsg,
         umedia,

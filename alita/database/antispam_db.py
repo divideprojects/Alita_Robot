@@ -26,7 +26,6 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-
 ANTISPAM_BANNED = set()
 
 
@@ -49,7 +48,6 @@ class GBan(MongoDB):
     def add_gban(self, user_id: int, reason: str, by_user: int):
         global ANTISPAM_BANNED
         with INSERTION_LOCK:
-
             # Check if  user is already gbanned or not
             if self.find_one({"_id": user_id}):
                 return self.update_gban_reason(user_id, reason)
@@ -119,4 +117,4 @@ def __pre_req_antispam_users():
     db = GBan()
     users = db.load_from_db()
     ANTISPAM_BANNED = {i["_id"] for i in users}
-    LOGGER.info(f"Loaded AntispamBanned Cache - {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded AntispamBanned Cache - {round((time() - start), 3)}s")

@@ -16,8 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from traceback import format_exc
-
 from pyrogram import filters
 from pyrogram.errors import (
     ChatAdminInviteRequired,
@@ -27,6 +25,7 @@ from pyrogram.errors import (
     UserAdminInvalid,
 )
 from pyrogram.types import Message
+from traceback import format_exc
 
 from alita import LOGGER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -110,9 +109,9 @@ async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
 
     if (
-        (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
-        and (m.from_user.id not in SUPPORT_STAFF)
-        and TEMP_ADMIN_CACHE_BLOCK[m.chat.id] == "manualblock"
+            (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
+            and (m.from_user.id not in SUPPORT_STAFF)
+            and TEMP_ADMIN_CACHE_BLOCK[m.chat.id] == "manualblock"
     ):
         await m.reply_text("Can only reload admin cache once per 10 mins!")
         return
@@ -136,7 +135,6 @@ async def reload_admins(_, m: Message):
 
 @Alita.on_message(filters.regex(r"^(?i)@admin(s)?") & filters.group)
 async def tag_admins(_, m: Message):
-
     db = Reporting(m.chat.id)
     if not db.get_settings():
         return
@@ -334,7 +332,6 @@ async def demote_usr(c: Alita, m: Message):
     command("invitelink"),
 )
 async def get_invitelink(c: Alita, m: Message):
-
     # Bypass the bot devs, sudos and owner
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)

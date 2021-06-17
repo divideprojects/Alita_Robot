@@ -34,12 +34,10 @@ RUN_STRINGS = (
     "As The Doctor would say... RUN!",
 )
 
-
 SLAP_ALITA_TEMPLATES = (
     "Slap me one more time and I'll mute you.",
     "Don't again dare to slap me asshole.",
 )
-
 
 SLAP_TEMPLATES = (
     "{user2} was shot by {user1}.",
@@ -171,7 +169,6 @@ SLAP_TEMPLATES = (
     "{user1} took all of {user2}'s cookies.",
 )
 
-
 ITEMS = (
     "cast iron skillet",
     "angry meow",
@@ -198,7 +195,6 @@ ITEMS = (
     "spherical flying kat",
 )
 
-
 THROW = (
     "throws",
     "flings",
@@ -206,9 +202,7 @@ THROW = (
     "hurls",
 )
 
-
 HIT = ("hits", "whacks", "slaps", "smacks", "bashes", "pats")
-
 
 REACTIONS = (
     "( ͡° ͜ʖ ͡°)",
@@ -415,11 +409,9 @@ REACTIONS = (
     "(∩ᄑ_ᄑ)⊃━☆ﾟ*･｡*･:≡( ε:)",
 )
 
-
 TOSS = (
     "Heads",
     "Tails",
 )
-
 
 DECIDE = ("Yes.", "No.", "Maybe.")

@@ -16,9 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from time import time
-from traceback import format_exc
-
 from pyrogram.errors import (
     ChatAdminRequired,
     PeerIdInvalid,
@@ -27,6 +24,8 @@ from pyrogram.errors import (
     UserAdminInvalid,
 )
 from pyrogram.types import Message
+from time import time
+from traceback import format_exc
 
 from alita import LOGGER, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -213,7 +212,6 @@ async def ban_usr(c: Alita, m: Message):
 
 @Alita.on_message(command("unban") & restrict_filter)
 async def unban_usr(c: Alita, m: Message):
-
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.unban.no_target"))
         await m.stop_propagation()

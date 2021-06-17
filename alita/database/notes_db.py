@@ -27,19 +27,18 @@ INSERTION_LOCK = RLock()
 
 
 class Notes(MongoDB):
-
     db_name = "notes"
 
     def __init__(self) -> None:
         super().__init__(self.db_name)
 
     def save_note(
-        self,
-        chat_id: int,
-        note_name: str,
-        note_value: str,
-        msgtype: int = Types.TEXT,
-        fileid="",
+            self,
+            chat_id: int,
+            note_name: str,
+            note_value: str,
+            msgtype: int = Types.TEXT,
+            fileid="",
     ):
         with INSERTION_LOCK:
             curr = self.find_one(
@@ -118,7 +117,6 @@ class Notes(MongoDB):
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-
             old_chat_db = self.find_one({"_id": old_chat_id})
             if old_chat_db:
                 new_data = old_chat_db.update({"_id": new_chat_id})
@@ -154,7 +152,6 @@ class NotesSettings(MongoDB):
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-
             old_chat_db = self.find_one({"_id": old_chat_id})
             if old_chat_db:
                 new_data = old_chat_db.update({"_id": new_chat_id})

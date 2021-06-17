@@ -17,7 +17,6 @@
 
 
 from html import escape
-
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
 from pyromod.helpers import ikb
@@ -31,7 +30,6 @@ from alita.utils.custom_filters import command, owner_filter, restrict_filter
 
 @Alita.on_message(command("blacklist") & filters.group)
 async def view_blacklist(_, m: Message):
-
     db = Blacklist(m.chat.id)
 
     LOGGER.info(f"{m.from_user.id} checking blacklists in {m.chat.id}")
@@ -54,14 +52,12 @@ async def view_blacklist(_, m: Message):
         f" • <code>{escape(i)}</code>" for i in all_blacklisted
     )
 
-
     await m.reply_text(blacklists_chat)
     return
 
 
 @Alita.on_message(command("addblacklist") & restrict_filter)
 async def add_blacklist(_, m: Message):
-
     db = Blacklist(m.chat.id)
 
     if len(m.text.split()) < 2:
@@ -80,8 +76,8 @@ async def add_blacklist(_, m: Message):
 
     if already_added_words:
         rep_text = (
-            ", ".join([f"<code>{i}</code>" for i in bl_words])
-            + " already added in blacklist, skipped them!"
+                ", ".join([f"<code>{i}</code>" for i in bl_words])
+                + " already added in blacklist, skipped them!"
         )
     LOGGER.info(f"{m.from_user.id} added new blacklists ({bl_words}) in {m.chat.id}")
     await m.reply_text(
@@ -98,7 +94,6 @@ async def add_blacklist(_, m: Message):
     command(["blwarning", "blreason", "blacklistreason"]) & restrict_filter,
 )
 async def blacklistreason(_, m: Message):
-
     db = Blacklist(m.chat.id)
 
     if len(m.text.split()) == 1:
@@ -119,7 +114,6 @@ async def blacklistreason(_, m: Message):
     command(["rmblacklist", "unblacklist"]) & restrict_filter,
 )
 async def rm_blacklist(_, m: Message):
-
     db = Blacklist(m.chat.id)
 
     if len(m.text.split()) < 2:
@@ -141,10 +135,9 @@ async def rm_blacklist(_, m: Message):
 
     if non_found_words:
         rep_text = (
-            "Could not find "
-            + ", ".join(f"<code>{i}</code>" for i in non_found_words)
-        ) + " in blcklisted words, skipped them."
-
+                           "Could not find "
+                           + ", ".join(f"<code>{i}</code>" for i in non_found_words)
+                   ) + " in blcklisted words, skipped them."
 
     LOGGER.info(f"{m.from_user.id} removed blacklists ({bl_words}) in {m.chat.id}")
     await m.reply_text(
@@ -161,7 +154,6 @@ async def rm_blacklist(_, m: Message):
     command(["blaction", "blacklistaction", "blacklistmode"]) & restrict_filter,
 )
 async def set_bl_action(_, m: Message):
-
     db = Blacklist(m.chat.id)
 
     if len(m.text.split()) == 2:
@@ -170,8 +162,8 @@ async def set_bl_action(_, m: Message):
         if action not in valid_actions:
             await m.reply_text(
                 (
-                    "Choose a valid blacklist action from "
-                    + ", ".join(f"<code>{i}</code>" for i in valid_actions)
+                        "Choose a valid blacklist action from "
+                        + ", ".join(f"<code>{i}</code>" for i in valid_actions)
                 )
             )
 
@@ -199,7 +191,6 @@ async def set_bl_action(_, m: Message):
     command("rmallblacklist") & owner_filter,
 )
 async def rm_allblacklist(_, m: Message):
-
     db = Blacklist(m.chat.id)
 
     all_bls = db.get_blacklists()

@@ -16,13 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from threading import RLock
-from time import perf_counter, time
-from typing import List
-
 from cachetools import TTLCache
 from pyrogram.types import CallbackQuery
 from pyrogram.types.messages_and_media.message import Message
+from threading import RLock
+from time import perf_counter, time
+from typing import List
 
 from alita import LOGGER
 
@@ -63,7 +62,7 @@ async def admin_cache_reload(m: Message or CallbackQuery, status=None) -> List[i
         ]
         ADMIN_CACHE[m.chat.id] = admin_list
         LOGGER.info(
-            f"Loaded admins for chat {m.chat.id} in {round((time()-start),3)}s due to '{status}'",
+            f"Loaded admins for chat {m.chat.id} in {round((time() - start), 3)}s due to '{status}'",
         )
         TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = "autoblock"
 

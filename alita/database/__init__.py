@@ -23,6 +23,7 @@ from alita import DB_NAME, DB_URI, LOGGER
 alita_db_client = MongoClient(DB_URI)
 alita_main_db = alita_db_client[DB_NAME]
 
+
 class MongoDB:
     """Class for interacting with Bot database."""
 

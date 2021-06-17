@@ -16,9 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from traceback import format_exc
-
 from pyrogram.types import CallbackQuery, Message
+from traceback import format_exc
 
 from alita import DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS
 
@@ -54,6 +53,7 @@ async def admin_check(m: Message or CallbackQuery) -> bool:
 
     return True
 
+
 async def check_rights(m: Message or CallbackQuery, rights) -> bool:
     """ Check Admin Rights """
     if isinstance(m, Message):
@@ -74,6 +74,7 @@ async def check_rights(m: Message or CallbackQuery, rights) -> bool:
             return True
         return False
     return False
+
 
 async def owner_check(m: Message or CallbackQuery) -> bool:
     """Checks if user is owner or not."""

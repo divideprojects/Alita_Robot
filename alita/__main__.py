@@ -53,7 +53,7 @@ def pre_req_all():
     __pre_req_pins_chats()
     __pre_req_all_reporting_settings()
     __pre_req_group_blacklist()
-    LOGGER.info(f"Successfully loaded Local Caches in {round((time()-start),3)}s\n")
+    LOGGER.info(f"Successfully loaded Local Caches in {round((time() - start), 3)}s\n")
 
 
 if __name__ == "__main__":

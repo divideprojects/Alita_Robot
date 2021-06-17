@@ -16,9 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from traceback import format_exc
-
 from regex import search
+from traceback import format_exc
 
 from alita import LOGGER
 

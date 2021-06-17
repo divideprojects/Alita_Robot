@@ -16,11 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from gpytranslate import Translator
 from html import escape
 from io import BytesIO
 from os import remove
-
-from gpytranslate import Translator
 from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
 from pyrogram.types import Message
@@ -91,7 +90,6 @@ async def wiki(_, m: Message):
 
 @Alita.on_message(command("gdpr"))
 async def gdpr_remove(_, m: Message):
-
     if m.from_user.id in SUPPORT_STAFF:
         await m.reply_text(
             "You're in my support staff, I cannot do that unless you are no longer a part of it!",
@@ -115,7 +113,6 @@ async def gdpr_remove(_, m: Message):
     command("lyrics") & (filters.group | filters.private),
 )
 async def get_lyrics(_, m: Message):
-
     if len(m.text.split()) <= 1:
         await m.reply_text(tlang(m, "general.check_help"))
         return
@@ -369,7 +366,6 @@ async def weebify(_, m: Message):
 
 @Alita.on_message(command("paste"))
 async def paste_it(_, m: Message):
-
     replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")), quote=True)
 
     if m.reply_to_message:
@@ -396,7 +392,6 @@ async def paste_it(_, m: Message):
 
 @Alita.on_message(command("tr"))
 async def translate(_, m: Message):
-
     trl = Translator()
     if m.reply_to_message and (m.reply_to_message.text or m.reply_to_message.caption):
         if len(m.text.split()) == 1:

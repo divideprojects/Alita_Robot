@@ -30,19 +30,18 @@ FILTER_CACHE = {}
 
 
 class Filters(MongoDB):
-
     db_name = "chat_filters"
 
     def __init__(self) -> None:
         super().__init__(self.db_name)
 
     def save_filter(
-        self,
-        chat_id: int,
-        keyword: str,
-        filter_reply: str,
-        msgtype: int = Types.TEXT,
-        fileid="",
+            self,
+            chat_id: int,
+            keyword: str,
+            filter_reply: str,
+            msgtype: int = Types.TEXT,
+            fileid="",
     ):
         global FILTER_CACHE
         with INSERTION_LOCK:
@@ -172,9 +171,9 @@ class Filters(MongoDB):
                     [
                         j
                         for i in (
-                            (i["keyword"] for i in FILTER_CACHE[chat_id])
-                            for chat_id in set(FILTER_CACHE.keys())
-                        )
+                        (i["keyword"] for i in FILTER_CACHE[chat_id])
+                        for chat_id in set(FILTER_CACHE.keys())
+                    )
                         for j in i
                     ],
                 )
@@ -196,14 +195,14 @@ class Filters(MongoDB):
                     [
                         i
                         for j in [
-                            j.split("|")
-                            for i in (
-                                (i["keyword"] for i in FILTER_CACHE[chat_id])
-                                for chat_id in set(FILTER_CACHE.keys())
-                            )
-                            for j in i
-                            if len(j.split("|")) >= 2
-                        ]
+                        j.split("|")
+                        for i in (
+                            (i["keyword"] for i in FILTER_CACHE[chat_id])
+                            for chat_id in set(FILTER_CACHE.keys())
+                        )
+                        for j in i
+                        if len(j.split("|")) >= 2
+                    ]
                         for i in j
                     ],
                 )
@@ -289,4 +288,4 @@ def __pre_req_filters():
         chat: [filt for filt in all_filters if filt["chat_id"] == chat]
         for chat in chat_ids
     }
-    LOGGER.info(f"Loaded Filters Cache - {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded Filters Cache - {round((time() - start), 3)}s")

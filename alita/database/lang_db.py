@@ -101,7 +101,7 @@ def __pre_req_all_langs():
     LOGGER.info("Starting Langs Database Repair...")
     collection = MongoDB(Langs.db_name)
     Langs.repair_db(collection)
-    LOGGER.info(f"Done in {round((time()-start),3)}s!")
+    LOGGER.info(f"Done in {round((time() - start), 3)}s!")
 
 
 def __load_lang_cache():

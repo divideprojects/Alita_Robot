@@ -43,12 +43,12 @@ class Chats(MongoDB):
         with INSERTION_LOCK:
 
             if chat_name == self.chat_info["chat_name"] and self.user_is_in_chat(
-                user_id,
+                    user_id,
             ):
                 return True
 
             if chat_name != self.chat_info["chat_name"] and self.user_is_in_chat(
-                user_id,
+                    user_id,
             ):
                 return self.update(
                     {"_id": self.chat_id},
@@ -56,7 +56,7 @@ class Chats(MongoDB):
                 )
 
             if chat_name == self.chat_info["chat_name"] and not self.user_is_in_chat(
-                user_id,
+                    user_id,
             ):
                 self.chat_info["users"].append(user_id)
                 return self.update(
@@ -156,4 +156,4 @@ def __pre_req_chats():
     LOGGER.info("Starting Chats Database Repair...")
     collection = MongoDB(Chats.db_name)
     Chats.repair_db(collection)
-    LOGGER.info(f"Done in {round((time()-start),3)}s!")
+    LOGGER.info(f"Done in {round((time() - start), 3)}s!")

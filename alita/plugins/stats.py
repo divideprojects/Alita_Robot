@@ -35,7 +35,6 @@ from alita.utils.custom_filters import command
 
 @Alita.on_message(command("stats", dev_cmd=True))
 async def get_stats(_, m: Message):
-
     # initialise
     bldb = Blacklist
     gbandb = GBan()

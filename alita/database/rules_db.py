@@ -119,4 +119,4 @@ def __pre_req_all_rules():
     LOGGER.info("Starting Rules Database Repair...")
     collection = MongoDB(Rules.db_name)
     Rules.repair_db(collection)
-    LOGGER.info(f"Done in {round((time()-start),3)}s!")
+    LOGGER.info(f"Done in {round((time() - start), 3)}s!")

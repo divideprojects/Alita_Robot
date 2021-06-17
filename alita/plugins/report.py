@@ -16,13 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from time import time
-from traceback import format_exc
-
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, RPCError, Unauthorized, UserIsBlocked
 from pyrogram.types import CallbackQuery, Message
 from pyromod.helpers import ikb
+from time import time
+from traceback import format_exc
 
 from alita import LOGGER, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -82,7 +81,6 @@ async def report_setting(_, m: Message):
 
 @Alita.on_message(command("report") & filters.group)
 async def report_watcher(c: Alita, m: Message):
-
     if m.chat.type != "supergroup":
         return
 
@@ -154,7 +152,7 @@ async def report_watcher(c: Alita, m: Message):
 
         for admin in admin_list:
             if (
-                admin.user.is_bot or admin.user.is_deleted
+                    admin.user.is_bot or admin.user.is_deleted
             ):  # can't message bots or deleted accounts
                 continue
 

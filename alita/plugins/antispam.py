@@ -18,10 +18,9 @@
 
 from datetime import datetime
 from io import BytesIO
-from traceback import format_exc
-
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, UserIsBlocked
 from pyrogram.types import Message
+from traceback import format_exc
 
 from alita import BOT_ID, LOGGER, MESSAGE_DUMP, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -39,7 +38,6 @@ db = GBan()
 
 @Alita.on_message(command(["gban", "globalban"], sudo_cmd=True))
 async def gban(c: Alita, m: Message):
-
     if len(m.text.split()) == 1:
         await m.reply_text(tlang(m, "antispam.gban.how_to"))
         return
@@ -112,7 +110,6 @@ async def gban(c: Alita, m: Message):
     command(["ungban", "unglobalban", "globalunban"], sudo_cmd=True),
 )
 async def ungban(c: Alita, m: Message):
-
     if len(m.text.split()) == 1:
         await m.reply_text(tlang(m, "antispam.pass_user_id"))
         return

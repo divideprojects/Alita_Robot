@@ -95,4 +95,4 @@ def __pre_req_all_reporting_settings():
     LOGGER.info("Starting Reports Database Repair...")
     collection = MongoDB(Reporting.db_name)
     Reporting.repair_db(collection)
-    LOGGER.info(f"Done in {round((time()-start),3)}s!")
+    LOGGER.info(f"Done in {round((time() - start), 3)}s!")

@@ -20,10 +20,9 @@ from functools import reduce
 from glob import glob
 from operator import getitem
 from os import path
+from pyrogram.types import CallbackQuery
 from threading import RLock
 from traceback import format_exc
-
-from pyrogram.types import CallbackQuery
 from yaml import FullLoader
 from yaml import load as load_yml
 

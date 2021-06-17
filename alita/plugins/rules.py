@@ -29,7 +29,6 @@ from alita.utils.custom_filters import admin_filter, command
 
 @Alita.on_message(command("rules") & filters.group)
 async def get_rules(_, m: Message):
-
     db = Rules(m.chat.id)
     msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
 
@@ -80,7 +79,6 @@ async def get_rules(_, m: Message):
 
 @Alita.on_message(command("setrules") & admin_filter)
 async def set_rules(_, m: Message):
-
     db = Rules(m.chat.id)
     if m.reply_to_message and m.reply_to_message.text:
         rules = m.reply_to_message.text
@@ -101,7 +99,6 @@ async def set_rules(_, m: Message):
     command(["privrules", "privaterules"]) & admin_filter,
 )
 async def priv_rules(_, m: Message):
-
     db = Rules(m.chat.id)
     if len(m.text.split()) == 2:
         option = (m.text.split())[1]
@@ -131,7 +128,6 @@ async def priv_rules(_, m: Message):
 
 @Alita.on_message(command("clearrules") & admin_filter)
 async def clear_rules(_, m: Message):
-
     db = Rules(m.chat.id)
 
     rules = db.get_rules()

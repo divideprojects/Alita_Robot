@@ -17,7 +17,6 @@
 
 
 from asyncio import sleep
-
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
 from pyromod.helpers import ikb
@@ -51,7 +50,6 @@ async def gen_langs_kb():
 
 @Alita.on_callback_query(filters.regex("^chlang$"))
 async def chlang_callback(_, q: CallbackQuery):
-
     kb = await gen_langs_kb()
     kb.append([(f"« {(tlang(q, 'general.back_btn'))}", "start_back")])
 
@@ -76,7 +74,6 @@ async def close_btn_callback(_, q: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^set_lang."))
 async def set_lang_callback(_, q: CallbackQuery):
-
     lang_code = q.data.split(".")[1]
 
     Langs(q.message.chat.id).set_lang(lang_code)
@@ -99,7 +96,6 @@ async def set_lang_callback(_, q: CallbackQuery):
     group=7,
 )
 async def set_lang(_, m: Message):
-
     args = m.text.split()
 
     if len(args) > 2:

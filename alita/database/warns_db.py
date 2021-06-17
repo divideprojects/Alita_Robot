@@ -26,7 +26,6 @@ INSERTION_LOCK = RLock()
 
 
 class Warns(MongoDB):
-
     db_name = "chat_warns"
 
     def __init__(self, chat_id: int) -> None:
@@ -126,7 +125,6 @@ class Warns(MongoDB):
 
 
 class WarnSettings(MongoDB):
-
     db_name = "chat_warn_settings"
 
     def __init__(self, chat_id: int) -> None:
@@ -198,4 +196,4 @@ def __pre_req_warns():
     collection_warn_settings = MongoDB(WarnSettings.db_name)
     Warns.repair_db(collection_warns)
     WarnSettings.repair_db(collection_warn_settings)
-    LOGGER.info(f"Done in {round((time()-start),3)}s!")
+    LOGGER.info(f"Done in {round((time() - start), 3)}s!")

@@ -38,8 +38,8 @@ class Users(MongoDB):
     def update_user(self, name: str, username: str = None):
         with INSERTION_LOCK:
             if (
-                name == self.user_info["name"]
-                and username == self.user_info["username"]
+                    name == self.user_info["name"]
+                    and username == self.user_info["username"]
             ):
                 return True
             return self.update(
@@ -121,4 +121,4 @@ def __pre_req_users():
     LOGGER.info("Starting Users Database Repair...")
     collection = MongoDB(Users.db_name)
     Users.repair_db(collection)
-    LOGGER.info(f"Done in {round((time()-start),3)}s!")
+    LOGGER.info(f"Done in {round((time() - start), 3)}s!")

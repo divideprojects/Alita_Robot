@@ -68,13 +68,12 @@ async def close_admin_callback(_, q: CallbackQuery):
     command("start") & (filters.group | filters.private),
 )
 async def start(c: Alita, m: Message):
-
     if m.chat.type == "private":
         if len(m.text.split()) > 1:
             help_option = (m.text.split(None, 1)[1]).lower()
 
             if help_option.startswith("note") and (
-                help_option not in ("note", "notes")
+                    help_option not in ("note", "notes")
             ):
                 await get_private_note(c, m, help_option)
                 return
@@ -115,7 +114,6 @@ async def start(c: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^start_back$"))
 async def start_back(_, q: CallbackQuery):
-
     try:
         await q.message.edit_text(
             (tlang(q, "start.private")),
@@ -130,7 +128,6 @@ async def start_back(_, q: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(_, q: CallbackQuery):
-
     keyboard = ikb(
         [
             *(await gen_cmds_kb(q)),
@@ -155,7 +152,6 @@ async def commands_menu(_, q: CallbackQuery):
 
 @Alita.on_message(command("help"))
 async def help_menu(_, m: Message):
-
     from alita import BOT_USERNAME
 
     if len(m.text.split()) >= 2:
@@ -207,7 +203,6 @@ async def help_menu(_, m: Message):
 
 @Alita.on_callback_query(filters.regex("^get_mod."))
 async def get_module_info(_, q: CallbackQuery):
-
     module = q.data.split(".", 1)[1]
 
     help_msg = f"**{(tlang(q, str(module)))}:**\n\n" + tlang(

@@ -130,4 +130,4 @@ def __pre_req_approve():
     LOGGER.info("Starting Approve Database Repair...")
     collection = MongoDB(Approve.db_name)
     Approve.repair_db(collection)
-    LOGGER.info(f"Done in {round((time()-start),3)}s!")
+    LOGGER.info(f"Done in {round((time() - start), 3)}s!")

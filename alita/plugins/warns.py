@@ -16,11 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from time import time
-
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, ChatPermissions, Message
+from time import time
 
 from alita import LOGGER, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -93,7 +92,7 @@ async def warn(c: Alita, m: Message):
                 f"\n<b>Reason for last warn</b>:\n{reason}"
                 if reason
                 else "\n"
-                f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
+                     f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
             ),
             reply_to_message_id=r_id,
         )
@@ -158,7 +157,7 @@ async def reset_warn(c: Alita, m: Message):
     warn_db = Warns(m.chat.id)
     warn_db.reset_warns(user_id)
     await m.reply_text(
-        f"Warnings have been reset for {(await mention_html(user_first_name,user_id))}",
+        f"Warnings have been reset for {(await mention_html(user_first_name, user_id))}",
     )
     return
 
@@ -198,7 +197,7 @@ async def list_warns(c: Alita, m: Message):
     if not warns:
         await m.reply_text("This user has no warns!")
         return
-    msg = f"{(await mention_html(user_first_name,user_id))} has <b>{num_warns}/{warn_settings['warn_limit']}</b> warns!\n\n<b>Reasons:</b>\n"
+    msg = f"{(await mention_html(user_first_name, user_id))} has <b>{num_warns}/{warn_settings['warn_limit']}</b> warns!\n\n<b>Reasons:</b>\n"
     msg += "\n".join("- No reason" if i is None else f" - {i}" for i in warns)
     await m.reply_text(msg)
     return
@@ -249,7 +248,7 @@ async def remove_warn(c: Alita, m: Message):
     _, num_warns = warn_db.remove_warn(user_id)
     await m.reply_text(
         (
-            f"{(await mention_html(user_first_name,user_id))} now has <b>{num_warns}</b> warnings!\n"
+            f"{(await mention_html(user_first_name, user_id))} now has <b>{num_warns}</b> warnings!\n"
             "Their last warn was removed."
         ),
     )
@@ -258,7 +257,6 @@ async def remove_warn(c: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^warn."))
 async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
-
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[q.message.chat.id]}
     except KeyError:

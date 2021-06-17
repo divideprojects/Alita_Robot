@@ -72,4 +72,4 @@ def __pre_req_group_blacklist():
     for chat in chats:
         BLACKLIST_CHATS.append(chat["_id"])
     BLACKLIST_CHATS.sort()
-    LOGGER.info(f"Loaded GroupBlacklist Cache - {round((time()-start),3)}s")
+    LOGGER.info(f"Loaded GroupBlacklist Cache - {round((time() - start), 3)}s")

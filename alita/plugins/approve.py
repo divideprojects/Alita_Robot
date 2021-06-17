@@ -33,7 +33,6 @@ from alita.utils.parser import mention_html
     command("approve") & admin_filter,
 )
 async def approve_user(c: Alita, m: Message):
-
     db = Approve(m.chat.id)
 
     chat_title = m.chat.title
@@ -99,7 +98,6 @@ async def approve_user(c: Alita, m: Message):
     command(["disapprove", "unapprove"]) & admin_filter,
 )
 async def disapprove_user(c: Alita, m: Message):
-
     db = Approve(m.chat.id)
 
     chat_title = m.chat.title
@@ -151,7 +149,6 @@ async def disapprove_user(c: Alita, m: Message):
 
 @Alita.on_message(command("approved") & admin_filter)
 async def check_approved(_, m: Message):
-
     db = Approve(m.chat.id)
 
     chat = m.chat
@@ -179,7 +176,6 @@ async def check_approved(_, m: Message):
 
 @Alita.on_message(command("approval") & filters.group)
 async def check_approval(c: Alita, m: Message):
-
     db = Approve(m.chat.id)
 
     user_id, user_first_name, _ = await extract_user(c, m)
@@ -206,7 +202,6 @@ async def check_approval(c: Alita, m: Message):
     command("unapproveall") & filters.group & owner_filter,
 )
 async def unapproveall_users(_, m: Message):
-
     db = Approve(m.chat.id)
 
     all_approved = db.list_approved()

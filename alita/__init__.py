@@ -67,7 +67,6 @@ except Exception as ef:
     LOGGER.error(format_exc())
     sysexit(1)
 
-
 LOGGER.info("------------------------")
 LOGGER.info("|      Alita_Robot     |")
 LOGGER.info("------------------------")
@@ -165,8 +164,8 @@ async def load_cmds(all_plugins):
         LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
     return (
-        ", ".join(
-            (i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())
-        )
-        + "\n"
+            ", ".join(
+                (i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())
+            )
+            + "\n"
     )

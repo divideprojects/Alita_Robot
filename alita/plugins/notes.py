@@ -16,13 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from secrets import choice
-from traceback import format_exc
-
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 from pyromod.helpers import ikb
+from secrets import choice
+from traceback import format_exc
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -43,7 +42,6 @@ db_settings = NotesSettings()
 
 @Alita.on_message(command("save") & admin_filter)
 async def save_note(_, m: Message):
-
     existing_notes = {i[0] for i in db.get_all_notes(m.chat.id)}
 
     note_name, text, data_type, content = await get_note_type(m)
@@ -64,9 +62,9 @@ async def save_note(_, m: Message):
         return
 
     if (
-        not m.reply_to_message
-        and data_type == Types.TEXT
-        and len(m.command) <= 2
+            not m.reply_to_message
+            and data_type == Types.TEXT
+            and len(m.command) <= 2
     ):
         await m.reply_text(
             f"<code>{m.text}</code>\n\nError: There is no text in here!",
@@ -158,10 +156,10 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
             await reply_text(teks, quote=True, disable_web_page_preview=True)
             return
     elif msgtype in (
-        Types.STICKER,
-        Types.VIDEO_NOTE,
-        Types.CONTACT,
-        Types.ANIMATED_STICKER,
+            Types.STICKER,
+            Types.VIDEO_NOTE,
+            Types.CONTACT,
+            Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
@@ -229,10 +227,10 @@ async def get_raw_note(c: Alita, m: Message, note: str):
         teks = getnotes["note_value"]
         await m.reply_text(teks, parse_mode=None, reply_to_message_id=msg_id)
     elif msgtype in (
-        Types.STICKER,
-        Types.VIDEO_NOTE,
-        Types.CONTACT,
-        Types.ANIMATED_STICKER,
+            Types.STICKER,
+            Types.VIDEO_NOTE,
+            Types.CONTACT,
+            Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
@@ -256,7 +254,6 @@ async def get_raw_note(c: Alita, m: Message, note: str):
 
 @Alita.on_message(filters.regex(r"^#[^\s]+") & filters.group)
 async def hash_get(c: Alita, m: Message):
-
     # If not from user, then return
     if not m.from_user:
         return
@@ -303,7 +300,6 @@ async def get_note(c: Alita, m: Message):
     command(["privnotes", "privatenotes"]) & admin_filter,
 )
 async def priv_notes(_, m: Message):
-
     chat_id = m.chat.id
     if len(m.text.split()) == 2:
         option = (m.text.split())[1]
@@ -371,7 +367,6 @@ async def local_notes(_, m: Message):
 
 @Alita.on_message(command("clear") & admin_filter)
 async def clear_note(_, m: Message):
-
     if len(m.text.split()) <= 1:
         await m.reply_text("What do you want to clear?")
         return
@@ -389,7 +384,6 @@ async def clear_note(_, m: Message):
 
 @Alita.on_message(command("clearall") & owner_filter)
 async def clear_allnote(_, m: Message):
-
     all_notes = {i[0] for i in db.get_all_notes(m.chat.id)}
     if not all_notes:
         await m.reply_text("No notes are there in this chat")

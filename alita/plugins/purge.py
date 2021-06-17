@@ -17,7 +17,6 @@
 
 
 from asyncio import sleep
-
 from pyrogram.errors import MessageDeleteForbidden, RPCError
 from pyrogram.types import Message
 
@@ -29,7 +28,6 @@ from alita.utils.custom_filters import admin_filter, command
 
 @Alita.on_message(command("purge") & admin_filter)
 async def purge(c: Alita, m: Message):
-
     if m.chat.type != "supergroup":
         await m.reply_text(tlang(m, "purge.err_basic"))
         return
@@ -39,7 +37,7 @@ async def purge(c: Alita, m: Message):
 
         def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
-                yield l[i : i + n]
+                yield l[i: i + n]
 
         # Dielete messages in chunks of 100 messages
         m_list = list(divide_chunks(message_ids))
@@ -82,7 +80,6 @@ async def purge(c: Alita, m: Message):
     group=9,
 )
 async def del_msg(c: Alita, m: Message):
-
     if m.chat.type != "supergroup":
         return
 

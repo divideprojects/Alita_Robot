@@ -16,12 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from secrets import choice
-from traceback import format_exc
-
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 from pyromod.helpers import ikb
+from secrets import choice
+from traceback import format_exc
 
 from alita import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
@@ -49,7 +48,7 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
     cmds = sorted(list(HELP_COMMANDS.keys()))
     kb = [(tlang(m, cmd), f"get_mod.{cmd.lower()}") for cmd in cmds]
 
-    return [kb[i : i + 3] for i in range(0, len(kb), 3)]
+    return [kb[i: i + 3] for i in range(0, len(kb), 3)]
 
 
 async def gen_start_kb(q: Message or CallbackQuery):
@@ -165,10 +164,10 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
             await m.reply_text(teks, quote=True, disable_web_page_preview=True)
             return
     elif msgtype in (
-        Types.STICKER,
-        Types.VIDEO_NOTE,
-        Types.CONTACT,
-        Types.ANIMATED_STICKER,
+            Types.STICKER,
+            Types.VIDEO_NOTE,
+            Types.CONTACT,
+            Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(m.chat.id, getnotes["fileid"])
     else:
@@ -248,8 +247,8 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             if help_option in HELP_COMMANDS[i]["alt_cmds"]
         ) + [[("« " + (tlang(m, "general.back_btn")), "commands")]]
         help_msg = (
-            f"**{(tlang(m, (help_option_name['help_msg']).replace('.help', '.main')))}:**\n\n"
-            + tlang(m, help_option_value)
+                f"**{(tlang(m, (help_option_name['help_msg']).replace('.help', '.main')))}:**\n\n"
+                + tlang(m, help_option_value)
         )
         LOGGER.info(
             f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",

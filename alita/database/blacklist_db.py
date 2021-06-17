@@ -163,4 +163,4 @@ def __pre_req_blacklists():
     LOGGER.info("Starting Blacklists Database Repair...")
     collection = MongoDB(Blacklist.db_name)
     Blacklist.repair_db(collection)
-    LOGGER.info(f"Done in {round((time()-start),3)}s!")
+    LOGGER.info(f"Done in {round((time() - start), 3)}s!")

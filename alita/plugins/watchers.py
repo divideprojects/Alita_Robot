@@ -16,13 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from re import escape as re_escape
-from time import time
-from traceback import format_exc
-
 from pyrogram import filters
 from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
 from pyrogram.types import ChatPermissions, Message
+from re import escape as re_escape
+from time import time
+from traceback import format_exc
 
 from alita import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -68,7 +67,6 @@ async def antichanpin_cleanlinked(c: Alita, m: Message):
 
 @Alita.on_message(filters.text & filters.group, group=5)
 async def bl_watcher(_, m: Message):
-
     if not m.from_user:
         return
 

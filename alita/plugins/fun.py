@@ -17,9 +17,8 @@
 
 
 from html import escape
-from secrets import choice
-
 from pyrogram.types import Message
+from secrets import choice
 
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
@@ -30,7 +29,6 @@ from alita.utils.extract_user import extract_user
 
 @Alita.on_message(command("shout"))
 async def fun_shout(_, m: Message):
-
     if len(m.text.split()) == 1:
         await m.reply_text(
             (tlang(m, "general.check_help")),

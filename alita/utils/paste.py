@@ -25,9 +25,9 @@ async def paste(content: str):
     NEKOBIN_URL = "https://nekobin.com/"
     async with AsyncClient() as client:
         async with client.post(
-                    f"{NEKOBIN_URL}api/documents",
-                    json={"content": content},
-                ) as resp:
+                f"{NEKOBIN_URL}api/documents",
+                json={"content": content},
+        ) as resp:
             if resp.status_code != 201:
                 raise Exception("Error Pasting to Nekobin")
 

@@ -142,4 +142,4 @@ def __pre_req_greetings():
     LOGGER.info("Starting Geeetings Database Repair...")
     collection = MongoDB(Greetings.db_name)
     Greetings.repair_db(collection)
-    LOGGER.info(f"Done in {round((time()-start),3)}s!")
+    LOGGER.info(f"Done in {round((time() - start), 3)}s!")

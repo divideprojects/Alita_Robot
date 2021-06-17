@@ -16,14 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from re import escape as re_escape
-from secrets import choice
-from traceback import format_exc
-
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 from pyromod.helpers import ikb
+from re import escape as re_escape
+from secrets import choice
+from traceback import format_exc
 
 from alita.bot_class import LOGGER, Alita
 from alita.database.filters_db import Filters
@@ -44,7 +43,6 @@ db = Filters()
 
 @Alita.on_message(command("filters") & filters.group)
 async def view_filters(_, m: Message):
-
     LOGGER.info(f"{m.from_user.id} checking filters in {m.chat.id}")
 
     filters_chat = f"Filters in <b>{m.chat.title}</b>:\n"
@@ -69,7 +67,6 @@ async def view_filters(_, m: Message):
     command(["addfilter", "filter"]) & admin_filter,
 )
 async def add_filter(_, m: Message):
-
     args = m.text.split(None, 1)
     all_filters = db.get_all_filters(m.chat.id)
     actual_filters = {j for i in all_filters for j in i.split("|")}
@@ -191,7 +188,6 @@ async def stop_filter(_, m: Message):
     & owner_filter,
 )
 async def rm_allfilters(_, m: Message):
-
     all_bls = db.get_all_filters(m.chat.id)
     if not all_bls:
         await m.reply_text("No filters to stop in this chat.")
@@ -290,10 +286,10 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
             return
 
     elif msgtype in (
-        Types.STICKER,
-        Types.VIDEO_NOTE,
-        Types.CONTACT,
-        Types.ANIMATED_STICKER,
+            Types.STICKER,
+            Types.VIDEO_NOTE,
+            Types.CONTACT,
+            Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
@@ -312,7 +308,6 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
 
 @Alita.on_message(filters.text & filters.group, group=6)
 async def filters_watcher(c: Alita, m: Message):
-
     if not m.from_user:
         return
 
