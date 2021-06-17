@@ -108,3 +108,7 @@ If all works well, bot should send message to the **MESSAGE_DUMP** Group!
 
 * Copyright (C) 2020-2021 by [Divkix](https://github.com/Divkix) ❤️️
 * Licensed under the terms of the [GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/DivideProjects/Alita_Robot/blob/master/LICENSE)
+
+## Powered By
+
+[![DivideProjects](https://img.shields.io/badge/Divide-Projects-green?style=for-the-badge&logo=appveyor)](https://t.me/DivideProjectsDiscussion)
