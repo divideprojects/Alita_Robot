@@ -70,9 +70,7 @@ async def check_rights(m: Message or CallbackQuery, rights) -> bool:
         return False
     admin_strings = ("creator", "administrator")
     if user.status in admin_strings:
-        if getattr(user, rights, None):
-            return True
-        return False
+        return bool(getattr(user, rights, None))
     return False
 
 
