@@ -29,7 +29,7 @@ from pyrogram.errors import (
     RPCError,
 )
 from pyrogram.types import Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 from speedtest import Speedtest
 from time import gmtime, strftime, time
 from traceback import format_exc
@@ -42,7 +42,6 @@ from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import command
 from alita.utils.http_helper import HTTPx
 from alita.utils.parser import mention_markdown
-from alita.utils.paste import paste
 
 
 @Alita.on_message(command("ping", sudo_cmd=True))
@@ -64,10 +63,9 @@ async def send_log(c: Alita, m: Message):
     )
     # Send logs
     with open(LOGFILE) as f:
-        raw = (await paste(f.read()))[1]
+        raw = (await (f.read()))[1]
     await m.reply_document(
         document=LOGFILE,
-        reply_markup=ikb([[("Logs", raw, "url")]]),
         quote=True,
     )
     await replymsg.delete()

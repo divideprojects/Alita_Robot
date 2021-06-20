@@ -15,15 +15,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from gpytranslate import Translator
+import asyncio
 from html import escape
 from io import BytesIO
 from os import remove
+
+from gpytranslate import Translator
+
 from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
 from pyrogram.types import Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 from tswift import Song
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
@@ -45,9 +47,8 @@ from alita.tr_engine import tlang
 from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import command
 from alita.utils.extract_user import extract_user
-from alita.utils.http_helper import HTTPx
+from alita.utils.http_helper import HTTPx, http
 from alita.utils.parser import mention_html
-from alita.utils.paste import paste
 
 gban_db = GBan()
 
@@ -217,16 +218,14 @@ async def get_gifid(_, m: Message):
 
 
 @Alita.on_message(
-    command("github") & (filters.group | filters.private),
-)
+    command("github") & (filters.group | filters.private), )
 async def github(_, m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(None, 1)[1]
         LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
     else:
         await m.reply_text(
-            f"Usage: <code>{PREFIX_HANDLER}github <username></code>",
-        )
+            f"Usage: <code>{PREFIX_HANDLER}github username</code>")
         return
 
     URL = f"https://api.github.com/users/{username}"
@@ -239,20 +238,23 @@ async def github(_, m: Message):
     url = r_json.get("html_url", None)
     name = r_json.get("name", None)
     company = r_json.get("company", None)
+    followers = r_json.get("followers", 0)
+    following = r_json.get("following", 0)
+    public_repos = r_json.get("public_repos", 0)
     bio = r_json.get("bio", None)
     created_at = r_json.get("created_at", "Not Found")
 
-    REPLY = (
-        f"<b>GitHub Info for</b> <code>{username}</code>"
-        f"\n<b>Name:</b> <code>{name}</code>\n"
-        f"<b>Bio:</b> <code>{bio}</code>\n"
-        f"<b>URL:</b> {url}"
-        f"\n<b>Company:</b> <code>{company}</code>\n"
-        f"<b>Created at:</b> <code>{created_at}</code>"
-    )
+    REPLY = (f"<b>GitHub Info for @{username}:</b>"
+             f"\n<b>Name:</b> <code>{name}</code>\n"
+             f"<b>Bio:</b> <code>{bio}</code>\n"
+             f"<b>URL:</b> {url}\n"
+             f"<b>Public Repos:</b> {public_repos}\n"
+             f"<b>Followers:</b> {followers}\n"
+             f"<b>Following:</b> {following}\n"
+             f"<b>Company:</b> <code>{company}</code>\n"
+             f"<b>Created at:</b> <code>{created_at}</code>")
 
     await m.reply_text(REPLY, quote=True, disable_web_page_preview=True)
-
     return
 
 
@@ -366,28 +368,34 @@ async def weebify(_, m: Message):
 
 @Alita.on_message(command("paste"))
 async def paste_it(_, m: Message):
+    await m.reply_text("Nekobin is currently not reachable! :) will fix it soon !")
+    return
+    """
     replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")), quote=True)
-
-    if m.reply_to_message:
-        if m.reply_to_message.document:
-            dl_loc = await m.reply_to_message.download()
-            with open(dl_loc) as f:
-                txt = f.read()
-            remove(dl_loc)
+    try:
+        if m.reply_to_message:
+            if m.reply_to_message.document:
+                dl_loc = await m.reply_to_message.download()
+                with open(dl_loc) as f:
+                    txt = f.read()
+                remove(dl_loc)
+            else:
+                txt = m.reply_to_message.text
         else:
-            txt = m.reply_to_message.text
-    else:
-        txt = m.text.split(None, 1)[1]
+            txt = m.text.split(None, 1)[1]
 
-    url = (await paste(txt))[0]
-
-    await replymsg.edit_text(
-        (tlang(m, "utils.paste.pasted_nekobin")),
-        reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
-    )
-    LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
+        url = (await paste(txt))[0]
+        await replymsg.edit_text(
+            (tlang(m, "utils.paste.pasted_nekobin")),
+            reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
+        )
+        LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
+    except Exception as e:
+        await replymsg.edit_text(f"Error: {e}")
+        return
 
     return
+    """
 
 
 @Alita.on_message(command("tr"))

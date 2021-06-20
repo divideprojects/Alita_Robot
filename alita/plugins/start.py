@@ -19,7 +19,7 @@
 from pyrogram import filters
 from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
 from pyrogram.types import CallbackQuery, Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 
 from alita import HELP_COMMANDS, LOGGER
 from alita.bot_class import Alita
@@ -73,7 +73,7 @@ async def start(c: Alita, m: Message):
             help_option = (m.text.split(None, 1)[1]).lower()
 
             if help_option.startswith("note") and (
-                    help_option not in ("note", "notes")
+                help_option not in ("note", "notes")
             ):
                 await get_private_note(c, m, help_option)
                 return

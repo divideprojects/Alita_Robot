@@ -15,11 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
 from pyrogram.types import CallbackQuery, ChatPermissions, Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 
 from alita import LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
@@ -29,14 +28,17 @@ from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 
-@Alita.on_message(
-    command("approve") & admin_filter,
-)
+@Alita.on_message(command("approve") & admin_filter)
 async def approve_user(c: Alita, m: Message):
     db = Approve(m.chat.id)
 
     chat_title = m.chat.title
-    user_id, user_first_name, _ = await extract_user(c, m)
+
+    try:
+        user_id, user_first_name, _ = await extract_user(c, m)
+    except Exception:
+        return
+
     if not user_id:
         await m.reply_text(
             "I don't know who you're talking about, you're going to need to specify a user!",
@@ -101,7 +103,10 @@ async def disapprove_user(c: Alita, m: Message):
     db = Approve(m.chat.id)
 
     chat_title = m.chat.title
-    user_id, user_first_name, _ = await extract_user(c, m)
+    try:
+        user_id, user_first_name, _ = await extract_user(c, m)
+    except Exception:
+        return
     already_approved = db.check_approve(user_id)
     if not user_id:
         await m.reply_text(
@@ -178,7 +183,10 @@ async def check_approved(_, m: Message):
 async def check_approval(c: Alita, m: Message):
     db = Approve(m.chat.id)
 
-    user_id, user_first_name, _ = await extract_user(c, m)
+    try:
+        user_id, user_first_name, _ = await extract_user(c, m)
+    except Exception:
+        return
     check_approve = db.check_approve(user_id)
     LOGGER.info(f"{m.from_user.id} checking approval of {user_id} in {m.chat.id}")
 

@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from threading import RLock
 from time import time
 
@@ -72,31 +71,19 @@ class Greetings(MongoDB):
 
     def set_welcome_text(self, welcome_text: str):
         with INSERTION_LOCK:
-            return self.update(
-                {"_id": self.chat_id},
-                {"welcome_text": welcome_text},
-            )
+            return self.update({"_id": self.chat_id}, {"welcome_text": welcome_text})
 
     def set_goodbye_text(self, goodbye_text: str):
         with INSERTION_LOCK:
-            return self.update(
-                {"_id": self.chat_id},
-                {"goodbye_text": goodbye_text},
-            )
+            return self.update({"_id": self.chat_id}, {"goodbye_text": goodbye_text})
 
     def set_current_cleanservice_settings(self, status: bool):
         with INSERTION_LOCK:
-            return self.update(
-                {"_id": self.chat_id},
-                {"cleanservice": status},
-            )
+            return self.update({"_id": self.chat_id}, {"cleanservice": status})
 
     def set_current_cleanwelcome_settings(self, status: bool):
         with INSERTION_LOCK:
-            return self.update(
-                {"_id": self.chat_id},
-                {"cleanwelcome": status},
-            )
+            return self.update({"_id": self.chat_id}, {"cleanwelcome": status})
 
     def __ensure_in_db(self):
         chat_data = self.find_one({"_id": self.chat_id})
@@ -105,8 +92,8 @@ class Greetings(MongoDB):
                 "_id": self.chat_id,
                 "cleanwelcome": False,
                 "cleanservice": False,
-                "goodbye_text": "Sad to see you leave {first}.\nTake Care!",
-                "welcome_text": "Hey {first}, welcome to {group}!",
+                "goodbye_text": "Sad to see you leaving {first}.\nTake Care!",
+                "welcome_text": "Hey {first}, welcome to {chatname}!",
                 "welcome": True,
                 "goodbye": True,
             }
@@ -121,8 +108,8 @@ class Greetings(MongoDB):
         keys = {
             "cleanwelcome": False,
             "cleanservice": False,
-            "goodbye_text": "Sad to see you leave {first}.\nTake Care!",
-            "welcome_text": "Hey {first}, welcome to {group}!",
+            "goodbye_text": "Sad to see you leaving {first}.\nTake Care!",
+            "welcome_text": "Hey {first}, welcome to {chatname}!",
             "welcome": True,
             "goodbye": True,
         }

@@ -32,13 +32,13 @@ LOGDIR = f"{__name__}/logs"
 if not path.isdir(LOGDIR):
     mkdir(LOGDIR)
 
-LOGFILE = f"{LOGDIR}/{__name__}_{LOG_DATETIME}.log"
+LOGFILE = f"{LOGDIR}/{__name__}_{LOG_DATETIME}_log.txt"
 
 file_handler = FileHandler(filename=LOGFILE)
 stdout_handler = StreamHandler(stdout)
 
 basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format="%(asctime)s - [Alita_Robot] - %(levelname)s - %(message)s",
     level=INFO,
     handlers=[file_handler, stdout_handler],
 )
@@ -61,7 +61,7 @@ try:
     if environ.get("ENV"):
         from alita.vars import Config
     else:
-        from alita.local_vars import Development as Config
+        from alita.vars import Development as Config
 except Exception as ef:
     LOGGER.error(ef)  # Print Error
     LOGGER.error(format_exc())
@@ -83,7 +83,6 @@ API_HASH = Config.API_HASH
 MESSAGE_DUMP = Config.MESSAGE_DUMP
 SUPPORT_GROUP = Config.SUPPORT_GROUP
 SUPPORT_CHANNEL = Config.SUPPORT_CHANNEL
-LOG_CHANNEL = Config.LOG_CHANNEL
 
 # Users Config
 OWNER_ID = Config.OWNER_ID

@@ -15,16 +15,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from html import escape
-from pyrogram.types import Message
 from re import compile as compile_re
 from time import time
 from typing import List
 
-from alita.utils.parser import mention_html
+from pyrogram.types import InlineKeyboardButton, Message
 
-BTN_URL_REGEX = compile_re(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
+BTN_URL_REGEX = compile_re(
+    r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
 
 
 async def extract_time(m: Message, time_val: str):
@@ -69,15 +68,16 @@ async def parse_button(text: str):
         # if even, not escaped -> create button
         if n_escapes % 2 == 0:
             # create a thruple with button label, url, and newline status
-            buttons.append((match.group(2), match.group(3), bool(match.group(4))))
-            note_data += markdown_note[prev: match.start(1)]
+            buttons.append(
+                (match.group(2), match.group(3), bool(match.group(4))))
+            note_data += markdown_note[prev:match.start(1)]
             prev = match.end(1)
         # if odd, escaped -> move along
         else:
             note_data += markdown_note[prev:to_check]
             prev = match.start(1) - 1
-
-    note_data += markdown_note[prev:]
+    else:
+        note_data += markdown_note[prev:]
 
     return note_data, buttons
 
@@ -87,9 +87,9 @@ async def build_keyboard(buttons):
     keyb = []
     for btn in buttons:
         if btn[-1] and keyb:
-            keyb[-1].append((btn[0], btn[1], "url"))
+            keyb[-1].append(InlineKeyboardButton(btn[0], url=btn[1]))
         else:
-            keyb.append([(btn[0], btn[1], "url")])
+            keyb.append([InlineKeyboardButton(btn[0], url=btn[1])])
 
     return keyb
 
@@ -107,11 +107,17 @@ async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
             if idx + 1 < len(text) and text[idx + 1] == "{":
                 idx += 2
                 new_text += "{{{{"
+                continue
             else:
-                success = any(text[idx:].startswith("{" + v + "}") for v in valids)
+                success = False
+                for v in valids:
+                    if text[idx:].startswith("{" + v + "}"):
+                        success = True
+                        break
                 if success:
-                    new_text += text[idx: idx + len(v) + 2]
+                    new_text += text[idx:idx + len(v) + 2]
                     idx += len(v) + 2
+                    continue
                 else:
                     new_text += "{{"
 
@@ -119,6 +125,7 @@ async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
             if idx + 1 < len(text) and text[idx + 1] == "}":
                 idx += 2
                 new_text += "}}}}"
+                continue
             else:
                 new_text += "}}"
 
@@ -130,30 +137,22 @@ async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
 
 
 async def escape_mentions_using_curly_brackets(
-        m: Message,
-        text: str,
-        parse_words: list,
+    m: Message,
+    text: str,
+    parse_words: list,
 ) -> str:
     teks = await escape_invalid_curly_brackets(text, parse_words)
     if teks:
         teks = teks.format(
             first=escape(m.from_user.first_name),
             last=escape(m.from_user.last_name or m.from_user.first_name),
-            fullname=" ".join(
-                [
-                    escape(m.from_user.first_name),
-                    escape(m.from_user.last_name),
-                ]
-                if m.from_user.last_name
-                else [escape(m.from_user.first_name)],
-            ),
-            username="@" + escape(m.from_user.username)
-            if m.from_user.username
-            else (await mention_html(m.from_user.first_name, m.from_user.id)),
-            mention=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            fullname=" ".join([
+                escape(m.from_user.first_name),
+                escape(m.from_user.last_name),
+            ] if m.from_user.last_name else [escape(m.from_user.first_name)
+                                             ], ),
             chatname=escape(m.chat.title)
-            if m.chat.type != "private"
-            else escape(m.from_user.first_name),
+            if m.chat.type != "private" else escape(m.from_user.first_name),
             id=m.from_user.id,
         )
     else:
@@ -170,9 +169,8 @@ async def split_quotes(text: str):
     while counter < len(text):
         if text[counter] == "\\":
             counter += 1
-        elif text[counter] == text[0] or (
-                text[0] == SMART_OPEN and text[counter] == SMART_CLOSE
-        ):
+        elif text[counter] == text[0] or (text[0] == SMART_OPEN
+                                          and text[counter] == SMART_CLOSE):
             break
         counter += 1
     else:

@@ -43,12 +43,12 @@ class Chats(MongoDB):
         with INSERTION_LOCK:
 
             if chat_name == self.chat_info["chat_name"] and self.user_is_in_chat(
-                    user_id,
+                user_id,
             ):
                 return True
 
             if chat_name != self.chat_info["chat_name"] and self.user_is_in_chat(
-                    user_id,
+                user_id,
             ):
                 return self.update(
                     {"_id": self.chat_id},
@@ -56,7 +56,7 @@ class Chats(MongoDB):
                 )
 
             if chat_name == self.chat_info["chat_name"] and not self.user_is_in_chat(
-                    user_id,
+                user_id,
             ):
                 self.chat_info["users"].append(user_id)
                 return self.update(

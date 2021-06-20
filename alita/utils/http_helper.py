@@ -14,14 +14,17 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import asyncio
 
-
+import httpx
 from httpx import AsyncClient
+
+timeout = httpx.Timeout(40, pool=None)
+http = httpx.AsyncClient(http2=True, timeout=timeout)
 
 
 class HTTPx:
     """class for helping get the data from url using aiohttp."""
-
     @staticmethod
     async def get(link: str):
         """Get JSON data from the provided link."""

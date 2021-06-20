@@ -18,12 +18,12 @@
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
-from pyromod.helpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import command
+from alita.utils.kbhelpers import ikb
 
 
 async def gen_formatting_kb(m):
@@ -48,7 +48,7 @@ async def markdownhelp(_, m: Message):
         quote=True,
         reply_markup=(await gen_formatting_kb(m)),
     )
-    LOGGER.info(f"{m.from_user.id} used cmd '{m.command[0]}' in {m.chat.id}")
+    LOGGER.info(f"{m.from_user.id} used cmd '{m.command}' in {m.chat.id}")
     return
 
 

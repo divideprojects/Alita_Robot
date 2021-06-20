@@ -26,8 +26,6 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-ANTISPAM_BANNED = set()
-
 
 class GBan(MongoDB):
     """Class for managing Gbans in bot."""
@@ -39,11 +37,7 @@ class GBan(MongoDB):
 
     def check_gban(self, user_id: int):
         with INSERTION_LOCK:
-            return (
-                True
-                if user_id in ANTISPAM_BANNED
-                else bool(self.find_one({"_id": user_id}))
-            )
+            return bool(self.find_one({"_id": user_id}))
 
     def add_gban(self, user_id: int, reason: str, by_user: int):
         global ANTISPAM_BANNED
@@ -54,7 +48,6 @@ class GBan(MongoDB):
 
             # If not already gbanned, then add to gban
             time_rn = datetime.now()
-            ANTISPAM_BANNED.add(user_id)
             return self.insert_one(
                 {
                     "_id": user_id,
@@ -69,7 +62,6 @@ class GBan(MongoDB):
         with INSERTION_LOCK:
             # Check if  user is already gbanned or not
             if self.find_one({"_id": user_id}):
-                ANTISPAM_BANNED.remove(user_id)
                 return self.delete_one({"_id": user_id})
 
             return "User not gbanned!"
@@ -90,12 +82,7 @@ class GBan(MongoDB):
 
     def count_gbans(self):
         with INSERTION_LOCK:
-            try:
-                return len(ANTISPAM_BANNED)
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
-                return self.count()
+            return self.count()
 
     def load_from_db(self):
         with INSERTION_LOCK:
@@ -103,18 +90,4 @@ class GBan(MongoDB):
 
     def list_gbans(self):
         with INSERTION_LOCK:
-            try:
-                return list(ANTISPAM_BANNED)
-            except Exception as ef:
-                LOGGER.error(ef)
-                LOGGER.error(format_exc())
             return self.find_all()
-
-
-def __pre_req_antispam_users():
-    global ANTISPAM_BANNED
-    start = time()
-    db = GBan()
-    users = db.load_from_db()
-    ANTISPAM_BANNED = {i["_id"] for i in users}
-    LOGGER.info(f"Loaded AntispamBanned Cache - {round((time() - start), 3)}s")

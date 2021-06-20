@@ -19,7 +19,7 @@
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 from re import escape as re_escape
 from secrets import choice
 from traceback import format_exc
@@ -286,10 +286,10 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
             return
 
     elif msgtype in (
-            Types.STICKER,
-            Types.VIDEO_NOTE,
-            Types.CONTACT,
-            Types.ANIMATED_STICKER,
+        Types.STICKER,
+        Types.VIDEO_NOTE,
+        Types.CONTACT,
+        Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(
             m.chat.id,

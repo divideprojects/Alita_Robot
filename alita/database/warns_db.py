@@ -29,53 +29,41 @@ class Warns(MongoDB):
     db_name = "chat_warns"
 
     def __init__(self, chat_id: int) -> None:
-        self.collection = MongoDB(Warns.db_name)
+        super().__init__(self.db_name)
         self.chat_id = chat_id
-
-    def __ensure_in_db(self, user_id: int):
-        chat_data = self.find_one(
-            {"chat_id": self.chat_id, "user_id": user_id},
-        )
-        if not chat_data:
-            new_data = {
-                "chat_id": self.chat_id,
-                "user_id": user_id,
-                "warns": [],
-                "num_warns": 0,
-            }
-            self.insert_one(new_data)
-            LOGGER.info(f"Initialized Warn Document for {user_id} in {self.chat_id}")
-            return new_data
-        return chat_data
 
     def warn_user(self, user_id: int, warn_reason=None):
         with INSERTION_LOCK:
             self.user_info = self.__ensure_in_db(user_id)
-            warns = self.user_info["warns"] + [warn_reason]
-            num_warns = len(warns)
+            self.user_info["warns"].append(warn_reason)
+            self.user_info["num_warns"] = len(self.user_info["warns"])
             self.update(
                 {"chat_id": self.chat_id, "user_id": user_id},
-                {"warns": warns, "num_warns": num_warns},
+                {
+                    "warns": self.user_info["warns"],
+                    "num_warns": self.user_info["num_warns"],
+                },
             )
-            return warns, num_warns
+            return self.user_info["warns"], self.user_info["num_warns"]
 
     def remove_warn(self, user_id: int):
         with INSERTION_LOCK:
             self.user_info = self.__ensure_in_db(user_id)
-            curr_warns = self.user_info["warns"][:-1]
-            num_warns = len(curr_warns)
+            self.user_info["warns"].pop()
+            self.user_info["num_warns"] = len(self.user_info["warns"])
             self.update(
                 {"chat_id": self.chat_id, "user_id": user_id},
-                {"warns": curr_warns, "num_warns": num_warns},
+                {
+                    "warns": self.user_info["warns"],
+                    "num_warns": self.user_info["num_warns"],
+                },
             )
-            return curr_warns, num_warns
+            return self.user_info["warns"], self.user_info["num_warns"]
 
     def reset_warns(self, user_id: int):
         with INSERTION_LOCK:
             self.user_info = self.__ensure_in_db(user_id)
-            return self.delete_one(
-                {"chat_id": self.chat_id, "user_id": user_id},
-            )
+            return self.delete_one({"chat_id": self.chat_id, "user_id": user_id})
 
     def get_warns(self, user_id: int):
         with INSERTION_LOCK:
@@ -123,6 +111,20 @@ class Warns(MongoDB):
                         {key: val},
                     )
 
+    def __ensure_in_db(self, user_id: int):
+        chat_data = self.find_one({"chat_id": self.chat_id, "user_id": user_id})
+        if not chat_data:
+            new_data = {
+                "chat_id": self.chat_id,
+                "user_id": user_id,
+                "warns": [],
+                "num_warns": 0,
+            }
+            self.insert_one(new_data)
+            LOGGER.info(f"Initialized Warn Document for {user_id} in {self.chat_id}")
+            return new_data
+        return chat_data
+
 
 class WarnSettings(MongoDB):
     db_name = "chat_warn_settings"
@@ -147,10 +149,7 @@ class WarnSettings(MongoDB):
 
     def set_warnmode(self, warn_mode: str = "none"):
         with INSERTION_LOCK:
-            self.update(
-                {"_id": self.chat_id},
-                {"warn_mode": warn_mode},
-            )
+            self.update({"_id": self.chat_id}, {"warn_mode": warn_mode})
             return warn_mode
 
     def get_warnmode(self):
@@ -159,10 +158,7 @@ class WarnSettings(MongoDB):
 
     def set_warnlimit(self, warn_limit: int = 3):
         with INSERTION_LOCK:
-            self.update(
-                {"_id": self.chat_id},
-                {"warn_limit": warn_limit},
-            )
+            self.update({"_id": self.chat_id}, {"warn_limit": warn_limit})
             return warn_limit
 
     def get_warnlimit(self):

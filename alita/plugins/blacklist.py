@@ -19,7 +19,7 @@
 from html import escape
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -76,8 +76,8 @@ async def add_blacklist(_, m: Message):
 
     if already_added_words:
         rep_text = (
-                ", ".join([f"<code>{i}</code>" for i in bl_words])
-                + " already added in blacklist, skipped them!"
+            ", ".join([f"<code>{i}</code>" for i in bl_words])
+            + " already added in blacklist, skipped them!"
         )
     LOGGER.info(f"{m.from_user.id} added new blacklists ({bl_words}) in {m.chat.id}")
     await m.reply_text(
@@ -135,9 +135,8 @@ async def rm_blacklist(_, m: Message):
 
     if non_found_words:
         rep_text = (
-                           "Could not find "
-                           + ", ".join(f"<code>{i}</code>" for i in non_found_words)
-                   ) + " in blcklisted words, skipped them."
+            "Could not find " + ", ".join(f"<code>{i}</code>" for i in non_found_words)
+        ) + " in blcklisted words, skipped them."
 
     LOGGER.info(f"{m.from_user.id} removed blacklists ({bl_words}) in {m.chat.id}")
     await m.reply_text(
@@ -162,8 +161,8 @@ async def set_bl_action(_, m: Message):
         if action not in valid_actions:
             await m.reply_text(
                 (
-                        "Choose a valid blacklist action from "
-                        + ", ".join(f"<code>{i}</code>" for i in valid_actions)
+                    "Choose a valid blacklist action from "
+                    + ", ".join(f"<code>{i}</code>" for i in valid_actions)
                 )
             )
 
