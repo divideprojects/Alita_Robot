@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import html
 
+from html import escape as escape_html
 from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
 from pyrogram.filters import regex
 from pyrogram.types import CallbackQuery, Message
@@ -185,9 +185,9 @@ async def anti_channel_pin(_, m: Message):
 
 
 @Alita.on_message(command("pinned") & admin_filter)
-async def pinned_message(_, m: Message):
+async def pinned_message(c: Alita, m: Message):
     chat_title = message.chat.title
-    chat = await Alita.get_chat(chat_id=m.chat.id)
+    chat = await c.get_chat(chat_id=m.chat.id)
     msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
     if m.chat.username:
         link_chat_id = m.chat.username
@@ -203,9 +203,9 @@ async def pinned_message(_, m: Message):
         elif (str(m.chat.id)).startswith("-100"):
             link_chat_id = (str(m.chat.id)).replace("-100", "")
             message_link = (f"https://t.me/c/{link_chat_id}/{pinned_id}")
-        await m.reply_text(f"The pinned message of {html.escape(chat_title)} is [here]({message_link}).", reply_to_message_id=msg_id)
+        await m.reply_text(f"The pinned message of {escape_html(chat_title)} is [here]({message_link}).", reply_to_message_id=msg_id)
     else:
-        await m.reply_text(f"There is no pinned message in {html.escape(chat_title)}.")
+        await m.reply_text(f"There is no pinned message in {escape_html(chat_title)}.")
 
 
 @Alita.on_message(command("cleanlinked") & admin_filter)
