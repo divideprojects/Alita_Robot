@@ -186,7 +186,7 @@ async def anti_channel_pin(_, m: Message):
 
 @Alita.on_message(command("pinned") & admin_filter)
 async def pinned_message(c: Alita, m: Message):
-    chat_title = message.chat.title
+    chat_title = m.chat.title
     chat = await c.get_chat(chat_id=m.chat.id)
     msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
     if m.chat.username:
