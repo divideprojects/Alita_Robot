@@ -197,6 +197,7 @@ strings:
         **Admin Cmds:**
         × /pin: Silently pins the message replied to - add `loud`, `notify` or `alert` to give notificaton to users.
         × /unpin: Unpins the last pinned message.
+        × /pinned: Gives the current pinned message of the chat.
         × /unpinall: Unpins all the pinned message in the current chat.
         × /antichannelpin `<on/off/yes/no>`: Toggle antichannelpin status. All the messages from linked channel will be unpinned if enabled!
         × /cleanlinked `<on/off/yes/no>`: Toggle cleanlinked status. All the messages from linked channel will be deleted if enabled!
