@@ -111,7 +111,7 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
         return False
 
     # Telegram and GroupAnonyamousBot
-    if m.from_user.id in [777000, 1087968824]:
+    if m.sender_chat:
         return True
 
     # Bypass the bot devs, sudos and owner
