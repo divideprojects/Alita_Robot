@@ -189,12 +189,7 @@ async def pinned_message(c: Alita, m: Message):
     chat_title = m.chat.title
     chat = await c.get_chat(chat_id=m.chat.id)
     msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
-    if m.chat.username:
-        link_chat_id = m.chat.username
-        message_link = (f"https://t.me/{link_chat_id}/{m.reply_to_message.message_id}")
-    elif (str(m.chat.id)).startswith("-100"):
-        link_chat_id = (str(m.chat.id)).replace("-100", "")
-        message_link = (f"https://t.me/c/{link_chat_id}/{m.reply_to_message.message_id}")
+
     if chat.pinned_message:
         pinned_id = chat.pinned_message.message_id
         if m.chat.username:
