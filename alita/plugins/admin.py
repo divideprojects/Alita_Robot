@@ -169,11 +169,15 @@ async def promote_usr(c: Alita, m: Message):
         return
 
     user_id, user_first_name, user_name = await extract_user(c, m)
+    
+    bot = await c.get_chat_member(m.chat.id, BOT_ID)
 
     if user_id == BOT_ID:
         await m.reply_text("Huh, how can I even promote myself?")
         return
 
+    if not bot.can_promote_members:
+        return await m.reply_text("I don't have enough permissions") # This should be here 
     # If user is alreay admin
     try:
         admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
@@ -191,13 +195,14 @@ async def promote_usr(c: Alita, m: Message):
     try:
         await m.chat.promote_member(
             user_id=user_id,
-            can_change_info=False,
-            can_delete_messages=True,
-            can_restrict_members=True,
-            can_invite_users=True,
-            can_pin_messages=True,
-            can_manage_voice_chats=False,
-            can_manage_chat=True,
+            can_change_info=bot.can_change_info,
+            can_invite_users=bot.can_invite_users,
+            can_delete_messages=bot.can_delete_messages,
+            can_restrict_members=bot.can_restrict_members,
+            can_pin_messages=bot.can_pin_messages,
+        #    can_promote_members=bot.can_promote_members,
+            can_manage_chat=bot.can_manage_chat,
+            can_manage_voice_chats=bot.can_manage_voice_chats,
         )
 
         title = "admin"  # Deafult title
@@ -289,7 +294,17 @@ async def demote_usr(c: Alita, m: Message):
         return
 
     try:
-        await m.chat.promote_member(user_id=user_id, can_manage_chat=False)
+        await m.chat.promote_member(
+            user_id=user_id,
+            can_change_info=False,
+            can_invite_users=False,
+            can_delete_messages=False,
+            can_restrict_members=False,
+            can_pin_messages=False,
+            can_promote_members=False,
+            can_manage_chat=False,
+            can_manage_voice_chats=False,
+        )
         LOGGER.info(f"{m.from_user.id} demoted {user_id} in {m.chat.id}")
 
         # ----- Remove admin from cache -----

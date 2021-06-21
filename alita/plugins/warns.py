@@ -16,10 +16,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from time import time
+
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, ChatPermissions, Message
-from time import time
+from pyrogram.types import (
+    CallbackQuery,
+    ChatPermissions,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+)
 
 from alita import LOGGER, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -41,11 +48,20 @@ async def warn(c: Alita, m: Message):
 
     if m.reply_to_message:
         r_id = m.reply_to_message.message_id
-        reason = m.text.split(None, 1)[1] if len(m.text.split()) >= 2 else None
-    else:
+        if len(m.text.split()) >= 2:
+            reason = m.text.split(None, 1)[1]
+        else:
+            reason = None
+    elif not m.reply_to_message:
         r_id = m.message_id
-        reason = m.text.split(None, 2)[2] if len(m.text.split()) >= 3 else None
-    if len(m.command) <= 1 and not m.reply_to_message:
+        if len(m.text.split()) >= 3:
+            reason = m.text.split(None, 2)[2]
+        else:
+            reason = None
+    else:
+        reason = None
+
+    if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
@@ -92,7 +108,7 @@ async def warn(c: Alita, m: Message):
                 f"\n<b>Reason for last warn</b>:\n{reason}"
                 if reason
                 else "\n"
-                     f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
+                f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
             ),
             reply_to_message_id=r_id,
         )
@@ -100,9 +116,15 @@ async def warn(c: Alita, m: Message):
 
     rules = Rules(m.chat.id).get_rules()
     if rules:
-        kb = ("Rules 📋", f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}", "url")
+        kb = InlineKeyboardButton(
+            "Rules 📋",
+            url=f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
+        )
     else:
-        kb = ("Kick ⚠️", f"warn.kick.{user_id}")
+        kb = InlineKeyboardButton(
+            "Kick ⚠️",
+            callback_data=f"warn.kick.{user_id}",
+        )
 
     if m.text.split()[0] == "/swarn":
         await m.delete()
@@ -116,7 +138,17 @@ async def warn(c: Alita, m: Message):
     txt += f"\n<b>Reason for last warn</b>:\n{reason}" if reason else ""
     await m.reply_text(
         txt,
-        reply_markup=([[("Remove Warn ❌", f"warn.remove.{user_id}")] + [kb]]),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Remove Warn ❌",
+                        callback_data=f"warn.remove.{user_id}",
+                    ),
+                ]
+                + [kb],
+            ],
+        ),
         reply_to_message_id=r_id,
     )
     await m.stop_propagation()
@@ -126,7 +158,7 @@ async def warn(c: Alita, m: Message):
 async def reset_warn(c: Alita, m: Message):
     from alita import BOT_ID
 
-    if len(m.command) <= 1 and not m.reply_to_message:
+    if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
@@ -197,8 +229,8 @@ async def list_warns(c: Alita, m: Message):
     if not warns:
         await m.reply_text("This user has no warns!")
         return
-    msg = f"{(await mention_html(user_first_name, user_id))} has <b>{num_warns}/{warn_settings['warn_limit']}</b> warns!\n\n<b>Reasons:</b>\n"
-    msg += "\n".join("- No reason" if i is None else f" - {i}" for i in warns)
+    msg = f"{(await mention_html(user_first_name,user_id))} has <b>{num_warns}/{warn_settings['warn_limit']}</b> warns!\n\n<b>Reasons:</b>\n"
+    msg += "\n".join([("- No reason" if i is None else f" - {i}") for i in warns])
     await m.reply_text(msg)
     return
 
@@ -209,7 +241,7 @@ async def list_warns(c: Alita, m: Message):
 async def remove_warn(c: Alita, m: Message):
     from alita import BOT_ID
 
-    if len(m.command) <= 1 and not m.reply_to_message:
+    if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text(
             "I can't remove warns of nothing! Tell me user whose warn should be removed!",
         )
@@ -248,7 +280,7 @@ async def remove_warn(c: Alita, m: Message):
     _, num_warns = warn_db.remove_warn(user_id)
     await m.reply_text(
         (
-            f"{(await mention_html(user_first_name, user_id))} now has <b>{num_warns}</b> warnings!\n"
+            f"{(await mention_html(user_first_name,user_id))} now has <b>{num_warns}</b> warnings!\n"
             "Their last warn was removed."
         ),
     )
@@ -257,6 +289,7 @@ async def remove_warn(c: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^warn."))
 async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
+
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[q.message.chat.id]}
     except KeyError:
