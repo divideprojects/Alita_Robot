@@ -48,20 +48,11 @@ async def warn(c: Alita, m: Message):
 
     if m.reply_to_message:
         r_id = m.reply_to_message.message_id
-        if len(m.text.split()) >= 2:
-            reason = m.text.split(None, 1)[1]
-        else:
-            reason = None
-    elif not m.reply_to_message:
-        r_id = m.message_id
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
-        else:
-            reason = None
+        reason = m.text.split(None, 1)[1] if len(m.text.split()) >= 2 else None
     else:
-        reason = None
-
-    if not len(m.command) > 1 and not m.reply_to_message:
+        r_id = m.message_id
+        reason = m.text.split(None, 2)[2] if len(m.text.split()) >= 3 else None
+    if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
@@ -158,7 +149,7 @@ async def warn(c: Alita, m: Message):
 async def reset_warn(c: Alita, m: Message):
     from alita import BOT_ID
 
-    if not len(m.command) > 1 and not m.reply_to_message:
+    if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
@@ -230,7 +221,7 @@ async def list_warns(c: Alita, m: Message):
         await m.reply_text("This user has no warns!")
         return
     msg = f"{(await mention_html(user_first_name,user_id))} has <b>{num_warns}/{warn_settings['warn_limit']}</b> warns!\n\n<b>Reasons:</b>\n"
-    msg += "\n".join([("- No reason" if i is None else f" - {i}") for i in warns])
+    msg += "\n".join("- No reason" if i is None else f" - {i}" for i in warns)
     await m.reply_text(msg)
     return
 
@@ -241,7 +232,7 @@ async def list_warns(c: Alita, m: Message):
 async def remove_warn(c: Alita, m: Message):
     from alita import BOT_ID
 
-    if not len(m.command) > 1 and not m.reply_to_message:
+    if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text(
             "I can't remove warns of nothing! Tell me user whose warn should be removed!",
         )
