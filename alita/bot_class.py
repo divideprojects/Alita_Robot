@@ -33,7 +33,6 @@ from alita import (
     API_HASH,
     APP_ID,
     BOT_TOKEN,
-    LOG_CHANNEL,
     LOG_DATETIME,
     LOGFILE,
     LOGGER,
@@ -129,10 +128,10 @@ class Alita(Client):
             ),
             reply_markup=ikb([[("Raw Logs", raw, "url")], [("Neko", neko, "url")]]),
         )
-        if LOG_CHANNEL:
+        if MESSAGE_DUMP:
             # LOG_CHANNEL is not necessary
             await self.send_document(
-                LOG_CHANNEL,
+                MESSAGE_DUMP,
                 document=LOGFILE,
                 caption=f"Uptime: {runtime}\n[NekoBin]({neko})\n[Raw]({raw})",
             )
