@@ -177,7 +177,7 @@ async def id_info(c: Alita, m: Message):
             )
         else:
             try:
-                user = await c.get_users(user_id)
+                user = await c.get_chat(user_id)
             except PeerIdInvalid:
                 await m.reply_text(tlang(m, "utils.no_user_db"))
                 return
