@@ -29,7 +29,7 @@ class Warns(MongoDB):
     db_name = "chat_warns"
 
     def __init__(self, chat_id: int) -> None:
-        self.collection = MongoDB(Warns.db_name)
+        super().__init__(self.db_name)
         self.chat_id = chat_id
 
     def __ensure_in_db(self, user_id: int):

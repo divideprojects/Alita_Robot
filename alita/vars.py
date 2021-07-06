@@ -44,7 +44,6 @@ class Config:
     ENABLED_LOCALES = [str(i) for i in load_var("ENABLED_LOCALES", "").split()]
     VERSION = load_var("VERSION")
     WORKERS = int(load_var("WORKERS", 16))
-    LOG_CHANNEL = int(load_var("LOG_CHANNEL", -100))
 
 
 class Development:
@@ -69,4 +68,3 @@ class Development:
     ENABLED_LOCALES = ["ENABLED_LOCALES"]
     VERSION = "VERSION"
     WORKERS = 8
-    LOG_CHANNEL = -100

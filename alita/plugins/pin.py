@@ -198,7 +198,8 @@ async def pinned_message(c: Alita, m: Message):
         elif (str(m.chat.id)).startswith("-100"):
             link_chat_id = (str(m.chat.id)).replace("-100", "")
             message_link = (f"https://t.me/c/{link_chat_id}/{pinned_id}")
-        await m.reply_text(f"The pinned message of {escape_html(chat_title)} is [here]({message_link}).", reply_to_message_id=msg_id)
+            
+        await m.reply_text(f"The pinned message of {escape_html(chat_title)} is [here]({message_link}).", reply_to_message_id=msg_id, disable_web_page_preview=True,)
     else:
         await m.reply_text(f"There is no pinned message in {escape_html(chat_title)}.")
 

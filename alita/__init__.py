@@ -38,7 +38,7 @@ file_handler = FileHandler(filename=LOGFILE)
 stdout_handler = StreamHandler(stdout)
 
 basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format="%(asctime)s - [Alita_Robot] - %(levelname)s - %(message)s",
     level=INFO,
     handlers=[file_handler, stdout_handler],
 )
@@ -83,7 +83,6 @@ API_HASH = Config.API_HASH
 MESSAGE_DUMP = Config.MESSAGE_DUMP
 SUPPORT_GROUP = Config.SUPPORT_GROUP
 SUPPORT_CHANNEL = Config.SUPPORT_CHANNEL
-LOG_CHANNEL = Config.LOG_CHANNEL
 
 # Users Config
 OWNER_ID = Config.OWNER_ID
