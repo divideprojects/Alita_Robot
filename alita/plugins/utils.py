@@ -177,7 +177,7 @@ async def id_info(c: Alita, m: Message):
             )
         else:
             try:
-                user = await c.get_chat(user_id)
+                user = await c.get_users(user_id)
             except PeerIdInvalid:
                 await m.reply_text(tlang(m, "utils.no_user_db"))
                 return
@@ -276,7 +276,7 @@ async def my_info(c: Alita, m: Message):
         user_id = user["_id"]
     except KeyError:
         LOGGER.warning(f"Calling api to fetch info about user {user_id}")
-        user = await c.get_chat(user_id)
+        user = await c.get_users(user_id)
         name = (
             escape(user["first_name"] + " " + user["last_name"])
             if user["last_name"]
