@@ -35,7 +35,7 @@ from alita.utils.string import extract_time
 
 
 @Alita.on_message(command(["tmute", "stmute", "dtmute"]) & restrict_filter)
-async def mute_usr(c: Alita, m: Message):
+async def tmute_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text("I can't mute nothing!")
         return
