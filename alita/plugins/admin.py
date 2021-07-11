@@ -205,13 +205,13 @@ async def promote_usr(c: Alita, m: Message):
             can_manage_voice_chats=bot.can_manage_voice_chats,
         )
 
-        title = "admin"  # Deafult title
+        title = "Admin"  # Deafult title
         if len(m.text.split()) == 3 and not m.reply_to_message:
             title = m.text.split()[2]
         elif len(m.text.split()) == 2 and m.reply_to_message:
             title = m.text.split()[1]
         if len(title) > 16:
-            title = title[0:15]  # trim title to 15 characters
+            title = title[0:16]  # trim title to 16 characters
 
         await c.set_administrator_title(m.chat.id, user_id, title)
 
