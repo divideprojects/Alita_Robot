@@ -51,6 +51,9 @@ strings:
         × /ban: Bans the user replied to or tagged.
         × /sban: Bans the user replied or tagged and delete your messsage.
         × /dban: Bans the user replied and delete their message.
+        × /tban <userhandle> x(m/h/d): Bans a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
+        × /stban <userhandle> x(m/h/d): Silently bans a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
+        × /dtban <userhandle> x(m/h/d): Silently bans a user for x time and delete the replied message. (via reply). m = minutes, h = hours, d = days.
         × /unban: Unbans the user replied to or tagged.
 
         **Example:**
@@ -155,6 +158,11 @@ strings:
 
         **Admin only:**
         × /mute: Mute the user replied to or mentioned.
+        × /smute: silences a user without notifying. Can also be used as a reply, muting the replied to user.
+        × /dmute: Mute a user by reply, and delete their message.
+        × /tmute <userhandle> x(m/h/d): mutes a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
+        × /stmute <userhandle> x(m/h/d): mutes a user for x time without notifying. (via handle, or reply). m = minutes, h = hours, d = days.
+        × /dtmute <userhandle> x(m/h/d): Mute the replied user, and delete the replied message. (via reply). m = minutes, h = hours, d = days.
         × /unmute: Unmutes the user mentioned or replied to.
 
         **Example:**
