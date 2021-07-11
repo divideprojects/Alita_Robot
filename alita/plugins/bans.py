@@ -44,6 +44,8 @@ async def tban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.ban.no_target"))
         await m.stop_propagation()
 
+    user_id, user_first_name, _ = await extract_user(c, m)
+        
     if not user_id:
         await m.reply_text("Cannot find user to ban")
         return
@@ -66,8 +68,6 @@ async def tban_usr(c: Alita, m: Message):
         r_id = m.message_id
         if len(m.text.split()) >= 3:
             reason = m.text.split(None, 2)[2]
-
-    user_id, user_first_name, _ = await extract_user(c, m)
 
     if not reason:
         await m.reply_text("You haven't specified a time to ban this user for!")
