@@ -85,7 +85,7 @@ async def mute_usr(c: Alita, m: Message):
     else:
         reason = ""
 
-    mutetime = extract_time(message, time_val)
+    mutetime = await extract_time(m, time_val)
 
     if not mutetime:
         return
