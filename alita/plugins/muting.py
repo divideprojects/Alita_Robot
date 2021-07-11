@@ -24,7 +24,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import ChatPermissions, Message
 
-from alita import LOGGER, SUPPORT_GROUP, SUPPORT_STAFF
+from alita import LOGGER, SUPPORT_GROUP, SUPPORT_STAFF, BOT_ID
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
@@ -33,9 +33,8 @@ from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 
-@Alita.on_message(command("mute") & restrict_filter)
+@Alita.on_message(command(["mute", "smute", "dmute"]) & restrict_filter)
 async def mute_usr(c: Alita, m: Message):
-    from alita import BOT_ID
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text("I can't mute nothing!")
@@ -93,6 +92,16 @@ async def mute_usr(c: Alita, m: Message):
             ),
         )
         LOGGER.info(f"{m.from_user.id} muted {user_id} in {m.chat.id}")
+        if m.text.split()[0] == "/smute":
+            await m.delete()
+            if m.reply_to_message:
+                await m.reply_to_message.delete()
+            await m.stop_propagation()
+        if m.text.split()[0] == "/dmute":
+            if not m.reply_to_message:
+                await m.reply_text("Reply to a message to delete it and mute the user!")
+                await m.stop_propagation()
+            await m.reply_to_message.delete()
         txt = (tlang(m, "admin.mute.muted_user")).format(
             admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
             muted=(await mention_html(user_first_name, user_id)),
@@ -120,7 +129,6 @@ async def mute_usr(c: Alita, m: Message):
 
 @Alita.on_message(command("unmute") & restrict_filter)
 async def unmute_usr(c: Alita, m: Message):
-    from alita import BOT_ID
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text("I can't unmute nothing!")
