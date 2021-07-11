@@ -80,7 +80,7 @@ async def tban_usr(c: Alita, m: Message):
     else:
         reason = ""
 
-    bantime = extract_time(message, time_val)
+    bantime = extract_time(m, time_val)
 
     if not bantime:
         return
