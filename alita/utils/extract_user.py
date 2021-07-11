@@ -67,7 +67,10 @@ async def extract_user(c: Alita, m: Message) -> Tuple[int, str, str]:
                     user_name = user["username"]
                 except KeyError:
                     # If user not in database
-                    user = await c.get_users(user_found)
+                    try:
+                        user = await c.get_users(user_found)
+                    except Exception as ef:
+                        return await m.reply_text(f"User not found ! Error: {ef}")
                     user_id = user.id
                     user_first_name = user.first_name
                     user_name = user.username
@@ -99,7 +102,10 @@ async def extract_user(c: Alita, m: Message) -> Tuple[int, str, str]:
                     user_first_name = user["name"]
                     user_name = user["username"]
                 except Exception as ef:
-                    user = await c.get_users(user_id)
+                    try:
+                        user = await c.get_users(user_id)
+                    except Exception as ef:
+                        return await m.reply_text(f"User not found ! Error: {ef}")
                     user_first_name = user.first_name
                     user_name = user.username
                     LOGGER.error(ef)
