@@ -61,13 +61,17 @@ async def tban_usr(c: Alita, m: Message):
 
     if m.reply_to_message:
         r_id = m.reply_to_message.message_id
-        if len(m.text.split()) >= 2:
-            reason = m.text.split(None, 1)[1]
     else:
         r_id = m.message_id
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
-
+        
+    if m.reply_to_message and len(m.text.split()) < 2:
+        reason = m.text.split(None, 2)[2]
+    elif not m.reply_to_message and len(m.text.split()) < 3:
+        reason = m.text.split(None, 2)[2]
+    else:
+        m.reply_text("Read /help !!")
+        return
+    
     if not reason:
         await m.reply_text("You haven't specified a time to ban this user for!")
         return
