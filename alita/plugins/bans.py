@@ -14,7 +14,6 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from time import time
 from traceback import format_exc
 
 from pyrogram.errors import (
@@ -96,7 +95,7 @@ async def tban_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} tbanned {user_id} in {m.chat.id}")
-        await c.kick_chat_member(m.chat.id, user_id, int(bantime))
+        await m.chat.kick_member(user_id, until_date=int(bantime))
         if m.text.split()[0] == "/stban":
             await m.delete()
             if m.reply_to_message:
@@ -181,7 +180,7 @@ async def kick_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
-        await c.kick_chat_member(m.chat.id, user_id, int(time() + 45))
+        await m.chat.kick_member(user_id)
         if m.text.split()[0] == "/skick":
             await m.delete()
             if m.reply_to_message:
@@ -199,6 +198,7 @@ async def kick_usr(c: Alita, m: Message):
         )
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         await m.reply_text(txt, reply_to_message_id=r_id)
+        await m.chat.unban_member(user_id)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -266,7 +266,7 @@ async def ban_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} banned {user_id} in {m.chat.id}")
-        await c.kick_chat_member(m.chat.id, user_id)
+        await m.chat.kick_member(user_id)
         if m.text.split()[0] == "/sban":
             await m.delete()
             if m.reply_to_message:
