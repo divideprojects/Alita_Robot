@@ -104,7 +104,7 @@ async def tban_usr(c: Alita, m: Message):
             await m.stop_propagation()
         if m.text.split()[0] == "/dtban":
             if not m.reply_to_message:
-                await m.reply_text("Reply to a message to delete it and ban the user!")
+                await m.reply_text("Reply to a message to delete it and tban the user!")
                 await m.stop_propagation()
             await m.reply_to_message.delete()
         txt = (tlang(m, "admin.ban.banned_user")).format(
