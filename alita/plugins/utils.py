@@ -388,8 +388,6 @@ async def paste_it(_, m: Message):
     except Exception as e:
         await replymsg.edit_text(f"Error: {e}"
 
-    return
-
 
 @Alita.on_message(command("tr"))
 async def translate(_, m: Message):
