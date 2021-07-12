@@ -386,7 +386,7 @@ async def paste_it(_, m: Message):
         )
         LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
     except Exception as e:
-        await replymsg.edit_text(f"Error: {e}"
+        await replymsg.edit_text(f"Error: {e}")
         return
 
     return
