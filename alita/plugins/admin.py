@@ -107,7 +107,8 @@ async def adminlist_show(_, m: Message):
 )
 async def reload_admins(_, m: Message):
     global TEMP_ADMIN_CACHE_BLOCK
-
+    if m.chat.type != "supergroup":
+        return
     if (
             (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
             and (m.from_user.id not in SUPPORT_STAFF)
@@ -224,7 +225,7 @@ async def promote_usr(c: Alita, m: Message):
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
                 chat_title=m.chat.title + f"\nTitle set to {title}"
-                if title != "admin"
+                if title != "Admin"
                 else "",
             ),
         )
