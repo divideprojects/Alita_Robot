@@ -367,25 +367,26 @@ async def weebify(_, m: Message):
 @Alita.on_message(command("paste"))
 async def paste_it(_, m: Message):
     replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")), quote=True)
-
-    if m.reply_to_message:
-        if m.reply_to_message.document:
-            dl_loc = await m.reply_to_message.download()
-            with open(dl_loc) as f:
-                txt = f.read()
-            remove(dl_loc)
+    try:
+        if m.reply_to_message:
+            if m.reply_to_message.document:
+                dl_loc = await m.reply_to_message.download()
+                with open(dl_loc) as f:
+                    txt = f.read()
+                remove(dl_loc)
+            else:
+                txt = m.reply_to_message.text
         else:
-            txt = m.reply_to_message.text
-    else:
-        txt = m.text.split(None, 1)[1]
+            txt = m.text.split(None, 1)[1]
 
-    url = (await paste(txt))[0]
-
-    await replymsg.edit_text(
-        (tlang(m, "utils.paste.pasted_nekobin")),
-        reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
-    )
-    LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
+        url = (await paste(txt))[0]
+        await replymsg.edit_text(
+            (tlang(m, "utils.paste.pasted_nekobin")),
+            reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
+        )
+        LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
+    except Exception as e:
+        await replymsg.edit_text(f"Error: {e}"
 
     return
 
