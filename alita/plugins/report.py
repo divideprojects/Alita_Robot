@@ -152,10 +152,9 @@ async def report_watcher(c: Alita, m: Message):
 
         for admin in admin_list:
             if (
-                    admin.user.is_bot or admin.user.is_deleted
+                admin.user.is_bot or admin.user.is_deleted
             ):  # can't message bots or deleted accounts
                 continue
-
             if Reporting(admin.user.id).get_settings():
                 try:
                     await c.send_message(
@@ -164,22 +163,18 @@ async def report_watcher(c: Alita, m: Message):
                         reply_markup=reply_markup,
                         disable_web_page_preview=True,
                     )
-
-                    # TODO - fix message.forward
-                    # if should_forward:
-                    #     # forward the reported message
-                    #     await m.reply_to_message.forward(admin.user.id)
-
-                    #     if len(m.text.split()) > 1:
-                    #         # If user is giving a reason, send his message too
-                    #         await m.forward(admin.user.id)
-
-                except (Unauthorized, UserIsBlocked, PeerIdInvalid):
+                    try:
+                        await m.reply_to_message.forward(admin.user.id)
+                        if len(m.text.split()) > 1:
+                            await m.forward(admin.user.id)
+                    except Exception:
+                        pass
+                except Exception:
                     pass
                 except RPCError as ef:
                     LOGGER.error(ef)
                     LOGGER.error(format_exc())
-    return
+    return ""
 
 
 @Alita.on_callback_query(filters.regex("^report_"))
