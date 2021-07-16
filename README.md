@@ -98,7 +98,7 @@ If all works well, bot should send message to the **MESSAGE_DUMP** Group!
 
 
 ## Special Thanks to
-- [AmanoTeam](https://github.com/AmanoTeam/) for [EduuRobot](https://github.com/AmanoTeam/EduuRobot/tree/rewrite) as that helped me make the translation engine.
+- [AmanoTeam](https://github.com/AmanoTeam/) for [EduuRobot](https://github.com/AmanoTeam/EduuRobot) as that helped me make the translation engine.
 - [Dan](https://github.com/delivrance) for his [Pyrogram](https://github.com/pyrogram/pyrogram) library
 - [Paul Larsen](https://github.com/PaulSonOfLars) for his Original Marie Source Code.
 - Everyone else who inspired me to make this project, more names can be seen on commits!
