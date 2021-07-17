@@ -46,7 +46,6 @@ from alita import (
 from alita.database import MongoDB
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
-from alita.utils.paste import paste
 
 INITIAL_LOCK = RLock()
 
@@ -113,9 +112,6 @@ class Alita(Client):
         """Stop the bot and send a message to MESSAGE_DUMP telling that the bot has stopped."""
         runtime = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
         LOGGER.info("Uploading logs before stopping...!\n")
-        with open(LOGFILE) as f:
-            txt = f.read()
-            neko, raw = await paste(txt)
         # Send Logs to MESSAGE_DUMP and LOG_CHANNEL
         await self.send_document(
             MESSAGE_DUMP,
@@ -123,17 +119,15 @@ class Alita(Client):
             caption=(
                 "Bot Stopped!\n\n"
                 f"Uptime: {runtime}\n"
-                f"Logs for last run, pasted to [NekoBin]({neko}) as well as uploaded a file here.\n"
                 f"<code>{LOG_DATETIME}</code>"
             ),
-            reply_markup=ikb([[("Raw Logs", raw, "url")], [("Neko", neko, "url")]]),
         )
         if MESSAGE_DUMP:
             # LOG_CHANNEL is not necessary
             await self.send_document(
                 MESSAGE_DUMP,
                 document=LOGFILE,
-                caption=f"Uptime: {runtime}\n[NekoBin]({neko})\n[Raw]({raw})",
+                caption=f"Uptime: {runtime}",
             )
         await super().stop()
         MongoDB.close()
