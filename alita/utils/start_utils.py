@@ -213,15 +213,20 @@ async def get_private_rules(_, m: Message, help_option: str):
     chat_id = int(help_option.split("_")[1])
     rules = Rules(chat_id).get_rules()
     chat_title = Chats.get_chat_info(chat_id)["chat_name"]
+    if not rules:
+        await m.reply_text(
+            "The Admins of that group have not setup any rules, that dosen't mean you break the decorum of the chat!",
+            quote=True,
+        )
+        return ""
     await m.reply_text(
-        (tlang(m, "rules.get_rules")).format(
-            chat=chat_title,
-            rules=rules,
-        ),
+        f"""The rules for <b>{escape(chat_title)} are</b>:\n
+{rules}
+""",
         quote=True,
         disable_web_page_preview=True,
     )
-    return
+    return ""
 
 
 async def get_help_msg(m: Message or CallbackQuery, help_option: str):
