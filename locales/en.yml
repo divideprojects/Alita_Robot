@@ -284,7 +284,7 @@ strings:
       note_cached: "<i>Note:</i> These are cached values!"
       note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "Reloaded all admins in this chat!"
-      use_admin_cache: "Use /reload to reload admins!"
+      use_admin_cache: "Use /admincache to reload admins!"
     ban:
       user_already_banned: "This user is already banned, no use banning them again!"
       no_target: "I can't ban nothing!"
