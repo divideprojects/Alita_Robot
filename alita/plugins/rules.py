@@ -20,7 +20,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
 from pyromod.helpers import ikb
 
-from alita import LOGGER
+from alita import LOGGER, BOT_USERNAME
 from alita.bot_class import Alita
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
@@ -34,6 +34,8 @@ async def get_rules(_, m: Message):
 
     rules = db.get_rules()
     LOGGER.info(f"{m.from_user.id} fetched rules in {m.chat.id}")
+    if m and not m.from_user:
+        return
 
     if not rules:
         await m.reply_text(
@@ -45,19 +47,16 @@ async def get_rules(_, m: Message):
     priv_rules_status = db.get_privrules()
 
     if priv_rules_status:
-        from alita import BOT_USERNAME
 
-        pm_kb = ikb(
+        pm_kb = ikb([
             [
-                [
-                    (
-                        "Rules",
-                        f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
-                        "url",
-                    ),
-                ],
+                (
+                    "Rules",
+                    f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
+                    "url",
+                ),
             ],
-        )
+        ], )
         await m.reply_text(
             (tlang(m, "rules.pm_me")),
             quote=True,
@@ -68,8 +67,8 @@ async def get_rules(_, m: Message):
 
     await m.reply_text(
         (tlang(m, "rules.get_rules")).format(
-            chat=m.chat.title,
-            rules=rules,
+            chat=f"<b>{m.chat.title}</b>",
+            rules,
         ),
         disable_web_page_preview=True,
         reply_to_message_id=msg_id,
@@ -96,7 +95,7 @@ async def set_rules(_, m: Message):
 
 
 @Alita.on_message(
-    command(["privrules", "privaterules"]) & admin_filter,
+    command(["pmrules", "privaterules"]) & admin_filter,
 )
 async def priv_rules(_, m: Message):
     db = Rules(m.chat.id)
