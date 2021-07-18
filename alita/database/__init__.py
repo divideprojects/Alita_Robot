@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from pymongo import MongoClient
 
 from alita import DB_NAME, DB_URI, LOGGER
@@ -26,7 +25,6 @@ alita_main_db = alita_db_client[DB_NAME]
 
 class MongoDB:
     """Class for interacting with Bot database."""
-
     def __init__(self, collection) -> None:
         self.collection = alita_main_db[collection]
 
@@ -46,7 +44,7 @@ class MongoDB:
     def find_all(self, query=None):
         if query is None:
             query = {}
-        return [document for document in self.collection.find(query)]
+        return list(self.collection.find(query))
 
     # Count entries from collection
     def count(self, query=None):
@@ -76,8 +74,9 @@ class MongoDB:
     def db_command(self, command):
         return self._db.command(command)
 
-    def close(self):
-        return self._client.close()
+    @staticmethod
+    def close():
+        return alita_db_client.close()  # self._client.close() kept this for revert purpose
 
 
 def __connect_first():
