@@ -47,7 +47,6 @@ from alita.utils.custom_filters import command
 from alita.utils.extract_user import extract_user
 from alita.utils.http_helper import HTTPx
 from alita.utils.parser import mention_html
-from alita.utils.paste import paste
 
 gban_db = GBan()
 
@@ -362,6 +361,9 @@ async def weebify(_, m: Message):
 
 @Alita.on_message(command("paste"))
 async def paste_it(_, m: Message):
+    await m.reply_text("Nekobin is currently not reachable! :) will fix it soon !")
+    return
+    """
     replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")), quote=True)
     try:
         if m.reply_to_message:
@@ -386,6 +388,7 @@ async def paste_it(_, m: Message):
         return
 
     return
+    """
 
 
 @Alita.on_message(command("tr"))
