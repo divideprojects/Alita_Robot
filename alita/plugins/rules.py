@@ -64,11 +64,12 @@ async def get_rules(_, m: Message):
             reply_to_message_id=msg_id,
         )
         return
-
+    
+    formated = rules
     await m.reply_text(
         (tlang(m, "rules.get_rules")).format(
             chat=f"<b>{m.chat.title}</b>",
-            rules,
+            rules=formated,
         ),
         disable_web_page_preview=True,
         reply_to_message_id=msg_id,
