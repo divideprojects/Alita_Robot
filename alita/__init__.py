@@ -32,7 +32,7 @@ LOGDIR = f"{__name__}/logs"
 if not path.isdir(LOGDIR):
     mkdir(LOGDIR)
 
-LOGFILE = f"{LOGDIR}/{__name__}_{LOG_DATETIME}.log"
+LOGFILE = f"{LOGDIR}/{__name__}_{LOG_DATETIME}_log.txt"
 
 file_handler = FileHandler(filename=LOGFILE)
 stdout_handler = StreamHandler(stdout)
