@@ -214,10 +214,10 @@ strings:
       main: "Purges"
       help: |-
         Want to delete messages in you group?
-
         × /purge: Deletes messages upto replied message.
+        × /spurge: Deletes messages upto replied message without a success message.
         × /del: Deletes a single message, used as a reply to message.
-
+        
         **Example:**
         `/purge <as a reply to message>`: this will delete all the messages till the one you replied.
     reporting:
@@ -284,11 +284,11 @@ strings:
       note_cached: "<i>Note:</i> These are cached values!"
       note_updated: "<i>Note:</i> These are up-to-date values!"
       reloaded_admins: "Reloaded all admins in this chat!"
-      use_admin_cache: "Use /admincache to reload admins!"
+      use_admin_cache: "Use /reload to reload admins!"
     ban:
       user_already_banned: "This user is already banned, no use banning them again!"
       no_target: "I can't ban nothing!"
-      admin_cannot_ban: "This user is an admin, I cannot ban them!"
+      admin_cannot_ban: 'This user is an admin, I cannot ban them!"'
       ban_all: "Are you sure you want to ban all members in this group?"
       banned_user: "{admin} banned {banned} in chat <b>{chat_title}</b>!"
       banning_all: "Banning All Members..."
@@ -568,11 +568,10 @@ strings:
     clear_rules: "Are you sure you want to clear rules?"
     cleared: "Successfully cleared rules for this group!"
     get_rules: |-
-      Rules for <b>{chat}:</b>
-
+      The rules for <b>{chat} are:</b>
       {rules}
-    no_rules: "The Admins for this group have not setup rules!"
-    pm_me: "First PM me and then get the rules!"
+    no_rules: "The Admins for this group have not setup rules! That doesn't mean you can break the DECORUM of this group !"
+    pm_me: "Click on the below button to see this group rules!"
     sent_pm_rules: "I've messaged you the rules"
     set_rules: "Successfully set rules for this group."
   start:
