@@ -107,11 +107,17 @@ async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
             if idx + 1 < len(text) and text[idx + 1] == "{":
                 idx += 2
                 new_text += "{{{{"
+                continue
             else:
-                success = any(text[idx:].startswith("{" + v + "}") for v in valids)
+                success = False
+                for v in valids:
+                    if text[idx:].startswith("{" + v + "}"):
+                        success = True
+                        break
                 if success:
-                    new_text += text[idx: idx + len(v) + 2]
+                    new_text += text[idx:idx + len(v) + 2]
                     idx += len(v) + 2
+                    continue
                 else:
                     new_text += "{{"
 
@@ -119,6 +125,7 @@ async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
             if idx + 1 < len(text) and text[idx + 1] == "}":
                 idx += 2
                 new_text += "}}}}"
+                continue
             else:
                 new_text += "}}"
 
