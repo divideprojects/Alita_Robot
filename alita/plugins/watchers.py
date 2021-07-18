@@ -225,7 +225,7 @@ async def gban_watcher(c: Alita, m: Message):
             # Bot not admin in group and hence cannot ban users!
             # TO-DO - Improve Error Detection
             LOGGER.info(
-                f"User ({m.from_user.id}) is admin in group {m.chat.name} ({m.chat.id})",
+                f"User ({m.from_user.id}) is admin in group {m.chat.title} ({m.chat.id})",
             )
         except RPCError as ef:
             await c.send_message(
