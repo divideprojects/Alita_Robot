@@ -71,7 +71,7 @@ async def purge(c: Alita, m: Message):
 
 
 @Alita.on_message(command("spurge") & admin_filter)
-async def purge(c: Alita, m: Message):
+async def spurge(c: Alita, m: Message):
     if m.chat.type != "supergroup":
         await m.reply_text(tlang(m, "purge.err_basic"))
         return
