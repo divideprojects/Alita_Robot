@@ -37,6 +37,23 @@ strings:
 
         **Example:**
         `/approve @username`: this approves a user in the chat.
+    greetings:
+      main: "Greetings"
+      help: |-
+        Customize your group's welcome / goodbye messages that can be personalised in multiple ways.
+        
+        Note: Currently it supports only text !
+        
+        Admin Commands:
+        × /setwelcome <reply> : Sets a custom welcome message.
+        × /setgoodbye <reply> : Sets a custom goodbye message.
+        × /resetwelcome : Resets to bot default welcome message.
+        × /resetgoodbye : Resets to bot default goodbye message.
+        × /welcome <on/off> : enable/disable Welcome messages.
+        × /goodbye <on/off> : enable/disable goodbye messages.
+        × /welcome | /welcome noformat: Display current welcome message and settings.
+        × /goodbye | /goodbye noformat: Display current goodbye message and settings.
+        × /cleanservice <on/off> : Use it to clean `user joined` service messages automatically or to view current status.
     bans:
       main: "Bans"
       help: |-
