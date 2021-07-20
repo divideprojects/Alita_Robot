@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from threading import RLock
 from time import time
 
@@ -105,8 +104,8 @@ class Greetings(MongoDB):
                 "_id": self.chat_id,
                 "cleanwelcome": False,
                 "cleanservice": False,
-                "goodbye_text": "Sad to see you leave {first}.\nTake Care!",
-                "welcome_text": "Hey {first}, welcome to {group}!",
+                "goodbye_text": "Sad to see you leaving {first}.\nTake Care!",
+                "welcome_text": "Hey {first}, welcome to {chatname}!",
                 "welcome": True,
                 "goodbye": True,
             }
@@ -121,8 +120,8 @@ class Greetings(MongoDB):
         keys = {
             "cleanwelcome": False,
             "cleanservice": False,
-            "goodbye_text": "Sad to see you leave {first}.\nTake Care!",
-            "welcome_text": "Hey {first}, welcome to {group}!",
+            "goodbye_text": "Sad to see you leaving {first}.\nTake Care!",
+            "welcome_text": "Hey {first}, welcome to {chatname}!",
             "welcome": True,
             "goodbye": True,
         }
