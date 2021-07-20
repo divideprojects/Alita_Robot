@@ -14,13 +14,11 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
 from pyromod.helpers import ikb
 
-from alita import LOGGER, BOT_USERNAME
+from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
@@ -47,16 +45,19 @@ async def get_rules(_, m: Message):
     priv_rules_status = db.get_privrules()
 
     if priv_rules_status:
+        from alita import BOT_USERNAME
 
-        pm_kb = ikb([
+        pm_kb = ikb(
             [
-                (
-                    "Rules",
-                    f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
-                    "url",
-                ),
+                [
+                    (
+                        "Rules",
+                        f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
+                        "url",
+                    ),
+                ],
             ],
-        ], )
+        )
         await m.reply_text(
             (tlang(m, "rules.pm_me")),
             quote=True,
@@ -64,8 +65,9 @@ async def get_rules(_, m: Message):
             reply_to_message_id=msg_id,
         )
         return
-    
+
     formated = rules
+
     await m.reply_text(
         (tlang(m, "rules.get_rules")).format(
             chat=f"<b>{m.chat.title}</b>",
@@ -80,14 +82,19 @@ async def get_rules(_, m: Message):
 @Alita.on_message(command("setrules") & admin_filter)
 async def set_rules(_, m: Message):
     db = Rules(m.chat.id)
+    if m and not m.from_user:
+        return
+
     if m.reply_to_message and m.reply_to_message.text:
-        rules = m.reply_to_message.text
+        rules = m.reply_to_message.text.markdown
     elif (not m.reply_to_message) and len(m.text.split()) >= 2:
         rules = m.text.split(None, 1)[1]
+    else:
+        return await m.reply_text("Provide some text to set as rules !!")
 
     if len(rules) > 4000:
         rules = rules[0:3949]  # Split Rules if len > 4000 chars
-        await m.reply_text("Rules truncated to 3950 characters!")
+        await m.reply_text("Rules are truncated to 3950 characters!")
 
     db.set_rules(rules)
     LOGGER.info(f"{m.from_user.id} set rules in {m.chat.id}")
@@ -100,6 +107,9 @@ async def set_rules(_, m: Message):
 )
 async def priv_rules(_, m: Message):
     db = Rules(m.chat.id)
+    if m and not m.from_user:
+        return
+
     if len(m.text.split()) == 2:
         option = (m.text.split())[1]
         if option in ("on", "yes"):
@@ -129,6 +139,8 @@ async def priv_rules(_, m: Message):
 @Alita.on_message(command("clearrules") & admin_filter)
 async def clear_rules(_, m: Message):
     db = Rules(m.chat.id)
+    if m and not m.from_user:
+        return
 
     rules = db.get_rules()
     if not rules:
