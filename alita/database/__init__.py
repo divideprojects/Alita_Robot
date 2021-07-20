@@ -25,6 +25,7 @@ alita_main_db = alita_db_client[DB_NAME]
 
 class MongoDB:
     """Class for interacting with Bot database."""
+
     def __init__(self, collection) -> None:
         self.collection = alita_main_db[collection]
 
@@ -71,12 +72,9 @@ class MongoDB:
         new_document = self.collection.find_one(query)
         return result.modified_count, new_document
 
-    def db_command(self, command):
-        return self._db.command(command)
-
     @staticmethod
     def close():
-        return alita_db_client.close()  # self._client.close() kept this for revert purpose
+        return alita_db_client.close()
 
 
 def __connect_first():
