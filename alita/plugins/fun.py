@@ -43,7 +43,7 @@ async def fun_shout(_, m: Message):
     result[0] = text[0]
     result = "".join(result)
     msg = "```\n" + result + "```"
-    await m.reply_text(msg, parse_mode="MARKDOWN")
+    await m.reply_text(msg, parse_mode="markdown")
     return
 
 
