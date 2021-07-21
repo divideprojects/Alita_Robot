@@ -12,7 +12,7 @@ strings:
         All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be done easily using the bot.
 
         **User Commands:**
-        × /adminlist: List all admins in the current chat.
+        × /adminlist: List all admins in the group.
 
         **Admin only:**
         × /invitelink: Gets private chat's invitelink.
@@ -307,13 +307,13 @@ strings:
       no_target: "I can't ban nothing!"
       admin_cannot_ban: "This user is an admin, I cannot ban them!"
       ban_all: "Are you sure you want to ban all members in this group?"
-      banned_user: "{admin} banned {banned} in chat <b>{chat_title}</b>!"
+      banned_user: "{admin} banned {banned} in <b>{chat_title}</b>!"
       banning_all: "Banning All Members..."
       bot_no_right: "I don't have enough rights to ban this user."
     demote:
       no_target: "I can't demote nothing!"
       bot_no_right: "I don't have enough rights to demote this user."
-      demoted_user: "{demoter} demoted {demoted} in chat <b>{chat_title}</b>!"
+      demoted_user: "{demoter} demoted {demoted} in <b>{chat_title}</b>!"
     invitelink: |-
       Invite Link for Chat <b>{chat_name}</b>:
       {link}
@@ -322,7 +322,7 @@ strings:
       no_target: "I can't kick nothing!"
       admin_cannot_kick: "This user is an admin, I cannot kick them!"
       bot_no_right: "I don't have enough rights to kick this user."
-      kicked_user: "{admin} kicked {kicked} in chat <b>{chat_title}</b>!"
+      kicked_user: "{admin} kicked {kicked} in <b>{chat_title}</b>!"
     mute:
       admin_cannot_mute: "This user is an admin, I cannot mute them!"
       bot_no_right: "I don't have enough rights to mute this user."
@@ -412,7 +412,7 @@ strings:
         <b>Chat:</b> <code>{chat_id}</code>
         <b>Error:</b> <code>{ef}</code>
       added_to_watch: |-
-        Added {first_name} to Global Ban List.
+        Added {first_name} to GBan List.
         They will now be banned in all groups where I'm admin!
       enter_reason: "Please enter a reason to gban user!"
       how_to: |-
@@ -457,9 +457,9 @@ strings:
       To get unbanned, appeal at @{SUPPORT_GROUP}
   blacklist:
     bl_watcher:
-      action_kick: "Kicked {user} for using a blacklisted word!"
-      action_ban: "Banned {user} for using a blacklisted word!"
-      action_mute: "Muted {user} for using a blacklisted word!"
+      action_kick: "Kicked {user} for sending a blacklisted word!"
+      action_ban: "Banned {user} for sending a blacklisted word!"
+      action_mute: "Muted {user} for sending a blacklisted word!"
     already_exists: "The word <code>{trigger}</code> is already blacklisted!"
     action_get: |-
       The current action for blacklists in this chat is <i><b>{action}</b></i>
@@ -595,7 +595,7 @@ strings:
     sent_pm_rules: "I've messaged you the rules"
     set_rules: "Successfully set rules for this group."
   start:
-    add_chat_btn: "Add to a chat"
+    add_chat_btn: "Add me to a chat!"
     commands_btn: Commands & Help
     group: "I'm alive :3"
     info_page: |-
@@ -611,16 +611,16 @@ strings:
     private: |-
       Hey there! My name is Alita ✨.
       I'm here to help you manage your groups!
-      Hit /help to find out more about how to use me to my full potential.
+      Hit /help to find out more about how to use me in my full potential!
 
       Join my [News Channel](http://t.me/AlitaRobotUpdates) to get information on all the latest updates.
     public_help: "Press the button below to get help for <i>{help_option}</i>"
     source_code: "Source Code"
   utils:
     gif_id:
-      reply_gif: "Please reply to a gif to get its ID."
+      reply_gif: "Please reply to a gif to get it's ID."
     id:
-      group_id: "This Groups ID is <code>{group_id}</code>"
+      group_id: "This Group's ID is <code>{group_id}</code>"
       id_main: |-
         Original Sender - {orig_sender} (<code>{orig_id}</code>)
         Forwarder - {fwd_sender} (<code>{fwd_id}</code>)
