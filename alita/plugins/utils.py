@@ -15,11 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from gpytranslate import Translator
+import asyncio
 from html import escape
 from io import BytesIO
 from os import remove
+
+from gpytranslate import Translator
+
 from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
 from pyrogram.types import Message
@@ -45,7 +47,7 @@ from alita.tr_engine import tlang
 from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import command
 from alita.utils.extract_user import extract_user
-from alita.utils.http_helper import HTTPx
+from alita.utils.http_helper import HTTPx, http
 from alita.utils.parser import mention_html
 
 gban_db = GBan()
@@ -236,17 +238,21 @@ async def github(_, m: Message):
     url = r_json.get("html_url", None)
     name = r_json.get("name", None)
     company = r_json.get("company", None)
+    followers = r_json.get("followers", 0)
+    following = r_json.get("following", 0)
+    public_repos = r_json.get("public_repos", 0)
     bio = r_json.get("bio", None)
     created_at = r_json.get("created_at", "Not Found")
 
-    REPLY = (
-        f"<b>GitHub Info for</b> <code>{username}</code>"
-        f"\n<b>Name:</b> <code>{name}</code>\n"
-        f"<b>Bio:</b> <code>{bio}</code>\n"
-        f"<b>URL:</b> {url}"
-        f"\n<b>Company:</b> <code>{company}</code>\n"
-        f"<b>Created at:</b> <code>{created_at}</code>"
-    )
+    REPLY = (f"<b>GitHub Info for @{username}:</b>"
+             f"\n<b>Name:</b> <code>{name}</code>\n"
+             f"<b>Bio:</b> <code>{bio}</code>\n"
+             f"<b>URL:</b> {url}"
+             f"<b>Public Repos:</b> {public_repos}"
+             f"<b>Followers:</b> {followers}"
+             f"<b>Following:</b> {following}"
+             f"\n<b>Company:</b> <code>{company}</code>\n"
+             f"<b>Created at:</b> <code>{created_at}</code>")
 
     await m.reply_text(REPLY, quote=True, disable_web_page_preview=True)
 
