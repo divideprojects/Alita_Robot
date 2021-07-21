@@ -305,7 +305,7 @@ strings:
     ban:
       user_already_banned: "This user is already banned, no use banning them again!"
       no_target: "I can't ban nothing!"
-      admin_cannot_ban: 'This user is an admin, I cannot ban them!"'
+      admin_cannot_ban: "This user is an admin, I cannot ban them!"
       ban_all: "Are you sure you want to ban all members in this group?"
       banned_user: "{admin} banned {banned} in chat <b>{chat_title}</b>!"
       banning_all: "Banning All Members..."
