@@ -19,7 +19,8 @@
 from html import escape
 from pyrogram.types import Message
 from secrets import choice
-
+import requests
+import rapidjson as json
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils import fun_strings
@@ -53,36 +54,18 @@ async def fun_run(_, m: Message):
     return
 
 
+@Alita.on_message(command("aq"))
+async def quote(_, message):
+    quote = requests.get("https://animechan.vercel.app/api/random").json()
+    await message.reply_text('`'+quote['quote']+'`\n '+quote['anime']+' (In '+quote['character']+')')
+    return
+
+
 @Alita.on_message(command("slap"))
-async def fun_slap(c: Alita, m: Message):
-    me = await c.get_me()
-
-    reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-
-    curr_user = escape(m.from_user.first_name)
-    user_id, _, _ = await extract_user(c, m)
-
-    if user_id == me.id:
-        temp = choice(fun_strings.SLAP_ALITA_TEMPLATES)
-    else:
-        temp = choice(fun_strings.SLAP_TEMPLATES)
-
-    if user_id:
-        slapped_user = await c.get_users(user_id)
-        user1 = curr_user
-        user2 = escape(slapped_user.first_name)
-
-    else:
-        user1 = me.first_name
-        user2 = curr_user
-
-    item = choice(fun_strings.ITEMS)
-    hit = choice(fun_strings.HIT)
-    throw = choice(fun_strings.THROW)
-
-    reply = temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
-
-    await reply_text(reply)
+async def slap(_, message):
+    slap = requests.get("https://nekos.life/api/v2/img/slap").json()
+    slap = url.get("slap")
+    await message.reply_video(slap)
     return
 
 
