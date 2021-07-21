@@ -350,7 +350,7 @@ strings:
     md_help: |-
       <b>Markdown Formatting</b>
 
-      You can format your message using <b>bold</b>, <i>italic</i>, </u>underline</u>,<strike>strike</strike> and much more. Go ahead and experiment!
+      You can format your message using <b>bold</b>, <i>italic</i>, <u>underline</u>, <strike>strike</strike> and much more. Go ahead and experiment!
       
       Note: It supports HTML and Markdown (Both) as well !
 
