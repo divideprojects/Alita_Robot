@@ -218,14 +218,14 @@ async def get_gifid(_, m: Message):
 
 
 @Alita.on_message(
-    command("github") & (filters.group | filters.private),
-)
+    command("github") & (filters.group | filters.private), )
 async def github(_, m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(None, 1)[1]
         LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
     else:
-        await m.reply_text(f"Usage: <code>{PREFIX_HANDLER}github username</code>")
+        await m.reply_text(
+            f"Usage: <code>{PREFIX_HANDLER}github username</code>")
         return
 
     URL = f"https://api.github.com/users/{username}"
@@ -247,15 +247,14 @@ async def github(_, m: Message):
     REPLY = (f"<b>GitHub Info for @{username}:</b>"
              f"\n<b>Name:</b> <code>{name}</code>\n"
              f"<b>Bio:</b> <code>{bio}</code>\n"
-             f"<b>URL:</b> {url}"
-             f"<b>Public Repos:</b> {public_repos}"
-             f"<b>Followers:</b> {followers}"
-             f"<b>Following:</b> {following}"
-             f"\n<b>Company:</b> <code>{company}</code>\n"
+             f"<b>URL:</b> {url}\n"
+             f"<b>Public Repos:</b> {public_repos}\n"
+             f"<b>Followers:</b> {followers}\n"
+             f"<b>Following:</b> {following}\n"
+             f"<b>Company:</b> <code>{company}</code>\n"
              f"<b>Created at:</b> <code>{created_at}</code>")
 
     await m.reply_text(REPLY, quote=True, disable_web_page_preview=True)
-
     return
 
 
