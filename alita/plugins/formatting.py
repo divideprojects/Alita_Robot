@@ -48,7 +48,7 @@ async def markdownhelp(_, m: Message):
         quote=True,
         reply_markup=(await gen_formatting_kb(m)),
     )
-    LOGGER.info(f"{m.from_user.id} used cmd '{m.command[0]}' in {m.chat.id}")
+    LOGGER.info(f"{m.from_user.id} used cmd '{m.command}' in {m.chat.id}")
     return
 
 
