@@ -123,11 +123,3 @@ class Approve(MongoDB):
                         f"Repairing Approve Database - setting '{key}:{val}' for {data['_id']}",
                     )
                     collection.update({"_id": data["_id"]}, {key: val})
-
-
-def __pre_req_approve():
-    start = time()
-    LOGGER.info("Starting Approve Database Repair...")
-    collection = MongoDB(Approve.db_name)
-    Approve.repair_db(collection)
-    LOGGER.info(f"Done in {round((time() - start), 3)}s!")

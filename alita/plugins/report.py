@@ -19,7 +19,7 @@
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, RPCError, Unauthorized, UserIsBlocked
 from pyrogram.types import CallbackQuery, Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 from time import time
 from traceback import format_exc
 

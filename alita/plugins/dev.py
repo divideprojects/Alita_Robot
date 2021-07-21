@@ -29,7 +29,7 @@ from pyrogram.errors import (
     RPCError,
 )
 from pyrogram.types import Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 from speedtest import Speedtest
 from time import gmtime, strftime, time
 from traceback import format_exc

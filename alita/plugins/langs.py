@@ -19,7 +19,7 @@
 from asyncio import sleep
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita

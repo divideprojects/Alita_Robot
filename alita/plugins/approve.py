@@ -18,7 +18,7 @@
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
 from pyrogram.types import CallbackQuery, ChatPermissions, Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 
 from alita import LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
@@ -28,8 +28,7 @@ from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
 
-@Alita.on_message(
-    command("approve") & admin_filter, )
+@Alita.on_message(command("approve") & admin_filter)
 async def approve_user(c: Alita, m: Message):
     db = Approve(m.chat.id)
 
@@ -88,14 +87,18 @@ async def approve_user(c: Alita, m: Message):
         ),
     )
 
-    await m.reply_text((
-        f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}!\n"
-        "They will now be ignored by blacklists, locks and antiflood!"), )
+    await m.reply_text(
+        (
+            f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}!\n"
+            "They will now be ignored by blacklists, locks and antiflood!"
+        ),
+    )
     return
 
 
 @Alita.on_message(
-    command(["disapprove", "unapprove"]) & admin_filter, )
+    command(["disapprove", "unapprove"]) & admin_filter,
+)
 async def disapprove_user(c: Alita, m: Message):
     db = Approve(m.chat.id)
 
@@ -115,8 +118,7 @@ async def disapprove_user(c: Alita, m: Message):
     except UserNotParticipant:
         if already_approved:  # If user is approved and not in chat, unapprove them.
             db.remove_approve(user_id)
-            LOGGER.info(
-                f"{user_id} disapproved in {m.chat.id} as UserNotParticipant")
+            LOGGER.info(f"{user_id} disapproved in {m.chat.id} as UserNotParticipant")
         await m.reply_text("This user is not in this chat, unapproved them.")
         return
     except RPCError as ef:
@@ -186,8 +188,7 @@ async def check_approval(c: Alita, m: Message):
     except Exception:
         return
     check_approve = db.check_approve(user_id)
-    LOGGER.info(
-        f"{m.from_user.id} checking approval of {user_id} in {m.chat.id}")
+    LOGGER.info(f"{m.from_user.id} checking approval of {user_id} in {m.chat.id}")
 
     if not user_id:
         await m.reply_text(
@@ -206,7 +207,8 @@ async def check_approval(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command("unapproveall") & filters.group & owner_filter, )
+    command("unapproveall") & filters.group & owner_filter,
+)
 async def unapproveall_users(_, m: Message):
     db = Approve(m.chat.id)
 
@@ -217,8 +219,9 @@ async def unapproveall_users(_, m: Message):
 
     await m.reply_text(
         "Are you sure you want to remove everyone who is approved in this chat?",
-        reply_markup=ikb([[("⚠️ Confirm", "unapprove_all"),
-                           ("❌ Cancel", "close_admin")]], ),
+        reply_markup=ikb(
+            [[("⚠️ Confirm", "unapprove_all"), ("❌ Cancel", "close_admin")]],
+        ),
     )
     return
 

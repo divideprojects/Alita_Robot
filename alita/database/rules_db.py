@@ -24,8 +24,6 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-RULES_CACHE = {}
-
 
 class Rules(MongoDB):
     """Class for rules for chats in bot."""

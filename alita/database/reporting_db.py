@@ -24,8 +24,6 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-REPORTING_CACHE = {}
-
 
 class Reporting(MongoDB):
     """Class for managing report settings of users and groups."""

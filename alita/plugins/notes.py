@@ -19,7 +19,7 @@
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 from secrets import choice
 from traceback import format_exc
 
@@ -61,11 +61,7 @@ async def save_note(_, m: Message):
         await m.reply_text("Cannot save a note which starts with '<' or '>'")
         return
 
-    if (
-            not m.reply_to_message
-            and data_type == Types.TEXT
-            and len(m.command) <= 2
-    ):
+    if not m.reply_to_message and data_type == Types.TEXT and len(m.command) <= 2:
         await m.reply_text(
             f"<code>{m.text}</code>\n\nError: There is no text in here!",
         )
@@ -156,10 +152,10 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
             await reply_text(teks, quote=True, disable_web_page_preview=True)
             return
     elif msgtype in (
-            Types.STICKER,
-            Types.VIDEO_NOTE,
-            Types.CONTACT,
-            Types.ANIMATED_STICKER,
+        Types.STICKER,
+        Types.VIDEO_NOTE,
+        Types.CONTACT,
+        Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
@@ -227,10 +223,10 @@ async def get_raw_note(c: Alita, m: Message, note: str):
         teks = getnotes["note_value"]
         await m.reply_text(teks, parse_mode=None, reply_to_message_id=msg_id)
     elif msgtype in (
-            Types.STICKER,
-            Types.VIDEO_NOTE,
-            Types.CONTACT,
-            Types.ANIMATED_STICKER,
+        Types.STICKER,
+        Types.VIDEO_NOTE,
+        Types.CONTACT,
+        Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(
             m.chat.id,

@@ -27,7 +27,7 @@ from time import gmtime, strftime, time
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
-from pyromod.helpers import ikb
+from alita.utils.kbhelpers import ikb
 
 from alita import (
     API_HASH,
@@ -117,9 +117,7 @@ class Alita(Client):
             MESSAGE_DUMP,
             document=LOGFILE,
             caption=(
-                "Bot Stopped!\n\n"
-                f"Uptime: {runtime}\n"
-                f"<code>{LOG_DATETIME}</code>"
+                "Bot Stopped!\n\n" f"Uptime: {runtime}\n" f"<code>{LOG_DATETIME}</code>"
             ),
         )
         if MESSAGE_DUMP:

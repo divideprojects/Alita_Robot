@@ -18,12 +18,12 @@
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
-from pyromod.helpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import command
+from alita.utils.kbhelpers import ikb
 
 
 async def gen_formatting_kb(m):

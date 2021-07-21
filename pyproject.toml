@@ -22,7 +22,6 @@ tswift = "^0.7.0"
 ujson = "^4.0.2"
 uvloop = "^0.15.2"
 wikipedia = "^1.4.0"
-pyromod = {git = "https://github.com/usernein/pyromod"}
 httpx = {extras = ["http2"], version = "^0.18.1"}
 
 [tool.poetry.dev-dependencies]

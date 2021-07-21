@@ -37,21 +37,16 @@ class Users(MongoDB):
 
     def update_user(self, name: str, username: str = None):
         with INSERTION_LOCK:
-            if (
-                    name == self.user_info["name"]
-                    and username == self.user_info["username"]
-            ):
-                return True
-            return self.update(
-                {"_id": self.user_id},
-                {"username": username, "name": name},
-            )
+            if name != self.user_info["name"] or username != self.user_info["username"]:
+                return self.update(
+                    {"_id": self.user_id},
+                    {"username": username, "name": name},
+                )
+            return True
 
     def delete_user(self):
         with INSERTION_LOCK:
-            return self.delete_one(
-                {"_id": self.user_id},
-            )
+            return self.delete_one({"_id": self.user_id})
 
     @staticmethod
     def count_users():
