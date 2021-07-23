@@ -252,7 +252,7 @@ http2 = ["h2 (>=3,<5)"]
 
 [[package]]
 name = "httpx"
-version = "0.18.1"
+version = "0.18.2"
 description = "The next generation HTTP client."
 category = "main"
 optional = false
@@ -261,7 +261,7 @@ python-versions = ">=3.6"
 [package.dependencies]
 certifi = "*"
 h2 = {version = ">=3.0.0,<4.0.0", optional = true, markers = "extra == \"http2\""}
-httpcore = ">=0.13.0,<0.14.0"
+httpcore = ">=0.13.3,<0.14.0"
 rfc3986 = {version = ">=1.3,<2", extras = ["idna2008"]}
 sniffio = "*"
 
@@ -708,7 +708,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "1fb4fbc1748cb6b658e128e34b5c89bda75bbefe1ec4c9191742a65ea711d065"
+content-hash = "a662687d6119494f176e775510da34fbb8c2dab84ff8debce474d32d1a1175dc"
 
 [metadata.files]
 aiofiles = [
@@ -806,8 +806,8 @@ httpcore = [
     {file = "httpcore-0.13.6.tar.gz", hash = "sha256:b0d16f0012ec88d8cc848f5a55f8a03158405f4bca02ee49bc4ca2c1fda49f3e"},
 ]
 httpx = [
-    {file = "httpx-0.18.1-py3-none-any.whl", hash = "sha256:ad2e3db847be736edc4b272c4d5788790a7e5789ef132fc6b5fef8aeb9e9f6e0"},
-    {file = "httpx-0.18.1.tar.gz", hash = "sha256:0a2651dd2b9d7662c70d12ada5c290abcf57373b9633515fe4baa9f62566086f"},
+    {file = "httpx-0.18.2-py3-none-any.whl", hash = "sha256:979afafecb7d22a1d10340bafb403cf2cb75aff214426ff206521fc79d26408c"},
+    {file = "httpx-0.18.2.tar.gz", hash = "sha256:9f99c15d33642d38bce8405df088c1c4cfd940284b4290cacbfb02e64f4877c6"},
 ]
 hyperframe = [
     {file = "hyperframe-5.2.0-py2.py3-none-any.whl", hash = "sha256:5187962cb16dcc078f23cb5a4b110098d546c3f41ff2d4038a9896893bbd0b40"},

@@ -23,7 +23,7 @@ ujson = "^4.0.2"
 uvloop = "^0.15.2"
 wikipedia = "^1.4.0"
 pyromod = {git = "https://github.com/usernein/pyromod"}
-httpx = {extras = ["http2"], version = "^0.18.1"}
+httpx = {extras = ["http2"], version = "^0.18.2"}
 
 [tool.poetry.dev-dependencies]
 black = "^21.6b0"
