@@ -16,9 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram.types.messages_and_media.message import Message
 from traceback import format_exc
 from typing import Tuple
+
+from pyrogram.types.messages_and_media.message import Message
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -46,10 +47,10 @@ async def extract_user(c: Alita, m: Message) -> Tuple[int, str, str]:
             elif required_entity.type in ("mention", "phone_number"):
                 # new long user ids are identified as phone_number
                 user_found = m.text[
-                             required_entity.offset: (
-                                     required_entity.offset + required_entity.length
-                             )
-                             ]
+                    required_entity.offset : (
+                        required_entity.offset + required_entity.length
+                    )
+                ]
 
                 try:
                     user_found = int(user_found)

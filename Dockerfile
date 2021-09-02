@@ -1,4 +1,4 @@
-FROM bitnami/python:3.9.5-prod
+FROM bitnami/python:3.9.7-prod
 
 # Don't use cached python packages
 ENV PIP_NO_CACHE_DIR 1

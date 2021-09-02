@@ -41,9 +41,9 @@ strings:
       main: "Greetings"
       help: |-
         Customize your group's welcome / goodbye messages that can be personalised in multiple ways.
-        
+
         Note: Currently it supports only text !
-        
+
         Admin Commands:
         × /setwelcome <reply> : Sets a custom welcome message.
         × /setgoodbye <reply> : Sets a custom goodbye message.
@@ -234,7 +234,7 @@ strings:
         × /purge: Deletes messages upto replied message.
         × /spurge: Deletes messages upto replied message without a success message.
         × /del: Deletes a single message, used as a reply to message.
-        
+
         **Example:**
         `/purge <as a reply to message>`: this will delete all the messages till the one you replied.
     reporting:
@@ -351,7 +351,7 @@ strings:
       <b>Markdown Formatting</b>
 
       You can format your message using <b>bold</b>, <i>italic</i>, <u>underline</u>, <strike>strike</strike> and much more. Go ahead and experiment!
-      
+
       Note: It supports HTML and Markdown (Both) as well !
 
       <b>Supported markdown</b>:

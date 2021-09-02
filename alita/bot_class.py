@@ -22,7 +22,6 @@ from time import gmtime, strftime, time
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
-from alita.utils.kbhelpers import ikb
 
 from alita import (
     API_HASH,
@@ -41,6 +40,7 @@ from alita import (
 from alita.database import MongoDB
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
+from alita.utils.kbhelpers import ikb
 
 INITIAL_LOCK = RLock()
 

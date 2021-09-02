@@ -153,9 +153,7 @@ async def load_cmds(all_plugins):
         if hasattr(imported_module, "__buttons__"):
             HELP_COMMANDS[plugin_dict_name]["buttons"] = imported_module.__buttons__
         if hasattr(imported_module, "__alt_name__"):
-            HELP_COMMANDS[plugin_dict_name][
-                "alt_cmds"
-            ] = imported_module.__alt_name__
+            HELP_COMMANDS[plugin_dict_name]["alt_cmds"] = imported_module.__alt_name__
 
         # Add the plugin name to cmd list
         (HELP_COMMANDS[plugin_dict_name]["alt_cmds"]).append(plugin_name)
@@ -163,8 +161,6 @@ async def load_cmds(all_plugins):
         LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
     return (
-            ", ".join(
-                (i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys())
-            )
-            + "\n"
+        ", ".join((i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys()))
+        + "\n"
     )

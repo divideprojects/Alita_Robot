@@ -47,7 +47,8 @@ async def adminlist_show(_, m: Message):
     global ADMIN_CACHE
     if m.chat.type != "supergroup":
         return await m.reply_text(
-            "This command is made to be used in groups only!")
+            "This command is made to be used in groups only!",
+        )
     try:
         try:
             admin_list = ADMIN_CACHE[m.chat.id]
@@ -57,24 +58,32 @@ async def adminlist_show(_, m: Message):
             note = tlang(m, "admin.adminlist.note_updated")
 
         adminstr = (tlang(m, "admin.adminlist.adminstr")).format(
-            chat_title=m.chat.title, ) + "\n\n"
+            chat_title=m.chat.title,
+        ) + "\n\n"
 
         bot_admins = [i for i in admin_list if (i[1].lower()).endswith("bot")]
-        user_admins = [
-            i for i in admin_list if not (i[1].lower()).endswith("bot")
-        ]
+        user_admins = [i for i in admin_list if not (i[1].lower()).endswith("bot")]
 
         # format is like: (user_id, username/name,anonyamous or not)
         mention_users = [
-            (admin[1] if admin[1].startswith("@") else
-             (await mention_html(admin[1], admin[0]))) for admin in user_admins
+            (
+                admin[1]
+                if admin[1].startswith("@")
+                else (await mention_html(admin[1], admin[0]))
+            )
+            for admin in user_admins
             if not admin[2]  # if non-anonyamous admin
         ]
         mention_users.sort(key=lambda x: x[1])
 
-        mention_bots = [(admin[1] if admin[1].startswith("@") else
-                         (await mention_html(admin[1], admin[0])))
-                        for admin in bot_admins]
+        mention_bots = [
+            (
+                admin[1]
+                if admin[1].startswith("@")
+                else (await mention_html(admin[1], admin[0]))
+            )
+            for admin in bot_admins
+        ]
         mention_bots.sort(key=lambda x: x[1])
 
         adminstr += "<b>User Admins:</b>\n"
@@ -90,10 +99,12 @@ async def adminlist_show(_, m: Message):
             await m.reply_text(tlang(m, "admin.adminlist.use_admin_cache"))
         else:
             ef = str(ef) + f"{admin_list}\n"
-            await m.reply_text((tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ), )
+            await m.reply_text(
+                (tlang(m, "general.some_error")).format(
+                    SUPPORT_GROUP=SUPPORT_GROUP,
+                    ef=ef,
+                ),
+            )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -102,17 +113,19 @@ async def adminlist_show(_, m: Message):
 
 @Alita.on_message(command("zombies") & admin_filter)
 async def zombie_clean(c: Alita, m: Message):
-    
+
     if m.chat.type != "supergroup":
         return await m.reply_text(
-            "This command is made to be used in groups only!")
-    
+            "This command is made to be used in groups only!",
+        )
+
     zombie = 0
     user = await m.chat.get_member(m.from_user.id)
     if user and user.status != "creator":
         return await m.reply_text(
-            "This is a highly destructive command only owner can use it !!")
-    
+            "This is a highly destructive command only owner can use it !!",
+        )
+
     wait = await m.reply_text("Searching... and baning...")
     async for member in c.iter_chat_members(m.chat.id):
         if member.user.is_deleted:
@@ -126,7 +139,8 @@ async def zombie_clean(c: Alita, m: Message):
     if zombie == 0:
         return await wait.edit_text("Group is clean!")
     return await wait.edit_text(
-        f"<b>{zombie}</b> Zombies found and has been baned!")
+        f"<b>{zombie}</b> Zombies found and has been baned!",
+    )
 
 
 @Alita.on_message(command("admincache"))
@@ -135,11 +149,14 @@ async def reload_admins(_, m: Message):
 
     if m.chat.type != "supergroup":
         return await m.reply_text(
-            "This command is made to be used in groups only!")
+            "This command is made to be used in groups only!",
+        )
 
-    if ((m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
-            and (m.from_user.id not in SUPPORT_STAFF)
-            and TEMP_ADMIN_CACHE_BLOCK[m.chat.id] == "manualblock"):
+    if (
+        (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
+        and (m.from_user.id not in SUPPORT_STAFF)
+        and TEMP_ADMIN_CACHE_BLOCK[m.chat.id] == "manualblock"
+    ):
         await m.reply_text("Can only reload admin cache once per 10 mins!")
         return
 
@@ -149,10 +166,12 @@ async def reload_admins(_, m: Message):
         await m.reply_text(tlang(m, "admin.adminlist.reloaded_admins"))
         LOGGER.info(f"Admincache cmd use in {m.chat.id} by {m.from_user.id}")
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
@@ -170,13 +189,15 @@ async def tag_admins(_, m: Message):
         admin_list = await admin_cache_reload(m, "adminlist")
 
     user_admins = [i for i in admin_list if not (i[1].lower()).endswith("bot")]
-    mention_users = [(await mention_html("\u2063", admin[0]))
-                     for admin in user_admins]
+    mention_users = [(await mention_html("\u2063", admin[0])) for admin in user_admins]
     mention_users.sort(key=lambda x: x[1])
     mention_str = "".join(mention_users)
     await m.reply_text(
-        (f"{(await mention_html(m.from_user.first_name, m.from_user.id))}"
-         f" reported the message to admins!{mention_str}"), )
+        (
+            f"{(await mention_html(m.from_user.first_name, m.from_user.id))}"
+            f" reported the message to admins!{mention_str}"
+        ),
+    )
 
 
 @Alita.on_message(command("promote") & promote_filter)
@@ -201,15 +222,15 @@ async def promote_usr(c: Alita, m: Message):
         return
 
     if not bot.can_promote_members:
-        return await m.reply_text("I don't have enough permissions"
-                                  )  # This should be here
+        return await m.reply_text(
+            "I don't have enough permissions",
+        )  # This should be here
     # If user is alreay admin
     try:
         admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
         admin_list = {
-            i[0]
-            for i in (await admin_cache_reload(m, "promote_cache_update"))
+            i[0] for i in (await admin_cache_reload(m, "promote_cache_update"))
         }
 
     if user_id in admin_list:
@@ -248,13 +269,20 @@ async def promote_usr(c: Alita, m: Message):
             f"{m.from_user.id} promoted {user_id} in {m.chat.id} with title '{title}'",
         )
 
-        await m.reply_text((tlang(m, "admin.promote.promoted_user")).format(
-            promoter=(await mention_html(m.from_user.first_name,
-                                         m.from_user.id)),
-            promoted=(await mention_html(user_first_name, user_id)),
-            chat_title=m.chat.title + f"\nTitle set to {title}"
-            if title != "Admin" else "Default Admin!",
-        ), )
+        await m.reply_text(
+            (tlang(m, "admin.promote.promoted_user")).format(
+                promoter=(
+                    await mention_html(
+                        m.from_user.first_name,
+                        m.from_user.id,
+                    )
+                ),
+                promoted=(await mention_html(user_first_name, user_id)),
+                chat_title=m.chat.title + f"\nTitle set to {title}"
+                if title != "Admin"
+                else "Default Admin!",
+            ),
+        )
 
         # If user is approved, disapprove them as they willbe promoted and get even more rights
         if Approve(m.chat.id).check_approve(user_id):
@@ -276,15 +304,19 @@ async def promote_usr(c: Alita, m: Message):
     except UserAdminInvalid:
         await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
     except Exception as e:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=e,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=e,
+            ),
+        )
         LOGGER.error(e)
         LOGGER.error(format_exc())
 
@@ -315,8 +347,7 @@ async def demote_usr(c: Alita, m: Message):
         admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
         admin_list = {
-            i[0]
-            for i in (await admin_cache_reload(m, "demote_cache_update"))
+            i[0] for i in (await admin_cache_reload(m, "demote_cache_update"))
         }
 
     if user_id not in admin_list:
@@ -348,12 +379,18 @@ async def demote_usr(c: Alita, m: Message):
         except (KeyError, StopIteration):
             await admin_cache_reload(m, "demote_key_stopiter_error")
 
-        await m.reply_text((tlang(m, "admin.demote.demoted_user")).format(
-            demoter=(await mention_html(m.from_user.first_name,
-                                        m.from_user.id)),
-            demoted=(await mention_html(user_first_name, user_id)),
-            chat_title=m.chat.title,
-        ), )
+        await m.reply_text(
+            (tlang(m, "admin.demote.demoted_user")).format(
+                demoter=(
+                    await mention_html(
+                        m.from_user.first_name,
+                        m.from_user.id,
+                    )
+                ),
+                demoted=(await mention_html(user_first_name, user_id)),
+                chat_title=m.chat.title,
+            ),
+        )
 
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -362,10 +399,12 @@ async def demote_usr(c: Alita, m: Message):
     except UserAdminInvalid:
         await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -399,10 +438,12 @@ async def get_invitelink(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.no_user_invite_perm"))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -412,43 +453,47 @@ async def get_invitelink(c: Alita, m: Message):
 @Alita.on_message(command("setgtitle") & admin_filter)
 async def setgtitle(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
-    
+
     if not user.can_change_info and user.status != "creator":
         await m.reply_text(
-            "You don't have enough permission to use this command!")
+            "You don't have enough permission to use this command!",
+        )
         return False
-    
+
     if len(m.command) < 1:
         return await m.reply_text("Please read /help for using it!")
-    
+
     gtit = m.text.split(None, 1)[1]
     try:
         await m.chat.set_title(gtit)
     except Exception as e:
         return await m.reply_text(f"Error: {e}")
     return await m.reply_text(
-        f"Successfully Changed Group Title From {m.chat.title} To {gtit}")
+        f"Successfully Changed Group Title From {m.chat.title} To {gtit}",
+    )
 
 
 @Alita.on_message(command("setgdes") & admin_filter)
 async def setgdes(_, m: Message):
-    
+
     user = await m.chat.get_member(m.from_user.id)
     if not user.can_change_info and user.status != "creator":
         await m.reply_text(
-            "You don't have enough permission to use this command!")
+            "You don't have enough permission to use this command!",
+        )
         return False
-    
+
     if len(m.command) < 1:
         return await m.reply_text("Please read /help for using it!")
-    
+
     desp = m.text.split(None, 1)[1]
     try:
         await m.chat.set_description(desp)
     except Exception as e:
         return await m.reply_text(f"Error: {e}")
     return await m.reply_text(
-        f"Successfully Changed Group description From {m.chat.description} To {desp}")
+        f"Successfully Changed Group description From {m.chat.description} To {desp}",
+    )
 
 
 @Alita.on_message(command("title") & admin_filter)
@@ -458,7 +503,8 @@ async def set_user_title(c: Alita, m: Message):
     user = await m.chat.get_member(m.from_user.id)
     if not user.can_promote_members and user.status != "creator":
         await m.reply_text(
-            "You don't have enough permission to use this command!")
+            "You don't have enough permission to use this command!",
+        )
         return False
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -491,7 +537,8 @@ async def set_user_title(c: Alita, m: Message):
     except Exception as e:
         return await m.reply_text(f"Error: {e}")
     return await m.reply_text(
-        f"Successfully Changed {from_user.mention}'s Admin Title To {title}")
+        f"Successfully Changed {from_user.mention}'s Admin Title To {title}",
+    )
 
 
 @Alita.on_message(command("setgpic") & admin_filter)
@@ -499,7 +546,8 @@ async def setgpic(c: Alita, m: Message):
     user = await m.chat.get_member(m.from_user.id)
     if not user.can_change_info and user.status != "creator":
         await m.reply_text(
-            "You don't have enough permission to use this command!")
+            "You don't have enough permission to use this command!",
+        )
         return False
     if not m.reply_to_message:
         return await m.reply_text("Reply to a photo to set it as chat photo")

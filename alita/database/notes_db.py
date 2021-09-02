@@ -33,12 +33,12 @@ class Notes(MongoDB):
         super().__init__(self.db_name)
 
     def save_note(
-            self,
-            chat_id: int,
-            note_name: str,
-            note_value: str,
-            msgtype: int = Types.TEXT,
-            fileid="",
+        self,
+        chat_id: int,
+        note_name: str,
+        note_value: str,
+        msgtype: int = Types.TEXT,
+        fileid="",
     ):
         with INSERTION_LOCK:
             curr = self.find_one(

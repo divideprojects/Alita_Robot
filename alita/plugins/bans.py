@@ -36,7 +36,8 @@ from alita.utils.string import extract_time
 
 
 @Alita.on_message(
-    command("tban") & restrict_filter, )
+    command("tban") & restrict_filter,
+)
 async def tban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
@@ -75,8 +76,9 @@ async def tban_usr(c: Alita, m: Message):
         return
 
     if not reason:
-        await m.reply_text("You haven't specified a time to ban this user for!"
-                           )
+        await m.reply_text(
+            "You haven't specified a time to ban this user for!",
+        )
         return
 
     split_reason = reason.split(None, 1)
@@ -121,17 +123,20 @@ async def tban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
 
 
 @Alita.on_message(
-    command("stban") & restrict_filter, )
+    command("stban") & restrict_filter,
+)
 async def stban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
@@ -165,8 +170,9 @@ async def stban_usr(c: Alita, m: Message):
         return
 
     if not reason:
-        await m.reply_text("You haven't specified a time to ban this user for!"
-                           )
+        await m.reply_text(
+            "You haven't specified a time to ban this user for!",
+        )
         return
 
     split_reason = reason.split(None, 1)
@@ -209,17 +215,20 @@ async def stban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
 
 
 @Alita.on_message(
-    command("dtban") & restrict_filter, )
+    command("dtban") & restrict_filter,
+)
 async def dtban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
@@ -227,7 +236,7 @@ async def dtban_usr(c: Alita, m: Message):
 
     if not m.reply_to_message:
         await m.reply_text(
-            "Reply to a message with this command to temp ban and delete the message."
+            "Reply to a message with this command to temp ban and delete the message.",
         )
         await m.stop_propagation()
 
@@ -257,8 +266,9 @@ async def dtban_usr(c: Alita, m: Message):
         return
 
     if not reason:
-        await m.reply_text("You haven't specified a time to ban this user for!"
-                           )
+        await m.reply_text(
+            "You haven't specified a time to ban this user for!",
+        )
         return
 
     split_reason = reason.split(None, 1)
@@ -305,17 +315,20 @@ async def dtban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
 
 
 @Alita.on_message(
-    command("kick") & restrict_filter, )
+    command("kick") & restrict_filter,
+)
 async def kick_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.kick.no_target"))
@@ -382,10 +395,12 @@ async def kick_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -393,7 +408,8 @@ async def kick_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command("skick") & restrict_filter, )
+    command("skick") & restrict_filter,
+)
 async def skick_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.kick.no_target"))
@@ -454,10 +470,12 @@ async def skick_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -465,14 +483,16 @@ async def skick_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command("dkick") & restrict_filter, )
+    command("dkick") & restrict_filter,
+)
 async def dkick_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.kick.no_target"))
         return
     if not m.reply_to_message:
         return await m.reply_text(
-            "Reply to a message to delete it and kick the user!")
+            "Reply to a message to delete it and kick the user!",
+        )
 
     reason = None
 
@@ -526,10 +546,12 @@ async def dkick_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -568,10 +590,12 @@ async def unban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.unban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -579,7 +603,8 @@ async def unban_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command("sban") & restrict_filter, )
+    command("sban") & restrict_filter,
+)
 async def sban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
@@ -639,17 +664,20 @@ async def sban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
 
 
 @Alita.on_message(
-    command("dban") & restrict_filter, )
+    command("dban") & restrict_filter,
+)
 async def dban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
@@ -657,7 +685,8 @@ async def dban_usr(c: Alita, m: Message):
 
     if not m.reply_to_message:
         return await m.reply_text(
-            "Reply to a message to delete it and ban the user!")
+            "Reply to a message to delete it and ban the user!",
+        )
 
     reason = None
 
@@ -709,17 +738,20 @@ async def dban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
 
 
 @Alita.on_message(
-    command("ban") & restrict_filter, )
+    command("ban") & restrict_filter,
+)
 async def ban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
@@ -783,10 +815,12 @@ async def ban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return

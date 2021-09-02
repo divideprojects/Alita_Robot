@@ -18,9 +18,10 @@
 
 from datetime import datetime
 from io import BytesIO
+from traceback import format_exc
+
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, UserIsBlocked
 from pyrogram.types import Message
-from traceback import format_exc
 
 from alita import BOT_ID, LOGGER, MESSAGE_DUMP, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita

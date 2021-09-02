@@ -16,12 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram import filters
-from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
-from pyrogram.types import ChatPermissions, Message
 from re import escape as re_escape
 from time import time
 from traceback import format_exc
+
+from pyrogram import filters
+from pyrogram.errors import ChatAdminRequired, RPCError, UserAdminInvalid
+from pyrogram.types import ChatPermissions, Message
 
 from alita import LOGGER, MESSAGE_DUMP, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -77,8 +78,8 @@ async def bl_watcher(_, m: Message):
             await m.chat.kick_member(m.from_user.id, int(time() + 45))
             await m.reply_text(
                 tlang(m, "blacklist.bl_watcher.action_kick").format(
-                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>"
-                )
+                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
+                ),
             )
 
         elif action == "ban":
@@ -89,8 +90,8 @@ async def bl_watcher(_, m: Message):
             )
             await m.reply_text(
                 tlang(m, "blacklist.bl_watcher.action_ban").format(
-                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>"
-                )
+                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
+                ),
             )
 
         elif action == "mute":
@@ -113,8 +114,8 @@ async def bl_watcher(_, m: Message):
 
             await m.reply_text(
                 tlang(m, "blacklist.bl_watcher.action_mute").format(
-                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>"
-                )
+                    user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
+                ),
             )
 
         elif action == "warn":

@@ -17,15 +17,16 @@
 
 
 from asyncio import sleep
+
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
-from alita.utils.kbhelpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.lang_db import Langs
 from alita.tr_engine import lang_dict, tlang
 from alita.utils.custom_filters import admin_filter, command
+from alita.utils.kbhelpers import ikb
 
 
 async def gen_langs_kb():
@@ -43,7 +44,7 @@ async def gen_langs_kb():
                 "🌎 Help us with translations!",
                 "https://crowdin.com/project/alita_robot",
                 "url",
-            )
+            ),
         ],
     ]
 

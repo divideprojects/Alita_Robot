@@ -16,9 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from traceback import format_exc
+
 from pyrogram.errors import PeerIdInvalid, RPCError
 from pyrogram.types import Message
-from traceback import format_exc
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -92,8 +93,8 @@ async def list_blacklist_chats(_, m: Message):
     if bl_chats:
         txt = (
             (
-                    "These Chats are Blacklisted:\n"
-                    + "\n".join(f"<code>{i}</code>" for i in bl_chats)
+                "These Chats are Blacklisted:\n"
+                + "\n".join(f"<code>{i}</code>" for i in bl_chats)
             ),
         )
 

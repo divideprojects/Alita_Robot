@@ -23,13 +23,13 @@ async def remove_markdown_and_html(text: str) -> str:
 async def clean_html(text: str) -> str:
     return (
         text.replace("<code>", "")
-            .replace("</code>", "")
-            .replace("<b>", "")
-            .replace("</b>", "")
-            .replace("<i>", "")
-            .replace("</i>", "")
-            .replace("<u>", "")
-            .replace("</u>", "")
+        .replace("</code>", "")
+        .replace("<b>", "")
+        .replace("</b>", "")
+        .replace("<i>", "")
+        .replace("</i>", "")
+        .replace("<u>", "")
+        .replace("</u>", "")
     )
 
 

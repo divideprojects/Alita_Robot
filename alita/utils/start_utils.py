@@ -16,11 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, Message
-from alita.utils.kbhelpers import ikb
 from secrets import choice
 from traceback import format_exc
+
+from pyrogram.errors import RPCError
+from pyrogram.types import CallbackQuery, Message
 
 from alita import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
@@ -29,6 +29,7 @@ from alita.database.notes_db import Notes
 from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
 from alita.utils.cmd_senders import send_cmd
+from alita.utils.kbhelpers import ikb
 from alita.utils.msg_types import Types
 from alita.utils.string import (
     build_keyboard,

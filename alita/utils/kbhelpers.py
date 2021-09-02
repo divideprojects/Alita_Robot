@@ -17,7 +17,7 @@
 # The following snipplet has been taken from:
 # https://github.com/usernein/pyromod/blob/86d9d7cae2e0c4bf144bf054461d0bd980755138/pyromod/helpers/helpers.py#L3-#L15
 
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 def ikb(rows=[]):

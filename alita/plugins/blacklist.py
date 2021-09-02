@@ -17,15 +17,16 @@
 
 
 from html import escape
+
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, Message
-from alita.utils.kbhelpers import ikb
 
 from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.blacklist_db import Blacklist
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import command, owner_filter, restrict_filter
+from alita.utils.kbhelpers import ikb
 
 
 @Alita.on_message(command("blacklist") & filters.group)
@@ -82,9 +83,9 @@ async def add_blacklist(_, m: Message):
     LOGGER.info(f"{m.from_user.id} added new blacklists ({bl_words}) in {m.chat.id}")
     await m.reply_text(
         (tlang(m, "blacklist.added_blacklist")).format(
-            trigger=", ".join(f"<code>{i}</code>" for i in bl_words)
+            trigger=", ".join(f"<code>{i}</code>" for i in bl_words),
         )
-        + (f"\n{rep_text}" if rep_text else "")
+        + (f"\n{rep_text}" if rep_text else ""),
     )
 
     await m.stop_propagation()
@@ -141,9 +142,9 @@ async def rm_blacklist(_, m: Message):
     LOGGER.info(f"{m.from_user.id} removed blacklists ({bl_words}) in {m.chat.id}")
     await m.reply_text(
         (tlang(m, "blacklist.rm_blacklist")).format(
-            bl_words=", ".join(f"<code>{i}</code>" for i in bl_words)
+            bl_words=", ".join(f"<code>{i}</code>" for i in bl_words),
         )
-        + (f"\n{rep_text}" if rep_text else "")
+        + (f"\n{rep_text}" if rep_text else ""),
     )
 
     await m.stop_propagation()
@@ -163,7 +164,7 @@ async def set_bl_action(_, m: Message):
                 (
                     "Choose a valid blacklist action from "
                     + ", ".join(f"<code>{i}</code>" for i in valid_actions)
-                )
+                ),
             )
 
             return

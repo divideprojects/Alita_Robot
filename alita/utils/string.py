@@ -23,7 +23,8 @@ from typing import List
 from pyrogram.types import InlineKeyboardButton, Message
 
 BTN_URL_REGEX = compile_re(
-    r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
+    r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))",
+)
 
 
 async def extract_time(m: Message, time_val: str):
@@ -69,8 +70,9 @@ async def parse_button(text: str):
         if n_escapes % 2 == 0:
             # create a thruple with button label, url, and newline status
             buttons.append(
-                (match.group(2), match.group(3), bool(match.group(4))))
-            note_data += markdown_note[prev:match.start(1)]
+                (match.group(2), match.group(3), bool(match.group(4))),
+            )
+            note_data += markdown_note[prev : match.start(1)]
             prev = match.end(1)
         # if odd, escaped -> move along
         else:
@@ -115,7 +117,7 @@ async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
                         success = True
                         break
                 if success:
-                    new_text += text[idx:idx + len(v) + 2]
+                    new_text += text[idx : idx + len(v) + 2]
                     idx += len(v) + 2
                     continue
                 else:
@@ -146,13 +148,19 @@ async def escape_mentions_using_curly_brackets(
         teks = teks.format(
             first=escape(m.from_user.first_name),
             last=escape(m.from_user.last_name or m.from_user.first_name),
-            fullname=" ".join([
-                escape(m.from_user.first_name),
-                escape(m.from_user.last_name),
-            ] if m.from_user.last_name else [escape(m.from_user.first_name)
-                                             ], ),
+            fullname=" ".join(
+                [
+                    escape(m.from_user.first_name),
+                    escape(m.from_user.last_name),
+                ]
+                if m.from_user.last_name
+                else [
+                    escape(m.from_user.first_name),
+                ],
+            ),
             chatname=escape(m.chat.title)
-            if m.chat.type != "private" else escape(m.from_user.first_name),
+            if m.chat.type != "private"
+            else escape(m.from_user.first_name),
             id=m.from_user.id,
         )
     else:
@@ -169,8 +177,9 @@ async def split_quotes(text: str):
     while counter < len(text):
         if text[counter] == "\\":
             counter += 1
-        elif text[counter] == text[0] or (text[0] == SMART_OPEN
-                                          and text[counter] == SMART_CLOSE):
+        elif text[counter] == text[0] or (
+            text[0] == SMART_OPEN and text[counter] == SMART_CLOSE
+        ):
             break
         counter += 1
     else:
@@ -179,7 +188,7 @@ async def split_quotes(text: str):
     # 1 to avoid starting quote, and counter is exclusive so avoids ending
     key = await remove_escapes(text[1:counter].strip())
     # index will be in range, or `else` would have been executed and returned
-    rest = text[counter + 1:].strip()
+    rest = text[counter + 1 :].strip()
     if not key:
         key = text[0] + text[0]
     return list(filter(None, [key, rest]))

@@ -16,12 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pyrogram.filters import create
-from pyrogram.types import CallbackQuery, Message
 from re import compile as compile_re
 from re import escape, search
 from shlex import split
 from typing import List
+
+from pyrogram.filters import create
+from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
 from alita.tr_engine import tlang
@@ -32,11 +33,11 @@ DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
 
 
 def command(
-        commands: str or List[str],
-        prefixes: str or List[str] = PREFIX_HANDLER,
-        case_sensitive: bool = False,
-        dev_cmd: bool = False,
-        sudo_cmd: bool = False,
+    commands: str or List[str],
+    prefixes: str or List[str] = PREFIX_HANDLER,
+    case_sensitive: bool = False,
+    dev_cmd: bool = False,
+    sudo_cmd: bool = False,
 ):
     from alita import BOT_USERNAME
 

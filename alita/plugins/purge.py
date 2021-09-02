@@ -37,7 +37,7 @@ async def purge(c: Alita, m: Message):
 
         def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
-                yield l[i:i + n]
+                yield l[i : i + n]
 
         # Dielete messages in chunks of 100 messages
         m_list = list(divide_chunks(message_ids))
@@ -54,15 +54,20 @@ async def purge(c: Alita, m: Message):
             await m.reply_text(tlang(m, "purge.old_msg_err"))
             return
         except RPCError as ef:
-            await m.reply_text((tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ), )
+            await m.reply_text(
+                (tlang(m, "general.some_error")).format(
+                    SUPPORT_GROUP=SUPPORT_GROUP,
+                    ef=ef,
+                ),
+            )
 
         count_del_msg = len(message_ids)
 
-        z = await m.reply_text((tlang(m, "purge.purge_msg_count")).format(
-            msg_count=count_del_msg, ), )
+        z = await m.reply_text(
+            (tlang(m, "purge.purge_msg_count")).format(
+                msg_count=count_del_msg,
+            ),
+        )
         await sleep(3)
         await z.delete()
         return
@@ -81,7 +86,7 @@ async def spurge(c: Alita, m: Message):
 
         def divide_chunks(l: list, n: int = 100):
             for i in range(0, len(l), n):
-                yield l[i:i + n]
+                yield l[i : i + n]
 
         # Dielete messages in chunks of 100 messages
         m_list = list(divide_chunks(message_ids))
@@ -98,10 +103,12 @@ async def spurge(c: Alita, m: Message):
             await m.reply_text(tlang(m, "purge.old_msg_err"))
             return
         except RPCError as ef:
-            await m.reply_text((tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ), )
+            await m.reply_text(
+                (tlang(m, "general.some_error")).format(
+                    SUPPORT_GROUP=SUPPORT_GROUP,
+                    ef=ef,
+                ),
+            )
         return
     await m.reply_text("Reply to a message to start spurge !")
     return
