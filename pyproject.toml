@@ -20,7 +20,7 @@ speedtest-cli = "^2.1.3"
 tgcrypto = "^1.2.2"
 tswift = "^0.7.0"
 ujson = "^4.0.2"
-uvloop = "^0.15.2"
+uvloop = "^0.16.0"
 wikipedia = "^1.4.0"
 pyromod = {git = "https://github.com/usernein/pyromod"}
 httpx = {extras = ["http2"], version = "^0.18.1"}
