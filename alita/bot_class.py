@@ -16,11 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from uvloop import install
-
-# Install uvloop to make bot faster
-install()
-
 from platform import python_version
 from threading import RLock
 from time import gmtime, strftime, time

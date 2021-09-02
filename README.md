@@ -48,7 +48,7 @@ Help us bring more languages to the bot by contributing to the project on [Crowd
 
 ## Requirements
 - You need to have a *Mongo Database* (Cluster Preferred)
-- Linux machine (Ubuntu/Debain-based OS Preferred)
+- Linux/Windows machine (Ubuntu/Debain-based OS Preferred or Windows 10/Server2016 and later)
 
 
 ## How to setup
@@ -69,14 +69,15 @@ It really motivates me to continue this project further.
 ### Traditional
 
 - Install Python v3.7 or later from [Python's Website](https://python.org)
-- Install virtualenv using `python3 -m pip -U install poetry`.
+- Install virtualenv using `python3 -m pip -U install virtualenv`.
 - **Fork** or Clone the project using `git clone https://github.com/DivideProjects/Alita_Robot.git`
-- Install the requirements using `poetry install`
+- Create Virtualenv using: `virtualenv venv`
+- Install the requirements using `python3 -m pip install -r requirements.txt`
 - Fill in all the variables in *Development* class, not *Config* class. **Sudo, Dev, Whitelist** users are optional!!
-- Change to poetry shell by using: `poetry shell`
+- Change to virtualenv shell by using:
+  `. venv/bin/activate` (Linux)
+  `venv\Scripts\activate` (Windows)
 - Run the bot using `python3 -m alita`
-
-**Note:** The traditional method currently only works on Linux OSes as a requirement [uvloop](https://pypi.org/project/uvloop/) requires linux API method which isn't provided by Windows!
 
 ### Docker
 

@@ -2,11 +2,9 @@ test:
 	@pre-commit run --all-files
 
 install:
-	@pip3 install --upgrade pip setuptools wheel poetry
+	@pip3 install --upgrade pip setuptools wheel
 	@sleep 3
-	@poetry config virtualenvs.create false
-	@sleep 3
-	@poetry install --no-dev --no-interaction
+	@pip install -r requirements.txt
 
 run:
 	@python3 -m alita
