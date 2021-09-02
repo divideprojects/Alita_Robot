@@ -196,7 +196,7 @@ beautifulsoup4 = "*"
 
 [[package]]
 name = "gpytranslate"
-version = "1.2.0"
+version = "1.3.0"
 description = "A Python3 library for translating text using Google Translate API."
 category = "main"
 optional = false
@@ -709,7 +709,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "ecb123cee894da8802b632ba43b5dba21ac33855cef40969a191f0662d16cd9f"
+content-hash = "c468e385032d917d21f36ddbd9863a970313c5967f10f5289d1afd613001be2b"
 
 [metadata.files]
 aiofiles = [
@@ -787,8 +787,8 @@ google = [
     {file = "google-3.0.0.tar.gz", hash = "sha256:143530122ee5130509ad5e989f0512f7cb218b2d4eddbafbad40fd10e8d8ccbe"},
 ]
 gpytranslate = [
-    {file = "gpytranslate-1.2.0-py3-none-any.whl", hash = "sha256:e06dd6e022f82d60afb1a772cf7b50cc6bba02ffa4f192108f882a1cc02ff2f0"},
-    {file = "gpytranslate-1.2.0.tar.gz", hash = "sha256:ac542f1fa796d89f168a1063b865d81de699602a87dcd343544e7c5aca11182d"},
+    {file = "gpytranslate-1.3.0-py3-none-any.whl", hash = "sha256:789483dbc6acfe181bf01de3b30f9a5979fd072a91e4f35ffcb5e808b018ea4b"},
+    {file = "gpytranslate-1.3.0.tar.gz", hash = "sha256:767b9085818b70edacfb85a358661929686e2e31deb1618f7856388076db7407"},
 ]
 h11 = [
     {file = "h11-0.12.0-py3-none-any.whl", hash = "sha256:36a3cb8c0a032f56e2da7084577878a035d3b61d104230d4bd49c0c6b555a9c6"},
