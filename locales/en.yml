@@ -43,7 +43,7 @@ strings:
         
         Note: 
         a) Currently it supports only text!
-        b) Rubina must be an admin to greet and goodbye users.   
+        b) Alita must be an admin to greet and goodbye users.   
         
         Admin Commands:
         × /setwelcome <reply> : Sets a custom welcome message.
