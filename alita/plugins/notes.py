@@ -20,17 +20,13 @@ from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, Message
 
 from alita import LOGGER
 from alita.bot_class import Alita
 from alita.database.notes_db import Notes, NotesSettings
 from alita.utils.cmd_senders import send_cmd
+from alita.utils.kbhelpers import ikb
 from alita.utils.custom_filters import admin_filter, command, owner_filter
 from alita.utils.msg_types import Types, get_note_type
 from alita.utils.parser import escape_markdown, mention_html
@@ -104,15 +100,17 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                          if i[0] == note_name)
         await reply_text(
             f"Click on the button to get the note <code>{note_name}</code>",
-            reply_markup=InlineKeyboardMarkup([
+            reply_markup=ikb(
                 [
-                    InlineKeyboardButton(
-                        "Click Here!",
-                        url=
-                        f"https://t.me/{BOT_USERNAME}?start=note_{m.chat.id}_{note_hash}",
-                    ),
+                    [
+                        (
+                            "Click Me!",
+                            f"https://t.me/{BOT_USERNAME}?start=note_{m.chat.id}_{note_hash}",
+                            "url",
+                        ),
+                    ],
                 ],
-            ], ),
+            ),
         )
         return
 
@@ -377,14 +375,17 @@ async def local_notes(_, m: Message):
     if curr_pref:
         from alita import BOT_USERNAME
 
-        pm_kb = InlineKeyboardMarkup([
+        pm_kb = ikb(
             [
-                InlineKeyboardButton(
-                    "All Notes",
-                    url=f"https://t.me/{BOT_USERNAME}?start=notes_{m.chat.id}",
-                ),
+                [
+                    (
+                        "All Notes",
+                        f"https://t.me/{BOT_USERNAME}?start=notes_{m.chat.id}",
+                        "url",
+                    ),
+                ],
             ],
-        ], )
+        )
         await m.reply_text(
             "Click on the button below to get notes!",
             quote=True,
@@ -429,15 +430,9 @@ async def clear_allnote(_, m: Message):
 
     await m.reply_text(
         "Are you sure you want to clear all notes?",
-        reply_markup=InlineKeyboardMarkup([
-            [
-                InlineKeyboardButton(
-                    "Confirm",
-                    callback_data="clear_notes",
-                ),
-                InlineKeyboardButton("Cancel", callback_data="close_admin"),
-            ],
-        ], ),
+        reply_markup=ikb(
+            [[("⚠️ Confirm", "clear_notes"), ("❌ Cancel", "close_admin")]],
+        ),
     )
     return
 
