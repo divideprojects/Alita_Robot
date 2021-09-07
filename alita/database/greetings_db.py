@@ -71,19 +71,31 @@ class Greetings(MongoDB):
 
     def set_welcome_text(self, welcome_text: str):
         with INSERTION_LOCK:
-            return self.update({"_id": self.chat_id}, {"welcome_text": welcome_text})
+            return self.update(
+                {"_id": self.chat_id},
+                {"welcome_text": welcome_text},
+            )
 
     def set_goodbye_text(self, goodbye_text: str):
         with INSERTION_LOCK:
-            return self.update({"_id": self.chat_id}, {"goodbye_text": goodbye_text})
+            return self.update(
+                {"_id": self.chat_id},
+                {"goodbye_text": goodbye_text},
+            )
 
     def set_current_cleanservice_settings(self, status: bool):
         with INSERTION_LOCK:
-            return self.update({"_id": self.chat_id}, {"cleanservice": status})
+            return self.update(
+                {"_id": self.chat_id},
+                {"cleanservice": status},
+            )
 
     def set_current_cleanwelcome_settings(self, status: bool):
         with INSERTION_LOCK:
-            return self.update({"_id": self.chat_id}, {"cleanwelcome": status})
+            return self.update(
+                {"_id": self.chat_id},
+                {"cleanwelcome": status},
+            )
 
     def __ensure_in_db(self):
         chat_data = self.find_one({"_id": self.chat_id})
@@ -98,9 +110,23 @@ class Greetings(MongoDB):
                 "goodbye": True,
             }
             self.insert_one(new_data)
-            LOGGER.info(f"Initialized Greetings Document for chat {self.chat_id}")
+            LOGGER.info(
+                f"Initialized Greetings Document for chat {self.chat_id}")
             return new_data
         return chat_data
+
+    # Migrate if chat id changes!
+    def migrate_chat(self, new_chat_id: int):
+        old_chat_db = self.find_one({"_id": self.chat_id})
+        new_data = old_chat_db.update({"_id": new_chat_id})
+        self.insert_one(new_data)
+        self.delete_one({"_id": self.chat_id})
+
+    @staticmethod
+    def count_chats(query: str):
+        with INSERTION_LOCK:
+            collection = MongoDB(Greetings.db_name)
+            return collection.count({query: True})
 
     @staticmethod
     def repair_db(collection):
