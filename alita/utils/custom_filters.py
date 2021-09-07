@@ -104,7 +104,7 @@ def command(
 
 
 async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
-    """Check if user is Admin or not."""
+    """Check if bot is Admin or not."""
     from alita import BOT_ID
 
     if isinstance(m, CallbackQuery):
