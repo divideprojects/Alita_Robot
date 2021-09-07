@@ -17,6 +17,7 @@ strings:
         **Admin only:**
         × /invitelink: Gets private chat's invitelink.
         × /promote: Promotes the user replied to or tagged.
+        × /zombies: Bans all the deleted accounts. (owner only)
         × /demote: Demotes the user replied to or tagged.
 
         **Example:**
@@ -27,23 +28,23 @@ strings:
         Sometimes, you might trust a user not to send unwanted content.
         Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
         That's what approvals are for - approve trustworthy users to allow them to send stuff without restrictions!
-
         **Admin commands:**
         × /approval: Check a user's approval status in this chat.
         × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
         × /unapprove: Unapprove of a user. They will now be subject to blocklists.
         × /approved: List all approved users.
         × /unapproveall: Unapprove *ALL* users in a chat. This cannot be undone!
-
         **Example:**
         `/approve @username`: this approves a user in the chat.
     greetings:
       main: "Greetings"
       help: |-
         Customize your group's welcome / goodbye messages that can be personalised in multiple ways.
-
-        Note: Currently it supports only text !
-
+        
+        Note: 
+        a) Currently it supports only text!
+        b) Rubina must be an admin to greet and goodbye users.   
+        
         Admin Commands:
         × /setwelcome <reply> : Sets a custom welcome message.
         × /setgoodbye <reply> : Sets a custom goodbye message.
@@ -51,16 +52,21 @@ strings:
         × /resetgoodbye : Resets to bot default goodbye message.
         × /welcome <on/off> : enable/disable Welcome messages.
         × /goodbye <on/off> : enable/disable goodbye messages.
-        × /welcome | /welcome noformat: Display current welcome message and settings.
-        × /goodbye | /goodbye noformat: Display current goodbye message and settings.
-        × /cleanservice <on/off> : Use it to clean `user joined` service messages automatically or to view current status.
+        × /welcome | /welcome noformat: Shows the current welcome message and settings.
+        × /goodbye | /goodbye noformat: Shows the current goodbye message and settings.
+        
+        ── **Cleaner** ──:
+        × /cleanservice <on/off> : Use it to clean all service messages automatically or to view current status.
+        
+        ── **Format** ──
+        Check /markdownhelp for help related to formatting!
+        
     bans:
       main: "Bans"
       help: |-
         Someone annoying entered your group?
         Want to ban/restriction him/her?
         This is the plugin for you, easily kick, ban and unban members in a group.
-
         **Admin only:**
         × /kick: Kick the user replied or tagged.
         × /skick: Kick the user replied or tagged and delete your messsage.
@@ -72,30 +78,24 @@ strings:
         × /stban <userhandle> x(m/h/d): Silently bans a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
         × /dtban <userhandle> x(m/h/d): Silently bans a user for x time and delete the replied message. (via reply). m = minutes, h = hours, d = days.
         × /unban: Unbans the user replied to or tagged.
-
         **Example:**
         `/ban @username`: this bans a user in the chat.
     blacklist:
       main: "Blacklist"
       help: |-
         Want to restrict certain words or sentences in your group?
-
         Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, that message will immediately be deleted.
         A good combo is sometimes to pair this up with warn filters!
         **NOTE:** blacklists do not affect group admins.
         × /blacklist: View the current blacklisted words.
-
         **Admin only:**
         × /addblacklist `<triggers>`: Add a trigger to the blacklist. Each line is considered one trigger, so using different lines will allow you to add multiple triggers.
         × /unblacklist `<triggers>`: Remove triggers from the blacklist. Same newline logic applies here, so you can remove multiple triggers at once.
         × /blaction `<action>`: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'.
         Default is 'none', which will delete the users message on typing a blacklist word.
-
         **Owner Only**
         × /rmallblacklist: Removes all the blacklists from the current chat.
-
         **Note:** Can only add or remove one blacklist at a time!
-
         **Example:**
         `/addblacklist hello`: this adds the word 'hello' as blacklist in the chat.
     filters:
