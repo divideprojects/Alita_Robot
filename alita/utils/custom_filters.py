@@ -103,6 +103,41 @@ def command(
     )
 
 
+async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
+    """Check if user is Admin or not."""
+    from alita import BOT_ID
+
+    if isinstance(m, CallbackQuery):
+        m = m.message
+
+    if m.chat.type != "supergroup":
+        return False
+
+    # Telegram and GroupAnonyamousBot
+    if m.sender_chat:
+        return True
+
+    try:
+        admin_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
+    except KeyError:
+        admin_group = {
+            i[0]
+            for i in await admin_cache_reload(m, "custom_filter_update")
+        }
+    except ValueError as ef:
+        # To make language selection work in private chat of user, i.e. PM
+        if ("The chat_id" and "belongs to a user") in ef:
+            return True
+
+    if BOT_ID in admin_group:
+        return True
+
+    await m.reply_text(
+        "I am not an admin to recive updates in this group; Mind Promoting?")
+
+    return False
+
+
 async def admin_check_func(_, __, m: Message or CallbackQuery):
     """Check if user is Admin or not."""
     if isinstance(m, CallbackQuery):
@@ -215,3 +250,4 @@ admin_filter = create(admin_check_func)
 owner_filter = create(owner_check_func)
 restrict_filter = create(restrict_check_func)
 promote_filter = create(promote_check_func)
+bot_admin_filter = create(bot_admin_check_func)
