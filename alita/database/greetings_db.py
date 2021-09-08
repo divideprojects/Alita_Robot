@@ -1,20 +1,3 @@
-# Copyright (C) 2020 - 2021 Divkix. All rights reserved. Source code available under the AGPL.
-#
-# This file is part of Alita_Robot.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 from threading import RLock
 from time import time
 
@@ -52,6 +35,10 @@ class Greetings(MongoDB):
         with INSERTION_LOCK:
             return self.chat_info["cleanwelcome"]
 
+    def get_current_cleangoodbye_settings(self):
+        with INSERTION_LOCK:
+            return self.chat_info["cleangoodbye"]
+
     def get_welcome_text(self):
         with INSERTION_LOCK:
             return self.chat_info["welcome_text"]
@@ -59,6 +46,14 @@ class Greetings(MongoDB):
     def get_goodbye_text(self):
         with INSERTION_LOCK:
             return self.chat_info["goodbye_text"]
+
+    def get_current_cleanwelcome_id(self):
+        with INSERTION_LOCK:
+            return self.chat_info["cleanwelcome_id"]
+
+    def get_current_cleangoodbye_id(self):
+        with INSERTION_LOCK:
+            return self.chat_info["cleangoodbye_id"]
 
     # Set settings in database
     def set_current_welcome_settings(self, status: bool):
@@ -97,12 +92,36 @@ class Greetings(MongoDB):
                 {"cleanwelcome": status},
             )
 
+    def set_current_cleangoodbye_settings(self, status: bool):
+        with INSERTION_LOCK:
+            return self.update(
+                {"_id": self.chat_id},
+                {"cleangoodbye": status},
+            )
+
+    def set_cleanwlcm_id(self, status: int):
+        with INSERTION_LOCK:
+            return self.update(
+                {"_id": self.chat_id},
+                {"cleanwelcome_id": status},
+            )
+
+    def set_cleangoodbye_id(self, status: int):
+        with INSERTION_LOCK:
+            return self.update(
+                {"_id": self.chat_id},
+                {"cleangoodbye_id": status},
+            )
+
     def __ensure_in_db(self):
         chat_data = self.find_one({"_id": self.chat_id})
         if not chat_data:
             new_data = {
                 "_id": self.chat_id,
                 "cleanwelcome": False,
+                "cleanwelcome_id": None,
+                "cleangoodbye_id": None,
+                "cleangoodbye": False,
                 "cleanservice": False,
                 "goodbye_text": "Sad to see you leaving {first}.\nTake Care!",
                 "welcome_text": "Hey {first}, welcome to {chatname}!",
