@@ -127,32 +127,3 @@ class Greetings(MongoDB):
         with INSERTION_LOCK:
             collection = MongoDB(Greetings.db_name)
             return collection.count({query: True})
-
-    @staticmethod
-    def repair_db(collection):
-        all_data = collection.find_all()
-        keys = {
-            "cleanwelcome": False,
-            "cleanservice": False,
-            "goodbye_text": "Sad to see you leaving {first}.\nTake Care!",
-            "welcome_text": "Hey {first}, welcome to {chatname}!",
-            "welcome": True,
-            "goodbye": True,
-        }
-        for data in all_data:
-            for key, val in keys.items():
-                try:
-                    _ = data[key]
-                except KeyError:
-                    LOGGER.warning(
-                        f"Repairing Greeting Database - setting '{key}:{val}' for {data['_id']}",
-                    )
-                    collection.update({"_id": data["_id"]}, {key: val})
-
-
-def __pre_req_greetings():
-    start = time()
-    LOGGER.info("Starting Geeetings Database Repair...")
-    collection = MongoDB(Greetings.db_name)
-    Greetings.repair_db(collection)
-    LOGGER.info(f"Done in {round((time() - start), 3)}s!")
