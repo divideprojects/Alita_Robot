@@ -50,10 +50,10 @@ strings:
         × /setgoodbye <reply> : Sets a custom goodbye message.
         × /resetwelcome : Resets to bot default welcome message.
         × /resetgoodbye : Resets to bot default goodbye message.
-        × /welcome <on/off> : enable/disable Welcome messages.
-        × /goodbye <on/off> : enable/disable goodbye messages.
-        × /welcome | /welcome noformat: Shows the current welcome message and settings.
-        × /goodbye | /goodbye noformat: Shows the current goodbye message and settings.
+        × /welcome <on/off> | noformat : enable/disable | Shows the current welcome message | settings.
+        × /goodbye <on/off> | noformat : enable/disable | Shows the current goodbye message | settings.
+        × /cleanwelcome <on/off> : Shows or sets the current clean welcome settings.
+        × /cleangoodbye <on/off> : Shows or sets the current clean goodbye settings.
         
         ── **Cleaner** ──:
         × /cleanservice <on/off> : Use it to clean all service messages automatically or to view current status.
