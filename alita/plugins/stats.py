@@ -19,7 +19,6 @@
 from pyrogram.types import Message
 
 from alita.bot_class import Alita
-from alita.database import MongoDB
 from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
