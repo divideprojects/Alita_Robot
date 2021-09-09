@@ -610,7 +610,22 @@ async def unmute_usr(c: Alita, m: Message):
         return
 
     try:
-        await m.chat.restrict_member(user_id, m.chat.permissions)
+        await m.chat.restrict_member(
+            user_id,
+            ChatPermissions(
+                can_send_messages=True,
+                can_send_media_messages=True,
+                can_send_stickers=True,
+                can_send_animations=True,
+                can_send_games=True,
+                can_use_inline_bots=True,
+                can_add_web_page_previews=True,
+                can_send_polls=True,
+                can_change_info=True,
+                can_invite_users=True,
+                can_pin_messages=True,
+            ),
+        )
         LOGGER.info(f"{m.from_user.id} unmuted {user_id} in {m.chat.id}")
         await m.reply_text((tlang(m, "admin.unmute.unmuted_user")).format(
             admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
