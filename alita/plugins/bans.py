@@ -23,9 +23,15 @@ from pyrogram.errors import (
     RPCError,
     UserAdminInvalid,
 )
-from pyrogram.types import Message
+from pyrogram.filters import regex
+from pyrogram.types import (
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+)
 
-from alita import BOT_ID, BOT_USERNAME, LOGGER, SUPPORT_GROUP, SUPPORT_STAFF
+from alita import BOT_ID, BOT_USERNAME, LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
@@ -35,8 +41,7 @@ from alita.utils.parser import mention_html
 from alita.utils.string import extract_time
 
 
-@Alita.on_message(
-    command("tban") & restrict_filter, )
+@Alita.on_message(command("tban") & restrict_filter)
 async def tban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
@@ -61,10 +66,7 @@ async def tban_usr(c: Alita, m: Message):
         )
         await m.stop_propagation()
 
-    if m.reply_to_message:
-        r_id = m.reply_to_message.message_id
-    else:
-        r_id = m.message_id
+    r_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
 
     if m.reply_to_message and len(m.text.split()) < 2:
         reason = m.text.split(None, 2)[2]
@@ -81,10 +83,7 @@ async def tban_usr(c: Alita, m: Message):
 
     split_reason = reason.split(None, 1)
     time_val = split_reason[0].lower()
-    if len(split_reason) > 1:
-        reason = split_reason[1]
-    else:
-        reason = ""
+    reason = split_reason[1] if len(split_reason) > 1 else ""
 
     bantime = await extract_time(m, time_val)
 
@@ -109,7 +108,15 @@ async def tban_usr(c: Alita, m: Message):
             chat_title=m.chat.title,
         )
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        await m.reply_text(txt, reply_to_message_id=r_id)
+        keyboard = InlineKeyboardMarkup([[
+            InlineKeyboardButton(
+                "Unban",
+                callback_data=f"unban_={user_id}",
+            ),
+        ]])
+        await m.reply_text(txt,
+                           reply_markup=keyboard,
+                           reply_to_message_id=r_id)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -130,15 +137,14 @@ async def tban_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    command("stban") & restrict_filter, )
+@Alita.on_message(command("stban") & restrict_filter)
 async def stban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
         await m.stop_propagation()
 
     try:
-        user_id, user_first_name, _ = await extract_user(c, m)
+        user_id, _, _ = await extract_user(c, m)
     except Exception:
         return
 
@@ -171,10 +177,7 @@ async def stban_usr(c: Alita, m: Message):
 
     split_reason = reason.split(None, 1)
     time_val = split_reason[0].lower()
-    if len(split_reason) > 1:
-        reason = split_reason[1]
-    else:
-        reason = ""
+    reason = split_reason[1] if len(split_reason) > 1 else ""
 
     bantime = await extract_time(m, time_val)
 
@@ -218,8 +221,7 @@ async def stban_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    command("dtban") & restrict_filter, )
+@Alita.on_message(command("dtban") & restrict_filter)
 async def dtban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
@@ -263,10 +265,7 @@ async def dtban_usr(c: Alita, m: Message):
 
     split_reason = reason.split(None, 1)
     time_val = split_reason[0].lower()
-    if len(split_reason) > 1:
-        reason = split_reason[1]
-    else:
-        reason = ""
+    reason = split_reason[1] if len(split_reason) > 1 else ""
 
     bantime = await extract_time(m, time_val)
 
@@ -292,8 +291,13 @@ async def dtban_usr(c: Alita, m: Message):
             chat_title=m.chat.title,
         )
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        await c.send_message(m.chat.id, txt)
-        return
+        keyboard = InlineKeyboardMarkup([[
+            InlineKeyboardButton(
+                "Unban",
+                callback_data=f"unban_={user_id}",
+            ),
+        ]])
+        await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -314,14 +318,14 @@ async def dtban_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    command("kick") & restrict_filter, )
+@Alita.on_message(command("kick") & restrict_filter)
 async def kick_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.kick.no_target"))
         return
 
     reason = None
+
     if m.reply_to_message:
         r_id = m.reply_to_message.message_id
         if len(m.text.split()) >= 2:
@@ -370,7 +374,6 @@ async def kick_usr(c: Alita, m: Message):
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         await m.reply_text(txt, reply_to_message_id=r_id)
         await m.chat.unban_member(user_id)
-        return
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -392,22 +395,14 @@ async def kick_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    command("skick") & restrict_filter, )
+@Alita.on_message(command("skick") & restrict_filter)
 async def skick_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.kick.no_target"))
         return
 
-    reason = None
-    if m.reply_to_message:
-        if len(m.text.split()) >= 2:
-            reason = m.text.split(None, 1)[1]
-    else:
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
     try:
-        user_id, user_first_name, _ = await extract_user(c, m)
+        user_id, _, _ = await extract_user(c, m)
     except Exception:
         return
 
@@ -442,7 +437,6 @@ async def skick_usr(c: Alita, m: Message):
         if m.reply_to_message:
             await m.reply_to_message.delete()
         await m.chat.unban_member(user_id)
-        return
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -464,8 +458,7 @@ async def skick_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    command("dkick") & restrict_filter, )
+@Alita.on_message(command("dkick") & restrict_filter)
 async def dkick_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.kick.no_target"))
@@ -578,22 +571,14 @@ async def unban_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    command("sban") & restrict_filter, )
+@Alita.on_message(command("sban") & restrict_filter)
 async def sban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
         await m.stop_propagation()
 
-    reason = None
-    if m.reply_to_message:
-        if len(m.text.split()) >= 2:
-            reason = m.text.split(None, 1)[1]
-    else:
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
     try:
-        user_id, user_first_name, _ = await extract_user(c, m)
+        user_id, _, _ = await extract_user(c, m)
     except Exception:
         return
 
@@ -626,8 +611,6 @@ async def sban_usr(c: Alita, m: Message):
         await m.delete()
         if m.reply_to_message:
             await m.reply_to_message.delete()
-            return
-        return
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -648,8 +631,7 @@ async def sban_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    command("dban") & restrict_filter, )
+@Alita.on_message(command("dban") & restrict_filter)
 async def dban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
@@ -697,7 +679,13 @@ async def dban_usr(c: Alita, m: Message):
             chat_title=m.chat.title,
         )
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        await c.send_message(m.chat.id, txt)
+        keyboard = InlineKeyboardMarkup([[
+            InlineKeyboardButton(
+                "Unban",
+                callback_data=f"unban_={user_id}",
+            ),
+        ]])
+        await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -718,8 +706,7 @@ async def dban_usr(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(
-    command("ban") & restrict_filter, )
+@Alita.on_message(command("ban") & restrict_filter)
 async def ban_usr(c: Alita, m: Message):
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.ban.no_target"))
@@ -771,7 +758,15 @@ async def ban_usr(c: Alita, m: Message):
             chat_title=m.chat.title,
         )
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        await m.reply_text(txt)
+        keyboard = InlineKeyboardMarkup([[
+            InlineKeyboardButton(
+                "Unban",
+                callback_data=f"unban_={user_id}",
+            ),
+        ]])
+        await m.reply_text(txt,
+                           reply_markup=keyboard,
+                           reply_to_message_id=r_id)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -789,6 +784,28 @@ async def ban_usr(c: Alita, m: Message):
         ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
+    return
+
+
+@Alita.on_callback_query(regex("^unban_"))
+async def unbanbutton(c: Alita, q: CallbackQuery):
+    splitter = (str(q.data).replace("unban_", "")).split("=")
+    user_id = int(splitter[1])
+    user = await q.message.chat.get_member(q.from_user.id)
+
+    if not user.can_restrict_members and user.id != OWNER_ID:
+        await q.answer(
+            "You don't have enough permission to do this!\nStay in your limits!",
+            show_alert=True,
+        )
+        return
+    whoo = await c.get_users(user_id)
+    try:
+        await q.message.chat.unban_member(user_id)
+    except RPCError as e:
+        await q.message.edit_text(f"Error: {e}")
+        return
+    await q.message.edit_text(f"{q.from_user.mention} unbaned {whoo.mention}!")
     return
 
 
