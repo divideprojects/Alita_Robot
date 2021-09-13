@@ -30,7 +30,6 @@ from alita.database.filters_db import Filters
 from alita.utils.cmd_senders import send_cmd
 from alita.utils.custom_filters import admin_filter, command, owner_filter
 from alita.utils.msg_types import Types, get_filter_type
-from alita.utils.parser import escape_markdown, mention_html
 from alita.utils.regex_utils import regex_searcher
 from alita.utils.string import (
     build_keyboard,
@@ -86,10 +85,7 @@ async def add_filter(_, m: Message):
                            )
         return
 
-    if not m.reply_to_message:
-        extracted = await split_quotes(args[1])
-    else:
-        extracted = await split_quotes(args[1])
+    extracted = await split_quotes(args[1])
     keyword = extracted[0].lower()
 
     for k in keyword.split("|"):
@@ -108,14 +104,8 @@ async def add_filter(_, m: Message):
         return
 
     eee, msgtype, file_id = await get_filter_type(m)
-    if m.reply_to_message:
-        lol = eee
-    else:
-        lol = extracted[1]
-    if msgtype == Types.TEXT:
-        teks = lol
-    else:
-        teks = eee
+    lol = eee if m.reply_to_message else extracted[1]
+    teks = lol if msgtype == Types.TEXT else eee
 
     if not m.reply_to_message and msgtype == Types.TEXT and len(
             m.command) <= 2:
@@ -250,6 +240,8 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
         "last",
         "fullname",
         "id",
+        "mention",
+        "username",
         "chatname",
     ]
     text = await escape_mentions_using_curly_brackets(m, filter_reply,
@@ -257,21 +249,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
     teks, button = await parse_button(text)
     button = await build_keyboard(button)
     button = InlineKeyboardMarkup(button) if button else None
-    t = teks
-    username = ("@" + (await escape_markdown(escape(m.from_user.username)))
-                if m.from_user.username else (await (mention_html(
-                    escape(m.from_user.first_name), m.from_user.id))))
-    mention = await (mention_html(escape(m.from_user.first_name),
-                                  m.from_user.id))
-    if "{username}" in t:
-        tec = t.replace("{username}", username)
-    else:
-        tec = t
-    if "{mention}" in tec:
-        textt = tec.replace("{mention}", mention)
-    else:
-        textt = tec
-
+    textt = teks
     try:
         if msgtype == Types.TEXT:
             if button:
