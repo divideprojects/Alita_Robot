@@ -29,7 +29,6 @@ from alita.utils.cmd_senders import send_cmd
 from alita.utils.kbhelpers import ikb
 from alita.utils.custom_filters import admin_filter, command, owner_filter
 from alita.utils.msg_types import Types, get_note_type
-from alita.utils.parser import escape_markdown, mention_html
 from alita.utils.string import (
     build_keyboard,
     escape_mentions_using_curly_brackets,
@@ -134,6 +133,8 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         "last",
         "fullname",
         "id",
+        "username",
+        "mention",
         "chatname",
     ]
     text = await escape_mentions_using_curly_brackets(m, note_reply,
@@ -141,20 +142,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
     teks, button = await parse_button(text)
     button = await build_keyboard(button)
     button = InlineKeyboardMarkup(button) if button else None
-    t = teks
-    username = ("@" + (await escape_markdown(escape(m.from_user.username)))
-                if m.from_user.username else (await (mention_html(
-                    escape(m.from_user.first_name), m.from_user.id))))
-    mention = await (mention_html(escape(m.from_user.first_name),
-                                  m.from_user.id))
-    if "{username}" in t:
-        tec = t.replace("{username}", username)
-    else:
-        tec = t
-    if "{mention}" in tec:
-        textt = tec.replace("{mention}", mention)
-    else:
-        textt = tec
+    textt = teks
 
     try:
         if msgtype == Types.TEXT:
@@ -196,30 +184,8 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                 reply_markup=button,
                 reply_to_message_id=reply_msg_id,
             )
-        else:
-            if button:
-                try:
-                    await (await send_cmd(c, msgtype))(
-                        m.chat.id,
-                        getnotes["fileid"],
-                        caption=textt,
-                        # parse_mode="markdown",
-                        reply_markup=button,
-                        reply_to_message_id=reply_msg_id,
-                    )
-                    return
-                except RPCError as ef:
-                    await m.reply_text(
-                        textt,
-                        # parse_mode="markdown",
-                        reply_markup=button,
-                        disable_web_page_preview=True,
-                        reply_to_message_id=reply_msg_id,
-                    )
-                    LOGGER.error(ef)
-                    LOGGER.error(format_exc())
-                    return
-            else:
+        elif button:
+            try:
                 await (await send_cmd(c, msgtype))(
                     m.chat.id,
                     getnotes["fileid"],
@@ -228,6 +194,27 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                     reply_markup=button,
                     reply_to_message_id=reply_msg_id,
                 )
+                return
+            except RPCError as ef:
+                await m.reply_text(
+                    textt,
+                    # parse_mode="markdown",
+                    reply_markup=button,
+                    disable_web_page_preview=True,
+                    reply_to_message_id=reply_msg_id,
+                )
+                LOGGER.error(ef)
+                LOGGER.error(format_exc())
+                return
+        else:
+            await (await send_cmd(c, msgtype))(
+                m.chat.id,
+                getnotes["fileid"],
+                caption=textt,
+                # parse_mode="markdown",
+                reply_markup=button,
+                reply_to_message_id=reply_msg_id,
+            )
         LOGGER.info(
             f"{m.from_user.id} fetched note {note_name} (type - {getnotes}) in {m.chat.id}",
         )
