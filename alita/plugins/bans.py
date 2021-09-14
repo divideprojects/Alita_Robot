@@ -805,8 +805,8 @@ async def unbanbutton(c: Alita, q: CallbackQuery):
     except RPCError as e:
         await q.message.edit_text(f"Error: {e}")
         return
-    await q.message.edit_text(f"{q.from_user.mention} unbanned {whoo.mention}!"
-                              )
+    return await q.message.edit_text(f"{q.from_user.mention} unbanned {whoo.mention}!"
+                                     )
 
 
 __PLUGIN__ = "bans"
