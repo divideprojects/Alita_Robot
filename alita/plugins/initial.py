@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import Message
@@ -26,6 +25,7 @@ from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
 from alita.database.filters_db import Filters
+from alita.database.greetings_db import Greetings
 from alita.database.lang_db import Langs
 from alita.database.notes_db import Notes, NotesSettings
 from alita.database.pins_db import Pins
@@ -51,11 +51,9 @@ async def initial_works(_, m: Message):
                 m.reply_to_message.from_user.id,
             )
             Users(m.reply_to_message.from_user.id).update_user(
-                (
-                    f"{m.reply_to_message.from_user.first_name} {m.reply_to_message.from_user.last_name}"
-                    if m.reply_to_message.from_user.last_name
-                    else m.reply_to_message.from_user.first_name
-                ),
+                (f"{m.reply_to_message.from_user.first_name} {m.reply_to_message.from_user.last_name}"
+                 if m.reply_to_message.from_user.last_name else
+                 m.reply_to_message.from_user.first_name),
                 m.reply_to_message.from_user.username,
             )
         elif m.forward_from and not m.reply_to_message:
@@ -64,11 +62,8 @@ async def initial_works(_, m: Message):
                 m.forward_from.id,
             )
             Users(m.forward_from.id).update_user(
-                (
-                    f"{m.forward_from.first_name} {m.forward_from.last_name}"
-                    if m.forward_from.last_name
-                    else m.forward_from.first_name
-                ),
+                (f"{m.forward_from.first_name} {m.forward_from.last_name}"
+                 if m.forward_from.last_name else m.forward_from.first_name),
                 m.forward_from.username,
             )
         elif m.reply_to_message:
@@ -77,21 +72,16 @@ async def initial_works(_, m: Message):
                 m.reply_to_message.forward_from.id,
             )
             Users(m.forward_from.id).update_user(
-                (
-                    f"{m.reply_to_message.forward_from.first_name} {m.reply_to_message.forward_from.last_name}"
-                    if m.reply_to_message.forward_from.last_name
-                    else m.reply_to_message.forward_from.first_name
-                ),
+                (f"{m.reply_to_message.forward_from.first_name} {m.reply_to_message.forward_from.last_name}"
+                 if m.reply_to_message.forward_from.last_name else
+                 m.reply_to_message.forward_from.first_name),
                 m.forward_from.username,
             )
         else:
             chatdb.update_chat(m.chat.title, m.from_user.id)
             Users(m.from_user.id).update_user(
-                (
-                    f"{m.from_user.first_name} {m.from_user.last_name}"
-                    if m.from_user.last_name
-                    else m.from_user.first_name
-                ),
+                (f"{m.from_user.first_name} {m.from_user.last_name}"
+                 if m.from_user.last_name else m.from_user.first_name),
                 m.from_user.username,
             )
     except AttributeError:
@@ -103,6 +93,7 @@ async def migrate_chat(m: Message, new_chat: int) -> None:
     LOGGER.info(f"Migrating from {m.chat.id} to {new_chat}...")
     langdb = Langs(m.chat.id)
     notedb = Notes()
+    gdb = Greetings(m.chat.id)
     ruledb = Rules(m.chat.id)
     userdb = Users(m.chat.id)
     chatdb = Chats(m.chat.id)
@@ -112,6 +103,7 @@ async def migrate_chat(m: Message, new_chat: int) -> None:
     notes_settings = NotesSettings()
     pins_db = Pins(m.chat.id)
     fldb = Filters()
+    gdb.migrate_chat(new_chat)
     chatdb.migrate_chat(new_chat)
     userdb.migrate_chat(new_chat)
     langdb.migrate_chat(new_chat)

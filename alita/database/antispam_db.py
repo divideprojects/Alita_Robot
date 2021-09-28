@@ -25,7 +25,7 @@ from alita import LOGGER
 from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
-
+ANTISPAM_BANNED = set()
 
 class GBan(MongoDB):
     """Class for managing Gbans in bot."""

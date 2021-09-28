@@ -19,12 +19,12 @@
 from pyrogram.types import Message
 
 from alita.bot_class import Alita
-from alita.database import MongoDB
 from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
 from alita.database.filters_db import Filters
+from alita.database.greetings_db import Greetings
 from alita.database.notes_db import Notes, NotesSettings
 from alita.database.pins_db import Pins
 from alita.database.rules_db import Rules
@@ -40,6 +40,7 @@ async def get_stats(_, m: Message):
     gbandb = GBan()
     notesdb = Notes()
     rulesdb = Rules
+    grtdb = Greetings
     userdb = Users
     appdb = Approve
     chatdb = Chats
@@ -73,16 +74,8 @@ async def get_stats(_, m: Message):
         f"<b>Notes:</b> <code>{(notesdb.count_all_notes())}</code> in <code>{(notesdb.count_notes_chats())}</code> chats\n"
         f"    <b>Private Notes:</b> <code>{(notesettings_db.count_chats())}</code> chats\n"
         f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
+        f"<b>Welcoming Users in:</b> <code>{(grtdb.count_chats('welcome'))}</code> chats"
         f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
     )
     await replymsg.edit_text(rply, parse_mode="html")
-    return
-
-
-@Alita.on_message(command("dbstats", dev_cmd=True))
-async def get_dbstats(_, m: Message):
-    db_stats = (
-        f"<b>Database Stats:</b>\n<code>{MongoDB('test').db_command('dbstats')}</code>"
-    )
-    await m.reply_text(db_stats, parse_mode="html")
     return

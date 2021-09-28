@@ -37,7 +37,13 @@ from alita.database.approve_db import Approve
 from alita.database.reporting_db import Reporting
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload
-from alita.utils.custom_filters import DEV_LEVEL, admin_filter, command, promote_filter
+from alita.utils.custom_filters import (
+    DEV_LEVEL,
+    admin_filter,
+    command,
+    owner_filter,
+    promote_filter,
+)
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 
@@ -111,22 +117,12 @@ async def adminlist_show(_, m: Message):
     return
 
 
-@Alita.on_message(command("zombies") & admin_filter)
+@Alita.on_message(command("zombies") & owner_filter)
 async def zombie_clean(c: Alita, m: Message):
-
-    if m.chat.type != "supergroup":
-        return await m.reply_text(
-            "This command is made to be used in groups only!",
-        )
-
+    
     zombie = 0
-    user = await m.chat.get_member(m.from_user.id)
-    if user and user.status != "creator":
-        return await m.reply_text(
-            "This is a highly destructive command only owner can use it !!",
-        )
 
-    wait = await m.reply_text("Searching... and baning...")
+    wait = await m.reply_text("Searching ... and banning ...")
     async for member in c.iter_chat_members(m.chat.id):
         if member.user.is_deleted:
             zombie += 1
@@ -139,7 +135,7 @@ async def zombie_clean(c: Alita, m: Message):
     if zombie == 0:
         return await wait.edit_text("Group is clean!")
     return await wait.edit_text(
-        f"<b>{zombie}</b> Zombies found and has been baned!",
+        f"<b>{zombie}</b> Zombies found and has been banned!",
     )
 
 
