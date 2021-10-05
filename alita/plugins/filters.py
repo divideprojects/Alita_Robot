@@ -58,8 +58,7 @@ async def view_filters(_, m: Message):
         f" • {' | '.join([f'<code>{i}</code>' for i in i.split('|')])}"
         for i in all_filters
     ], )
-    await m.reply_text(filters_chat, disable_web_page_preview=True)
-    return
+    return await m.reply_text(filters_chat, disable_web_page_preview=True)
 
 
 @Alita.on_message(command(["filter", "addfilter"]) & admin_filter & ~filters.bot)
@@ -76,32 +75,27 @@ async def add_filter(_, m: Message):
         return
 
     if not m.reply_to_message and len(m.text.split()) < 3:
-        await m.reply_text("Please read help section for how to save a filter!"
-                           )
-        return
+        return await m.reply_text("Please read help section for how to save a filter!"
+                                  )
 
     if m.reply_to_message and len(args) < 2:
-        await m.reply_text("Please read help section for how to save a filter!"
-                           )
-        return
+        return await m.reply_text("Please read help section for how to save a filter!"
+                                  )
 
     extracted = await split_quotes(args[1])
     keyword = extracted[0].lower()
 
     for k in keyword.split("|"):
         if k in actual_filters:
-            await m.reply_text(f"Filter <code>{k}</code> already exists!")
-            return
+            return await m.reply_text(f"Filter <code>{k}</code> already exists!")
 
     if not keyword:
-        await m.reply_text(
+        return await m.reply_text(
             f"<code>{m.text}</code>\n\nError: You must give a name for this Filter!",
         )
-        return
 
     if keyword.startswith("<") or keyword.startswith(">"):
-        await m.reply_text("Cannot save a filter which starts with '<' or '>'")
-        return
+        return await m.reply_text("Cannot save a filter which starts with '<' or '>'")
 
     eee, msgtype, file_id = await get_filter_type(m)
     lol = eee if m.reply_to_message else extracted[1]
@@ -109,19 +103,16 @@ async def add_filter(_, m: Message):
 
     if not m.reply_to_message and msgtype == Types.TEXT and len(
             m.command) <= 2:
-        await m.reply_text(
-            f"<code>{m.text}</code>\n\nError: There is no text in here!", )
-        return
+        return await m.reply_text(
+            f"<code>{m.text}</code>\n\nError: There is no text in here!")
 
     if not teks and not msgtype:
-        await m.reply_text(
+        return await m.reply_text(
             'Please provide keyword for this filter reply with!\nEnclose filter in <code>"double quotes"</code>',
         )
-        return
 
     if not msgtype:
-        await m.reply_text("Please provide data for this filter reply with!", )
-        return
+        return await m.reply_text("Please provide data for this filter reply with!", )
 
     add = db.save_filter(m.chat.id, keyword, teks, msgtype, file_id)
     LOGGER.info(
@@ -138,19 +129,17 @@ async def stop_filter(_, m: Message):
     args = m.command
 
     if len(args) < 1:
-        await m.reply_text("What should I stop replying to?")
-        return
+        return await m.reply_text("What should I stop replying to?")
 
     chat_filters = db.get_all_filters(m.chat.id)
     act_filters = {j for i in chat_filters for j in i.split("|")}
 
     if not chat_filters:
-        await m.reply_text("No filters active here!")
-        return
+        return await m.reply_text("No filters active here!")
 
     for keyword in act_filters:
-        if keyword == args[0].lower():
-            db.rm_filter(m.chat.id, args[0].lower())
+        if keyword == m.text.split(None, 1)[1].lower():
+            db.rm_filter(m.chat.id, m.text.split(None, 1)[1].lower())
             LOGGER.info(
                 f"{m.from_user.id} removed filter ({keyword}) in {m.chat.id}")
             await m.reply_text(
@@ -162,7 +151,7 @@ async def stop_filter(_, m: Message):
         "That's not a filter - Click: /filters to get currently active filters.",
     )
     await m.stop_propagation()
-
+    
 
 @Alita.on_message(
     command(
@@ -173,16 +162,14 @@ async def stop_filter(_, m: Message):
 async def rm_allfilters(_, m: Message):
     all_bls = db.get_all_filters(m.chat.id)
     if not all_bls:
-        await m.reply_text("No filters to stop in this chat.")
-        return
+        return await m.reply_text("No filters to stop in this chat.")
 
-    await m.reply_text(
+    return await m.reply_text(
         "Are you sure you want to clear all filters?",
         reply_markup=ikb(
             [[("⚠️ Confirm", "rm_allfilters"), ("❌ Cancel", "close_admin")]],
         ),
     )
-    return
 
 
 @Alita.on_callback_query(filters.regex("^rm_allfilters$"))
@@ -215,17 +202,15 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
         return
 
     if not getfilter:
-        await m.reply_text(
+        return await m.reply_text(
             "<b>Error:</b> Cannot find a type for this filter!!",
             quote=True,
         )
-        return
 
     msgtype = getfilter["msgtype"]
     if not msgtype:
-        await m.reply_text("<b>Error:</b> Cannot find a type for this filter!!"
-                           )
-        return
+        return await m.reply_text("<b>Error:</b> Cannot find a type for this filter!!"
+        )
 
     try:
         # support for random filter texts
