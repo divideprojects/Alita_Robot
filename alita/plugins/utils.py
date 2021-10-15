@@ -55,37 +55,38 @@ gban_db = GBan()
 @Alita.on_message(command("wiki"))
 async def wiki(_, m: Message):
     LOGGER.info(f"{m.from_user.id} used wiki cmd in {m.chat.id}")
-    if m.reply_to_message:
-        search = m.reply_to_message.text
-    else:
-        search = m.text.split(None, 1)[1]
+
+    if len(m.text.split()) <= 1:
+        return await m.reply_text(tlang(m, "general.check_help"))
+
+    search = m.text.split(None, 1)[1]
     try:
         res = summary(search)
     except DisambiguationError as de:
-        await m.reply_text(
+        return await m.reply_text(
             f"Disambiguated pages found! Adjust your query accordingly.\n<i>{de}</i>",
             parse_mode="html",
         )
-        return
     except PageError as pe:
-        await m.reply_text(f"<code>{pe}</code>", parse_mode="html")
-        return
+        return await m.reply_text(f"<code>{pe}</code>", parse_mode="html")
     if res:
         result = f"<b>{search}</b>\n\n"
         result += f"<i>{res}</i>\n"
         result += f"""<a href="https://en.wikipedia.org/wiki/{search.replace(" ", "%20")}">Read more...</a>"""
         try:
-            await m.reply_text(result, parse_mode="html", disable_web_page_preview=True)
+            return await m.reply_text(result,
+                                      parse_mode="html",
+                                      disable_web_page_preview=True)
         except MessageTooLong:
-            with BytesIO(str.encode(await remove_markdown_and_html(result))) as f:
+            with BytesIO(str.encode(await
+                                    remove_markdown_and_html(result))) as f:
                 f.name = "result.txt"
-                await m.reply_document(
+                return await m.reply_document(
                     document=f,
                     quote=True,
                     parse_mode="html",
                 )
-
-    return
+    await m.stop_propagation()     
 
 
 @Alita.on_message(command("gdpr"))
