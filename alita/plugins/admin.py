@@ -222,7 +222,7 @@ async def fullpromote_usr(c: Alita, m: Message):
                                   )  # This should be here
     
     user = await m.chat.get_member(m.from_user.id)
-    if not user.id in [DEV_USERS, OWNER_ID] and user.status == "creator":
+    if user.id not in [DEV_USERS, OWNER_ID] and user.status != "creator":
         return await m.reply_text("This command can only be used by chat owner.")
     # If user is alreay admin
     try:
