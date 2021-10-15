@@ -405,13 +405,12 @@ async def paste_it(_, m: Message):
 @Alita.on_message(command("tr"))
 async def translate(_, m: Message):
     trl = Translator()
-    if m.reply_to_message and (m.reply_to_message.text or m.reply_to_message.caption):
+    if m.reply_to_message and (m.reply_to_message.text
+                               or m.reply_to_message.caption):
         if len(m.text.split()) == 1:
-            await m.reply_text(
-                "Provide lang code.\n[Available options](https://telegra.ph/Lang-Codes-11-08).\n<b>Usage:</b> <code>/tr en</code>",
-            )
-            return
-        target_lang = m.text.split()[1]
+            target_lang = "en"
+        else:
+            target_lang = m.text.split()[1]
         if m.reply_to_message.text:
             text = m.reply_to_message.text
         else:
@@ -430,10 +429,10 @@ async def translate(_, m: Message):
     except ValueError as err:
         await m.reply_text(f"Error: <code>{str(err)}</code>")
         return
-    await m.reply_text(
+    LOGGER.info(f"{m.from_user.id} used translate cmd in {m.chat.id}")
+    return await m.reply_text(
         f"<b>Translated:</b> from {detectlang} to {target_lang} \n<code>``{tekstr.text}``</code>",
     )
-    LOGGER.info(f"{m.from_user.id} used translate cmd in {m.chat.id}")
 
 
 __PLUGIN__ = "utils"
