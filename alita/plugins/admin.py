@@ -218,7 +218,7 @@ async def fullpromote_usr(c: Alita, m: Message):
         return
 
     if not bot.can_promote_members:
-        return await m.reply_text("I don't have enough permissions"
+        return await m.reply_text("I don't have enough permissions!"
                                   )  # This should be here
     
     user = await m.chat.get_member(m.from_user.id)
