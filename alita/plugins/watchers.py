@@ -58,7 +58,7 @@ async def antichanpin_cleanlinked(c: Alita, m: Message):
             "Disabled antichannelpin as I don't have enough admin rights!",
         )
         pins_db.antichannelpin_off()
-        LOGGER.warning(f"Disabled antichannelpin in {m.chat.id} as bot is not admin.")
+        LOGGER.warning(f"Disabled antichannelpin in {m.chat.id} as i'm not an admin.")
     except Exception as ef:
         LOGGER.error(ef)
         LOGGER.error(format_exc())
@@ -68,7 +68,7 @@ async def antichanpin_cleanlinked(c: Alita, m: Message):
 
 @Alita.on_message(filters.text & filters.group, group=5)
 async def bl_watcher(_, m: Message):
-    if not m.from_user:
+    if m and not m.from_user:
         return
 
     bl_db = Blacklist(m.chat.id)
@@ -200,6 +200,9 @@ async def bl_watcher(_, m: Message):
 @Alita.on_message(filters.user(list(ANTISPAM_BANNED)) & filters.group)
 async def gban_watcher(c: Alita, m: Message):
     from alita import SUPPORT_GROUP
+    
+    if m and not m.from_user:
+        return
 
     try:
         _banned = gban_db.check_gban(m.from_user.id)
