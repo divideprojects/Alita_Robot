@@ -16,7 +16,8 @@ strings:
 
         **Admin only:**
         × /invitelink: Gets private chat's invitelink.
-        × /promote: Promotes the user replied to or tagged.
+        × /promote: Promotes the user replied to or tagged (supports with title).
+        × /fullpromote: Fully Promotes the user replied to or tagged (supports with title).
         × /zombies: Bans all the deleted accounts. (owner only)
         × /demote: Demotes the user replied to or tagged.
 
