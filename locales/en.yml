@@ -41,11 +41,11 @@ strings:
       main: "Greetings"
       help: |-
         Customize your group's welcome / goodbye messages that can be personalised in multiple ways.
-        
-        Note: 
+
+        Note:
         a) Currently it supports only text!
-        b) Alita must be an admin to greet and goodbye users.   
-        
+        b) Alita must be an admin to greet and goodbye users.
+
         Admin Commands:
         × /setwelcome <reply> : Sets a custom welcome message.
         × /setgoodbye <reply> : Sets a custom goodbye message.
@@ -55,13 +55,13 @@ strings:
         × /goodbye <on/off> | noformat : enable/disable | Shows the current goodbye message | settings.
         × /cleanwelcome <on/off> : Shows or sets the current clean welcome settings.
         × /cleangoodbye <on/off> : Shows or sets the current clean goodbye settings.
-        
+
         ── **Cleaner** ──:
         × /cleanservice <on/off> : Use it to clean all service messages automatically or to view current status.
-        
+
         ── **Format** ──
         Check /markdownhelp for help related to formatting!
-        
+
     bans:
       main: "Bans"
       help: |-

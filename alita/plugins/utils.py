@@ -74,19 +74,20 @@ async def wiki(_, m: Message):
         result += f"<i>{res}</i>\n"
         result += f"""<a href="https://en.wikipedia.org/wiki/{search.replace(" ", "%20")}">Read more...</a>"""
         try:
-            return await m.reply_text(result,
-                                      parse_mode="html",
-                                      disable_web_page_preview=True)
+            return await m.reply_text(
+                result,
+                parse_mode="html",
+                disable_web_page_preview=True,
+            )
         except MessageTooLong:
-            with BytesIO(str.encode(await
-                                    remove_markdown_and_html(result))) as f:
+            with BytesIO(str.encode(await remove_markdown_and_html(result))) as f:
                 f.name = "result.txt"
                 return await m.reply_document(
                     document=f,
                     quote=True,
                     parse_mode="html",
                 )
-    await m.stop_propagation()     
+    await m.stop_propagation()
 
 
 @Alita.on_message(command("gdpr"))
@@ -405,8 +406,7 @@ async def paste_it(_, m: Message):
 @Alita.on_message(command("tr"))
 async def translate(_, m: Message):
     trl = Translator()
-    if m.reply_to_message and (m.reply_to_message.text
-                               or m.reply_to_message.caption):
+    if m.reply_to_message and (m.reply_to_message.text or m.reply_to_message.caption):
         if len(m.text.split()) == 1:
             target_lang = "en"
         else:

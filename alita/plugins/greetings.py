@@ -65,17 +65,23 @@ async def escape_mentions_using_curly_brackets_wl(
         teks = teks.format(
             first=escape(user.first_name),
             last=escape(user.last_name or user.first_name),
-            fullname=" ".join([
-                escape(user.first_name),
-                escape(user.last_name),
-            ] if user.last_name else [escape(user.first_name)], ),
-            username=("@" + (await escape_markdown(escape(user.username)))
-                      if user.username else
-                      (await
-                       (mention_html(escape(user.first_name), user.id)))),
+            fullname=" ".join(
+                [
+                    escape(user.first_name),
+                    escape(user.last_name),
+                ]
+                if user.last_name
+                else [escape(user.first_name)],
+            ),
+            username=(
+                "@" + (await escape_markdown(escape(user.username)))
+                if user.username
+                else (await (mention_html(escape(user.first_name), user.id)))
+            ),
             mention=await (mention_html(escape(user.first_name), user.id)),
             chatname=escape(m.chat.title)
-            if m.chat.type != "private" else escape(user.first_name),
+            if m.chat.type != "private"
+            else escape(user.first_name),
             id=user.id,
         )
     else:
@@ -163,24 +169,25 @@ async def save_wlcm(_, m: Message):
     args = m.text.split(None, 1)
 
     if len(args) >= 4096:
-        await m.reply_text("Word limit exeeds !!", )
-        return
-    if not (m.reply_to_message and m.reply_to_message.text) and len(
-            m.command) == 0:
         await m.reply_text(
-            "Error: There is no text in here! and only text with buttons are supported currently !"
+            "Word limit exeeds !!",
+        )
+        return
+    if not (m.reply_to_message and m.reply_to_message.text) and len(m.command) == 0:
+        await m.reply_text(
+            "Error: There is no text in here! and only text with buttons are supported currently !",
         )
         return
     text, msgtype, _ = await get_wlcm_type(m)
 
-    if not m.reply_to_message and msgtype == Types.TEXT and len(
-            m.command) <= 2:
-        await m.reply_text(
-            f"<code>{m.text}</code>\n\nError: There is no data in here!")
+    if not m.reply_to_message and msgtype == Types.TEXT and len(m.command) <= 2:
+        await m.reply_text(f"<code>{m.text}</code>\n\nError: There is no data in here!")
         return
 
     if not text and not msgtype:
-        await m.reply_text("Please provide some data!", )
+        await m.reply_text(
+            "Please provide some data!",
+        )
         return
 
     if not msgtype:
@@ -200,24 +207,25 @@ async def save_gdbye(_, m: Message):
     args = m.text.split(None, 1)
 
     if len(args) >= 4096:
-        await m.reply_text("Word limit exeeds !!", )
-        return
-    if not (m.reply_to_message and m.reply_to_message.text) and len(
-            m.command) == 0:
         await m.reply_text(
-            "Error: There is no text in here! and only text with buttons are supported currently !"
+            "Word limit exeeds !!",
+        )
+        return
+    if not (m.reply_to_message and m.reply_to_message.text) and len(m.command) == 0:
+        await m.reply_text(
+            "Error: There is no text in here! and only text with buttons are supported currently !",
         )
         return
     text, msgtype, _ = await get_wlcm_type(m)
 
-    if not m.reply_to_message and msgtype == Types.TEXT and len(
-            m.command) <= 2:
-        await m.reply_text(
-            f"<code>{m.text}</code>\n\nError: There is no data in here!")
+    if not m.reply_to_message and msgtype == Types.TEXT and len(m.command) <= 2:
+        await m.reply_text(f"<code>{m.text}</code>\n\nError: There is no data in here!")
         return
 
     if not text and not msgtype:
-        await m.reply_text("Please provide some data!", )
+        await m.reply_text(
+            "Please provide some data!",
+        )
         return
 
     if not msgtype:
@@ -266,9 +274,11 @@ async def cleannnnn(_, m: Message):
 async def member_has_joined(c: Alita, member: ChatMemberUpdated):
     from alita import BOT_ID
 
-    if (member.new_chat_member and member.new_chat_member.status
-            not in {"kicked", "left", "restricted"}
-            and not member.old_chat_member):
+    if (
+        member.new_chat_member
+        and member.new_chat_member.status not in {"kicked", "left", "restricted"}
+        and not member.old_chat_member
+    ):
         pass
     else:
         return
@@ -281,8 +291,10 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
         if user.id == BOT_ID:
             return
         elif user.id == OWNER_ID:
-            await c.send_message(member.chat.id,
-                                 "Wew My Owner has also joined the chat!")
+            await c.send_message(
+                member.chat.id,
+                "Wew My Owner has also joined the chat!",
+            )
             return
         elif banned_users:
             await member.chat.kick_member(user.id)
@@ -306,8 +318,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
         "id",
         "chatname",
     ]
-    hmm = await escape_mentions_using_curly_brackets_wl(
-        member, True, oo, parse_words)
+    hmm = await escape_mentions_using_curly_brackets_wl(member, True, oo, parse_words)
     if status:
         tek, button = await parse_button(hmm)
         button = await build_keyboard(button)
@@ -345,9 +356,11 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
 async def member_has_left(c: Alita, member: ChatMemberUpdated):
     from alita import BOT_ID
 
-    if (not member.new_chat_member
-            and member.old_chat_member.status not in {"kicked", "restricted"}
-            and member.old_chat_member):
+    if (
+        not member.new_chat_member
+        and member.old_chat_member.status not in {"kicked", "restricted"}
+        and member.old_chat_member
+    ):
         pass
     else:
         return
@@ -366,8 +379,7 @@ async def member_has_left(c: Alita, member: ChatMemberUpdated):
 
     user = member.old_chat_member.user if member.old_chat_member else member.from_user
 
-    hmm = await escape_mentions_using_curly_brackets_wl(
-        member, False, oo, parse_words)
+    hmm = await escape_mentions_using_curly_brackets_wl(member, False, oo, parse_words)
     if status:
         tek, button = await parse_button(hmm)
         button = await build_keyboard(button)
@@ -420,12 +432,14 @@ async def welcome(c: Alita, m: Message):
 
     if len(args) >= 2:
         if args[1].lower() == "noformat":
-            await m.reply_text(f"""Current welcome settings:-
+            await m.reply_text(
+                f"""Current welcome settings:-
 Welcome power: {status}
 Clean Welcome: {db.get_current_cleanwelcome_settings()}
 Cleaning service: {db.get_current_cleanservice_settings()}
 Welcome text in no formating:
-""")
+""",
+            )
             await c.send_message(m.chat.id, text=oo, parse_mode=None)
             return
         elif args[1].lower() == "on":
@@ -440,12 +454,14 @@ Welcome text in no formating:
             await m.reply_text("what are you trying to do ??")
             return
     else:
-        await m.reply_text(f"""Current welcome settings:-
+        await m.reply_text(
+            f"""Current welcome settings:-
 Welcome power: {status}
 Clean Welcome: {db.get_current_cleanwelcome_settings()}
 Cleaning service: {db.get_current_cleanservice_settings()}
 Welcome text:
-""")
+""",
+        )
         tek, button = await parse_button(oo)
         button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
@@ -463,12 +479,14 @@ async def goodbye(c: Alita, m: Message):
         return
     if len(args) >= 2:
         if args[1].lower() == "noformat":
-            await m.reply_text(f"""Current goodbye settings:-
+            await m.reply_text(
+                f"""Current goodbye settings:-
 Goodbye power: {status}
 Clean Goodbye: {db.get_current_cleangoodbye_settings()}
 Cleaning service: {db.get_current_cleanservice_settings()}
 Goodbye text in no formating:
-""")
+""",
+            )
             await c.send_message(m.chat.id, text=oo, parse_mode=None)
             return
         elif args[1].lower() == "on":
@@ -483,12 +501,14 @@ Goodbye text in no formating:
             await m.reply_text("what are you trying to do ??")
             return
     else:
-        await m.reply_text(f"""Current Goodbye settings:-
+        await m.reply_text(
+            f"""Current Goodbye settings:-
 Goodbye power: {status}
 Clean Goodbye: {db.get_current_cleangoodbye_settings()}
 Cleaning service: {db.get_current_cleanservice_settings()}
 Goodbye text:
-""")
+""",
+        )
         tek, button = await parse_button(oo)
         button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None

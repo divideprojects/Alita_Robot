@@ -31,7 +31,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import Message
 
-from alita import LOGGER, SUPPORT_GROUP, SUPPORT_STAFF, DEV_USERS, OWNER_ID
+from alita import DEV_USERS, LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.database.reporting_db import Reporting
@@ -119,7 +119,7 @@ async def adminlist_show(_, m: Message):
 
 @Alita.on_message(command("zombies") & owner_filter)
 async def zombie_clean(c: Alita, m: Message):
-    
+
     zombie = 0
 
     wait = await m.reply_text("Searching ... and banning ...")
@@ -194,8 +194,8 @@ async def tag_admins(_, m: Message):
             f" reported the message to admins!{mention_str}"
         ),
     )
-    
-    
+
+
 @Alita.on_message(command("fullpromote") & promote_filter)
 async def fullpromote_usr(c: Alita, m: Message):
     from alita import BOT_ID
@@ -218,9 +218,10 @@ async def fullpromote_usr(c: Alita, m: Message):
         return
 
     if not bot.can_promote_members:
-        return await m.reply_text("I don't have enough permissions!"
-                                  )  # This should be here
-    
+        return await m.reply_text(
+            "I don't have enough permissions!",
+        )  # This should be here
+
     user = await m.chat.get_member(m.from_user.id)
     if user.id not in [DEV_USERS, OWNER_ID] and user.status != "creator":
         return await m.reply_text("This command can only be used by chat owner.")
@@ -229,8 +230,7 @@ async def fullpromote_usr(c: Alita, m: Message):
         admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
         admin_list = {
-            i[0]
-            for i in (await admin_cache_reload(m, "promote_cache_update"))
+            i[0] for i in (await admin_cache_reload(m, "promote_cache_update"))
         }
 
     if user_id in admin_list:
@@ -269,13 +269,15 @@ async def fullpromote_usr(c: Alita, m: Message):
             f"{m.from_user.id} fullpromoted {user_id} in {m.chat.id} with title '{title}'",
         )
 
-        await m.reply_text((tlang(m, "admin.promote.promoted_user")).format(
-            promoter=(await mention_html(m.from_user.first_name,
-                                         m.from_user.id)),
-            promoted=(await mention_html(user_first_name, user_id)),
-            chat_title=m.chat.title + f"\nTitle set to {title}"
-            if title != "Admin" else "Default Admin!",
-        ), )
+        await m.reply_text(
+            (tlang(m, "admin.promote.promoted_user")).format(
+                promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
+                promoted=(await mention_html(user_first_name, user_id)),
+                chat_title=m.chat.title + f"\nTitle set to {title}"
+                if title != "Admin"
+                else "Default Admin!",
+            ),
+        )
 
         # If user is approved, disapprove them as they willbe promoted and get even more rights
         if Approve(m.chat.id).check_approve(user_id):
@@ -297,15 +299,19 @@ async def fullpromote_usr(c: Alita, m: Message):
     except UserAdminInvalid:
         await m.reply_text(tlang(m, "admin.user_admin_invalid"))
     except RPCError as ef:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=ef,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=ef,
+            ),
+        )
     except Exception as e:
-        await m.reply_text((tlang(m, "general.some_error")).format(
-            SUPPORT_GROUP=SUPPORT_GROUP,
-            ef=e,
-        ), )
+        await m.reply_text(
+            (tlang(m, "general.some_error")).format(
+                SUPPORT_GROUP=SUPPORT_GROUP,
+                ef=e,
+            ),
+        )
         LOGGER.error(e)
         LOGGER.error(format_exc())
 

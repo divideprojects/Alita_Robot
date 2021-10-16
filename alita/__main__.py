@@ -21,6 +21,5 @@ from time import time
 from alita import LOGGER
 from alita.bot_class import Alita
 
-
 if __name__ == "__main__":
     Alita().run()
