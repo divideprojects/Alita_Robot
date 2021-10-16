@@ -51,9 +51,11 @@ async def initial_works(_, m: Message):
                 m.reply_to_message.from_user.id,
             )
             Users(m.reply_to_message.from_user.id).update_user(
-                (f"{m.reply_to_message.from_user.first_name} {m.reply_to_message.from_user.last_name}"
-                 if m.reply_to_message.from_user.last_name else
-                 m.reply_to_message.from_user.first_name),
+                (
+                    f"{m.reply_to_message.from_user.first_name} {m.reply_to_message.from_user.last_name}"
+                    if m.reply_to_message.from_user.last_name
+                    else m.reply_to_message.from_user.first_name
+                ),
                 m.reply_to_message.from_user.username,
             )
         elif m.forward_from and not m.reply_to_message:
@@ -62,8 +64,11 @@ async def initial_works(_, m: Message):
                 m.forward_from.id,
             )
             Users(m.forward_from.id).update_user(
-                (f"{m.forward_from.first_name} {m.forward_from.last_name}"
-                 if m.forward_from.last_name else m.forward_from.first_name),
+                (
+                    f"{m.forward_from.first_name} {m.forward_from.last_name}"
+                    if m.forward_from.last_name
+                    else m.forward_from.first_name
+                ),
                 m.forward_from.username,
             )
         elif m.reply_to_message:
@@ -72,16 +77,21 @@ async def initial_works(_, m: Message):
                 m.reply_to_message.forward_from.id,
             )
             Users(m.forward_from.id).update_user(
-                (f"{m.reply_to_message.forward_from.first_name} {m.reply_to_message.forward_from.last_name}"
-                 if m.reply_to_message.forward_from.last_name else
-                 m.reply_to_message.forward_from.first_name),
+                (
+                    f"{m.reply_to_message.forward_from.first_name} {m.reply_to_message.forward_from.last_name}"
+                    if m.reply_to_message.forward_from.last_name
+                    else m.reply_to_message.forward_from.first_name
+                ),
                 m.forward_from.username,
             )
         else:
             chatdb.update_chat(m.chat.title, m.from_user.id)
             Users(m.from_user.id).update_user(
-                (f"{m.from_user.first_name} {m.from_user.last_name}"
-                 if m.from_user.last_name else m.from_user.first_name),
+                (
+                    f"{m.from_user.first_name} {m.from_user.last_name}"
+                    if m.from_user.last_name
+                    else m.from_user.first_name
+                ),
                 m.from_user.username,
             )
     except AttributeError:

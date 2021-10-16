@@ -24,11 +24,11 @@ from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
-from alita.utils.kbhelpers import ikb
 from alita.bot_class import LOGGER, Alita
 from alita.database.filters_db import Filters
 from alita.utils.cmd_senders import send_cmd
 from alita.utils.custom_filters import admin_filter, command, owner_filter
+from alita.utils.kbhelpers import ikb
 from alita.utils.msg_types import Types, get_filter_type
 from alita.utils.regex_utils import regex_searcher
 from alita.utils.string import (
@@ -54,10 +54,12 @@ async def view_filters(_, m: Message):
         await m.reply_text(f"There are no filters in {m.chat.title}")
         return
 
-    filters_chat += "\n".join([
-        f" • {' | '.join([f'<code>{i}</code>' for i in i.split('|')])}"
-        for i in all_filters
-    ], )
+    filters_chat += "\n".join(
+        [
+            f" • {' | '.join([f'<code>{i}</code>' for i in i.split('|')])}"
+            for i in all_filters
+        ],
+    )
     return await m.reply_text(filters_chat, disable_web_page_preview=True)
 
 
@@ -75,12 +77,10 @@ async def add_filter(_, m: Message):
         return
 
     if not m.reply_to_message and len(m.text.split()) < 3:
-        return await m.reply_text("Please read help section for how to save a filter!"
-                                  )
+        return await m.reply_text("Please read help section for how to save a filter!")
 
     if m.reply_to_message and len(args) < 2:
-        return await m.reply_text("Please read help section for how to save a filter!"
-                                  )
+        return await m.reply_text("Please read help section for how to save a filter!")
 
     extracted = await split_quotes(args[1])
     keyword = extracted[0].lower()
@@ -101,10 +101,10 @@ async def add_filter(_, m: Message):
     lol = eee if m.reply_to_message else extracted[1]
     teks = lol if msgtype == Types.TEXT else eee
 
-    if not m.reply_to_message and msgtype == Types.TEXT and len(
-            m.command) <= 2:
+    if not m.reply_to_message and msgtype == Types.TEXT and len(m.command) <= 2:
         return await m.reply_text(
-            f"<code>{m.text}</code>\n\nError: There is no text in here!")
+            f"<code>{m.text}</code>\n\nError: There is no text in here!",
+        )
 
     if not teks and not msgtype:
         return await m.reply_text(
@@ -112,11 +112,12 @@ async def add_filter(_, m: Message):
         )
 
     if not msgtype:
-        return await m.reply_text("Please provide data for this filter reply with!", )
+        return await m.reply_text(
+            "Please provide data for this filter reply with!",
+        )
 
     add = db.save_filter(m.chat.id, keyword, teks, msgtype, file_id)
-    LOGGER.info(
-        f"{m.from_user.id} added new filter ({keyword}) in {m.chat.id}")
+    LOGGER.info(f"{m.from_user.id} added new filter ({keyword}) in {m.chat.id}")
     if add:
         await m.reply_text(
             f"Saved filter for '<code>{', '.join(keyword.split('|'))}</code>' in <b>{m.chat.title}</b>!",
@@ -140,8 +141,7 @@ async def stop_filter(_, m: Message):
     for keyword in act_filters:
         if keyword == m.text.split(None, 1)[1].lower():
             db.rm_filter(m.chat.id, m.text.split(None, 1)[1].lower())
-            LOGGER.info(
-                f"{m.from_user.id} removed filter ({keyword}) in {m.chat.id}")
+            LOGGER.info(f"{m.from_user.id} removed filter ({keyword}) in {m.chat.id}")
             await m.reply_text(
                 f"Okay, I'll stop replying to that filter and it's aliases in <b>{m.chat.title}</b>.",
             )
@@ -151,7 +151,7 @@ async def stop_filter(_, m: Message):
         "That's not a filter - Click: /filters to get currently active filters.",
     )
     await m.stop_propagation()
-    
+
 
 @Alita.on_message(
     command(
@@ -209,8 +209,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
 
     msgtype = getfilter["msgtype"]
     if not msgtype:
-        return await m.reply_text("<b>Error:</b> Cannot find a type for this filter!!"
-        )
+        return await m.reply_text("<b>Error:</b> Cannot find a type for this filter!!")
 
     try:
         # support for random filter texts
@@ -229,8 +228,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
         "username",
         "chatname",
     ]
-    text = await escape_mentions_using_curly_brackets(m, filter_reply,
-                                                      parse_words)
+    text = await escape_mentions_using_curly_brackets(m, filter_reply, parse_words)
     teks, button = await parse_button(text)
     button = await build_keyboard(button)
     button = InlineKeyboardMarkup(button) if button else None
@@ -265,10 +263,10 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
                 return
 
         elif msgtype in (
-                Types.STICKER,
-                Types.VIDEO_NOTE,
-                Types.CONTACT,
-                Types.ANIMATED_STICKER,
+            Types.STICKER,
+            Types.VIDEO_NOTE,
+            Types.CONTACT,
+            Types.ANIMATED_STICKER,
         ):
             await (await send_cmd(c, msgtype))(
                 m.chat.id,
@@ -304,8 +302,7 @@ async def filters_watcher(c: Alita, m: Message):
         if match:
             try:
                 msgtype = await send_filter_reply(c, m, trigger)
-                LOGGER.info(
-                    f"Replied with {msgtype} to {trigger} in {m.chat.id}")
+                LOGGER.info(f"Replied with {msgtype} to {trigger} in {m.chat.id}")
             except Exception as ef:
                 await m.reply_text(f"Error: {ef}")
                 LOGGER.error(ef)
