@@ -101,13 +101,12 @@ async def cleanwlcm(_, m: Message):
             db.set_current_cleanwelcome_settings(True)
             await m.reply_text("Turned on!")
             return
-        elif args[1].lower() == "off":
+        if args[1].lower() == "off":
             db.set_current_cleanwelcome_settings(False)
             await m.reply_text("Turned off!")
             return
-        else:
-            await m.reply_text("what are you trying to do ??")
-            return
+        await m.reply_text("what are you trying to do ??")
+        return
     else:
         await m.reply_text(f"Current settings:- {status}")
         return
@@ -125,13 +124,12 @@ async def cleangdbye(_, m: Message):
             db.set_current_cleangoodbye_settings(True)
             await m.reply_text("Turned on!")
             return
-        elif args[1].lower() == "off":
+        if args[1].lower() == "off":
             db.set_current_cleangoodbye_settings(False)
             await m.reply_text("Turned off!")
             return
-        else:
-            await m.reply_text("what are you trying to do ??")
-            return
+        await m.reply_text("what are you trying to do ??")
+        return
     else:
         await m.reply_text(f"Current settings:- {status}")
         return
@@ -149,13 +147,12 @@ async def cleanservice(_, m: Message):
             db.set_current_cleanservice_settings(True)
             await m.reply_text("Turned on!")
             return
-        elif args[1].lower() == "off":
+        if args[1].lower() == "off":
             db.set_current_cleanservice_settings(False)
             await m.reply_text("Turned off!")
             return
-        else:
-            await m.reply_text("what are you trying to do ??")
-            return
+        await m.reply_text("what are you trying to do ??")
+        return
     else:
         await m.reply_text(f"Current settings:- {status}")
         return
@@ -290,20 +287,20 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
     try:
         if user.id == BOT_ID:
             return
-        elif user.id == OWNER_ID:
+        if user.id == OWNER_ID:
             await c.send_message(
                 member.chat.id,
                 "Wew My Owner has also joined the chat!",
             )
             return
-        elif banned_users:
+        if banned_users:
             await member.chat.kick_member(user.id)
             await c.send_message(
                 member.chat.id,
                 f"{user.mention} was globally banned so i banned!",
             )
             return
-        elif user.is_bot:
+        if user.is_bot:
             return  # ignore bots
     except ChatAdminRequired:
         return
@@ -434,25 +431,24 @@ async def welcome(c: Alita, m: Message):
         if args[1].lower() == "noformat":
             await m.reply_text(
                 f"""Current welcome settings:-
-Welcome power: {status}
-Clean Welcome: {db.get_current_cleanwelcome_settings()}
-Cleaning service: {db.get_current_cleanservice_settings()}
-Welcome text in no formating:
-""",
+        Welcome power: {status}
+        Clean Welcome: {db.get_current_cleanwelcome_settings()}
+        Cleaning service: {db.get_current_cleanservice_settings()}
+        Welcome text in no formating:
+        """,
             )
             await c.send_message(m.chat.id, text=oo, parse_mode=None)
             return
-        elif args[1].lower() == "on":
+        if args[1].lower() == "on":
             db.set_current_welcome_settings(True)
             await m.reply_text("Turned on!")
             return
-        elif args[1].lower() == "off":
+        if args[1].lower() == "off":
             db.set_current_welcome_settings(False)
             await m.reply_text("Turned off!")
             return
-        else:
-            await m.reply_text("what are you trying to do ??")
-            return
+        await m.reply_text("what are you trying to do ??")
+        return
     else:
         await m.reply_text(
             f"""Current welcome settings:-
@@ -481,25 +477,24 @@ async def goodbye(c: Alita, m: Message):
         if args[1].lower() == "noformat":
             await m.reply_text(
                 f"""Current goodbye settings:-
-Goodbye power: {status}
-Clean Goodbye: {db.get_current_cleangoodbye_settings()}
-Cleaning service: {db.get_current_cleanservice_settings()}
-Goodbye text in no formating:
-""",
+        Goodbye power: {status}
+        Clean Goodbye: {db.get_current_cleangoodbye_settings()}
+        Cleaning service: {db.get_current_cleanservice_settings()}
+        Goodbye text in no formating:
+        """,
             )
             await c.send_message(m.chat.id, text=oo, parse_mode=None)
             return
-        elif args[1].lower() == "on":
+        if args[1].lower() == "on":
             db.set_current_goodbye_settings(True)
             await m.reply_text("Turned on!")
             return
-        elif args[1].lower() == "off":
+        if args[1].lower() == "off":
             db.set_current_goodbye_settings(False)
             await m.reply_text("Turned off!")
             return
-        else:
-            await m.reply_text("what are you trying to do ??")
-            return
+        await m.reply_text("what are you trying to do ??")
+        return
     else:
         await m.reply_text(
             f"""Current Goodbye settings:-
