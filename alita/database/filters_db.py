@@ -69,7 +69,6 @@ class Filters(MongoDB):
             return []
 
     def rm_filter(self, chat_id: int, keyword: str):
-        global FILTER_CACHE
         with INSERTION_LOCK:
             curr = self.find_one({"chat_id": chat_id, "keyword": keyword})
             if curr:
