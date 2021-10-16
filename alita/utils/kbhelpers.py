@@ -20,7 +20,9 @@
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
-def ikb(rows=[]):
+def ikb(rows=None):
+    if rows is None:
+        rows = []
     lines = []
     for row in rows:
         line = []
