@@ -1,4 +1,4 @@
-FROM bitnami/python:3.9.7-prod
+FROM python:3.9.7-slim-bullseye
 
 # Don't use cached python packages
 ENV PIP_NO_CACHE_DIR 1
@@ -26,9 +26,9 @@ COPY . .
 
 # Install dependencies
 RUN pip3 install --upgrade pip
-RUN rm -r /opt/bitnami/python/lib/python3.9/site-packages/setuptools*
-RUN pip3 install --upgrade setuptools
+
+# Install Bot Deps and stuff
 RUN make install
 
 # Run the bot
-CMD ["make", "run"]
+ENTRYPOINT ["make", "run"]
