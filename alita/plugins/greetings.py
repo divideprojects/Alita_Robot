@@ -167,7 +167,7 @@ async def save_wlcm(_, m: Message):
 
     if len(args) >= 4096:
         await m.reply_text(
-            "Word limit exeeds !!",
+            "Word limit exceed !!",
         )
         return
     if not (m.reply_to_message and m.reply_to_message.text) and len(m.command) == 0:
@@ -205,7 +205,7 @@ async def save_gdbye(_, m: Message):
 
     if len(args) >= 4096:
         await m.reply_text(
-            "Word limit exeeds !!",
+            "Word limit exceeds !!",
         )
         return
     if not (m.reply_to_message and m.reply_to_message.text) and len(m.command) == 0:
