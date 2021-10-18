@@ -246,8 +246,68 @@ async def promote_check_func(_, __, m):
     return status
 
 
+async def changeinfo_check_func(_, __, m):
+    """Check if user can change info or not."""
+    if isinstance(m, CallbackQuery):
+        m = m.message
+
+    if m.chat.type != "supergroup":
+        await m.reply_text(
+            "This command is made to be used in groups not in pm!")
+        return False
+
+    # Telegram and GroupAnonyamousBot
+    if m.sender_chat:
+        return True
+
+    # Bypass the bot devs, sudos and owner
+    if m.from_user.id in SUDO_LEVEL:
+        return True
+
+    user = await m.chat.get_member(m.from_user.id)
+
+    if user.can_change_info or user.status == "creator":
+        status = True
+    else:
+        status = False
+        await m.reply_text("You don't have: can_change_info permission!")
+
+    return status
+
+
+async def can_pin_message_func(_, __, m):
+    """Check if user can change info or not."""
+    if isinstance(m, CallbackQuery):
+        m = m.message
+
+    if m.chat.type != "supergroup":
+        await m.reply_text(
+            "This command is made to be used in groups not in pm!")
+        return False
+
+    # Telegram and GroupAnonyamousBot
+    if m.sender_chat:
+        return True
+
+    # Bypass the bot devs, sudos and owner
+    if m.from_user.id in SUDO_LEVEL:
+        return True
+
+    user = await m.chat.get_member(m.from_user.id)
+
+    if user.can_pin_messages or user.status == "creator":
+        status = True
+    else:
+        status = False
+        await m.reply_text("You don't have: can_pin_messages permission!")
+
+    return status
+
+
 admin_filter = create(admin_check_func)
 owner_filter = create(owner_check_func)
 restrict_filter = create(restrict_check_func)
 promote_filter = create(promote_check_func)
 bot_admin_filter = create(bot_admin_check_func)
+can_change_filter = create(changeinfo_check_func)
+can_pin_filter = create(can_pin_message_func)
