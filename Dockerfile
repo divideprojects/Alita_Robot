@@ -1,4 +1,4 @@
-FROM python:3.9.7-slim-bullseye
+FROM python:3.10.0-slim-bullseye
 
 # Don't use cached python packages
 ENV PIP_NO_CACHE_DIR 1
