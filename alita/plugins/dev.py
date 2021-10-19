@@ -327,11 +327,10 @@ async def leave_chat(c: Alita, m: Message):
 
     replymsg = await m.reply_text(f"Trying to leave chat {chat_id}...", quote=True)
     try:
-        await c.send_message(chat_id, "Bye everyone!")
         await c.leave_chat(chat_id)
         await replymsg.edit_text(f"Left <code>{chat_id}</code>.")
     except PeerIdInvalid:
-        await replymsg.edit_text("Haven't seen this group in this session")
+        await replymsg.edit_text("Haven't seen this group in this session!")
     except RPCError as ef:
         LOGGER.error(ef)
         await replymsg.edit_text(f"Failed to leave chat!\nError: <code>{ef}</code>.")
@@ -373,3 +372,6 @@ async def chat_broadcast(c: Alita, m: Message):
             )
 
     return
+
+
+_DISABLE_CMDS_ = ["ping"]
