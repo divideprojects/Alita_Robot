@@ -258,4 +258,6 @@ async def unapproveall_callback(_, q: CallbackQuery):
 
 __PLUGIN__ = "approve"
 
+_DISABLE_CMDS_ = ["approval"]
+
 __alt_name__ = ["approved"]
