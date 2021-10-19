@@ -46,6 +46,13 @@ def command(
         if not m.from_user:
             return False
 
+        if m.from_user.is_bot:
+            return False
+
+        if owner_cmd and (m.from_user.id != OWNER_ID):
+            # Only owner allowed to use this...!
+            return False
+
         if dev_cmd and (m.from_user.id not in DEV_LEVEL):
             # Only devs allowed to use this...!
             return False
@@ -70,6 +77,18 @@ def command(
                 "'",
                 "\\'",
             )  # fix for shlex qoutation error, majorly in filters
+            db = Disabling(m.chat.id)
+            disable_list = db.get_disabled()
+            try:
+                user_status = (await m.chat.get_member(m.from_user.id)).status
+            except ValueError:
+                # i.e. PM
+                user_status = "creator"
+            if str(matches.group(1)) in disable_list and user_status not in {
+                    "creator",
+                    "administrator",
+            }:
+                return False
             for arg in split(matches.strip()):
                 m.command.append(arg)
             return True
