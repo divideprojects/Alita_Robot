@@ -17,12 +17,9 @@ strings:
         × /promote: Promotes the user replied to or tagged (supports with title).
         × /fullpromote: Fully Promotes the user replied to or tagged (supports with title).
         × /demote: Demotes the user replied to or tagged.
-        × /reload: Reloads the List of all the admins in the Group.
+        × /admincache: Reloads the List of all the admins in the Group.
         × /zombies: Bans all the deleted accounts. (owner only)
-        × /setgpic: Use it as a reply to file | photo to set it as group profile pic!.
         × /title: sets a custom title for an admin that the bot promoted.
-        × /setgtitle <title>: Sets new chat title in the group.
-        × /setgdes <description>: Sets new description in the group.
         × /disable <commandname>: Stop users from using "commandname" in this group.
         × /enable <item name>: Allow users from using "commandname" in this group.
         × /disableable: List all disableable commands.
