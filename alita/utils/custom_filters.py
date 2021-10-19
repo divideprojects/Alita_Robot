@@ -22,6 +22,7 @@ from shlex import split
 from typing import List
 
 from pyrogram.filters import create
+from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
@@ -76,6 +77,7 @@ def command(
             )  # fix for shlex qoutation error, majorly in filters
             db = Disabling(m.chat.id)
             disable_list = db.get_disabled()
+            status = db.get_action()
             try:
                 user_status = (await m.chat.get_member(m.from_user.id)).status
             except ValueError:
@@ -85,6 +87,11 @@ def command(
                     "creator",
                     "administrator",
             }:
+                try:
+                    if status == "del":
+                        await m.delete()
+                except RPCError:
+                    pass
                 return False
             for arg in split(matches.strip()):
                 m.command.append(arg)
