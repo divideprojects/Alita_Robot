@@ -410,4 +410,15 @@ async def translate(_, m: Message):
 
 
 __PLUGIN__ = "utils"
+_DISABLE_CMDS_ = [
+    "paste",
+    "wiki",
+    "id",
+    "gifid",
+    "lyrics",
+    "tr",
+    "github",
+    "git",
+    "info",
+]
 __alt_name__ = ["util", "misc", "tools"]
