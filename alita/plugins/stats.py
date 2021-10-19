@@ -28,6 +28,7 @@ from alita.database.greetings_db import Greetings
 from alita.database.notes_db import Notes, NotesSettings
 from alita.database.pins_db import Pins
 from alita.database.rules_db import Rules
+from alita.database.disable_db import Disabling
 from alita.database.users_db import Users
 from alita.database.warns_db import Warns, WarnSettings
 from alita.utils.custom_filters import command
@@ -42,6 +43,7 @@ async def get_stats(_, m: Message):
     rulesdb = Rules
     grtdb = Greetings
     userdb = Users
+    dsbl = Disabling
     appdb = Approve
     chatdb = Chats
     fldb = Filters()
@@ -76,6 +78,9 @@ async def get_stats(_, m: Message):
         f"<b>GBanned Users:</b> <code>{(gbandb.count_gbans())}</code>\n"
         f"<b>Welcoming Users in:</b> <code>{(grtdb.count_chats('welcome'))}</code> chats"
         f"<b>Approved People</b>: <code>{(appdb.count_all_approved())}</code> in <code>{(appdb.count_approved_chats())}</code> chats\n"
+        f"<b>Disabling:</b> <code>{(dsbl.count_disabled_all())}</code> items in <code>{(dsbl.count_disabling_chats())}</code> chats.\n"
+        "<b>Action:</b>\n"
+        f"     <b>Del:</b> Applied in <code>{(dsbl.count_action_dis_all('del'))}</code> chats.\n"
     )
     await replymsg.edit_text(rply, parse_mode="html")
     return
