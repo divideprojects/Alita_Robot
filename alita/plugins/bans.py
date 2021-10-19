@@ -835,11 +835,35 @@ async def unbanbutton(c: Alita, q: CallbackQuery):
     return await q.message.edit_text(f"{q.from_user.mention} unbanned {whoo.mention}!")
 
 
+@Alita.on_message(command("kickme"))
+async def kickme(_, m: Message):
+    reason = None
+    if len(m.text.split()) >= 2:
+        reason = m.text.split(None, 1)[1]
+    try:
+        LOGGER.info(
+            f"{m.from_user.id} kickme used by {m.from_user.id} in {m.chat.id}")
+        await m.chat.kick_member(m.from_user.id)
+        txt = "Why not let me help you!"
+        txt += f"\n<b>Reason</b>: {reason}" if reason else ""
+        await m.reply_text(txt)
+        await m.chat.unban_member(m.from_user.id)
+    except RPCError as ef:
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
+    return
+
+
 __PLUGIN__ = "bans"
+
+_DISABLE_CMDS_ = ["kickme"]
 
 __alt_name__ = [
     "ban",
     "unban",
+    "kickme",
     "kick",
     "tban",
 ]

@@ -26,6 +26,7 @@ from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
 from alita.tr_engine import tlang
+from alita.database.disable_db import Disabling
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 
 SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
@@ -44,6 +45,9 @@ def command(
     async def func(flt, _, m: Message):
 
         if not m.from_user:
+            return False
+
+        if m.from_user.is_bot:
             return False
 
         if dev_cmd and (m.from_user.id not in DEV_LEVEL):
@@ -70,6 +74,18 @@ def command(
                 "'",
                 "\\'",
             )  # fix for shlex qoutation error, majorly in filters
+            db = Disabling(m.chat.id)
+            disable_list = db.get_disabled()
+            try:
+                user_status = (await m.chat.get_member(m.from_user.id)).status
+            except ValueError:
+                # i.e. PM
+                user_status = "creator"
+            if str(matches.group(1)) in disable_list and user_status not in {
+                    "creator",
+                    "administrator",
+            }:
+                return False
             for arg in split(matches.strip()):
                 m.command.append(arg)
             return True
@@ -246,8 +262,68 @@ async def promote_check_func(_, __, m):
     return status
 
 
+async def changeinfo_check_func(_, __, m):
+    """Check if user can change info or not."""
+    if isinstance(m, CallbackQuery):
+        m = m.message
+
+    if m.chat.type != "supergroup":
+        await m.reply_text(
+            "This command is made to be used in groups not in pm!")
+        return False
+
+    # Telegram and GroupAnonyamousBot
+    if m.sender_chat:
+        return True
+
+    # Bypass the bot devs, sudos and owner
+    if m.from_user.id in SUDO_LEVEL:
+        return True
+
+    user = await m.chat.get_member(m.from_user.id)
+
+    if user.can_change_info or user.status == "creator":
+        status = True
+    else:
+        status = False
+        await m.reply_text("You don't have: can_change_info permission!")
+
+    return status
+
+
+async def can_pin_message_func(_, __, m):
+    """Check if user can change info or not."""
+    if isinstance(m, CallbackQuery):
+        m = m.message
+
+    if m.chat.type != "supergroup":
+        await m.reply_text(
+            "This command is made to be used in groups not in pm!")
+        return False
+
+    # Telegram and GroupAnonyamousBot
+    if m.sender_chat:
+        return True
+
+    # Bypass the bot devs, sudos and owner
+    if m.from_user.id in SUDO_LEVEL:
+        return True
+
+    user = await m.chat.get_member(m.from_user.id)
+
+    if user.can_pin_messages or user.status == "creator":
+        status = True
+    else:
+        status = False
+        await m.reply_text("You don't have: can_pin_messages permission!")
+
+    return status
+
+
 admin_filter = create(admin_check_func)
 owner_filter = create(owner_check_func)
 restrict_filter = create(restrict_check_func)
 promote_filter = create(promote_check_func)
 bot_admin_filter = create(bot_admin_check_func)
+can_change_filter = create(changeinfo_check_func)
+can_pin_filter = create(can_pin_message_func)

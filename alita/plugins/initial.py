@@ -25,6 +25,7 @@ from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
 from alita.database.filters_db import Filters
+from alita.database.disable_db import Disabling
 from alita.database.greetings_db import Greetings
 from alita.database.lang_db import Langs
 from alita.database.notes_db import Notes, NotesSettings
@@ -113,6 +114,8 @@ async def migrate_chat(m: Message, new_chat: int) -> None:
     notes_settings = NotesSettings()
     pins_db = Pins(m.chat.id)
     fldb = Filters()
+    disabl = Disabling(m.chat.id)
+    disabl.migrate_chat(new_chat)
     gdb.migrate_chat(new_chat)
     chatdb.migrate_chat(new_chat)
     userdb.migrate_chat(new_chat)

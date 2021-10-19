@@ -439,4 +439,6 @@ async def clearallnotes_callback(_, q: CallbackQuery):
 
 __PLUGIN__ = "notes"
 
+_DISABLE_CMDS_ = ["notes"]
+
 __alt_name__ = ["groupnotes", "snips", "notes"]

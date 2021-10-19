@@ -333,47 +333,34 @@ async def my_info(c: Alita, m: Message):
         text += tlang(m, "utils.user_info.support_user.whitelist")
 
     await m.reply_text(text, parse_mode="html", disable_web_page_preview=True)
-
-    return
-
-
-@Alita.on_message(command("weebify"))
-async def weebify(_, m: Message):
-    if len(m.text.split()) >= 2:
-        args = m.text.split(None, 1)[1]
-    elif m.reply_to_message and len(m.text.split()) == 1:
-        args = m.reply_to_message.text
-    else:
-        await m.reply_text(
-            "Please reply to a message or enter text after command to weebify it.",
-        )
-        return
-    if not args:
-        await m.reply_text(tlang(m, "utils.weebify.weebify_what"))
-        return
-
-    # Use split to convert to list
-    # Not using list itself becuase black changes it to long format...
-    normiefont = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split()
-    weebyfont = "卂 乃 匚 刀 乇 下 厶 卄 工 丁 长 乚 从 𠘨 口 尸 㔿 尺 丂 丅 凵 リ 山 乂 丫 乙".split()
-
-    string = "  ".join(args).lower()
-    for normiecharacter in string:
-        if normiecharacter in normiefont:
-            weebycharacter = weebyfont[normiefont.index(normiecharacter)]
-            string = string.replace(normiecharacter, weebycharacter)
-
-    await m.reply_text(
-        (tlang(m, "utils.weebify.weebified_string").format(string=string)),
-    )
-    LOGGER.info(f"{m.from_user.id} weebified '{args}' in {m.chat.id}")
-
     return
 
 
 @Alita.on_message(command("paste"))
 async def paste_it(_, m: Message):
-    await m.reply_text("Nekobin is currently not reachable! :) will fix it soon !")
+    replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")), quote=True)
+    try:
+        if m.reply_to_message:
+            if m.reply_to_message.document:
+                dl_loc = await m.reply_to_message.download()
+                with open(dl_loc) as f:
+                    txt = f.read()
+                remove(dl_loc)
+            else:
+                txt = m.reply_to_message.text
+        else:
+            txt = m.text.split(None, 1)[1]
+        ur = "https://hastebin.com/documents"
+        r = await http.post(ur, json={"content": txt})
+        url = f"https://hastebin.com/{r.json().get('key')}"
+        await replymsg.edit_text(
+            (tlang(m, "utils.paste.pasted_nekobin")),
+            reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
+        )
+        LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
+    except Exception as e:
+        await replymsg.edit_text(f"Error: {e}")
+        return
     return
 
 
@@ -410,4 +397,15 @@ async def translate(_, m: Message):
 
 
 __PLUGIN__ = "utils"
+_DISABLE_CMDS_ = [
+    "paste",
+    "wiki",
+    "id",
+    "gifid",
+    "lyrics",
+    "tr",
+    "github",
+    "git",
+    "info",
+]
 __alt_name__ = ["util", "misc", "tools"]
