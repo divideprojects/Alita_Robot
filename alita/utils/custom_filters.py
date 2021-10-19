@@ -26,6 +26,7 @@ from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
 from alita.tr_engine import tlang
+from alita.database.disable_db import Disabling
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 
 SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
@@ -47,10 +48,6 @@ def command(
             return False
 
         if m.from_user.is_bot:
-            return False
-
-        if owner_cmd and (m.from_user.id != OWNER_ID):
-            # Only owner allowed to use this...!
             return False
 
         if dev_cmd and (m.from_user.id not in DEV_LEVEL):
