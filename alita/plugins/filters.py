@@ -314,4 +314,6 @@ async def filters_watcher(c: Alita, m: Message):
 
 __PLUGIN__ = "filters"
 
+_DISABLE_CMDS_ = ["filters"]
+
 __alt_name__ = ["filters", "autoreply"]
