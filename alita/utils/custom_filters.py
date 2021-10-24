@@ -83,7 +83,7 @@ def command(
             except ValueError:
                 # i.e. PM
                 user_status = "creator"
-            if str(matches.group(1)) in disable_list and user_status not in {
+            if str(matches.group(2)) in disable_list and user_status not in {
                     "creator",
                     "administrator",
             }:
