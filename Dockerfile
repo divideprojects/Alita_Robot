@@ -4,22 +4,19 @@ FROM python:3.9.7-slim-bullseye
 ENV PIP_NO_CACHE_DIR 1
 
 # Installing Required Packages
-RUN apt update && \
-    apt upgrade -y && \
-    apt install --no-install-recommends -y \
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install --no-install-recommends -y \
     bash \
     python3-dev \
     python3-lxml \
     gcc \
     git \
     make \
-    neofetch
-
-# Clear apt lists
-RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp
 
 # Enter Workplace
-WORKDIR /app/
+WORKDIR /app
 
 # Copy folder
 COPY . .
