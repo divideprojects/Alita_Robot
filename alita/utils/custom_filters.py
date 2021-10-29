@@ -50,6 +50,9 @@ def command(
 
         if m.from_user.is_bot:
             return False
+        
+        if any([m.forward_from_chat, m.forward_from]):
+            return False
 
         if dev_cmd and (m.from_user.id not in DEV_LEVEL):
             # Only devs allowed to use this...!
