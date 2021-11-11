@@ -79,6 +79,7 @@ def command(
             db = Disabling(m.chat.id)
             disable_list = db.get_disabled()
             status = db.get_action()
+            print(matches)
             try:
                 user_status = (await m.chat.get_member(m.from_user.id)).status
             except ValueError:
