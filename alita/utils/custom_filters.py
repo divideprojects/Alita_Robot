@@ -87,8 +87,8 @@ def command(
                 user_status = "creator"
             for arg in split(matches.strip()):
                 m.command.append(arg)
-            print(m.command)
-            if str(matches) in disable_list and user_status not in {
+            print(str(m.command[0]))
+            if str(m.command[0]) in disable_list and user_status not in {
                     "creator",
                     "administrator",
             }:
