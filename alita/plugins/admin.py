@@ -198,8 +198,6 @@ async def tag_admins(_, m: Message):
 
 @Alita.on_message(command("fullpromote") & promote_filter)
 async def fullpromote_usr(c: Alita, m: Message):
-    from alita import BOT_ID
-
     global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -219,7 +217,7 @@ async def fullpromote_usr(c: Alita, m: Message):
 
     if not bot.can_promote_members:
         return await m.reply_text(
-            "I don't have enough permissions!",
+            "I don't have enough permissions!"
         )  # This should be here
 
     user = await c.get_chat_member(m.chat.id, m.from_user.id)
@@ -252,17 +250,17 @@ async def fullpromote_usr(c: Alita, m: Message):
             can_manage_voice_chats=bot.can_manage_voice_chats,
         )
 
-        title = ""  # Deafult title
+        title = ""
         if len(m.text.split()) == 3 and not m.reply_to_message:
             title = m.text.split()[2]
         elif len(m.text.split()) == 2 and m.reply_to_message:
             title = m.text.split()[1]
-        if len(title) > 16:
+        if title and len(title) > 16:
             title = title[0:16]  # trim title to 16 characters
 
         try:
             await c.set_administrator_title(m.chat.id, user_id, title)
-        except Exception as e:
+        except RPCError as e:
             LOGGER.error(e)
 
         LOGGER.info(
@@ -273,9 +271,9 @@ async def fullpromote_usr(c: Alita, m: Message):
             (tlang(m, "admin.promote.promoted_user")).format(
                 promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
-                chat_title=m.chat.title + f"\nTitle set to {title}"
-                if title != "Admin"
-                else "Default Admin!",
+                chat_title=f"{escape(m.chat.title)} title set to {title}"
+                if title
+                else f"{escape(m.chat.title)} title set to Admin",
             ),
         )
 
@@ -298,14 +296,7 @@ async def fullpromote_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.promote.bot_no_right"))
     except UserAdminInvalid:
         await m.reply_text(tlang(m, "admin.user_admin_invalid"))
-    except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
-    except Exception as e:
+    except RPCError as e:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=SUPPORT_GROUP,
@@ -314,13 +305,11 @@ async def fullpromote_usr(c: Alita, m: Message):
         )
         LOGGER.error(e)
         LOGGER.error(format_exc())
-
     return
 
 
 @Alita.on_message(command("promote") & promote_filter)
 async def promote_usr(c: Alita, m: Message):
-    from alita import BOT_ID
 
     global ADMIN_CACHE
 
@@ -341,7 +330,7 @@ async def promote_usr(c: Alita, m: Message):
 
     if not bot.can_promote_members:
         return await m.reply_text(
-            "I don't have enough permissions",
+            "I don't have enough permissions"
         )  # This should be here
     # If user is alreay admin
     try:
@@ -375,12 +364,12 @@ async def promote_usr(c: Alita, m: Message):
             title = m.text.split()[2]
         elif len(m.text.split()) == 2 and m.reply_to_message:
             title = m.text.split()[1]
-        if len(title) > 16:
+        if title and len(title) > 16:
             title = title[0:16]  # trim title to 16 characters
 
         try:
             await c.set_administrator_title(m.chat.id, user_id, title)
-        except Exception as e:
+        except RPCError as e:
             LOGGER.error(e)
 
         LOGGER.info(
@@ -389,16 +378,11 @@ async def promote_usr(c: Alita, m: Message):
 
         await m.reply_text(
             (tlang(m, "admin.promote.promoted_user")).format(
-                promoter=(
-                    await mention_html(
-                        m.from_user.first_name,
-                        m.from_user.id,
-                    )
-                ),
+                promoter=(await mention_html(m.from_user.first_name, m.from_user.id)),
                 promoted=(await mention_html(user_first_name, user_id)),
-                chat_title=m.chat.title + f"\nTitle set to {title}"
-                if title != "Admin"
-                else "Default Admin!",
+                chat_title=f"{escape(m.chat.title)} title set to {title}"
+                if title
+                else f"{escape(m.chat.title)} title set to Admin",
             ),
         )
 
@@ -421,14 +405,7 @@ async def promote_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.promote.bot_no_right"))
     except UserAdminInvalid:
         await m.reply_text(tlang(m, "admin.user_admin_invalid"))
-    except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
-    except Exception as e:
+    except RPCError as e:
         await m.reply_text(
             (tlang(m, "general.some_error")).format(
                 SUPPORT_GROUP=SUPPORT_GROUP,
@@ -437,7 +414,6 @@ async def promote_usr(c: Alita, m: Message):
         )
         LOGGER.error(e)
         LOGGER.error(format_exc())
-
     return
 
 
