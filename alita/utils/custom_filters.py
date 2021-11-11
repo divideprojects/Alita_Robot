@@ -79,7 +79,6 @@ def command(
             db = Disabling(m.chat.id)
             disable_list = db.get_disabled()
             status = db.get_action()
-            print(matches)
             try:
                 user_status = (await m.chat.get_member(m.from_user.id)).status
             except ValueError:
@@ -87,7 +86,6 @@ def command(
                 user_status = "creator"
             for arg in split(matches.strip()):
                 m.command.append(arg)
-            print(str(m.command[0]))
             if str(m.command[0]) in disable_list and user_status not in {
                     "creator",
                     "administrator",
