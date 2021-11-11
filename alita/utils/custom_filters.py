@@ -85,6 +85,9 @@ def command(
             except ValueError:
                 # i.e. PM
                 user_status = "creator"
+            for arg in split(matches.strip()):
+                m.command.append(arg)
+            print(m.command)
             if str(matches) in disable_list and user_status not in {
                     "creator",
                     "administrator",
@@ -95,8 +98,6 @@ def command(
                 except RPCError:
                     pass
                 return False
-            for arg in split(matches.strip()):
-                m.command.append(arg)
             return True
         return False
 
