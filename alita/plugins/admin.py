@@ -199,6 +199,7 @@ async def tag_admins(_, m: Message):
 @Alita.on_message(command("fullpromote") & promote_filter)
 async def fullpromote_usr(c: Alita, m: Message):
     global ADMIN_CACHE
+    from alita import BOT_ID
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
@@ -312,6 +313,7 @@ async def fullpromote_usr(c: Alita, m: Message):
 async def promote_usr(c: Alita, m: Message):
 
     global ADMIN_CACHE
+    from alita import BOT_ID
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
