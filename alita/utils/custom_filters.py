@@ -14,8 +14,6 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
 from re import compile as compile_re
 from re import escape, search
 from shlex import split
@@ -86,7 +84,7 @@ def command(
             except ValueError:
                 # i.e. PM
                 user_status = "creator"
-            if str(matches.group(2)) in disable_list and user_status not in {
+            if str(matches) in disable_list and user_status not in {
                     "creator",
                     "administrator",
             }:
