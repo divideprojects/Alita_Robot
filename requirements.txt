@@ -1,38 +1,50 @@
-aiofiles==0.7.0; python_version >= "3.6" and python_version < "4.0"
-anyio==3.3.4; python_full_version >= "3.6.2" and python_version >= "3.6"
-async-lru==1.0.2; python_version >= "3.6" and python_version < "4.0"
-asyncio==3.4.3
-beautifulsoup4==4.10.0; python_full_version > "3.0.0"
-cachetools==4.2.4; python_version >= "3.5" and python_version < "4.0"
-certifi==2021.10.8; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6"
-charset-normalizer==2.0.7; python_full_version >= "3.6.0" and python_version >= "3.6"
-dnspython==2.1.0; python_version >= "3.6"
-google==3.0.0
-gpytranslate==1.3.0; python_version >= "3.6"
-h11==0.12.0; python_version >= "3.6"
-h2==4.1.0; python_version >= "3.6" and python_full_version >= "3.6.1"
-hpack==4.0.0; python_version >= "3.6" and python_full_version >= "3.6.1"
-httpcore==0.13.7; python_version >= "3.6"
-httpx==0.20.0; python_version >= "3.6"
-hyperframe==6.0.1; python_version >= "3.6" and python_full_version >= "3.6.1"
-idna==3.3; python_version >= "3.6" and (python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.5") and python_full_version >= "3.6.2"
-lxml==4.6.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
-pyaes==1.6.1; python_version >= "3.6" and python_version < "4.0"
-pymongo==3.12.0
-pyrogram==1.2.9; python_version >= "3.6" and python_version < "4.0"
-pysocks==1.7.1; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "4.0" or python_version >= "3.6" and python_version < "4.0" and python_full_version >= "3.4.0"
-python-dateutil==2.8.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
-pyyaml==6.0; python_version >= "3.6"
-regex==2021.10.8
-requests==2.26.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
-rfc3986==1.5.0; python_version >= "3.6"
-six==1.16.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
-sniffio==1.2.0; python_full_version >= "3.6.2" and python_version >= "3.6"
-soupsieve==2.2.1; python_version >= "3.6" and python_full_version > "3.0.0"
-speedtest-cli==2.1.3
-tgcrypto==1.2.2; python_version >= "3.6" and python_version < "4.0"
-tswift==0.7.0
-typing-extensions==3.10.0.2; python_full_version >= "3.6.2" and python_version >= "3.6" and python_version < "3.8"
-ujson==4.2.0; python_version >= "3.6"
-urllib3==1.26.7; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version < "4"
-wikipedia==1.4.0
+
+  Stack trace:
+
+  11  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/console_application.py:123 in run
+      io = io_factory(
+
+  10  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/poetry/console/config/application_config.py:221 in create_io
+      resolved_command = application.resolve_command(args)
+
+   9  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/console_application.py:110 in resolve_command
+      return self._config.command_resolver.resolve(args, self)
+
+   8  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/resolver/default_resolver.py:34 in resolve
+      return self.create_resolved_command(result)
+
+   7  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/resolver/default_resolver.py:166 in create_resolved_command
+      if not result.is_parsable():
+
+   6  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/resolver/resolve_result.py:43 in is_parsable
+      self._parse()
+
+   5  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/resolver/resolve_result.py:49 in _parse
+      self._parsed_args = self._command.parse(self._raw_args)
+
+   4  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/api/command/command.py:113 in parse
+      return self._config.args_parser.parse(args, self._args_format, lenient)
+
+   3  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/args/default_args_parser.py:53 in parse
+      self._parse(args, _fmt, lenient)
+
+   2  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/args/default_args_parser.py:101 in _parse
+      self._parse_long_option(token, tokens, fmt, lenient)
+
+   1  ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/args/default_args_parser.py:247 in _parse_long_option
+      self._add_long_option(name, None, tokens, fmt, lenient)
+
+  NoSuchOptionException
+
+  The "--no-dev" option does not exist.
+
+  at ~/.local/share/pypoetry/venv/lib/python3.9/site-packages/clikit/args/default_args_parser.py:300 in _add_long_option
+      296│     def _add_long_option(
+      297│         self, name, value, tokens, fmt, lenient
+      298│     ):  # type: (str, Optional[str], List[str], ArgsFormat, bool) -> None
+      299│         if not fmt.has_option(name):
+    → 300│             raise NoSuchOptionException(name)
+      301│ 
+      302│         option = fmt.get_option(name)
+      303│ 
+      304│         if value is False:
