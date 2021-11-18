@@ -29,22 +29,22 @@ class Config:
     """Config class for variables."""
 
     LOGGER = True
-    BOT_TOKEN = config("BOT_TOKEN")
-    APP_ID = int(config("APP_ID"))
-    API_HASH = config("API_HASH")
-    OWNER_ID = int(config("OWNER_ID"))
+    BOT_TOKEN = config("BOT_TOKEN", default=None)
+    APP_ID = int(config("APP_ID", default=None))
+    API_HASH = config("API_HASH", default=None)
+    OWNER_ID = int(config("OWNER_ID", default=1198820588))
     MESSAGE_DUMP = int(config("MESSAGE_DUMP", default=-100))
     DEV_USERS = [int(i) for i in config("DEV_USERS", default="").split()]
     SUDO_USERS = [int(i) for i in config("SUDO_USERS", default="").split()]
     WHITELIST_USERS = [int(i) for i in config("WHITELIST_USERS", default="").split()]
-    DB_URI = config("DB_URI")
+    DB_URI = config("DB_URI", default=None)
     DB_NAME = config("DB_NAME", default="alita_robot")
     NO_LOAD = config("NO_LOAD", default="").split()
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
-    SUPPORT_GROUP = config("SUPPORT_GROUP")
-    SUPPORT_CHANNEL = config("SUPPORT_CHANNEL")
-    ENABLED_LOCALES = [str(i) for i in config("ENABLED_LOCALES", default="").split()]
-    VERSION = config("VERSION")
+    SUPPORT_GROUP = config("SUPPORT_GROUP", default="DivideProjectsDiscussion")
+    SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="DivideProjects")
+    ENABLED_LOCALES = [str(i) for i in config("ENABLED_LOCALES", default="en").split()]
+    VERSION = config("VERSION", default="v2.0")
     WORKERS = int(config("WORKERS", default=16))
 
 
