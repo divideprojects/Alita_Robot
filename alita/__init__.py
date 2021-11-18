@@ -153,7 +153,9 @@ async def load_cmds(all_plugins):
         if hasattr(imported_module, "__buttons__"):
             HELP_COMMANDS[plugin_dict_name]["buttons"] = imported_module.__buttons__
         if hasattr(imported_module, "_DISABLE_CMDS_"):
-            HELP_COMMANDS[plugin_dict_name]["disablable"] = imported_module._DISABLE_CMDS_
+            HELP_COMMANDS[plugin_dict_name][
+                "disablable"
+            ] = imported_module._DISABLE_CMDS_
         if hasattr(imported_module, "__alt_name__"):
             HELP_COMMANDS[plugin_dict_name]["alt_cmds"] = imported_module.__alt_name__
 

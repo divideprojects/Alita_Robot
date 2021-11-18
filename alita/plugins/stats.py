@@ -23,12 +23,12 @@ from alita.database.antispam_db import GBan
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
+from alita.database.disable_db import Disabling
 from alita.database.filters_db import Filters
 from alita.database.greetings_db import Greetings
 from alita.database.notes_db import Notes, NotesSettings
 from alita.database.pins_db import Pins
 from alita.database.rules_db import Rules
-from alita.database.disable_db import Disabling
 from alita.database.users_db import Users
 from alita.database.warns_db import Warns, WarnSettings
 from alita.utils.custom_filters import command

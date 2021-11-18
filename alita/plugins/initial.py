@@ -24,8 +24,8 @@ from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.database.blacklist_db import Blacklist
 from alita.database.chats_db import Chats
-from alita.database.filters_db import Filters
 from alita.database.disable_db import Disabling
+from alita.database.filters_db import Filters
 from alita.database.greetings_db import Greetings
 from alita.database.lang_db import Langs
 from alita.database.notes_db import Notes, NotesSettings

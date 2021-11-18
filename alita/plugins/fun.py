@@ -90,11 +90,7 @@ async def fun_slap(c: Alita, m: Message):
     hit = choice(fun_strings.HIT)
     throw = choice(fun_strings.THROW)
 
-    reply = temp.format(user1=user1,
-                        user2=user2,
-                        item=item,
-                        hits=hit,
-                        throws=throw)
+    reply = temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
     await reply_text(reply)
     LOGGER.info(f"{m.from_user.id} slaped in {m.chat.id}")
     return
@@ -177,7 +173,8 @@ async def weebify(_, m: Message):
             string = string.replace(normiecharacter, weebycharacter)
 
     await m.reply_text(
-        (tlang(m, "utils.weebify.weebified_string").format(string=string)), )
+        (tlang(m, "utils.weebify.weebified_string").format(string=string)),
+    )
     LOGGER.info(f"{m.from_user.id} weebified '{args}' in {m.chat.id}")
     return
 

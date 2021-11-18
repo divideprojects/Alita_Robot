@@ -41,9 +41,10 @@ async def disableit(_, m: Message):
     if len(m.text.split()) < 2:
         return await m.reply_text("What to disable?")
     disable_cmd_keys = sorted(
-        k for j in
-        [HELP_COMMANDS[i]["disablable"] for i in list(HELP_COMMANDS.keys())]
-        for k in j)
+        k
+        for j in [HELP_COMMANDS[i]["disablable"] for i in list(HELP_COMMANDS.keys())]
+        for k in j
+    )
 
     db = Disabling(m.chat.id)
     disable_list = db.get_disabled()
@@ -102,9 +103,10 @@ async def enableit(_, m: Message):
 @Alita.on_message(command("disableable") & can_change_filter)
 async def disabling(_, m: Message):
     disable_cmd_keys = sorted(
-        k for j in
-        [HELP_COMMANDS[i]["disablable"] for i in list(HELP_COMMANDS.keys())]
-        for k in j)
+        k
+        for j in [HELP_COMMANDS[i]["disablable"] for i in list(HELP_COMMANDS.keys())]
+        for k in j
+    )
     tes = "List of commnds that can be disabled:\n"
     tes += "\n".join(f" • <code>{escape(i)}</code>" for i in disable_cmd_keys)
     LOGGER.info(f"{m.from_user.id} checked disableable {m.chat.id}")
@@ -133,15 +135,17 @@ async def rm_alldisbl(_, m: Message):
         return
     await m.reply_text(
         "Are you sure you want to enable all?",
-        reply_markup=InlineKeyboardMarkup([
+        reply_markup=InlineKeyboardMarkup(
             [
-                InlineKeyboardButton(
-                    "Confirm",
-                    callback_data="enableallcmds",
-                ),
-                InlineKeyboardButton("Cancel", callback_data="close_admin"),
+                [
+                    InlineKeyboardButton(
+                        "Confirm",
+                        callback_data="enableallcmds",
+                    ),
+                    InlineKeyboardButton("Cancel", callback_data="close_admin"),
+                ],
             ],
-        ], ),
+        ),
     )
     return
 

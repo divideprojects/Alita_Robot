@@ -19,13 +19,13 @@ from re import escape, search
 from shlex import split
 from typing import List
 
-from pyrogram.filters import create
 from pyrogram.errors import RPCError
+from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
-from alita.tr_engine import tlang
 from alita.database.disable_db import Disabling
+from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 
 SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
@@ -48,7 +48,7 @@ def command(
 
         if m.from_user.is_bot:
             return False
-        
+
         if any([m.forward_from_chat, m.forward_from]):
             return False
 
@@ -87,8 +87,8 @@ def command(
             for arg in split(matches.strip()):
                 m.command.append(arg)
             if str(m.command[0]) in disable_list and user_status not in {
-                    "creator",
-                    "administrator",
+                "creator",
+                "administrator",
             }:
                 try:
                     if status == "del":
@@ -276,8 +276,7 @@ async def changeinfo_check_func(_, __, m):
         m = m.message
 
     if m.chat.type != "supergroup":
-        await m.reply_text(
-            "This command is made to be used in groups not in pm!")
+        await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 
     # Telegram and GroupAnonyamousBot
@@ -305,8 +304,7 @@ async def can_pin_message_func(_, __, m):
         m = m.message
 
     if m.chat.type != "supergroup":
-        await m.reply_text(
-            "This command is made to be used in groups not in pm!")
+        await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 
     # Telegram and GroupAnonyamousBot

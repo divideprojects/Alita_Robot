@@ -86,10 +86,7 @@ class Disabling(MongoDB):
         with INSERTION_LOCK:
             return self.update(
                 {"_id": self.chat_id},
-                {
-                    "_id": self.chat_id,
-                    "action": action
-                },
+                {"_id": self.chat_id, "action": action},
             )
 
     def get_action(self):
@@ -119,8 +116,7 @@ class Disabling(MongoDB):
                 "action": "none",
             }
             self.insert_one(new_data)
-            LOGGER.info(
-                f"Initialized Disabling Document for chat {self.chat_id}")
+            LOGGER.info(f"Initialized Disabling Document for chat {self.chat_id}")
             return new_data
         return chat_data
 
