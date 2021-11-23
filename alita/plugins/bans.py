@@ -68,9 +68,9 @@ async def tban_usr(c: Alita, m: Message):
 
     r_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
 
-    if m.reply_to_message and len(m.text.split()) < 2:
-        reason = m.text.split(None, 2)[2]
-    elif not m.reply_to_message and len(m.text.split()) < 3:
+    if m.reply_to_message and len(m.text.split()) <= 2:
+        reason = m.text.split(None, 2)[1]
+    elif not m.reply_to_message and len(m.text.split()) <= 3:
         reason = m.text.split(None, 2)[2]
     else:
         await m.reply_text("Read /help !!")
@@ -165,9 +165,9 @@ async def stban_usr(c: Alita, m: Message):
         )
         await m.stop_propagation()
 
-    if m.reply_to_message and len(m.text.split()) < 2:
-        reason = m.text.split(None, 2)[2]
-    elif not m.reply_to_message and len(m.text.split()) < 3:
+    if m.reply_to_message and len(m.text.split()) <= 2:
+        reason = m.text.split(None, 2)[1]
+    elif not m.reply_to_message and len(m.text.split()) <= 3:
         reason = m.text.split(None, 2)[2]
     else:
         await m.reply_text("Read /help !!")
@@ -254,9 +254,9 @@ async def dtban_usr(c: Alita, m: Message):
         )
         await m.stop_propagation()
 
-    if m.reply_to_message and len(m.text.split()) < 2:
-        reason = m.text.split(None, 2)[2]
-    elif not m.reply_to_message and len(m.text.split()) < 3:
+    if m.reply_to_message and len(m.text.split()) <= 2:
+        reason = m.text.split(None, 2)[1]
+    elif not m.reply_to_message and len(m.text.split()) <= 3:
         reason = m.text.split(None, 2)[2]
     else:
         await m.reply_text("Read /help !!")
@@ -554,9 +554,9 @@ async def unban_usr(c: Alita, m: Message):
     except Exception:
         return
 
-    if m.reply_to_message and len(m.text.split()) >= 2:
-        reason = m.text.split(None, 1)[1]
-    elif not m.reply_to_message and len(m.text.split()) >= 3:
+    if m.reply_to_message and len(m.text.split()) <= 2:
+        reason = m.text.split(None, 2)[1]
+    elif not m.reply_to_message and len(m.text.split()) <= 3:
         reason = m.text.split(None, 2)[2]
     else:
         reason = None
