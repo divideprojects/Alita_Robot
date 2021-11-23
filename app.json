@@ -1,112 +1,112 @@
 {
-   "name": "Alita_Robot",
-   "description": "Alita is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers.",
-   "keywords": [
-      "telegram bot",
-      "group bot",
-      "group",
-      "manager",
-      "alita",
-      "alita_robot"
-   ],
-   "repository": "https://github.com/DivideProjects/Alita_Robot",
-   "website": "https://t.me/DivideProjects",
-   "success_url": "https://t.me/DivideProjects",
-   "env": {
-      "BOT_TOKEN": {
-         "description": "Your telegram bot token, get from @Botfather in telegram.",
-         "required": true,
-         "value": ""
-      },
-      "APP_ID": {
-         "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
-         "required": true,
-         "value": "12345"
-      },
-      "API_HASH": {
-         "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
-         "required": true,
-         "value": "testinghash123"
-      },
-      "DB_URI": {
-         "description": "Your MongoDB connection string.",
-         "required": true,
-         "value": "put it here"
-      },
-      "DB_NAME": {
-         "description": "Your MongoDB database name.",
-         "required": true,
-         "value": "alita_robot"
-      },
-      "OWNER_ID": {
-         "description": "Your user ID as an integer.",
-         "required": true,
-         "value": "1198820588"
-      },
-      "SUPPORT_CHAT": {
-         "description": "Your Telegram support group chat username where user's can contact in case of a problem..",
-         "required": true,
-         "value": "DivideProjects"
-      },
-      "MESSAGE_DUMP": {
-         "description": "Event logs channel where bot will send updates.",
-         "required": true,
-         "value": "-100123456798"
-      },
-      "VERSION": {
-         "description": "A Version to be shown in bot.",
-         "required": false,
-         "value": "Stable"
-      },
-      "PREFIX_HANDLER": {
-         "description": "Something like '/' to execute commands.",
-         "required": true,
-         "value": "/ !"
-      },
-      "DEV_USERS": {
-         "description": "ID of users who are Devs of your bot (can use /py etc.). If you are a noob and would come and bother Saitama support then keep the current ID's here at they are and add yours.",
-         "required": false,
-         "value": ""
-      },
-      "SUPPORT_CHANNEL": {
-         "description": "Channel where bot uodates will be posted!",
-         "value": "AlitaUpdates"
-      },
-      "SUDO_USERS": {
-         "description": "A space separated list of user IDs who you want to assign as sudo users.",
-         "required": false,
-         "value": ""
-      },
-      "WHITELIST_USERS": {
-         "description": "A space separated list of user IDs whitelisted, cannot be restricted..",
-         "required": false,
-         "value": ""
-      },
-      "ENABLED_LOCALES": {
-         "description": "A space separated list of language which should be enabled in bot.",
-         "required": false,
-         "value": "en"
-      },
-      "WORKERS": {
-         "description": "Number of workers to eun the bot.",
-         "required": false,
-         "value": "8"
-      },
-      "ENV": {
-         "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
-         "required": true,
-         "value": "ANYTHING"
-      }
-   },
-   "buildpacks": [
+  "name": "Alita_Robot",
+  "description": "Alita is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers.",
+  "keywords": [
+    "telegram bot",
+    "group bot",
+    "group",
+    "manager",
+    "alita",
+    "alita_robot"
+  ],
+  "repository": "https://github.com/DivideProjects/Alita_Robot",
+  "website": "https://t.me/DivideProjects",
+  "success_url": "https://t.me/DivideProjects",
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Your telegram bot token, get from @Botfather in telegram.",
+      "required": true,
+      "value": ""
+    },
+    "APP_ID": {
+      "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
+      "required": true,
+      "value": "12345"
+    },
+    "API_HASH": {
+      "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
+      "required": true,
+      "value": "testinghash123"
+    },
+    "DB_URI": {
+      "description": "Your MongoDB connection string.",
+      "required": true,
+      "value": "put it here"
+    },
+    "DB_NAME": {
+      "description": "Your MongoDB database name.",
+      "required": true,
+      "value": "alita_robot"
+    },
+    "OWNER_ID": {
+      "description": "Your user ID as an integer.",
+      "required": true,
+      "value": "1198820588"
+    },
+    "SUPPORT_GROUP": {
+      "description": "Your Telegram support group chat username where user's can contact in case of a problem..",
+      "required": true,
+      "value": "DivideProjects"
+    },
+    "MESSAGE_DUMP": {
+      "description": "Event logs channel where bot will send updates.",
+      "required": true,
+      "value": "-100123456798"
+    },
+    "VERSION": {
+      "description": "A Version to be shown in bot.",
+      "required": false,
+      "value": "Stable"
+    },
+    "PREFIX_HANDLER": {
+      "description": "Something like '/' to execute commands.",
+      "required": true,
+      "value": "/ !"
+    },
+    "DEV_USERS": {
+      "description": "ID of users who are Devs of your bot (can use /py etc.). If you are a noob and would come and bother Saitama support then keep the current ID's here at they are and add yours.",
+      "required": false,
+      "value": ""
+    },
+    "SUPPORT_CHANNEL": {
+      "description": "Channel where bot uodates will be posted!",
+      "value": "AlitaUpdates"
+    },
+    "SUDO_USERS": {
+      "description": "A space separated list of user IDs who you want to assign as sudo users.",
+      "required": false,
+      "value": ""
+    },
+    "WHITELIST_USERS": {
+      "description": "A space separated list of user IDs whitelisted, cannot be restricted..",
+      "required": false,
+      "value": ""
+    },
+    "ENABLED_LOCALES": {
+      "description": "A space separated list of language which should be enabled in bot.",
+      "required": false,
+      "value": "en"
+    },
+    "WORKERS": {
+      "description": "Number of workers to eun the bot.",
+      "required": false,
+      "value": "8"
+    },
+    "ENV": {
+      "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
+      "required": true,
+      "value": "ANYTHING"
+    }
+  },
+  "buildpacks": [
     {
       "url": "heroku/python"
     }
   ],
-   "formation": {
-      "worker": {
-         "quantity": 1,
-         "size": "free"
-      }
-   }
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
 }
