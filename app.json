@@ -43,7 +43,7 @@
          "required": true,
          "value": "1198820588"
       },
-      "SUPPORT_CHAT": {
+      "SUPPORT_GROUP": {
          "description": "Your Telegram support group chat username where user's can contact in case of a problem..",
          "required": true,
          "value": "DivideProjects"
