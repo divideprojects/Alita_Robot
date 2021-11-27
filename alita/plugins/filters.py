@@ -6,33 +6,37 @@
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 from re import escape as re_escape
 from secrets import choice
 from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
+from pyrogram.types import CallbackQuery
+from pyrogram.types import InlineKeyboardMarkup
+from pyrogram.types import Message
 
-from alita.bot_class import LOGGER, Alita
+from alita.bot_class import Alita
+from alita.bot_class import LOGGER
 from alita.database.filters_db import Filters
 from alita.utils.cmd_senders import send_cmd
-from alita.utils.custom_filters import admin_filter, command, owner_filter
+from alita.utils.custom_filters import admin_filter
+from alita.utils.custom_filters import command
+from alita.utils.custom_filters import owner_filter
 from alita.utils.kbhelpers import ikb
-from alita.utils.msg_types import Types, get_filter_type
+from alita.utils.msg_types import get_filter_type
+from alita.utils.msg_types import Types
 from alita.utils.regex_utils import regex_searcher
-from alita.utils.string import (build_keyboard,
-                                escape_mentions_using_curly_brackets,
-                                parse_button, split_quotes)
+from alita.utils.string import build_keyboard
+from alita.utils.string import escape_mentions_using_curly_brackets
+from alita.utils.string import parse_button
+from alita.utils.string import split_quotes
 
 # Initialise
 db = Filters()

@@ -6,27 +6,33 @@
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from pyrogram.errors import (ChatAdminRequired, RightForbidden, RPCError,
-                             UserNotParticipant)
+from pyrogram.errors import ChatAdminRequired
+from pyrogram.errors import RightForbidden
+from pyrogram.errors import RPCError
+from pyrogram.errors import UserNotParticipant
 from pyrogram.filters import regex
-from pyrogram.types import (CallbackQuery, ChatPermissions,
-                            InlineKeyboardButton, InlineKeyboardMarkup,
-                            Message)
+from pyrogram.types import CallbackQuery
+from pyrogram.types import ChatPermissions
+from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import InlineKeyboardMarkup
+from pyrogram.types import Message
 
-from alita import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
+from alita import LOGGER
+from alita import OWNER_ID
+from alita import SUPPORT_GROUP
+from alita import SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
-from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
-from alita.utils.custom_filters import command, restrict_filter
+from alita.utils.caching import ADMIN_CACHE
+from alita.utils.caching import admin_cache_reload
+from alita.utils.custom_filters import command
+from alita.utils.custom_filters import restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 from alita.utils.string import extract_time

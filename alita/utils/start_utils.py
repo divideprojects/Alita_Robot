@@ -6,24 +6,23 @@
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
 from html import escape
 from secrets import choice
 from traceback import format_exc
 
 from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.types import CallbackQuery
+from pyrogram.types import Message
 
-from alita import HELP_COMMANDS, LOGGER, SUPPORT_GROUP
+from alita import HELP_COMMANDS
+from alita import LOGGER
+from alita import SUPPORT_GROUP
 from alita.bot_class import Alita
 from alita.database.chats_db import Chats
 from alita.database.notes_db import Notes
@@ -32,9 +31,9 @@ from alita.tr_engine import tlang
 from alita.utils.cmd_senders import send_cmd
 from alita.utils.kbhelpers import ikb
 from alita.utils.msg_types import Types
-from alita.utils.string import (build_keyboard,
-                                escape_mentions_using_curly_brackets,
-                                parse_button)
+from alita.utils.string import build_keyboard
+from alita.utils.string import escape_mentions_using_curly_brackets
+from alita.utils.string import parse_button
 from alita.vars import Config
 
 # Initialize
