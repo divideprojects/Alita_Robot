@@ -78,7 +78,8 @@ async def wiki(_, m: Message):
                 disable_web_page_preview=True,
             )
         except MessageTooLong:
-            with BytesIO(str.encode(await remove_markdown_and_html(result))) as f:
+            with BytesIO(str.encode(await
+                                    remove_markdown_and_html(result))) as f:
                 f.name = "result.txt"
                 return await m.reply_document(
                     document=f,
@@ -110,8 +111,7 @@ async def gdpr_remove(_, m: Message):
 
 
 @Alita.on_message(
-    command("lyrics") & (filters.group | filters.private),
-)
+    command("lyrics") & (filters.group | filters.private), )
 async def get_lyrics(_, m: Message):
     if len(m.text.split()) <= 1:
         await m.reply_text(tlang(m, "general.check_help"))
@@ -125,8 +125,7 @@ async def get_lyrics(_, m: Message):
         return
 
     em = await m.reply_text(
-        (tlang(m, "utils.song.searching").format(song_name=query)),
-    )
+        (tlang(m, "utils.song.searching").format(song_name=query)), )
     song = Song.find_song(query)
     if song:
         if song.lyrics:
@@ -140,25 +139,24 @@ async def get_lyrics(_, m: Message):
     except MessageTooLong:
         with BytesIO(str.encode(await remove_markdown_and_html(reply))) as f:
             f.name = "lyrics.txt"
-            await m.reply_document(
-                document=f,
-            )
+            await m.reply_document(document=f, )
         await em.delete()
     return
 
 
 @Alita.on_message(
-    command("id") & (filters.group | filters.private),
-)
+    command("id") & (filters.group | filters.private), )
 async def id_info(c: Alita, m: Message):
     LOGGER.info(f"{m.from_user.id} used id cmd in {m.chat.id}")
 
     if m.chat.type == "supergroup" and not m.reply_to_message:
-        await m.reply_text((tlang(m, "utils.id.group_id")).format(group_id=m.chat.id))
+        await m.reply_text(
+            (tlang(m, "utils.id.group_id")).format(group_id=m.chat.id))
         return
 
     if m.chat.type == "private" and not m.reply_to_message:
-        await m.reply_text((tlang(m, "utils.id.my_id")).format(my_id=m.chat.id))
+        await m.reply_text((tlang(m,
+                                  "utils.id.my_id")).format(my_id=m.chat.id))
         return
 
     user_id, _, _ = await extract_user(c, m)
@@ -168,9 +166,11 @@ async def id_info(c: Alita, m: Message):
             user2 = m.reply_to_message.forward_from
             await m.reply_text(
                 (tlang(m, "utils.id.id_main")).format(
-                    orig_sender=(await mention_html(user2.first_name, user2.id)),
+                    orig_sender=(await mention_html(user2.first_name,
+                                                    user2.id)),
                     orig_id=f"<code>{user2.id}</code>",
-                    fwd_sender=(await mention_html(user1.first_name, user1.id)),
+                    fwd_sender=(await mention_html(user1.first_name,
+                                                   user1.id)),
                     fwd_id=f"<code>{user1.id}</code>",
                 ),
                 parse_mode="HTML",
@@ -187,23 +187,16 @@ async def id_info(c: Alita, m: Message):
                 parse_mode="HTML",
             )
     elif m.chat.type == "private":
-        await m.reply_text(
-            (tlang(m, "utils.id.my_id")).format(
-                my_id=f"<code>{m.chat.id}</code>",
-            ),
-        )
+        await m.reply_text((tlang(m, "utils.id.my_id")).format(
+            my_id=f"<code>{m.chat.id}</code>", ), )
     else:
-        await m.reply_text(
-            (tlang(m, "utils.id.group_id")).format(
-                group_id=f"<code>{m.chat.id}</code>",
-            ),
-        )
+        await m.reply_text((tlang(m, "utils.id.group_id")).format(
+            group_id=f"<code>{m.chat.id}</code>", ), )
     return
 
 
 @Alita.on_message(
-    command("gifid") & (filters.group | filters.private),
-)
+    command("gifid") & (filters.group | filters.private), )
 async def get_gifid(_, m: Message):
     if m.reply_to_message and m.reply_to_message.animation:
         LOGGER.info(f"{m.from_user.id} used gifid cmd in {m.chat.id}")
@@ -217,16 +210,14 @@ async def get_gifid(_, m: Message):
 
 
 @Alita.on_message(
-    command("github") & (filters.group | filters.private),
-)
+    command("github") & (filters.group | filters.private), )
 async def github(_, m: Message):
     if len(m.text.split()) == 2:
         username = m.text.split(None, 1)[1]
         LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
     else:
         await m.reply_text(
-            f"Usage: <code>{Config.PREFIX_HANDLER}github username</code>",
-        )
+            f"Usage: <code>{Config.PREFIX_HANDLER}github username</code>", )
         return
 
     URL = f"https://api.github.com/users/{username}"
@@ -245,25 +236,22 @@ async def github(_, m: Message):
     bio = r_json.get("bio", None)
     created_at = r_json.get("created_at", "Not Found")
 
-    REPLY = (
-        f"<b>GitHub Info for @{username}:</b>"
-        f"\n<b>Name:</b> <code>{name}</code>\n"
-        f"<b>Bio:</b> <code>{bio}</code>\n"
-        f"<b>URL:</b> {url}\n"
-        f"<b>Public Repos:</b> {public_repos}\n"
-        f"<b>Followers:</b> {followers}\n"
-        f"<b>Following:</b> {following}\n"
-        f"<b>Company:</b> <code>{company}</code>\n"
-        f"<b>Created at:</b> <code>{created_at}</code>"
-    )
+    REPLY = (f"<b>GitHub Info for @{username}:</b>"
+             f"\n<b>Name:</b> <code>{name}</code>\n"
+             f"<b>Bio:</b> <code>{bio}</code>\n"
+             f"<b>URL:</b> {url}\n"
+             f"<b>Public Repos:</b> {public_repos}\n"
+             f"<b>Followers:</b> {followers}\n"
+             f"<b>Following:</b> {following}\n"
+             f"<b>Company:</b> <code>{company}</code>\n"
+             f"<b>Created at:</b> <code>{created_at}</code>")
 
     await m.reply_text(REPLY, quote=True, disable_web_page_preview=True)
     return
 
 
 @Alita.on_message(
-    command("info") & (filters.group | filters.private),
-)
+    command("info") & (filters.group | filters.private), )
 async def my_info(c: Alita, m: Message):
     try:
         user_id, name, user_name = await extract_user(c, m)
@@ -282,23 +270,18 @@ async def my_info(c: Alita, m: Message):
     except KeyError:
         LOGGER.warning(f"Calling api to fetch info about user {user_id}")
         user = await c.get_users(user_id)
-        name = (
-            escape(user["first_name"] + " " + user["last_name"])
-            if user["last_name"]
-            else user["first_name"]
-        )
+        name = (escape(user["first_name"] + " " + user["last_name"])
+                if user["last_name"] else user["first_name"])
         user_name = user["username"]
         user_id = user["id"]
     except PeerIdInvalid:
         await m.reply_text(tlang(m, "utils.no_user_db"))
         return
     except (RPCError, Exception) as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         return
 
     gbanned, reason_gban = gban_db.get_gban(user_id)
@@ -311,12 +294,10 @@ async def my_info(c: Alita, m: Message):
 
     if user_name:
         text += (tlang(m, "utils.user_info.info_text.username")).format(
-            username=user_name,
-        )
+            username=user_name, )
 
     text += (tlang(m, "utils.user_info.info_text.perma_link")).format(
-        perma_link=(await mention_html("Click Here", user_id)),
-    )
+        perma_link=(await mention_html("Click Here", user_id)), )
 
     if gbanned:
         text += f"\nThis user is Globally banned beacuse: {reason_gban}\n"
@@ -336,7 +317,8 @@ async def my_info(c: Alita, m: Message):
 
 @Alita.on_message(command("paste"))
 async def paste_it(_, m: Message):
-    replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")), quote=True)
+    replymsg = await m.reply_text((tlang(m, "utils.paste.pasting")),
+                                  quote=True)
     try:
         if m.reply_to_message:
             if m.reply_to_message.document:
@@ -353,7 +335,8 @@ async def paste_it(_, m: Message):
         url = f"https://hastebin.com/{r.json().get('key')}"
         await replymsg.edit_text(
             (tlang(m, "utils.paste.pasted_nekobin")),
-            reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
+            reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url,
+                                "url")]]),
         )
         LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
     except Exception as e:
@@ -365,7 +348,8 @@ async def paste_it(_, m: Message):
 @Alita.on_message(command("tr"))
 async def translate(_, m: Message):
     trl = Translator()
-    if m.reply_to_message and (m.reply_to_message.text or m.reply_to_message.caption):
+    if m.reply_to_message and (m.reply_to_message.text
+                               or m.reply_to_message.caption):
         if len(m.text.split()) == 1:
             target_lang = "en"
         else:

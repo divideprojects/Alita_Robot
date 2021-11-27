@@ -33,14 +33,18 @@ class Config:
     MESSAGE_DUMP = int(config("MESSAGE_DUMP", default=-100))
     DEV_USERS = [int(i) for i in config("DEV_USERS", default="").split()]
     SUDO_USERS = [int(i) for i in config("SUDO_USERS", default="").split()]
-    WHITELIST_USERS = [int(i) for i in config("WHITELIST_USERS", default="").split()]
+    WHITELIST_USERS = [
+        int(i) for i in config("WHITELIST_USERS", default="").split()
+    ]
     DB_URI = config("DB_URI", default="")
     DB_NAME = config("DB_NAME", default="alita_robot")
     NO_LOAD = config("NO_LOAD", default="").split()
     PREFIX_HANDLER = config("PREFIX_HANDLER", default="/").split()
     SUPPORT_GROUP = config("SUPPORT_GROUP", default="DivideProjectsDiscussion")
     SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="DivideProjects")
-    ENABLED_LOCALES = [str(i) for i in config("ENABLED_LOCALES", default="en").split()]
+    ENABLED_LOCALES = [
+        str(i) for i in config("ENABLED_LOCALES", default="en").split()
+    ]
     VERSION = config("VERSION", default="v2.0")
     WORKERS = int(config("WORKERS", default=16))
     BOT_USERNAME = ""

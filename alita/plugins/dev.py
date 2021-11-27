@@ -88,13 +88,11 @@ async def group_info(c: Alita, m: Message):
 
     replymsg = await m.reply_text("Fetching info about group...!")
     grp_data = await c.get_chat(chat_id)
-    msg = (
-        f"Information for group: {chat_id}\n\n"
-        f"Group Name: {grp_data['title']}\n"
-        f"Members Count: {grp_data['members_count']}\n"
-        f"Type: {grp_data['type']}\n"
-        f"Group ID: {grp_data['id']}"
-    )
+    msg = (f"Information for group: {chat_id}\n\n"
+           f"Group Name: {grp_data['title']}\n"
+           f"Members Count: {grp_data['members_count']}\n"
+           f"Type: {grp_data['type']}\n"
+           f"Group ID: {grp_data['id']}")
     await replymsg.edit_text(msg)
     return
 
@@ -110,14 +108,12 @@ async def test_speed(c: Alita, m: Message):
     bs = s.get_best_server()
     dl = round(s.download() / 1024 / 1024, 2)
     ul = round(s.upload() / 1024 / 1024, 2)
-    await sent.edit_text(
-        (tlang(m, "dev.speedtest.speedtest_txt")).format(
-            host=bs["sponsor"],
-            ping=int(bs["latency"]),
-            download=dl,
-            upload=ul,
-        ),
-    )
+    await sent.edit_text((tlang(m, "dev.speedtest.speedtest_txt")).format(
+        host=bs["sponsor"],
+        ping=int(bs["latency"]),
+        download=dl,
+        upload=ul,
+    ), )
     return
 
 
@@ -192,7 +188,8 @@ async def evaluate_code(c: Alita, m: Message):
     try:
         await sm.edit(final_output)
     except MessageTooLong:
-        with BytesIO(str.encode(await remove_markdown_and_html(final_output))) as f:
+        with BytesIO(str.encode(await
+                                remove_markdown_and_html(final_output))) as f:
             f.name = "py.txt"
             await m.reply_document(
                 document=f,
@@ -206,7 +203,8 @@ async def evaluate_code(c: Alita, m: Message):
 
 
 async def aexec(code, c, m):
-    exec("async def __aexec(c, m): " + "".join(f"\n {l}" for l in code.split("\n")))
+    exec("async def __aexec(c, m): " + "".join(f"\n {l}"
+                                               for l in code.split("\n")))
     return await locals()["__aexec"](c, m)
 
 
@@ -323,12 +321,14 @@ async def uptime(_, m: Message):
 @Alita.on_message(command("leavechat", dev_cmd=True))
 async def leave_chat(c: Alita, m: Message):
     if len(m.text.split()) != 2:
-        await m.reply_text("Supply a chat id which I should leave!", quoet=True)
+        await m.reply_text("Supply a chat id which I should leave!",
+                           quoet=True)
         return
 
     chat_id = m.text.split(None, 1)[1]
 
-    replymsg = await m.reply_text(f"Trying to leave chat {chat_id}...", quote=True)
+    replymsg = await m.reply_text(f"Trying to leave chat {chat_id}...",
+                                  quote=True)
     try:
         await c.leave_chat(chat_id)
         await replymsg.edit_text(f"Left <code>{chat_id}</code>.")
@@ -336,7 +336,8 @@ async def leave_chat(c: Alita, m: Message):
         await replymsg.edit_text("Haven't seen this group in this session!")
     except RPCError as ef:
         LOGGER.error(ef)
-        await replymsg.edit_text(f"Failed to leave chat!\nError: <code>{ef}</code>.")
+        await replymsg.edit_text(
+            f"Failed to leave chat!\nError: <code>{ef}</code>.")
     return
 
 
@@ -363,8 +364,7 @@ async def chat_broadcast(c: Alita, m: Message):
             continue
 
     await exmsg.edit_text(
-        f"Done broadcasting ✅\nSent message to {done_broadcast} chats",
-    )
+        f"Done broadcasting ✅\nSent message to {done_broadcast} chats", )
 
     if err_str:
         with BytesIO(str.encode(await remove_markdown_and_html(err_str))) as f:

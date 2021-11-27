@@ -90,7 +90,10 @@ class Disabling(MongoDB):
         with INSERTION_LOCK:
             return self.update(
                 {"_id": self.chat_id},
-                {"_id": self.chat_id, "action": action},
+                {
+                    "_id": self.chat_id,
+                    "action": action
+                },
             )
 
     def get_action(self):
@@ -129,7 +132,8 @@ class Disabling(MongoDB):
                     "action": "none",
                 }
                 self.insert_one(new_data)
-                LOGGER.info(f"Initialized Disabling Document for chat {self.chat_id}")
+                LOGGER.info(
+                    f"Initialized Disabling Document for chat {self.chat_id}")
                 return new_data
         return chat_data
 
@@ -146,7 +150,11 @@ def __load_disable_cache():
     collection = MongoDB(Disabling.db_name)
     all_data = collection.find_all()
     DISABLED_CMDS = {
-        i["_id"]: {"action": i["action"], "commands": i["commands"]} for i in all_data
+        i["_id"]: {
+            "action": i["action"],
+            "commands": i["commands"]
+        }
+        for i in all_data
     }
 
 

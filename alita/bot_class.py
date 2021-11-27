@@ -49,7 +49,6 @@ if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
 
 class Alita(Client):
     """Starts the Pyrogram Client on the Bot Token when we do 'python3 -m alita'"""
-
     def __init__(self):
         name = self.__class__.__name__.lower()
 
@@ -72,7 +71,8 @@ class Alita(Client):
         Config.BOT_NAME = meh.first_name
         Config.BOT_USERNAME = meh.username
 
-        startmsg = await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
+        startmsg = await self.send_message(MESSAGE_DUMP,
+                                           "<i>Starting Bot...</i>")
 
         # Load Languages
         lang_status = len(lang_dict) >= 1
@@ -91,14 +91,11 @@ class Alita(Client):
 
         # Send a message to MESSAGE_DUMP telling that the
         # bot has started and has loaded all plugins!
-        await startmsg.edit_text(
-            (
-                f"<b><i>@{meh.username} started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n"
-                f"\n<b>Python:</b> <u>{python_version()}</u>\n"
-                "\n<b>Loaded Plugins:</b>\n"
-                f"<i>{cmd_list}</i>\n"
-            ),
-        )
+        await startmsg.edit_text((
+            f"<b><i>@{meh.username} started on Pyrogram v{__version__} (Layer - {layer})</i></b>\n"
+            f"\n<b>Python:</b> <u>{python_version()}</u>\n"
+            "\n<b>Loaded Plugins:</b>\n"
+            f"<i>{cmd_list}</i>\n"), )
 
         LOGGER.info("Bot Started Successfully!\n")
 
@@ -110,9 +107,9 @@ class Alita(Client):
         await self.send_document(
             MESSAGE_DUMP,
             document=LOGFILE,
-            caption=(
-                "Bot Stopped!\n\n" f"Uptime: {runtime}\n" f"<code>{LOG_DATETIME}</code>"
-            ),
+            caption=("Bot Stopped!\n\n"
+                     f"Uptime: {runtime}\n"
+                     f"<code>{LOG_DATETIME}</code>"),
         )
         if MESSAGE_DUMP:
             # LOG_CHANNEL is not necessary
@@ -127,5 +124,4 @@ class Alita(Client):
             f"""Bot Stopped.
             Logs have been uploaded to the MESSAGE_DUMP Group!
             Runtime: {runtime}s\n
-        """,
-        )
+        """, )

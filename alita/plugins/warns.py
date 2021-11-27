@@ -41,8 +41,7 @@ from alita.vars import Config
 
 
 @Alita.on_message(
-    command(["warn", "swarn", "dwarn"]) & restrict_filter,
-)
+    command(["warn", "swarn", "dwarn"]) & restrict_filter, )
 async def warn(c: Alita, m: Message):
     if m.reply_to_message:
         r_id = m.reply_to_message.message_id
@@ -60,7 +59,8 @@ async def warn(c: Alita, m: Message):
         reason = None
 
     if not len(m.command) > 1 and not m.reply_to_message:
-        await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
+        await m.reply_text(
+            "I can't warn nothing! Tell me user whom I should warn")
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
@@ -79,10 +79,14 @@ async def warn(c: Alita, m: Message):
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
-        admins_group = {i[0] for i in (await admin_cache_reload(m, "warn_user"))}
+        admins_group = {
+            i[0]
+            for i in (await admin_cache_reload(m, "warn_user"))
+        }
 
     if user_id in admins_group:
-        await m.reply_text("This user is admin in this chat, I can't warn them!")
+        await m.reply_text(
+            "This user is admin in this chat, I can't warn them!")
         return
 
     warn_db = Warns(m.chat.id)
@@ -101,13 +105,10 @@ async def warn(c: Alita, m: Message):
             await m.chat.restrict_member(user_id, ChatPermissions())
             action = "muted"
         await m.reply_text(
-            (
-                f"Warnings {num}/{warn_settings['warn_limit']}!"
-                f"\n<b>Reason for last warn</b>:\n{reason}"
-                if reason
-                else "\n"
-                f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
-            ),
+            (f"Warnings {num}/{warn_settings['warn_limit']}!"
+             f"\n<b>Reason for last warn</b>:\n{reason}" if reason else "\n"
+             f"{(await mention_html(user_first_name, user_id))} has been <b>{action}!</b>"
+             ),
             reply_to_message_id=r_id,
         )
         await m.stop_propagation()
@@ -129,24 +130,22 @@ async def warn(c: Alita, m: Message):
         await m.stop_propagation()
     if m.text.split()[0] == "/dwarn":
         if not m.reply_to_message:
-            await m.reply_text("Reply to a message to delete it and ban the user!")
+            await m.reply_text(
+                "Reply to a message to delete it and ban the user!")
             await m.stop_propagation()
         await m.reply_to_message.delete()
     txt = f"{(await mention_html(user_first_name, user_id))} has {num}/{warn_settings['warn_limit']} warnings!"
     txt += f"\n<b>Reason for last warn</b>:\n{reason}" if reason else ""
     await m.reply_text(
         txt,
-        reply_markup=InlineKeyboardMarkup(
+        reply_markup=InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton(
-                        "Remove Warn ❌",
-                        callback_data=f"warn.remove.{user_id}",
-                    ),
-                ]
-                + [kb],
-            ],
-        ),
+                InlineKeyboardButton(
+                    "Remove Warn ❌",
+                    callback_data=f"warn.remove.{user_id}",
+                ),
+            ] + [kb],
+        ], ),
         reply_to_message_id=r_id,
     )
     await m.stop_propagation()
@@ -156,7 +155,8 @@ async def warn(c: Alita, m: Message):
 async def reset_warn(c: Alita, m: Message):
 
     if not len(m.command) > 1 and not m.reply_to_message:
-        await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
+        await m.reply_text(
+            "I can't warn nothing! Tell me user whom I should warn")
         return
 
     user_id, user_first_name, _ = await extract_user(c, m)
@@ -177,10 +177,14 @@ async def reset_warn(c: Alita, m: Message):
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
-        admins_group = {i[0] for i in (await admin_cache_reload(m, "reset_warns"))}
+        admins_group = {
+            i[0]
+            for i in (await admin_cache_reload(m, "reset_warns"))
+        }
 
     if user_id in admins_group:
-        await m.reply_text("This user is admin in this chat, I can't warn them!")
+        await m.reply_text(
+            "This user is admin in this chat, I can't warn them!")
         return
 
     warn_db = Warns(m.chat.id)
@@ -214,8 +218,7 @@ async def list_warns(c: Alita, m: Message):
 
     if user_id in admins_group:
         await m.reply_text(
-            "This user is admin in this chat, they don't have any warns!",
-        )
+            "This user is admin in this chat, they don't have any warns!", )
         return
 
     warn_db = Warns(m.chat.id)
@@ -226,14 +229,14 @@ async def list_warns(c: Alita, m: Message):
         await m.reply_text("This user has no warns!")
         return
     msg = f"{(await mention_html(user_first_name,user_id))} has <b>{num_warns}/{warn_settings['warn_limit']}</b> warns!\n\n<b>Reasons:</b>\n"
-    msg += "\n".join([("- No reason" if i is None else f" - {i}") for i in warns])
+    msg += "\n".join([("- No reason" if i is None else f" - {i}")
+                      for i in warns])
     await m.reply_text(msg)
     return
 
 
 @Alita.on_message(
-    command(["rmwarn", "removewarn"]) & restrict_filter,
-)
+    command(["rmwarn", "removewarn"]) & restrict_filter, )
 async def remove_warn(c: Alita, m: Message):
 
     if not len(m.command) > 1 and not m.reply_to_message:
@@ -262,8 +265,7 @@ async def remove_warn(c: Alita, m: Message):
 
     if user_id in admins_group:
         await m.reply_text(
-            "This user is admin in this chat, they don't have any warns!",
-        )
+            "This user is admin in this chat, they don't have any warns!", )
         return
 
     warn_db = Warns(m.chat.id)
@@ -273,12 +275,9 @@ async def remove_warn(c: Alita, m: Message):
         return
 
     _, num_warns = warn_db.remove_warn(user_id)
-    await m.reply_text(
-        (
-            f"{(await mention_html(user_first_name,user_id))} now has <b>{num_warns}</b> warnings!\n"
-            "Their last warn was removed."
-        ),
-    )
+    await m.reply_text((
+        f"{(await mention_html(user_first_name,user_id))} now has <b>{num_warns}</b> warnings!\n"
+        "Their last warn was removed."), )
     return
 
 
@@ -288,7 +287,10 @@ async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[q.message.chat.id]}
     except KeyError:
-        admins_group = {i[0] for i in (await admin_cache_reload(q, "warn_btn"))}
+        admins_group = {
+            i[0]
+            for i in (await admin_cache_reload(q, "warn_btn"))
+        }
 
     if q.from_user.id not in admins_group:
         await q.answer("You are not allowed to use this!", show_alert=True)
@@ -304,28 +306,24 @@ async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
     if action == "remove":
         warn_db = Warns(q.message.chat.id)
         _, num_warns = warn_db.remove_warn(user_id)
-        await q.message.edit_text(
-            (
-                f"Admin {(await mention_html(q.from_user.first_name, q.from_user.id))} "
-                "removed last warn for "
-                f"{(await mention_html(user_first_name, user_id))}\n"
-                f"<b>Current Warnings:</b> {num_warns}"
-            ),
-        )
+        await q.message.edit_text((
+            f"Admin {(await mention_html(q.from_user.first_name, q.from_user.id))} "
+            "removed last warn for "
+            f"{(await mention_html(user_first_name, user_id))}\n"
+            f"<b>Current Warnings:</b> {num_warns}"), )
     if action == "kick":
         try:
-            await c.kick_chat_member(chat_id, user_id, until_date=int(time() + 45))
-            await q.message.edit_text(
-                (
-                    f"Admin {(await mention_html(q.from_user.first_name, q.from_user.id))} "
-                    "kicked user "
-                    f"{(await mention_html(user_first_name, user_id))} for last warning!"
-                ),
-            )
+            await c.kick_chat_member(chat_id,
+                                     user_id,
+                                     until_date=int(time() + 45))
+            await q.message.edit_text((
+                f"Admin {(await mention_html(q.from_user.first_name, q.from_user.id))} "
+                "kicked user "
+                f"{(await mention_html(user_first_name, user_id))} for last warning!"
+            ), )
         except RPCError as err:
             await q.message.edit_text(
-                f"🛑 Failed to Kick\n<b>Error:</b>\n</code>{err}</code>",
-            )
+                f"🛑 Failed to Kick\n<b>Error:</b>\n</code>{err}</code>", )
 
     await q.answer()
     return
@@ -336,12 +334,9 @@ async def get_settings(_, m: Message):
     warn_settings_db = WarnSettings(m.chat.id)
     settings = warn_settings_db.get_warnings_settings()
     await m.reply_text(
-        (
-            "This group has these following settings:\n"
-            f"<b>Warn Limit:</b> <code>{settings['warn_limit']}</code>\n"
-            f"<b>Warn Mode:</b> <code>{settings['warn_mode']}</code>"
-        ),
-    )
+        ("This group has these following settings:\n"
+         f"<b>Warn Limit:</b> <code>{settings['warn_limit']}</code>\n"
+         f"<b>Warn Mode:</b> <code>{settings['warn_mode']}</code>"), )
     return
 
 
@@ -351,12 +346,10 @@ async def warnmode(_, m: Message):
     if len(m.text.split()) > 1:
         wm = (m.text.split(None, 1)[1]).lower()
         if wm not in ("kick", "ban", "mute"):
-            await m.reply_text(
-                (
-                    "Please choose a valid warn mode!"
-                    "Valid options are: <code>ban</code>,<code>kick</code>,<code>mute</code>"
-                ),
-            )
+            await m.reply_text((
+                "Please choose a valid warn mode!"
+                "Valid options are: <code>ban</code>,<code>kick</code>,<code>mute</code>"
+            ), )
             return
         warnmode_var = warn_settings_db.set_warnmode(wm)
         await m.reply_text(f"Warn Mode has been set to: {warnmode_var}")
