@@ -596,7 +596,7 @@ strings:
     get_rules: |-
       Reglerne for <b>{chat} are:</b>
 
-       
+
       {rules}
     no_rules: "Admins for denne gruppe har ikke konfigureret regler! Det betyder ikke, at du kan bryde DECORUM for denne gruppe!"
     pm_me: "Klik på nedenstående knap for at få vist gruppereglerne!"
