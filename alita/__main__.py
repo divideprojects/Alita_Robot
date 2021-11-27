@@ -16,9 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from time import time
-
-from alita import LOGGER
 from alita.bot_class import Alita
 
 if __name__ == "__main__":

@@ -34,13 +34,12 @@ from alita import (
     NO_LOAD,
     UPTIME,
     WORKERS,
-    get_self,
     load_cmds,
 )
 from alita.database import MongoDB
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict
-from alita.utils.kbhelpers import ikb
+from alita.vars import Config
 
 INITIAL_LOCK = RLock()
 
@@ -70,8 +69,11 @@ class Alita(Client):
         """Start the bot."""
         await super().start()
 
-        meh = await get_self(self)  # Get bot info from pyrogram client
+        meh = await self.get_me()  # Get bot info from pyrogram client
         LOGGER.info("Starting bot...")
+        Config.BOT_ID = meh.id
+        Config.BOT_NAME = meh.first_name
+        Config.BOT_USERNAME = meh.username
 
         startmsg = await self.send_message(MESSAGE_DUMP, "<i>Starting Bot...</i>")
 

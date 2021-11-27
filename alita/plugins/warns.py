@@ -38,14 +38,13 @@ from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 from alita.utils.custom_filters import admin_filter, command, restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
+from alita.vars import Config
 
 
 @Alita.on_message(
     command(["warn", "swarn", "dwarn"]) & restrict_filter,
 )
 async def warn(c: Alita, m: Message):
-    from alita import BOT_ID, BOT_USERNAME
-
     if m.reply_to_message:
         r_id = m.reply_to_message.message_id
         if len(m.text.split()) >= 2:
@@ -67,7 +66,7 @@ async def warn(c: Alita, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I warn myself?")
         return
 
@@ -118,7 +117,7 @@ async def warn(c: Alita, m: Message):
     if rules:
         kb = InlineKeyboardButton(
             "Rules 📋",
-            url=f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
+            url=f"https://t.me/{Config.BOT_USERNAME}?start=rules_{m.chat.id}",
         )
     else:
         kb = InlineKeyboardButton(
@@ -156,7 +155,6 @@ async def warn(c: Alita, m: Message):
 
 @Alita.on_message(command("resetwarns") & restrict_filter)
 async def reset_warn(c: Alita, m: Message):
-    from alita import BOT_ID
 
     if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
@@ -164,7 +162,7 @@ async def reset_warn(c: Alita, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I warn myself?")
         return
 
@@ -196,11 +194,10 @@ async def reset_warn(c: Alita, m: Message):
 
 @Alita.on_message(command("warns") & filters.group)
 async def list_warns(c: Alita, m: Message):
-    from alita import BOT_ID
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I warn myself?")
         return
 
@@ -239,7 +236,6 @@ async def list_warns(c: Alita, m: Message):
     command(["rmwarn", "removewarn"]) & restrict_filter,
 )
 async def remove_warn(c: Alita, m: Message):
-    from alita import BOT_ID
 
     if not len(m.command) > 1 and not m.reply_to_message:
         await m.reply_text(
@@ -249,7 +245,7 @@ async def remove_warn(c: Alita, m: Message):
 
     user_id, user_first_name, _ = await extract_user(c, m)
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I warn myself?")
         return
 

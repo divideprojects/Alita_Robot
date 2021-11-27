@@ -16,11 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from time import time
 from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import PeerIdInvalid, RPCError, Unauthorized, UserIsBlocked
+from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
 
 from alita import LOGGER, SUPPORT_STAFF

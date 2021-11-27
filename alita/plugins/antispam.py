@@ -23,7 +23,7 @@ from traceback import format_exc
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, UserIsBlocked
 from pyrogram.types import Message
 
-from alita import BOT_ID, LOGGER, MESSAGE_DUMP, SUPPORT_GROUP, SUPPORT_STAFF
+from alita import LOGGER, MESSAGE_DUMP, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
 from alita.database.users_db import Users
@@ -32,6 +32,7 @@ from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import command
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
+from alita.vars import Config
 
 # Initialize
 db = GBan()
@@ -58,7 +59,7 @@ async def gban(c: Alita, m: Message):
         await m.reply_text(tlang(m, "antispam.part_of_support"))
         return
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text(tlang(m, "antispam.gban.not_self"))
         return
 
@@ -121,7 +122,7 @@ async def ungban(c: Alita, m: Message):
         await m.reply_text(tlang(m, "antispam.part_of_support"))
         return
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text(tlang(m, "antispam.ungban.not_self"))
         return
 

@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import asyncio
 from html import escape
 from io import BytesIO
 from os import remove
@@ -32,12 +31,12 @@ from alita import (
     DEV_USERS,
     LOGGER,
     OWNER_ID,
-    PREFIX_HANDLER,
     SUDO_USERS,
     SUPPORT_GROUP,
     SUPPORT_STAFF,
     WHITELIST_USERS,
 )
+from alita.vars import Config
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
 from alita.database.users_db import Users
@@ -227,7 +226,7 @@ async def github(_, m: Message):
         LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
     else:
         await m.reply_text(
-            f"Usage: <code>{PREFIX_HANDLER}github username</code>",
+            f"Usage: <code>{Config.PREFIX_HANDLER}github username</code>",
         )
         return
 

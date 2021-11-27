@@ -18,10 +18,7 @@
 
 from datetime import datetime
 from threading import RLock
-from time import time
-from traceback import format_exc
 
-from alita import LOGGER
 from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()

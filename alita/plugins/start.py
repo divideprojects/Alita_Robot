@@ -32,6 +32,7 @@ from alita.utils.start_utils import (
     get_private_note,
     get_private_rules,
 )
+from alita.vars import Config
 
 
 @Alita.on_message(
@@ -152,8 +153,6 @@ async def commands_menu(_, q: CallbackQuery):
 
 @Alita.on_message(command("help"))
 async def help_menu(_, m: Message):
-    from alita import BOT_USERNAME
-
     if len(m.text.split()) >= 2:
         help_option = (m.text.split(None, 1)[1]).lower()
         help_msg, help_kb = await get_help_msg(m, help_option)
@@ -177,7 +176,15 @@ async def help_menu(_, m: Message):
             await m.reply_text(
                 (tlang(m, "start.public_help").format(help_option=help_option)),
                 reply_markup=ikb(
-                    [[("Help", f"t.me/{BOT_USERNAME}?start={help_option}", "url")]],
+                    [
+                        [
+                            (
+                                "Help",
+                                f"t.me/{Config.BOT_USERNAME}?start={help_option}",
+                                "url",
+                            ),
+                        ],
+                    ],
                 ),
             )
     else:
@@ -190,7 +197,9 @@ async def help_menu(_, m: Message):
             )
             msg = tlang(m, "general.commands_available")
         else:
-            keyboard = ikb([[("Help", f"t.me/{BOT_USERNAME}?start=help", "url")]])
+            keyboard = ikb(
+                [[("Help", f"t.me/{Config.BOT_USERNAME}?start=help", "url")]],
+            )
             msg = tlang(m, "start.pm_for_help")
 
         await m.reply_text(

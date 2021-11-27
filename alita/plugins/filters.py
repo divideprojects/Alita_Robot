@@ -15,14 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from html import escape
 from re import escape as re_escape
 from secrets import choice
 from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 
 from alita.bot_class import LOGGER, Alita
 from alita.database.filters_db import Filters

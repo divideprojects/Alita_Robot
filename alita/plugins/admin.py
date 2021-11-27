@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import asyncio
+from asyncio import sleep
+from html import escape
 from os import remove
 from traceback import format_exc
 
@@ -27,7 +28,6 @@ from pyrogram.errors import (
     RightForbidden,
     RPCError,
     UserAdminInvalid,
-    UserIdInvalid,
 )
 from pyrogram.types import Message
 
@@ -46,6 +46,7 @@ from alita.utils.custom_filters import (
 )
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
+from alita.vars import Config
 
 
 @Alita.on_message(command("adminlist"))
@@ -131,7 +132,7 @@ async def zombie_clean(c: Alita, m: Message):
             except UserAdminInvalid:
                 zombie -= 1
             except FloodWait as e:
-                await asyncio.sleep(e.x)
+                await sleep(e.x)
     if zombie == 0:
         return await wait.edit_text("Group is clean!")
     return await wait.edit_text(
@@ -199,7 +200,6 @@ async def tag_admins(_, m: Message):
 @Alita.on_message(command("fullpromote") & promote_filter)
 async def fullpromote_usr(c: Alita, m: Message):
     global ADMIN_CACHE
-    from alita import BOT_ID
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
@@ -210,9 +210,9 @@ async def fullpromote_usr(c: Alita, m: Message):
     except Exception:
         return
 
-    bot = await c.get_chat_member(m.chat.id, BOT_ID)
+    bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, how can I even promote myself?")
         return
 
@@ -313,7 +313,6 @@ async def fullpromote_usr(c: Alita, m: Message):
 async def promote_usr(c: Alita, m: Message):
 
     global ADMIN_CACHE
-    from alita import BOT_ID
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
@@ -324,9 +323,9 @@ async def promote_usr(c: Alita, m: Message):
     except Exception:
         return
 
-    bot = await c.get_chat_member(m.chat.id, BOT_ID)
+    bot = await c.get_chat_member(m.chat.id, Config.BOT_ID)
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, how can I even promote myself?")
         return
 
@@ -421,7 +420,6 @@ async def promote_usr(c: Alita, m: Message):
 
 @Alita.on_message(command("demote") & promote_filter)
 async def demote_usr(c: Alita, m: Message):
-    from alita import BOT_ID
 
     global ADMIN_CACHE
 
@@ -434,7 +432,7 @@ async def demote_usr(c: Alita, m: Message):
     except Exception:
         return
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Get an admin to demote me!")
         return
 
@@ -594,7 +592,6 @@ async def setgdes(_, m: Message):
 
 @Alita.on_message(command("title") & admin_filter)
 async def set_user_title(c: Alita, m: Message):
-    from alita import BOT_ID
 
     user = await m.chat.get_member(m.from_user.id)
     if not user.can_promote_members and user.status != "creator":
@@ -620,7 +617,7 @@ async def set_user_title(c: Alita, m: Message):
     if not user_id:
         return await m.reply_text("Cannot find user!")
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         return await m.reply_text("Huh, why ?")
 
     if not reason:

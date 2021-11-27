@@ -30,7 +30,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import BOT_ID, LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
+from alita import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
@@ -38,6 +38,7 @@ from alita.utils.custom_filters import command, restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 from alita.utils.string import extract_time
+from alita.vars import Config
 
 
 @Alita.on_message(command("tmute") & restrict_filter)
@@ -54,7 +55,7 @@ async def tmute_usr(c: Alita, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute !")
         return
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -168,7 +169,7 @@ async def dtmute_usr(c: Alita, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute !")
         return
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -278,7 +279,7 @@ async def stmute_usr(c: Alita, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute !")
         return
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -382,7 +383,7 @@ async def mute_usr(c: Alita, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute")
         return
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -469,7 +470,7 @@ async def smute_usr(c: Alita, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute")
         return
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -551,7 +552,7 @@ async def dmute_usr(c: Alita, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to mute")
         return
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I mute myself?")
         return
 
@@ -636,7 +637,7 @@ async def unmute_usr(c: Alita, m: Message):
     except Exception:
         return
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I unmute myself if you are using me?")
         return
 
