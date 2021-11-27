@@ -115,6 +115,7 @@ class Disabling(MongoDB):
 
     def rm_all_disabled(self):
         with INSERTION_LOCK:
+            DISABLED_CMDS[self.chat_id]["commands"] = []
             return self.update(
                 {"_id": self.chat_id},
                 {"commands": []},
