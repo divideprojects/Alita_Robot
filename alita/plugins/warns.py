@@ -20,13 +20,9 @@ from time import time
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import (
-    CallbackQuery,
-    ChatPermissions,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import (CallbackQuery, ChatPermissions,
+                            InlineKeyboardButton, InlineKeyboardMarkup,
+                            Message)
 
 from alita import LOGGER, SUPPORT_STAFF
 from alita.bot_class import Alita
