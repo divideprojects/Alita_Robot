@@ -6,27 +6,30 @@
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
 from pyrogram import filters
-from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.errors import MessageNotModified
+from pyrogram.errors import QueryIdInvalid
+from pyrogram.errors import UserIsBlocked
+from pyrogram.types import CallbackQuery
+from pyrogram.types import Message
 
-from alita import HELP_COMMANDS, LOGGER
+from alita import HELP_COMMANDS
+from alita import LOGGER
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import command
 from alita.utils.kbhelpers import ikb
-from alita.utils.start_utils import (gen_cmds_kb, gen_start_kb, get_help_msg,
-                                     get_private_note, get_private_rules)
+from alita.utils.start_utils import gen_cmds_kb
+from alita.utils.start_utils import gen_start_kb
+from alita.utils.start_utils import get_help_msg
+from alita.utils.start_utils import get_private_note
+from alita.utils.start_utils import get_private_rules
 from alita.vars import Config
 
 
