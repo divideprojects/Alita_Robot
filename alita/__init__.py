@@ -52,12 +52,8 @@ LOGGER = getLogger(__name__)
 
 # if version < 3.9, stop bot.
 if version_info[0] < 3 or version_info[1] < 7:
-    LOGGER.error(
-        (
-            "You MUST have a Python Version of at least 3.7!\n"
-            "Multiple features depend on this. Bot quitting."
-        ),
-    )
+    LOGGER.error(("You MUST have a Python Version of at least 3.7!\n"
+                  "Multiple features depend on this. Bot quitting."), )
     sysexit(1)  # Quit the Script
 
 # the secret configuration specific things
@@ -116,7 +112,8 @@ async def load_cmds(all_plugins):
     for single in all_plugins:
         # If plugin in NO_LOAD, skip the plugin
         if single.lower() in [i.lower() for i in Config.NO_LOAD]:
-            LOGGER.warning(f"Not loading '{single}' s it's added in NO_LOAD list")
+            LOGGER.warning(
+                f"Not loading '{single}' s it's added in NO_LOAD list")
             continue
 
         imported_module = imp_mod("alita.plugins." + single)
@@ -127,12 +124,9 @@ async def load_cmds(all_plugins):
         plugin_dict_name = f"plugins.{plugin_name}.main"
 
         if plugin_dict_name in HELP_COMMANDS:
-            raise Exception(
-                (
-                    "Can't have two plugins with the same name! Please change one\n"
-                    f"Error while importing '{imported_module.__name__}'"
-                ),
-            )
+            raise Exception((
+                "Can't have two plugins with the same name! Please change one\n"
+                f"Error while importing '{imported_module.__name__}'"), )
 
         HELP_COMMANDS[plugin_dict_name] = {
             "buttons": [],
@@ -142,20 +136,19 @@ async def load_cmds(all_plugins):
         }
 
         if hasattr(imported_module, "__buttons__"):
-            HELP_COMMANDS[plugin_dict_name]["buttons"] = imported_module.__buttons__
+            HELP_COMMANDS[plugin_dict_name][
+                "buttons"] = imported_module.__buttons__
         if hasattr(imported_module, "_DISABLE_CMDS_"):
             HELP_COMMANDS[plugin_dict_name][
-                "disablable"
-            ] = imported_module._DISABLE_CMDS_
+                "disablable"] = imported_module._DISABLE_CMDS_
         if hasattr(imported_module, "__alt_name__"):
-            HELP_COMMANDS[plugin_dict_name]["alt_cmds"] = imported_module.__alt_name__
+            HELP_COMMANDS[plugin_dict_name][
+                "alt_cmds"] = imported_module.__alt_name__
 
         # Add the plugin name to cmd list
         (HELP_COMMANDS[plugin_dict_name]["alt_cmds"]).append(plugin_name)
     if NO_LOAD:
         LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
-    return (
-        ", ".join((i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys()))
-        + "\n"
-    )
+    return (", ".join((i.split(".")[1]).capitalize()
+                      for i in list(HELP_COMMANDS.keys())) + "\n")

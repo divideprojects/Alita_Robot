@@ -68,14 +68,15 @@ async def save_note(_, m: Message):
         await m.reply_text("Cannot save a note which starts with '<' or '>'")
         return
 
-    if not m.reply_to_message and data_type == Types.TEXT and len(m.text.split()) < 3:
-        await m.reply_text(f"<code>{m.text}</code>\n\nError: There is no text in here!")
+    if not m.reply_to_message and data_type == Types.TEXT and len(
+            m.text.split()) < 3:
+        await m.reply_text(
+            f"<code>{m.text}</code>\n\nError: There is no text in here!")
         return
 
     if not data_type:
         await m.reply_text(
-            f"<code>{m.text}</code>\n\nError: There is no data in here!",
-        )
+            f"<code>{m.text}</code>\n\nError: There is no data in here!", )
         return
 
     db.save_note(m.chat.id, note_name, text, data_type, content)
@@ -95,20 +96,19 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
 
     if priv_notes_status:
 
-        note_hash = next(i[1] for i in db.get_all_notes(m.chat.id) if i[0] == note_name)
+        note_hash = next(i[1] for i in db.get_all_notes(m.chat.id)
+                         if i[0] == note_name)
         await reply_text(
             f"Click on the button to get the note <code>{note_name}</code>",
-            reply_markup=ikb(
+            reply_markup=ikb([
                 [
-                    [
-                        (
-                            "Click Me!",
-                            f"https://t.me/{Config.BOT_USERNAME}?start=note_{m.chat.id}_{note_hash}",
-                            "url",
-                        ),
-                    ],
+                    (
+                        "Click Me!",
+                        f"https://t.me/{Config.BOT_USERNAME}?start=note_{m.chat.id}_{note_hash}",
+                        "url",
+                    ),
                 ],
-            ),
+            ], ),
         )
         return
 
@@ -136,7 +136,8 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         "mention",
         "chatname",
     ]
-    text = await escape_mentions_using_curly_brackets(m, note_reply, parse_words)
+    text = await escape_mentions_using_curly_brackets(m, note_reply,
+                                                      parse_words)
     teks, button = await parse_button(text)
     button = await build_keyboard(button)
     button = InlineKeyboardMarkup(button) if button else None
@@ -171,10 +172,10 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                 )
                 return
         elif msgtype in (
-            Types.STICKER,
-            Types.VIDEO_NOTE,
-            Types.CONTACT,
-            Types.ANIMATED_STICKER,
+                Types.STICKER,
+                Types.VIDEO_NOTE,
+                Types.CONTACT,
+                Types.ANIMATED_STICKER,
         ):
             await (await send_cmd(c, msgtype))(
                 m.chat.id,
@@ -243,10 +244,10 @@ async def get_raw_note(c: Alita, m: Message, note: str):
         teks = getnotes["note_value"]
         await m.reply_text(teks, parse_mode=None, reply_to_message_id=msg_id)
     elif msgtype in (
-        Types.STICKER,
-        Types.VIDEO_NOTE,
-        Types.CONTACT,
-        Types.ANIMATED_STICKER,
+            Types.STICKER,
+            Types.VIDEO_NOTE,
+            Types.CONTACT,
+            Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(
             m.chat.id,
@@ -301,7 +302,9 @@ async def get_note(c: Alita, m: Message):
             return
 
         await get_note_func(c, m, note, priv_notes_status)
-    elif len(m.text.split()) == 3 and (m.text.split())[2] in ["noformat", "raw"]:
+    elif len(m.text.split()) == 3 and (m.text.split())[2] in [
+            "noformat", "raw"
+    ]:
         note = ((m.text.split())[1]).lower()
         await get_raw_note(c, m, note)
     else:
@@ -311,7 +314,8 @@ async def get_note(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(command(["privnotes", "privatenotes"]) & admin_filter & ~filters.bot)
+@Alita.on_message(
+    command(["privnotes", "privatenotes"]) & admin_filter & ~filters.bot)
 async def priv_notes(_, m: Message):
 
     chat_id = m.chat.id
@@ -319,11 +323,13 @@ async def priv_notes(_, m: Message):
         option = (m.text.split())[1]
         if option in ("on", "yes"):
             db_settings.set_privatenotes(chat_id, True)
-            LOGGER.info(f"{m.from_user.id} enabled privatenotes in {m.chat.id}")
+            LOGGER.info(
+                f"{m.from_user.id} enabled privatenotes in {m.chat.id}")
             msg = "Set private notes to On"
         elif option in ("off", "no"):
             db_settings.set_privatenotes(chat_id, False)
-            LOGGER.info(f"{m.from_user.id} disabled privatenotes in {m.chat.id}")
+            LOGGER.info(
+                f"{m.from_user.id} disabled privatenotes in {m.chat.id}")
             msg = "Set private notes to Off"
         else:
             msg = "Enter correct option"
@@ -331,7 +337,8 @@ async def priv_notes(_, m: Message):
     elif len(m.text.split()) == 1:
         curr_pref = db_settings.get_privatenotes(m.chat.id)
         msg = msg = f"Private Notes: {curr_pref}"
-        LOGGER.info(f"{m.from_user.id} fetched privatenotes preference in {m.chat.id}")
+        LOGGER.info(
+            f"{m.from_user.id} fetched privatenotes preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
         await m.replt_text("Check help on how to use this command!")
@@ -353,17 +360,15 @@ async def local_notes(_, m: Message):
     curr_pref = db_settings.get_privatenotes(m.chat.id)
     if curr_pref:
 
-        pm_kb = ikb(
+        pm_kb = ikb([
             [
-                [
-                    (
-                        "All Notes",
-                        f"https://t.me/{Config.BOT_USERNAME}?start=notes_{m.chat.id}",
-                        "url",
-                    ),
-                ],
+                (
+                    "All Notes",
+                    f"https://t.me/{Config.BOT_USERNAME}?start=notes_{m.chat.id}",
+                    "url",
+                ),
             ],
-        )
+        ], )
         await m.reply_text(
             "Click on the button below to get notes!",
             quote=True,
@@ -408,9 +413,8 @@ async def clear_allnote(_, m: Message):
 
     await m.reply_text(
         "Are you sure you want to clear all notes?",
-        reply_markup=ikb(
-            [[("⚠️ Confirm", "clear_notes"), ("❌ Cancel", "close_admin")]],
-        ),
+        reply_markup=ikb([[("⚠️ Confirm", "clear_notes"),
+                           ("❌ Cancel", "close_admin")]], ),
     )
     return
 

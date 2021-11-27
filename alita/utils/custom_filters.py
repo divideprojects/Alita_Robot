@@ -86,8 +86,8 @@ def command(
                 # i.e. PM
                 user_status = "creator"
             if str(matches.group(1)) in disable_list and user_status not in {
-                "creator",
-                "administrator",
+                    "creator",
+                    "administrator",
             }:
                 try:
                     if status == "del":
@@ -133,7 +133,8 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
         admin_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
         admin_group = {
-            i[0] for i in await admin_cache_reload(m, "custom_filter_update")
+            i[0]
+            for i in await admin_cache_reload(m, "custom_filter_update")
         }
     except ValueError as ef:
         # To make language selection work in private chat of user, i.e. PM
@@ -144,8 +145,7 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
         return True
 
     await m.reply_text(
-        "I am not an admin to recive updates in this group; Mind Promoting?",
-    )
+        "I am not an admin to recive updates in this group; Mind Promoting?", )
 
     return False
 
@@ -170,7 +170,8 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
         admin_group = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
         admin_group = {
-            i[0] for i in await admin_cache_reload(m, "custom_filter_update")
+            i[0]
+            for i in await admin_cache_reload(m, "custom_filter_update")
         }
     except ValueError as ef:
         # To make language selection work in private chat of user, i.e. PM
@@ -264,7 +265,8 @@ async def changeinfo_check_func(_, __, m):
         m = m.message
 
     if m.chat.type != "supergroup":
-        await m.reply_text("This command is made to be used in groups not in pm!")
+        await m.reply_text(
+            "This command is made to be used in groups not in pm!")
         return False
 
     # Telegram and GroupAnonyamousBot
@@ -292,7 +294,8 @@ async def can_pin_message_func(_, __, m):
         m = m.message
 
     if m.chat.type != "supergroup":
-        await m.reply_text("This command is made to be used in groups not in pm!")
+        await m.reply_text(
+            "This command is made to be used in groups not in pm!")
         return False
 
     # Telegram and GroupAnonyamousBot

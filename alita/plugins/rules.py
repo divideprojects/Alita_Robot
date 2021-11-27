@@ -46,17 +46,15 @@ async def get_rules(_, m: Message):
     priv_rules_status = db.get_privrules()
 
     if priv_rules_status:
-        pm_kb = ikb(
+        pm_kb = ikb([
             [
-                [
-                    (
-                        "Rules",
-                        f"https://t.me/{Config.BOT_USERNAME}?start=rules_{m.chat.id}",
-                        "url",
-                    ),
-                ],
+                (
+                    "Rules",
+                    f"https://t.me/{Config.BOT_USERNAME}?start=rules_{m.chat.id}",
+                    "url",
+                ),
             ],
-        )
+        ], )
         await m.reply_text(
             (tlang(m, "rules.pm_me")),
             quote=True,
@@ -102,8 +100,7 @@ async def set_rules(_, m: Message):
 
 
 @Alita.on_message(
-    command(["pmrules", "privaterules"]) & admin_filter,
-)
+    command(["pmrules", "privaterules"]) & admin_filter, )
 async def priv_rules(_, m: Message):
     db = Rules(m.chat.id)
     if m and not m.from_user:
@@ -113,21 +110,26 @@ async def priv_rules(_, m: Message):
         option = (m.text.split())[1]
         if option in ("on", "yes"):
             db.set_privrules(True)
-            LOGGER.info(f"{m.from_user.id} enabled privaterules in {m.chat.id}")
-            msg = tlang(m, "rules.priv_rules.turned_on").format(chat_name=m.chat.title)
+            LOGGER.info(
+                f"{m.from_user.id} enabled privaterules in {m.chat.id}")
+            msg = tlang(
+                m, "rules.priv_rules.turned_on").format(chat_name=m.chat.title)
         elif option in ("off", "no"):
             db.set_privrules(False)
-            LOGGER.info(f"{m.from_user.id} disbaled privaterules in {m.chat.id}")
-            msg = tlang(m, "rules.priv_rules.turned_off").format(chat_name=m.chat.title)
+            LOGGER.info(
+                f"{m.from_user.id} disbaled privaterules in {m.chat.id}")
+            msg = tlang(
+                m,
+                "rules.priv_rules.turned_off").format(chat_name=m.chat.title)
         else:
             msg = tlang(m, "rules.priv_rules.no_option")
         await m.reply_text(msg)
     elif len(m.text.split()) == 1:
         curr_pref = db.get_privrules()
         msg = tlang(m, "rules.priv_rules.current_preference").format(
-            current_option=curr_pref,
-        )
-        LOGGER.info(f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
+            current_option=curr_pref, )
+        LOGGER.info(
+            f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
         await m.replt_text(tlang(m, "general.check_help"))
@@ -148,9 +150,8 @@ async def clear_rules(_, m: Message):
 
     await m.reply_text(
         (tlang(m, "rules.clear_rules")),
-        reply_markup=ikb(
-            [[("⚠️ Confirm", "clear_rules"), ("❌ Cancel", "close_admin")]],
-        ),
+        reply_markup=ikb([[("⚠️ Confirm", "clear_rules"),
+                           ("❌ Cancel", "close_admin")]], ),
     )
     return
 

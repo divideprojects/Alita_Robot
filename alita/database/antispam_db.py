@@ -48,8 +48,7 @@ class GBan(MongoDB):
                     "reason": reason,
                     "by": by_user,
                     "time": time_rn,
-                },
-            )
+                }, )
 
     def remove_gban(self, user_id: int):
         global ANTISPAM_BANNED

@@ -84,7 +84,8 @@ async def tmute_usr(c: Alita, m: Message):
         return
 
     if not reason:
-        await m.reply_text("You haven't specified a time to mute this user for!")
+        await m.reply_text(
+            "You haven't specified a time to mute this user for!")
         return
 
     split_reason = reason.split(None, 1)
@@ -122,30 +123,29 @@ async def tmute_usr(c: Alita, m: Message):
         )
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        keyboard = InlineKeyboardMarkup(
+        keyboard = InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton(
-                        "Unmute",
-                        callback_data=f"unmute_={user_id}",
-                    ),
-                ],
+                InlineKeyboardButton(
+                    "Unmute",
+                    callback_data=f"unmute_={user_id}",
+                ),
             ],
-        )
-        await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
+        ], )
+        await m.reply_text(txt,
+                           reply_markup=keyboard,
+                           reply_to_message_id=r_id)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
     except UserNotParticipant:
-        await m.reply_text("How can I mute a user who is not a part of this chat?")
-    except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+            "How can I mute a user who is not a part of this chat?")
+    except RPCError as ef:
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
 
     return
@@ -158,7 +158,8 @@ async def dtmute_usr(c: Alita, m: Message):
         return
 
     if not m.reply_to_message:
-        return await m.reply_text("No replied message and user to delete and mute!")
+        return await m.reply_text(
+            "No replied message and user to delete and mute!")
 
     reason = None
     user_id = m.reply_to_message.from_user.id
@@ -196,7 +197,8 @@ async def dtmute_usr(c: Alita, m: Message):
         return
 
     if not reason:
-        await m.reply_text("You haven't specified a time to mute this user for!")
+        await m.reply_text(
+            "You haven't specified a time to mute this user for!")
         return
 
     split_reason = reason.split(None, 1)
@@ -234,30 +236,27 @@ async def dtmute_usr(c: Alita, m: Message):
         )
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        keyboard = InlineKeyboardMarkup(
+        keyboard = InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton(
-                        "Unmute",
-                        callback_data=f"unmute_={user_id}",
-                    ),
-                ],
+                InlineKeyboardButton(
+                    "Unmute",
+                    callback_data=f"unmute_={user_id}",
+                ),
             ],
-        )
+        ], )
         await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
     except UserNotParticipant:
-        await m.reply_text("How can I mute a user who is not a part of this chat?")
-    except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+            "How can I mute a user who is not a part of this chat?")
+    except RPCError as ef:
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
 
     return
@@ -306,7 +305,8 @@ async def stmute_usr(c: Alita, m: Message):
         return
 
     if not reason:
-        await m.reply_text("You haven't specified a time to mute this user for!")
+        await m.reply_text(
+            "You haven't specified a time to mute this user for!")
         return
 
     split_reason = reason.split(None, 1)
@@ -345,14 +345,13 @@ async def stmute_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
     except UserNotParticipant:
-        await m.reply_text("How can I mute a user who is not a part of this chat?")
-    except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+            "How can I mute a user who is not a part of this chat?")
+    except RPCError as ef:
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
 
     return
@@ -425,30 +424,29 @@ async def mute_usr(c: Alita, m: Message):
         )
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        keyboard = InlineKeyboardMarkup(
+        keyboard = InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton(
-                        "Unmute",
-                        callback_data=f"unmute_={user_id}",
-                    ),
-                ],
+                InlineKeyboardButton(
+                    "Unmute",
+                    callback_data=f"unmute_={user_id}",
+                ),
             ],
-        )
-        await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
+        ], )
+        await m.reply_text(txt,
+                           reply_markup=keyboard,
+                           reply_to_message_id=r_id)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
     except UserNotParticipant:
-        await m.reply_text("How can I mute a user who is not a part of this chat?")
-    except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+            "How can I mute a user who is not a part of this chat?")
+    except RPCError as ef:
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
 
     return
@@ -516,14 +514,13 @@ async def smute_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
     except UserNotParticipant:
-        await m.reply_text("How can I mute a user who is not a part of this chat?")
-    except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+            "How can I mute a user who is not a part of this chat?")
+    except RPCError as ef:
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
 
     return
@@ -535,7 +532,8 @@ async def dmute_usr(c: Alita, m: Message):
         await m.reply_text("I can't mute nothing!")
         return
     if not m.reply_to_message:
-        return await m.reply_text("No replied message and user to delete and mute!")
+        return await m.reply_text(
+            "No replied message and user to delete and mute!")
 
     reason = None
     if m.reply_to_message:
@@ -595,30 +593,27 @@ async def dmute_usr(c: Alita, m: Message):
         )
         if reason:
             txt += f"\n<b>Reason</b>: {reason}"
-        keyboard = InlineKeyboardMarkup(
+        keyboard = InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton(
-                        "Unmute",
-                        callback_data=f"unmute_={user_id}",
-                    ),
-                ],
+                InlineKeyboardButton(
+                    "Unmute",
+                    callback_data=f"unmute_={user_id}",
+                ),
             ],
-        )
+        ], )
         await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.mute.bot_no_right"))
     except UserNotParticipant:
-        await m.reply_text("How can I mute a user who is not a part of this chat?")
-    except RPCError as ef:
         await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+            "How can I mute a user who is not a part of this chat?")
+    except RPCError as ef:
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
 
     return
@@ -636,7 +631,8 @@ async def unmute_usr(c: Alita, m: Message):
         return
 
     if user_id == Config.BOT_ID:
-        await m.reply_text("Huh, why would I unmute myself if you are using me?")
+        await m.reply_text(
+            "Huh, why would I unmute myself if you are using me?")
         return
 
     try:
@@ -657,25 +653,22 @@ async def unmute_usr(c: Alita, m: Message):
             ),
         )
         LOGGER.info(f"{m.from_user.id} unmuted {user_id} in {m.chat.id}")
-        await m.reply_text(
-            (tlang(m, "admin.unmute.unmuted_user")).format(
-                admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-                unmuted=(await mention_html(user_first_name, user_id)),
-            ),
-        )
+        await m.reply_text((tlang(m, "admin.unmute.unmuted_user")).format(
+            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            unmuted=(await mention_html(user_first_name, user_id)),
+        ), )
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except UserNotParticipant:
-        await m.reply_text("How can I unmute a user who is not a part of this chat?")
+        await m.reply_text(
+            "How can I unmute a user who is not a part of this chat?")
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.unmute.bot_no_right"))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
     return
 
