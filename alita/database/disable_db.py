@@ -140,6 +140,8 @@ class Disabling(MongoDB):
     def migrate_chat(self, new_chat_id: int):
         old_chat_db = self.find_one({"_id": self.chat_id})
         new_data = old_chat_db.update({"_id": new_chat_id})
+        DISABLED_CMDS[new_chat_id] = DISABLED_CMDS[self.chat_id]
+        del DISABLED_CMDS[self.chat_id]
         self.insert_one(new_data)
         self.delete_one({"_id": self.chat_id})
 
