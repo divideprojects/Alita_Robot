@@ -354,8 +354,7 @@ async def paste_it(_, m: Message):
         url = f"https://hastebin.com/{r.json().get('key')}"
         await replymsg.edit_text(
             (tlang(m, "utils.paste.pasted_nekobin")),
-            reply_markup=ikb(
-                [[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
+            reply_markup=ikb([[((tlang(m, "utils.paste.nekobin_btn")), url, "url")]]),
         )
         LOGGER.info(f"{m.from_user.id} used paste cmd in {m.chat.id}")
     except Exception as e:

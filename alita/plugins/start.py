@@ -79,8 +79,7 @@ async def start(c: Alita, m: Message):
                 await get_private_note(c, m, help_option)
                 return
             if help_option.startswith("rules"):
-                LOGGER.info(
-                    f"{m.from_user.id} fetched privaterules in {m.chat.id}")
+                LOGGER.info(f"{m.from_user.id} fetched privaterules in {m.chat.id}")
                 await get_private_rules(c, m, help_option)
                 return
 
@@ -159,8 +158,7 @@ async def help_menu(_, m: Message):
         help_msg, help_kb = await get_help_msg(m, help_option)
 
         if not help_msg:
-            LOGGER.error(
-                f"No help_msg found for help_option - {help_option}!!")
+            LOGGER.error(f"No help_msg found for help_option - {help_option}!!")
             return
 
         LOGGER.info(
