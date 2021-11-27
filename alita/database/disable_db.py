@@ -42,6 +42,7 @@ class Disabling(MongoDB):
 
     def add_disable(self, cmd: str):
         with INSERTION_LOCK:
+            global DISABLED_CMDS
             if not self.check_cmd_status(cmd):
                 DISABLED_CMDS[self.chat_id]["commands"].append(cmd)
                 return self.update(
@@ -54,6 +55,7 @@ class Disabling(MongoDB):
 
     def remove_disabled(self, comm: str):
         with INSERTION_LOCK:
+            global DISABLED_CMDS
             if self.check_cmd_status(comm):
                 self.chat_info["commands"].remove(comm)
                 DISABLED_CMDS[self.chat_id]["commands"].remove(comm)
@@ -91,6 +93,8 @@ class Disabling(MongoDB):
 
     def set_action(self, action: str):
         with INSERTION_LOCK:
+            global DISABLED_CMDS
+            DISABLED_CMDS[self.chat_id]["action"] = action
             return self.update(
                 {"_id": self.chat_id},
                 {"_id": self.chat_id, "action": action},
