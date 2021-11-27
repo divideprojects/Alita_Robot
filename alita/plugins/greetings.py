@@ -109,7 +109,6 @@ async def cleanwlcm(_, m: Message):
         return
     await m.reply_text(f"Current settings:- {status}")
     return
-    return
 
 
 @Alita.on_message(command("cleangoodbye") & admin_filter)
@@ -130,7 +129,6 @@ async def cleangdbye(_, m: Message):
         await m.reply_text("what are you trying to do ??")
         return
     await m.reply_text(f"Current settings:- {status}")
-    return
     return
 
 
