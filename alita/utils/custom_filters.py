@@ -108,7 +108,7 @@ def command(
 
     return create(
         func,
-        "CustomCommandFilter",
+        "NormalCommandFilter",
         commands=commands,
         case_sensitive=case_sensitive,
     )
