@@ -51,7 +51,7 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
     cmds = sorted(list(HELP_COMMANDS.keys()))
     kb = [(tlang(m, cmd), f"get_mod.{cmd.lower()}") for cmd in cmds]
 
-    return [kb[i : i + 3] for i in range(0, len(kb), 3)]
+    return [kb[i: i + 3] for i in range(0, len(kb), 3)]
 
 
 async def gen_start_kb(q: Message or CallbackQuery):
