@@ -113,12 +113,16 @@ async def priv_rules(_, m: Message):
         option = (m.text.split())[1]
         if option in ("on", "yes"):
             db.set_privrules(True)
-            LOGGER.info(f"{m.from_user.id} enabled privaterules in {m.chat.id}")
-            msg = tlang(m, "rules.priv_rules.turned_on").format(chat_name=m.chat.title)
+            LOGGER.info(
+                f"{m.from_user.id} enabled privaterules in {m.chat.id}")
+            msg = tlang(m, "rules.priv_rules.turned_on").format(
+                chat_name=m.chat.title)
         elif option in ("off", "no"):
             db.set_privrules(False)
-            LOGGER.info(f"{m.from_user.id} disbaled privaterules in {m.chat.id}")
-            msg = tlang(m, "rules.priv_rules.turned_off").format(chat_name=m.chat.title)
+            LOGGER.info(
+                f"{m.from_user.id} disbaled privaterules in {m.chat.id}")
+            msg = tlang(m, "rules.priv_rules.turned_off").format(
+                chat_name=m.chat.title)
         else:
             msg = tlang(m, "rules.priv_rules.no_option")
         await m.reply_text(msg)
@@ -127,7 +131,8 @@ async def priv_rules(_, m: Message):
         msg = tlang(m, "rules.priv_rules.current_preference").format(
             current_option=curr_pref,
         )
-        LOGGER.info(f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
+        LOGGER.info(
+            f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
         await m.replt_text(tlang(m, "general.check_help"))

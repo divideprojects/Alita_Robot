@@ -94,7 +94,8 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
 
     if priv_notes_status:
 
-        note_hash = next(i[1] for i in db.get_all_notes(m.chat.id) if i[0] == note_name)
+        note_hash = next(i[1] for i in db.get_all_notes(
+            m.chat.id) if i[0] == note_name)
         await reply_text(
             f"Click on the button to get the note <code>{note_name}</code>",
             reply_markup=ikb(
@@ -318,11 +319,13 @@ async def priv_notes(_, m: Message):
         option = (m.text.split())[1]
         if option in ("on", "yes"):
             db_settings.set_privatenotes(chat_id, True)
-            LOGGER.info(f"{m.from_user.id} enabled privatenotes in {m.chat.id}")
+            LOGGER.info(
+                f"{m.from_user.id} enabled privatenotes in {m.chat.id}")
             msg = "Set private notes to On"
         elif option in ("off", "no"):
             db_settings.set_privatenotes(chat_id, False)
-            LOGGER.info(f"{m.from_user.id} disabled privatenotes in {m.chat.id}")
+            LOGGER.info(
+                f"{m.from_user.id} disabled privatenotes in {m.chat.id}")
             msg = "Set private notes to Off"
         else:
             msg = "Enter correct option"
@@ -330,7 +333,8 @@ async def priv_notes(_, m: Message):
     elif len(m.text.split()) == 1:
         curr_pref = db_settings.get_privatenotes(m.chat.id)
         msg = msg = f"Private Notes: {curr_pref}"
-        LOGGER.info(f"{m.from_user.id} fetched privatenotes preference in {m.chat.id}")
+        LOGGER.info(
+            f"{m.from_user.id} fetched privatenotes preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
         await m.replt_text("Check help on how to use this command!")

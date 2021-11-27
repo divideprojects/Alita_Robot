@@ -136,13 +136,14 @@ class Disabling(MongoDB):
                     "action": "none",
                 }
                 self.insert_one(new_data)
-                LOGGER.info(f"Initialized Disabling Document for chat {self.chat_id}")
+                LOGGER.info(
+                    f"Initialized Disabling Document for chat {self.chat_id}")
                 return new_data
         return chat_data
 
     # Migrate if chat id changes!
     def migrate_chat(self, new_chat_id: int):
-        global DISABLED_CMDS # global only when we are modifying the value
+        global DISABLED_CMDS  # global only when we are modifying the value
         old_chat_db = self.find_one({"_id": self.chat_id})
         new_data = old_chat_db.update({"_id": new_chat_id})
         DISABLED_CMDS[new_chat_id] = DISABLED_CMDS[self.chat_id]
