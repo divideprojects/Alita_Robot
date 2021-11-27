@@ -29,11 +29,9 @@ from alita.utils.cmd_senders import send_cmd
 from alita.utils.custom_filters import admin_filter, command, owner_filter
 from alita.utils.kbhelpers import ikb
 from alita.utils.msg_types import Types, get_note_type
-from alita.utils.string import (
-    build_keyboard,
-    escape_mentions_using_curly_brackets,
-    parse_button,
-)
+from alita.utils.string import (build_keyboard,
+                                escape_mentions_using_curly_brackets,
+                                parse_button)
 from alita.vars import Config
 
 # Initialise

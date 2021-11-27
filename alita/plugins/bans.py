@@ -16,20 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from traceback import format_exc
 
-from pyrogram.errors import (
-    ChatAdminRequired,
-    PeerIdInvalid,
-    RightForbidden,
-    RPCError,
-    UserAdminInvalid,
-)
+from pyrogram.errors import (ChatAdminRequired, PeerIdInvalid, RightForbidden,
+                             RPCError, UserAdminInvalid)
 from pyrogram.filters import regex
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import (CallbackQuery, InlineKeyboardButton,
+                            InlineKeyboardMarkup, Message)
 
 from alita import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
