@@ -24,7 +24,7 @@ from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
-from alita.database.disable_db import Disabling
+from alita.database.disable_db import DISABLED_CMDS
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 from alita.vars import Config
@@ -75,9 +75,8 @@ def command(
             m.command = [matches.group(1)]
             if matches.group(1) not in flt.commands:
                 return False
-            db = Disabling(m.chat.id)
-            disable_list = db.get_disabled()
-            status = db.get_action()
+            disable_list = DISABLED_CMDS[m.chat.id].get("commands", [])
+            status = str(DISABLED_CMDS[m.chat.id].get("action", "none"))
             try:
                 user_status = (await m.chat.get_member(m.from_user.id)).status
             except ValueError:
