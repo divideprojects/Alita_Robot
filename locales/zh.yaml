@@ -432,7 +432,7 @@ strings:
         <b>禁止用户:</b> {gbanned_user}
         <b><b> 用户标识:</b> {gban_user_id}
 
-         
+
         <b>:</b> {time}
       not_self: |-
         你不能 gban me nigga!

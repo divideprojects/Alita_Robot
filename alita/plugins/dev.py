@@ -33,7 +33,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import Message
 from speedtest import Speedtest
-from alita.vars import Config
+
 from alita import LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
 from alita.bot_class import Alita
 from alita.database.chats_db import Chats
@@ -43,6 +43,7 @@ from alita.utils.custom_filters import command
 from alita.utils.http_helper import HTTPx
 from alita.utils.kbhelpers import ikb
 from alita.utils.parser import mention_markdown
+from alita.vars import Config
 
 
 @Alita.on_message(command("ping", sudo_cmd=True))

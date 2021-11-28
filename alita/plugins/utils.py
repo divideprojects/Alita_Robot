@@ -36,7 +36,6 @@ from alita import (
     SUPPORT_STAFF,
     WHITELIST_USERS,
 )
-from alita.vars import Config
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
 from alita.database.users_db import Users
@@ -47,6 +46,7 @@ from alita.utils.extract_user import extract_user
 from alita.utils.http_helper import HTTPx, http
 from alita.utils.kbhelpers import ikb
 from alita.utils.parser import mention_html
+from alita.vars import Config
 
 gban_db = GBan()
 
