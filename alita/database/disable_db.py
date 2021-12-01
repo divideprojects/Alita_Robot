@@ -44,7 +44,7 @@ class Disabling(MongoDB):
     def add_disable(self, cmd: str):
         with INSERTION_LOCK:
             if not self.check_cmd_status(cmd):
-                DISABLED_CMDS[self.chat_id]["commands"].append(cmd)
+                # DISABLED_CMDS[self.chat_id]["commands"].append(cmd)
                 return self.update(
                     {"_id": self.chat_id},
                     {
