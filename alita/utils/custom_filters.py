@@ -75,23 +75,26 @@ def command(
             m.command = [matches.group(1)]
             if matches.group(1) not in flt.commands:
                 return False
-            disable_list = DISABLED_CMDS[m.chat.id].get("commands", [])
-            status = str(DISABLED_CMDS[m.chat.id].get("action", "none"))
-            try:
-                user_status = (await m.chat.get_member(m.from_user.id)).status
-            except ValueError:
-                # i.e. PM
-                user_status = "creator"
-            if str(matches.group(1)) in disable_list and user_status not in {
-                "creator",
-                "administrator",
-            }:
+            if m.chat.type == "supergroup":
+                disable_list = DISABLED_CMDS[m.chat.id].get("commands", [])
+                status = str(DISABLED_CMDS[m.chat.id].get("action", "none"))
                 try:
-                    if status == "del":
-                        await m.delete()
-                except RPCError:
-                    pass
-                return False
+                    user_status = (await m.chat.get_member(user_id)).status
+                except UserNotParticipant:
+                    # i.e anon admin
+                    user_status = "administrator"
+                except ValueError:
+                    # i.e. PM
+                    user_status = "creator"
+                if str(matches.group(1)) in disable_list and (
+                        user_id not in (1087968824, 777000)
+                        and user_status not in ("creator", "administrator")):
+                    try:
+                        if status == "del":
+                            await m.delete()
+                    except RPCError:
+                        pass
+                    return False 
             if matches.group(3) == "":
                 return True
             try:
