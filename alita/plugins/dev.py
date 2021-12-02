@@ -22,15 +22,9 @@ from io import BytesIO, StringIO
 from time import gmtime, strftime, time
 from traceback import format_exc
 
-from pyrogram.errors import (
-    ChannelInvalid,
-    ChannelPrivate,
-    ChatAdminRequired,
-    FloodWait,
-    MessageTooLong,
-    PeerIdInvalid,
-    RPCError,
-)
+from pyrogram.errors import (ChannelInvalid, ChannelPrivate, ChatAdminRequired,
+                             FloodWait, MessageTooLong, PeerIdInvalid,
+                             RPCError)
 from pyrogram.types import Message
 from speedtest import Speedtest
 

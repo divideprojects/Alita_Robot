@@ -28,11 +28,8 @@ from alita.database.greetings_db import Greetings
 from alita.utils.custom_filters import admin_filter, bot_admin_filter, command
 from alita.utils.msg_types import Types, get_wlcm_type
 from alita.utils.parser import escape_markdown, mention_html
-from alita.utils.string import (
-    build_keyboard,
-    escape_invalid_curly_brackets,
-    parse_button,
-)
+from alita.utils.string import (build_keyboard, escape_invalid_curly_brackets,
+                                parse_button)
 from alita.vars import Config
 
 # Initialize

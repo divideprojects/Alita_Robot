@@ -27,15 +27,8 @@ from tswift import Song
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
 
-from alita import (
-    DEV_USERS,
-    LOGGER,
-    OWNER_ID,
-    SUDO_USERS,
-    SUPPORT_GROUP,
-    SUPPORT_STAFF,
-    WHITELIST_USERS,
-)
+from alita import (DEV_USERS, LOGGER, OWNER_ID, SUDO_USERS, SUPPORT_GROUP,
+                   SUPPORT_STAFF, WHITELIST_USERS)
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
 from alita.database.users_db import Users

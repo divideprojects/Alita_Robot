@@ -23,19 +23,8 @@ from time import gmtime, strftime, time
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
 
-from alita import (
-    API_HASH,
-    APP_ID,
-    BOT_TOKEN,
-    LOG_DATETIME,
-    LOGFILE,
-    LOGGER,
-    MESSAGE_DUMP,
-    NO_LOAD,
-    UPTIME,
-    WORKERS,
-    load_cmds,
-)
+from alita import (API_HASH, APP_ID, BOT_TOKEN, LOG_DATETIME, LOGFILE, LOGGER,
+                   MESSAGE_DUMP, NO_LOAD, UPTIME, WORKERS, load_cmds)
 from alita.database import MongoDB
 from alita.plugins import all_plugins
 from alita.tr_engine import lang_dict

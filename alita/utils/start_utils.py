@@ -32,11 +32,9 @@ from alita.tr_engine import tlang
 from alita.utils.cmd_senders import send_cmd
 from alita.utils.kbhelpers import ikb
 from alita.utils.msg_types import Types
-from alita.utils.string import (
-    build_keyboard,
-    escape_mentions_using_curly_brackets,
-    parse_button,
-)
+from alita.utils.string import (build_keyboard,
+                                escape_mentions_using_curly_brackets,
+                                parse_button)
 from alita.vars import Config
 
 # Initialize

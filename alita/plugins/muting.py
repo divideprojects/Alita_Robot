@@ -15,20 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pyrogram.errors import (
-    ChatAdminRequired,
-    RightForbidden,
-    RPCError,
-    UserNotParticipant,
-)
+from pyrogram.errors import (ChatAdminRequired, RightForbidden, RPCError,
+                             UserNotParticipant)
 from pyrogram.filters import regex
-from pyrogram.types import (
-    CallbackQuery,
-    ChatPermissions,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import (CallbackQuery, ChatPermissions,
+                            InlineKeyboardButton, InlineKeyboardMarkup,
+                            Message)
 
 from alita import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita

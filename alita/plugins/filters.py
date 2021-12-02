@@ -30,12 +30,9 @@ from alita.utils.custom_filters import admin_filter, command, owner_filter
 from alita.utils.kbhelpers import ikb
 from alita.utils.msg_types import Types, get_filter_type
 from alita.utils.regex_utils import regex_searcher
-from alita.utils.string import (
-    build_keyboard,
-    escape_mentions_using_curly_brackets,
-    parse_button,
-    split_quotes,
-)
+from alita.utils.string import (build_keyboard,
+                                escape_mentions_using_curly_brackets,
+                                parse_button, split_quotes)
 
 # Initialise
 db = Filters()
