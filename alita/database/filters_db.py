@@ -88,10 +88,9 @@ class Filters(MongoDB):
         with INSERTION_LOCK:
             curr = self.find_all()
             if curr:
-                return len([
-                    z for z in (i["keyword"].split("|")
-                                for i in curr) if len(z) >= 2
-                ], )
+                return len(
+                    [z for z in (i["keyword"].split("|") for i in curr) if len(z) >= 2],
+                )
             return 0
 
     def count_filters_chats(self):
