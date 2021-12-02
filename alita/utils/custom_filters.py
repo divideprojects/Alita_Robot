@@ -92,7 +92,7 @@ def command(
                             await m.delete()
                     except RPCError:
                         pass
-                    return False 
+                    return False
             if matches.group(3) == "":
                 return True
             try:

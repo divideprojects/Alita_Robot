@@ -145,7 +145,8 @@ class Greetings(MongoDB):
                 "goodbye": True,
             }
             self.insert_one(new_data)
-            LOGGER.info(f"Initialized Greetings Document for chat {self.chat_id}")
+            LOGGER.info(
+                f"Initialized Greetings Document for chat {self.chat_id}")
             return new_data
         return chat_data
 

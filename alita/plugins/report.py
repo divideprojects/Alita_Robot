@@ -115,7 +115,8 @@ async def report_watcher(c: Alita, m: Message):
             msg = f"{(await mention_html(m.from_user.first_name, m.from_user.id))} is calling for admins in '{chat_name}'!\n"
 
         link_chat_id = str(m.chat.id).replace("-100", "")
-        link = f"https://t.me/c/{link_chat_id}/{reported_msg_id}"  # message link
+        # message link
+        link = f"https://t.me/c/{link_chat_id}/{reported_msg_id}"
 
         reply_markup = ikb(
             [

@@ -842,7 +842,8 @@ async def kickme(_, m: Message):
     if len(m.text.split()) >= 2:
         reason = m.text.split(None, 1)[1]
     try:
-        LOGGER.info(f"{m.from_user.id} kickme used by {m.from_user.id} in {m.chat.id}")
+        LOGGER.info(
+            f"{m.from_user.id} kickme used by {m.from_user.id} in {m.chat.id}")
         await m.chat.kick_member(m.from_user.id)
         txt = "Why not let me help you!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""

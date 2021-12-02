@@ -136,7 +136,8 @@ class Disabling(MongoDB):
                     "action": "none",
                 }
                 self.insert_one(new_data)
-                LOGGER.info(f"Initialized Disabling Document for chat {self.chat_id}")
+                LOGGER.info(
+                    f"Initialized Disabling Document for chat {self.chat_id}")
                 return new_data
         return chat_data
 

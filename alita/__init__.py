@@ -112,7 +112,8 @@ async def load_cmds(all_plugins):
     for single in all_plugins:
         # If plugin in NO_LOAD, skip the plugin
         if single.lower() in [i.lower() for i in Config.NO_LOAD]:
-            LOGGER.warning(f"Not loading '{single}' s it's added in NO_LOAD list")
+            LOGGER.warning(
+                f"Not loading '{single}' s it's added in NO_LOAD list")
             continue
 
         imported_module = imp_mod("alita.plugins." + single)
@@ -152,6 +153,7 @@ async def load_cmds(all_plugins):
         LOGGER.warning(f"Not loading Plugins - {NO_LOAD}")
 
     return (
-        ", ".join((i.split(".")[1]).capitalize() for i in list(HELP_COMMANDS.keys()))
+        ", ".join((i.split(".")[1]).capitalize()
+                  for i in list(HELP_COMMANDS.keys()))
         + "\n"
     )
