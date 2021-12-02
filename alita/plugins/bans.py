@@ -77,7 +77,8 @@ async def tban_usr(c: Alita, m: Message):
         return
 
     if not reason:
-        await m.reply_text("You haven't specified a time to ban this user for!")
+        await m.reply_text("You haven't specified a time to ban this user for!"
+                           )
         return
 
     split_reason = reason.split(None, 1)
@@ -107,17 +108,17 @@ async def tban_usr(c: Alita, m: Message):
             chat_title=m.chat.title,
         )
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        keyboard = InlineKeyboardMarkup(
+        keyboard = InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton(
-                        "Unban",
-                        callback_data=f"unban_={user_id}",
-                    ),
-                ],
+                InlineKeyboardButton(
+                    "Unban",
+                    callback_data=f"unban_={user_id}",
+                ),
             ],
-        )
-        await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
+        ], )
+        await m.reply_text(txt,
+                           reply_markup=keyboard,
+                           reply_to_message_id=r_id)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -129,12 +130,10 @@ async def tban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
@@ -174,7 +173,8 @@ async def stban_usr(c: Alita, m: Message):
         return
 
     if not reason:
-        await m.reply_text("You haven't specified a time to ban this user for!")
+        await m.reply_text("You haven't specified a time to ban this user for!"
+                           )
         return
 
     split_reason = reason.split(None, 1)
@@ -214,12 +214,10 @@ async def stban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
@@ -263,7 +261,8 @@ async def dtban_usr(c: Alita, m: Message):
         return
 
     if not reason:
-        await m.reply_text("You haven't specified a time to ban this user for!")
+        await m.reply_text("You haven't specified a time to ban this user for!"
+                           )
         return
 
     split_reason = reason.split(None, 1)
@@ -294,16 +293,14 @@ async def dtban_usr(c: Alita, m: Message):
             chat_title=m.chat.title,
         )
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        keyboard = InlineKeyboardMarkup(
+        keyboard = InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton(
-                        "Unban",
-                        callback_data=f"unban_={user_id}",
-                    ),
-                ],
+                InlineKeyboardButton(
+                    "Unban",
+                    callback_data=f"unban_={user_id}",
+                ),
             ],
-        )
+        ], )
         await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -316,12 +313,10 @@ async def dtban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
@@ -394,12 +389,10 @@ async def kick_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -459,12 +452,10 @@ async def skick_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -477,7 +468,8 @@ async def dkick_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.kick.no_target"))
         return
     if not m.reply_to_message:
-        return await m.reply_text("Reply to a message to delete it and kick the user!")
+        return await m.reply_text(
+            "Reply to a message to delete it and kick the user!")
 
     reason = None
 
@@ -531,12 +523,10 @@ async def dkick_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, "admin.kick.bot_no_right"))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -575,12 +565,10 @@ async def unban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.unban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
 
@@ -638,12 +626,10 @@ async def sban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
@@ -656,7 +642,8 @@ async def dban_usr(c: Alita, m: Message):
         await m.stop_propagation()
 
     if not m.reply_to_message:
-        return await m.reply_text("Reply to a message to delete it and ban the user!")
+        return await m.reply_text(
+            "Reply to a message to delete it and ban the user!")
 
     reason = None
 
@@ -696,16 +683,14 @@ async def dban_usr(c: Alita, m: Message):
             chat_title=m.chat.title,
         )
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        keyboard = InlineKeyboardMarkup(
+        keyboard = InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton(
-                        "Unban",
-                        callback_data=f"unban_={user_id}",
-                    ),
-                ],
+                InlineKeyboardButton(
+                    "Unban",
+                    callback_data=f"unban_={user_id}",
+                ),
             ],
-        )
+        ], )
         await c.send_message(m.chat.id, txt, reply_markup=keyboard)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
@@ -718,12 +703,10 @@ async def dban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
@@ -781,17 +764,17 @@ async def ban_usr(c: Alita, m: Message):
             chat_title=m.chat.title,
         )
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
-        keyboard = InlineKeyboardMarkup(
+        keyboard = InlineKeyboardMarkup([
             [
-                [
-                    InlineKeyboardButton(
-                        "Unban",
-                        callback_data=f"unban_={user_id}",
-                    ),
-                ],
+                InlineKeyboardButton(
+                    "Unban",
+                    callback_data=f"unban_={user_id}",
+                ),
             ],
-        )
-        await m.reply_text(txt, reply_markup=keyboard, reply_to_message_id=r_id)
+        ], )
+        await m.reply_text(txt,
+                           reply_markup=keyboard,
+                           reply_to_message_id=r_id)
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "admin.not_admin"))
     except PeerIdInvalid:
@@ -803,12 +786,10 @@ async def ban_usr(c: Alita, m: Message):
     except RightForbidden:
         await m.reply_text(tlang(m, tlang(m, "admin.ban.bot_no_right")))
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
         LOGGER.error(ef)
         LOGGER.error(format_exc())
     return
@@ -832,7 +813,8 @@ async def unbanbutton(c: Alita, q: CallbackQuery):
     except RPCError as e:
         await q.message.edit_text(f"Error: {e}")
         return
-    return await q.message.edit_text(f"{q.from_user.mention} unbanned {whoo.mention}!")
+    return await q.message.edit_text(
+        f"{q.from_user.mention} unbanned {whoo.mention}!")
 
 
 @Alita.on_message(command("kickme"))
@@ -841,19 +823,18 @@ async def kickme(_, m: Message):
     if len(m.text.split()) >= 2:
         reason = m.text.split(None, 1)[1]
     try:
-        LOGGER.info(f"{m.from_user.id} kickme used by {m.from_user.id} in {m.chat.id}")
+        LOGGER.info(
+            f"{m.from_user.id} kickme used by {m.from_user.id} in {m.chat.id}")
         await m.chat.kick_member(m.from_user.id)
         txt = "Why not let me help you!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         await m.reply_text(txt)
         await m.chat.unban_member(m.from_user.id)
     except RPCError as ef:
-        await m.reply_text(
-            (tlang(m, "general.some_error")).format(
-                SUPPORT_GROUP=SUPPORT_GROUP,
-                ef=ef,
-            ),
-        )
+        await m.reply_text((tlang(m, "general.some_error")).format(
+            SUPPORT_GROUP=SUPPORT_GROUP,
+            ef=ef,
+        ), )
     return
 
 

@@ -66,19 +66,13 @@ async def gban(c: Alita, m: Message):
 
     if db.check_gban(user_id):
         db.update_gban_reason(user_id, gban_reason)
-        await m.reply_text(
-            (tlang(m, "antispam.gban.updated_reason")).format(
-                gban_reason=gban_reason,
-            ),
-        )
+        await m.reply_text((tlang(m, "antispam.gban.updated_reason")).format(
+            gban_reason=gban_reason, ), )
         return
 
     db.add_gban(user_id, gban_reason, m.from_user.id)
-    await m.reply_text(
-        (tlang(m, "antispam.gban.added_to_watch")).format(
-            first_name=user_first_name,
-        ),
-    )
+    await m.reply_text((tlang(m, "antispam.gban.added_to_watch")).format(
+        first_name=user_first_name, ), )
     LOGGER.info(f"{m.from_user.id} gbanned {user_id} from {m.chat.id}")
     log_msg = (tlang(m, "antispam.gban.log_msg")).format(
         chat_id=m.chat.id,
@@ -110,8 +104,7 @@ async def gban(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command(["ungban", "unglobalban", "globalunban"], sudo_cmd=True),
-)
+    command(["ungban", "unglobalban", "globalunban"], sudo_cmd=True), )
 async def ungban(c: Alita, m: Message):
     if len(m.text.split()) == 1:
         await m.reply_text(tlang(m, "antispam.pass_user_id"))
@@ -129,15 +122,14 @@ async def ungban(c: Alita, m: Message):
 
     if db.check_gban(user_id):
         db.remove_gban(user_id)
-        await m.reply_text(
-            (tlang(m, "antispam.ungban.removed_from_list")).format(
-                first_name=user_first_name,
-            ),
-        )
+        await m.reply_text((tlang(m,
+                                  "antispam.ungban.removed_from_list")).format(
+                                      first_name=user_first_name, ), )
         LOGGER.info(f"{m.from_user.id} ungbanned {user_id} from {m.chat.id}")
         log_msg = (tlang(m, "amtispam.ungban.log_msg")).format(
             chat_id=m.chat.id,
-            ungban_admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            ungban_admin=(await mention_html(m.from_user.first_name,
+                                             m.from_user.id)),
             ungbaned_user=(await mention_html(user_first_name, user_id)),
             ungbanned_user_id=user_id,
             time=(datetime.utcnow().strftime("%H:%M - %d-%m-%Y")),
@@ -159,19 +151,17 @@ async def ungban(c: Alita, m: Message):
 
 
 @Alita.on_message(
-    command(["numgbans", "countgbans", "gbancount", "gbanscount"], sudo_cmd=True),
-)
+    command(["numgbans", "countgbans", "gbancount", "gbanscount"],
+            sudo_cmd=True), )
 async def gban_count(_, m: Message):
     await m.reply_text(
-        (tlang(m, "antispam.num_gbans")).format(count=(db.count_gbans())),
-    )
+        (tlang(m, "antispam.num_gbans")).format(count=(db.count_gbans())), )
     LOGGER.info(f"{m.from_user.id} counting gbans in {m.chat.id}")
     return
 
 
 @Alita.on_message(
-    command(["gbanlist", "globalbanlist"], sudo_cmd=True),
-)
+    command(["gbanlist", "globalbanlist"], sudo_cmd=True), )
 async def gban_list(_, m: Message):
     banned_users = db.load_from_db()
 

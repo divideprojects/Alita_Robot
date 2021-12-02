@@ -48,36 +48,34 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
     cmds = sorted(list(HELP_COMMANDS.keys()))
     kb = [(tlang(m, cmd), f"get_mod.{cmd.lower()}") for cmd in cmds]
 
-    return [kb[i : i + 3] for i in range(0, len(kb), 3)]
+    return [kb[i:i + 3] for i in range(0, len(kb), 3)]
 
 
 async def gen_start_kb(q: Message or CallbackQuery):
     """Generate keyboard with start menu options."""
-    return ikb(
+    return ikb([
         [
-            [
-                (
-                    f"➕ {(tlang(q, 'start.add_chat_btn'))}",
-                    f"https://t.me/{Config.BOT_USERNAME}?startgroup=new",
-                    "url",
-                ),
-                (
-                    f"{(tlang(q, 'start.support_group'))} 👥",
-                    f"https://t.me/{SUPPORT_GROUP}",
-                    "url",
-                ),
-            ],
-            [(f"📚 {(tlang(q, 'start.commands_btn'))}", "commands")],
-            [
-                (f"🌐 {(tlang(q, 'start.language_btn'))}", "chlang"),
-                (
-                    f"🗃️ {(tlang(q, 'start.source_code'))}",
-                    "https://github.com/DivideProjects/Alita_Robot",
-                    "url",
-                ),
-            ],
+            (
+                f"➕ {(tlang(q, 'start.add_chat_btn'))}",
+                f"https://t.me/{Config.BOT_USERNAME}?startgroup=new",
+                "url",
+            ),
+            (
+                f"{(tlang(q, 'start.support_group'))} 👥",
+                f"https://t.me/{SUPPORT_GROUP}",
+                "url",
+            ),
         ],
-    )
+        [(f"📚 {(tlang(q, 'start.commands_btn'))}", "commands")],
+        [
+            (f"🌐 {(tlang(q, 'start.language_btn'))}", "chlang"),
+            (
+                f"🗃️ {(tlang(q, 'start.source_code'))}",
+                "https://github.com/DivideProjects/Alita_Robot",
+                "url",
+            ),
+        ],
+    ], )
 
 
 async def get_private_note(c: Alita, m: Message, help_option: str):
@@ -132,7 +130,8 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
         "chatname",
         "mention",
     ]
-    text = await escape_mentions_using_curly_brackets(m, note_reply, parse_words)
+    text = await escape_mentions_using_curly_brackets(m, note_reply,
+                                                      parse_words)
 
     if msgtype == Types.TEXT:
 
@@ -160,10 +159,10 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
             await m.reply_text(teks, quote=True, disable_web_page_preview=True)
             return
     elif msgtype in (
-        Types.STICKER,
-        Types.VIDEO_NOTE,
-        Types.CONTACT,
-        Types.ANIMATED_STICKER,
+            Types.STICKER,
+            Types.VIDEO_NOTE,
+            Types.CONTACT,
+            Types.ANIMATED_STICKER,
     ):
         await (await send_cmd(c, msgtype))(m.chat.id, getnotes["fileid"])
     else:
@@ -230,27 +229,21 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
     help_msg = None
     help_kb = None
     help_cmd_keys = sorted(
-        k
-        for j in [HELP_COMMANDS[i]["alt_cmds"] for i in list(HELP_COMMANDS.keys())]
-        for k in j
-    )
+        k for j in
+        [HELP_COMMANDS[i]["alt_cmds"] for i in list(HELP_COMMANDS.keys())]
+        for k in j)
 
     if help_option in help_cmd_keys:
-        help_option_name = next(
-            HELP_COMMANDS[i]
-            for i in HELP_COMMANDS
-            if help_option in HELP_COMMANDS[i]["alt_cmds"]
-        )
+        help_option_name = next(HELP_COMMANDS[i] for i in HELP_COMMANDS
+                                if help_option in HELP_COMMANDS[i]["alt_cmds"])
         help_option_value = help_option_name["help_msg"]
-        help_kb = next(
-            HELP_COMMANDS[i]["buttons"]
-            for i in HELP_COMMANDS
-            if help_option in HELP_COMMANDS[i]["alt_cmds"]
-        ) + [[("« " + (tlang(m, "general.back_btn")), "commands")]]
+        help_kb = next(HELP_COMMANDS[i]["buttons"] for i in HELP_COMMANDS
+                       if help_option in HELP_COMMANDS[i]["alt_cmds"]) + [[
+                           ("« " + (tlang(m, "general.back_btn")), "commands")
+                       ]]
         help_msg = (
             f"**{(tlang(m, (help_option_name['help_msg']).replace('.help', '.main')))}:**\n\n"
-            + tlang(m, help_option_value)
-        )
+            + tlang(m, help_option_value))
         LOGGER.info(
             f"{m.from_user.id} fetched help for {help_option} in {m.chat.id}",
         )

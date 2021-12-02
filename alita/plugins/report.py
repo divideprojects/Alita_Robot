@@ -30,8 +30,7 @@ from alita.utils.parser import mention_html
 
 
 @Alita.on_message(
-    command("reports") & (filters.private | admin_filter),
-)
+    command("reports") & (filters.private | admin_filter), )
 async def report_setting(_, m: Message):
     args = m.text.split()
     db = Reporting(m.chat.id)
@@ -49,7 +48,8 @@ async def report_setting(_, m: Message):
             elif option in ("no", "off", "false"):
                 db.set_settings(False)
                 LOGGER.info(f"{m.from_user.id} disabled reports for them")
-                await m.reply_text("Turned off reporting! You wont get any reports.")
+                await m.reply_text(
+                    "Turned off reporting! You wont get any reports.")
         else:
             await m.reply_text(
                 f"Your current report preference is: `{(db.get_settings())}`",
@@ -74,8 +74,7 @@ async def report_setting(_, m: Message):
             )
     else:
         await m.reply_text(
-            f"This group's current setting is: `{(db.get_settings())}`",
-        )
+            f"This group's current setting is: `{(db.get_settings())}`", )
 
 
 @Alita.on_message(command("report") & filters.group)
@@ -93,7 +92,8 @@ async def report_watcher(c: Alita, m: Message):
         reported_msg_id = m.reply_to_message.message_id
         reported_user = m.reply_to_message.from_user
         chat_name = m.chat.title or m.chat.username
-        admin_list = await c.get_chat_members(m.chat.id, filter="administrators")
+        admin_list = await c.get_chat_members(m.chat.id,
+                                              filter="administrators")
 
         if reported_user.id == me.id:
             await m.reply_text("Nice try.")
@@ -117,43 +117,38 @@ async def report_watcher(c: Alita, m: Message):
         # message link
         link = f"https://t.me/c/{link_chat_id}/{reported_msg_id}"
 
-        reply_markup = ikb(
+        reply_markup = ikb([
+            [("➡ Message", link, "url")],
             [
-                [("➡ Message", link, "url")],
-                [
-                    (
-                        "⚠ Kick",
-                        f"report_{m.chat.id}=kick={reported_user.id}={reported_msg_id}",
-                    ),
-                    (
-                        "⛔️ Ban",
-                        f"report_{m.chat.id}=ban={reported_user.id}={reported_msg_id}",
-                    ),
-                ],
-                [
-                    (
-                        "❎ Delete Message",
-                        f"report_{m.chat.id}=del={reported_user.id}={reported_msg_id}",
-                    ),
-                ],
+                (
+                    "⚠ Kick",
+                    f"report_{m.chat.id}=kick={reported_user.id}={reported_msg_id}",
+                ),
+                (
+                    "⛔️ Ban",
+                    f"report_{m.chat.id}=ban={reported_user.id}={reported_msg_id}",
+                ),
             ],
-        )
+            [
+                (
+                    "❎ Delete Message",
+                    f"report_{m.chat.id}=del={reported_user.id}={reported_msg_id}",
+                ),
+            ],
+        ], )
 
         LOGGER.info(
             f"{m.from_user.id} reported msgid-{m.reply_to_message.message_id} to admins in {m.chat.id}",
         )
         await m.reply_text(
-            (
-                f"{(await mention_html(m.from_user.first_name, m.from_user.id))} "
-                "reported the message to the admins."
-            ),
+            (f"{(await mention_html(m.from_user.first_name, m.from_user.id))} "
+             "reported the message to the admins."),
             quote=True,
         )
 
         for admin in admin_list:
-            if (
-                admin.user.is_bot or admin.user.is_deleted
-            ):  # can't message bots or deleted accounts
+            if (admin.user.is_bot or admin.user.is_deleted
+                ):  # can't message bots or deleted accounts
                 continue
             if Reporting(admin.user.id).get_settings():
                 try:
@@ -201,7 +196,8 @@ async def report_buttons(c: Alita, q: CallbackQuery):
             await q.answer("✅ Succesfully Banned")
             return
         except RPCError as err:
-            await q.answer(f"🛑 Failed to Ban\n<b>Error:</b>\n`{err}`", show_alert=True)
+            await q.answer(f"🛑 Failed to Ban\n<b>Error:</b>\n`{err}`",
+                           show_alert=True)
     elif action == "del":
         try:
             await c.delete_messages(chat_id, message_id)

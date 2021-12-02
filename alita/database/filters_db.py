@@ -46,8 +46,7 @@ class Filters(MongoDB):
                     "filter_reply": filter_reply,
                     "msgtype": msgtype,
                     "fileid": fileid,
-                },
-            )
+                }, )
 
     def get_filter(self, chat_id: int, keyword: str):
         with INSERTION_LOCK:
@@ -84,9 +83,10 @@ class Filters(MongoDB):
         with INSERTION_LOCK:
             curr = self.find_all()
             if curr:
-                return len(
-                    [z for z in (i["keyword"].split("|") for i in curr) if len(z) >= 2],
-                )
+                return len([
+                    z for z in (i["keyword"].split("|")
+                                for i in curr) if len(z) >= 2
+                ], )
             return 0
 
     def count_filters_chats(self):

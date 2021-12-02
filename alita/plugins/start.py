@@ -34,8 +34,7 @@ from alita.vars import Config
 
 
 @Alita.on_message(
-    command("donate") & (filters.group | filters.private),
-)
+    command("donate") & (filters.group | filters.private), )
 async def donate(_, m: Message):
     LOGGER.info(f"{m.from_user.id} fetched donation text in {m.chat.id}")
     await m.reply_text(tlang(m, "general.donate_owner"))
@@ -64,20 +63,19 @@ async def close_admin_callback(_, q: CallbackQuery):
 
 
 @Alita.on_message(
-    command("start") & (filters.group | filters.private),
-)
+    command("start") & (filters.group | filters.private), )
 async def start(c: Alita, m: Message):
     if m.chat.type == "private":
         if len(m.text.split()) > 1:
             help_option = (m.text.split(None, 1)[1]).lower()
 
-            if help_option.startswith("note") and (
-                help_option not in ("note", "notes")
-            ):
+            if help_option.startswith("note") and (help_option
+                                                   not in ("note", "notes")):
                 await get_private_note(c, m, help_option)
                 return
             if help_option.startswith("rules"):
-                LOGGER.info(f"{m.from_user.id} fetched privaterules in {m.chat.id}")
+                LOGGER.info(
+                    f"{m.from_user.id} fetched privaterules in {m.chat.id}")
                 await get_private_rules(c, m, help_option)
                 return
 
@@ -127,12 +125,10 @@ async def start_back(_, q: CallbackQuery):
 
 @Alita.on_callback_query(filters.regex("^commands$"))
 async def commands_menu(_, q: CallbackQuery):
-    keyboard = ikb(
-        [
-            *(await gen_cmds_kb(q)),
-            [(f"« {(tlang(q, 'general.back_btn'))}", "start_back")],
-        ],
-    )
+    keyboard = ikb([
+        *(await gen_cmds_kb(q)),
+        [(f"« {(tlang(q, 'general.back_btn'))}", "start_back")],
+    ], )
     try:
         await q.message.edit_text(
             (tlang(q, "general.commands_available")),
@@ -156,7 +152,8 @@ async def help_menu(_, m: Message):
         help_msg, help_kb = await get_help_msg(m, help_option)
 
         if not help_msg:
-            LOGGER.error(f"No help_msg found for help_option - {help_option}!!")
+            LOGGER.error(
+                f"No help_msg found for help_option - {help_option}!!")
             return
 
         LOGGER.info(
@@ -172,32 +169,29 @@ async def help_menu(_, m: Message):
             )
         else:
             await m.reply_text(
-                (tlang(m, "start.public_help").format(help_option=help_option)),
-                reply_markup=ikb(
+                (tlang(m,
+                       "start.public_help").format(help_option=help_option)),
+                reply_markup=ikb([
                     [
-                        [
-                            (
-                                "Help",
-                                f"t.me/{Config.BOT_USERNAME}?start={help_option}",
-                                "url",
-                            ),
-                        ],
+                        (
+                            "Help",
+                            f"t.me/{Config.BOT_USERNAME}?start={help_option}",
+                            "url",
+                        ),
                     ],
-                ),
+                ], ),
             )
     else:
         if m.chat.type == "private":
-            keyboard = ikb(
-                [
-                    *(await gen_cmds_kb(m)),
-                    [(f"« {(tlang(m, 'general.back_btn'))}", "start_back")],
-                ],
-            )
+            keyboard = ikb([
+                *(await gen_cmds_kb(m)),
+                [(f"« {(tlang(m, 'general.back_btn'))}", "start_back")],
+            ], )
             msg = tlang(m, "general.commands_available")
         else:
-            keyboard = ikb(
-                [[("Help", f"t.me/{Config.BOT_USERNAME}?start=help", "url")]],
-            )
+            keyboard = ikb([[
+                ("Help", f"t.me/{Config.BOT_USERNAME}?start=help", "url")
+            ]], )
             msg = tlang(m, "start.pm_for_help")
 
         await m.reply_text(
