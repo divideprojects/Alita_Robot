@@ -283,7 +283,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
                 reply_to_message_id=m.message_id,
             )
     except Exception as ef:
-        await m.reply_text(f"Error: {ef}")
+        await m.reply_text(f"Error in filters: {ef}")
         return msgtype
 
     return msgtype
