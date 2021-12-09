@@ -216,7 +216,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
             f"{m.from_user.id} fetched note {note_name} (type - {getnotes}) in {m.chat.id}",
         )
     except Exception as e:
-        await m.reply_text(f"Error: {e}")
+        await m.reply_text(f"Error in notes: {e}")
     return
 
 
