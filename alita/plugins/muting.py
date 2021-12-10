@@ -570,22 +570,7 @@ async def unmute_usr(c: Alita, m: Message):
         return
 
     try:
-        await m.chat.restrict_member(
-            user_id,
-            ChatPermissions(
-                can_send_messages=True,
-                can_send_media_messages=True,
-                can_send_stickers=True,
-                can_send_animations=True,
-                can_send_games=True,
-                can_use_inline_bots=True,
-                can_add_web_page_previews=True,
-                can_send_polls=True,
-                can_change_info=True,
-                can_invite_users=True,
-                can_pin_messages=True,
-            ),
-        )
+        await m.chat.unban_member(user_id)
         LOGGER.info(f"{m.from_user.id} unmuted {user_id} in {m.chat.id}")
         await m.reply_text(
             (tlang(m, "admin.unmute.unmuted_user")).format(
@@ -624,22 +609,7 @@ async def unmutebutton(c: Alita, q: CallbackQuery):
         return
     whoo = await c.get_users(user_id)
     try:
-        await q.message.chat.restrict_member(
-            user_id,
-            ChatPermissions(
-                can_send_messages=True,
-                can_send_media_messages=True,
-                can_send_stickers=True,
-                can_send_animations=True,
-                can_send_games=True,
-                can_use_inline_bots=True,
-                can_add_web_page_previews=True,
-                can_send_polls=True,
-                can_change_info=True,
-                can_invite_users=True,
-                can_pin_messages=True,
-            ),
-        )
+        await q.message.chat.unban_member(user_id)
     except RPCError as e:
         await q.message.edit_text(f"Error: {e}")
         return
