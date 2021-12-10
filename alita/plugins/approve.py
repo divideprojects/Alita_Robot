@@ -70,23 +70,11 @@ async def approve_user(c: Alita, m: Message):
     LOGGER.info(f"{user_id} approved by {m.from_user.id} in {m.chat.id}")
 
     # Allow all permissions
-    await m.chat.restrict_member(
-        user_id=user_id,
-        permissions=ChatPermissions(
-            can_send_messages=True,
-            can_send_media_messages=True,
-            can_send_stickers=True,
-            can_send_animations=True,
-            can_send_games=True,
-            can_use_inline_bots=True,
-            can_add_web_page_previews=True,
-            can_send_polls=True,
-            can_change_info=True,
-            can_invite_users=True,
-            can_pin_messages=True,
-        ),
-    )
-
+    try:
+        await m.chat.unban_member(user_id=user_id)
+    except RPCError as g:
+        await m.reply_text(f"Error: {g}")
+        return
     await m.reply_text(
         (
             f"{(await mention_html(user_first_name, user_id))} has been approved in {chat_title}!\n"
