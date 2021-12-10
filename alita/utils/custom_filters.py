@@ -79,7 +79,7 @@ def command(
                 disable_list = DISABLED_CMDS[m.chat.id].get("commands", [])
                 status = str(DISABLED_CMDS[m.chat.id].get("action", "none"))
                 try:
-                    user_status = (await m.chat.get_member(user_id)).status
+                    user_status = (await m.chat.get_member(m.from_user.id)).status
                 except UserNotParticipant:
                     # i.e anon admin
                     user_status = "administrator"
