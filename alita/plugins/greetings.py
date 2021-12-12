@@ -316,7 +316,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
         button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
 
-        if "%%%" in tekss:
+        if "%%%" in tek:
             filter_reply = tek.split("%%%")
             teks = choice(filter_reply)
         else:
