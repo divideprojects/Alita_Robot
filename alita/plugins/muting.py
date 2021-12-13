@@ -101,19 +101,7 @@ async def tmute_usr(c: Alita, m: Message):
     try:
         await m.chat.restrict_member(
             user_id,
-            ChatPermissions(
-                can_send_messages=False,
-                can_send_media_messages=False,
-                can_send_stickers=False,
-                can_send_animations=False,
-                can_send_games=False,
-                can_use_inline_bots=False,
-                can_add_web_page_previews=False,
-                can_send_polls=False,
-                can_change_info=False,
-                can_invite_users=False,
-                can_pin_messages=False,
-            ),
+            ChatPermissions(),
             mutetime,
         )
         LOGGER.info(f"{m.from_user.id} tmuted {user_id} in {m.chat.id}")
@@ -213,19 +201,7 @@ async def dtmute_usr(c: Alita, m: Message):
     try:
         await m.chat.restrict_member(
             user_id,
-            ChatPermissions(
-                can_send_messages=False,
-                can_send_media_messages=False,
-                can_send_stickers=False,
-                can_send_animations=False,
-                can_send_games=False,
-                can_use_inline_bots=False,
-                can_add_web_page_previews=False,
-                can_send_polls=False,
-                can_change_info=False,
-                can_invite_users=False,
-                can_pin_messages=False,
-            ),
+            ChatPermissions(),
             mutetime,
         )
         LOGGER.info(f"{m.from_user.id} dtmuted {user_id} in {m.chat.id}")
@@ -321,19 +297,7 @@ async def stmute_usr(c: Alita, m: Message):
     try:
         await m.chat.restrict_member(
             user_id,
-            ChatPermissions(
-                can_send_messages=False,
-                can_send_media_messages=False,
-                can_send_stickers=False,
-                can_send_animations=False,
-                can_send_games=False,
-                can_use_inline_bots=False,
-                can_add_web_page_previews=False,
-                can_send_polls=False,
-                can_change_info=False,
-                can_invite_users=False,
-                can_pin_messages=False,
-            ),
+            ChatPermissions(),
             mutetime,
         )
         LOGGER.info(f"{m.from_user.id} stmuted {user_id} in {m.chat.id}")
@@ -403,19 +367,7 @@ async def mute_usr(c: Alita, m: Message):
     try:
         await m.chat.restrict_member(
             user_id,
-            ChatPermissions(
-                can_send_messages=False,
-                can_send_media_messages=False,
-                can_send_stickers=False,
-                can_send_animations=False,
-                can_send_games=False,
-                can_use_inline_bots=False,
-                can_add_web_page_previews=False,
-                can_send_polls=False,
-                can_change_info=False,
-                can_invite_users=False,
-                can_pin_messages=False,
-            ),
+            ChatPermissions(),
         )
         LOGGER.info(f"{m.from_user.id} muted {user_id} in {m.chat.id}")
         txt = (tlang(m, "admin.mute.muted_user")).format(
@@ -489,19 +441,7 @@ async def smute_usr(c: Alita, m: Message):
     try:
         await m.chat.restrict_member(
             user_id,
-            ChatPermissions(
-                can_send_messages=False,
-                can_send_media_messages=False,
-                can_send_stickers=False,
-                can_send_animations=False,
-                can_send_games=False,
-                can_use_inline_bots=False,
-                can_add_web_page_previews=False,
-                can_send_polls=False,
-                can_change_info=False,
-                can_invite_users=False,
-                can_pin_messages=False,
-            ),
+            ChatPermissions(),
         )
         LOGGER.info(f"{m.from_user.id} smuted {user_id} in {m.chat.id}")
         await m.delete()
@@ -571,19 +511,7 @@ async def dmute_usr(c: Alita, m: Message):
     try:
         await m.chat.restrict_member(
             user_id,
-            ChatPermissions(
-                can_send_messages=False,
-                can_send_media_messages=False,
-                can_send_stickers=False,
-                can_send_animations=False,
-                can_send_games=False,
-                can_use_inline_bots=False,
-                can_add_web_page_previews=False,
-                can_send_polls=False,
-                can_change_info=False,
-                can_invite_users=False,
-                can_pin_messages=False,
-            ),
+            ChatPermissions(),
         )
         LOGGER.info(f"{m.from_user.id} dmuted {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
@@ -636,22 +564,7 @@ async def unmute_usr(c: Alita, m: Message):
         return
 
     try:
-        await m.chat.restrict_member(
-            user_id,
-            ChatPermissions(
-                can_send_messages=True,
-                can_send_media_messages=True,
-                can_send_stickers=True,
-                can_send_animations=True,
-                can_send_games=True,
-                can_use_inline_bots=True,
-                can_add_web_page_previews=True,
-                can_send_polls=True,
-                can_change_info=True,
-                can_invite_users=True,
-                can_pin_messages=True,
-            ),
-        )
+        await m.chat.unban_member(user_id)
         LOGGER.info(f"{m.from_user.id} unmuted {user_id} in {m.chat.id}")
         await m.reply_text((tlang(m, "admin.unmute.unmuted_user")).format(
             admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -687,22 +600,7 @@ async def unmutebutton(c: Alita, q: CallbackQuery):
         return
     whoo = await c.get_users(user_id)
     try:
-        await q.message.chat.restrict_member(
-            user_id,
-            ChatPermissions(
-                can_send_messages=True,
-                can_send_media_messages=True,
-                can_send_stickers=True,
-                can_send_animations=True,
-                can_send_games=True,
-                can_use_inline_bots=True,
-                can_add_web_page_previews=True,
-                can_send_polls=True,
-                can_change_info=True,
-                can_invite_users=True,
-                can_pin_messages=True,
-            ),
-        )
+        await q.message.chat.unban_member(user_id)
     except RPCError as e:
         await q.message.edit_text(f"Error: {e}")
         return

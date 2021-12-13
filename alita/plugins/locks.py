@@ -382,22 +382,10 @@ async def prevent_approved(m: Message):
     approved_users = Approve(m.chat.id).list_approved()
     ul = [user[0] for user in approved_users]
     for i in ul:
-        await m.chat.restrict_member(
-            user_id=i,
-            permissions=ChatPermissions(
-                can_send_messages=True,
-                can_send_media_messages=True,
-                can_send_stickers=True,
-                can_send_animations=True,
-                can_send_games=True,
-                can_use_inline_bots=True,
-                can_add_web_page_previews=True,
-                can_send_polls=True,
-                can_change_info=True,
-                can_invite_users=True,
-                can_pin_messages=True,
-            ),
-        )
+        try:
+            await m.chat.unban_member(user_id=i)
+        except ChatAdminRequired:
+            continue
         LOGGER.info(f"Approved {i} in {m.chat.id}")
         await sleep(0.1)
 

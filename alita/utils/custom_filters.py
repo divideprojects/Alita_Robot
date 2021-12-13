@@ -18,7 +18,7 @@ from shlex import split
 from typing import List
 from typing import Union
 
-from pyrogram.errors import RPCError
+from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery
 from pyrogram.types import Message
@@ -82,18 +82,17 @@ def command(
                 disable_list = DISABLED_CMDS[m.chat.id].get("commands", [])
                 status = str(DISABLED_CMDS[m.chat.id].get("action", "none"))
                 try:
-                    user_status = (await m.chat.get_member(user_id)).status
+                    user_status = (await m.chat.get_member(m.from_user.id)).status
                 except UserNotParticipant:
                     # i.e anon admin
                     user_status = "administrator"
                 except ValueError:
                     # i.e. PM
                     user_status = "creator"
-                if str(matches.group(
-                        1)) in disable_list and user_status not in (
-                            "creator",
-                            "administrator",
-                        ):
+                if str(matches.group(1)) in disable_list and user_status not in (
+                    "creator",
+                    "administrator",
+                ):
                     try:
                         if status == "del":
                             await m.delete()

@@ -97,19 +97,7 @@ async def bl_watcher(_, m: Message):
         elif action == "mute":
             await m.chat.restrict_member(
                 m.from_user.id,
-                ChatPermissions(
-                    can_send_messages=False,
-                    can_send_media_messages=False,
-                    can_send_stickers=False,
-                    can_send_animations=False,
-                    can_send_games=False,
-                    can_use_inline_bots=False,
-                    can_add_web_page_previews=False,
-                    can_send_polls=False,
-                    can_change_info=False,
-                    can_invite_users=True,
-                    can_pin_messages=False,
-                ),
+                ChatPermissions(),
             )
 
             await m.reply_text(
