@@ -31,7 +31,7 @@ from pyrogram.types import (
     Message,
 )
 
-from alita import BOT_ID, BOT_USERNAME, LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
+from alita import LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
@@ -39,6 +39,7 @@ from alita.utils.custom_filters import command, restrict_filter
 from alita.utils.extract_user import extract_user
 from alita.utils.parser import mention_html
 from alita.utils.string import extract_time
+from alita.vars import Config
 
 
 @Alita.on_message(command("tban") & restrict_filter)
@@ -55,7 +56,7 @@ async def tban_usr(c: Alita, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to ban")
         return
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
@@ -154,7 +155,7 @@ async def stban_usr(c: Alita, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to ban")
         return
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
@@ -243,7 +244,7 @@ async def dtban_usr(c: Alita, m: Message):
     if not user_id:
         await m.reply_text("Cannot find user to ban")
         return
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
@@ -352,7 +353,7 @@ async def kick_usr(c: Alita, m: Message):
         await m.reply_text("Cannot find user to kick")
         return
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I kick myself?")
         await m.stop_propagation()
 
@@ -421,7 +422,7 @@ async def skick_usr(c: Alita, m: Message):
         await m.reply_text("Cannot find user to kick")
         return
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I kick myself?")
         await m.stop_propagation()
 
@@ -488,7 +489,7 @@ async def dkick_usr(c: Alita, m: Message):
         await m.reply_text("Cannot find user to kick")
         return
 
-    if user_id == BOT_ID:
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I kick myself?")
         await m.stop_propagation()
 
@@ -549,14 +550,20 @@ async def unban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.unban.no_target"))
         await m.stop_propagation()
 
-    try:
-        user_id, user_first_name, _ = await extract_user(c, m)
-    except Exception:
-        return
+    if m.reply_to_message and not m.reply_to_message.from_user:
+        user_id, user_first_name = (
+            m.reply_to_message.sender_chat.id,
+            m.reply_to_message.sender_chat.title,
+        )
+    else:
+        try:
+            user_id, user_first_name, _ = await extract_user(c, m)
+        except Exception:
+            return
 
-    if m.reply_to_message and len(m.text.split()) <= 2:
+    if m.reply_to_message and len(m.text.split()) >= 2:
         reason = m.text.split(None, 2)[1]
-    elif not m.reply_to_message and len(m.text.split()) <= 3:
+    elif not m.reply_to_message and len(m.text.split()) >= 3:
         reason = m.text.split(None, 2)[2]
     else:
         reason = None
@@ -564,7 +571,7 @@ async def unban_usr(c: Alita, m: Message):
     try:
         await m.chat.unban_member(user_id)
         txt = (tlang(m, "admin.unban.unbanned_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            admin=m.from_user.mention,
             unbanned=(await mention_html(user_first_name, user_id)),
             chat_title=m.chat.title,
         )
@@ -593,15 +600,21 @@ async def sban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.ban.no_target"))
         await m.stop_propagation()
 
-    try:
-        user_id, _, _ = await extract_user(c, m)
-    except Exception:
-        return
+    if m.reply_to_message and not m.reply_to_message.from_user:
+        user_id = m.reply_to_message.sender_chat.id
+    else:
+        try:
+            user_id, _, _ = await extract_user(c, m)
+        except Exception:
+            return
 
     if not user_id:
         await m.reply_text("Cannot find user to ban")
         return
-    if user_id == BOT_ID:
+    if user_id == m.chat.id:
+        await m.reply_text("That's an admin!")
+        await m.stop_propagation()
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
@@ -658,15 +671,24 @@ async def dban_usr(c: Alita, m: Message):
     if not m.reply_to_message:
         return await m.reply_text("Reply to a message to delete it and ban the user!")
 
-    reason = None
-
-    user_id = m.reply_to_message.from_user.id
-    user_first_name = m.reply_to_message.from_user.first_name
+    if m.reply_to_message and not m.reply_to_message.from_user:
+        user_id, user_first_name = (
+            m.reply_to_message.sender_chat.id,
+            m.reply_to_message.sender_chat.title,
+        )
+    else:
+        user_id, user_first_name = (
+            m.reply_to_message.from_user.id,
+            m.reply_to_message.from_user.first_name,
+        )
 
     if not user_id:
         await m.reply_text("Cannot find user to ban")
         return
-    if user_id == BOT_ID:
+    if user_id == m.chat.id:
+        await m.reply_text("That's an admin!")
+        await m.stop_propagation()
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
@@ -686,13 +708,17 @@ async def dban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
         await m.stop_propagation()
 
+    reason = None
+    if len(m.text.split()) >= 2:
+        reason = m.text.split(None, 1)[1]
+
     try:
         LOGGER.info(f"{m.from_user.id} dbanned {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
         await m.chat.kick_member(user_id)
         txt = (tlang(m, "admin.ban.banned_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
-            banned=(await mention_html(user_first_name, user_id)),
+            admin=m.from_user.mention,
+            banned=m.reply_to_message.from_user.mention,
             chat_title=m.chat.title,
         )
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
@@ -735,24 +761,24 @@ async def ban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.ban.no_target"))
         await m.stop_propagation()
 
-    reason = None
-    if m.reply_to_message:
-        r_id = m.reply_to_message.message_id
-        if len(m.text.split()) >= 2:
-            reason = m.text.split(None, 1)[1]
+    if m.reply_to_message and not m.reply_to_message.from_user:
+        user_id, user_first_name = (
+            m.reply_to_message.sender_chat.id,
+            m.reply_to_message.sender_chat.title,
+        )
     else:
-        r_id = m.message_id
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
-    try:
-        user_id, user_first_name, _ = await extract_user(c, m)
-    except Exception:
-        return
+        try:
+            user_id, user_first_name, _ = await extract_user(c, m)
+        except Exception:
+            return
 
     if not user_id:
         await m.reply_text("Cannot find user to ban")
-        return
-    if user_id == BOT_ID:
+        await m.stop_propagation()
+    if user_id == m.chat.id:
+        await m.reply_text("That's an admin!")
+        await m.stop_propagation()
+    if user_id == Config.BOT_ID:
         await m.reply_text("Huh, why would I ban myself?")
         await m.stop_propagation()
 
@@ -772,11 +798,21 @@ async def ban_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.ban.admin_cannot_ban"))
         await m.stop_propagation()
 
+    reason = None
+    if m.reply_to_message:
+        r_id = m.reply_to_message.message_id
+        if len(m.text.split()) >= 2:
+            reason = m.text.split(None, 1)[1]
+    else:
+        r_id = m.message_id
+        if len(m.text.split()) >= 3:
+            reason = m.text.split(None, 2)[2]
+
     try:
         LOGGER.info(f"{m.from_user.id} banned {user_id} in {m.chat.id}")
         await m.chat.kick_member(user_id)
         txt = (tlang(m, "admin.ban.banned_user")).format(
-            admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
+            admin=m.from_user.mention,
             banned=(await mention_html(user_first_name, user_id)),
             chat_title=m.chat.title,
         )
@@ -820,19 +856,21 @@ async def unbanbutton(c: Alita, q: CallbackQuery):
     user_id = int(splitter[1])
     user = await q.message.chat.get_member(q.from_user.id)
 
-    if not user.can_restrict_members and user.id != OWNER_ID:
+    if not user.can_restrict_members and q.from_user.id != OWNER_ID:
         await q.answer(
             "You don't have enough permission to do this!\nStay in your limits!",
             show_alert=True,
         )
         return
-    whoo = await c.get_users(user_id)
+    whoo = await c.get_chat(user_id)
+    doneto = whoo.first_name if whoo.first_name else whoo.title
     try:
         await q.message.chat.unban_member(user_id)
     except RPCError as e:
         await q.message.edit_text(f"Error: {e}")
         return
-    return await q.message.edit_text(f"{q.from_user.mention} unbanned {whoo.mention}!")
+    await q.message.edit_text(f"{q.from_user.mention} unbanned {doneto}!")
+    return
 
 
 @Alita.on_message(command("kickme"))

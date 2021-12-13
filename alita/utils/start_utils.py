@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from html import escape
 from secrets import choice
 from traceback import format_exc
 
@@ -36,6 +37,7 @@ from alita.utils.string import (
     escape_mentions_using_curly_brackets,
     parse_button,
 )
+from alita.vars import Config
 
 # Initialize
 notes_db = Notes()
@@ -54,14 +56,12 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
 
 async def gen_start_kb(q: Message or CallbackQuery):
     """Generate keyboard with start menu options."""
-    from alita import BOT_USERNAME
-
     return ikb(
         [
             [
                 (
                     f"➕ {(tlang(q, 'start.add_chat_btn'))}",
-                    f"https://t.me/{BOT_USERNAME}?startgroup=new",
+                    f"https://t.me/{Config.BOT_USERNAME}?startgroup=new",
                     "url",
                 ),
                 (
@@ -85,8 +85,6 @@ async def gen_start_kb(q: Message or CallbackQuery):
 
 async def get_private_note(c: Alita, m: Message, help_option: str):
     """Get the note in pm of user, with parsing enabled."""
-    from alita import BOT_USERNAME
-
     help_lst = help_option.split("_")
     if len(help_lst) == 2:
         chat_id = int(help_lst[1])
@@ -95,7 +93,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
         chat_title = Chats.get_chat_info(chat_id)["chat_name"]
         rply = f"Notes in {chat_title}:\n\n"
         note_list = [
-            f"- [{note[0]}](https://t.me/{BOT_USERNAME}?start=note_{chat_id}_{note[1]})"
+            f"- [{note[0]}](https://t.me/{Config.BOT_USERNAME}?start=note_{chat_id}_{note[1]})"
             for note in all_notes
         ]
         rply = "\n".join(note_list)

@@ -14,13 +14,13 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from html import escape
+
 from secrets import choice
 from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -34,6 +34,7 @@ from alita.utils.string import (
     escape_mentions_using_curly_brackets,
     parse_button,
 )
+from alita.vars import Config
 
 # Initialise
 db = Notes()
@@ -92,7 +93,6 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
         return
 
     if priv_notes_status:
-        from alita import BOT_USERNAME
 
         note_hash = next(i[1] for i in db.get_all_notes(m.chat.id) if i[0] == note_name)
         await reply_text(
@@ -102,7 +102,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                     [
                         (
                             "Click Me!",
-                            f"https://t.me/{BOT_USERNAME}?start=note_{m.chat.id}_{note_hash}",
+                            f"https://t.me/{Config.BOT_USERNAME}?start=note_{m.chat.id}_{note_hash}",
                             "url",
                         ),
                     ],
@@ -216,7 +216,7 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
             f"{m.from_user.id} fetched note {note_name} (type - {getnotes}) in {m.chat.id}",
         )
     except Exception as e:
-        await m.reply_text(f"Error: {e}")
+        await m.reply_text(f"Error in notes: {e}")
     return
 
 
@@ -351,14 +351,13 @@ async def local_notes(_, m: Message):
 
     curr_pref = db_settings.get_privatenotes(m.chat.id)
     if curr_pref:
-        from alita import BOT_USERNAME
 
         pm_kb = ikb(
             [
                 [
                     (
                         "All Notes",
-                        f"https://t.me/{BOT_USERNAME}?start=notes_{m.chat.id}",
+                        f"https://t.me/{Config.BOT_USERNAME}?start=notes_{m.chat.id}",
                         "url",
                     ),
                 ],

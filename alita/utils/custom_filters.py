@@ -15,41 +15,44 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from re import compile as compile_re
-from re import escape, search
+from re import escape
 from shlex import split
-from typing import List
+from typing import List, Union
 
-from pyrogram.errors import RPCError
+from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
-from alita import DEV_USERS, OWNER_ID, PREFIX_HANDLER, SUDO_USERS
-from alita.database.disable_db import Disabling
+from alita import DEV_USERS, OWNER_ID, SUDO_USERS
+from alita.database.disable_db import DISABLED_CMDS
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
+from alita.vars import Config
 
 SUDO_LEVEL = set(SUDO_USERS + DEV_USERS + [int(OWNER_ID)])
 DEV_LEVEL = set(DEV_USERS + [int(OWNER_ID)])
 
 
 def command(
-    commands: str or List[str],
-    prefixes: str or List[str] = PREFIX_HANDLER,
+    commands: Union[str, List[str]],
     case_sensitive: bool = False,
+    owner_cmd: bool = False,
     dev_cmd: bool = False,
     sudo_cmd: bool = False,
 ):
-    from alita import BOT_USERNAME
-
     async def func(flt, _, m: Message):
 
-        if not m.from_user:
+        if m and not m.from_user:
             return False
 
         if m.from_user.is_bot:
             return False
 
         if any([m.forward_from_chat, m.forward_from]):
+            return False
+
+        if owner_cmd and (m.from_user.id != OWNER_ID):
+            # Only owner allowed to use this...!
             return False
 
         if dev_cmd and (m.from_user.id not in DEV_LEVEL):
@@ -61,75 +64,61 @@ def command(
             return False
 
         text: str = m.text or m.caption
-        m.command = None
         if not text:
             return False
-        regex = "^({prefix})+\\b({regex})\\b(\\b@{bot_name}\\b)?(.*)".format(
-            prefix="|".join(escape(x) for x in flt.prefixes),
-            regex="|".join(flt.commands),
-            bot_name=BOT_USERNAME,
+        regex = r"^[{prefix}](\w+)(@{bot_name})?(?: |$)(.*)".format(
+            prefix="|".join(escape(x) for x in Config.PREFIX_HANDLER),
+            bot_name=Config.BOT_USERNAME,
         )
-        matches = search(compile_re(regex), text)
+        matches = compile_re(regex).search(text)
         if matches:
-            m.command = [matches.group(2)]
-            matches = (matches.group(4)).replace(
-                "'",
-                "\\'",
-            )  # fix for shlex qoutation error, majorly in filters
-            db = Disabling(m.chat.id)
-            disable_list = db.get_disabled()
-            status = db.get_action()
-            try:
-                user_status = (await m.chat.get_member(m.from_user.id)).status
-            except ValueError:
-                # i.e. PM
-                user_status = "creator"
-            for arg in split(matches.strip()):
-                m.command.append(arg)
-            if str(m.command[0]) in disable_list and user_status not in {
-                "creator",
-                "administrator",
-            }:
-                try:
-                    if status == "del":
-                        await m.delete()
-                except RPCError:
-                    pass
+            m.command = [matches.group(1)]
+            if matches.group(1) not in flt.commands:
                 return False
+            if m.chat.type == "supergroup":
+                disable_list = DISABLED_CMDS[m.chat.id].get("commands", [])
+                status = str(DISABLED_CMDS[m.chat.id].get("action", "none"))
+                try:
+                    user_status = (await m.chat.get_member(m.from_user.id)).status
+                except UserNotParticipant:
+                    # i.e anon admin
+                    user_status = "administrator"
+                except ValueError:
+                    # i.e. PM
+                    user_status = "creator"
+                if str(matches.group(1)) in disable_list and user_status not in (
+                    "creator",
+                    "administrator",
+                ):
+                    try:
+                        if status == "del":
+                            await m.delete()
+                    except RPCError:
+                        pass
+                    return False
+            if matches.group(3) == "":
+                return True
+            try:
+                for arg in split(matches.group(3)):
+                    m.command.append(arg)
+            except ValueError:
+                pass
             return True
         return False
 
-        # backup code incase something breaks!
-        # regex = "^({prefix})+\\b({regex})\\b(.*)".format(
-        #     prefix="|".join(escape(x) for x in flt.prefixes),
-        #     regex="|".join(flt.commands),
-        # )
-        # matches = search(compile_re(regex), text)
-        # if matches:
-        #     m.command = [matches.group(2)]
-        #     matches = (matches.group(3)).replace("'", "\\'")
-        #     for arg in split(matches.strip()):
-        #         m.command.append(arg)
-        #     return True
-        # return False
-
     commands = commands if type(commands) is list else [commands]
     commands = {c if case_sensitive else c.lower() for c in commands}
-    prefixes = [] if prefixes is None else prefixes
-    prefixes = prefixes if type(prefixes) is list else [prefixes]
-    prefixes = set(prefixes) if prefixes else {""}
+
     return create(
         func,
         "NormalCommandFilter",
         commands=commands,
-        prefixes=prefixes,
         case_sensitive=case_sensitive,
     )
 
 
 async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
     """Check if bot is Admin or not."""
-    from alita import BOT_ID
 
     if isinstance(m, CallbackQuery):
         m = m.message
@@ -152,7 +141,7 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
         if ("The chat_id" and "belongs to a user") in ef:
             return True
 
-    if BOT_ID in admin_group:
+    if Config.BOT_ID in admin_group:
         return True
 
     await m.reply_text(

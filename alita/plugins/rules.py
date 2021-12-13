@@ -23,6 +23,7 @@ from alita.database.rules_db import Rules
 from alita.tr_engine import tlang
 from alita.utils.custom_filters import admin_filter, command
 from alita.utils.kbhelpers import ikb
+from alita.vars import Config
 
 
 @Alita.on_message(command("rules") & filters.group)
@@ -45,14 +46,12 @@ async def get_rules(_, m: Message):
     priv_rules_status = db.get_privrules()
 
     if priv_rules_status:
-        from alita import BOT_USERNAME
-
         pm_kb = ikb(
             [
                 [
                     (
                         "Rules",
-                        f"https://t.me/{BOT_USERNAME}?start=rules_{m.chat.id}",
+                        f"https://t.me/{Config.BOT_USERNAME}?start=rules_{m.chat.id}",
                         "url",
                     ),
                 ],

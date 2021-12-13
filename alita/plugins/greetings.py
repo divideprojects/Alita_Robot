@@ -16,24 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from html import escape
 from secrets import choice
-from traceback import format_exc
 
-from pyrogram import filters, types
-from pyrogram.errors import RPCError
-from pyrogram.errors.exceptions.bad_request_400 import (
-    ChatAdminRequired,
-    UserNotParticipant,
-)
-from pyrogram.types import (
-    ChatMemberUpdated,
-    ChatPermissions,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-    User,
-)
+from pyrogram import filters
+from pyrogram.errors import ChatAdminRequired, RPCError
+from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, Message
 
-from alita import MESSAGE_DUMP, OWNER_ID
+from alita import OWNER_ID
 from alita.bot_class import Alita
 from alita.database.antispam_db import GBan
 from alita.database.greetings_db import Greetings
@@ -45,6 +33,7 @@ from alita.utils.string import (
     escape_invalid_curly_brackets,
     parse_button,
 )
+from alita.vars import Config
 
 # Initialize
 gdb = GBan()
@@ -264,7 +253,6 @@ async def cleannnnn(_, m: Message):
 
 @Alita.on_chat_member_updated(filters.group, group=69)
 async def member_has_joined(c: Alita, member: ChatMemberUpdated):
-    from alita import BOT_ID
 
     if (
         member.new_chat_member
@@ -280,7 +268,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
     db = Greetings(member.chat.id)
     banned_users = gdb.check_gban(user.id)
     try:
-        if user.id == BOT_ID:
+        if user.id == Config.BOT_ID:
             return
         if user.id == OWNER_ID:
             await c.send_message(
@@ -316,7 +304,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
         button = await build_keyboard(button)
         button = InlineKeyboardMarkup(button) if button else None
 
-        if "%%%" in tekss:
+        if "%%%" in tek:
             filter_reply = tek.split("%%%")
             teks = choice(filter_reply)
         else:
@@ -346,7 +334,6 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
 
 @Alita.on_chat_member_updated(filters.group, group=99)
 async def member_has_left(c: Alita, member: ChatMemberUpdated):
-    from alita import BOT_ID
 
     if (
         not member.new_chat_member

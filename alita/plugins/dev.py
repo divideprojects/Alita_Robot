@@ -34,7 +34,7 @@ from pyrogram.errors import (
 from pyrogram.types import Message
 from speedtest import Speedtest
 
-from alita import LOGFILE, LOGGER, MESSAGE_DUMP, PREFIX_HANDLER, UPTIME
+from alita import LOGFILE, LOGGER, MESSAGE_DUMP, UPTIME
 from alita.bot_class import Alita
 from alita.database.chats_db import Chats
 from alita.tr_engine import tlang
@@ -43,6 +43,7 @@ from alita.utils.custom_filters import command
 from alita.utils.http_helper import HTTPx
 from alita.utils.kbhelpers import ikb
 from alita.utils.parser import mention_markdown
+from alita.vars import Config
 
 
 @Alita.on_message(command("ping", sudo_cmd=True))
@@ -77,7 +78,7 @@ async def send_log(c: Alita, m: Message):
 async def group_info(c: Alita, m: Message):
     if len(m.text.split()) != 2:
         await m.reply_text(
-            f"It works like this: <code>{PREFIX_HANDLER} chat_id</code>",
+            f"It works like this: <code>{Config.PREFIX_HANDLER} chat_id</code>",
         )
         return
 

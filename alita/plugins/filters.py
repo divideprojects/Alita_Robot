@@ -15,14 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from html import escape
 from re import escape as re_escape
 from secrets import choice
 from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 
 from alita.bot_class import LOGGER, Alita
 from alita.database.filters_db import Filters
@@ -284,7 +283,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
                 reply_to_message_id=m.message_id,
             )
     except Exception as ef:
-        await m.reply_text(f"Error: {ef}")
+        await m.reply_text(f"Error in filters: {ef}")
         return msgtype
 
     return msgtype

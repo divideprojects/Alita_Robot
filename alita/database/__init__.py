@@ -14,12 +14,18 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from sys import exit as exiter
 
 from pymongo import MongoClient
+from pymongo.errors import PyMongoError
 
 from alita import DB_NAME, DB_URI, LOGGER
 
-alita_db_client = MongoClient(DB_URI)
+try:
+    alita_db_client = MongoClient(DB_URI)
+except PyMongoError as f:
+    LOGGER.error(f"Error in Mongodb: {f}")
+    exiter(1)
 alita_main_db = alita_db_client[DB_NAME]
 
 

@@ -100,25 +100,11 @@ NO_LOAD = Config.NO_LOAD
 WORKERS = Config.WORKERS
 
 # Prefixes
-PREFIX_HANDLER = Config.PREFIX_HANDLER
 ENABLED_LOCALES = Config.ENABLED_LOCALES
 VERSION = Config.VERSION
 
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime
-BOT_USERNAME = ""
-BOT_NAME = ""
-BOT_ID = 0
-
-
-async def get_self(c):
-    """Gets the information about bot."""
-    global BOT_USERNAME, BOT_NAME, BOT_ID
-    getbot = await c.get_me()
-    BOT_NAME = getbot.first_name
-    BOT_USERNAME = getbot.username
-    BOT_ID = getbot.id
-    return getbot
 
 
 async def load_cmds(all_plugins):
@@ -146,6 +132,7 @@ async def load_cmds(all_plugins):
 
         HELP_COMMANDS[plugin_dict_name] = {
             "buttons": [],
+            "disablable": [],
             "alt_cmds": [],
             "help_msg": f"plugins.{plugin_name}.help",
         }

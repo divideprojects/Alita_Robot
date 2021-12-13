@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import asyncio
 from html import escape
 from io import BytesIO
 from os import remove
@@ -32,7 +31,6 @@ from alita import (
     DEV_USERS,
     LOGGER,
     OWNER_ID,
-    PREFIX_HANDLER,
     SUDO_USERS,
     SUPPORT_GROUP,
     SUPPORT_STAFF,
@@ -48,6 +46,7 @@ from alita.utils.extract_user import extract_user
 from alita.utils.http_helper import HTTPx, http
 from alita.utils.kbhelpers import ikb
 from alita.utils.parser import mention_html
+from alita.vars import Config
 
 gban_db = GBan()
 
@@ -227,7 +226,7 @@ async def github(_, m: Message):
         LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
     else:
         await m.reply_text(
-            f"Usage: <code>{PREFIX_HANDLER}github username</code>",
+            f"Usage: <code>{Config.PREFIX_HANDLER}github username</code>",
         )
         return
 

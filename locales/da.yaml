@@ -1,0 +1,695 @@
+---
+main:
+  lang_sample: "Dansk"
+  language_flag: "🇩🇰"
+  language_name: Dansk
+strings:
+  plugins:
+    admin:
+      main: "Admin"
+      help: |-
+        Lazy to promote or demote someone for admins? Want to see basic information about chat?
+        All stuff about chatroom such as admin lists, pinning or grabbing an invite link can be done easily using the bot.
+        **User Commands:**
+        × /adminlist: List all the admins in the Group.
+        **Admin only:**
+        × /invitelink: Gets chat invitelink.
+        × /promote: Promotes the user replied to or tagged (supports with title).
+        × /fullpromote: Fully Promotes the user replied to or tagged (supports with title).
+        × /demote: Demotes the user replied to or tagged.
+        × /admincache: Reloads the List of all the admins in the Group.
+        × /zombies: Bans all the deleted accounts. (owner only)
+        × /title: sets a custom title for an admin that the bot promoted.
+        × /disable <commandname>: Stop users from using "commandname" in this group.
+        × /enable <item name>: Allow users from using "commandname" in this group.
+        × /disableable: List all disableable commands.
+        × /disabledel <yes/off>: Delete disabled commands when used by non-admins.
+        × /disabled: List the disabled commands in this chat.
+        × /enableall: enable all disabled commands.
+
+        **Example:**
+        `/promote @username`: this promotes a user to admin.
+    approve:
+      main: "Godkend"
+      help: |-
+        Nogle gange kan man stole på, at en bruger ikke sender uønsket indhold.
+        måske ikke nok til at gøre dem admin, men du kan være ok med låse, blacklister og antioversvømmelse, der ikke gælder for dem.
+        Det er, hvad godkendelser er for-godkende pålidelige brugere, så de kan sende ting uden begrænsninger!
+        ** Admin-kommandoer: **
+        × /godkendelse: Kontrollér en brugers godkendelsesstatus i denne chat.
+        × /godkende: Approve of a user. Lacks, sorte lister, og antioversvømmelse vil ikke gælde for dem længere.
+        × /ugodkende: Unapbevis for en bruger. De vil nu blive omfattet af blokeringer.
+        × /autoriseret: List alle godkendte brugere.
+        × /unapproveall: Unapprove *ALL* brugere i en chat. Dette kan ikke fortrydnes!
+        ** Eksempel:**
+        . Godkend @username": Dette godkender en bruger i chatten.
+    greetings:
+      main: "Vær hilset"
+      help: |-
+        Customize your group's welcome / goodbye messages that can be personalised in multiple ways.
+
+        Note:
+        a) Currently it supports only text!
+        b) Alita must be an admin to greet and goodbye users.
+
+        Admin Commands:
+        × /setwelcome <reply> : Sets a custom welcome message.
+        × /setgoodbye <reply> : Sets a custom goodbye message.
+        × /resetwelcome : Resets to bot default welcome message.
+        × /resetgoodbye : Resets to bot default goodbye message.
+        × /welcome <on/off> | noformat : enable/disable | Shows the current welcome message | settings.
+        × /goodbye <on/off> | noformat : enable/disable | Shows the current goodbye message | settings.
+        × /cleanwelcome <on/off> : Shows or sets the current clean welcome settings.
+        × /cleangoodbye <on/off> : Shows or sets the current clean goodbye settings.
+
+        ── **Cleaner** ──:
+        × /cleanservice <on/off> : Use it to clean all service messages automatically or to view current status.
+
+        ── **Format** ──
+        Check /markdownhelp for help related to formatting!
+    bans:
+      main: "Bans"
+      help: |-
+        Someone annoying entered your group?
+        Want to ban/restriction him/her?
+        This is the plugin for you, easily kick, ban and unban members in a group.
+        **Admin only:**
+        × /kick: Kick the user replied or tagged.
+        × /skick: Kick the user replied or tagged and delete your messsage.
+        × /dkick: Kick the user replied and delete their message.
+        × /ban: Bans the user replied to or tagged.
+        × /sban: Bans the user replied or tagged and delete your messsage.
+        × /dban: Bans the user replied and delete their message.
+        × /tban <userhandle> x(m/h/d): Bans a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
+        × /stban <userhandle> x(m/h/d): Silently bans a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
+        × /dtban <userhandle> x(m/h/d): Silently bans a user for x time and delete the replied message. (via reply). m = minutes, h = hours, d = days.
+        × /unban: Unbans the user replied to or tagged.
+        **Example:**
+        `/ban @username`: this bans a user in the chat.
+    blacklist:
+      main: "Blacklist"
+      help: |-
+        Want to restrict certain words or sentences in your group?
+        Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, that message will immediately be deleted.
+        A good combo is sometimes to pair this up with warn filters!
+        **NOTE:** blacklists do not affect group admins.
+        × /blacklist: View the current blacklisted words.
+        **Admin only:**
+        × /addblacklist `<triggers>`: Add a trigger to the blacklist. Each line is considered one trigger, so using different lines will allow you to add multiple triggers.
+        × /unblacklist `<triggers>`: Remove triggers from the blacklist. Same newline logic applies here, so you can remove multiple triggers at once.
+        × /blaction `<action>`: This action will occur when user uses a blacklist word. Choose from - 'kick', 'ban', 'mute', 'warn'.
+        Default is 'none', which will delete the users message on typing a blacklist word.
+        **Owner Only**
+        × /rmallblacklist: Removes all the blacklists from the current chat.
+        **Note:** Can only add or remove one blacklist at a time!
+        **Example:**
+        `/addblacklist hello`: this adds the word 'hello' as blacklist in the chat.
+    filters:
+      main: "Filtre"
+      help: |-
+        • /filters: List all active filters saved in the chat.
+
+        **Admin only:**
+        • /filter "`<keyword>`" `<reply message>`: Add a filter to this chat. The bot will now reply that message whenever 'keyword'
+        is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker.
+
+        If you want your keyword to be a sentence, use quotes. eg: /filter "hey there" How are you doin?
+        **Example:**
+        `/filter "filtername" Reply Text`
+
+        Aliases for filters can be too set, just put '|' between the filternames you want.
+        **Example:**
+        `/filter "filtername1|filtername2" Reply Text`
+        Using the you can make a single filter work on 2 filternames without manually adding another one.
+
+        • /stop `<filter keyword>`: Stop that filter.
+        **Note:** For filters with aliases, if you stop one alias, the filter will stop working on other aliases too.
+        **For Example:** If you stop the "filtername1" from above example, the bot will not respond to "filtername2".
+
+        **Chat creator only:**
+        • /removeallfilters: Remove all chat filters at once.
+
+        **Note:**
+        Currently there is a limit of 50 filters and 120 aliases per chat.
+        All filter keywords are in lowercase.
+    formatting:
+      main: "Formatering"
+      help: |-
+        Formatering af
+
+        Alita understøtter et stort antal formateringsvalg for at gøre dine beskeder mere udtryksfulde. Tag et kig ved at klikke på knapperne nedenfor!
+    fun:
+      main: "Sjov"
+      help: |-
+        × /kørsler: Besvar en vilkårlig streng fra et array af svar.
+        × /dask: slå en bruger, eller blive klappet, hvis det ikke er et svar.
+        × /shrug: get shrug XD.
+        × /beslutte: Randomly besvarer ja/no/måske
+        × /bluetext: Tosses A mønt
+        × /bluetext: check urself :V
+        × /roll: Roll a dice.
+        × /reageret: Random Reaction
+        × /råb `<keyword>`: skriv noget, som du vil give højt råb.
+    language:
+      main: "Sprog"
+      help: |-
+        Ikke i stand til at ændre bots sprog?
+        Easily change by using this module!
+
+        Just type /lang and use inline tastatur to choose a language for yourself or your group.
+
+        Du kan hjælpe os med at bringe bot til flere sprog ved at hjælpe med [Crowdin](https: //crowdin.com/project/alita_robot)
+    locks:
+      main: "Låse"
+      help: |-
+        Use this to lock group permissions.
+        Allows you to lock and unlock permission types in the chat.
+
+        **Usage:**
+        × /lock `<type>`: Lock Chat permission.
+        × /unlock `<type>`: Unlock Chat permission.
+        × /locks: View Chat permission.
+        × /locktypes: Check available lock types!
+
+        **Example:**
+        `/lock media`: this locks all the media messages in the chat.
+    muting:
+      main: "Muting"
+      help: |-
+        Vil du have nogen til at holde noget i en tid i gruppen?
+        Mute-plugin er her for at hjælpe, dæmpe eller dæmpe enhver bruger let!
+
+        ** Admin only: **
+        × /mute: Mute the user svarede på eller nævnte.
+        × /smute: lyddæmper en bruger uden at advisere. Kan også bruges som svar, og muterer svaret til brugeren.
+        × /dmute: Mute a user pr. svar, og slet deres meddelelse.
+        × /tmute <userhandle> x (m/h/d): mutes en bruger for x-tid. (via håndtag eller svar). m = minutter, h = timer, d = dage.
+        × /stmute <userhandle> x (m/h/d): mutes en bruger for x-tid uden at advisere. (via håndtag eller svar). m = minutter, h = timer, d = dage.
+        × /dtmute <userhandle> x (m/h/d): Mute den besvarede bruger, og slet den svarede meddelelse. (via svar). m = minutter, h = timer, d = dage.
+        × /stum: Umuterer den bruger, der er nævnt, eller svaret på.
+
+        ** Eksempel:**
+        /stumme @username", denne muterer en bruger.
+    notes:
+      main: "Noter"
+      help: |-
+        Save a note, get that, even you can delete that note.
+        This note only avaiable for your whole group!
+        Only admins can save and deletenotes, anyone can get them.
+
+        × /save `<notename>` <`note content or reply to message>`
+        Save a note, you can get or delete that later.
+
+        × /get `<note>` or #<note>
+        Get that note, if avaiable.
+
+        × /get `<note>` noformat or /get `<note>` raw
+        Get that note in raw format, so you can edit and update it.
+
+        × /clear `<note>`
+        Delete that note, if avaiable.
+
+        × /clearall
+        Clears all notes in the chat!
+        **NOTE:** Can only be used by owner of chat!
+
+        × /saved or /notes
+        Get all your notes, if too much notes, please use this in your saved message instead!
+
+        × /privatenotes `<on/yes/no/off>`: Whether to turn private rules on or off, prevents spam in chat when people use notes command.
+
+        ── **Note Format** ──
+        Check /markdownhelp for help related to formatting!
+    pins:
+      main: "Pins"
+      help: |-
+        Her finder du alt hjælp i forbindelse med grupper af knappenåle, og hvordan de skal håndtere dem via mig.
+
+        ** Administrator-Cmds: **
+        × /pin: "adviset piner beskeden" "højt", "adviset" eller "alarm" for at give notifikationen besked til brugerne.
+        × /unpin: Unpin the last message message.
+        × /fastgjort: Gives det aktuelle fastgjorte budskab til chatten.
+        × /unpinall: Unpin all the pinned message in the current chat.
+        × /antikannelpin `<on/off/yes/no>`: Toggle status for kanalenål. Alle meddelelser fra linkede kanal vil være ufastholdt, hvis det er aktiveret!
+        × /cleanlinket `<on/off/yes/no>`: Toggle rengullinstatus. Alle beskeder fra linket kanal bliver slettet, hvis det er aktiveret!
+        × /permapin `<text>`: Pin a custom messages via bot. Denne meddelelse kan indeholde markeringer og kan bruges i svar til medierne, herunder ekstra knapper og tekst.
+    purges:
+      main: "Indkøbsmål"
+      help: |-
+        Vil du slette beskeder i gruppen?
+        × /purge: Sletter beskeder, besvarede en besked.
+        × /spurge: Sletter meddelelser, der skal besvares, uden at meddelelsen er udført.
+        × /del: Sletter en enkelt meddelelse, som bruges som svar på meddelelsen.
+
+        ** Eksempel:**
+        /purge <as a reply to message>": Dette sletter alle meddelelser, indtil den, du har svaret på.
+    reporting:
+      main: "Rapportering"
+      help: |-
+        × /report `<reason>`: reply to a message to report it to admins.
+        - @admin: reply to a message to report it to admins.
+        **NOTE:** Neither of these will get triggered if used by admins.
+
+        **Admins Only:**
+        × /reports `<on/off/yes/no>`: change report setting, or view current status.
+        - If done in PM, toggles your status.
+        - If in group, toggles that groups's status.
+    rules:
+      main: "Regler"
+      help: |-
+        Angiv regler for chatten, så medlemmerne ved, hvad de skal gøre, og hvad der ikke skal gøres i din gruppe!
+
+        × /rules: hent reglerne for den aktuelle chat.
+
+        ** Admin only: **
+        × /setrules `<rules>": Angiv reglerne for denne chat, og fungerer også som et svar på en meddelelse.
+        × /clearrules: Ryd reglerne for denne chat.
+        × /privatrules `<on/yes/no/off>": Aktiverer / defra muligheden for at sende reglerne til FV for bruger eller gruppe.
+    utils:
+      main: "Utils"
+      help: |-
+        Some utils provided by bot to make your tasks easy!
+
+        × /id: Get the current group id. If used by replying to a message, get that user's id.
+        × /info: Get information about a user.
+        × /gifid: Reply to a gif to me to tell you its file ID.
+        × /wiki: `<query>`: wiki your query.
+        × /tr `<language>`: Translates the text and then replies to you with the language you have specifed, works as a reply to message.
+        × /github `<username>`: Search for the user using github api!
+        × /lyrics `<song>`: Get the lyrics of the song you specify!
+        × /weebify `<text>` or `<reply to message>`: To weebify the text.
+
+        **Example:**
+        `/info @username`: this fetches the information about a user from the database.
+    warnings:
+      main: "Advarsler"
+      help: |-
+        Keep your members in check with warnings; stop them getting out of control!
+
+        If you're looking for automated warnings, go read about the blacklist module.
+
+        Admin commands:
+        - /warn `<reason>`: Warn a user.
+        - /dwarn `<reason>`: Warn a user by reply, and delete their message.
+        - /swarn `<reason>`: Silently warn a user, and delete your message.
+        - /warns: See a user's warnings.
+        - /rmwarn: Remove a user's latest warning.
+        - /resetwarn: Reset all of a user's warnings to 0.
+        - /warnings: Get the chat's warning settings.
+        - /warnmode `<ban/kick/mute>`: Set the chat's warn mode.
+        - /warnlimit `<number>`: Set the number of warnings before users are punished.
+
+        Examples:
+        `/warn @user`: this warns a user in the chat.
+  admin:
+    adminlist:
+      adminstr: "Admins i <b>{chat_title}</b>:"
+      note_cached: "<i>Bemærk:</i> Disse er cachelagrede værdier!"
+      note_updated: "<i>Bemærk:</i> Disse er opdaterede værdier!"
+      reloaded_admins: "Genindlæser alle administratorer i denne chat!"
+      use_admin_cache: "Brug /admincachen til at genindlæse administratorer!"
+    ban:
+      user_already_banned: "Denne bruger er allerede forbudt, ingen brug af forbud mod dem igen!"
+      no_target: "Jeg kan ikke forbyde noget!"
+      admin_cannot_ban: "Denne bruger er en administrator, jeg kan ikke forbyde dem!"
+      ban_all: "Er du sikker på, at du vil forbyde alle medlemmer i denne gruppe?"
+      banned_user: "{admin} forbudt {banned} i <b>{chat_title}</b>!"
+      banning_all: "Banning af alle medlemmer ..."
+      bot_no_right: "Jeg har ikke nok rettigheder til at forbyde denne bruger."
+    demote:
+      no_target: "Jeg kan ikke degradere noget!"
+      bot_no_right: "Jeg har ikke nok rettigheder til at degradere denne bruger."
+      demoted_user: "{demoter} degraderet {demoted} i <b>{chat_title}</b>!"
+    invitelink: |-
+      Invitér link til chat <b>{chat_name}</b>:
+      {link}
+    kick:
+      user_already_banned: "Denne bruger er allerede forbudt, ingen brug sparke til dem!"
+      no_target: "Jeg kan ikke sparke noget!"
+      admin_cannot_kick: "Denne bruger er en admin, jeg kan ikke sparke dem!"
+      bot_no_right: "Jeg har ikke nok rettigheder til at sparke denne bruger."
+      kicked_user: "{admin} sparket {kicked} i <b>{chat_title}</b>!"
+    mute:
+      admin_cannot_mute: "Denne bruger er en admin, jeg kan ikke skrue ned for dem!"
+      bot_no_right: "Jeg har ikke nok rettigheder til at stum denne bruger."
+      muted_user: "Admin {admin} muteret {muted}!"
+    no_invite_perm: "Jeg har ikke tilladelse til at invitere link!"
+    no_restrict_perm: "Du har ikke tilladelse til at begrænse medlemmer!"
+    no_user_invite_perm: "Du har ikke tilladelse til at invitere brugere."
+    not_admin: "Jeg er ikke administrator, eller jeg har ikke rettigheder."
+    promote:
+      no_target: "Jeg kan ikke forfremme noget!"
+      bot_no_right: "Jeg har ikke nok rettigheder til at promovere denne bruger."
+      no_promote_perm: "Du har ikke tilladelse til at promovere medlemmer!"
+      promoted_user: "{promoter} promoveret {promoted} i chat <b>{chat_title}</b>!"
+    support_cannot_restrict: "Denne bruger er i mit supportpersonale, kan ikke begrænse dem."
+    unban:
+      user_not_banned: "Hvordan kan jeg forbyde en bruger, der ikke er forbudt?"
+      no_target: "Jeg kan ikke forbyde noget!"
+      bot_no_right: "Jeg har ikke nok rettigheder til at forbyde denne bruger."
+      unbanned_user: "{admin} unbanned {unbanned} in chat <b>{chat_title}</b>!"
+    unmute:
+      bot_no_right: "Jeg har ikke nok rettigheder til at skrue op for denne bruger."
+      unmuted_user: "Admin {admin} unmuted {unmuted}!"
+    user_admin_invalid: "Kan ikke handle på denne bruger, måske var jeg ikke den, der ændrede deres tilladelser."
+  formatting:
+    md_help: |-
+      <b>Markdown Formatting</b>
+
+      You can format your message using <b>bold</b>, <i>italic</i>, <u>underline</u>, <strike>strike</strike> and much more. Go ahead and experiment!
+
+      Note: It supports HTML and Markdown (Both) as well !
+
+      <b>Supported markdown</b>:
+      - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
+      - <code>__italic__</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
+      - <code>**bold**</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
+      - <code>--underline--</code>: To make fronts <u>underline</u>.
+      - <code>~~strike~~</code>: Tildes are used for strikethrough. Shows as: <strike>strike</strike>.
+      - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href="https://example.com/">hyperlink</a>.
+      - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+      If you would like to send buttons on the same row, use the <code>:same</code> formatting.
+
+      <b>Example:</b>
+      <code>[button 1](buttonurl://example.com)</code>
+      <code>[button 2](buttonurl://example.com:same)</code>
+      <code>[button 3](buttonurl://example.com)</code>
+      This will show button 1 and 2 on the same line, with 3 underneath.
+    filling_help: |-
+      <b>Fillings</b>
+
+      You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
+      You can use these to mention a user in notes too!
+
+      <b>Supported fillings:</b>
+      - <code>{first}</code>: The user's first name.
+      - <code>{last}</code>: The user's last name.
+      - <code>{fullname}</code>: The user's full name.
+      - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
+      - <code>{mention}</code>: Mentions the user with their firstname.
+      - <code>{id}</code>: The user's ID.
+      - <code>{chatname}</code>: The chat's name.
+    random_help: |-
+      <b>Random Content</b>
+
+      Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
+
+      How to use random contents:
+      - %%%: This separator can be used to add "random" replies to the bot.
+      For example:
+      <code>hello
+      %%%
+      how are you</code>
+      This will randomly choose between sending the first message, "hello", or the second message, "how are you".
+      Use this to make Alita feel a bit more customised! (only works in filters/notes)
+
+      Example welcome message::
+      - Every time a new user joins, they'll be presented with one of the three messages shown here.
+      -> /filter "hey"
+      hello there <code>{first}</code>!
+      %%%
+      Ooooh, <code>{first}</code> how are you?
+      %%%
+      Sup? <code>{first}</code>
+  antispam:
+    gban:
+      gban_error_log: |-
+        <b>Gban Watcher Error!</b>
+        <b>Chat:</b> <code>{chat_id}</code>
+        <b>Error:</b> <code>{ef}</code>
+      added_to_watch: |-
+        {first_name} til GBan-liste.
+        De vil nu blive forbudt i alle grupper, hvor jeg er administrator!
+      enter_reason: "Angiv en årsag til at gforbyde bruger!"
+      how_to: |-
+        <b>Hvordan går det med bandlyskryden?</b>
+        <b>-012 Svar:</b> <code>/gban user_id reason</code>
+      log_msg: |-
+        #GBAN
+        <b>Originated from:</b> {chat_id}
+        <b>Admin:</b> {ban_admin}
+        <b>Gbanned User:</b> {gbanned_user}
+        <b>Gbanned User ID:</b> {gban_user_id}
+        <b>Event Stamp:</b> {time}
+      not_self: |-
+        Du kan ikke forbyde mig neger.
+        ...
+      updated_reason: "Opdateret Gban-årsag til: <code>{gban_reason}</code>."
+      user_added_to_watch: |-
+        You have been added to my global ban list!
+        <b>Reason:</b> <code>{gban_reason}</code>
+
+        <b>Appeal Chat:</b> @{SUPPORT_GROUP}
+    here_gbanned_start: "Her er alle de globalt forbudte geys!\n\n"
+    none_gbanned: "Der er ikke nogen forbudte brugere ...!"
+    num_gbans: "Antal personer, der er gforbudte: <code>{count}</code>"
+    part_of_support: "Denne bruger er en del af min støtte, kan ikke forbyde vores egen!"
+    pass_user_id: "Overfør en bruger-id eller brugernavn som argument!"
+    ungban:
+      log_msg: |-
+        #UNGBAN
+        <b>Originated from:</b> {chat_id}
+        <b>Admin:</b> {ungban_admin}
+        <b>UnGbanned User:</b> {ungbanned_user}
+        <b>UnGbanned User ID:</b> {ungbanned_user_id}
+        <b>Event Stamp:</b> {time}
+      non_gbanned: "Bruger er ikke forbudt!"
+      not_self: "Godt forsøg ...!"
+      removed_from_list: "Fjernet {first_name} fra Global Ban List."
+      user_removed_from_list: "Du er blevet fjernet fra min liste over globale forbud!"
+    watcher_banned: |-
+      Denne bruger ({user_gbanned}) er blevet forbudt globalt!
+
+      For at få uvist, appellen ved @{SUPPORT_GROUP}
+  blacklist:
+    bl_watcher:
+      action_kick: "Kicked {user} for at sende et blacklistet ord!"
+      action_ban: "Banned {user} for at sende et sortlistet ord!"
+      action_mute: "Muteret {user} for at sende et blacklistet ord!"
+    already_exists: "Ordet <code>{trigger}</code> er allerede blacklistet!"
+    action_get: |-
+      The current action for blacklists in this chat is <i><b>{action}</b></i>
+      All blacklist modes delete the message containing blacklist word.
+
+      If you want to change this, you need to specify a new action instead of it.
+      Possible actions are: <code>none</code>/<code>warn</code>/<code>mute</code>/<code>ban</code>
+    action_set: "Indstil handling for sortliste for dette til <b>{action}</b>"
+    added_blacklist: "Tilføjet <code>{trigger}</code> i blacklisterord!"
+    curr_blacklist_initial: "Current Blacklisted words in <b>{chat_title}</b>:\n\n"
+    no_bl_found: "Ingen sortliste <b>{bl_words}</b> fundet!"
+    no_blacklist: "Der er ingen blacklistede beskeder i <b>{chat_title}</b>!"
+    rm_blacklist: "Fjernet <b>{bl_words}</b> fra blacklisterord!"
+  dev:
+    bot_ip: |-
+      <b>Bot-IP-adresse:</b>
+      <code><code> <code>{ip}</code>
+    chatlist:
+      chats_in_db: "Her er listen over chats i min database."
+      exporting: "Eksporterer Charlist ..."
+      header: |
+        Liste over chats i min database.
+
+        <b>Chaname-navn | Chat-id | Medlemmer count</b>
+    execute_cmd_err: "Udfør koden korrekt!"
+    restarting: Genstarter ...
+    speedtest:
+      speedtest_txt: |-
+        Speedtest
+
+        <b>Host:</b> <code>{host}</code>
+
+        <b>Ping:</b> <code>{ping}</code> ms
+        <b>Download:</b> <code>{download}</code> Mbps
+        <b>Upload:</b> <code>{upload}</code> Mbps
+      start_speedtest: "Beregner min hastighed ..."
+    uptime: "<b>Uptime:</b> <code>{uptime}{uptime}</code>"
+  general:
+    donate_owner: |-
+      Tak for tanken om at donere mig!
+      , når du donerer, går fonden i retning af min udvikling, som gør hurtigt og lydhør.
+      Din donation vil måske også give mig en ny funktion eller to, som jeg ikke kunne få på grund af serverbegrænsninger.
+
+      Hele fonden vil blive lagt i mine serviceydelser, f.eks. database, storage og hosting!
+
+      Du kan donere ved at kontakte min ejer her: @DivideProjectsBot
+    back_btn: Tilbage
+    check_help: "Kontrollér hjælpen til, hvordan du bruger denne kommando."
+    close_btn: Luk
+    commands_available: |-
+      Hey, der! Mit navn er Alita.
+      Jeg er her for at hjælpe dig med at styre dine grupper!
+      Kommandoer:
+      × /start: Start the bot
+      × /help: Giv mig denne besked.
+      × /donate: Information related om, hvordan du kan understøtte min skaber!
+
+      Alle kommandoer kan enten bruges sammen med / eller.
+    no_admin_cmd_perm: "Du kan ikke bruge en admin-kommando!"
+    no_perm_admin: "Jeg har ikke tilladelse til at gøre det."
+    no_results: "Ingen resultater fundet."
+    some_error: |-
+      Some error occured, report to @{SUPPORT_GROUP}
+
+      <b>Error:</b> <code>{ef}</code>
+    something_wrong: "Noget gik galt!"
+  langs:
+    changed: "Sprog ændret til <code>{lang_code}</code>"
+    changelang: |-
+      Her kan du skifte sprog for botten.
+
+      Du kan hjælpe os med at bringe bot til flere sprog ved at hjælpe med [Crowdin](https: //crowdin.com/project/alita_robot)
+    correct_usage: |-
+      <b>Korrekt anvendelse:</b>
+      /lang eller /setlang sprog-kode
+  locks:
+    check_perm_msg: "Kontrollerer chattilladelser ..."
+    invalid_lock: |-
+      Ugyldig låsetype!
+
+      Brug /locktypes til at hente låsetyper
+    lock_all: "Låst <b>all</b> tilladelse fra denne chat!"
+    locked_perm: "Låst <b>{perm}</b> for denne chat."
+    locks_perm_sp: "Angiv en tilladelse til at låse!"
+    unlock_all: "Ulåst <b>all</b> tilladelse fra denne chat!"
+    unlocked_perm: "Ulåst <b>{uperm}</b> for denne chat."
+    unlocks_perm.sp_perm: "Angiv en tilladelse til at låse op!"
+    view_perm: |-
+      <b>Chat Permissions:</b>
+
+      <b>Send Messages:</b> {vmsg}
+      <b>Send Media:</b> {vmedia}
+      <b>Send Stickers:</b> {vstickers}
+      <b>Send Animations:</b> {vanimations}
+      <b>Can Play Games:</b> {vgames}
+      <b>Can Use Inline Bots:</b> {vinlinebots}
+      <b>Webpage Preview:</b> {vwebprev}
+      <b>Send Polls:</b> {vpolls}
+      <b>Change Info:</b> {vinfo}
+      <b>Invite Users:</b> {vinvite}
+      <b>Pin Messages:</b> {vpin}
+  pin:
+    antichannelpin:
+      current_status: "Nuværende AntiChannelPin-status: {status}"
+      turned_on: "Forvandlet på AntiChannelPin, nu vil alle beskeder blive sat op på en automatik!"
+      turned_off: "Forvandlede antiChannelPin, og nu vil alle signaler, der er fastgjort af kanalen, blive fastgjort!"
+    no_pin_msg: "Svar på en meddelelse, som du vil fastgøre ..."
+    no_rights_pin: "Jeg har ikke nok rettigheder til at hænge beskeder op."
+    no_rights_unpin: "Jeg har ikke nok rettigheder til at afkode beskeder."
+    pinned_msg: "Jeg har Pinnet [ denne besked ] ({message_link})!"
+    reply_to_unpin: "Idk, hvad du vil bruge til at afknase, svare på en meddelelse for at få den op at hænge."
+    unpinned_all_msg: "Frigav alle meddelelser i denne chat."
+    unpinned_last_msg: "Ufastgjort sidste besked."
+  purge:
+    deleting: "At infilere disse ubrugelige beskeder ..."
+    err_basic: "Kan ikke slette beskeder i en basisgruppe"
+    old_msg_err: "Kan ikke slette alle meddelelser. Beskederne kan være for gamle, jeg har muligvis ikke sletterettigheder, eller det er muligvis ikke en supergruppe."
+    purge_msg_count: "Slettet <i>{msg_count}</i> meddelelser"
+    what_del: "Hvad vil du slette?"
+  rules:
+    priv_rules:
+      no_option: "Indstillingen er ikke gyldig, vælg fra <code>på</code>, <code>,</code>, <code>ud</code>, <code>no</code>"
+      turned_on: "Private regler er blevet ændret <b>på</b> for chat <b>{chat_name}</b>"
+      turned_off: "Private regler er blevet ændret <b>ud for</b> for chat <b>{chat_name}</b>"
+      current_preference: "Aktuel præference for private regler i denne chat er: <b>{current_option}</b>"
+    clear_rules: "Er du sikker på, at du vil rydde reglerne?"
+    cleared: "Regler for denne gruppe er ryddet."
+    get_rules: |-
+      Reglerne for <b>{chat} are:</b>
+
+
+      {rules}
+    no_rules: "Admins for denne gruppe har ikke konfigureret regler! Det betyder ikke, at du kan bryde DECORUM for denne gruppe!"
+    pm_me: "Klik på nedenstående knap for at få vist gruppereglerne!"
+    sent_pm_rules: "Jeg har sms'ede dig reglerne"
+    set_rules: "Regler for denne gruppe er angivet."
+  start:
+    add_chat_btn: "Tilføj mig til en snak!"
+    commands_btn: Kommandoer og hjælp
+    group: "Jeg er i live: 3"
+    info_page: |-
+      • @Alita_Robot
+
+      <b>Version:</b> <i>{version}</i>
+
+      <b>Developers:</b> [Divkix](https://github.com/Divkix)
+      <b>Owner:</b> [{Owner}](tg://user?id={ID})
+    support_group: Support
+    language_btn: Sprog
+    pm_for_help: "Kontakt mig i PM for at få vist en liste med mulige kommandoer."
+    private: |-
+      Hej med dig! Mit navn er Alita ✨.
+      Jeg er her for at hjælpe dig med at styre dine grupper!
+      Ram / hjælp til at finde ud af mere om, hvordan du bruger mig i mit fulde potentiale!
+
+      Deltag i min [ News Channel ] (http://t.me/AlitaRobotUpdates) for at få vist oplysninger om alle de seneste opdateringer.
+    public_help: "Tryk på knappen nedenfor for at hente hjælp til <i>{help_option}</i>"
+    source_code: "Kildekode"
+  utils:
+    gif_id:
+      reply_gif: "Vær venlig at svare på en gif for at få det."
+    id:
+      group_id: "Denne gruppe-id er <code>{group_id}</code>"
+      id_main: |-
+        Original Sender - {orig_sender} (<code>{orig_id}</code>)
+        Forwarder - {fwd_sender} (<code>{fwd_id}</code>)
+      my_id: "Din id er <code>{my_id}</code>."
+    no_user_db: |-
+      Kan ikke hente bruger
+      Peer-id'en er ugyldig. Jeg har ikke set denne bruger nogen steder tidligere, måske ville brugernavn hjælpe med at kende dem!
+    paste:
+      nekobin_btn: NekoBin
+      pasted_nekobin: "-Udbetalt til NekoBin!"
+      pasting: Klistre ...
+    ping:
+      pinging: Pingre ...
+    song:
+      no_lyrics_found: "Jeg kunne ikke finde nogen sangtekster til den sang!"
+      no_song_given: "Du har ikke angivet, hvilken sang du skal lede efter!"
+      searching: "Finding tekster for <code>{song_name}<code>..."
+      song_not_found: "Song er ikke fundet!"
+    translate:
+      translate_usage: "Syntaks: /tr <language> tekst til oversættelse (Kan også bruges som svar på en besked)."
+      translating: Oversætter ...
+      translation: |-
+        <b>Language:</b> <code>{from_lang}</code> <b>-></b> <code>{to_lang}</code>
+        <b>Translation:</b> <code>{translation}</code>
+    user_info:
+      id_not_found: "Bruger er ikke fundet. Kontrollér id'en igen."
+      peer_id_error: "Jeg har ikke set denne bruger, har noget imod at videresende en af deres beskeder, så jeg kan genkende dem?"
+      getting_info: "Henter brugeroplysninger ..."
+      info_text:
+        last_name: |-
+
+          <b>Last Name:</b> {user_lname}
+        main: |-
+          <b>Characteristics:</b>
+          <b>ID:</b> <code>{user_id}</code>
+          <b>First Name:</b> {user_name}
+        perma_link: |-
+
+          <b>Permanent User Link:</b> {perma_link}
+        username: |-
+
+          <b>Username:</b> @{username}
+      support_user:
+        dev: |-
+
+
+          Dette medlem er en af mine udviklere ⚡️
+        owner: |-
+
+
+          Denne person er min ejer, jeg ville aldrig gøre noget mod dem!
+        sudo: |-
+
+
+          Denne bruger er en af mine Sudos, han har beføjelser, som er omtrent ens for ejer!
+        whitelist: |-
+
+
+          Denne person er 'Whitelist User', de kan ikke forbydes!
+    weebify:
+      weebified_string: |-
+        <b>Weebified String:</b>
+        <code><code> <code> 210-10-012{string}</code>
+      weebify_what: "Hvad skal jeg gøre med Weebify?"

@@ -1,4 +1,14 @@
-commit_message: "[skip ci] Update Translations"
+"project_id": "487211"
+"base_path": "."
+"base_url": "https://api.crowdin.com"
+
+"preserve_hierarchy": true
+
 files:
-  - source: locales/en.yml
-    translation: /**/locales/%locale_with_underscore%.yml
+  [
+    {
+      "source": "locales/en.yml",
+      "translation": "locales/%two_letters_code%.yaml",
+      "type": "yaml",
+    },
+  ]

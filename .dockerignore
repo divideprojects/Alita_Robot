@@ -1,19 +1,5 @@
-# Python Dockerignore
-__pycache__
-*.pyc
-*.pyo
-*.pyd
-.Python
-env
-pip-log.txt
-pip-delete-this-directory.txt
-.tox
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-alita/local_vars.py
-*.logs
+**
+!pyproject.toml
+!poetry.lock
+!locales
+!alita

@@ -14,13 +14,11 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import asyncio
 
-import httpx
-from httpx import AsyncClient
+from httpx import AsyncClient, Timeout
 
-timeout = httpx.Timeout(40, pool=None)
-http = httpx.AsyncClient(http2=True, timeout=timeout)
+timeout = Timeout(40, pool=None)
+http = AsyncClient(http2=True, timeout=timeout)
 
 
 class HTTPx:
