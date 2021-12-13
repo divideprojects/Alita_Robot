@@ -86,13 +86,16 @@ def command(
                 except ValueError:
                     # i.e. PM
                     user_status = "creator"
-                if str(matches.group(1)) in disable_list and user_status not in ("creator", "administrator"):
+                if str(matches.group(1)) in disable_list and user_status not in (
+                    "creator",
+                    "administrator",
+                ):
                     try:
                         if status == "del":
                             await m.delete()
                     except RPCError:
                         pass
-                    return False 
+                    return False
             if matches.group(3) == "":
                 return True
             try:
