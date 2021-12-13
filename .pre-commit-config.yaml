@@ -12,13 +12,13 @@ repos:
         - id: check-merge-conflict
 
     - repo: https://github.com/psf/black
-      rev: 21.11b1
+      rev: 21.12b0
       hooks:
         - id: black
           language_version: python3
 
     - repo: https://github.com/asottile/add-trailing-comma
-      rev: v2.2.0
+      rev: v2.2.1
       hooks:
         - id: add-trailing-comma
           args: [--py36-plus]
