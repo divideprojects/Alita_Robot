@@ -863,7 +863,7 @@ async def unbanbutton(c: Alita, q: CallbackQuery):
         )
         return
     whoo = await c.get_chat(user_id)
-    doneto = whoo.title if whoo.title else whoo.mention
+    doneto = whoo.first_name if whoo.first_name else whoo.title
     try:
         await q.message.chat.unban_member(user_id)
     except RPCError as e:
