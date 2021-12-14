@@ -100,7 +100,7 @@ async def add_filter(_, m: Message):
     lol = eee if m.reply_to_message else extracted[1]
     teks = lol if msgtype == Types.TEXT else eee
 
-    if not m.reply_to_message and msgtype == Types.TEXT and len(m.command) <= 2:
+    if not m.reply_to_message and msgtype == Types.TEXT and len(m.text.split()) < 3:
         return await m.reply_text(
             f"<code>{m.text}</code>\n\nError: There is no text in here!",
         )
