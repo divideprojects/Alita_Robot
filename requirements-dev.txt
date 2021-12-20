@@ -57,7 +57,7 @@ tomli==1.2.2; python_version >= "3.6" and python_full_version >= "3.6.2"
 tswift==0.7.0
 typed-ast==1.5.1; python_version < "3.8" and implementation_name == "cpython" and python_full_version >= "3.6.2" and python_version >= "3.6"
 typing-extensions==4.0.1
-ujson==4.2.0; python_version >= "3.6"
+ujson==5.1.0; python_version >= "3.6"
 urllib3==1.26.7; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version < "4"
 virtualenv==20.10.0; python_full_version >= "3.6.1"
 wikipedia==1.4.0
