@@ -108,7 +108,7 @@ class Pins(MongoDB):
     def load_from_db():
         with INSERTION_LOCK:
             collection = MongoDB(Pins.db_name)
-            return collection.findall()
+            return collection.find_all()
 
     @staticmethod
     def repair_db(collection):
