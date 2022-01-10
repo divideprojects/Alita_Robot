@@ -374,7 +374,7 @@ strings:
       <code>[button 1](buttonurl:example.com)</code>
       <code>[button 2](buttonurl://example.com:same)</code>
       <code>[button 3](buttonurl://example.com)</code>
-      This will show button 1 and 2 on the same line, with 2, 3 will be underneath.
+      This will show button 1 and 2 on the same line, while 3 will be underneath.
     filling_help: |-
       <b>Fillings</b>
 
