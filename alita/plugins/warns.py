@@ -93,10 +93,10 @@ async def warn(c: Alita, m: Message):
     warn_settings = warn_settings_db.get_warnings_settings()
     if num >= warn_settings["warn_limit"]:
         if warn_settings["warn_mode"] == "kick":
-            await m.chat.kick_member(user_id, until_date=int(time() + 45))
+            await m.chat.ban_member(user_id, until_date=int(time() + 45))
             action = "kicked"
         elif warn_settings["warn_mode"] == "ban":
-            await m.chat.kick_member(user_id)
+            await m.chat.ban_member(user_id)
             action = "banned"
         elif warn_settings["warn_mode"] == "mute":
             await m.chat.restrict_member(user_id, ChatPermissions())
