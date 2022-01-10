@@ -256,7 +256,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
 
     if (
         member.new_chat_member
-        and member.new_chat_member.status not in {"kicked", "left", "restricted"}
+        and member.new_chat_member.status not in {"banned", "left", "restricted"}
         and not member.old_chat_member
     ):
         pass
@@ -337,7 +337,7 @@ async def member_has_left(c: Alita, member: ChatMemberUpdated):
 
     if (
         not member.new_chat_member
-        and member.old_chat_member.status not in {"kicked", "restricted"}
+        and member.old_chat_member.status not in {"banned", "restricted"}
         and member.old_chat_member
     ):
         pass
