@@ -72,13 +72,12 @@ async def lock_perm(c: Alita, m: Message):
             await c.set_chat_permissions(chat_id, ChatPermissions())
             LOGGER.info(
                 f"{m.from_user.id} locked all permissions in {m.chat.id}")
-            await prevent_approved(
-                m)  # Don't lock permissions for approved users!
         except ChatNotModified:
             pass
         except ChatAdminRequired:
             await m.reply_text(tlang(m, "general.no_perm_admin"))
         await m.reply_text("🔒 " + (tlang(m, "locks.lock_all")))
+        await prevent_approved(m)
         return
 
     if lock_type == "msg":
@@ -146,13 +145,13 @@ async def lock_perm(c: Alita, m: Message):
         )
         LOGGER.info(
             f"{m.from_user.id} locked selected permissions in {m.chat.id}")
-        await prevent_approved(m)  # Don't lock permissions for approved users!
     except ChatNotModified:
         pass
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "general.no_perm_admin"))
     await m.reply_text(
         "🔒 " + (tlang(m, "locks.locked_perm").format(perm=perm)), )
+    await prevent_approved(m)
     return
 
 
@@ -208,17 +207,6 @@ async def unlock_perm(c: Alita, m: Message):
         await m.reply_text(tlang(m, "locks.unlocks_perm_sp"))
         return
 
-    get_uperm = m.chat.permissions
-
-    umsg = get_uperm.can_send_messages
-    umedia = get_uperm.can_send_media_messages
-    uwebprev = get_uperm.can_add_web_page_previews
-    upolls = get_uperm.can_send_polls
-    uinfo = get_uperm.can_change_info
-    uinvite = get_uperm.can_invite_users
-    upin = get_uperm.can_pin_messages
-    ustickers = uanimations = ugames = uinlinebots = None
-
     if unlock_type == "all":
         try:
             await c.set_chat_permissions(
@@ -236,14 +224,24 @@ async def unlock_perm(c: Alita, m: Message):
             )
             LOGGER.info(
                 f"{m.from_user.id} unlocked all permissions in {m.chat.id}")
-            await prevent_approved(
-                m)  # Don't lock permissions for approved users!
         except ChatNotModified:
             pass
         except ChatAdminRequired:
             await m.reply_text(tlang(m, "general.no_perm_admin"))
         await m.reply_text("🔓 " + (tlang(m, "locks.unlock_all")))
+        await prevent_approved(m)
         return
+
+    get_uperm = m.chat.permissions
+
+    umsg = get_uperm.can_send_messages
+    umedia = get_uperm.can_send_media_messages
+    uwebprev = get_uperm.can_add_web_page_previews
+    upolls = get_uperm.can_send_polls
+    uinfo = get_uperm.can_change_info
+    uinvite = get_uperm.can_invite_users
+    upin = get_uperm.can_pin_messages
+    ustickers = uanimations = ugames = uinlinebots = None
 
     if unlock_type == "msg":
         umsg = True
@@ -310,13 +308,13 @@ async def unlock_perm(c: Alita, m: Message):
                 can_pin_messages=upin,
             ),
         )
-        await prevent_approved(m)  # Don't lock permissions for approved users!
     except ChatNotModified:
         pass
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "general.no_perm_admin"))
     await m.reply_text(
         "🔓 " + (tlang(m, "locks.unlocked_perm").format(uperm=uperm)), )
+    await prevent_approved(m)
     return
 
 
