@@ -277,7 +277,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
             )
             return
         if banned_users:
-            await member.chat.kick_member(user.id)
+            await member.chat.ban_member(user.id)
             await c.send_message(
                 member.chat.id,
                 f"{user.mention} was globally banned so i banned!",
