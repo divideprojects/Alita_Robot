@@ -76,8 +76,12 @@ def command(
             if matches.group(1) not in flt.commands:
                 return False
             if m.chat.type == "supergroup":
-                disable_list = DISABLED_CMDS[m.chat.id].get("commands", [])
-                status = str(DISABLED_CMDS[m.chat.id].get("action", "none"))
+                try:
+                    disable_list = DISABLED_CMDS[m.chat.id].get("commands", [])
+                    status = str(DISABLED_CMDS[m.chat.id].get("action", "none"))
+                except KeyError:
+                    disable_list = []
+                    status = "none"
                 try:
                     user_status = (await m.chat.get_member(m.from_user.id)).status
                 except UserNotParticipant:

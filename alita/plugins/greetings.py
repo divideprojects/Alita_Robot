@@ -256,7 +256,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
 
     if (
         member.new_chat_member
-        and member.new_chat_member.status not in {"kicked", "left", "restricted"}
+        and member.new_chat_member.status not in {"banned", "left", "restricted"}
         and not member.old_chat_member
     ):
         pass
@@ -277,7 +277,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
             )
             return
         if banned_users:
-            await member.chat.kick_member(user.id)
+            await member.chat.ban_member(user.id)
             await c.send_message(
                 member.chat.id,
                 f"{user.mention} was globally banned so i banned!",
@@ -337,7 +337,7 @@ async def member_has_left(c: Alita, member: ChatMemberUpdated):
 
     if (
         not member.new_chat_member
-        and member.old_chat_member.status not in {"kicked", "restricted"}
+        and member.old_chat_member.status not in {"banned", "restricted"}
         and member.old_chat_member
     ):
         pass

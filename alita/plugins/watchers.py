@@ -114,13 +114,13 @@ async def bl_watcher(_, m: Message):
             _, num = warns_db.warn_user(m.from_user.id, warn_reason)
             if num >= warn_settings["warn_limit"]:
                 if warn_settings["warn_mode"] == "kick":
-                    await m.chat.kick_member(
+                    await m.chat.ban_member(
                         m.from_user.id,
                         until_date=int(time() + 45),
                     )
                     action = "kicked"
                 elif warn_settings["warn_mode"] == "ban":
-                    await m.chat.kick_member(m.from_user.id)
+                    await m.chat.ban_member(m.from_user.id)
                     action = "banned"
                 elif warn_settings["warn_mode"] == "mute":
                     await m.chat.restrict_member(m.from_user.id, ChatPermissions())
@@ -201,7 +201,7 @@ async def gban_watcher(c: Alita, m: Message):
 
     if _banned:
         try:
-            await m.chat.kick_member(m.from_user.id)
+            await m.chat.ban_member(m.from_user.id)
             await m.delete(m.message_id)  # Delete users message!
             await m.reply_text(
                 (tlang(m, "antispam.watcher_banned")).format(

@@ -101,7 +101,7 @@ async def tban_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} tbanned {user_id} in {m.chat.id}")
-        await m.chat.kick_member(user_id, until_date=int(bantime))
+        await m.chat.ban_member(user_id, until_date=int(bantime))
         txt = (tlang(m, "admin.ban.banned_user")).format(
             admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
             banned=(await mention_html(user_first_name, user_id)),
@@ -198,7 +198,7 @@ async def stban_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} stbanned {user_id} in {m.chat.id}")
-        await m.chat.kick_member(user_id, until_date=int(bantime))
+        await m.chat.ban_member(user_id, until_date=int(bantime))
         await m.delete()
         if m.reply_to_message:
             await m.reply_to_message.delete()
@@ -287,7 +287,7 @@ async def dtban_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} dtbanned {user_id} in {m.chat.id}")
-        await m.chat.kick_member(user_id, until_date=int(bantime))
+        await m.chat.ban_member(user_id, until_date=int(bantime))
         await m.reply_to_message.delete()
         txt = (tlang(m, "admin.ban.banned_user")).format(
             admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
@@ -375,7 +375,7 @@ async def kick_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} kicked {user_id} in {m.chat.id}")
-        await m.chat.kick_member(user_id)
+        await m.chat.ban_member(user_id)
         txt = (tlang(m, "admin.kick.kicked_user")).format(
             admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
             kicked=(await mention_html(user_first_name, user_id)),
@@ -444,7 +444,7 @@ async def skick_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} skicked {user_id} in {m.chat.id}")
-        await m.chat.kick_member(user_id)
+        await m.chat.ban_member(user_id)
         await m.delete()
         if m.reply_to_message:
             await m.reply_to_message.delete()
@@ -512,7 +512,7 @@ async def dkick_usr(c: Alita, m: Message):
     try:
         LOGGER.info(f"{m.from_user.id} dkicked {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
-        await m.chat.kick_member(user_id)
+        await m.chat.ban_member(user_id)
         txt = (tlang(m, "admin.kick.kicked_user")).format(
             admin=(await mention_html(m.from_user.first_name, m.from_user.id)),
             kicked=(await mention_html(user_first_name, user_id)),
@@ -636,7 +636,7 @@ async def sban_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} sbanned {user_id} in {m.chat.id}")
-        await m.chat.kick_member(user_id)
+        await m.chat.ban_member(user_id)
         await m.delete()
         if m.reply_to_message:
             await m.reply_to_message.delete()
@@ -715,7 +715,7 @@ async def dban_usr(c: Alita, m: Message):
     try:
         LOGGER.info(f"{m.from_user.id} dbanned {user_id} in {m.chat.id}")
         await m.reply_to_message.delete()
-        await m.chat.kick_member(user_id)
+        await m.chat.ban_member(user_id)
         txt = (tlang(m, "admin.ban.banned_user")).format(
             admin=m.from_user.mention,
             banned=m.reply_to_message.from_user.mention,
@@ -810,7 +810,7 @@ async def ban_usr(c: Alita, m: Message):
 
     try:
         LOGGER.info(f"{m.from_user.id} banned {user_id} in {m.chat.id}")
-        await m.chat.kick_member(user_id)
+        await m.chat.ban_member(user_id)
         txt = (tlang(m, "admin.ban.banned_user")).format(
             admin=m.from_user.mention,
             banned=(await mention_html(user_first_name, user_id)),
@@ -880,7 +880,7 @@ async def kickme(_, m: Message):
         reason = m.text.split(None, 1)[1]
     try:
         LOGGER.info(f"{m.from_user.id} kickme used by {m.from_user.id} in {m.chat.id}")
-        await m.chat.kick_member(m.from_user.id)
+        await m.chat.ban_member(m.from_user.id)
         txt = "Why not let me help you!"
         txt += f"\n<b>Reason</b>: {reason}" if reason else ""
         await m.reply_text(txt)
