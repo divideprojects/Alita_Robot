@@ -28,19 +28,23 @@ from alita.utils.custom_filters import command, restrict_filter
 
 @Alita.on_message(command("locktypes"))
 async def lock_types(_, m: Message):
-    await m.reply_text(("**Lock Types:**\n"
-                        " - `all` = Everything\n"
-                        " - `msg` = Messages\n"
-                        " - `media` = Media, such as Photo and Video.\n"
-                        " - `polls` = Polls\n"
-                        " - `invite` = Add users to Group\n"
-                        " - `pin` = Pin Messages\n"
-                        " - `info` = Change Group Info\n"
-                        " - `webprev` = Web Page Previews\n"
-                        " - `inlinebots`, `inline` = Inline bots\n"
-                        " - `animations` = Animations\n"
-                        " - `games` = Game Bots\n"
-                        " - `stickers` = Stickers"), )
+    await m.reply_text(
+        (
+            "**Lock Types:**\n"
+            " - `all` = Everything\n"
+            " - `msg` = Messages\n"
+            " - `media` = Media, such as Photo and Video.\n"
+            " - `polls` = Polls\n"
+            " - `invite` = Add users to Group\n"
+            " - `pin` = Pin Messages\n"
+            " - `info` = Change Group Info\n"
+            " - `webprev` = Web Page Previews\n"
+            " - `inlinebots`, `inline` = Inline bots\n"
+            " - `animations` = Animations\n"
+            " - `games` = Game Bots\n"
+            " - `stickers` = Stickers"
+        ),
+    )
     return
 
 
@@ -70,8 +74,7 @@ async def lock_perm(c: Alita, m: Message):
     if lock_type == "all":
         try:
             await c.set_chat_permissions(chat_id, ChatPermissions())
-            LOGGER.info(
-                f"{m.from_user.id} locked all permissions in {m.chat.id}")
+            LOGGER.info(f"{m.from_user.id} locked all permissions in {m.chat.id}")
         except ChatNotModified:
             pass
         except ChatAdminRequired:
@@ -134,8 +137,7 @@ async def lock_perm(c: Alita, m: Message):
             ChatPermissions(
                 can_send_messages=msg,
                 can_send_media_messages=media,
-                can_send_other_messages=any(
-                    [stickers, animations, games, inlinebots]),
+                can_send_other_messages=any([stickers, animations, games, inlinebots]),
                 can_add_web_page_previews=webprev,
                 can_send_polls=polls,
                 can_change_info=info,
@@ -143,14 +145,14 @@ async def lock_perm(c: Alita, m: Message):
                 can_pin_messages=pin,
             ),
         )
-        LOGGER.info(
-            f"{m.from_user.id} locked selected permissions in {m.chat.id}")
+        LOGGER.info(f"{m.from_user.id} locked selected permissions in {m.chat.id}")
     except ChatNotModified:
         pass
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "general.no_perm_admin"))
     await m.reply_text(
-        "🔒 " + (tlang(m, "locks.locked_perm").format(perm=perm)), )
+        "🔒 " + (tlang(m, "locks.locked_perm").format(perm=perm)),
+    )
     await prevent_approved(m)
     return
 
@@ -222,8 +224,7 @@ async def unlock_perm(c: Alita, m: Message):
                     can_pin_messages=True,
                 ),
             )
-            LOGGER.info(
-                f"{m.from_user.id} unlocked all permissions in {m.chat.id}")
+            LOGGER.info(f"{m.from_user.id} unlocked all permissions in {m.chat.id}")
         except ChatNotModified:
             pass
         except ChatAdminRequired:
@@ -292,15 +293,15 @@ async def unlock_perm(c: Alita, m: Message):
         return
 
     try:
-        LOGGER.info(
-            f"{m.from_user.id} unlocked selected permissions in {m.chat.id}")
+        LOGGER.info(f"{m.from_user.id} unlocked selected permissions in {m.chat.id}")
         await c.set_chat_permissions(
             chat_id,
             ChatPermissions(
                 can_send_messages=umsg,
                 can_send_media_messages=umedia,
                 can_send_other_messages=any(
-                    [ustickers, uanimations, ugames, uinlinebots]),
+                    [ustickers, uanimations, ugames, uinlinebots],
+                ),
                 can_add_web_page_previews=uwebprev,
                 can_send_polls=upolls,
                 can_change_info=uinfo,
@@ -313,7 +314,8 @@ async def unlock_perm(c: Alita, m: Message):
     except ChatAdminRequired:
         await m.reply_text(tlang(m, "general.no_perm_admin"))
     await m.reply_text(
-        "🔓 " + (tlang(m, "locks.unlocked_perm").format(uperm=uperm)), )
+        "🔓 " + (tlang(m, "locks.unlocked_perm").format(uperm=uperm)),
+    )
     await prevent_approved(m)
     return
 

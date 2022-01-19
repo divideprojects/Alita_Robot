@@ -357,7 +357,7 @@ strings:
     md_help: |-
       <b>Markdown Formatting</b>
       You can format your message using <b>bold</b>, <i>italic</i>, <u>underline</u>, <strike>strike</strike> and much more. Go ahead and experiment!
-      
+
       **Note**: It supports telegram user based formatting as well as html and markdown formattings.
       <b>Supported markdown</b>:
       - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
