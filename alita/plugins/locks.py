@@ -153,7 +153,10 @@ async def view_locks(_, m: Message):
 
     vmsg = await convert_to_emoji(v_perm.can_send_messages)
     vmedia = await convert_to_emoji(v_perm.can_send_media_messages)
-    vother = await convert_to_emoji(v_perm.can_send_other_messages)
+    vstickers = await convert_to_emoji(v_perm.can_send_other_messages)
+    vanimations = await convert_to_emoji(v_perm.can_send_other_messages)
+    vgames = await convert_to_emoji(v_perm.can_send_other_messages)
+    vinlinebots = await convert_to_emoji(v_perm.can_send_other_messages)
     vwebprev = await convert_to_emoji(v_perm.can_add_web_page_previews)
     vpolls = await convert_to_emoji(v_perm.can_send_polls)
     vinfo = await convert_to_emoji(v_perm.can_change_info)
@@ -165,7 +168,10 @@ async def view_locks(_, m: Message):
             permission_view_str = (tlang(m, "locks.view_perm")).format(
                 vmsg=vmsg,
                 vmedia=vmedia,
-                vother=vother,
+                vstickers=vstickers,
+                vanimations=vanimations,
+                vgames=vgames,
+                vinlinebots=vinlinebots,
                 vwebprev=vwebprev,
                 vpolls=vpolls,
                 vinfo=vinfo,
