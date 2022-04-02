@@ -558,10 +558,10 @@ strings:
 
       <b>Send Messages:</b> {vmsg}
       <b>Send Media:</b> {vmedia}
-      <b>Send Stickers:</b> {vstickers}
-      <b>Send Animations:</b> {vanimations}
-      <b>Can Play Games:</b> {vgames}
-      <b>Can Use Inline Bots:</b> {vinlinebots}
+      <b>Send Stickers:</b> {vother}
+      <b>Send Animations:</b> {vother}
+      <b>Can Play Games:</b> {vother}
+      <b>Can Use Inline Bots:</b> {vother}
       <b>Webpage Preview:</b> {vwebprev}
       <b>Send Polls:</b> {vpolls}
       <b>Change Info:</b> {vinfo}
