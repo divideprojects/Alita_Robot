@@ -1,6 +1,6 @@
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v4.0.1
+      rev: v4.1.0
       hooks:
         - id: trailing-whitespace
         - id: end-of-file-fixer
@@ -12,19 +12,19 @@ repos:
         - id: check-merge-conflict
 
     - repo: https://github.com/psf/black
-      rev: 21.12b0
+      rev: 22.3.0
       hooks:
         - id: black
           language_version: python3
 
     - repo: https://github.com/asottile/add-trailing-comma
-      rev: v2.2.1
+      rev: v2.2.2
       hooks:
         - id: add-trailing-comma
           args: [--py36-plus]
 
     - repo: https://github.com/asottile/pyupgrade
-      rev: v2.29.1
+      rev: v2.31.1
       hooks:
         - id: pyupgrade
           args: [--py36-plus]
