@@ -1,4 +1,5 @@
 from threading import RLock
+from time import time
 
 from alita import LOGGER
 from alita.database import MongoDB
@@ -10,7 +11,7 @@ DISABLED_CMDS = {}
 class Disabling(MongoDB):
     """Class to manage database for Disabling for chats."""
 
-    # Database name to connect to to preform operations
+    # Database name to connect to preform operations
     db_name = "disabled"
 
     def __init__(self, chat_id: int) -> None:
@@ -20,20 +21,26 @@ class Disabling(MongoDB):
 
     def check_cmd_status(self, cmd: str):
         with INSERTION_LOCK:
-            # cmds = self.chat_info["commands"]
-            cmds = DISABLED_CMDS[self.chat_id]["commands"]
+            try:
+                cmds = DISABLED_CMDS[self.chat_id]["commands"]
+            except KeyError:
+                cmds = self.chat_info["commands"]
+                act = self.chat_info["action"]
+                DISABLED_CMDS[self.chat_id] = {
+                    "command": cmds if cmds else [],
+                    "action": act if act else "none",
+                }
             # return bool(cmd in cmds)
-            return bool(cmd in cmds)
+            return bool(cmd in cmds if cmds else [])
 
     def add_disable(self, cmd: str):
         with INSERTION_LOCK:
             if not self.check_cmd_status(cmd):
-                # DISABLED_CMDS[self.chat_id]["commands"].append(cmd)
                 return self.update(
                     {"_id": self.chat_id},
                     {
                         "_id": self.chat_id,
-                        "commands": self.chat_info["commands"] + [cmd],
+                        "commands": self.chat_info["commands"].append(cmd),
                     },
                 )
 
@@ -41,7 +48,6 @@ class Disabling(MongoDB):
         with INSERTION_LOCK:
             if self.check_cmd_status(comm):
                 self.chat_info["commands"].remove(comm)
-                DISABLED_CMDS[self.chat_id]["commands"].remove(comm)
                 return self.update(
                     {"_id": self.chat_id},
                     {
@@ -52,20 +58,24 @@ class Disabling(MongoDB):
 
     def get_disabled(self):
         with INSERTION_LOCK:
-            global DISABLED_CMDS
             try:
                 cmds = DISABLED_CMDS[self.chat_id]["commands"]
             except KeyError:
                 cmds = self.chat_info["commands"]
-                DISABLED_CMDS[self.chat_id]["commands"] = cmds
-            return cmds
+                DISABLED_CMDS[self.chat_id] = {
+                    "commands": cmds if cmds else [],
+                    "action": self.chat_info["action"],
+                }
+            return cmds if cmds else []
 
     @staticmethod
     def count_disabled_all():
         with INSERTION_LOCK:
             collection = MongoDB(Disabling.db_name)
             curr = collection.find_all()
-            return sum(len(chat["commands"]) for chat in curr)
+            return sum(
+                len(chat["commands"] if chat["commands"] else [])
+                for chat in curr)
 
     @staticmethod
     def count_disabling_chats():
@@ -76,33 +86,53 @@ class Disabling(MongoDB):
 
     def set_action(self, action: str):
         with INSERTION_LOCK:
-            global DISABLED_CMDS
-            DISABLED_CMDS[self.chat_id]["action"] = action
+            try:
+                DISABLED_CMDS[self.chat_id]["action"] = action
+            except KeyError:
+                cmds = self.chat_info["commands"]
+                DISABLED_CMDS[self.chat_id] = {
+                    "commands": cmds if cmds else [],
+                    "action": action,
+                }
             return self.update(
                 {"_id": self.chat_id},
-                {"_id": self.chat_id, "action": action},
+                {
+                    "_id": self.chat_id,
+                    "action": action
+                },
             )
 
     def get_action(self):
         with INSERTION_LOCK:
-            global DISABLED_CMDS
             try:
-                action = DISABLED_CMDS[self.chat_id]["action"]
+                val = DISABLED_CMDS[self.chat_id]["action"]
             except KeyError:
-                action = self.chat_info["action"]
-                DISABLED_CMDS[self.chat_id]["action"] = action
-            return action
+                cmds = self.chat_info["commands"]
+                val = self.chat_info["action"]
+                DISABLED_CMDS[self.chat_id] = {
+                    "commands": cmds if cmds else [],
+                    "action": val,
+                }
+            return val if val else "none"
 
     @staticmethod
     def count_action_dis_all(action: str):
         with INSERTION_LOCK:
             collection = MongoDB(Disabling.db_name)
             all_data = collection.find_all({"action": action})
-            return sum(len(i["commands"]) >= 1 for i in all_data)
+            return sum(
+                len(i["commands"] if i["commands"] else []) >= 1
+                for i in all_data)
 
     def rm_all_disabled(self):
         with INSERTION_LOCK:
-            DISABLED_CMDS[self.chat_id]["commands"] = []
+            try:
+                DISABLED_CMDS[self.chat_id]["commands"] = []
+            except KeyError:
+                DISABLED_CMDS[self.chat_id] = {
+                    "commands": [],
+                    "action": self.chat_info["action"],
+                }
             return self.update(
                 {"_id": self.chat_id},
                 {"commands": []},
@@ -114,34 +144,62 @@ class Disabling(MongoDB):
         except KeyError:
             chat_data = self.find_one({"_id": self.chat_id})
             if not chat_data:
-                new_data = new_data = {
+                new_data = {
                     "_id": self.chat_id,
                     "commands": [],
                     "action": "none",
                 }
+                DISABLED_CMDS[self.chat_id] = {
+                    "commands": [],
+                    "action": "none"
+                }
                 self.insert_one(new_data)
-                LOGGER.info(f"Initialized Disabling Document for chat {self.chat_id}")
+                LOGGER.info(
+                    f"Initialized Disabling Document for chat {self.chat_id}")
                 return new_data
+            DISABLED_CMDS[self.chat_id] = chat_data
         return chat_data
 
     # Migrate if chat id changes!
     def migrate_chat(self, new_chat_id: int):
-        global DISABLED_CMDS  # global only when we are modifying the value
         old_chat_db = self.find_one({"_id": self.chat_id})
         new_data = old_chat_db.update({"_id": new_chat_id})
-        DISABLED_CMDS[new_chat_id] = DISABLED_CMDS[self.chat_id]
-        del DISABLED_CMDS[self.chat_id]
+        DISABLED_CMDS[new_chat_id] = DISABLED_CMDS.pop(self.chat_id)
         self.insert_one(new_data)
         self.delete_one({"_id": self.chat_id})
 
+    @staticmethod
+    def repair_db(collection):
+        global DISABLED_CMDS
+        all_data = collection.find_all()
+        DISABLED_CMDS = {
+            i["_id"]: {
+                "action": i["action"] if i["action"] else "none",
+                "commands": i["commands"] if i["commands"] else [],
+            }
+            for i in all_data
+        }
+        keys = {
+            "commands": [],
+            "action": "none",
+        }
+        for data in all_data:
+            for key, val in keys.items():
+                try:
+                    _ = data[key]
+                except KeyError:
+                    LOGGER.warning(
+                        f"Repairing Disabling Database - setting '{key}:{val}' for {data['_id']}",
+                    )
+                    collection.update({"_id": data["_id"]}, {key: val})
 
-def __load_disable_cache():
-    global DISABLED_CMDS
+
+def __pre_req_disabling():
+    start = time()
+    LOGGER.info("Starting disabling Database Repair ...")
     collection = MongoDB(Disabling.db_name)
-    all_data = collection.find_all()
-    DISABLED_CMDS = {
-        i["_id"]: {"action": i["action"], "commands": i["commands"]} for i in all_data
-    }
+    Disabling.repair_db(collection)
+    LOGGER.info(f"Done in {round((time() - start), 3)}s!")
 
 
-__load_disable_cache()
+__pre_req_disabling()
