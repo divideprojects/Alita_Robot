@@ -38,9 +38,10 @@ async def disableit(_, m: Message):
 
     if str((m.text.split(None, 1)[1]).lower()) in disable_cmd_keys:
         db.add_disable((str(m.text.split(None, 1)[1])).lower())
-        return await m.reply_text(f"Disabled {m.text.split(None, 1)[1]}!")
-    if str(m.text.split(None, 1)[1]) not in disable_cmd_keys:
-        return await m.reply_text("Can't do it sorry !")
+        await m.reply_text(f"Disabled {m.text.split(None, 1)[1]}!")
+        return
+    await m.reply_text("Can't do it sorry !")
+    return
 
 
 @Alita.on_message(command("disabledel") & can_change_filter)
