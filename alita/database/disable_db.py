@@ -11,7 +11,7 @@ DISABLED_CMDS = {}
 class Disabling(MongoDB):
     """Class to manage database for Disabling for chats."""
 
-    # Database name to connect to preform operations
+    # Database name to connect to perform operations
     db_name = "disabled"
 
     def __init__(self, chat_id: int) -> None:
