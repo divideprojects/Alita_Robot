@@ -8,7 +8,7 @@ from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
-from alita.database.disable_db import DISABLED_CMDS
+from alita.database.disable_db import Disabling
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
 from alita.vars import Config
@@ -25,8 +25,16 @@ def command(
     sudo_cmd: bool = False,
 ):
     async def func(flt, _, m: Message):
+        if not m:
+            return
 
-        if m and not m.from_user:
+        if m["edit_date"]:
+            return # reaction
+
+        if m["chat"] and m["chat"]["type"] == "channel":
+            return
+
+        if not m.from_user:
             return False
 
         if m.from_user.is_bot:
@@ -61,12 +69,6 @@ def command(
                 return False
             if m.chat.type == "supergroup":
                 try:
-                    disable_list = DISABLED_CMDS[m.chat.id].get("commands", [])
-                    status = str(DISABLED_CMDS[m.chat.id].get("action", "none"))
-                except KeyError:
-                    disable_list = []
-                    status = "none"
-                try:
                     user_status = (await m.chat.get_member(m.from_user.id)).status
                 except UserNotParticipant:
                     # i.e anon admin
@@ -74,16 +76,17 @@ def command(
                 except ValueError:
                     # i.e. PM
                     user_status = "creator"
-                if str(matches.group(1)) in disable_list and user_status not in (
+                ddb = Disabling(m["chat"]["id"])
+                if str(matches.group(1)) in ddb.get_disabled() and user_status not in (
                     "creator",
                     "administrator",
                 ):
-                    try:
-                        if status == "del":
+                    if bool(ddb.get_action() == "del"):
+                        try:
                             await m.delete()
-                    except RPCError:
-                        pass
-                    return False
+                        except RPCError:
+                            pass
+                    return
             if matches.group(3) == "":
                 return True
             try:
