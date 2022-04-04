@@ -34,7 +34,7 @@ def command(
         if m["chat"] and m["chat"]["type"] == "channel":
             return
 
-        if m and not m.from_user:
+        if not m.from_user:
             return False
 
         if m.from_user.is_bot:
