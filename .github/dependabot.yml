@@ -1,19 +1,15 @@
 version: 2
 
 updates:
-    - package-ecosystem: pip
-      directory: "/"
-      schedule:
-          interval: daily
-          time: "09:00"
-          timezone: "Asia/Kolkata"
-      open-pull-requests-limit: 20
-      target-branch: main
-    - package-ecosystem: docker
-      directory: "/"
-      schedule:
-          interval: daily
-          time: "09:00"
-          timezone: "Asia/Kolkata"
-      open-pull-requests-limit: 20
-      target-branch: main
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+        interval: daily
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+        interval: daily
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: daily
