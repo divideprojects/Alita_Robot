@@ -78,8 +78,11 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
             f"- [{note[0]}](https://t.me/{Config.BOT_USERNAME}?start=note_{chat_id}_{note[1]})"
             for note in all_notes
         ]
-        rply = "\n".join(note_list)
-        rply += "You can retrieve these notes by tapping on the notename."
+        rply = (
+            "\n".join(note_list)
+            + "You can retrieve these notes by tapping on the notename."
+        )
+
         await m.reply_text(rply, disable_web_page_preview=True, quote=True)
         return
 

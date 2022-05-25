@@ -97,7 +97,7 @@ async def load_cmds(all_plugins):
             LOGGER.warning(f"Not loading '{single}' s it's added in NO_LOAD list")
             continue
 
-        imported_module = imp_mod("alita.plugins." + single)
+        imported_module = imp_mod(f"alita.plugins.{single}")
         if not hasattr(imported_module, "__PLUGIN__"):
             continue
 

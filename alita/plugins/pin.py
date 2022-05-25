@@ -18,10 +18,11 @@ async def pin_message(_, m: Message):
     pin_args = m.text.split(None, 1)
     if m.reply_to_message:
         try:
-            disable_notification = True
-
-            if len(pin_args) >= 2 and pin_args[1] in ["alert", "notify", "loud"]:
-                disable_notification = False
+            disable_notification = len(pin_args) < 2 or pin_args[1] not in [
+                "alert",
+                "notify",
+                "loud",
+            ]
 
             await m.reply_to_message.pin(
                 disable_notification=disable_notification,

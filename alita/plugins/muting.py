@@ -462,13 +462,7 @@ async def dmute_usr(c: Alita, m: Message):
     if not m.reply_to_message:
         return await m.reply_text("No replied message and user to delete and mute!")
 
-    reason = None
-    if m.reply_to_message:
-        if len(m.text.split()) >= 2:
-            reason = m.text.split(None, 1)[1]
-    else:
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
+    reason = m.text.split(None, 1)[1] if len(m.text.split()) >= 2 else None
     user_id = m.reply_to_message.from_user.id
     user_first_name = m.reply_to_message.from_user.first_name
 
