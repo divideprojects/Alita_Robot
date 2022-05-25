@@ -26,10 +26,7 @@ class Disabling(MongoDB):
             except KeyError:
                 cmds = self.chat_info["commands"]
                 act = self.chat_info["action"]
-                DISABLED_CMDS[self.chat_id] = {
-                    "command": cmds if cmds else [],
-                    "action": act if act else "none",
-                }
+                DISABLED_CMDS[self.chat_id] = {"command": cmds or [], "action": act or "none"}
             # return bool(cmd in cmds)
             return bool(cmd in cmds if cmds else [])
 
@@ -63,19 +60,18 @@ class Disabling(MongoDB):
             except KeyError:
                 cmds = self.chat_info["commands"]
                 DISABLED_CMDS[self.chat_id] = {
-                    "commands": cmds if cmds else [],
+                    "commands": cmds or [],
                     "action": self.chat_info["action"],
                 }
-            return cmds if cmds else []
+
+            return cmds or []
 
     @staticmethod
     def count_disabled_all():
         with INSERTION_LOCK:
             collection = MongoDB(Disabling.db_name)
             curr = collection.find_all()
-            return sum(
-                len(chat["commands"] if chat["commands"] else [])
-                for chat in curr)
+            return sum(len(chat["commands"] or []) for chat in curr)
 
     @staticmethod
     def count_disabling_chats():
@@ -90,10 +86,7 @@ class Disabling(MongoDB):
                 DISABLED_CMDS[self.chat_id]["action"] = action
             except KeyError:
                 cmds = self.chat_info["commands"]
-                DISABLED_CMDS[self.chat_id] = {
-                    "commands": cmds if cmds else [],
-                    "action": action,
-                }
+                DISABLED_CMDS[self.chat_id] = {"commands": cmds or [], "action": action}
             return self.update(
                 {"_id": self.chat_id},
                 {
@@ -109,20 +102,15 @@ class Disabling(MongoDB):
             except KeyError:
                 cmds = self.chat_info["commands"]
                 val = self.chat_info["action"]
-                DISABLED_CMDS[self.chat_id] = {
-                    "commands": cmds if cmds else [],
-                    "action": val,
-                }
-            return val if val else "none"
+                DISABLED_CMDS[self.chat_id] = {"commands": cmds or [], "action": val}
+            return val or "none"
 
     @staticmethod
     def count_action_dis_all(action: str):
         with INSERTION_LOCK:
             collection = MongoDB(Disabling.db_name)
             all_data = collection.find_all({"action": action})
-            return sum(
-                len(i["commands"] if i["commands"] else []) >= 1
-                for i in all_data)
+            return sum(len(i["commands"] or []) >= 1 for i in all_data)
 
     def rm_all_disabled(self):
         with INSERTION_LOCK:
@@ -174,11 +162,12 @@ class Disabling(MongoDB):
         all_data = collection.find_all()
         DISABLED_CMDS = {
             i["_id"]: {
-                "action": i["action"] if i["action"] else "none",
-                "commands": i["commands"] if i["commands"] else [],
+                "action": i["action"] or "none",
+                "commands": i["commands"] or [],
             }
             for i in all_data
         }
+
         keys = {
             "commands": [],
             "action": "none",

@@ -62,8 +62,7 @@ def command(
             prefix="|".join(escape(x) for x in Config.PREFIX_HANDLER),
             bot_name=Config.BOT_USERNAME,
         )
-        matches = compile_re(regex).search(text)
-        if matches:
+        if matches := compile_re(regex).search(text):
             m.command = [matches.group(1)]
             if matches.group(1) not in flt.commands:
                 return False
@@ -81,7 +80,7 @@ def command(
                     "creator",
                     "administrator",
                 ):
-                    if bool(ddb.get_action() == "del"):
+                    if ddb.get_action() == "del":
                         try:
                             await m.delete()
                         except RPCError:
@@ -90,8 +89,7 @@ def command(
             if matches.group(3) == "":
                 return True
             try:
-                for arg in split(matches.group(3)):
-                    m.command.append(arg)
+                m.command.extend(iter(split(matches.group(3))))
             except ValueError:
                 pass
             return True

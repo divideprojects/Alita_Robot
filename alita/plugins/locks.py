@@ -147,9 +147,7 @@ async def view_locks(_, m: Message):
     v_perm = m.chat.permissions
 
     async def convert_to_emoji(val: bool):
-        if val:
-            return "✅"
-        return "❌"
+        return "✅" if val else "❌"
 
     vmsg = await convert_to_emoji(v_perm.can_send_messages)
     vmedia = await convert_to_emoji(v_perm.can_send_media_messages)

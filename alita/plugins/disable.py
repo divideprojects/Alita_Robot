@@ -49,10 +49,7 @@ async def set_dsbl_action(_, m: Message):
     db = Disabling(m.chat.id)
 
     status = db.get_action()
-    if status == "none":
-        cur = False
-    else:
-        cur = True
+    cur = status != "none"
     args = m.text.split(" ", 1)
 
     LOGGER.info(f"{m.from_user.id} disabledel used in {m.chat.id}")
@@ -91,8 +88,10 @@ async def disabling(_, m: Message):
         for j in [HELP_COMMANDS[i]["disablable"] for i in list(HELP_COMMANDS.keys())]
         for k in j
     )
-    tes = "List of commnds that can be disabled:\n"
-    tes += "\n".join(f" • <code>{escape(i)}</code>" for i in disable_cmd_keys)
+    tes = "List of commnds that can be disabled:\n" + "\n".join(
+        f" • <code>{escape(i)}</code>" for i in disable_cmd_keys
+    )
+
     LOGGER.info(f"{m.from_user.id} checked disableable {m.chat.id}")
     return await m.reply_text(tes)
 
@@ -104,8 +103,10 @@ async def disabled(_, m: Message):
     if not disable_list:
         await m.reply_text("No disabled items!")
         return
-    tex = "Disabled commands:\n"
-    tex += "\n".join(f" • <code>{escape(i)}</code>" for i in disable_list)
+    tex = "Disabled commands:\n" + "\n".join(
+        f" • <code>{escape(i)}</code>" for i in disable_list
+    )
+
     LOGGER.info(f"{m.from_user.id} checked disabled {m.chat.id}")
     return await m.reply_text(tex)
 

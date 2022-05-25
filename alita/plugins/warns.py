@@ -29,20 +29,11 @@ from alita.vars import Config
 async def warn(c: Alita, m: Message):
     if m.reply_to_message:
         r_id = m.reply_to_message.message_id
-        if len(m.text.split()) >= 2:
-            reason = m.text.split(None, 1)[1]
-        else:
-            reason = None
-    elif not m.reply_to_message:
-        r_id = m.message_id
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
-        else:
-            reason = None
+        reason = m.text.split(None, 1)[1] if len(m.text.split()) >= 2 else None
     else:
-        reason = None
-
-    if not len(m.command) > 1 and not m.reply_to_message:
+        r_id = m.message_id
+        reason = m.text.split(None, 2)[2] if len(m.text.split()) >= 3 else None
+    if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
@@ -95,8 +86,7 @@ async def warn(c: Alita, m: Message):
         )
         await m.stop_propagation()
 
-    rules = Rules(m.chat.id).get_rules()
-    if rules:
+    if rules := Rules(m.chat.id).get_rules():
         kb = InlineKeyboardButton(
             "Rules 📋",
             url=f"https://t.me/{Config.BOT_USERNAME}?start=rules_{m.chat.id}",
@@ -138,7 +128,7 @@ async def warn(c: Alita, m: Message):
 @Alita.on_message(command("resetwarns") & restrict_filter)
 async def reset_warn(c: Alita, m: Message):
 
-    if not len(m.command) > 1 and not m.reply_to_message:
+    if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
 
@@ -219,7 +209,7 @@ async def list_warns(c: Alita, m: Message):
 )
 async def remove_warn(c: Alita, m: Message):
 
-    if not len(m.command) > 1 and not m.reply_to_message:
+    if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text(
             "I can't remove warns of nothing! Tell me user whose warn should be removed!",
         )
@@ -281,7 +271,7 @@ async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
     action = args[1]
     user_id = int(args[2])
     chat_id = int(q.message.chat.id)
-    user = Users.get_user_info(int(user_id))
+    user = Users.get_user_info(user_id)
     user_first_name = user["name"]
 
     if action == "remove":

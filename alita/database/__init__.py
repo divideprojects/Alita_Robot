@@ -26,10 +26,7 @@ class MongoDB:
 
     # Find one entry from collection
     def find_one(self, query):
-        result = self.collection.find_one(query)
-        if result:
-            return result
-        return False
+        return result if (result := self.collection.find_one(query)) else False
 
     # Find entries from collection
     def find_all(self, query=None):
