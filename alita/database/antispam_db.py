@@ -48,8 +48,7 @@ class GBan(MongoDB):
 
     def get_gban(self, user_id: int):
         if self.check_gban(user_id):
-            curr = self.find_one({"_id": user_id})
-            if curr:
+            if curr := self.find_one({"_id": user_id}):
                 return True, curr["reason"]
         return False, ""
 

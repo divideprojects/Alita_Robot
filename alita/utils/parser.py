@@ -12,7 +12,7 @@ async def cleanhtml(raw_html: str) -> str:
 async def escape_markdown(text: str) -> str:
     """Escape markdown data."""
     escape_chars = r"\*_`\["
-    return sub(r"([%s])" % escape_chars, r"\\\1", text)
+    return sub(f"([{escape_chars}])", r"\\\1", text)
 
 
 async def mention_html(name: str, user_id: int) -> str:

@@ -23,8 +23,11 @@ async def fun_shout(_, m: Message):
     try:
         text = " ".join(m.text.split(None, 1)[1])
         result = [" ".join(list(text))]
-        for pos, symbol in enumerate(text[1:]):
-            result.append(symbol + " " + "  " * pos + symbol)
+        result.extend(
+            f"{symbol} " + "  " * pos + symbol
+            for pos, symbol in enumerate(text[1:])
+        )
+
         result = list("\n".join(result))
         result[0] = text[0]
         result = "".join(result)

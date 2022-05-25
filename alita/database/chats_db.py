@@ -19,7 +19,7 @@ class Chats(MongoDB):
         self.chat_info = self.__ensure_in_db()
 
     def user_is_in_chat(self, user_id: int):
-        return bool(user_id in set(self.chat_info["users"]))
+        return user_id in set(self.chat_info["users"])
 
     def update_chat(self, chat_name: str, user_id: int):
         with INSERTION_LOCK:

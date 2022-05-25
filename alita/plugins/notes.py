@@ -332,9 +332,7 @@ async def local_notes(_, m: Message):
 
     msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
 
-    curr_pref = db_settings.get_privatenotes(m.chat.id)
-    if curr_pref:
-
+    if curr_pref := db_settings.get_privatenotes(m.chat.id):
         pm_kb = ikb(
             [
                 [
