@@ -22,8 +22,6 @@ async def admin_cache_reload(m: Message or CallbackQuery, status=None) -> List[i
 
         if isinstance(m, CallbackQuery):
             m = m.message
-
-        global ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK
         if status is not None:
             TEMP_ADMIN_CACHE_BLOCK[m.chat.id] = status
 

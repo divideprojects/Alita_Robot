@@ -25,7 +25,6 @@ class Langs(MongoDB):
 
     def set_lang(self, lang: str):
         with INSERTION_LOCK:
-            global LANG_CACHE
             LANG_CACHE[self.chat_id] = lang
             self.chat_info["lang"] = lang
             return self.update(

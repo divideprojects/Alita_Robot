@@ -20,7 +20,6 @@ class GBan(MongoDB):
             return bool(self.find_one({"_id": user_id}))
 
     def add_gban(self, user_id: int, reason: str, by_user: int):
-        global ANTISPAM_BANNED
         with INSERTION_LOCK:
             # Check if  user is already gbanned or not
             if self.find_one({"_id": user_id}):
@@ -38,7 +37,6 @@ class GBan(MongoDB):
             )
 
     def remove_gban(self, user_id: int):
-        global ANTISPAM_BANNED
         with INSERTION_LOCK:
             # Check if  user is already gbanned or not
             if self.find_one({"_id": user_id}):
