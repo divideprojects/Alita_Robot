@@ -21,9 +21,7 @@ class Filters(MongoDB):
         fileid="",
     ):
         with INSERTION_LOCK:
-            # Database update
-            curr = self.find_one({"chat_id": chat_id, "keyword": keyword})
-            if curr:
+            if curr := self.find_one({"chat_id": chat_id, "keyword": keyword}):
                 return False
             return self.insert_one(
                 {
@@ -37,23 +35,20 @@ class Filters(MongoDB):
 
     def get_filter(self, chat_id: int, keyword: str):
         with INSERTION_LOCK:
-            curr = self.find_one({"chat_id": chat_id, "keyword": keyword})
-            if curr:
+            if curr := self.find_one({"chat_id": chat_id, "keyword": keyword}):
                 return curr
             return "Filter does not exist!"
 
     def get_all_filters(self, chat_id: int):
         with INSERTION_LOCK:
-            curr = self.find_all({"chat_id": chat_id})
-            if curr:
+            if curr := self.find_all({"chat_id": chat_id}):
                 filter_list = {i["keyword"] for i in curr}
                 return list(filter_list)
             return []
 
     def rm_filter(self, chat_id: int, keyword: str):
         with INSERTION_LOCK:
-            curr = self.find_one({"chat_id": chat_id, "keyword": keyword})
-            if curr:
+            if curr := self.find_one({"chat_id": chat_id, "keyword": keyword}):
                 self.delete_one(curr)
                 return True
             return False
@@ -68,8 +63,7 @@ class Filters(MongoDB):
 
     def count_filter_aliases(self):
         with INSERTION_LOCK:
-            curr = self.find_all()
-            if curr:
+            if curr := self.find_all():
                 return len(
                     [z for z in (i["keyword"].split("|") for i in curr) if len(z) >= 2],
                 )
@@ -96,8 +90,7 @@ class Filters(MongoDB):
     # Migrate if chat id changes!
     def migrate_chat(self, old_chat_id: int, new_chat_id: int):
         with INSERTION_LOCK:
-            old_chat_db = self.find_one({"_id": old_chat_id})
-            if old_chat_db:
+            if old_chat_db := self.find_one({"_id": old_chat_id}):
                 new_data = old_chat_db.update({"_id": new_chat_id})
                 self.delete_one({"_id": old_chat_id})
                 self.insert_one(new_data)

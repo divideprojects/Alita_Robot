@@ -21,7 +21,7 @@ class Blacklist(MongoDB):
     def check_word_blacklist_status(self, word: str):
         with INSERTION_LOCK:
             bl_words = self.chat_info["triggers"]
-            return bool(word in bl_words)
+            return word in bl_words
 
     def add_blacklist(self, trigger: str):
         with INSERTION_LOCK:

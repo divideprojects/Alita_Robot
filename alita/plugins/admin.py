@@ -88,7 +88,7 @@ async def adminlist_show(_, m: Message):
         if str(ef) == str(m.chat.id):
             await m.reply_text(tlang(m, "admin.adminlist.use_admin_cache"))
         else:
-            ef = str(ef) + f"{admin_list}\n"
+            ef = f"{str(ef)}{admin_list}\n"
             await m.reply_text(
                 (tlang(m, "general.some_error")).format(
                     SUPPORT_GROUP=SUPPORT_GROUP,
@@ -240,7 +240,7 @@ async def fullpromote_usr(c: Alita, m: Message):
         elif len(m.text.split()) == 2 and m.reply_to_message:
             title = m.text.split()[1]
         if title and len(title) > 16:
-            title = title[0:16]  # trim title to 16 characters
+            title = title[:16]
 
         try:
             await c.set_administrator_title(m.chat.id, user_id, title)
@@ -349,7 +349,7 @@ async def promote_usr(c: Alita, m: Message):
         elif len(m.text.split()) == 2 and m.reply_to_message:
             title = m.text.split()[1]
         if title and len(title) > 16:
-            title = title[0:16]  # trim title to 16 characters
+            title = title[:16]
 
         try:
             await c.set_administrator_title(m.chat.id, user_id, title)
@@ -589,9 +589,8 @@ async def set_user_title(c: Alita, m: Message):
     if m.reply_to_message:
         if len(m.text.split()) >= 2:
             reason = m.text.split(None, 1)[1]
-    else:
-        if len(m.text.split()) >= 3:
-            reason = m.text.split(None, 2)[2]
+    elif len(m.text.split()) >= 3:
+        reason = m.text.split(None, 2)[2]
     try:
         user_id, _, _ = await extract_user(c, m)
     except Exception:

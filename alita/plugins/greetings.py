@@ -239,12 +239,10 @@ async def cleannnnn(_, m: Message):
 async def member_has_joined(c: Alita, member: ChatMemberUpdated):
 
     if (
-        member.new_chat_member
-        and member.new_chat_member.status not in {"banned", "left", "restricted"}
-        and not member.old_chat_member
+        not member.new_chat_member
+        or member.new_chat_member.status in {"banned", "left", "restricted"}
+        or member.old_chat_member
     ):
-        pass
-    else:
         return
 
     user = member.new_chat_member.user if member.new_chat_member else member.from_user
@@ -283,36 +281,35 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
         "chatname",
     ]
     hmm = await escape_mentions_using_curly_brackets_wl(member, True, oo, parse_words)
-    if status:
-        tek, button = await parse_button(hmm)
-        button = await build_keyboard(button)
-        button = InlineKeyboardMarkup(button) if button else None
+    if not status:
+        return
+    tek, button = await parse_button(hmm)
+    button = await build_keyboard(button)
+    button = InlineKeyboardMarkup(button) if button else None
 
-        if "%%%" in tek:
-            filter_reply = tek.split("%%%")
-            teks = choice(filter_reply)
-        else:
-            teks = tek
-        ifff = db.get_current_cleanwelcome_id()
-        gg = db.get_current_cleanwelcome_settings()
-        if ifff and gg:
-            try:
-                await c.delete_messages(member.chat.id, int(ifff))
-            except RPCError:
-                pass
-        try:
-            jj = await c.send_message(
-                member.chat.id,
-                text=teks,
-                reply_markup=button,
-                disable_web_page_preview=True,
-            )
-            if jj:
-                db.set_cleanwlcm_id(int(jj.message_id))
-        except RPCError as e:
-            print(e)
-            return
+    if "%%%" in tek:
+        filter_reply = tek.split("%%%")
+        teks = choice(filter_reply)
     else:
+        teks = tek
+    ifff = db.get_current_cleanwelcome_id()
+    gg = db.get_current_cleanwelcome_settings()
+    if ifff and gg:
+        try:
+            await c.delete_messages(member.chat.id, int(ifff))
+        except RPCError:
+            pass
+    try:
+        jj = await c.send_message(
+            member.chat.id,
+            text=teks,
+            reply_markup=button,
+            disable_web_page_preview=True,
+        )
+        if jj:
+            db.set_cleanwlcm_id(int(jj.message_id))
+    except RPCError as e:
+        print(e)
         return
 
 
@@ -320,12 +317,10 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
 async def member_has_left(c: Alita, member: ChatMemberUpdated):
 
     if (
-        not member.new_chat_member
-        and member.old_chat_member.status not in {"banned", "restricted"}
-        and member.old_chat_member
+        member.new_chat_member
+        or member.old_chat_member.status in {"banned", "restricted"}
+        or not member.old_chat_member
     ):
-        pass
-    else:
         return
     db = Greetings(member.chat.id)
     status = db.get_goodbye_status()
@@ -343,43 +338,42 @@ async def member_has_left(c: Alita, member: ChatMemberUpdated):
     user = member.old_chat_member.user if member.old_chat_member else member.from_user
 
     hmm = await escape_mentions_using_curly_brackets_wl(member, False, oo, parse_words)
-    if status:
-        tek, button = await parse_button(hmm)
-        button = await build_keyboard(button)
-        button = InlineKeyboardMarkup(button) if button else None
+    if not status:
+        return
+    tek, button = await parse_button(hmm)
+    button = await build_keyboard(button)
+    button = InlineKeyboardMarkup(button) if button else None
 
-        if "%%%" in tek:
-            filter_reply = tek.split("%%%")
-            teks = choice(filter_reply)
-        else:
-            teks = tek
-        ifff = db.get_current_cleangoodbye_id()
-        iii = db.get_current_cleangoodbye_settings()
-        if ifff and iii:
-            try:
-                await c.delete_messages(member.chat.id, int(ifff))
-            except RPCError:
-                pass
-        if user.id == OWNER_ID:
-            await c.send_message(
-                member.chat.id,
-                "Will miss you :)",
-            )
-            return
-        try:
-            ooo = await c.send_message(
-                member.chat.id,
-                text=teks,
-                reply_markup=button,
-                disable_web_page_preview=True,
-            )
-            if ooo:
-                db.set_cleangoodbye_id(int(ooo.message_id))
-            return
-        except RPCError as e:
-            print(e)
-            return
+    if "%%%" in tek:
+        filter_reply = tek.split("%%%")
+        teks = choice(filter_reply)
     else:
+        teks = tek
+    ifff = db.get_current_cleangoodbye_id()
+    iii = db.get_current_cleangoodbye_settings()
+    if ifff and iii:
+        try:
+            await c.delete_messages(member.chat.id, int(ifff))
+        except RPCError:
+            pass
+    if user.id == OWNER_ID:
+        await c.send_message(
+            member.chat.id,
+            "Will miss you :)",
+        )
+        return
+    try:
+        ooo = await c.send_message(
+            member.chat.id,
+            text=teks,
+            reply_markup=button,
+            disable_web_page_preview=True,
+        )
+        if ooo:
+            db.set_cleangoodbye_id(int(ooo.message_id))
+        return
+    except RPCError as e:
+        print(e)
         return
 
 

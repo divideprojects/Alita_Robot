@@ -43,8 +43,7 @@ async def approve_user(c: Alita, m: Message):
             "User is already admin - blacklists and locks already don't apply to them.",
         )
         return
-    already_approved = db.check_approve(user_id)
-    if already_approved:
+    if already_approved := db.check_approve(user_id):
         await m.reply_text(
             f"{(await mention_html(user_first_name, user_id))} is already approved in {chat_title}",
         )

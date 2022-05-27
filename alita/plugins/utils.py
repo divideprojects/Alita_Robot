@@ -111,8 +111,7 @@ async def get_lyrics(_, m: Message):
     em = await m.reply_text(
         (tlang(m, "utils.song.searching").format(song_name=query)),
     )
-    song = Song.find_song(query)
-    if song:
+    if song := Song.find_song(query):
         if song.lyrics:
             reply = song.format()
         else:
@@ -350,14 +349,8 @@ async def paste_it(_, m: Message):
 async def translate(_, m: Message):
     trl = Translator()
     if m.reply_to_message and (m.reply_to_message.text or m.reply_to_message.caption):
-        if len(m.text.split()) == 1:
-            target_lang = "en"
-        else:
-            target_lang = m.text.split()[1]
-        if m.reply_to_message.text:
-            text = m.reply_to_message.text
-        else:
-            text = m.reply_to_message.caption
+        target_lang = "en" if len(m.text.split()) == 1 else m.text.split()[1]
+        text = m.reply_to_message.text or m.reply_to_message.caption
     else:
         if len(m.text.split()) <= 2:
             await m.reply_text(
