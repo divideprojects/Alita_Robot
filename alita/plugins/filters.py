@@ -221,7 +221,6 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
                 try:
                     await m.reply_text(
                         textt,
-                        # parse_mode="markdown",
                         reply_markup=button,
                         disable_web_page_preview=True,
                         quote=True,
@@ -238,7 +237,6 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
             else:
                 await m.reply_text(
                     textt,
-                    # parse_mode="markdown",
                     quote=True,
                     disable_web_page_preview=True,
                 )
@@ -261,7 +259,6 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
                 m.chat.id,
                 getfilter["fileid"],
                 caption=textt,
-                #   parse_mode="markdown",
                 reply_markup=button,
                 reply_to_message_id=m.message_id,
             )

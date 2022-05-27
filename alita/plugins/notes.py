@@ -130,7 +130,6 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                 try:
                     await reply_text(
                         textt,
-                        # parse_mode="markdown",
                         reply_markup=button,
                         disable_web_page_preview=True,
                         quote=True,
@@ -147,7 +146,6 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
             else:
                 await reply_text(
                     textt,
-                    # parse_mode="markdown",
                     quote=True,
                     disable_web_page_preview=True,
                 )
@@ -170,7 +168,6 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                     m.chat.id,
                     getnotes["fileid"],
                     caption=textt,
-                    # parse_mode="markdown",
                     reply_markup=button,
                     reply_to_message_id=reply_msg_id,
                 )
@@ -178,7 +175,6 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
             except RPCError as ef:
                 await m.reply_text(
                     textt,
-                    # parse_mode="markdown",
                     reply_markup=button,
                     disable_web_page_preview=True,
                     reply_to_message_id=reply_msg_id,
@@ -191,7 +187,6 @@ async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
                 m.chat.id,
                 getnotes["fileid"],
                 caption=textt,
-                # parse_mode="markdown",
                 reply_markup=button,
                 reply_to_message_id=reply_msg_id,
             )

@@ -338,7 +338,6 @@ async def promote_usr(c: Alita, m: Message):
             can_delete_messages=bot.can_delete_messages,
             can_restrict_members=bot.can_restrict_members,
             can_pin_messages=bot.can_pin_messages,
-            # can_promote_members=bot.can_promote_members,
             can_manage_chat=bot.can_manage_chat,
             can_manage_voice_chats=bot.can_manage_voice_chats,
         )
