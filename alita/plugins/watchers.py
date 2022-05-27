@@ -117,7 +117,6 @@ async def bl_watcher(_, m: Message):
             await m.reply_text(
                 (
                     f"{(await mention_html(m.from_user.first_name, m.from_user.id))} warned {num}/{warn_settings['warn_limit']}\n"
-                    # f"Last warn was for:\n<i>{warn_reason}</i>"
                     f"Last warn was for:\n<i>{warn_reason.format(trigger)}</i>"
                 ),
             )
