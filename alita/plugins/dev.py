@@ -23,7 +23,6 @@ from alita.tr_engine import tlang
 from alita.utils.clean_file import remove_markdown_and_html
 from alita.utils.custom_filters import command
 from alita.utils.http_helper import HTTPx
-from alita.utils.kbhelpers import ikb
 from alita.utils.parser import mention_markdown
 from alita.vars import Config
 
