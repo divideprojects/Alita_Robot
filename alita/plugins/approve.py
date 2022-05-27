@@ -1,6 +1,6 @@
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, RPCError, UserNotParticipant
-from pyrogram.types import CallbackQuery, ChatPermissions, Message
+from pyrogram.types import CallbackQuery, Message
 
 from alita import LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
