@@ -17,7 +17,6 @@ class GroupBlacklist(MongoDB):
 
     def add_chat(self, chat_id: int):
         with INSERTION_LOCK:
-            global BLACKLIST_CHATS
             try:
                 Chats.remove_chat(chat_id)  # Delete chat from database
             except KeyError:
@@ -28,7 +27,6 @@ class GroupBlacklist(MongoDB):
 
     def remove_chat(self, chat_id: int):
         with INSERTION_LOCK:
-            global BLACKLIST_CHATS
             BLACKLIST_CHATS.remove(chat_id)
             BLACKLIST_CHATS.sort()
             return self.delete_one({"_id": chat_id})

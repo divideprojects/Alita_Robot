@@ -34,7 +34,6 @@ from alita.vars import Config
 
 @Alita.on_message(command("adminlist"))
 async def adminlist_show(_, m: Message):
-    global ADMIN_CACHE
     if m.chat.type != "supergroup":
         return await m.reply_text(
             "This command is made to be used in groups only!",
@@ -125,7 +124,6 @@ async def zombie_clean(c: Alita, m: Message):
 
 @Alita.on_message(command("admincache"))
 async def reload_admins(_, m: Message):
-    global TEMP_ADMIN_CACHE_BLOCK
 
     if m.chat.type != "supergroup":
         return await m.reply_text(
@@ -182,7 +180,6 @@ async def tag_admins(_, m: Message):
 
 @Alita.on_message(command("fullpromote") & promote_filter)
 async def fullpromote_usr(c: Alita, m: Message):
-    global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
@@ -294,8 +291,6 @@ async def fullpromote_usr(c: Alita, m: Message):
 
 @Alita.on_message(command("promote") & promote_filter)
 async def promote_usr(c: Alita, m: Message):
-
-    global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
