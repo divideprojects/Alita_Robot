@@ -29,7 +29,7 @@ def command(
             return
 
         if m["edit_date"]:
-            return # reaction
+            return  # reaction
 
         if m["chat"] and m["chat"]["type"] == "channel":
             return
