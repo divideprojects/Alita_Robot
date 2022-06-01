@@ -1,6 +1,5 @@
 **
 !pyproject.toml
 !poetry.lock
-!locales
 !alita
 !locales
