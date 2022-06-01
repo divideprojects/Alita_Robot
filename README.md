@@ -17,13 +17,6 @@
   <a href="https://makeapullrequest.com" alt="PRs Welcome"> <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /> </a>
 </p>
 
-<p align='center'>
- <a href="https://heroku.com/deploy?template=https://github.com/DivideProjects/Alita_Robot"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy on Heroku"></a></br></br>
-  <a href="https://t.me/DivideProjects"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&amp;logo=telegram&amp;logoColor=white" alt="Join us on Telegram"></a></br></br>
-
-</p>
-
-
 Alita is a Telegram Group managment bot made using **[Pyrogram](https://github.com/pyrogram/pyrogram) _async version_** and **[Python](https://python.org)**, which makes it modern and faster than most of the exisitng Telegram Chat Managers.
 
 **Alita's features over other bots:**
@@ -64,8 +57,10 @@ It really motivates me to continue this project further.
 
 **Note:** By default the bot uses the default heroku-20 stack.
 
-So we made a script for you to deploy it in heruko :)
-[Click Here](https://github.com/DivideProjects/Alita_Deployer)
+**So we had made a script for you to deploy it in heruko :)-**
+
+**[Click Here](https://github.com/DivideProjects/Alita_Deployer)**
+
 **Note:** Have a few risk !
 
 ### Traditional
