@@ -15,7 +15,7 @@ class Config:
     APP_ID = int(config("APP_ID", default=None))
     API_HASH = config("API_HASH", default=None)
     OWNER_ID = int(config("OWNER_ID", default=1198820588))
-    MESSAGE_DUMP = int(config("MESSAGE_DUMP", default=""))
+    MESSAGE_DUMP = int(config("MESSAGE_DUMP", default=None))
     DEV_USERS = [int(i) for i in config("DEV_USERS", default="").split()]
     SUDO_USERS = [int(i) for i in config("SUDO_USERS", default="").split()]
     WHITELIST_USERS = [int(i) for i in config("WHITELIST_USERS", default="").split()]
