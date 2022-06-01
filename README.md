@@ -64,7 +64,9 @@ It really motivates me to continue this project further.
 
 **Note:** By default the bot uses the default heroku-20 stack.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/DivideProjects/Alita_Robot)
+So we made a script for you to deploy it in heruko :)
+[Click Here](https://github.com/DivideProjects/Alita_Deployer)
+**Note:** Have a few risk !
 
 ### Traditional
 
