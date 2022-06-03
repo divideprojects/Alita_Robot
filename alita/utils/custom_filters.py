@@ -1,3 +1,4 @@
+from contextlib import suppress
 from re import compile as compile_re
 from re import escape
 from shlex import split
@@ -128,7 +129,7 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
         return True
 
     await m.reply_text(
-        "I am not an admin to recive updates in this group; Mind Promoting?",
+        "I am not an admin to receive updates in this group; Mind Promoting?",
     )
 
     return False
@@ -210,7 +211,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_restrict_members or user.status == ChatMemberStatus.OWNER:
+    if user.privileges.can_restrict_members or user.status == ChatMemberStatus.OWNER:
         status = True
     else:
         status = False
@@ -233,7 +234,7 @@ async def promote_check_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_promote_members or user.status == ChatMemberStatus.OWNER:
+    if user.privileges.can_promote_members or user.status == ChatMemberStatus.OWNER:
         status = True
     else:
         status = False
@@ -261,7 +262,7 @@ async def changeinfo_check_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_change_info or user.status == ChatMemberStatus.OWNER:
+    if user.privileges.can_change_info or user.status == ChatMemberStatus.OWNER:
         status = True
     else:
         status = False
@@ -289,7 +290,7 @@ async def can_pin_message_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_pin_messages or user.status == ChatMemberStatus.OWNER:
+    if user.privileges.can_pin_messages or user.status == ChatMemberStatus.OWNER:
         status = True
     else:
         status = False

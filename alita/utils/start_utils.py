@@ -78,7 +78,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
             f"- [{note[0]}](https://t.me/{Config.BOT_USERNAME}?start=note_{chat_id}_{note[1]})"
             for note in all_notes
         ]
-        rply = (
+        rply += (
             "\n".join(note_list)
             + "You can retrieve these notes by tapping on the notename."
         )
@@ -138,7 +138,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
                 return
             except RPCError as ef:
                 await m.reply_text(
-                    "An error has occured! Cannot parse note.",
+                    "An error has occurred! Cannot parse note.",
                     quote=True,
                 )
                 LOGGER.error(ef)
@@ -199,7 +199,7 @@ async def get_private_rules(_, m: Message, help_option: str):
     chat_title = Chats.get_chat_info(chat_id)["chat_name"]
     if not rules:
         await m.reply_text(
-            "The Admins of that group have not setup any rules, that dosen't mean you break the decorum of the chat!",
+            "The Admins of that group have not setup any rules, that doesn't mean you break the decorum of the chat!",
             quote=True,
         )
         return ""
@@ -215,8 +215,6 @@ async def get_private_rules(_, m: Message, help_option: str):
 
 async def get_help_msg(m: Message or CallbackQuery, help_option: str):
     """Helper function for getting help_msg and it's keyboard."""
-    help_msg = None
-    help_kb = None
     help_cmd_keys = sorted(
         k
         for j in [HELP_COMMANDS[i]["alt_cmds"] for i in list(HELP_COMMANDS.keys())]
