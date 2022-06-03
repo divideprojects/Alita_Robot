@@ -55,13 +55,12 @@ It really motivates me to continue this project further.
 - Get your `API_ID` and `API_HASH` from [here](https://my.telegram.org/)
 - Get your Bot Token from [@BotFather](https://t.me/BotFather)
 
-**Note:** By default the bot uses the default heroku-20 stack.
-
-**So we had made a script for you to deploy it in heruko :)-**
-
-**[Click Here](https://github.com/DivideProjects/Alita_Deployer)**
-
-**Note:** Have a few risk !
+**Note:** As it is banned with an unknown reason in heroku, follow the below steps carefully!
+- First Fork this repo :)
+- secondly, create an empty app in the Heroku, with a custom app name; and select Europe region for faster speed.
+- Now go to the deploy tab of your app and under deployment method select GitHub and connect it.
+- after that, type the forked repo name and select it now select main branch and enable auto deploy, at last click on deploy now button!
+- Lastly, you must fill up all the vars in heroku as directed in app.json file and now turn on the worker dyno to run it :)
 
 ### Traditional
 
