@@ -24,6 +24,7 @@ from alita.utils.custom_filters import (
     DEV_LEVEL,
     admin_filter,
     command,
+    chatonly,
     owner_filter,
     promote_filter,
 )
@@ -33,11 +34,8 @@ from alita.vars import Config
 
 
 @Alita.on_message(command("adminlist"))
+@chatonly
 async def adminlist_show(_, m: Message):
-    if m.chat.type != "supergroup":
-        return await m.reply_text(
-            "This command is made to be used in groups only!",
-        )
     try:
         try:
             admin_list = ADMIN_CACHE[m.chat.id]
@@ -102,19 +100,17 @@ async def adminlist_show(_, m: Message):
 
 @Alita.on_message(command("zombies") & owner_filter)
 async def zombie_clean(c: Alita, m: Message):
-
     zombie = 0
-
     wait = await m.reply_text("Searching ... and banning ...")
-    async for member in c.iter_chat_members(m.chat.id):
+    async for member in c.get_chat_members(m.chat.id):
         if member.user.is_deleted:
             zombie += 1
             try:
-                await c.kick_chat_member(m.chat.id, member.user.id)
+                await c.ban_chat_member(m.chat.id, member.user.id)
             except UserAdminInvalid:
                 zombie -= 1
             except FloodWait as e:
-                await sleep(e.x)
+                await sleep(e.value)
     if zombie == 0:
         return await wait.edit_text("Group is clean!")
     return await wait.edit_text(
@@ -123,13 +119,8 @@ async def zombie_clean(c: Alita, m: Message):
 
 
 @Alita.on_message(command("admincache"))
+@chatonly
 async def reload_admins(_, m: Message):
-
-    if m.chat.type != "supergroup":
-        return await m.reply_text(
-            "This command is made to be used in groups only!",
-        )
-
     if (
         (m.chat.id in set(TEMP_ADMIN_CACHE_BLOCK.keys()))
         and (m.from_user.id not in SUPPORT_STAFF)
@@ -258,7 +249,7 @@ async def fullpromote_usr(c: Alita, m: Message):
             ),
         )
 
-        # If user is approved, disapprove them as they willbe promoted and get even more rights
+        # If user is approved, disapprove them as they will be promoted and get even more rights
         if Approve(m.chat.id).check_approve(user_id):
             Approve(m.chat.id).remove_approve(user_id)
 
@@ -307,11 +298,11 @@ async def promote_usr(c: Alita, m: Message):
         await m.reply_text("Huh, how can I even promote myself?")
         return
 
-    if not bot.can_promote_members:
+    if not bot.privileges.can_promote_members:
         return await m.reply_text(
             "I don't have enough permissions",
         )  # This should be here
-    # If user is alreay admin
+    # If user is already admin
     try:
         admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
@@ -337,7 +328,7 @@ async def promote_usr(c: Alita, m: Message):
             can_manage_voice_chats=bot.can_manage_voice_chats,
         )
 
-        title = ""  # Deafult title
+        title = ""  # Default title
         if len(m.text.split()) == 3 and not m.reply_to_message:
             title = m.text.split()[2]
         elif len(m.text.split()) == 2 and m.reply_to_message:
@@ -364,7 +355,7 @@ async def promote_usr(c: Alita, m: Message):
             ),
         )
 
-        # If user is approved, disapprove them as they willbe promoted and get even more rights
+        # If user is approved, disapprove them as they will be promoted and get even more rights
         if Approve(m.chat.id).check_approve(user_id):
             Approve(m.chat.id).remove_approve(user_id)
 
@@ -413,7 +404,7 @@ async def demote_usr(c: Alita, m: Message):
         await m.reply_text("Get an admin to demote me!")
         return
 
-    # If user not alreay admin
+    # If user not already admin
     try:
         admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
@@ -483,12 +474,13 @@ async def demote_usr(c: Alita, m: Message):
 
 
 @Alita.on_message(command("invitelink"))
+@chatonly
 async def get_invitelink(c: Alita, m: Message):
     # Bypass the bot devs, sudos and owner
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)
 
-        if not user.can_invite_users and user.status != "creator":
+        if not user.privileges.can_invite_users and user.status != "creator":
             await m.reply_text(tlang(m, "admin.no_user_invite_perm"))
             return False
 
@@ -525,7 +517,7 @@ async def get_invitelink(c: Alita, m: Message):
 async def setgtitle(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
 
-    if not user.can_change_info and user.status != "creator":
+    if not user.privileges.can_change_info and user.status != "creator":
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -548,7 +540,7 @@ async def setgtitle(_, m: Message):
 async def setgdes(_, m: Message):
 
     user = await m.chat.get_member(m.from_user.id)
-    if not user.can_change_info and user.status != "creator":
+    if not user.privileges.can_change_info and user.status != "creator":
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -571,7 +563,7 @@ async def setgdes(_, m: Message):
 async def set_user_title(c: Alita, m: Message):
 
     user = await m.chat.get_member(m.from_user.id)
-    if not user.can_promote_members and user.status != "creator":
+    if not user.privileges.can_promote_members and user.status != "creator":
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -611,9 +603,9 @@ async def set_user_title(c: Alita, m: Message):
 
 
 @Alita.on_message(command("setgpic") & admin_filter)
-async def setgpic(c: Alita, m: Message):
+async def setgpic(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
-    if not user.can_change_info and user.status != "creator":
+    if not user.privileges.can_change_info and user.status != "creator":
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )

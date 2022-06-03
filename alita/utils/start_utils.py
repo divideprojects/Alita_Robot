@@ -145,10 +145,7 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
         "username",
         "mention",
         "id",
-        "time",
-        "date",
         "chatname",
-        "rules",
     )
     texti = await escape_mentions_using_curly_brackets(
         m, note_replu, parse_words

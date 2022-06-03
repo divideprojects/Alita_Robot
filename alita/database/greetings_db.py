@@ -7,7 +7,7 @@ INSERTION_LOCK = RLock()
 
 
 class Greetings(MongoDB):
-    """Class for managing antichannelpins in chats."""
+    """Class for managing greetings in chats."""
 
     # Database name to connect to preform operations
     db_name = "welcome_chats"
@@ -21,6 +21,10 @@ class Greetings(MongoDB):
     def get_welcome_status(self):
         with INSERTION_LOCK:
             return self.chat_info["welcome"]
+
+    def get_raid_status(self):
+        with INSERTION_LOCK:
+            return self.chat_info["raid"]
 
     def get_goodbye_status(self):
         with INSERTION_LOCK:
@@ -50,11 +54,19 @@ class Greetings(MongoDB):
         with INSERTION_LOCK:
             return self.chat_info["cleanwelcome_id"]
 
+    def get_autoapprove(self):
+        with INSERTION_LOCK:
+            return self.chat_info["autoapprove"]
+
     def get_current_cleangoodbye_id(self):
         with INSERTION_LOCK:
             return self.chat_info["cleangoodbye_id"]
 
     # Set settings in database
+    def set_raid_settings(self, status: bool):
+        with INSERTION_LOCK:
+            return self.update({"_id": self.chat_id}, {"raid": status})
+
     def set_current_welcome_settings(self, status: bool):
         with INSERTION_LOCK:
             return self.update({"_id": self.chat_id}, {"welcome": status})
@@ -82,6 +94,13 @@ class Greetings(MongoDB):
             return self.update(
                 {"_id": self.chat_id},
                 {"cleanservice": status},
+            )
+
+    def set_autoapprove(self, status: bool):
+        with INSERTION_LOCK:
+            return self.update(
+                {"_id": self.chat_id},
+                {"autoapprove": status},
             )
 
     def set_current_cleanwelcome_settings(self, status: bool):
@@ -126,9 +145,12 @@ class Greetings(MongoDB):
                 "welcome_text": "Hey {first}, welcome to {chatname}!",
                 "welcome": True,
                 "goodbye": True,
+                "raid": False,
+                "autoapprove": False,
             }
             self.insert_one(new_data)
-            LOGGER.info(f"Initialized Greetings Document for chat {self.chat_id}")
+            LOGGER.info(
+                f"Initialized Greetings Document for chat {self.chat_id}")
             return new_data
         return chat_data
 

@@ -1,4 +1,5 @@
 from contextlib import suppress
+from functools import wraps
 from re import compile as compile_re
 from re import escape
 from shlex import split
@@ -10,6 +11,7 @@ from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
+from alita.bot_class import Alita
 from alita.database.disable_db import Disabling
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
@@ -297,6 +299,28 @@ async def can_pin_message_func(_, __, m):
         await m.reply_text("You don't have: can_pin_messages permission!")
 
     return status
+
+
+def pmonly(func):
+    @wraps(func)
+    async def private(c: Alita, m: Message, *args, **kwargs):
+        if m.chat.type != ChatType.PRIVATE:
+            await m.reply_text("This command is made to be used only in PM!")
+            return
+        return await func(c, m, *args, **kwargs)
+
+    return private
+
+
+def chatonly(func):
+    @wraps(func)
+    async def public(c: Alita, m: Message, *args, **kwargs):
+        if m.chat.type != ChatType.SUPERGROUP:
+            await m.reply_text("This command is made to be used only in groups!")
+            return
+        return await func(c, m, *args, **kwargs)
+
+    return public
 
 
 admin_filter = create(admin_check_func)
