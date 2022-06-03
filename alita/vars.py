@@ -26,7 +26,6 @@ class Config:
     SUPPORT_GROUP = config("SUPPORT_GROUP", default="DivideProjectsDiscussion")
     SUPPORT_CHANNEL = config("SUPPORT_CHANNEL", default="DivideProjects")
     ENABLED_LOCALES = [str(i) for i in config("ENABLED_LOCALES", default="en").split()]
-    VERSION = config("VERSION", default="v2.0")
     WORKERS = int(config("WORKERS", default=16))
     BOT_USERNAME = ""
     BOT_ID = ""
@@ -53,5 +52,4 @@ class Development:
     SUPPORT_GROUP = "SUPPORT_GROUP"
     SUPPORT_CHANNEL = "SUPPORT_CHANNEL"
     ENABLED_LOCALES = ["ENABLED_LOCALES"]
-    VERSION = "VERSION"
     WORKERS = 8
