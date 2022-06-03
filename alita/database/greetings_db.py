@@ -9,7 +9,7 @@ INSERTION_LOCK = RLock()
 class Greetings(MongoDB):
     """Class for managing antichannelpins in chats."""
 
-    # Database name to connect to to preform operations
+    # Database name to connect to preform operations
     db_name = "welcome_chats"
 
     def __init__(self, chat_id: int) -> None:

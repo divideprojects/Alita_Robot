@@ -9,7 +9,7 @@ INSERTION_LOCK = RLock()
 class Approve(MongoDB):
     """Class for managing Approves in Chats in Bot."""
 
-    # Database name to connect to to preform operations
+    # Database name to connect to preform operations
     db_name = "approve"
 
     def __init__(self, chat_id: int) -> None:

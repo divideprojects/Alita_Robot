@@ -21,7 +21,7 @@ class Filters(MongoDB):
         fileid="",
     ):
         with INSERTION_LOCK:
-            if curr := self.find_one({"chat_id": chat_id, "keyword": keyword}):
+            if self.find_one({"chat_id": chat_id, "keyword": keyword}):
                 return False
             return self.insert_one(
                 {

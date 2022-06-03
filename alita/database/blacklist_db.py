@@ -10,7 +10,7 @@ INSERTION_LOCK = RLock()
 class Blacklist(MongoDB):
     """Class to manage database for blacklists for chats."""
 
-    # Database name to connect to to preform operations
+    # Database name to connect to preform operations
     db_name = "blacklists"
 
     def __init__(self, chat_id: int) -> None:
@@ -103,7 +103,7 @@ class Blacklist(MongoDB):
     def __ensure_in_db(self):
         chat_data = self.find_one({"_id": self.chat_id})
         if not chat_data:
-            new_data = new_data = {
+            new_data = {
                 "_id": self.chat_id,
                 "triggers": [],
                 "action": "none",
