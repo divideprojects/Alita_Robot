@@ -83,7 +83,6 @@ WORKERS = Config.WORKERS
 
 # Prefixes
 ENABLED_LOCALES = Config.ENABLED_LOCALES
-VERSION = Config.VERSION
 
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime
