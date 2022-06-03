@@ -53,11 +53,6 @@
       "required": true,
       "value": ""
     },
-    "VERSION": {
-      "description": "A Version to be shown in bot.",
-      "required": false,
-      "value": "Stable"
-    },
     "PREFIX_HANDLER": {
       "description": "Something like '/' to execute commands.",
       "required": true,
