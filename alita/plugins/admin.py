@@ -19,7 +19,7 @@ from alita.bot_class import Alita
 from alita.database.approve_db import Approve
 from alita.database.reporting_db import Reporting
 from alita.tr_engine import tlang
-from alita.utils.caching import ADMIN_CACHE, TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload
+from alita.utils.caching import TEMP_ADMIN_CACHE_BLOCK, admin_cache_reload
 from alita.utils.custom_filters import (
     DEV_LEVEL,
     admin_filter,

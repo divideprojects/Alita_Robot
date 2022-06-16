@@ -6,7 +6,6 @@ from gpytranslate import Translator
 from pyrogram import filters
 from pyrogram.errors import MessageTooLong, PeerIdInvalid, RPCError
 from pyrogram.types import Message
-from tswift import Song
 from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
 
@@ -47,10 +46,9 @@ async def wiki(_, m: Message):
     except DisambiguationError as de:
         return await m.reply_text(
             f"Disambiguated pages found! Adjust your query accordingly.\n<i>{de}</i>",
-            parse_mode="html",
         )
     except PageError as pe:
-        return await m.reply_text(f"<code>{pe}</code>", parse_mode="html")
+        return await m.reply_text(f"<code>{pe}</code>")
     if res:
         result = f"<b>{search}</b>\n\n"
         result += f"<i>{res}</i>\n"
@@ -58,7 +56,6 @@ async def wiki(_, m: Message):
         try:
             return await m.reply_text(
                 result,
-                parse_mode="html",
                 disable_web_page_preview=True,
             )
         except MessageTooLong:
@@ -67,7 +64,6 @@ async def wiki(_, m: Message):
                 return await m.reply_document(
                     document=f,
                     quote=True,
-                    parse_mode="html",
                 )
     await m.stop_propagation()
 
@@ -91,43 +87,6 @@ async def gdpr_remove(_, m: Message):
         disable_web_page_preview=True,
     )
     await m.stop_propagation()
-
-
-@Alita.on_message(
-    command("lyrics") & (filters.group | filters.private),
-)
-async def get_lyrics(_, m: Message):
-    if len(m.text.split()) <= 1:
-        await m.reply_text(tlang(m, "general.check_help"))
-        return
-
-    query = m.text.split(None, 1)[1]
-    LOGGER.info(f"{m.from_user.id} used lyrics cmd in {m.chat.id}")
-    song = ""
-    if not query:
-        await m.edit_text(tlang(m, "utils.song.no_song_given"))
-        return
-
-    em = await m.reply_text(
-        (tlang(m, "utils.song.searching").format(song_name=query)),
-    )
-    if song := Song.find_song(query):
-        if song.lyrics:
-            reply = song.format()
-        else:
-            reply = tlang(m, "utils.song.no_lyrics_found")
-    else:
-        reply = tlang(m, "utils.song.song_not_found")
-    try:
-        await em.edit_text(reply)
-    except MessageTooLong:
-        with BytesIO(str.encode(await remove_markdown_and_html(reply))) as f:
-            f.name = "lyrics.txt"
-            await m.reply_document(
-                document=f,
-            )
-        await em.delete()
-    return
 
 
 @Alita.on_message(
@@ -156,7 +115,6 @@ async def id_info(c: Alita, m: Message):
                     fwd_sender=(await mention_html(user1.first_name, user1.id)),
                     fwd_id=f"<code>{user1.id}</code>",
                 ),
-                parse_mode="HTML",
             )
         else:
             try:
@@ -167,7 +125,6 @@ async def id_info(c: Alita, m: Message):
 
             await m.reply_text(
                 f"{(await mention_html(user.first_name, user.id))}'s ID is <code>{user.id}</code>.",
-                parse_mode="HTML",
             )
     elif m.chat.type == "private":
         await m.reply_text(
@@ -192,7 +149,6 @@ async def get_gifid(_, m: Message):
         LOGGER.info(f"{m.from_user.id} used gifid cmd in {m.chat.id}")
         await m.reply_text(
             f"Gif ID:\n<code>{m.reply_to_message.animation.file_id}</code>",
-            parse_mode="html",
         )
     else:
         await m.reply_text(tlang(m, "utils.gif_id.reply_gif"))
@@ -313,7 +269,7 @@ async def my_info(c: Alita, m: Message):
     elif user_id in WHITELIST_USERS:
         text += tlang(m, "utils.user_info.support_user.whitelist")
 
-    await m.reply_text(text, parse_mode="html", disable_web_page_preview=True)
+    await m.reply_text(text, disable_web_page_preview=True)
     return
 
 
@@ -377,7 +333,6 @@ _DISABLE_CMDS_ = [
     "wiki",
     "id",
     "gifid",
-    "lyrics",
     "tr",
     "github",
     "git",

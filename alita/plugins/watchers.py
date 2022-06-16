@@ -25,16 +25,16 @@ gban_db = GBan()
 
 @Alita.on_message(filters.linked_channel)
 async def antichanpin_cleanlinked(c: Alita, m: Message):
+    pins_db = Pins(m.chat.id)
     try:
-        msg_id = m.message_id
-        pins_db = Pins(m.chat.id)
+        msg_id = m.id
         curr = pins_db.get_settings()
         if curr["antichannelpin"]:
             await c.unpin_chat_message(chat_id=m.chat.id, message_id=msg_id)
-            LOGGER.info(f"AntiChannelPin: msgid-{m.message_id} unpinned in {m.chat.id}")
+            LOGGER.info(f"AntiChannelPin: msgid-{m.id} unpinned in {m.chat.id}")
         if curr["cleanlinked"]:
             await c.delete_messages(m.chat.id, msg_id)
-            LOGGER.info(f"CleanLinked: msgid-{m.message_id} cleaned in {m.chat.id}")
+            LOGGER.info(f"CleanLinked: msgid-{m.id} cleaned in {m.chat.id}")
     except ChatAdminRequired:
         await m.reply_text(
             "Disabled antichannelpin as I don't have enough admin rights!",
@@ -57,7 +57,7 @@ async def bl_watcher(_, m: Message):
 
     async def perform_action_blacklist(m: Message, action: str, trigger: str):
         if action == "kick":
-            await m.chat.kick_member(m.from_user.id, int(time() + 45))
+            await m.chat.ban_member(m.from_user.id, int(time() + 45))
             await m.reply_text(
                 tlang(m, "blacklist.bl_watcher.action_kick").format(
                     user=m.from_user.username or f"<b>{m.from_user.first_name}</b>",
@@ -66,7 +66,7 @@ async def bl_watcher(_, m: Message):
 
         elif action == "ban":
             (
-                await m.chat.kick_member(
+                await m.chat.ban_member(
                     m.from_user.id,
                 )
             )
@@ -183,7 +183,7 @@ async def gban_watcher(c: Alita, m: Message):
     if _banned:
         try:
             await m.chat.ban_member(m.from_user.id)
-            await m.delete(m.message_id)  # Delete users message!
+            await m.delete()  # Delete users message!
             await m.reply_text(
                 (tlang(m, "antispam.watcher_banned")).format(
                     user_gbanned=(

@@ -64,5 +64,5 @@ async def get_stats(_, m: Message):
         "<b>Action:</b>\n"
         f"     <b>Del:</b> Applied in <code>{(dsbl.count_action_dis_all('del'))}</code> chats.\n"
     )
-    await replymsg.edit_text(rply, parse_mode="html")
+    await replymsg.edit_text(rply)
     return
