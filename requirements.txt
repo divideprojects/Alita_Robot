@@ -8,7 +8,7 @@ charset-normalizer==2.0.12; python_full_version >= "3.6.0" and python_version >=
 dnspython==2.2.1; python_version >= "3.6" and python_version < "4.0"
 google==3.0.0
 gpytranslate==1.4.0; python_version >= "3.6"
-h11==0.12.0; python_version >= "3.6"
+h11==0.13.0; python_version >= "3.6"
 h2==4.1.0; python_version >= "3.6" and python_full_version >= "3.6.1"
 hpack==4.0.0; python_version >= "3.6" and python_full_version >= "3.6.1"
 httpcore==0.13.7; python_version >= "3.6"
