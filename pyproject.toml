@@ -22,7 +22,7 @@ Pyrogram = "^2.0.25"
 ujson = "^5.4.0"
 regex = "^2022.4.24"
 pymongo = "^4.1.1"
-cachetools = "^5.1.0"
+cachetools = "^5.2.0"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.9.3"
