@@ -4,7 +4,7 @@ asyncio==3.4.3
 beautifulsoup4==4.11.1; python_full_version >= "3.6.0"
 cachetools==5.1.0; python_version >= "3.7" and python_version < "4.0"
 certifi==2022.5.18.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6"
-charset-normalizer==2.1.0; python_full_version >= "3.6.0" and python_version >= "3.6"
+charset-normalizer==2.1.1; python_full_version >= "3.6.0" and python_version >= "3.6"
 dnspython==2.2.1; python_version >= "3.6" and python_version < "4.0"
 google==3.0.0
 gpytranslate==1.4.0; python_version >= "3.6"
