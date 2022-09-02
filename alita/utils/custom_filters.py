@@ -1,13 +1,17 @@
+from contextlib import suppress
+from functools import wraps
 from re import compile as compile_re
 from re import escape
 from shlex import split
 from typing import List, Union
 
+from pyrogram.enums import ChatType, ChatMemberStatus
 from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
+from alita.bot_class import Alita
 from alita.database.disable_db import Disabling
 from alita.tr_engine import tlang
 from alita.utils.caching import ADMIN_CACHE, admin_cache_reload
@@ -28,10 +32,7 @@ def command(
         if not m:
             return
 
-        if m["edit_date"]:
-            return # reaction
-
-        if m["chat"] and m["chat"]["type"] == "channel":
+        if m.chat and m.chat.type == ChatType.CHANNEL:
             return
 
         if not m.from_user:
@@ -66,32 +67,28 @@ def command(
             m.command = [matches.group(1)]
             if matches.group(1) not in flt.commands:
                 return False
-            if m.chat.type == "supergroup":
+            if m.chat.type == ChatType.SUPERGROUP:
                 try:
                     user_status = (await m.chat.get_member(m.from_user.id)).status
                 except UserNotParticipant:
                     # i.e anon admin
-                    user_status = "administrator"
+                    user_status = ChatMemberStatus.ADMINISTRATOR
                 except ValueError:
                     # i.e. PM
-                    user_status = "creator"
-                ddb = Disabling(m["chat"]["id"])
+                    user_status = ChatMemberStatus.OWNER
+                ddb = Disabling(m.chat.id)
                 if str(matches.group(1)) in ddb.get_disabled() and user_status not in (
-                    "creator",
-                    "administrator",
+                    ChatMemberStatus.OWNER,
+                    ChatMemberStatus.ADMINISTRATOR,
                 ):
                     if ddb.get_action() == "del":
-                        try:
+                        with suppress(RPCError):
                             await m.delete()
-                        except RPCError:
-                            pass
                     return
             if matches.group(3) == "":
                 return True
-            try:
+            with suppress(ValueError):
                 m.command.extend(iter(split(matches.group(3))))
-            except ValueError:
-                pass
             return True
         return False
 
@@ -112,7 +109,7 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    if m.chat.type != ChatType.SUPERGROUP:
         return False
 
     # Telegram and GroupAnonyamousBot
@@ -134,7 +131,7 @@ async def bot_admin_check_func(_, __, m: Message or CallbackQuery):
         return True
 
     await m.reply_text(
-        "I am not an admin to recive updates in this group; Mind Promoting?",
+        "I am not an admin to receive updates in this group; Mind Promoting?",
     )
 
     return False
@@ -145,7 +142,7 @@ async def admin_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    if m.chat.type != ChatType.SUPERGROUP:
         return False
 
     # Telegram and GroupAnonyamousBot
@@ -180,7 +177,7 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    if m.chat.type != ChatType.SUPERGROUP:
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -189,11 +186,11 @@ async def owner_check_func(_, __, m: Message or CallbackQuery):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.status == "creator":
+    if user.status == ChatMemberStatus.OWNER:
         status = True
     else:
         status = False
-        if user.status == "administrator":
+        if user.status == ChatMemberStatus.ADMINISTRATOR:
             msg = "You're an admin only, stay in your limits!"
         else:
             msg = "Do you think that you can execute owner commands?"
@@ -207,7 +204,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    if m.chat.type != ChatType.SUPERGROUP:
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -216,7 +213,7 @@ async def restrict_check_func(_, __, m: Message or CallbackQuery):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_restrict_members or user.status == "creator":
+    if user.privileges.can_restrict_members or user.status == ChatMemberStatus.OWNER:
         status = True
     else:
         status = False
@@ -230,7 +227,7 @@ async def promote_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    if m.chat.type != ChatType.SUPERGROUP:
         return False
 
     # Bypass the bot devs, sudos and owner
@@ -239,7 +236,7 @@ async def promote_check_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_promote_members or user.status == "creator":
+    if user.privileges.can_promote_members or user.status == ChatMemberStatus.OWNER:
         status = True
     else:
         status = False
@@ -253,7 +250,7 @@ async def changeinfo_check_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 
@@ -267,7 +264,7 @@ async def changeinfo_check_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_change_info or user.status == "creator":
+    if user.privileges.can_change_info or user.status == ChatMemberStatus.OWNER:
         status = True
     else:
         status = False
@@ -281,7 +278,7 @@ async def can_pin_message_func(_, __, m):
     if isinstance(m, CallbackQuery):
         m = m.message
 
-    if m.chat.type != "supergroup":
+    if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text("This command is made to be used in groups not in pm!")
         return False
 
@@ -295,13 +292,35 @@ async def can_pin_message_func(_, __, m):
 
     user = await m.chat.get_member(m.from_user.id)
 
-    if user.can_pin_messages or user.status == "creator":
+    if user.privileges.can_pin_messages or user.status == ChatMemberStatus.OWNER:
         status = True
     else:
         status = False
         await m.reply_text("You don't have: can_pin_messages permission!")
 
     return status
+
+
+def pmonly(func):
+    @wraps(func)
+    async def private(c: Alita, m: Message, *args, **kwargs):
+        if m.chat.type != ChatType.PRIVATE:
+            await m.reply_text("This command is made to be used only in PM!")
+            return
+        return await func(c, m, *args, **kwargs)
+
+    return private
+
+
+def chatonly(func):
+    @wraps(func)
+    async def public(c: Alita, m: Message, *args, **kwargs):
+        if m.chat.type != ChatType.SUPERGROUP:
+            await m.reply_text("This command is made to be used only in groups!")
+            return
+        return await func(c, m, *args, **kwargs)
+
+    return public
 
 
 admin_filter = create(admin_check_func)

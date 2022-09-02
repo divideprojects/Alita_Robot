@@ -10,7 +10,7 @@ from traceback import format_exc
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
 
-# Make Logs directory if it does not exixts
+# Make Logs directory if it does not exits
 if not path.isdir(LOGDIR):
     mkdir(LOGDIR)
 
@@ -52,8 +52,7 @@ except Exception as ef:
 LOGGER.info("------------------------")
 LOGGER.info("|      Alita_Robot     |")
 LOGGER.info("------------------------")
-LOGGER.info(f"Version: {Config.VERSION}")
-LOGGER.info(f"Owner: {str(Config.OWNER_ID)}")
+LOGGER.info(f"Owner: {Config.OWNER_ID}")
 LOGGER.info("Source Code: https://github.com/DivideProjects/Alita_Robot\n")
 
 # Account Related
@@ -83,7 +82,6 @@ WORKERS = Config.WORKERS
 
 # Prefixes
 ENABLED_LOCALES = Config.ENABLED_LOCALES
-VERSION = Config.VERSION
 
 HELP_COMMANDS = {}  # For help menu
 UPTIME = time()  # Check bot uptime

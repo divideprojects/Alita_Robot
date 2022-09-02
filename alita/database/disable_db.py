@@ -26,7 +26,10 @@ class Disabling(MongoDB):
             except KeyError:
                 cmds = self.chat_info["commands"]
                 act = self.chat_info["action"]
-                DISABLED_CMDS[self.chat_id] = {"command": cmds or [], "action": act or "none"}
+                DISABLED_CMDS[self.chat_id] = {
+                    "command": cmds or [],
+                    "action": act or "none",
+                }
             # return bool(cmd in cmds)
             return bool(cmd in cmds if cmds else [])
 
@@ -89,10 +92,7 @@ class Disabling(MongoDB):
                 DISABLED_CMDS[self.chat_id] = {"commands": cmds or [], "action": action}
             return self.update(
                 {"_id": self.chat_id},
-                {
-                    "_id": self.chat_id,
-                    "action": action
-                },
+                {"_id": self.chat_id, "action": action},
             )
 
     def get_action(self):
@@ -137,13 +137,9 @@ class Disabling(MongoDB):
                     "commands": [],
                     "action": "none",
                 }
-                DISABLED_CMDS[self.chat_id] = {
-                    "commands": [],
-                    "action": "none"
-                }
+                DISABLED_CMDS[self.chat_id] = {"commands": [], "action": "none"}
                 self.insert_one(new_data)
-                LOGGER.info(
-                    f"Initialized Disabling Document for chat {self.chat_id}")
+                LOGGER.info(f"Initialized Disabling Document for chat {self.chat_id}")
                 return new_data
             DISABLED_CMDS[self.chat_id] = chat_data
         return chat_data

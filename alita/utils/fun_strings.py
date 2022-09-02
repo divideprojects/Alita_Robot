@@ -6,7 +6,7 @@ RUN_STRINGS = (
     "You've got company!",
     "Chotto matte!",
     "Yare yare daze",
-    "Hey take responsibilty for what you just did!",
+    "Hey take responsibility for what you just did!",
     "May the odds be ever in your favour.",
     "Run everyone, they just dropped a bomb 💣💣",
     "And they disappeared forever, never to be seen again.",

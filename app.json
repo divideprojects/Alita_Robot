@@ -10,7 +10,7 @@
     "alita_robot"
   ],
   "repository": "https://github.com/DivideProjects/Alita_Robot",
-  "website": "https://t.me/DivideProjects",
+  "website": "https://divideprojects.com",
   "success_url": "https://t.me/DivideProjects",
   "env": {
     "BOT_TOKEN": {
@@ -21,27 +21,27 @@
     "APP_ID": {
       "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
       "required": true,
-      "value": "12345"
+      "value": ""
     },
     "API_HASH": {
       "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
       "required": true,
-      "value": "testinghash123"
+      "value": ""
     },
     "DB_URI": {
       "description": "Your MongoDB connection string.",
       "required": true,
-      "value": "put it here"
+      "value": ""
     },
     "DB_NAME": {
       "description": "Your MongoDB database name.",
       "required": true,
-      "value": "alita_robot"
+      "value": "alita"
     },
     "OWNER_ID": {
       "description": "Your user ID as an integer.",
       "required": true,
-      "value": "1198820588"
+      "value": ""
     },
     "SUPPORT_GROUP": {
       "description": "Your Telegram support group chat username where user's can contact in case of a problem..",
@@ -49,14 +49,9 @@
       "value": "DivideProjects"
     },
     "MESSAGE_DUMP": {
-      "description": "Event logs channel where bot will send updates.",
+      "description": "Event logs channel where bot will send updates. Starts with -100",
       "required": true,
-      "value": "-100123456798"
-    },
-    "VERSION": {
-      "description": "A Version to be shown in bot.",
-      "required": false,
-      "value": "Stable"
+      "value": ""
     },
     "PREFIX_HANDLER": {
       "description": "Something like '/' to execute commands.",

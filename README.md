@@ -17,13 +17,6 @@
   <a href="https://makeapullrequest.com" alt="PRs Welcome"> <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /> </a>
 </p>
 
-<p align='center'>
- <a href="https://heroku.com/deploy?template=https://github.com/DivideProjects/Alita_Robot"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy on Heroku"></a></br></br>
-  <a href="https://t.me/DivideProjects"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&amp;logo=telegram&amp;logoColor=white" alt="Join us on Telegram"></a></br></br>
-
-</p>
-
-
 Alita is a Telegram Group managment bot made using **[Pyrogram](https://github.com/pyrogram/pyrogram) _async version_** and **[Python](https://python.org)**, which makes it modern and faster than most of the exisitng Telegram Chat Managers.
 
 **Alita's features over other bots:**
@@ -62,9 +55,12 @@ It really motivates me to continue this project further.
 - Get your `API_ID` and `API_HASH` from [here](https://my.telegram.org/)
 - Get your Bot Token from [@BotFather](https://t.me/BotFather)
 
-**Note:** By default the bot uses the default heroku-20 stack.
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/DivideProjects/Alita_Robot)
+**Note:** As it is banned with an unknown reason in heroku, follow the below steps carefully!
+- First Fork this repo :)
+- secondly, create an empty app in the Heroku, with a custom app name; and select Europe region for faster speed.
+- Now go to the deploy tab of your app and under deployment method select GitHub and connect it.
+- after that, type the forked repo name and select it now select main branch and enable auto deploy, at last click on deploy now button!
+- Lastly, you must fill up all the vars in heroku as directed in app.json file and now turn on the worker dyno to run it :)
 
 ### Traditional
 

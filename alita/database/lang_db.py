@@ -6,7 +6,7 @@ from alita.database import MongoDB
 
 INSERTION_LOCK = RLock()
 
-# Locall cache languages for users!!
+# Local cache languages for users!!
 LANG_CACHE = {}
 
 
