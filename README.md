@@ -108,4 +108,4 @@ If all works well, bot should send message to the **MESSAGE_DUMP** Group!
 
 ## Powered By
 
-[![DivideProjects](https://img.shields.io/badge/Divide-Projects-green?style=for-the-badge&logo=appveyor)](https://t.me/DivideProjectsDiscussion)
+[![DivideProjects](https://img.shields.io/badge/Divide-Projects-green?style=for-the-badge&logo=appveyor)](https://t.me/DivideSupport)
