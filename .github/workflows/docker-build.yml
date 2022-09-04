@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - Dockerfile
-      - docker-entrypoint.sh
-      - .github/workflows/docker-build.yml
   workflow_dispatch:
 
 jobs:
