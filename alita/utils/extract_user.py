@@ -10,10 +10,17 @@ from alita.database.users_db import Users
 
 
 async def extract_user(
-    c: Alita, m: Message
+    c: Alita,
+    m: Message,
 ) -> tuple[Any | None, Any | None, Any | None] | tuple[
-        int | str, Any | None, Any | None] | tuple[None, None, None] | tuple[
-            int | None | str | Any, int | None | str | Any, str | None | Any]:
+    int | str,
+    Any | None,
+    Any | None,
+] | tuple[None, None, None] | tuple[
+    int | None | str | Any,
+    int | None | str | Any,
+    str | None | Any,
+]:
     """Extract the user from the provided message."""
     user_id = None
     user_first_name = None
@@ -37,12 +44,15 @@ async def extract_user(
                 user_first_name = required_entity.user.first_name
                 user_name = required_entity.user.username
             elif required_entity.type in (
-                    MessageEntityType.MENTION,
-                    MessageEntityType.PHONE_NUMBER,
+                MessageEntityType.MENTION,
+                MessageEntityType.PHONE_NUMBER,
             ):
                 # new long user ids are identified as phone_number
-                user_found = m.text[required_entity.offset:(
-                    required_entity.offset + required_entity.length)]
+                user_found = m.text[
+                    required_entity.offset : (
+                        required_entity.offset + required_entity.length
+                    )
+                ]
                 try:
                     user_found = int(user_found)
                 except (AttributeError, ValueError, TypeError) as ef:
@@ -75,8 +85,11 @@ async def extract_user(
                 user_id = int(m.text.split()[1])
             except (AttributeError, ValueError, TypeError) as ef:
                 if "invalid literal for int() with base 10:" in str(ef):
-                    user_id = (str(m.text.split()[1]) if
-                               (m.text.split()[1]).startswith("@") else None)
+                    user_id = (
+                        str(m.text.split()[1])
+                        if (m.text.split()[1]).startswith("@")
+                        else None
+                    )
                 else:
                     user_id = m.text.split()[1]
                     LOGGER.error(ef)

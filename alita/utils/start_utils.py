@@ -36,7 +36,7 @@ async def gen_cmds_kb(m: Message or CallbackQuery):
         for cmd in cmds
     ]
 
-    return [kb[i: i + 3] for i in range(0, len(kb), 3)]
+    return [kb[i : i + 3] for i in range(0, len(kb), 3)]
 
 
 async def gen_start_kb(q: Message or CallbackQuery):
@@ -68,6 +68,7 @@ async def gen_start_kb(q: Message or CallbackQuery):
 async def get_private_note(c: Alita, m: Message, help_option: str):
     """Get the note in pm of user, with parsing enabled."""
     from alita.vars import Config
+
     # Initialize
     notes_db = Notes()
 
@@ -147,16 +148,14 @@ async def get_private_note(c: Alita, m: Message, help_option: str):
         "id",
         "chatname",
     )
-    texti = await escape_mentions_using_curly_brackets(
-        m, note_replu, parse_words
-    )
+    texti = await escape_mentions_using_curly_brackets(m, note_replu, parse_words)
     pre = "{preview}" not in texti
     pro = "{protect}" in texti
 
     textt, butto = await parse_button(
         texti.replace("{preview}", "")
-            .replace("{private}", "")
-            .replace("{protect}", "")
+        .replace("{private}", "")
+        .replace("{protect}", ""),
     )
     buttn = await build_keyboard(butto)
     button = InlineKeyboardMarkup(buttn) if buttn else None
@@ -238,13 +237,13 @@ async def get_help_msg(m: Message or CallbackQuery, help_option: str):
             for i in HELP_COMMANDS
             if help_option in HELP_COMMANDS[i]["alt_cmds"]
         ) + [
-                      [
-                          InlineKeyboardButton(
-                              "« " + (tlang(m, "general.back_btn")),
-                              callback_data="commands",
-                          ),
-                      ],
-                  ]
+            [
+                InlineKeyboardButton(
+                    "« " + (tlang(m, "general.back_btn")),
+                    callback_data="commands",
+                ),
+            ],
+        ]
         help_msg = (
             f"**{(tlang(m, (help_option_name['help_msg']).replace('.help', '.main')))}:**\n\n"
             + tlang(m, help_option_value)

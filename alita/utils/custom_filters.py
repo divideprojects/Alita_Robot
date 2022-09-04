@@ -5,7 +5,7 @@ from re import escape
 from shlex import split
 from typing import List, Union
 
-from pyrogram.enums import ChatType, ChatMemberStatus
+from pyrogram.enums import ChatMemberStatus, ChatType
 from pyrogram.errors import RPCError, UserNotParticipant
 from pyrogram.filters import create
 from pyrogram.types import CallbackQuery, Message
