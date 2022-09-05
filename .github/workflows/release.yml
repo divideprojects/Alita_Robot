@@ -130,7 +130,7 @@ jobs:
           tag_name: ${{ needs.docker-build.outputs.BUILD_VER }}
           body: |-
            ${{ github.event.repository.name }} ${{ needs.docker-build.outputs.BUILD_VER }}
-            
+
             Docker Images:
             `ghcr.io/${{ github.repository_owner }}/${{ env.ProjectName }}:${{ needs.docker-build.outputs.BUILD_VER }}`
             `docker.io/${{ github.repository_owner }}/${{ env.ProjectName }}:${{ needs.docker-build.outputs.BUILD_VER }}`
