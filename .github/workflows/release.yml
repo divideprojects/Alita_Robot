@@ -132,5 +132,5 @@ jobs:
            ${{ github.event.repository.name }} ${{ needs.docker-build.outputs.BUILD_VER }}
             
             Docker Images:
-            `ghcr.io/divideprojects/${{ env.ProjectName }}:${{ needs.docker-build.outputs.BUILD_VER }}`
-            `docker.io/divideprojects/${{ env.ProjectName }}:${{ needs.docker-build.outputs.BUILD_VER }}`
+            `ghcr.io/${{ github.repository_owner }}/${{ env.ProjectName }}:${{ needs.docker-build.outputs.BUILD_VER }}`
+            `docker.io/${{ github.repository_owner }}/${{ env.ProjectName }}:${{ needs.docker-build.outputs.BUILD_VER }}`
