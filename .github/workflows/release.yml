@@ -103,7 +103,7 @@ jobs:
   # update description of the docker image on docker hub
   update-dockerhub-description:
     name: Update Description
-    needs: create-tag
+    needs: docker-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
