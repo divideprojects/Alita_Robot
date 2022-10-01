@@ -154,5 +154,5 @@ async def enablealll(_, q: CallbackQuery):
     db = Disabling(q.message.chat.id)
     db.rm_all_disabled()
     LOGGER.info(f"{user_id} enabled all in {q.message.chat.id}")
-    await q.message.edit_text("Enabled all!", show_alert=True)
+    await q.message.edit_text("Enabled all!")
     return

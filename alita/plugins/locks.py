@@ -175,7 +175,7 @@ async def view_locks(_, m: Message):
 
         except RPCError as e_f:
             await chkmsg.edit_text(tlang(m, "general.something_wrong"))
-            await m.reply_text(e_f)
+            await m.reply_text(str(e_f))
     return
 
 

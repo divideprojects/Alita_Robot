@@ -11,9 +11,9 @@ from alita.utils.parser import mention_html
 async def botstaff(c: Alita, m: Message):
     try:
         owner = await c.get_users(OWNER_ID)
-        reply = f"<b>🌟 Owner:</b> {(await mention_html(owner.first_name, OWNER_ID))} (<code>{OWNER_ID}</code>)\n"
     except RPCError:
         pass
+    reply = f"<b>🌟 Owner:</b> {(await mention_html(owner.first_name, OWNER_ID))} (<code>{OWNER_ID}</code>)\n"
     true_dev = list(set(DEV_USERS) - {OWNER_ID})
     reply += "\n<b>Developers ⚡️:</b>\n"
     if not true_dev:
@@ -39,7 +39,7 @@ async def botstaff(c: Alita, m: Message):
             except RPCError:
                 pass
     reply += "\n<b>Whitelisted Users 🐺:</b>\n"
-    if WHITELIST_USERS == []:
+    if not WHITELIST_USERS:
         reply += "No additional whitelisted users\n"
     else:
         for each_user in WHITELIST_USERS:

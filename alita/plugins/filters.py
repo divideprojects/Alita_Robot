@@ -252,7 +252,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
                 m.chat.id,
                 getfilter["fileid"],
                 reply_markup=button,
-                reply_to_message_id=m.message_id,
+                reply_to_message_id=m.id,
             )
         else:
             await (await send_cmd(c, msgtype))(
@@ -260,7 +260,7 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
                 getfilter["fileid"],
                 caption=textt,
                 reply_markup=button,
-                reply_to_message_id=m.message_id,
+                reply_to_message_id=m.id,
             )
     except Exception as ef:
         await m.reply_text(f"Error in filters: {ef}")

@@ -58,7 +58,7 @@ async def tmute_usr(c: Alita, m: Message):
         await m.reply_text(tlang(m, "admin.mute.admin_cannot_mute"))
         return
 
-    r_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+    r_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     if m.reply_to_message and len(m.text.split()) >= 2:
         reason = m.text.split(None, 2)[1]
@@ -133,7 +133,6 @@ async def dtmute_usr(c: Alita, m: Message):
     if not m.reply_to_message:
         return await m.reply_text("No replied message and user to delete and mute!")
 
-    reason = None
     user_id = m.reply_to_message.from_user.id
     user_first_name = m.reply_to_message.from_user.first_name
 
@@ -315,11 +314,11 @@ async def mute_usr(c: Alita, m: Message):
 
     reason = None
     if m.reply_to_message:
-        r_id = m.reply_to_message.message_id
+        r_id = m.reply_to_message.id
         if len(m.text.split()) >= 2:
             reason = m.text.split(None, 1)[1]
     else:
-        r_id = m.message_id
+        r_id = m.id
         if len(m.text.split()) >= 3:
             reason = m.text.split(None, 2)[2]
     try:
@@ -578,7 +577,7 @@ async def unmutebutton(c: Alita, q: CallbackQuery):
     user_id = int(splitter[1])
     user = await q.message.chat.get_member(q.from_user.id)
 
-    if not user.can_restrict_members and user.id != OWNER_ID:
+    if not user.privileges.can_restrict_members and user.user.id != OWNER_ID:
         await q.answer(
             "You don't have enough permission to do this!\nStay in your limits!",
             show_alert=True,

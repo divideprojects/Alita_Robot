@@ -45,8 +45,6 @@ async def send_log(c: Alita, m: Message):
         f"#LOGS\n\n**User:** {(await mention_markdown(m.from_user.first_name, m.from_user.id))}",
     )
     # Send logs
-    with open(LOGFILE) as f:
-        raw = (await (f.read()))[1]
     await m.reply_document(
         document=LOGFILE,
         quote=True,
@@ -69,10 +67,10 @@ async def group_info(c: Alita, m: Message):
     grp_data = await c.get_chat(chat_id)
     msg = (
         f"Information for group: {chat_id}\n\n"
-        f"Group Name: {grp_data['title']}\n"
-        f"Members Count: {grp_data['members_count']}\n"
-        f"Type: {grp_data['type']}\n"
-        f"Group ID: {grp_data['id']}"
+        f"Group Name: {grp_data.title}\n"
+        f"Members Count: {grp_data.members_count}\n"
+        f"Type: {grp_data.type}\n"
+        f"Group ID: {grp_data.id}"
     )
     await replymsg.edit_text(msg)
     return
@@ -135,9 +133,9 @@ async def evaluate_code(c: Alita, m: Message):
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(None, maxsplit=1)[1]
 
-    reply_to_id = m.message_id
+    reply_to_id = m.id
     if m.reply_to_message:
-        reply_to_id = m.reply_to_message.message_id
+        reply_to_id = m.reply_to_message.id
 
     old_stderr = sys.stderr
     old_stdout = sys.stdout
@@ -196,9 +194,9 @@ async def execution(_, m: Message):
         return
     sm = await m.reply_text("`Processing...`")
     cmd = m.text.split(maxsplit=1)[1]
-    reply_to_id = m.message_id
+    reply_to_id = m.id
     if m.reply_to_message:
-        reply_to_id = m.reply_to_message.message_id
+        reply_to_id = m.reply_to_message.id
 
     process = await create_subprocess_shell(
         cmd,
@@ -277,7 +275,7 @@ async def chats(c: Alita, m: Message):
         except FloodWait as ef:
             LOGGER.error("FloodWait required, Sleeping for 60s")
             LOGGER.error(ef)
-            sleep(60)
+            await sleep(60)
         except RPCError as ef:
             LOGGER.error(ef)
             await m.reply_text(f"**Error:**\n{ef}")
@@ -302,7 +300,7 @@ async def uptime(_, m: Message):
 @Alita.on_message(command("leavechat", dev_cmd=True))
 async def leave_chat(c: Alita, m: Message):
     if len(m.text.split()) != 2:
-        await m.reply_text("Supply a chat id which I should leave!", quoet=True)
+        await m.reply_text("Supply a chat id which I should leave!")
         return
 
     chat_id = m.text.split(None, 1)[1]

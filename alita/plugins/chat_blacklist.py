@@ -50,7 +50,7 @@ async def unblacklist_chat(c: Alita, m: Message):
                 get_chat = await c.get_chat(chat)
                 chat_id = get_chat.id
                 if chat_id not in bl_chats:
-                    # If chat is not blaklisted, continue loop
+                    # If chat is not blacklisted, continue loop
                     continue
                 db.remove_chat(chat_id)
             except PeerIdInvalid:

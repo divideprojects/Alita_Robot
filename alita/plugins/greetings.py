@@ -307,7 +307,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
             disable_web_page_preview=True,
         )
         if jj:
-            db.set_cleanwlcm_id(int(jj.message_id))
+            db.set_cleanwlcm_id(jj.id)
     except RPCError as e:
         print(e)
         return
@@ -370,7 +370,7 @@ async def member_has_left(c: Alita, member: ChatMemberUpdated):
             disable_web_page_preview=True,
         )
         if ooo:
-            db.set_cleangoodbye_id(int(ooo.message_id))
+            db.set_cleangoodbye_id(ooo.id)
         return
     except RPCError as e:
         print(e)

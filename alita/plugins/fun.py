@@ -3,6 +3,7 @@ from secrets import choice
 
 from pyrogram.errors import MessageTooLong
 from pyrogram.types import Message
+from pyrogram.enums import ParseMode
 
 from alita import LOGGER
 from alita.bot_class import Alita
@@ -31,7 +32,7 @@ async def fun_shout(_, m: Message):
         result[0] = text[0]
         result = "".join(result)
         msg = "```\n" + result + "```"
-        await m.reply_text(msg, parse_mode="markdown")
+        await m.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
         LOGGER.info(f"{m.from_user.id} shouted in {m.chat.id}")
         return
     except MessageTooLong as e:
@@ -84,7 +85,7 @@ async def fun_slap(c: Alita, m: Message):
 @Alita.on_message(command("roll"))
 async def fun_roll(_, m: Message):
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    await reply_text(choice(range(1, 7)))
+    await reply_text(str(choice(range(1, 7))))
     LOGGER.info(f"{m.from_user.id} roll in {m.chat.id}")
     return
 

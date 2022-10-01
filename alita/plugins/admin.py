@@ -12,7 +12,7 @@ from pyrogram.errors import (
     RPCError,
     UserAdminInvalid,
 )
-from pyrogram.types import Message
+from pyrogram.types import Message, ChatPrivileges
 
 from alita import DEV_USERS, LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -187,7 +187,7 @@ async def fullpromote_usr(c: Alita, m: Message):
         await m.reply_text("Huh, how can I even promote myself?")
         return
 
-    if not bot.can_promote_members:
+    if not bot.privileges.can_promote_members:
         return await m.reply_text(
             "I don't have enough permissions!",
         )  # This should be here
@@ -195,7 +195,7 @@ async def fullpromote_usr(c: Alita, m: Message):
     user = await c.get_chat_member(m.chat.id, m.from_user.id)
     if m.from_user.id not in [DEV_USERS, OWNER_ID] and user.status != "creator":
         return await m.reply_text("This command can only be used by chat owner.")
-    # If user is alreay admin
+    # If user is already admin
     try:
         admin_list = {i[0] for i in ADMIN_CACHE[m.chat.id]}
     except KeyError:
@@ -210,18 +210,7 @@ async def fullpromote_usr(c: Alita, m: Message):
         return
 
     try:
-        await m.chat.promote_member(
-            user_id=user_id,
-            can_change_info=bot.can_change_info,
-            can_invite_users=bot.can_invite_users,
-            can_delete_messages=bot.can_delete_messages,
-            can_restrict_members=bot.can_restrict_members,
-            can_pin_messages=bot.can_pin_messages,
-            can_promote_members=bot.can_promote_members,
-            can_manage_chat=bot.can_manage_chat,
-            can_manage_voice_chats=bot.can_manage_voice_chats,
-        )
-
+        await m.chat.promote_member(user_id=user_id, privileges=bot.privileges)
         title = ""
         if len(m.text.split()) == 3 and not m.reply_to_message:
             title = m.text.split()[2]
@@ -317,16 +306,7 @@ async def promote_usr(c: Alita, m: Message):
         return
 
     try:
-        await m.chat.promote_member(
-            user_id=user_id,
-            can_change_info=bot.can_change_info,
-            can_invite_users=bot.can_invite_users,
-            can_delete_messages=bot.can_delete_messages,
-            can_restrict_members=bot.can_restrict_members,
-            can_pin_messages=bot.can_pin_messages,
-            can_manage_chat=bot.can_manage_chat,
-            can_manage_voice_chats=bot.can_manage_voice_chats,
-        )
+        await m.chat.promote_member(user_id=user_id, privileges=bot.privileges)
 
         title = ""  # Default title
         if len(m.text.split()) == 3 and not m.reply_to_message:
@@ -420,16 +400,7 @@ async def demote_usr(c: Alita, m: Message):
 
     try:
         await m.chat.promote_member(
-            user_id=user_id,
-            can_change_info=False,
-            can_invite_users=False,
-            can_delete_messages=False,
-            can_restrict_members=False,
-            can_pin_messages=False,
-            can_promote_members=False,
-            can_manage_chat=False,
-            can_manage_voice_chats=False,
-        )
+            user_id=user_id, privileges=ChatPrivileges(can_manage_chat=False))
         LOGGER.info(f"{m.from_user.id} demoted {user_id} in {m.chat.id}")
 
         # ----- Remove admin from cache -----
