@@ -1,5 +1,6 @@
 from pyrogram import filters
 from pyrogram.errors import MessageNotModified, QueryIdInvalid, UserIsBlocked
+from pyrogram.enums import ParseMode, ChatType, ChatMemberStatus
 from pyrogram.types import CallbackQuery, Message
 
 from alita import HELP_COMMANDS, LOGGER
@@ -30,13 +31,13 @@ async def donate(_, m: Message):
 async def close_admin_callback(_, q: CallbackQuery):
     user_id = q.from_user.id
     user_status = (await q.message.chat.get_member(user_id)).status
-    if user_status not in {"creator", "administrator"}:
+    if user_status not in {ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR}:
         await q.answer(
             "You're not even an admin, don't try this explosive shit!",
             show_alert=True,
         )
         return
-    if user_status != "creator":
+    if user_status != ChatMemberStatus.OWNER:
         await q.answer(
             "You're just an admin, not owner\nStay in your limits!",
             show_alert=True,
@@ -51,7 +52,7 @@ async def close_admin_callback(_, q: CallbackQuery):
     command("start") & (filters.group | filters.private),
 )
 async def start(c: Alita, m: Message):
-    if m.chat.type == "private":
+    if m.chat.type == ChatType.PRIVATE:
         if len(m.text.split()) > 1:
             help_option = (m.text.split(None, 1)[1]).lower()
 
@@ -72,7 +73,7 @@ async def start(c: Alita, m: Message):
 
             await m.reply_text(
                 help_msg,
-                parse_mode="markdown",
+                parse_mode=ParseMode.MARKDOWN,
                 reply_markup=ikb(help_kb),
                 quote=True,
                 disable_web_page_preview=True,
@@ -146,10 +147,10 @@ async def help_menu(_, m: Message):
         LOGGER.info(
             f"{m.from_user.id} fetched help for '{help_option}' text in {m.chat.id}",
         )
-        if m.chat.type == "private":
+        if m.chat.type == ChatType.PRIVATE:
             await m.reply_text(
                 help_msg,
-                parse_mode="markdown",
+                parse_mode=ParseMode.MARKDOWN,
                 reply_markup=ikb(help_kb),
                 quote=True,
                 disable_web_page_preview=True,
@@ -170,7 +171,7 @@ async def help_menu(_, m: Message):
                 ),
             )
     else:
-        if m.chat.type == "private":
+        if m.chat.type == ChatType.PRIVATE:
             keyboard = ikb(
                 [
                     *(await gen_cmds_kb(m)),
@@ -206,7 +207,7 @@ async def get_module_info(_, q: CallbackQuery):
     ]
     await q.message.edit_text(
         help_msg,
-        parse_mode="markdown",
+        parse_mode=ParseMode.MARKDOWN,
         reply_markup=ikb(help_kb),
     )
     await q.answer()
