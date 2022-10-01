@@ -3,8 +3,8 @@ from pyrogram.types import CallbackQuery, Message
 
 from alita import DEV_USERS, OWNER_ID, SUDO_USERS
 
-SUDO_LEVEL = SUDO_USERS + DEV_USERS + [int(OWNER_ID)]
-DEV_LEVEL = DEV_USERS + [int(OWNER_ID)]
+SUDO_LEVEL = SUDO_USERS + DEV_USERS + [OWNER_ID]
+DEV_LEVEL = DEV_USERS + [OWNER_ID]
 admin_strings = (ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR)
 
 

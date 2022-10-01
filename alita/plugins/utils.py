@@ -160,7 +160,7 @@ async def get_gifid(_, m: Message):
 )
 async def github(_, m: Message):
     if len(m.text.split()) == 2:
-        username = m.text.split(None, 1)[1]
+        username = m.text.split(maxsplit=1)[1]
         LOGGER.info(f"{m.from_user.id} used github cmd in {m.chat.id}")
     else:
         await m.reply_text(
@@ -222,12 +222,12 @@ async def my_info(c: Alita, m: Message):
         LOGGER.warning(f"Calling api to fetch info about user {user_id}")
         user = await c.get_users(user_id)
         name = (
-            escape(user["first_name"] + " " + user["last_name"])
-            if user["last_name"]
-            else user["first_name"]
+            escape(user.first_name + " " + user.last_name)
+            if user.last_name
+            else user.first_name
         )
-        user_name = user["username"]
-        user_id = user["id"]
+        user_name = user.username
+        user_id = user.id
     except PeerIdInvalid:
         await m.reply_text(tlang(m, "utils.no_user_db"))
         return

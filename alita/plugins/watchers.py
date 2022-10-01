@@ -211,7 +211,7 @@ async def gban_watcher(c: Alita, m: Message):
     return
 
 
-@Alita.on_message(filters.chat(BLACKLIST_CHATS))
+@Alita.on_message(filters.chat(BLACKLIST_CHATS) & filters.new_chat_members)
 async def bl_chats_watcher(c: Alita, m: Message):
     from alita import SUPPORT_GROUP
 

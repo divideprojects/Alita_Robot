@@ -22,5 +22,5 @@ async def mention_html(name: str, user_id: int) -> str:
 
 
 async def mention_markdown(name: str, user_id: int) -> str:
-    """Mention user in markdown format."""
+    """Mention user in Markdown format."""
     return f"[{(await escape_markdown(name))}](tg://user?id={user_id})"
