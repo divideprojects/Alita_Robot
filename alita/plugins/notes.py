@@ -3,6 +3,7 @@ from traceback import format_exc
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
+from pyrogram.enums import ChatMemberStatus
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 
 from alita import LOGGER
@@ -71,7 +72,7 @@ async def save_note(_, m: Message):
 async def get_note_func(c: Alita, m: Message, note_name, priv_notes_status):
     """Get the note in normal mode, with parsing enabled."""
     reply_text = m.reply_to_message.reply_text if m.reply_to_message else m.reply_text
-    reply_msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+    reply_msg_id = m.reply_to_message.id if m.reply_to_message else m.id
     if m and not m.from_user:
         return
 
@@ -209,7 +210,7 @@ async def get_raw_note(c: Alita, m: Message, note: str):
         return
 
     getnotes = db.get_note(m.chat.id, note)
-    msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+    msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     msgtype = getnotes["msgtype"]
     if not getnotes:
@@ -307,11 +308,11 @@ async def priv_notes(_, m: Message):
         await m.reply_text(msg)
     elif len(m.text.split()) == 1:
         curr_pref = db_settings.get_privatenotes(m.chat.id)
-        msg = msg = f"Private Notes: {curr_pref}"
+        msg = f"Private Notes: {curr_pref}"
         LOGGER.info(f"{m.from_user.id} fetched privatenotes preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
-        await m.replt_text("Check help on how to use this command!")
+        await m.reply_text("Check help on how to use this command!")
 
     return
 
@@ -325,9 +326,9 @@ async def local_notes(_, m: Message):
         await m.reply_text(f"There are no notes in <b>{m.chat.title}</b>.")
         return
 
-    msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+    msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
-    if curr_pref := db_settings.get_privatenotes(m.chat.id):
+    if db_settings.get_privatenotes(m.chat.id):
         pm_kb = ikb(
             [
                 [
@@ -394,13 +395,13 @@ async def clear_allnote(_, m: Message):
 async def clearallnotes_callback(_, q: CallbackQuery):
     user_id = q.from_user.id
     user_status = (await q.message.chat.get_member(user_id)).status
-    if user_status not in {"creator", "administrator"}:
+    if user_status not in {ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR}:
         await q.answer(
             "You're not even an admin, don't try this explosive shit!",
             show_alert=True,
         )
         return
-    if user_status != "creator":
+    if user_status != ChatMemberStatus.OWNER:
         await q.answer(
             "You're just an admin, not owner\nStay in your limits!",
             show_alert=True,

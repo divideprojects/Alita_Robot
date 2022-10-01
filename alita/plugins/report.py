@@ -3,10 +3,12 @@ from traceback import format_exc
 from pyrogram import filters
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
+from pyrogram.enums import ChatType
 
 from alita import LOGGER, SUPPORT_STAFF
 from alita.bot_class import Alita
 from alita.database.reporting_db import Reporting
+from alita.utils.caching import ADMIN_CACHE
 from alita.utils.custom_filters import admin_filter, command
 from alita.utils.kbhelpers import ikb
 from alita.utils.parser import mention_html
@@ -19,7 +21,7 @@ async def report_setting(_, m: Message):
     args = m.text.split()
     db = Reporting(m.chat.id)
 
-    if m.chat.type == "private":
+    if m.chat.type == ChatType.PRIVATE:
         if len(args) >= 2:
             option = args[1].lower()
             if option in ("yes", "on", "true"):
@@ -63,7 +65,7 @@ async def report_setting(_, m: Message):
 
 @Alita.on_message(command("report") & filters.group)
 async def report_watcher(c: Alita, m: Message):
-    if m.chat.type != "supergroup":
+    if m.chat.type != ChatType.SUPERGROUP:
         return
 
     if not m.from_user:
@@ -73,10 +75,10 @@ async def report_watcher(c: Alita, m: Message):
     db = Reporting(m.chat.id)
 
     if (m.chat and m.reply_to_message) and (db.get_settings()):
-        reported_msg_id = m.reply_to_message.message_id
+        reported_msg_id = m.reply_to_message.id
         reported_user = m.reply_to_message.from_user
         chat_name = m.chat.title or m.chat.username
-        admin_list = await c.get_chat_members(m.chat.id, filter="administrators")
+        admin_list = ADMIN_CACHE[m.chat.id]
 
         if reported_user.id == me.id:
             await m.reply_text("Nice try.")
@@ -122,7 +124,7 @@ async def report_watcher(c: Alita, m: Message):
         )
 
         LOGGER.info(
-            f"{m.from_user.id} reported msgid-{m.reply_to_message.message_id} to admins in {m.chat.id}",
+            f"{m.from_user.id} reported msgid-{m.reply_to_message.id} to admins in {m.chat.id}",
         )
         await m.reply_text(
             (
@@ -151,12 +153,12 @@ async def report_watcher(c: Alita, m: Message):
                             await m.forward(admin.user.id)
                     except Exception:
                         pass
-                except Exception:
-                    pass
                 except RPCError as ef:
                     LOGGER.error(ef)
                     LOGGER.error(format_exc())
-    return ""
+                except Exception:
+                    pass
+    return
 
 
 @Alita.on_callback_query(filters.regex("^report_"))
@@ -169,7 +171,7 @@ async def report_buttons(c: Alita, q: CallbackQuery):
     if action == "kick":
         try:
             await c.ban_chat_member(chat_id, user_id)
-            await q.answer("✅ Succesfully kicked")
+            await q.answer("✅ Successfully kicked")
             await c.unban_chat_member(chat_id, user_id)
             return
         except RPCError as err:
@@ -180,7 +182,7 @@ async def report_buttons(c: Alita, q: CallbackQuery):
     elif action == "ban":
         try:
             await c.ban_chat_member(chat_id, user_id)
-            await q.answer("✅ Succesfully Banned")
+            await q.answer("✅ Successfully Banned")
             return
         except RPCError as err:
             await q.answer(f"🛑 Failed to Ban\n<b>Error:</b>\n`{err}`", show_alert=True)

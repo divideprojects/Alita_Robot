@@ -13,7 +13,7 @@ from alita.vars import Config
 @Alita.on_message(command("rules") & filters.group)
 async def get_rules(_, m: Message):
     db = Rules(m.chat.id)
-    msg_id = m.reply_to_message.message_id if m.reply_to_message else m.message_id
+    msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     rules = db.get_rules()
     LOGGER.info(f"{m.from_user.id} fetched rules in {m.chat.id}")
@@ -27,7 +27,7 @@ async def get_rules(_, m: Message):
         )
         return
 
-    if priv_rules_status := db.get_privrules():
+    if db.get_privrules():
         pm_kb = ikb(
             [
                 [
@@ -112,7 +112,7 @@ async def priv_rules(_, m: Message):
         LOGGER.info(f"{m.from_user.id} fetched privaterules preference in {m.chat.id}")
         await m.reply_text(msg)
     else:
-        await m.replt_text(tlang(m, "general.check_help"))
+        await m.reply_text(tlang(m, "general.check_help"))
 
     return
 
