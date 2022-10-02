@@ -1,12 +1,11 @@
 from traceback import format_exc
 
 from regex import search
-from regex._regex import Match
 
 from alita import LOGGER
 
 
-async def regex_searcher(regex_string: str, string: str) -> bool | Match[str]:
+async def regex_searcher(regex_string: str, string: str) -> bool:
     """Search for Regex in string."""
     try:
         re_search = search(regex_string, string, timeout=6)
