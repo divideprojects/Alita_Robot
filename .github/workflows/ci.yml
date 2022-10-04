@@ -24,6 +24,6 @@ jobs:
       pull-requests: write
       contents: write
     steps:
-      - uses: fastify/github-action-merge-dependabot@v3.3.2
+      - uses: fastify/github-action-merge-dependabot@v3.4.0
         with:
           target: minor
