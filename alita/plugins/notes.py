@@ -2,8 +2,8 @@ from secrets import choice
 from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import RPCError
 from pyrogram.enums import ChatMemberStatus
+from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 
 from alita import LOGGER

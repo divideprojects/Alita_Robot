@@ -1,9 +1,9 @@
 from html import escape
 from secrets import choice
 
+from pyrogram.enums import ParseMode
 from pyrogram.errors import MessageTooLong
 from pyrogram.types import Message
-from pyrogram.enums import ParseMode
 
 from alita import LOGGER
 from alita.bot_class import Alita

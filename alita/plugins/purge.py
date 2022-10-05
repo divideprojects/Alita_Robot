@@ -1,8 +1,8 @@
 from asyncio import sleep
 
+from pyrogram.enums import ChatType
 from pyrogram.errors import MessageDeleteForbidden, RPCError
 from pyrogram.types import Message
-from pyrogram.enums import ChatType
 
 from alita import SUPPORT_GROUP
 from alita.bot_class import Alita

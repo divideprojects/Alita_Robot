@@ -1,9 +1,9 @@
 from html import escape as escape_html
 
+from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors import ChatAdminRequired, RightForbidden, RPCError
 from pyrogram.filters import regex
 from pyrogram.types import CallbackQuery, Message
-from pyrogram.enums import ChatMemberStatus
 
 from alita import LOGGER, SUPPORT_GROUP
 from alita.bot_class import Alita
@@ -35,15 +35,11 @@ async def pin_message(_, m: Message):
             if m.chat.username:
                 # If chat has a username, use this format
                 link_chat_id = m.chat.username
-                message_link = (
-                    f"https://t.me/{link_chat_id}/{m.reply_to_message.id}"
-                )
+                message_link = f"https://t.me/{link_chat_id}/{m.reply_to_message.id}"
             elif (str(m.chat.id)).startswith("-100"):
                 # If chat does not have a username, use this
                 link_chat_id = (str(m.chat.id)).replace("-100", "")
-                message_link = (
-                    f"https://t.me/c/{link_chat_id}/{m.reply_to_message.id}"
-                )
+                message_link = f"https://t.me/c/{link_chat_id}/{m.reply_to_message.id}"
             await m.reply_text(
                 tlang(m, "pin.pinned_msg").format(message_link=message_link),
                 disable_web_page_preview=True,

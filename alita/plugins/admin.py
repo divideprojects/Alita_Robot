@@ -12,7 +12,7 @@ from pyrogram.errors import (
     RPCError,
     UserAdminInvalid,
 )
-from pyrogram.types import Message, ChatPrivileges
+from pyrogram.types import ChatPrivileges, Message
 
 from alita import DEV_USERS, LOGGER, OWNER_ID, SUPPORT_GROUP, SUPPORT_STAFF
 from alita.bot_class import Alita
@@ -400,7 +400,9 @@ async def demote_usr(c: Alita, m: Message):
 
     try:
         await m.chat.promote_member(
-            user_id=user_id, privileges=ChatPrivileges(can_manage_chat=False))
+            user_id=user_id,
+            privileges=ChatPrivileges(can_manage_chat=False),
+        )
         LOGGER.info(f"{m.from_user.id} demoted {user_id} in {m.chat.id}")
 
         # ----- Remove admin from cache -----

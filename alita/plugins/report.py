@@ -1,9 +1,9 @@
 from traceback import format_exc
 
 from pyrogram import filters
+from pyrogram.enums import ChatType
 from pyrogram.errors import RPCError
 from pyrogram.types import CallbackQuery, Message
-from pyrogram.enums import ChatType
 
 from alita import LOGGER, SUPPORT_STAFF
 from alita.bot_class import Alita
