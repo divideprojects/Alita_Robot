@@ -14,7 +14,7 @@ httpx = {version = "^0.23.0", extras = ["http2"]}
 python-dateutil = "^2.8.2"
 pyyaml = "^6.0"
 speedtest-cli = "^2.1.3"
-tgcrypto = "^1.2.3"
+tgcrypto = "^1.2.4"
 tswift = "^0.7.0"
 wikipedia = "^1.4.0"
 prettyconf = "^2.2.1"
