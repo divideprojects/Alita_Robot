@@ -20,7 +20,7 @@ wikipedia = "^1.4.0"
 prettyconf = "^2.2.1"
 Pyrogram = "^2.0.59"
 ujson = "^5.5.0"
-regex = "^2022.9.13"
+regex = "^2022.10.31"
 pymongo = "^4.3.2"
 cachetools = "^5.2.0"
 
