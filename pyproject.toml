@@ -21,7 +21,7 @@ prettyconf = "^2.2.1"
 Pyrogram = "^2.0.61"
 ujson = "^5.5.0"
 regex = "^2022.10.31"
-pymongo = "^4.3.2"
+pymongo = "^4.3.3"
 cachetools = "^5.2.0"
 
 [tool.poetry.dev-dependencies]
