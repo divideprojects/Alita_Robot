@@ -2,6 +2,7 @@ from html import escape
 from secrets import choice
 
 from pyrogram import filters
+from pyrogram.enums import ChatType
 from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, Message
 
@@ -53,7 +54,7 @@ async def escape_mentions_using_curly_brackets_wl(
             ),
             mention=await (mention_html(escape(user.first_name), user.id)),
             chatname=escape(m.chat.title)
-            if m.chat.type != "private"
+            if m.chat.type != ChatType.PRIVATE
             else escape(user.first_name),
             id=user.id,
         )
