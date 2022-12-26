@@ -110,7 +110,7 @@ async def unpinall_calllback(c: Alita, q: CallbackQuery):
             show_alert=True,
         )
         return
-    if user_status != "creator":
+    if user_status != ChatMemberStatus.OWNER:
         await q.answer(
             "You're just an admin, not owner\nStay in your limits!",
             show_alert=True,
