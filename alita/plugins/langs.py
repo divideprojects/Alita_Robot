@@ -1,6 +1,6 @@
 from asyncio import sleep
 
-from pyrogram import filters
+from pyrogram import enums, filters
 from pyrogram.types import CallbackQuery, Message
 
 from alita import LOGGER
@@ -62,7 +62,7 @@ async def set_lang_callback(_, q: CallbackQuery):
     Langs(q.message.chat.id).set_lang(lang_code)
     await sleep(0.1)
 
-    if q.message.chat.type == "private":
+    if q.message.chat.type == enums.ChatType.PRIVATE:
         keyboard = ikb([[(f"« {(tlang(q, 'general.back_btn'))}", "start_back")]])
     else:
         keyboard = None

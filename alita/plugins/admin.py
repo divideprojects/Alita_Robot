@@ -4,6 +4,7 @@ from os import remove
 from traceback import format_exc
 
 from pyrogram import filters
+from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors import (
     ChatAdminInviteRequired,
     ChatAdminRequired,
@@ -193,7 +194,7 @@ async def fullpromote_usr(c: Alita, m: Message):
         )  # This should be here
 
     user = await c.get_chat_member(m.chat.id, m.from_user.id)
-    if m.from_user.id not in [DEV_USERS, OWNER_ID] and user.status != "creator":
+    if m.from_user.id not in [DEV_USERS, OWNER_ID] and user.status != ChatMemberStatus.OWNER:
         return await m.reply_text("This command can only be used by chat owner.")
     # If user is already admin
     try:
@@ -453,7 +454,7 @@ async def get_invitelink(c: Alita, m: Message):
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)
 
-        if not user.privileges.can_invite_users and user.status != "creator":
+        if not user.privileges.can_invite_users and user.status != ChatMemberStatus.OWNER:
             await m.reply_text(tlang(m, "admin.no_user_invite_perm"))
             return False
 
@@ -490,7 +491,7 @@ async def get_invitelink(c: Alita, m: Message):
 async def setgtitle(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
 
-    if not user.privileges.can_change_info and user.status != "creator":
+    if not user.privileges.can_change_info and user.status != ChatMemberStatus.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -513,7 +514,7 @@ async def setgtitle(_, m: Message):
 async def setgdes(_, m: Message):
 
     user = await m.chat.get_member(m.from_user.id)
-    if not user.privileges.can_change_info and user.status != "creator":
+    if not user.privileges.can_change_info and user.status != ChatMemberStatus.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -536,7 +537,7 @@ async def setgdes(_, m: Message):
 async def set_user_title(c: Alita, m: Message):
 
     user = await m.chat.get_member(m.from_user.id)
-    if not user.privileges.can_promote_members and user.status != "creator":
+    if not user.privileges.can_promote_members and user.status != ChatMemberStatus.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
@@ -578,13 +579,11 @@ async def set_user_title(c: Alita, m: Message):
 @Alita.on_message(command("setgpic") & admin_filter)
 async def setgpic(_, m: Message):
     user = await m.chat.get_member(m.from_user.id)
-    if not user.privileges.can_change_info and user.status != "creator":
+    if not user.privileges.can_change_info and user.status != ChatMemberStatus.OWNER:
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )
         return False
-    if not m.reply_to_message:
-        return await m.reply_text("Reply to a photo to set it as chat photo")
     if not m.reply_to_message.photo and not m.reply_to_message.document:
         return await m.reply_text("Reply to a photo to set it as chat photo")
     photo = await m.reply_to_message.download()

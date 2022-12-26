@@ -57,7 +57,7 @@ async def send_log(c: Alita, m: Message):
 async def group_info(c: Alita, m: Message):
     if len(m.text.split()) != 2:
         await m.reply_text(
-            f"It works like this: <code>{Config.PREFIX_HANDLER} chat_id</code>",
+            f"It works like this: <code>{Config.PREFIX_HANDLER}ginfo chat_id</code>",
         )
         return
 
