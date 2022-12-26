@@ -172,7 +172,7 @@ async def pinned_message(c: Alita, m: Message):
     msg_id = m.reply_to_message.id if m.reply_to_message else m.id
 
     if chat.pinned_message:
-        pinned_id = chat.pinned_message.message_id
+        pinned_id = chat.pinned_message.id
         if m.chat.username:
             link_chat_id = m.chat.username
             message_link = f"https://t.me/{link_chat_id}/{pinned_id}"

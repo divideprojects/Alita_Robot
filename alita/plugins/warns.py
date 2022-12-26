@@ -28,10 +28,10 @@ from alita.vars import Config
 )
 async def warn(c: Alita, m: Message):
     if m.reply_to_message:
-        r_id = m.reply_to_message.message_id
+        r_id = m.reply_to_message.id
         reason = m.text.split(None, 1)[1] if len(m.text.split()) >= 2 else None
     else:
-        r_id = m.message_id
+        r_id = m.id
         reason = m.text.split(None, 2)[2] if len(m.text.split()) >= 3 else None
     if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
