@@ -2,7 +2,7 @@ from html import escape
 from secrets import choice
 
 from pyrogram import filters
-from pyrogram.enums import ChatType
+from pyrogram.enums import ChatType, ChatMemberStatus
 from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, Message
 
@@ -241,7 +241,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
 
     if (
         not member.new_chat_member
-        or member.new_chat_member.status in {"banned", "left", "restricted"}
+        or member.new_chat_member.status in {ChatMemberStatus.BANNED, ChatMemberStatus.LEFT, ChatMemberStatus.RESTRICTED}
         or member.old_chat_member
     ):
         return
@@ -256,7 +256,7 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
         if user.id == OWNER_ID:
             await c.send_message(
                 member.chat.id,
-                "Wew My Owner has also joined the chat!",
+                "Wew My Owner just joined the chat!",
             )
             return
         if banned_users:
@@ -319,7 +319,7 @@ async def member_has_left(c: Alita, member: ChatMemberUpdated):
 
     if (
         member.new_chat_member
-        or member.old_chat_member.status in {"banned", "restricted"}
+        or member.old_chat_member.status in {ChatMemberStatus.BANNED, ChatMemberStatus.RESTRICTED}
         or not member.old_chat_member
     ):
         return

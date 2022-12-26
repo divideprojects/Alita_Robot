@@ -1,6 +1,7 @@
 from html import escape
 
 from pyrogram import filters
+from pyrogram.enums import ChatMemberStatus
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -139,13 +140,13 @@ async def rm_alldisbl(_, m: Message):
 async def enablealll(_, q: CallbackQuery):
     user_id = q.from_user.id
     user_status = (await q.message.chat.get_member(user_id)).status
-    if user_status not in {"creator", "administrator"}:
+    if user_status not in {ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER}:
         await q.answer(
             "You're not even an admin, don't try this explosive shit!",
             show_alert=True,
         )
         return
-    if user_status != "creator":
+    if user_status != ChatMemberStatus.OWNER:
         await q.answer(
             "You're just an admin, not owner\nStay in your limits!",
             show_alert=True,

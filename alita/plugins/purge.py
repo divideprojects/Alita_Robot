@@ -106,10 +106,7 @@ async def del_msg(c: Alita, m: Message):
 
     if m.reply_to_message:
         await m.delete()
-        await c.delete_messages(
-            chat_id=m.chat.id,
-            message_ids=m.reply_to_message.id,
-        )
+        await m.reply_to_message.delete()
     else:
         await m.reply_text(tlang(m, "purge.what_del"))
     return
