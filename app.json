@@ -91,17 +91,14 @@
       "description": "Setting this to ANYTHING will enable environment variables. Leave it as it is",
       "required": true,
       "value": "ANYTHING"
-    }
+    } 
   },
-  "buildpacks": [
-    {
-      "url": "heroku/python"
-    }
-  ],
-  "formation": {
-    "worker": {
-      "quantity": 1,
-      "size": "free"
-    }
+    "buildpacks": [
+          {
+              "url": "heroku/python"
+          }
+      ],
+      "stack": "container"
   }
-}
+
+    
