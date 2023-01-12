@@ -125,14 +125,14 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "cachetools"
-version = "5.2.0"
+version = "5.2.1"
 description = "Extensible memoizing collections and decorators"
 category = "main"
 optional = false
 python-versions = "~=3.7"
 files = [
-    {file = "cachetools-5.2.0-py3-none-any.whl", hash = "sha256:f9f17d2aec496a9aa6b76f53e3b614c965223c061982d434d160f930c698a9db"},
-    {file = "cachetools-5.2.0.tar.gz", hash = "sha256:6a94c6402995a99c3970cc7e4884bb60b4a8639938157eeed436098bf9831757"},
+    {file = "cachetools-5.2.1-py3-none-any.whl", hash = "sha256:8462eebf3a6c15d25430a8c27c56ac61340b2ecf60c9ce57afc2b97e450e47da"},
+    {file = "cachetools-5.2.1.tar.gz", hash = "sha256:5991bc0e08a1319bb618d3195ca5b6bc76646a49c21d55962977197b301cc1fe"},
 ]
 
 [[package]]
@@ -1497,4 +1497,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "9f13297bb27c49fb2dc9347e6c767ebbfb481aa3c8979e8bd8459754a6280c03"
+content-hash = "9d720c640aa35d423015357925c90c7f8c32ceced540723fae91f0cf177a8f68"
