@@ -194,7 +194,10 @@ async def fullpromote_usr(c: Alita, m: Message):
         )  # This should be here
 
     user = await c.get_chat_member(m.chat.id, m.from_user.id)
-    if m.from_user.id not in [DEV_USERS, OWNER_ID] and user.status != ChatMemberStatus.OWNER:
+    if (
+        m.from_user.id not in [DEV_USERS, OWNER_ID]
+        and user.status != ChatMemberStatus.OWNER
+    ):
         return await m.reply_text("This command can only be used by chat owner.")
     # If user is already admin
     try:
@@ -454,7 +457,10 @@ async def get_invitelink(c: Alita, m: Message):
     if m.from_user.id not in DEV_LEVEL:
         user = await m.chat.get_member(m.from_user.id)
 
-        if not user.privileges.can_invite_users and user.status != ChatMemberStatus.OWNER:
+        if (
+            not user.privileges.can_invite_users
+            and user.status != ChatMemberStatus.OWNER
+        ):
             await m.reply_text(tlang(m, "admin.no_user_invite_perm"))
             return False
 
@@ -537,7 +543,10 @@ async def setgdes(_, m: Message):
 async def set_user_title(c: Alita, m: Message):
 
     user = await m.chat.get_member(m.from_user.id)
-    if not user.privileges.can_promote_members and user.status != ChatMemberStatus.OWNER:
+    if (
+        not user.privileges.can_promote_members
+        and user.status != ChatMemberStatus.OWNER
+    ):
         await m.reply_text(
             "You don't have enough permission to use this command!",
         )

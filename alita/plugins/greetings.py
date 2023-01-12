@@ -2,7 +2,7 @@ from html import escape
 from secrets import choice
 
 from pyrogram import filters
-from pyrogram.enums import ChatType, ChatMemberStatus
+from pyrogram.enums import ChatMemberStatus, ChatType
 from pyrogram.errors import ChatAdminRequired, RPCError
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, Message
 
@@ -241,7 +241,8 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
 
     if (
         not member.new_chat_member
-        or member.new_chat_member.status in {ChatMemberStatus.BANNED, ChatMemberStatus.LEFT, ChatMemberStatus.RESTRICTED}
+        or member.new_chat_member.status
+        in {ChatMemberStatus.BANNED, ChatMemberStatus.LEFT, ChatMemberStatus.RESTRICTED}
         or member.old_chat_member
     ):
         return
@@ -319,7 +320,8 @@ async def member_has_left(c: Alita, member: ChatMemberUpdated):
 
     if (
         member.new_chat_member
-        or member.old_chat_member.status in {ChatMemberStatus.BANNED, ChatMemberStatus.RESTRICTED}
+        or member.old_chat_member.status
+        in {ChatMemberStatus.BANNED, ChatMemberStatus.RESTRICTED}
         or not member.old_chat_member
     ):
         return
