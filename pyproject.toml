@@ -25,7 +25,7 @@ pymongo = "^4.3.3"
 cachetools = "^5.3.0"
 
 [tool.poetry.dev-dependencies]
-isort = "^5.11.4"
+isort = "^5.11.5"
 pre-commit = "^2.21.0"
 pyclean = "^2.6.0"
 pylint = "^2.13.9"
