@@ -29,7 +29,7 @@ isort = "^5.11.5"
 pre-commit = "^2.21.0"
 pyclean = "^2.6.0"
 pylint = "^2.13.9"
-black = "^22.12.0"
+black = "^23.1.0"
 
 
 [build-system]
