@@ -12,7 +12,6 @@ from alita.utils.custom_filters import admin_filter, command
 
 @Alita.on_message(command("purge") & admin_filter)
 async def purge(c: Alita, m: Message):
-
     if m.reply_to_message:
         message_ids = list(range(m.reply_to_message.id, m.id))
 

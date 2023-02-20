@@ -34,7 +34,6 @@ async def get_note_type(m: Message):
         data_type = Types.TEXT
 
     elif m.reply_to_message:
-
         if m.reply_to_message.text:
             text = m.reply_to_message.text.markdown
         elif m.reply_to_message.caption:
@@ -102,7 +101,6 @@ async def get_filter_type(m: Message):
         data_type = Types.TEXT
 
     elif m.reply_to_message:
-
         if m.reply_to_message.text:
             text = m.reply_to_message.text.markdown
         elif m.reply_to_message.caption:
@@ -169,7 +167,6 @@ async def get_wlcm_type(m: Message):
         data_type = Types.TEXT
 
     elif m.reply_to_message:
-
         if m.reply_to_message.text:
             text = m.reply_to_message.text.markdown
         elif m.reply_to_message.caption:

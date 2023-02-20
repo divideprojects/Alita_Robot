@@ -48,7 +48,6 @@ async def view_filters(_, m: Message):
 
 @Alita.on_message(command(["filter", "addfilter"]) & admin_filter & ~filters.bot)
 async def add_filter(_, m: Message):
-
     args = m.text.split(" ", 1)
     all_filters = db.get_all_filters(m.chat.id)
     actual_filters = {j for i in all_filters for j in i.split("|")}
@@ -272,7 +271,6 @@ async def send_filter_reply(c: Alita, m: Message, trigger: str):
 
 @Alita.on_message(filters.text & filters.group & ~filters.bot, group=69)
 async def filters_watcher(c: Alita, m: Message):
-
     chat_filters = db.get_all_filters(m.chat.id)
     actual_filters = {j for i in chat_filters for j in i.split("|")}
 

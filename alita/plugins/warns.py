@@ -127,7 +127,6 @@ async def warn(c: Alita, m: Message):
 
 @Alita.on_message(command("resetwarns") & restrict_filter)
 async def reset_warn(c: Alita, m: Message):
-
     if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text("I can't warn nothing! Tell me user whom I should warn")
         return
@@ -166,7 +165,6 @@ async def reset_warn(c: Alita, m: Message):
 
 @Alita.on_message(command("warns") & filters.group)
 async def list_warns(c: Alita, m: Message):
-
     user_id, user_first_name, _ = await extract_user(c, m)
 
     if user_id == Config.BOT_ID:
@@ -208,7 +206,6 @@ async def list_warns(c: Alita, m: Message):
     command(["rmwarn", "removewarn"]) & restrict_filter,
 )
 async def remove_warn(c: Alita, m: Message):
-
     if len(m.command) <= 1 and not m.reply_to_message:
         await m.reply_text(
             "I can't remove warns of nothing! Tell me user whose warn should be removed!",
@@ -257,7 +254,6 @@ async def remove_warn(c: Alita, m: Message):
 
 @Alita.on_callback_query(filters.regex("^warn."))
 async def remove_last_warn_btn(c: Alita, q: CallbackQuery):
-
     try:
         admins_group = {i[0] for i in ADMIN_CACHE[q.message.chat.id]}
     except KeyError:

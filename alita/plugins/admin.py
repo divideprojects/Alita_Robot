@@ -172,7 +172,6 @@ async def tag_admins(_, m: Message):
 
 @Alita.on_message(command("fullpromote") & promote_filter)
 async def fullpromote_usr(c: Alita, m: Message):
-
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
         return
@@ -275,7 +274,6 @@ async def fullpromote_usr(c: Alita, m: Message):
 
 @Alita.on_message(command("promote") & promote_filter)
 async def promote_usr(c: Alita, m: Message):
-
     if len(m.text.split()) == 1 and not m.reply_to_message:
         await m.reply_text(tlang(m, "admin.promote.no_target"))
         return
@@ -372,7 +370,6 @@ async def promote_usr(c: Alita, m: Message):
 
 @Alita.on_message(command("demote") & promote_filter)
 async def demote_usr(c: Alita, m: Message):
-
     global ADMIN_CACHE
 
     if len(m.text.split()) == 1 and not m.reply_to_message:
@@ -518,7 +515,6 @@ async def setgtitle(_, m: Message):
 
 @Alita.on_message(command("setgdes") & admin_filter)
 async def setgdes(_, m: Message):
-
     user = await m.chat.get_member(m.from_user.id)
     if not user.privileges.can_change_info and user.status != ChatMemberStatus.OWNER:
         await m.reply_text(
@@ -541,7 +537,6 @@ async def setgdes(_, m: Message):
 
 @Alita.on_message(command("title") & admin_filter)
 async def set_user_title(c: Alita, m: Message):
-
     user = await m.chat.get_member(m.from_user.id)
     if (
         not user.privileges.can_promote_members

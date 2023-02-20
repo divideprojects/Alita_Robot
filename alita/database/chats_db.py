@@ -23,7 +23,6 @@ class Chats(MongoDB):
 
     def update_chat(self, chat_name: str, user_id: int):
         with INSERTION_LOCK:
-
             if chat_name == self.chat_info["chat_name"] and self.user_is_in_chat(
                 user_id,
             ):

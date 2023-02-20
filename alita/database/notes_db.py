@@ -26,7 +26,6 @@ class Notes(MongoDB):
         fileid="",
     ):
         with INSERTION_LOCK:
-
             # local dict update
             try:
                 curr_notes = NOTES_CACHE[chat_id]

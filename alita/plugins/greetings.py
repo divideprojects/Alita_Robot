@@ -50,9 +50,9 @@ async def escape_mentions_using_curly_brackets_wl(
             username=(
                 "@" + (await escape_markdown(escape(user.username)))
                 if user.username
-                else (await (mention_html(escape(user.first_name), user.id)))
+                else (await mention_html(escape(user.first_name), user.id))
             ),
-            mention=await (mention_html(escape(user.first_name), user.id)),
+            mention=await mention_html(escape(user.first_name), user.id),
             chatname=escape(m.chat.title)
             if m.chat.type != ChatType.PRIVATE
             else escape(user.first_name),
@@ -238,7 +238,6 @@ async def cleannnnn(_, m: Message):
 
 @Alita.on_chat_member_updated(filters.group, group=69)
 async def member_has_joined(c: Alita, member: ChatMemberUpdated):
-
     if (
         not member.new_chat_member
         or member.new_chat_member.status
@@ -317,7 +316,6 @@ async def member_has_joined(c: Alita, member: ChatMemberUpdated):
 
 @Alita.on_chat_member_updated(filters.group, group=99)
 async def member_has_left(c: Alita, member: ChatMemberUpdated):
-
     if (
         member.new_chat_member
         or member.old_chat_member.status

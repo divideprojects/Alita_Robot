@@ -26,7 +26,6 @@ class Filters(MongoDB):
         fileid="",
     ):
         with INSERTION_LOCK:
-
             # local dict update
             try:
                 curr_filters = FILTER_CACHE[chat_id]
