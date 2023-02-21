@@ -1,4 +1,4 @@
-FROM ghcr.io/divideprojects/docker-python-base:latest
+FROM ghcr.io/divkix/docker-python-base:latest
 WORKDIR /app
 COPY pyproject.toml poetry.lock .
 RUN poetry export -f requirements.txt --without-hashes --output requirements.txt
