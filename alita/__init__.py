@@ -53,7 +53,7 @@ LOGGER.info("------------------------")
 LOGGER.info("|      Alita_Robot     |")
 LOGGER.info("------------------------")
 LOGGER.info(f"Owner: {Config.OWNER_ID}")
-LOGGER.info("Source Code: https://github.com/DivideProjects/Alita_Robot\n")
+LOGGER.info("Source Code: https://github.com/divkix/Alita_Robot\n")
 
 # Account Related
 BOT_TOKEN = Config.BOT_TOKEN

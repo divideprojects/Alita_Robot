@@ -2,7 +2,7 @@
 name = "alita_robot"
 version = "1.5.0"
 description = "Alita is a Telegram Group management bot made using Pyrogram and Python, which makes it modern and faster than most of the Telegram chat managers."
-authors = ["Divanshu Chauhan <23524935+Divkix@users.noreply.github.com>"]
+authors = ["Divanshu Chauhan <divkix@divkix.me>"]
 license = "AGPL-3.0"
 
 [tool.poetry.dependencies]
