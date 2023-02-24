@@ -27,7 +27,7 @@ cachetools = "^5.3.0"
 [tool.poetry.dev-dependencies]
 isort = "^5.11.5"
 pre-commit = "^2.21.0"
-pyclean = "^2.6.0"
+pyclean = "^2.7.0"
 pylint = "^2.13.9"
 black = "^23.1.0"
 
