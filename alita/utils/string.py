@@ -1,7 +1,6 @@
 from html import escape
 from re import compile as compile_re
 from time import time
-from typing import List
 
 from pyrogram.types import InlineKeyboardButton, Message
 
@@ -81,7 +80,7 @@ SMART_CLOSE = "”"
 START_CHAR = ("'", '"', SMART_OPEN)
 
 
-async def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
+async def escape_invalid_curly_brackets(text: str, valids: list[str]) -> str:
     new_text = ""
     idx = 0
     while idx < len(text):

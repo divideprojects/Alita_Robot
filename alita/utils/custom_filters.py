@@ -3,7 +3,6 @@ from functools import wraps
 from re import compile as compile_re
 from re import escape
 from shlex import split
-from typing import List, Union
 
 from pyrogram.enums import ChatMemberStatus, ChatType
 from pyrogram.errors import RPCError, UserNotParticipant
@@ -22,7 +21,7 @@ DEV_LEVEL = set(DEV_USERS + [OWNER_ID])
 
 
 def command(
-    commands: Union[str, List[str]],
+    commands: str | list[str],
     case_sensitive: bool = False,
     owner_cmd: bool = False,
     dev_cmd: bool = False,
