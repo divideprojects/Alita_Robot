@@ -1,0 +1,12 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    uses: divkix/reusable-workflows/.github/workflows/goreleaser-ci.yml@main
