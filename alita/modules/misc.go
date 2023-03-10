@@ -183,7 +183,6 @@ func (m miscModuleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	edited, _ := msg.Reply(b, "Pasting ...", nil)
-	extention := "txt"
 	if len(args) >= 2 {
 		text = strings.Join(args[1:], " ")
 	} else if len(args) != 2 && msg.ReplyToMessage.Text != "" {
@@ -191,16 +190,9 @@ func (m miscModuleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else if len(args) != 2 && msg.ReplyToMessage.Caption != "" && msg.ReplyToMessage.Document == nil {
 		text = msg.ReplyToMessage.Caption
 	} else if msg.ReplyToMessage.Document != nil {
-		if strings.Contains(msg.ReplyToMessage.Document.FileName, ".") {
-			extention = strings.SplitN(msg.ReplyToMessage.Document.FileName, ".", 2)[1]
-		}
 		f, err := b.GetFile(msg.ReplyToMessage.Document.FileId, nil)
 		if err != nil {
 			_, _, _ = edited.EditText(b, "BadRequest on GetFile!", nil)
-			return ext.EndGroups
-		}
-		if f.FileSize > 600000 {
-			_, _, _ = edited.EditText(b, "File too big to paste; Max. file size that can be pasted is 600 kb!", nil)
 			return ext.EndGroups
 		}
 		fileName := fmt.Sprintf("paste_%d_%d.txt", msg.Chat.Id, msg.MessageId)
@@ -238,7 +230,7 @@ func (m miscModuleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	pasted, key := helpers.PasteToNekoBin(text)
 
 	if pasted {
-		_, _, err = edited.EditText(b, fmt.Sprintf("<b>Pasted Successfully!</b>\nhttps://www.nekobin.com/%s.%s", key, extention),
+		_, _, err = edited.EditText(b, fmt.Sprintf("<b>Pasted Successfully!</b>\nhttps://www.nekobin.com/%s", key),
 			&gotgbot.EditMessageTextOpts{
 				ParseMode:             parsemode.HTML,
 				DisableWebPagePreview: true,
@@ -448,7 +440,7 @@ func (m miscModuleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 	if chat_status.CheckDisabledCmd(b, msg, "stat") {
 		return ext.EndGroups
 	}
-	_, err := msg.Reply(b, fmt.Sprintf("Total Messages in %s are: %d", msg.Chat.Title, msg.MessageId+1), nil)
+	_, err := msg.Reply(b, fmt.Sprintf("Total Messages in %s are: %d", msg.Chat.Title, msg.MessageId), nil)
 	if err != nil {
 		log.Error(err)
 	}
