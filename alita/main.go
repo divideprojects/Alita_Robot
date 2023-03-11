@@ -55,7 +55,6 @@ func LoadModules(dispatcher *ext.Dispatcher) {
 	defer modules.LoadHelp(dispatcher)
 
 	modules.LoadBotUpdates(dispatcher)
-	modules.LoadAntispam(dispatcher)
 	modules.LoadLanguage(dispatcher)
 	modules.LoadAdmin(dispatcher)
 	modules.LoadPin(dispatcher)

@@ -56,15 +56,7 @@ func (m purgesModuleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFro
 			// 	return false
 		}
 	}
-	var a, b int64
-	if deleteTo > msgId {
-		a = msgId
-		b = deleteTo + 1
-	} else {
-		a = deleteTo
-		b = msgId + 1
-	}
-	for mId := b; mId > a-1; mId-- {
+	for mId := deleteTo; mId > msgId-1; mId-- {
 		_, _ = bot.DeleteMessage(chat.Id, mId, nil)
 		// if err != nil {
 		// if err.Error() != "unable to deleteMessage: Bad Request: message to delete not found" {
