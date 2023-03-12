@@ -1,0 +1,706 @@
+---
+#stringcode: string
+main:
+  lang_sample: |-
+    日本
+  language_flag: |-
+    🇯🇵
+  language_name: |-
+    日本
+strings:
+  Admin:
+    adminlist: |-
+      Admins in <b>%s</b>:
+    demote:
+      is_owner: |-
+        This person created this chat, how would I demote them?
+      is_admin: |-
+        This person is not an admin, how would I demote them?
+      is_bot_itself: |-
+        I can't demote myself, go get the person who promoted me!
+      success_demote: |-
+        Successfully demoted %s!
+    promote:
+      admin_title_truncated: |-
+        Admin title truncated to 16 characters from %d
+      is_bot_itself: |-
+        If only I could do this to myself ;_;
+      is_owner: |-
+        This person created this chat, how would I promote them?
+      is_admin: |-
+        This person is already an admin, how would I promote them?
+      success_promote: |-
+        Successfully promoted %s!
+    title:
+      success_set: |-
+        Successfully set %s's admin title to <b>%s</b>
+      is_bot_itself: |-
+        If only I could do this to myself ;_;
+      is_owner: |-
+        This person created this chat, how would I set a custom admin title for them?
+      is_admin: |-
+        This person is already an admin, how would I set a custom admin title for them?
+    errors:
+      err_set_title: |-
+        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+      err_cannot_demote: |-
+        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+      err_cannot_promote: |-
+        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+      title_empty: |-
+        You need to give me an admin title so I can set it.
+    help_msg: |-
+      管理モジュール!
+
+      *User Command:*
+      × /adminlist: 現在のチャット内の管理者をリストすることで、ユーザーをプロモートし、降格させることが容易になります。
+
+      *Admin コマンド:*
+      × / プロモート `<reply/username/mention/userid>`: ユーザーをプロモートします。
+      × /demote `<reply/username/mention/userid>': ユーザーをデモートしてください。
+      × / タイトル `<reply/username/mention/userid>` `<custom title>`: ユーザーのカスタム・タイトルを設定する
+  Antiflood:
+    checkflood:
+      perform_action: |-
+        Yeah, I don't like your flooding. %s has been %s!
+    setflood:
+      success: |-
+        Got it! Max flood limit in <b>%d</b> messages.
+      disabled: |-
+        Okay.
+        I won't warn users for flooding.
+    flood:
+      disabled: |-
+        This chat is not currently enforcing flood control.
+      show_settings: |-
+        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+    setfloodmode:
+      success: |-
+        Got it! Flood mode will be %s.
+      unknown_type: |-
+        Unknown type '%s'. Please use one of: ban/kick/mute
+      specify_action: |-
+        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+    flood_deleter:
+      enabled: |-
+        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+      disabled: |-
+        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+      invalid_option: |-
+        I only understand an option from: `yes`/`no`/`on`/`off`
+      already_enabled: |-
+        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+      already_disabled: |-
+        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+    errors:
+      expected_args: |-
+        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+      invalid_int: |-
+        That's not a valid integer. Please give me a valid integer, or `off`.
+      set_in_limit: |-
+        The antiflood limit has to be set between 3 and 100.
+    help_msg: |-
+      人は時々参加し、 100 件のメッセージを送り、チャットを破滅させることがありますか ? アンチフラッディングでは、これ以上はありません。
+
+      アンチフラッディングを使用すると、複数のメッセージを 1 行に送信するユーザーに対してアクションを実行することができます。 アクション : 禁止/kick/mute/tban/tmute
+
+      *Admin コマンド*:
+      × / 洪水: 現在の洪水設定を取得します。
+      × /set洪水 `<number/off/no>': ユーザーに対してアクションを実行するメッセージの数を設定します。 '0'、 'off'、または 'no' に設定して、使用不可にします。
+      × /set氾dmode `<action type>' : 洪水の発生したユーザーに対して取るべきアクションを選択してください。 オプション: ban/kick/mute/tban/tmute
+      × /del洪水 `<yes/no/on/off>`: ユーザーが浸水したメッセージを削除したい場合。
+  Approvals:
+    approve:
+      is_bot_itself: |-
+        You have already approved me by making me admin!
+      user_approved: |-
+        Approved User: %s
+        They are now protected from bans, blacklists, locks and antiflood!
+    unapprove:
+      is_bot_itself: |-
+        I'm an admin, I can't be unapproved!
+      user_unapproved: |-
+        Unapproved User: %s
+        They are no longer protected from bans, blacklists, locks and antiflood!
+    approval:
+      is_admin: |-
+        %s is an admin, you don't need approval.
+      is_bot_itself: |-
+        I'm an admin, I don't need approval.
+      is_approved: |-
+        %s is an approved User in <b>%s</b>
+        They are protected from blacklists, locks and antiflood!
+
+        <b>Approved By:</b> %s (<code>%d</code>)"
+        <b>Approved Time:</b> %s UTC
+      is_unapproved: |-
+        You are not approved in <b>%s</b>
+        You are not protected from blacklists, locks and antiflood!
+    approved:
+      none_approved: "No users are approved in <b>%s</b>!"
+      approved_list: |-
+        These users are approved in <b>%s:</b>
+        %s
+
+        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+    unapprove_all:
+      ask: |-
+        Are you sure you want to remove all Approved Users from this chat?
+      chat_creator_only: |-
+        Only Chat Creator can use this command to unapprove all users in this chat.
+      button_handler:
+        yes: |-
+          Removed all Approved Users from this Chat ✅
+        no: |-
+          Cancelled removing all Approved Users from this Chat ❌
+    help_msg: |-
+      場合によっては、望ましくないコンテンツを送信しないユーザーを信頼することがあります。
+      管理者にするには十分ではありませんが、ロック、ブラックリスト、およびアンチフラッディングが適用されない状態では問題が発生している可能性があります。
+      承認を承認するには、信頼できるユーザーが
+
+      *User コマンドを送信できるようにします。*
+      × /承認: このチャットでユーザーの承認状況を確認してください。
+
+      *Admin コマンド:*
+      × / 承認: ユーザーの承認。 ロック、ブラックリスト、およびアンチフラッドは、これらには適用されません。
+      × /unapprove: ユーザーの承認を解除します。 これで、ロック、ブラックリスト、およびアンチフラッドが再度適用されます。
+      × / 承認済み : 承認されたすべてのユーザーをリストします。
+
+      * 所有者コマンド:*
+      × /un承認者: チャットのすべてのユーザーを承認解除します。 これは元にはできません。
+  Bans:
+    kick:
+      user_not_in_chat: |-
+        This user is not in this chat, how can I restirct them?
+      cannot_kick_admin: |-
+        Why would I kick an admin? That sounds like a pretty dumb idea.
+      is_bot_itself: |-
+        Why would I kick myself?
+      kicked_user: |-
+        Another one bites the dust...!
+        Kicked %s.
+      kicked_reason: "\n<b>Reason: </b> %s"
+    kickme:
+      is_admin: |-
+        You are an admin, you're stuck here with everyone else!
+      ok_out: |-
+        Alright, get out!
+    ban:
+      is_admin: |-
+        Why would I ban an admin? That sounds like a pretty dumb idea.
+      is_bot_itself: |-
+        Do you really think I will ban myself?
+      ban_reason: "\n<b>Reason: </b> %s"
+      tban: |-
+        Another one bites the dust...!
+        Banned %s for %s
+      normal_ban: |-
+        Another one bites the dust...!
+        Banned %s.
+      dban:
+        no_reply: |-
+          You need to reply to a message to delete it and ban the user!
+    unban:
+      is_admin: |-
+        Why would I unban an admin? That sounds like a pretty dumb idea.
+      is_bot_itself: |-
+        Why would I un-restrict myself when I'm already here?
+      unbanned_user: |-
+        Ok Sure...!
+        Unbanned %s.
+    help_msg: |-
+      場合によっては、ユーザーが注釈を付けることができ、チャットから削除したい場合があります。このモジュールは、お客様のチャットに対応する上で役に立ちます。
+      チャットを禁止し、それらが自分自身を持っているかどうかを後で解除することができます。
+
+      * ユーザー・コマンド:*
+      × /kickme: コマンドを発行したユーザーを蹴ります。
+
+      *バン・コマンド* (管理のみ):
+      × /バン <userhandle>: ユーザーは禁止されています。 ( ハンドル、または応答による )
+      × /sban <userhandle>: ユーザーは、ユーザーのサイレント・禁止を禁止し、メッセージをグループに送信したり、コマンドを削除したりすることはありません。 ( ハンドルまたは応答による )
+      × /dban <userhandle>: ユーザーは禁止され、返信されたメッセージは削除されます。 ( ハンドルまたは応答で )
+      × /tban <userhandle> x(m/h/d): ユーザーの「x」時間は禁止されている。 ( ハンドルまたは応答を介して ) 。 m = 分、 h = 時間、 d = 日。
+      × /unban <userhandle>: ユーザーは禁止されています。 ( ハンドルまたは応答による )
+
+      *Restrict コマンド:* (管理のみ)
+      × / 制限: InlineKeyboard でキック、禁止、ミュート
+      × /unれたり : InlineKeyboard を表示し、 InlineKeyboard を表示して、アンミュートおよびアンバンからのオプションを選択します。
+  Blacklists:
+    blacklist:
+      give_bl_word: |-
+        Please give me a word to add to the blacklist!
+      already_blacklisted: |-
+        These words are already blacklisted:
+      added_bl: |-
+        Added these words as blacklists:
+    unblacklist:
+      give_bl_word: |-
+        Please give me a word to remove from the blacklist!
+      no_removed_bl: |-
+        None of the given words were in the blacklist which can be removed!
+      removed_bl: |-
+        Removed '%s' from the blacklisted words!
+    ls_bl:
+      no_blacklisted: |-
+        There are no blacklisted words in this chat.
+      list_bl: |-
+        These words are blacklisted in this chat:
+    set_bl_action:
+      current_mode: |-
+        The current blacklist mode is: %s
+      changed_mode: |-
+        Changed blacklist mode to: *%s*
+      choose_correct_option: |-
+        Please choose an option out of <mute/kick/ban/warn/none>
+    rm_all_bl:
+      ask: |-
+        Are you sure you want to remove all blacklisted words from this chat?
+      button_handler:
+        yes: |-
+          Removed all Blacklists from this Chat ✅
+        no: |-
+          Cancelled removing all Blacklists from this Chat ❌
+    bl_watcher:
+      muted_user: |-
+        Muted %s due to %s
+      banned_user: |-
+        Banned %s due to %s
+      kicked_user: |-
+        Kicked %s due to %s
+    help_msg: |-
+      * ユーザーコマンド:*
+      × / ブラックリスト: チャット中のすべてのブラックリストを確認してください。
+
+      *Admin コマンド:*
+      × /addブラックリスト `<trigger>`: ブラックリストは現在のチャットの中の単語をリストします。
+      × /rmBlacklist `<trigger>`: 現在のブラックリストに含まれている単語をチャットから削除します。
+      × /blaction `<mute/kick/ban/warn/none>`: ブラックリスト・ワードが検出されたときに、ボットによって実行されるアクションを設定します。
+      × /blacklistaction: *
+
+      *Owner Only:*
+      × /remallbl: チャット
+
+      *Note:*
+      ブラックリストに含まれているすべてのワードを削除します。ブラックリストのデフォルト・モードは *none*です。これにより、チャットからのメッセージのみが削除されます。
+  Connections:
+    connected: |-
+      You are currently connected to <b>%s</b>
+    not_connected: |-
+      You aren't connected to any chats.
+    allow_connect:
+      turned_on: |-
+        Turned <b>on</b> User connections to this chat!
+        Users can now connect chat to their PM's!
+      turned_off: |-
+        Turned <b>off</b> User connections to this chat!
+        Users can't connect chat to their PM's!
+      currently_on: |-
+        User connections are currently turned <b>on</b>.
+        Users can connect this chat to their PM's!
+      currently_off: |-
+        User connections are currently turned <b>off</b>.
+        Users can't connect this chat to their PM's!
+    connect:
+      connection_disabled: |-
+        User connections are currently <b>disabled</b> to this chat.
+        Please ask admins to allow if you want to connect!
+      connected: |-
+        You are now connected to <b>%s</b>!
+      tap_btn_connect: |-
+        Please press the button below to connect this chat to your PM
+    connections_btns:
+      admin_conn_cmds: |-
+        Admin commands available:%s
+      user_conn_cmds: |-
+        User commands available:%s
+    disconnect:
+      disconnected: |-
+        Disconnected from the connected chat.
+      need_pm: |-
+        You need to send this in PM to me to disconnect from the chat!
+    is_user_connected:
+      need_group: |-
+        This command is made to be used in group chats, not in PM!
+      bot_not_admin: |-
+        I'm not an admin in this chat!
+      user_not_admin: |-
+        You need to be an admin to do this.
+    reconnect:
+      reconnected: |-
+        You are now reconnected to <b>%s</b>!
+      no_last_chat: |-
+        You have no last chat to reconnect to!
+      need_pm: |-
+        You need to be in a PM with me to reconnect to a chat!
+    help_msg: |-
+      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+
+      *Commands*:
+      × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
+      × /disconnect: Disconnect from the current chat.
+      × /reconnect: Reconnect to the previously connect chat
+      × /connection: See information about the currently connected chat.
+
+      *Admin Commands:*
+      × /allowconnect <yes/no>: Allow users to connect to chats or not.
+
+      You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+  Disabling:
+    help_msg: |-
+      これにより、一般的に使用されるコマンドを使用不可にすることができます。そのため、 noone また、それらを自動削除して、ブルーテックスからのユーザーを停止することもできます。
+
+      *Admin コマンド*:
+      × /disable `<commandname>`: このグループのコマンド名を使用するユーザーを停止します。
+      × /enable `<item name>`: このグループでユーザーがコマンド名を使用できるようにします。
+      × /disableable: すべての使用不可のコマンドをリストします。
+      × /disabledel `<yes/no/on/off>`: 非管理者によって使用された場合は、使用不可のコマンドを削除します。
+      × / 使用不可: このチャットで使用不可のコマンドをリストします。
+
+      注:
+      コマンドを使用不可に設定すると、コマンドは非管理者に対してのみ使用不可になります。 すべての管理者は、それらのコマンドを引き続き使用
+      使用不可のコマンドは、 /connect フィーチャーを介して引き続きアクセス可能です。 この障害を表示することに興味がある場合は、サポート・チャットで知らせてください。
+  Filters:
+    help_msg: |-
+      フィルターは大 / 小文字を区別しません。誰かがトリガー・ワードを指定するたびに、 Alita は別のコマンドを応答します。必要に応じて、独自のコマンドを作成することもできます。
+
+      コマンド:
+      - /filter <trigger> <reply>: 誰かがトリガをするたびに、ボットは文で応答する。 複数のワード・フィルターの場合、トリガーを引用符で
+      - /filters: すべてのチャット・フィルターをリストします。
+      - /stop <trigger>: トリガーに応答するボットを停止します。
+      - /stopall: 現在のチャットですべてのフィルターを停止します。 これは元にはできません。
+
+      サンプル:
+      - フィルターを設定 :
+      -> /filter hello Hello そこ ! 調子はどう ?
+      - 複数ワード・フィルターを設定します :
+      -> /filter hello フレンド・ハロー・バック! 「
+      」 - 管理者が使用できるフィルターを設定します。
+      -> /filter 例 : 通常のユーザーが {admin}
+      - ファイル、イメージ、 gif、またはその他の添付ファイルを保存するには、
+      -> / フィルター・トリガーによるファイルへの応答のみを行うことができます。
+  Formatting:
+    help_msg: |-
+      Alita は、メッセージをより表現力にするために、多数のフォーマット・オプションをサポートしています。 下のボタンをクリックして確認してください。
+    Markdown: |-
+      <b>Markdown Formatting</b>
+
+      You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
+      <b>Supported markdown</b>:
+      - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
+      - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
+      - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
+      - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
+      - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
+      - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
+      - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
+      - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
+      - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+
+      If you would like to send buttons on the same row, use the <code>:same</code> formatting.
+      <b>Example:</b>
+      <code>[button 1](buttonurl:example.com)</code>
+      <code>[button 2](buttonurl://example.com:same)</code>
+      <code>[button 3](buttonurl://example.com)</code>
+      This will show button 1 and 2 on the same line, with 3 underneath.
+    Fillings: |-
+      <b>Fillings</b>
+
+      You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
+      You can use these to mention a user in notes too!
+
+      <b>Supported fillings:</b>
+      - <code>{first}</code>: The user's first name.
+      - <code>{last}</code>: The user's last name.
+      - <code>{fullname}</code>: The user's full name.
+      - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
+      - <code>{mention}</code>: Mentions the user with their firstname.
+      - <code>{id}</code>: The user's ID.
+      - <code>{chatname}</code>: The chat's name.
+      - <code>{rules}</code>: Adds Rules Button to Message.
+    Random: |-
+      <b>Random Content</b>
+
+      Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
+      How to use random contents:
+      - %%%: This separator can be used to add  random replies to the bot.
+      For example:
+      <code>hello
+      %%%
+      how are you</code>
+      This will randomly choose between sending the first message, "hello", or the second message, "how are you".
+      Use this to make Alita feel a bit more customised! (only works in filters/notes)
+      Example welcome message:
+      - Every time a new user joins, they'll be presented with one of the three messages shown here.
+      -> /filter "hey"
+      hello there <code>{first}</code>!
+      %%%
+      Ooooh, <code>{first}</code> how are you?
+      %%%
+      Sup? <code>{first}</code>
+  Greetings:
+    help_msg: |-
+      グループへの新規メンバーの紹介や、終了後の「グッバイ」については、「
+
+      *Admin コマンド」 : *
+      × /se12 `<reply/text>`: グループのウェルカム・テキストを設定します。
+      × / ようこそ「<yes/no/on/off>」: グループのウェルカム設定を使用可能または使用不可にします。
+      × /rese12: ウェルカム・メッセージをデフォルトにリセットします。
+      × / setGoodbye `<reply/text>`: グループのお別れテキストを設定します。
+      × /Goodbye `<yes/no/on/off>`: グループのバイバイ設定を有効または無効にします。
+      × /resetGoodbye : お別れのメッセージをデフォルトにリセットします。
+      × / cleanservice `<yes/no/on/off>`: ' x ' などのすべてのサービス・メッセージを削除します。
+      × /cleanようこそ `<yes/no/on/off>`: 新しいメンバーが結合するたびに、古いウェルカム・メッセージを削除します。
+  Help:
+    About: |-
+      @%s は、最も速く、最も機能が満たされたグループ・マネージャーの 1 つです。
+
+      Alita ✨ は、 @DivideProjects!
+
+      Alita は 2020 年以降オンラインになっており、何千ものユーザー!
+
+      <b>なぜ Alita:</b>
+      - Simple: 多くのボット・コマンドを使用する簡単な使い方と compaitble により、数千のユーザーにサービスを提供してきました。
+      - フィーガード: 他のグループの管理ボットが持っていない多くの機能 :
+      - Fast: どうする? Python を使うことではなく、 <a href='https://go.dev/'>ゴー</a> をコアプログラミング言語として使用している。
+
+      <b>現在のバージョン:</b> %s
+    Configuration:
+      Step-1: |-
+        アリタ構成
+
+        へようこそ。まず、 Alita ✨ をグループに追加することです。 これを行うには、下のボタンを押してグループを選択し、「完了」を押してチュートリアルを続行します。
+      Step-2: |-
+        Ok, well done!
+
+        Now to let me work correctly, you need to make me Admin of your Group!
+        To do that, follow this easy steps:
+        ▫️ Go to your group
+        ▫️ Press the Group's name
+        ▫️ Press Modify
+        ▫️ Press on Administrator
+        ▫️ Press Add Administrator
+        ▫️ Press the Magnifying Glass
+        ▫️ Search @%s
+        ▫️ Confirm
+      Step-3: |-
+        素晴らしい!
+        今、 Bot は!
+        すべてのコマンドを / または ! で使用できます。
+
+        グループ内での設定に問題がある場合は、 @DivideSupportへのログインをためらわないでください。
+        あなたをお手伝いしたいと思います。
+    DonateText: |-
+      寄付したいのか ? 驚いた!
+      あなたが寄付すると、すべての基金は、迅速かつ即応性のある開発に向かっています。
+      お客様の寄付により、サーバーの制限により取得できなかった新機能または 2つの機能が取得される場合があります。
+      すべての基金は、データベース、ストレージ、およびホスティング !
+      といったサービスに投入されます。ここでは、以下のように所有者に連絡してください。 @DivideProjectsBot
+  Locks:
+    help_msg: |-
+      * 管理者のみ*:
+      × /lock `<permission>`: [ チャットの許可] をロックします。
+      × /アンロック `<permission>': チャット許可をアンロックします。
+      × / ロック: チャット許可を表示します。
+      × /locktype: 使用可能なロック・タイプ!
+
+      ロックを使用して、グループのユーザーを制限することができます。
+      ロックされた URL は、 URLを持つすべてのメッセージを自動的に削除し、ロック・ステッカーはすべてのステッカーを削除します。
+      ロッキング・ボットは、非管理者がボットをチャットに追加するのを停止します。
+
+      **Example:** Exam:**
+      `/lock media`: このロックはチャット内のすべてのメディア・メッセージをロックします。
+  Languages:
+    help_msg: |-
+      ボットの言語を変更することはできませんか ?
+      このモジュール!
+
+      ジャスト・タイプ /lang を使用して、インライン・キーボードを使用してユーザー自身またはグループの言語を選択することができます。
+
+      お客様は、 [Crowdin](https://crowdin.com/project/alita_robot) を使用して、ボットをより多くの言語に導入することができます。
+  Misc:
+    help_msg: |-
+      × /info: Get your user info, can be used as reply or by passing a User Id or Username.
+      × /id: Get the current group id. If used by replying to a message, get that user's id.
+      × /ping: Ping the Telegram Server!
+      × /paste: Paste texts at nekobin Server!
+      × /tr <lang code> <msg/reply to message>: Translate the message.
+      × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
+      × /stat: Gets the count of total number of messages in chat.
+  Mutes:
+    help_msg: |-
+      場合によっては、ユーザーが注釈を付けることができ、送信メッセージをチャットに制限したい場合があります。このモジュールはここで役立ちます。このモジュールを使用して、グループ内のメンバーをミュートすることができます。
+
+      *Mute コマンド:* (管理者のみ)
+      × /ミュート <userhandle>: ユーザーのミュート ( ハンドル、または応答 )
+      × /smute <userhandle>: ユーザーは、ユーザーをサイレントにミュートし、メッセージを送信せず、コマンドも削除しません。 ( ハンドル、または応答による )
+      × /dmute <userhandle>: ユーザーをミュートして、返信されたメッセージを削除します。 ( ハンドルまたは応答による )
+      × /tmute <userhandle> x(m/h/d): ユーザーを「x」の時間にミュートする。 ( ハンドルまたは応答を介して ) 。 m = 分、 h = 時間、 d = 日。
+      × /unmute <userhandle>: ユーザーのミュートを解除します。 ( ハンドル、または応答による )
+  Notes:
+    help_msg: |-
+      ノート !
+      ノートは、情報のランダムなチブチを保存すること、電話番号、素敵なギフ、面白いピクチャーで、 !
+      * ユーザー・コマンド:*
+      - /get <notename>: メモを取得するためには、素晴らしい情報を保存します。
+      - #notename: /getと同じ。
+      管理コマンド:
+      - /save <notename> <note text>: 「ワード」という名前の新しいメモを保存します。 メッセージに応答すると、そのメッセージが保存されます。 メディア!
+      - /clear <notename>: 関連メモを削除します。
+      - /notes: 現在のチャット内のすべてのメモをリストします。
+      - / 保存: /notesと同じ。
+      - /clearall: チャット中のすべてのメモを削除します。 これは元にはできません。
+      - /privatenotes: 予防保全にメモを送信するかどうか。 ユーザーがクリックすると予防保全のメモを取得するためのボタンが付いたメッセージが送信されます。
+  Pin:
+    help_msg: |-
+      ピンに関連するすべてのコマンドは、ここで見つけることができます。最新のニュースで、単純なピン留めされたメッセージでチャットを最新の状態に保つことができます。
+
+      *User コマンド:*
+      × /pinned: 現在のピン留めされたメッセージを取得します。
+
+      *Admin コマンド:*
+      × /pin: 返信したメッセージをピンとしています。 グループ・メンバーに通知を送信するには、「大きい」または「通知」を追加してください。
+      × /pinned: 現在のチャットで最新のピン留めされたメッセージを取得します。
+      × /permapin <text>: カスタム・メッセージをボットを介してピン留めします。 このメッセージには、マークダウン、ボタン、およびその他のすべてのクール・フィーチャーを含めることができます
+      × /unpin : 現在のピン留めされたメッセージをピン留め解除します。 応答として使用する場合は、応答メッセージをアンピンします。
+      × /unpinall: すべてのピン留めされたメッセージをアンピンします。
+      × /antichannelpin <yes/no/on/off>: 電報の自動ピンでリンクされたチャネルを使用することはできません。 引数が指定されていない場合は、現在の設定を表示
+      x/cleanLinked <yes/no/on/off>: リンクされたチャネルによって送信されたメッセージを削除します。
+      注: アンチチャネル・ピンを使用する場合は、手動で実行するのではなく、 /unpin コマンドを使用するようにしてください。 それ以外の場合は、チャネルがメッセージを送信すると、古いメッセージが再びピン留めされます。
+  Purges:
+    help_msg: |-
+      *Admin のみ:*
+      - /粛清 : このメッセージと返信メッセージとの間のすべてのメッセージを削除します。
+      - /del: 返信したメッセージを削除します。
+
+      *Examples*:
+      - 今までの間、返信されたメッセージからすべてのメッセージを削除します。
+      -> " 表示 / パージ"
+  Reports:
+    help_msg: |-
+      24 時間週 7日に監視する時間がない人はみんな忙しいんだ しかし、あなたのグループの誰かがスパミングをしている場合、どう対応しますか ?
+
+      × /report `<reason>`: 管理者に報告するためのメッセージに返信する。
+      - @admin: /report と同じが、コマンドではありません。
+
+      *Admins Only:*
+      × / レポート `<on/off/yes/no>`: レポートの設定を変更するか、現在の状況を表示します。
+      - 予防保全で実行する場合は、ステータスを切り替えます。
+      - グループ内にグループの状況を切り替える場合は、
+      × / レポート `block` ( 応答のみ): ユーザーが /report または @adminを使用することをブロックします。
+      × / レポート `unblock` ( 応答のみ経由 ): ユーザーを /report または @adminからブロック解除します。
+      × / レポート `showblocklist`: /report または @adminを使用できないすべてのブロックされたユーザーをチェックしてください。
+
+      ユーザーを報告するには、 @admin または /report; Natalie のメッセージに返信し、管理者に通知されたことを通知するメッセージを返信します。
+      ユーザーを報告するためにメッセージに応答する必要があります。 @admin 者のみにタグを付けることはできません。理由 !
+
+      *NOTE:* これらのいずれも、管理者によって使用された場合にはトリガーされません。
+  Rules:
+    help_msg: |-
+      すべてのチャットは、異なるルールを使用して動作します。このモジュールは、これらのルールをクリアするのに役立ちます。
+      *User コマンド*:
+      × / ルール: 現在のチャット・ルールを確認します。
+      *Admin コマンド*:
+      × /setrules `<text>` : このチャットのルールを設定してください。
+      × /privaterules `<yes/no/on/off>`: ルールをプライベートで送信するかどうかを有効/無効にします。
+      × /resetrules: チャット規則をデフォルトにリセットする
+  Tagger:
+    help_msg: |-
+      Tagger is an essential feature to mention all subscribed members in the group.
+      Any chat members can subscribe to tagger.
+
+      *User Commands:*
+      × /tagme: Allow user to be tagged
+      × /untagme: Disallow user to be tagged
+
+      *Admin Commands:*
+      × /tagall: tag/mention all tagged users
+      × /untagall: clear all tagged members
+      × /addtag <user>: Add a user manually to taglist
+      × /rmtag <user>: Remove a user manually from taglist
+  Warns:
+    help_msg: |-
+      Keep your members in check with warnings; stop them getting out of control!
+      If you're looking for automated warnings, read about the blacklist module!
+
+      *Admin Commands:*
+      - /warn <reason>: Warn a user.
+      - /dwarn <reason>: Warn a user by reply, and delete their message.
+      - /swarn <reason>: Silently warn a user, and delete your message.
+      - /warns: See a user's warnings.
+      - /rmwarn: Remove a user's latest warning.
+      - /resetwarn: Reset all of a user's warnings to 0.
+      - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
+      - /warnings: Get the chat's warning settings.
+      - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
+      - /setwarnlimit <number>: Set the number of warnings before users are punished.
+
+      *Examples*
+      - Warn a user.
+      -> `/warn @user For disobeying the rules`
+  Utils:
+    chat_status:
+      user:
+        no_permission_change_info_btn: |-
+          情報を変更する権限がありません !!
+        no_permission_change_info_cmd: |-
+          このグループの情報を変更する権限がありません。
+        no_permission_restrict_btn: |-
+          メンバーを制限する権限がありません !!
+        no_permission_restrict_cmd: |-
+          このグループのメンバーを制限する権限がありません。
+        no_permission_promote_btn: |-
+          メンバーをプロモート/デモートする権限がありません !!
+        no_permission_promote_cmd: |-
+          ここでは人を昇進/ 降格できない ! 適切な権限があることを確認してください。
+        no_permission_pin: |-
+          ここでメッセージをピン留めはできない 管理者で、メッセージをピン留めできるようにしてください。
+        no_permission_delete: |-
+          メッセージを削除するための権限がありません。
+        require_admin_btn: |-
+          これを行うには、管理者である必要があります。
+        require_admin_cmd: |-
+          このコマンドを実行できるのは管理者のみです。
+        require_owner_btn: |-
+          これを行うには、グループ作成者である必要があります。
+        require_owner_cmd: |-
+          これを行うのはグループ作成者のみです
+      bot:
+        no_permission_restrict: |-
+          メンバーを制限する権限がありません !!
+        no_permission_restrict_group: |-
+          ここの人を制限できない ! 自分が管理者であり、他のメンバーを制限できることを確認してください
+        no_permission_promote: |-
+          ここでは人を昇進/ 降格できない ! 自分が管理者であり、新しい管理者を指名できることを確認してください。
+        no_permission_pin: |-
+          メッセージをピン留められない ! 自分が管理者であり、メッセージをピン留めできることを確認
+        no_permission_delete: |-
+          メッセージを削除するための権限がありません。
+        require_admin: |-
+          私は管理者じゃない ! 管理者であり、適切な権限を持っていることを確認してください。
+      require_private: |-
+        このコマンドは、グループチャットではなく、午後に行われます。
+      require_group: |-
+        このコマンドはグループチャットで使用されます。午後には使用されません。
+      anon_admin_string: |-
+        あなたは匿名のように見える このボタンをタップして、 IDを確認します。
+      anon_admin_btn: |-
+        クリックして管理者を証明
+    extraction:
+      extract_chat:
+        badrequest_failed_getchat: |-
+          チャットへの接続に失敗しました : チャットを取得できませんでした : チャットを取得できません : 不正な要求: チャットが見つかりません
+        fail_need_chat_id: |-
+          チャット IDが予期されていましたが、これは有効な整数ではありません
+        fail_need_chat: |-
+          接続するチャット ID が必要です。
+      extract_user:
+        no_user_found: |-
+          この名前でユーザーを見つけることができませんでした。以前にそれらを見たことがありますか ?
+        badrequest_failed_getchatmember: |-
+          ユーザーの取得に失敗しました : getChatMember: Bad Request: チャットが見つかりません
+    string_handling:
+      extract_time:
+        invalid_time_amount: |-
+          無効な時間の指定です。
+        invalid_time_type: |-
+          無効な時刻タイプが指定され 予期される m、 h、または d の値 : %s

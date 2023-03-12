@@ -10,35 +10,12 @@ on:
         description: 'Tag to release'
         required: true
 
-env:
-  ProjectName: alita_robot
-
 jobs:
-  # only run this step when the tag is not already created
-  create-tag:
+  goreleaser:
+    name: Release Binaries
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Create and Push Tag
-      if: startsWith(github.ref, 'refs/tags/') != 'true' && github.event.inputs.tag != ''
-      run: |-
-        git config --global user.email "divkix@divkix.me"
-        git config --global user.name "Divanshu Chauhan"
-        tag=${{ github.event.inputs.tag }} # if triggered by workflow_dispatch
-        if [ -z "$tag" ]; then
-          tag=${GITHUB_REF#refs/tags/}
-        fi
-        git tag -f -a -m "$tag" "$tag"
-        git push -f origin "$tag"
-
-  # build the docker image and push it to docker hub and ghcr
-  docker-build:
-    name: Build Image
-    needs: create-tag
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout current repo
+      - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -50,87 +27,33 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Set ENV Variables
-        id: vars
-        run: |
-          IMG="$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')"
-          TAG="$(git tag | sort -V | tail -1)"
-          echo "BUILD_VER=${TAG}" >> $GITHUB_ENV
-          echo "::set-output name=tag::${TAG}"
-          echo "IMAGE=${IMG}" >> $GITHUB_ENV
-          echo "BUILD_DATE=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
-          echo "GIT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
-          echo "GIT_REF=$(git symbolic-ref -q --short HEAD || git describe --tags --exact-match)" >> $GITHUB_ENV
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v4
+      - uses: actions/setup-go@v3
         with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: |
-            ghcr.io/${{ env.IMAGE }}:latest
-            ghcr.io/${{ env.IMAGE }}:${{ env.BUILD_VER }}
-            ${{ env.IMAGE }}:latest
-            ${{ env.IMAGE }}:${{ env.BUILD_VER }}
-          labels: |
-            org.opencontainers.image.authors=${{ github.repository_owner }}
-            org.opencontainers.image.created=${{ env.BUILD_DATE }}
-            org.opencontainers.image.description=Created from commit ${{ env.GIT_SHA }} and ref ${{ env.GIT_REF }}
-            org.opencontainers.image.ref.name=${{ env.GIT_REF }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.source=https://github.com/${{ github.repository }}
-            org.opencontainers.image.version=${{ env.BUILD_VER }}
+          go-version: 1.19
 
-    outputs:
-      BUILD_VER: ${{ steps.vars.outputs.tag }}
+      # only run this step when the tag is not already created
+      - if: startsWith(github.ref, 'refs/tags/') != 'true' && github.event.inputs.tag != ''
+        name: Create and Push Tag
+        run: |-
+          git config --global user.email "divkix@divkix.me"
+          git config --global user.name "Divanshu Chauhan"
+          tag=${{ github.event.inputs.tag }} # if triggered by workflow_dispatch
+          if [ -z "$tag" ]; then
+            tag=${GITHUB_REF#refs/tags/}
+          fi
+          git tag -f -a -m "$tag" "$tag"
+          git push -f origin "$tag"
 
-  # update description of the docker image on docker hub
-  update-dockerhub-description:
-    name: Update Description
-    needs: docker-build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Docker Hub Description
-        uses: peter-evans/dockerhub-description@v3
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v4
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-  # create a release on github
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    needs:
-      - docker-build
-      - create-tag
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: ${{ needs.docker-build.outputs.BUILD_VER }}
-          tag_name: ${{ needs.docker-build.outputs.BUILD_VER }}
-          body: |-
-           ${{ github.event.repository.name }} ${{ needs.docker-build.outputs.BUILD_VER }}
-
-            Docker Images:
-            `ghcr.io/${{ github.repository_owner }}/${{ env.ProjectName }}:${{ needs.docker-build.outputs.BUILD_VER }}`
-            `docker.io/${{ github.repository_owner }}/${{ env.ProjectName }}:${{ needs.docker-build.outputs.BUILD_VER }}`
+          version: latest
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

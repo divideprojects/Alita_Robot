@@ -1,14 +1,11 @@
-test:
-	@pre-commit run --all-files
-
-install:
-	@pip3 install --upgrade pip setuptools wheel
-	@sleep 3
-	@pip install -r requirements.txt
-
 run:
-	@python3 -m alita
+	go run main.go
 
-clean:
-	@rm -rf alita/logs
-	@pyclean .
+tidy:
+	go mod tidy
+
+vendor:
+	go mod vendor
+
+docker-compose:
+	set -x DOPPLER_TOKEN (doppler configs tokens create dev --plain --max-age 1m) && docker compose down && docker compose up -d --build

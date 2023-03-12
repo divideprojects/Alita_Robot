@@ -11,13 +11,13 @@
 </p>
 
 <p align='center'>
-  <a href="https://www.python.org/" alt="made-with-python"> <img src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?style=flat-square&logo=python&color=blue" /> </a>
+  <a href="https://go.dev/" alt="made-with-go"> <img src="https://img.shields.io/badge/Made%20with-Go-1f425f.svg?style=flat-square&logo=Go&color=blue" /> </a>
   <a href="https://hub.docker.com/r/divideprojects/alita_robot" alt="Docker!"> <img src="https://aleen42.github.io/badges/src/docker.svg" /> </a>
   <a href="https://deepsource.io/gh/DivideProjects/Alita_Robot/?ref=repository-badge"><img src="https://static.deepsource.io/deepsource-badge-light-mini.svg" alt="DeepSource"></a>
   <a href="https://makeapullrequest.com" alt="PRs Welcome"> <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /> </a>
 </p>
 
-Alita is a Telegram Group managment bot made using **[Pyrogram](https://github.com/pyrogram/pyrogram) _async version_** and **[Python](https://python.org)**, which makes it modern and faster than most of the exisitng Telegram Chat Managers.
+Alita is a Telegram Group managment bot made using **[Gotgbot](https://github.com/PaulSonOfLars/gotgbot)** and **[Go](https://go.dev)**, which makes it modern and faster than most of the exisitng Telegram Chat Managers.
 
 **Alita's features over other bots:**
 - Modern
@@ -35,7 +35,8 @@ Alita is currently available in 1 Language as of now:
 
 More languages can be managed in the _locales_ folder.
 
-We are still working on adding new languages.
+More langauges have been added to locales folder but need some configuration.
+
 
 Help us bring more languages to the bot by contributing to the project on [Crowdin](https://crowdin.com/project/alitarobot)
 
@@ -43,11 +44,15 @@ Help us bring more languages to the bot by contributing to the project on [Crowd
 - You need to have a *Mongo Database* (Cluster Preferred)
 - Linux/Windows machine (Ubuntu/Debain-based OS Preferred or Windows 10/Server2016 and later)
 
+or
+- Docker (Easiest way to setup the bot)
+
 
 ## How to setup
 
 First Step!
 - Star **⭐** the repository!!
+- Fork **🔱** the repository before deploying and make changes in the fork.
 
 It really motivates me to continue this project further.
 
@@ -64,24 +69,16 @@ It really motivates me to continue this project further.
 
 ### Traditional
 
-- Install Python v3.7 or later from [Python's Website](https://python.org)
-- Install virtualenv using `python3 -m pip -U install virtualenv`.
-- **Fork** or Clone the project using `git clone https://github.com/divkix/Alita_Robot.git`
-- Create Virtualenv using: `virtualenv venv`
-- Install the requirements using `python3 -m pip install -r requirements.txt`
-- Fill in all the variables in *Development* class, not *Config* class. **Sudo, Dev, Whitelist** users are optional!!
-- Change to virtualenv shell by using:
-  `. venv/bin/activate` (Linux)
-  `venv\Scripts\activate` (Windows)
-- Run the bot using `python3 -m alita`
+- Download a binary from [releases](https://github.com/Divkix/Alita_Robot/releases) page specific to your PC.
+- Set the required env variables and run the binary
+
+**Note:** Not a lot of people may be able to run using this because the instructions aren't clear but I'll try to make it clear in future.
 
 ### Docker
 
 - Clone the repo and enter into it
 - Install [Docker](https://www.docker.com/)
-- Fill in the `sample.env` file and rename it to `main.env`.
-- Build the docker image using: `docker build -t alita_robot:latest .` (The dot '.' at last is necessary!)
-- Run the command `docker run --env-file main.env alita_robot`
+- Run `docker build -t alita .` if you're using your forked repo, else run `docker run -e ENV_VAR=VALUE -d --name alita divkix/alita_robot`
 
 
 If all works well, bot should send message to the **MESSAGE_DUMP** Group!
@@ -91,13 +88,14 @@ If all works well, bot should send message to the **MESSAGE_DUMP** Group!
 
 - Make sure your PR works and doesn't break anything.
 - You must join the support group.
-- Make sure it passes test using `make test`.
+- Make sure it builds and runs properly.
 
 
 ## Special Thanks to
-- [AmanoTeam](https://github.com/AmanoTeam/) for [EduuRobot](https://github.com/AmanoTeam/EduuRobot) as that helped me make the translation engine.
-- [Dan](https://github.com/delivrance) for his [Pyrogram](https://github.com/pyrogram/pyrogram) library
-- [Paul Larsen](https://github.com/PaulSonOfLars) for his Original Marie Source Code.
+- [Paul Larsen](https://github.com/PaulSonOfLars) for his Original Marie Source Code and the amazing [Gotgbot](https://github.com/PaulSonOfLars/gotgbot) library.
+- [ÁÑÑÍHÌLÅTØR SPÄRK](https://github.com/annihilatorrrr) always motivating me to make this project better.
+- [jayantkageri](https://github.com/jayantkageri) for motivating me as well.
+- [Anony](https://github.com/anonyindian) for helping me with bugs and issues in the project.
 - Everyone else who inspired me to make this project, more names can be seen on commits!
 
 
@@ -105,7 +103,3 @@ If all works well, bot should send message to the **MESSAGE_DUMP** Group!
 
 * Copyright (C) 2020-2021 by [Divkix](https://github.com/Divkix) ❤️️
 * Licensed under the terms of the [GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/divkix/Alita_Robot/blob/master/LICENSE)
-
-## Powered By
-
-[![DivideProjects](https://img.shields.io/badge/Divide-Projects-green?style=for-the-badge&logo=appveyor)](https://t.me/DivideSupport)

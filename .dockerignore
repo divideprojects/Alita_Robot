@@ -1,5 +1,6 @@
 **
-!pyproject.toml
-!poetry.lock
-!alita
+!alita/
+!main.go
+!go.*
 !locales
+!vendor

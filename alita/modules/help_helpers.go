@@ -1,0 +1,248 @@
+package modules
+
+import (
+	"fmt"
+	"html"
+	"sort"
+	"strconv"
+	"strings"
+
+	"github.com/PaulSonOfLars/gotgbot/v2"
+	"github.com/PaulSonOfLars/gotgbot/v2/ext"
+	log "github.com/sirupsen/logrus"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+
+	"github.com/Divkix/Alita_Robot/alita/db"
+	"github.com/Divkix/Alita_Robot/alita/i18n"
+	"github.com/Divkix/Alita_Robot/alita/utils/chat_status"
+	"github.com/Divkix/Alita_Robot/alita/utils/helpers"
+	"github.com/Divkix/Alita_Robot/alita/utils/parsemode"
+	"github.com/Divkix/Alita_Robot/alita/utils/string_handling"
+)
+
+// This var is used to add the back button to the help menu
+// i.e. where modules are shown
+var markup gotgbot.InlineKeyboardMarkup
+
+func listModules() []string {
+	// sort the modules alphabetically
+	modules := HelpModule.AbleMap.LoadModules()
+	sort.Strings(modules) // Sort the modules
+	return modules
+}
+
+// New menu, used for building help menu in bot!
+func initHelpButtons() {
+	var kb []gotgbot.InlineKeyboardButton
+
+	for _, i := range listModules() {
+		kb = append(kb, gotgbot.InlineKeyboardButton{Text: i, CallbackData: fmt.Sprintf("helpq.%s", i)})
+	}
+	zb := helpers.ChunkKeyboardSlices(kb, 3)
+	zb = append(zb, []gotgbot.InlineKeyboardButton{{Text: "« Back", CallbackData: fmt.Sprintf("helpq.%s", "BackStart")}})
+	markup = gotgbot.InlineKeyboardMarkup{InlineKeyboard: zb}
+}
+
+func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgbot.InlineKeyboardMarkup) {
+	ModName := cases.Title(language.English).String(module)
+	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) +
+		i18n.I18n{LangCode: lang}.GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
+
+	replyMarkup = gotgbot.InlineKeyboardMarkup{
+		InlineKeyboard: append(
+			HelpModule.helpableKb[ModName],
+			backBtnSuffix,
+		),
+	}
+	return
+}
+
+func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.Message, err error) {
+	helpText, replyMarkup, _parsemode := getHelpTextAndMarkup(ctx, strings.ToLower(module))
+
+	msg, err = b.SendMessage(
+		ctx.EffectiveChat.Id,
+		helpText,
+		&gotgbot.SendMessageOpts{
+			ParseMode:   _parsemode,
+			ReplyMarkup: replyMarkup,
+		},
+	)
+	return
+}
+
+func getModuleNameFromAltName(altName string) string {
+	for _, modName := range listModules() {
+		altNames := append(i18n.I18n{LangCode: "config"}.GetStringSlice(fmt.Sprintf("alt_names.%s", modName)), strings.ToLower(modName))
+		for _, altNameInSlice := range altNames {
+			if altNameInSlice == altName {
+				return modName
+			}
+		}
+	}
+	return ""
+}
+
+func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User, arg string) error {
+	msg := ctx.EffectiveMessage
+	chat := ctx.EffectiveChat
+
+	if strings.HasPrefix(arg, "help_") {
+		helpModule := strings.Split(arg, "_")[1]
+		_, err := sendHelpkb(b, ctx, helpModule)
+		if err != nil {
+			log.Errorf("[Start]: %v", err)
+			return err
+		}
+	} else if strings.HasPrefix(arg, "connect_") {
+		chatID, _ := strconv.Atoi(strings.Split(arg, "_")[1])
+		cochat, _ := b.GetChat(int64(chatID), nil)
+		go db.ConnectId(user.Id, cochat.Id)
+
+		Text := fmt.Sprintf("You have been connected to %s!", cochat.Title)
+		connKeyboard := helpers.InitButtons(b, cochat.Id, user.Id)
+
+		_, err := ctx.EffectiveMessage.Reply(b, Text,
+			&gotgbot.SendMessageOpts{
+				ReplyMarkup: connKeyboard,
+			},
+		)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	} else if strings.HasPrefix(arg, "rules_") {
+		chatID, _ := strconv.Atoi(strings.Split(arg, "_")[1])
+		chatinfo, _ := b.GetChat(int64(chatID), nil)
+		rulesrc := db.GetChatRulesInfo(int64(chatID))
+
+		if rulesrc.Rules == "" {
+			_, err := msg.Reply(b, "This chat does not have any rules!", parsemode.Shtml())
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+			return ext.EndGroups
+		}
+
+		Text := fmt.Sprintf("Rules for <b>%s</b>:\n\n%s", chatinfo.Title, rulesrc.Rules)
+		_, err := msg.Reply(b, Text, parsemode.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	} else if strings.HasPrefix(arg, "note") {
+		nArgs := strings.SplitN(arg, "_", 3)
+		chatID, _ := strconv.Atoi(nArgs[1])
+		chatinfo, _ := b.GetChat(int64(chatID), nil)
+
+		if strings.HasPrefix(arg, "notes_") {
+			// check if feth admin notes or not
+			admin := chat_status.IsUserAdmin(b, int64(chatID), user.Id)
+			noteKeys := db.GetNotesList(chatinfo.Id, admin)
+			info := "There are no notes in this chat!"
+			if len(noteKeys) > 0 {
+				info = "These are the current notes in this Chat:\n"
+				for _, note := range noteKeys {
+					info += fmt.Sprintf(" - <a href='https://t.me/%s?start=note_%d_%s'>%s</a>\n", b.Username, int64(chatID), note, note)
+				}
+			}
+
+			_, err := msg.Reply(b, info, parsemode.Shtml())
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+		} else if strings.HasPrefix(arg, "note_") {
+			noteName := strings.ToLower(nArgs[2])
+			noteData := db.GetNote(chatinfo.Id, noteName)
+			if noteData == nil {
+				_, err := msg.Reply(b, "This note does not exist!", parsemode.Shtml())
+				if err != nil {
+					log.Error(err)
+					return err
+				}
+				return ext.EndGroups
+			}
+			if noteData.AdminOnly {
+				if !chat_status.IsUserAdmin(b, int64(chatID), user.Id) {
+					_, err := msg.Reply(b, "This note can only be accessed by a admin!", parsemode.Shtml())
+					if err != nil {
+						log.Error(err)
+						return err
+					}
+					return ext.ContinueGroups
+				}
+			}
+			_, err := helpers.SendNote(b, chatinfo, ctx, noteData, msg.MessageId)
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+		}
+	} else if arg == "about" {
+		_, err := b.SendMessage(chat.Id,
+			aboutText,
+			&gotgbot.SendMessageOpts{
+				ParseMode:                "Markdown",
+				DisableWebPagePreview:    true,
+				ReplyToMessageId:         msg.MessageId,
+				ReplyMarkup:              &aboutKb,
+				AllowSendingWithoutReply: true,
+			},
+		)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	} else {
+		// This sends the normal help block
+		_, err := b.SendMessage(chat.Id,
+			startHelp,
+			&gotgbot.SendMessageOpts{
+				ParseMode:             parsemode.HTML,
+				DisableWebPagePreview: true,
+				ReplyMarkup:           &startMarkup,
+			},
+		)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	}
+
+	return ext.EndGroups
+}
+
+func getAltNamesOfModule(moduleName string) []string {
+	return append(i18n.I18n{LangCode: "config"}.GetStringSlice(fmt.Sprintf("alt_names.%s", moduleName)), strings.ToLower(moduleName))
+}
+
+func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbmarkup gotgbot.InlineKeyboardMarkup, _parsemode string) {
+	var moduleName string
+	userOrGroupLanguage := db.GetLanguage(ctx)
+
+	for _, ModName := range listModules() {
+		// add key as well to this array
+		altnames := getAltNamesOfModule(ModName)
+
+		if string_handling.FindInStringSlice(altnames, module) {
+			moduleName = ModName
+			break
+		}
+	}
+
+	// compare and check if module name is not empty
+	if moduleName != "" {
+		_parsemode = parsemode.Markdown
+		helpText, kbmarkup = getModuleHelpAndKb(moduleName, userOrGroupLanguage)
+	} else {
+		_parsemode = parsemode.HTML
+		helpText = fmt.Sprintf(mainhlp, html.EscapeString(ctx.EffectiveUser.FirstName))
+		kbmarkup = markup
+	}
+
+	return
+}
