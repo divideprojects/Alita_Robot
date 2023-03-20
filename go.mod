@@ -5,7 +5,7 @@ go 1.19
 
 require (
 	github.com/PaulSonOfLars/gotg_md2html v0.0.0-20230214132856-40b1a455928a
-	github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.15
+	github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.16
 	github.com/dustin/go-humanize v1.0.1
 	github.com/eko/gocache/v3 v3.1.2
 	github.com/go-redis/redis/v8 v8.11.5
