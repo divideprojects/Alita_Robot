@@ -9,12 +9,11 @@ body:
       value: "## Welcome!"
   - type: markdown
     attributes:
-      value: |
-        Thanks for taking the time to fill out this bug!.
+      value: "Thanks for taking the time to fill out this bug!."
   - type: checkboxes
     id: cbox
     attributes:
-      label: I am sure the error is coming from Bot's code and not elsewhere.
+      label: "I am sure the error is coming from Bot's code and not elsewhere."
       description: You may select more than one.
       options:
         - label: "I am sure the error is coming from Bot's code and not elsewhere."
