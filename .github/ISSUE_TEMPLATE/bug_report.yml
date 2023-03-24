@@ -34,7 +34,7 @@ body:
     validations:
       required: true
 
-  - type: input
+  - type: textarea
     id: traceback
     attributes:
       label: Error Traceback
