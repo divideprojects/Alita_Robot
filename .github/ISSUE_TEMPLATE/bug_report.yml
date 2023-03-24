@@ -34,12 +34,11 @@ body:
     validations:
       required: true
 
-body:
-- type: input
-  id: traceback
-  attributes:
-    label: Error Traceback
-    description: "Please enter the traceback bellow (if applicable):"
-    placeholder: "Enter error traceback here"
-  validations:
-    required: false
+  - type: input
+    id: traceback
+    attributes:
+      label: Error Traceback
+      description: "Please enter the traceback bellow (if applicable):"
+      placeholder: "Enter error traceback here"
+    validations:
+      required: false
