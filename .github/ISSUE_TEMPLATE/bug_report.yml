@@ -1,0 +1,44 @@
+name: Bug Report
+description: Create a bug report affecting the bot
+title: "[BUG]"
+labels: ["bug :bug:"]
+
+body:
+  - type: markdown
+    attributes:
+      value: "## Welcome!"
+  - type: markdown
+    attributes:
+      value: "Thanks for taking the time to fill out this bug!."
+  - type: checkboxes
+    id: cbox
+    attributes:
+      label: "I am sure the error is coming from Bot's code and not elsewhere."
+      description: You may select more than one.
+      options:
+        - label: "I am sure the error is coming from Bot's code and not elsewhere."
+        - label: "I have searched in the issue tracker for similar bug reports, including closed ones."
+        - label: "I ran `go run main.go` in the project root and reproduced the issue using the latest development version."
+        - label: "I am not here to spam and show that I'm stupid."
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: "How do you trigger this bug? Please walk us through it step by step."
+      value: |
+        1.
+        2.
+        3.
+        ...
+      render: bash
+    validations:
+      required: true
+
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Error Traceback
+      description: "Please enter the traceback bellow (if applicable):"
+      placeholder: "Enter error traceback here"
+    validations:
+      required: false
