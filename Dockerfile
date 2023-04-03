@@ -6,6 +6,6 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=`go env GOHOSTOS` GOARCH=`go env GOHOSTARCH` go build -o out/Alita_Robot -ldflags="-w -s" .
 
 # Run Stage: Run bot using the bot binary copied from build stage
-FROM alpine:3.17.2
+FROM alpine:3.17.3
 COPY --from=builder /app/out/Alita_Robot /app/Alita_Robot
 CMD ["/app/Alita_Robot"]
