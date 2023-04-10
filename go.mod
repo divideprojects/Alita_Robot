@@ -13,7 +13,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.15.0
 	go.mongodb.org/mongo-driver v1.11.3
-	golang.org/x/text v0.8.0
+	golang.org/x/text v0.9.0
 )
 
 require (
