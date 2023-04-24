@@ -42,8 +42,8 @@ github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym
 github.com/NYTimes/gziphandler v0.0.0-20170623195520-56545f4a5d46/go.mod h1:3wb06e3pkSAbeQ52E9H9iFoQsEEwGN64994WTCIhntQ=
 github.com/PaulSonOfLars/gotg_md2html v0.0.0-20230214132856-40b1a455928a h1:CmqbP3VarJQm1GGLwTWKd17PIUvFK1sL903L/3uGqkE=
 github.com/PaulSonOfLars/gotg_md2html v0.0.0-20230214132856-40b1a455928a/go.mod h1:RprvtzpWhKv7APWJQuW4zjG1XhIOPSvfIfvAHAxJaTY=
-github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.15 h1:iXeqrGN8Q/qNl+aUWjaAbFrwNJ4MpSxicQ4x4XWTCKI=
-github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.15/go.mod h1:r815fYWTudnU9JhtsJAxUtuV7QrSgKpChJkfTSMFpfg=
+github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.19 h1:NpBvZukBNR866VXTJ5L42owU7vXUjkAcL4w7d+oXq+s=
+github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.19/go.mod h1:r815fYWTudnU9JhtsJAxUtuV7QrSgKpChJkfTSMFpfg=
 github.com/PuerkitoBio/purell v1.0.0/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
 github.com/PuerkitoBio/urlesc v0.0.0-20160726150825-5bd2802263f2/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
 github.com/XiaoMi/pegasus-go-client v0.0.0-20220519103347-ba0e68465cd5 h1:mePTwVjIZ65Ko7gK9MWh/xV/ubEe9yns69Slzr4B1aI=
