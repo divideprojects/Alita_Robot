@@ -463,7 +463,6 @@ func (filtersModuleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) erro
 }
 
 func LoadFilters(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(filtersModule.modname, true)
 
 	HelpModule.helpableKb[filtersModule.modname] = [][]gotgbot.InlineKeyboardButton{

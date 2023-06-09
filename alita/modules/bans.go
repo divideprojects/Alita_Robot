@@ -1038,7 +1038,6 @@ func (bansModuleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context
 }
 
 func LoadBans(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(bansModule.modname, true)
 
 	// ban cmds

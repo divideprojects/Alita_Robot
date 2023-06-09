@@ -456,7 +456,6 @@ func (miscModuleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func LoadMisc(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(miscModule.modname, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("stat", miscModule.stat))
@@ -473,5 +472,4 @@ func LoadMisc(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("tr", miscModule.translate))
 	misc.AddCmdToDisableable("tr")
 	dispatcher.AddHandler(handlers.NewCommand("removebotkeyboard", miscModule.removeBotKeyboard))
-
 }
