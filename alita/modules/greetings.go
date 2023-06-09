@@ -28,7 +28,7 @@ type greetingsModuleStruct struct {
 
 var greetingsModule = greetingsModuleStruct{modname: "Greetings"}
 
-func (m greetingsModuleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
@@ -99,7 +99,7 @@ func (m greetingsModuleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
@@ -135,7 +135,7 @@ func (m greetingsModuleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) er
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
@@ -160,7 +160,7 @@ func (m greetingsModuleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) 
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
@@ -229,7 +229,7 @@ func (m greetingsModuleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
@@ -263,7 +263,7 @@ func (m greetingsModuleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) er
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
@@ -291,7 +291,7 @@ func (m greetingsModuleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) 
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
@@ -341,7 +341,7 @@ func (m greetingsModuleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) 
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 	var err error
@@ -391,7 +391,7 @@ func (m greetingsModuleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) 
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 	var err error
@@ -440,7 +440,7 @@ func (m greetingsModuleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) err
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	newMember := ctx.ChatMember.NewChatMember.MergeChatMember().User
 	greetPrefs := db.GetGreetingSettings(chat.Id)
@@ -479,7 +479,7 @@ func (m greetingsModuleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) err
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	leftMember := ctx.ChatMember.OldChatMember.MergeChatMember().User
 	greetPrefs := db.GetGreetingSettings(chat.Id)
@@ -515,7 +515,7 @@ func (m greetingsModuleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) er
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -591,7 +591,7 @@ func (m greetingsModuleStruct) pendingJoins(bot *gotgbot.Bot, ctx *ext.Context) 
 	return ext.ContinueGroups
 }
 
-func (m greetingsModuleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
@@ -650,7 +650,7 @@ func (m greetingsModuleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Conte
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (greetingsModuleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 	var err error
@@ -701,7 +701,7 @@ func (m greetingsModuleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) e
 	return ext.EndGroups
 }
 
-func (m greetingsModuleStruct) loadPendingJoins(chatId, userId int64) bool {
+func (greetingsModuleStruct) loadPendingJoins(chatId, userId int64) bool {
 	alreadyAsked, _ := cache.Marshal.Get(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chatId, userId), new(bool))
 	if alreadyAsked == nil || !alreadyAsked.(bool) {
 		return false
@@ -709,7 +709,7 @@ func (m greetingsModuleStruct) loadPendingJoins(chatId, userId int64) bool {
 	return true
 }
 
-func (m greetingsModuleStruct) setPendingJoins(chatId, userId int64) {
+func (greetingsModuleStruct) setPendingJoins(chatId, userId int64) {
 	_ = cache.Marshal.Set(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chatId, userId), true, store.WithExpiration(5*time.Minute))
 }
 

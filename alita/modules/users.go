@@ -23,7 +23,7 @@ var usersModule = usersModuleStruct{
 	handlerGroup: -1,
 }
 
-func (m usersModuleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (usersModuleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender

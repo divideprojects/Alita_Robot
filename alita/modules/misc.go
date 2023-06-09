@@ -34,7 +34,7 @@ type miscModuleStruct struct {
 
 var miscModule = miscModuleStruct{modname: "Misc"}
 
-func (m miscModuleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
+func (miscModuleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 
@@ -72,7 +72,7 @@ func (m miscModuleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m miscModuleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
+func (miscModuleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
@@ -153,7 +153,7 @@ func (m miscModuleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m miscModuleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
+func (miscModuleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
 
@@ -256,7 +256,7 @@ func (m miscModuleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m miscModuleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
+func (miscModuleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "ping") {
@@ -272,7 +272,7 @@ func (m miscModuleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m miscModuleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
+func (miscModuleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	sender := ctx.EffectiveSender
 	userId := extraction.ExtractUser(b, ctx)
@@ -341,7 +341,7 @@ func (m miscModuleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m miscModuleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
+func (miscModuleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 
@@ -413,7 +413,7 @@ func (m miscModuleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // This function removes the stuck bot keyboard from your chat!
-func (m miscModuleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
+func (miscModuleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	rMsg, err := msg.Reply(b,
 		"Removing the stuck bot keyboard...",
@@ -438,7 +438,7 @@ func (m miscModuleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) er
 	return ext.EndGroups
 }
 
-func (m miscModuleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
+func (miscModuleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	if !chat_status.RequireGroup(b, ctx, chat, false) {

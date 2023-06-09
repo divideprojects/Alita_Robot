@@ -30,7 +30,7 @@ var rulesModule = rulesModuleStruct{
 	defaultRulesBtn: "Rules",
 }
 
-func (m rulesModuleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (rulesModuleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
@@ -44,7 +44,7 @@ func (m rulesModuleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error 
 	return ext.EndGroups
 }
 
-func (m rulesModuleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (rulesModuleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
@@ -154,7 +154,7 @@ func (m rulesModuleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m rulesModuleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (rulesModuleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
@@ -231,7 +231,7 @@ func (m rulesModuleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m rulesModuleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (rulesModuleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)

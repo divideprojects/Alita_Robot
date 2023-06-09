@@ -83,7 +83,7 @@ func (m formattingModuleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) e
 	return ext.EndGroups
 }
 
-func (m formattingModuleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
+func (formattingModuleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
 	fxt := "formatting.%s"
 
 	keyboard := [][]gotgbot.InlineKeyboardButton{
@@ -110,7 +110,7 @@ func (m formattingModuleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButt
 	return keyboard
 }
 
-func (m formattingModuleStruct) getMarkdownHelp(module string) string {
+func (formattingModuleStruct) getMarkdownHelp(module string) string {
 	var helpTxt string
 	tr := i18n.I18n{LangCode: "en"}
 	if module == "md_formatting" {

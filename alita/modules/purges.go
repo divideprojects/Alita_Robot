@@ -27,7 +27,7 @@ var (
 	delMsgs      = map[int64]int64{}
 )
 
-func (m purgesModuleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
+func (purgesModuleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
 	if !pFrom {
 		_, err := bot.DeleteMessage(chat.Id, msgId, nil)
 		if err != nil {
@@ -139,7 +139,7 @@ func (m purgesModuleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m purgesModuleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (purgesModuleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	// Permission checks
@@ -199,7 +199,7 @@ func (m purgesModuleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m purgesModuleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (purgesModuleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -238,7 +238,7 @@ func (m purgesModuleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context
 	return ext.EndGroups
 }
 
-func (m purgesModuleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (purgesModuleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	// Permission checks

@@ -89,7 +89,7 @@ var (
 	}
 )
 
-func (m locksModuleStruct) getLockMapAsArray() (lockTypes []string) {
+func (locksModuleStruct) getLockMapAsArray() (lockTypes []string) {
 	tmpMap := map[string]filters.Message{}
 
 	for r, rk := range restrMap {
@@ -108,7 +108,7 @@ func (m locksModuleStruct) getLockMapAsArray() (lockTypes []string) {
 	return
 }
 
-func (m locksModuleStruct) buildLockTypesMessage(chatID int64) (res string) {
+func (locksModuleStruct) buildLockTypesMessage(chatID int64) (res string) {
 	chatLocks := db.GetChatLocks(chatID)
 
 	newMapLocks := db.MapLockType(*chatLocks)
@@ -286,7 +286,7 @@ func (m locksModuleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m locksModuleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (locksModuleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -321,7 +321,7 @@ func (m locksModuleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func (m locksModuleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (locksModuleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -349,7 +349,7 @@ func (m locksModuleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func (m locksModuleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (locksModuleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	mem := ctx.ChatMember.NewChatMember.MergeChatMember().User

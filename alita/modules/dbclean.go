@@ -14,7 +14,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (m devsModuleStruct) dbClean(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) dbClean(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -45,7 +45,7 @@ func (m devsModuleStruct) dbClean(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m devsModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := ctx.EffectiveSender.User
 	msg := query.Message
