@@ -698,7 +698,6 @@ func (m warnsModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 }
 
 func LoadWarns(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(warnsModule.modname, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("warn", warnsModule.warnUser))
