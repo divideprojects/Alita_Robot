@@ -1,3 +1,10 @@
-FROM alpine:3.17.2
-COPY alita_robot /
-CMD ["/alita_robot"]
+FROM alpine
+COPY alitagorobot /
+ENTRYPOINT ["/alitagorobot"]
+
+LABEL org.opencontainers.image.authors="Divanshu Chauhan <divkix@divkix.me>"
+LABEL org.opencontainers.image.url="https://divkix.me"
+LABEL org.opencontainers.image.source="https://github.com/Divkix/Alita_Robot"
+LABEL org.opencontainers.image.title="Alita Go Robot"
+LABEL org.opencontainers.image.description="Official Alita Go Robot Docker Image"
+LABEL org.opencontainers.image.vendor="Divkix"

@@ -47,7 +47,7 @@ func init() {
 
 	// set necessary variables
 	Debug = typeConvertor{str: os.Getenv("DEBUG")}.Bool()
-	DropPendingUpdates = typeConvertor{str: os.Getenv("DEDROP_PENDING_UPDATESBUG")}.Bool()
+	DropPendingUpdates = typeConvertor{str: os.Getenv("DROP_PENDING_UPDATES")}.Bool()
 	DatabaseURI = os.Getenv("DB_URI")
 	MainDbName = os.Getenv("DB_NAME")
 	OwnerId = typeConvertor{str: os.Getenv("OWNER_ID")}.Int64()

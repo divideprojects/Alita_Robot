@@ -2,27 +2,23 @@ version: '3.8'
 
 services:
   alita:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: alita
-    depends_on:
-      - mongodb
-      - redis
+    image: ghcr.io/divkix/alitagorobot:latest
+    container_name: alita-robot
+    restart: always
     environment:
-     - DOPPLER_TOKEN
-
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=alita_beta_robot
-      - MONGO_INITDB_ROOT_PASSWORD=alita_beta_robot
-      - MONGO_INITDB_DATABASE=alita_beta_robot
-    command: mongod
-
-  redis:
-    image: redis:alpine
-    container_name: redis
-    environment:
-      - REDIS_PASSWORD=root
+     - BOT_TOKEN
+     - BOT_VERSION
+     - DB_NAME
+     - DB_PASS
+     - DB_URI
+     - DROP_PENDING_UPDATES
+     - ENABLED_LOCALES
+     - LOG_CHANNEL
+     - MESSAGE_DUMP
+     - OWNER_ID
+     - PORT
+     - REDIS_PASSWORD
+     - REDIS_URI
+     - SECRET_TOKEN
+     - USE_WEBHOOKS
+     - WEBHOOK_URL

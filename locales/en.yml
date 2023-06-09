@@ -659,7 +659,7 @@ strings:
 
   Tagger:
     help_msg: |-
-      Tagger is an essential feature to mention all subscribed members in the group.
+      Tagger is an essential feature to mention all subscribed members in the group. 
       Any chat members can subscribe to the tagger.
 
       *User Commands:*

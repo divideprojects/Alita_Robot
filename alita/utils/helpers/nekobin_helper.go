@@ -15,6 +15,10 @@ type mapType map[string]interface{}
 // We can use '<br>' inline text to split the messages into different paragraphs
 func PasteToNekoBin(text string) (pasted bool, key string) {
 	var body mapType
+
+	if len(text) > 65000 {
+		text = text[:65000]
+	}
 	postBody, err := json.Marshal(
 		map[string]string{
 			"content": text,
@@ -23,6 +27,7 @@ func PasteToNekoBin(text string) (pasted bool, key string) {
 	if err != nil {
 		log.Error(err)
 	}
+
 	responseBody := bytes.NewBuffer(postBody)
 	resp, err := http.Post("https://nekobin.com/api/documents", "application/json", responseBody)
 	if err != nil {

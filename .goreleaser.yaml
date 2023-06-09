@@ -1,4 +1,4 @@
-project_name: alita_robot
+project_name: alitagorobot
 release:
   replace_existing_draft: true
   header: |
@@ -6,7 +6,6 @@ release:
   footer: |
     Docker Images:
     `ghcr.io/divkix/{{ .ProjectName }}:latest`
-    `docker.io/divkix/{{ .ProjectName }}:latest`
 before:
   hooks:
     - go mod tidy
@@ -59,33 +58,6 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
 
-  # amd64 only
-  - goarch: amd64
-    dockerfile: goreleaser.Dockerfile
-    use: buildx
-    image_templates:
-      - "docker.io/divkix/{{ .ProjectName }}:{{ .Tag }}-amd64"
-    build_flag_templates:
-      - "--platform=linux/amd64"
-      - "--pull"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-  # arm64 only
-  - goarch: arm64
-    dockerfile: goreleaser.Dockerfile
-    use: buildx
-    image_templates:
-      - "docker.io/divkix/{{ .ProjectName }}:{{ .Tag }}-arm64v8"
-    build_flag_templates:
-      - "--platform=linux/arm64/v8"
-      - "--pull"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-
 docker_manifests:
   # github container registry
   - name_template: "ghcr.io/divkix/{{ .ProjectName }}:{{ .Version }}"
@@ -96,13 +68,3 @@ docker_manifests:
     image_templates:
       - "ghcr.io/divkix/{{ .ProjectName }}:{{ .Tag }}-amd64"
       - "ghcr.io/divkix/{{ .ProjectName }}:{{ .Tag }}-arm64v8"
-
-  # docker hub
-  - name_template: "docker.io/divkix/{{ .ProjectName }}:{{ .Version }}"
-    image_templates:
-      - "docker.io/divkix/{{ .ProjectName }}:{{ .Tag }}-amd64"
-      - "docker.io/divkix/{{ .ProjectName }}:{{ .Tag }}-arm64v8"
-  - name_template: "docker.io/divkix/{{ .ProjectName }}:latest"
-    image_templates:
-      - "docker.io/divkix/{{ .ProjectName }}:{{ .Tag }}-amd64"
-      - "docker.io/divkix/{{ .ProjectName }}:{{ .Tag }}-arm64v8"
