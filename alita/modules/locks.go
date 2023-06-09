@@ -398,7 +398,6 @@ func (m locksModuleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) erro
 }
 
 func LoadLocks(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(locksModule.modname, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("lock", locksModule.lockPerm))

@@ -378,7 +378,6 @@ func (m purgesModuleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func LoadPurges(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(purgesModule.modname, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("del", purgesModule.delCmd))

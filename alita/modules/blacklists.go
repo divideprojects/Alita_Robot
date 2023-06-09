@@ -491,7 +491,6 @@ func (m blacklistsModuleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Contex
 }
 
 func LoadBlacklists(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(blacklistsModule.modname, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("blacklists", blacklistsModule.listBlacklists))

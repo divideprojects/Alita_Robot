@@ -761,7 +761,6 @@ func (m pinsModuleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string,
 }
 
 func LoadPin(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(pinsModule.modname, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("unpin", pinsModule.unpin))

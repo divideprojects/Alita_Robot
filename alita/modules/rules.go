@@ -252,7 +252,6 @@ func (m rulesModuleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) err
 }
 
 func LoadRules(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(rulesModule.modname, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("rules", rulesModule.sendRules))
