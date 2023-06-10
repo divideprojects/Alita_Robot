@@ -1,4 +1,4 @@
-module github.com/Divkix/Alita_Robot
+module github.com/divideprojects/Alita_Robot
 
 // +heroku goVersion go1.19
 go 1.19

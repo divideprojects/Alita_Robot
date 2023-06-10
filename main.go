@@ -9,15 +9,15 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/Divkix/Alita_Robot/alita/config"
-	"github.com/Divkix/Alita_Robot/alita/i18n"
-	"github.com/Divkix/Alita_Robot/alita/utils/helpers"
-	"github.com/Divkix/Alita_Robot/alita/utils/parsemode"
+	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
-	bot "github.com/Divkix/Alita_Robot/alita"
+	bot "github.com/divideprojects/Alita_Robot/alita"
 )
 
 //go:embed locales

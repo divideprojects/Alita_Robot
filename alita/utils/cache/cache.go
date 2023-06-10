@@ -9,7 +9,7 @@ import (
 	"github.com/eko/gocache/v3/store"
 	"github.com/go-redis/redis/v8"
 
-	"github.com/Divkix/Alita_Robot/alita/config"
+	"github.com/divideprojects/Alita_Robot/alita/config"
 )
 
 var (

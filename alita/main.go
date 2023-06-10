@@ -7,14 +7,14 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/Divkix/Alita_Robot/alita/db"
-	"github.com/Divkix/Alita_Robot/alita/modules"
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/modules"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
-	"github.com/Divkix/Alita_Robot/alita/utils/cache"
-	"github.com/Divkix/Alita_Robot/alita/utils/string_handling"
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 // ListModules list all modules loaded in the bot

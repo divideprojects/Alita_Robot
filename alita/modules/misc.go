@@ -10,22 +10,22 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Divkix/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/db"
 
-	"github.com/Divkix/Alita_Robot/alita/utils/chat_status"
-	"github.com/Divkix/Alita_Robot/alita/utils/decorators/misc"
+	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/Divkix/Alita_Robot/alita/config"
-	"github.com/Divkix/Alita_Robot/alita/utils/parsemode"
+	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
-	"github.com/Divkix/Alita_Robot/alita/utils/extraction"
-	"github.com/Divkix/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
 
 type miscModuleStruct struct {

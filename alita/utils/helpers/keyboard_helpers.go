@@ -6,7 +6,7 @@ import (
 	tgmd2html "github.com/PaulSonOfLars/gotg_md2html"
 	"github.com/PaulSonOfLars/gotgbot/v2"
 
-	"github.com/Divkix/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
 func BuildKeyboard(buttons []db.Button) [][]gotgbot.InlineKeyboardButton {

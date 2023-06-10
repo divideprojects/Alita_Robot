@@ -10,10 +10,10 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/Divkix/Alita_Robot/alita/i18n"
-	"github.com/Divkix/Alita_Robot/alita/utils/chat_status"
-	"github.com/Divkix/Alita_Robot/alita/utils/decorators/cmdDecorator"
-	"github.com/Divkix/Alita_Robot/alita/utils/parsemode"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
+	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
 )
 
 type formattingModuleStruct struct {

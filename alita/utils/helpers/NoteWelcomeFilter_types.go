@@ -12,9 +12,9 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/Divkix/Alita_Robot/alita/db"
-	"github.com/Divkix/Alita_Robot/alita/utils/extraction"
-	"github.com/Divkix/Alita_Robot/alita/utils/parsemode"
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
+	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
 )
 
 func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool) (keyWord, fileid, text string, dataType int, buttons []db.Button, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool, errorMsg string) {

@@ -14,12 +14,12 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 
-	"github.com/Divkix/Alita_Robot/alita/db"
-	"github.com/Divkix/Alita_Robot/alita/i18n"
-	"github.com/Divkix/Alita_Robot/alita/utils/chat_status"
-	"github.com/Divkix/Alita_Robot/alita/utils/helpers"
-	"github.com/Divkix/Alita_Robot/alita/utils/parsemode"
-	"github.com/Divkix/Alita_Robot/alita/utils/string_handling"
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 // This var is used to add the back button to the help menu

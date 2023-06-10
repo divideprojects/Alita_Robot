@@ -10,7 +10,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/Divkix/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
 func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, oldMsg string, buttons []db.Button) (res string, btns []db.Button) {

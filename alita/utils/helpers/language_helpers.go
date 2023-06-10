@@ -5,8 +5,8 @@ import (
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 
-	"github.com/Divkix/Alita_Robot/alita/config"
-	"github.com/Divkix/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 )
 
 func MakeLanguageKeyboard() [][]gotgbot.InlineKeyboardButton {

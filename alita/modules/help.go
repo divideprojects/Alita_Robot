@@ -11,11 +11,11 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/Divkix/Alita_Robot/alita/config"
-	"github.com/Divkix/Alita_Robot/alita/db"
-	"github.com/Divkix/Alita_Robot/alita/i18n"
-	"github.com/Divkix/Alita_Robot/alita/utils/parsemode"
-	"github.com/Divkix/Alita_Robot/alita/utils/string_handling"
+	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 type helpModuleStruct struct {

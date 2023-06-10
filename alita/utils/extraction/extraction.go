@@ -14,9 +14,9 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/google/uuid"
 
-	"github.com/Divkix/Alita_Robot/alita/db"
-	"github.com/Divkix/Alita_Robot/alita/utils/chat_status"
-	"github.com/Divkix/Alita_Robot/alita/utils/error_handling"
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 )
 
 func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {

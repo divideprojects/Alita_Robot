@@ -7,7 +7,7 @@ import (
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 
-	"github.com/Divkix/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 )
 
 const MaxMessageLength int = 4096

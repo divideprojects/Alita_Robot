@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/github/license/DivideProjects/Alita_Robot?style=flat-square" alt="LICENSE">
   <img src="https://img.shields.io/github/contributors/DivideProjects/Alita_Robot?style=flat-square" alt="Contributors">
   <img src="https://img.shields.io/github/repo-size/DivideProjects/Alita_Robot?style=flat-square" alt="Repo Size">
-  <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/divkix/Alita_Robot&amp;title=Profile%20Views" alt="Views">
+  <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/divideprojects/Alita_Robot&amp;title=Profile%20Views" alt="Views">
 </p>
 
 <p align='center'>
@@ -69,7 +69,7 @@ It really motivates me to continue this project further.
 
 ### Traditional
 
-- Download a binary from [releases](https://github.com/Divkix/Alita_Robot/releases) page specific to your PC.
+- Download a binary from [releases](https://github.com/divideprojects/Alita_Robot/releases) page specific to your PC.
 - Set the required env variables and run the binary
 
 **Note:** Not a lot of people may be able to run using this because the instructions aren't clear but I'll try to make it clear in future.
@@ -78,7 +78,7 @@ It really motivates me to continue this project further.
 
 - Clone the repo and enter into it
 - Install [Docker](https://www.docker.com/)
-- Run `docker build -t alita .` if you're using your forked repo, else run `docker run -e ENV_VAR=VALUE -d --name alita divkix/alita_robot`
+- Run `docker build -t alita .` if you're using your forked repo, else run `docker run -e ENV_VAR=VALUE -d --name alita divideprojects/Alita_Robot`
 
 
 If all works well, bot should send message to the **MESSAGE_DUMP** Group!
@@ -102,4 +102,4 @@ If all works well, bot should send message to the **MESSAGE_DUMP** Group!
 ### Copyright & License
 
 * Copyright (C) 2020-2021 by [Divkix](https://github.com/Divkix) ❤️️
-* Licensed under the terms of the [GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/divkix/Alita_Robot/blob/master/LICENSE)
+* Licensed under the terms of the [GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/divideprojects/Alita_Robot/blob/master/LICENSE)

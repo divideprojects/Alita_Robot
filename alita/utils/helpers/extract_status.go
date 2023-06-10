@@ -3,7 +3,7 @@ package helpers
 import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 
-	"github.com/Divkix/Alita_Robot/alita/utils/string_handling"
+	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 // ExtractJoinLeftStatusChange Takes a ChatMemberUpdated instance and extracts whether the 'old_chat_member' was a member

@@ -14,12 +14,12 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters"
 
-	"github.com/Divkix/Alita_Robot/alita/db"
-	"github.com/Divkix/Alita_Robot/alita/utils/chat_status"
-	"github.com/Divkix/Alita_Robot/alita/utils/decorators/misc"
-	"github.com/Divkix/Alita_Robot/alita/utils/helpers"
-	"github.com/Divkix/Alita_Robot/alita/utils/parsemode"
-	"github.com/Divkix/Alita_Robot/alita/utils/string_handling"
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 type locksModuleStruct struct {
