@@ -420,7 +420,6 @@ func (m reportsModuleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.
 }
 
 func LoadReports(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(reportsModule.modname, true)
 
 	dispatcher.AddHandlerToGroup(
