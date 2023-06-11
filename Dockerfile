@@ -3,13 +3,13 @@ FROM golang:1.20-alpine AS builder
 RUN apk add --no-cache curl wget gnupg git upx
 WORKDIR /app
 COPY . .
-RUN CGO_ENABLED=0 GOOS=`go env GOHOSTOS` GOARCH=`go env GOHOSTARCH` go build -o out/AlitaGoRobot -ldflags="-w -s" .
-RUN upx --brute out/AlitaGoRobot
+RUN CGO_ENABLED=0 GOOS=`go env GOHOSTOS` GOARCH=`go env GOHOSTARCH` go build -o out/alita_robot -ldflags="-w -s" .
+RUN upx --brute out/alita_robot
 
 # Run Stage: Run bot using the bot binary copied from build stage
 FROM alpine
-COPY --from=builder /app/out/AlitaGoRobot /app/AlitaGoRobot
-ENTRYPOINT ["/app/AlitaGoRobot"]
+COPY --from=builder /app/out/alita_robot /app/alita_robot
+ENTRYPOINT ["/app/alita_robot"]
 
 LABEL org.opencontainers.image.authors="Divanshu Chauhan <divkix@divkix.me>"
 LABEL org.opencontainers.image.url="https://divkix.me"

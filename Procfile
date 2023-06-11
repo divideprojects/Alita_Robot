@@ -1,1 +1,1 @@
-web: /app/AlitaGoRobot
+web: /app/Alita_Robot

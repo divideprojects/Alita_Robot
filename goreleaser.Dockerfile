@@ -1,6 +1,6 @@
 FROM alpine
-COPY alitagorobot /
-ENTRYPOINT ["/alitagorobot"]
+COPY alita_robot /
+ENTRYPOINT ["/alita_robot"]
 
 LABEL org.opencontainers.image.authors="Divanshu Chauhan <divkix@divkix.me>"
 LABEL org.opencontainers.image.url="https://divkix.me"
