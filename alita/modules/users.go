@@ -100,6 +100,5 @@ func (usersModuleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func LoadUsers(dispatcher *ext.Dispatcher) {
-
 	dispatcher.AddHandlerToGroup(handlers.NewMessage(message.All, usersModule.logUsers), usersModule.handlerGroup)
 }

@@ -108,7 +108,6 @@ func (languagesModuleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) er
 }
 
 func LoadLanguage(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(languagesModule.modname, true)
 	HelpModule.helpableKb[languagesModule.modname] = languagesModule.genFullLanguageKb()
 

@@ -271,7 +271,6 @@ func (disablingModuleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func LoadDisabling(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(disablingModule.modname, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("disable", disablingModule.disable))

@@ -714,7 +714,6 @@ func (greetingsModuleStruct) setPendingJoins(chatId, userId int64) {
 }
 
 func LoadGreetings(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(greetingsModule.modname, true)
 
 	// Adds Formatting kb button to Greetings Menu
