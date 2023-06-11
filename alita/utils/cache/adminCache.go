@@ -8,6 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// LoadAdminCache loads the admin cache for the chat.
 func LoadAdminCache(b *gotgbot.Bot, chat *gotgbot.Chat) AdminCache {
 	adminList, err := chat.GetAdministrators(b, nil)
 	if err != nil {
@@ -42,6 +43,7 @@ func LoadAdminCache(b *gotgbot.Bot, chat *gotgbot.Chat) AdminCache {
 	return newAdminList
 }
 
+// GetAdminCacheList gets the admin cache for the chat.
 func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 	gotAdminlist, _ := Marshal.Get(
 		Context,

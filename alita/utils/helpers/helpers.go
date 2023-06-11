@@ -12,6 +12,7 @@ import (
 
 const MaxMessageLength int = 4096
 
+// SplitMessage splits a message into multiple messages if it is too long.
 func SplitMessage(msg string) []string {
 	if len(msg) > MaxMessageLength {
 		tmp := make([]string, 1)
@@ -34,14 +35,17 @@ func SplitMessage(msg string) []string {
 	}
 }
 
+// MentionHtml returns a mention in html format.
 func MentionHtml(userId int64, name string) string {
 	return MentionUrl(fmt.Sprintf("tg://user?id=%d", userId), name)
 }
 
+// MentionUrl returns a mention in html format.
 func MentionUrl(url, name string) string {
 	return fmt.Sprintf("<a href=\"%s\">%s</a>", url, html.EscapeString(name))
 }
 
+// GetFullName returns the full name of a user.
 func GetFullName(FirstName, LastName string) string {
 	var name string
 	if LastName != "" {
@@ -52,6 +56,7 @@ func GetFullName(FirstName, LastName string) string {
 	return name
 }
 
+// InitButtons initializes the buttons for the connection menu.
 func InitButtons(b *gotgbot.Bot, chatId, userId int64) gotgbot.InlineKeyboardMarkup {
 	var connButtons [][]gotgbot.InlineKeyboardButton
 	if chat_status.IsUserAdmin(b, chatId, userId) {

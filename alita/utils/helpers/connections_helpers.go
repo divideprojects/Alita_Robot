@@ -11,11 +11,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
 )
 
-/*
-	Used to return the chat to which user is connected
-
-If user is connected to a chat, chat is returned else nil is returned
-*/
+// IsUserConnected checks if a user is connected to a chat.
 func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool) (chat *gotgbot.Chat) {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveUser

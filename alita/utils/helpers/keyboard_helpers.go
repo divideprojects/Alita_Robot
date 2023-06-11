@@ -9,6 +9,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
+// BuildKeyboard is used to build a keyboard from a list of buttons provided by the database.
 func BuildKeyboard(buttons []db.Button) [][]gotgbot.InlineKeyboardButton {
 	keyb := make([][]gotgbot.InlineKeyboardButton, 0)
 	for _, btn := range buttons {
@@ -23,6 +24,7 @@ func BuildKeyboard(buttons []db.Button) [][]gotgbot.InlineKeyboardButton {
 	return keyb
 }
 
+// ConvertButtonV2ToDbButton is used to convert []tgmd2html.ButtonV2 to []db.Button
 func ConvertButtonV2ToDbButton(buttons []tgmd2html.ButtonV2) (btns []db.Button) {
 	btns = make([]db.Button, len(buttons))
 	for i, btn := range buttons {
@@ -35,6 +37,7 @@ func ConvertButtonV2ToDbButton(buttons []tgmd2html.ButtonV2) (btns []db.Button) 
 	return
 }
 
+// RevertButtons is used to convert []db.Button to string
 func RevertButtons(buttons []db.Button) string {
 	res := ""
 	for _, btn := range buttons {

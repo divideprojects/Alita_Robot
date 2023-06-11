@@ -17,6 +17,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
 )
 
+// GetNoteAndFilterType is a helper function to get the note and filter type from a *gotgbot.Message object.
 func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool) (keyWord, fileid, text string, dataType int, buttons []db.Button, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool, errorMsg string) {
 	dataType = -1 // not defined datatype; invalid note
 	if isFilter {
@@ -88,6 +89,7 @@ func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool) (keyWord, fileid,
 	return
 }
 
+// GetWelcomeType is a helper function to get the welcome type from a *gotgbot.Message object.
 func GetWelcomeType(msg *gotgbot.Message, greetingType string) (text string, dataType int, fileid string, buttons []db.Button, errorMsg string) {
 	dataType = -1
 	errorMsg = fmt.Sprintf("You need to give me some content to %s users!", greetingType)
@@ -177,6 +179,7 @@ func SendFilter(b *gotgbot.Bot, ctx *ext.Context, filterData *db.ChatFilters, re
 	return msg, err
 }
 
+// noteParser is a helper function to parse notes and return the parsed data
 func notesParser(sent string) (pvtOnly, grpOnly, adminOnly, webPrev, protectedContent, noNotif bool, sentBack string) {
 	pvtOnly, err := regexp.MatchString(`({private})`, sent)
 	if err != nil {
@@ -226,6 +229,7 @@ func notesParser(sent string) (pvtOnly, grpOnly, adminOnly, webPrev, protectedCo
 	return pvtOnly, grpOnly, adminOnly, webPrev, protectedContent, noNotif, sent
 }
 
+// SendNote Simple function used to send a note with help from EnumFuncMap, this just organises data for it and returns the message
 func SendNote(b *gotgbot.Bot, chat *gotgbot.Chat, ctx *ext.Context, noteData *db.ChatNotes, replyMsgId int64) (*gotgbot.Message, error) {
 	var (
 		keyb    = make([][]gotgbot.InlineKeyboardButton, 0)
@@ -644,11 +648,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 	},
 }
 
-// this function should fix the empty names of buttons in the buttons slice
-//
-// it first checks if text length is appropriate or not
-//
-// if it is appropriate, then perform other minor fixes
+// preFixes is a function that checks the message before saving it to database.
 func preFixes(buttons []tgmd2html.ButtonV2, defaultNameButton string, text *string, dataType *int, fileid string, dbButtons *[]db.Button, errorMsg *string) {
 	if *dataType == db.TEXT && len(*text) > 4096 {
 		*dataType = -1

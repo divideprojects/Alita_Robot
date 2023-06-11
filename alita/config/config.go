@@ -31,6 +31,7 @@ var (
 	SecretToken        string
 )
 
+// init initializes the config variables.
 func init() {
 	// set logger config
 	log.SetLevel(log.DebugLevel)

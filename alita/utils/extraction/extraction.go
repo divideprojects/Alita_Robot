@@ -19,6 +19,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 )
 
+// ExtractChat extracts the chat from the message.
 func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
@@ -56,11 +57,13 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 	return nil
 }
 
+// ExtractUser extracts the user from the message.
 func ExtractUser(b *gotgbot.Bot, ctx *ext.Context) int64 {
 	userId, _ := ExtractUserAndText(b, ctx)
 	return userId
 }
 
+// ExtractUserAndText extracts the user and text from the message.
 func ExtractUserAndText(b *gotgbot.Bot, ctx *ext.Context) (int64, string) {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -212,6 +215,7 @@ func IdFromReply(m *gotgbot.Message) (int64, string) {
 	return userId, res[1]
 }
 
+// ExtractQuotes function used to extract text between quotes
 func ExtractQuotes(sentence string, matchQuotes, matchWord bool) (inQuotes, afterWord string) {
 	// if first character starts with '""' and matchQutes is true
 	if sentence[0] == '"' && matchQuotes {
@@ -247,6 +251,7 @@ func ExtractQuotes(sentence string, matchQuotes, matchWord bool) (inQuotes, afte
 	return
 }
 
+// ExtractTime function used to extract time from a string
 func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int64, timeStr, reason string) {
 	msg := ctx.EffectiveMessage
 	timeNow := time.Now().Unix()

@@ -13,6 +13,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
+// FormattingReplacer replaces the formatting in a message.
 func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, oldMsg string, buttons []db.Button) (res string, btns []db.Button) {
 	var (
 		firstName     string

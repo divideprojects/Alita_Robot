@@ -45,6 +45,8 @@ func IsDuplicateInStringSlice(arr []string) (string, bool) {
 	return "", false
 }
 
+// FindIndexInt64 Find takes a slice and looks for an element in it. If found it will
+// return true, otherwise it will return a bool of false.
 func FindIndexInt64(chatIds []int64, chatId int64) int {
 	for k, v := range chatIds {
 		if chatId == v {

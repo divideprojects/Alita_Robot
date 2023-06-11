@@ -14,12 +14,10 @@ func sendAnonAdminKeyboard(b *gotgbot.Bot, msg *gotgbot.Message, chat *gotgbot.C
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
-					{
-						{
-							Text:         "Click to prove admin",
-							CallbackData: fmt.Sprintf("anonAdmin.%d.%d", chat.Id, msg.MessageId),
-						},
-					},
+					{{
+						Text:         "Click to prove admin",
+						CallbackData: fmt.Sprintf("anonAdmin.%d.%d", chat.Id, msg.MessageId),
+					}},
 				},
 			},
 		},

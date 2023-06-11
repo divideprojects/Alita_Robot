@@ -23,6 +23,7 @@ type AdminCache struct {
 	Cached   bool
 }
 
+// InitCache initializes the cache.
 func InitCache() {
 	gocacheClient := gocache.New(5*time.Minute, 10*time.Minute)
 	gocacheStore := store.NewGoCache(gocacheClient)
@@ -34,6 +35,7 @@ func InitCache() {
 	Marshal = marshaler.New(Manager)
 }
 
+// GetAdminCacheUser gets the admin cache for the chat.
 func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
 	adminList, _ := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
 	for i := range adminList.(*AdminCache).UserInfo {

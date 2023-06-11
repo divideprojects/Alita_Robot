@@ -9,11 +9,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type mapType map[string]interface{}
-
 // PasteToNekoBin CreateTelegraphPost function used to create a Telegraph Page/Post with provide text
 // We can use '<br>' inline text to split the messages into different paragraphs
 func PasteToNekoBin(text string) (pasted bool, key string) {
+	type mapType map[string]interface{}
 	var body mapType
 
 	if len(text) > 65000 {

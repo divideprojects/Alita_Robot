@@ -9,6 +9,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 )
 
+// MakeLanguageKeyboard makes a keyboard with all the languages in it.
 func MakeLanguageKeyboard() [][]gotgbot.InlineKeyboardButton {
 	var kb []gotgbot.InlineKeyboardButton
 
@@ -30,6 +31,7 @@ func MakeLanguageKeyboard() [][]gotgbot.InlineKeyboardButton {
 	return ChunkKeyboardSlices(kb, 2)
 }
 
+// GetLangFormat returns the language name and flag.
 func GetLangFormat(langCode string) string {
 	return i18n.I18n{LangCode: langCode}.GetString("main.language_name") +
 		" " +

@@ -9,6 +9,7 @@ var (
 	mu          = &sync.Mutex{}
 )
 
+// addToArray is a func to add to array of strings
 func addToArray(arr []string, val ...string) []string {
 	mu.Lock()
 	arr = append(arr, val...)
