@@ -12,7 +12,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/sirupsen/logrus v1.9.2
 	github.com/spf13/viper v1.15.0
-	go.mongodb.org/mongo-driver v1.11.6
+	go.mongodb.org/mongo-driver v1.11.7
 	golang.org/x/text v0.9.0
 )
 
