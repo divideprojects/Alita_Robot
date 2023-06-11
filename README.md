@@ -1,6 +1,12 @@
 # Alita_Robot
 
 <p align='center'>
+  <a href="https://github.com/divideprojects/Alita_Robot/actions/workflows/ci.yml"><img src="https://github.com/divideprojects/Alita_Robot/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/divideprojects/Alita_Robot/actions/workflows/release.yml" alt="made-with-go"> <img src="https://github.com/divideprojects/Alita_Robot/actions/workflows/release.yml/badge.svg" alt="Release"/> </a>
+</p>
+
+
+<p align='center'>
   <img src="https://img.shields.io/github/forks/DivideProjects/Alita_Robot?style=flat-square" alt="Forks">
   <img src="https://img.shields.io/github/stars/DivideProjects/Alita_Robot?style=flat-square" alt="Stars">
   <img src="https://img.shields.io/github/issues/DivideProjects/Alita_Robot?style=flat-square" alt="Issues">
