@@ -22,7 +22,7 @@ before:
 #     brute: true
 
 builds:
-  - binary: alita
+  - binary: alita_robot
     env:
       - CGO_ENABLED=0
     goos:
