@@ -100,8 +100,10 @@ func init() {
 	filterColl = mongoClient.Database(config.MainDbName).Collection("filters")
 	notesColl = mongoClient.Database(config.MainDbName).Collection("notes")
 	notesSettingsColl = mongoClient.Database(config.MainDbName).Collection("notes_settings")
+	log.Info("Done opening all database collections!")
 }
 
+// updateOne func to update one document
 func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (err error) {
 	_, err = collecion.UpdateOne(tdCtx, filter, bson.M{"$set": data}, options.Update().SetUpsert(true))
 	if err != nil {
@@ -110,11 +112,13 @@ func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (er
 	return
 }
 
+// findOne func to find one document
 func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResult) {
 	res = collecion.FindOne(tdCtx, filter)
 	return
 }
 
+// countDocs func to count documents
 func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err error) {
 	count, err = collecion.CountDocuments(tdCtx, filter)
 	if err != nil {
@@ -123,6 +127,7 @@ func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err err
 	return
 }
 
+// findAll func to find all documents
 func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	cur, err := collecion.Find(tdCtx, filter)
 	if err != nil {
@@ -131,6 +136,7 @@ func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	return
 }
 
+// deleteOne func to delete one document
 func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	_, err = collecion.DeleteOne(tdCtx, filter)
 	if err != nil {
@@ -139,6 +145,7 @@ func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	return
 }
 
+// deleteMany func to delete many documents
 func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 	_, err = collecion.DeleteMany(tdCtx, filter)
 	if err != nil {
