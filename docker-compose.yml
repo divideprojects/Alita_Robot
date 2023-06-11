@@ -13,7 +13,6 @@ services:
      - DB_URI
      - DROP_PENDING_UPDATES
      - ENABLED_LOCALES
-     - LOG_CHANNEL
      - MESSAGE_DUMP
      - OWNER_ID
      - PORT

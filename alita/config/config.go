@@ -53,7 +53,6 @@ func init() {
 	MainDbName = os.Getenv("DB_NAME")
 	OwnerId = typeConvertor{str: os.Getenv("OWNER_ID")}.Int64()
 	MessageDump = typeConvertor{str: os.Getenv("MESSAGE_DUMP")}.Int64()
-	LogChannel = typeConvertor{str: os.Getenv("LOG_CHANNEL")}.Int64()
 	WebhookURL = os.Getenv("WEBHOOK_URL")
 	BotToken = os.Getenv("BOT_TOKEN")
 	SecretToken = os.Getenv("SECRET_TOKEN")
