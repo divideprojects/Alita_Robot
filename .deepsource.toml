@@ -3,6 +3,15 @@ version = 1
 exclude_patterns = [".md"]
 
 [[analyzers]]
+name = "docker"
+
+[analyzers.meta]
+dockerfile_paths = ["docker/alpine"]
+
+[[analyzers]]
+name = "secrets"
+
+[[analyzers]]
 name = "go"
 
 [analyzers.meta]
