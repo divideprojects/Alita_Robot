@@ -164,7 +164,7 @@ func (m filtersModuleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Only admin can remove filters in the chat
 */
-func (m filtersModuleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
+func (filtersModuleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
 	if connectedChat == nil {
@@ -216,7 +216,7 @@ func (m filtersModuleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Any user can view users in a chat
 */
-func (m filtersModuleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (filtersModuleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "filters") {
@@ -272,7 +272,7 @@ func (m filtersModuleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error
 
 Only owner can remove all filters from the chat
 */
-func (m filtersModuleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
+func (filtersModuleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -311,7 +311,7 @@ func (m filtersModuleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) erro
 }
 
 // CallbackQuery handler for rmAllFilters
-func (m filtersModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (filtersModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
@@ -408,7 +408,7 @@ func (m filtersModuleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Con
 
 Replies with appropriate data to the filter.
 */
-func (m filtersModuleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
+func (filtersModuleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User

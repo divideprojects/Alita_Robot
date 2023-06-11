@@ -31,7 +31,7 @@ type antiSpamLevel struct {
 	Spammed  bool
 }
 
-func (m antispamModuleStruct) checkSpammed(chatId int64, levels []antiSpamLevel) bool {
+func (antispamModuleStruct) checkSpammed(chatId int64, levels []antiSpamLevel) bool {
 	_asInfo, ok := antispamModule.antiSpam[chatId]
 	if !ok {
 		// Assign a new AntiSpamInfo to the chatId because not found
@@ -65,7 +65,7 @@ func (m antispamModuleStruct) checkSpammed(chatId int64, levels []antiSpamLevel)
 	return spammed
 }
 
-func (m antispamModuleStruct) spamCheck(chatId int64) bool {
+func (antispamModuleStruct) spamCheck(chatId int64) bool {
 	// if sql.IsUserSudo(chatId) {
 	//	return false
 	// }

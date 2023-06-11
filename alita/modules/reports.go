@@ -32,7 +32,7 @@ var reportsModule = reportsModuleStruct{
 	handlerGroup: 8,
 }
 
-func (m reportsModuleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
+func (reportsModuleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -196,7 +196,7 @@ func (m reportsModuleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m reportsModuleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
+func (reportsModuleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
@@ -312,7 +312,7 @@ func (m reportsModuleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m reportsModuleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (reportsModuleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User

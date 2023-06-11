@@ -696,7 +696,7 @@ func (m bansModuleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 /* Used to Restrict members from a chat
 Shows an inline keyboard menu which shows options to kick, ban and mute */
 
-func (m bansModuleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
+func (bansModuleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -775,7 +775,7 @@ func (m bansModuleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // Handles the queries fore restrict command
-func (m bansModuleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (bansModuleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -876,7 +876,7 @@ func (m bansModuleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context
 /* Used to Unrestrict members from a chat
 Shows an inline keyboard menu which shows options to unban and unmute */
 
-func (m bansModuleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
+func (bansModuleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -954,7 +954,7 @@ func (m bansModuleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // Handles queries for unrestrict command
-func (m bansModuleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (bansModuleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User

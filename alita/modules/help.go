@@ -156,7 +156,7 @@ func (m *moduleEnabled) LoadModules() []string {
 	return modules
 }
 
-func (m helpModuleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
+func (helpModuleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -240,7 +240,7 @@ func (m helpModuleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m helpModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (helpModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	args := strings.Split(query.Data, ".")
 	module := args[1]
@@ -293,7 +293,7 @@ func (m helpModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 }
 
 // start introduces the bot
-func (m helpModuleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
+func (helpModuleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -331,7 +331,7 @@ func (m helpModuleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m helpModuleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
+func (helpModuleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
@@ -351,7 +351,7 @@ func (m helpModuleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m helpModuleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
+func (helpModuleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	msg := query.Message
 
@@ -436,7 +436,7 @@ func (m helpModuleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m helpModuleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
+func (helpModuleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()

@@ -30,7 +30,7 @@ var devsModule = devsModuleStruct{modname: "Dev"}
 // for general purposes for strings in functions below
 var txt string
 
-func (m devsModuleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -67,7 +67,7 @@ func (m devsModuleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func (m devsModuleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -141,7 +141,7 @@ func (m devsModuleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m devsModuleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -174,7 +174,7 @@ func (m devsModuleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
-func (m devsModuleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -214,7 +214,7 @@ func (m devsModuleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
-func (m devsModuleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -254,7 +254,7 @@ func (m devsModuleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
-func (m devsModuleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -294,7 +294,7 @@ func (m devsModuleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
-func (m devsModuleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -334,7 +334,7 @@ func (m devsModuleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by existing team members
 */
-func (m devsModuleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	teamUsers := db.GetTeamMembers()
@@ -401,7 +401,7 @@ func (m devsModuleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
-func (m devsModuleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
+func (devsModuleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 

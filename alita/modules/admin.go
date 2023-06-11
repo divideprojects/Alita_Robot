@@ -368,7 +368,7 @@ func (m adminModuleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m adminModuleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
+func (adminModuleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -572,7 +572,7 @@ func (m adminModuleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m adminModuleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
+func (adminModuleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
