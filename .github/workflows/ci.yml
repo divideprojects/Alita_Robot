@@ -4,12 +4,42 @@ on:
   push:
     branches:
       - main
+      - dev
+    tags-ignore:
+      - "**"
   pull_request:
   workflow_dispatch:
 
 jobs:
   ci:
-    uses: divkix/reusable-workflows/.github/workflows/goreleaser-ci.yml@main
-    with:
-      GH_PAT: ${{ secrets.GITHUB_TOKEN }}
-    secrets: inherit
+    name: Goreleaser CI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "stable"
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          version: latest
+          args: release --snapshot --skip-publish --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Tar files
+        run: tar -czvf artifacts.tar.gz dist/
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: artifacts.tar.gz
