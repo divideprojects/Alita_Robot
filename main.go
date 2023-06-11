@@ -65,57 +65,24 @@ func main() {
 	// extract dispatcher from updater
 	dispatcher := updater.Dispatcher
 
-	// if webhooks are enabled in config
-	if config.EnableWebhook {
-		log.Info("[Webhook] Starting webhook...")
-		config.WorkingMode = "webhook"
-
-		webhookOpts := ext.WebhookOpts{
-			ListenAddr:  fmt.Sprintf("0.0.0.0:%d", config.WebhookPort),
-			SecretToken: config.SecretToken,
-		}
-
-		// Start the webhook
-		// We use the token as the urlPath for the webhook, as using a secret ensures that strangers aren't crafting fake updates.
-		err = updater.StartWebhook(b, config.BotToken, webhookOpts)
-		if err != nil {
-			log.Fatalf("[Webhook] Failed to start webhook: %v", err)
-		}
-		log.Info("[Webhook] Webhook started Successfully!")
-
-		// Get the full webhook URL that we are expecting to receive updates at.
-
-		// Set Webhook
-		err = updater.SetAllBotWebhooks(config.WebhookURL, &gotgbot.SetWebhookOpts{
-			MaxConnections:     100,
-			DropPendingUpdates: true,
-			SecretToken:        webhookOpts.SecretToken,
-		})
-		if err != nil {
-			log.Fatalf("[Webhook] Failed to set webhook: %v", err)
-		}
-		log.Infof("[Webhook] Set Webhook to: %s", config.WebhookURL)
-
-	} else {
-		if _, err = b.DeleteWebhook(nil); err != nil {
-			log.Fatalf("[Polling] Failed to remove webhook: %v", err)
-		}
-		log.Info("[Polling] Removed Webhook!")
-
-		err = updater.StartPolling(b,
-			&ext.PollingOpts{
-				DropPendingUpdates: config.DropPendingUpdates,
-				GetUpdatesOpts: gotgbot.GetUpdatesOpts{
-					AllowedUpdates: config.AllowedUpdates,
-				},
-			},
-		)
-		if err != nil {
-			log.Fatalf("[Polling] Failed to start polling: %v", err)
-		}
-		log.Info("[Polling] Started Polling...!")
-
+	if _, err = b.DeleteWebhook(nil); err != nil {
+		log.Fatalf("[Polling] Failed to remove webhook: %v", err)
 	}
+	log.Info("[Polling] Removed Webhook!")
+
+	// start the bot in polling mode
+	err = updater.StartPolling(b,
+		&ext.PollingOpts{
+			DropPendingUpdates: config.DropPendingUpdates,
+			GetUpdatesOpts: gotgbot.GetUpdatesOpts{
+				AllowedUpdates: config.AllowedUpdates,
+			},
+		},
+	)
+	if err != nil {
+		log.Fatalf("[Polling] Failed to start polling: %v", err)
+	}
+	log.Info("[Polling] Started Polling...!")
 
 	// list modules from modules dir
 	log.Infof(

@@ -19,5 +19,3 @@ services:
      - REDIS_PASSWORD
      - REDIS_URI
      - SECRET_TOKEN
-     - USE_WEBHOOKS
-     - WEBHOOK_URL

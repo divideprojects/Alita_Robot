@@ -15,20 +15,13 @@ var (
 	BotToken           string
 	DatabaseURI        string
 	MainDbName         string
-	WebhookURL         string
 	BotVersion         string = "2.1.3"
 	ApiServer          string
-	RedisUri           string
-	RedisPassword      string
 	WorkingMode        = "worker"
 	Debug              = false
 	DropPendingUpdates = true
-	EnableWebhook      = false
-	WebhookPort        int
 	OwnerId            int64
 	MessageDump        int64
-	LogChannel         int64
-	SecretToken        string
 )
 
 // init initializes the config variables.
@@ -53,11 +46,7 @@ func init() {
 	MainDbName = os.Getenv("DB_NAME")
 	OwnerId = typeConvertor{str: os.Getenv("OWNER_ID")}.Int64()
 	MessageDump = typeConvertor{str: os.Getenv("MESSAGE_DUMP")}.Int64()
-	WebhookURL = os.Getenv("WEBHOOK_URL")
 	BotToken = os.Getenv("BOT_TOKEN")
-	SecretToken = os.Getenv("SECRET_TOKEN")
-	EnableWebhook = typeConvertor{str: os.Getenv("USE_WEBHOOKS")}.Bool()
-	WebhookPort = typeConvertor{str: os.Getenv("PORT")}.Int()
 
 	AllowedUpdates = typeConvertor{str: os.Getenv("ALLOWED_UPDATES")}.StringArray()
 	// if allowed updates is not set, set it to receive all updates
