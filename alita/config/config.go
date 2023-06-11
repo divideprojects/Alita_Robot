@@ -16,7 +16,7 @@ var (
 	DatabaseURI        string
 	MainDbName         string
 	WebhookURL         string
-	BotVersion         string
+	BotVersion         string = "2.1.3"
 	ApiServer          string
 	RedisUri           string
 	RedisPassword      string
@@ -56,16 +56,11 @@ func init() {
 	LogChannel = typeConvertor{str: os.Getenv("LOG_CHANNEL")}.Int64()
 	WebhookURL = os.Getenv("WEBHOOK_URL")
 	BotToken = os.Getenv("BOT_TOKEN")
-	BotVersion = os.Getenv("BOT_VERSION")
-	ApiServer = os.Getenv("API_SERVER")
 	SecretToken = os.Getenv("SECRET_TOKEN")
 	EnableWebhook = typeConvertor{str: os.Getenv("USE_WEBHOOKS")}.Bool()
 	WebhookPort = typeConvertor{str: os.Getenv("PORT")}.Int()
-	AllowedUpdates = typeConvertor{str: os.Getenv("ALLOWED_UPDATES")}.StringArray()
-	ValidLangCodes = typeConvertor{str: os.Getenv("ENABLED_LOCALES")}.StringArray()
-	RedisUri = os.Getenv("REDIS_URI")
-	RedisPassword = os.Getenv("REDIS_PASSWORD")
 
+	AllowedUpdates = typeConvertor{str: os.Getenv("ALLOWED_UPDATES")}.StringArray()
 	// if allowed updates is not set, set it to receive all updates
 	if (len(AllowedUpdates) == 1 && AllowedUpdates[0] == "") || (len(AllowedUpdates) == 0) {
 		AllowedUpdates = []string{
@@ -86,11 +81,13 @@ func init() {
 		}
 	}
 
+	ValidLangCodes = typeConvertor{str: os.Getenv("ENABLED_LOCALES")}.StringArray()
 	// if valid lang codes is not set, set it to 'en' only
 	if (len(ValidLangCodes) == 1 && ValidLangCodes[0] == "") || (len(ValidLangCodes) == 0) {
 		ValidLangCodes = []string{"en"}
 	}
 
+	ApiServer = os.Getenv("API_SERVER")
 	// set as default api server if not set
 	if ApiServer == "" {
 		ApiServer = "https://api.telegram.org"
