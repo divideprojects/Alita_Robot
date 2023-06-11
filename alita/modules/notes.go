@@ -717,7 +717,6 @@ func (m notesModuleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, re
 }
 
 func LoadNotes(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(notesModule.modname, true)
 
 	HelpModule.helpableKb[notesModule.modname] = [][]gotgbot.InlineKeyboardButton{
