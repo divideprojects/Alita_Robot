@@ -2,14 +2,13 @@ package cache
 
 import (
 	"context"
+	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/eko/gocache/v3/cache"
 	"github.com/eko/gocache/v3/marshaler"
 	"github.com/eko/gocache/v3/store"
-	"github.com/go-redis/redis/v8"
-
-	"github.com/divideprojects/Alita_Robot/alita/config"
+	gocache "github.com/patrickmn/go-cache"
 )
 
 var (
@@ -25,21 +24,11 @@ type AdminCache struct {
 }
 
 func InitCache() {
-	// Initialize gocache cache and Redis client
-	// gocacheClient := gocache.New(5*time.Minute, 10*time.Minute)
-	redisClient := redis.NewClient(
-		&redis.Options{
-			Addr:     config.RedisUri,
-			Password: config.RedisPassword,
-		},
-	)
-
-	// Initialize stores
-	// gocacheStore := store.NewGoCache(gocacheClient, nil)
-	redisStore := store.NewRedis(redisClient)
+	gocacheClient := gocache.New(5*time.Minute, 10*time.Minute)
+	gocacheStore := store.NewGoCache(gocacheClient)
 
 	// Initialize chained cache
-	Manager = cache.NewChain[any](cache.New[any](redisStore))
+	Manager = cache.NewChain[any](cache.New[any](gocacheStore))
 
 	// Initializes marshaler
 	Marshal = marshaler.New(Manager)
