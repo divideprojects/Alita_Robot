@@ -371,7 +371,6 @@ func (m connectionsModuleStruct) userCmdConnString() string {
 }
 
 func LoadConnections(dispatcher *ext.Dispatcher) {
-
 	// modules.helpModule.ableMap.Store(m.modname, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("connect", ConnectionsModule.connect))

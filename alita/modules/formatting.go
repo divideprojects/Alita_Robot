@@ -159,7 +159,6 @@ func (m formattingModuleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Conte
 }
 
 func LoadMkdCmd(dispatcher *ext.Dispatcher) {
-
 	HelpModule.AbleMap.Store(formattingModule.modname, true)
 	HelpModule.helpableKb[formattingModule.modname] = formattingModule.genFormattingKb()
 	cmdDecorator.MultiCommand(dispatcher, []string{"markdownhelp", "formatting"}, formattingModule.markdownHelp)

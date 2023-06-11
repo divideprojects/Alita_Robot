@@ -239,7 +239,6 @@ func setAdminCache(chatId, msgId int64) (interface{}, error) {
 }
 
 func LoadBotUpdates(dispatcher *ext.Dispatcher) {
-
 	dispatcher.AddHandlerToGroup(
 		handlers.NewMyChatMember(
 			func(u *gotgbot.ChatMemberUpdated) bool {
