@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   alita:
-    image: ghcr.io/divkix/alitagorobot:latest
+    image: ghcr.io/divideprojects/alitagorobot:latest
     container_name: alita-robot
     restart: always
     environment:
