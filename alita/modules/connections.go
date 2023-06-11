@@ -362,11 +362,11 @@ func (m connectionsModuleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) err
 	return ext.EndGroups
 }
 
-func (m connectionsModuleStruct) adminCmdConnString() string {
+func (connectionsModuleStruct) adminCmdConnString() string {
 	return "\n - /" + strings.Join(misc.AdminCmds, "\n - /")
 }
 
-func (m connectionsModuleStruct) userCmdConnString() string {
+func (connectionsModuleStruct) userCmdConnString() string {
 	return "\n - /" + strings.Join(misc.UserCmds, "\n - /")
 }
 

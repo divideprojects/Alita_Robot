@@ -25,7 +25,7 @@ var mutesModule = mutesModuleStruct{modname: "Mutes"}
 
 The Bot, Muter should be admin with restrict permissions in order to use this */
 
-func (m mutesModuleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (mutesModuleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -156,7 +156,7 @@ func (m mutesModuleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The Bot, Muter should be admin with restrict permissions in order to use this */
 
-func (m mutesModuleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (mutesModuleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -287,7 +287,7 @@ The Bot, Muter should be admin with restrict permissions in order to use this
 
 The message of muter will be deleted after sending this command */
 
-func (m mutesModuleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (mutesModuleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -387,7 +387,7 @@ The Bot, Muter should be admin with restrict permissions in order to use this
 
 Used as a reply to a message and delete the replied message*/
 
-func (m mutesModuleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (mutesModuleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -526,7 +526,7 @@ func (m mutesModuleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The Bot, Unmuter should be admin with restrict permissions in order to use this */
 
-func (m mutesModuleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (mutesModuleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage

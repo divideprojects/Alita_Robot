@@ -23,7 +23,7 @@ type languagesModuleStruct struct {
 
 var languagesModule = languagesModuleStruct{modname: "Languages"}
 
-func (m languagesModuleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
+func (languagesModuleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
 	keyboard := helpers.MakeLanguageKeyboard()
 	keyboard = append(
 		keyboard,
@@ -75,7 +75,7 @@ func (m languagesModuleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) 
 	return ext.EndGroups
 }
 
-func (m languagesModuleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (languagesModuleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := query.Message.Chat
 	user := query.From

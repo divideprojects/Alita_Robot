@@ -27,7 +27,7 @@ type warnsModuleStruct struct {
 
 var warnsModule = warnsModuleStruct{modname: "Warns"}
 
-func (m warnsModuleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
+func (warnsModuleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -75,7 +75,7 @@ func (m warnsModuleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m warnsModuleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64, reason, warnType string) (err error) {
+func (warnsModuleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64, reason, warnType string) (err error) {
 	var (
 		reply    string
 		keyboard gotgbot.InlineKeyboardMarkup
@@ -378,7 +378,7 @@ func (m warnsModuleStruct) dWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	return m.warnThisUser(b, ctx, warnusr, reason, "dwarn")
 }
 
-func (m warnsModuleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
+func (warnsModuleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -409,7 +409,7 @@ func (m warnsModuleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m warnsModuleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (warnsModuleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -474,7 +474,7 @@ func (m warnsModuleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m warnsModuleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
+func (warnsModuleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
@@ -520,7 +520,7 @@ func (m warnsModuleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error 
 	return ext.EndGroups
 }
 
-func (m warnsModuleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
+func (warnsModuleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -567,7 +567,7 @@ func (m warnsModuleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error 
 	return ext.EndGroups
 }
 
-func (m warnsModuleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (warnsModuleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -613,7 +613,7 @@ func (m warnsModuleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m warnsModuleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (warnsModuleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -654,7 +654,7 @@ func (m warnsModuleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error
 	return ext.EndGroups
 }
 
-func (m warnsModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (warnsModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 

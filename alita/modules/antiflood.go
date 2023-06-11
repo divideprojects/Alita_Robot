@@ -41,7 +41,7 @@ var antifloodModule = antifloodModuleStruct{
 	floodMap:     sync.Map{},
 }
 
-func (m *antifloodModuleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, floodCrc floodControl) {
+func (*antifloodModuleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, floodCrc floodControl) {
 	floodSrc := db.GetFlood(chatId)
 
 	if floodSrc.Limit != 0 {
