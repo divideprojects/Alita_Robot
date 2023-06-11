@@ -10,3 +10,6 @@ on:
 jobs:
   ci:
     uses: divkix/reusable-workflows/.github/workflows/goreleaser-ci.yml@main
+    with:
+      GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+    secrets: inherit
