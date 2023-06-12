@@ -15,5 +15,3 @@ services:
      - ENABLED_LOCALES
      - MESSAGE_DUMP
      - OWNER_ID
-    env_file:
-     - .env
