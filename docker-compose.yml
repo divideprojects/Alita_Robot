@@ -15,7 +15,5 @@ services:
      - ENABLED_LOCALES
      - MESSAGE_DUMP
      - OWNER_ID
-     - PORT
-     - REDIS_PASSWORD
-     - REDIS_URI
-     - SECRET_TOKEN
+    env_file:
+     - .env
