@@ -5,6 +5,7 @@ release:
   header: |
     Welcome to this new release!
 
+  footer: |
     Docker 🐳 images are available at:
     `docker pull ghcr.io/divideprojects/{{ .ProjectName }}:{{ .Tag }}`
 
