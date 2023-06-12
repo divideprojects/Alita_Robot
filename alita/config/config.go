@@ -6,6 +6,7 @@ import (
 	"path"
 	"runtime"
 
+	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -38,6 +39,9 @@ func init() {
 			},
 		},
 	)
+
+	// load goenv config
+	godotenv.Load()
 
 	// set necessary variables
 	Debug = typeConvertor{str: os.Getenv("DEBUG")}.Bool()

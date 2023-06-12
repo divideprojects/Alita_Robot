@@ -9,6 +9,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1
 	github.com/eko/gocache/v3 v3.1.2
 	github.com/google/uuid v1.3.0
+	github.com/joho/godotenv v1.5.1
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.16.0
