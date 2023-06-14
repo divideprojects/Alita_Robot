@@ -1,0 +1,63 @@
+{
+  "name": "Alita_Robot",
+  "description": "Alita is a Telegram Group management bot made using gotgbot and Go, which makes it modern and faster than most of the Telegram chat managers.",
+  "keywords": [
+    "telegram bot",
+    "group bot",
+    "group",
+    "manager",
+    "alita",
+    "alita_robot"
+  ],
+  "repository": "https://github.com/divkix/Alita_Robot",
+  "website": "https://divideprojects.com",
+  "success_url": "https://t.me/DivideProjects",
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Your telegram bot token, get from @Botfather in telegram.",
+      "required": true,
+      "value": ""
+    },
+    "APP_ID": {
+      "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
+      "required": true,
+      "value": ""
+    },
+    "API_HASH": {
+      "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
+      "required": true,
+      "value": ""
+    },
+    "DB_URI": {
+      "description": "Your MongoDB connection string.",
+      "required": true,
+      "value": ""
+    },
+    "DB_NAME": {
+      "description": "Your MongoDB database name.",
+      "required": true,
+      "value": "alita"
+    },
+    "OWNER_ID": {
+      "description": "Your user ID as an integer.",
+      "required": true,
+      "value": ""
+    },
+    "MESSAGE_DUMP": {
+      "description": "Event logs channel where bot will send updates. Starts with -100",
+      "required": true,
+      "value": ""
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/go"
+    }
+  ],
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  }
+}
