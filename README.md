@@ -70,6 +70,10 @@ It really motivates me to continue this project further.
 - after that, type the forked repo name and select it now select main branch and enable auto deploy, at last click on deploy now button!
 - Lastly, you must fill up all the vars in heroku (if using heroku) as directed in app.json file and now turn on the worker dyno to run it `:)`
 
+**Must Add in heroku [config](https://dashboard.heroku.com/apps/yourappname/settings) :**
+- `DB_URI` : Get one from [mongodb](https://cloud.mongodb.com/)
+- `OWNER_ID` : your telegram id
+- `MESSAGE_DUMP` : must be start with `-100` or your bot added in as **admin**
 ### Traditional
 
 - Download a binary from [releases](https://github.com/divideprojects/Alita_Robot/releases) page specific to your PC.
