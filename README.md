@@ -68,6 +68,9 @@ It really motivates me to continue this project further.
 - secondly, create an empty app in the Heroku, with a custom app name; and select Europe region for faster speed.
 - Now go to the deploy tab of your app and under deployment method select GitHub and connect it.
 - after that, type the forked repo name and select it now select main branch and enable auto deploy, at last click on deploy now button!
+</h3>
+<p align="center"><a href="https://heroku.com/deploy?template=https://github.com/divideprojects/Alita_Robot"> <img src="https://img.shields.io/badge/Redirect%20To%20Heroku-black?style=for-the-badge&logo=heroku" width="200" height="35.45"/></a></p>
+
 - Lastly, you must fill up all the vars in heroku (if using heroku) as directed in app.json file and now turn on the worker dyno to run it `:)`
 
 **Must Add in heroku [config](https://dashboard.heroku.com/apps/yourappname/settings) :**
@@ -94,6 +97,7 @@ If all works well, bot should send message to the **MESSAGE_DUMP** Group!
 You can download all binaries and release artifacts from the Releases page. Binaries are built for macOS, Linux, Windows, for amd64 and arm64 architectures.
 
 If a binary does not yet exist for the OS/architecture you use, please open a GitHub Issue.
+
 
 ## Verify Signature
 
