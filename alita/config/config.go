@@ -84,4 +84,8 @@ func init() {
 	if ApiServer == "" {
 		ApiServer = "https://api.telegram.org"
 	}
+	// set default db_name 
+	if MainDbName == "" {
+		MainDbName = "Alita_Robot"
+	}
 }
