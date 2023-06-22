@@ -7,6 +7,7 @@ import (
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
@@ -14,7 +15,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -185,7 +186,7 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			&gotgbot.EditMessageTextOpts{
 				ReplyMarkup:           currKb,
 				DisableWebPagePreview: true,
-				ParseMode:             parsemode.HTML,
+				ParseMode:             helpers.HTML,
 			},
 		)
 		if err != nil {
@@ -219,7 +220,7 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			b,
 			currText,
 			&gotgbot.SendMessageOpts{
-				ParseMode:             parsemode.HTML,
+				ParseMode:             helpers.HTML,
 				DisableWebPagePreview: true,
 				ReplyMarkup:           &currKb,
 			},
@@ -245,7 +246,7 @@ func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// Sort the module names
 	if string_handling.FindInStringSlice([]string{"BackStart", "Help"}, module) {
-		_parsemode = parsemode.HTML
+		_parsemode = helpers.HTML
 		switch module {
 		case "Help":
 			// This shows the main start menu
@@ -296,7 +297,7 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 			_, err := msg.Reply(b,
 				startHelp,
 				&gotgbot.SendMessageOpts{
-					ParseMode:             parsemode.HTML,
+					ParseMode:             helpers.HTML,
 					DisableWebPagePreview: true,
 					ReplyMarkup:           &startMarkup,
 				},
@@ -315,7 +316,7 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Info("sed")
 		}
 	} else {
-		_, err := msg.Reply(b, "Hey :) PM me if you have any questions on how to use me!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Hey :) PM me if you have any questions on how to use me!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -331,7 +332,7 @@ func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err := b.SendMessage(chat.Id,
 		i18n.I18n{LangCode: "en"}.GetString("strings.Help.DonateText"),
 		&gotgbot.SendMessageOpts{
-			ParseMode:                parsemode.HTML,
+			ParseMode:                helpers.HTML,
 			DisableWebPagePreview:    true,
 			ReplyToMessageId:         msg.MessageId,
 			AllowSendingWithoutReply: true,
@@ -442,7 +443,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 					html.EscapeString(msg.From.FirstName),
 				),
 				&gotgbot.SendMessageOpts{
-					ParseMode:   parsemode.HTML,
+					ParseMode:   helpers.HTML,
 					ReplyMarkup: &markup,
 				},
 			)
@@ -490,7 +491,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b,
 			moduleHelpString,
 			&gotgbot.SendMessageOpts{
-				ParseMode:                parsemode.HTML,
+				ParseMode:                helpers.HTML,
 				ReplyToMessageId:         replyMsgId,
 				AllowSendingWithoutReply: true,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{

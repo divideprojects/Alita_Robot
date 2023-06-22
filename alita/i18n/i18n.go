@@ -9,12 +9,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-const (
-	defaultLangCode = "en"
-)
+const defaultLangCode = "en"
 
+// localeMap is the map of the embedded locale
 var localeMap = make(map[string][]byte)
 
+// I18n is the struct for i18n
 type I18n struct {
 	LangCode string
 }

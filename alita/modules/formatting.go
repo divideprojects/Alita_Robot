@@ -6,6 +6,7 @@ import (
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
@@ -13,7 +14,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 )
 
 var formattingModule = moduleStruct{moduleName: "Formatting"}
@@ -30,7 +31,7 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := reply(b,
 			"Press the button below to get Markdown Help!",
 			&gotgbot.SendMessageOpts{
-				ParseMode: parsemode.HTML,
+				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
@@ -64,7 +65,7 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 			// TODO: Fix help msg here
 			"Alita supports a large number of formatting options to make your messages more expressive. Take a look!",
 			&gotgbot.SendMessageOpts{
-				ParseMode: parsemode.HTML,
+				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: Mkdkb,
 				},
@@ -138,7 +139,7 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 					},
 				},
 			},
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {

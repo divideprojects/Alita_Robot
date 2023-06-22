@@ -21,7 +21,7 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -60,7 +60,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b,
 			fmt.Sprint("Filters limit exceeded, a group can only have maximum 150 filters!\n",
 				"This limitation is due to bot running free without any donations by users."),
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -70,14 +70,14 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage != nil && len(args) <= 1 {
-		_, err := msg.Reply(b, "Please give a keyword to reply to!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Please give a keyword to reply to!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if len(args) <= 2 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Invalid Filter!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Invalid Filter!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -87,7 +87,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	filterWord, fileid, text, dataType, buttons, _, _, _, _, _, _, errorMsg := helpers.GetNoteAndFilterType(msg, true)
 	if dataType == -1 {
-		_, err := msg.Reply(b, errorMsg, parsemode.Shtml())
+		_, err := msg.Reply(b, errorMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -108,7 +108,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b,
 			"Filter already exists!\nDo you want to overwrite it?",
 			&gotgbot.SendMessageOpts{
-				ParseMode: parsemode.HTML,
+				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
@@ -134,7 +134,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	go db.AddFilter(chat.Id, filterWord, text, fileid, buttons, dataType)
 
-	_, err := msg.Reply(b, fmt.Sprintf("Added reply for filter word <code>%s</code>", filterWord), parsemode.Shtml())
+	_, err := msg.Reply(b, fmt.Sprintf("Added reply for filter word <code>%s</code>", filterWord), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -168,7 +168,7 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "Please give a filter word to remove!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Please give a filter word to remove!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -178,14 +178,14 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 		filterWord, _ := extraction.ExtractQuotes(strings.Join(args, " "), true, true)
 
 		if !string_handling.FindInStringSlice(db.GetFiltersList(chat.Id), strings.ToLower(filterWord)) {
-			_, err := msg.Reply(b, "Filter does not exist!", parsemode.Shtml())
+			_, err := msg.Reply(b, "Filter does not exist!", helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
 			}
 		} else {
 			go db.RemoveFilter(chat.Id, strings.ToLower(filterWord))
-			_, err := msg.Reply(b, fmt.Sprintf("Ok!\nI will no longer reply to <code>%s</code>", filterWord), parsemode.Shtml())
+			_, err := msg.Reply(b, fmt.Sprintf("Ok!\nI will no longer reply to <code>%s</code>", filterWord), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -240,7 +240,7 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err := msg.Reply(b,
 		info,
 		&gotgbot.SendMessageOpts{
-			ParseMode:                parsemode.HTML,
+			ParseMode:                helpers.HTML,
 			ReplyToMessageId:         replyMsgId,
 			AllowSendingWithoutReply: true,
 		},
@@ -265,7 +265,7 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	filterKeys := db.GetFiltersList(chat.Id)
 
 	if len(filterKeys) == 0 {
-		_, err := msg.Reply(b, "There are no filters in this chat!", parsemode.Shtml())
+		_, err := msg.Reply(b, "There are no filters in this chat!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
 	log "github.com/sirupsen/logrus"
 
@@ -15,7 +16,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 )
 
 var (
@@ -112,7 +113,7 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 			if len(args) >= 1 {
 				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
 			}
-			pMsg, err := bot.SendMessage(chat.Id, Text, parsemode.Smarkdown())
+			pMsg, err := bot.SendMessage(chat.Id, Text, helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 			}
@@ -352,7 +353,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			if len(args) >= 1 {
 				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
 			}
-			pMsg, err := bot.SendMessage(chat.Id, Text, parsemode.Smarkdown())
+			pMsg, err := bot.SendMessage(chat.Id, Text, helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 			}

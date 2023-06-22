@@ -10,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -247,7 +247,7 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// if command is empty (i.e. Without Arguments) not replied to a message, return and end group
 	if len(args) == 1 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Please reply to a message or give some text to pin.", parsemode.Shtml())
+		_, err := msg.Reply(b, "Please reply to a message or give some text to pin.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -262,7 +262,7 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	pinT.FileID, pinT.MsgText, pinT.DataType, buttons = m.GetPinType(msg)
 	if pinT.DataType == -1 {
-		_, err := msg.Reply(b, "Permapin not supported for data type!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Permapin not supported for data type!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -291,7 +291,7 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err = msg.Reply(b,
 			fmt.Sprintf("I have pinned <a href='%s'>this message</a>", pinLink),
 			&gotgbot.SendMessageOpts{
-				ParseMode:                parsemode.HTML,
+				ParseMode:                helpers.HTML,
 				ReplyToMessageId:         msgToPin,
 				DisableWebPagePreview:    true,
 				AllowSendingWithoutReply: true,
@@ -336,7 +336,7 @@ func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Reply to a message to pin it", parsemode.Shtml())
+		_, err := msg.Reply(b, "Reply to a message to pin it", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -372,7 +372,7 @@ func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 				pinMsg,
 				pinLink,
 			),
-			parsemode.Shtml(),
+			helpers.Shtml(),
 		)
 		if err != nil {
 			log.Error(err)
@@ -407,7 +407,7 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.SetAntiChannelPin(chat.Id, true)
 			_, err := msg.Reply(b,
 				"<b>Enabled</b> anti channel pins. Automatic pins from a channel will now be replaced with the previous pin.",
-				parsemode.Shtml(),
+				helpers.Shtml(),
 			)
 			if err != nil {
 				log.Error(err)
@@ -417,14 +417,14 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.SetAntiChannelPin(chat.Id, false)
 			_, err := msg.Reply(b,
 				"<b>Disabled</b> anti channel pins. Automatic pins from a channel will not be removed.",
-				parsemode.Shtml(),
+				helpers.Shtml(),
 			)
 			if err != nil {
 				log.Error(err)
 				return err
 			}
 		default:
-			_, err := msg.Reply(b, "Your input was not recognised as one of: yes/no/on/off", parsemode.Shtml())
+			_, err := msg.Reply(b, "Your input was not recognised as one of: yes/no/on/off", helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -435,7 +435,7 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 		if pinprefs.AntiChannelPin {
 			_, err := msg.Reply(b,
 				fmt.Sprintf("Anti-Channel pins are currently <b>enabled</b> in %s. All channel posts that get auto-pinned by telegram will be replaced with the previous pin.", chat.Title),
-				parsemode.Shtml(),
+				helpers.Shtml(),
 			)
 			if err != nil {
 				log.Error(err)
@@ -444,7 +444,7 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 		} else {
 			_, err := msg.Reply(b,
 				fmt.Sprintf("Anti-Channel pins are currently <b>disabled</b> in %s.", chat.Title),
-				parsemode.Shtml(),
+				helpers.Shtml(),
 			)
 			if err != nil {
 				log.Error(err)
@@ -480,7 +480,7 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.SetCleanLinked(chat.Id, true)
 			_, err := msg.Reply(b,
 				"<b>Enabled</b> linked channel post deletion in Logs. Messages sent from the linked channel will be deleted.",
-				parsemode.Shtml(),
+				helpers.Shtml(),
 			)
 			if err != nil {
 				log.Error(err)
@@ -490,14 +490,14 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.SetCleanLinked(chat.Id, false)
 			_, err := msg.Reply(b,
 				"<b>Disabled</b> linked channel post deletion in Logs.",
-				parsemode.Shtml(),
+				helpers.Shtml(),
 			)
 			if err != nil {
 				log.Error(err)
 				return err
 			}
 		default:
-			_, err := msg.Reply(b, "Your input was not recognised as one of: yes/no/on/off", parsemode.Shtml())
+			_, err := msg.Reply(b, "Your input was not recognised as one of: yes/no/on/off", helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -508,7 +508,7 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 		if pinprefs.CleanLinked {
 			_, err := msg.Reply(b,
 				fmt.Sprintf("Linked channel post deletion is currently <b>enabled</b> in %s. Messages sent from the linked channel will be deleted", chat.Title),
-				parsemode.Shtml(),
+				helpers.Shtml(),
 			)
 			if err != nil {
 				log.Error(err)
@@ -517,7 +517,7 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 		} else {
 			_, err := msg.Reply(b,
 				fmt.Sprintf("Linked channel post deletion is currently <b>disabled</b> in %s.", chat.Title),
-				parsemode.Shtml(),
+				helpers.Shtml(),
 			)
 			if err != nil {
 				log.Error(err)
@@ -568,7 +568,7 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	pinnedMsg := chatInfo.PinnedMessage
 
 	if pinnedMsg == nil {
-		_, err = msg.Reply(b, "No message has been pinned in the current chat!", parsemode.Shtml())
+		_, err = msg.Reply(b, "No message has been pinned in the current chat!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -580,7 +580,7 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err = msg.Reply(b,
 		fmt.Sprintf("<a href='%s'>Here</a> is the pinned message.", pinLink),
 		&gotgbot.SendMessageOpts{
-			ParseMode:                parsemode.HTML,
+			ParseMode:                helpers.HTML,
 			DisableWebPagePreview:    true,
 			ReplyToMessageId:         replyMsgId,
 			AllowSendingWithoutReply: true,
@@ -609,7 +609,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 			ctx.EffectiveChat.Id,
 			pinT.MsgText,
 			&gotgbot.SendMessageOpts{
-				ParseMode:                parsemode.HTML,
+				ParseMode:                helpers.HTML,
 				DisableWebPagePreview:    true,
 				ReplyToMessageId:         replyMsgId,
 				ReplyMarkup:              keyb,
@@ -636,7 +636,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 			pinT.FileID,
 			&gotgbot.SendDocumentOpts{
 				ReplyToMessageId:         replyMsgId,
-				ParseMode:                parsemode.HTML,
+				ParseMode:                helpers.HTML,
 				ReplyMarkup:              keyb,
 				Caption:                  pinT.MsgText,
 				AllowSendingWithoutReply: true,
@@ -650,7 +650,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 			pinT.FileID,
 			&gotgbot.SendPhotoOpts{
 				ReplyToMessageId:         replyMsgId,
-				ParseMode:                parsemode.HTML,
+				ParseMode:                helpers.HTML,
 				ReplyMarkup:              keyb,
 				Caption:                  pinT.MsgText,
 				AllowSendingWithoutReply: true,
@@ -664,7 +664,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 			pinT.FileID,
 			&gotgbot.SendAudioOpts{
 				ReplyToMessageId:         replyMsgId,
-				ParseMode:                parsemode.HTML,
+				ParseMode:                helpers.HTML,
 				ReplyMarkup:              keyb,
 				Caption:                  pinT.MsgText,
 				AllowSendingWithoutReply: true,
@@ -678,7 +678,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 			pinT.FileID,
 			&gotgbot.SendVoiceOpts{
 				ReplyToMessageId:         replyMsgId,
-				ParseMode:                parsemode.HTML,
+				ParseMode:                helpers.HTML,
 				ReplyMarkup:              keyb,
 				Caption:                  pinT.MsgText,
 				AllowSendingWithoutReply: true,
@@ -692,7 +692,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 			pinT.FileID,
 			&gotgbot.SendVideoOpts{
 				ReplyToMessageId:         replyMsgId,
-				ParseMode:                parsemode.HTML,
+				ParseMode:                helpers.HTML,
 				ReplyMarkup:              keyb,
 				Caption:                  pinT.MsgText,
 				AllowSendingWithoutReply: true,

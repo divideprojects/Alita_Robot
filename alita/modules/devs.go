@@ -16,7 +16,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -53,7 +53,7 @@ func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 		replyText = fmt.Sprintf("<b>Name:</b> %s\n<b>Chat ID</b>: %d\n<b>Users Count:</b> %d\n<b>Link:</b> %s", chat.Title, chat.Id, con, chat.InviteLink)
 	}
 
-	_, err := msg.Reply(b, replyText, parsemode.Shtml())
+	_, err := msg.Reply(b, replyText, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -155,7 +155,7 @@ func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = msg.Reply(b, "Okay, I left the chat!", parsemode.Shtml())
+	_, err = msg.Reply(b, "Okay, I left the chat!", helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -196,7 +196,7 @@ func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = fmt.Sprintf("Added %s to Sudo List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.AddSudo(userId)
 	}
-	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: parsemode.HTML})
+	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 	if err != nil {
 		log.Error(err)
 		return err
@@ -236,7 +236,7 @@ func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = fmt.Sprintf("Added %s to Dev List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.AddDev(userId)
 	}
-	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: parsemode.HTML})
+	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 	if err != nil {
 		log.Error(err)
 		return err
@@ -276,7 +276,7 @@ func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = fmt.Sprintf("Removed %s from Sudo List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.RemSudo(userId)
 	}
-	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: parsemode.HTML})
+	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 	if err != nil {
 		log.Error(err)
 		return err
@@ -316,7 +316,7 @@ func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = fmt.Sprintf("Removed %s from Dev List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.RemDev(userId)
 	}
-	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: parsemode.HTML})
+	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 	if err != nil {
 		log.Error(err)
 		return err
@@ -382,7 +382,7 @@ func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = dev + "\n\n" + sudo
 	}
 
-	_, err := msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: parsemode.HTML})
+	_, err := msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 	if err != nil {
 		log.Error(err)
 		return err
@@ -410,7 +410,7 @@ func (moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		"<code>Fetching bot stats...</code>",
 		&gotgbot.SendMessageOpts{
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -423,7 +423,7 @@ func (moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		stats,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {

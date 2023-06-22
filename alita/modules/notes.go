@@ -20,7 +20,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -49,14 +49,14 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	noteString := "Saved Note <b>%s</b>!\nGet it with <code>#%s</code> or <code>/get %s</code>."
 
 	if msg.ReplyToMessage != nil && len(args) <= 1 {
-		_, err := msg.Reply(b, "Please give a keyword to reply to!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Please give a keyword to reply to!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if len(args) <= 2 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Invalid Note!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Invalid Note!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -66,7 +66,7 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	noteWord, fileid, text, dataType, buttons, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif, errorMsg := helpers.GetNoteAndFilterType(msg, false)
 	if dataType == -1 && errorMsg != "" {
-		_, err := msg.Reply(b, errorMsg, parsemode.Shtml())
+		_, err := msg.Reply(b, errorMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -103,7 +103,7 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b,
 			"Note already exists!\nDo you want to overwrite it?",
 			&gotgbot.SendMessageOpts{
-				ParseMode: parsemode.HTML,
+				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
@@ -129,7 +129,7 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	go db.AddNote(chat.Id, noteWord, text, fileid, buttons, dataType, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif)
 
-	_, err := msg.Reply(b, fmt.Sprintf(noteString, noteWord, noteWord, noteWord), parsemode.Shtml())
+	_, err := msg.Reply(b, fmt.Sprintf(noteString, noteWord, noteWord, noteWord), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -151,7 +151,7 @@ func (moduleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	args := ctx.Args()
 
 	if len(args) == 1 {
-		_, err := msg.Reply(b, "Please give a keyword to remove!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Please give a keyword to remove!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -169,7 +169,7 @@ func (moduleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// check if note exists in admin notes as well
 	if !string_handling.FindInStringSlice(db.GetNotesList(chat.Id, true), strings.ToLower(noteWord)) {
-		_, err := msg.Reply(b, "Note does not exists!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Note does not exists!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -180,7 +180,7 @@ func (moduleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	db.RemoveNote(chat.Id, strings.ToLower(noteWord))
 
-	_, err := msg.Reply(b, fmt.Sprintf("Removed note <b>%s</b>.", noteWord), parsemode.Shtml())
+	_, err := msg.Reply(b, fmt.Sprintf("Removed note <b>%s</b>.", noteWord), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -214,7 +214,7 @@ func (moduleStruct) privNote(b *gotgbot.Bot, ctx *ext.Context) error {
 			txt = "Private Notes are currently turned off!"
 		}
 	}
-	_, err := msg.Reply(b, txt, parsemode.Smarkdown())
+	_, err := msg.Reply(b, txt, helpers.Smarkdown())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -241,7 +241,7 @@ func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 	info := "There are no notes in this chat!"
 
 	if len(noteKeys) == 0 {
-		_, err := msg.Reply(b, info, parsemode.Shtml())
+		_, err := msg.Reply(b, info, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -260,7 +260,7 @@ func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 			info += fmt.Sprintf("\n - <a href='https://t.me/%s?start=note_%d_%s'>%s</a>",
 				b.Username, chat.Id, note, note)
 		}
-		_, err := msg.Reply(b, info, parsemode.Shtml())
+		_, err := msg.Reply(b, info, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -294,7 +294,7 @@ func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 			info += fmt.Sprintf(" - <code>#%s</code>\n", note)
 		}
 		info += "\nYou can get a note by <code>#notename</code> or <code>/get notename</code>"
-		_, err := msg.Reply(b, info, parsemode.Shtml())
+		_, err := msg.Reply(b, info, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -316,7 +316,7 @@ func (moduleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	// check notes in adminkeys as well
 	noteKeys := db.GetNotesList(chat.Id, true)
 	if len(noteKeys) == 0 {
-		_, err := msg.Reply(b, "There are no notes in this chat!", parsemode.Shtml())
+		_, err := msg.Reply(b, "There are no notes in this chat!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -348,7 +348,7 @@ func (moduleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 	} else {
-		_, err := msg.Reply(b, "Only Chat Creator can use this command.", parsemode.Shtml())
+		_, err := msg.Reply(b, "Only Chat Creator can use this command.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -483,7 +483,7 @@ func (m moduleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// check if notedata is correct or not
 	if noteData.NoteContent == "" && noteData.FileID == "" {
-		_, err := msg.Reply(b, "There's some error parsing the note, please report this in support chat.", parsemode.Shtml())
+		_, err := msg.Reply(b, "There's some error parsing the note, please report this in support chat.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -495,7 +495,7 @@ func (m moduleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	// admin notes follow the group note policy
 	if noteData.AdminOnly {
 		if !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			_, err := msg.Reply(b, "This note can only be accessed by a admin!", parsemode.Shtml())
+			_, err := msg.Reply(b, "This note can only be accessed by a admin!", helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -535,7 +535,7 @@ func (m moduleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 								},
 							},
 						},
-						ParseMode: parsemode.Markdown,
+						ParseMode: helpers.Markdown,
 					},
 				)
 			}
@@ -569,7 +569,7 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	var err error
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "Not enough arguments.", parsemode.Shtml())
+		_, err := msg.Reply(b, "Not enough arguments.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -590,7 +590,7 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// check if note exists or not
 	if !string_handling.FindInStringSlice(db.GetNotesList(chat.Id, true), strings.ToLower(noteName)) {
-		_, err := msg.Reply(b, "Note doesn't exists!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Note doesn't exists!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -602,7 +602,7 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// check if notedata is correct or not
 	if noteData.NoteContent == "" && noteData.FileID == "" {
-		_, err := msg.Reply(b, "There's some error parsing the note, please report this to support chat.", parsemode.Shtml())
+		_, err := msg.Reply(b, "There's some error parsing the note, please report this to support chat.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -614,7 +614,7 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	// admin notes follow the group note policy
 	if noteData.AdminOnly {
 		if !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			_, err = msg.Reply(b, "This note can only be accessed by a admin!", parsemode.Shtml())
+			_, err = msg.Reply(b, "This note can only be accessed by a admin!", helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -641,7 +641,7 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 							},
 						},
 					},
-					ParseMode:                parsemode.Markdown,
+					ParseMode:                helpers.Markdown,
 					ReplyToMessageId:         replyMsgId,
 					AllowSendingWithoutReply: true,
 				},

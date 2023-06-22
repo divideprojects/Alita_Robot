@@ -19,7 +19,7 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 )
 
 var adminModule = moduleStruct{moduleName: "Admin"}
@@ -73,7 +73,7 @@ func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 	if !cached {
 		text += "\n\nNote: These are up-to-date values"
 	}
-	_, err := msg.Reply(b, text, parsemode.Shtml())
+	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -123,7 +123,7 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -132,7 +132,7 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, nil, userId, true) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_owner"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_owner"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -141,7 +141,7 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_bot_itself"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_bot_itself"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -150,7 +150,7 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if !chat_status.IsUserAdmin(b, chat.Id, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_admin"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -194,7 +194,7 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	mem := userMember.MergeChatMember().User
 	_, err = msg.Reply(b,
 		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".demote.success_demote"), helpers.MentionHtml(mem.Id, mem.FirstName)),
-		parsemode.Shtml(),
+		helpers.Shtml(),
 	)
 	if err != nil {
 		log.Error(err)
@@ -247,7 +247,7 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -256,7 +256,7 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".promote.is_bot_itself"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".promote.is_bot_itself"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -267,7 +267,7 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// checks if user being promoted is already admin or owner
 	if chat_status.RequireUserOwner(b, ctx, nil, userId, true) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".promote.is_owner"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".promote.is_owner"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -276,7 +276,7 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if chat_status.IsUserAdmin(b, chat.Id, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".promote.is_admin"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".promote.is_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -322,7 +322,7 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 		},
 	)
 	if err != nil {
-		_, _ = msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.err_cannot_promote"), parsemode.Shtml())
+		_, _ = msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.err_cannot_promote"), helpers.Shtml())
 		return err
 	}
 
@@ -354,7 +354,7 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	mem := userMember.MergeChatMember().User
 	_, err = msg.Reply(b,
 		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".promote.success_promote"), helpers.MentionHtml(mem.Id, mem.FirstName))+extraText,
-		parsemode.Shtml(),
+		helpers.Shtml(),
 	)
 	if err != nil {
 		log.Error(err)
@@ -430,7 +430,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -439,7 +439,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, nil, userId, true) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".title.is_owner"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".title.is_owner"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -447,7 +447,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if !chat_status.IsUserAdmin(b, chat.Id, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".title.is_admin"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".title.is_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -456,7 +456,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".title.is_bot_itself"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".title.is_bot_itself"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -467,7 +467,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// for managing custom title
 	if customTitle == "" {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.title_empty"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.title_empty"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -485,7 +485,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	)
 	if err != nil {
 		log.Error(err)
-		_, _ = msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.err_set_title"), parsemode.Shtml())
+		_, _ = msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.err_set_title"), helpers.Shtml())
 		return err
 	}
 
@@ -499,7 +499,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	_, err = msg.Reply(b,
 		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".title.success_set"), mem.User.FirstName, mem.CustomTitle),
-		parsemode.Shtml(),
+		helpers.Shtml(),
 	)
 	if err != nil {
 		log.Error(err)
@@ -559,7 +559,7 @@ func (m moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 
-	_, err := msg.Reply(b, text, parsemode.Shtml())
+	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -599,7 +599,7 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	k := tr.GetString("strings.CommonStrings.admin_cache.cache_reloaded")
 	debug_bot.PrettyPrintStruct(k)
-	_, err = msg.Reply(b, k, parsemode.Shtml())
+	_, err = msg.Reply(b, k, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err

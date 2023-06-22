@@ -17,7 +17,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 )
 
 var ConnectionsModule = moduleStruct{moduleName: "Connections"}
@@ -56,7 +56,7 @@ func (m moduleStruct) connection(b *gotgbot.Bot, ctx *ext.Context) error {
 		_text,
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: connKeyboard,
-			ParseMode:   parsemode.HTML,
+			ParseMode:   helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -109,7 +109,7 @@ func (m moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 
-	_, err := msg.Reply(b, text, parsemode.Shtml())
+	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -168,7 +168,7 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 		text,
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: replyMarkup,
-			ParseMode:   parsemode.HTML,
+			ParseMode:   helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -232,7 +232,7 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 		replyText,
 		&gotgbot.EditMessageTextOpts{
 			ReplyMarkup: replyKb,
-			ParseMode:   parsemode.HTML,
+			ParseMode:   helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -274,7 +274,7 @@ func (m moduleStruct) disconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		text = tr.GetString("strings." + m.moduleName + ".disconnect.need_pm")
 	}
 
-	_, err := msg.Reply(b, text, parsemode.Shtml())
+	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -340,7 +340,7 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b, text,
 			&gotgbot.SendMessageOpts{
 				ReplyMarkup: connKeyboard,
-				ParseMode:   parsemode.HTML,
+				ParseMode:   helpers.HTML,
 			},
 		)
 		if err != nil {
@@ -349,7 +349,7 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".reconnect.need_pm"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".reconnect.need_pm"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

@@ -18,7 +18,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -85,7 +85,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-		_, err := msg.Reply(b, "You're an admin, whom will I report your issues to?", parsemode.Shtml())
+		_, err := msg.Reply(b, "You're an admin, whom will I report your issues to?", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -111,7 +111,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	reportedMsgId := msg.ReplyToMessage.MessageId
 
 	if reportedUser.Id == b.Id {
-		_, err := msg.Reply(b, "Why would I report myself?", parsemode.Shtml())
+		_, err := msg.Reply(b, "Why would I report myself?", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -119,7 +119,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if string_handling.FindInInt64Slice(adminArray, reportedUser.Id) {
-		_, err := msg.Reply(b, "Why would I report an admin?", parsemode.Shtml())
+		_, err := msg.Reply(b, "Why would I report an admin?", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -146,7 +146,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err = msg.Reply(b,
 		reported,
 		&gotgbot.SendMessageOpts{
-			ParseMode:                parsemode.HTML,
+			ParseMode:                helpers.HTML,
 			ReplyToMessageId:         replyMsgId,
 			AllowSendingWithoutReply: true,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -299,7 +299,7 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 		replyText += "\n\nTo change this setting, try this command again, with one of the following args: yes/no/on/off"
 	}
 
-	_, err = msg.Reply(b, replyText, parsemode.Shtml())
+	_, err = msg.Reply(b, replyText, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -393,7 +393,7 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 		replyText,
 		&gotgbot.EditMessageTextOpts{
 			ChatId:    chat.Id,
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {

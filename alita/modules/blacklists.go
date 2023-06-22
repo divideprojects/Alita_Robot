@@ -20,7 +20,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -68,7 +68,7 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".blacklist.give_bl_word"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".blacklist.give_bl_word"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -92,7 +92,7 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 			text += tr.GetString("strings."+m.moduleName+".blacklist.added_bl") + fmt.Sprintf("\n - %s\n\n", strings.Join(newBlacklist, "\n - "))
 		}
 
-		_, err := msg.Reply(b, text, parsemode.Shtml())
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -138,7 +138,7 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".unblacklist.give_bl_word"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".unblacklist.give_bl_word"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -222,7 +222,7 @@ func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 		&gotgbot.SendMessageOpts{
 			ReplyToMessageId:         replyMsgId,
 			AllowSendingWithoutReply: true,
-			ParseMode:                parsemode.HTML,
+			ParseMode:                helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -277,7 +277,7 @@ func (m moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error
 	} else {
 		rMsg = tr.GetString("strings." + m.moduleName + ".set_bl_action.choose_correct_option")
 	}
-	_, err := msg.Reply(b, rMsg, parsemode.Smarkdown())
+	_, err := msg.Reply(b, rMsg, helpers.Smarkdown())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -350,7 +350,7 @@ func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, _, err := query.Message.EditText(b,
 		helpText,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -415,7 +415,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 
 				_, err = msg.Reply(b,
 					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.muted_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
-					parsemode.Shtml())
+					helpers.Shtml())
 				if err != nil {
 					log.Error(err)
 					return err
@@ -434,7 +434,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 
 				_, err = msg.Reply(b,
 					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.banned_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
-					parsemode.Shtml())
+					helpers.Shtml())
 				if err != nil {
 					log.Error(err)
 					return err
@@ -453,7 +453,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 
 				_, err = msg.Reply(b,
 					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.kicked_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
-					parsemode.Shtml())
+					helpers.Shtml())
 				if err != nil {
 					log.Error(err)
 					return err

@@ -15,7 +15,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 )
 
 // function used to get status of bot when it joined a group and send a message to the group
@@ -40,7 +40,7 @@ func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 					"To convert this group to a supergroup, please follow the instructions here:\n",
 					"https://telegra.ph/Convert-group-to-Supergroup-07-29",
 				),
-				parsemode.Shtml(),
+				helpers.Shtml(),
 			)
 			if err != nil {
 				log.Error(err)

@@ -17,7 +17,7 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 )
 
 var rulesModule = moduleStruct{
@@ -138,7 +138,7 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup:              rulesKb,
 			ReplyToMessageId:         replyMsgId,
 			AllowSendingWithoutReply: true,
-			ParseMode:                parsemode.HTML,
+			ParseMode:                helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -173,7 +173,7 @@ func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 		text = "Successfully set rules for this group!"
 	}
 
-	_, err := msg.Reply(bot, text, parsemode.Shtml())
+	_, err := msg.Reply(bot, text, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -217,7 +217,7 @@ func (m moduleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 
-	_, err = msg.Reply(bot, text, parsemode.Shtml())
+	_, err = msg.Reply(bot, text, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err

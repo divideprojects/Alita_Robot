@@ -14,7 +14,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 )
 
 var languagesModule = moduleStruct{moduleName: "Languages"}
@@ -91,7 +91,7 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		replyString,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode:             parsemode.HTML,
+			ParseMode:             helpers.HTML,
 			DisableWebPagePreview: true,
 		},
 	)

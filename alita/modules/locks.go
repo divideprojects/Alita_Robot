@@ -18,7 +18,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -134,7 +134,7 @@ func (m moduleStruct) locktypes(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	_locktypes := m.getLockMapAsArray()
 
-	_, err := msg.Reply(b, "Locks: \n - "+strings.Join(_locktypes, "\n - "), parsemode.Shtml())
+	_, err := msg.Reply(b, "Locks: \n - "+strings.Join(_locktypes, "\n - "), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -157,7 +157,7 @@ func (m moduleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 
-	_, err := msg.Reply(b, m.buildLockTypesMessage(chat.Id), parsemode.Smarkdown())
+	_, err := msg.Reply(b, m.buildLockTypesMessage(chat.Id), helpers.Smarkdown())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -187,7 +187,7 @@ func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "What do you want to lock? Check /locktypes for available options.", parsemode.Shtml())
+		_, err := msg.Reply(b, "What do you want to lock? Check /locktypes for available options.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -196,7 +196,7 @@ func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	for _, perm := range args {
 		if !string_handling.FindInStringSlice(m.getLockMapAsArray(), perm) {
-			_, err := msg.Reply(b, fmt.Sprintf("`%s` is not a correct lock type, check /locktypes.", perm), parsemode.Smarkdown())
+			_, err := msg.Reply(b, fmt.Sprintf("`%s` is not a correct lock type, check /locktypes.", perm), helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -243,7 +243,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "What do you want to lock? Check /locktypes for available options.", parsemode.Shtml())
+		_, err := msg.Reply(b, "What do you want to lock? Check /locktypes for available options.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -253,7 +253,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	for _, perm := range args {
 		if !string_handling.FindInStringSlice(m.getLockMapAsArray(), perm) {
-			_, err := msg.Reply(b, fmt.Sprintf("`%s` is not a correct lock type, check /locktypes.", perm), parsemode.Smarkdown())
+			_, err := msg.Reply(b, fmt.Sprintf("`%s` is not a correct lock type, check /locktypes.", perm), helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -270,7 +270,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err := msg.Reply(b,
 		fmt.Sprintf("Un-Locked the following in this group:\n - %s",
 			strings.Join(toLock, "\n - ")),
-		parsemode.Smarkdown(),
+		helpers.Smarkdown(),
 	)
 	if err != nil {
 		log.Error(err)

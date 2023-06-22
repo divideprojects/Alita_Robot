@@ -15,7 +15,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -49,7 +49,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 				_, err := msg.Reply(b, fmt.Sprintf("Disabled the use of the following in this chat:"+
 					"%s",
 					strings.Join(toDisable, "\n - ")),
-					parsemode.Smarkdown())
+					helpers.Smarkdown())
 				if err != nil {
 					log.Error(err)
 					return err
@@ -69,7 +69,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, "You haven't specified a command to disable.", parsemode.Shtml())
+		_, err := msg.Reply(b, "You haven't specified a command to disable.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -91,7 +91,7 @@ func (moduleStruct) disableable(b *gotgbot.Bot, ctx *ext.Context) error {
 		text += fmt.Sprintf("\n - `%s`", cmds)
 	}
 
-	_, err := msg.Reply(b, text, parsemode.Smarkdown())
+	_, err := msg.Reply(b, text, helpers.Smarkdown())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -149,7 +149,7 @@ func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 		for _, cmds := range disabled {
 			text += fmt.Sprintf("\n - `%s`", cmds)
 		}
-		_, err := msg.Reply(b, text, parsemode.Smarkdown())
+		_, err := msg.Reply(b, text, helpers.Smarkdown())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -200,7 +200,7 @@ func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
 			text = "Disabled Command deleting is *disabled*, disabled commands from users will *not* be deleted!"
 		}
 	}
-	_, err := msg.Reply(b, text, parsemode.Smarkdown())
+	_, err := msg.Reply(b, text, helpers.Smarkdown())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -237,7 +237,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 				_, err := msg.Reply(b, fmt.Sprintf("Re-Enabled the use of the following in this chat:"+
 					"%s",
 					strings.Join(toEnable, "\n - ")),
-					parsemode.Smarkdown())
+					helpers.Smarkdown())
 				if err != nil {
 					log.Error(err)
 					return err
@@ -257,7 +257,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, "You haven't specified a command to disable.", parsemode.Shtml())
+		_, err := msg.Reply(b, "You haven't specified a command to disable.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

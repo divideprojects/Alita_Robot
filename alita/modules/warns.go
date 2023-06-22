@@ -15,7 +15,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -63,7 +63,7 @@ func (moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 		replyText = "You need to specify an action to take upon too many warns. Current modes are: ban/kick/mute"
 	}
 
-	_, err := msg.Reply(b, replyText, parsemode.Shtml())
+	_, err := msg.Reply(b, replyText, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -194,7 +194,7 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 	}
 	_, err = b.SendMessage(chat.Id, reply,
 		&gotgbot.SendMessageOpts{
-			ParseMode:                parsemode.HTML,
+			ParseMode:                helpers.HTML,
 			DisableWebPagePreview:    true,
 			ReplyToMessageId:         msg.MessageId,
 			AllowSendingWithoutReply: true,
@@ -243,7 +243,7 @@ func (m moduleStruct) warnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -298,7 +298,7 @@ func (m moduleStruct) sWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -353,7 +353,7 @@ func (m moduleStruct) dWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -397,7 +397,7 @@ func (moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 		"<b>Warn Mode:</b> <code>%s</code>"),
 		warnrc.WarnLimit,
 		warnrc.WarnMode)
-	_, err := msg.Reply(b, text, parsemode.Shtml())
+	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -426,7 +426,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -499,7 +499,7 @@ func (moduleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		replyText,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -554,7 +554,7 @@ func (moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 
-	_, err := msg.Reply(b, replyText, parsemode.Smarkdown())
+	_, err := msg.Reply(b, replyText, helpers.Smarkdown())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -591,7 +591,7 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -600,7 +600,7 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.ResetUserWarns(userId, chat.Id)
-	_, err := msg.Reply(b, "Warnings have been reset!", parsemode.Shtml())
+	_, err := msg.Reply(b, "Warnings have been reset!", helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -624,7 +624,7 @@ func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	warnrc := db.GetAllChatWarns(chat.Id)
 	if warnrc == 0 {
-		_, err := msg.Reply(b, "No users are warned in this chat!", parsemode.Shtml())
+		_, err := msg.Reply(b, "No users are warned in this chat!", helpers.Shtml())
 		return err
 	}
 
