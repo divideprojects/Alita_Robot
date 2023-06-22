@@ -17,7 +17,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	
 )
 
 var ConnectionsModule = moduleStruct{moduleName: "Connections"}

@@ -10,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	
+
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"

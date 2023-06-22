@@ -16,7 +16,6 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
-	
 )
 
 var (
