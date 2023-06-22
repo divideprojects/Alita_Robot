@@ -17,7 +17,6 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
-	
 )
 
 var rulesModule = moduleStruct{

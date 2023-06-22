@@ -20,7 +20,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	
+
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 

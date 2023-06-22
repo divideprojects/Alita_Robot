@@ -19,7 +19,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	
 )
 
 var greetingsModule = moduleStruct{moduleName: "Greetings"}
