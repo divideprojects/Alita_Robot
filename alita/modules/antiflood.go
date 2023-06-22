@@ -19,14 +19,13 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-type antifloodModuleStruct struct {
-	modname      string
-	handlerGroup int
-	floodMap     sync.Map
+type antifloodStruct struct {
+	moduleStruct  // inheritance
+	syncHelperMap sync.Map
 }
 
 type floodControl struct {
@@ -35,19 +34,23 @@ type floodControl struct {
 	messageIDs   []int64
 }
 
-var antifloodModule = antifloodModuleStruct{
-	modname:      "Antiflood",
+var _normalAntifloodModule = moduleStruct{
+	moduleName:   "Antiflood",
 	handlerGroup: 4,
-	floodMap:     sync.Map{},
 }
 
-func (*antifloodModuleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, floodCrc floodControl) {
+var antifloodModule = antifloodStruct{
+	moduleStruct:  _normalAntifloodModule,
+	syncHelperMap: sync.Map{},
+}
+
+func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, floodCrc floodControl) {
 	floodSrc := db.GetFlood(chatId)
 
 	if floodSrc.Limit != 0 {
 
 		// Read from map
-		tmpInterface, valExists := antifloodModule.floodMap.Load(chatId)
+		tmpInterface, valExists := antifloodModule.syncHelperMap.Load(chatId)
 		if valExists && tmpInterface != nil {
 			floodCrc = tmpInterface.(floodControl)
 		}
@@ -62,7 +65,7 @@ func (*antifloodModuleStruct) updateFlood(chatId, userId, msgId int64) (returnVa
 		floodCrc.messageIDs = append([]int64{msgId}, floodCrc.messageIDs...) // prepend at first
 
 		if floodCrc.messageCount > floodSrc.Limit {
-			antifloodModule.floodMap.Store(chatId,
+			antifloodModule.syncHelperMap.Store(chatId,
 				floodControl{
 					userId:       0,
 					messageCount: 0,
@@ -71,14 +74,14 @@ func (*antifloodModuleStruct) updateFlood(chatId, userId, msgId int64) (returnVa
 			)
 			returnVar = true
 		} else {
-			antifloodModule.floodMap.Store(chatId, floodCrc)
+			antifloodModule.syncHelperMap.Store(chatId, floodCrc)
 		}
 	}
 
 	return
 }
 
-func (m *antifloodModuleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender
 	if user.IsAnonymousAdmin() {
@@ -219,9 +222,9 @@ func (m *antifloodModuleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) err
 		}
 	}
 	if _, err := b.SendMessage(chat.Id,
-		fmt.Sprintf(tr.GetString("strings."+m.modname+".checkflood.perform_action"), helpers.MentionHtml(userId, user.Name()), fmode),
+		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".checkflood.perform_action"), helpers.MentionHtml(userId, user.Name()), fmode),
 		&gotgbot.SendMessageOpts{
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: keyboard,
 			},
@@ -235,7 +238,7 @@ func (m *antifloodModuleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) err
 	return ext.ContinueGroups
 }
 
-func (m *antifloodModuleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -250,27 +253,27 @@ func (m *antifloodModuleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error
 	var replyText string
 
 	if len(args) == 0 {
-		replyText = tr.GetString("strings." + m.modname + ".errors.expected_args")
+		replyText = tr.GetString("strings." + m.moduleName + ".errors.expected_args")
 	} else {
 		if string_handling.FindInStringSlice([]string{"off", "no", "false", "0"}, strings.ToLower(args[0])) {
-			replyText = tr.GetString("strings." + m.modname + ".setflood.disabled")
+			replyText = tr.GetString("strings." + m.moduleName + ".setflood.disabled")
 			go db.SetFlood(chat.Id, 0)
 		} else {
 			num, err := strconv.Atoi(args[0])
 			if err != nil {
-				replyText = tr.GetString("strings." + m.modname + ".errors.invalid_int")
+				replyText = tr.GetString("strings." + m.moduleName + ".errors.invalid_int")
 			} else {
 				if num < 3 || num > 100 {
-					replyText = tr.GetString("strings." + m.modname + ".errors.set_in_limit")
+					replyText = tr.GetString("strings." + m.moduleName + ".errors.set_in_limit")
 				} else {
 					go db.SetFlood(chat.Id, num)
-					replyText = fmt.Sprintf(tr.GetString("strings."+m.modname+".setflood.success"), num)
+					replyText = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".setflood.success"), num)
 				}
 			}
 		}
 	}
 
-	_, err := msg.Reply(b, replyText, parsemode.Shtml())
+	_, err := msg.Reply(b, replyText, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -279,7 +282,7 @@ func (m *antifloodModuleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error
 	return ext.EndGroups
 }
 
-func (m *antifloodModuleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	var text string
 	msg := ctx.EffectiveMessage
 
@@ -299,7 +302,7 @@ func (m *antifloodModuleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	flood := db.GetFlood(chat.Id)
 	if flood.Limit == 0 {
-		text = tr.GetString("strings." + m.modname + ".flood.disabled")
+		text = tr.GetString("strings." + m.moduleName + ".flood.disabled")
 	} else {
 		var mode string
 		switch flood.Mode {
@@ -310,16 +313,16 @@ func (m *antifloodModuleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 		case "kick":
 			mode = "kicked"
 		}
-		text = fmt.Sprintf(tr.GetString("strings."+m.modname+".flood.show_settings"), flood.Limit, mode)
+		text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".flood.show_settings"), flood.Limit, mode)
 	}
-	_, err := msg.Reply(b, text, parsemode.Shtml())
+	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
 		return err
 	}
 	return ext.EndGroups
 }
 
-func (m *antifloodModuleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -334,20 +337,20 @@ func (m *antifloodModuleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) e
 	if len(args) > 0 {
 		selectedMode := strings.ToLower(args[0])
 		if string_handling.FindInStringSlice([]string{"ban", "kick", "mute"}, selectedMode) {
-			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings."+m.modname+".setfloodmode.success"), selectedMode), parsemode.Shtml())
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings."+m.moduleName+".setfloodmode.success"), selectedMode), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 			}
 			go db.SetFloodMode(chat.Id, selectedMode)
 			return ext.EndGroups
 		} else {
-			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings."+m.modname+".setfloodmode.unknown_type"), args[0]), parsemode.Shtml())
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings."+m.moduleName+".setfloodmode.unknown_type"), args[0]), helpers.Shtml())
 			if err != nil {
 				return err
 			}
 		}
 	} else {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".setfloodmode.specify_action"), parsemode.Smarkdown())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".setfloodmode.specify_action"), helpers.Smarkdown())
 		if err != nil {
 			return err
 		}
@@ -355,7 +358,7 @@ func (m *antifloodModuleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) e
 	return ext.EndGroups
 }
 
-func (m *antifloodModuleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -373,22 +376,22 @@ func (m *antifloodModuleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context
 		switch selectedMode {
 		case "on", "yes":
 			go db.SetFloodMsgDel(chat.Id, true)
-			text = tr.GetString("strings." + m.modname + ".flood_deleter.enabled")
+			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.enabled")
 		case "off", "no":
 			go db.SetFloodMsgDel(chat.Id, true)
-			text = tr.GetString("strings." + m.modname + ".flood_deleter.disabled")
+			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.disabled")
 		default:
-			text = tr.GetString("strings." + m.modname + ".flood_deleter.invalid_option")
+			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.invalid_option")
 		}
 	} else {
 		currSet := db.GetFlood(chat.Id).DeleteAntifloodMessage
 		if currSet {
-			text = tr.GetString("strings." + m.modname + ".flood_deleter.already_enabled")
+			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.already_enabled")
 		} else {
-			text = tr.GetString("strings." + m.modname + ".flood_deleter.already_disabled")
+			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.already_disabled")
 		}
 	}
-	_, err := msg.Reply(b, text, parsemode.Smarkdown())
+	_, err := msg.Reply(b, text, helpers.Smarkdown())
 	if err != nil {
 		return err
 	}
@@ -397,7 +400,7 @@ func (m *antifloodModuleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context
 }
 
 func LoadAntiflood(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(antifloodModule.modname, true)
+	HelpModule.AbleMap.Store(antifloodModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("setflood", antifloodModule.setFlood))
 	dispatcher.AddHandler(handlers.NewCommand("setfloodmode", antifloodModule.setFloodMode))

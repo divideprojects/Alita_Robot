@@ -7,6 +7,7 @@ import (
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
@@ -14,19 +15,12 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-type helpModuleStruct struct {
-	modname        string
-	AbleMap        moduleEnabled
-	AltHelpOptions map[string][]string
-	helpableKb     map[string][][]gotgbot.InlineKeyboardButton
-}
-
-var HelpModule = helpModuleStruct{
-	modname:        "Help",
+var HelpModule = moduleStruct{
+	moduleName:     "Help",
 	AbleMap:        moduleEnabled{},
 	AltHelpOptions: make(map[string][]string),
 	helpableKb:     make(map[string][][]gotgbot.InlineKeyboardButton),
@@ -156,7 +150,7 @@ func (m *moduleEnabled) LoadModules() []string {
 	return modules
 }
 
-func (helpModuleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -192,7 +186,7 @@ func (helpModuleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			&gotgbot.EditMessageTextOpts{
 				ReplyMarkup:           currKb,
 				DisableWebPagePreview: true,
-				ParseMode:             parsemode.HTML,
+				ParseMode:             helpers.HTML,
 			},
 		)
 		if err != nil {
@@ -226,7 +220,7 @@ func (helpModuleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			b,
 			currText,
 			&gotgbot.SendMessageOpts{
-				ParseMode:             parsemode.HTML,
+				ParseMode:             helpers.HTML,
 				DisableWebPagePreview: true,
 				ReplyMarkup:           &currKb,
 			},
@@ -240,7 +234,7 @@ func (helpModuleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (helpModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	args := strings.Split(query.Data, ".")
 	module := args[1]
@@ -252,7 +246,7 @@ func (helpModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// Sort the module names
 	if string_handling.FindInStringSlice([]string{"BackStart", "Help"}, module) {
-		_parsemode = parsemode.HTML
+		_parsemode = helpers.HTML
 		switch module {
 		case "Help":
 			// This shows the main start menu
@@ -293,7 +287,7 @@ func (helpModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // start introduces the bot
-func (helpModuleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -303,7 +297,7 @@ func (helpModuleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 			_, err := msg.Reply(b,
 				startHelp,
 				&gotgbot.SendMessageOpts{
-					ParseMode:             parsemode.HTML,
+					ParseMode:             helpers.HTML,
 					DisableWebPagePreview: true,
 					ReplyMarkup:           &startMarkup,
 				},
@@ -322,7 +316,7 @@ func (helpModuleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Info("sed")
 		}
 	} else {
-		_, err := msg.Reply(b, "Hey :) PM me if you have any questions on how to use me!", parsemode.Shtml())
+		_, err := msg.Reply(b, "Hey :) PM me if you have any questions on how to use me!", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -331,14 +325,14 @@ func (helpModuleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (helpModuleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
 	_, err := b.SendMessage(chat.Id,
 		i18n.I18n{LangCode: "en"}.GetString("strings.Help.DonateText"),
 		&gotgbot.SendMessageOpts{
-			ParseMode:                parsemode.HTML,
+			ParseMode:                helpers.HTML,
 			DisableWebPagePreview:    true,
 			ReplyToMessageId:         msg.MessageId,
 			AllowSendingWithoutReply: true,
@@ -351,7 +345,7 @@ func (helpModuleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (helpModuleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	msg := query.Message
 
@@ -436,7 +430,7 @@ func (helpModuleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (helpModuleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -449,7 +443,7 @@ func (helpModuleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 					html.EscapeString(msg.From.FirstName),
 				),
 				&gotgbot.SendMessageOpts{
-					ParseMode:   parsemode.HTML,
+					ParseMode:   helpers.HTML,
 					ReplyMarkup: &markup,
 				},
 			)
@@ -497,7 +491,7 @@ func (helpModuleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b,
 			moduleHelpString,
 			&gotgbot.SendMessageOpts{
-				ParseMode:                parsemode.HTML,
+				ParseMode:                helpers.HTML,
 				ReplyToMessageId:         replyMsgId,
 				AllowSendingWithoutReply: true,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -520,7 +514,7 @@ func (helpModuleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 func LoadHelp(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("start", HelpModule.start))
 	dispatcher.AddHandler(handlers.NewCommand("help", HelpModule.help))
-	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("helpq"), HelpModule.buttonHandler))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("helpq"), HelpModule.helpButtonHandler))
 	dispatcher.AddHandler(handlers.NewCommand("donate", HelpModule.donate))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("configuration"), HelpModule.botConfig))
 	dispatcher.AddHandler(handlers.NewCommand("about", HelpModule.about))

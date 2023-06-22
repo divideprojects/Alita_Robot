@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
 	log "github.com/sirupsen/logrus"
 
@@ -15,19 +16,15 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 )
 
-type purgesModuleStruct struct {
-	modname string
-}
-
 var (
-	purgesModule = purgesModuleStruct{modname: "Purges"}
+	purgesModule = moduleStruct{moduleName: "Purges"}
 	delMsgs      = map[int64]int64{}
 )
 
-func (purgesModuleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
+func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
 	if !pFrom {
 		_, err := bot.DeleteMessage(chat.Id, msgId, nil)
 		if err != nil {
@@ -70,7 +67,7 @@ func (purgesModuleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom 
 	return true
 }
 
-func (m purgesModuleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	// Permission checks
@@ -116,7 +113,7 @@ func (m purgesModuleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 			if len(args) >= 1 {
 				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
 			}
-			pMsg, err := bot.SendMessage(chat.Id, Text, parsemode.Smarkdown())
+			pMsg, err := bot.SendMessage(chat.Id, Text, helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 			}
@@ -139,7 +136,7 @@ func (m purgesModuleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (purgesModuleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	// Permission checks
@@ -199,7 +196,7 @@ func (purgesModuleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (purgesModuleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -238,7 +235,7 @@ func (purgesModuleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 	return ext.EndGroups
 }
 
-func (purgesModuleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	// Permission checks
@@ -297,7 +294,7 @@ func (purgesModuleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m purgesModuleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	// Permission checks
@@ -356,7 +353,7 @@ func (m purgesModuleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			if len(args) >= 1 {
 				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
 			}
-			pMsg, err := bot.SendMessage(chat.Id, Text, parsemode.Smarkdown())
+			pMsg, err := bot.SendMessage(chat.Id, Text, helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 			}
@@ -378,7 +375,7 @@ func (m purgesModuleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func LoadPurges(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(purgesModule.modname, true)
+	HelpModule.AbleMap.Store(purgesModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("del", purgesModule.delCmd))
 	dispatcher.AddHandler(handlers.NewCommand("purge", purgesModule.purge))

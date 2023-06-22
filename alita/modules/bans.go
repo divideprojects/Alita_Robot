@@ -13,7 +13,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -22,17 +22,13 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 )
 
-type bansModuleStruct struct {
-	modname string
-}
-
-var bansModule = bansModuleStruct{modname: "Bans"}
+var bansModule = moduleStruct{moduleName: "Bans"}
 
 /* Used to Kick a user from group
 
 The Bot, Kicker should be admin with ban permissions in order to use this */
 
-func (m bansModuleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -67,7 +63,7 @@ func (m bansModuleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -77,7 +73,7 @@ func (m bansModuleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".kick.user_not_in_chat"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.user_not_in_chat"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -85,7 +81,7 @@ func (m bansModuleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".kick.cannot_kick_admin"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.cannot_kick_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -94,7 +90,7 @@ func (m bansModuleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".kick.is_bot_itself"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.is_bot_itself"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -122,14 +118,14 @@ func (m bansModuleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	baseStr := tr.GetString("strings." + m.modname + ".kick.kicked_user")
+	baseStr := tr.GetString("strings." + m.moduleName + ".kick.kicked_user")
 	if reason != "" {
-		baseStr += fmt.Sprintf(tr.GetString("strings."+m.modname+".kick.kicked_reason"), reason)
+		baseStr += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".kick.kicked_reason"), reason)
 	}
 
 	_, err = msg.Reply(b,
 		fmt.Sprintf(baseStr, helpers.MentionHtml(kickuser.Id, kickuser.FirstName)),
-		parsemode.Shtml(),
+		helpers.Shtml(),
 	)
 	if err != nil {
 		log.Error(err)
@@ -144,7 +140,7 @@ func (m bansModuleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The Bot should be admin with ban permissions in order to use this
 */
-func (m bansModuleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -160,7 +156,7 @@ func (m bansModuleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// Don't allow admins to use the command
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".kickme.is_admin"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kickme.is_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -175,7 +171,7 @@ func (m bansModuleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = msg.Reply(b, tr.GetString("strings."+m.modname+".kickme.ok_out"), parsemode.Shtml())
+	_, err = msg.Reply(b, tr.GetString("strings."+m.moduleName+".kickme.ok_out"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -188,7 +184,7 @@ func (m bansModuleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The Bot, Kick should be admin with ban permissions in order to use this */
 
-func (m bansModuleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -223,7 +219,7 @@ func (m bansModuleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -232,7 +228,7 @@ func (m bansModuleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".ban.is_admin"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -241,7 +237,7 @@ func (m bansModuleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".ban.is_bot_itself"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_bot_itself"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -273,18 +269,18 @@ func (m bansModuleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	baseStr := fmt.Sprintf(
-		tr.GetString("strings."+m.modname+".ban.tban"),
+		tr.GetString("strings."+m.moduleName+".ban.tban"),
 		helpers.MentionHtml(banUser.Id, banUser.FirstName),
 		timeVal,
 	)
 	if reason != "" {
-		baseStr += fmt.Sprintf(tr.GetString("strings."+m.modname+".ban.ban_reason"), reason)
+		baseStr += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".ban.ban_reason"), reason)
 	}
 
 	_, err = msg.Reply(
 		b,
 		baseStr,
-		parsemode.Shtml(),
+		helpers.Shtml(),
 	)
 	if err != nil {
 		log.Error(err)
@@ -298,7 +294,7 @@ func (m bansModuleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The Bot, Banner should be admin with ban permissions in order to use this */
 
-func (m bansModuleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -328,7 +324,7 @@ func (m bansModuleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -337,7 +333,7 @@ func (m bansModuleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".ban.is_admin"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -346,7 +342,7 @@ func (m bansModuleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".ban.is_bot_itself"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_bot_itself"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -366,7 +362,7 @@ func (m bansModuleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 		} else {
 			text = "You can only ban an anonymous user by replying to their message."
 		}
-		sendMsgOptns = parsemode.Shtml()
+		sendMsgOptns = helpers.Shtml()
 	} else {
 		_, err := chat.BanMember(b, userId, nil)
 		if err != nil {
@@ -376,15 +372,15 @@ func (m bansModuleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		_, name, _ := extraction.GetUserInfo(userId)
 
-		baseStr := tr.GetString("strings." + m.modname + ".ban.normal_ban")
+		baseStr := tr.GetString("strings." + m.moduleName + ".ban.normal_ban")
 		if reason != "" {
-			baseStr += fmt.Sprintf(tr.GetString("strings."+m.modname+".ban.ban_reason"), reason)
+			baseStr += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".ban.ban_reason"), reason)
 		}
 
 		text = fmt.Sprintf(baseStr, helpers.MentionHtml(userId, name))
 
 		sendMsgOptns = &gotgbot.SendMessageOpts{
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
@@ -413,7 +409,7 @@ This deletes the command of Banner and also does not reply.
 
 The Bot, Banner should be admin with ban permissions in order to use this */
 
-func (m bansModuleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -451,7 +447,7 @@ func (m bansModuleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -460,7 +456,7 @@ func (m bansModuleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".ban.is_admin"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -489,7 +485,7 @@ This deletes the message of replied user
 
 The Bot, Banner should be admin with ban permissions in order to use this */
 
-func (m bansModuleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -530,7 +526,7 @@ func (m bansModuleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -539,7 +535,7 @@ func (m bansModuleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".ban.is_admin"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -548,7 +544,7 @@ func (m bansModuleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".ban.dban.no_reply"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.dban.no_reply"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -574,15 +570,15 @@ func (m bansModuleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	baseStr := tr.GetString("strings." + m.modname + ".ban.normal_ban")
+	baseStr := tr.GetString("strings." + m.moduleName + ".ban.normal_ban")
 	if reason != "" {
-		baseStr += fmt.Sprintf(tr.GetString("strings."+m.modname+".ban.ban_reason"), reason)
+		baseStr += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".ban.ban_reason"), reason)
 	}
 
 	_, err = msg.Reply(b,
 		fmt.Sprintf(baseStr, helpers.MentionHtml(banUser.Id, banUser.FirstName)),
 		&gotgbot.SendMessageOpts{
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
@@ -607,7 +603,7 @@ func (m bansModuleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The Bot, Unbanner should be admin with ban permissions in order to use this */
 
-func (m bansModuleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -636,7 +632,7 @@ func (m bansModuleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -645,7 +641,7 @@ func (m bansModuleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.modname+".unban.is_bot_itself"), parsemode.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".unban.is_bot_itself"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -679,12 +675,12 @@ func (m bansModuleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		text = fmt.Sprintf(
-			tr.GetString("strings."+m.modname+".unban.unbanned_user"),
+			tr.GetString("strings."+m.moduleName+".unban.unbanned_user"),
 			helpers.MentionHtml(banUser.Id, banUser.FirstName),
 		)
 	}
 
-	_, err := msg.Reply(b, text, parsemode.Shtml())
+	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -696,7 +692,7 @@ func (m bansModuleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 /* Used to Restrict members from a chat
 Shows an inline keyboard menu which shows options to kick, ban and mute */
 
-func (bansModuleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -717,7 +713,7 @@ func (bansModuleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -727,7 +723,7 @@ func (bansModuleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", parsemode.Shtml())
+		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -736,7 +732,7 @@ func (bansModuleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "Why would I restrict an admin? That sounds like a pretty dumb idea.", parsemode.Shtml())
+		_, err := msg.Reply(b, "Why would I restrict an admin? That sounds like a pretty dumb idea.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -745,7 +741,7 @@ func (bansModuleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, "Why would I restrict myself?", parsemode.Shtml())
+		_, err := msg.Reply(b, "Why would I restrict myself?", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -775,7 +771,7 @@ func (bansModuleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // Handles the queries fore restrict command
-func (bansModuleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -858,7 +854,7 @@ func (bansModuleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 	_, _, err = query.Message.EditText(b,
 		helpText,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -876,7 +872,7 @@ func (bansModuleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 /* Used to Unrestrict members from a chat
 Shows an inline keyboard menu which shows options to unban and unmute */
 
-func (bansModuleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -897,7 +893,7 @@ func (bansModuleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if userId == 0 {
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			parsemode.Shtml())
+			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -907,7 +903,7 @@ func (bansModuleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", parsemode.Shtml())
+		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -916,7 +912,7 @@ func (bansModuleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "Why would I kick an admin? That sounds like a pretty dumb idea.", parsemode.Shtml())
+		_, err := msg.Reply(b, "Why would I kick an admin? That sounds like a pretty dumb idea.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -925,7 +921,7 @@ func (bansModuleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, "No u", parsemode.Shtml())
+		_, err := msg.Reply(b, "No u", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -954,7 +950,7 @@ func (bansModuleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // Handles queries for unrestrict command
-func (bansModuleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -1020,7 +1016,7 @@ func (bansModuleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context
 		b,
 		fmt.Sprint(msg.Text, helpText),
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -1038,7 +1034,7 @@ func (bansModuleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context
 }
 
 func LoadBans(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(bansModule.modname, true)
+	HelpModule.AbleMap.Store(bansModule.moduleName, true)
 
 	// ban cmds
 	dispatcher.AddHandler(handlers.NewCommand("ban", bansModule.ban))

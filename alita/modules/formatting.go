@@ -6,6 +6,7 @@ import (
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
@@ -13,16 +14,12 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 )
 
-type formattingModuleStruct struct {
-	modname string
-}
+var formattingModule = moduleStruct{moduleName: "Formatting"}
 
-var formattingModule = formattingModuleStruct{modname: "Formatting"}
-
-func (m formattingModuleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	// Check of group or pm
@@ -34,7 +31,7 @@ func (m formattingModuleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) e
 		_, err := reply(b,
 			"Press the button below to get Markdown Help!",
 			&gotgbot.SendMessageOpts{
-				ParseMode: parsemode.HTML,
+				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
@@ -68,7 +65,7 @@ func (m formattingModuleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) e
 			// TODO: Fix help msg here
 			"Alita supports a large number of formatting options to make your messages more expressive. Take a look!",
 			&gotgbot.SendMessageOpts{
-				ParseMode: parsemode.HTML,
+				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: Mkdkb,
 				},
@@ -83,7 +80,7 @@ func (m formattingModuleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) e
 	return ext.EndGroups
 }
 
-func (formattingModuleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
+func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
 	fxt := "formatting.%s"
 
 	keyboard := [][]gotgbot.InlineKeyboardButton{
@@ -110,7 +107,7 @@ func (formattingModuleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton
 	return keyboard
 }
 
-func (formattingModuleStruct) getMarkdownHelp(module string) string {
+func (moduleStruct) getMarkdownHelp(module string) string {
 	var helpTxt string
 	tr := i18n.I18n{LangCode: "en"}
 	if module == "md_formatting" {
@@ -123,7 +120,7 @@ func (formattingModuleStruct) getMarkdownHelp(module string) string {
 	return helpTxt
 }
 
-func (m formattingModuleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	msg := query.Message
 
@@ -142,7 +139,7 @@ func (m formattingModuleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Conte
 					},
 				},
 			},
-			ParseMode: parsemode.HTML,
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -159,8 +156,8 @@ func (m formattingModuleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Conte
 }
 
 func LoadMkdCmd(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(formattingModule.modname, true)
-	HelpModule.helpableKb[formattingModule.modname] = formattingModule.genFormattingKb()
+	HelpModule.AbleMap.Store(formattingModule.moduleName, true)
+	HelpModule.helpableKb[formattingModule.moduleName] = formattingModule.genFormattingKb()
 	cmdDecorator.MultiCommand(dispatcher, []string{"markdownhelp", "formatting"}, formattingModule.markdownHelp)
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("formatting."), formattingModule.formattingHandler))
 }

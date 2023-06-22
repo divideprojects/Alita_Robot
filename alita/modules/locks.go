@@ -18,19 +18,13 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
+	
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-type locksModuleStruct struct {
-	modname           string
-	permHandlerGroup  int
-	restrHandlerGroup int
-}
-
 var (
-	locksModule = locksModuleStruct{
-		modname:           "Languages",
+	locksModule = moduleStruct{
+		moduleName:        "Languages",
 		permHandlerGroup:  5,
 		restrHandlerGroup: 6,
 	}
@@ -89,7 +83,7 @@ var (
 	}
 )
 
-func (locksModuleStruct) getLockMapAsArray() (lockTypes []string) {
+func (moduleStruct) getLockMapAsArray() (lockTypes []string) {
 	tmpMap := map[string]filters.Message{}
 
 	for r, rk := range restrMap {
@@ -108,7 +102,7 @@ func (locksModuleStruct) getLockMapAsArray() (lockTypes []string) {
 	return
 }
 
-func (locksModuleStruct) buildLockTypesMessage(chatID int64) (res string) {
+func (moduleStruct) buildLockTypesMessage(chatID int64) (res string) {
 	chatLocks := db.GetChatLocks(chatID)
 
 	newMapLocks := db.MapLockType(*chatLocks)
@@ -126,7 +120,7 @@ func (locksModuleStruct) buildLockTypesMessage(chatID int64) (res string) {
 	return
 }
 
-func (m locksModuleStruct) locktypes(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) locktypes(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "adminlist") {
@@ -140,7 +134,7 @@ func (m locksModuleStruct) locktypes(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	_locktypes := m.getLockMapAsArray()
 
-	_, err := msg.Reply(b, "Locks: \n - "+strings.Join(_locktypes, "\n - "), parsemode.Shtml())
+	_, err := msg.Reply(b, "Locks: \n - "+strings.Join(_locktypes, "\n - "), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -149,7 +143,7 @@ func (m locksModuleStruct) locktypes(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m locksModuleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "adminlist") {
@@ -163,7 +157,7 @@ func (m locksModuleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 
-	_, err := msg.Reply(b, m.buildLockTypesMessage(chat.Id), parsemode.Smarkdown())
+	_, err := msg.Reply(b, m.buildLockTypesMessage(chat.Id), helpers.Smarkdown())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -172,7 +166,7 @@ func (m locksModuleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m locksModuleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -193,7 +187,7 @@ func (m locksModuleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "What do you want to lock? Check /locktypes for available options.", parsemode.Shtml())
+		_, err := msg.Reply(b, "What do you want to lock? Check /locktypes for available options.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -202,7 +196,7 @@ func (m locksModuleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	for _, perm := range args {
 		if !string_handling.FindInStringSlice(m.getLockMapAsArray(), perm) {
-			_, err := msg.Reply(b, fmt.Sprintf("`%s` is not a correct lock type, check /locktypes.", perm), parsemode.Smarkdown())
+			_, err := msg.Reply(b, fmt.Sprintf("`%s` is not a correct lock type, check /locktypes.", perm), helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -228,7 +222,7 @@ func (m locksModuleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m locksModuleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
@@ -249,7 +243,7 @@ func (m locksModuleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "What do you want to lock? Check /locktypes for available options.", parsemode.Shtml())
+		_, err := msg.Reply(b, "What do you want to lock? Check /locktypes for available options.", helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -259,7 +253,7 @@ func (m locksModuleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	for _, perm := range args {
 		if !string_handling.FindInStringSlice(m.getLockMapAsArray(), perm) {
-			_, err := msg.Reply(b, fmt.Sprintf("`%s` is not a correct lock type, check /locktypes.", perm), parsemode.Smarkdown())
+			_, err := msg.Reply(b, fmt.Sprintf("`%s` is not a correct lock type, check /locktypes.", perm), helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -276,7 +270,7 @@ func (m locksModuleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err := msg.Reply(b,
 		fmt.Sprintf("Un-Locked the following in this group:\n - %s",
 			strings.Join(toLock, "\n - ")),
-		parsemode.Smarkdown(),
+		helpers.Smarkdown(),
 	)
 	if err != nil {
 		log.Error(err)
@@ -286,7 +280,7 @@ func (m locksModuleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (locksModuleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -321,7 +315,7 @@ func (locksModuleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func (locksModuleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -349,7 +343,7 @@ func (locksModuleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func (locksModuleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	mem := ctx.ChatMember.NewChatMember.MergeChatMember().User
@@ -398,7 +392,7 @@ func (locksModuleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 }
 
 func LoadLocks(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(locksModule.modname, true)
+	HelpModule.AbleMap.Store(locksModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("lock", locksModule.lockPerm))
 	dispatcher.AddHandler(handlers.NewCommand("unlock", locksModule.unlockPerm))

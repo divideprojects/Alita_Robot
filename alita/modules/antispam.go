@@ -9,29 +9,12 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/message"
 )
 
-type antispamModuleStruct struct {
-	modname  string
-	antiSpam map[int64]*antiSpamInfo
+var antispamModule = moduleStruct{
+	moduleName: "antispam",
+	antiSpam:   map[int64]*antiSpamInfo{},
 }
 
-var antispamModule = antispamModuleStruct{
-	modname:  "antispam",
-	antiSpam: map[int64]*antiSpamInfo{},
-}
-
-type antiSpamInfo struct {
-	Levels []antiSpamLevel
-}
-
-type antiSpamLevel struct {
-	Count    int
-	Limit    int
-	CurrTime time.Duration
-	Expiry   time.Duration
-	Spammed  bool
-}
-
-func (antispamModuleStruct) checkSpammed(chatId int64, levels []antiSpamLevel) bool {
+func (moduleStruct) checkSpammed(chatId int64, levels []antiSpamLevel) bool {
 	_asInfo, ok := antispamModule.antiSpam[chatId]
 	if !ok {
 		// Assign a new AntiSpamInfo to the chatId because not found
@@ -65,7 +48,7 @@ func (antispamModuleStruct) checkSpammed(chatId int64, levels []antiSpamLevel) b
 	return spammed
 }
 
-func (antispamModuleStruct) spamCheck(chatId int64) bool {
+func (moduleStruct) spamCheck(chatId int64) bool {
 	// if sql.IsUserSudo(chatId) {
 	//	return false
 	// }
