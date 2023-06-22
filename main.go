@@ -14,7 +14,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
-	bot "github.com/divideprojects/Alita_Robot/alita"
+	"github.com/divideprojects/Alita_Robot/alita"
 )
 
 //go:embed locales
@@ -45,7 +45,7 @@ func main() {
 	}
 
 	// some initial checks before running bot
-	bot.InitialChecks(b)
+	alita.InitialChecks(b)
 
 	// Create updater and dispatcher.
 	updater := ext.NewUpdater(&ext.UpdaterOpts{
@@ -101,18 +101,18 @@ func main() {
 	}
 
 	// Loading Modules
-	bot.LoadModules(dispatcher)
+	alita.LoadModules(dispatcher)
 
 	// list modules from modules dir
 	log.Infof(
 		fmt.Sprintf(
-			"[Modules] Loaded modules: %s", bot.ListModules(),
+			"[Modules] Loaded modules: %s", alita.ListModules(),
 		),
 	)
 
 	// send message to log group
 	_, err = b.SendMessage(config.MessageDump,
-		fmt.Sprintf("<b>Started Bot!</b>\n<b>Mode:</b> %s\n<b>Loaded Modules:</b>\n%s", config.WorkingMode, bot.ListModules()),
+		fmt.Sprintf("<b>Started Bot!</b>\n<b>Mode:</b> %s\n<b>Loaded Modules:</b>\n%s", config.WorkingMode, alita.ListModules()),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 		},

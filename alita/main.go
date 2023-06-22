@@ -1,4 +1,4 @@
-package bot
+package alita
 
 import (
 	"fmt"
