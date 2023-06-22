@@ -13,17 +13,12 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
 
-type usersModuleStruct struct {
-	modname      string
-	handlerGroup int
-}
-
-var usersModule = usersModuleStruct{
-	modname:      "Users",
+var usersModule = moduleStruct{
+	moduleName:   "Users",
 	handlerGroup: -1,
 }
 
-func (usersModuleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender

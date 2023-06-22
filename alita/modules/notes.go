@@ -24,31 +24,12 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-type notesModuleStruct struct {
-	modname           string
-	overwriteNotesMap map[string]overwriteNote
-}
-
-var notesModule = notesModuleStruct{
-	modname:           "Notes",
+var notesModule = moduleStruct{
+	moduleName:        "Notes",
 	overwriteNotesMap: make(map[string]overwriteNote),
 }
 
-type overwriteNote struct {
-	noteWord    string
-	text        string
-	fileId      string
-	buttons     []db.Button
-	dataType    int
-	pvtOnly     bool
-	grpOnly     bool
-	adminOnly   bool
-	webPrev     bool
-	isProtected bool
-	noNotif     bool
-}
-
-func (m notesModuleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
@@ -157,7 +138,7 @@ func (m notesModuleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (notesModuleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -207,7 +188,7 @@ func (notesModuleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (notesModuleStruct) privNote(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) privNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	args := ctx.Args()[1:]
@@ -241,7 +222,7 @@ func (notesModuleStruct) privNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (notesModuleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "notes") {
@@ -323,7 +304,7 @@ func (notesModuleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (notesModuleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -378,7 +359,7 @@ func (notesModuleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // CallbackQuery handler for notes_overwite. query
-func (m notesModuleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 
@@ -431,7 +412,7 @@ func (m notesModuleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context
 	return ext.EndGroups
 }
 
-func (notesModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) notesButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 
@@ -474,7 +455,7 @@ func (notesModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m notesModuleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -571,7 +552,7 @@ func (m notesModuleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error 
 	return ext.EndGroups
 }
 
-func (m notesModuleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "get") {
@@ -679,7 +660,7 @@ func (m notesModuleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // returns the note in non-formatted text
-func (notesModuleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, replyMsgId int64, noteData *db.ChatNotes) error {
+func (moduleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, replyMsgId int64, noteData *db.ChatNotes) error {
 	user := ctx.EffectiveSender.User
 
 	// check if user is admin or not
@@ -717,9 +698,9 @@ func (notesModuleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, repl
 }
 
 func LoadNotes(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(notesModule.modname, true)
+	HelpModule.AbleMap.Store(notesModule.moduleName, true)
 
-	HelpModule.helpableKb[notesModule.modname] = [][]gotgbot.InlineKeyboardButton{
+	HelpModule.helpableKb[notesModule.moduleName] = [][]gotgbot.InlineKeyboardButton{
 		{
 			{
 				Text:         "Formatting",
@@ -734,7 +715,7 @@ func LoadNotes(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("notes", notesModule.notesList))
 	misc.AddCmdToDisableable("notes")
 	dispatcher.AddHandler(handlers.NewCommand("clearall", notesModule.rmAllNotes))
-	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("rmAllNotes"), notesModule.buttonHandler))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("rmAllNotes"), notesModule.notesButtonHandler))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("notes.overwrite."), notesModule.noteOverWriteHandler))
 	dispatcher.AddHandler(
 		handlers.NewMessage(

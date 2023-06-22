@@ -18,15 +18,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-type helpModuleStruct struct {
-	modname        string
-	AbleMap        moduleEnabled
-	AltHelpOptions map[string][]string
-	helpableKb     map[string][][]gotgbot.InlineKeyboardButton
-}
-
-var HelpModule = helpModuleStruct{
-	modname:        "Help",
+var HelpModule = moduleStruct{
+	moduleName:     "Help",
 	AbleMap:        moduleEnabled{},
 	AltHelpOptions: make(map[string][]string),
 	helpableKb:     make(map[string][][]gotgbot.InlineKeyboardButton),
@@ -156,7 +149,7 @@ func (m *moduleEnabled) LoadModules() []string {
 	return modules
 }
 
-func (helpModuleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -240,7 +233,7 @@ func (helpModuleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (helpModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	args := strings.Split(query.Data, ".")
 	module := args[1]
@@ -293,7 +286,7 @@ func (helpModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // start introduces the bot
-func (helpModuleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -331,7 +324,7 @@ func (helpModuleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (helpModuleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
@@ -351,7 +344,7 @@ func (helpModuleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (helpModuleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	msg := query.Message
 
@@ -436,7 +429,7 @@ func (helpModuleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (helpModuleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -520,7 +513,7 @@ func (helpModuleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 func LoadHelp(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("start", HelpModule.start))
 	dispatcher.AddHandler(handlers.NewCommand("help", HelpModule.help))
-	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("helpq"), HelpModule.buttonHandler))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("helpq"), HelpModule.helpButtonHandler))
 	dispatcher.AddHandler(handlers.NewCommand("donate", HelpModule.donate))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("configuration"), HelpModule.botConfig))
 	dispatcher.AddHandler(handlers.NewCommand("about", HelpModule.about))

@@ -10,27 +10,22 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/PaulSonOfLars/gotgbot/v2"
+	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
-
-	"github.com/PaulSonOfLars/gotgbot/v2"
-	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 )
 
-type devsModuleStruct struct {
-	modname string
-}
-
-var devsModule = devsModuleStruct{modname: "Dev"}
+var devsModule = moduleStruct{moduleName: "Dev"}
 
 // for general purposes for strings in functions below
 var txt string
 
-func (devsModuleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -67,7 +62,7 @@ func (devsModuleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func (devsModuleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -141,7 +136,7 @@ func (devsModuleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (devsModuleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -174,7 +169,7 @@ func (devsModuleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
-func (devsModuleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -214,7 +209,7 @@ func (devsModuleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
-func (devsModuleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -254,7 +249,7 @@ func (devsModuleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
-func (devsModuleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -294,7 +289,7 @@ func (devsModuleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
-func (devsModuleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -334,7 +329,7 @@ func (devsModuleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by existing team members
 */
-func (devsModuleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	teamUsers := db.GetTeamMembers()
@@ -401,7 +396,7 @@ func (devsModuleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
-func (devsModuleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -449,5 +444,5 @@ func LoadDev(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("chatlist", devsModule.chatList))
 	dispatcher.AddHandler(handlers.NewCommand("leavechat", devsModule.leaveChat))
 	dispatcher.AddHandler(handlers.NewCommand("dbclean", devsModule.dbClean))
-	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("dbclean."), devsModule.buttonHandler))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("dbclean."), devsModule.dbCleanButtonHandler))
 }

@@ -17,13 +17,9 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
 )
 
-type languagesModuleStruct struct {
-	modname string
-}
+var languagesModule = moduleStruct{moduleName: "Languages"}
 
-var languagesModule = languagesModuleStruct{modname: "Languages"}
-
-func (languagesModuleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
+func (moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
 	keyboard := helpers.MakeLanguageKeyboard()
 	keyboard = append(
 		keyboard,
@@ -37,7 +33,7 @@ func (languagesModuleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButto
 	return keyboard
 }
 
-func (m languagesModuleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -75,7 +71,7 @@ func (m languagesModuleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) 
 	return ext.EndGroups
 }
 
-func (languagesModuleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := query.Message.Chat
 	user := query.From
@@ -108,8 +104,8 @@ func (languagesModuleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) er
 }
 
 func LoadLanguage(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(languagesModule.modname, true)
-	HelpModule.helpableKb[languagesModule.modname] = languagesModule.genFullLanguageKb()
+	HelpModule.AbleMap.Store(languagesModule.moduleName, true)
+	HelpModule.helpableKb[languagesModule.moduleName] = languagesModule.genFullLanguageKb()
 
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("change_language."), languagesModule.langBtnHandler))
 	dispatcher.AddHandler(handlers.NewCommand("lang", languagesModule.changeLanguage))

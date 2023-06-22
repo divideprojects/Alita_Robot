@@ -6,21 +6,75 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
-	log "github.com/sirupsen/logrus"
-
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
-
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
+	log "github.com/sirupsen/logrus"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
+
+// module struct for all modules
+type moduleStruct struct {
+	moduleName          string
+	handlerGroup        int
+	permHandlerGroup    int
+	restrHandlerGroup   int
+	defaultRulesBtn     string
+	overwriteFiltersMap map[string]overwriteFilter
+	overwriteNotesMap   map[string]overwriteNote
+	antiSpam            map[int64]*antiSpamInfo
+	AbleMap             moduleEnabled
+	AltHelpOptions      map[string][]string
+	helpableKb          map[string][][]gotgbot.InlineKeyboardButton
+}
+
+// struct for filters module
+type overwriteFilter struct {
+	filterWord string
+	text       string
+	fileid     string
+	buttons    []db.Button
+	dataType   int
+}
+
+// struct for notes module
+type overwriteNote struct {
+	noteWord    string
+	text        string
+	fileId      string
+	buttons     []db.Button
+	dataType    int
+	pvtOnly     bool
+	grpOnly     bool
+	adminOnly   bool
+	webPrev     bool
+	isProtected bool
+	noNotif     bool
+}
+
+// struct for antiSpam module - antiSpamInfo
+type antiSpamInfo struct {
+	Levels []antiSpamLevel
+}
+
+// struct for antiSpam module - antiSpamLevel
+type antiSpamLevel struct {
+	Count    int
+	Limit    int
+	CurrTime time.Duration
+	Expiry   time.Duration
+	Spammed  bool
+}
+
+// helper functions for help module
 
 // This var is used to add the back button to the help menu
 // i.e. where modules are shown

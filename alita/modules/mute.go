@@ -15,17 +15,13 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/parsemode"
 )
 
-type mutesModuleStruct struct {
-	modname string
-}
-
-var mutesModule = mutesModuleStruct{modname: "Mutes"}
+var mutesModule = moduleStruct{moduleName: "Mutes"}
 
 /* Used to temporarily mute a user from group
 
 The Bot, Muter should be admin with restrict permissions in order to use this */
 
-func (mutesModuleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -156,7 +152,7 @@ func (mutesModuleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The Bot, Muter should be admin with restrict permissions in order to use this */
 
-func (mutesModuleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -287,7 +283,7 @@ The Bot, Muter should be admin with restrict permissions in order to use this
 
 The message of muter will be deleted after sending this command */
 
-func (mutesModuleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -387,7 +383,7 @@ The Bot, Muter should be admin with restrict permissions in order to use this
 
 Used as a reply to a message and delete the replied message*/
 
-func (mutesModuleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -526,7 +522,7 @@ func (mutesModuleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The Bot, Unmuter should be admin with restrict permissions in order to use this */
 
-func (mutesModuleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -627,7 +623,7 @@ func (mutesModuleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func LoadMutes(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(mutesModule.modname, true)
+	HelpModule.AbleMap.Store(mutesModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("mute", mutesModule.mute))
 	dispatcher.AddHandler(handlers.NewCommand("smute", mutesModule.sMute))

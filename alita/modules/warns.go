@@ -21,13 +21,9 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 )
 
-type warnsModuleStruct struct {
-	modname string
-}
+var warnsModule = moduleStruct{moduleName: "Warns"}
 
-var warnsModule = warnsModuleStruct{modname: "Warns"}
-
-func (warnsModuleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -75,7 +71,7 @@ func (warnsModuleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (warnsModuleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64, reason, warnType string) (err error) {
+func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64, reason, warnType string) (err error) {
 	var (
 		reply    string
 		keyboard gotgbot.InlineKeyboardMarkup
@@ -213,7 +209,7 @@ func (warnsModuleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId i
 	return ext.EndGroups
 }
 
-func (m warnsModuleStruct) warnUser(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) warnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -268,7 +264,7 @@ func (m warnsModuleStruct) warnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	return m.warnThisUser(b, ctx, warnusr, reason, "warn")
 }
 
-func (m warnsModuleStruct) sWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) sWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -323,7 +319,7 @@ func (m warnsModuleStruct) sWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	return m.warnThisUser(b, ctx, warnusr, reason, "swarn")
 }
 
-func (m warnsModuleStruct) dWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) dWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -378,7 +374,7 @@ func (m warnsModuleStruct) dWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	return m.warnThisUser(b, ctx, warnusr, reason, "dwarn")
 }
 
-func (warnsModuleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -409,7 +405,7 @@ func (warnsModuleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (warnsModuleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -474,7 +470,7 @@ func (warnsModuleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (warnsModuleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
@@ -520,7 +516,7 @@ func (warnsModuleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (warnsModuleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -567,7 +563,7 @@ func (warnsModuleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (warnsModuleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -613,7 +609,7 @@ func (warnsModuleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (warnsModuleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -654,7 +650,7 @@ func (warnsModuleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (warnsModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 
@@ -698,7 +694,7 @@ func (warnsModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func LoadWarns(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(warnsModule.modname, true)
+	HelpModule.AbleMap.Store(warnsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("warn", warnsModule.warnUser))
 	dispatcher.AddHandler(handlers.NewCommand("swarn", warnsModule.sWarnUser))
@@ -709,7 +705,7 @@ func LoadWarns(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("setwarnlimit", warnsModule.setWarnLimit))
 	dispatcher.AddHandler(handlers.NewCommand("setwarnmode", warnsModule.setWarnMode))
 	dispatcher.AddHandler(handlers.NewCommand("resetallwarns", warnsModule.resetAllWarns))
-	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("rmAllChatWarns"), warnsModule.buttonHandler))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("rmAllChatWarns"), warnsModule.warnsButtonHandler))
 	dispatcher.AddHandler(handlers.NewCommand("warnings", warnsModule.warnings))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("rmWarn"), warnsModule.rmWarnButton))
 }

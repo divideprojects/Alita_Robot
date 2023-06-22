@@ -25,24 +25,10 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-type filtersModuleStruct struct {
-	modname             string
-	overwriteFiltersMap map[string]overwriteFilter
-	handlerGroup        int
-}
-
-var filtersModule = filtersModuleStruct{
-	modname:             "Filters",
+var filtersModule = moduleStruct{
+	moduleName:          "Filters",
 	overwriteFiltersMap: make(map[string]overwriteFilter),
 	handlerGroup:        9,
-}
-
-type overwriteFilter struct {
-	filterWord string
-	text       string
-	fileid     string
-	buttons    []db.Button
-	dataType   int
 }
 
 /*
@@ -52,7 +38,7 @@ type overwriteFilter struct {
 
 Only admin can add new filters in the chat
 */
-func (m filtersModuleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
@@ -164,7 +150,7 @@ func (m filtersModuleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Only admin can remove filters in the chat
 */
-func (filtersModuleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
 	if connectedChat == nil {
@@ -216,7 +202,7 @@ func (filtersModuleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Any user can view users in a chat
 */
-func (filtersModuleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "filters") {
@@ -272,7 +258,7 @@ func (filtersModuleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Only owner can remove all filters from the chat
 */
-func (filtersModuleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -311,7 +297,7 @@ func (filtersModuleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error 
 }
 
 // CallbackQuery handler for rmAllFilters
-func (filtersModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
@@ -356,7 +342,7 @@ func (filtersModuleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 }
 
 // CallbackQuery handler for filters_overwite. query
-func (m filtersModuleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
@@ -408,7 +394,7 @@ func (m filtersModuleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Con
 
 Replies with appropriate data to the filter.
 */
-func (filtersModuleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -463,9 +449,9 @@ func (filtersModuleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) erro
 }
 
 func LoadFilters(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(filtersModule.modname, true)
+	HelpModule.AbleMap.Store(filtersModule.moduleName, true)
 
-	HelpModule.helpableKb[filtersModule.modname] = [][]gotgbot.InlineKeyboardButton{
+	HelpModule.helpableKb[filtersModule.moduleName] = [][]gotgbot.InlineKeyboardButton{
 		{
 			{
 				Text:         "Formatting",
@@ -480,7 +466,7 @@ func LoadFilters(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("filters", filtersModule.filtersList))
 	misc.AddCmdToDisableable("filters")
 	dispatcher.AddHandler(handlers.NewCommand("stopall", filtersModule.rmAllFilters))
-	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("rmAllFilters"), filtersModule.buttonHandler))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("rmAllFilters"), filtersModule.filtersButtonHandler))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("filters_overwrite."), filtersModule.filterOverWriteHandler))
 	dispatcher.AddHandlerToGroup(handlers.NewMessage(message.Text, filtersModule.filtersWatcher), filtersModule.handlerGroup)
 }

@@ -20,13 +20,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 )
 
-type pinsModuleStruct struct {
-	modname      string
-	handlerGroup int
-}
-
-var pinsModule = pinsModuleStruct{
-	modname:      "Pins",
+var pinsModule = moduleStruct{
+	moduleName:   "Pins",
 	handlerGroup: 10,
 }
 
@@ -47,7 +42,7 @@ type pinType struct {
 
 This a watcher for 2 functions described above
 */
-func (pinsModuleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	pinprefs := db.GetPinData(chat.Id)
@@ -85,7 +80,7 @@ func (pinsModuleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
 
 This function unpins the latest pinned message or message to which user replied */
 
-func (pinsModuleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -159,7 +154,7 @@ func (pinsModuleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // Callback Query Handler for Unpinall command
-func (pinsModuleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 
@@ -188,7 +183,7 @@ func (pinsModuleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error
 
 Can only be used by owner to unpin all message in a chat. */
 
-func (pinsModuleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -227,7 +222,7 @@ func (pinsModuleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The users message is pinned by bot and includes buttons as well */
 
-func (m pinsModuleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -316,7 +311,7 @@ func (m pinsModuleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 Normally pins message without tagging users but tag can be
 enabled by entering 'notify'/'violent'/'loud' in front of command */
 
-func (pinsModuleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -395,7 +390,7 @@ connection - true, true
 
 Sets Preference for checkPinned function to check message for unpinning or not
 */
-func (pinsModuleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -468,7 +463,7 @@ connection - true, true
 
 Sets Preference for checkPinned function to check message for cleaning or not
 */
-func (pinsModuleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -541,7 +536,7 @@ connection - false, true
 
 User can get the link to latest pinned message of chat using this
 */
-func (pinsModuleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -707,7 +702,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 	},
 }
 
-func (pinsModuleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataType int, buttons []tgmd2html.ButtonV2) {
+func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataType int, buttons []tgmd2html.ButtonV2) {
 	dataType = -1 // not defined datatype; invalid filter
 	var (
 		rawText string
@@ -761,7 +756,7 @@ func (pinsModuleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, d
 }
 
 func LoadPin(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(pinsModule.modname, true)
+	HelpModule.AbleMap.Store(pinsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("unpin", pinsModule.unpin))
 	dispatcher.AddHandler(handlers.NewCommand("unpinall", pinsModule.unpinAll))

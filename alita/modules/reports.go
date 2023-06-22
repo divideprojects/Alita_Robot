@@ -22,17 +22,12 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-type reportsModuleStruct struct {
-	modname      string
-	handlerGroup int
-}
-
-var reportsModule = reportsModuleStruct{
-	modname:      "Reports",
+var reportsModule = moduleStruct{
+	moduleName:   "Reports",
 	handlerGroup: 8,
 }
 
-func (reportsModuleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -196,7 +191,7 @@ func (reportsModuleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (reportsModuleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
@@ -312,7 +307,7 @@ func (reportsModuleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (reportsModuleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -420,7 +415,7 @@ func (reportsModuleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Co
 }
 
 func LoadReports(dispatcher *ext.Dispatcher) {
-	HelpModule.AbleMap.Store(reportsModule.modname, true)
+	HelpModule.AbleMap.Store(reportsModule.moduleName, true)
 
 	dispatcher.AddHandlerToGroup(
 		handlers.NewMessage(
