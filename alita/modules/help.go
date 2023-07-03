@@ -469,7 +469,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	} else {
 		pmMeKbText := "Click here for help!"
-		pmMeKbUri := fmt.Sprintf("https://t.me/%s?start=help_help", b.Username)
+		pmMeKbUri := fmt.Sprintf("https://t.me/%s?start=help", b.Username)
 		moduleHelpString := "Contact me in PM for help!"
 		replyMsgId := msg.MessageId
 		var lowerModName string
