@@ -27,6 +27,126 @@ var bansModule = moduleStruct{moduleName: "Bans"}
 
 The Bot, Kicker should be admin with ban permissions in order to use this */
 
+func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
+	chat := ctx.EffectiveChat
+	user := ctx.EffectiveSender.User
+	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+
+	// Permission checks
+	if !chat_status.RequireGroup(b, ctx, nil, false) {
+		return ext.EndGroups
+	}
+	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
+		return ext.EndGroups
+	}
+	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
+		return ext.EndGroups
+	}
+	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
+		return ext.EndGroups
+	}
+	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+		return ext.EndGroups
+	}
+	if !chat_status.CanBotDelete(b, ctx, nil, false) {
+		return ext.EndGroups
+	}
+	if !chat_status.CanUserDelete(b, ctx, chat, user.Id, false) {
+		return ext.EndGroups
+	}
+	if msg.ReplyToMessage != nil {
+		_, _ = msg.Reply(b, "Reply to a user's message to delete and kick him!", nil)
+		return ext.EndGroups
+	}
+
+	_, reason := extraction.ExtractUserAndText(b, ctx)
+	userId := msg.ReplyToMessage.From.Id
+	if userId == -1 {
+		return ext.EndGroups
+	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		return ext.EndGroups
+	} else if userId == 0 {
+		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+			helpers.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		return ext.EndGroups
+	}
+
+	_, _ = msg.ReplyToMessage.Delete(b, nil)
+
+	// User should be in chat for getting restricted
+	if !chat_status.IsUserInChat(b, chat, userId) {
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.user_not_in_chat"), helpers.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		return ext.EndGroups
+	}
+	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.cannot_kick_admin"), helpers.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		return ext.EndGroups
+	}
+
+	if userId == b.Id {
+		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.is_bot_itself"), helpers.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		return ext.EndGroups
+	}
+
+	_, err := chat.BanMember(b, userId, nil)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	time.Sleep(2 * time.Second)
+
+	_, err = chat.UnbanMember(b, userId, nil)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	kickuser, err := b.GetChat(userId, nil)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	baseStr := tr.GetString("strings." + m.moduleName + ".kick.kicked_user")
+	if reason != "" {
+		baseStr += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".kick.kicked_reason"), reason)
+	}
+
+	_, err = msg.Reply(b,
+		fmt.Sprintf(baseStr, helpers.MentionHtml(kickuser.Id, kickuser.FirstName)),
+		helpers.Shtml(),
+	)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return ext.EndGroups
+}
+
 func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User

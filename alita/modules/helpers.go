@@ -114,7 +114,21 @@ func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgb
 }
 
 func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.Message, err error) {
-	helpText, replyMarkup, _parsemode := getHelpTextAndMarkup(ctx, strings.ToLower(module))
+	module = strings.ToLower(module)
+	if module == "help" {
+		_, err = b.SendMessage(ctx.EffectiveMessage.Chat.Id,
+			fmt.Sprintf(
+				mainhlp,
+				html.EscapeString(msg.From.FirstName),
+			),
+			&gotgbot.SendMessageOpts{
+				ParseMode:   helpers.HTML,
+				ReplyMarkup: &markup,
+			},
+		)
+		return
+	}
+	helpText, replyMarkup, _parsemode := getHelpTextAndMarkup(ctx, module)
 
 	msg, err = b.SendMessage(
 		ctx.EffectiveChat.Id,
