@@ -153,7 +153,7 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	args := ctx.Args()
 
 	// if command is disabled, return
-	if chat_status.CheckDisabledCmd(b, msg, "stat") {
+	if chat_status.CheckDisabledCmd(b, msg, "paste") {
 		return ext.EndGroups
 	}
 
