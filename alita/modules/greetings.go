@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eko/gocache/v3/store"
+	"github.com/eko/gocache/lib/v4/store"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"

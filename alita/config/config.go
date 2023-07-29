@@ -23,6 +23,9 @@ var (
 	DropPendingUpdates = true
 	OwnerId            int64
 	MessageDump        int64
+	RedisAddress       string
+	RedisPassword      string
+	RedisDB            int
 )
 
 // init initializes the config variables.
@@ -84,8 +87,22 @@ func init() {
 	if ApiServer == "" {
 		ApiServer = "https://api.telegram.org"
 	}
-	// set default db_name 
+	// set default db_name
 	if MainDbName == "" {
 		MainDbName = "Alita_Robot"
+	}
+
+	// redis config
+	RedisAddress = os.Getenv("REDIS_ADDRESS")
+	if os.Getenv("REDIS_ADDRESS") == "" {
+		RedisAddress = "localhost:6379"
+	}
+	RedisPassword = os.Getenv("REDIS_PASSWORD")
+	if os.Getenv("REDIS_PASSWORD") == "" {
+		RedisPassword = ""
+	}
+	RedisDB = typeConvertor{str: os.Getenv("REDIS_DB")}.Int()
+	if os.Getenv("REDIS_DB") == "" {
+		RedisDB = 0
 	}
 }

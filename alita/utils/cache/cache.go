@@ -2,13 +2,13 @@ package cache
 
 import (
 	"context"
-	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
-	"github.com/eko/gocache/v3/cache"
-	"github.com/eko/gocache/v3/marshaler"
-	"github.com/eko/gocache/v3/store"
-	gocache "github.com/patrickmn/go-cache"
+	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/eko/gocache/lib/v4/cache"
+	"github.com/eko/gocache/lib/v4/marshaler"
+	"github.com/eko/gocache/store/redis/v4"
+	goredis "github.com/redis/go-redis/v9"
 )
 
 var (
@@ -25,14 +25,18 @@ type AdminCache struct {
 
 // InitCache initializes the cache.
 func InitCache() {
-	gocacheClient := gocache.New(5*time.Minute, 10*time.Minute)
-	gocacheStore := store.NewGoCache(gocacheClient)
+	redisClient := goredis.NewClient(&goredis.Options{
+		Addr:     config.RedisAddress,
+		Password: config.RedisPassword, // no password set
+		DB:       config.RedisDB,       // use default DB
+	})
 
-	// Initialize chained cache
-	Manager = cache.NewChain[any](cache.New[any](gocacheStore))
+	// initialize cache manager
+	redisStore := redis.NewRedis(redisClient)
+	cacheManager := cache.NewChain[any](cache.New[any](redisStore))
 
 	// Initializes marshaler
-	Marshal = marshaler.New(Manager)
+	Marshal = marshaler.New(cacheManager)
 }
 
 // GetAdminCacheUser gets the admin cache for the chat.

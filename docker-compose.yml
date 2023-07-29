@@ -15,3 +15,6 @@ services:
      - ENABLED_LOCALES
      - MESSAGE_DUMP
      - OWNER_ID
+     - REDIS_ADDRESS
+     - REDIS_PASSWORD
+     - REDIS_DB

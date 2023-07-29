@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
-	"github.com/eko/gocache/v3/store"
+	"github.com/eko/gocache/lib/v4/store"
 	log "github.com/sirupsen/logrus"
 )
 
