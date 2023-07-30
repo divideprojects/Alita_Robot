@@ -46,6 +46,7 @@ Help us bring more languages to the bot by contributing to the project on [Crowd
 
 ## Requirements
 - You need to have a *Mongo Database* (Cluster Preferred)
+- You also need a *Redis Database* for caching (Required): Get a free redis database from [here](https://redis.com/try-free/)
 - Linux/Windows machine (Ubuntu/Debain-based OS Preferred or Windows 10/Server2016 and later)
 
 or
