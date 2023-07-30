@@ -4,11 +4,13 @@ import (
 	"context"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
+	"github.com/dgraph-io/ristretto"
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/marshaler"
-	"github.com/eko/gocache/store/redis/v4"
-	goredis "github.com/redis/go-redis/v9"
+	redis_store "github.com/eko/gocache/store/redis/v4"
+	ristretto_store "github.com/eko/gocache/store/ristretto/v4"
+	"github.com/redis/go-redis/v9"
 )
 
 var (
@@ -25,15 +27,24 @@ type AdminCache struct {
 
 // InitCache initializes the cache.
 func InitCache() {
-	redisClient := goredis.NewClient(&goredis.Options{
+	redisClient := redis.NewClient(&redis.Options{
 		Addr:     config.RedisAddress,
 		Password: config.RedisPassword, // no password set
 		DB:       config.RedisDB,       // use default DB
 	})
+	ristrettoCache, err := ristretto.NewCache(&ristretto.Config{
+		NumCounters: 1000,
+		MaxCost:     100,
+		BufferItems: 64,
+	})
+	if err != nil {
+		panic(err)
+	}
 
 	// initialize cache manager
-	redisStore := redis.NewRedis(redisClient)
-	cacheManager := cache.NewChain[any](cache.New[any](redisStore))
+	redisStore := redis_store.NewRedis(redisClient)
+	ristrettoStore := ristretto_store.NewRistretto(ristrettoCache)
+	cacheManager := cache.NewChain[any](cache.New[any](ristrettoStore), cache.New[any](redisStore))
 
 	// Initializes marshaler
 	Marshal = marshaler.New(cacheManager)
