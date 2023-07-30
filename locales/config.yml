@@ -4,7 +4,8 @@ alt_names:
   Admin: [admins, promote, demote, title]
   Antiflood: [flood]
   Approvals: [approval, approve]
-  Bans: [ban, kick, restrict, kickme, unrestrict, sban, dban, tban, unban]
+  Bans:
+    [ban, kick, dkick, restrict, kickme, unrestrict, sban, dban, tban, unban]
   Blacklists: [blacklist, unblacklist]
   Connections: [connection, connect]
   Disabling: [disable, enable]
