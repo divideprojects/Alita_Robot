@@ -1164,6 +1164,7 @@ func LoadBans(dispatcher *ext.Dispatcher) {
 
 	// kick cmds
 	dispatcher.AddHandler(handlers.NewCommand("kick", bansModule.kick))
+	dispatcher.AddHandler(handlers.NewCommand("dkick", bansModule.dkick))
 	dispatcher.AddHandler(handlers.NewCommand("kickme", bansModule.kickme))
 
 	// special commands
