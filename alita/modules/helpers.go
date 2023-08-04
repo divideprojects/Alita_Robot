@@ -95,7 +95,7 @@ func initHelpButtons() {
 		kb = append(kb, gotgbot.InlineKeyboardButton{Text: i, CallbackData: fmt.Sprintf("helpq.%s", i)})
 	}
 	zb := helpers.ChunkKeyboardSlices(kb, 3)
-	zb = append(zb, []gotgbot.InlineKeyboardButton{{Text: "« Back", CallbackData: fmt.Sprintf("helpq.%s", "BackStart")}})
+	zb = append(zb, []gotgbot.InlineKeyboardButton{{Text: "« Back", CallbackData: "helpq.BackStart"}})
 	markup = gotgbot.InlineKeyboardMarkup{InlineKeyboard: zb}
 }
 
@@ -116,10 +116,11 @@ func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgb
 func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.Message, err error) {
 	module = strings.ToLower(module)
 	if module == "help" {
-		_, err = b.SendMessage(ctx.EffectiveMessage.Chat.Id,
+		_, err = b.SendMessage(
+			ctx.EffectiveMessage.Chat.Id,
 			fmt.Sprintf(
 				mainhlp,
-				html.EscapeString(msg.From.FirstName),
+				html.EscapeString(ctx.EffectiveMessage.From.FirstName),
 			),
 			&gotgbot.SendMessageOpts{
 				ParseMode:   helpers.HTML,
