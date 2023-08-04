@@ -573,6 +573,7 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Error(err)
 			return err
 		}
+		return err
 	}
 
 	pinLink = helpers.GetMessageLinkFromMessageId(chat, pinnedMsg.MessageId)
