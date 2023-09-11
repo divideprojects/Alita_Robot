@@ -43,7 +43,7 @@ jobs:
         with:
           go-version: "stable"
       - name: Install UPX
-        uses: crazy-max/ghaction-upx@v2
+        uses: crazy-max/ghaction-upx@v3
         with:
           install-only: true
         # only run this step when the tag is not already created
