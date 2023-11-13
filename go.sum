@@ -40,8 +40,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/PaulSonOfLars/gotg_md2html v0.0.0-20230615075057-63792bdcacf8 h1:JifkKqhXYJH+74fgpln2bIUI916wpj6Kd0q2Wc8cpfc=
 github.com/PaulSonOfLars/gotg_md2html v0.0.0-20230615075057-63792bdcacf8/go.mod h1:RprvtzpWhKv7APWJQuW4zjG1XhIOPSvfIfvAHAxJaTY=
-github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.20 h1:LgJ2DwqvtvvUOMS2q7IdeaLS1olDUQqDZ4GZliQZAPM=
-github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.20/go.mod h1:r815fYWTudnU9JhtsJAxUtuV7QrSgKpChJkfTSMFpfg=
+github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.23 h1:gfa4qPLiGemeBgQDEFH4s8N9HcS+5o+V/4ycmB35c1Y=
+github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.23/go.mod h1:kL1v4iIjlalwm3gCYGvF4NLa3hs+aKEfRkNJvj4aoDU=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
 github.com/bsm/ginkgo/v2 v2.12.0 h1:Ny8MWAHyOepLGlLKYmXG4IEkioBysk6GpaRTLC8zwWs=
