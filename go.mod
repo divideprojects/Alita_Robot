@@ -8,7 +8,7 @@ require (
 	github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.20
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/dustin/go-humanize v1.0.1
-	github.com/eko/gocache/lib/v4 v4.1.5
+	github.com/eko/gocache/lib/v4 v4.1.6
 	github.com/eko/gocache/store/redis/v4 v4.2.1
 	github.com/eko/gocache/store/ristretto/v4 v4.2.1
 	github.com/google/uuid v1.5.0

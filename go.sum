@@ -21,8 +21,8 @@ github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f/go.mod h1:cu
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
 github.com/dustin/go-humanize v1.0.1/go.mod h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto=
-github.com/eko/gocache/lib/v4 v4.1.5 h1:CeMQmdIzwBKKLRjk3FCDXzNFsQTyqJ01JLI7Ib0C9r8=
-github.com/eko/gocache/lib/v4 v4.1.5/go.mod h1:XaNfCwW8KYW1bRZ/KoHA1TugnnkMz0/gT51NDIu7LSY=
+github.com/eko/gocache/lib/v4 v4.1.6 h1:5WWIGISKhE7mfkyF+SJyWwqa4Dp2mkdX8QsZpnENqJI=
+github.com/eko/gocache/lib/v4 v4.1.6/go.mod h1:HFxC8IiG2WeRotg09xEnPD72sCheJiTSr4Li5Ameg7g=
 github.com/eko/gocache/store/redis/v4 v4.2.1 h1:uPAgZIn7knH6a55tO4ETN9V93VD3Rcyx0ZIyozEqC0I=
 github.com/eko/gocache/store/redis/v4 v4.2.1/go.mod h1:JoLkNA5yeGNQUwINAM9529cDNQCo88WwiKlO9e/+39I=
 github.com/eko/gocache/store/ristretto/v4 v4.2.1 h1:xB5E1LP1gh8yUV1G3KVRSL4T0OTnxp4OixuTljn2848=
