@@ -27,7 +27,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
-          args: release --snapshot --skip=publish --clean --skip-sign
+          args: release --snapshot --skip=publish --clean --skip=sign
       - name: Tar files
         run: tar -czvf artifacts.tar.gz dist/
       - name: Upload artifacts
