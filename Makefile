@@ -8,4 +8,4 @@ vendor:
 	go mod vendor
 
 build:
-	goreleaser release --snapshot --skip=publish --clean --skip-sign
+	goreleaser release --snapshot --skip=publish --clean --skip=sign
