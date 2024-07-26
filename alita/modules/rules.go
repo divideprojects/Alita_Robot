@@ -134,10 +134,12 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 
 	_, err = msg.Reply(bot, Text,
 		&gotgbot.SendMessageOpts{
-			ReplyMarkup:              rulesKb,
-			ReplyToMessageId:         replyMsgId,
-			AllowSendingWithoutReply: true,
-			ParseMode:                helpers.HTML,
+			ReplyMarkup: rulesKb,
+			ReplyParameters: &gotgbot.ReplyParameters{
+				MessageId:                replyMsgId,
+				AllowSendingWithoutReply: true,
+			},
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {

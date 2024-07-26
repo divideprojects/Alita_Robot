@@ -53,8 +53,10 @@ func (moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 				strings.Split(msg.OriginalHTML(), " ")[1:], " ",
 			),
 			&gotgbot.SendMessageOpts{
-				ReplyToMessageId: replyMsg.MessageId,
-				ParseMode:        helpers.Shtml().ParseMode,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId: replyMsg.MessageId,
+				},
+				ParseMode: helpers.Shtml().ParseMode,
 			},
 		)
 		if err != nil {
@@ -98,6 +100,7 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 					originalId,
 				)
 			}
+
 			if msg.ReplyToMessage.ForwardFrom != nil {
 				user1Id := msg.ReplyToMessage.ForwardFrom.Id
 				_, user1Name, _ := extraction.GetUserInfo(user1Id)
@@ -235,8 +238,10 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	if pasted {
 		_, _, err = edited.EditText(b, fmt.Sprintf("<b>Pasted Successfully!</b>\nhttps://www.nekobin.com/%s.%s", key, extention),
 			&gotgbot.EditMessageTextOpts{
-				ParseMode:             helpers.HTML,
-				DisableWebPagePreview: true,
+				ParseMode: helpers.HTML,
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
 			},
 		)
 		if err != nil {

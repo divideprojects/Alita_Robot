@@ -81,11 +81,11 @@ func (moduleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
 		} else {
 			// if chat type is not group
 			go db.UpdateUser(
-				msg.ForwardFrom.Id,
-				msg.ForwardFrom.Username,
+				msg.ForwardOrigin.MergeMessageOrigin().SenderUser.Id,
+				msg.ForwardOrigin.MergeMessageOrigin().SenderUser.Username,
 				helpers.GetFullName(
-					msg.ForwardFrom.FirstName,
-					msg.ForwardFrom.LastName,
+					msg.ForwardOrigin.MergeMessageOrigin().SenderUser.FirstName,
+					msg.ForwardOrigin.MergeMessageOrigin().SenderUser.LastName,
 				),
 			)
 		}

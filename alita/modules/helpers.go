@@ -245,7 +245,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 					return ext.ContinueGroups
 				}
 			}
-			_, err := helpers.SendNote(b, chatinfo, ctx, noteData, msg.MessageId)
+			_, err := helpers.SendNote(b, chatinfo.PersonalChat, ctx, noteData, msg.MessageId)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -255,11 +255,15 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		_, err := b.SendMessage(chat.Id,
 			aboutText,
 			&gotgbot.SendMessageOpts{
-				ParseMode:                "Markdown",
-				DisableWebPagePreview:    true,
-				ReplyToMessageId:         msg.MessageId,
-				ReplyMarkup:              &aboutKb,
-				AllowSendingWithoutReply: true,
+				ParseMode: "Markdown",
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                msg.MessageId,
+					AllowSendingWithoutReply: true,
+				},
+				ReplyMarkup: &aboutKb,
 			},
 		)
 		if err != nil {
@@ -271,9 +275,11 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		_, err := b.SendMessage(chat.Id,
 			startHelp,
 			&gotgbot.SendMessageOpts{
-				ParseMode:             helpers.HTML,
-				DisableWebPagePreview: true,
-				ReplyMarkup:           &startMarkup,
+				ParseMode: helpers.HTML,
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
+				ReplyMarkup: &startMarkup,
 			},
 		)
 		if err != nil {

@@ -92,11 +92,11 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 
 	adminsAvail, admins := cache.GetAdminCacheList(chat.Id)
 	if !adminsAvail {
-		admins = cache.LoadAdminCache(b, chat)
+		admins = cache.LoadAdminCache(b, chat.PersonalChat)
 	}
 
 	if !admins.Cached {
-		adminList, err := chat.GetAdministrators(b, nil)
+		adminList, err := chat.PersonalChat.GetAdministrators(b, nil)
 		if err != nil {
 			log.Error(err)
 			return false
@@ -117,7 +117,8 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -136,7 +137,8 @@ func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {
 func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -180,7 +182,14 @@ func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, use
 			return false
 		}
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "You don't have permission to change info in this group!", &gotgbot.SendMessageOpts{ReplyToMessageId: ctx.EffectiveMessage.MessageId})
+			_, err := b.SendMessage(chat.Id, "You don't have permission to change info in this group!",
+				&gotgbot.SendMessageOpts{
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                ctx.EffectiveMessage.MessageId,
+						AllowSendingWithoutReply: true,
+					},
+				},
+			)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -191,7 +200,8 @@ func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, use
 func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -234,7 +244,14 @@ func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userI
 			return false
 		}
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "You don't have permission to restrict users in this group!", &gotgbot.SendMessageOpts{ReplyToMessageId: ctx.EffectiveMessage.MessageId})
+			_, err := b.SendMessage(chat.Id, "You don't have permission to restrict users in this group!",
+				&gotgbot.SendMessageOpts{
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                ctx.EffectiveMessage.MessageId,
+						AllowSendingWithoutReply: true,
+					},
+				},
+			)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -245,7 +262,8 @@ func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userI
 func CanBotRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -266,7 +284,14 @@ func CanBotRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 			return false
 		}
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "I can't restrict people here! Make sure I'm admin and can restrict other members.", &gotgbot.SendMessageOpts{ReplyToMessageId: ctx.EffectiveMessage.MessageId})
+			_, err := b.SendMessage(chat.Id, "I can't restrict people here! Make sure I'm admin and can restrict other members.",
+				&gotgbot.SendMessageOpts{
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                ctx.EffectiveMessage.MessageId,
+						AllowSendingWithoutReply: true,
+					},
+				},
+			)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -277,7 +302,8 @@ func CanBotRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -320,7 +346,14 @@ func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId
 			return false
 		}
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "You can't promote/demote people here! Make sure you have appropriate rights!", &gotgbot.SendMessageOpts{ReplyToMessageId: ctx.EffectiveMessage.MessageId})
+			_, err := b.SendMessage(chat.Id, "You can't promote/demote people here! Make sure you have appropriate rights!",
+				&gotgbot.SendMessageOpts{
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                ctx.EffectiveMessage.MessageId,
+						AllowSendingWithoutReply: true,
+					},
+				},
+			)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -331,7 +364,8 @@ func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId
 func CanBotPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -341,7 +375,14 @@ func CanBotPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChe
 	error_handling.HandleErr(err)
 	if !botChatMember.MergeChatMember().CanPromoteMembers {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "I can't promote/demote people here! Make sure I'm admin and can appoint new admins.", &gotgbot.SendMessageOpts{ReplyToMessageId: ctx.EffectiveMessage.MessageId})
+			_, err := b.SendMessage(chat.Id, "I can't promote/demote people here! Make sure I'm admin and can appoint new admins.",
+				&gotgbot.SendMessageOpts{
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                ctx.EffectiveMessage.MessageId,
+						AllowSendingWithoutReply: true,
+					},
+				},
+			)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -352,7 +393,8 @@ func CanBotPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChe
 func CanUserPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -384,7 +426,13 @@ func CanUserPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int
 	}
 	if !userMember.CanPinMessages && userMember.Status != "creator" {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "You can't pin messages here! Make sure you're admin and can pin messages.", &gotgbot.SendMessageOpts{ReplyToMessageId: ctx.EffectiveMessage.MessageId})
+			_, err := b.SendMessage(chat.Id, "You can't pin messages here! Make sure you're admin and can pin messages.", &gotgbot.SendMessageOpts{
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                ctx.EffectiveMessage.MessageId,
+					AllowSendingWithoutReply: true,
+				},
+			},
+			)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -395,7 +443,8 @@ func CanUserPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int
 func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -405,7 +454,14 @@ func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck b
 	error_handling.HandleErr(err)
 	if !botChatMember.MergeChatMember().CanPinMessages {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "I can't pin messages here! Make sure I'm admin and can pin messages.", &gotgbot.SendMessageOpts{ReplyToMessageId: ctx.EffectiveMessage.MessageId})
+			_, err := b.SendMessage(chat.Id, "I can't pin messages here! Make sure I'm admin and can pin messages.",
+				&gotgbot.SendMessageOpts{
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                ctx.EffectiveMessage.MessageId,
+						AllowSendingWithoutReply: true,
+					},
+				},
+			)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -416,7 +472,8 @@ func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck b
 func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbot.Message, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -428,7 +485,14 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 	error_handling.HandleErr(err)
 	if !botChatMember.MergeChatMember().CanInviteUsers {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "I don't have access to invite links! Make sure I'm admin and can invite users.", &gotgbot.SendMessageOpts{ReplyToMessageId: ctx.EffectiveMessage.MessageId})
+			_, err := b.SendMessage(chat.Id, "I don't have access to invite links! Make sure I'm admin and can invite users.",
+				&gotgbot.SendMessageOpts{
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                ctx.EffectiveMessage.MessageId,
+						AllowSendingWithoutReply: true,
+					},
+				},
+			)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -457,7 +521,14 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 	}
 	if !userMember.CanInviteUsers && userMember.Status != "creator" {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "You don't have access to invite links; You need to be admin to get this!", &gotgbot.SendMessageOpts{ReplyToMessageId: ctx.EffectiveMessage.MessageId})
+			_, err := b.SendMessage(chat.Id, "You don't have access to invite links; You need to be admin to get this!",
+				&gotgbot.SendMessageOpts{
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                ctx.EffectiveMessage.MessageId,
+						AllowSendingWithoutReply: true,
+					},
+				},
+			)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -468,7 +539,8 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 func CanUserDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -526,7 +598,8 @@ func CanUserDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId 
 func CanBotDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -555,7 +628,8 @@ func CanBotDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 func RequireBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -586,7 +660,8 @@ func IsUserInChat(b *gotgbot.Bot, chat *gotgbot.Chat, userId int64) bool {
 func IsUserBanProtected(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -602,7 +677,8 @@ func IsUserBanProtected(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, us
 func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -633,7 +709,8 @@ func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -671,7 +748,8 @@ func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -681,7 +759,9 @@ func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 		if !justCheck {
 			_, err := msg.Reply(b, "This command is made for pm, not group chat!",
 				&gotgbot.SendMessageOpts{
-					ReplyToMessageId: msg.MessageId,
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId: msg.MessageId,
+					},
 				},
 			)
 			error_handling.HandleErr(err)
@@ -694,7 +774,8 @@ func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 func RequireGroup(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
-			chat = &ctx.CallbackQuery.Message.Chat
+			_chatValue := ctx.CallbackQuery.Message.GetChat()
+			chat = &_chatValue
 		} else {
 			chat = &ctx.Update.Message.Chat
 		}
@@ -704,7 +785,9 @@ func RequireGroup(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 		if !justCheck {
 			_, err := msg.Reply(b, "This command is made to be used in group chats, not in pm!",
 				&gotgbot.SendMessageOpts{
-					ReplyToMessageId: msg.MessageId,
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId: msg.MessageId,
+					},
 				},
 			)
 			error_handling.HandleErr(err)

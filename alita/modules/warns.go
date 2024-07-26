@@ -193,11 +193,15 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 	}
 	_, err = b.SendMessage(chat.Id, reply,
 		&gotgbot.SendMessageOpts{
-			ParseMode:                helpers.HTML,
-			DisableWebPagePreview:    true,
-			ReplyToMessageId:         msg.MessageId,
-			AllowSendingWithoutReply: true,
-			ReplyMarkup:              &keyboard,
+			ParseMode: helpers.HTML,
+			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+				IsDisabled: true,
+			},
+			ReplyParameters: &gotgbot.ReplyParameters{
+				MessageId:                msg.MessageId,
+				AllowSendingWithoutReply: true,
+			},
+			ReplyMarkup: &keyboard,
 		},
 	)
 	if err != nil {
@@ -663,7 +667,7 @@ func (moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	switch response {
 	case "yes":
-		go db.ResetAllChatWarns(query.Message.Chat.Id)
+		go db.ResetAllChatWarns(query.Message.GetChat().Id)
 		helpText = "Removed all warns of all the users in this chat !"
 	case "no":
 		helpText = "Cancelled the removal of all the warns of all the users in this chat !"

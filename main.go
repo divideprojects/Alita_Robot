@@ -34,7 +34,7 @@ func main() {
 	b, err := gotgbot.NewBot(
 		config.BotToken,
 		&gotgbot.BotOpts{
-			DefaultRequestOpts: &gotgbot.RequestOpts{
+			RequestOpts: &gotgbot.RequestOpts{
 				APIURL: config.ApiServer,
 			},
 		},
@@ -55,8 +55,10 @@ func main() {
 				return ext.DispatcherActionNoop
 			},
 			MaxRoutines: ext.DefaultMaxRoutines,
-		}),
-	})
+		},
+		),
+	},
+	)
 
 	// extract dispatcher from updater
 	dispatcher := updater.Dispatcher
@@ -70,7 +72,7 @@ func main() {
 	err = updater.StartPolling(b,
 		&ext.PollingOpts{
 			DropPendingUpdates: config.DropPendingUpdates,
-			GetUpdatesOpts: gotgbot.GetUpdatesOpts{
+			GetUpdatesOpts: &gotgbot.GetUpdatesOpts{
 				AllowedUpdates: config.AllowedUpdates,
 			},
 		},
