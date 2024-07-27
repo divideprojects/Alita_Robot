@@ -47,21 +47,15 @@ func main() {
 	alita.InitialChecks(b)
 
 	// Create updater and dispatcher.
-	updater := ext.NewUpdater(&ext.UpdaterOpts{
-		Dispatcher: ext.NewDispatcher(&ext.DispatcherOpts{
-			// If an error is returned by a handler, log it and continue going.
-			Error: func(b *gotgbot.Bot, ctx *ext.Context, err error) ext.DispatcherAction {
-				log.Println("an error occurred while handling update:", err.Error())
-				return ext.DispatcherActionNoop
-			},
-			MaxRoutines: ext.DefaultMaxRoutines,
+	dispatcher := ext.NewDispatcher(&ext.DispatcherOpts{
+		// If an error is returned by a handler, log it and continue going.
+		Error: func(b *gotgbot.Bot, ctx *ext.Context, err error) ext.DispatcherAction {
+			log.Println("an error occurred while handling update:", err.Error())
+			return ext.DispatcherActionNoop
 		},
-		),
-	},
-	)
-
-	// extract dispatcher from updater
-	dispatcher := updater.Dispatcher
+		MaxRoutines: ext.DefaultMaxRoutines,
+	})
+	updater := ext.NewUpdater(dispatcher, nil) // create updater with dispatcher
 
 	if _, err = b.DeleteWebhook(nil); err != nil {
 		log.Fatalf("[Polling] Failed to remove webhook: %v", err)
