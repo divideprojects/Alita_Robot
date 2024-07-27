@@ -71,21 +71,22 @@ func (moduleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	// update if message is forwarded
-	if msg.ForwardFrom != nil || msg.ForwardFromChat != nil {
-		if msg.ForwardFromChat != nil && msg.ForwardFromChat.Type != "group" {
+	if msg.ForwardOrigin != nil {
+		forwarded := msg.ForwardOrigin.MergeMessageOrigin()
+		if forwarded.Chat != nil && forwarded.Chat.Type != "group" {
 			go db.UpdateChannel(
-				msg.ForwardFromChat.Id,
-				msg.ForwardFromChat.Title,
-				msg.ForwardFromChat.Username,
+				forwarded.Chat.Id,
+				forwarded.Chat.Title,
+				forwarded.Chat.Username,
 			)
-		} else {
+		} else if forwarded.SenderUser != nil {
 			// if chat type is not group
 			go db.UpdateUser(
-				msg.ForwardOrigin.MergeMessageOrigin().SenderUser.Id,
-				msg.ForwardOrigin.MergeMessageOrigin().SenderUser.Username,
+				forwarded.SenderUser.Id,
+				forwarded.SenderUser.Username,
 				helpers.GetFullName(
-					msg.ForwardOrigin.MergeMessageOrigin().SenderUser.FirstName,
-					msg.ForwardOrigin.MergeMessageOrigin().SenderUser.LastName,
+					forwarded.SenderUser.FirstName,
+					forwarded.SenderUser.LastName,
 				),
 			)
 		}

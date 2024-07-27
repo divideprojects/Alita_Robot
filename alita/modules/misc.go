@@ -101,18 +101,27 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 				)
 			}
 
-			if msg.ReplyToMessage.ForwardFrom != nil {
-				user1Id := msg.ReplyToMessage.ForwardFrom.Id
-				_, user1Name, _ := extraction.GetUserInfo(user1Id)
-				replyText += fmt.Sprintf(
-					"<b>Forwarded from %s's ID:</b> <code>%d</code>\n",
-					user1Name, user1Id,
-				)
-			}
-			if msg.ReplyToMessage.ForwardFromChat != nil {
-				replyText += fmt.Sprintf("<b>Forwarded from chat %s's ID:</b> <code>%d</code>\n",
-					msg.ReplyToMessage.ForwardFromChat.Title, msg.ReplyToMessage.ForwardFromChat.Id,
-				)
+			if rpm := msg.ReplyToMessage; rpm != nil {
+				if frpm := rpm.ForwardOrigin; frpm != nil {
+					if frpm.GetDate() != 0 {
+						fwdd := frpm.MergeMessageOrigin()
+			
+						if fwdc := fwdd.SenderUser; fwdc != nil {
+							user1Id := fwdc.Id
+							_, user1Name, _ := extraction.GetUserInfo(user1Id)
+							replyText += fmt.Sprintf(
+								"<b>Forwarded from %s's ID:</b> <code>%d</code>\n",
+								user1Name, user1Id,
+							)
+						}
+			
+						if fwdc := fwdd.Chat; fwdc != nil {
+							replyText += fmt.Sprintf("<b>Forwarded from chat %s's ID:</b> <code>%d</code>\n",
+								fwdc.Title, fwdc.Id,
+							)
+						}
+					}
+				}
 			}
 			if msg.ReplyToMessage.Animation != nil {
 				replyText += fmt.Sprintf("<b>GIF ID:</b> <code>%s</code>\n",
