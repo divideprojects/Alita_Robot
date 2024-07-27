@@ -202,7 +202,7 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.EndGroups
 		}
 		fileName := fmt.Sprintf("paste_%d_%d.txt", msg.Chat.Id, msg.MessageId)
-		raw, err := http.Get(config.ApiServer + "/file/bot" + b.GetToken() + "/" + f.FilePath)
+		raw, err := http.Get(config.ApiServer + "/file/bot" + config.BotToken + "/" + f.FilePath)
 		if err != nil {
 			log.Error(err)
 		}
