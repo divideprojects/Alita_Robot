@@ -132,10 +132,10 @@ func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 			// if err.Error() == "unable to unpinChatMessage: Bad Request: message to unpin not found" {
 			// 	replyText = "No pinned message found."
 			// } else
-			if err != nil {
-				log.Error(err)
-				return err
-			}
+			// if err != nil {
+			log.Error(err)
+			return err
+			// }
 		}
 	}
 
