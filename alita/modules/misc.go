@@ -105,7 +105,7 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 				if frpm := rpm.ForwardOrigin; frpm != nil {
 					if frpm.GetDate() != 0 {
 						fwdd := frpm.MergeMessageOrigin()
-			
+
 						if fwdc := fwdd.SenderUser; fwdc != nil {
 							user1Id := fwdc.Id
 							_, user1Name, _ := extraction.GetUserInfo(user1Id)
@@ -114,7 +114,7 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 								user1Name, user1Id,
 							)
 						}
-			
+
 						if fwdc := fwdd.Chat; fwdc != nil {
 							replyText += fmt.Sprintf("<b>Forwarded from chat %s's ID:</b> <code>%d</code>\n",
 								fwdc.Title, fwdc.Id,
