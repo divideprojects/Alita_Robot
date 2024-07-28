@@ -9,44 +9,49 @@
     "alita",
     "alita_robot"
   ],
-  "repository": "https://github.com/divkix/Alita_Robot",
-  "website": "https://divideprojects.com",
+  "repository": "https://github.com/divkideprojects/Alita_Robot",
+  "website": "https://divkix.me",
   "success_url": "https://t.me/DivideProjects",
   "env": {
     "BOT_TOKEN": {
       "description": "Your telegram bot token, get from @Botfather in telegram.",
-      "required": true,
-      "value": ""
+      "required": true
     },
-    "APP_ID": {
-      "description": "Get API_ID from my.telegram.org, used for pyrogram base.",
-      "required": true,
-      "value": ""
-    },
-    "API_HASH": {
-      "description": "Get API_HASH from my.telegram.org, used for pyrogram base.",
-      "required": true,
-      "value": ""
+    "BOT_VERSION": {
+      "description": "Version of your bot.",
+      "required": true
     },
     "DB_URI": {
       "description": "Your MongoDB connection string.",
-      "required": true,
-      "value": ""
+      "required": true
     },
     "DB_NAME": {
       "description": "Your MongoDB database name.",
-      "required": true,
-      "value": "alita"
+      "required": true
     },
     "OWNER_ID": {
       "description": "Your user ID as an integer.",
-      "required": true,
-      "value": ""
+      "required": true
     },
     "MESSAGE_DUMP": {
       "description": "Event logs channel where bot will send updates. Starts with -100",
-      "required": true,
-      "value": ""
+      "required": true
+    },
+    "ENABLED_LOCALES": {
+      "description": "Locales enabled for your bot.",
+      "required": true
+    },
+    "REDIS_ADDRESS": {
+      "description": "Address for your Redis instance.",
+      "required": true
+    },
+    "REDIS_PASSWORD": {
+      "description": "Password for your Redis instance.",
+      "required": true
+    },
+    "USE_WEBHOOKS": {
+      "description": "Whether to use webhooks or not.",
+      "required": true
     }
   },
   "buildpacks": [
