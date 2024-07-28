@@ -856,7 +856,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 			&gotgbot.SendMessageOpts{
 				ParseMode: formatMode,
 				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
-					IsDisabled: true,
+					IsDisabled: !webPreview,
 				},
 				ReplyMarkup: keyb,
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -869,7 +869,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 			},
 		)
 	},
-	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, isProtected bool, noFormat, noNotif bool) (*gotgbot.Message, error) {
+	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, isProtected bool, _, noNotif bool) (*gotgbot.Message, error) {
 		return b.SendSticker(ctx.Update.Message.Chat.Id,
 			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendStickerOpts{
@@ -989,7 +989,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 			},
 		)
 	},
-	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, isProtected bool, noFormat, noNotif bool) (*gotgbot.Message, error) {
+	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, isProtected bool, _, noNotif bool) (*gotgbot.Message, error) {
 		return b.SendVideoNote(ctx.Update.Message.Chat.Id,
 			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendVideoNoteOpts{
@@ -1093,7 +1093,7 @@ var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, f
 			},
 		)
 	},
-	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
+	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, _, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendVideoNote(
 			ctx.EffectiveChat.Id,
 			gotgbot.InputFileByID(fileID),
@@ -1130,7 +1130,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 			},
 		)
 	},
-	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, noFormat, noNotif bool) (*gotgbot.Message, error) {
+	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, noNotif bool) (*gotgbot.Message, error) {
 		return b.SendSticker(
 			ctx.Update.Message.Chat.Id,
 			gotgbot.InputFileByID(filterData.FileID),
@@ -1244,7 +1244,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 			},
 		)
 	},
-	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, noFormat, noNotif bool) (*gotgbot.Message, error) {
+	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, noNotif bool) (*gotgbot.Message, error) {
 		return b.SendVideoNote(
 			ctx.Update.Message.Chat.Id,
 			gotgbot.InputFileByID(filterData.FileID),
