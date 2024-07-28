@@ -1,20 +1,25 @@
-version: '3.8'
-
 services:
   alita:
-    image: ghcr.io/divideprojects/alita_robot:latest
+    build:
+      context: .
+      dockerfile: docker/alpine
     container_name: alita-robot
     restart: always
-    environment:
-     - BOT_TOKEN
-     - BOT_VERSION
-     - DB_NAME
-     - DB_PASS
-     - DB_URI
-     - DROP_PENDING_UPDATES
-     - ENABLED_LOCALES
-     - MESSAGE_DUMP
-     - OWNER_ID
-     - REDIS_ADDRESS
-     - REDIS_PASSWORD
-     - REDIS_DB
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+      - redis
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    env_file:
+      - .db.env
+    volumes:
+      - ./docker/entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+  redis:
+    image: redis:latest
+    restart: always
+    command: redis-server --requirepass redisPassword
