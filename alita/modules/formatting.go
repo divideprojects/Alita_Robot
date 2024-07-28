@@ -130,7 +130,7 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 	_, _, err := msg.EditText(b,
 		m.getMarkdownHelp(module),
 		&gotgbot.EditMessageTextOpts{
-			MessageId: msg.MessageId,
+			MessageId: msg.GetMessageId(),
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{

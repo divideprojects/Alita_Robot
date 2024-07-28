@@ -53,8 +53,10 @@ func (moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 				strings.Split(msg.OriginalHTML(), " ")[1:], " ",
 			),
 			&gotgbot.SendMessageOpts{
-				ReplyToMessageId: replyMsg.MessageId,
-				ParseMode:        helpers.Shtml().ParseMode,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId: replyMsg.MessageId,
+				},
+				ParseMode: helpers.Shtml().ParseMode,
 			},
 		)
 		if err != nil {
@@ -98,18 +100,28 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 					originalId,
 				)
 			}
-			if msg.ReplyToMessage.ForwardFrom != nil {
-				user1Id := msg.ReplyToMessage.ForwardFrom.Id
-				_, user1Name, _ := extraction.GetUserInfo(user1Id)
-				replyText += fmt.Sprintf(
-					"<b>Forwarded from %s's ID:</b> <code>%d</code>\n",
-					user1Name, user1Id,
-				)
-			}
-			if msg.ReplyToMessage.ForwardFromChat != nil {
-				replyText += fmt.Sprintf("<b>Forwarded from chat %s's ID:</b> <code>%d</code>\n",
-					msg.ReplyToMessage.ForwardFromChat.Title, msg.ReplyToMessage.ForwardFromChat.Id,
-				)
+
+			if rpm := msg.ReplyToMessage; rpm != nil {
+				if frpm := rpm.ForwardOrigin; frpm != nil {
+					if frpm.GetDate() != 0 {
+						fwdd := frpm.MergeMessageOrigin()
+
+						if fwdc := fwdd.SenderUser; fwdc != nil {
+							user1Id := fwdc.Id
+							_, user1Name, _ := extraction.GetUserInfo(user1Id)
+							replyText += fmt.Sprintf(
+								"<b>Forwarded from %s's ID:</b> <code>%d</code>\n",
+								user1Name, user1Id,
+							)
+						}
+
+						if fwdc := fwdd.Chat; fwdc != nil {
+							replyText += fmt.Sprintf("<b>Forwarded from chat %s's ID:</b> <code>%d</code>\n",
+								fwdc.Title, fwdc.Id,
+							)
+						}
+					}
+				}
 			}
 			if msg.ReplyToMessage.Animation != nil {
 				replyText += fmt.Sprintf("<b>GIF ID:</b> <code>%s</code>\n",
@@ -199,7 +211,7 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.EndGroups
 		}
 		fileName := fmt.Sprintf("paste_%d_%d.txt", msg.Chat.Id, msg.MessageId)
-		raw, err := http.Get(config.ApiServer + "/file/bot" + b.GetToken() + "/" + f.FilePath)
+		raw, err := http.Get(config.ApiServer + "/file/bot" + config.BotToken + "/" + f.FilePath)
 		if err != nil {
 			log.Error(err)
 		}
@@ -235,8 +247,10 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	if pasted {
 		_, _, err = edited.EditText(b, fmt.Sprintf("<b>Pasted Successfully!</b>\nhttps://www.nekobin.com/%s.%s", key, extention),
 			&gotgbot.EditMessageTextOpts{
-				ParseMode:             helpers.HTML,
-				DisableWebPagePreview: true,
+				ParseMode: helpers.HTML,
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
 			},
 		)
 		if err != nil {

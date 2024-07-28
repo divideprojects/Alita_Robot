@@ -132,17 +132,19 @@ func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 			// if err.Error() == "unable to unpinChatMessage: Bad Request: message to unpin not found" {
 			// 	replyText = "No pinned message found."
 			// } else
-			if err != nil {
-				log.Error(err)
-				return err
-			}
+			// if err != nil {
+			log.Error(err)
+			return err
+			// }
 		}
 	}
 
 	_, err := msg.Reply(b, replyText,
 		&gotgbot.SendMessageOpts{
-			ReplyToMessageId:         replyMsgId,
-			AllowSendingWithoutReply: true,
+			ReplyParameters: &gotgbot.ReplyParameters{
+				MessageId:                replyMsgId,
+				AllowSendingWithoutReply: true,
+			},
 		},
 	)
 	if err != nil {
@@ -291,10 +293,14 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err = msg.Reply(b,
 			fmt.Sprintf("I have pinned <a href='%s'>this message</a>", pinLink),
 			&gotgbot.SendMessageOpts{
-				ParseMode:                helpers.HTML,
-				ReplyToMessageId:         msgToPin,
-				DisableWebPagePreview:    true,
-				AllowSendingWithoutReply: true,
+				ParseMode: helpers.HTML,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                msgToPin,
+					AllowSendingWithoutReply: true,
+				},
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
 			},
 		)
 		if err != nil {
@@ -581,10 +587,14 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err = msg.Reply(b,
 		fmt.Sprintf("<a href='%s'>Here</a> is the pinned message.", pinLink),
 		&gotgbot.SendMessageOpts{
-			ParseMode:                helpers.HTML,
-			DisableWebPagePreview:    true,
-			ReplyToMessageId:         replyMsgId,
-			AllowSendingWithoutReply: true,
+			ParseMode: helpers.HTML,
+			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+				IsDisabled: true,
+			},
+			ReplyParameters: &gotgbot.ReplyParameters{
+				MessageId:                replyMsgId,
+				AllowSendingWithoutReply: true,
+			},
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
@@ -610,94 +620,110 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 			ctx.EffectiveChat.Id,
 			pinT.MsgText,
 			&gotgbot.SendMessageOpts{
-				ParseMode:                helpers.HTML,
-				DisableWebPagePreview:    true,
-				ReplyToMessageId:         replyMsgId,
-				ReplyMarkup:              keyb,
-				AllowSendingWithoutReply: true,
-				MessageThreadId:          ctx.EffectiveMessage.MessageThreadId,
+				ParseMode: helpers.HTML,
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
+				ReplyMarkup: keyb,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
 			},
 		)
 	},
 	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, pinT pinType, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64) (*gotgbot.Message, error) {
 		return b.SendSticker(
 			ctx.EffectiveChat.Id,
-			pinT.FileID,
+			gotgbot.InputFileByID(pinT.FileID),
 			&gotgbot.SendStickerOpts{
-				ReplyToMessageId:         replyMsgId,
-				ReplyMarkup:              keyb,
-				AllowSendingWithoutReply: true,
-				MessageThreadId:          ctx.EffectiveMessage.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ReplyMarkup:     keyb,
+				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
 			},
 		)
 	},
 	db.DOCUMENT: func(b *gotgbot.Bot, ctx *ext.Context, pinT pinType, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64) (*gotgbot.Message, error) {
 		return b.SendDocument(
 			ctx.EffectiveChat.Id,
-			pinT.FileID,
+			gotgbot.InputFileByID(pinT.FileID),
 			&gotgbot.SendDocumentOpts{
-				ReplyToMessageId:         replyMsgId,
-				ParseMode:                helpers.HTML,
-				ReplyMarkup:              keyb,
-				Caption:                  pinT.MsgText,
-				AllowSendingWithoutReply: true,
-				MessageThreadId:          ctx.EffectiveMessage.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ParseMode:       helpers.HTML,
+				ReplyMarkup:     keyb,
+				Caption:         pinT.MsgText,
+				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
 			},
 		)
 	},
 	db.PHOTO: func(b *gotgbot.Bot, ctx *ext.Context, pinT pinType, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64) (*gotgbot.Message, error) {
 		return b.SendPhoto(
 			ctx.EffectiveChat.Id,
-			pinT.FileID,
+			gotgbot.InputFileByID(pinT.FileID),
 			&gotgbot.SendPhotoOpts{
-				ReplyToMessageId:         replyMsgId,
-				ParseMode:                helpers.HTML,
-				ReplyMarkup:              keyb,
-				Caption:                  pinT.MsgText,
-				AllowSendingWithoutReply: true,
-				MessageThreadId:          ctx.EffectiveMessage.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ParseMode:       helpers.HTML,
+				ReplyMarkup:     keyb,
+				Caption:         pinT.MsgText,
+				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
 			},
 		)
 	},
 	db.AUDIO: func(b *gotgbot.Bot, ctx *ext.Context, pinT pinType, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64) (*gotgbot.Message, error) {
 		return b.SendAudio(
 			ctx.EffectiveChat.Id,
-			pinT.FileID,
+			gotgbot.InputFileByID(pinT.FileID),
 			&gotgbot.SendAudioOpts{
-				ReplyToMessageId:         replyMsgId,
-				ParseMode:                helpers.HTML,
-				ReplyMarkup:              keyb,
-				Caption:                  pinT.MsgText,
-				AllowSendingWithoutReply: true,
-				MessageThreadId:          ctx.EffectiveMessage.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ParseMode:       helpers.HTML,
+				ReplyMarkup:     keyb,
+				Caption:         pinT.MsgText,
+				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
 			},
 		)
 	},
 	db.VOICE: func(b *gotgbot.Bot, ctx *ext.Context, pinT pinType, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64) (*gotgbot.Message, error) {
 		return b.SendVoice(
 			ctx.EffectiveChat.Id,
-			pinT.FileID,
+			gotgbot.InputFileByID(pinT.FileID),
 			&gotgbot.SendVoiceOpts{
-				ReplyToMessageId:         replyMsgId,
-				ParseMode:                helpers.HTML,
-				ReplyMarkup:              keyb,
-				Caption:                  pinT.MsgText,
-				AllowSendingWithoutReply: true,
-				MessageThreadId:          ctx.EffectiveMessage.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ParseMode:       helpers.HTML,
+				ReplyMarkup:     keyb,
+				Caption:         pinT.MsgText,
+				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
 			},
 		)
 	},
 	db.VIDEO: func(b *gotgbot.Bot, ctx *ext.Context, pinT pinType, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64) (*gotgbot.Message, error) {
 		return b.SendVideo(
 			ctx.EffectiveChat.Id,
-			pinT.FileID,
+			gotgbot.InputFileByID(pinT.FileID),
 			&gotgbot.SendVideoOpts{
-				ReplyToMessageId:         replyMsgId,
-				ParseMode:                helpers.HTML,
-				ReplyMarkup:              keyb,
-				Caption:                  pinT.MsgText,
-				AllowSendingWithoutReply: true,
-				MessageThreadId:          ctx.EffectiveMessage.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ParseMode:       helpers.HTML,
+				ReplyMarkup:     keyb,
+				Caption:         pinT.MsgText,
+				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
 			},
 		)
 	},

@@ -8,11 +8,11 @@ import (
 )
 
 func GetLanguage(ctx *ext.Context) string {
-	var chat *gotgbot.Chat
+	var chat gotgbot.Chat
 	if ctx.CallbackQuery != nil {
-		chat = &ctx.CallbackQuery.Message.Chat
+		chat = ctx.CallbackQuery.Message.GetChat()
 	} else {
-		chat = &ctx.Update.Message.Chat
+		chat = ctx.Update.Message.Chat
 	}
 	// FIXME: this is a hack
 	// if ctx.Update.Message.Chat.Type == "private" || ctx.CallbackQuery.Message.Chat.Type == "private" {

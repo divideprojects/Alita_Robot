@@ -72,7 +72,7 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 
 func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
-	chat := query.Message.Chat
+	chat := query.Message.GetChat()
 	user := query.From
 
 	var replyString string
@@ -90,8 +90,10 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		replyString,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode:             helpers.HTML,
-			DisableWebPagePreview: true,
+			ParseMode: helpers.HTML,
+			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+				IsDisabled: true,
+			},
 		},
 	)
 	if err != nil {

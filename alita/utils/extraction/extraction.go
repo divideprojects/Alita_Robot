@@ -35,7 +35,7 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 				}
 				return nil
 			}
-			return chat
+			return chat.PersonalChat
 		} else {
 			chat, err := chat_status.GetChat(b, args[0])
 			if err != nil {

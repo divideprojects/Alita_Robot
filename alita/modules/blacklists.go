@@ -220,9 +220,11 @@ func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err := msg.Reply(b,
 		blacklistsText,
 		&gotgbot.SendMessageOpts{
-			ReplyToMessageId:         replyMsgId,
-			AllowSendingWithoutReply: true,
-			ParseMode:                helpers.HTML,
+			ReplyParameters: &gotgbot.ReplyParameters{
+				MessageId:                replyMsgId,
+				AllowSendingWithoutReply: true,
+			},
+			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -341,7 +343,7 @@ func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	switch creatorAction {
 	case "yes":
-		go db.RemoveAllBlacklist(query.Message.Chat.Id)
+		go db.RemoveAllBlacklist(query.Message.GetChat().Id)
 		helpText = tr.GetString("strings." + m.moduleName + ".rm_all_bl.button_handler.yes")
 	case "no":
 		helpText = tr.GetString("strings." + m.moduleName + ".rm_all_bl.button_handler.yes")

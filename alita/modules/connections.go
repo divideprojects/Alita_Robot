@@ -327,7 +327,7 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 
-			if !chat_status.IsUserInChat(b, gchat, user.Id) {
+			if !chat_status.IsUserInChat(b, gchat.PersonalChat, user.Id) {
 				return ext.EndGroups
 			}
 

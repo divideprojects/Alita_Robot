@@ -31,8 +31,10 @@ func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, 
 				_, err = bot.SendMessage(chat.Id,
 					"You cannot delete messages over two days old. Please choose a more recent message.",
 					&gotgbot.SendMessageOpts{
-						ReplyToMessageId:         deleteTo + 1,
-						AllowSendingWithoutReply: true,
+						ReplyParameters: &gotgbot.ReplyParameters{
+							MessageId:                deleteTo + 1,
+							AllowSendingWithoutReply: true,
+						},
 					},
 				)
 				if err != nil {
@@ -268,7 +270,15 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			_, _ = msg.Reply(bot, err.Error(), nil)
 			return ext.EndGroups
 		}
-		pMsg, err := bot.SendMessage(chat.Id, "Message marked for deletion. Reply to another message with /purgeto to delete all messages in between; within 30s!", &gotgbot.SendMessageOpts{ReplyToMessageId: TodelId})
+		pMsg, err := bot.SendMessage(chat.Id,
+			"Message marked for deletion. Reply to another message with /purgeto to delete all messages in between; within 30s!",
+			&gotgbot.SendMessageOpts{
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                TodelId,
+					AllowSendingWithoutReply: true,
+				},
+			},
+		)
 		if err != nil {
 			log.Error(err)
 			return err

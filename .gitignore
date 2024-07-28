@@ -21,7 +21,8 @@ dist/
 # Executables
 Alita_Robot
 Alita_Robot.exe
-*.env
+.env
+.db.env
 
 # Mac OS DS_Store file
 .DS_Store

@@ -1,5 +1,5 @@
 # Build Stage: Build bot using the alpine image
-FROM golang:1.20-alpine AS builder
+FROM golang:alpine AS builder
 RUN apk add --no-cache curl wget gnupg git upx
 WORKDIR /app
 COPY . .

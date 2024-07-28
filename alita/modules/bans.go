@@ -1126,14 +1126,17 @@ func (moduleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) er
 		)
 	}
 
+	// type assertion to get the message
+	_updatedMsg := msg.(*gotgbot.Message)
+
 	// only strikethrough if msg.Text is non-empty
-	if msg.Text != "" {
-		msg.Text = fmt.Sprint("<s>", msg.Text, "</s>", "\n\n")
+	if _updatedMsg.Text != "" {
+		_updatedMsg.Text = fmt.Sprint("<s>", _updatedMsg.Text, "</s>", "\n\n")
 	}
 
 	_, _, err := msg.EditText(
 		b,
-		fmt.Sprint(msg.Text, helpText),
+		fmt.Sprint(_updatedMsg.Text, helpText),
 		&gotgbot.EditMessageTextOpts{
 			ParseMode: helpers.HTML,
 		},

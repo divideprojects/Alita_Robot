@@ -427,7 +427,7 @@ func (moduleStruct) notesButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	switch response {
 	case "yes":
-		db.RemoveAllNotes(query.Message.Chat.Id)
+		db.RemoveAllNotes(query.Message.GetChat().Id)
 		helpText = "Removed all Notes from this Chat ✅"
 	case "no":
 		helpText = "Cancelled removing all notes from this Chat ❌"
@@ -523,8 +523,10 @@ func (m moduleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 				_, err = msg.Reply(b,
 					fmt.Sprintf("Click on the button below to get the note *%s*", noteName),
 					&gotgbot.SendMessageOpts{
-						ReplyToMessageId:         replyMsgId,
-						AllowSendingWithoutReply: true,
+						ReplyParameters: &gotgbot.ReplyParameters{
+							MessageId:                replyMsgId,
+							AllowSendingWithoutReply: true,
+						},
 						ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 							InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 								{
@@ -641,9 +643,11 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 							},
 						},
 					},
-					ParseMode:                helpers.Markdown,
-					ReplyToMessageId:         replyMsgId,
-					AllowSendingWithoutReply: true,
+					ParseMode: helpers.Markdown,
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                replyMsgId,
+						AllowSendingWithoutReply: true,
+					},
 				},
 			)
 		} else {

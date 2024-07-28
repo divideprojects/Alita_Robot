@@ -146,9 +146,11 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err = msg.Reply(b,
 		reported,
 		&gotgbot.SendMessageOpts{
-			ParseMode:                helpers.HTML,
-			ReplyToMessageId:         replyMsgId,
-			AllowSendingWithoutReply: true,
+			ParseMode: helpers.HTML,
+			ReplyParameters: &gotgbot.ReplyParameters{
+				MessageId:                replyMsgId,
+				AllowSendingWithoutReply: true,
+			},
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{

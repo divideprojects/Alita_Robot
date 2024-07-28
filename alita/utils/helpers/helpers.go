@@ -38,18 +38,26 @@ const (
 // Shtml is a shortcut for SendMessageOpts with HTML parse mode.
 func Shtml() *gotgbot.SendMessageOpts {
 	return &gotgbot.SendMessageOpts{
-		ParseMode:                HTML,
-		DisableWebPagePreview:    true,
-		AllowSendingWithoutReply: true,
+		ParseMode: HTML,
+		LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+			IsDisabled: true,
+		},
+		ReplyParameters: &gotgbot.ReplyParameters{
+			AllowSendingWithoutReply: true,
+		},
 	}
 }
 
 // Smarkdown is a shortcut for SendMessageOpts with Markdown parse mode.
 func Smarkdown() *gotgbot.SendMessageOpts {
 	return &gotgbot.SendMessageOpts{
-		ParseMode:                Markdown,
-		DisableWebPagePreview:    true,
-		AllowSendingWithoutReply: true,
+		ParseMode: Markdown,
+		LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+			IsDisabled: true,
+		},
+		ReplyParameters: &gotgbot.ReplyParameters{
+			AllowSendingWithoutReply: true,
+		},
 	}
 }
 
@@ -156,22 +164,24 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveUser
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
-	var err error
 
 	if ctx.Update.Message.Chat.Type == "private" {
 		conn := db.Connection(user.Id)
 		if conn.Connected && conn.ChatId != 0 {
-			chat, err = b.GetChat(conn.ChatId, nil)
+			chatFullInfo, err := b.GetChat(conn.ChatId, nil)
 			if err != nil {
 				log.Error(err)
 				return nil
 			}
+			chat = chatFullInfo.PersonalChat
 		} else {
 			_, err := msg.Reply(b,
 				tr.GetString("strings.Connections.is_user_connected.need_group"),
 				&gotgbot.SendMessageOpts{
-					ReplyToMessageId:         msg.MessageId,
-					AllowSendingWithoutReply: true,
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                msg.MessageId,
+						AllowSendingWithoutReply: true,
+					},
 				},
 			)
 			if err != nil {
@@ -844,27 +854,33 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 		return b.SendMessage(ctx.Update.Message.Chat.Id,
 			noteData.NoteContent,
 			&gotgbot.SendMessageOpts{
-				ParseMode:                formatMode,
-				DisableWebPagePreview:    !webPreview,
-				ReplyMarkup:              keyb,
-				ReplyToMessageId:         replyMsgId,
-				AllowSendingWithoutReply: true,
-				ProtectContent:           isProtected,
-				DisableNotification:      noNotif,
-				MessageThreadId:          ctx.Update.Message.MessageThreadId,
+				ParseMode: formatMode,
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: !webPreview,
+				},
+				ReplyMarkup: keyb,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ProtectContent:      isProtected,
+				DisableNotification: noNotif,
+				MessageThreadId:     ctx.Update.Message.MessageThreadId,
 			},
 		)
 	},
-	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, isProtected bool, noFormat, noNotif bool) (*gotgbot.Message, error) {
+	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, isProtected bool, _, noNotif bool) (*gotgbot.Message, error) {
 		return b.SendSticker(ctx.Update.Message.Chat.Id,
-			noteData.FileID,
+			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendStickerOpts{
-				ReplyToMessageId:         replyMsgId,
-				ReplyMarkup:              keyb,
-				AllowSendingWithoutReply: true,
-				ProtectContent:           isProtected,
-				DisableNotification:      noNotif,
-				MessageThreadId:          ctx.Update.Message.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ReplyMarkup:         keyb,
+				ProtectContent:      isProtected,
+				DisableNotification: noNotif,
+				MessageThreadId:     ctx.Update.Message.MessageThreadId,
 			},
 		)
 	},
@@ -874,16 +890,18 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 			formatMode = None
 		}
 		return b.SendDocument(ctx.Update.Message.Chat.Id,
-			noteData.FileID,
+			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendDocumentOpts{
-				ReplyToMessageId:         replyMsgId,
-				ParseMode:                formatMode,
-				ReplyMarkup:              keyb,
-				Caption:                  noteData.NoteContent,
-				AllowSendingWithoutReply: true,
-				ProtectContent:           isProtected,
-				DisableNotification:      noNotif,
-				MessageThreadId:          ctx.Update.Message.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ParseMode:           formatMode,
+				ReplyMarkup:         keyb,
+				Caption:             noteData.NoteContent,
+				ProtectContent:      isProtected,
+				DisableNotification: noNotif,
+				MessageThreadId:     ctx.Update.Message.MessageThreadId,
 			},
 		)
 	},
@@ -893,16 +911,18 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 			formatMode = None
 		}
 		return b.SendPhoto(ctx.Update.Message.Chat.Id,
-			noteData.FileID,
+			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendPhotoOpts{
-				ReplyToMessageId:         replyMsgId,
-				ParseMode:                formatMode,
-				ReplyMarkup:              keyb,
-				Caption:                  noteData.NoteContent,
-				AllowSendingWithoutReply: true,
-				ProtectContent:           isProtected,
-				DisableNotification:      noNotif,
-				MessageThreadId:          ctx.Update.Message.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ParseMode:           formatMode,
+				ReplyMarkup:         keyb,
+				Caption:             noteData.NoteContent,
+				ProtectContent:      isProtected,
+				DisableNotification: noNotif,
+				MessageThreadId:     ctx.Update.Message.MessageThreadId,
 			},
 		)
 	},
@@ -912,16 +932,18 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 			formatMode = None
 		}
 		return b.SendAudio(ctx.Update.Message.Chat.Id,
-			noteData.FileID,
+			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendAudioOpts{
-				ReplyToMessageId:         replyMsgId,
-				ParseMode:                formatMode,
-				ReplyMarkup:              keyb,
-				Caption:                  noteData.NoteContent,
-				AllowSendingWithoutReply: true,
-				ProtectContent:           isProtected,
-				DisableNotification:      noNotif,
-				MessageThreadId:          ctx.Update.Message.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ParseMode:           formatMode,
+				ReplyMarkup:         keyb,
+				Caption:             noteData.NoteContent,
+				ProtectContent:      isProtected,
+				DisableNotification: noNotif,
+				MessageThreadId:     ctx.Update.Message.MessageThreadId,
 			},
 		)
 	},
@@ -931,16 +953,18 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 			formatMode = None
 		}
 		return b.SendVoice(ctx.Update.Message.Chat.Id,
-			noteData.FileID,
+			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendVoiceOpts{
-				ReplyToMessageId:         replyMsgId,
-				ParseMode:                formatMode,
-				ReplyMarkup:              keyb,
-				Caption:                  noteData.NoteContent,
-				AllowSendingWithoutReply: true,
-				ProtectContent:           isProtected,
-				DisableNotification:      noNotif,
-				MessageThreadId:          ctx.Update.Message.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ParseMode:           formatMode,
+				ReplyMarkup:         keyb,
+				Caption:             noteData.NoteContent,
+				ProtectContent:      isProtected,
+				DisableNotification: noNotif,
+				MessageThreadId:     ctx.Update.Message.MessageThreadId,
 			},
 		)
 	},
@@ -950,29 +974,33 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 			formatMode = None
 		}
 		return b.SendVideo(ctx.Update.Message.Chat.Id,
-			noteData.FileID,
+			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendVideoOpts{
-				ReplyToMessageId:         replyMsgId,
-				ParseMode:                formatMode,
-				ReplyMarkup:              keyb,
-				Caption:                  noteData.NoteContent,
-				AllowSendingWithoutReply: true,
-				ProtectContent:           isProtected,
-				DisableNotification:      noNotif,
-				MessageThreadId:          ctx.Update.Message.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ParseMode:           formatMode,
+				ReplyMarkup:         keyb,
+				Caption:             noteData.NoteContent,
+				ProtectContent:      isProtected,
+				DisableNotification: noNotif,
+				MessageThreadId:     ctx.Update.Message.MessageThreadId,
 			},
 		)
 	},
-	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, isProtected bool, noFormat, noNotif bool) (*gotgbot.Message, error) {
+	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, isProtected bool, _, noNotif bool) (*gotgbot.Message, error) {
 		return b.SendVideoNote(ctx.Update.Message.Chat.Id,
-			noteData.FileID,
+			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendVideoNoteOpts{
-				ReplyToMessageId:         replyMsgId,
-				ReplyMarkup:              keyb,
-				AllowSendingWithoutReply: true,
-				ProtectContent:           isProtected,
-				DisableNotification:      noNotif,
-				MessageThreadId:          ctx.Update.Message.MessageThreadId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ReplyMarkup:         keyb,
+				ProtectContent:      isProtected,
+				DisableNotification: noNotif,
+				MessageThreadId:     ctx.Update.Message.MessageThreadId,
 			},
 		)
 	},
@@ -987,16 +1015,18 @@ var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, f
 			ctx.EffectiveChat.Id,
 			msg,
 			&gotgbot.SendMessageOpts{
-				ParseMode:             HTML,
-				DisableWebPagePreview: true,
-				ReplyMarkup:           keyb,
+				ParseMode: HTML,
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
+				ReplyMarkup: keyb,
 			},
 		)
 	},
 	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, _, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendSticker(
 			ctx.EffectiveChat.Id,
-			fileID,
+			gotgbot.InputFileByID(fileID),
 			&gotgbot.SendStickerOpts{
 				ReplyMarkup:     keyb,
 				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
@@ -1006,7 +1036,7 @@ var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, f
 	db.DOCUMENT: func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendDocument(
 			ctx.EffectiveChat.Id,
-			fileID,
+			gotgbot.InputFileByID(fileID),
 			&gotgbot.SendDocumentOpts{
 				ParseMode:       HTML,
 				ReplyMarkup:     keyb,
@@ -1018,7 +1048,7 @@ var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, f
 	db.PHOTO: func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendPhoto(
 			ctx.EffectiveChat.Id,
-			fileID,
+			gotgbot.InputFileByID(fileID),
 			&gotgbot.SendPhotoOpts{
 				ParseMode:       HTML,
 				ReplyMarkup:     keyb,
@@ -1030,7 +1060,7 @@ var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, f
 	db.AUDIO: func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendAudio(
 			ctx.EffectiveChat.Id,
-			fileID,
+			gotgbot.InputFileByID(fileID),
 			&gotgbot.SendAudioOpts{
 				ParseMode:       HTML,
 				ReplyMarkup:     keyb,
@@ -1042,7 +1072,7 @@ var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, f
 	db.VOICE: func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendVoice(
 			ctx.EffectiveChat.Id,
-			fileID,
+			gotgbot.InputFileByID(fileID),
 			&gotgbot.SendVoiceOpts{
 				ParseMode:       HTML,
 				ReplyMarkup:     keyb,
@@ -1054,7 +1084,7 @@ var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, f
 	db.VIDEO: func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendVideo(
 			ctx.EffectiveChat.Id,
-			fileID,
+			gotgbot.InputFileByID(fileID),
 			&gotgbot.SendVideoOpts{
 				ParseMode:       HTML,
 				ReplyMarkup:     keyb,
@@ -1063,10 +1093,10 @@ var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, f
 			},
 		)
 	},
-	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
+	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, _, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendVideoNote(
 			ctx.EffectiveChat.Id,
-			fileID,
+			gotgbot.InputFileByID(fileID),
 			&gotgbot.SendVideoNoteOpts{
 				ReplyMarkup:     keyb,
 				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
@@ -1087,21 +1117,27 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 			ctx.Update.Message.Chat.Id,
 			filterData.FilterReply,
 			&gotgbot.SendMessageOpts{
-				ParseMode:             formatMode,
-				DisableWebPagePreview: true,
-				ReplyToMessageId:      replyMsgId,
-				ReplyMarkup:           keyb,
-				DisableNotification:   noNotif,
-				MessageThreadId:       ctx.Update.Message.MessageThreadId,
+				ParseMode: formatMode,
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId: replyMsgId,
+				},
+				ReplyMarkup:         keyb,
+				DisableNotification: noNotif,
+				MessageThreadId:     ctx.Update.Message.MessageThreadId,
 			},
 		)
 	},
-	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, noFormat, noNotif bool) (*gotgbot.Message, error) {
+	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, noNotif bool) (*gotgbot.Message, error) {
 		return b.SendSticker(
 			ctx.Update.Message.Chat.Id,
-			filterData.FileID,
+			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendStickerOpts{
-				ReplyToMessageId:    replyMsgId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId: replyMsgId,
+				},
 				ReplyMarkup:         keyb,
 				DisableNotification: noNotif,
 				MessageThreadId:     ctx.Update.Message.MessageThreadId,
@@ -1115,9 +1151,11 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 		}
 		return b.SendDocument(
 			ctx.Update.Message.Chat.Id,
-			filterData.FileID,
+			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendDocumentOpts{
-				ReplyToMessageId:    replyMsgId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId: replyMsgId,
+				},
 				ParseMode:           formatMode,
 				ReplyMarkup:         keyb,
 				Caption:             filterData.FilterReply,
@@ -1133,9 +1171,11 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 		}
 		return b.SendPhoto(
 			ctx.Update.Message.Chat.Id,
-			filterData.FileID,
+			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendPhotoOpts{
-				ReplyToMessageId:    replyMsgId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId: replyMsgId,
+				},
 				ParseMode:           formatMode,
 				ReplyMarkup:         keyb,
 				Caption:             filterData.FilterReply,
@@ -1151,9 +1191,11 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 		}
 		return b.SendAudio(
 			ctx.Update.Message.Chat.Id,
-			filterData.FileID,
+			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendAudioOpts{
-				ReplyToMessageId:    replyMsgId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId: replyMsgId,
+				},
 				ParseMode:           formatMode,
 				ReplyMarkup:         keyb,
 				Caption:             filterData.FilterReply,
@@ -1169,9 +1211,11 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 		}
 		return b.SendVoice(
 			ctx.Update.Message.Chat.Id,
-			filterData.FileID,
+			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendVoiceOpts{
-				ReplyToMessageId:    replyMsgId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId: replyMsgId,
+				},
 				ParseMode:           formatMode,
 				ReplyMarkup:         keyb,
 				Caption:             filterData.FilterReply,
@@ -1187,9 +1231,11 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 		}
 		return b.SendVideo(
 			ctx.Update.Message.Chat.Id,
-			filterData.FileID,
+			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendVideoOpts{
-				ReplyToMessageId:    replyMsgId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId: replyMsgId,
+				},
 				ParseMode:           formatMode,
 				ReplyMarkup:         keyb,
 				Caption:             filterData.FilterReply,
@@ -1198,12 +1244,14 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 			},
 		)
 	},
-	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, noFormat, noNotif bool) (*gotgbot.Message, error) {
+	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, noNotif bool) (*gotgbot.Message, error) {
 		return b.SendVideoNote(
 			ctx.Update.Message.Chat.Id,
-			filterData.FileID,
+			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendVideoNoteOpts{
-				ReplyToMessageId:    replyMsgId,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId: replyMsgId,
+				},
 				ReplyMarkup:         keyb,
 				DisableNotification: noNotif,
 				MessageThreadId:     ctx.Update.Message.MessageThreadId,

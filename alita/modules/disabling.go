@@ -135,8 +135,10 @@ func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b,
 			"There are no disabled commands in this chat.",
 			&gotgbot.SendMessageOpts{
-				ReplyToMessageId:         replyMsgId,
-				AllowSendingWithoutReply: true,
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
 			},
 		)
 		if err != nil {
