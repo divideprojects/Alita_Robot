@@ -25,8 +25,8 @@ github.com/eko/gocache/lib/v4 v4.1.6 h1:5WWIGISKhE7mfkyF+SJyWwqa4Dp2mkdX8QsZpnEN
 github.com/eko/gocache/lib/v4 v4.1.6/go.mod h1:HFxC8IiG2WeRotg09xEnPD72sCheJiTSr4Li5Ameg7g=
 github.com/eko/gocache/store/redis/v4 v4.2.2 h1:Thw31fzGuH3WzJywsdbMivOmP550D6JS7GDHhvCJPA0=
 github.com/eko/gocache/store/redis/v4 v4.2.2/go.mod h1:LaTxLKx9TG/YUEybQvPMij++D7PBTIJ4+pzvk0ykz0w=
-github.com/eko/gocache/store/ristretto/v4 v4.2.1 h1:xB5E1LP1gh8yUV1G3KVRSL4T0OTnxp4OixuTljn2848=
-github.com/eko/gocache/store/ristretto/v4 v4.2.1/go.mod h1:KyshDyWQqfSVrg2rH06fFQZTj6vG2fxlY7oAW9oxNHY=
+github.com/eko/gocache/store/ristretto/v4 v4.2.2 h1:lXFzoZ5ck6Gy6ON7f5DHSkNt122qN7KoroCVgVwF7oo=
+github.com/eko/gocache/store/ristretto/v4 v4.2.2/go.mod h1:uIvBVJzqRepr5L0RsbkfQ2iYfbyos2fuji/s4yM+aUM=
 github.com/frankban/quicktest v1.14.6 h1:7Xjx+VpznH+oBnejlPUj8oUpdxnVs4f8XU8WnHkI4W8=
 github.com/fsnotify/fsnotify v1.7.0 h1:8JEhPFa5W2WU7YfeZzPNqzMP6Lwt7L2715Ggo0nosvA=
 github.com/fsnotify/fsnotify v1.7.0/go.mod h1:40Bi/Hjc2AVfZrqy+aj+yEI+/bRxZnMJyTJwOpGvigM=
