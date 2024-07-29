@@ -2,6 +2,7 @@ FROM alpine
 COPY alita_robot /
 ENTRYPOINT ["/alita_robot"]
 
+# Metadata
 LABEL org.opencontainers.image.authors="Divanshu Chauhan <divkix@divkix.me>"
 LABEL org.opencontainers.image.url="https://divkix.me"
 LABEL org.opencontainers.image.source="https://github.com/divideprojects/Alita_Robot"

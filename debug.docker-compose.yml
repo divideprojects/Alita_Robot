@@ -1,10 +1,10 @@
-# This is to run the alita-robot in production mode with alpine image
-# This does optimizations and builds slower
+# This is to run the alita-robot in debug mode with alpine image
+# This starts up fast and does not do any optimizations
 services:
   alita:
     build:
       context: .
-      dockerfile: docker/alpine
+      dockerfile: docker/debug.alpine
     container_name: alita-robot
     restart: always
     env_file:

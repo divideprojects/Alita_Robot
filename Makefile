@@ -1,11 +1,16 @@
+.PHONY: run tidy vendor build
+
+GO_CMD = go
+GORELEASER_CMD = goreleaser
+
 run:
-	go run main.go
+    $(GO_CMD) run main.go
 
 tidy:
-	go mod tidy
+    $(GO_CMD) mod tidy
 
 vendor:
-	go mod vendor
+    $(GO_CMD) mod vendor
 
 build:
-	goreleaser release --snapshot --skip=publish --clean --skip=sign
+    $(GORELEASER_CMD) release --snapshot --skip=publish --clean --skip=sign

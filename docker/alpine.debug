@@ -1,20 +1,16 @@
 # Build Stage: Build bot using the alpine image
+# This is an debug image, it will not compress the binary
 FROM golang:alpine AS builder
 RUN apk add --no-cache curl wget gnupg git upx
 WORKDIR /app
 COPY . .
-RUN CGO_ENABLED=0 GOOS=`go env GOHOSTOS` GOARCH=`go env GOHOSTARCH` go build -o out/alita_robot -ldflags="-w -s" .
-RUN upx --brute out/alita_robot
-
-# Run Stage: Run bot using the bot binary copied from build stage
-FROM alpine
-COPY --from=builder /app/out/alita_robot /app/alita_robot
-ENTRYPOINT ["/app/alita_robot"]
+RUN go build -o out/alita_robot
+ENTRYPOINT ["/app/out/alita_robot"]
 
 # Metadata
 LABEL org.opencontainers.image.authors="Divanshu Chauhan <divkix@divkix.me>"
 LABEL org.opencontainers.image.url="https://divkix.me"
 LABEL org.opencontainers.image.source="https://github.com/divideprojects/Alita_Robot"
 LABEL org.opencontainers.image.title="Alita Go Robot"
-LABEL org.opencontainers.image.description="Official Alita Go Robot Docker Image"
+LABEL org.opencontainers.image.description="Official Alita Go Robot Debug Docker Image"
 LABEL org.opencontainers.image.vendor="Divkix"
