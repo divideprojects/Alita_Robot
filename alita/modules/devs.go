@@ -49,7 +49,10 @@ func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 			_, _ = msg.Reply(b, err.Error(), nil)
 			return ext.EndGroups
 		}
-		con, _ := chat.PersonalChat.GetMemberCount(b, nil)
+		// need to convert chat to group chat to use GetMemberCount
+		_chat := chat.ToChat()
+		gChat := &_chat
+		con, _ := gChat.GetMemberCount(b, nil)
 		replyText = fmt.Sprintf("<b>Name:</b> %s\n<b>Chat ID</b>: %d\n<b>Users Count:</b> %d\n<b>Link:</b> %s", chat.Title, chat.Id, con, chat.InviteLink)
 	}
 

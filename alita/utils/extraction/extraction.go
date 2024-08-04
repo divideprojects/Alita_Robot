@@ -35,7 +35,8 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 				}
 				return nil
 			}
-			return chat.PersonalChat
+			_chat := chat.ToChat() // need to convert to Chat type
+			return &_chat
 		} else {
 			chat, err := chat_status.GetChat(b, args[0])
 			if err != nil {

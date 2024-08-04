@@ -52,7 +52,7 @@ func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	adminsAvail, admins := cache.GetAdminCacheList(chat.Id)
 	if !adminsAvail {
-		admins = cache.LoadAdminCache(b, chat)
+		admins = cache.LoadAdminCache(b, chat.Id)
 		cached = false
 	}
 
@@ -594,7 +594,7 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	cache.LoadAdminCache(b, chat)
+	cache.LoadAdminCache(b, chat.Id)
 
 	k := tr.GetString("strings.CommonStrings.admin_cache.cache_reloaded")
 	debug_bot.PrettyPrintStruct(k)

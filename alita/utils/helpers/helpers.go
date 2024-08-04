@@ -173,7 +173,8 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 				log.Error(err)
 				return nil
 			}
-			chat = chatFullInfo.PersonalChat
+			_chat := chatFullInfo.ToChat() // need to convert to Chat type
+			chat = &_chat
 		} else {
 			_, err := msg.Reply(b,
 				tr.GetString("strings.Connections.is_user_connected.need_group"),
@@ -243,7 +244,7 @@ func ConvertButtonV2ToDbButton(buttons []tgmd2html.ButtonV2) (btns []db.Button) 
 	for i, btn := range buttons {
 		btns[i] = db.Button{
 			Name:     btn.Name,
-			Url:      btn.Text,
+			Url:      btn.Content,
 			SameLine: btn.SameLine,
 		}
 	}
@@ -283,7 +284,7 @@ func InlineKeyboardMarkupToTgmd2htmlButtonV2(replyMarkup *gotgbot.InlineKeyboard
 					btns,
 					tgmd2html.ButtonV2{
 						Name:     button.Text,
-						Text:     button.Url,
+						Content:  button.Url,
 						SameLine: sameline,
 					},
 				)
@@ -292,7 +293,7 @@ func InlineKeyboardMarkupToTgmd2htmlButtonV2(replyMarkup *gotgbot.InlineKeyboard
 			btns = append(btns,
 				tgmd2html.ButtonV2{
 					Name:     inlineKeyboard[0].Text,
-					Text:     inlineKeyboard[0].Url,
+					Content:  inlineKeyboard[0].Url,
 					SameLine: false,
 				},
 			)
@@ -1295,7 +1296,7 @@ func preFixes(buttons []tgmd2html.ButtonV2, defaultNameButton string, text *stri
 			buttonUrlPattern, _ := regexp.Compile(`[(htps)?:/w.a-zA-Z\d@%_+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z\d@:%_+.~#?&/=]*)`)
 			buttons = *_buttons
 			for i, btn := range *_buttons {
-				if !buttonUrlPattern.MatchString(btn.Text) {
+				if !buttonUrlPattern.MatchString(btn.Content) {
 					buttons = append(buttons[:i], buttons[i+1:]...)
 				}
 			}

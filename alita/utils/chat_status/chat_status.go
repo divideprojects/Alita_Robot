@@ -90,13 +90,13 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 
 	adminlist := make([]int64, 0)
 
-	adminsAvail, admins := cache.GetAdminCacheList(chat.Id)
+	adminsAvail, admins := cache.GetAdminCacheList(chatID)
 	if !adminsAvail {
-		admins = cache.LoadAdminCache(b, chat.PersonalChat)
+		admins = cache.LoadAdminCache(b, chatID)
 	}
 
 	if !admins.Cached {
-		adminList, err := chat.PersonalChat.GetAdministrators(b, nil)
+		adminList, err := b.GetChatAdministrators(chatID, nil)
 		if err != nil {
 			log.Error(err)
 			return false

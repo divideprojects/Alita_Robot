@@ -245,7 +245,8 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 					return ext.ContinueGroups
 				}
 			}
-			_, err := helpers.SendNote(b, chatinfo.PersonalChat, ctx, noteData, msg.MessageId)
+			_chat := chatinfo.ToChat() // need to convert to chat
+			_, err := helpers.SendNote(b, &_chat, ctx, noteData, msg.MessageId)
 			if err != nil {
 				log.Error(err)
 				return err

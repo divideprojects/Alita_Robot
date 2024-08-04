@@ -99,7 +99,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	adminsAvail, admins := cache.GetAdminCacheList(chat.Id)
 	if !adminsAvail {
-		admins = cache.LoadAdminCache(b, chat)
+		admins = cache.LoadAdminCache(b, chat.Id)
 	}
 
 	for i := range admins.UserInfo {

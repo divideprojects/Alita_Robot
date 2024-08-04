@@ -327,7 +327,10 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 
-			if !chat_status.IsUserInChat(b, gchat.PersonalChat, user.Id) {
+			// need to convert to chat type
+			_chat := gchat.ToChat()
+
+			if !chat_status.IsUserInChat(b, &_chat, user.Id) {
 				return ext.EndGroups
 			}
 

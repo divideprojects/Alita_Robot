@@ -49,15 +49,3 @@ func InitCache() {
 	// Initializes marshaler
 	Marshal = marshaler.New(cacheManager)
 }
-
-// GetAdminCacheUser gets the admin cache for the chat.
-func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
-	adminList, _ := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
-	for i := range adminList.(*AdminCache).UserInfo {
-		admin := &adminList.(*AdminCache).UserInfo[i]
-		if admin.User.Id == userId {
-			return true, *admin
-		}
-	}
-	return false, gotgbot.MergedChatMember{}
-}
