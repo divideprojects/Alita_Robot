@@ -550,7 +550,7 @@ strings:
       -/guardado: Igual que /notes.
       -/clearall: Suprimir todas las notas en una conversación. Esto no se puede deshacer.
       -/privatenetes: Ya sea o no enviar notas en PM. Enviará un mensaje con un botón que los usuarios pueden hacer clic para obtener la nota en PM.
-  Pin:
+  Pins:
     help_msg: |-
       Todos los comandos relacionados con el pin se pueden encontrar aquí; mantén tu chat al día en las últimas noticias con un simple mensaje marcado!
 

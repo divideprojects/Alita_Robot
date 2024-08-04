@@ -550,7 +550,7 @@ strings:
       -/opgeslagen: Zelfde als /notes.
       -/clearall: Verwijder alle noten in een chat. Dit kan niet ongedaan worden gemaakt.
       -/privatenotes: Al dan niet notities verzenden in PM. Zal een bericht verzenden met een knop waarmee gebruikers kunnen klikken om de noot in PM te krijgen.
-  Pin:
+  Pins:
     help_msg: |-
       Alle pin-gerelateerde commando's zijn hier te vinden; houd uw chat up-to-date op het laatste nieuws met een eenvoudig vastgezette bericht!
 

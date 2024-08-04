@@ -550,7 +550,7 @@ strings:
       -/zapisane: tak samo jak /notes.
       -/clearall: Usuń WSZYSTKIE uwagi w rozmowie sieciowej. Tego nie można cofnąć.
       -/privatenotes: Określa, czy mają być wysyłane notatki w KZ. Zostanie wysłana wiadomość z przyciskiem, który użytkownicy mogą kliknąć, aby uzyskać notatkę w KZ.
-  Pin:
+  Pins:
     help_msg: |-
       Wszystkie komendy związane z pinami można znaleźć tutaj; na bieżąco informować o najnowszych nowościach za pomocą prostego zaczepionego komunikatu!
 

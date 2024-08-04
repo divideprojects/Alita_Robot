@@ -550,7 +550,7 @@ strings:
       -/sauvegardé: Identique à /notes.
       -/clearall: Supprimer TOUTES les notes dans une discussion. Cela ne peut pas être fait.
       -/privatenotes: Indique s'il faut envoyer ou non des notes dans la fiche MP. Enverra un message avec un bouton que les utilisateurs peuvent cliquer pour obtenir la note dans PM.
-  Pin:
+  Pins:
     help_msg: |-
       Toutes les commandes liées à la broche peuvent être trouvées ici ; gardez votre discussion à jour sur les dernières nouvelles avec un message épinglette simple !
 

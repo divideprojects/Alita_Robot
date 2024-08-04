@@ -549,7 +549,7 @@ strings:
       -/gespeichert: Das Gleiche wie /Notes.
       -/clearall: Löschen Sie ALLE Notizen in einem Chat. Das kann nicht rückgängig gemacht werden.
       -/privatenotes: Ob Sie Notizen in PM senden möchten oder nicht. Wird eine Nachricht mit einer Schaltfläche senden, die Benutzer anklicken können, um den Hinweis in PM zu erhalten.
-  Pin:
+  Pins:
     help_msg: |-
       Alle Pin-bezogenen Befehle können hier gefunden werden; halten Sie Ihren Chat auf dem Laufenden über die neuesten Nachrichten mit einer einfachen gepinnten Nachricht!
 

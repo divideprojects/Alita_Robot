@@ -549,7 +549,7 @@ strings:
       -/uloženo: Stejné jako /notes.
       -/clearall: Odstranit VŠECHNY poznámky v konverzaci. Tuto operaci nelze vrátit zpět.
       -/privatenotes: Určuje, zda mají být odeslány poznámky v PÚ. Odešle zprávu s tlačítkem, které uživatelé mohou klepnutím získat záznam v PÚ.
-  Pin:
+  Pins:
     help_msg: |-
       Všechny příkazy související s kolíkem zde naleznete; udržujte konverzaci aktuální na nejnovější zprávy s jednoduchou zafixovanou zprávou!
 

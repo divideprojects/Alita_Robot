@@ -597,7 +597,7 @@ strings:
       - /clearall: Delete ALL notes in a chat. This cannot be undone.
       - /privatenotes: Whether or not to send notes in PM. Will send a message with a button which users can click to get the note in PM.
 
-  Pin:
+  Pins:
     help_msg: |-
       All the pin-related commands can be found here; keep your chat up to date on the latest news with a simple pinned message!
 

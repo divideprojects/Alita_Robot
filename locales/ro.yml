@@ -550,7 +550,7 @@ strings:
       -/salvat: La fel ca şi /notiţele.
       -/clearall: Şterge TOATE notele într-un chat. Aceasta nu poate fi anulată.
       -/privatenotes: Fie ca se trimit sau nu note in PM. Va trimite un mesaj cu un buton pe care utilizatorii il pot face clic pentru a obtine nota in PM.
-  Pin:
+  Pins:
     help_msg: |-
       Toate comenzile legate de pin pot fi găsite aici; păstraţi chat-ul până la data la ultimele ştiri cu un mesaj simplu ţintuit!
 

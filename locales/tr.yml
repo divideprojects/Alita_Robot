@@ -550,7 +550,7 @@ strings:
       -/kayıtlı: /notes ile aynı.
       -/clearall: Bir sohbetteki TÜM notları silin. Bu işlem geri alınamaz.
       -/privateentes: PM ' de not gönderilip gönderilmeyeceğini belirler. Kullanıcıların Koruyucu Bakımda notu almak için tıklatabilecekleri bir düğme içeren bir ileti gönderilir.
-  Pin:
+  Pins:
     help_msg: |-
       Tüm iğne ile ilgili komutlar burada bulunabilir; sohbetinizi en son haberler üzerinde basit sabitlenmiş bir iletiyle güncel tutun!
 

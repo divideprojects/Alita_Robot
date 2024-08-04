@@ -17,7 +17,7 @@ alt_names:
   Misc: [extra, extras]
   Mutes: [mute, unmute, tmute, smute, dmute]
   Notes: [note, notes]
-  Pin: [antichannelpin, cleanlinked, pins]
+  Pins: [antichannelpin, cleanlinked, pins]
   Purges: [purge, del]
   Reports: [report, reporting]
   Rules: [rule]

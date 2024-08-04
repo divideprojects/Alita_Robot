@@ -244,13 +244,13 @@ func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	module := args[1]
 
 	var (
-		_parsemode, helpText string
-		replyKb              gotgbot.InlineKeyboardMarkup
+		parsemode, helpText string
+		replyKb             gotgbot.InlineKeyboardMarkup
 	)
 
 	// Sort the module names
 	if string_handling.FindInStringSlice([]string{"BackStart", "Help"}, module) {
-		_parsemode = helpers.HTML
+		parsemode = helpers.HTML
 		switch module {
 		case "Help":
 			// This shows the main start menu
@@ -263,7 +263,8 @@ func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	} else {
 		// For all remainging modules
-		helpText, replyKb, _parsemode = getHelpTextAndMarkup(ctx, strings.ToLower(module))
+		// FIXME: error for pins, purges, reports, rules, warns
+		helpText, replyKb, parsemode = getHelpTextAndMarkup(ctx, strings.ToLower(module))
 	}
 
 	// Edit the main message, the main querymessage
@@ -271,7 +272,7 @@ func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		helpText,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode:   _parsemode,
+			ParseMode:   parsemode,
 			ReplyMarkup: replyKb,
 			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 				IsDisabled: true,

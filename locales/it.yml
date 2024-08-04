@@ -550,7 +550,7 @@ strings:
       - /salvato: Stessa /note.
       - /clearall: Elimina tutte le note ALL in una conversazione. Questo non può essere incompiuto.
       - /privatenotes: Che inviare o meno le note in PM. Invierà un messaggio con un pulsante che gli utenti possono clicca per ottenere la nota in PM.
-  Pin:
+  Pins:
     help_msg: |-
       Tutti i comandi correlati al pin possono essere trovati qui; tieni la tua chat aggiornata sulle ultime novità con un semplice messaggio pinned!
 

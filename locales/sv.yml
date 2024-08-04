@@ -550,7 +550,7 @@ strings:
       -/sparad: Samma som / anteckningar.
       -/clearall: Ta bort alla anteckningar i en chatt. Det här kan inte ångras.
       -/privatenotes: Om du vill skicka anteckningar i FU-mallen eller inte. Skickar ett meddelande med en knapp som användare kan klicka på för att hämta anteckningen i PM.
-  Pin:
+  Pins:
     help_msg: |-
       Alla knappnålsbesläktade kommandon finns här. Håll chatten aktuell på de senaste nyheterna med ett enkelt favoritmeddelande.
 
