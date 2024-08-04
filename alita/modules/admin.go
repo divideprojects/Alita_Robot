@@ -71,6 +71,8 @@ func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	if !cached {
 		text += "\n\nNote: These are up-to-date values"
+	} else {
+		text += "\n\nNote: These values are cached and may not be up-to-date"
 	}
 	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
