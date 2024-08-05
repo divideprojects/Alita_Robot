@@ -670,30 +670,17 @@ func GetWelcomeType(msg *gotgbot.Message, greetingType string) (text string, dat
 	errorMsg = fmt.Sprintf("You need to give me some content to %s users!", greetingType)
 	var (
 		rawText string
-		args    []string
+		args    = strings.Fields(msg.Text)[1:]
 	)
 	_buttons := make([]tgmd2html.ButtonV2, 0)
 	replyMsg := msg.ReplyToMessage
-
-	// Split msg.Text into fields and ensure there are enough fields
-	fields := strings.Fields(msg.Text)
-	if len(fields) > 1 {
-		args = fields[1:]
-	} else {
-		log.Printf("Message text has insufficient fields: %v", fields)
-	}
 
 	// set rawText from helper function
 	setRawText(msg, args, &rawText)
 
 	if len(args) >= 1 && msg.ReplyToMessage == nil {
 		fileid = ""
-		splitRawText := strings.SplitN(rawText, " ", 2)
-		if len(splitRawText) > 1 {
-			text, _buttons = tgmd2html.MD2HTMLButtonsV2(splitRawText[1])
-		} else {
-			text, _buttons = tgmd2html.MD2HTMLButtonsV2("")
-		}
+		text, _buttons = tgmd2html.MD2HTMLButtonsV2(rawText)
 		dataType = db.TEXT
 	} else if msg.ReplyToMessage != nil {
 		if replyMsg.ReplyMarkup == nil {
@@ -1315,43 +1302,22 @@ func preFixes(buttons []tgmd2html.ButtonV2, defaultNameButton string, text *stri
 	}
 }
 
-// function used to get rawText from gotgbot.Message
+// function used to get rawtext from gotgbot.Message
 func setRawText(msg *gotgbot.Message, args []string, rawText *string) {
 	replyMsg := msg.ReplyToMessage
-
 	if replyMsg == nil {
 		if msg.Text == "" && msg.Caption != "" {
-			splitText := strings.SplitN(msg.OriginalCaptionMDV2(), " ", 2)
-			if len(splitText) > 1 {
-				*rawText = splitText[1] // using [1] to remove the command
-			} else {
-				log.Println("Insufficient split elements for OriginalCaptionMDV2")
-				*rawText = ""
-			}
+			*rawText = strings.SplitN(msg.OriginalCaptionMDV2(), " ", 2)[1] // using [1] to remove the command
 		} else if msg.Text != "" && msg.Caption == "" {
-			splitText := strings.SplitN(msg.OriginalMDV2(), " ", 2)
-			if len(splitText) > 1 {
-				*rawText = splitText[1] // using [1] to remove the command
-			} else {
-				log.Println("Insufficient split elements for OriginalMDV2")
-				*rawText = ""
-			}
+			*rawText = strings.SplitN(msg.OriginalMDV2(), " ", 2)[1] // using [1] to remove the command
 		}
 	} else {
 		if replyMsg.Text == "" && replyMsg.Caption != "" {
 			*rawText = replyMsg.OriginalCaptionMDV2()
 		} else if replyMsg.Caption == "" && len(args) >= 2 {
-			splitText := strings.SplitN(msg.OriginalMDV2(), " ", 3)
-			if len(splitText) > 2 {
-				*rawText = splitText[2] // using [2] to remove the command
-			} else {
-				log.Println("Insufficient split elements for OriginalMDV2 with args")
-				*rawText = ""
-			}
+			*rawText = strings.SplitN(msg.OriginalMDV2(), " ", 3)[2] // using [1] to remove the command
 		} else {
 			*rawText = replyMsg.OriginalMDV2()
 		}
 	}
-
-	log.Printf("setRawText: msg.Text = %s, args = %v, rawText = %s\n", msg.Text, args, *rawText)
 }
