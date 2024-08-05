@@ -386,7 +386,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	// skip admins and creator + approved users and anonymous channel
-	if !user.IsAnonymousChannel() && (chat_status.IsUserAdmin(b, chat.Id, user.Id())) {
+	if !user.IsAnonymousChannel() && chat_status.IsUserAdmin(b, chat.Id, user.Id()) {
 		return ext.ContinueGroups
 	}
 
