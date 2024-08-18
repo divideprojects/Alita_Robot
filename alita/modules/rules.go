@@ -212,9 +212,9 @@ func (m moduleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	} else {
 		customRulesBtn := db.GetChatRulesInfo(chat.Id).RulesBtn
 		if customRulesBtn == "" {
-			text = fmt.Sprintf("You haven't set a custom rules button yet. The default text \"%s\" will be used.", m.defaultRulesBtn)
+			text = fmt.Sprintf("You haven't set a custom rules button yet. The default text \"%q\" will be used.", m.defaultRulesBtn)
 		} else {
-			text = fmt.Sprintf("The rules button is currently set to the following text:\n %s", customRulesBtn)
+			text = fmt.Sprintf("The rules button is currently set to the following text:\n %q", customRulesBtn)
 		}
 	}
 
