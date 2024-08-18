@@ -2,8 +2,6 @@ package db
 
 import (
 	"context"
-	"time"
-
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
@@ -63,16 +61,14 @@ var (
 // dbInstance initializes the MongoDB client and collections
 func init() {
 	// Create a new MongoDB client
-	mongoClient, err := mongo.NewClient(options.Client().ApplyURI(config.DatabaseURI))
+	mongoClient, err := mongo.Connect(tdCtx, options.Client().ApplyURI(config.DatabaseURI))
 	if err != nil {
-		log.Fatalf("[Database][Client]: %v", err)
+		log.Fatalf("[Database][Connect]: %v", err)
 	}
 
-	ctx, cancel := context.WithTimeout(bgCtx, 10*time.Second)
-	defer cancel()
-
-	if err = mongoClient.Connect(ctx); err != nil {
-		log.Fatalf("[Database][Connect]: %v", err)
+	err = mongoClient.Ping(tdCtx, nil)
+	if err != nil {
+		log.Fatalf("[Database][Ping]: %v", err)
 	}
 
 	// Get the database reference
