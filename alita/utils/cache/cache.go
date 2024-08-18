@@ -44,7 +44,7 @@ func InitCache() {
 	// initialize cache manager
 	redisStore := redis_store.NewRedis(redisClient)
 	ristrettoStore := ristretto_store.NewRistretto(ristrettoCache)
-	cacheManager := cache.NewChain(cache.New[any](ristrettoStore), cache.New[any](redisStore))
+	cacheManager := cache.NewChain[any](cache.New[any](ristrettoStore), cache.New[any](redisStore))
 
 	// Initializes marshaler
 	Marshal = marshaler.New(cacheManager)
