@@ -81,7 +81,8 @@ func GetBlacklistSettings(chatId int64) *BlacklistSettings {
 }
 
 func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
-	var BlacklistStriuct []*BlacklistSettings
+	var blacklistStruct []*BlacklistSettings
+
 	cursor := findAll(blacklistsColl, bson.M{})
 	defer func(cursor *mongo.Cursor, ctx context.Context) {
 		err := cursor.Close(ctx)
@@ -89,7 +90,17 @@ func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 			log.Error(err)
 		}
 	}(cursor, bgCtx)
-	for _, i := range BlacklistStriuct {
+
+	for cursor.Next(bgCtx) {
+		var blacklistSetting BlacklistSettings
+		if err := cursor.Decode(&blacklistSetting); err != nil {
+			log.Error("Failed to decode blacklist setting:", err)
+			continue
+		}
+		blacklistStruct = append(blacklistStruct, &blacklistSetting)
+	}
+
+	for _, i := range blacklistStruct {
 		lenBl := len(i.Triggers)
 		blacklistTriggers += int64(lenBl)
 		if lenBl > 0 {
