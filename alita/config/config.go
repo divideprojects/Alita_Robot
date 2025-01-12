@@ -6,8 +6,9 @@ import (
 	"path"
 	"runtime"
 
-	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
+
+	_ "github.com/joho/godotenv/autoload"
 )
 
 var (
@@ -40,9 +41,6 @@ func init() {
 			},
 		},
 	)
-
-	// load dotenv config
-	_ = godotenv.Load()
 
 	// set the necessary variables
 	Debug = typeConvertor{str: os.Getenv("DEBUG")}.Bool()
