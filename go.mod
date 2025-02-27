@@ -7,7 +7,7 @@ toolchain go1.22.5
 
 require (
 	github.com/PaulSonOfLars/gotg_md2html v0.0.0-20240605215313-a6fdd2445f54
-	github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.30
+	github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.31
 	github.com/dgraph-io/ristretto v0.2.0
 	github.com/dustin/go-humanize v1.0.1
 	github.com/eko/gocache/lib/v4 v4.2.0
