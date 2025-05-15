@@ -45,7 +45,7 @@ func DisableCMD(chatID int64, cmd string) {
 // EnableCMD Enable CMD in chat
 func EnableCMD(chatID int64, cmd string) {
 	disableCmd := checkDisableSettings(chatID)
-	disableCmd.Commands = removeStrfromStr(disableCmd.Commands, cmd)
+	disableCmd.Commands = string_handling.RemoveFromStringSlice(disableCmd.Commands, cmd)
 	err := updateOne(disableColl, bson.M{"_id": chatID}, disableCmd)
 	if err != nil {
 		log.Errorf("[Database][EnableCMD]: %v", err)
@@ -76,16 +76,6 @@ func ToggleDel(chatId int64, pref bool) {
 func ShouldDel(chatId int64) bool {
 	disableCmd := checkDisableSettings(chatId)
 	return disableCmd.ShouldDelete
-}
-
-// remove a string element from an string slice
-func removeStrfromStr(s []string, r string) []string {
-	for i, v := range s {
-		if v == r {
-			return append(s[:i], s[i+1:]...)
-		}
-	}
-	return s
 }
 
 func LoadDisableStats() (disabledCmds, disableEnabledChats int64) {

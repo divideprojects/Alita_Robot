@@ -4,7 +4,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // default strings when no settings are set
@@ -42,37 +41,31 @@ type WelcomeSettings struct {
 }
 
 // check Chat Welcome Settings, used to get data before performing any operation
-func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
-	defaultGreetSrc := &GreetingSettings{
-		ChatID:             chatID,
-		ShouldCleanService: false,
-		WelcomeSettings: &WelcomeSettings{
-			LastMsgId:     0,
-			CleanWelcome:  false,
-			ShouldWelcome: true,
-			WelcomeText:   DefaultWelcome,
-			WelcomeType:   TEXT,
+func checkGreetingSettings(chatID int64) *GreetingSettings {
+	return GetOrCreateByID(
+		greetingsColl,
+		bson.M{"_id": chatID},
+		func() *GreetingSettings {
+			return &GreetingSettings{
+				ChatID:             chatID,
+				ShouldCleanService: false,
+				WelcomeSettings: &WelcomeSettings{
+					LastMsgId:     0,
+					CleanWelcome:  false,
+					ShouldWelcome: true,
+					WelcomeText:   DefaultWelcome,
+					WelcomeType:   TEXT,
+				},
+				GoodbyeSettings: &GoodbyeSettings{
+					LastMsgId:     0,
+					CleanGoodbye:  false,
+					ShouldGoodbye: false,
+					GoodbyeText:   DefaultGoodbye,
+					GoodbyeType:   TEXT,
+				},
+			}
 		},
-		GoodbyeSettings: &GoodbyeSettings{
-			LastMsgId:     0,
-			CleanGoodbye:  false,
-			ShouldGoodbye: false,
-			GoodbyeText:   DefaultGoodbye,
-			GoodbyeType:   TEXT,
-		},
-	}
-	errS := findOne(greetingsColl, bson.M{"_id": chatID}).Decode(&greetingSrc)
-	if errS == mongo.ErrNoDocuments {
-		greetingSrc = defaultGreetSrc
-		err := updateOne(greetingsColl, bson.M{"_id": chatID}, defaultGreetSrc)
-		if err != nil {
-			log.Errorf("[Database][checkGreetingSettings]: %v ", err)
-		}
-	} else if errS != nil {
-		log.Errorf("[Database][checkGreetingSettings]: %v", errS)
-		greetingSrc = defaultGreetSrc
-	}
-	return greetingSrc
+	)
 }
 
 func GetGreetingSettings(chatID int64) *GreetingSettings {

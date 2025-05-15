@@ -50,7 +50,7 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else {
 
 		// Keyboard for markdown help menu
-		Mkdkb := append(m.genFormattingKb(),
+		Mkdkb := append(helpers.GenFormattingKb(),
 			[]gotgbot.InlineKeyboardButton{
 				{
 					Text: "Back", CallbackData: "helpq.Help",
@@ -77,33 +77,6 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	return ext.EndGroups
-}
-
-func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
-	fxt := "formatting.%s"
-
-	keyboard := [][]gotgbot.InlineKeyboardButton{
-		make([]gotgbot.InlineKeyboardButton, 2),
-		make([]gotgbot.InlineKeyboardButton, 1),
-	}
-
-	// First row
-	keyboard[0][0] = gotgbot.InlineKeyboardButton{
-		Text:         "Markdown Formatting",
-		CallbackData: fmt.Sprintf(fxt, "md_formatting"),
-	}
-	keyboard[0][1] = gotgbot.InlineKeyboardButton{
-		Text:         "Fillings",
-		CallbackData: fmt.Sprintf(fxt, "fillings"),
-	}
-
-	// Second Row
-	keyboard[1][0] = gotgbot.InlineKeyboardButton{
-		Text:         "Random Content",
-		CallbackData: fmt.Sprintf(fxt, "random"),
-	}
-
-	return keyboard
 }
 
 func (moduleStruct) getMarkdownHelp(module string) string {
@@ -156,7 +129,7 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 
 func LoadMkdCmd(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(formattingModule.moduleName, true)
-	HelpModule.helpableKb[formattingModule.moduleName] = formattingModule.genFormattingKb()
+	HelpModule.helpableKb[formattingModule.moduleName] = helpers.GenFormattingKb()
 	cmdDecorator.MultiCommand(dispatcher, []string{"markdownhelp", "formatting"}, formattingModule.markdownHelp)
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("formatting."), formattingModule.formattingHandler))
 }

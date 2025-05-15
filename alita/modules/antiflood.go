@@ -241,7 +241,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -291,7 +291,7 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, false, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, false, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -325,7 +325,7 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -361,7 +361,7 @@ func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}

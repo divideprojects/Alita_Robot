@@ -36,70 +36,62 @@ Connection - true, true
 Admin can add a blacklist to the chat
 */
 func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
-	msg := ctx.EffectiveMessage
-	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
-	if connectedChat == nil {
-		return ext.EndGroups
-	}
-	ctx.EffectiveChat = connectedChat
-	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
-	args := ctx.Args()[1:]
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
-
-	var (
-		alreadyBlacklisted, newBlacklist []string
-		text                             string
-	)
-
-	// Permission Checks
-	if !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-		return ext.EndGroups
-	}
-	if !chat_status.IsBotAdmin(b, ctx, chat) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, chat, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, chat, false) {
-		return ext.EndGroups
-	}
-
-	if len(args) == 0 {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".blacklist.give_bl_word"), helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if len(args) >= 1 {
-		allBlWords := db.GetBlacklistSettings(chat.Id).Triggers
-		for _, blWord := range args {
-			if string_handling.FindInStringSlice(allBlWords, blWord) {
-				alreadyBlacklisted = append(alreadyBlacklisted, blWord)
-			} else {
-				go db.AddBlacklist(chat.Id, blWord)
-				newBlacklist = append(newBlacklist, fmt.Sprintf("<code>%s</code>", blWord))
+	return HandleCommandWithChecks(
+		b,
+		ctx,
+		func(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
+			return chat_status.IsUserConnected(b, ctx, true, true)
+		},
+		[]func(*gotgbot.Bot, *ext.Context, *gotgbot.Chat, *gotgbot.User) bool{
+			func(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user *gotgbot.User) bool {
+				return chat_status.IsUserAdmin(b, chat.Id, user.Id)
+			},
+			func(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user *gotgbot.User) bool {
+				return chat_status.IsBotAdmin(b, ctx, chat)
+			},
+			func(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user *gotgbot.User) bool {
+				return chat_status.CanUserRestrict(b, ctx, chat, user.Id, false)
+			},
+			func(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user *gotgbot.User) bool {
+				return chat_status.CanBotRestrict(b, ctx, chat, false)
+			},
+		},
+		func(args []string, msg *gotgbot.Message) (bool, string) {
+			if len(args) <= 1 {
+				return false, tr.GetString("strings." + m.moduleName + ".blacklist.give_bl_word")
 			}
-		}
-
-		if len(alreadyBlacklisted) >= 1 {
-			text += tr.GetString("strings."+m.moduleName+".blacklist.already_blacklisted") + fmt.Sprintf("\n - %s\n\n", strings.Join(alreadyBlacklisted, "\n - "))
-		}
-		if len(newBlacklist) >= 1 {
-			text += tr.GetString("strings."+m.moduleName+".blacklist.added_bl") + fmt.Sprintf("\n - %s\n\n", strings.Join(newBlacklist, "\n - "))
-		}
-
-		_, err := msg.Reply(b, text, helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-	}
-
-	return ext.EndGroups
+			return true, ""
+		},
+		func(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user *gotgbot.User, args []string) error {
+			var (
+				alreadyBlacklisted, newBlacklist []string
+				text                             string
+			)
+			blArgs := args[1:]
+			allBlWords := db.GetBlacklistSettings(chat.Id).Triggers
+			for _, blWord := range blArgs {
+				if string_handling.FindInStringSlice(allBlWords, blWord) {
+					alreadyBlacklisted = append(alreadyBlacklisted, blWord)
+				} else {
+					go db.AddBlacklist(chat.Id, blWord)
+					newBlacklist = append(newBlacklist, fmt.Sprintf("<code>%s</code>", blWord))
+				}
+			}
+			if len(alreadyBlacklisted) >= 1 {
+				text += tr.GetString("strings."+m.moduleName+".blacklist.already_blacklisted") + fmt.Sprintf("\n - %s\n\n", strings.Join(alreadyBlacklisted, "\n - "))
+			}
+			if len(newBlacklist) >= 1 {
+				text += tr.GetString("strings."+m.moduleName+".blacklist.added_bl") + fmt.Sprintf("\n - %s\n\n", strings.Join(newBlacklist, "\n - "))
+			}
+			_, err := ctx.EffectiveMessage.Reply(b, text, helpers.Shtml())
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+			return nil
+		},
+	)
 }
 
 /*
@@ -111,7 +103,7 @@ Admin can add a blacklist to the chat
 func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -187,7 +179,7 @@ func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, false, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, false, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -245,7 +237,7 @@ Admin with restriction permission can set blacklist action in group out of - ick
 func (m moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}

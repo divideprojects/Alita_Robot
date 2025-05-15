@@ -11,6 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
@@ -112,6 +113,81 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 	}
 
 	return string_handling.FindInInt64Slice(adminlist, userId)
+}
+
+// IsUserConnected checks if a user is connected to a chat, and optionally if user/bot is admin.
+func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool) (chat *gotgbot.Chat) {
+	msg := ctx.EffectiveMessage
+	user := ctx.EffectiveUser
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+
+	if ctx.Update.Message.Chat.Type == "private" {
+		conn := db.Connection(user.Id)
+		if conn.Connected && conn.ChatId != 0 {
+			chatFullInfo, err := b.GetChat(conn.ChatId, nil)
+			if err != nil {
+				log.Error(err)
+				return nil
+			}
+			_chat := chatFullInfo.ToChat()
+			chat = &_chat
+		} else {
+			_, err := msg.Reply(b,
+				tr.GetString("strings.Connections.is_user_connected.need_group"),
+				&gotgbot.SendMessageOpts{
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                msg.MessageId,
+						AllowSendingWithoutReply: true,
+					},
+				},
+			)
+			if err != nil {
+				log.Error(err)
+				return nil
+			}
+			return nil
+		}
+	} else {
+		chat = ctx.EffectiveChat
+	}
+	if botAdmin {
+		if !IsUserAdmin(b, chat.Id, b.Id) {
+			_, err := msg.Reply(b, tr.GetString("strings.Connections.is_user_connected.bot_not_admin"), &gotgbot.SendMessageOpts{
+				ParseMode: "HTML",
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
+				ReplyParameters: &gotgbot.ReplyParameters{
+					AllowSendingWithoutReply: true,
+				},
+			})
+			if err != nil {
+				log.Error(err)
+				return nil
+			}
+			return nil
+		}
+	}
+	if chatAdmin {
+		if !IsUserAdmin(b, chat.Id, user.Id) {
+			_, err := msg.Reply(b, tr.GetString("strings.Connections.is_user_connected.user_not_admin"), &gotgbot.SendMessageOpts{
+				ParseMode: "HTML",
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
+				ReplyParameters: &gotgbot.ReplyParameters{
+					AllowSendingWithoutReply: true,
+				},
+			})
+			if err != nil {
+				log.Error(err)
+				return nil
+			}
+			return nil
+		}
+	}
+	ctx.EffectiveChat = chat
+	return chat
 }
 
 func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {

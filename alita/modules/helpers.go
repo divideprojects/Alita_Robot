@@ -322,3 +322,42 @@ func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbm
 
 	return
 }
+
+// HandleCommandWithChecks abstracts common command handler logic for modules.
+func HandleCommandWithChecks(
+	b *gotgbot.Bot,
+	ctx *ext.Context,
+	connectCheck func(*gotgbot.Bot, *ext.Context) *gotgbot.Chat,
+	permChecks []func(*gotgbot.Bot, *ext.Context, *gotgbot.Chat, *gotgbot.User) bool,
+	argCheck func([]string, *gotgbot.Message) (bool, string),
+	handler func(*gotgbot.Bot, *ext.Context, *gotgbot.Chat, *gotgbot.User, []string) error,
+) error {
+	msg := ctx.EffectiveMessage
+	connectedChat := connectCheck(b, ctx)
+	if connectedChat == nil {
+		return ext.EndGroups
+	}
+	ctx.EffectiveChat = connectedChat
+	chat := ctx.EffectiveChat
+	user := ctx.EffectiveSender.User
+	args := ctx.Args()
+
+	for _, check := range permChecks {
+		if !check(b, ctx, chat, user) {
+			return ext.EndGroups
+		}
+	}
+
+	if ok, errMsg := argCheck(args, msg); !ok {
+		if errMsg != "" {
+			_, err := msg.Reply(b, errMsg, helpers.Shtml())
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+		}
+		return ext.EndGroups
+	}
+
+	return handler(b, ctx, chat, user, args)
+}

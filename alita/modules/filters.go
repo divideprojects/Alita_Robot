@@ -41,7 +41,7 @@ Only admin can add new filters in the chat
 func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
+	connectedChat := chat_status.IsUserConnected(b, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -152,7 +152,7 @@ Only admin can remove filters in the chat
 */
 func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
+	connectedChat := chat_status.IsUserConnected(b, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -209,7 +209,7 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, false, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, false, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}

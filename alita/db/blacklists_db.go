@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -18,25 +19,19 @@ type BlacklistSettings struct {
 }
 
 // check Chat Blacklists Settings, used to get data before performing any operation
-func checkBlacklistSetting(chatID int64) (blSrc *BlacklistSettings) {
-	defaultBlacklistSrc := &BlacklistSettings{
-		ChatId:   chatID,
-		Action:   "none",
-		Triggers: make([]string, 0),
-		Reason:   "Automated Blacklisted word %s",
-	}
-	errS := findOne(blacklistsColl, bson.M{"_id": chatID}).Decode(&blSrc)
-	if errS == mongo.ErrNoDocuments {
-		blSrc = defaultBlacklistSrc
-		err := updateOne(blacklistsColl, bson.M{"_id": chatID}, defaultBlacklistSrc)
-		if err != nil {
-			log.Errorf("[Database][GetBlacklistSettings]: %v ", err)
-		}
-	} else if errS != nil {
-		log.Errorf("[Database][GetBlacklistSettings]: %v - %d", errS, chatID)
-		blSrc = defaultBlacklistSrc
-	}
-	return blSrc
+func checkBlacklistSetting(chatID int64) *BlacklistSettings {
+	return GetOrCreateByID(
+		blacklistsColl,
+		bson.M{"_id": chatID},
+		func() *BlacklistSettings {
+			return &BlacklistSettings{
+				ChatId:   chatID,
+				Action:   "none",
+				Triggers: make([]string, 0),
+				Reason:   "Automated Blacklisted word %s",
+			}
+		},
+	)
 }
 
 func AddBlacklist(chatId int64, trigger string) {
@@ -50,7 +45,7 @@ func AddBlacklist(chatId int64, trigger string) {
 
 func RemoveBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
-	blSrc.Triggers = removeStrfromStr(blSrc.Triggers, strings.ToLower(trigger))
+	blSrc.Triggers = string_handling.RemoveFromStringSlice(blSrc.Triggers, strings.ToLower(trigger))
 	err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
 	if err != nil {
 		log.Errorf("[Database] RemoveBlacklist: %v - %d", err, chatId)

@@ -4,7 +4,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // default mode is 'mute'
@@ -24,21 +23,18 @@ func GetFlood(chatID int64) *FloodSettings {
 }
 
 // check Chat Flood Settings, used to get data before performing any operation
-func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
-	defaultFloodSrc := &FloodSettings{ChatId: chatID, Limit: 0, Mode: defaultFloodsettingsMode}
-
-	err := findOne(antifloodSettingsColl, bson.M{"_id": chatID}).Decode(&floodSrc)
-	if err == mongo.ErrNoDocuments {
-		floodSrc = defaultFloodSrc
-		err := updateOne(antifloodSettingsColl, bson.M{"_id": chatID}, defaultFloodSrc)
-		if err != nil {
-			log.Errorf("[Database][checkFloodSetting]: %v ", err)
-		}
-	} else if err != nil {
-		floodSrc = defaultFloodSrc
-		log.Errorf("[Database][checkGreetingSettings]: %v ", err)
-	}
-	return floodSrc
+func checkFloodSetting(chatID int64) *FloodSettings {
+	return GetOrCreateByID(
+		antifloodSettingsColl,
+		bson.M{"_id": chatID},
+		func() *FloodSettings {
+			return &FloodSettings{
+				ChatId: chatID,
+				Limit:  0,
+				Mode:   defaultFloodsettingsMode,
+			}
+		},
+	)
 }
 
 // SetFlood set Flood Setting for a Chat

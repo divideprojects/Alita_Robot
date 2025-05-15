@@ -22,8 +22,22 @@ func FindInInt64Slice(slice []int64, val int64) bool {
 	return false
 }
 
-// RemoveFromInt64Slice Find takes a slice and looks for an element in it. If found it will
+/*
+RemoveFromInt64Slice removes the first occurrence of r from s.
+*/
 func RemoveFromInt64Slice(s []int64, r int64) []int64 {
+	for i, v := range s {
+		if v == r {
+			return append(s[:i], s[i+1:]...)
+		}
+	}
+	return s
+}
+
+/*
+RemoveFromStringSlice removes the first occurrence of r from s.
+*/
+func RemoveFromStringSlice(s []string, r string) []string {
 	for i, v := range s {
 		if v == r {
 			return append(s[:i], s[i+1:]...)

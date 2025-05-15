@@ -60,6 +60,27 @@ var (
 	notesSettingsColl      *mongo.Collection
 )
 
+// Generic GetOrCreateByID for MongoDB collections
+func GetOrCreateByID[T any](
+	coll *mongo.Collection,
+	filter interface{},
+	defaultFactory func() *T,
+) *T {
+	var result *T
+	err := coll.FindOne(bgCtx, filter).Decode(&result)
+	if err == mongo.ErrNoDocuments {
+		result = defaultFactory()
+		_, err := coll.UpdateOne(bgCtx, filter, bson.M{"$set": result}, options.Update().SetUpsert(true))
+		if err != nil {
+			log.Errorf("[Database][GetOrCreateByID]: %v", err)
+		}
+	} else if err != nil {
+		log.Errorf("[Database][GetOrCreateByID]: %v", err)
+		result = defaultFactory()
+	}
+	return result
+}
+
 // dbInstance func
 func init() {
 	mongoClient, err := mongo.NewClient(

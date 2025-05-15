@@ -4,7 +4,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Rules struct {
@@ -15,20 +14,14 @@ type Rules struct {
 }
 
 // check chat Flood Settings, used to get data before performing any operation
-func checkRulesSetting(chatID int64) (rulesrc *Rules) {
-	defRulesSrc := &Rules{ChatId: chatID, Rules: "", Private: false}
-	errS := findOne(rulesColl, bson.M{"_id": chatID}).Decode(&rulesrc)
-	if errS == mongo.ErrNoDocuments {
-		rulesrc = defRulesSrc
-		err := updateOne(rulesColl, bson.M{"_id": chatID}, rulesrc)
-		if err != nil {
-			log.Errorf("[Database] checkRulesSetting: %v - %d", err, chatID)
-		}
-	} else if errS != nil {
-		rulesrc = defRulesSrc
-		log.Errorf("[Database] checkRulesSetting: %v - %d", errS, chatID)
-	}
-	return rulesrc
+func checkRulesSetting(chatID int64) *Rules {
+	return GetOrCreateByID(
+		rulesColl,
+		bson.M{"_id": chatID},
+		func() *Rules {
+			return &Rules{ChatId: chatID, Rules: "", Private: false}
+		},
+	)
 }
 
 func GetChatRulesInfo(chatId int64) *Rules {

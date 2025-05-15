@@ -31,7 +31,7 @@ var notesModule = moduleStruct{
 
 func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -141,7 +141,7 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -229,7 +229,7 @@ func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, false, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, false, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -561,7 +561,7 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, false, false)
+	connectedChat := chat_status.IsUserConnected(b, ctx, false, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}

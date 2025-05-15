@@ -195,7 +195,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 
 func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
-	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}

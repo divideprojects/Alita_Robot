@@ -26,7 +26,7 @@ var greetingsModule = moduleStruct{moduleName: "Greetings"}
 func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -97,7 +97,7 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -133,7 +133,7 @@ func (moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -158,7 +158,7 @@ func (moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -227,7 +227,7 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -261,7 +261,7 @@ func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -289,7 +289,7 @@ func (moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -341,7 +341,7 @@ func (moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	args := ctx.Args()[1:]
 	var err error
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -391,7 +391,7 @@ func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	args := ctx.Args()[1:]
 	var err error
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -650,7 +650,7 @@ func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	args := ctx.Args()[1:]
 	var err error
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}

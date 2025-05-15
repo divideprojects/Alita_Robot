@@ -41,7 +41,7 @@ func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -86,7 +86,7 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, false, true)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, false, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -153,7 +153,7 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -186,7 +186,7 @@ func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 func (m moduleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
@@ -230,7 +230,7 @@ func (m moduleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
-	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
+	connectedChat := chat_status.IsUserConnected(bot, ctx, true, true)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}

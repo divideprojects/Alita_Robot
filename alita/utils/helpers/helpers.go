@@ -137,6 +137,34 @@ func InitButtons(b *gotgbot.Bot, chatId, userId int64) gotgbot.InlineKeyboardMar
 	return connKeyboard
 }
 
+// GenFormattingKb builds the formatting keyboard for the formatting module.
+func GenFormattingKb() [][]gotgbot.InlineKeyboardButton {
+	fxt := "formatting.%s"
+
+	keyboard := [][]gotgbot.InlineKeyboardButton{
+		make([]gotgbot.InlineKeyboardButton, 2),
+		make([]gotgbot.InlineKeyboardButton, 1),
+	}
+
+	// First row
+	keyboard[0][0] = gotgbot.InlineKeyboardButton{
+		Text:         "Markdown Formatting",
+		CallbackData: fmt.Sprintf(fxt, "md_formatting"),
+	}
+	keyboard[0][1] = gotgbot.InlineKeyboardButton{
+		Text:         "Fillings",
+		CallbackData: fmt.Sprintf(fxt, "fillings"),
+	}
+
+	// Second Row
+	keyboard[1][0] = gotgbot.InlineKeyboardButton{
+		Text:         "Random Content",
+		CallbackData: fmt.Sprintf(fxt, "random"),
+	}
+
+	return keyboard
+}
+
 // GetMessageLinkFromMessageId Gets the message link via chat Id and message Id
 // maybe replace in future by msg.GetLink()
 func GetMessageLinkFromMessageId(chat *gotgbot.Chat, messageId int64) (messageLink string) {

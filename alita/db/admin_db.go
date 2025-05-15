@@ -4,7 +4,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // AdminSettings Flood Settings struct for chat
@@ -19,21 +18,14 @@ func GetAdminSettings(chatID int64) *AdminSettings {
 }
 
 // check Chat Admin Settings, used to get data before performing any operation
-func checkAdminSetting(chatID int64) (adminSrc *AdminSettings) {
-	defaultAdminSrc := &AdminSettings{ChatId: chatID, AnonAdmin: false}
-
-	err := findOne(adminSettingsColl, bson.M{"_id": chatID}).Decode(&adminSrc)
-	if err == mongo.ErrNoDocuments {
-		adminSrc = defaultAdminSrc
-		err := updateOne(adminSettingsColl, bson.M{"_id": chatID}, defaultAdminSrc)
-		if err != nil {
-			log.Errorf("[Database][checkAdminSetting]: %v ", err)
-		}
-	} else if err != nil {
-		adminSrc = defaultAdminSrc
-		log.Errorf("[Database][checkAdminSetting]: %v ", err)
-	}
-	return adminSrc
+func checkAdminSetting(chatID int64) *AdminSettings {
+	return GetOrCreateByID(
+		adminSettingsColl,
+		bson.M{"_id": chatID},
+		func() *AdminSettings {
+			return &AdminSettings{ChatId: chatID, AnonAdmin: false}
+		},
+	)
 }
 
 // SetAnonAdminMode Set anon admin mode for a chat
