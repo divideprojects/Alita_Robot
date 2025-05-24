@@ -1,0 +1,23 @@
+# Base Docker Compose configuration for Alita Robot
+# Contains shared service definitions used across all environments
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+    env_file:
+      - .db.env
+    volumes:
+      - ./docker/entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - alita-network
+
+  redis:
+    image: redis:latest
+    restart: always
+    command: redis-server --requirepass redisPassword
+    networks:
+      - alita-network
+
+networks:
+  alita-network:
+    driver: bridge

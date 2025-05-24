@@ -1,0 +1,21 @@
+# Production override configuration for Alita Robot
+# This file extends docker-compose.base.yml with production-specific settings
+# This is automatically loaded by docker-compose when no specific file is specified
+
+include:
+  - docker-compose.base.yml
+
+services:
+  alita:
+    build:
+      context: .
+      dockerfile: docker/alpine
+    container_name: alita-robot
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - alita-network

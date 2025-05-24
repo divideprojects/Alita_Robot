@@ -81,6 +81,139 @@ func GetOrCreateByID[T any](
 	return result
 }
 
+// UpdateField updates a specific field in a document
+func UpdateField[T any](
+	coll *mongo.Collection,
+	filter interface{},
+	fieldName string,
+	value T,
+) error {
+	_, err := coll.UpdateOne(bgCtx, filter, bson.M{"$set": bson.M{fieldName: value}}, options.Update().SetUpsert(true))
+	if err != nil {
+		log.Errorf("[Database][UpdateField]: %v", err)
+	}
+	return err
+}
+
+// ToggleField toggles a boolean field in a document
+func ToggleField(
+	coll *mongo.Collection,
+	filter interface{},
+	fieldName string,
+) (bool, error) {
+	// First get the current value
+	var result bson.M
+	err := coll.FindOne(bgCtx, filter).Decode(&result)
+	if err != nil && err != mongo.ErrNoDocuments {
+		log.Errorf("[Database][ToggleField]: %v", err)
+		return false, err
+	}
+
+	// Get current value or default to false
+	currentValue := false
+	if val, exists := result[fieldName]; exists {
+		if boolVal, ok := val.(bool); ok {
+			currentValue = boolVal
+		}
+	}
+
+	// Toggle the value
+	newValue := !currentValue
+	err = UpdateField(coll, filter, fieldName, newValue)
+	return newValue, err
+}
+
+// GetList retrieves a list of documents matching the filter
+func GetList[T any](
+	coll *mongo.Collection,
+	filter interface{},
+	opts ...*options.FindOptions,
+) ([]*T, error) {
+	cursor, err := coll.Find(bgCtx, filter, opts...)
+	if err != nil {
+		log.Errorf("[Database][GetList]: %v", err)
+		return nil, err
+	}
+	defer cursor.Close(bgCtx)
+
+	var results []*T
+	err = cursor.All(bgCtx, &results)
+	if err != nil {
+		log.Errorf("[Database][GetList]: %v", err)
+		return nil, err
+	}
+
+	return results, nil
+}
+
+// CheckExists checks if a document exists matching the filter
+func CheckExists(
+	coll *mongo.Collection,
+	filter interface{},
+) (bool, error) {
+	count, err := coll.CountDocuments(bgCtx, filter)
+	if err != nil {
+		log.Errorf("[Database][CheckExists]: %v", err)
+		return false, err
+	}
+	return count > 0, nil
+}
+
+// GetByID retrieves a document by ID
+func GetByID[T any](
+	coll *mongo.Collection,
+	id interface{},
+) (*T, error) {
+	var result *T
+	err := coll.FindOne(bgCtx, bson.M{"_id": id}).Decode(&result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		}
+		log.Errorf("[Database][GetByID]: %v", err)
+		return nil, err
+	}
+	return result, nil
+}
+
+// DeleteByID deletes a document by ID
+func DeleteByID(
+	coll *mongo.Collection,
+	id interface{},
+) error {
+	_, err := coll.DeleteOne(bgCtx, bson.M{"_id": id})
+	if err != nil {
+		log.Errorf("[Database][DeleteByID]: %v", err)
+	}
+	return err
+}
+
+// UpsertDocument inserts or updates a document
+func UpsertDocument[T any](
+	coll *mongo.Collection,
+	filter interface{},
+	document *T,
+) error {
+	_, err := coll.ReplaceOne(bgCtx, filter, document, options.Replace().SetUpsert(true))
+	if err != nil {
+		log.Errorf("[Database][UpsertDocument]: %v", err)
+	}
+	return err
+}
+
+// GetCount returns the count of documents matching the filter
+func GetCount(
+	coll *mongo.Collection,
+	filter interface{},
+) (int64, error) {
+	count, err := coll.CountDocuments(bgCtx, filter)
+	if err != nil {
+		log.Errorf("[Database][GetCount]: %v", err)
+		return 0, err
+	}
+	return count, nil
+}
+
 // dbInstance func
 func init() {
 	ctx, cancel := context.WithTimeout(bgCtx, 10*time.Second)

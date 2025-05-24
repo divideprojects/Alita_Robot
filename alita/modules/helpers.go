@@ -14,6 +14,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
+	"github.com/divideprojects/Alita_Robot/alita/utils/validation"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 	log "github.com/sirupsen/logrus"
@@ -324,6 +326,7 @@ func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbm
 }
 
 // HandleCommandWithChecks abstracts common command handler logic for modules.
+// ENHANCED: Now supports both legacy function-based checks and new frameworks
 func HandleCommandWithChecks(
 	b *gotgbot.Bot,
 	ctx *ext.Context,
@@ -360,4 +363,84 @@ func HandleCommandWithChecks(
 	}
 
 	return handler(b, ctx, chat, user, args)
+}
+
+// HandleCommandWithFrameworks provides enhanced command handling using the new frameworks
+// This is the recommended approach for new commands
+func HandleCommandWithFrameworks(
+	b *gotgbot.Bot,
+	ctx *ext.Context,
+	connectCheck func(*gotgbot.Bot, *ext.Context) *gotgbot.Chat,
+	permissionChecker func(*gotgbot.Bot, *ext.Context) bool,
+	userValidator func(*gotgbot.Bot, *ext.Context) bool,
+	argCheck func([]string, *gotgbot.Message) (bool, string),
+	handler func(*gotgbot.Bot, *ext.Context, *gotgbot.Chat, *gotgbot.User, []string) error,
+) error {
+	msg := ctx.EffectiveMessage
+
+	// Connection check
+	connectedChat := connectCheck(b, ctx)
+	if connectedChat == nil {
+		return ext.EndGroups
+	}
+	ctx.EffectiveChat = connectedChat
+	chat := ctx.EffectiveChat
+	user := ctx.EffectiveSender.User
+	args := ctx.Args()
+
+	// Permission check using new framework
+	if permissionChecker != nil && !permissionChecker(b, ctx) {
+		return ext.EndGroups
+	}
+
+	// User validation using new framework
+	if userValidator != nil && !userValidator(b, ctx) {
+		return ext.EndGroups
+	}
+
+	// Argument validation
+	if argCheck != nil {
+		if ok, errMsg := argCheck(args, msg); !ok {
+			if errMsg != "" {
+				_, err := msg.Reply(b, errMsg, helpers.Shtml())
+				if err != nil {
+					log.Error(err)
+					return err
+				}
+			}
+			return ext.EndGroups
+		}
+	}
+
+	return handler(b, ctx, chat, user, args)
+}
+
+// Helper functions for common permission patterns
+
+// RequireAdminPermission creates a permission checker that requires admin status
+func RequireAdminPermission(b *gotgbot.Bot, ctx *ext.Context) bool {
+	checker := permissions.NewPermissionChecker(b, ctx)
+	return checker.RequireUserAdmin(ctx.EffectiveSender.User.Id).Check()
+}
+
+// RequireGroupPermission creates a permission checker that requires group chat
+func RequireGroupPermission(b *gotgbot.Bot, ctx *ext.Context) bool {
+	checker := permissions.NewPermissionChecker(b, ctx)
+	return checker.RequireGroup().Check()
+}
+
+// RequireBotAdminPermission creates a permission checker that requires bot admin status
+func RequireBotAdminPermission(b *gotgbot.Bot, ctx *ext.Context) bool {
+	checker := permissions.NewPermissionChecker(b, ctx)
+	return checker.RequireBotAdmin().Check()
+}
+
+// ValidateUserNotBot creates a user validator that ensures the user is not a bot
+func ValidateUserNotBot(b *gotgbot.Bot, ctx *ext.Context) bool {
+	result, err := validation.ValidateUser(b, ctx)
+	if err != nil {
+		log.Error(err)
+		return false
+	}
+	return result.Valid && !result.IsUserBot()
 }

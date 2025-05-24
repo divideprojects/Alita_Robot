@@ -871,9 +871,8 @@ func SendNote(b *gotgbot.Bot, chat *gotgbot.Chat, ctx *ext.Context, noteData *db
 	return msg, nil
 }
 
-// NotesEnumFuncMap TODO: make a new function to merge all EnumFuncMap functions
-// NotesEnumFuncMap
-// A rather very complicated NotesEnumFuncMap Variable made by me to send filters in an appropriate way
+// NotesEnumFuncMap - DEPRECATED: Use messaging.SendNote instead
+// Maintained for backward compatibility during migration
 var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, webPreview, isProtected bool, noFormat, noNotif bool) (*gotgbot.Message, error){
 	db.TEXT: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, webPreview, isProtected bool, noFormat, noNotif bool) (*gotgbot.Message, error) {
 		formatMode := HTML
@@ -1035,9 +1034,8 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 	},
 }
 
-// GreetingsEnumFuncMap FIXME: when using /welcome command in private with connection, the string of welcome is sent to connected chat instead of pm
-// GreetingsEnumFuncMap
-// A rather very complicated GreetingsEnumFuncMap Variable made by me to send filters in an appropriate way
+// GreetingsEnumFuncMap - DEPRECATED: Use messaging.SendGreeting instead
+// Maintained for backward compatibility during migration
 var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error){
 	db.TEXT: func(b *gotgbot.Bot, ctx *ext.Context, msg, _ string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendMessage(
@@ -1134,8 +1132,8 @@ var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, f
 	},
 }
 
-// FiltersEnumFuncMap
-// A rather very complicated FiltersEnumFuncMap Variable made by me to send filters in an appropriate way
+// FiltersEnumFuncMap - DEPRECATED: Use messaging.SendFilter instead
+// Maintained for backward compatibility during migration
 var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, noFormat, noNotif bool) (*gotgbot.Message, error){
 	db.TEXT: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, noFormat, noNotif bool) (*gotgbot.Message, error) {
 		formatMode := HTML

@@ -12,6 +12,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/debug_bot"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
+	"github.com/divideprojects/Alita_Robot/alita/utils/validation"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -90,78 +92,79 @@ connection = true, true
 Bot can only Demote people it promoted! */
 
 func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
-	chat := ctx.EffectiveChat
+	// REFACTORED: Using new permission checking framework and user validation
+	return m.demoteRefactored(b, ctx)
+}
+
+// demoteRefactored demonstrates the new refactored patterns
+func (m moduleStruct) demoteRefactored(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
-	// permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserPromote(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotPromote(b, ctx, nil, false) {
+	// NEW: Use permission checker framework - eliminates 15+ lines of repetitive checks
+	permChecker := permissions.NewPermissionChecker(b, ctx).
+		RequireGroup().
+		RequireUserAdmin(user.Id).
+		RequireBotAdmin().
+		CanUserPromote(user.Id).
+		CanBotPromote()
+
+	// Check permissions with connection support
+	connectedChat := permChecker.CheckWithConnection(func(bot *gotgbot.Bot, context *ext.Context) *gotgbot.Chat {
+		return helpers.IsUserConnected(bot, context, true, true)
+	})
+
+	if connectedChat == nil {
 		return ext.EndGroups
 	}
 
-	userId := extraction.ExtractUser(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// NEW: Use user validation helper - eliminates 12+ lines of repetitive user extraction
+	userResult, err := validation.ValidateUser(b, ctx)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	if !userResult.Valid {
+		// Error message already sent by ValidateUser
 		return ext.EndGroups
 	}
 
-	if chat_status.RequireUserOwner(b, ctx, nil, userId, true) {
+	targetUserID := userResult.UserID
+	// targetUser := userResult.User // Available if needed for additional validation
+
+	// Additional validation specific to demote command
+	if chat_status.RequireUserOwner(b, ctx, nil, targetUserID, true) {
 		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_owner"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
 		}
-
 		return ext.EndGroups
 	}
-	if userId == b.Id {
+
+	if targetUserID == b.Id {
 		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_bot_itself"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
 		}
-
 		return ext.EndGroups
 	}
-	if !chat_status.IsUserAdmin(b, chat.Id, userId) {
+
+	if !chat_status.IsUserAdmin(b, connectedChat.Id, targetUserID) {
 		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
 		}
-
 		return ext.EndGroups
 	}
 
-	bb, err := chat.PromoteMember(b,
-		userId,
+	// Perform the demotion
+	bb, err := connectedChat.PromoteMember(b,
+		targetUserID,
 		&gotgbot.PromoteChatMemberOpts{
 			CanDeleteMessages:   false,
 			CanRestrictMembers:  false,
@@ -183,18 +186,12 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Error(err)
 			return err
 		}
-
 		return ext.EndGroups
 	}
 
-	userMember, err := chat.GetMember(b, userId, nil)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-	mem := userMember.MergeChatMember().User
+	// Send success message using the validated user data
 	_, err = msg.Reply(b,
-		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".demote.success_demote"), helpers.MentionHtml(mem.Id, mem.FirstName)),
+		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".demote.success_demote"), userResult.GetUserMention()),
 		helpers.Shtml(),
 	)
 	if err != nil {

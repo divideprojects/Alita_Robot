@@ -1,0 +1,26 @@
+# Debug configuration for Alita Robot
+# This file extends docker-compose.base.yml with debug-specific settings
+# Use with: docker-compose -f docker-compose.base.yml -f docker-compose.debug.yml up
+
+include:
+  - docker-compose.base.yml
+
+services:
+  alita:
+    build:
+      context: .
+      dockerfile: docker/alpine.debug
+    container_name: alita-robot-debug
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - alita-network
+    # Debug-specific configurations
+    ports:
+      - "2345:2345" # Delve debugger port
+    environment:
+      - DEBUG_MODE=true

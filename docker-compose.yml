@@ -1,5 +1,17 @@
 # This is to run the alita-robot in production mode with alpine image
 # This does optimizations and builds slower
+#
+# This configuration now uses the base + override pattern:
+# - docker-compose.base.yml: Contains shared services (mongodb, redis)
+# - docker-compose.override.yml: Contains production-specific alita service config
+#
+# Usage:
+#   docker-compose up                    # Uses base + override (production)
+#   docker-compose -f docker-compose.base.yml -f docker-compose.debug.yml up  # Debug mode
+
+include:
+  - docker-compose.base.yml
+
 services:
   alita:
     build:
@@ -12,16 +24,5 @@ services:
     depends_on:
       - mongodb
       - redis
-
-  mongodb:
-    image: mongo:latest
-    restart: always
-    env_file:
-      - .db.env
-    volumes:
-      - ./docker/entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-
-  redis:
-    image: redis:latest
-    restart: always
-    command: redis-server --requirepass redisPassword
+    networks:
+      - alita-network

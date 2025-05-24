@@ -1,27 +1,35 @@
 # This is to run the alita-robot in debug mode with alpine image
 # This starts up fast and does not do any optimizations
+#
+# This configuration now uses the base + override pattern:
+# - docker-compose.base.yml: Contains shared services (mongodb, redis)
+# - docker-compose.debug.yml: Contains debug-specific alita service config
+#
+# Usage:
+#   docker-compose -f docker-compose.base.yml -f docker-compose.debug.yml up
+#
+# Note: This file is kept for backward compatibility.
+# For new development, use: docker-compose -f docker-compose.base.yml -f docker-compose.debug.yml up
+
+include:
+  - docker-compose.base.yml
+
 services:
   alita:
     build:
       context: .
-      dockerfile: docker/debug.alpine
-    container_name: alita-robot
+      dockerfile: docker/alpine.debug
+    container_name: alita-robot-debug
     restart: always
     env_file:
       - .env
     depends_on:
       - mongodb
       - redis
-
-  mongodb:
-    image: mongo:latest
-    restart: always
-    env_file:
-      - .db.env
-    volumes:
-      - ./docker/entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-
-  redis:
-    image: redis:latest
-    restart: always
-    command: redis-server --requirepass redisPassword
+    networks:
+      - alita-network
+    # Debug-specific configurations
+    ports:
+      - "2345:2345"  # Delve debugger port
+    environment:
+      - DEBUG_MODE=true
