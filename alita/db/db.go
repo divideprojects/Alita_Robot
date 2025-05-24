@@ -83,17 +83,10 @@ func GetOrCreateByID[T any](
 
 // dbInstance func
 func init() {
-	mongoClient, err := mongo.NewClient(
-		options.Client().ApplyURI(config.DatabaseURI),
-	)
-	if err != nil {
-		log.Errorf("[Database][Client]: %v", err)
-	}
-
 	ctx, cancel := context.WithTimeout(bgCtx, 10*time.Second)
 	defer cancel()
 
-	err = mongoClient.Connect(ctx)
+	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI(config.DatabaseURI))
 	if err != nil {
 		log.Errorf("[Database][Connect]: %v", err)
 	}
