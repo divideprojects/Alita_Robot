@@ -1,4 +1,3 @@
----
 #stringcode: string
 main:
   lang_sample: |-
@@ -59,6 +58,25 @@ strings:
       × / プロモート `<reply/username/mention/userid>`: ユーザーをプロモートします。
       × /demote `<reply/username/mention/userid>': ユーザーをデモートしてください。
       × / タイトル `<reply/username/mention/userid>` `<custom title>`: ユーザーのカスタム・タイトルを設定する
+    anon_admin:
+      enabled: |-
+        AnonAdmin mode is currently <b>enabled</b> for %s.
+        This allows all anonymous admin to perform admin actions without restriction.
+      disabled: |-
+        AnonAdmin mode is currently <b>disabled</b> for %s.
+        This requires anonymous admins to press a button to confirm their permissions.
+      enabled_now: |-
+        AnonAdmin mode is now <b>enabled</b> for %s.
+        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+      disabled_now: |-
+        AnonAdmin mode is now <b>disabled</b> for %s.
+        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+      already_enabled: |-
+        AnonAdmin mode is already <b>enabled</b> for %s
+      already_disabled: |-
+        AnonAdmin mode is already <b>disabled</b> for %s
+      invalid_arg: |-
+        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
   Antiflood:
     checkflood:
       perform_action: |-
@@ -116,6 +134,8 @@ strings:
       user_approved: |-
         Approved User: %s
         They are now protected from bans, blacklists, locks and antiflood!
+      user_not_in_chat: |-
+        This user is not in this chat, and how can I approve them?
     unapprove:
       is_bot_itself: |-
         I'm an admin, I can't be unapproved!
@@ -137,7 +157,7 @@ strings:
         You are not approved in <b>%s</b>
         You are not protected from blacklists, locks and antiflood!
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: No users are approved in <b>%s</b>!
       approved_list: |-
         These users are approved in <b>%s:</b>
         %s
@@ -704,3 +724,9 @@ strings:
           無効な時間の指定です。
         invalid_time_type: |-
           無効な時刻タイプが指定され 予期される m、 h、または d の値 : %s
+  CommonStrings:
+    admin_cache:
+      cache_reloaded: |-
+        Successfully reloaded admin cache.
+      not_found: |-
+        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
