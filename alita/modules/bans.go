@@ -34,19 +34,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 	if !chat_status.CanBotDelete(b, ctx, nil, false) {
@@ -65,15 +53,16 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.anonymous_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.specify_user"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -154,19 +143,7 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 
@@ -174,15 +151,16 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.anonymous_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.specify_user"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -310,19 +288,7 @@ func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 
@@ -330,15 +296,16 @@ func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.anonymous_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.specify_user"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -422,19 +389,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	var sendMsgOptns *gotgbot.SendMessageOpts
 
 	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, true) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 
@@ -442,8 +397,8 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.specify_user"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -535,19 +490,7 @@ func (m moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 	if !chat_status.CanBotDelete(b, ctx, nil, false) {
@@ -558,15 +501,16 @@ func (m moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.anonymous_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.specify_user"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -611,19 +555,7 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 	if !chat_status.CanUserDelete(b, ctx, nil, user.Id, false) {
@@ -637,15 +569,16 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.anonymous_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.specify_user"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -730,19 +663,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	var text string
 
 	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 
@@ -817,13 +738,7 @@ func (moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, chat, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, chat, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, chat, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 
@@ -931,25 +846,7 @@ func (moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) erro
 			return err
 		}
 	case "mute":
-		_, err := chat.RestrictMember(b, int64(userId),
-			gotgbot.ChatPermissions{
-				CanSendMessages:       false,
-				CanSendPhotos:         false,
-				CanSendVideos:         false,
-				CanSendAudios:         false,
-				CanSendDocuments:      false,
-				CanSendVideoNotes:     false,
-				CanSendVoiceNotes:     false,
-				CanAddWebPagePreviews: false,
-				CanChangeInfo:         false,
-				CanInviteUsers:        false,
-				CanPinMessages:        false,
-				CanManageTopics:       false,
-				CanSendPolls:          false,
-				CanSendOtherMessages:  false,
-			},
-			nil,
-		)
+		_, err := chat.RestrictMember(b, int64(userId), chat_status.NoPermissions, nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -997,13 +894,7 @@ func (moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, chat, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, chat, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, chat, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 

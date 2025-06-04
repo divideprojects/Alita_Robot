@@ -409,7 +409,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 					return ext.ContinueGroups
 				}
 
-				_, err = b.RestrictChatMember(chat.Id, user.Id(), gotgbot.ChatPermissions{CanSendMessages: false}, nil)
+				_, err = b.RestrictChatMember(chat.Id, user.Id(), chat_status.NoPermissions, nil)
 				if err != nil {
 					log.Error(err)
 					return err

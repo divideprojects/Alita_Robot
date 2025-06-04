@@ -8,6 +8,11 @@ main:
   language_name: |-
     Українська
 strings:
+  errors:
+    anonymous_user: |-
+      This command cannot be used on anonymous user.
+    specify_user: |-
+      I don't know who you're talking about, you're going to need to specify a user...!
   Admin:
     adminlist: |-
       Admins in <b>%s</b>:

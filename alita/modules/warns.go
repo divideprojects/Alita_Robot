@@ -120,25 +120,7 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				return err
 			}
 		} else if warnrc.WarnMode == "mute" {
-			_, err = chat.RestrictMember(b, userId,
-				gotgbot.ChatPermissions{
-					CanSendMessages:       false,
-					CanSendPhotos:         false,
-					CanSendVideos:         false,
-					CanSendAudios:         false,
-					CanSendDocuments:      false,
-					CanSendVideoNotes:     false,
-					CanSendVoiceNotes:     false,
-					CanAddWebPagePreviews: false,
-					CanChangeInfo:         false,
-					CanInviteUsers:        false,
-					CanPinMessages:        false,
-					CanManageTopics:       false,
-					CanSendPolls:          false,
-					CanSendOtherMessages:  false,
-				},
-				nil,
-			)
+			_, err = chat.RestrictMember(b, userId, chat_status.NoPermissions, nil)
 			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been Muted!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: mute (%d) - %s", userId, err)
@@ -218,19 +200,7 @@ func (m moduleStruct) warnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	// Check permissions
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 
@@ -273,19 +243,7 @@ func (m moduleStruct) sWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	// Check permissions
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	if !chat_status.CheckRestrictPermissions(b, ctx, user.Id) {
 		return ext.EndGroups
 	}
 

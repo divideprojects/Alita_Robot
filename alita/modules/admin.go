@@ -116,15 +116,16 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.anonymous_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		_, err := msg.Reply(b, tr.GetString("errors.specify_user"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

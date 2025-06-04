@@ -155,25 +155,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 		}
 
-		_, err := chat.RestrictMember(b, userId,
-			gotgbot.ChatPermissions{
-				CanSendMessages:       false,
-				CanSendPhotos:         false,
-				CanSendVideos:         false,
-				CanSendAudios:         false,
-				CanSendDocuments:      false,
-				CanSendVideoNotes:     false,
-				CanSendVoiceNotes:     false,
-				CanAddWebPagePreviews: false,
-				CanChangeInfo:         false,
-				CanInviteUsers:        false,
-				CanPinMessages:        false,
-				CanManageTopics:       false,
-				CanSendPolls:          false,
-				CanSendOtherMessages:  false,
-			},
-			nil,
-		)
+		_, err := chat.RestrictMember(b, userId, chat_status.NoPermissions, nil)
 		if err != nil {
 			log.Errorf(" checkFlood: %d (%d) - %v", chat.Id, user.Id(), err)
 			return err
