@@ -109,17 +109,17 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	case antifloodModule.adminCheckSemaphore <- struct{}{}:
 		// Got semaphore, proceed with admin check
 		defer func() { <-antifloodModule.adminCheckSemaphore }()
-		
+
 		// Create context with timeout for admin check
 		ctx_timeout, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 		defer cancel()
-		
+
 		// Check if user is admin with timeout
 		isAdmin := make(chan bool, 1)
 		go func() {
 			isAdmin <- chat_status.IsUserAdmin(b, chat.Id, userId)
 		}()
-		
+
 		select {
 		case admin := <-isAdmin:
 			if admin {
