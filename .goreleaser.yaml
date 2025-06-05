@@ -44,8 +44,11 @@ builds:
       - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }}
 
 archives:
-  # - rlcp: true
-  - name_template: >-
+  - # Archive formats to create
+    formats:
+      - tar.gz
+      - zip
+    name_template: >-
       {{ .ProjectName }}_
       {{- .Version }}_
       {{- if eq .Os "darwin" }}macOS
@@ -57,7 +60,8 @@ archives:
       {{- if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}
     format_overrides:
       - goos: windows
-        format: zip
+        formats:
+          - zip
 
 signs:
   - artifacts: all
@@ -91,7 +95,7 @@ checksum:
   algorithm: sha256
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 
 dockers:
   - goarch: amd64
