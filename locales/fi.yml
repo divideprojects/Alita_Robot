@@ -2,291 +2,291 @@
 #stringcode: string
 main:
   lang_sample: |-
-    Suomalainen
+    Suomi
   language_flag: |-
     🇫🇮
   language_name: |-
-    Suomalainen
+    Suomi
 strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        Ylläpitäjävälimuisti ladattu onnistuneesti uudelleen.
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        Ylläpitäjävälimuistia ei löytynyt. Pyydä ylläpitäjää käyttämään /admincache ladatakseen ylläpitäjävälimuistin uudelleen.
   Admin:
     adminlist: |-
-      Admins in <b>%s</b>:
+      Ylläpitäjät ryhmässä <b>%s</b>:
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        AnonAdmin-tila on tällä hetkellä <b>käytössä</b> ryhmässä %s.
+        Tämä sallii kaikkien anonyymien ylläpitäjien suorittaa ylläpitotoimintoja ilman rajoituksia.
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        AnonAdmin-tila on tällä hetkellä <b>pois käytöstä</b> ryhmässä %s.
+        Tämä vaatii anonyymejä ylläpitäjiä painamaan painiketta vahvistaakseen oikeutensa.
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        AnonAdmin-tila on nyt <b>käytössä</b> ryhmässä %s.
+        Tästä eteenpäin pyydän ylläpitäjiä vahvistamaan oikeudet anonyymeiltä ylläpitäjiltä.
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        AnonAdmin-tila on nyt <b>pois käytöstä</b> ryhmässä %s.
+        Tästä eteenpäin en enää pyydä ylläpitäjiä vahvistamaan oikeuksia anonyymeiltä ylläpitäjiltä.
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        AnonAdmin-tila on jo <b>käytössä</b> ryhmässä %s
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        AnonAdmin-tila on jo <b>pois käytöstä</b> ryhmässä %s
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Virheellinen argumentti, ymmärrän vain <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        Tämä henkilö loi tämän keskustelun, miten voisin alentaa häntä?
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        Tämä henkilö ei ole ylläpitäjä, miten voisin alentaa häntä?
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        En voi alentaa itseäni, mene hakemaan se henkilö joka ylläpiti minut!
       success_demote: |-
-        Successfully demoted %s!
+        Onnistuneesti alennettu %s!
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        Ylläpitäjän otsikko lyhennetty 16 merkkiin %d:stä
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Jos vain voisin tehdä tämän itselleni ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        Tämä henkilö loi tämän keskustelun, miten voisin ylentää häntä?
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        Tämä henkilö on jo ylläpitäjä, miten voisin ylentää häntä?
       success_promote: |-
-        Successfully promoted %s!
+        Onnistuneesti ylennetty %s!
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        Onnistuneesti asetettu %s:n ylläpitäjän otsikoksi <b>%s</b>
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Jos vain voisin tehdä tämän itselleni ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        Tämä henkilö loi tämän keskustelun, miten voisin asettaa mukautetun ylläpitäjän otsikon hänelle?
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        Tämä henkilö on jo ylläpitäjä, miten voisin asettaa mukautetun ylläpitäjän otsikon hänelle?
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        Mukautetun ylläpitäjän otsikon asettaminen epäonnistui, otsikon nimi saattaa olla väärä tai sisältää emojeja.
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Ei voitu alentaa. En ehkä ole ylläpitäjä, tai ylläpitäjän aseman nimitti toinen käyttäjä, joten en voi toimia heitä vastaan!
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Ei voitu ylentää. En ehkä ole ylläpitäjä, tai ylläpitäjän aseman nimitti toinen käyttäjä, joten en voi toimia heitä vastaan!
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        Sinun täytyy antaa minulle ylläpitäjän otsikko, jotta voin asettaa sen.
     help_msg: |-
-      Voit helposti edistää ja alentaa käyttäjiä, joilla on admin-moduuli.
+      Tee käyttäjien ylentäminen ja alentaminen helpoksi ylläpito-moduulilla!
 
-      *User Commands: *
-      x /adminlist: Luettelo nykyisen keskustelun ylläpitäjistä.
+      *Käyttäjäkomennot:*
+      × /adminlist: Listaa ylläpitäjät nykyisessä keskustelussa.
 
-      *ADML-komennot: *
-      x /ylennyksen "<reply/username/mention/userid>": Edistetään käyttäjää.
-      × /demote "<reply/username/mention/userid>": käyttäjä.
-      × /otsikko "<reply/username/mention/userid>" "<custom title>": Aseta mukautettu otsikko käyttäjälle
+      *Ylläpitäjäkomennot:*
+      × /promote `<vastaus/käyttäjänimi/maininta/käyttäjätunnus>`: Ylennä käyttäjä.
+      × /demote `<vastaus/käyttäjänimi/maininta/käyttäjätunnus>`: Alenna käyttäjä.
+      × /title `<vastaus/käyttäjänimi/maininta/käyttäjätunnus>` `<mukautettu otsikko>`: Aseta mukautettu otsikko käyttäjälle
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        Joo, en pidä roskapostistasi. %s on %s!
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        Selvä! Maksimi roskapostiraja <b>%d</b> viestissä.
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        Okei.
+        En varoita käyttäjiä roskapostista.
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        Tämä keskustelu ei tällä hetkellä valvo roskapostia.
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        Tämä keskustelu valvoo tällä hetkellä roskapostia %d viestin jälkeen. Käyttäjät, jotka lähettävät enemmän kuin tuon määrän viestejä, %s.
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        Selvä! Roskapostitila tulee olemaan %s.
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        Tuntematon tyyppi '%s'. Käytä yhtä seuraavista: ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        Sinun täytyy määrittää toiminto roskapostille. Nykyiset tilat ovat: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        Roskapostin vastaiset viestien poistot käytössä. Roskapostia aiheuttavat viestit poistetaan!
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        Roskapostin vastaiset viestien poistot pois käytöstä. Roskapostia aiheuttavat viestit ohitetaan!
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        Ymmärrän vain vaihtoehdon: `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        Roskapostin vastainen viestien poisto on tällä hetkellä *käytössä* tässä keskustelussa, roskapostia aiheuttavat viestit poistetaan!
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        Roskapostin vastainen viestien poisto on tällä hetkellä *pois käytöstä* tässä keskustelussa, roskapostia aiheuttavat viestit ohitetaan!
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        Odotin argumentteja! Joko off, tai kokonaisluku. esim: `/setflood 5`, tai `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        Tuo ei ole kelvollinen kokonaisluku. Anna minulle kelvollinen kokonaisluku, tai `off`.
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        Roskapostin vastaiset raja täytyy asettaa 3 ja 100 välille.
     help_msg: |-
-      Joskus ihmiset liittyvät, lähettävät sata viestiä ja pilaavat juttunne. Kun antitulva, niin ei tapahdu enää!
+      Tiedätkö miten joskus ihmiset liittyvät, lähettävät 100 viestiä ja pilaavat keskustelusi? Roskapostin vastaisella toiminnolla tämä ei enää tapahdu!
 
-      Antitulvien avulla voit toteuttaa käyttäjiä, jotka lähettävät enemmän kuin x viestejä peräkkäin. Toimia ovat: kieltäminen/kick/mute/tban/tmute
+      Roskapostin vastainen toiminto antaa sinun ryhtyä toimenpiteisiin käyttäjiä vastaan, jotka lähettävät enemmän kuin x viestiä peräkkäin. Toiminnot ovat: ban/kick/mute/tban/tmute
 
-      *ADMIN-komennot *:
-      x /tulva: Hae nykyiset tulvaasetukset.
-      × /settulva.<number/off/no>': Aseta sanomien määrä käyttäjän toiminnon jälkeen. Aseta "0", "pois" tai "ei" käytöstä.
-      × /settulvat "<action type>": Valitse käyttäjä, joka käyttää tulvia. Vaihtoehtoja: bani/kick/mute/tban/tmute
-      × /deltul-<yes/no/on/off>: Jos haluat botin poistavan käyttäjän tulvia viestejä
+      *Ylläpitäjäkomennot*:
+      × /flood: Hae nykyiset roskapostin vastaiset asetukset.
+      × /setflood `<numero/off/no>`: Aseta viestien määrä jonka jälkeen ryhdytään toimenpiteisiin käyttäjää vastaan. Aseta '0', 'off', tai 'no' poistaaksesi käytöstä.
+      × /setfloodmode `<toimintotyyppi>`: Valitse mikä toiminto ryhdytään käyttäjää vastaan joka on roskapostattu. Vaihtoehdot: ban/kick/mute/tban/tmute
+      × /delflood `<yes/no/on/off>`: Jos haluat botin poistavan käyttäjän roskapostaamat viestit.
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        Olet jo hyväksynyt minut tekemällä minusta ylläpitäjän!
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        Hyväksytty käyttäjä: %s
+        He ovat nyt suojattuja estoja, mustia listoja, lukituksia ja roskapostin vastaista toimintaa vastaan!
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        Tämä käyttäjä ei ole tässä keskustelussa, miten voin hyväksyä hänet?
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        Olen ylläpitäjä, minua ei voida hylätä!
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        Hylätty käyttäjä: %s
+        He eivät ole enää suojattuja estoja, mustia listoja, lukituksia ja roskapostin vastaista toimintaa vastaan!
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s on ylläpitäjä, et tarvitse hyväksyntää.
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        Olen ylläpitäjä, en tarvitse hyväksyntää.
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s on hyväksytty käyttäjä ryhmässä <b>%s</b>
+        He ovat suojattuja mustia listoja, lukituksia ja roskapostin vastaista toimintaa vastaan!
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>Hyväksynyt:</b> %s (<code>%d</code>)
+        <b>Hyväksymisaika:</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        Et ole hyväksytty ryhmässä <b>%s</b>
+        Et ole suojattu mustia listoja, lukituksia ja roskapostin vastaista toimintaa vastaan!
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: "Yhtään käyttäjää ei ole hyväksytty ryhmässä <b>%s</b>!"
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        Nämä käyttäjät on hyväksytty ryhmässä <b>%s:</b>
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        Saadaksesi lisätietoja kustakin käyttäjästä kuten Hyväksynyt ja Hyväksymisaika, käytä /approval (käyttäjätunnus).
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        Oletko varma että haluat poistaa kaikki hyväksytyt käyttäjät tästä keskustelusta?
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        Vain keskustelun luoja voi käyttää tätä komentoa hylätäkseen kaikki käyttäjät tässä keskustelussa.
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          Poistettu kaikki hyväksytyt käyttäjät tästä keskustelusta ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          Peruttu kaikkien hyväksyttyjen käyttäjien poistaminen tästä keskustelusta ❌
     help_msg: |-
-      Sometimes, you might trust a user not to send unwanted content.
-      Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
-      That's what approvals are for - approve of trustworthy users to allow them to send
+      Joskus saatat luottaa käyttäjään ettei hän lähetä ei-toivottua sisältöä.
+      Ehkä ei tarpeeksi tehdäksesi hänestä ylläpitäjän, mutta saatat olla ok sen kanssa että lukitukset, mustat listat ja roskapostin vastainen toiminto ei koske heitä.
+      Sitä varten hyväksynnät ovat - hyväksy luotettavia käyttäjiä salliaksesi heidän lähettää
 
-      *User commands:*
-      × /approval: Check a user's approval status in this chat.
+      *Käyttäjäkomennot:*
+      × /approval: Tarkista käyttäjän hyväksyntätila tässä keskustelussa.
 
-      *Admin Commands:*
-      × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-      × /unapprove: Unapprove of a user. They will now be subject to locks, blacklists, and antiflood again.
-      × /approved: List all approved users.
+      *Ylläpitäjäkomennot:*
+      × /approve: Hyväksy käyttäjä. Lukitukset, mustat listat ja roskapostin vastainen toiminto ei enää koske heitä.
+      × /unapprove: Hylkää käyttäjä. He tulevat nyt taas lukitusten, mustien listojen ja roskapostin vastaisen toiminnon alaisiksi.
+      × /approved: Listaa kaikki hyväksytyt käyttäjät.
 
-      *Owner Commands:*
-      × /unapproveall: Unapprove ALL users in a chat. This cannot be undone.
+      *Omistajan komennot:*
+      × /unapproveall: Hylkää KAIKKI käyttäjät keskustelussa. Tätä ei voida peruuttaa.
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        Tämä käyttäjä ei ole tässä keskustelussa, miten voin potkia häntä?
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        Miksi mahtaisin potkia ylläpitäjän? Se kuulostaa kuin hyvin tyhmä idea.
       is_bot_itself: |-
-        Why would I kick myself?
+        Miksi mahtaisin potkia itselleni?
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        Toinen yksi törmäsi maahan...!
+        Potkittu %s.
+      kicked_reason: "\n<b>Syy: </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        Olet ylläpitäjä, olet kääntynyt tähän kaikkien kanssa!
       ok_out: |-
-        Alright, get out!
+        Selvä, mene ulos!
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        Miksi mahtaisin bannata ylläpitäjän? Se kuulostaa kuin hyvin tyhmä idea.
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        Oletko todella luottanut, että mahtaisin bannata itselleni?
+      ban_reason: "\n<b>Syy: </b> %s"
       tban: |-
-        Another one bites the dust...!
+        Toinen yksi törmäsi maahan...!
         Banned %s for %s
       normal_ban: |-
-        Another one bites the dust...!
+        Toinen yksi törmäsi maahan...!
         Banned %s.
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          Sinun täytyy vastata viestiin, jotta voit poistaa viestin ja bannata käyttäjän!
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        Miksi mahtaisin unbannata ylläpitäjän? Se kuulostaa kuin hyvin tyhmä idea.
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        Miksi mahtaisin vapauttaa itseäni, kun olen jo tässä?
       unbanned_user: |-
-        Ok Sure...!
+        Okei varmasti...!
         Unbanned %s.
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      Joskus käyttäjät voivat olla ärsyttäviä, ja ehkä haluat poistaa heidät keskustelustasi, tämä moduuli auttaa sinua tämän tekemiseen!
+      Banna/potkaa käyttäjät keskustelustasi, ja unbanna heitä myöhemmin, jos he ovat käyttäytyneet itseään.
 
-      *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      *Käyttäjäkomennot:*
+      × /kickme: potkaa käyttäjä, joka antoi tämän komennon.
 
-      *Ban Commands* (Admin only):
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-      × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-      × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-      × /unban <userhandle>: unbans a user. (via handle, or reply)
+      *Bannikomennot* (Ylläpitäjälle vain):
+      × /ban <käyttäjätunnus>: banna käyttäjä. (käyttämällä tunnusta tai vastaamalla)
+      × /sban <käyttäjätunnus>: banna käyttäjä hiljalla, ei lähetä viestiä ryhmälle ja myös poistaa komennon. (käyttämällä tunnusta tai vastaamalla)
+      × /dban <käyttäjätunnus>: banna käyttäjä ja poistaa vastaamasi viesti. (käyttämällä tunnusta tai vastaamalla)
+      × /tban <käyttäjätunnus> x(m/h/d): banna käyttäjän `x` aikaa. (käyttämällä tunnusta tai vastaamalla). m = minuutteja, h = tunteja, d = päiviä.
+      × /unban <käyttäjätunnus>: unbanna käyttäjä. (käyttämällä tunnusta tai vastaamalla)
 
-      *Restrict Commands:* (Admin only)
-      × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-      × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+      *Rajoituskomennot:* (Ylläpitäjälle vain)
+      × /restrict: Näyttää InlineKeyboard valitaksesi vaihtoehdot käytöstä potkaisesta, bannista ja mutesista
+      × /unrestrict: Näyttää InlineKeyboard valitaksesi vaihtoehdot käytöstä unmute ja unban.
   Blacklists:
     blacklist:
       give_bl_word: |-
-        Please give me a word to add to the blacklist!
+        Anna minulle sanoa, joka lisätään mustaan listaan!
       already_blacklisted: |-
-        These words are already blacklisted:
+        Nämä sanat ovat jo mustissa listoissa:
       added_bl: |-
-        Added these words as blacklists:
+        Lisätty nämä sanat mustiksi listaan:
     unblacklist:
       give_bl_word: |-
-        Please give me a word to remove from the blacklist!
+        Anna minulle sanoa, joka poistetaan mustasta listasta!
       no_removed_bl: |-
-        None of the given words were in the blacklist which can be removed!
+        Ei yhtään annettuja sanoja ollut mustassa listassa, joka voidaan poistaa!
       removed_bl: |-
-        Removed '%s' from the blacklisted words!
+        Poistettu '%s' mustista sanoista!
     ls_bl:
       no_blacklisted: |-
-        There are no blacklisted words in this chat.
+        Tässä keskustelussa ei ole mustia sanoja.
       list_bl: |-
-        These words are blacklisted in this chat:
+        Nämä sanat ovat mustissa tässä keskustelussa:
     set_bl_action:
       current_mode: |-
-        The current blacklist mode is: %s
+        Nykyinen musta lista-tila on: %s
       changed_mode: |-
-        Changed blacklist mode to: *%s*
+        Muutettu musta lista-tilaan: *%s*
       choose_correct_option: |-
-        Please choose an option out of <mute/kick/ban/warn/none>
+        Valitse yksi vaihtoehto <mute/kick/ban/warn/none>
     rm_all_bl:
       ask: |-
-        Are you sure you want to remove all blacklisted words from this chat?
+        Oletko varma että haluat poistaa kaikki mustat sanat tästä keskustelusta?
       button_handler:
         yes: |-
-          Removed all Blacklists from this Chat ✅
+          Poistettu kaikki mustat sanat tästä keskustelusta ✅
         no: |-
-          Cancelled removing all Blacklists from this Chat ❌
+          Peruttu kaikkien mustien sanojen poistaminen tästä keskustelusta ❌
     bl_watcher:
       muted_user: |-
         Muted %s due to %s
@@ -295,92 +295,92 @@ strings:
       kicked_user: |-
         Kicked %s due to %s
     help_msg: |-
-      *User Commands:*
-      × /blacklists: Check all the blacklists in chat.
+      *Käyttäjäkomennot:*
+      × /blacklists: Tarkista kaikki mustat listat keskustelussa.
 
-      *Admin Commands:*
-      × /addblacklist `<trigger>`: Blacklists the word in the current chat.
-      × /rmblacklist `<trigger>`: Removes the word from current Blacklisted Words in Chat.
-      × /blaction `<mute/kick/ban/warn/none>`: Sets the action to be performed by bot when a blacklist word is detected.
-      × /blacklistaction: Same as above
+      *Ylläpitäjäkomennot:*
+      × /addblacklist `<trigger>`: Mustaa sanaa tässä keskustelussa.
+      × /rmblacklist `<trigger>`: Poista sana nykyisestä mustasta sanasta keskustelussa.
+      × /blaction `<mute/kick/ban/warn/none>`: Aseta toiminto, joka tehdään botti kun musta sana tunnistetaan.
+      × /blacklistaction: Samanlainen kuin yllä.
 
-      *Owner Only:*
-      × /remallbl: Removes all the blacklisted words from chat
+      *Omistajan vain:*
+      × /remallbl: Poista kaikki mustat sanat keskustelusta
 
-      *Note:*
-      The Default mode for Blacklist is *none*, which will just delete the messages from the chat.
+      *Huomautus:*
+      Oletusmoodi mustille on *ei mitään*, joka vain poistaa keskustelun viestit.
   Connections:
     connected: |-
-      You are currently connected to <b>%s</b>
+      Olet tällä hetkellä yhteydessä <b>%s</b>
     not_connected: |-
-      You aren't connected to any chats.
+      Olet yhteydessä mihinkään keskusteluihin.
     allow_connect:
       turned_on: |-
-        Turned <b>on</b> User connections to this chat!
-        Users can now connect chat to their PM's!
+        Kääntänyt <b>päälle</b> käyttäjäyhteydet tähän keskusteluun!
+        Käyttäjät voivat nyt keskusteluun yhteydessä PM:iänsä!
       turned_off: |-
-        Turned <b>off</b> User connections to this chat!
-        Users can't connect chat to their PM's!
+        Kääntänyt <b>pois</b> käyttäjäyhteydet tähän keskusteluun!
+        Käyttäjät eivät voi keskusteluun yhteydessä PM:iänsä!
       currently_on: |-
-        User connections are currently turned <b>on</b>.
-        Users can connect this chat to their PM's!
+        Käyttäjäyhteydet ovat tällä hetkellä <b>päällä</b>.
+        Käyttäjät voivat keskusteluun yhteydessä PM:iänsä!
       currently_off: |-
-        User connections are currently turned <b>off</b>.
-        Users can't connect this chat to their PM's!
+        Käyttäjäyhteydet ovat tällä hetkellä <b>pois päällä</b>.
+        Käyttäjät eivät voi keskusteluun yhteydessä PM:iänsä!
     connect:
       connection_disabled: |-
-        User connections are currently <b>disabled</b> to this chat.
-        Please ask admins to allow if you want to connect!
+        Käyttäjäyhteydet ovat tällä hetkellä <b>ei käytössä</b> tähän keskusteluun.
+        Pyydä ylläpitäjiä sallimaan, jos haluat yhteydessä olla
       connected: |-
-        You are now connected to <b>%s</b>!
+        Olet nyt yhteydessä <b>%s</b>!
       tap_btn_connect: |-
-        Please press the button below to connect this chat to your PM
+        Paina alla olevaa painiketta, jotta voit keskusteluun yhteydessä PM
     connections_btns:
       admin_conn_cmds: |-
-        Admin commands available:%s
+        Ylläpitäjäkomennot saatavilla:%s
       user_conn_cmds: |-
-        User commands available:%s
+        Käyttäjäkomennot saatavilla:%s
     disconnect:
       disconnected: |-
-        Disconnected from the connected chat.
+        Katkennut yhteydestä keskustelusta.
       need_pm: |-
-        You need to send this in PM to me to disconnect from the chat!
+        Sinun täytyy lähettää tämä PM:iin minulle, jotta voit katkaista yhteyden keskustelusta!
     is_user_connected:
       need_group: |-
-        This command is made to be used in group chats, not in PM!
+        Tämä komento on tarkoitettu käytettäväksi ryhmässä chats, ei PM!
       bot_not_admin: |-
-        I'm not an admin in this chat!
+        Minä en ole ylläpitäjä tässä keskustelussa!
       user_not_admin: |-
-        You need to be an admin to do this.
+        Sinun täytyy olla ylläpitäjä tämän tehdäksesi!
     reconnect:
       reconnected: |-
-        You are now reconnected to <b>%s</b>!
+        Olet nyt uudelleen yhteydessä <b>%s</b>!
       no_last_chat: |-
-        You have no last chat to reconnect to!
+        Sinulla ei ole viimeksi keskusteltu, jotta voit uudelleen yhteydessä olla
       need_pm: |-
-        You need to be in a PM with me to reconnect to a chat!
+        Sinun täytyy olla PM:ssä minun kanssa, jotta voit uudelleen yhteydessä olla keskustelussa!
     help_msg: |-
-      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+      Tämä antaa sinun yhteydessä keskustelun tietokantaan, ja lisätä asioita sen ulkopuolelle, ilman että keskustelu tiedät! Ilmeisestikin sinun täytyy olla ylläpitäjä lisätä asioita; mutta mikä tahansa jäsen voi nähdä tiedot. (banned/potetut käyttäjät eivät voi!)
 
-      *Commands*:
-      × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-      × /disconnect: Disconnect from the current chat.
-      × /reconnect: Reconnect to the previously connect chat
-      × /connection: See information about the currently connected chat.
+      *Komennot:*
+      × /connect `<käyttäjätunnus>`: Yhteydessä keskusteluun, antaen sinun nähdä/muuttaa sisältöä.
+      × /disconnect: Katkaise yhteyden nykyisestä keskustelusta.
+      × /reconnect: Uudelleen yhteydessä edelliseen keskusteluun
+      × /connection: Näytä tietoa nykyisestä yhteydestä keskustelusta.
 
-      *Admin Commands:*
-      × /allowconnect <yes/no>: Allow users to connect to chats or not.
+      *Ylläpitäjäkomennot:*
+      × /allowconnect <kyllä/ei>: Salli käyttäjät yhteydessä keskusteluihin vai ei.
 
-      You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+      Voit saada keskustelun tunnus käyttämällä /id komentoa keskustelussa. Älä ihmettele, jos tunnus on negatiivinen; kaikki supergroups ovat negatiivisia id:itä.
   Disabling:
     help_msg: |-
-      Tämän avulla voit poistaa käytöstä joitakin yleisesti käytettyjä komentoja, joten kukaan ei voi käyttää niitä. Sen avulla voit myös autodelete ne, estää ihmisiä pohjatekstaus.
+      Tämä antaa sinun poistaa käytöstä joitakin yleisesti käytettyjä komentoja, joten kukaan ei voi käyttää niitä. Sen avulla voit myös autodelete ne, estää ihmisiä pohjatekstaus.
 
-      *Admin komentoja *:
-      x /poista käytöstä "<commandname>": Älä käytä käyttäjiä tässä ryhmässä.
-      x /mahdolli "<item name>": Salli käyttäjien käyttää tämän ryhmän komentinimeä.
-      × /disableable: Luettelo kaikista kelvottomista komennoista.
-      × /desabledel "<yes/no/on/off>": Tarpeeton yliviivataan.
+      *Ylläpitäjäkomennot *:
+      x /poista käytöstä "<komentonimi>": Älä käytä käyttäjiä tässä ryhmässä.
+      x /mahdolli "<kohteen nimi>": Salli käyttäjien käyttää tämän ryhmän komentinimeä.
+      × /disableable: Lista kaikista kelvottomista komennoista.
+      × /desabledel "<kyllä/ei/on/off>": Tarpeeton yliviivataan.
       x /vammaiset: tässä chatissa olevat vammaiset komennot.
 
       Huomautus:
@@ -388,22 +388,22 @@ strings:
       Käytöstä potut komennot ovat edelleen käytettävissä. Jos tekin haluatte nähdä tämän vammaisen, ilmoittakaa minulle tukirasussa.
   Filters:
     help_msg: |-
-      Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+      Filters ovat case insensitive; jokainen kerta, kun joku sanoo sinun trigger sanoja, Alita vastaa jotain muuta! voidaan käyttää luomaan omia komentoja, jos halutaan.
 
-      Commands:
-      - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-      - /filters: List all chat filters.
-      - /stop <trigger>: Stop the bot from replying to trigger.
-      - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+      Komennot:
+      - /filter <trigger> <vastaus>: Jokainen kerta, kun joku sanoo trigger, botti vastaa lauseella. Monimutkaisille sanan filterille, lainaa trigger.
+      - /filters: Lista kaikki keskustelun filterit.
+      - /stop <trigger>: Pysäytä botti vastaamaan trigger.
+      - /stopall: Pysäytä KAIKKI filterit nykyisessä keskustelussa. Tätä ei voida peruuttaa.
 
-      Examples:
-      - Set a filter:
+      Esimerkkejä:
+      - Aseta filter:
       -> /filter hello Hello there! How are you?
-      - Set a multiword filter:
+      - Aseta monimutkaisfilter:
       -> /filter hello friend Hello back! Long time no see!
-      - Set a filter that can only be used by admins:
+      - Aseta filter, joka voidaan käyttää vain ylläpitäjän:
       -> /filter example This filter wont happen if a normal user says it {admin}
-      - To save a file, image, gif, or any other attachment, simply reply to file with:
+      - Lähetä tiedosto, kuva, gif tai mikä tahansa muu liite, vastaamalla tiedostoon:
       -> /filter trigger
   Formatting:
     help_msg: |-
@@ -411,8 +411,8 @@ strings:
     Markdown: |-
       <b>Markdown Formatting</b>
 
-      You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-      <b>Supported markdown</b>:
+      Voit muotoilla viestisi käyttämällä <b>bold</b>, <i>italics</i>, <u>underline</u>, ja paljon muuta. Menee eteenpäin ja kokeile!
+      <b>Tuetut markdown</b>:
       - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
       - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
       - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
@@ -423,41 +423,41 @@ strings:
       - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
       - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
 
-      If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-      <b>Example:</b>
+      Jos haluat lähettää nappuloita samalla rivillä, käytä <code>:same</code> muotoilua.
+      <b>Esimerkki:</b>
       <code>[button 1](buttonurl:example.com)</code>
       <code>[button 2](buttonurl://example.com:same)</code>
       <code>[button 3](buttonurl://example.com)</code>
-      This will show button 1 and 2 on the same line, with 3 underneath.
+      Tämä näyttää nappuloita 1 ja 2 samalla rivillä, 3 alla.
     Fillings: |-
       <b>Fillings</b>
 
-      You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-      You can use these to mention a user in notes too!
+      Voit myös mukauttaa viestisi sisältöä kontekstuaalisella tiedolla. Esimerkiksi voit mainita käyttäjän nimen tervetuloviestissä, tai mainita heitä filerissä!
+      Voit myös käyttää näitä mainitaksesi käyttäjän myös muissa huomautuksissa!
 
-      <b>Supported fillings:</b>
-      - <code>{first}</code>: The user's first name.
-      - <code>{last}</code>: The user's last name.
-      - <code>{fullname}</code>: The user's full name.
-      - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-      - <code>{mention}</code>: Mentions the user with their firstname.
-      - <code>{id}</code>: The user's ID.
-      - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      <b>Tuetut fillings:</b>
+      - <code>{first}</code>: Käyttäjän ensimmäinen nimi.
+      - <code>{last}</code>: Käyttäjän viimeinen nimi.
+      - <code>{fullname}</code>: Käyttäjän täysi nimi.
+      - <code>{username}</code>: Käyttäjän käyttäjänimi. Jos heillä ei ole, mainita käyttäjä.
+      - <code>{mention}</code>: Mainitsee käyttäjän ensimmäisellä nimellä.
+      - <code>{id}</code>: Käyttäjän ID.
+      - <code>{chatname}</code>: Keskustelun nimi.
+      - <code>{rules}</code>: Lisää säännöt painiketta viestiin.
     Random: |-
       <b>Random Content</b>
 
-      Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-      How to use random contents:
-      - %%%: This separator can be used to add  random replies to the bot.
-      For example:
+      Toinen asia, joka voi olla hauskaa, on satunnaisointi viestin sisältöä. Tee asiat vähän henkeämpiä muuttamalla tervetuloviestejä, tai muuttamalla huomautuksia!
+      Kuinka käyttää satunnaista sisältöä:
+      - %%%: Tämä erotin voidaan käyttää lisätäksi satunnaisia vastauksia bottiin.
+      Esimerkki:
       <code>hello
       %%%
       how are you</code>
-      This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-      Use this to make Alita feel a bit more customised! (only works in filters/notes)
-      Example welcome message:
-      - Every time a new user joins, they'll be presented with one of the three messages shown here.
+      Tämä satunnaisesti valitsee kumpi viestistä lähetetään, "hello" vai "how are you".
+      Käytä tätä tehdäksesi Alita vähän enemmän kustomoitua! (toimii vain filereissä/huomautuksissa)
+      Esimerkki tervetuloviesti:
+      - Jokainen kerta, kun uusi käyttäjä liittyy, heille näytetään yksi kolmesta viestistä, joka näkyy tässä.
       -> /filter "hey"
       hello there <code>{first}</code>!
       %%%
@@ -468,15 +468,15 @@ strings:
     help_msg: |-
       Tervetuloa, uudet jäsenet ryhmääsi tai sano hyvästit heidän lähdettyään!
 
-      *Admin Commands: *
-      × /settervetullut "<reply/text>": Sets toivottaa ryhmän tervetulleeksi.
-      x /tervetuloa "<yes/no/on/off>": Enables tai Disables toivottaa ryhmän tervetulleeksi.
+      *Ylläpitäjäkomennot: *
+      × /settervetullut "<vastaus/teksti>": Sets toivottaa ryhmän tervetulleeksi.
+      x /tervetuloa "<kyllä/ei/on/off>": Enables tai Disables toivottaa ryhmän tervetulleeksi.
       × /resetkestä: palauttaa oletusarvon oletusarvon.
-      × /sethyvästit "<reply/text>": lähetä jäähyväisteksti ryhmälle.
-      × /hyvästit "<yes/no/on/off>": Enables tai Disables hyvästele ryhmän.
+      × /sethyvästit "<vastaus/teksti>": lähetä jäähyväisteksti ryhmälle.
+      × /hyvästit "<kyllä/ei/on/off>": Enables tai Disables hyvästele ryhmän.
       × /resetjäähyväiset: Palauta hyvästit oletusarvolle.
-      ×/siivouspalvelu "<yes/no/on/off>": Poista kaikki palveluviestit, kuten "x liittyi ryhmän ilmoitukseen".
-      × /puhdistaa "<yes/no/on/off>": Poista vanha tervetuloviesti aina, kun uusi jäsen liittyy.
+      ×/siivouspalvelu "<kyllä/ei/on/off>": Poista kaikki palveluviestit, kuten "x liittyi ryhmän ilmoitukseen".
+      × /puhdistaa "<kyllä/ei/on/off>": Poista vanha tervetuloviesti aina, kun uusi jäsen liittyy.
   Help:
     About: |-
       @%s on yksi nopeimmin ja eniten täytetyistä ryhmän johtajista.
@@ -525,12 +525,12 @@ strings:
   Locks:
     help_msg: |-
       * *:
-      × /lukitus "<permission>": Lukitse Chat-lupa.
-      × /vapautetaan "<permission>": Luvaton Chat-lupa.
+      × /lukitus "<lupa>": Lukitse Chat-lupa.
+      × /vapautetaan "<lupa>": Luvaton Chat-lupa.
       × /lukitus: Näytä Chat-lupa.
       × /locklajit: Tarkista käytettävissä olevat lukituslajit.
 
-      Locks voidaan käyttää ryhmän käyttäjien rajoittamiseen.
+      Lukitukset voidaan käyttää ryhmän käyttäjien rajoittamiseen.
       Lukitusurls poistaa kaikki viestit, joissa on urls-ja lukitustarrat, poistaa kaikki tarrat jne.
       Lukitusbotit estävät muita kuin päähenkilöitä lisäämästä boteja keskusteluun.
 
@@ -538,50 +538,50 @@ strings:
       /lukkoviestimet ': tämä lukitsee kaikki keskusteluryhmän viestimet.
   Languages:
     help_msg: |-
-      Etkö pysty muuttamaan botin kieltä?
-      Itäinen muutos käyttämällä tätä moduulia.
+      Etkö osaa vaihtaa botin kieltä?
+      Helppo muutos käyttämällä tätä moduulia!
 
-      Vain tyyppi /lang ja käyttää inline näppäimistöä valitsemaan kieli itsellesi tai ryhmällesi.
+      Kirjoita vain /lang ja käytä inline-näppäimistöä valitaksesi kielen itsellesi tai ryhmällesi.
 
-      Voit auttaa meitä tuomaan botti lisää kieliä auttamalla [Crowdin](https: //crowdin.com/project/alita_robot).
+      Voit auttaa meitä tuomaan botin lisää kielille auttamalla [Crowdinissa](https://crowdin.com/project/alita_robot).
   Misc:
     help_msg: |-
-      × /info: Get your user info, can be used as reply or by passing a User Id or Username.
-      × /id: Get the current group id. If used by replying to a message, get that user's id.
-      × /ping: Ping the Telegram Server!
-      × /paste: Paste texts at nekobin Server!
-      × /tr <lang code> <msg/reply to message>: Translate the message.
-      × /webping: Ping [Telegram API](https://api.telegram.org)!+
-      × /google <query>: Search something on Google.
-      × /yts <query>: Search something on YouTube.
-      × /app <query>: Search something on Google Play.
-      × /github <query>: Search something on Github.
-      × /reddit <query>: Search something on Reddit.
-      × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
+      × /info: Hae käyttäjätietosi, voidaan käyttää vastauksena tai antamalla käyttäjätunnus tai käyttäjänimi.
+      × /id: Hae nykyisen ryhmän tunnus. Jos käytetty vastaamalla viestiin, hae sen käyttäjän tunnus.
+      × /ping: Pingaa Telegram-palvelin!
+      × /paste: Liitä tekstit nekobin-palvelimelle!
+      × /tr <kielikoodi> <viesti/vastaa viestiin>: Käännä viesti.
+      × /webping: Pingaa [Telegram API](https://api.telegram.org)!
+      × /google <kysely>: Etsi jotain Googlesta.
+      × /yts <kysely>: Etsi jotain YouTubesta.
+      × /app <kysely>: Etsi jotain Google Playsta.
+      × /github <kysely>: Etsi jotain Githubista.
+      × /reddit <kysely>: Etsi jotain Redditistä.
+      × /removebotkeyboard: Poistaa jumittuneen bot-näppäimistön keskustelustasi.
   Mutes:
     help_msg: |-
-      Joskus käyttäjät voivat olla ärsyttäviä, ja ehkä haluat rajoittaa niitä lähettämästä viestiä keskusteluun, tämä moduuli on täällä auttamassa, voit käyttää moduulin mute jäseniä ryhmäsi.
+      Joskus käyttäjät voivat olla ärsyttäviä, ja saatat haluta rajoittaa heitä lähettämästä viestejä keskusteluun, tämä moduuli on tässä auttamassa, voit mykistää ryhmäsi jäseniä tällä moduulilla.
 
-      *Mute Commands: * (vain Admin)
-      × /mute <userhandle>: muutoloki käyttäjä, (kahvan tai vastauksen avulla)
-      × /salaatti <userhandle>: muitit käyttäjän hiljaa, ei lähetä viestiä ryhmälle ja myös poistaa komennon. (kahvan tai vastauksen avulla)
-      × /dmute <userhandle>: myo käyttäjä ja poista vastausviesti. (kahvan tai vastauksen avulla)
-      × /tmute <userhandle> x (m/h/d): myisi käyttäjän x-aikaa. (kahvan tai vastauksen avulla). M = minuuttia, h = tuntia, d = vuorokausi.
-      × /unmute <userhandle>: Poistetaan käyttäjä. (kahvan tai vastauksen avulla)
+      *Mute-komennot:* (vain ylläpitäjälle)
+      × /mute <käyttäjätunnus>: mykistä käyttäjä (tunnuksen tai vastauksen kautta)
+      × /smute <käyttäjätunnus>: mykistä käyttäjä hiljaa, ei lähetä viestiä ryhmälle ja poistaa myös komennon. (tunnuksen tai vastauksen kautta)
+      × /dmute <käyttäjätunnus>: mykistä käyttäjä ja poista vastausviesti. (tunnuksen tai vastauksen kautta)
+      × /tmute <käyttäjätunnus> x(m/h/d): mykistä käyttäjä x ajaksi. (tunnuksen tai vastauksen kautta). m = minuutteja, h = tunteja, d = päiviä.
+      × /unmute <käyttäjätunnus>: poista mykistys käyttäjältä. (tunnuksen tai vastauksen kautta)
   Notes:
     help_msg: |-
-      Save data for future users with notes!
-      Notes are great to save random tidbits of information; a phone number, a nice gif, a funny picture - anything!
-      *User commands:*
-      - /get <notename>: Get a note.
-      - #notename: Same as /get.
-      Admin commands:
-      - /save <notename> <note text>: Save a new note called "word". Replying to a message will save that message. Even works on media!
-      - /clear <notename>: Delete the associated note.
-      - /notes: List all notes in the current chat.
-      - /saved: Same as /notes.
-      - /clearall: Delete ALL notes in a chat. This cannot be undone.
-      - /privatenotes: Whether or not to send notes in PM. Will send a message with a button which users can click to get the note in PM.
+      Tallenna tietoja tuleville käyttäjille muistiinpanoilla!
+      Muistiinpanot ovat loistavia tallentamaan satunnaisia tiedon palasia; puhelinnumero, kiva gif, hauska kuva - mitä tahansa!
+      *Käyttäjäkomennot:*
+      - /get <muistiinpanonimi>: Hae muistiinpano.
+      - #muistiinpanonimi: Sama kuin /get.
+      *Ylläpitäjäkomennot:*
+      - /save <muistiinpanonimi> <muistiinpanoteksti>: Tallenna uusi muistiinpano nimeltä "sana". Vastaaminen viestiin tallentaa tuon viestin. Toimii jopa mediassa!
+      - /clear <muistiinpanonimi>: Poista siihen liittyvä muistiinpano.
+      - /notes: Listaa kaikki muistiinpanot nykyisessä keskustelussa.
+      - /saved: Sama kuin /notes.
+      - /clearall: Poista KAIKKI muistiinpanot keskustelusta. Tätä ei voida peruuttaa.
+      - /privatenotes: Lähetetäänkö muistiinpanot PM:ssä vai ei. Lähettää viestin painikkeella, jota käyttäjät voivat painaa saadakseen muistiinpanon PM:ssä.
   Pins:
     help_msg: |-
       Kaikki tähän liittyvät komennot voidaan löytää täältä; pidä rupattelun ajan tasalla viimeisimmistä uutisista, joissa on yksinkertainen kiinnitetty viesti.
@@ -589,86 +589,86 @@ strings:
       *Käyttäjän komennot: *
       × /kiinnitetty: Hae nykyinen tuettu sanoma.
 
-      *ADMIN-komennot: *
+      *Ylläpitäjäkomennot: *
       × /pin: Pin, johon vastasit. Lisää "äänekäs" tai "ilmoitus", jotta ryhmän jäsenille lähetetään ilmoitus.
       × /kiinnitetty: Gets viimeisin kiinnitetty viesti nykyisen Chat:
       × /permapin <text>: Pin on mukautettu viesti botin kautta. Tämä sanoma voi sisältää merkintöjä, painikkeita ja muita hienoja ominaisuuksia.
       × /unpin: Järjestelmä poistaa nykyisen sanoman. Jos vastaus on vastaus, vastatkaa viestiin.
       x /unpinall: Kaikki kiinnitetyt viestit
-      × kanavointi <yes/no/on/off>: Älä anna sähkeen linkitettyjen kanavien kautta. Jos argumentteja ei anneta, näyttää nykyinen asetus.
-      x /puhdistava <yes/no/on/off>: linkitetyn kanavan lähettämät viestit.
+      × kanavointi <kyllä/ei/on/off>: Älä anna sähkeen linkitettyjen kanavien kautta. Jos argumentteja ei anneta, näyttää nykyinen asetus.
+      x /puhdistava <kyllä/ei/on/off>: linkitetyn kanavan lähettämät viestit.
       Huomautus: Kun käytät antikanavakeiloja, varmista, että käytät /unpin - komentoa sen sijaan, että teet sen manuaalisesti. Muussa tapauksessa vanha viesti jää jumiin, kun kanava lähettää viestejä.
   Purges:
     help_msg: |-
-      *Admin only:*
-      - /purge: deletes all messages between this and the replied to message.
-      - /del: deletes the message you replied to.
+      *Vain ylläpitäjälle:*
+      - /purge: poistaa kaikki viestit tämän ja vastatun viestin väliltä.
+      - /del: poistaa viestin johon vastasit.
 
-      *Examples*:
-      - Delete all messages from the replied to message, until now.
+      *Esimerkkejä:*
+      - Poista kaikki viestit vastatusta viestistä tähän asti.
       -> `/purge`
   Reports:
     help_msg: |-
-      Olemme kaikki kiireisiä ihmisiä, joilla ei ole aikaa tarkkailla ryhmäämme ympäri vuorokauden. Mutta miten reagoit, jos joku ryhmässäsi on roskapostia?
+      Olemme kaikki kiireisiä ihmisiä, joilla ei ole aikaa valvoa ryhmäämme ympäri vuorokauden. Mutta miten reagoit, jos joku ryhmässäsi roskapostaa?
 
-      x /report "<reason>": vastaus sanomassa raportoidaksesi sen ylläpitäjille.
-      - @admin: sama kuin raportti, mutta ei komentoa.
+      × /report "<syy>": vastaa viestiin raportoidaksesi sen ylläpitäjille.
+      - @admin: sama kuin raportti, mutta ei komento.
 
-      *Admins Vain: *
-      x /raportit "<on/off/yes/no>": muutosraportin asetus, tai näkymän nykyinen tila.
-      -Jos se tehdään PM :ssä, suojalasit statuksesi.
-      -Jos ryhmässä on ongelmia ryhmien aseman kanssa.
-      × /raportit "lohko" (vain vastaamalla): Sulje käyttäjä käyttämällä /raporttia tai @admin.
-      x /raportit "unblock" (vain vastauksen kautta): Poista käyttäjä käytöstä /raportista tai @admin.
-      x /raportit "showblocklist": Tarkista kaikki estetyt käyttäjät, jotka eivät voi käyttää /raporttia tai @admin.
+      *Vain ylläpitäjälle:*
+      × /reports "<on/off/yes/no>": muuta raportin asetusta, tai näytä nykyinen tila.
+      - Jos tehdään PM:ssä, vaihtaa tilaasi.
+      - Jos ryhmässä, vaihtaa ryhmän tilaa.
+      × /reports "block" (vain vastaamalla): estä käyttäjä käyttämästä /reportia tai @admin.
+      × /reports "unblock" (vain vastaamalla): poista käyttäjän esto /reportin tai @admin käytöstä.
+      × /reports "showblocklist": tarkista kaikki estetyt käyttäjät, jotka eivät voi käyttää /reportia tai @admin.
 
-      Ilmoittaa käyttäjän, yksinkertaisesti vastauksen hänen viestiään @admin tai /reportt; Natalie sitten vastaa sanomalla, että ylläpitäjille on ilmoitettu.
-      You MUST vastaussanoma, jonka avulla voit raportoida käyttäjälle; et voi vain käyttää @admin -tunnisteita ilman syytä.
+      Raportoidaksesi käyttäjän, vastaa yksinkertaisesti hänen viestiinsä @admin tai /report; Alita sitten vastaa sanomalla että ylläpitäjille on ilmoitettu.
+      Sinun TÄYTYY vastata viestiin jonka haluat raportoida; et voi vain käyttää @admin ilman syytä.
 
-      *HUOMAUTUS: * Kumpikaan näistä ei laukaise, jos ylläpitäjät käyttävät sitä.
+      *HUOMAUTUS:* Kumpikaan näistä ei laukaise, jos ylläpitäjät käyttävät sitä.
   Rules:
     help_msg: |-
-      Kaikki keskusteluryhmät toimivat eri sääntöjen kanssa. Tämä moduuli auttaa sääntöjen selkeyttämiseen.
-      *User komennot *:
-      x /säännöt: Tarkista nykyiset chat-säännöt.
-      *ADMIN-komennot *:
-      x /setäännöt "<text>": Määritä tämän keskustelun säännöt.
-      × /privaterlit "<yes/no/on/off>": Ota käyttöön/poista käytöstä, onko säännöt lähetettävä yksityisesti.
-      × /resetäännöt: Järjestelmä palauttaa oletusarvon.
+      Kaikki keskusteluryhmät toimivat eri sääntöjen kanssa. Tämä moduuli auttaa sääntöjen selkeyttämisessä.
+      *Käyttäjäkomennot:*
+      × /rules: Tarkista nykyiset keskustelun säännöt.
+      *Ylläpitäjäkomennot:*
+      × /setrules "<teksti>": Aseta tämän keskustelun säännöt.
+      × /privaterules "<yes/no/on/off>": Ota käyttöön/poista käytöstä, lähetetäänkö säännöt yksityisesti.
+      × /resetrules: Palauta säännöt oletusarvoon.
   Tagger:
     help_msg: |-
-      Tagger is an essential feature to mention all subscribed members in the group.
-      Any chat members can subscribe to tagger.
+      Tagger on olennainen ominaisuus mainita kaikki tilatut jäsenet ryhmässä.
+      Kaikki keskustelun jäsenet voivat tilata taggerin.
 
-      *User Commands:*
-      × /tagme: Allow user to be tagged
-      × /untagme: Disallow user to be tagged
+      *Käyttäjäkomennot:*
+      × /tagme: Anna käyttäjän tulla merkityksi
+      × /untagme: Älä anna käyttäjän tulla merkityksi
 
-      *Admin Commands:*
-      × /tagall: tag/mention all tagged users
-      × /untagall: clear all tagged members
-      × /addtag <user>: Add a user manually to taglist
-      × /rmtag <user>: Remove a user manually from taglist
+      *Ylläpitäjäkomennot:*
+      × /tagall: merkitse/mainitse kaikki merkityt käyttäjät
+      × /untagall: tyhjennä kaikki merkityt jäsenet
+      × /addtag <käyttäjä>: Lisää käyttäjä manuaalisesti merkintälistaan
+      × /rmtag <käyttäjä>: Poista käyttäjä manuaalisesti merkintälistasta
   Warns:
     help_msg: |-
-      Keep your members in check with warnings; stop them getting out of control!
-      If you're looking for automated warnings, read about the blacklist module!
+      Pidä jäsenesi kurissa varoituksilla; estä heitä riistäytymästä käsistä!
+      Jos etsit automaattisia varoituksia, lue mustien listojen moduulista!
 
-      *Admin Commands:*
-      - /warn <reason>: Warn a user.
-      - /dwarn <reason>: Warn a user by reply, and delete their message.
-      - /swarn <reason>: Silently warn a user, and delete your message.
-      - /warns: See a user's warnings.
-      - /rmwarn: Remove a user's latest warning.
-      - /resetwarn: Reset all of a user's warnings to 0.
-      - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-      - /warnings: Get the chat's warning settings.
-      - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-      - /setwarnlimit <number>: Set the number of warnings before users are punished.
+      *Ylläpitäjäkomennot:*
+      - /warn <syy>: Varoita käyttäjää.
+      - /dwarn <syy>: Varoita käyttäjää vastaamalla, ja poista hänen viestinsä.
+      - /swarn <syy>: Varoita käyttäjää hiljaa, ja poista oma viestisi.
+      - /warns: Katso käyttäjän varoitukset.
+      - /rmwarn: Poista käyttäjän viimeisin varoitus.
+      - /resetwarn: Nollaa kaikki käyttäjän varoitukset.
+      - /resetallwarns: Poista kaikki varoitukset keskustelusta. Kaikki käyttäjät palaavat 0 varoitukseen.
+      - /warnings: Hae keskustelun varoitusasetukset.
+      - /setwarnmode <ban/kick/mute/tban/tmute>: Aseta keskustelun varoitustila.
+      - /setwarnlimit <numero>: Aseta varoitusten määrä ennen kuin käyttäjät rankaistaan.
 
-      *Examples*
-      - Warn a user.
-      -> `/warn @user For disobeying the rules`
+      *Esimerkkejä:*
+      - Varoita käyttäjää.
+      -> `/warn @käyttäjä Sääntöjen rikkomisesta`
   Utils:
     chat_status:
       user:

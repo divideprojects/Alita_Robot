@@ -11,69 +11,69 @@ strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        Кэш администратора успешно перезагружен.
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        Кэш администратора не найден. Попросите администратора использовать /admincache для перезагрузки кэша администратора.
   Admin:
     adminlist: |-
-      Admins in <b>%s</b>:
+      Администраторы в <b>%s</b>:
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        Режим АнонимныйАдмин в настоящее время <b>включен</b> для %s.
+        Это позволяет всем анонимным администраторам выполнять административные действия без ограничений.
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        Режим АнонимныйАдмин в настоящее время <b>отключен</b> для %s.
+        Это требует от анонимных администраторов нажать кнопку для подтверждения их прав.
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        Режим АнонимныйАдмин теперь <b>включен</b> для %s.
+        Отныне я буду просить администраторов проверять права анонимных администраторов.
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        Режим АнонимныйАдмин теперь <b>отключен</b> для %s.
+        Отныне я больше не буду просить администраторов проверять права анонимных администраторов.
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        Режим АнонимныйАдмин уже <b>включен</b> для %s
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        Режим АнонимныйАдмин уже <b>отключен</b> для %s
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Неверный аргумент, я понимаю только <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        Этот человек создал этот чат, как я могу его понизить?
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        Этот человек не администратор, как я могу его понизить?
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        Я не могу понизить себя, иди к тому, кто меня повысил!
       success_demote: |-
-        Successfully demoted %s!
+        Успешно понижен %s!
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        Заголовок администратора обрезан до 16 символов с %d
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Если бы только я мог сделать это с собой ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        Этот человек создал этот чат, как я могу его повысить?
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        Этот человек уже администратор, как я могу его повысить?
       success_promote: |-
-        Successfully promoted %s!
+        Успешно повышен %s!
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        Успешно установлен заголовок администратора %s на <b>%s</b>
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Если бы только я мог сделать это с собой ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        Этот человек создал этот чат, как я могу установить для него пользовательский заголовок администратора?
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        Этот человек уже администратор, как я могу установить для него пользовательский заголовок администратора?
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        Не удалось установить пользовательский заголовок администратора, имя заголовка может быть неправильным или содержать эмодзи.
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Не удалось понизить. Возможно, я не администратор, или статус администратора был назначен другим пользователем, поэтому я не могу воздействовать на них!
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Не удалось повысить. Возможно, я не администратор, или статус администратора был назначен другим пользователем, поэтому я не могу воздействовать на них!
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        Вам нужно дать мне заголовок администратора, чтобы я мог его установить.
     help_msg: |-
       Упростим и понижайте пользователей с помощью административного модуля!
 
@@ -87,43 +87,43 @@ strings:
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        Да, мне не нравится ваш флуд. %s был %s!
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        Понятно! Максимальный лимит флуда в <b>%d</b> сообщений.
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        Хорошо.
+        Я не буду предупреждать пользователей за флуд.
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        Этот чат в настоящее время не применяет контроль флуда.
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        Этот чат в настоящее время применяет контроль флуда после %d сообщений. Любые пользователи, отправляющие больше этого количества сообщений, будут %s.
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        Понятно! Режим флуда будет %s.
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        Неизвестный тип '%s'. Пожалуйста, используйте один из: ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        Вам нужно указать действие, которое нужно выполнить при флуде. Текущие режимы: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        Включено удаление сообщений антифлуда. Сообщения, вызывающие антифлуд, будут удалены!
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        Отключено удаление сообщений антифлуда. Сообщения, вызывающие антифлуд, будут игнорироваться!
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        Я понимаю только опцию из: `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        Удаление сообщений антифлуда в настоящее время *включено* в этом чате, сообщения, вызывающие антифлуд, будут удалены!
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        Удаление сообщений антифлуда в настоящее время *отключено* в этом чате, сообщения, вызывающие антифлуд, будут игнорироваться!
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        Я ожидал некоторые аргументы! Либо off, либо целое число. например: `/setflood 5`, или `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        Это не допустимое целое число. Пожалуйста, дайте мне допустимое целое число, или `off`.
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        Лимит антифлуда должен быть установлен между 3 и 100.
     help_msg: |-
       Ты знаешь, как иногда, люди присоединяются, посылают 100 сообщений и рушат твой чат? С помощью антипаводка это не больше!
 

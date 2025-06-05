@@ -11,40 +11,40 @@ strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        Admin-Cache erfolgreich neu geladen.
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        Admin-Cache nicht gefunden. Bitten Sie einen Admin, /admincache zu verwenden, um den Admin-Cache neu zu laden.
   Admin:
     adminlist: |-
       Admins in <b>%s</b>:
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        AnonAdmin-Modus ist derzeit <b>aktiviert</b> für %s.
+        Dies ermöglicht es allen anonymen Admins, Admin-Aktionen ohne Einschränkungen durchzuführen.
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        AnonAdmin-Modus ist derzeit <b>deaktiviert</b> für %s.
+        Dies erfordert, dass anonyme Admins eine Schaltfläche drücken, um ihre Berechtigungen zu bestätigen.
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        AnonAdmin-Modus ist jetzt <b>aktiviert</b> für %s.
+        Von nun an werde ich die Admins bitten, Berechtigungen von anonymen Admins zu überprüfen.
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        AnonAdmin-Modus ist jetzt <b>deaktiviert</b> für %s.
+        Von nun an werde ich die Admins nicht mehr bitten, Berechtigungen von anonymen Admins zu überprüfen.
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        AnonAdmin-Modus ist bereits <b>aktiviert</b> für %s
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        AnonAdmin-Modus ist bereits <b>deaktiviert</b> für %s
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Ungültiges Argument, ich verstehe nur <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        Diese Person hat diesen Chat erstellt, wie soll ich sie degradieren?
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        Diese Person ist kein Admin, wie soll ich sie degradieren?
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        Ich kann mich nicht selbst degradieren, hol dir die Person, die mich befördert hat!
       success_demote: |-
-        Successfully demoted %s!
+        %s erfolgreich degradiert!
     promote:
       admin_title_truncated: |-
         Admin title truncated to 16 characters from %d

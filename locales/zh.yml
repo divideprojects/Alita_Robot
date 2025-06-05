@@ -11,69 +11,69 @@ strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        成功重新加载管理员缓存。
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        找不到管理员缓存。请联系管理员使用 /admincache 重新加载管理员缓存。
   Admin:
     adminlist: |-
-      Admins in <b>%s</b>:
+      <b>%s</b> 中的管理员：
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        匿名管理员模式目前为 %s <b>已启用</b>。
+        这允许所有匿名管理员无限制地执行管理员操作。
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        匿名管理员模式目前为 %s <b>已禁用</b>。
+        这要求匿名管理员按下按钮确认他们的权限。
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        匿名管理员模式现在为 %s <b>已启用</b>。
+        从现在开始，我将要求管理员验证匿名管理员的权限。
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        匿名管理员模式现在为 %s <b>已禁用</b>。
+        从现在开始，我不再要求管理员验证匿名管理员的权限。
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        匿名管理员模式已经为 %s <b>已启用</b>
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        匿名管理员模式已经为 %s <b>已禁用</b>
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        无效参数，我只理解 <code>on</code>、<code>off</code>、<code>yes</code>、<code>no</code>
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        这个人创建了这个聊天，我怎么能降级他们？
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        这个人不是管理员，我怎么能降级他们？
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        我不能降级自己，去找提升我的人！
       success_demote: |-
-        Successfully demoted %s!
+        成功降级 %s！
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        管理员标题从 %d 字符截断为 16 字符
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        如果我能对自己这样做就好了 ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        这个人创建了这个聊天，我怎么能提升他们？
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        这个人已经是管理员了，我怎么能提升他们？
       success_promote: |-
-        Successfully promoted %s!
+        成功提升 %s！
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        成功将 %s 的管理员标题设置为 <b>%s</b>
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        如果我能对自己这样做就好了 ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        这个人创建了这个聊天，我怎么能为他们设置自定义管理员标题？
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        这个人已经是管理员了，我怎么能为他们设置自定义管理员标题？
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        设置自定义管理员标题失败，标题名称可能不正确或包含表情符号。
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        无法降级。我可能不是管理员，或者管理员状态是由其他用户指定的，所以我无法对他们采取行动！
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        无法提升。我可能不是管理员，或者管理员状态是由其他用户指定的，所以我无法对他们采取行动！
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        你需要给我一个管理员标题，这样我就能设置它。
     help_msg: |-
       请使用 admin 模块!
 
@@ -87,43 +87,43 @@ strings:
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        是的，我不喜欢你的刷屏。%s 已被 %s！
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        明白！最大刷屏限制为 <b>%d</b> 条消息。
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        好的。
+        我不会因为刷屏警告用户。
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        此聊天目前没有执行刷屏控制。
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        此聊天目前在 %d 条消息后执行刷屏控制。发送超过该数量消息的任何用户将被 %s。
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        明白！刷屏模式将是 %s。
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        未知类型 '%s'。请使用其中之一：ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        您需要指定刷屏时要采取的行动。当前模式有：`ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        开启反刷屏消息删除。导致反刷屏的消息将被删除！
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        关闭反刷屏消息删除。导致反刷屏的消息将被忽略！
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        我只理解以下选项：`yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        反刷屏消息删除目前在此聊天中*已启用*，导致反刷屏的消息将被删除！
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        反刷屏消息删除目前在此聊天中*已禁用*，导致反刷屏的消息将被忽略！
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        我期望一些参数！要么是 off，要么是整数。例如：`/setflood 5`，或 `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        那不是有效的整数。请给我一个有效的整数，或 `off`。
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        反刷屏限制必须设置在 3 到 100 之间。
     help_msg: |-
       您知道有时，人们会加入，发送 100 条消息，并破坏您的交谈吗 ? 在抗洪水的情况下，这将不再发生 !
 
@@ -137,49 +137,49 @@ strings:
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        您已经通过让我成为管理员来批准我了！
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        已批准用户：%s
+        他们现在受到保护，免受封禁、黑名单、锁定和反刷屏的影响！
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        这个用户不在这个聊天中，我怎么能批准他们？
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        我是管理员，我不能被取消批准！
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        已取消批准用户：%s
+        他们不再受到保护，免受封禁、黑名单、锁定和反刷屏的影响！
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s 是管理员，您不需要批准。
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        我是管理员，我不需要批准。
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s 是 <b>%s</b> 中的已批准用户
+        他们受到保护，免受黑名单、锁定和反刷屏的影响！
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>批准者：</b> %s (<code>%d</code>)
+        <b>批准时间：</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        您在 <b>%s</b> 中未被批准
+        您不受保护，免受黑名单、锁定和反刷屏的影响！
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: "<b>%s</b> 中没有已批准的用户！"
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        这些用户在 <b>%s</b> 中已被批准：
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        要获取每个用户的更多信息，如批准者和批准时间，请使用 /approval（用户 ID）。
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        您确定要从此聊天中移除所有已批准用户吗？
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        只有聊天创建者可以使用此命令取消批准此聊天中的所有用户。
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          已从此聊天中移除所有已批准用户 ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          已取消从此聊天中移除所有已批准用户 ❌
     help_msg: |-
       有时，您可能信任用户不发送不需要的内容。
       也许不够让他们 admin ，但你可能对锁，黑名单，抗洪不适用于他们。

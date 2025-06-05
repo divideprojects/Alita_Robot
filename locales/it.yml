@@ -11,69 +11,69 @@ strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        Cache admin ricaricata con successo.
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        Cache admin non trovata. Chiedi a un admin di usare /admincache per ricaricare la cache admin.
   Admin:
     adminlist: |-
-      Admins in <b>%s</b>:
+      Amministratori in <b>%s</b>:
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        La modalità AdminAnonimo è attualmente <b>abilitata</b> per %s.
+        Questo permette a tutti gli amministratori anonimi di eseguire azioni amministrative senza restrizioni.
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        La modalità AdminAnonimo è attualmente <b>disabilitata</b> per %s.
+        Questo richiede agli amministratori anonimi di premere un pulsante per confermare i loro permessi.
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        La modalità AdminAnonimo è ora <b>abilitata</b> per %s.
+        Da ora in poi, chiederò agli amministratori di verificare i permessi degli amministratori anonimi.
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        La modalità AdminAnonimo è ora <b>disabilitata</b> per %s.
+        Da ora in poi, non chiederò più agli amministratori di verificare i permessi degli amministratori anonimi.
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        La modalità AdminAnonimo è già <b>abilitata</b> per %s
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        La modalità AdminAnonimo è già <b>disabilitata</b> per %s
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Argomento non valido, capisco solo <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        Questa persona ha creato questa chat, come potrei retrocederla?
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        Questa persona non è un amministratore, come potrei retrocederla?
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        Non posso retrocedere me stesso, vai a prendere la persona che mi ha promosso!
       success_demote: |-
-        Successfully demoted %s!
+        %s retrocesso con successo!
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        Titolo admin troncato a 16 caratteri da %d
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Se solo potessi farlo a me stesso ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        Questa persona ha creato questa chat, come potrei promuoverla?
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        Questa persona è già un amministratore, come potrei promuoverla?
       success_promote: |-
-        Successfully promoted %s!
+        %s promosso con successo!
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        Titolo admin di %s impostato con successo su <b>%s</b>
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Se solo potessi farlo a me stesso ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        Questa persona ha creato questa chat, come potrei impostare un titolo admin personalizzato per lei?
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        Questa persona è già un amministratore, come potrei impostare un titolo admin personalizzato per lei?
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        Impossibile impostare il titolo admin personalizzato, il nome del titolo potrebbe non essere corretto o potrebbe contenere emoji.
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Impossibile retrocedere. Potrei non essere admin, o lo status di amministratore è stato nominato da un altro utente, quindi non posso agire su di loro!
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Impossibile promuovere. Potrei non essere admin, o lo status di amministratore è stato nominato da un altro utente, quindi non posso agire su di loro!
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        Devi darmi un titolo admin così posso impostarlo.
     help_msg: |-
       Rendi facile promuovere e declassare gli utenti con il modulo admin!
 
@@ -87,43 +87,43 @@ strings:
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        Sì, non mi piace il tuo spam. %s è stato %s!
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        Capito! Limite massimo di spam in <b>%d</b> messaggi.
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        D'accordo.
+        Non avvertirò gli utenti per lo spam.
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        Questa chat non sta attualmente applicando il controllo anti-spam.
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        Questa chat sta attualmente applicando il controllo anti-spam dopo %d messaggi. Qualsiasi utente che invia più di quella quantità di messaggi sarà %s.
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        Capito! La modalità anti-spam sarà %s.
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        Tipo sconosciuto '%s'. Per favore usa uno di: ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        Devi specificare un'azione da intraprendere in caso di spam. Le modalità attuali sono: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        Attivata l'eliminazione dei messaggi anti-spam. I messaggi che causano anti-spam saranno eliminati!
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        Disattivata l'eliminazione dei messaggi anti-spam. I messaggi che causano anti-spam saranno ignorati!
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        Capisco solo un'opzione tra: `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        L'eliminazione dei messaggi anti-spam è attualmente *abilitata* in questa chat, i messaggi che causano anti-spam saranno eliminati!
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        L'eliminazione dei messaggi anti-spam è attualmente *disabilitata* in questa chat, i messaggi che causano anti-spam saranno ignorati!
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        Mi aspettavo alcuni argomenti! O off, o un numero intero. es: `/setflood 5`, o `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        Quello non è un numero intero valido. Per favore dammi un numero intero valido, o `off`.
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        Il limite anti-spam deve essere impostato tra 3 e 100.
     help_msg: |-
       Sai come a volte, le persone si uniscono, inviano 100 messaggi e rovinano la tua chiacchierata? Con antialluvione, questo non succede più!
 
@@ -137,49 +137,49 @@ strings:
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        Mi hai già approvato rendendomi admin!
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        Utente Approvato: %s
+        Ora sono protetti da ban, blacklist, blocchi e anti-spam!
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        Questo utente non è in questa chat, e come posso approvarli?
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        Sono un admin, non posso essere disapprovato!
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        Utente Disapprovato: %s
+        Non sono più protetti da ban, blacklist, blocchi e anti-spam!
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s è un admin, non hai bisogno di approvazione.
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        Sono un admin, non ho bisogno di approvazione.
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s è un Utente approvato in <b>%s</b>
+        Sono protetti da blacklist, blocchi e anti-spam!
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>Approvato Da:</b> %s (<code>%d</code>)
+        <b>Ora di Approvazione:</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        Non sei approvato in <b>%s</b>
+        Non sei protetto da blacklist, blocchi e anti-spam!
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: "Nessun utente è approvato in <b>%s</b>!"
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        Questi utenti sono approvati in <b>%s:</b>
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        Per ottenere più informazioni su ogni utente come Approvato Da e Ora di Approvazione, usa /approval (id utente).
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        Sei sicuro di voler rimuovere tutti gli Utenti Approvati da questa chat?
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        Solo il Creatore della Chat può usare questo comando per disapprovare tutti gli utenti in questa chat.
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          Rimossi tutti gli Utenti Approvati da questa Chat ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          Annullata la rimozione di tutti gli Utenti Approvati da questa Chat ❌
     help_msg: |-
       A volte, potresti fidarti di un utente per non inviare contenuti indesiderati.
       Forse non abbastanza per renderli admin, ma potreste stare bene con le serrature, le blacklist e l'antiinondazione che non si applicano a loro.

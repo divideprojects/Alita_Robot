@@ -2,291 +2,291 @@
 #stringcode: string
 main:
   lang_sample: |-
-    svenska
+    Svenska
   language_flag: |-
     🇸🇪
   language_name: |-
-    svenska
+    Svenska
 strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        Administratörs-cache har laddats om framgångsrikt.
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        Administratörs-cache hittades inte. Be en administratör att använda /admincache för att ladda om administratörs-cachen.
   Admin:
     adminlist: |-
-      Admins in <b>%s</b>:
+      Administratörer i <b>%s</b>:
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        AnonAdmin-läget är för närvarande <b>aktiverat</b> för %s.
+        Detta tillåter alla anonyma administratörer att utföra administrativa åtgärder utan begränsning.
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        AnonAdmin-läget är för närvarande <b>inaktiverat</b> för %s.
+        Detta kräver att anonyma administratörer trycker på en knapp för att bekräfta sina behörigheter.
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        AnonAdmin-läget är nu <b>aktiverat</b> för %s.
+        Från och med nu kommer jag att be administratörerna att verifiera behörigheter från anonyma administratörer.
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        AnonAdmin-läget är nu <b>inaktiverat</b> för %s.
+        Från och med nu kommer jag inte längre att be administratörerna att verifiera behörigheter från anonyma administratörer.
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        AnonAdmin-läget är redan <b>aktiverat</b> för %s
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        AnonAdmin-läget är redan <b>inaktiverat</b> för %s
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Ogiltigt argument, jag förstår bara <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        Den här personen skapade denna chatt, hur skulle jag kunna degradera dem?
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        Den här personen är inte en administratör, hur skulle jag kunna degradera dem?
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        Jag kan inte degradera mig själv, gå och hitta personen som befordrade mig!
       success_demote: |-
-        Successfully demoted %s!
+        Framgångsrikt degraderade %s!
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        Administratörstitel trunkerad till 16 tecken från %d
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Om jag bara kunde göra detta för mig själv ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        Den här personen skapade denna chatt, hur skulle jag kunna befordra dem?
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        Den här personen är redan en administratör, hur skulle jag kunna befordra dem?
       success_promote: |-
-        Successfully promoted %s!
+        Framgångsrikt befordrade %s!
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        Framgångsrikt satte %s:s administratörstitel till <b>%s</b>
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Om jag bara kunde göra detta för mig själv ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        Den här personen skapade denna chatt, hur skulle jag kunna sätta en anpassad administratörstitel för dem?
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        Den här personen är redan en administratör, hur skulle jag kunna sätta en anpassad administratörstitel för dem?
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        Misslyckades med att sätta anpassad administratörstitel, titelnamnet kanske inte är korrekt eller innehåller emojis.
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Kunde inte degradera. Jag kanske inte är administratör, eller administratörsstatusen tilldelades av en annan användare, så jag kan inte agera mot dem!
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Kunde inte befordra. Jag kanske inte är administratör, eller administratörsstatusen tilldelades av en annan användare, så jag kan inte agera mot dem!
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        Du måste ge mig en administratörstitel så att jag kan sätta den.
     help_msg: |-
-      Gör det enkelt att befordra och nedgradera användare med administratörsmodulen!
+      Gör det enkelt att befordra och degradera användare med administratörsmodulen!
 
-      *User: *
-      × /adminlist: Lista adminer i den aktuella chatten.
+      *Användarkommandon:*
+      × /adminlist: Lista administratörer i den aktuella chatten.
 
-      *Admin-kommandon: *
-      × /befordra "<reply/username/mention/userid>": befordra en användare.
-      × /demote "<reply/username/mention/userid>": Avvisa en användare.
-      × /titel "<reply/username/mention/userid>" "<custom title>": Ange anpassad titel för användaren
+      *Administratörskommandon:*
+      × /promote `<svar/användarnamn/omnämnande/användar-id>`: Befordra en användare.
+      × /demote `<svar/användarnamn/omnämnande/användar-id>`: Degradera en användare.
+      × /title `<svar/användarnamn/omnämnande/användar-id>` `<anpassad titel>`: Sätt anpassad titel för användare
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        Ja, jag gillar inte din spam. %s har blivit %s!
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        Förstått! Max spam-gräns på <b>%d</b> meddelanden.
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        Okej.
+        Jag kommer inte varna användare för spam.
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        Denna chatt tillämpar för närvarande inte spam-kontroll.
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        Denna chatt tillämpar för närvarande spam-kontroll efter %d meddelanden. Alla användare som skickar mer än den mängden meddelanden kommer att bli %s.
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        Förstått! Spam-läget kommer att vara %s.
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        Okänd typ '%s'. Använd en av: ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        Du måste specificera en åtgärd att vidta vid spam. Nuvarande lägen är: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        Aktiverade Anti-spam Meddelandeborttagning. Meddelanden som orsakar spam kommer att raderas!
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        Inaktiverade Anti-spam Meddelandeborttagning. Meddelanden som orsakar spam kommer att ignoreras!
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        Jag förstår bara ett alternativ från: `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        Anti-spam meddelandeborttagning är för närvarande *aktiverad* i denna chatt, meddelanden som orsakar spam kommer att raderas!
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        Anti-spam meddelandeborttagning är för närvarande *inaktiverad* i denna chatt, meddelanden som orsakar spam kommer att ignoreras!
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        Jag förväntade mig några argument! Antingen off, eller ett heltal. ex: `/setflood 5`, eller `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        Det är inte ett giltigt heltal. Ge mig ett giltigt heltal, eller `off`.
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        Anti-spam-gränsen måste sättas mellan 3 och 100.
     help_msg: |-
-      You know how sometimes, people join, send 100 messages, and ruin your chat? With antiflood, that happens no more!
+      Du vet hur ibland människor går med, skickar 100 meddelanden och förstör din chatt? Med anti-spam händer det inte längre!
 
-      Antiflood allows you to take action on users that send more than x messages in a row. Actions are: ban/kick/mute/tban/tmute
+      Anti-spam tillåter dig att vidta åtgärder mot användare som skickar mer än x meddelanden i rad. Åtgärder är: ban/kick/mute/tban/tmute
 
-      *Admin commands*:
-      × /flood: Get the current antiflood settings.
-      × /setflood `<number/off/no>`: Set the number of messages after which to take action on a user. Set to '0', 'off', or 'no' to disable.
-      × /setfloodmode `<action type>`: Choose which action to take on a user who has been flooding. Options: ban/kick/mute/tban/tmute
-      × /delflood `<yes/no/on/off>`: If you want bot to delete messages flooded by user.
+      *Administratörskommandon:*
+      × /flood: Hämta nuvarande anti-spam-inställningar.
+      × /setflood `<nummer/off/no>`: Sätt antalet meddelanden efter vilket åtgärder ska vidtas mot en användare. Sätt till '0', 'off', eller 'no' för att inaktivera.
+      × /setfloodmode `<åtgärdstyp>`: Välj vilken åtgärd som ska vidtas mot en användare som har spammat. Alternativ: ban/kick/mute/tban/tmute
+      × /delflood `<yes/no/on/off>`: Om du vill att botten ska radera meddelanden som spammats av användaren.
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        Du har redan godkänt mig genom att göra mig till administratör!
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        Godkänd användare: %s
+        De är nu skyddade från förbud, svartlistor, lås och anti-spam!
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        Denna användare är inte i denna chatt, hur kan jag godkänna dem?
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        Jag är en administratör, jag kan inte bli ogodkänd!
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        Ogodkänd användare: %s
+        De är inte längre skyddade från förbud, svartlistor, lås och anti-spam!
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s är en administratör, du behöver inte godkännande.
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        Jag är en administratör, jag behöver inte godkännande.
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s är en godkänd användare i <b>%s</b>
+        De är skyddade från svartlistor, lås och anti-spam!
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>Godkänd av:</b> %s (<code>%d</code>)
+        <b>Godkänd tid:</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        Du är inte godkänd i <b>%s</b>
+        Du är inte skyddad från svartlistor, lås och anti-spam!
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: "Inga användare är godkända i <b>%s</b>!"
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        Dessa användare är godkända i <b>%s:</b>
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        För att få mer information om varje användare såsom Godkänd av och Godkänd tid, använd /approval (användar-id).
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        Är du säker på att du vill ta bort alla godkända användare från denna chatt?
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        Endast chattskaparen kan använda detta kommando för att ogodkänna alla användare i denna chatt.
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          Tog bort alla godkända användare från denna chatt ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          Avbröt borttagning av alla godkända användare från denna chatt ❌
     help_msg: |-
       Ibland kan du lita på att en användare inte skickar oönskat innehåll.
-      Kanske inte tillräckligt för att göra dem ohyra, men du kan vara ok med lås, svartlistor och antiflod som inte är tillämpliga på dem.
-      Det är vad typgodkännanden är för-godkännande av tillförlitliga användare som gör det möjligt för dem att skicka
+      Kanske inte tillräckligt för att göra dem till administratör, men du kan vara okej med att lås, svartlistor och anti-spam inte gäller för dem.
+      Det är vad godkännanden är till för - godkänn pålitliga användare för att tillåta dem att skicka
 
-      *User-kommandon: *
-      × /godkännande: Kontrollera en användares godkännandestatus i den här chatten.
+      *Användarkommandon:*
+      × /approval: Kontrollera en användares godkännandestatus i denna chatt.
 
-      *Admin-kommandon: *
-      × /godkänna: Godkänn för en användare. Locks, svartlistor, och antiöversvämning gäller inte längre.
-      × /ungodkän:: Ogodkännande av en användare. De kommer nu att bli föremål för slussar, svartlistor och antiöversvämning igen.
-      × /godkänd: Lista alla godkända användare.
+      *Administratörskommandon:*
+      × /approve: Godkänn en användare. Lås, svartlistor och anti-spam kommer inte längre att gälla för dem.
+      × /unapprove: Ogodkänn en användare. De kommer nu åter att bli föremål för lås, svartlistor och anti-spam.
+      × /approved: Lista alla godkända användare.
 
-      *Ägare (*Owner): *
-      × /unapproveall: Ogilla alla användare i en chatt. Det här kan inte ångras.
+      *Ägarkommandon:*
+      × /unapproveall: Ogodkänn ALLA användare i en chatt. Detta kan inte ångras.
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        Denna användare är inte i denna chatt, hur kan jag sparka dem?
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        Varför skulle jag sparka en administratör? Det låter som ett ganska dumt idé.
       is_bot_itself: |-
-        Why would I kick myself?
+        Varför skulle jag sparka mig själv?
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        En annan bitar av döden...!
+        Sparkad %s.
+      kicked_reason: "\n<b>Anledning: </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        Du är en administratör, du är fast här med alla andra!
       ok_out: |-
-        Alright, get out!
+        Okej, kom ut!
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        Varför skulle jag banna en administratör? Det låter som ett ganska dumt idé.
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        Tror du verkligen att jag skulle banna mig själv?
+      ban_reason: "\n<b>Anledning: </b> %s"
       tban: |-
-        Another one bites the dust...!
+        En annan bitar av döden...!
         Banned %s for %s
       normal_ban: |-
-        Another one bites the dust...!
+        En annan bitar av döden...!
         Banned %s.
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          Du måste svara på ett meddelande för att ta bort det och banna användaren!
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        Varför skulle jag avbanna en administratör? Det låter som ett ganska dumt idé.
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        Varför skulle jag av-begränsa mig själv när jag redan är här?
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        Ok, säker...!
+        Avbanned %s.
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      Ibland kan användare vara irriterande och du kanske vill ta bort dem från din chatt, den här modulen hjälper dig exakt med det!
+      Banna/sparka användare från din chatt och avbanna dem senare om de beter sig.
 
-      *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      *Användarkommandon:*
+      × /kickme: sparkar användaren som gav kommandot.
 
-      *Ban Commands* (Admin only):
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-      × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-      × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-      × /unban <userhandle>: unbans a user. (via handle, or reply)
+      *Bannkommandon* (Endast administratör):
+      × /ban <användarnamn>: banna en användare. (via användarnamn, eller svara)
+      × /sban <användarnamn>: banna en användare tyst, skickar inte meddelande till gruppen och tar också bort ditt kommando. (via användarnamn, eller svara)
+      × /dban <användarnamn>: banna en användare och ta bort det besvarade meddelandet. (via användarnamn, eller svara)
+      × /tban <användarnamn> x(m/h/d): banna en användare för `x` tid. (via användarnamn, eller svara). m = minuter, h = timmar, d = dagar.
+      × /unban <användarnamn>: avbanna en användare. (via användarnamn, eller svara)
 
-      *Restrict Commands:* (Admin only)
-      × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-      × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+      *Begränsningskommandon:* (Endast administratör)
+      × /restrict: Visar ett InlineKeyboard för att välja alternativ från banna, banna och muta
+      × /unrestrict: Visar ett InlineKeyboard för att välja alternativ från unmuta och avbanna.
   Blacklists:
     blacklist:
       give_bl_word: |-
-        Please give me a word to add to the blacklist!
+        Ge mig ett ord att lägga till i svartlistan!
       already_blacklisted: |-
-        These words are already blacklisted:
+        Dessa ord är redan på svartlistan:
       added_bl: |-
-        Added these words as blacklists:
+        Lade till dessa ord i svartlistan:
     unblacklist:
       give_bl_word: |-
-        Please give me a word to remove from the blacklist!
+        Ge mig ett ord att ta bort från svartlistan!
       no_removed_bl: |-
-        None of the given words were in the blacklist which can be removed!
+        Inga av de givna orden var på svartlistan som kunde tas bort!
       removed_bl: |-
-        Removed '%s' from the blacklisted words!
+        To remove '%s' from the blacklisted words!
     ls_bl:
       no_blacklisted: |-
-        There are no blacklisted words in this chat.
+        Det finns inga svartlistade ord i denna chatt.
       list_bl: |-
-        These words are blacklisted in this chat:
+        Dessa ord är på svartlistan i denna chatt:
     set_bl_action:
       current_mode: |-
-        The current blacklist mode is: %s
+        Den nuvarande svartlistläget är: %s
       changed_mode: |-
-        Changed blacklist mode to: *%s*
+        Ändrade svartlistläget till: *%s*
       choose_correct_option: |-
-        Please choose an option out of <mute/kick/ban/warn/none>
+        Välj ett alternativ ut ur <mute/kick/ban/warn/none>
     rm_all_bl:
       ask: |-
-        Are you sure you want to remove all blacklisted words from this chat?
+        Är du säker på att du vill ta bort alla svartlistade ord från denna chatt?
       button_handler:
         yes: |-
-          Removed all Blacklists from this Chat ✅
+          To remove all Blacklists from this Chat ✅
         no: |-
-          Cancelled removing all Blacklists from this Chat ❌
+          Avbröt borttagning av alla Blacklists from this Chat ❌
     bl_watcher:
       muted_user: |-
         Muted %s due to %s
@@ -295,25 +295,25 @@ strings:
       kicked_user: |-
         Kicked %s due to %s
     help_msg: |-
-      *User (*User): *
+      *Användare (*Användare): *
       × /svartlistor: Kontrollera alla svartlistor i chatt.
 
-      *Admin-kommandon: *
-      × /addblacklist "<trigger>": Svartlistar ordet i den aktuella chatten.
-      × /rmblacklist "<trigger>": Tar bort ordet från aktuella svartlistade ord i chatt.
+      *Administratörskommandon:*
+      × /addblacklist "<trigger>": Lägg till ett ord i den aktuella chatt.
+      × /rmblacklist "<trigger>": Ta bort ordet från aktuella svartlistade ord i chatt.
       × /blaction "<mute/kick/ban/warn/none>": Anger den åtgärd som ska utföras av bot när ett svartlisteord detekteras.
       × /blacklistaction: Samma som ovan
 
-      *Ägare: *
-      × /remallbl: Tar bort alla svartlistade ord från chatt
+      *Ägare:*
+      × /remallbl: Ta bort alla svartlistade ord från chatt
 
-      *Note: *
+      *Notera:*
       Standardläget för Blacklist är * none*, som bara tar bort meddelanden från chatten.
   Connections:
     connected: |-
-      You are currently connected to <b>%s</b>
+      Du är nu ansluten till <b>%s</b>
     not_connected: |-
-      You aren't connected to any chats.
+      Du är inte ansluten till några chattar.
     allow_connect:
       turned_on: |-
         Turned <b>on</b> User connections to this chat!
@@ -332,9 +332,9 @@ strings:
         User connections are currently <b>disabled</b> to this chat.
         Please ask admins to allow if you want to connect!
       connected: |-
-        You are now connected to <b>%s</b>!
+        Du är nu ansluten till <b>%s</b>!
       tap_btn_connect: |-
-        Please press the button below to connect this chat to your PM
+        Tryck på knappen nedan för att ansluta denna chatt till din PM
     connections_btns:
       admin_conn_cmds: |-
         Admin commands available:%s
@@ -344,66 +344,66 @@ strings:
       disconnected: |-
         Disconnected from the connected chat.
       need_pm: |-
-        You need to send this in PM to me to disconnect from the chat!
+        Du måste skicka detta i PM till mig för att koppla från chatt!
     is_user_connected:
       need_group: |-
-        This command is made to be used in group chats, not in PM!
+        Detta kommando är till för att användas i gruppchattar, inte i PM!
       bot_not_admin: |-
-        I'm not an admin in this chat!
+        Jag är inte en administratör i denna chatt!
       user_not_admin: |-
-        You need to be an admin to do this.
+        Du måste vara en administratör för att göra detta.
     reconnect:
       reconnected: |-
-        You are now reconnected to <b>%s</b>!
+        Du är nu ansluten till <b>%s</b>!
       no_last_chat: |-
-        You have no last chat to reconnect to!
+        Du har ingen senaste chatt att ansluta till!
       need_pm: |-
-        You need to be in a PM with me to reconnect to a chat!
+        Du måste vara i en PM med mig för att ansluta till en chatt!
     help_msg: |-
-      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+      Detta tillåter dig att ansluta till en chatt's databas och lägga till saker i den utan att chatten vet om det! För självklara skäl behöver du vara en administratör för att lägga till saker; men alla medlemmar kan se dina data. (banned/kicked users can't!)
 
-      *Commands*:
-      × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-      × /disconnect: Disconnect from the current chat.
-      × /reconnect: Reconnect to the previously connect chat
-      × /connection: See information about the currently connected chat.
+      *Kommandon:*
+      × /connect `<chatid>`: Anslut till den angivna chatten, tillåta att du kan se/redigera innehållet.
+      × /disconnect: Koppla från från den nuvarande chatt.
+      × /reconnect: Anslut till den tidigare anslutna chatt
+      × /connection: Se information om den nuvarande anslutna chatt.
 
-      *Admin Commands:*
-      × /allowconnect <yes/no>: Allow users to connect to chats or not.
+      *Administratörskommandon:*
+      × /allowconnect <yes/no>: Tillåt användare att ansluta till chattar eller inte.
 
-      You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+      Du kan hämta chatt-ID genom att använda /id kommandot i din chatt. Vara inte förvånad om ID är negativt; alla supergrupper har negativa ID.
   Disabling:
     help_msg: |-
-      På så sätt kan du avaktivera vissa vanliga kommandon, så att ingen kan använda dem. Du kan också automatiskt ta bort dem, stoppa personer från bluetexting.
+      På detta sätt kan du inaktivera vissa vanliga kommandon så att ingen kan använda dem. Du kan också automatiskt ta bort dem, stoppa personer från bluetexting.
 
-      *Admin-kommandon *:
-      × /avaktivera "<commandname>": Stoppa användare från att använda commandnamn i den här gruppen.
-      × /aktivera "<item name>": Tillåt användare att använda commandnamn i den här gruppen.
+      *Administratörskommandon:*
+      × /avaktivera "<kommandonamn>": Stoppa användare från att använda kommandonamn i denna grupp.
+      × /aktivera "<objektnamn>": Tillåt användare att använda kommandonamn i denna grupp.
       × /disableable: Lista alla odugliga kommandon.
-      × /disabledel "<yes/no/on/off>": Ta bort avaktiverade kommandon när de används av icke-admins.
-      × /avaktivera: Lista de avaktiverade kommandona i den här chatten.
+      × /disabledel "<yes/no/on/off>": Ta bort inaktiverade kommandon när de används av icke-admins.
+      × /avaktivera: Lista de inaktiverade kommandona i denna chatt.
 
-      Anmärkning:
-      Vid avaktivering av ett kommando avaktiveras kommandot endast för icke-admins. Alla administratörer kan fortfarande använda dessa kommandon.
-      Avaktiverade kommandon är fortfarande tillgängliga via funktionen /connect. Om du skulle vara intresserad av att se det här alternativet också, låt mig få veta det i supportchatten.
+      Notera:
+      Vid inaktivering av ett kommando inaktiveras kommandot endast för icke-admins. Alla administratörer kan fortfarande använda dessa kommandon.
+      Inaktiverade kommandon är fortfarande tillgängliga via funktionen /connect. Om du är intresserad av att se detta alternativ också, låt mig veta det i supportchatten.
   Filters:
     help_msg: |-
-      Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+      Filters är case insensitive; varje gång någon säger dina trigger-ord, Alita kommer att svara med något annat! kan användas för att skapa dina egna kommandon, om önskas.
 
-      Commands:
-      - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-      - /filters: List all chat filters.
-      - /stop <trigger>: Stop the bot from replying to trigger.
-      - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+      Kommandon:
+      - /filter <trigger> <reply>: Varje gång någon säger trigger, kommer botten att svara med ett meddelande. För flerordsfilter, citera trigger.
+      - /filters: Lista alla chattfilter.
+      - /stop <trigger>: Stoppa botten från att svara på trigger.
+      - /stopall: Stoppa ALL filter i den nuvarande chatt. Detta kan inte ångras.
 
-      Examples:
-      - Set a filter:
+      Exempel:
+      - Ställ in ett filter:
       -> /filter hello Hello there! How are you?
-      - Set a multiword filter:
+      - Ställ in ett flerordsfilter:
       -> /filter hello friend Hello back! Long time no see!
-      - Set a filter that can only be used by admins:
+      - Ställ in ett filter som kan endast användas av admins:
       -> /filter example This filter wont happen if a normal user says it {admin}
-      - To save a file, image, gif, or any other attachment, simply reply to file with:
+      - För att spara en fil, bild, gif eller annan bilaga, bara svara på filen med:
       -> /filter trigger
   Formatting:
     help_msg: |-
@@ -411,59 +411,59 @@ strings:
     Markdown: |-
       <b>Markdown Formatting</b>
 
-      You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
+      Du kan formattera ditt meddelande med <b>bold</b>, <i>kursiv</i>, <u>understruken</u>, och mycket mer. Gå vidare och experimentera!
       <b>Supported markdown</b>:
-      - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-      - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-      - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-      - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-      - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-      - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-      - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-      - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-      - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+      - <code>`code words`</code>: Backticks är använda för monospace-tecken. Visas som: <code>code words</code>.
+      - <code>_italic words_</code>: Underscores är använda för kursiv-tecken. Visas som: <i>italic words</i>.
+      - <code>*bold words*</code>: Asterisks är använda för bold-tecken. Visas som: <b>bold words</b>.
+      - <code>~strikethrough~</code>: Tildes är använda för strikethrough. Visas som: <strike>strikethrough</strike>.
+      - <code>||spoiler||</code>: Double vertical bars är använda för spoilers. Visas som: <tg-spoiler>Spoiler</tg-spoiler>.
+      - <code>```pre```</code>: För att göra formatteren att ignorera andra formateringstecken inuti texten formaterad med '```', kommer det att vara som: <code>**bold** | *bold*</code>.
+      - <code>__underline__</code>: Double underscores är använda för understruken. Visas som: underline. NOTE: Some clients försöker vara smarta och tolka det som kursiv. I det fallet, försök att använda appens inbyggda formatering.
+      - <code>[hyperlink](example.com)</code>: Detta är formateringen som används för hyperlänkar. Visas som: <a href='https://example.com/'>hyperlink</a>.
+      - <code>[My Button](buttonurl://example.com)</code>: Detta är formateringen som används för att skapa knappar. Det här exemplet kommer att skapa en knapp med namnet "My button" som öppnar <code>example.com</code> när den klickas.
 
-      If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-      <b>Example:</b>
+      Om du vill skicka knappar på samma rad, använd <code>:same</code> formatering.
+      <b>Exempel:</b>
       <code>[button 1](buttonurl:example.com)</code>
       <code>[button 2](buttonurl://example.com:same)</code>
       <code>[button 3](buttonurl://example.com)</code>
-      This will show button 1 and 2 on the same line, with 3 underneath.
-    Fillings: |-
-      <b>Fillings</b>
+      Detta kommer att visa knapp 1 och 2 på samma rad, med 3 under.
+         Fillings: |-
+       <b>Fillings</b>
 
-      You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-      You can use these to mention a user in notes too!
+       Du kan också anpassa innehållet i ditt meddelande med kontextuell data. Till exempel kan du nämna en användare med namn i välkomstmeddelandet, eller nämna dem i ett filter!
+       Du kan använda dessa för att nämna en användare i anteckningar också!
 
-      <b>Supported fillings:</b>
-      - <code>{first}</code>: The user's first name.
-      - <code>{last}</code>: The user's last name.
-      - <code>{fullname}</code>: The user's full name.
-      - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-      - <code>{mention}</code>: Mentions the user with their firstname.
-      - <code>{id}</code>: The user's ID.
-      - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
-    Random: |-
-      <b>Random Content</b>
+       <b>Supported fillings:</b>
+       - <code>{first}</code>: Användarens första namn.
+       - <code>{last}</code>: Användarens efternamn.
+       - <code>{fullname}</code>: Användarens fulla namn.
+       - <code>{username}</code>: Användarens användarnamn. Om de inte har något, nämn användaren istället.
+       - <code>{mention}</code>: Nämn användaren med deras förnamn.
+       - <code>{id}</code>: Användarens ID.
+       - <code>{chatname}</code>: Chats namn.
+       - <code>{rules}</code>: Lägger till Regler-knappen till meddelandet.
+          Random: |-
+       <b>Slumpmässigt innehåll</b>
 
-      Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-      How to use random contents:
-      - %%%: This separator can be used to add  random replies to the bot.
-      For example:
-      <code>hello
-      %%%
-      how are you</code>
-      This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-      Use this to make Alita feel a bit more customised! (only works in filters/notes)
-      Example welcome message:
-      - Every time a new user joins, they'll be presented with one of the three messages shown here.
-      -> /filter "hey"
-      hello there <code>{first}</code>!
-      %%%
-      Ooooh, <code>{first}</code> how are you?
-      %%%
-      Sup? <code>{first}</code>
+       Ett annat roligt är att slumpa innehållet i ett meddelande. Gör det lite mer personligt genom att ändra välkomstmeddelanden, eller ändra anteckningar!
+       Hur man använder slumpmässigt innehåll:
+       - %%%: Denna separator kan användas för att lägga till slumpmässiga svar till botten.
+       Till exempel:
+       <code>hej
+       %%%
+       hur mår du</code>
+       Detta kommer slumpmässigt att välja mellan att skicka det första meddelandet, "hej", eller det andra meddelandet, "hur mår du".
+       Använd detta för att få Alita att kännas lite mer anpassad! (fungerar bara i filter/anteckningar)
+       Exempel välkomstmeddelande:
+       - Varje gång en ny användare går med, kommer de att presenteras med ett av de tre meddelanden som visas här.
+       -> /filter "hej"
+       hej där <code>{first}</code>!
+       %%%
+       Ooooh, <code>{first}</code> hur mår du?
+       %%%
+       Tjena? <code>{first}</code>
   Greetings:
     help_msg: |-
       Välkomna nya medlemmar till grupperna eller säg adjö efter att de har lämnat.

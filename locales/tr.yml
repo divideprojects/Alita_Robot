@@ -2,383 +2,384 @@
 #stringcode: string
 main:
   lang_sample: |-
-    Türkiye
+    Türkçe
   language_flag: |-
     🇹🇷
   language_name: |-
-    Türkiye
+    Türkçe
 strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        Yönetici önbelleği başarıyla yeniden yüklendi.
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        Yönetici önbelleği bulunamadı. Bir yöneticiden yönetici önbelleğini yeniden yüklemek için /admincache kullanmasını isteyin.
   Admin:
     adminlist: |-
-      Admins in <b>%s</b>:
+      <b>%s</b> sohbetindeki yöneticiler:
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        %s için AnonAdmin modu şu anda <b>etkin</b>.
+        Bu, tüm anonim yöneticilerin kısıtlama olmaksızın yönetici işlemleri yapmasına izin verir.
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        %s için AnonAdmin modu şu anda <b>devre dışı</b>.
+        Bu, anonim yöneticilerin izinlerini onaylamak için bir düğmeye basmasını gerektirir.
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        %s için AnonAdmin modu şimdi <b>etkin</b>.
+        Bundan böyle yöneticilerden anonim yöneticilerden izinleri doğrulamalarını isteyeceğim.
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        %s için AnonAdmin modu şimdi <b>devre dışı</b>.
+        Bundan böyle yöneticilerden anonim yöneticilerden izin doğrulaması istemeyeceğim.
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        %s için AnonAdmin modu zaten <b>etkin</b>
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        %s için AnonAdmin modu zaten <b>devre dışı</b>
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Geçersiz argüman, sadece <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code> anlayabiliyorum
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        Bu kişi bu sohbeti oluşturdu, onu nasıl rütbe düşürebilirim?
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        Bu kişi bir yönetici değil, onu nasıl rütbe düşürebilirim?
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        Kendimi rütbe düşüremem, beni terfi ettiren kişiyi bul!
       success_demote: |-
-        Successfully demoted %s!
+        %s başarıyla rütbe düşürüldü!
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        Yönetici başlığı %d karakterden 16 karaktere kısaltıldı
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Keşke bunu kendime yapabilsem ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        Bu kişi bu sohbeti oluşturdu, onu nasıl terfi ettirebilirim?
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        Bu kişi zaten bir yönetici, onu nasıl terfi ettirebilirim?
       success_promote: |-
-        Successfully promoted %s!
+        %s başarıyla terfi ettirildi!
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        %s'nin yönetici başlığı başarıyla <b>%s</b> olarak ayarlandı
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Keşke bunu kendime yapabilsem ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        Bu kişi bu sohbeti oluşturdu, onun için özel yönetici başlığı nasıl ayarlayabilirim?
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        Bu kişi zaten bir yönetici, onun için özel yönetici başlığı nasıl ayarlayabilirim?
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        Özel yönetici başlığı ayarlanamadı, başlık adı doğru olmayabilir veya emoji içerebilir.
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Rütbe düşürülemedi. Yönetici olmayabilirim veya yönetici durumu başka bir kullanıcı tarafından atanmış olabilir, bu yüzden onlara müdahale edemem!
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Terfi ettirilemedi. Yönetici olmayabilirim veya yönetici durumu başka bir kullanıcı tarafından atanmış olabilir, bu yüzden onlara müdahale edemem!
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        Ayarlayabilmem için bana bir yönetici başlığı vermelisiniz.
     help_msg: |-
-      admin modülü ile kullanıcıları tanıtmak ve indirmeyi kolaylaştırmak!
+      Yönetici modülü ile kullanıcıları terfi ettirmeyi ve rütbe düşürmeyi kolaylaştırın!
 
-      *User Commands: *
-      × /adminlist: Geçerli sohbette administrator ' ları listele.
+      *Kullanıcı Komutları:*
+      × /adminlist: Mevcut sohbetteki yöneticileri listele.
 
-      *Admin Komutları: *
-      × /promot `<reply/username/mention/userid>`: Bir kullanıcıyı tanıtın.
-      × /demote `<reply/username/mention/userid>`: Kullanıcıyı indirgeme.
-      × /title `<reply/username/mention/userid>` `<custom title>`: Kullanıcı için özel başlık ayarlayın
+      *Yönetici Komutları:*
+      × /promote `<yanıt/kullanıcıadı/bahsetme/kullanıcıid>`: Bir kullanıcıyı terfi ettir.
+      × /demote `<yanıt/kullanıcıadı/bahsetme/kullanıcıid>`: Bir kullanıcının rütbesini düşür.
+      × /title `<yanıt/kullanıcıadı/bahsetme/kullanıcıid>` `<özel başlık>`: Kullanıcı için özel başlık ayarla
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        Evet, spam yapmanızı sevmiyorum. %s %s oldu!
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        Anladım! Maksimum spam sınırı <b>%d</b> mesaj.
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        Tamam.
+        Kullanıcıları spam için uyarmayacağım.
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        Bu sohbet şu anda spam kontrolü uygulamıyor.
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        Bu sohbet şu anda %d mesajdan sonra spam kontrolü uyguluyor. Bu miktardan fazla mesaj gönderen kullanıcılar %s olacak.
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        Anladım! Spam modu %s olacak.
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        Bilinmeyen tür '%s'. Lütfen şunlardan birini kullanın: ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        Spam durumunda yapılacak bir işlem belirtmelisiniz. Mevcut modlar: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        Antispam Mesaj Silme açıldı. Antispam'a neden olan mesajlar silinecek!
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        Antispam Mesaj Silme kapatıldı. Antispam'a neden olan mesajlar göz ardı edilecek!
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        Sadece şu seçeneklerden birini anlayabiliyorum: `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        Antispam Mesaj silme şu anda bu sohbette *etkin*, Antispam'a neden olan mesajlar silinecek!
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        Antispam Mesaj silme şu anda bu sohbette *devre dışı*, Antispam'a neden olan mesajlar göz ardı edilecek!
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        Bazı argümanlar bekliyordum! Ya off, ya da bir tam sayı. örn: `/setflood 5`, veya `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        Bu geçerli bir tam sayı değil. Lütfen bana geçerli bir tam sayı verin, veya `off`.
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        Antispam sınırı 3 ile 100 arasında ayarlanmalıdır.
     help_msg: |-
-      Bazen insanlar, 100 tane mesaj gönderip, sohbetinizi mahveder, biliyor musunuz? Antissel ile, bu daha fazla olmaz!
+      Biliyorsunuz, bazen insanlar katılır, 100 mesaj gönderir ve sohbetinizi mahveder? Antispam ile bu artık olmayacak!
 
-      Antisel, bir satırda x 'den fazla ileti gönderen kullanıcılar üzerinde işlem görmenizi sağlar. İşlemler şunlardır: ban/kick/mute/tban/tsusun
+      Antispam, art arda x'den fazla mesaj gönderen kullanıcılara karşı işlem yapmanıza izin verir. İşlemler: ban/kick/mute/tban/tmute
 
-      *Admin komutları *:
-      × /sel: Geçerli antissel ayarlarını alın.
-      × /setsel `<number/off/no>`: Bir kullanıcı üzerinde işlem yapılması için sonraki ileti sayısını ayarlayın. Geçersiz kılmak için '0', 'off' ya da 'no ' değerine ayarlayın.
-      × /setfloadmode `<action type>`: sel olan bir kullanıcı için hangi işlemin gerçekleşeceğini seçin. Seçenekler: ban/kick/mute/tban/tsusun
-      × /delssel `<yes/no/on/off>`: Kullanıcı tarafından dolan iletileri silmek için bot istiyorsanız.
+      *Yönetici komutları*:
+      × /flood: Mevcut antispam ayarlarını al.
+      × /setflood `<sayı/off/no>`: Kullanıcıya karşı işlem yapılacak mesaj sayısını ayarla. Devre dışı bırakmak için '0', 'off' veya 'no' olarak ayarla.
+      × /setfloodmode `<işlem türü>`: Spam yapan kullanıcıya karşı hangi işlemin yapılacağını seçin. Seçenekler: ban/kick/mute/tban/tmute
+      × /delflood `<yes/no/on/off>`: Bot'un kullanıcı tarafından spam yapılan mesajları silmesini istiyorsanız.
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        Beni yönetici yaparak zaten onayladınız!
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        Onaylanan Kullanıcı: %s
+        Artık yasaklar, kara listeler, kilitler ve antispam'dan korunuyorlar!
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        Bu kullanıcı bu sohbette değil, onu nasıl onaylayabilirim?
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        Ben bir yöneticiyim, onayım kaldırılamaz!
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        Onayı Kaldırılan Kullanıcı: %s
+        Artık yasaklar, kara listeler, kilitler ve antispam'dan korunmuyorlar!
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s bir yönetici, onaya ihtiyacınız yok.
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        Ben bir yöneticiyim, onaya ihtiyacım yok.
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s, <b>%s</b> sohbetinde onaylı bir kullanıcı
+        Kara listeler, kilitler ve antispam'dan korunuyorlar!
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>Onaylayan:</b> %s (<code>%d</code>)
+        <b>Onay Zamanı:</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        <b>%s</b> sohbetinde onaylı değilsiniz
+        Kara listeler, kilitler ve antispam'dan korunmuyorsunuz!
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: "<b>%s</b> sohbetinde onaylı kullanıcı yok!"
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        Bu kullanıcılar <b>%s</b> sohbetinde onaylı:
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        Her kullanıcı hakkında Onaylayan ve Onay Zamanı gibi daha fazla bilgi almak için /approval (kullanıcı id) kullanın.
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        Bu sohbetten tüm Onaylı Kullanıcıları kaldırmak istediğinizden emin misiniz?
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        Bu sohbetteki tüm kullanıcıların onayını kaldırmak için sadece Sohbet Yaratıcısı bu komutu kullanabilir.
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          Bu Sohbetten tüm Onaylı Kullanıcılar kaldırıldı ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          Bu Sohbetten tüm Onaylı Kullanıcıları kaldırma iptal edildi ❌
     help_msg: |-
-      Bazen, bir kullanıcının istenmeyen içerik göndermemesine güvenebilirsiniz.
-      belki onları admin yapmak için yeterli olmayabilir ama kilitler, kara listeler ve antissel onlara başvurmamakla iyi olabilirsin.
-      Onaylar, güvenilir kullanıcıların
+      Bazen bir kullanıcının istenmeyen içerik göndermeyeceğine güvenebilirsiniz.
+      Belki onları yönetici yapmak için yeterli olmayabilir ama kilitler, kara listeler ve antispam'ın onlara uygulanmamasında sorun görmeyebilirsiniz.
+      İşte onaylar bunun için - güvenilir kullanıcıları onaylamak, onlara izin vermek için.
 
-      *Kullanıcı komutlarını göndermelerine olanak tanıyacak şekilde onaylar: *
-      × /onay: Bu sohbette kullanıcının onay durumunu denetleyin.
+      *Kullanıcı Komutları:*
+      × /approval: Bu sohbette kullanıcının onay durumunu kontrol et.
 
-      *Admin Komutları: *
-      × /onayla: Bir kullanıcının onaylanması. Kilitler, kara listeler, ve antisel artık onlar için geçerli olmayacak.
-      × /Onaylamasız: Kullanıcının onayını geri al. Artık kilitler, kara listeler ve yine antissel denecek.
-      × /onaylandı: Onaylayan tüm kullanıcılar listelenir.
+      *Yönetici Komutları:*
+      × /approve: Bir kullanıcıyı onayla. Kilitler, kara listeler ve antispam artık onlar için geçerli olmayacak.
+      × /unapprove: Bir kullanıcının onayını kaldır. Artık tekrar kilitler, kara listeler ve antispam'a tabi olacaklar.
+      × /approved: Tüm onaylı kullanıcıları listele.
 
-      *Sahip komutları: *
-      × /unapproveall: Sohbette TÜM kullanıcıların onayını kaldırın. Bu işlem geri alınamaz.
+      *Sahip Komutları:*
+      × /unapproveall: Sohbetteki TÜM kullanıcıların onayını kaldır. Bu geri alınamaz.
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        Bu kullanıcı bu sohbette değil, onu nasıl atabilirim?
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        Neden bir yöneticiyi atayayım? Bu oldukça aptal bir fikir gibi görünüyor.
       is_bot_itself: |-
-        Why would I kick myself?
+        Neden kendimi atayayım?
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        Başka biri bu kadarını yiyor...!
+        %s atıldı.
+      kicked_reason: "\n<b>Sebep: </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        Sen bir yönetici, burada herkesle beraber kalmışsın!
       ok_out: |-
-        Alright, get out!
+        Tamam, git!
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        Neden bir yöneticiyi yasaklayayım? Bu oldukça aptal bir fikir gibi görünüyor.
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        Bunu gerçekten mi düşünüyorsun?
+      ban_reason: "\n<b>Sebep: </b> %s"
       tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+        Başka biri bu kadarını yiyor...!
+        %s, %s için yasaklandı
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        Başka biri bu kadarını yiyor...!
+        %s yasaklandı.
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          Mesajı silmek ve kullanıcıyı yasaklamak için bir mesaj yanıtlamanız gerekiyor!
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        Neden bir yöneticiyi açıklayayım? Bu oldukça aptal bir fikir gibi görünüyor.
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        Neden kendimi açıklamak için zaten burada değilim?
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        Tamam, tabi...!
+        %s açıldı.
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      Bazen kullanıcılar kötüleşebilir ve sohbetten kaldırmak isteyebilirsiniz, bu modül tam olarak bunun için buradadır, grubunuzdaki üyelerin sesini kapatmak için ths modülünü kullanabilirsiniz.
 
-      *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      *Kullanıcı Komutları:*
+      × /kickme: komutu vermek olan kullanıcıyı atar.
 
-      *Ban Commands* (Admin only):
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-      × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-      × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-      × /unban <userhandle>: unbans a user. (via handle, or reply)
+      *Yasak Komutları* (Yönetici için):
+      × /ban <userhandle>: bir kullanıcıyı yasaklar. (işlem, yanıt veya yanıt)
+      × /sban <userhandle>: bir kullanıcıyı sessizce yasaklar, gruba mesaj göndermez ve komutunuzu da siler. (işlem, yanıt veya yanıt)
+      × /dban <userhandle>: bir kullanıcıyı yasaklar ve yanıtlanan mesajı siler. (işlem, yanıt veya yanıt)
+      × /tban <userhandle> x(m/h/d): bir kullanıcıyı `x` zamanı için yasaklar. (işlem, yanıt veya yanıt). m = dakika, h = saat, d = gün.
+      × /unban <userhandle>: bir kullanıcıyı açın. (işlem, yanıt veya yanıt)
 
-      *Restrict Commands:* (Admin only)
-      × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-      × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+      *Sınır Komutları:* (Yönetici için)
+      × /restrict: İçinde kick, ban ve mute seçenekleri olan bir InlineKeyboard göster
+      × /unrestrict: İçinde unmute ve unban seçenekleri olan bir InlineKeyboard göster
   Blacklists:
     blacklist:
       give_bl_word: |-
-        Please give me a word to add to the blacklist!
+        Lütfen kara listeye eklemek için bir kelime verin!
       already_blacklisted: |-
-        These words are already blacklisted:
+        Bu kelimeler zaten kara listede:
       added_bl: |-
-        Added these words as blacklists:
+        Bu kelimeleri kara listeye ekledim:
     unblacklist:
       give_bl_word: |-
-        Please give me a word to remove from the blacklist!
+        Lütfen kara listeden kaldırmak için bir kelime verin!
       no_removed_bl: |-
-        None of the given words were in the blacklist which can be removed!
+        Verilen hiçbir kelime kara listede bulunamadığından kaldırılabilir!
       removed_bl: |-
-        Removed '%s' from the blacklisted words!
+        %s'i kara listeden kaldırdım!
     ls_bl:
       no_blacklisted: |-
-        There are no blacklisted words in this chat.
+        Bu sohbette kara listede kelime yok.
       list_bl: |-
-        These words are blacklisted in this chat:
+        Bu sohbette kara listede kelimeler:
     set_bl_action:
       current_mode: |-
-        The current blacklist mode is: %s
+        Şu anda kara liste modu: %s
       changed_mode: |-
-        Changed blacklist mode to: *%s*
+        Kara liste modunu değiştirdim: *%s*
       choose_correct_option: |-
-        Please choose an option out of <mute/kick/ban/warn/none>
+        Lütfen <mute/kick/ban/warn/none> arasından bir seçenek seçin
     rm_all_bl:
       ask: |-
-        Are you sure you want to remove all blacklisted words from this chat?
+        Bu sohbetten tüm kara listedeki kelimeleri kaldırmak istediğinizden emin misiniz?
       button_handler:
         yes: |-
-          Removed all Blacklists from this Chat ✅
+          Bu Sohbetten tüm kara listedeki kelimeler kaldırıldı ✅
         no: |-
-          Cancelled removing all Blacklists from this Chat ❌
+          Bu Sohbetten tüm kara listedeki kelimeler kaldırma iptal edildi ❌
     bl_watcher:
       muted_user: |-
-        Muted %s due to %s
+        %s, %s nedeniyle sessiz
       banned_user: |-
-        Banned %s due to %s
+        %s, %s nedeniyle yasaklandı
       kicked_user: |-
-        Kicked %s due to %s
+        %s, %s nedeniyle atıldı
     help_msg: |-
       *Kullanıcı Komutları: *
       × /kara listeler: Sohbet içindeki tüm kara listeleri kontrol edin.
 
-      *Admin Komutları: *
-      × /addblacklist `<trigger>`: Geçerli sohbetteki sözcük kara listeler.
-      × /rmblaclist `<trigger>`: Sohbetteki geçerli Kara Listeli sözcüklerden sözcüğü kaldırır.
-      × /baction `<mute/kick/ban/warn/none>`: Kara liste sözcüğü saptandığında bot tarafından gerçekleştirilecek işlemi ayarlar.
+      *Yönetici Komutları: *
+      × /addblacklist `<tetikleyici>`: Mevcut sohbetteki kelimeleri kara listeye ekleyin.
+      × /rmblaclist `<tetikleyici>`: Mevcut kara listeli kelimelerden kelimeyi kaldırır.
+      × /baction `<mute/kick/ban/warn/none>`: Kara listedeki kelime, bot tarafından gerçekleştirilecek işlemi ayarlar.
       × /blacklistaction: Yalnızca
 
-      *Owner ile aynı: *
+      *Sahip ile aynı: *
       × /remallbl:
 
-      *Note: *
-      numaralı sohbetten kara listeye gelen tüm sözcükleri kaldırır: Kara liste için varsayılan kip * yok *; bu kip yalnızca sohbetten gelen iletileri siler.
+      *Not: *
+      numaralı sohbetten kara listeye gelen tüm kelimeleri kaldırır: Kara liste için varsayılan kip * yok *; bu kip yalnızca sohbetten gelen iletileri siler.
   Connections:
     connected: |-
-      You are currently connected to <b>%s</b>
+      Şu anda <b>%s</b> ile bağlısınız
     not_connected: |-
-      You aren't connected to any chats.
+      Hiçbir sohbetle bağlı değilsiniz.
     allow_connect:
       turned_on: |-
-        Turned <b>on</b> User connections to this chat!
-        Users can now connect chat to their PM's!
+        <b>on</b> Kullanıcı bağlantılarını bu sohbete izin verdi!
+        Kullanıcılar artık PM'lerine sohbet bağlayabilir!
       turned_off: |-
-        Turned <b>off</b> User connections to this chat!
-        Users can't connect chat to their PM's!
+        <b>off</b> Kullanıcı bağlantılarını bu sohbete izin vermedi!
+        Kullanıcılar sohbet bağlayamazlar PM'lerine!
       currently_on: |-
-        User connections are currently turned <b>on</b>.
-        Users can connect this chat to their PM's!
+        Kullanıcı bağlantıları şu anda <b>on</b>
+        Kullanıcılar bu sohbeti PM'lerine bağlayabilir!
       currently_off: |-
-        User connections are currently turned <b>off</b>.
-        Users can't connect this chat to their PM's!
+        Kullanıcı bağlantıları şu anda <b>off</b>
+        Kullanıcılar bu sohbeti PM'lerine bağlayamazlar!
     connect:
       connection_disabled: |-
-        User connections are currently <b>disabled</b> to this chat.
-        Please ask admins to allow if you want to connect!
+        Kullanıcı bağlantıları şu anda <b>devre dışı</b> bu sohbet için.
+        Lütfen yöneticilerden izin isteyin, bağlamak istiyorsanız!
       connected: |-
-        You are now connected to <b>%s</b>!
+        Şimdi <b>%s</b> ile bağlısınız!
       tap_btn_connect: |-
-        Please press the button below to connect this chat to your PM
+        Lütfen aşağıdaki düğmeye basınız
+        Bu sohbeti PM'lerine bağlamak için
     connections_btns:
       admin_conn_cmds: |-
-        Admin commands available:%s
+        Admin komutları mevcut: %s
       user_conn_cmds: |-
-        User commands available:%s
+        Kullanıcı komutları mevcut: %s
     disconnect:
       disconnected: |-
-        Disconnected from the connected chat.
+        Bağlı sohbetten ayrıldınız.
       need_pm: |-
-        You need to send this in PM to me to disconnect from the chat!
+        Bu PM'de göndermek için bir mesaj göndermelisiniz!
     is_user_connected:
       need_group: |-
-        This command is made to be used in group chats, not in PM!
+        Bu komut grup sohbetlerinde kullanılmak üzere yapılmıştır, PM için değil!
       bot_not_admin: |-
-        I'm not an admin in this chat!
+        Bu sohbette bir yönetici değilim!
       user_not_admin: |-
-        You need to be an admin to do this.
+        Bu işlemi yapmak için bir yönetici olmanız gerekiyor.
     reconnect:
       reconnected: |-
-        You are now reconnected to <b>%s</b>!
+        Şimdi <b>%s</b> ile bağlısınız!
       no_last_chat: |-
-        You have no last chat to reconnect to!
+        Bağlanılacak eski sohbetiniz yok!
       need_pm: |-
-        You need to be in a PM with me to reconnect to a chat!
+        PM'de bulunmanız gerekiyor
+        Bu sohbeti bağlamak için!
     help_msg: |-
-      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+      Bu, bir sohbetin veritabanına bağlanmanıza ve ona şeyler eklemenize olanak sağlar, sohbetin bilmeyeceği şekilde! Gerekli olduğunu unutmayın, şeyleri eklemek için bir yönetici olmanız gerekiyor, ancak her üye verininizi görebilir. (yasaklanmış/atılmış kullanıcılar göremez!)
 
-      *Commands*:
-      × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-      × /disconnect: Disconnect from the current chat.
-      × /reconnect: Reconnect to the previously connect chat
-      × /connection: See information about the currently connected chat.
+      *Komutlar*:
+      × /connect `<chatid>`: Belirtilen sohbete bağlanın, içeriği/düzenleyin.
+      × /disconnect: Şu andaki sohbetten ayrılın.
+      × /reconnect: Önceki bağlı sohbete bağlanın
+      × /connection: Şu andaki bağlı sohbet hakkında bilgi alın.
 
-      *Admin Commands:*
-      × /allowconnect <yes/no>: Allow users to connect to chats or not.
+      *Yönetici Komutları:*
+      × /allowconnect <yes/no>: Kullanıcıların sohbetlere bağlanıp bağlanılmayacağını değiştirin.
 
-      You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+      Chat id'yi /id komutunu kullanarak sohbette alabilirsiniz. id'nin negatif olduğunu şaşırmayın; tüm super gruplar negatif id'lere sahip.
   Disabling:
     help_msg: |-
-      Bu, yaygın olarak kullanılan bazı komutları devre dışı bırakmanıza olanak sağlar, böylece noone bunları kullanabilir. Ayrıca, kişileri otomatik olarak silmenizi, kişileri bluetexting ' den durdurmanızı da sağlar.
+      Bu, genellikle kullanılan bazı komutları devre dışı bırakmanıza olanak sağlar, böylece kimse bunları kullanamaz. Ayrıca, kişileri otomatik olarak silmenizi, kişileri bluetexting'den durdurmanızı da sağlar.
 
-      *Admin komutları *:
-      × /disable `<commandname>`: Kullanıcılara bu grupta komut adı kullanılmasından dur.
-      × /enable `<item name>`: Kullanıcılara bu grupta komut adı kullanmalarına izin verin.
+      *Yönetici komutları*:
+      × /disable `<commandname>`: Bu grubta komut adı kullanılmasından dur.
+      × /enable `<item name>`: Bu grubta komut adı kullanmalarına izin verin.
       × /disableable: Tüm disableble komutlarını listele.
       × /disabledel `<yes/no/on/off>`: Admins olmayan kullanıcı tarafından kullanıldığında devre dışı bırakılan komutları sil.
       × /devre dışı: Bu sohbetteki devre dışı komutları listele.
@@ -388,7 +389,7 @@ strings:
       Geçersiz kılınan komutlara /connect özelliği aracılığıyla erişilebilmeye devam edilir. Eğer bu engelin de engelini görmek isterseniz, destek sohbetinde bana haber verin.
   Filters:
     help_msg: |-
-      Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+      Filters case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
 
       Commands:
       - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
@@ -670,11 +671,11 @@ strings:
         no_permission_change_info_btn: |-
           Bilgi değiştirmek için izniniz yok!!
         no_permission_change_info_cmd: |-
-          Bu gruptaki bilgileri değiştirmek için izniniz yok!
+          Bu grubtaki bilgileri değiştirmek için izniniz yok!
         no_permission_restrict_btn: |-
           Üyeleri kısıtlamak için izniniz yok!!
         no_permission_restrict_cmd: |-
-          Bu gruptaki üyeleri kısıtlamak için izniniz yok!
+          Bu grubtaki üyeleri kısıtlamak için izniniz yok!
         no_permission_promote_btn: |-
           Üyeleri yükseltme/indirgeme izniniz yok!!
         no_permission_promote_cmd: |-

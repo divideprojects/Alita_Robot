@@ -11,31 +11,31 @@ strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        व्यवस्थापक कैश सफलतापूर्वक पुनः लोड किया गया।
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        व्यवस्थापक कैश नहीं मिला। व्यवस्थापक कैश पुनः लोड करने के लिए किसी व्यवस्थापक से /admincache का उपयोग करने को कहें।
   Admin:
     adminlist: |-
       <b>%s</b> में व्यवस्थापक:
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        AnonAdmin मोड वर्तमान में %s के लिए <b>सक्षम</b> है।
+        यह सभी गुमनाम व्यवस्थापकों को बिना किसी प्रतिबंध के व्यवस्थापकीय कार्य करने की अनुमति देता है।
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        AnonAdmin मोड वर्तमान में %s के लिए <b>निष्क्रिय</b> है।
+        इसके लिए गुमनाम व्यवस्थापकों को अपनी अनुमतियों की पुष्टि करने के लिए एक बटन दबाना आवश्यक है।
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        AnonAdmin मोड अब %s के लिए <b>सक्षम</b> है।
+        अब से, मैं व्यवस्थापकों से गुमनाम व्यवस्थापकों की अनुमतियों को सत्यापित करने के लिए कहूंगा।
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        AnonAdmin मोड अब %s के लिए <b>निष्क्रिय</b> है।
+        अब से, मैं व्यवस्थापकों से गुमनाम व्यवस्थापकों की अनुमतियों को सत्यापित करने के लिए नहीं कहूंगा।
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        AnonAdmin मोड पहले से ही %s के लिए <b>सक्षम</b> है
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        AnonAdmin मोड पहले से ही %s के लिए <b>निष्क्रिय</b> है
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        अमान्य तर्क, मैं केवल <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code> समझता हूं
     demote:
       is_owner: |-
         इस व्यक्ति ने यह चैट बनाई है, मैं उन्हें कैसे अवनत करूं?
@@ -47,162 +47,162 @@ strings:
         %s सफलतापूर्वक पदावनत!
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        व्यवस्थापक शीर्षक %d से 16 अक्षरों में काट दिया गया
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        काश मैं यह अपने साथ कर सकता ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        इस व्यक्ति ने यह चैट बनाई है, मैं उन्हें कैसे पदोन्नत करूं?
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        यह व्यक्ति पहले से ही एक व्यवस्थापक है, मैं उन्हें कैसे पदोन्नत करूं?
       success_promote: |-
-        Successfully promoted %s!
+        %s को सफलतापूर्वक पदोन्नत किया गया!
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        %s का व्यवस्थापक शीर्षक <b>%s</b> पर सफलतापूर्वक सेट किया गया
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        काश मैं यह अपने साथ कर सकता ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        इस व्यक्ति ने यह चैट बनाई है, मैं उनके लिए कस्टम व्यवस्थापक शीर्षक कैसे सेट करूं?
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        यह व्यक्ति पहले से ही एक व्यवस्थापक है, मैं उनके लिए कस्टम व्यवस्थापक शीर्षक कैसे सेट करूं?
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        कस्टम व्यवस्थापक शीर्षक सेट करने में विफल, शीर्षक नाम सही नहीं हो सकता या इसमें इमोजी हो सकते हैं।
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        पदावनत नहीं कर सकता। मैं व्यवस्थापक नहीं हो सकता, या व्यवस्थापक स्थिति किसी अन्य उपयोगकर्ता द्वारा नियुक्त की गई थी, इसलिए मैं उन पर कार्य नहीं कर सकता!
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        पदोन्नत नहीं कर सकता। मैं व्यवस्थापक नहीं हो सकता, या व्यवस्थापक स्थिति किसी अन्य उपयोगकर्ता द्वारा नियुक्त की गई थी, इसलिए मैं उन पर कार्य नहीं कर सकता!
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        आपको मुझे एक व्यवस्थापक शीर्षक देना होगा ताकि मैं इसे सेट कर सकूं।
     help_msg: |-
-      Make it easy to promote and demote users with the admin module!
+      व्यवस्थापक मॉड्यूल के साथ उपयोगकर्ताओं को पदोन्नत और पदावनत करना आसान बनाएं!
 
-      *User Commands:*
-      × /adminlist: List the admins in the current chat.
+      *उपयोगकर्ता कमांड:*
+      × /adminlist: वर्तमान चैट में व्यवस्थापकों की सूची।
 
-      *Admin Commands:*
-      × /promote `<reply/username/mention/userid>`: Promote a user.
-      × /demote `<reply/username/mention/userid>`: Demote a user.
-      × /title `<reply/username/mention/userid>` `<custom title>`: Set custom title for user
+      *व्यवस्थापक कमांड:*
+      × /promote `<उत्तर/उपयोगकर्ता नाम/उल्लेख/उपयोगकर्ता आईडी>`: किसी उपयोगकर्ता को पदोन्नत करें।
+      × /demote `<उत्तर/उपयोगकर्ता नाम/उल्लेख/उपयोगकर्ता आईडी>`: किसी उपयोगकर्ता को पदावनत करें।
+      × /title `<उत्तर/उपयोगकर्ता नाम/उल्लेख/उपयोगकर्ता आईडी>` `<कस्टम शीर्षक>`: उपयोगकर्ता के लिए कस्टम शीर्षक सेट करें
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        हां, मुझे आपका स्पैमिंग पसंद नहीं है। %s को %s कर दिया गया है!
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        समझ गया! अधिकतम स्पैम सीमा <b>%d</b> संदेशों में।
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        ठीक है।
+        मैं स्पैमिंग के लिए उपयोगकर्ताओं को चेतावनी नहीं दूंगा।
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        यह चैट वर्तमान में स्पैम नियंत्रण लागू नहीं कर रहा है।
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        यह चैट वर्तमान में %d संदेशों के बाद स्पैम नियंत्रण लागू कर रहा है। उससे अधिक संदेश भेजने वाले किसी भी उपयोगकर्ता को %s किया जाएगा।
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        समझ गया! स्पैम मोड %s होगा।
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        अज्ञात प्रकार '%s'। कृपया इनमें से एक का उपयोग करें: ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        आपको स्पैमिंग पर लेने वाली कार्रवाई निर्दिष्ट करनी होगी। वर्तमान मोड हैं: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        एंटी-स्पैम संदेश हटाना चालू किया गया। स्पैम का कारण बनने वाले संदेश हटा दिए जाएंगे!
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        एंटी-स्पैम संदेश हटाना बंद किया गया। स्पैम का कारण बनने वाले संदेशों को नजरअंदाज कर दिया जाएगा!
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        मैं केवल इससे एक विकल्प समझता हूं: `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        एंटी-स्पैम संदेश हटाना वर्तमान में इस चैट में *सक्षम* है, स्पैम का कारण बनने वाले संदेश हटा दिए जाएंगे!
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        एंटी-स्पैम संदेश हटाना वर्तमान में इस चैट में *निष्क्रिय* है, स्पैम का कारण बनने वाले संदेशों को नजरअंदाज कर दिया जाएगा!
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        मुझे कुछ तर्कों की अपेक्षा थी! या तो off, या एक पूर्णांक। उदा: `/setflood 5`, या `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        यह एक वैध पूर्णांक नहीं है। कृपया मुझे एक वैध पूर्णांक, या `off` दें।
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        एंटी-स्पैम सीमा 3 और 100 के बीच सेट करनी होगी।
     help_msg: |-
-      You know how sometimes, people join, send 100 messages, and ruin your chat? With antiflood, that happens no more!
+      आप जानते हैं कि कैसे कभी-कभी लोग जुड़ते हैं, 100 संदेश भेजते हैं, और आपकी चैट को बर्बाद कर देते हैं? एंटी-स्पैम के साथ, ऐसा अब नहीं होता!
 
-      Antiflood allows you to take action on users that send more than x messages in a row. Actions are: ban/kick/mute/tban/tmute
+      एंटी-स्पैम आपको उन उपयोगकर्ताओं पर कार्रवाई करने की अनुमति देता है जो लगातार x से अधिक संदेश भेजते हैं। कार्रवाइयां हैं: ban/kick/mute/tban/tmute
 
-      *Admin commands*:
-      × /flood: Get the current antiflood settings.
-      × /setflood `<number/off/no>`: Set the number of messages after which to take action on a user. Set to '0', 'off', or 'no' to disable.
-      × /setfloodmode `<action type>`: Choose which action to take on a user who has been flooding. Options: ban/kick/mute/tban/tmute
-      × /delflood `<yes/no/on/off>`: If you want bot to delete messages flooded by user.
+      *व्यवस्थापक कमांड:*
+      × /flood: वर्तमान एंटी-स्पैम सेटिंग्स प्राप्त करें।
+      × /setflood `<संख्या/off/no>`: संदेशों की संख्या सेट करें जिसके बाद उपयोगकर्ता पर कार्रवाई करनी है। निष्क्रिय करने के लिए '0', 'off', या 'no' पर सेट करें।
+      × /setfloodmode `<कार्रवाई प्रकार>`: स्पैम करने वाले उपयोगकर्ता पर कौन सी कार्रवाई करनी है चुनें। विकल्प: ban/kick/mute/tban/tmute
+      × /delflood `<yes/no/on/off>`: यदि आप चाहते हैं कि बॉट उपयोगकर्ता द्वारा स्पैम किए गए संदेशों को हटा दे।
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        आपने मुझे व्यवस्थापक बनाकर पहले ही मुझे अनुमोदित कर दिया है!
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        अनुमोदित उपयोगकर्ता: %s
+        वे अब प्रतिबंध, ब्लैकलिस्ट, लॉक और एंटी-स्पैम से सुरक्षित हैं!
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        यह उपयोगकर्ता इस चैट में नहीं है, मैं उन्हें कैसे अनुमोदित कर सकता हूं?
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        मैं एक व्यवस्थापक हूं, मुझे अनअनुमोदित नहीं किया जा सकता!
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        अनअनुमोदित उपयोगकर्ता: %s
+        वे अब प्रतिबंध, ब्लैकलिस्ट, लॉक और एंटी-स्पैम से सुरक्षित नहीं हैं!
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s एक व्यवस्थापक है, आपको अनुमोदन की आवश्यकता नहीं है।
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        मैं एक व्यवस्थापक हूं, मुझे अनुमोदन की आवश्यकता नहीं है।
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s <b>%s</b> में एक अनुमोदित उपयोगकर्ता है
+        वे ब्लैकलिस्ट, लॉक और एंटी-स्पैम से सुरक्षित हैं!
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>द्वारा अनुमोदित:</b> %s (<code>%d</code>)
+        <b>अनुमोदन समय:</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        आप <b>%s</b> में अनुमोदित नहीं हैं
+        आप ब्लैकलिस्ट, लॉक और एंटी-स्पैम से सुरक्षित नहीं हैं!
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: "<b>%s</b> में कोई उपयोगकर्ता अनुमोदित नहीं है!"
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        ये उपयोगकर्ता <b>%s:</b> में अनुमोदित हैं
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        प्रत्येक उपयोगकर्ता के बारे में अधिक जानकारी जैसे कि किसके द्वारा अनुमोदित और अनुमोदन समय प्राप्त करने के लिए, /approval (उपयोगकर्ता आईडी) का उपयोग करें।
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        क्या आप वाकई इस चैट से सभी अनुमोदित उपयोगकर्ताओं को हटाना चाहते हैं?
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        केवल चैट निर्माता ही इस चैट में सभी उपयोगकर्ताओं को अनअनुमोदित करने के लिए इस कमांड का उपयोग कर सकता है।
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          इस चैट से सभी अनुमोदित उपयोगकर्ताओं को हटा दिया गया ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          इस चैट से सभी अनुमोदित उपयोगकर्ताओं को हटाना रद्द किया गया ❌
     help_msg: |-
-      Sometimes, you might trust a user not to send unwanted content.
-      Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
-      That's what approvals are for - approve of trustworthy users to allow them to send
+      कभी-कभी, आप किसी उपयोगकर्ता पर भरोसा कर सकते हैं कि वे अवांछित सामग्री नहीं भेजेंगे।
+      शायद उन्हें व्यवस्थापक बनाने के लिए पर्याप्त नहीं, लेकिन आप लॉक, ब्लैकलिस्ट और एंटी-स्पैम के उन पर लागू न होने से सहमत हो सकते हैं।
+      यही अनुमोदन के लिए है - विश्वसनीय उपयोगकर्ताओं को भेजने की अनुमति देने के लिए अनुमोदित करें
 
-      *User commands:*
-      × /approval: Check a user's approval status in this chat.
+      *उपयोगकर्ता कमांड:*
+      × /approval: इस चैट में किसी उपयोगकर्ता की अनुमोदन स्थिति जांचें।
 
-      *Admin Commands:*
-      × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-      × /unapprove: Unapprove of a user. They will now be subject to locks, blacklists, and antiflood again.
-      × /approved: List all approved users.
+      *व्यवस्थापक कमांड:*
+      × /approve: किसी उपयोगकर्ता को अनुमोदित करें। लॉक, ब्लैकलिस्ट और एंटी-स्पैम अब उन पर लागू नहीं होंगे।
+      × /unapprove: किसी उपयोगकर्ता को अनअनुमोदित करें। वे अब फिर से लॉक, ब्लैकलिस्ट और एंटी-स्पैम के अधीन होंगे।
+      × /approved: सभी अनुमोदित उपयोगकर्ताओं की सूची।
 
-      *Owner Commands:*
-      × /unapproveall: Unapprove ALL users in a chat. This cannot be undone.
+      *स्वामी कमांड:*
+      × /unapproveall: चैट में सभी उपयोगकर्ताओं को अनअनुमोदित करें। इसे पूर्ववत नहीं किया जा सकता।
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        यह उपयोगकर्ता इस चैट में नहीं है, मैं उन्हें कैसे किक कर सकता हूं?
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        क्यों मैं एक व्यवस्थापक को हटाने की कोशिश करूं? यह एक बहुत बेवकूफ विचार लगता है।
       is_bot_itself: |-
-        Why would I kick myself?
+        मैं खुद को क्यों हटाने की कोशिश करूं?
       kicked_user: |-
         Another one bites the dust...!
         Kicked %s.
@@ -722,7 +722,7 @@ strings:
           मैं से कनेक्ट करने के लिए एक चैट आईडी की जरूरत है!
       extract_user:
         no_user_found: |-
-          इस नाम से कोई उपयोक्ता नहीं मिला; क्या आप सुनिश्चित हैं कि मैं उन्हें पहले देखा है?
+          इस नाम से कोई उपयोगकर्ता नहीं मिला; क्या आप सुनिश्चित हैं कि मैं उन्हें पहले देखा है?
         badrequest_failed_getchatmember: |-
           उपयोगकर्ता को पाने में विफल: gatchmen करने में असमर्थ: गलत आग्रह: गपशप नहीं मिला
     string_handling:

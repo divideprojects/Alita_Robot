@@ -2,247 +2,249 @@
 #stringcode: string
 main:
   lang_sample: |-
-    Hollandske
+    Nederlands
   language_flag: |-
     🇳🇱
   language_name: |-
-    Hhollandske
+    Nederlands
 strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        Admin cache succesvol opnieuw geladen.
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        Admin cache niet gevonden. Vraag een admin om /admincache te gebruiken om de admin cache opnieuw te laden.
   Admin:
     adminlist: |-
       Admins in <b>%s</b>:
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        AnonAdmin modus is momenteel <b>ingeschakeld</b> voor %s.
+        Dit stelt alle anonieme admins in staat om admin acties uit te voeren zonder beperking.
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        AnonAdmin modus is momenteel <b>uitgeschakeld</b> voor %s.
+        Dit vereist dat anonieme admins op een knop drukken om hun toestemmingen te bevestigen.
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        AnonAdmin modus is nu <b>ingeschakeld</b> voor %s.
+        Vanaf nu zal ik de admins vragen om toestemmingen van anonieme admins te verifiëren.
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        AnonAdmin modus is nu <b>uitgeschakeld</b> voor %s.
+        Vanaf nu zal ik de admins niet meer vragen om toestemmingen van anonieme admins te verifiëren.
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        AnonAdmin modus is al <b>ingeschakeld</b> voor %s
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        AnonAdmin modus is al <b>uitgeschakeld</b> voor %s
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Ongeldig argument, ik begrijp alleen <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        Deze persoon heeft deze chat aangemaakt, hoe zou ik hen degraderen?
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        Deze persoon is geen admin, hoe zou ik hen degraderen?
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        Ik kan mezelf niet degraderen, ga de persoon halen die mij heeft gepromoot!
       success_demote: |-
-        Successfully demoted %s!
+        %s succesvol gedegradeerd!
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        Admin titel ingekort tot 16 karakters van %d
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Was het maar zo dat ik dit bij mezelf kon doen ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        Deze persoon heeft deze chat aangemaakt, hoe zou ik hen promoten?
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        Deze persoon is al een admin, hoe zou ik hen promoten?
       success_promote: |-
-        Successfully promoted %s!
+        %s succesvol gepromoot!
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        Admin titel van %s succesvol ingesteld op <b>%s</b>
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Was het maar zo dat ik dit bij mezelf kon doen ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        Deze persoon heeft deze chat aangemaakt, hoe zou ik een aangepaste admin titel voor hen instellen?
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        Deze persoon is al een admin, hoe zou ik een aangepaste admin titel voor hen instellen?
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        Kon aangepaste admin titel niet instellen, de titel naam is mogelijk niet correct of bevat emoji's.
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Kon niet degraderen. Ik ben mogelijk geen admin, of de admin status werd aangesteld door een andere gebruiker, dus ik kan geen actie ondernemen!
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Kon niet promoten. Ik ben mogelijk geen admin, of de admin status werd aangesteld door een andere gebruiker, dus ik kan geen actie ondernemen!
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        Je moet mij een admin titel geven zodat ik deze kan instellen.
     help_msg: |-
       Maak het gemakkelijk om gebruikers te promoten en te degraderen met de admin module!
 
-      *Gebruikersopdrachten: *
+      *Gebruikerscommando's:*
       × /adminlist: Lijst van de admins in de huidige chat.
 
-      *Admin-opdrachten: *
-      × /promote `<reply/username/mention/userid>`: Een gebruiker promoveren.
-      × /demote `<reply/username/mention/userid>`: Demote een gebruiker.
+      *Admin commando's:*
+      × /promote `<reply/username/mention/userid>`: Een gebruiker promoten.
+      × /demote `<reply/username/mention/userid>`: Een gebruiker degraderen.
       × /title `<reply/username/mention/userid>` `<custom title>`: Aangepaste titel voor gebruiker instellen
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        Ja, ik hou niet van je spam. %s is %s geworden!
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        Begrepen! Maximale spam limiet ingesteld op <b>%d</b> berichten.
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        Oké.
+        Ik zal gebruikers niet waarschuwen voor spam.
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        Deze chat heeft momenteel geen spam controle actief.
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        Deze chat heeft momenteel spam controle actief na %d berichten. Gebruikers die meer dan dat aantal berichten sturen worden %s.
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        Begrepen! Spam modus wordt %s.
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        Onbekend type '%s'. Gebruik een van: ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        Je moet een actie specificeren om uit te voeren bij spam. Huidige modi zijn: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        Anti-spam berichtverwijdering ingeschakeld. Berichten die anti-spam veroorzaken worden verwijderd!
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        Anti-spam berichtverwijdering uitgeschakeld. Berichten die anti-spam veroorzaken worden genegeerd!
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        Ik begrijp alleen een optie van: `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        Anti-spam berichtverwijdering is momenteel *ingeschakeld* in deze chat, Berichten die anti-spam veroorzaken worden verwijderd!
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        Anti-spam berichtverwijdering is momenteel *uitgeschakeld* in deze chat, Berichten die anti-spam veroorzaken worden genegeerd!
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        Ik verwachtte wat argumenten! Ofwel off, of een geheel getal. bijv: `/setflood 5`, of `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        Dat is geen geldig geheel getal. Geef mij een geldig geheel getal, of `off`.
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        De anti-spam limiet moet ingesteld worden tussen 3 en 100.
     help_msg: |-
-      Je weet hoe soms, mensen meedoen, 100 berichten versturen en je praatje ruïneren? Met antivloed, dat gebeurt niet meer!
+      Je weet hoe soms mensen zich aansluiten, 100 berichten versturen en je chat ruïneren? Met anti-spam gebeurt dat niet meer!
 
-      Antioverstroming stelt u in staat om actie te ondernemen op gebruikers die meer dan x berichten in een rij sturen. Acties zijn: ban/kick/mute/tban/tmute
+      Anti-spam stelt je in staat om actie te ondernemen tegen gebruikers die meer dan x berichten achter elkaar sturen. Acties zijn: ban/kick/mute/tban/tmute
 
-      *Admin-opdrachten *:
-      × /overstroming: De huidige antioverstromingsinstellingen ophalen.
-      × /setvloed `<number/off/no>`: Stel het aantal berichten in waarna u actie kunt ondernemen voor een gebruiker. Stel de waarde in op '0', 'off' of 'no' to disable.
-      × /setfloodmode "<action type>": Kies welke actie moet worden ondernomen voor een gebruiker die een overstroming heeft gehad. Opties: ban/kick/mute/tban/tmute
-      × /delflood `<yes/no/on/off>`: Als u wilt dat bot berichten verwijdert overstroomd door de gebruiker.
+      *Admin commando's*:
+      × /flood: De huidige anti-spam instellingen ophalen.
+      × /setflood `<number/off/no>`: Stel het aantal berichten in waarna actie wordt ondernomen tegen een gebruiker. Stel in op '0', 'off' of 'no' om uit te schakelen.
+      × /setfloodmode `<action type>`: Kies welke actie moet worden ondernomen tegen een gebruiker die spam heeft veroorzaakt. Opties: ban/kick/mute/tban/tmute
+      × /delflood `<yes/no/on/off>`: Als je wilt dat berichten die door de gebruiker zijn gespammed worden verwijderd.
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        Je hebt mij al goedgekeurd door mij admin te maken!
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        Goedgekeurde Gebruiker: %s
+        Ze zijn nu beschermd tegen bans, zwarte lijsten, vergrendelingen en anti-spam!
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        Deze gebruiker is niet in deze chat, hoe kan ik hen goedkeuren?
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        Ik ben een admin, ik kan niet niet-goedgekeurd worden!
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        Niet-goedgekeurde Gebruiker: %s
+        Ze zijn niet langer beschermd tegen bans, zwarte lijsten, vergrendelingen en anti-spam!
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s is een admin, je hebt geen goedkeuring nodig.
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        Ik ben een admin, ik heb geen goedkeuring nodig.
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s is een goedgekeurde Gebruiker in <b>%s</b>
+        Ze zijn beschermd tegen zwarte lijsten, vergrendelingen en anti-spam!
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>Goedgekeurd Door:</b> %s (<code>%d</code>)
+        <b>Goedkeuringstijd:</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        Je bent niet goedgekeurd in <b>%s</b>
+        Je bent niet beschermd tegen zwarte lijsten, vergrendelingen en anti-spam!
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: "Geen gebruikers zijn goedgekeurd in <b>%s</b>!"
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        Deze gebruikers zijn goedgekeurd in <b>%s:</b>
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        Om meer informatie over elke gebruiker te krijgen zoals Goedgekeurd Door en Goedkeuringstijd, gebruik /approval (user id).
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        Weet je zeker dat je alle Goedgekeurde Gebruikers uit deze chat wilt verwijderen?
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        Alleen de Chat Maker kan dit commando gebruiken om alle gebruikers in deze chat niet goed te keuren.
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          Alle Goedgekeurde Gebruikers uit deze Chat verwijderd ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          Het verwijderen van alle Goedgekeurde Gebruikers uit deze Chat geannuleerd ❌
     help_msg: |-
-      Soms kunt u een gebruiker vertrouwen om ongewenste content niet te verzenden.
-      Misschien niet genoeg om ze admin te maken, maar het kan zijn dat je ok bent met sloten, zwarte lijsten, en antivloed niet op hen van toepassing.
-      Dat is wat goedkeuringen zijn voor-goedkeuring van betrouwbare gebruikers om hen te laten sturen
+      Soms kun je een gebruiker vertrouwen om geen ongewenste content te verzenden.
+      Misschien niet genoeg om ze admin te maken, maar je bent misschien oké met vergrendelingen, zwarte lijsten en anti-spam die niet op hen van toepassing zijn.
+      Dat is waar goedkeuringen voor zijn - het goedkeuren van betrouwbare gebruikers om hen toe te staan.
 
-      *Gebruiker commando's: *
-      × /approval: Controleer de status van de goedkeuring van een gebruiker in deze chat.
+      *Gebruiker commando's:*
+      × /approval: Controleer de goedkeuringsstatus van een gebruiker in deze chat.
 
-      *Beheeropdrachten: *
-      × /goedkeuren: Goedkeuren van een gebruiker. Sloten, zwarte lijsten, en anti-overstroming zal niet meer op hen van toepassing zijn.
-      × /unapprove: Niet goedkeuren van een gebruiker. Ze zullen nu worden onderworpen aan sloten, zwarte lijsten en weer antivloed.
-      × /goedgekeurd: Lijst van alle goedgekeurde gebruikers.
+      *Admin commando's:*
+      × /approve: Een gebruiker goedkeuren. Vergrendelingen, zwarte lijsten en anti-spam zijn niet meer op hen van toepassing.
+      × /unapprove: Een gebruiker niet goedkeuren. Ze zullen nu onderworpen zijn aan vergrendelingen, zwarte lijsten en anti-spam weer.
+      × /approved: Lijst alle goedgekeurde gebruikers.
 
-      *Eigenaar opdrachten: *
-      × /unapproveall: Alle gebruikers goedkeuren in een chatsessie. Dit kan niet ongedaan worden gemaakt.
+      *Eigenaar commando's:*
+      × /unapproveall: Alle gebruikers in een chat niet goedkeuren. Dit kan niet ongedaan gemaakt worden.
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        Deze gebruiker is niet in deze chat, hoe kan ik ze wegschoppen?
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        Waarom zou ik een admin afzetten? Dat klinkt als een vrij dom idee.
       is_bot_itself: |-
-        Why would I kick myself?
+        Waarom zou ik mezelf afzetten?
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        Nog een is gevallen...!
+        Afgezet %s.
+      kicked_reason: "\n<b>Reden: </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        Je bent een admin, je zit hier met iedereen!
       ok_out: |-
-        Alright, get out!
+        Oké, ga weg!
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        Waarom zou ik een admin afzetten? Dat klinkt als een vrij dom idee.
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        Denk je echt dat ik mezelf zou afzetten?
+      ban_reason: "\n<b>Reden: </b> %s"
       tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+        Nog een is gevallen...!
+        Gebanned %s voor %s
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        Nog een is gevallen...!
+        Gebanned %s.
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          Je moet een reactie geven om het te verwijderen en de gebruiker te bannen!
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        Waarom zou ik een admin onbannen? Dat klinkt als een vrij dom idee.
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        Waarom zou ik mezelf niet ontgrendelen als ik al hier ben?
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        Oké, zeker...!
+        Ontbanned %s.
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      Soms kunnen gebruikers irritant zijn en je wilt ze misschien uit je chat verwijderen, deze module helpt je precies om dat te doen!
+      Ban/kick gebruikers uit je chat en ontban ze later als ze zich goed gedragen.
 
       *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      × /kickme: kickt de gebruiker die de opdracht heeft uitgevoerd.
 
       *Ban Commands* (Admin only):
+      × /ban <userhandle>: een gebruiker bannen. (via handle, of reactie)
+      × /sban <userhandle>: een gebruiker stil bannen, stuurt geen bericht naar groep en verwijdert ook uw opdracht. (via handle, of reactie)
       × /ban <userhandle>: bans a user. (via handle, or reply)
       × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
       × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
@@ -255,45 +257,45 @@ strings:
   Blacklists:
     blacklist:
       give_bl_word: |-
-        Please give me a word to add to the blacklist!
+        Geef me alstublieft een woord om toe te voegen aan de zwarte lijst!
       already_blacklisted: |-
-        These words are already blacklisted:
+        Deze woorden staan al op de zwarte lijst:
       added_bl: |-
-        Added these words as blacklists:
+        Deze woorden toegevoegd als zwarte lijsten:
     unblacklist:
       give_bl_word: |-
-        Please give me a word to remove from the blacklist!
+        Geef me alstublieft een woord om te verwijderen van de zwarte lijst!
       no_removed_bl: |-
-        None of the given words were in the blacklist which can be removed!
+        Geen van de gegeven woorden stond op de zwarte lijst die verwijderd kon worden!
       removed_bl: |-
-        Removed '%s' from the blacklisted words!
+        '%s' verwijderd van de zwarte lijst woorden!
     ls_bl:
       no_blacklisted: |-
-        There are no blacklisted words in this chat.
+        Er zijn geen woorden op de zwarte lijst in deze chat.
       list_bl: |-
-        These words are blacklisted in this chat:
+        Deze woorden staan op de zwarte lijst in deze chat:
     set_bl_action:
       current_mode: |-
-        The current blacklist mode is: %s
+        De huidige zwarte lijst modus is: %s
       changed_mode: |-
-        Changed blacklist mode to: *%s*
+        Zwarte lijst modus gewijzigd naar: *%s*
       choose_correct_option: |-
-        Please choose an option out of <mute/kick/ban/warn/none>
+        Kies alstublieft een optie uit <mute/kick/ban/warn/none>
     rm_all_bl:
       ask: |-
-        Are you sure you want to remove all blacklisted words from this chat?
+        Weet je zeker dat je alle woorden van de zwarte lijst uit deze chat wilt verwijderen?
       button_handler:
         yes: |-
-          Removed all Blacklists from this Chat ✅
+          Alle zwarte lijsten uit deze chat verwijderd ✅
         no: |-
-          Cancelled removing all Blacklists from this Chat ❌
+          Het verwijderen van alle zwarte lijsten uit deze chat geannuleerd ❌
     bl_watcher:
       muted_user: |-
-        Muted %s due to %s
+        %s gedempt vanwege %s
       banned_user: |-
-        Banned %s due to %s
+        %s verbannen vanwege %s
       kicked_user: |-
-        Kicked %s due to %s
+        %s weggeschopt vanwege %s
     help_msg: |-
       *Gebruikersopdrachten: *
       × /blacklists: Controleer alle zwarte lijsten in de chat.
@@ -311,67 +313,67 @@ strings:
       De standaardwerkstand voor Blacklist is * geen *, waardoor de berichten van de chat worden verwijderd.
   Connections:
     connected: |-
-      You are currently connected to <b>%s</b>
+      Je bent momenteel verbonden met <b>%s</b>
     not_connected: |-
-      You aren't connected to any chats.
+      Je bent niet verbonden met chats.
     allow_connect:
       turned_on: |-
-        Turned <b>on</b> User connections to this chat!
-        Users can now connect chat to their PM's!
+        Gebruikersverbindingen naar deze chat <b>ingeschakeld</b>!
+        Gebruikers kunnen nu chat verbinden met hun PM's!
       turned_off: |-
-        Turned <b>off</b> User connections to this chat!
-        Users can't connect chat to their PM's!
+        Gebruikersverbindingen naar deze chat <b>uitgeschakeld</b>!
+        Gebruikers kunnen chat niet verbinden met hun PM's!
       currently_on: |-
-        User connections are currently turned <b>on</b>.
-        Users can connect this chat to their PM's!
+        Gebruikersverbindingen zijn momenteel <b>ingeschakeld</b>.
+        Gebruikers kunnen deze chat verbinden met hun PM's!
       currently_off: |-
-        User connections are currently turned <b>off</b>.
-        Users can't connect this chat to their PM's!
+        Gebruikersverbindingen zijn momenteel <b>uitgeschakeld</b>.
+        Gebruikers kunnen deze chat niet verbinden met hun PM's!
     connect:
       connection_disabled: |-
-        User connections are currently <b>disabled</b> to this chat.
-        Please ask admins to allow if you want to connect!
+        Gebruikersverbindingen zijn momenteel <b>uitgeschakeld</b> voor deze chat.
+        Vraag admins om toestemming als je wilt verbinden!
       connected: |-
-        You are now connected to <b>%s</b>!
+        Je bent nu verbonden met <b>%s</b>!
       tap_btn_connect: |-
-        Please press the button below to connect this chat to your PM
+        Druk op de knop hieronder om deze chat te verbinden met je PM
     connections_btns:
       admin_conn_cmds: |-
-        Admin commands available:%s
+        Admin commando's beschikbaar:%s
       user_conn_cmds: |-
-        User commands available:%s
+        Gebruiker commando's beschikbaar:%s
     disconnect:
       disconnected: |-
-        Disconnected from the connected chat.
+        Verbinding verbroken met de verbonden chat.
       need_pm: |-
-        You need to send this in PM to me to disconnect from the chat!
+        Je moet dit in PM naar mij sturen om de verbinding met de chat te verbreken!
     is_user_connected:
       need_group: |-
-        This command is made to be used in group chats, not in PM!
+        Dit commando is gemaakt om gebruikt te worden in groepschats, niet in PM!
       bot_not_admin: |-
-        I'm not an admin in this chat!
+        Ik ben geen admin in deze chat!
       user_not_admin: |-
-        You need to be an admin to do this.
+        Je moet een admin zijn om dit te doen.
     reconnect:
       reconnected: |-
-        You are now reconnected to <b>%s</b>!
+        Je bent nu opnieuw verbonden met <b>%s</b>!
       no_last_chat: |-
-        You have no last chat to reconnect to!
+        Je hebt geen laatste chat om opnieuw mee te verbinden!
       need_pm: |-
-        You need to be in a PM with me to reconnect to a chat!
+        Je moet in een PM met mij zijn om opnieuw te verbinden met een chat!
     help_msg: |-
-      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+      Dit stelt je in staat om te verbinden met een chat's database, en dingen toe te voegen zonder dat de chat ervan weet! Om voor de hand liggende redenen moet je een admin zijn om dingen toe te voegen; maar elk lid kan je data bekijken. (verbannen/weggeschopte gebruikers kunnen dat niet!)
 
-      *Commands*:
-      × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-      × /disconnect: Disconnect from the current chat.
-      × /reconnect: Reconnect to the previously connect chat
-      × /connection: See information about the currently connected chat.
+      *Commando's*:
+      × /connect `<chatid>`: Verbind met de gespecificeerde chat, waardoor je inhoud kunt bekijken/bewerken.
+      × /disconnect: Verbreek verbinding met de huidige chat.
+      × /reconnect: Verbind opnieuw met de eerder verbonden chat
+      × /connection: Bekijk informatie over de momenteel verbonden chat.
 
-      *Admin Commands:*
-      × /allowconnect <yes/no>: Allow users to connect to chats or not.
+      *Admin Commando's:*
+      × /allowconnect <yes/no>: Sta gebruikers toe om te verbinden met chats of niet.
 
-      You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+      Je kunt de chat id verkrijgen door het /id commando te gebruiken in je chat. Wees niet verrast als de id negatief is; alle supergroepen hebben negatieve ids.
   Disabling:
     help_msg: |-
       Hiermee kunt u een aantal veelgebruikte opdrachten uitschakelen, zodat niemand ze kan gebruiken. Het zal u ook toestaan om te autodelete, het stoppen van mensen bluetexting.
@@ -388,22 +390,22 @@ strings:
       Uitgeschakelde opdrachten zijn nog steeds toegankelijk via de functie /connect. Als u geïnteresseerd zou zijn om dit ook gehandicapt te zien, laat het me weten in de support chat.
   Filters:
     help_msg: |-
-      Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+      Filters zijn hoofdletter-ongevoelig; elke keer dat iemand je trigger woorden zegt, zal Alita iets anders antwoorden! kan gebruikt worden om je eigen commando's te maken, indien gewenst.
 
-      Commands:
-      - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-      - /filters: List all chat filters.
-      - /stop <trigger>: Stop the bot from replying to trigger.
-      - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+      Commando's:
+      - /filter <trigger> <antwoord>: Elke keer dat iemand trigger zegt, zal de bot antwoorden met een zin. Voor filters met meerdere woorden, citeer de trigger.
+      - /filters: Lijst alle chat filters.
+      - /stop <trigger>: Stop de bot met antwoorden op trigger.
+      - /stopall: Stop ALLE filters in de huidige chat. Dit kan niet ongedaan gemaakt worden.
 
-      Examples:
-      - Set a filter:
-      -> /filter hello Hello there! How are you?
-      - Set a multiword filter:
-      -> /filter hello friend Hello back! Long time no see!
-      - Set a filter that can only be used by admins:
-      -> /filter example This filter wont happen if a normal user says it {admin}
-      - To save a file, image, gif, or any other attachment, simply reply to file with:
+      Voorbeelden:
+      - Stel een filter in:
+      -> /filter hello Hallo daar! Hoe gaat het?
+      - Stel een meerwoord filter in:
+      -> /filter hello friend Hallo terug! Lang niet gezien!
+      - Stel een filter in dat alleen door admins gebruikt kan worden:
+      -> /filter example Dit filter zal niet gebeuren als een normale gebruiker het zegt {admin}
+      - Om een bestand, afbeelding, gif, of andere bijlage op te slaan, antwoord simpelweg op het bestand met:
       -> /filter trigger
   Formatting:
     help_msg: |-

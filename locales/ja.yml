@@ -2,286 +2,286 @@
 #stringcode: string
 main:
   lang_sample: |-
-    日本
+    日本語
   language_flag: |-
     🇯🇵
   language_name: |-
-    日本
+    日本語
 strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        管理者キャッシュを正常に再読み込みしました。
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        管理者キャッシュが見つかりません。管理者に /admincache を使用して管理者キャッシュを再読み込みするよう依頼してください。
   Admin:
     adminlist: |-
-      Admins in <b>%s</b>:
+      <b>%s</b>の管理者：
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        %s で匿名管理者モードが現在<b>有効</b>になっています。
+        これにより、すべての匿名管理者が制限なく管理アクションを実行できます。
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        %s で匿名管理者モードが現在<b>無効</b>になっています。
+        これにより、匿名管理者は権限を確認するためにボタンを押す必要があります。
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        %s で匿名管理者モードが<b>有効</b>になりました。
+        今後、管理者には匿名管理者からの権限を確認するよう依頼します。
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        %s で匿名管理者モードが<b>無効</b>になりました。
+        今後、匿名管理者からの権限確認を依頼しません。
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        %s で匿名管理者モードは既に<b>有効</b>になっています
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        %s で匿名管理者モードは既に<b>無効</b>になっています
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        無効な引数です。<code>on</code>、<code>off</code>、<code>yes</code>、<code>no</code>のみ理解します
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        この人はこのチャットを作成した人です。どうやって降格できますか？
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        この人は管理者ではありません。どうやって降格できますか？
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        自分を降格させることはできません。私を昇格させた人を連れてきてください！
       success_demote: |-
-        Successfully demoted %s!
+        %s を正常に降格させました！
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        管理者タイトルが %d 文字から16文字に切り詰められました
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        これを自分にできればいいのに ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        この人はこのチャットを作成した人です。どうやって昇格できますか？
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        この人は既に管理者です。どうやって昇格できますか？
       success_promote: |-
-        Successfully promoted %s!
+        %s を正常に昇格させました！
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        %s の管理者タイトルを <b>%s</b> に正常に設定しました
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        これを自分にできればいいのに ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        この人はこのチャットを作成した人です。どうやってカスタム管理者タイトルを設定できますか？
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        この人は既に管理者です。どうやってカスタム管理者タイトルを設定できますか？
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        カスタム管理者タイトルの設定に失敗しました。タイトル名が正しくないか、絵文字が含まれている可能性があります。
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        降格できませんでした。私が管理者でないか、管理者ステータスが他のユーザーによって任命されたため、アクションを実行できません！
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        昇格できませんでした。私が管理者でないか、管理者ステータスが他のユーザーによって任命されたため、アクションを実行できません！
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        設定できるように管理者タイトルを教えてください。
     help_msg: |-
-      管理モジュール!
+      管理モジュール！
 
-      *User Command:*
-      × /adminlist: 現在のチャット内の管理者をリストすることで、ユーザーをプロモートし、降格させることが容易になります。
+      *ユーザーコマンド:*
+      × /adminlist: 現在のチャット内の管理者をリストし、ユーザーの昇格と降格を容易にします。
 
-      *Admin コマンド:*
-      × / プロモート `<reply/username/mention/userid>`: ユーザーをプロモートします。
-      × /demote `<reply/username/mention/userid>': ユーザーをデモートしてください。
-      × / タイトル `<reply/username/mention/userid>` `<custom title>`: ユーザーのカスタム・タイトルを設定する
+      *管理者コマンド:*
+      × /promote `<返信/ユーザー名/メンション/ユーザーID>`: ユーザーを昇格させます。
+      × /demote `<返信/ユーザー名/メンション/ユーザーID>`: ユーザーを降格させます。
+      × /title `<返信/ユーザー名/メンション/ユーザーID>` `<カスタムタイトル>`: ユーザーのカスタムタイトルを設定します
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        はい、あなたのスパムは好きではありません。%s は %s されました！
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        了解！最大スパム制限を <b>%d</b> メッセージに設定しました。
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        了解。
+        スパムについてユーザーに警告しません。
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        このチャットは現在スパム制御を実施していません。
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        このチャットは現在 %d メッセージ後にスパム制御を実施しています。その量を超えるメッセージを送信するユーザーは %s されます。
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        了解！スパムモードは %s になります。
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        不明なタイプ '%s' です。ban/kick/mute のいずれかを使用してください
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        スパム時に実行するアクションを指定する必要があります。現在のモード: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        アンチスパムメッセージ削除をオンにしました。アンチスパムを引き起こすメッセージは削除されます！
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        アンチスパムメッセージ削除をオフにしました。アンチスパムを引き起こすメッセージは無視されます！
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        `yes`/`no`/`on`/`off` のオプションのみ理解します
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        アンチスパムメッセージ削除は現在このチャットで*有効*です。アンチスパムを引き起こすメッセージは削除されます！
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        アンチスパムメッセージ削除は現在このチャットで*無効*です。アンチスパムを引き起こすメッセージは無視されます！
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        引数が必要です！off、または整数。例: `/setflood 5`、または `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        それは有効な整数ではありません。有効な整数、または `off` を入力してください。
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        アンチスパム制限は 3 から 100 の間に設定する必要があります。
     help_msg: |-
-      人は時々参加し、 100 件のメッセージを送り、チャットを破滅させることがありますか ? アンチフラッディングでは、これ以上はありません。
+      人々が時々参加して100件のメッセージを送信し、チャットを台無しにすることがありますか？アンチスパムがあればもうそんなことはありません。
 
-      アンチフラッディングを使用すると、複数のメッセージを 1 行に送信するユーザーに対してアクションを実行することができます。 アクション : 禁止/kick/mute/tban/tmute
+      アンチスパムを使用すると、複数のメッセージを連続で送信するユーザーに対してアクションを実行できます。アクション: ban/kick/mute/tban/tmute
 
-      *Admin コマンド*:
-      × / 洪水: 現在の洪水設定を取得します。
-      × /set洪水 `<number/off/no>': ユーザーに対してアクションを実行するメッセージの数を設定します。 '0'、 'off'、または 'no' に設定して、使用不可にします。
-      × /set氾dmode `<action type>' : 洪水の発生したユーザーに対して取るべきアクションを選択してください。 オプション: ban/kick/mute/tban/tmute
-      × /del洪水 `<yes/no/on/off>`: ユーザーが浸水したメッセージを削除したい場合。
+      *管理者コマンド*:
+      × /flood: 現在のスパム設定を取得します。
+      × /setflood `<数値/off/no>`: ユーザーに対してアクションを実行するメッセージ数を設定します。'0'、'off'、または'no'に設定して無効にします。
+      × /setfloodmode `<アクションタイプ>`: スパムを行ったユーザーに対して実行するアクションを選択します。オプション: ban/kick/mute/tban/tmute
+      × /delflood `<yes/no/on/off>`: ユーザーがスパムしたメッセージを削除したい場合。
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        私を管理者にすることで既に承認していただいています！
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        承認されたユーザー: %s
+        このユーザーはban、ブラックリスト、ロック、アンチスパムから保護されています！
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        このユーザーはこのチャットにいません。どうやって承認できますか？
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        私は管理者です。承認を取り消すことはできません！
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        承認取り消しユーザー: %s
+        このユーザーはもうban、ブラックリスト、ロック、アンチスパムから保護されません！
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s は管理者です。承認は必要ありません。
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        私は管理者です。承認は必要ありません。
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s は <b>%s</b> で承認されたユーザーです
+        ブラックリスト、ロック、アンチスパムから保護されています！
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>承認者:</b> %s (<code>%d</code>)
+        <b>承認時刻:</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        あなたは <b>%s</b> で承認されていません
+        ブラックリスト、ロック、アンチスパムから保護されていません！
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: "<b>%s</b> で承認されたユーザーはいません！"
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        これらのユーザーは <b>%s</b> で承認されています:
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        承認者や承認時刻などの各ユーザーの詳細情報を取得するには、/approval (ユーザーID) を使用してください。
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        このチャットからすべての承認ユーザーを削除してもよろしいですか？
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        このコマンドを使用してチャット内のすべてのユーザーの承認を取り消すことができるのは、チャット作成者のみです。
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          このチャットからすべての承認ユーザーを削除しました ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          このチャットからすべての承認ユーザーの削除をキャンセルしました ❌
     help_msg: |-
-      場合によっては、望ましくないコンテンツを送信しないユーザーを信頼することがあります。
-      管理者にするには十分ではありませんが、ロック、ブラックリスト、およびアンチフラッディングが適用されない状態では問題が発生している可能性があります。
-      承認を承認するには、信頼できるユーザーが
+      時々、望ましくないコンテンツを送信しないユーザーを信頼することがあります。
+      管理者にするほどではありませんが、ロック、ブラックリスト、アンチスパムが適用されない状態で問題を起こしている可能性があります。
+      承認により、信頼できるユーザーを許可できます。
 
-      *User コマンドを送信できるようにします。*
-      × /承認: このチャットでユーザーの承認状況を確認してください。
+      *ユーザーコマンド:*
+      × /approval: このチャットでのユーザーの承認状況を確認します。
 
-      *Admin コマンド:*
-      × / 承認: ユーザーの承認。 ロック、ブラックリスト、およびアンチフラッドは、これらには適用されません。
-      × /unapprove: ユーザーの承認を解除します。 これで、ロック、ブラックリスト、およびアンチフラッドが再度適用されます。
-      × / 承認済み : 承認されたすべてのユーザーをリストします。
+      *管理者コマンド:*
+      × /approve: ユーザーを承認します。ロック、ブラックリスト、アンチスパムはこれらに適用されません。
+      × /unapprove: ユーザーの承認を取り消します。ロック、ブラックリスト、アンチスパムが再び適用されます。
+      × /approved: すべての承認ユーザーをリストします。
 
-      * 所有者コマンド:*
-      × /un承認者: チャットのすべてのユーザーを承認解除します。 これは元にはできません。
+      *所有者コマンド:*
+      × /unapproveall: チャット内のすべてのユーザーの承認を取り消します。これは元に戻せません。
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        このユーザーはこのチャットにいません。どうやってキックできますか？
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        なぜ管理者をキックしますか？それはかなり愚かなアイデアのように聞こえます。
       is_bot_itself: |-
-        Why would I kick myself?
+        なぜ自分をキックしますか？
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        もう一人は塵になりました...！
+        %s をキックしました。
+      kicked_reason: "\n<b>理由: </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        あなたは管理者です。あなたはここにいる他の人と一緒になってしまいました！
       ok_out: |-
-        Alright, get out!
+        わかりました、出て行ってください！
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        なぜ管理者を禁止しますか？それはかなり愚かなアイデアのように聞こえます。
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        本当に私を禁止しないですか？
+      ban_reason: "\n<b>理由: </b> %s"
       tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+        もう一人は塵になりました...！
+        %s を %s で禁止しました
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        もう一人は塵になりました...！
+        %s を禁止しました。
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          削除するにはメッセージに返信する必要があります！
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        なぜ管理者を解除禁止しますか？それはかなり愚かなアイデアのように聞こえます。
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        なぜ私を解除禁止しないのですか？すでにここにいるのに！
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        はい、わかりました...！
+        %s を解除禁止しました。
     help_msg: |-
-      場合によっては、ユーザーが注釈を付けることができ、チャットから削除したい場合があります。このモジュールは、お客様のチャットに対応する上で役に立ちます。
+      時々、ユーザーが注釈を付けることができ、チャットから削除したい場合があります。このモジュールは、お客様のチャットに対応する上で役に立ちます。
       チャットを禁止し、それらが自分自身を持っているかどうかを後で解除することができます。
 
-      * ユーザー・コマンド:*
+      *ユーザーコマンド:*
       × /kickme: コマンドを発行したユーザーを蹴ります。
 
-      *バン・コマンド* (管理のみ):
-      × /バン <userhandle>: ユーザーは禁止されています。 ( ハンドル、または応答による )
-      × /sban <userhandle>: ユーザーは、ユーザーのサイレント・禁止を禁止し、メッセージをグループに送信したり、コマンドを削除したりすることはありません。 ( ハンドルまたは応答による )
-      × /dban <userhandle>: ユーザーは禁止され、返信されたメッセージは削除されます。 ( ハンドルまたは応答で )
-      × /tban <userhandle> x(m/h/d): ユーザーの「x」時間は禁止されている。 ( ハンドルまたは応答を介して ) 。 m = 分、 h = 時間、 d = 日。
-      × /unban <userhandle>: ユーザーは禁止されています。 ( ハンドルまたは応答による )
+      *バンコマンド* (管理者のみ):
+      × /ban <userhandle>: ユーザーは禁止されています。 (ハンドル、または応答による)
+      × /sban <userhandle>: ユーザーは、ユーザーのサイレント・禁止を禁止し、メッセージをグループに送信したり、コマンドを削除したりすることはありません。 (ハンドルまたは応答による)
+      × /dban <userhandle>: ユーザーは禁止され、返信されたメッセージは削除されます。 (ハンドルまたは応答で)
+      × /tban <userhandle> x(m/h/d): ユーザーの「x」時間は禁止されている。 (ハンドルまたは応答を介して) 。 m = 分、 h = 時間、 d = 日。
+      × /unban <userhandle>: ユーザーは禁止されています。 (ハンドルまたは応答による)
 
-      *Restrict コマンド:* (管理のみ)
-      × / 制限: InlineKeyboard でキック、禁止、ミュート
-      × /unれたり : InlineKeyboard を表示し、 InlineKeyboard を表示して、アンミュートおよびアンバンからのオプションを選択します。
+      *Restrict コマンド:* (管理者のみ)
+      × /制限: InlineKeyboard でキック、禁止、ミュート
+      × /unれたり: InlineKeyboard を表示し、 InlineKeyboard を表示して、アンミュートおよびアンバンからのオプションを選択します。
   Blacklists:
     blacklist:
       give_bl_word: |-
-        Please give me a word to add to the blacklist!
+        ブラックリストに追加する単語を教えてください！
       already_blacklisted: |-
-        These words are already blacklisted:
+        これらの単語は既にブラックリストに登録されています：
       added_bl: |-
-        Added these words as blacklists:
+        ブラックリストに追加された単語：
     unblacklist:
       give_bl_word: |-
-        Please give me a word to remove from the blacklist!
+        ブラックリストから削除する単語を教えてください！
       no_removed_bl: |-
-        None of the given words were in the blacklist which can be removed!
+        与えられた単語のいずれもブラックリストに含まれていないため削除できません！
       removed_bl: |-
-        Removed '%s' from the blacklisted words!
+        '%s' をブラックリストに登録された単語から削除しました！
     ls_bl:
       no_blacklisted: |-
-        There are no blacklisted words in this chat.
+        このチャットにはブラックリストに登録された単語はありません。
       list_bl: |-
-        These words are blacklisted in this chat:
+        このチャットに登録された単語：
     set_bl_action:
       current_mode: |-
-        The current blacklist mode is: %s
+        現在のブラックリストモードは: %s
       changed_mode: |-
         Changed blacklist mode to: *%s*
       choose_correct_option: |-
-        Please choose an option out of <mute/kick/ban/warn/none>
+        適切なオプションを選択してください <mute/kick/ban/warn/none>
     rm_all_bl:
       ask: |-
-        Are you sure you want to remove all blacklisted words from this chat?
+        このチャットからすべてのブラックリストに登録された単語を削除してもよろしいですか？
       button_handler:
         yes: |-
           Removed all Blacklists from this Chat ✅
@@ -295,10 +295,10 @@ strings:
       kicked_user: |-
         Kicked %s due to %s
     help_msg: |-
-      * ユーザーコマンド:*
-      × / ブラックリスト: チャット中のすべてのブラックリストを確認してください。
+      *ユーザーコマンド:*
+      × /ブラックリスト: このチャット内のすべてのブラックリストを確認してください。
 
-      *Admin コマンド:*
+      *管理者コマンド:*
       × /addブラックリスト `<trigger>`: ブラックリストは現在のチャットの中の単語をリストします。
       × /rmBlacklist `<trigger>`: 現在のブラックリストに含まれている単語をチャットから削除します。
       × /blaction `<mute/kick/ban/warn/none>`: ブラックリスト・ワードが検出されたときに、ボットによって実行されるアクションを設定します。
@@ -376,12 +376,12 @@ strings:
     help_msg: |-
       これにより、一般的に使用されるコマンドを使用不可にすることができます。そのため、 noone また、それらを自動削除して、ブルーテックスからのユーザーを停止することもできます。
 
-      *Admin コマンド*:
+      *管理者コマンド*:
       × /disable `<commandname>`: このグループのコマンド名を使用するユーザーを停止します。
       × /enable `<item name>`: このグループでユーザーがコマンド名を使用できるようにします。
       × /disableable: すべての使用不可のコマンドをリストします。
       × /disabledel `<yes/no/on/off>`: 非管理者によって使用された場合は、使用不可のコマンドを削除します。
-      × / 使用不可: このチャットで使用不可のコマンドをリストします。
+      × /使用不可: このチャットで使用不可のコマンドをリストします。
 
       注:
       コマンドを使用不可に設定すると、コマンドは非管理者に対してのみ使用不可になります。 すべての管理者は、それらのコマンドを引き続き使用
@@ -400,64 +400,64 @@ strings:
       - フィルターを設定 :
       -> /filter hello Hello そこ ! 調子はどう ?
       - 複数ワード・フィルターを設定します :
-      -> /filter hello フレンド・ハロー・バック! 「
+      -> /filter hello フレンド・ハロー・バック! "
       」 - 管理者が使用できるフィルターを設定します。
       -> /filter 例 : 通常のユーザーが {admin}
       - ファイル、イメージ、 gif、またはその他の添付ファイルを保存するには、
-      -> / フィルター・トリガーによるファイルへの応答のみを行うことができます。
+      -> /フィルター・トリガーによるファイルへの応答のみを行うことができます。
   Formatting:
     help_msg: |-
-      Alita は、メッセージをより表現力にするために、多数のフォーマット・オプションをサポートしています。 下のボタンをクリックして確認してください。
+      Alitaは、メッセージをより表現力豊かにするために、多数のフォーマットオプションをサポートしています。下のボタンをクリックして確認してください。
     Markdown: |-
-      <b>Markdown Formatting</b>
+      <b>マークダウンフォーマット</b>
 
-      You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-      <b>Supported markdown</b>:
-      - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-      - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-      - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-      - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-      - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-      - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-      - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-      - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-      - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+      <b>太字</b>、<i>斜体</i>、<u>下線</u>などを使用してメッセージをフォーマットできます。試してみてください！
+      <b>サポートされているマークダウン</b>:
+      - <code>`code words`</code>: バッククォートは等幅フォントに使用されます。表示: <code>code words</code>。
+      - <code>_italic words_</code>: アンダースコアは斜体フォントに使用されます。表示: <i>italic words</i>。
+      - <code>*bold words*</code>: アスタリスクは太字フォントに使用されます。表示: <b>bold words</b>。
+      - <code>~strikethrough~</code>: チルダは取り消し線に使用されます。表示: <strike>strikethrough</strike>。
+      - <code>||spoiler||</code>: 二重縦棒はスポイラーに使用されます。表示: <tg-spoiler>Spoiler</tg-spoiler>。
+      - <code>```pre```</code>: フォーマッターが「```」でフォーマットされたテキスト内の他のフォーマット文字を無視するようにします: <code>**bold** | *bold*</code>。
+      - <code>__underline__</code>: 二重アンダースコアは下線に使用されます。表示: underline。注意: 一部のクライアントは賢く動作しようとして斜体として解釈します。その場合は、アプリの組み込みフォーマットを使用してください。
+      - <code>[hyperlink](example.com)</code>: これはハイパーリンクに使用されるフォーマットです。表示: <a href='https://example.com/'>hyperlink</a>。
+      - <code>[My Button](buttonurl://example.com)</code>: これはボタン作成に使用されるフォーマットです。この例では、クリックすると<code>example.com</code>を開く「My button」という名前のボタンが作成されます。
 
-      If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-      <b>Example:</b>
+      同じ行にボタンを送信したい場合は、<code>:same</code>フォーマットを使用してください。
+      <b>例:</b>
       <code>[button 1](buttonurl:example.com)</code>
       <code>[button 2](buttonurl://example.com:same)</code>
       <code>[button 3](buttonurl://example.com)</code>
-      This will show button 1 and 2 on the same line, with 3 underneath.
+      これによりボタン1と2が同じ行に表示され、3がその下に表示されます。
     Fillings: |-
-      <b>Fillings</b>
+      <b>フィリング</b>
 
-      You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-      You can use these to mention a user in notes too!
+      コンテキストデータを使用してメッセージの内容をカスタマイズすることもできます。例えば、ウェルカムメッセージでユーザーを名前で言及したり、フィルターで言及したりできます！
+      これらをノートでユーザーを言及するためにも使用できます！
 
-      <b>Supported fillings:</b>
-      - <code>{first}</code>: The user's first name.
-      - <code>{last}</code>: The user's last name.
-      - <code>{fullname}</code>: The user's full name.
-      - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-      - <code>{mention}</code>: Mentions the user with their firstname.
-      - <code>{id}</code>: The user's ID.
-      - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      <b>サポートされているフィリング:</b>
+      - <code>{first}</code>: ユーザーの名前。
+      - <code>{last}</code>: ユーザーの姓。
+      - <code>{fullname}</code>: ユーザーのフルネーム。
+      - <code>{username}</code>: ユーザーのユーザー名。ない場合はユーザーを言及します。
+      - <code>{mention}</code>: ユーザーを名前で言及します。
+      - <code>{id}</code>: ユーザーのID。
+      - <code>{chatname}</code>: チャットの名前。
+      - <code>{rules}</code>: メッセージにルールボタンを追加します。
     Random: |-
-      <b>Random Content</b>
+      <b>ランダムコンテンツ</b>
 
-      Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-      How to use random contents:
-      - %%%: This separator can be used to add  random replies to the bot.
-      For example:
+      もう一つの楽しいことは、メッセージの内容をランダム化することです。ウェルカムメッセージを変更したり、ノートを変更したりして、少し個人的にしましょう！
+      ランダムコンテンツの使用方法:
+      - %%%: この区切り文字を使用してボットにランダムな返信を追加できます。
+      例:
       <code>hello
       %%%
       how are you</code>
-      This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-      Use this to make Alita feel a bit more customised! (only works in filters/notes)
-      Example welcome message:
-      - Every time a new user joins, they'll be presented with one of the three messages shown here.
+      これにより、最初のメッセージ「hello」または2番目のメッセージ「how are you」をランダムに選択して送信します。
+      これを使用してAlitaをもう少しカスタマイズしましょう！（フィルター/ノートでのみ動作）
+      ウェルカムメッセージの例:
+      - 新しいユーザーが参加するたびに、ここに示された3つのメッセージのうちの1つが表示されます。
       -> /filter "hey"
       hello there <code>{first}</code>!
       %%%
@@ -470,64 +470,64 @@ strings:
 
       *Admin コマンド」 : *
       × /se12 `<reply/text>`: グループのウェルカム・テキストを設定します。
-      × / ようこそ「<yes/no/on/off>」: グループのウェルカム設定を使用可能または使用不可にします。
+      × /ようこそ「<yes/no/on/off>」: グループのウェルカム設定を使用可能または使用不可にします。
       × /rese12: ウェルカム・メッセージをデフォルトにリセットします。
-      × / setGoodbye `<reply/text>`: グループのお別れテキストを設定します。
+      × /setGoodbye `<reply/text>`: グループのお別れテキストを設定します。
       × /Goodbye `<yes/no/on/off>`: グループのバイバイ設定を有効または無効にします。
-      × /resetGoodbye : お別れのメッセージをデフォルトにリセットします。
-      × / cleanservice `<yes/no/on/off>`: ' x ' などのすべてのサービス・メッセージを削除します。
+      × /resetGoodbye: お別れのメッセージをデフォルトにリセットします。
+      × /cleanservice `<yes/no/on/off>`: ' x ' などのすべてのサービス・メッセージを削除します。
       × /cleanようこそ `<yes/no/on/off>`: 新しいメンバーが結合するたびに、古いウェルカム・メッセージを削除します。
   Help:
     About: |-
-      @%s は、最も速く、最も機能が満たされたグループ・マネージャーの 1 つです。
+      @%s は、最も速く、最も機能豊富なグループマネージャーの一つです。
 
-      Alita ✨ は、 @DivideProjects!
+      Alita ✨ は @DivideProjects によって作られました！
 
-      Alita は 2020 年以降オンラインになっており、何千ものユーザー!
+      Alitaは2020年からオンラインになっており、何千ものユーザーにサービスを提供しています！
 
-      <b>なぜ Alita:</b>
-      - Simple: 多くのボット・コマンドを使用する簡単な使い方と compaitble により、数千のユーザーにサービスを提供してきました。
-      - フィーガード: 他のグループの管理ボットが持っていない多くの機能 :
-      - Fast: どうする? Python を使うことではなく、 <a href='https://go.dev/'>ゴー</a> をコアプログラミング言語として使用している。
+      <b>なぜAlitaを選ぶのか:</b>
+      - シンプル: 多くのボットコマンドを使用する簡単な使い方で、数千のユーザーにサービスを提供してきました。
+      - 豊富な機能: 他のグループ管理ボットが持っていない多くの機能があります。
+      - 高速: なぜでしょうか？Pythonを使わず、<a href='https://go.dev/'>Go</a>をコアプログラミング言語として使用しているからです。
 
       <b>現在のバージョン:</b> %s
     Configuration:
       Step-1: |-
-        アリタ構成
+        Alita設定へようこそ
 
-        へようこそ。まず、 Alita ✨ をグループに追加することです。 これを行うには、下のボタンを押してグループを選択し、「完了」を押してチュートリアルを続行します。
+        まず、Alita ✨ をグループに追加することです。これを行うには、下のボタンを押してグループを選択し、「完了」を押してチュートリアルを続行してください。
       Step-2: |-
-        Ok, well done!
+        よくできました！
 
-        Now to let me work correctly, you need to make me Admin of your Group!
-        To do that, follow this easy steps:
-        ▫️ Go to your group
-        ▫️ Press the Group's name
-        ▫️ Press Modify
-        ▫️ Press on Administrator
-        ▫️ Press Add Administrator
-        ▫️ Press the Magnifying Glass
-        ▫️ Search @%s
-        ▫️ Confirm
+        私が正しく動作するように、あなたのグループの管理者にする必要があります！
+        そのために、以下の簡単な手順に従ってください:
+        ▫️ あなたのグループに移動
+        ▫️ グループ名を押す
+        ▫️ 変更を押す
+        ▫️ 管理者を押す
+        ▫️ 管理者を追加を押す
+        ▫️ 虫眼鏡を押す
+        ▫️ @%s を検索
+        ▫️ 確認
       Step-3: |-
-        素晴らしい!
-        今、 Bot は!
+        素晴らしい！
+        これでボットは準備完了です！
         すべてのコマンドを / または ! で使用できます。
 
-        グループ内での設定に問題がある場合は、 @DivideSupportへのログインをためらわないでください。
-        あなたをお手伝いしたいと思います。
+        グループ内での設定に問題がある場合は、@DivideSupportにお気軽にお問い合わせください。
+        喜んでお手伝いします。
     DonateText: |-
-      寄付したいのか ? 驚いた!
-      あなたが寄付すると、すべての基金は、迅速かつ即応性のある開発に向かっています。
-      お客様の寄付により、サーバーの制限により取得できなかった新機能または 2つの機能が取得される場合があります。
-      すべての基金は、データベース、ストレージ、およびホスティング !
-      といったサービスに投入されます。ここでは、以下のように所有者に連絡してください。 @DivideProjectsBot
+      寄付したいですか？素晴らしい！
+      あなたが寄付すると、すべての資金は迅速で応答性の高い開発に向かいます。
+      あなたの寄付により、サーバーの制限により取得できなかった新機能や2つの機能が取得される場合があります。
+      すべての資金は、データベース、ストレージ、ホスティングなどのサービスに投入されます！
+      所有者に連絡するには: @DivideProjectsBot
   Locks:
     help_msg: |-
-      * 管理者のみ*:
+      *管理者のみ*:
       × /lock `<permission>`: [ チャットの許可] をロックします。
       × /アンロック `<permission>': チャット許可をアンロックします。
-      × / ロック: チャット許可を表示します。
+      × /ロック: チャット許可を表示します。
       × /locktype: 使用可能なロック・タイプ!
 
       ロックを使用して、グループのユーザーを制限することができます。
@@ -538,21 +538,21 @@ strings:
       `/lock media`: このロックはチャット内のすべてのメディア・メッセージをロックします。
   Languages:
     help_msg: |-
-      ボットの言語を変更することはできませんか ?
-      このモジュール!
+      ボットの言語を変更したいですか？
+      このモジュールで可能です！
 
-      ジャスト・タイプ /lang を使用して、インライン・キーボードを使用してユーザー自身またはグループの言語を選択することができます。
+      /langと入力するだけで、インラインキーボードを使用してユーザー自身またはグループの言語を選択することができます。
 
-      お客様は、 [Crowdin](https://crowdin.com/project/alita_robot) を使用して、ボットをより多くの言語に導入することができます。
+      [Crowdin](https://crowdin.com/project/alita_robot)を使用して、ボットをより多くの言語に翻訳するのを手伝うことができます。
   Misc:
     help_msg: |-
-      × /info: Get your user info, can be used as reply or by passing a User Id or Username.
-      × /id: Get the current group id. If used by replying to a message, get that user's id.
-      × /ping: Ping the Telegram Server!
-      × /paste: Paste texts at nekobin Server!
-      × /tr <lang code> <msg/reply to message>: Translate the message.
-      × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
-      × /stat: Gets the count of total number of messages in chat.
+      × /info: ユーザー情報を取得します。返信として使用するか、ユーザーIDまたはユーザー名を渡すことができます。
+      × /id: 現在のグループIDを取得します。メッセージに返信して使用すると、そのユーザーのIDを取得します。
+      × /ping: Telegramサーバーにping！
+      × /paste: nekobinサーバーにテキストを貼り付け！
+      × /tr <言語コード> <メッセージ/メッセージに返信>: メッセージを翻訳します。
+      × /removebotkeyboard: チャットから動かなくなったボットキーボードを削除します。
+      × /stat: チャット内のメッセージの総数を取得します。
   Mutes:
     help_msg: |-
       場合によっては、ユーザーが注釈を付けることができ、送信メッセージをチャットに制限したい場合があります。このモジュールはここで役立ちます。このモジュールを使用して、グループ内のメンバーをミュートすることができます。
@@ -567,14 +567,14 @@ strings:
     help_msg: |-
       ノート !
       ノートは、情報のランダムなチブチを保存すること、電話番号、素敵なギフ、面白いピクチャーで、 !
-      * ユーザー・コマンド:*
+      *ユーザーコマンド:*
       - /get <notename>: メモを取得するためには、素晴らしい情報を保存します。
       - #notename: /getと同じ。
       管理コマンド:
       - /save <notename> <note text>: 「ワード」という名前の新しいメモを保存します。 メッセージに応答すると、そのメッセージが保存されます。 メディア!
       - /clear <notename>: 関連メモを削除します。
       - /notes: 現在のチャット内のすべてのメモをリストします。
-      - / 保存: /notesと同じ。
+      - /保存: /notesと同じ。
       - /clearall: チャット中のすべてのメモを削除します。 これは元にはできません。
       - /privatenotes: 予防保全にメモを送信するかどうか。 ユーザーがクリックすると予防保全のメモを取得するためのボタンが付いたメッセージが送信されます。
   Pins:
@@ -588,7 +588,7 @@ strings:
       × /pin: 返信したメッセージをピンとしています。 グループ・メンバーに通知を送信するには、「大きい」または「通知」を追加してください。
       × /pinned: 現在のチャットで最新のピン留めされたメッセージを取得します。
       × /permapin <text>: カスタム・メッセージをボットを介してピン留めします。 このメッセージには、マークダウン、ボタン、およびその他のすべてのクール・フィーチャーを含めることができます
-      × /unpin : 現在のピン留めされたメッセージをピン留め解除します。 応答として使用する場合は、応答メッセージをアンピンします。
+      × /unpin: 現在のピン留めされたメッセージをピン留め解除します。 応答として使用する場合は、応答メッセージをアンピンします。
       × /unpinall: すべてのピン留めされたメッセージをアンピンします。
       × /antichannelpin <yes/no/on/off>: 電報の自動ピンでリンクされたチャネルを使用することはできません。 引数が指定されていない場合は、現在の設定を表示
       x/cleanLinked <yes/no/on/off>: リンクされたチャネルによって送信されたメッセージを削除します。
@@ -596,12 +596,12 @@ strings:
   Purges:
     help_msg: |-
       *Admin のみ:*
-      - /粛清 : このメッセージと返信メッセージとの間のすべてのメッセージを削除します。
+      - /粛清: このメッセージと返信メッセージとの間のすべてのメッセージを削除します。
       - /del: 返信したメッセージを削除します。
 
       *Examples*:
       - 今までの間、返信されたメッセージからすべてのメッセージを削除します。
-      -> " 表示 / パージ"
+      -> "表示 / パージ"
   Reports:
     help_msg: |-
       24 時間週 7日に監視する時間がない人はみんな忙しいんだ しかし、あなたのグループの誰かがスパミングをしている場合、どう対応しますか ?
@@ -610,12 +610,12 @@ strings:
       - @admin: /report と同じが、コマンドではありません。
 
       *Admins Only:*
-      × / レポート `<on/off/yes/no>`: レポートの設定を変更するか、現在の状況を表示します。
+      × /レポート `<on/off/yes/no>`: レポートの設定を変更するか、現在の状況を表示します。
       - 予防保全で実行する場合は、ステータスを切り替えます。
       - グループ内にグループの状況を切り替える場合は、
-      × / レポート `block` ( 応答のみ): ユーザーが /report または @adminを使用することをブロックします。
-      × / レポート `unblock` ( 応答のみ経由 ): ユーザーを /report または @adminからブロック解除します。
-      × / レポート `showblocklist`: /report または @adminを使用できないすべてのブロックされたユーザーをチェックしてください。
+      × /レポート `block` ( 応答のみ): ユーザーが /report または @adminを使用することをブロックします。
+      × /レポート `unblock` ( 応答のみ経由 ): ユーザーを /report または @adminからブロック解除します。
+      × /レポート `showblocklist`: /report または @adminを使用できないすべてのブロックされたユーザーをチェックしてください。
 
       ユーザーを報告するには、 @admin または /report; Natalie のメッセージに返信し、管理者に通知されたことを通知するメッセージを返信します。
       ユーザーを報告するためにメッセージに応答する必要があります。 @admin 者のみにタグを付けることはできません。理由 !
@@ -625,45 +625,45 @@ strings:
     help_msg: |-
       すべてのチャットは、異なるルールを使用して動作します。このモジュールは、これらのルールをクリアするのに役立ちます。
       *User コマンド*:
-      × / ルール: 現在のチャット・ルールを確認します。
+      × /ルール: 現在のチャット・ルールを確認します。
       *Admin コマンド*:
-      × /setrules `<text>` : このチャットのルールを設定してください。
+      × /setrules `<text>`: このチャットのルールを設定してください。
       × /privaterules `<yes/no/on/off>`: ルールをプライベートで送信するかどうかを有効/無効にします。
       × /resetrules: チャット規則をデフォルトにリセットする
   Tagger:
     help_msg: |-
-      Tagger is an essential feature to mention all subscribed members in the group.
-      Any chat members can subscribe to tagger.
+      タガーはグループ内のすべての登録メンバーを言及するための重要な機能です。
+      すべてのチャットメンバーがタガーに登録できます。
 
-      *User Commands:*
-      × /tagme: Allow user to be tagged
-      × /untagme: Disallow user to be tagged
+      *ユーザーコマンド:*
+      × /tagme: ユーザーをタグ付け可能にします
+      × /untagme: ユーザーのタグ付けを無効にします
 
-      *Admin Commands:*
-      × /tagall: tag/mention all tagged users
-      × /untagall: clear all tagged members
-      × /addtag <user>: Add a user manually to taglist
-      × /rmtag <user>: Remove a user manually from taglist
+      *管理者コマンド:*
+      × /tagall: すべてのタグ付けされたユーザーをタグ/言及します
+      × /untagall: すべてのタグ付けされたメンバーをクリアします
+      × /addtag <ユーザー>: ユーザーを手動でタグリストに追加します
+      × /rmtag <ユーザー>: ユーザーを手動でタグリストから削除します
   Warns:
     help_msg: |-
-      Keep your members in check with warnings; stop them getting out of control!
-      If you're looking for automated warnings, read about the blacklist module!
+      警告でメンバーをチェックし、手に負えなくなるのを防ぎましょう！
+      自動警告をお探しの場合は、ブラックリストモジュールについてお読みください！
 
-      *Admin Commands:*
-      - /warn <reason>: Warn a user.
-      - /dwarn <reason>: Warn a user by reply, and delete their message.
-      - /swarn <reason>: Silently warn a user, and delete your message.
-      - /warns: See a user's warnings.
-      - /rmwarn: Remove a user's latest warning.
-      - /resetwarn: Reset all of a user's warnings to 0.
-      - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-      - /warnings: Get the chat's warning settings.
-      - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-      - /setwarnlimit <number>: Set the number of warnings before users are punished.
+      *管理者コマンド:*
+      - /warn <理由>: ユーザーに警告します。
+      - /dwarn <理由>: 返信でユーザーに警告し、そのメッセージを削除します。
+      - /swarn <理由>: ユーザーに静かに警告し、あなたのメッセージを削除します。
+      - /warns: ユーザーの警告を確認します。
+      - /rmwarn: ユーザーの最新の警告を削除します。
+      - /resetwarn: ユーザーのすべての警告を0にリセットします。
+      - /resetallwarns: チャット内のすべての警告を削除します。すべてのユーザーが0警告に戻ります。
+      - /warnings: チャットの警告設定を取得します。
+      - /setwarnmode <ban/kick/mute/tban/tmute>: チャットの警告モードを設定します。
+      - /setwarnlimit <数値>: ユーザーが処罰される前の警告数を設定します。
 
-      *Examples*
-      - Warn a user.
-      -> `/warn @user For disobeying the rules`
+      *例*
+      - ユーザーに警告する。
+      -> `/warn @user ルールに従わなかったため`
   Utils:
     chat_status:
       user:

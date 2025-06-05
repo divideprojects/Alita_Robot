@@ -11,69 +11,69 @@ strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        Cache administrateur rechargé avec succès.
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        Cache administrateur introuvable. Demandez à un administrateur d'utiliser /admincache pour recharger le cache administrateur.
   Admin:
     adminlist: |-
-      Admins in <b>%s</b>:
+      Administrateurs dans <b>%s</b> :
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        Le mode AdminAnonyme est actuellement <b>activé</b> pour %s.
+        Cela permet à tous les administrateurs anonymes d'effectuer des actions d'administration sans restriction.
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        Le mode AdminAnonyme est actuellement <b>désactivé</b> pour %s.
+        Cela oblige les administrateurs anonymes à appuyer sur un bouton pour confirmer leurs permissions.
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        Le mode AdminAnonyme est maintenant <b>activé</b> pour %s.
+        À partir de maintenant, je demanderai aux administrateurs de vérifier les permissions des administrateurs anonymes.
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        Le mode AdminAnonyme est maintenant <b>désactivé</b> pour %s.
+        À partir de maintenant, je ne demanderai plus aux administrateurs de vérifier les permissions des administrateurs anonymes.
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        Le mode AdminAnonyme est déjà <b>activé</b> pour %s
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        Le mode AdminAnonyme est déjà <b>désactivé</b> pour %s
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Argument invalide, je ne comprends que <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        Cette personne a créé cette discussion, comment pourrais-je la rétrograder ?
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        Cette personne n'est pas un administrateur, comment pourrais-je la rétrograder ?
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        Je ne peux pas me rétrograder moi-même, va chercher la personne qui m'a promu !
       success_demote: |-
-        Successfully demoted %s!
+        %s rétrogradé avec succès !
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        Titre d'administrateur tronqué à 16 caractères depuis %d
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Si seulement je pouvais me faire ça à moi-même ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        Cette personne a créé cette discussion, comment pourrais-je la promouvoir ?
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        Cette personne est déjà un administrateur, comment pourrais-je la promouvoir ?
       success_promote: |-
-        Successfully promoted %s!
+        %s promu avec succès !
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        Titre d'administrateur de %s défini avec succès sur <b>%s</b>
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Si seulement je pouvais me faire ça à moi-même ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        Cette personne a créé cette discussion, comment pourrais-je définir un titre d'administrateur personnalisé pour elle ?
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        Cette personne est déjà un administrateur, comment pourrais-je définir un titre d'administrateur personnalisé pour elle ?
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        Échec de la définition du titre d'administrateur personnalisé, le nom du titre pourrait ne pas être correct ou pourrait contenir des emojis.
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Impossible de rétrograder. Je ne suis peut-être pas administrateur, ou le statut d'administrateur a été nommé par un autre utilisateur, donc je ne peux pas agir sur eux !
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Impossible de promouvoir. Je ne suis peut-être pas administrateur, ou le statut d'administrateur a été nommé par un autre utilisateur, donc je ne peux pas agir sur eux !
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        Vous devez me donner un titre d'administrateur pour que je puisse le définir.
     help_msg: |-
       Il est facile de promouvoir et de rétrogradez les utilisateurs avec le module d'administration !
 
@@ -87,43 +87,43 @@ strings:
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        Ouais, je n'aime pas votre spam. %s a été %s !
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        Compris ! Limite maximale de spam à <b>%d</b> messages.
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        D'accord.
+        Je n'avertirai pas les utilisateurs pour le spam.
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        Cette discussion n'applique actuellement pas le contrôle anti-spam.
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        Cette discussion applique actuellement le contrôle anti-spam après %d messages. Tous les utilisateurs envoyant plus que cette quantité de messages seront %s.
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        Compris ! Le mode anti-spam sera %s.
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        Type inconnu '%s'. Veuillez utiliser l'un de : ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        Vous devez spécifier une action à entreprendre lors du spam. Les modes actuels sont : `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        Suppression des messages anti-spam activée. Les messages causant l'anti-spam seront supprimés !
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        Suppression des messages anti-spam désactivée. Les messages causant l'anti-spam seront ignorés !
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        Je ne comprends qu'une option parmi : `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        La suppression des messages anti-spam est actuellement *activée* dans cette discussion, les messages causant l'anti-spam seront supprimés !
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        La suppression des messages anti-spam est actuellement *désactivée* dans cette discussion, les messages causant l'anti-spam seront ignorés !
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        J'attendais quelques arguments ! Soit off, soit un entier. ex : `/setflood 5`, ou `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        Ce n'est pas un entier valide. Veuillez me donner un entier valide, ou `off`.
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        La limite anti-spam doit être définie entre 3 et 100.
     help_msg: |-
       Vous savez comment parfois, les gens se joignent, envoient 100 messages, et ruine votre chat? Avec antiinondation, cela ne se produit plus !
 
@@ -137,49 +137,49 @@ strings:
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        Vous m'avez déjà approuvé en me faisant administrateur !
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        Utilisateur Approuvé : %s
+        Il est maintenant protégé des bannissements, listes noires, verrous et anti-spam !
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        Cet utilisateur n'est pas dans cette discussion, et comment puis-je l'approuver ?
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        Je suis un administrateur, je ne peux pas être désapprouvé !
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        Utilisateur Désapprouvé : %s
+        Il n'est plus protégé des bannissements, listes noires, verrous et anti-spam !
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s est un administrateur, vous n'avez pas besoin d'approbation.
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        Je suis un administrateur, je n'ai pas besoin d'approbation.
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s est un Utilisateur approuvé dans <b>%s</b>
+        Il est protégé des listes noires, verrous et anti-spam !
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>Approuvé Par :</b> %s (<code>%d</code>)
+        <b>Heure d'Approbation :</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        Vous n'êtes pas approuvé dans <b>%s</b>
+        Vous n'êtes pas protégé des listes noires, verrous et anti-spam !
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: "Aucun utilisateur n'est approuvé dans <b>%s</b> !"
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        Ces utilisateurs sont approuvés dans <b>%s :</b>
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        Pour obtenir plus d'informations sur chaque utilisateur comme Approuvé Par et Heure d'Approbation, utilisez /approval (id utilisateur).
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        Êtes-vous sûr de vouloir supprimer tous les Utilisateurs Approuvés de cette discussion ?
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        Seul le Créateur de la Discussion peut utiliser cette commande pour désapprouver tous les utilisateurs de cette discussion.
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          Supprimé tous les Utilisateurs Approuvés de cette Discussion ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          Annulé la suppression de tous les Utilisateurs Approuvés de cette Discussion ❌
     help_msg: |-
       Parfois, vous pouvez faire confiance à un utilisateur pour ne pas envoyer de contenu indésirable.
       Peut-être pas assez pour les faire admin, mais vous pourriez être ok avec des verrous, des listes noires et des anti-inondation ne s'appliquant pas à eux.
@@ -198,180 +198,180 @@ strings:
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        Cet utilisateur n'est pas dans cette discussion, comment puis-je le restreindre ?
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        Pourquoi expulserais-je un administrateur ? Ça semble être une idée plutôt stupide.
       is_bot_itself: |-
-        Why would I kick myself?
+        Pourquoi m'expulserais-je moi-même ?
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        Un autre qui mord la poussière... !
+        %s expulsé.
+      kicked_reason: "\n<b>Raison : </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        Vous êtes un administrateur, vous êtes coincé ici avec tout le monde !
       ok_out: |-
-        Alright, get out!
+        D'accord, sortez !
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        Pourquoi bannirais-je un administrateur ? Ça semble être une idée plutôt stupide.
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        Pensez-vous vraiment que je vais me bannir moi-même ?
+      ban_reason: "\n<b>Raison : </b> %s"
       tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+        Un autre qui mord la poussière... !
+        %s banni pour %s
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        Un autre qui mord la poussière... !
+        %s banni.
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          Vous devez répondre à un message pour le supprimer et bannir l'utilisateur !
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        Pourquoi débannirais-je un administrateur ? Ça semble être une idée plutôt stupide.
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        Pourquoi me dé-restreindrais-je moi-même alors que je suis déjà ici ?
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        Ok D'accord... !
+        %s débanni.
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      Parfois les utilisateurs peuvent être ennuyeux et vous pourriez vouloir les supprimer de votre discussion, ce module vous aide exactement à gérer cela !
+      Bannir/expulser les utilisateurs de votre discussion, et les débannir plus tard s'ils se comportent bien.
 
-      *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      *Commandes Utilisateur :*
+      × /kickme : expulse l'utilisateur qui a émis la commande.
 
-      *Ban Commands* (Admin only):
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-      × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-      × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-      × /unban <userhandle>: unbans a user. (via handle, or reply)
+      *Commandes de Bannissement* (Admin seulement) :
+      × /ban <pseudo utilisateur> : bannit un utilisateur. (via pseudo, ou réponse)
+      × /sban <pseudo utilisateur> : bannit un utilisateur silencieusement, n'envoie pas de message au groupe et supprime aussi votre commande. (via pseudo, ou réponse)
+      × /dban <pseudo utilisateur> : bannit un utilisateur et supprime le message auquel vous avez répondu. (via pseudo, ou réponse)
+      × /tban <pseudo utilisateur> x(m/h/d) : bannit un utilisateur pour `x` temps. (via pseudo, ou réponse). m = minutes, h = heures, d = jours.
+      × /unban <pseudo utilisateur> : débannit un utilisateur. (via pseudo, ou réponse)
 
-      *Restrict Commands:* (Admin only)
-      × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-      × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+      *Commandes de Restriction :* (Admin seulement)
+      × /restrict : Affiche un InlineKeyboard pour choisir des options parmi kick, ban et mute
+      × /unrestrict : Affiche un InlineKeyboard pour choisir des options parmi unmute et unban.
   Blacklists:
     blacklist:
       give_bl_word: |-
-        Please give me a word to add to the blacklist!
+        Veuillez me donner un mot à ajouter à la liste noire !
       already_blacklisted: |-
-        These words are already blacklisted:
+        Ces mots sont déjà en liste noire :
       added_bl: |-
-        Added these words as blacklists:
+        Ajouté ces mots comme listes noires :
     unblacklist:
       give_bl_word: |-
-        Please give me a word to remove from the blacklist!
+        Veuillez me donner un mot à supprimer de la liste noire !
       no_removed_bl: |-
-        None of the given words were in the blacklist which can be removed!
+        Aucun des mots donnés n'était dans la liste noire qui peut être supprimée !
       removed_bl: |-
-        Removed '%s' from the blacklisted words!
+        Supprimé '%s' des mots en liste noire !
     ls_bl:
       no_blacklisted: |-
-        There are no blacklisted words in this chat.
+        Il n'y a pas de mots en liste noire dans cette discussion.
       list_bl: |-
-        These words are blacklisted in this chat:
+        Ces mots sont en liste noire dans cette discussion :
     set_bl_action:
       current_mode: |-
-        The current blacklist mode is: %s
+        Le mode de liste noire actuel est : %s
       changed_mode: |-
-        Changed blacklist mode to: *%s*
+        Mode de liste noire changé en : *%s*
       choose_correct_option: |-
-        Please choose an option out of <mute/kick/ban/warn/none>
+        Veuillez choisir une option parmi <mute/kick/ban/warn/none>
     rm_all_bl:
       ask: |-
-        Are you sure you want to remove all blacklisted words from this chat?
+        Êtes-vous sûr de vouloir supprimer tous les mots en liste noire de cette discussion ?
       button_handler:
         yes: |-
-          Removed all Blacklists from this Chat ✅
+          Supprimé toutes les Listes noires de cette Discussion ✅
         no: |-
-          Cancelled removing all Blacklists from this Chat ❌
+          Annulé la suppression de toutes les Listes noires de cette Discussion ❌
     bl_watcher:
       muted_user: |-
-        Muted %s due to %s
+        %s rendu muet à cause de %s
       banned_user: |-
-        Banned %s due to %s
+        %s banni à cause de %s
       kicked_user: |-
-        Kicked %s due to %s
+        %s expulsé à cause de %s
     help_msg: |-
       *Commandes utilisateur: *
       × /blacklists: Vérifiez toutes les listes noires en discussion.
 
-      *Admin Commands: *
-      × /addblacklist `<trigger>`: Blacklists the word in the current chat.
-      × /rmblacklist `<trigger>`: Supprime le mot des mots Blackrépertoriés en cours dans la discussion.
+      *Commandes Admin :*
+      × /addblacklist `<déclencheur>`: Met le mot en liste noire dans la discussion actuelle.
+      × /rmblacklist `<déclencheur>`: Supprime le mot des mots en liste noire actuels dans la discussion.
       × /blaction `<mute/kick/ban/warn/none>`: Définit l'action à effectuer par le bot lorsqu'un mot de liste noire est détecté.
       × /blacklistaction: Même que ci-dessus
 
-      *Propriétaire uniquement: *
+      *Propriétaire uniquement :*
       × /remallbl: Supprime tous les mots de la liste noire de la discussion
 
-      *Note: *
-      Le mode par défaut pour Blacklist est * none*, ce qui va supprimer les messages de la discussion.
+      *Note :*
+      Le mode par défaut pour la Liste noire est *none*, ce qui supprime seulement les messages de la discussion.
   Connections:
     connected: |-
-      You are currently connected to <b>%s</b>
+      Vous êtes actuellement connecté à <b>%s</b>
     not_connected: |-
-      You aren't connected to any chats.
+      Vous n'êtes connecté à aucune discussion.
     allow_connect:
       turned_on: |-
-        Turned <b>on</b> User connections to this chat!
-        Users can now connect chat to their PM's!
+        <b>Activé</b> les connexions utilisateur à cette discussion !
+        Les utilisateurs peuvent maintenant connecter la discussion à leurs MP !
       turned_off: |-
-        Turned <b>off</b> User connections to this chat!
-        Users can't connect chat to their PM's!
+        <b>Désactivé</b> les connexions utilisateur à cette discussion !
+        Les utilisateurs ne peuvent pas connecter la discussion à leurs MP !
       currently_on: |-
-        User connections are currently turned <b>on</b>.
-        Users can connect this chat to their PM's!
+        Les connexions utilisateur sont actuellement <b>activées</b>.
+        Les utilisateurs peuvent connecter cette discussion à leurs MP !
       currently_off: |-
-        User connections are currently turned <b>off</b>.
-        Users can't connect this chat to their PM's!
+        Les connexions utilisateur sont actuellement <b>désactivées</b>.
+        Les utilisateurs ne peuvent pas connecter cette discussion à leurs MP !
     connect:
       connection_disabled: |-
-        User connections are currently <b>disabled</b> to this chat.
-        Please ask admins to allow if you want to connect!
+        Les connexions utilisateur sont actuellement <b>désactivées</b> pour cette discussion.
+        Veuillez demander aux administrateurs de l'autoriser si vous voulez vous connecter !
       connected: |-
-        You are now connected to <b>%s</b>!
+        Vous êtes maintenant connecté à <b>%s</b> !
       tap_btn_connect: |-
-        Please press the button below to connect this chat to your PM
+        Veuillez appuyer sur le bouton ci-dessous pour connecter cette discussion à votre MP
     connections_btns:
       admin_conn_cmds: |-
-        Admin commands available:%s
+        Commandes admin disponibles :%s
       user_conn_cmds: |-
-        User commands available:%s
+        Commandes utilisateur disponibles :%s
     disconnect:
       disconnected: |-
-        Disconnected from the connected chat.
+        Déconnecté de la discussion connectée.
       need_pm: |-
-        You need to send this in PM to me to disconnect from the chat!
+        Vous devez m'envoyer ceci en MP pour vous déconnecter de la discussion !
     is_user_connected:
       need_group: |-
-        This command is made to be used in group chats, not in PM!
+        Cette commande est faite pour être utilisée dans les discussions de groupe, pas en MP !
       bot_not_admin: |-
-        I'm not an admin in this chat!
+        Je ne suis pas un administrateur dans cette discussion !
       user_not_admin: |-
-        You need to be an admin to do this.
+        Vous devez être un administrateur pour faire cela.
     reconnect:
       reconnected: |-
-        You are now reconnected to <b>%s</b>!
+        Vous êtes maintenant reconnecté à <b>%s</b> !
       no_last_chat: |-
-        You have no last chat to reconnect to!
+        Vous n'avez pas de dernière discussion à laquelle vous reconnecter !
       need_pm: |-
-        You need to be in a PM with me to reconnect to a chat!
+        Vous devez être en MP avec moi pour vous reconnecter à une discussion !
     help_msg: |-
-      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+      Cela vous permet de vous connecter à la base de données d'une discussion, et d'y ajouter des choses sans que la discussion le sache ! Pour des raisons évidentes, vous devez être un administrateur pour ajouter des choses ; mais tout membre peut voir vos données. (les utilisateurs bannis/expulsés ne peuvent pas !)
 
-      *Commands*:
-      × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-      × /disconnect: Disconnect from the current chat.
-      × /reconnect: Reconnect to the previously connect chat
-      × /connection: See information about the currently connected chat.
+      *Commandes* :
+      × /connect `<chatid>` : Se connecter à la discussion spécifiée, vous permettant de voir/éditer le contenu.
+      × /disconnect : Se déconnecter de la discussion actuelle.
+      × /reconnect : Se reconnecter à la discussion précédemment connectée
+      × /connection : Voir les informations sur la discussion actuellement connectée.
 
-      *Admin Commands:*
-      × /allowconnect <yes/no>: Allow users to connect to chats or not.
+      *Commandes Admin :*
+      × /allowconnect <yes/no> : Permettre aux utilisateurs de se connecter aux discussions ou non.
 
-      You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+      Vous pouvez récupérer l'id de discussion en utilisant la commande /id dans votre discussion. Ne soyez pas surpris si l'id est négatif ; tous les super groupes ont des ids négatifs.
   Disabling:
     help_msg: |-
       Cela vous permet de désactiver certaines commandes couramment utilisées, donc personne ne peut les utiliser. Il vous permettra également de les autosupprimer, d'arrêter les gens de bluetexting.
@@ -388,23 +388,23 @@ strings:
       Les commandes désactivées sont toujours accessibles via la fonction /connect. Si vous êtes intéressé à voir ce handicap aussi, laissez-moi savoir dans le chat de support.
   Filters:
     help_msg: |-
-      Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+      Les filtres ne sont pas sensibles à la casse ; chaque fois que quelqu'un dit vos mots déclencheurs, Alita répondra autre chose ! Peut être utilisé pour créer vos propres commandes, si souhaité.
 
-      Commands:
-      - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-      - /filters: List all chat filters.
-      - /stop <trigger>: Stop the bot from replying to trigger.
-      - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+      Commandes :
+      - /filter <déclencheur> <réponse> : Chaque fois que quelqu'un dit le déclencheur, le bot répondra avec la phrase. Pour les filtres de plusieurs mots, mettez le déclencheur entre guillemets.
+      - /filters : Lister tous les filtres de la discussion.
+      - /stop <déclencheur> : Arrêter le bot de répondre au déclencheur.
+      - /stopall : Arrêter TOUS les filtres dans la discussion actuelle. Ceci ne peut pas être annulé.
 
-      Examples:
-      - Set a filter:
-      -> /filter hello Hello there! How are you?
-      - Set a multiword filter:
-      -> /filter hello friend Hello back! Long time no see!
-      - Set a filter that can only be used by admins:
-      -> /filter example This filter wont happen if a normal user says it {admin}
-      - To save a file, image, gif, or any other attachment, simply reply to file with:
-      -> /filter trigger
+      Exemples :
+      - Définir un filtre :
+      -> /filter bonjour Bonjour ! Comment allez-vous ?
+      - Définir un filtre multi-mots :
+      -> /filter bonjour ami Bonjour en retour ! Ça fait longtemps !
+      - Définir un filtre qui ne peut être utilisé que par les administrateurs :
+      -> /filter exemple Ce filtre n'arrivera pas si un utilisateur normal le dit {admin}
+      - Pour sauvegarder un fichier, image, gif, ou tout autre attachement, répondez simplement au fichier avec :
+      -> /filter déclencheur
   Formatting:
     help_msg: |-
       Alita prend en charge un grand nombre d'options de formatage pour rendre vos messages plus expressifs. Jetez un coup d'oeil en cliquant sur les boutons ci-dessous !
