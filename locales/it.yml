@@ -8,9 +8,34 @@ main:
   language_name: |-
     Italiano
 strings:
+  CommonStrings:
+    admin_cache:
+      cache_reloaded: |-
+        Successfully reloaded admin cache.
+      not_found: |-
+        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
   Admin:
     adminlist: |-
       Admins in <b>%s</b>:
+    anon_admin:
+      enabled: |-
+        AnonAdmin mode is currently <b>enabled</b> for %s.
+        This allows all anonymous admin to perform admin actions without restriction.
+      disabled: |-
+        AnonAdmin mode is currently <b>disabled</b> for %s.
+        This requires anonymous admins to press a button to confirm their permissions.
+      enabled_now: |-
+        AnonAdmin mode is now <b>enabled</b> for %s.
+        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+      disabled_now: |-
+        AnonAdmin mode is now <b>disabled</b> for %s.
+        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+      already_enabled: |-
+        AnonAdmin mode is already <b>enabled</b> for %s
+      already_disabled: |-
+        AnonAdmin mode is already <b>disabled</b> for %s
+      invalid_arg: |-
+        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
       is_owner: |-
         This person created this chat, how would I demote them?
@@ -116,6 +141,8 @@ strings:
       user_approved: |-
         Approved User: %s
         They are now protected from bans, blacklists, locks and antiflood!
+      user_not_in_chat: |-
+        This user is not in this chat, and how can I approve them?
     unapprove:
       is_bot_itself: |-
         I'm an admin, I can't be unapproved!
