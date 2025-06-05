@@ -1,6 +1,7 @@
 package modules
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"strings"
@@ -26,6 +27,8 @@ import (
 type antifloodStruct struct {
 	moduleStruct  // inheritance
 	syncHelperMap sync.Map
+	// Add semaphore to limit concurrent admin checks
+	adminCheckSemaphore chan struct{}
 }
 
 type floodControl struct {
@@ -40,8 +43,9 @@ var _normalAntifloodModule = moduleStruct{
 }
 
 var antifloodModule = antifloodStruct{
-	moduleStruct:  _normalAntifloodModule,
-	syncHelperMap: sync.Map{},
+	moduleStruct:        _normalAntifloodModule,
+	syncHelperMap:       sync.Map{},
+	adminCheckSemaphore: make(chan struct{}, 50), // Limit to 50 concurrent admin checks
 }
 
 func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, floodCrc floodControl) {
@@ -100,10 +104,41 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	)
 	userId := user.Id()
 
-	// if user is admin, flood count will be 0
-	if chat_status.IsUserAdmin(b, chat.Id, userId) {
-		m.updateFlood(chat.Id, 0, 0) // empty message queue when admin or approved user sends a message
-		return ext.ContinueGroups
+	// Use semaphore to limit concurrent admin checks and add timeout
+	select {
+	case antifloodModule.adminCheckSemaphore <- struct{}{}:
+		// Got semaphore, proceed with admin check
+		defer func() { <-antifloodModule.adminCheckSemaphore }()
+		
+		// Create context with timeout for admin check
+		ctx_timeout, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		defer cancel()
+		
+		// Check if user is admin with timeout
+		isAdmin := make(chan bool, 1)
+		go func() {
+			isAdmin <- chat_status.IsUserAdmin(b, chat.Id, userId)
+		}()
+		
+		select {
+		case admin := <-isAdmin:
+			if admin {
+				m.updateFlood(chat.Id, 0, 0) // empty message queue when admin sends a message
+				return ext.ContinueGroups
+			}
+		case <-ctx_timeout.Done():
+			// Admin check timed out, treat as non-admin for safety
+			log.WithFields(log.Fields{
+				"chatId": chat.Id,
+				"userId": userId,
+			}).Warn("Admin check timed out, treating user as non-admin")
+		}
+	default:
+		// Semaphore full, skip admin check for performance (treat as non-admin)
+		log.WithFields(log.Fields{
+			"chatId": chat.Id,
+			"userId": userId,
+		}).Debug("Admin check semaphore full, skipping admin check")
 	}
 
 	// update flood for user

@@ -1,6 +1,7 @@
 package chat_status
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -78,40 +79,51 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 		return true
 	}
 
-	chat, err := b.GetChat(chatID, nil)
-	if err != nil {
-		log.Error(err)
+	// Create context with timeout to prevent blocking indefinitely
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// Check cache first - avoid GetChat call if possible
+	adminsAvail, admins := cache.GetAdminCacheList(chatID)
+	if adminsAvail && admins.Cached {
+		// Use cached data without making API calls
+		for i := range admins.UserInfo {
+			admin := &admins.UserInfo[i]
+			if admin.User.Id == userId {
+				return true
+			}
+		}
 		return false
 	}
 
-	if chat.Type == "private" {
-		return true
+	// Only make GetChat call if cache miss - use context with timeout
+	chat, err := b.GetChatWithContext(ctx, chatID, nil)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"chatID": chatID,
+			"userID": userId,
+			"error":  err,
+		}).Warning("IsUserAdmin: Failed to get chat, treating as non-admin")
+		return false
 	}
 
-	adminlist := make([]int64, 0)
-
-	adminsAvail, admins := cache.GetAdminCacheList(chatID)
-	if !adminsAvail {
-		admins = cache.LoadAdminCache(b, chatID)
+	// Don't allow check if not a group/supergroup
+	if chat.Type != "group" && chat.Type != "supergroup" {
+		return false
 	}
 
-	if !admins.Cached {
-		adminList, err := b.GetChatAdministrators(chatID, nil)
-		if err != nil {
-			log.Error(err)
-			return false
-		}
-		for _, admin := range adminList {
-			adminlist = append(adminlist, admin.MergeChatMember().User.Id)
-		}
-	} else {
-		for i := range admins.UserInfo {
-			admin := &admins.UserInfo[i]
-			adminlist = append(adminlist, admin.User.Id)
+	// Load admin cache with timeout protection
+	adminList := cache.LoadAdminCache(b, chatID)
+	
+	// Check if user is in admin list
+	for i := range adminList.UserInfo {
+		admin := &adminList.UserInfo[i]
+		if admin.User.Id == userId {
+			return true
 		}
 	}
 
-	return string_handling.FindInInt64Slice(adminlist, userId)
+	return false
 }
 
 func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {

@@ -30,15 +30,8 @@ func main() {
 	// Load Locales
 	i18n.LoadLocaleFiles(&Locales, "locales")
 
-	// create a new bot
-	b, err := gotgbot.NewBot(
-		config.BotToken,
-		&gotgbot.BotOpts{
-			RequestOpts: &gotgbot.RequestOpts{
-				APIURL: config.ApiServer,
-			},
-		},
-	)
+	// create a new bot with default HTTP client (BotOpts doesn't support custom client in this version)
+	b, err := gotgbot.NewBot(config.BotToken, nil)
 	if err != nil {
 		panic("failed to create new bot: " + err.Error())
 	}
@@ -46,14 +39,14 @@ func main() {
 	// some initial checks before running bot
 	alita.InitialChecks(b)
 
-	// Create updater and dispatcher.
+	// Create updater and dispatcher with limited max routines
 	dispatcher := ext.NewDispatcher(&ext.DispatcherOpts{
 		// If an error is returned by a handler, log it and continue going.
 		Error: func(_ *gotgbot.Bot, _ *ext.Context, err error) ext.DispatcherAction {
 			log.Println("an error occurred while handling update:", err.Error())
 			return ext.DispatcherActionNoop
 		},
-		MaxRoutines: ext.DefaultMaxRoutines,
+		MaxRoutines: 100, // Limit concurrent goroutines to prevent explosion
 	})
 	updater := ext.NewUpdater(dispatcher, nil) // create updater with dispatcher
 

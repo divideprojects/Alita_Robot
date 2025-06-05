@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"context"
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -15,36 +16,63 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 		return AdminCache{}
 	}
 
-	adminList, err := b.GetChatAdministrators(chatId, nil)
+	// Create context with timeout to prevent indefinite blocking
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	adminList, err := b.GetChatAdministratorsWithContext(ctx, chatId, nil)
 	if err != nil {
-		log.Error(err)
+		log.WithFields(log.Fields{
+			"chatId": chatId,
+			"error":  err,
+		}).Error("LoadAdminCache: Failed to get chat administrators")
 		return AdminCache{}
 	}
 
+	if len(adminList) == 0 {
+		log.WithFields(log.Fields{
+			"chatId": chatId,
+		}).Warning("LoadAdminCache: No administrators found")
+		return AdminCache{}
+	}
+
+	// Convert ChatMember to MergedChatMember
 	var userList []gotgbot.MergedChatMember
 	for _, admin := range adminList {
 		userList = append(userList, admin.MergeChatMember())
 	}
 
-	err = Marshal.Set(
-		Context,
-		AdminCache{
-			ChatId: chatId,
-		},
-		AdminCache{
-			ChatId:   chatId,
-			UserInfo: userList,
-			Cached:   true,
-		},
-		store.WithExpiration(10*time.Minute),
-	)
-	if err != nil {
-		log.Error(err)
-		return AdminCache{}
+	adminCache := AdminCache{
+		ChatId:   chatId,
+		UserInfo: userList,
+		Cached:   true,
 	}
 
-	_, newAdminList := GetAdminCacheList(chatId)
-	return newAdminList
+	// Cache the admin list with retry on failure in background
+	go func() {
+		maxRetries := 3
+		for i := 0; i < maxRetries; i++ {
+			if err := Marshal.Set(Context, AdminCache{ChatId: chatId}, adminCache, store.WithExpiration(time.Minute*30)); err != nil {
+				log.WithFields(log.Fields{
+					"chatId": chatId,
+					"error":  err,
+					"retry":  i + 1,
+				}).Error("LoadAdminCache: Failed to cache admin list")
+				
+				if i < maxRetries-1 {
+					time.Sleep(time.Second * 2) // Wait before retry
+					continue
+				}
+			} else {
+				log.WithFields(log.Fields{
+					"chatId": chatId,
+				}).Debug("LoadAdminCache: Successfully cached admin list")
+				break
+			}
+		}
+	}()
+
+	return adminCache
 }
 
 // GetAdminCacheList gets the admin cache for the chat.

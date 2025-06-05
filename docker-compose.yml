@@ -12,6 +12,15 @@ services:
     depends_on:
       - mongodb
       - redis
+    # Resource limits to prevent crashes
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
 
   mongodb:
     image: mongo:latest
@@ -20,8 +29,20 @@ services:
       - .db.env
     volumes:
       - ./docker/entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    # Resource limits for MongoDB
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
 
   redis:
     image: redis:latest
     restart: always
     command: redis-server --requirepass redisPassword
+    # Resource limits for Redis
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'

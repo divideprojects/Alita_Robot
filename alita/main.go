@@ -2,8 +2,10 @@ package alita
 
 import (
 	"fmt"
+	"runtime"
 	"sort"
 	"strings"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 
@@ -16,6 +18,39 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
+
+// ResourceMonitor monitors system resources
+func ResourceMonitor() {
+	ticker := time.NewTicker(5 * time.Minute)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			var m runtime.MemStats
+			runtime.ReadMemStats(&m)
+			
+			numGoroutines := runtime.NumGoroutine()
+			
+			// Log metrics
+			log.WithFields(log.Fields{
+				"goroutines":  numGoroutines,
+				"memory_mb":   m.Alloc / 1024 / 1024,
+				"sys_mb":      m.Sys / 1024 / 1024,
+				"gc_runs":     m.NumGC,
+			}).Info("Resource usage stats")
+			
+			// Warning thresholds
+			if numGoroutines > 1000 {
+				log.WithField("goroutines", numGoroutines).Warn("High goroutine count detected")
+			}
+			
+			if m.Alloc/1024/1024 > 500 { // 500MB
+				log.WithField("memory_mb", m.Alloc/1024/1024).Warn("High memory usage detected")
+			}
+		}
+	}
+}
 
 // ListModules list all modules loaded in the bot
 func ListModules() string {
@@ -30,6 +65,9 @@ func InitialChecks(b *gotgbot.Bot) {
 	go db.EnsureBotInDb(b)
 	checkDuplicateAliases()
 	go cache.InitCache()
+	
+	// Start resource monitoring
+	go ResourceMonitor()
 }
 
 // check duplicate aliases of commands in the bot
