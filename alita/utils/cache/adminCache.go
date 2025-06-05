@@ -58,7 +58,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 					"error":  err,
 					"retry":  i + 1,
 				}).Error("LoadAdminCache: Failed to cache admin list")
-				
+
 				if i < maxRetries-1 {
 					time.Sleep(time.Second * 2) // Wait before retry
 					continue

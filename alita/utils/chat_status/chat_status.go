@@ -114,7 +114,7 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 
 	// Load admin cache with timeout protection
 	adminList := cache.LoadAdminCache(b, chatID)
-	
+
 	// Check if user is in admin list
 	for i := range adminList.UserInfo {
 		admin := &adminList.UserInfo[i]
