@@ -153,5 +153,5 @@ gpg --verify alita_robot_2.0.1_darwin_amd64.tar.gz.sig alita_robot_2.0.1_darwin_
 
 ### Copyright & License
 
-* Copyright © 2020–2024 by [Divkix](https://divkix.me) ❤️️
+* Copyright © 2020–2025 by [Divkix](https://divkix.me) ❤️️
 * Licensed under the terms of the [GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/divideprojects/Alita_Robot/blob/master/LICENSE)
