@@ -1,7 +1,7 @@
 github.com/PaulSonOfLars/gotg_md2html v0.0.0-20240605215313-a6fdd2445f54 h1:zkXZYemy5g4pLYVqGO8KFSkASsLH0coWWCwIzXMuXU8=
 github.com/PaulSonOfLars/gotg_md2html v0.0.0-20240605215313-a6fdd2445f54/go.mod h1:1xBfukLsM8dyQska4tSfxWmbRWhYGBzTjLLy8vRG4wc=
-github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.32 h1:+YzI72wzNTcaPUDVcSxeYQdHfvEk8mPGZh/yTk5kkRg=
-github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.32/go.mod h1:BSzsfjlE0wakLw2/U1FtO8rdVt+Z+4VyoGo/YcGD9QQ=
+github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.33 h1:uyVD1QSS7ftd/DE2x5OFRx4PYyhq9n4edvFJRExVWVk=
+github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.33/go.mod h1:BSzsfjlE0wakLw2/U1FtO8rdVt+Z+4VyoGo/YcGD9QQ=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
 github.com/bsm/ginkgo/v2 v2.12.0 h1:Ny8MWAHyOepLGlLKYmXG4IEkioBysk6GpaRTLC8zwWs=
