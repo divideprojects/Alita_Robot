@@ -5,12 +5,14 @@ import (
 	"strings"
 )
 
-// typeConvertor is a struct that will convert a string to a specific type
+// typeConvertor provides methods to convert a string to various Go types.
+// Used for parsing environment variables into usable config values.
 type typeConvertor struct {
 	str string
 }
 
-// StringArray will return a string array from a comma separated string
+// StringArray returns a string slice from a comma-separated string.
+// Whitespace is trimmed from each element.
 func (t typeConvertor) StringArray() []string {
 	allUpdates := strings.Split(t.str, ",")
 	for i, j := range allUpdates {
@@ -19,19 +21,21 @@ func (t typeConvertor) StringArray() []string {
 	return allUpdates
 }
 
-// IntArray will return an int array from a comma separated string
+// Int converts the string to an int.
+// Returns 0 if conversion fails.
 func (t typeConvertor) Int() int {
 	val, _ := strconv.Atoi(t.str)
 	return val
 }
 
-// Int64Array will return an int64 array from a comma separated string
+// Int64 converts the string to an int64.
+// Returns 0 if conversion fails.
 func (t typeConvertor) Int64() int64 {
 	val, _ := strconv.ParseInt(t.str, 10, 64)
 	return val
 }
 
-// Bool will return a bool from a string
+// Bool returns true if the string is "yes" or "true" (case-sensitive).
 func (t typeConvertor) Bool() bool {
 	return t.str == "yes" || t.str == "true"
 }

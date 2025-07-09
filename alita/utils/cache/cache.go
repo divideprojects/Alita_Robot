@@ -19,13 +19,27 @@ var (
 	Manager *cache.ChainCache[any]
 )
 
+/*
+AdminCache represents the cached administrator information for a chat.
+
+Fields:
+  - ChatId:   The unique identifier for the chat.
+  - UserInfo: A slice of merged chat member information for each admin.
+  - Cached:   Indicates if the cache is valid and populated.
+*/
 type AdminCache struct {
 	ChatId   int64
 	UserInfo []gotgbot.MergedChatMember
 	Cached   bool
 }
 
-// InitCache initializes the cache.
+/*
+InitCache initializes the caching system for the application.
+
+It sets up both Redis and Ristretto as cache backends, creates a chain cache manager,
+and initializes the marshaler for serializing and deserializing cached data.
+Panics if Ristretto cache initialization fails.
+*/
 func InitCache() {
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     config.RedisAddress,

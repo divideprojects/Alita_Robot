@@ -7,6 +7,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// GetLanguage returns the language code for the current chat or user context.
+// For private chats, it returns the user's language; for groups, it returns the group's language.
+// Defaults to "en" if not set.
 func GetLanguage(ctx *ext.Context) string {
 	var chat gotgbot.Chat
 	if ctx.CallbackQuery != nil {
@@ -42,6 +45,8 @@ func getUserLanguage(UserID int64) string {
 	return userc.Language
 }
 
+// ChangeUserLanguage sets the language code for a specific user.
+// No update is performed if the user does not exist or already has the target language.
 func ChangeUserLanguage(UserID int64, lang string) {
 	userc := checkUserInfo(UserID)
 	if userc == nil {
@@ -58,6 +63,8 @@ func ChangeUserLanguage(UserID int64, lang string) {
 	log.Infof("[Database] ChangeUserLanguage: %d", UserID)
 }
 
+// ChangeGroupLanguage sets the language code for a specific group chat.
+// No update is performed if the group already has the target language.
 func ChangeGroupLanguage(GroupID int64, lang string) {
 	groupc := GetChatSettings(GroupID)
 	if groupc.Language == lang {

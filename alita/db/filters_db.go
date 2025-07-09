@@ -10,6 +10,16 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
+// ChatFilters represents a filter rule for a chat.
+//
+// Fields:
+//   - ChatId: Unique identifier for the chat.
+//   - KeyWord: The keyword that triggers the filter.
+//   - FilterReply: The reply message for the filter.
+//   - MsgType: Type of message (e.g., text, media).
+//   - FileID: Optional file ID for media attachments.
+//   - NoNotif: Whether to suppress notifications when sending the filter reply.
+//   - Buttons: List of buttons to attach to the filter reply.
 type ChatFilters struct {
 	ChatId      int64    `bson:"chat_id,omitempty" json:"chat_id,omitempty"`
 	KeyWord     string   `bson:"keyword,omitempty" json:"keyword,omitempty"`
@@ -20,6 +30,8 @@ type ChatFilters struct {
 	Buttons     []Button `bson:"filter_buttons,omitempty" json:"filter_buttons,omitempty"`
 }
 
+// GetFilter retrieves a filter by keyword for a chat.
+// Returns a new ChatFilters struct if the filter does not exist.
 func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
 	err := findOne(filterColl, bson.M{"chat_id": chatID, "keyword": keyword}).Decode(&filtSrc)
 	if err == mongo.ErrNoDocuments {
@@ -30,7 +42,7 @@ func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
 	return
 }
 
-//goland:noinspection GoUnusedExportedFunction
+// GetAllFilters returns all filters for a chat.
 func GetAllFilters(chatID int64) (allFilters []*ChatFilters) {
 	cursor := findAll(filterColl, bson.M{"chat_id": chatID})
 	defer cursor.Close(bgCtx)
@@ -38,6 +50,7 @@ func GetAllFilters(chatID int64) (allFilters []*ChatFilters) {
 	return
 }
 
+// GetFiltersList returns a list of all filter keywords for a chat.
 func GetFiltersList(chatID int64) (allFilterWords []string) {
 	var results []*ChatFilters
 	cursor := findAll(filterColl, bson.M{"chat_id": chatID})
@@ -49,10 +62,13 @@ func GetFiltersList(chatID int64) (allFilterWords []string) {
 	return
 }
 
+// DoesFilterExists returns true if a filter with the given keyword exists in the chat.
 func DoesFilterExists(chatId int64, keyword string) bool {
 	return string_handling.FindInStringSlice(GetFiltersList(chatId), strings.ToLower(keyword))
 }
 
+// AddFilter adds a new filter to the chat with the specified properties.
+// If a filter with the same keyword already exists, no action is taken.
 func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button, filtType int) {
 	if string_handling.FindInStringSlice(GetFiltersList(chatID), keyWord) {
 		return
@@ -75,6 +91,8 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 	}
 }
 
+// RemoveFilter deletes a filter by keyword from the chat.
+// If the filter does not exist, no action is taken.
 func RemoveFilter(chatID int64, keyWord string) {
 	if !string_handling.FindInStringSlice(GetFiltersList(chatID), keyWord) {
 		return
@@ -87,6 +105,7 @@ func RemoveFilter(chatID int64, keyWord string) {
 	}
 }
 
+// RemoveAllFilters deletes all filters from the specified chat.
 func RemoveAllFilters(chatID int64) {
 	err := deleteMany(filterColl, bson.M{"chat_id": chatID})
 	if err != nil {
@@ -94,6 +113,7 @@ func RemoveAllFilters(chatID int64) {
 	}
 }
 
+// CountFilters returns the number of filters for a chat.
 func CountFilters(chatID int64) (filtersNum int64) {
 	filtersNum, err := countDocs(filterColl, bson.M{"chat_id": chatID})
 	if err != nil {
@@ -102,6 +122,7 @@ func CountFilters(chatID int64) (filtersNum int64) {
 	return
 }
 
+// LoadFilterStats returns the total number of filters and the number of chats using filters.
 func LoadFilterStats() (filtersNum, filtersUsingChats int64) {
 	var filterStruct []*ChatFilters
 	filtersMap := make(map[int64][]ChatFilters)

@@ -1,5 +1,8 @@
 package main
 
+// Main entry point for the Alita Telegram bot.
+// Sets up configuration, loads locales, initializes the bot, and starts polling for updates.
+
 import (
 	"embed"
 	"fmt"
@@ -20,6 +23,12 @@ import (
 var Locales embed.FS
 
 func main() {
+	// main initializes and starts the Alita Telegram bot.
+	// It configures logging, loads locales, creates the bot instance,
+	// performs initial checks, sets up polling, loads modules, and sends a startup message.
+	// The function blocks at the end to keep the bot running.
+	// All critical startup errors are logged and cause termination.
+
 	// logs if bot is running in debug mode or not
 	if config.Debug {
 		log.Info("Running in DEBUG Mode...")
@@ -31,6 +40,7 @@ func main() {
 	i18n.LoadLocaleFiles(&Locales, "locales")
 
 	// create a new bot with default HTTP client (BotOpts doesn't support custom client in this version)
+	// BotToken is loaded from config.
 	b, err := gotgbot.NewBot(config.BotToken, nil)
 	if err != nil {
 		panic("failed to create new bot: " + err.Error())
@@ -39,7 +49,8 @@ func main() {
 	// some initial checks before running bot
 	alita.InitialChecks(b)
 
-	// Create updater and dispatcher with limited max routines
+	// Create updater and dispatcher with limited max routines.
+	// Dispatcher handles incoming updates and routes them to handlers.
 	dispatcher := ext.NewDispatcher(&ext.DispatcherOpts{
 		// If an error is returned by a handler, log it and continue going.
 		Error: func(_ *gotgbot.Bot, _ *ext.Context, err error) ext.DispatcherAction {
@@ -72,7 +83,7 @@ func main() {
 	// Log the message that bot started
 	log.Infof("[Bot] %s has been started...", b.Username)
 
-	// Set Commands of Bot
+	// Set custom commands for private messages.
 	log.Info("Setting Custom Commands for PM...!")
 	_, err = b.SetMyCommands(
 		[]gotgbot.BotCommand{
@@ -91,7 +102,7 @@ func main() {
 	// Loading Modules
 	alita.LoadModules(dispatcher)
 
-	// list modules from modules dir
+	// List loaded modules from the modules directory.
 	log.Infof(
 		fmt.Sprintf(
 			"[Modules] Loaded modules: %s", alita.ListModules(),

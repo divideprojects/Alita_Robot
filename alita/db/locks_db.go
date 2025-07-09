@@ -6,12 +6,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// Locks represents all lock and restriction settings for a chat.
+//
+// Fields:
+//   - ChatId: Unique identifier for the chat.
+//   - Permissions: Permissions for various message types and actions.
+//   - Restrictions: Additional restrictions for the chat.
 type Locks struct {
 	ChatId       int64         `bson:"_id,omitempty" json:"_id,omitempty"`
 	Permissions  *Permissions  `bson:"permissions,omitempty" json:"permissions,omitempty"`
 	Restrictions *Restrictions `bson:"restrictions,omitempty" json:"restrictions,omitempty"`
 }
 
+// Permissions defines which message types and actions are locked in a chat.
 type Permissions struct {
 	Sticker       bool `bson:"sticker,omitempty" json:"sticker,omitempty"`
 	Audio         bool `bson:"audio,omitempty" json:"audio,omitempty"`
@@ -31,6 +38,7 @@ type Permissions struct {
 	SendAsChannel bool `bson:"send_as_channel,omitempty" json:"send_as_channel,omitempty"`
 }
 
+// Restrictions defines additional restrictions for a chat.
 type Restrictions struct {
 	Messages        bool `bson:"messages,omitempty" json:"messages,omitempty"`
 	ChannelComments bool `bson:"channel_comments,omitempty" json:"channel_comments,omitempty"`
@@ -56,10 +64,13 @@ func checkChatLocks(chatID int64) (lockrc *Locks) {
 	return lockrc
 }
 
+// GetChatLocks retrieves the lock settings for a given chat ID.
+// If no settings exist, it initializes them with default values.
 func GetChatLocks(chatID int64) *Locks {
 	return checkChatLocks(chatID)
 }
 
+// MapLockType returns a map of lock and restriction types to their enabled/disabled state for a chat.
 func MapLockType(locks Locks) map[string]bool {
 	perms := locks.Permissions
 	restr := locks.Restrictions
@@ -90,7 +101,8 @@ func MapLockType(locks Locks) map[string]bool {
 	return m
 }
 
-// UpdateLock Modify the value of Locks struct and update it in database
+// UpdateLock modifies the value of a specific lock or restriction for a chat and updates it in the database.
+// The perm argument specifies which lock/restriction to update.
 func UpdateLock(chatID int64, perm string, val bool) {
 	lockrc := checkChatLocks(chatID)
 
@@ -147,6 +159,7 @@ func UpdateLock(chatID int64, perm string, val bool) {
 	}
 }
 
+// IsPermLocked returns true if the specified permission or restriction is locked for the chat.
 func IsPermLocked(chatID int64, perm string) bool {
 	lockrc := checkChatLocks(chatID)
 	return MapLockType(*lockrc)[perm]

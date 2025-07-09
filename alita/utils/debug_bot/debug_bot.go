@@ -7,7 +7,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// PrettyPrintStruct prints the struct in a pretty format.
+/*
+PrettyPrintStruct returns a pretty-printed JSON string representation of the given struct.
+
+It also prints the formatted JSON to standard output for debugging purposes.
+*/
 func PrettyPrintStruct(v interface{}) string {
 	prettyStruct, _ := json.MarshalIndent(v, "", "  ")
 	jsonStruct := string(prettyStruct)
@@ -15,7 +19,11 @@ func PrettyPrintStruct(v interface{}) string {
 	return jsonStruct
 }
 
-// PrintInLog prints the struct in the log.
+/*
+PrintInLog logs the given struct or value using the debug log level.
+
+The output includes field names and values for easier inspection during debugging.
+*/
 func PrintInLog(v interface{}) {
 	log.Debugf("%+v\n\n", v)
 }

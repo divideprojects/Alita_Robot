@@ -24,6 +24,11 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
+/*
+blacklistsModule provides blacklist management logic for group chats.
+
+Implements commands to add, remove, list, and configure blacklists and their actions.
+*/
 var blacklistsModule = moduleStruct{
 	moduleName:   "Blacklists",
 	handlerGroup: 7,
@@ -34,6 +39,12 @@ var blacklistsModule = moduleStruct{
 
 Connection - true, true
 Admin can add a blacklist to the chat
+*/
+/*
+addBlacklist adds one or more blacklist words to the group.
+
+Checks permissions, updates the blacklist in the database, and replies with the result.
+Connection: true, true
 */
 func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
@@ -108,6 +119,12 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 Connection - true, true
 Admin can add a blacklist to the chat
 */
+/*
+removeBlacklist removes one or more blacklist words from the group.
+
+Checks permissions, updates the blacklist in the database, and replies with the result.
+Connection: true, true
+*/
 func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -179,6 +196,12 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 Connection - false, true
 Anyone can view blacklists in group
 */
+/*
+listBlacklists lists all blacklist words in the group.
+
+Anyone can view the blacklist. Replies with the current list or a message if none exist.
+Connection: false, true
+*/
 func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
@@ -242,6 +265,12 @@ func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Admin with restriction permission can set blacklist action in group out of - ick, ban, mute
 */
+/*
+setBlacklistAction sets the action to take when a blacklist word is triggered.
+
+Admins can set the action to "mute", "kick", "warn", "ban", or "none".
+Connection: true, true
+*/
 func (m moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -292,6 +321,11 @@ func (m moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error
 
 Only chat creator can use this command to remove all blacklists aat once from the current chat
 */
+/*
+rmAllBlacklists removes all blacklist words from the group.
+
+Only the chat creator can use this command to clear the blacklist.
+*/
 func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -327,6 +361,11 @@ func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // Callback Handler for rmallblacklist
+/*
+buttonHandler handles callback queries for removing all blacklists.
+
+Processes the creator's confirmation and removes all blacklist words if confirmed.
+*/
 func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
@@ -377,6 +416,11 @@ func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	Blacklist watcher
 
 Watcher for blacklisted words, if any of the sentence contains the word, it will remove and use the appropriate action
+*/
+/*
+blacklistWatcher monitors messages for blacklisted words and enforces the configured action.
+
+Deletes messages containing blacklisted words and applies the configured action (mute, ban, kick, warn) to the user.
 */
 func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -487,6 +531,11 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+/*
+LoadBlacklists registers all blacklist-related command handlers with the dispatcher.
+
+Enables the blacklists module and adds handlers for blacklist management and enforcement.
+*/
 func LoadBlacklists(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(blacklistsModule.moduleName, true)
 

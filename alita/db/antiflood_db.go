@@ -10,7 +10,15 @@ import (
 // default mode is 'mute'
 const defaultFloodsettingsMode string = "mute"
 
-// FloodSettings Flood Settings struct for chat
+/*
+FloodSettings represents anti-flood configuration for a chat.
+
+Fields:
+  - ChatId: Unique identifier for the chat.
+  - Limit: Maximum allowed consecutive messages before triggering flood action.
+  - Mode: Action to take when flood is detected (e.g., "mute", "ban").
+  - DeleteAntifloodMessage: Whether to delete messages that trigger the flood filter.
+*/
 type FloodSettings struct {
 	ChatId                 int64  `bson:"_id,omitempty" json:"_id,omitempty"`
 	Limit                  int    `bson:"limit" json:"limit"`
@@ -18,12 +26,15 @@ type FloodSettings struct {
 	DeleteAntifloodMessage bool   `bson:"del_msg" json:"del_msg"`
 }
 
-// GetFlood Get flood settings for a chat
+// GetFlood retrieves the flood settings for a given chat ID.
+// If no settings exist, it initializes them with default values.
 func GetFlood(chatID int64) *FloodSettings {
 	return checkFloodSetting(chatID)
 }
 
-// check Chat Flood Settings, used to get data before performing any operation
+// checkFloodSetting fetches flood settings for a chat from the database.
+// If no document exists, it creates one with default values.
+// Returns a pointer to the FloodSettings struct.
 func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
 	defaultFloodSrc := &FloodSettings{ChatId: chatID, Limit: 0, Mode: defaultFloodsettingsMode}
 
@@ -41,7 +52,8 @@ func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
 	return floodSrc
 }
 
-// SetFlood set Flood Setting for a Chat
+// SetFlood updates the flood limit for a specific chat.
+// If the mode is not set, it initializes the FloodSettings with the default mode.
 func SetFlood(chatID int64, limit int) {
 	floodSrc := checkFloodSetting(chatID)
 
@@ -58,7 +70,8 @@ func SetFlood(chatID int64, limit int) {
 	}
 }
 
-// SetFloodMode Set flood mode for a chat
+// SetFloodMode updates the flood action mode for a specific chat.
+// The mode determines what action is taken when flooding is detected.
 func SetFloodMode(chatID int64, mode string) {
 	floodSrc := checkFloodSetting(chatID)
 	floodSrc.Mode = mode
@@ -69,7 +82,7 @@ func SetFloodMode(chatID int64, mode string) {
 	}
 }
 
-// SetFloodMsgDel Set flood mode for a chat
+// SetFloodMsgDel sets whether messages that trigger the flood filter should be deleted for a chat.
 func SetFloodMsgDel(chatID int64, val bool) {
 	floodSrc := checkFloodSetting(chatID)
 	floodSrc.DeleteAntifloodMessage = val
@@ -80,6 +93,12 @@ func SetFloodMsgDel(chatID int64, val bool) {
 	}
 }
 
+/*
+LoadAntifloodStats returns the number of chats that have anti-flood enabled.
+
+It calculates the total number of chat documents and subtracts those with a flood limit of zero,
+indicating anti-flood is disabled.
+*/
 func LoadAntifloodStats() (antiCount int64) {
 	totalCount, err := countDocs(antifloodSettingsColl, bson.M{})
 	if err != nil {

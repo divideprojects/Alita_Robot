@@ -25,6 +25,11 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
+/*
+filtersModule provides logic for managing keyword-based filters in group chats.
+
+Implements commands to add, remove, list, and configure filters and their actions.
+*/
 var filtersModule = moduleStruct{
 	moduleName:          "Filters",
 	overwriteFiltersMap: make(map[string]overwriteFilter),
@@ -37,6 +42,12 @@ var filtersModule = moduleStruct{
 # Connection - true, true
 
 Only admin can add new filters in the chat
+*/
+/*
+addFilter adds a filter to a specific keyword in the chat.
+
+Only admins can add new filters. Handles filter limits, overwriting, and input validation.
+Connection: true, true
 */
 func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
@@ -150,6 +161,12 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Only admin can remove filters in the chat
 */
+/*
+rmFilter removes a filter for a specific keyword in the chat.
+
+Only admins can remove filters. Handles input validation and replies with the result.
+Connection: true, true
+*/
 func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
@@ -201,6 +218,12 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 # Connection - false, true
 
 Any user can view users in a chat
+*/
+/*
+filtersList lists all filters in the chat.
+
+Anyone can view the filters. Replies with the current list or a message if none exist.
+Connection: false, true
 */
 func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
@@ -260,6 +283,11 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Only owner can remove all filters from the chat
 */
+/*
+rmAllFilters removes all filters from the current chat.
+
+Only the chat owner can use this command to clear all filters.
+*/
 func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -299,6 +327,11 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // CallbackQuery handler for rmAllFilters
+/*
+filtersButtonHandler handles callback queries for removing all filters.
+
+Processes the owner's confirmation and removes all filters if confirmed.
+*/
 func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
@@ -344,6 +377,11 @@ func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 }
 
 // CallbackQuery handler for filters_overwite. query
+/*
+filterOverWriteHandler handles callback queries for overwriting an existing filter.
+
+Allows admins to confirm and overwrite an existing filter with new data.
+*/
 func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
@@ -395,6 +433,11 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 	Watchers for filter
 
 Replies with appropriate data to the filter.
+*/
+/*
+filtersWatcher monitors messages for filtered keywords and replies with the appropriate data.
+
+Handles both formatted and unformatted responses, and enforces admin-only access for noformat requests.
 */
 func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -450,6 +493,11 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+/*
+LoadFilters registers all filter-related command handlers with the dispatcher.
+
+Enables the filters module and adds handlers for filter management and enforcement.
+*/
 func LoadFilters(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(filtersModule.moduleName, true)
 

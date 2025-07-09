@@ -9,7 +9,15 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// BlacklistSettings Flood Control struct for user
+/*
+BlacklistSettings represents blacklist configuration for a chat.
+
+Fields:
+  - ChatId: Unique identifier for the chat.
+  - Action: Action to take when a blacklisted word is triggered (e.g., "ban", "mute", "none").
+  - Triggers: List of blacklisted words or phrases.
+  - Reason: Default reason for blacklist actions.
+*/
 type BlacklistSettings struct {
 	ChatId   int64    `bson:"_id,omitempty" json:"_id,omitempty"`
 	Action   string   `bson:"action,omitempty" json:"action,omitempty"`
@@ -39,6 +47,8 @@ func checkBlacklistSetting(chatID int64) (blSrc *BlacklistSettings) {
 	return blSrc
 }
 
+// AddBlacklist adds a new trigger word to the blacklist for the specified chat.
+// The trigger is converted to lowercase before being stored.
 func AddBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = append(blSrc.Triggers, strings.ToLower(trigger))
@@ -48,6 +58,8 @@ func AddBlacklist(chatId int64, trigger string) {
 	}
 }
 
+// RemoveBlacklist removes a trigger word from the blacklist for the specified chat.
+// The trigger is matched in lowercase.
 func RemoveBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = removeStrfromStr(blSrc.Triggers, strings.ToLower(trigger))
@@ -57,6 +69,7 @@ func RemoveBlacklist(chatId int64, trigger string) {
 	}
 }
 
+// RemoveAllBlacklist clears all blacklist triggers for the specified chat.
 func RemoveAllBlacklist(chatId int64) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = make([]string, 0)
@@ -66,6 +79,7 @@ func RemoveAllBlacklist(chatId int64) {
 	}
 }
 
+// SetBlacklistAction sets the action to be taken when a blacklist trigger is matched in the specified chat.
 func SetBlacklistAction(chatId int64, action string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Action = strings.ToLower(action)
@@ -75,10 +89,17 @@ func SetBlacklistAction(chatId int64, action string) {
 	}
 }
 
+// GetBlacklistSettings retrieves the blacklist settings for a given chat ID.
+// If no settings exist, it initializes them with default values.
 func GetBlacklistSettings(chatId int64) *BlacklistSettings {
 	return checkBlacklistSetting(chatId)
 }
 
+/*
+LoadBlacklistsStats returns the total number of blacklist triggers and the number of chats with at least one blacklist trigger.
+
+It iterates through all blacklist settings, counting triggers and chats with non-empty trigger lists.
+*/
 func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 	var blacklistStruct []*BlacklistSettings
 

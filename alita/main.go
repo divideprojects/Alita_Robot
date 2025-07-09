@@ -19,7 +19,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-// ResourceMonitor monitors system resources
+// ResourceMonitor periodically logs system resource usage such as goroutine count and memory usage.
+// It warns if thresholds are exceeded, helping to detect leaks or abnormal resource consumption.
 func ResourceMonitor() {
 	ticker := time.NewTicker(5 * time.Minute)
 	defer ticker.Stop()
@@ -52,14 +53,17 @@ func ResourceMonitor() {
 	}
 }
 
-// ListModules list all modules loaded in the bot
+// ListModules returns a formatted string listing all modules loaded in the bot.
+// It retrieves module names from the help module, sorts them, and joins them for display.
 func ListModules() string {
 	modSlice := modules.HelpModule.AbleMap.LoadModules()
 	sort.Strings(modSlice)
 	return fmt.Sprintf("[%s]", strings.Join(modSlice, ", "))
 }
 
-// InitialChecks some initial checks before running bot
+// InitialChecks performs startup checks and background initializations before running the bot.
+// It ensures the bot is present in the database, checks for duplicate command aliases,
+// initializes the cache, and starts resource monitoring.
 func InitialChecks(b *gotgbot.Bot) {
 	// Create bot in db if not already created
 	go db.EnsureBotInDb(b)
@@ -70,7 +74,8 @@ func InitialChecks(b *gotgbot.Bot) {
 	go ResourceMonitor()
 }
 
-// check duplicate aliases of commands in the bot
+// checkDuplicateAliases checks for duplicate command aliases in the help module.
+// If a duplicate is found, the bot logs a fatal error and exits.
 func checkDuplicateAliases() {
 	var althelp []string
 
@@ -84,7 +89,8 @@ func checkDuplicateAliases() {
 	}
 }
 
-// LoadModules load the modules one-by-one using dispatcher
+// LoadModules loads all bot modules into the dispatcher.
+// Modules are loaded in a specific order, with the help module loaded last to ensure all commands are registered.
 func LoadModules(dispatcher *ext.Dispatcher) {
 	// Initialize Inner Map
 	modules.HelpModule.AbleMap.Init()

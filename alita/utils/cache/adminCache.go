@@ -9,7 +9,13 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// LoadAdminCache loads the admin cache for the chat.
+/*
+LoadAdminCache loads and returns the admin cache for the specified chat.
+
+It fetches the list of chat administrators using the provided bot instance, converts them to MergedChatMember,
+and stores the result in the cache with retries on failure. If the bot is nil, or if no administrators are found,
+an empty AdminCache is returned. The caching operation is performed asynchronously.
+*/
 func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	if b == nil {
 		log.Error("LoadAdminCache: bot is nil")
@@ -75,7 +81,12 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	return adminCache
 }
 
-// GetAdminCacheList gets the admin cache for the chat.
+/*
+GetAdminCacheList retrieves the admin cache for the specified chat ID.
+
+Returns a boolean indicating if the cache was found, and the AdminCache object.
+If the cache is not found or an error occurs, returns false and an empty AdminCache.
+*/
 func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 	gotAdminlist, err := Marshal.Get(
 		Context,
@@ -94,7 +105,11 @@ func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 	return true, *gotAdminlist.(*AdminCache)
 }
 
-// GetAdminCacheUser gets the admin cache for the chat.
+/*
+GetAdminCacheUser retrieves the cached admin user for the given chat and user ID.
+
+Returns true and the MergedChatMember if found, otherwise returns false and an empty MergedChatMember.
+*/
 func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
 	adminList, _ := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
 	for i := range adminList.(*AdminCache).UserInfo {

@@ -11,15 +11,16 @@ import (
 
 const defaultLangCode = "en"
 
-// localeMap is the map of the embedded locale
+// localeMap holds the embedded locale YAML files, keyed by language code.
 var localeMap = make(map[string][]byte)
 
-// I18n is the struct for i18n
+// I18n provides methods for retrieving localized strings and slices for a given language code.
 type I18n struct {
 	LangCode string
 }
 
-// LoadLocaleFiles Load Locales files which are embedded in the binary
+// LoadLocaleFiles loads locale YAML files embedded in the binary into localeMap.
+// It expects files to be named with their language code (e.g., "en.yml").
 func LoadLocaleFiles(fs *embed.FS, path string) {
 	entries, _ := fs.ReadDir(path)
 	for _, entry := range entries {
@@ -34,7 +35,8 @@ func LoadLocaleFiles(fs *embed.FS, path string) {
 	}
 }
 
-// GetString get the string from the embedded locale
+// GetString retrieves a localized string for the given key from the embedded locale.
+// If the key is not found or the language code is unavailable, it falls back to the default language.
 func (goloc I18n) GetString(key string) string {
 	vi := viper.New()
 	vi.SetConfigType("yaml")
@@ -49,7 +51,8 @@ func (goloc I18n) GetString(key string) string {
 	return text
 }
 
-// GetStringSlice get the string slice from the embedded locale
+// GetStringSlice retrieves a localized string slice for the given key from the embedded locale.
+// If the key is not found or the language code is unavailable, it falls back to the default language.
 func (goloc I18n) GetStringSlice(key string) []string {
 	vi := viper.New()
 	vi.SetConfigType("yaml")

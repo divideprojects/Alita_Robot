@@ -13,12 +13,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// Button represents a UI button that can be attached to messages.
+//
+// Fields:
+//   - Name: The button's display text.
+//   - Url: The URL the button links to.
+//   - SameLine: Whether the button should appear on the same line as the previous button.
 type Button struct {
 	Name     string `bson:"name,omitempty" json:"name,omitempty"`
 	Url      string `bson:"url,omitempty" json:"url,omitempty"`
 	SameLine bool   `bson:"btn_sameline" json:"btn_sameline" default:"false"`
 }
 
+// Message type constants for different sender content types.
 const (
 	// TEXT types of senders
 	TEXT      int = 1
@@ -61,6 +68,12 @@ var (
 )
 
 // dbInstance func
+/*
+init initializes the MongoDB client and opens all required collections.
+
+This function is automatically called when the package is imported.
+It sets up global collection variables for use throughout the db package.
+*/
 func init() {
 	mongoClient, err := mongo.NewClient(
 		options.Client().ApplyURI(config.DatabaseURI),
@@ -103,7 +116,8 @@ func init() {
 	log.Info("Done opening all database collections!")
 }
 
-// updateOne func to update one document
+// updateOne updates a single document in the specified collection.
+// If no document matches the filter, a new one is inserted (upsert).
 func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (err error) {
 	_, err = collecion.UpdateOne(tdCtx, filter, bson.M{"$set": data}, options.Update().SetUpsert(true))
 	if err != nil {
@@ -112,13 +126,13 @@ func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (er
 	return
 }
 
-// findOne func to find one document
+// findOne finds a single document in the specified collection matching the filter.
 func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResult) {
 	res = collecion.FindOne(tdCtx, filter)
 	return
 }
 
-// countDocs func to count documents
+// countDocs returns the number of documents in the collection matching the filter.
 func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err error) {
 	count, err = collecion.CountDocuments(tdCtx, filter)
 	if err != nil {
@@ -127,7 +141,7 @@ func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err err
 	return
 }
 
-// findAll func to find all documents
+// findAll returns a cursor for all documents in the collection matching the filter.
 func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	cur, err := collecion.Find(tdCtx, filter)
 	if err != nil {
@@ -136,7 +150,7 @@ func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	return
 }
 
-// deleteOne func to delete one document
+// deleteOne deletes a single document from the collection matching the filter.
 func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	_, err = collecion.DeleteOne(tdCtx, filter)
 	if err != nil {
@@ -145,7 +159,7 @@ func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	return
 }
 
-// deleteMany func to delete many documents
+// deleteMany deletes all documents from the collection matching the filter.
 func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 	_, err = collecion.DeleteMany(tdCtx, filter)
 	if err != nil {

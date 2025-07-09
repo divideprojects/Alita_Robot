@@ -13,6 +13,14 @@ const (
 	DefaultGoodbye = "Sad to see you leaving {first}"
 )
 
+// GreetingSettings holds all greeting-related configuration for a chat.
+//
+// Fields:
+//   - ChatID: Unique identifier for the chat.
+//   - ShouldCleanService: Whether to clean service messages (e.g., join/leave).
+//   - WelcomeSettings: Settings for welcome messages.
+//   - GoodbyeSettings: Settings for goodbye messages.
+//   - ShouldAutoApprove: Whether to auto-approve users on join.
 type GreetingSettings struct {
 	ChatID             int64            `bson:"_id,omitempty" json:"_id,omitempty"`
 	ShouldCleanService bool             `bson:"clean_service_settings" json:"clean_service_settings" default:"false"`
@@ -21,6 +29,16 @@ type GreetingSettings struct {
 	ShouldAutoApprove  bool             `bson:"auto_approve" json:"auto_approve" default:"false"`
 }
 
+// GoodbyeSettings holds configuration for goodbye messages in a chat.
+//
+// Fields:
+//   - CleanGoodbye: Whether to clean up previous goodbye messages.
+//   - LastMsgId: The last goodbye message ID sent.
+//   - ShouldGoodbye: Whether goodbye messages are enabled.
+//   - GoodbyeText: The goodbye message text.
+//   - FileID: Optional file ID for media attachments.
+//   - GoodbyeType: Type of goodbye message (e.g., text, media).
+//   - Button: List of buttons to attach to the goodbye message.
 type GoodbyeSettings struct {
 	CleanGoodbye  bool     `bson:"clean_old" json:"clean_old" default:"false"`
 	LastMsgId     int64    `bson:"last_msg_id,omitempty" json:"last_msg_id,omitempty"`
@@ -31,6 +49,16 @@ type GoodbyeSettings struct {
 	Button        []Button `bson:"btns,omitempty" json:"btns,omitempty"`
 }
 
+// WelcomeSettings holds configuration for welcome messages in a chat.
+//
+// Fields:
+//   - CleanWelcome: Whether to clean up previous welcome messages.
+//   - LastMsgId: The last welcome message ID sent.
+//   - ShouldWelcome: Whether welcome messages are enabled.
+//   - WelcomeText: The welcome message text.
+//   - FileID: Optional file ID for media attachments.
+//   - WelcomeType: Type of welcome message (e.g., text, media).
+//   - Button: List of buttons to attach to the welcome message.
 type WelcomeSettings struct {
 	CleanWelcome  bool     `bson:"clean_old" json:"clean_old" default:"false"`
 	LastMsgId     int64    `bson:"last_msg_id,omitempty" json:"last_msg_id,omitempty"`
@@ -75,20 +103,25 @@ func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 	return greetingSrc
 }
 
+// GetGreetingSettings retrieves the greeting settings for a given chat ID.
+// If no settings exist, it initializes them with default values.
 func GetGreetingSettings(chatID int64) *GreetingSettings {
 	return checkGreetingSettings(chatID)
 }
 
+// GetWelcomeButtons returns the list of buttons configured for welcome messages in a chat.
 func GetWelcomeButtons(chatId int64) []Button {
 	btns := checkGreetingSettings(chatId).WelcomeSettings.Button
 	return btns
 }
 
+// GetGoodbyeButtons returns the list of buttons configured for goodbye messages in a chat.
 func GetGoodbyeButtons(chatId int64) []Button {
 	btns := checkGreetingSettings(chatId).GoodbyeSettings.Button
 	return btns
 }
 
+// SetWelcomeText updates the welcome message text, buttons, type, and file ID for a chat.
 func SetWelcomeText(chatID int64, welcometxt, fileId string, buttons []Button, welcType int) {
 	welcomeSrc := checkGreetingSettings(chatID)
 	welcomeSrc.WelcomeSettings.WelcomeText = welcometxt
@@ -102,6 +135,7 @@ func SetWelcomeText(chatID int64, welcometxt, fileId string, buttons []Button, w
 	}
 }
 
+// SetWelcomeToggle enables or disables welcome messages for a chat.
 func SetWelcomeToggle(chatID int64, pref bool) {
 	welcomeSrc := checkGreetingSettings(chatID)
 	welcomeSrc.WelcomeSettings.ShouldWelcome = pref
@@ -112,6 +146,7 @@ func SetWelcomeToggle(chatID int64, pref bool) {
 	}
 }
 
+// SetGoodbyeText updates the goodbye message text, buttons, type, and file ID for a chat.
 func SetGoodbyeText(chatID int64, goodbyetext, fileId string, buttons []Button, goodbyeType int) {
 	goodbyeSrc := checkGreetingSettings(chatID)
 	goodbyeSrc.GoodbyeSettings.GoodbyeText = goodbyetext
@@ -125,6 +160,7 @@ func SetGoodbyeText(chatID int64, goodbyetext, fileId string, buttons []Button, 
 	}
 }
 
+// SetGoodbyeToggle enables or disables goodbye messages for a chat.
 func SetGoodbyeToggle(chatID int64, pref bool) {
 	goodbyeSrc := checkGreetingSettings(chatID)
 	goodbyeSrc.GoodbyeSettings.ShouldGoodbye = pref
@@ -135,6 +171,7 @@ func SetGoodbyeToggle(chatID int64, pref bool) {
 	}
 }
 
+// SetShouldCleanService sets whether service messages should be cleaned for a chat.
 func SetShouldCleanService(chatID int64, pref bool) {
 	cleanServiceSrc := checkGreetingSettings(chatID)
 	cleanServiceSrc.ShouldCleanService = pref
@@ -145,6 +182,7 @@ func SetShouldCleanService(chatID int64, pref bool) {
 	}
 }
 
+// SetShouldAutoApprove sets whether users should be auto-approved on join for a chat.
 func SetShouldAutoApprove(chatID int64, pref bool) {
 	autoApproveSrc := checkGreetingSettings(chatID)
 	autoApproveSrc.ShouldAutoApprove = pref
@@ -155,6 +193,7 @@ func SetShouldAutoApprove(chatID int64, pref bool) {
 	}
 }
 
+// SetCleanWelcomeSetting sets whether previous welcome messages should be cleaned for a chat.
 func SetCleanWelcomeSetting(chatID int64, pref bool) {
 	cleanWelcomeSrc := checkGreetingSettings(chatID)
 	cleanWelcomeSrc.WelcomeSettings.CleanWelcome = pref
@@ -165,6 +204,7 @@ func SetCleanWelcomeSetting(chatID int64, pref bool) {
 	}
 }
 
+// SetCleanWelcomeMsgId updates the last welcome message ID for cleaning purposes.
 func SetCleanWelcomeMsgId(chatId, msgId int64) {
 	cleanWelcomeSrc := checkGreetingSettings(chatId)
 	cleanWelcomeSrc.WelcomeSettings.LastMsgId = msgId
@@ -175,6 +215,7 @@ func SetCleanWelcomeMsgId(chatId, msgId int64) {
 	}
 }
 
+// SetCleanGoodbyeSetting sets whether previous goodbye messages should be cleaned for a chat.
 func SetCleanGoodbyeSetting(chatID int64, pref bool) {
 	cleanGoodbyeSrc := checkGreetingSettings(chatID)
 	cleanGoodbyeSrc.GoodbyeSettings.CleanGoodbye = pref
@@ -185,6 +226,7 @@ func SetCleanGoodbyeSetting(chatID int64, pref bool) {
 	}
 }
 
+// SetCleanGoodbyeMsgId updates the last goodbye message ID for cleaning purposes.
 func SetCleanGoodbyeMsgId(chatId, msgId int64) {
 	cleanWelcomeSrc := checkGreetingSettings(chatId)
 	cleanWelcomeSrc.GoodbyeSettings.LastMsgId = msgId
@@ -195,6 +237,14 @@ func SetCleanGoodbyeMsgId(chatId, msgId int64) {
 	}
 }
 
+// LoadGreetingsStats returns counts of chats with various greeting features enabled.
+//
+// Returns:
+//   - enabledWelcome: Number of chats with welcome messages enabled.
+//   - enabledGoodbye: Number of chats with goodbye messages enabled.
+//   - cleanServiceEnabled: Number of chats with service message cleaning enabled.
+//   - cleanWelcomeEnabled: Number of chats cleaning previous welcome messages.
+//   - cleanGoodbyeEnabled: Number of chats cleaning previous goodbye messages.
 func LoadGreetingsStats() (enabledWelcome, enabledGoodbye, cleanServiceEnabled, cleanWelcomeEnabled, cleanGoodbyeEnabled int64) {
 	var greetRcStruct []*GreetingSettings
 

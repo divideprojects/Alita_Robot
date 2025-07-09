@@ -31,6 +31,12 @@ var (
 )
 
 // GetChat So that we can getchat with username also
+/*
+GetChat retrieves chat information for the given chat ID.
+
+This function allows fetching chat details using either a username or numeric ID.
+Returns a pointer to gotgbot.Chat and an error if the request fails.
+*/
 func GetChat(bot *gotgbot.Bot, chatId string) (*gotgbot.Chat, error) {
 	r, err := bot.Request("getChat", map[string]string{"chat_id": chatId}, nil, nil)
 	if err != nil {
@@ -41,6 +47,12 @@ func GetChat(bot *gotgbot.Bot, chatId string) (*gotgbot.Chat, error) {
 	return &c, json.Unmarshal(r, &c)
 }
 
+/*
+CheckDisabledCmd determines if a command is disabled in the current chat context.
+
+Returns true if the command is disabled and should be blocked, otherwise false.
+Handles admin bypass and message deletion if required.
+*/
 func CheckDisabledCmd(bot *gotgbot.Bot, msg *gotgbot.Message, cmd string) bool {
 	// Placing this first would not make additional queries if check is success!
 	// if chat is private, return false
@@ -73,6 +85,12 @@ func CheckDisabledCmd(bot *gotgbot.Bot, msg *gotgbot.Message, cmd string) bool {
 	return true
 }
 
+/*
+IsUserAdmin checks if the specified user is an admin in the given chat.
+
+Uses cached admin data if available, otherwise fetches from Telegram.
+Returns true if the user is an admin, otherwise false.
+*/
 func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 	// Placing this first would not make additional queries if check is success!
 	if string_handling.FindInInt64Slice(tgAdminList, userId) {
@@ -126,6 +144,11 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 	return false
 }
 
+/*
+IsBotAdmin checks if the bot is an admin in the specified chat.
+
+Returns true if the bot has administrator status, otherwise false.
+*/
 func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -146,6 +169,12 @@ func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {
 	return mem.MergeChatMember().Status == "administrator"
 }
 
+/*
+CanUserChangeInfo checks if a user has permission to change chat info.
+
+Returns true if the user can change info, otherwise false.
+Handles anonymous admin cases and provides feedback if permissions are lacking.
+*/
 func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -209,6 +238,12 @@ func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, use
 	return true
 }
 
+/*
+CanUserRestrict checks if a user has permission to restrict members in the chat.
+
+Returns true if the user can restrict members, otherwise false.
+Handles anonymous admin and provides feedback if permissions are lacking.
+*/
 func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -271,6 +306,12 @@ func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userI
 	return true
 }
 
+/*
+CanBotRestrict checks if the bot has permission to restrict members in the chat.
+
+Returns true if the bot can restrict members, otherwise false.
+Provides feedback if permissions are lacking.
+*/
 func CanBotRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -311,6 +352,12 @@ func CanBotRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 	return true
 }
 
+/*
+CanUserPromote checks if a user has permission to promote or demote members in the chat.
+
+Returns true if the user can promote/demote, otherwise false.
+Handles anonymous admin and provides feedback if permissions are lacking.
+*/
 func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -373,6 +420,12 @@ func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId
 	return true
 }
 
+/*
+CanBotPromote checks if the bot has permission to promote or demote members in the chat.
+
+Returns true if the bot can promote/demote, otherwise false.
+Provides feedback if permissions are lacking.
+*/
 func CanBotPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -402,6 +455,12 @@ func CanBotPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChe
 	return true
 }
 
+/*
+CanUserPin checks if a user has permission to pin messages in the chat.
+
+Returns true if the user can pin messages, otherwise false.
+Handles anonymous admin and provides feedback if permissions are lacking.
+*/
 func CanUserPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -452,6 +511,12 @@ func CanUserPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int
 	return true
 }
 
+/*
+CanBotPin checks if the bot has permission to pin messages in the chat.
+
+Returns true if the bot can pin messages, otherwise false.
+Provides feedback if permissions are lacking.
+*/
 func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -481,6 +546,12 @@ func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck b
 	return true
 }
 
+/*
+Caninvite checks if the bot or user has permission to generate invite links for the chat.
+
+Returns true if invite links can be generated, otherwise false.
+Handles anonymous admin and provides feedback if permissions are lacking.
+*/
 func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbot.Message, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -548,6 +619,12 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 	return true
 }
 
+/*
+CanUserDelete checks if a user has permission to delete messages in the chat.
+
+Returns true if the user can delete messages, otherwise false.
+Handles anonymous admin and provides feedback if permissions are lacking.
+*/
 func CanUserDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -607,6 +684,12 @@ func CanUserDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId 
 	return true
 }
 
+/*
+CanBotDelete checks if the bot has permission to delete messages in the chat.
+
+Returns true if the bot can delete messages, otherwise false.
+Provides feedback if permissions are lacking.
+*/
 func CanBotDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -637,6 +720,12 @@ func CanBotDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 	return true
 }
 
+/*
+RequireBotAdmin ensures the bot is an admin in the chat.
+
+Returns true if the bot is admin, otherwise false.
+Provides feedback if the bot lacks admin rights.
+*/
 func RequireBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -658,6 +747,11 @@ func RequireBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justC
 	return true
 }
 
+/*
+IsUserInChat checks if a user is currently a member of the chat.
+
+Returns true if the user is present and not left or kicked, otherwise false.
+*/
 func IsUserInChat(b *gotgbot.Bot, chat *gotgbot.Chat, userId int64) bool {
 	// telegram cannot be in chat, will need to fix this later
 	if userId == tgUserId {
@@ -669,6 +763,11 @@ func IsUserInChat(b *gotgbot.Bot, chat *gotgbot.Chat, userId int64) bool {
 	return !string_handling.FindInStringSlice([]string{"left", "kicked"}, userStatus)
 }
 
+/*
+IsUserBanProtected checks if a user is protected from being banned in the chat.
+
+Returns true if the user is an admin or a Telegram special user, otherwise false.
+*/
 func IsUserBanProtected(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -686,6 +785,12 @@ func IsUserBanProtected(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, us
 	return IsUserAdmin(b, ctx.EffectiveChat.Id, userId) || string_handling.FindInInt64Slice(tgAdminList, userId)
 }
 
+/*
+RequireUserAdmin ensures the user is an admin in the chat.
+
+Returns true if the user is admin, otherwise false.
+Provides feedback if the user lacks admin rights.
+*/
 func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -718,6 +823,12 @@ func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 	return true
 }
 
+/*
+RequireUserOwner ensures the user is the creator (owner) of the chat.
+
+Returns true if the user is the group creator, otherwise false.
+Provides feedback if the user lacks ownership rights.
+*/
 func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -757,6 +868,12 @@ func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 	return true
 }
 
+/*
+RequirePrivate ensures the command is executed in a private chat.
+
+Returns true if the chat is private, otherwise false.
+Provides feedback if used in a group context.
+*/
 func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -783,6 +900,12 @@ func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 	return true
 }
 
+/*
+RequireGroup ensures the command is executed in a group chat.
+
+Returns true if the chat is a group, otherwise false.
+Provides feedback if used in a private context.
+*/
 func RequireGroup(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
 		if ctx.CallbackQuery != nil {
@@ -809,6 +932,11 @@ func RequireGroup(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 	return true
 }
 
+/*
+setAnonAdminCache stores the anonymous admin message in the cache for a limited time.
+
+Used to track anonymous admin actions for verification purposes.
+*/
 func setAnonAdminCache(chatId int64, msg *gotgbot.Message) {
 	cache.Marshal.Set(cache.Context, fmt.Sprintf("anonAdmin.%d.%d", chatId, msg.MessageId), msg, store.WithExpiration(anonChatMapExpirartion))
 }

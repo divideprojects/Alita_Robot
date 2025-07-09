@@ -11,24 +11,40 @@ import (
 )
 
 var (
-	AllowedUpdates     []string
-	ValidLangCodes     []string
-	BotToken           string
-	DatabaseURI        string
-	MainDbName         string
-	BotVersion         string = "2.1.3"
-	ApiServer          string
-	WorkingMode        = "worker"
-	Debug              = false
+	// AllowedUpdates specifies which Telegram update types the bot should receive.
+	AllowedUpdates []string
+	// ValidLangCodes lists enabled locale codes for i18n.
+	ValidLangCodes []string
+	// BotToken is the Telegram bot token.
+	BotToken string
+	// DatabaseURI is the URI for the main database connection.
+	DatabaseURI string
+	// MainDbName is the name of the main database.
+	MainDbName string
+	// BotVersion is the current version of the bot.
+	BotVersion string = "2.1.3"
+	// ApiServer is the Telegram API server endpoint.
+	ApiServer string
+	// WorkingMode indicates the current working mode (e.g., "worker").
+	WorkingMode = "worker"
+	// Debug enables debug logging if true.
+	Debug = false
+	// DropPendingUpdates determines if pending updates should be dropped on startup.
 	DropPendingUpdates = true
-	OwnerId            int64
-	MessageDump        int64
-	RedisAddress       string
-	RedisPassword      string
-	RedisDB            int
+	// OwnerId is the Telegram user ID of the bot owner.
+	OwnerId int64
+	// MessageDump is the chat ID where startup/log messages are sent.
+	MessageDump int64
+	// RedisAddress is the address of the Redis server.
+	RedisAddress string
+	// RedisPassword is the password for the Redis server.
+	RedisPassword string
+	// RedisDB is the Redis database number to use.
+	RedisDB int
 )
 
-// init initializes the config variables.
+// init initializes the config variables from environment variables and sets up logging.
+// It loads .env files, parses environment variables, and applies defaults for unset values.
 func init() {
 	// set logger config
 	log.SetLevel(log.DebugLevel)

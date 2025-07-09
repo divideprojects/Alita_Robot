@@ -24,6 +24,11 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
+/*
+antifloodStruct implements the antiflood module logic.
+
+It embeds moduleStruct and manages flood control state per chat, including a semaphore to limit concurrent admin checks for performance and safety.
+*/
 type antifloodStruct struct {
 	moduleStruct  // inheritance
 	syncHelperMap sync.Map
@@ -31,6 +36,9 @@ type antifloodStruct struct {
 	adminCheckSemaphore chan struct{}
 }
 
+/*
+floodControl tracks message counts and IDs for a user in a chat to enforce flood limits.
+*/
 type floodControl struct {
 	userId       int64
 	messageCount int
@@ -48,6 +56,11 @@ var antifloodModule = antifloodStruct{
 	adminCheckSemaphore: make(chan struct{}, 50), // Limit to 50 concurrent admin checks
 }
 
+/*
+updateFlood updates the flood control state for a user in a chat.
+
+Returns true if the user has exceeded the flood limit, along with the updated floodControl struct.
+*/
 func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, floodCrc floodControl) {
 	floodSrc := db.GetFlood(chatId)
 
@@ -85,6 +98,11 @@ func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, f
 	return
 }
 
+/*
+checkFlood enforces flood control for incoming messages.
+
+Uses a semaphore to limit concurrent admin checks, applies flood logic, and takes action (mute, kick, ban) if limits are exceeded. Handles admin and anonymous user exceptions.
+*/
 func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender
@@ -273,6 +291,11 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+/*
+setFlood sets the flood limit for a chat.
+
+Allows admins to enable, disable, or change the flood limit. Handles argument parsing and updates the database accordingly.
+*/
 func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -317,6 +340,11 @@ func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+/*
+flood displays the current flood settings for the chat.
+
+Shows whether flood control is enabled and the current action mode (mute, ban, kick).
+*/
 func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	var text string
 	msg := ctx.EffectiveMessage
@@ -357,6 +385,11 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+/*
+setFloodMode sets the action mode for flood control.
+
+Admins can choose between "ban", "kick", or "mute" as the action when flood limits are exceeded.
+*/
 func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -393,6 +426,11 @@ func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+/*
+setFloodDeleter enables or disables deletion of messages that trigger flood control.
+
+Admins can toggle this setting or view its current status.
+*/
 func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -434,6 +472,11 @@ func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+/*
+LoadAntiflood registers antiflood-related command handlers with the dispatcher.
+
+Enables the antiflood module and adds handlers for flood control commands and message group checks.
+*/
 func LoadAntiflood(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(antifloodModule.moduleName, true)
 

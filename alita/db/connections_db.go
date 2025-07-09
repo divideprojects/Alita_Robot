@@ -7,17 +7,31 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+/*
+Connections represents a user's connection state to a chat.
+
+Fields:
+  - UserId: Unique identifier for the user.
+  - ChatId: ID of the chat the user is connected to.
+  - Connected: Whether the user is currently connected to a chat.
+*/
 type Connections struct {
 	UserId    int64 `bson:"_id,omitempty" json:"_id,omitempty"`
 	ChatId    int64 `bson:"chat_id,omitempty" json:"chat_id,omitempty"`
 	Connected bool  `bson:"connected" json:"connected" default:"false"`
 }
 
+// ConnectionSettings represents connection permissions for a chat.
+//
+// Fields:
+//   - ChatId: Unique identifier for the chat.
+//   - AllowConnect: Whether users are allowed to connect to this chat.
 type ConnectionSettings struct {
 	ChatId       int64 `bson:"_id,omitempty" json:"_id,omitempty"`
 	AllowConnect bool  `bson:"can_connect" json:"can_connect" default:"false"`
 }
 
+// ToggleAllowConnect sets whether users are allowed to connect to the specified chat.
 func ToggleAllowConnect(chatID int64, pref bool) {
 	connectionSrc := GetChatConnectionSetting(chatID)
 	connectionSrc.AllowConnect = pref
@@ -27,6 +41,8 @@ func ToggleAllowConnect(chatID int64, pref bool) {
 	}
 }
 
+// GetChatConnectionSetting retrieves the connection settings for a chat.
+// If no settings exist, it initializes them with default values.
 func GetChatConnectionSetting(chatID int64) (connectionSrc *ConnectionSettings) {
 	defaultConnectionSrc := &ConnectionSettings{ChatId: chatID, AllowConnect: false}
 	errF := findOne(connectionSettingsColl, bson.M{"_id": chatID}).Decode(&connectionSrc)
@@ -60,10 +76,12 @@ func getUserConnectionSetting(userID int64) (connectionSrc *Connections) {
 	return connectionSrc
 }
 
+// Connection retrieves the connection state for a user.
 func Connection(UserID int64) *Connections {
 	return getUserConnectionSetting(UserID)
 }
 
+// ConnectId marks a user as connected to a specific chat.
 func ConnectId(UserID, chatID int64) {
 	connectionUpdate := Connection(UserID)
 	connectionUpdate.Connected = true
@@ -74,6 +92,7 @@ func ConnectId(UserID, chatID int64) {
 	}
 }
 
+// DisconnectId marks a user as disconnected from any chat.
 func DisconnectId(UserID int64) {
 	connectionUpdate := Connection(UserID)
 	connectionUpdate.Connected = false
@@ -83,6 +102,8 @@ func DisconnectId(UserID int64) {
 	}
 }
 
+// ReconnectId marks a user as connected and returns the chat ID they are connected to.
+// Returns 0 if the update fails.
 func ReconnectId(UserID int64) int64 {
 	connectionUpdate := Connection(UserID)
 	connectionUpdate.Connected = true
@@ -94,6 +115,7 @@ func ReconnectId(UserID int64) int64 {
 	return connectionUpdate.ChatId
 }
 
+// LoadConnectionStats returns the number of users currently connected and the number of chats allowing connections.
 func LoadConnectionStats() (connectedUsers, connectedChats int64) {
 	connectedChats, err := countDocs(
 		connectionSettingsColl,

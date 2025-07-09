@@ -17,17 +17,29 @@ func addToArray(arr []string, val ...string) []string {
 	return arr
 }
 
-// AddAdminCmd AddAdminCm: Add Connection Commands for Admin
+/*
+AddAdminCmd adds one or more command names to the list of admin commands.
+
+This function is thread-safe and can be called concurrently.
+*/
 func AddAdminCmd(cmd ...string) {
 	AdminCmds = addToArray(AdminCmds, cmd...)
 }
 
-// AddUserCmd Add Connection Commands for User
+/*
+AddUserCmd adds one or more command names to the list of user commands.
+
+This function is thread-safe and can be called concurrently.
+*/
 func AddUserCmd(cmd ...string) {
 	UserCmds = addToArray(UserCmds, cmd...)
 }
 
-// AddCmdToDisableable - func to add cmd to list of disableable
+/*
+AddCmdToDisableable adds a command name to the list of disableable commands.
+
+This function is thread-safe and can be called concurrently.
+*/
 func AddCmdToDisableable(cmd string) {
 	DisableCmds = addToArray(DisableCmds, cmd)
 }
