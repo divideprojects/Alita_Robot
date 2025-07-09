@@ -25,30 +25,27 @@ func ResourceMonitor() {
 	ticker := time.NewTicker(5 * time.Minute)
 	defer ticker.Stop()
 
-	for {
-		select {
-		case <-ticker.C:
-			var m runtime.MemStats
-			runtime.ReadMemStats(&m)
+	for range ticker.C {
+		var m runtime.MemStats
+		runtime.ReadMemStats(&m)
 
-			numGoroutines := runtime.NumGoroutine()
+		numGoroutines := runtime.NumGoroutine()
 
-			// Log metrics
-			log.WithFields(log.Fields{
-				"goroutines": numGoroutines,
-				"memory_mb":  m.Alloc / 1024 / 1024,
-				"sys_mb":     m.Sys / 1024 / 1024,
-				"gc_runs":    m.NumGC,
-			}).Info("Resource usage stats")
+		// Log metrics
+		log.WithFields(log.Fields{
+			"goroutines": numGoroutines,
+			"memory_mb":  m.Alloc / 1024 / 1024,
+			"sys_mb":     m.Sys / 1024 / 1024,
+			"gc_runs":    m.NumGC,
+		}).Info("Resource usage stats")
 
-			// Warning thresholds
-			if numGoroutines > 1000 {
-				log.WithField("goroutines", numGoroutines).Warn("High goroutine count detected")
-			}
+		// Warning thresholds
+		if numGoroutines > 1000 {
+			log.WithField("goroutines", numGoroutines).Warn("High goroutine count detected")
+		}
 
-			if m.Alloc/1024/1024 > 500 { // 500MB
-				log.WithField("memory_mb", m.Alloc/1024/1024).Warn("High memory usage detected")
-			}
+		if m.Alloc/1024/1024 > 500 { // 500MB
+			log.WithField("memory_mb", m.Alloc/1024/1024).Warn("High memory usage detected")
 		}
 	}
 }
