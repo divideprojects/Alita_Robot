@@ -5,19 +5,8 @@ import (
 	"strings"
 
 	log "github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-/*
-BlacklistSettings represents blacklist configuration for a chat.
-
-Fields:
-  - ChatId: Unique identifier for the chat.
-  - Action: Action to take when a blacklisted word is triggered (e.g., "ban", "mute", "none").
-  - Triggers: List of blacklisted words or phrases.
-  - Reason: Default reason for blacklist actions.
-*/
 type BlacklistSettings struct {
 	ChatId   int64    `bson:"_id,omitempty" json:"_id,omitempty"`
 	Action   string   `bson:"action,omitempty" json:"action,omitempty"`
@@ -25,88 +14,68 @@ type BlacklistSettings struct {
 	Reason   string   `bson:"reason,omitempty" json:"reason,omitempty"`
 }
 
-// check Chat Blacklists Settings, used to get data before performing any operation
-func checkBlacklistSetting(chatID int64) (blSrc *BlacklistSettings) {
-	defaultBlacklistSrc := &BlacklistSettings{
-		ChatId:   chatID,
-		Action:   "none",
-		Triggers: make([]string, 0),
-		Reason:   "Automated Blacklisted word %s",
-	}
-	errS := findOne(blacklistsColl, bson.M{"_id": chatID}).Decode(&blSrc)
-	if errS == mongo.ErrNoDocuments {
-		blSrc = defaultBlacklistSrc
-		err := updateOne(blacklistsColl, bson.M{"_id": chatID}, defaultBlacklistSrc)
-		if err != nil {
-			log.Errorf("[Database][GetBlacklistSettings]: %v ", err)
+var blacklistSettingsHandler = &SettingsHandler[BlacklistSettings]{
+	Collection: blacklistsColl,
+	Default: func(chatID int64) *BlacklistSettings {
+		return &BlacklistSettings{
+			ChatId:   chatID,
+			Action:   "none",
+			Triggers: make([]string, 0),
+			Reason:   "Automated Blacklisted word %s",
 		}
-	} else if errS != nil {
-		log.Errorf("[Database][GetBlacklistSettings]: %v - %d", errS, chatID)
-		blSrc = defaultBlacklistSrc
-	}
-	return blSrc
+	},
 }
 
-// AddBlacklist adds a new trigger word to the blacklist for the specified chat.
-// The trigger is converted to lowercase before being stored.
+func CheckBlacklistSetting(chatID int64) *BlacklistSettings {
+	return blacklistSettingsHandler.CheckOrInit(chatID)
+}
+
 func AddBlacklist(chatId int64, trigger string) {
-	blSrc := checkBlacklistSetting(chatId)
+	blSrc := CheckBlacklistSetting(chatId)
 	blSrc.Triggers = append(blSrc.Triggers, strings.ToLower(trigger))
-	err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
+	err := updateOne(blacklistsColl, map[string]interface{}{"_id": chatId}, blSrc)
 	if err != nil {
 		log.Errorf("[Database] AddBlacklist: %v - %d", err, chatId)
 	}
 }
 
-// RemoveBlacklist removes a trigger word from the blacklist for the specified chat.
-// The trigger is matched in lowercase.
 func RemoveBlacklist(chatId int64, trigger string) {
-	blSrc := checkBlacklistSetting(chatId)
+	blSrc := CheckBlacklistSetting(chatId)
 	blSrc.Triggers = removeStrfromStr(blSrc.Triggers, strings.ToLower(trigger))
-	err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
+	err := updateOne(blacklistsColl, map[string]interface{}{"_id": chatId}, blSrc)
 	if err != nil {
 		log.Errorf("[Database] RemoveBlacklist: %v - %d", err, chatId)
 	}
 }
 
-// RemoveAllBlacklist clears all blacklist triggers for the specified chat.
 func RemoveAllBlacklist(chatId int64) {
-	blSrc := checkBlacklistSetting(chatId)
+	blSrc := CheckBlacklistSetting(chatId)
 	blSrc.Triggers = make([]string, 0)
-	err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
+	err := updateOne(blacklistsColl, map[string]interface{}{"_id": chatId}, blSrc)
 	if err != nil {
 		log.Errorf("[Database] RemoveBlacklist: %v - %d", err, chatId)
 	}
 }
 
-// SetBlacklistAction sets the action to be taken when a blacklist trigger is matched in the specified chat.
 func SetBlacklistAction(chatId int64, action string) {
-	blSrc := checkBlacklistSetting(chatId)
+	blSrc := CheckBlacklistSetting(chatId)
 	blSrc.Action = strings.ToLower(action)
-	err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
+	err := updateOne(blacklistsColl, map[string]interface{}{"_id": chatId}, blSrc)
 	if err != nil {
 		log.Errorf("[Database] ChangeBlacklistAction: %v - %d", err, chatId)
 	}
 }
 
-// GetBlacklistSettings retrieves the blacklist settings for a given chat ID.
-// If no settings exist, it initializes them with default values.
 func GetBlacklistSettings(chatId int64) *BlacklistSettings {
-	return checkBlacklistSetting(chatId)
+	return CheckBlacklistSetting(chatId)
 }
 
-/*
-LoadBlacklistsStats returns the total number of blacklist triggers and the number of chats with at least one blacklist trigger.
-
-It iterates through all blacklist settings, counting triggers and chats with non-empty trigger lists.
-*/
 func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 	var blacklistStruct []*BlacklistSettings
 
-	cursor := findAll(blacklistsColl, bson.M{})
-	defer func(cursor *mongo.Cursor, ctx context.Context) {
-		err := cursor.Close(ctx)
-		if err != nil {
+	cursor := findAll(blacklistsColl, map[string]interface{}{})
+	defer func(cursor interface{ Close(context.Context) error }, ctx context.Context) {
+		if err := cursor.Close(ctx); err != nil {
 			log.Error(err)
 		}
 	}(cursor, bgCtx)

@@ -2,38 +2,37 @@ package db
 
 import (
 	log "github.com/sirupsen/logrus"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Channel represents a Telegram channel's metadata stored in the database.
-//
-// Fields:
-//   - ChannelId: Unique identifier for the channel.
-//   - ChannelName: Human-readable name of the channel.
-//   - Username: Channel's username (if any).
 type Channel struct {
 	ChannelId   int64  `bson:"_id,omitempty" json:"_id,omitempty"`
 	ChannelName string `bson:"channel_name" json:"channel_name" default:"nil"`
 	Username    string `bson:"username" json:"username" default:"nil"`
 }
 
-// GetChannelSettings retrieves the channel settings for a given channel ID.
-// Returns nil if the channel does not exist in the database.
+var channelSettingsHandler = &SettingsHandler[Channel]{
+	Collection: channelColl,
+	Default: func(channelId int64) *Channel {
+		return &Channel{
+			ChannelId:   channelId,
+			ChannelName: "",
+			Username:    "",
+		}
+	},
+}
+
+func CheckChannelSetting(channelId int64) *Channel {
+	return channelSettingsHandler.CheckOrInit(channelId)
+}
+
 func GetChannelSettings(channelId int64) (channelSrc *Channel) {
-	err := findOne(channelColl, bson.M{"_id": channelId}).Decode(&channelSrc)
-	if err == mongo.ErrNoDocuments {
+	channelSrc = CheckChannelSetting(channelId)
+	if channelSrc.ChannelId == 0 {
 		channelSrc = nil
-	} else if err != nil {
-		log.Errorf("[Database] getChannelSettings: %v - %d ", err, channelId)
-		return
 	}
 	return
 }
 
-// UpdateChannel updates the channel's name and username for the given channel ID.
-// If the channel does not exist, it creates a new entry.
 func UpdateChannel(channelId int64, channelName, username string) {
 	channelSrc := GetChannelSettings(channelId)
 
@@ -51,7 +50,7 @@ func UpdateChannel(channelId int64, channelName, username string) {
 		}
 	}
 
-	err2 := updateOne(channelColl, bson.M{"_id": channelId}, channelSrc)
+	err2 := updateOne(channelColl, map[string]interface{}{"_id": channelId}, channelSrc)
 	if err2 != nil {
 		log.Errorf("[Database] UpdateChannel: %v - %d (%s)", err2, channelId, username)
 		return
@@ -59,23 +58,16 @@ func UpdateChannel(channelId int64, channelName, username string) {
 	log.Infof("[Database] UpdateChannel: %s", channelName)
 }
 
-// GetChannelIdByUserName returns the channel ID for a given username.
-// Returns 0 if the channel is not found.
 func GetChannelIdByUserName(username string) int64 {
 	var cuids *Channel
-	err := findOne(channelColl, bson.M{"username": username}).Decode(&cuids)
-	if err == mongo.ErrNoDocuments {
-		return 0
-	} else if err != nil {
-		log.Errorf("[Database] GetChannelByUserName: %v - %d", err, cuids.ChannelId)
+	err := findOne(channelColl, map[string]interface{}{"username": username}).Decode(&cuids)
+	if err != nil {
 		return 0
 	}
 	log.Infof("[Database] GetChannelByUserName: %d", cuids.ChannelId)
 	return cuids.ChannelId
 }
 
-// GetChannelInfoById retrieves the username and channel name for a given channel ID.
-// Returns found=false if the channel does not exist.
 func GetChannelInfoById(userId int64) (username, name string, found bool) {
 	channel := GetChannelSettings(userId)
 	if channel != nil {
@@ -86,9 +78,8 @@ func GetChannelInfoById(userId int64) (username, name string, found bool) {
 	return
 }
 
-// LoadChannelStats returns the total number of channels stored in the database.
 func LoadChannelStats() (count int64) {
-	count, err := countDocs(channelColl, bson.M{})
+	count, err := countDocs(channelColl, nil)
 	if err != nil {
 		log.Errorf("[Database] loadChannelStats: %v", err)
 		return 0
