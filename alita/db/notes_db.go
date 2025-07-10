@@ -174,19 +174,5 @@ func TooglePrivateNote(chatID int64, pref bool) {
 
 // LoadNotesStats returns the total number of notes and the number of chats using notes.
 func LoadNotesStats() (notesNum, notesUsingChats int64) {
-	var notesArray []*ChatNotes
-	notesMap := make(map[int64][]ChatNotes)
-
-	cursor := findAll(notesColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &notesArray)
-
-	for _, noteC := range notesArray {
-		notesNum++ // count number of filters
-		notesMap[noteC.ChatId] = append(notesMap[noteC.ChatId], *noteC)
-	}
-
-	notesUsingChats = int64(len(notesMap))
-
-	return
+	return CountByChat(notesColl, bson.M{}, "chat_id")
 }
