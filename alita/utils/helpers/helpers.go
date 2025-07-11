@@ -28,16 +28,16 @@ import (
 
 var (
 	// Pre-compiled regex patterns for better performance
-	anchorTagRegex     = regexp.MustCompile(`<a href="(.*?)">(.*?)</a>`)
-	rulesBtnRegex      = regexp.MustCompile(`(?s){rules(:(same|up))?}`)
-	buttonUrlPattern   = regexp.MustCompile(`[(htps)?:/w.a-zA-Z\d@%_+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z\d@:%_+.~#?&/=]*)`)
-	privateRegex       = regexp.MustCompile(`({private})`)
-	noprivateRegex     = regexp.MustCompile(`({noprivate})`)
-	adminRegex         = regexp.MustCompile(`({admin})`)
-	previewRegex       = regexp.MustCompile(`({preview})`)
-	protectRegex       = regexp.MustCompile(`({protect})`)
-	nonotifRegex       = regexp.MustCompile(`({nonotif})`)
-	noteReplacer       = strings.NewReplacer(
+	anchorTagRegex   = regexp.MustCompile(`<a href="(.*?)">(.*?)</a>`)
+	rulesBtnRegex    = regexp.MustCompile(`(?s){rules(:(same|up))?}`)
+	buttonUrlPattern = regexp.MustCompile(`[(htps)?:/w.a-zA-Z\d@%_+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z\d@:%_+.~#?&/=]*)`)
+	privateRegex     = regexp.MustCompile(`({private})`)
+	noprivateRegex   = regexp.MustCompile(`({noprivate})`)
+	adminRegex       = regexp.MustCompile(`({admin})`)
+	previewRegex     = regexp.MustCompile(`({preview})`)
+	protectRegex     = regexp.MustCompile(`({protect})`)
+	nonotifRegex     = regexp.MustCompile(`({nonotif})`)
+	noteReplacer     = strings.NewReplacer(
 		"{private}", "",
 		"{admin}", "",
 		"{preview}", "",
@@ -108,11 +108,11 @@ func SplitMessage(msg string) []string {
 	if len(msg) <= MaxMessageLength {
 		return []string{msg}
 	}
-	
+
 	lines := strings.Split(msg, "\n")
 	result := make([]string, 0)
 	var builder strings.Builder
-	
+
 	for _, line := range lines {
 		// Check if adding this line would exceed the limit
 		if builder.Len()+len(line)+1 > MaxMessageLength {
@@ -121,7 +121,7 @@ func SplitMessage(msg string) []string {
 				result = append(result, strings.TrimSuffix(builder.String(), "\n"))
 				builder.Reset()
 			}
-			
+
 			// If single line is too long, we need to split it further
 			if len(line) > MaxMessageLength {
 				for len(line) > MaxMessageLength {
@@ -129,7 +129,7 @@ func SplitMessage(msg string) []string {
 					line = line[MaxMessageLength:]
 				}
 			}
-			
+
 			// Start new message with remaining line
 			if len(line) > 0 {
 				builder.WriteString(line)
@@ -140,12 +140,12 @@ func SplitMessage(msg string) []string {
 			builder.WriteString("\n")
 		}
 	}
-	
+
 	// Add any remaining content
 	if builder.Len() > 0 {
 		result = append(result, strings.TrimSuffix(builder.String(), "\n"))
 	}
-	
+
 	return result
 }
 
@@ -533,7 +533,7 @@ func ReverseHTML2MD(text string) string {
 		}
 		return match
 	})
-	
+
 	// Handle other HTML tags with pre-compiled regexes
 	for htmlTag, pattern := range htmlTagRegexes {
 		var replacement string

@@ -11,7 +11,7 @@ import (
 // BenchmarkSplitMessage benchmarks the SplitMessage function
 func BenchmarkSplitMessage(b *testing.B) {
 	longMessage := strings.Repeat("This is a test message that needs to be split. ", 200)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = SplitMessage(longMessage)
@@ -21,7 +21,7 @@ func BenchmarkSplitMessage(b *testing.B) {
 // BenchmarkSplitMessageShort benchmarks SplitMessage with short messages
 func BenchmarkSplitMessageShort(b *testing.B) {
 	shortMessage := "Short message"
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = SplitMessage(shortMessage)
@@ -43,10 +43,10 @@ func BenchmarkFormattingReplacer(b *testing.B) {
 		LastName:  "Doe",
 		Username:  "johndoe",
 	}
-	
+
 	message := "Welcome {first} {last} ({username}) to {chatname}! You are user #{id} and we have {count} members total. {rules:same}"
 	buttons := []db.Button{{Name: "Test", Url: "https://example.com", SameLine: false}}
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, _ = FormattingReplacer(bot, chat, user, message, buttons)
@@ -56,7 +56,7 @@ func BenchmarkFormattingReplacer(b *testing.B) {
 // BenchmarkNotesParser benchmarks the notesParser function
 func BenchmarkNotesParser(b *testing.B) {
 	message := "This is a test message with {private} and {admin} and {preview} flags {protect} {nonotif}"
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, _, _, _, _, _, _ = notesParser(message)
@@ -67,7 +67,7 @@ func BenchmarkNotesParser(b *testing.B) {
 func BenchmarkMentionHtml(b *testing.B) {
 	userId := int64(123456789)
 	name := "John Doe"
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = MentionHtml(userId, name)
@@ -83,9 +83,9 @@ func BenchmarkBuildKeyboard(b *testing.B) {
 		{Name: "Button 4", Url: "https://example4.com", SameLine: true},
 		{Name: "Button 5", Url: "https://example5.com", SameLine: false},
 	}
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = BuildKeyboard(buttons)
 	}
-} 
+}

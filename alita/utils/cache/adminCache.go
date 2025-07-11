@@ -107,13 +107,13 @@ func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 	if gotAdminlist == nil {
 		return false, AdminCache{}
 	}
-	
+
 	adminCache := *gotAdminlist.(*AdminCache)
 	// Ensure user map is built after unmarshaling
 	if adminCache.userMap == nil && len(adminCache.UserInfo) > 0 {
 		adminCache.buildUserMap()
 	}
-	
+
 	return true, adminCache
 }
 
@@ -128,7 +128,7 @@ func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
 	if !found {
 		return false, gotgbot.MergedChatMember{}
 	}
-	
+
 	user, userFound := adminCache.GetUser(userId)
 	return userFound, user
 }

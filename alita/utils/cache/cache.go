@@ -29,10 +29,10 @@ Fields:
   - Cached:   Indicates if the cache is valid and populated.
 */
 type AdminCache struct {
-	ChatId   int64                               `json:"chat_id"`
-	UserInfo []gotgbot.MergedChatMember          `json:"user_info"`
-	userMap  map[int64]gotgbot.MergedChatMember  `json:"-"` // not marshaled
-	Cached   bool                                `json:"cached"`
+	ChatId   int64                              `json:"chat_id"`
+	UserInfo []gotgbot.MergedChatMember         `json:"user_info"`
+	userMap  map[int64]gotgbot.MergedChatMember `json:"-"` // not marshaled
+	Cached   bool                               `json:"cached"`
 }
 
 // buildUserMap creates the internal map for fast user lookups
@@ -66,8 +66,8 @@ func InitCache() {
 		DB:       config.RedisDB,       // use default DB
 	})
 	ristrettoCache, err := ristretto.NewCache(&ristretto.Config{
-		NumCounters: 10000,        // 10x expected keys for better performance
-		MaxCost:     100 * 1024,   // 100KB instead of 100B
+		NumCounters: 10000,      // 10x expected keys for better performance
+		MaxCost:     100 * 1024, // 100KB instead of 100B
 		BufferItems: 64,
 	})
 	if err != nil {
