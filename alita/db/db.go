@@ -124,22 +124,6 @@ func Initialize(cfg *config.Config) error {
 	return nil
 }
 
-// init provides backward compatibility by initializing with global config variables.
-// This will be deprecated once all code is migrated to use Initialize() explicitly.
-func init() {
-	// Use a simple check to see if we should use the legacy init
-	// This allows for gradual migration
-	if config.DatabaseURI != "" {
-		cfg := &config.Config{
-			DatabaseURI: config.DatabaseURI,
-			MainDbName:  config.MainDbName,
-		}
-		if err := Initialize(cfg); err != nil {
-			log.Errorf("[Database][LegacyInit]: %v", err)
-		}
-	}
-}
-
 // updateOne updates a single document in the specified collection.
 // If no document matches the filter, a new one is inserted (upsert).
 func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (err error) {

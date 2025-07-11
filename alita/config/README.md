@@ -1,6 +1,6 @@
 # Configuration Package
 
-This package provides robust configuration management for the Alita Robot with proper validation, error handling, and both modern and backward-compatible APIs.
+This package provides robust configuration management for the Alita Robot with proper validation, error handling, and a modern API.
 
 ## Features
 
@@ -8,12 +8,11 @@ This package provides robust configuration management for the Alita Robot with p
 - ✅ **Defaults**: Centralized default values with clear constants
 - ✅ **Type Safety**: Proper parsing with error handling for numbers, booleans, and arrays
 - ✅ **Environment Variables**: Loads from `.env` files and environment variables
-- ✅ **Backward Compatibility**: Maintains the old global variable API
 - ✅ **Testing**: Comprehensive unit tests included
 
 ## Quick Start
 
-### Basic Usage (Recommended)
+### Basic Usage
 
 ```go
 package main
@@ -38,25 +37,6 @@ func main() {
     // Use configuration
     fmt.Printf("Bot token: %s\n", cfg.BotToken)
     fmt.Printf("Owner ID: %d\n", cfg.OwnerId)
-}
-```
-
-### Backward Compatible Usage
-
-For existing code that uses global variables:
-
-```go
-import "github.com/divideprojects/Alita_Robot/alita/config"
-
-func main() {
-    // Load and set global variables
-    if err := config.LoadAndSetGlobals(); err != nil {
-        log.Fatal("Config error:", err)
-    }
-    
-    // Use the old global variables
-    fmt.Printf("Bot token: %s\n", config.BotToken)
-    fmt.Printf("Owner ID: %d\n", config.OwnerId)
 }
 ```
 
@@ -126,17 +106,10 @@ The tests cover:
 - Invalid data types
 - Helper function behavior
 
-## Migration from Old Config
+## Usage Pattern
 
-The old config system used global variables and an `init()` function that had side effects. The new system:
+The configuration system follows a simple pattern:
 
-1. **Separates concerns**: Configuration loading is separate from logger setup
-2. **Provides validation**: Required fields are validated with clear error messages  
-3. **Improves testability**: Pure functions that can be tested in isolation
-4. **Maintains compatibility**: Old global variables still work via `LoadAndSetGlobals()`
-
-To migrate existing code:
-1. Replace config imports with explicit config loading in `main()`
-2. Set up logger explicitly after loading config
-3. Use the new Config struct instead of global variables (recommended)
-4. Update any code that depended on config's init() side effects 
+1. **Load configuration**: Use `config.Load()` in `main()` to get a validated Config struct
+2. **Setup services**: Pass the config to services that need it (logger, database, etc.)
+3. **Use throughout app**: Access configuration values through the Config struct fields 

@@ -85,9 +85,10 @@ Only accessible by the owner or devs. Sends the list as a text file.
 func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
+	cfg := config.Get()
 
 	// only devs and owner can access this
-	if user.Id != config.OwnerId && !memStatus.Dev {
+	if user.Id != cfg.OwnerId && !memStatus.Dev {
 		return ext.ContinueGroups
 	}
 
@@ -167,9 +168,10 @@ func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	cfg := config.Get()
 
 	// only devs and owner can access this
-	if user.Id != config.OwnerId && !memStatus.Dev {
+	if user.Id != cfg.OwnerId && !memStatus.Dev {
 		return ext.ContinueGroups
 	}
 
@@ -204,7 +206,8 @@ Only the owner can use this command. Replies with the result.
 */
 func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
-	if user.Id != config.OwnerId {
+	cfg := config.Get()
+	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
 	}
 
@@ -249,7 +252,8 @@ Only the owner can use this command. Replies with the result.
 */
 func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
-	if user.Id != config.OwnerId {
+	cfg := config.Get()
+	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
 	}
 
@@ -294,7 +298,8 @@ Only the owner can use this command. Replies with the result.
 */
 func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
-	if user.Id != config.OwnerId {
+	cfg := config.Get()
+	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
 	}
 
@@ -339,7 +344,8 @@ Only the owner can use this command. Replies with the result.
 */
 func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
-	if user.Id != config.OwnerId {
+	cfg := config.Get()
+	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
 	}
 
@@ -384,13 +390,14 @@ Only accessible by existing team members. Replies with formatted lists of dev an
 */
 func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+	cfg := config.Get()
 
 	teamUsers := db.GetTeamMembers()
 	var teamint64Slice []int64
 	for k := range teamUsers {
 		teamint64Slice = append(teamint64Slice, k)
 	}
-	teamint64Slice = append(teamint64Slice, config.OwnerId)
+	teamint64Slice = append(teamint64Slice, cfg.OwnerId)
 
 	if !string_handling.FindInInt64Slice(teamint64Slice, user.Id) {
 		return ext.EndGroups
@@ -458,9 +465,10 @@ Only accessible by the owner or devs. Replies with stats in a formatted message.
 func (moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
+	cfg := config.Get()
 
 	// only devs and owner can access this
-	if user.Id != config.OwnerId && !memStatus.Dev {
+	if user.Id != cfg.OwnerId && !memStatus.Dev {
 		return ext.ContinueGroups
 	}
 

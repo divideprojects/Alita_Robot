@@ -438,8 +438,9 @@ Each button allows the user to change the bot's language setting.
 */
 func MakeLanguageKeyboard() [][]gotgbot.InlineKeyboardButton {
 	var kb []gotgbot.InlineKeyboardButton
+	cfg := config.Get()
 
-	for _, langCode := range config.ValidLangCodes {
+	for _, langCode := range cfg.ValidLangCodes {
 		properLang := GetLangFormat(langCode)
 		if properLang == "" || properLang == " " {
 			continue

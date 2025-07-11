@@ -219,7 +219,8 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.EndGroups
 		}
 		fileName := fmt.Sprintf("paste_%d_%d.txt", msg.Chat.Id, msg.MessageId)
-		raw, err := http.Get(config.ApiServer + "/file/bot" + config.BotToken + "/" + f.FilePath)
+		cfg := config.Get()
+		raw, err := http.Get(cfg.ApiServer + "/file/bot" + cfg.BotToken + "/" + f.FilePath)
 		if err != nil {
 			log.Error(err)
 		}
@@ -343,7 +344,8 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 				text += fmt.Sprintf("\nUsername: @%s", user.Username)
 			}
 			text += fmt.Sprintf("\nUser link: %s", helpers.MentionHtml(user.Id, "link"))
-			if user.Id == config.OwnerId {
+			cfg := config.Get()
+			if user.Id == cfg.OwnerId {
 				text += "\nHe is my owner!"
 			}
 			if db.GetTeamMemInfo(user.Id).Dev {

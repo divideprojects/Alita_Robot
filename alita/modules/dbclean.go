@@ -24,9 +24,10 @@ Only accessible by the owner or devs. Presents options via inline keyboard.
 func (moduleStruct) dbClean(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
+	cfg := config.Get()
 
 	// only dev can access this
-	if user.Id != config.OwnerId && !memStatus.Dev {
+	if user.Id != cfg.OwnerId && !memStatus.Dev {
 		return ext.ContinueGroups
 	}
 
@@ -63,11 +64,12 @@ func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 	user := ctx.EffectiveSender.User
 	msg := query.Message
 	memStatus := db.GetTeamMemInfo(user.Id)
+	cfg := config.Get()
 
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// permissions check
 	// only dev can access this
-	if user.Id != config.OwnerId && !memStatus.Dev {
+	if user.Id != cfg.OwnerId && !memStatus.Dev {
 		query.Answer(
 			b,
 			&gotgbot.AnswerCallbackQueryOpts{

@@ -69,7 +69,7 @@ type Config struct {
 	ValidLangCodes []string
 }
 
-// Global config instance for backward compatibility
+// Global config instance for modules that use config.Get()
 var globalConfig *Config
 
 // ValidationError represents a configuration validation error
@@ -181,7 +181,7 @@ func Load() (*Config, error) {
 	return cfg, nil
 }
 
-// Initialize loads and sets the global configuration
+// Initialize loads and sets the global configuration for modules that use config.Get()
 func Initialize() error {
 	cfg, err := Load()
 	if err != nil {
@@ -192,60 +192,12 @@ func Initialize() error {
 }
 
 // Get returns the global configuration instance
+// Panics if called before Initialize()
 func Get() *Config {
 	if globalConfig == nil {
 		panic("config not initialized - call config.Initialize() first")
 	}
 	return globalConfig
-}
-
-// Backward compatibility variables - these maintain the old API
-var (
-	BotToken           string
-	BotVersion         string
-	ApiServer          string
-	AllowedUpdates     []string
-	DropPendingUpdates bool
-	WorkingMode        string
-	Debug              bool
-	OwnerId            int64
-	MessageDump        int64
-	DatabaseURI        string
-	MainDbName         string
-	RedisAddress       string
-	RedisPassword      string
-	RedisDB            int
-	ValidLangCodes     []string
-)
-
-// updateGlobalVars updates the backward compatibility global variables
-func updateGlobalVars(cfg *Config) {
-	BotToken = cfg.BotToken
-	BotVersion = cfg.BotVersion
-	ApiServer = cfg.ApiServer
-	AllowedUpdates = cfg.AllowedUpdates
-	DropPendingUpdates = cfg.DropPendingUpdates
-	WorkingMode = cfg.WorkingMode
-	Debug = cfg.Debug
-	OwnerId = cfg.OwnerId
-	MessageDump = cfg.MessageDump
-	DatabaseURI = cfg.DatabaseURI
-	MainDbName = cfg.MainDbName
-	RedisAddress = cfg.RedisAddress
-	RedisPassword = cfg.RedisPassword
-	RedisDB = cfg.RedisDB
-	ValidLangCodes = cfg.ValidLangCodes
-}
-
-// LoadAndSetGlobals loads configuration and sets global variables for backward compatibility
-func LoadAndSetGlobals() error {
-	cfg, err := Load()
-	if err != nil {
-		return err
-	}
-	globalConfig = cfg
-	updateGlobalVars(cfg)
-	return nil
 }
 
 // ConfigValidationError contains multiple validation errors
