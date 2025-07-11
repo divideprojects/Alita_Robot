@@ -15,9 +15,9 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
-	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
-	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 )
 
 var (
@@ -71,7 +71,7 @@ func (m moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool
 }
 
 func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
-    tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	user := ctx.EffectiveSender.User
 
 	// Permission checks

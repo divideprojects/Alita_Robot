@@ -420,9 +420,9 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 				log.Error(err)
 				return err
 			}
-			text = tr.GetString("strings.Bans.banned_user")+ helpers.MentionHtml(userId, msg.ReplyToMessage.GetSender().Name())
+			text = tr.GetString("strings.Bans.banned_user") + helpers.MentionHtml(userId, msg.ReplyToMessage.GetSender().Name())
 		} else {
-			text = tr.GetString("strings."+m.moduleName+".errors.anon_user_ban_reply")
+			text = tr.GetString("strings." + m.moduleName + ".errors.anon_user_ban_reply")
 		}
 		sendMsgOptns = helpers.Shtml()
 	} else {
@@ -651,9 +651,9 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 				log.Error(err)
 				return err
 			}
-			text = tr.GetString("strings.Bans.banned_user")+ helpers.MentionHtml(userId, msg.ReplyToMessage.GetSender().Name())
+			text = tr.GetString("strings.Bans.banned_user") + helpers.MentionHtml(userId, msg.ReplyToMessage.GetSender().Name())
 		} else {
-			text = tr.GetString("strings."+m.moduleName+".errors.anon_user_ban_reply")
+			text = tr.GetString("strings." + m.moduleName + ".errors.anon_user_ban_reply")
 		}
 	} else {
 		_, err := chat.UnbanMember(b, userId, nil)

@@ -194,7 +194,6 @@ func (m moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
 
-
 	var gdbyeText string
 
 	if len(args) == 0 || strings.ToLower(args[0]) == "noformat" {

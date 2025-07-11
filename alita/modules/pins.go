@@ -149,7 +149,7 @@ func (m moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
-	
+
 	switch query.Data {
 	case "unpinallbtn(yes)":
 		status, err := b.UnpinAllChatMessages(chat.Id, nil)

@@ -14,35 +14,35 @@ import (
 // This helper consolidates the repetitive stats code that previously existed as
 // LoadXYZStats functions in every *_db.go file.
 func CountByChat(collection *mongo.Collection, filter bson.M, chatField string) (items, chats int64) {
-    chatSet := make(map[int64]struct{})
+	chatSet := make(map[int64]struct{})
 
-    cursor := findAll(collection, filter)
-    if cursor == nil {
-        return 0, 0 // findAll already logs the error
-    }
-    defer cursor.Close(bgCtx)
+	cursor := findAll(collection, filter)
+	if cursor == nil {
+		return 0, 0 // findAll already logs the error
+	}
+	defer cursor.Close(bgCtx)
 
-    for cursor.Next(bgCtx) {
-        var doc bson.M
-        if err := cursor.Decode(&doc); err != nil {
-            // skip malformed docs – the caller may handle/log aggregated errors
-            continue
-        }
+	for cursor.Next(bgCtx) {
+		var doc bson.M
+		if err := cursor.Decode(&doc); err != nil {
+			// skip malformed docs – the caller may handle/log aggregated errors
+			continue
+		}
 
-        items++
+		items++
 
-        if chatIDRaw, ok := doc[chatField]; ok {
-            switch v := chatIDRaw.(type) {
-            case int64:
-                chatSet[v] = struct{}{}
-            case int32:
-                chatSet[int64(v)] = struct{}{}
-            case float64:
-                chatSet[int64(v)] = struct{}{}
-            }
-        }
-    }
+		if chatIDRaw, ok := doc[chatField]; ok {
+			switch v := chatIDRaw.(type) {
+			case int64:
+				chatSet[v] = struct{}{}
+			case int32:
+				chatSet[int64(v)] = struct{}{}
+			case float64:
+				chatSet[int64(v)] = struct{}{}
+			}
+		}
+	}
 
-    chats = int64(len(chatSet))
-    return
-} 
+	chats = int64(len(chatSet))
+	return
+}

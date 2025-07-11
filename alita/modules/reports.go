@@ -19,8 +19,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
-	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 var reportsModule = moduleStruct{
@@ -29,7 +29,7 @@ var reportsModule = moduleStruct{
 }
 
 func (m moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
-    tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage

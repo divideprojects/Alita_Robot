@@ -77,7 +77,7 @@ func removeStrfromStr(s []string, r string) []string {
 func LoadDisableStats() (disabledCmds, disableEnabledChats int64) {
 	// Count chats with non-empty commands array (active disables)
 	_, disableEnabledChats = CountByChat(disableColl, bson.M{"commands": bson.M{"$exists": true, "$ne": []string{}}}, "_id")
-	
+
 	// For disabled commands count, we need manual aggregation since we're counting array elements
 	cursor := findAll(disableColl, bson.M{"commands": bson.M{"$exists": true, "$ne": []string{}}})
 	defer func(cursor interface{ Close(context.Context) error }, ctx context.Context) {

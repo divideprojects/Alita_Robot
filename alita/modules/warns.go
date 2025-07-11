@@ -166,7 +166,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         tr.GetString("strings."+m.moduleName+".warn.remove_warn_button"),
+							Text:         tr.GetString("strings." + m.moduleName + ".warn.remove_warn_button"),
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 						{
@@ -181,7 +181,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         tr.GetString("strings."+m.moduleName+".warn.remove_warn_button"),
+							Text:         tr.GetString("strings." + m.moduleName + ".warn.remove_warn_button"),
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 					},

@@ -74,7 +74,7 @@ func GetBlacklistSettings(chatId int64) *BlacklistSettings {
 func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 	// Count chats with non-empty triggers array (active blacklists)
 	_, blacklistChats = CountByChat(blacklistsColl, bson.M{"triggers": bson.M{"$exists": true, "$ne": []string{}}}, "_id")
-	
+
 	// For trigger count, we need manual aggregation since we're counting array elements
 	cursor := findAll(blacklistsColl, bson.M{"triggers": bson.M{"$exists": true, "$ne": []string{}}})
 	defer func(cursor interface{ Close(context.Context) error }, ctx context.Context) {

@@ -182,7 +182,6 @@ func (m moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
 
-
 	// check permission
 	if !chat_status.CanUserChangeInfo(b, ctx, chat, user.Id, false) {
 		return ext.EndGroups
