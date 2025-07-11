@@ -12,6 +12,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/logger"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -29,8 +30,17 @@ func main() {
 	// The function blocks at the end to keep the bot running.
 	// All critical startup errors are logged and cause termination.
 
+	// Load configuration first
+	if err := config.LoadAndSetGlobals(); err != nil {
+		log.Fatal("Failed to load configuration: ", err)
+	}
+
+	// Set up logger based on config
+	cfg := config.Get()
+	logger.Setup(cfg.Debug)
+
 	// logs if bot is running in debug mode or not
-	if config.Debug {
+	if cfg.Debug {
 		log.Info("Running in DEBUG Mode...")
 	} else {
 		log.Info("Running in RELEASE Mode...")
@@ -41,7 +51,7 @@ func main() {
 
 	// create a new bot with default HTTP client (BotOpts doesn't support custom client in this version)
 	// BotToken is loaded from config.
-	b, err := gotgbot.NewBot(config.BotToken, nil)
+	b, err := gotgbot.NewBot(cfg.BotToken, nil)
 	if err != nil {
 		panic("failed to create new bot: " + err.Error())
 	}
@@ -69,9 +79,9 @@ func main() {
 	// start the bot in polling mode
 	err = updater.StartPolling(b,
 		&ext.PollingOpts{
-			DropPendingUpdates: config.DropPendingUpdates,
+			DropPendingUpdates: cfg.DropPendingUpdates,
 			GetUpdatesOpts: &gotgbot.GetUpdatesOpts{
-				AllowedUpdates: config.AllowedUpdates,
+				AllowedUpdates: cfg.AllowedUpdates,
 			},
 		},
 	)
@@ -110,8 +120,8 @@ func main() {
 	)
 
 	// send message to log group
-	_, err = b.SendMessage(config.MessageDump,
-		fmt.Sprintf("<b>Started Bot!</b>\n<b>Mode:</b> %s\n<b>Loaded Modules:</b>\n%s", config.WorkingMode, alita.ListModules()),
+	_, err = b.SendMessage(cfg.MessageDump,
+		fmt.Sprintf("<b>Started Bot!</b>\n<b>Mode:</b> %s\n<b>Loaded Modules:</b>\n%s", cfg.WorkingMode, alita.ListModules()),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 		},
