@@ -628,12 +628,15 @@ strings:
   Rules:
     help_msg: |-
       Varje chatt fungerar med olika regler. Modulen hjälper till att göra reglerna tydligare.
-      *User-kommandon *:
+      *User-kommandon*:
       × /rules: Kontrollera de aktuella chattreglerna.
-      *Admin-kommandon *:
+      *Admin-kommandon*:
       × /setrules "<text>": Ange regler för den här chatten.
       × /privaterules "<yes/no/on/off>": Aktivera / avaktivera om reglerna ska skickas i privat.
       × /resetrules: Återställ chattreglerna till standard
+      × /rulesbtn `<anpassad text>`: Ställer in texten för regelknappen.
+      × /resetrulesbutton: Återställer texten för regelknappen till standard.
+      × /resetrulesbtn: Samma som ovan.
   Tagger:
     help_msg: |-
       Tagger är en viktig funktion för att nämna alla prenumererade medlemmar i gruppen.

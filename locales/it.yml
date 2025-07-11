@@ -628,12 +628,15 @@ strings:
   Rules:
     help_msg: |-
       Ogni chat funziona con regole diverse; questo modulo aiuterà a rendere più chiare quelle regole!
-      *Comandi utente *:
+      *Comandi utente*:
       × /regole: controllare le regole di chat in corso.
-      *Comandi Admin *:
+      *Comandi Admin*:
       × /setrules `<text>`: Imposta le regole per questa conversazione.
       × /privaterules `<yes/no/on/off>`: Abilitare / disabilitare se le regole devono essere inviate in privato.
       × /resetrules: impostare le regole di conversazione su default
+      × /rulesbtn `<testo personalizzato>`: Imposta il testo del pulsante delle regole.
+      × /resetrulesbutton: Reimposta il testo del pulsante delle regole su predefinito.
+      × /resetrulesbtn: Uguale a quanto sopra.
   Tagger:
     help_msg: |-
       Tagger è una caratteristica essenziale per citare tutti i membri sottoscritti nel gruppo.

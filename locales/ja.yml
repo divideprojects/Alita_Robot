@@ -634,6 +634,9 @@ strings:
       × /setrules `<text>`: このチャットのルールを設定してください。
       × /privaterules `<yes/no/on/off>`: ルールをプライベートで送信するかどうかを有効/無効にします。
       × /resetrules: チャット規則をデフォルトにリセットする
+      × /rulesbtn `<カスタムテキスト>`: ルールボタンのテキストを設定します。
+      × /resetrulesbutton: ルールボタンのテキストをデフォルトにリセットします。
+      × /resetrulesbtn: 上記と同じ。
   Tagger:
     help_msg: |-
       タガーはグループ内のすべての登録メンバーを言及するための重要な機能です。

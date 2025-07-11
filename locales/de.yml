@@ -71,19 +71,20 @@ strings:
       err_cannot_demote: |-
         Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Konnte nicht befördern. Ich bin möglicherweise kein Admin, oder der Admin-Status wurde von einem anderen Benutzer ernannt, daher kann ich nicht auf sie einwirken!
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        Du musst mir einen Admin-Titel geben, damit ich ihn setzen kann.
+
     help_msg: |-
-      Mit dem Admin-Modul!
+      Mache es einfach, Benutzer mit dem Admin-Modul zu befördern und herabzustufen!
 
-      *User Commands: *
-      × /adminlist: listen Sie die Admins im aktuellen Chat auf.
+      *Benutzerbefehle:*
+      × /adminlist: Liste die Admins im aktuellen Chat auf.
 
-      *Admin-Befehle: *
-      × /promote `<reply/username/mention/userid>`: Einen Benutzer hochstufen.
+      *Admin-Befehle:*
+      × /promote `<reply/username/mention/userid>`: Einen Benutzer befördern.
       × /demote `<reply/username/mention/userid>`: Einen Benutzer herabstufen.
-      × /title `<reply/username/mention/userid>` `<custom title>`: angepassten Titel für den Benutzer festlegen
+      × /title `<reply/username/mention/userid>` `<custom title>`: Benutzerdefinierten Titel für Benutzer setzen
   Antiflood:
     checkflood:
       perform_action: |-
@@ -550,12 +551,13 @@ strings:
       Sie können uns helfen, Bot in mehr Sprachen zu bringen, indem Sie auf [Crowdin]helfen (https: //crowdin.com/project/alita_robot)
   Misc:
     help_msg: |-
-      × /info: Get your user info, can be used as reply or by passing a User Id or Username
-      × /id: Get the current group id. If used by replying to a message, get that user's id.
-      × /ping: Ping the Telegram Server!
-      × /paste: Paste texts at nekobin Server!
-      × /tr <lang code> <msg/reply to message>: Translate the message.
-      × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
+      × /info: Holen Sie sich Ihre Benutzerinformationen, kann als Antwort oder durch Übergabe einer Benutzer-ID oder eines Benutzernamens verwendet werden
+      × /id: Holen Sie sich die aktuelle Gruppen-ID. Wenn Sie auf eine Nachricht antworten, erhalten Sie die ID dieses Benutzers.
+      × /ping: Ping den Telegram-Server!
+      × /paste: Texte am nekobin-Server einfügen!
+      × /tr <lang code> <msg/reply to message>: Die Nachricht übersetzen.
+      × /removebotkeyboard: Entfernt die festsitzende Bot-Tastatur aus Ihrem Chat.
+      × /stat: Erhalten Sie die Anzahl der Gesamtnachrichten im Chat.
   Mutes:
     help_msg: |-
       Manchmal können Benutzer lästig sein, und Sie möchten sie möglicherweise darauf beschränken, Nachrichten zum Chatten zu senden. Dieses Modul ist hier, um zu helfen. Sie können das Modul 'ths' verwenden, um Mitglieder in Ihrer Gruppe zu stumm zu machen.
@@ -627,12 +629,15 @@ strings:
   Rules:
     help_msg: |-
       Jeder Chat funktioniert mit verschiedenen Regeln; dieses Modul hilft Ihnen, diese Regeln klarer zu machen!
-      *User Befehle *:
+      *Benutzerbefehle*:
       × /rules: Überprüfen Sie die aktuellen Chat-Regeln.
-      *Admin-Befehle *:
+      *Admin-Befehle*:
       × /setrules `<text>`: Legen Sie die Regeln für diesen Chat fest.
       × /privaterules `<yes/no/on/off>`: Aktivieren/Deaktivieren, ob die Regeln im privaten Bereich gesendet werden sollen.
-      × /resetrules: Die Chatregeln auf default zurücksetzen
+      × /resetrules: Die Chatregeln auf Standard zurücksetzen
+      × /rulesbtn `<custom text>`: Setzt den Text des Regeln-Buttons.
+      × /resetrulesbutton: Setzt den Text des Regeln-Buttons auf Standard zurück.
+      × /resetrulesbtn: Dasselbe wie oben.
   Tagger:
     help_msg: |-
       Tagger ist ein wesentliches Merkmal, um alle gezeichneten Mitglieder in der Gruppe zu erwähnen.

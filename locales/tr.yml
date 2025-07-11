@@ -629,12 +629,15 @@ strings:
   Rules:
     help_msg: |-
       Her sohbet farklı kurallarla çalışır; bu modül bu kuralları daha net hale getirecektir!
-      *Kullanıcı komutları *:
+      *Kullanıcı komutları*:
       × /kurallar: Geçerli sohbet kurallarını kontrol edin.
-      *Admin komutları *:
+      *Admin komutları*:
       × /setrles `<text>`: Bu sohbete ilişkin kuralları ayarlayın.
       × /privaterules `<yes/no/on/off>`: Kuralların özel olarak gönderilip gönderilmeyeceğini etkinleştirin/devre dışı bırakın.
       × /resetrales: Sohbet kurallarını varsayılan olarak sıfırla
+      × /rulesbtn `<özel metin>`: Kurallar düğmesinin metnini ayarlar.
+      × /resetrulesbutton: Kurallar düğmesinin metnini varsayılana sıfırlar.
+      × /resetrulesbtn: Yukarıdakiyle aynı.
   Tagger:
     help_msg: |-
       Tagger, gruptaki tüm abone olunan üyelerde söz etmek için önemli bir özelliğidir.

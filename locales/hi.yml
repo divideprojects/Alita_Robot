@@ -627,13 +627,16 @@ strings:
       *NOTE:* Neither of these will get triggered if used by admins.
   Rules:
     help_msg: |-
-      Every chat works with different rules; this module will help make those rules clearer!
-      *User commands*:
-      × /rules: Check the current chat rules.
-      *Admin commands*:
-      × /setrules `<text>`: Set the rules for this chat.
-      × /privaterules `<yes/no/on/off>`: Enable/disable whether the rules should be sent in private.
-      × /resetrules: Reset the chat rules to default
+      हर चैट अलग नियमों के साथ काम करता है; यह मॉड्यूल उन नियमों को स्पष्ट बनाने में मदद करेगा!
+      *उपयोगकर्ता कमांड*:
+      × /rules: वर्तमान चैट नियम जांचें।
+      *व्यवस्थापक कमांड*:
+      × /setrules `<text>`: इस चैट के लिए नियम सेट करें।
+      × /privaterules `<yes/no/on/off>`: सक्षम/अक्षम करें कि नियम निजी तौर पर भेजे जाएं या नहीं।
+      × /resetrules: चैट नियमों को डिफ़ॉल्ट पर रीसेट करें
+      × /rulesbtn `<कस्टम टेक्स्ट>`: नियम बटन का टेक्स्ट सेट करता है।
+      × /resetrulesbutton: नियम बटन के टेक्स्ट को डिफ़ॉल्ट पर रीसेट करता है।
+      × /resetrulesbtn: ऊपर के समान।
   Tagger:
     help_msg: |-
       Tagger is an essential feature to mention all subscribed members in the group.

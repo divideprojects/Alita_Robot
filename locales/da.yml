@@ -627,12 +627,15 @@ strings:
   Rules:
     help_msg: |-
       Hver chat fungerer med forskellige regler. Dette modul vil hjælpe med at gøre disse regler klarere!
-      *Brugerkommandoer *:
+      *Brugerkommandoer*:
       × /rules: Kontrollér de aktuelle chatregler.
-      *Admin-kommandoer *:
+      *Admin-kommandoer*:
       × /setrules `<text>": Angiv reglerne for denne chat.
       × /privaterules "<yes/no/on/off>": Aktivér / deaktivér, om reglerne skal sendes i enrum.
       × /resetrules: Nulstil chatreglerne til standard
+      × /rulesbtn `<brugerdefineret tekst>`: Angiver teksten på regelknappen.
+      × /resetrulesbutton: Nulstiller teksten på regelknappen til standard.
+      × /resetrulesbtn: Samme som ovenstående.
   Tagger:
     help_msg: |-
       Tagger is an essential feature to mention all subscribed members in the group.

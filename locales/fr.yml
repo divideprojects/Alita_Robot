@@ -628,12 +628,15 @@ strings:
   Rules:
     help_msg: |-
       Chaque chat fonctionne avec des règles différentes ; ce module vous aidera à rendre ces règles plus claires !
-      *Commandes utilisateur *:
+      *Commandes utilisateur*:
       × /rules: Vérifiez les règles de discussion en cours.
-      *Commandes d'administration *:
+      *Commandes d'administration*:
       × /setrules `<text>`: Définissez les règles pour cette discussion.
       × /privaterules `<yes/no/on/off>`: Activer / désactiver si les règles doivent être envoyées en privé.
       × /resetrules: Réinitialiser les règles de discussion par défaut
+      × /rulesbtn `<custom text>`: Définit le texte du bouton des règles.
+      × /resetrulesbutton: Remet le texte du bouton des règles par défaut.
+      × /resetrulesbtn: Identique à ce qui précède.
   Tagger:
     help_msg: |-
       Tagger est un élément essentiel pour mentionner tous les membres abonnés du groupe.

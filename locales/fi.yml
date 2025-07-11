@@ -639,6 +639,9 @@ strings:
       × /setrules "<teksti>": Aseta tämän keskustelun säännöt.
       × /privaterules "<yes/no/on/off>": Ota käyttöön/poista käytöstä, lähetetäänkö säännöt yksityisesti.
       × /resetrules: Palauta säännöt oletusarvoon.
+      × /rulesbtn "<mukautettu teksti>": Asettaa sääntöpainikkeen tekstin.
+      × /resetrulesbutton: Palauttaa sääntöpainikkeen tekstin oletusarvoon.
+      × /resetrulesbtn: Sama kuin yllä.
   Tagger:
     help_msg: |-
       Tagger on olennainen ominaisuus mainita kaikki tilatut jäsenet ryhmässä.

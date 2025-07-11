@@ -630,12 +630,15 @@ strings:
   Rules:
     help_msg: |-
       Elke chat werkt met verschillende regels; deze module zal helpen om deze regels duidelijker te maken!
-      *Gebruikersopdrachten *:
+      *Gebruikersopdrachten*:
       × /rules: Controleer de huidige chat-regels.
-      *Beheeropdrachten *:
+      *Beheeropdrachten*:
       × /setrules `<text>`: De regels voor deze chat instellen.
       × /privaterulen "<yes/no/on/off>": Inschakelen/uitschakelen van het verzenden van de regels onder persoonlijk.
       × /resetregels: De chatregels herstellen als standaard
+      × /rulesbtn `<aangepaste tekst>`: Stelt de tekst van de regelknop in.
+      × /resetrulesbutton: Herstelt de tekst van de regelknop naar standaard.
+      × /resetrulesbtn: Hetzelfde als hierboven.
   Tagger:
     help_msg: |-
       Tagger is een essentieel kenmerk om alle leden van de groep te vermelden.

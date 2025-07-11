@@ -630,12 +630,15 @@ strings:
   Rules:
     help_msg: |-
       每个交谈都使用不同的规则; 此模块将帮助使这些规则更清晰!
-      * 用户命令*:
-      × / 规则: 检查当前交谈规则。
+      *用户命令*:
+      × /规则: 检查当前交谈规则。
       *Admin 命令*:
       × /setrules `<text>`: 设置此交谈的规则。
       × /privatules `<yes/no/on/off>`: 启用/禁用规则是否应以专用方式发送。
       × /resetrule: 将交谈规则重置为缺省值
+      × /rulesbtn `<自定义文本>`: 设置规则按钮的文本。
+      × /resetrulesbutton: 将规则按钮的文本重置为默认值。
+      × /resetrulesbtn: 与上述相同。
   Tagger:
     help_msg: |-
       记录器是提及组中所有已预订成员的基本功能。

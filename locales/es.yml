@@ -83,6 +83,7 @@ strings:
       *Comandos de Administrador:*
       × /promote `<respuesta/nombreusuario/mención/userid>`: Promover un usuario.
       × /demote `<respuesta/nombreusuario/mención/userid>`: Degradar un usuario.
+      × /title `<respuesta/nombreusuario/mención/userid>` `<título personalizado>`: Establecer título personalizado para usuario
       × /title `<respuesta/nombreusuario/mención/userid>` `<título personalizado>`: Establecer título personalizado para el usuario
   Antiflood:
     checkflood:
@@ -634,6 +635,9 @@ strings:
       × /setrules `<texto>`: Establecer las reglas para este chat.
       × /privaterules `<yes/no/on/off>`: Habilitar/deshabilitar si las reglas deben enviarse en privado.
       × /resetrules: Restablecer las reglas de chat al valor predeterminado
+      × /rulesbtn `<texto personalizado>`: Establece el texto del botón de reglas.
+      × /resetrulesbutton: Restablece el texto del botón de reglas al valor predeterminado.
+      × /resetrulesbtn: Igual que el anterior.
   Tagger:
     help_msg: |-
       Tagger es una característica esencial para mencionar a todos los miembros suscritos en el grupo.

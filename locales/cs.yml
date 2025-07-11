@@ -627,12 +627,15 @@ strings:
   Rules:
     help_msg: |-
       Každá konverzace pracuje s různými pravidly; tento modul vám pomůže učinit tato pravidla jasnější!
-      *Uživatelské příkazy *:
+      *Uživatelské příkazy*:
       × /rules: Zkontrolujte aktuální pravidla konverzace.
-      *Admin commands *:
+      *Admin commands*:
       × /setrules `<text>`: Nastavte pravidla pro tuto konverzaci.
       × /privaterules `<yes/no/on/off>`: Povolí/zakáže, zda by měla být pravidla odesílána v soukromých.
       × /resetrules: Resetování pravidel pro konverzaci na výchozí hodnotu
+      × /rulesbtn `<vlastní text>`: Nastaví text tlačítka pravidel.
+      × /resetrulesbutton: Obnoví text tlačítka pravidel na výchozí.
+      × /resetrulesbtn: Stejné jako výše.
   Tagger:
     help_msg: |-
       Tagger is an essential feature to mention all subscribed members in the group.

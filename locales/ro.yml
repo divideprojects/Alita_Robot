@@ -634,6 +634,9 @@ strings:
       × /setrules `<text>`: Setați regulile pentru acest chat.
       × /privaterules `<yes/no/on/off>`: Activați/dezactivați dacă regulile ar trebui trimise în privat.
       × /resetrules: Resetați regulile de chat la valoarea implicită
+      × /rulesbtn `<text personalizat>`: Setează textul butonului de reguli.
+      × /resetrulesbutton: Resetează textul butonului de reguli la valoarea implicită.
+      × /resetrulesbtn: La fel ca mai sus.
   Tagger:
     help_msg: |-
       Tagger este o caracteristică esențială pentru a menționa toți membrii abonați din grup.

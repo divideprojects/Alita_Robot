@@ -628,12 +628,15 @@ strings:
   Rules:
     help_msg: |-
       Każdy czat działa z różnymi regułami; ten moduł pomoże w tym, aby te zasady były jaśniejsze!
-      *Polecenia użytkownika *:
+      *Polecenia użytkownika*:
       × /rules: Sprawdź aktualne zasady rozmowy sieciowej.
-      *Polecenia administratorów *:
+      *Polecenia administratorów*:
       × /setrules `<text>`: ustaw reguły dla tej rozmowy sieciowej.
       × /privaterules `<yes/no/on/off>`: Włączenie/wyłączenie tego, czy reguły powinny być wysyłane w prywatnych.
       × /resetrules: Resetowanie reguł rozmowy sieciowej do wartości domyślnych
+      × /rulesbtn `<niestandardowy tekst>`: Ustawia tekst przycisku reguł.
+      × /resetrulesbutton: Resetuje tekst przycisku reguł do domyślnego.
+      × /resetrulesbtn: Tak samo jak powyżej.
   Tagger:
     help_msg: |-
       Program Tgger jest niezbędnym elementem, aby wspomnieć o wszystkich subskrybowanych elementach w grupie.
