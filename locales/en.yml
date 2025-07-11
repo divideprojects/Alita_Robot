@@ -42,6 +42,8 @@ strings:
     buttons:
       'true': 'Yes'
       'false': 'No'
+      'yes': Yes
+      'no': No
       back: Back
       back_arrow: « Back
       back_arrow_left: ⬅ Back

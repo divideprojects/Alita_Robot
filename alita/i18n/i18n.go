@@ -41,10 +41,26 @@ func (goloc I18n) GetString(key string) string {
 	vi := viper.New()
 	vi.SetConfigType("yaml")
 	vi.ReadConfig(bytes.NewBuffer(localeMap[goloc.LangCode]))
-	text := vi.GetString(key)
 
-	// if the language code is not available, return the default
-	if text == "<nil>" {
+	// helper to read a key and determine if value exists
+	read := func(k string) string {
+		val := vi.GetString(k)
+		if val == "<nil>" {
+			val = ""
+		}
+		return val
+	}
+
+	// 1) try the key as-is
+	text := read(key)
+
+	// 2) if not found and missing global prefix, try with "strings." prefix
+	if text == "" && !strings.HasPrefix(key, "strings.") {
+		text = read("strings." + key)
+	}
+
+	// 3) fallback to default language, if we are not already on default
+	if text == "" && goloc.LangCode != defaultLangCode {
 		return I18n{LangCode: defaultLangCode}.GetString(key)
 	}
 
@@ -57,10 +73,18 @@ func (goloc I18n) GetStringSlice(key string) []string {
 	vi := viper.New()
 	vi.SetConfigType("yaml")
 	vi.ReadConfig(bytes.NewBuffer(localeMap[goloc.LangCode]))
-	text := vi.GetStringSlice(key)
 
-	// if the language code is not available, return the default
-	if len(text) == 0 {
+	read := func(k string) []string {
+		return vi.GetStringSlice(k)
+	}
+
+	text := read(key)
+
+	if len(text) == 0 && !strings.HasPrefix(key, "strings.") {
+		text = read("strings." + key)
+	}
+
+	if len(text) == 0 && goloc.LangCode != defaultLangCode {
 		return I18n{LangCode: defaultLangCode}.GetStringSlice(key)
 	}
 
