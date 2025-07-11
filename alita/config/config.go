@@ -276,15 +276,13 @@ func getBool(key string, defaultValue bool) bool {
 	}
 }
 
-
-
 // getStringSlice parses a comma-separated string into a slice
 func getStringSlice(key string, defaultValue []string) []string {
 	value := os.Getenv(key)
 	if value == "" {
 		return defaultValue
 	}
-	
+
 	parts := strings.Split(value, ",")
 	result := make([]string, 0, len(parts))
 	for _, part := range parts {
@@ -292,7 +290,7 @@ func getStringSlice(key string, defaultValue []string) []string {
 			result = append(result, trimmed)
 		}
 	}
-	
+
 	if len(result) == 0 {
 		return defaultValue
 	}
