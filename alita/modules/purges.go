@@ -71,7 +71,7 @@ func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, 
 }
 
 func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	user := ctx.EffectiveSender.User
 
 	// Permission checks

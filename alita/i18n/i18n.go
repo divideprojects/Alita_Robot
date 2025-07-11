@@ -424,15 +424,3 @@ func GetStringSlice(langCode, key string) []string {
 func HasKey(langCode, key string) bool {
 	return New(langCode).HasKey(key)
 }
-
-// GetCompatLocaleMap returns the compatibility locale map for old code that might access it directly.
-// Deprecated: This is for backwards compatibility only.
-func GetCompatLocaleMap() map[string][]byte {
-	localeMu.RLock()
-	defer localeMu.RUnlock()
-
-	result := make(map[string][]byte)
-	// We can't easily convert back to raw bytes, so return empty map
-	// Old code should be updated to use the new API
-	return result
-}

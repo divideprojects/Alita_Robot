@@ -148,7 +148,7 @@ func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	switch query.Data {
 	case "unpinallbtn(yes)":
@@ -177,7 +177,7 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 Can only be used by owner to unpin all message in a chat. */
 
 func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	user := ctx.EffectiveSender.User
 
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -310,7 +310,7 @@ Normally pins message without tagging users but tag can be
 enabled by entering 'notify'/'violent'/'loud' in front of command */
 
 func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	isSilent := true
@@ -377,7 +377,7 @@ connection - true, true
 Sets Preference for checkPinned function to check message for unpinning or not
 */
 func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -451,7 +451,7 @@ connection - true, true
 Sets Preference for checkPinned function to check message for cleaning or not
 */
 func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)

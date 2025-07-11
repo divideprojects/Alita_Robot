@@ -29,7 +29,7 @@ var reportsModule = moduleStruct{
 }
 
 func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage

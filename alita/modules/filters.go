@@ -51,7 +51,7 @@ Only admins can add new filters. Handles filter limits, overwriting, and input v
 Connection: true, true
 */
 func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
@@ -170,7 +170,7 @@ Only admins can remove filters. Handles input validation and replies with the re
 Connection: true, true
 */
 func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
 	if connectedChat == nil {
@@ -230,7 +230,7 @@ Connection: false, true
 */
 func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "filters") {
 		return ext.EndGroups
@@ -293,7 +293,7 @@ rmAllFilters removes all filters from the current chat.
 Only the chat owner can use this command to clear all filters.
 */
 func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage

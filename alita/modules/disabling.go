@@ -50,7 +50,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 	args := ctx.Args()[1:]
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	if len(args) >= 1 {
 		toDisable := make([]string, 0)
@@ -200,7 +200,7 @@ Only admins can use this command. If no argument is given, replies with the curr
 Connection: true, true
 */
 func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -265,7 +265,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 	args := ctx.Args()[1:]
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	if len(args) >= 1 {
 		toEnable := make([]string, 0)

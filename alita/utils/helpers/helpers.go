@@ -253,7 +253,7 @@ Returns the connected chat or nil if requirements are not met.
 func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool) (chat *gotgbot.Chat) {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveUser
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	if ctx.Update.Message.Chat.Type == "private" {
 		conn := db.Connection(user.Id)

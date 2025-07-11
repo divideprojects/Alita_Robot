@@ -44,7 +44,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -69,7 +69,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if msg.ReplyToMessage == nil {
-		tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+		tr := i18n.New(db.GetLanguage(ctx))
 		_, _ = msg.Reply(b, tr.GetString("strings.CommonStrings.errors.no_reply"), nil)
 		return ext.EndGroups
 	}
@@ -169,7 +169,7 @@ Checks permissions, extracts the target user, and kicks them. Handles edge cases
 func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// Use helper for permission checks, user extraction, and protection validation
 	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, true)
@@ -237,7 +237,7 @@ func (m moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -285,7 +285,7 @@ Performs permission checks, extracts the target user and ban duration, and bans 
 func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// Use helper for permission checks, user extraction, and protection validation
 	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, false)
@@ -360,7 +360,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	var text string
 	var sendMsgOptns *gotgbot.SendMessageOpts
 
@@ -519,7 +519,7 @@ Checks permissions, extracts the target user, deletes their message, and bans th
 func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// Create permission config that also requires delete permissions
 	banWithDeletePerms := permissions.CommonRestrictionPerms
@@ -601,7 +601,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	var text string
 
 	// Permission checks
@@ -695,7 +695,7 @@ func (m moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, chat, false) {
@@ -780,7 +780,7 @@ func (m moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) er
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permissions check
 	if !chat_status.CanUserRestrict(b, ctx, chat, user.Id, false) {
@@ -887,7 +887,7 @@ func (m moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, chat, false) {
@@ -972,7 +972,7 @@ func (m moduleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := query.Message
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permissions check
 	if !chat_status.CanUserRestrict(b, ctx, chat, user.Id, false) {

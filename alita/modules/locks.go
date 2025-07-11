@@ -343,7 +343,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	mem := ctx.ChatMember.NewChatMember.MergeChatMember().User
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// don't work on admins and approved users
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {

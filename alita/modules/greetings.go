@@ -36,7 +36,7 @@ Admins can view current settings, toggle welcoming on/off, or display the curren
 */
 func (m moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -110,7 +110,7 @@ Admins can set the message content, type, and buttons. Handles input validation 
 */
 func (m moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -152,7 +152,7 @@ Admins can use this to remove any custom welcome message.
 */
 func (m moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -183,7 +183,7 @@ Admins can view current settings, toggle goodbyes on/off, or display the current
 */
 func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -258,7 +258,7 @@ Admins can set the message content, type, and buttons. Handles input validation 
 */
 func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -298,7 +298,7 @@ Admins can use this to remove any custom goodbye message.
 */
 func (moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -332,7 +332,7 @@ Admins can enable or disable automatic deletion of old welcome messages.
 */
 func (moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -388,7 +388,7 @@ Admins can enable or disable automatic deletion of old goodbye messages.
 */
 func (moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	args := ctx.Args()[1:]
 	var err error
 	// connection status
@@ -444,7 +444,7 @@ Admins can enable or disable automatic deletion of join messages.
 */
 func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	args := ctx.Args()[1:]
 	var err error
 	// connection status
@@ -734,7 +734,7 @@ Admins can enable or disable automatic approval of new join requests.
 */
 func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	args := ctx.Args()[1:]
 	var err error
 	// connection status

@@ -80,7 +80,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permissions check
 	if chat_status.IsUserAdmin(b, chat.Id, userId) {
@@ -305,7 +305,7 @@ func (moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -464,7 +464,7 @@ func (moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -511,7 +511,7 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat

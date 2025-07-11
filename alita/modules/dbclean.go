@@ -66,7 +66,7 @@ func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 	memStatus := db.GetTeamMemInfo(user.Id)
 	cfg := config.Get()
 
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	// permissions check
 	// only dev can access this
 	if user.Id != cfg.OwnerId && !memStatus.Dev {

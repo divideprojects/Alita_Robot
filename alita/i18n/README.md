@@ -244,33 +244,6 @@ go test -bench=. ./alita/i18n/
 // BenchmarkConcurrentGetString-8     	10000000	  150 ns/op	   0 B/op	  0 allocs/op
 ```
 
-## Migration from Old API
-
-The new implementation maintains backward compatibility:
-
-```go
-// Old usage (still works)
-tr := i18n.I18n{LangCode: "en"}
-text := tr.GetString("key")
-
-// New recommended usage
-tr := i18n.New("en")
-text := tr.GetString("key")
-```
-
-However, the old global `localeMap` variable is no longer available. Use the new API methods instead:
-
-```go
-// Old (deprecated)
-// rawBytes := localeMap[langCode]
-
-// New
-languages := i18n.GetAvailableLanguages()
-if i18n.IsLanguageAvailable(langCode) {
-    // Language is available
-}
-```
-
 ## Testing
 
 The package includes comprehensive tests covering:

@@ -30,7 +30,7 @@ markdownHelp provides markdown and formatting help to users.
 Displays help in private chat or via a button in group chats, with a keyboard for navigation.
 */
 func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 
 	// Check of group or pm
@@ -129,7 +129,7 @@ getMarkdownHelp returns the help text for a given formatting sub-module.
 Supports markdown formatting, fillings, and random content.
 */
 func (moduleStruct) getMarkdownHelp(module string, ctx *ext.Context) string {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	var helpTxt string
 	switch module {
 	case "md_formatting":
@@ -148,7 +148,7 @@ formattingHandler handles callback queries for formatting help sub-modules.
 Edits the help message to display the selected formatting topic.
 */
 func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	query := ctx.Update.CallbackQuery
 	msg := query.Message
 

@@ -167,7 +167,7 @@ Only accessible by the owner or devs. Takes the chat ID as an argument.
 func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	cfg := config.Get()
 
 	// only devs and owner can access this

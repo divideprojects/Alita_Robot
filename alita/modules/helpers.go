@@ -102,7 +102,7 @@ func initHelpButtons() {
 func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgbot.InlineKeyboardMarkup) {
 	ModName := cases.Title(language.English).String(module)
 	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) +
-		i18n.I18n{LangCode: lang}.GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
+		i18n.New(lang).GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
 
 	replyMarkup = gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: append(
@@ -144,7 +144,7 @@ func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.M
 
 func getModuleNameFromAltName(altName string) string {
 	for _, modName := range listModules() {
-		altNames := append(i18n.I18n{LangCode: "config"}.GetStringSlice(fmt.Sprintf("alt_names.%s", modName)), strings.ToLower(modName))
+		altNames := append(i18n.New("config").GetStringSlice(fmt.Sprintf("alt_names.%s", modName)), strings.ToLower(modName))
 		for _, altNameInSlice := range altNames {
 			if altNameInSlice == altName {
 				return modName
@@ -157,7 +157,7 @@ func getModuleNameFromAltName(altName string) string {
 func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User, arg string) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	if strings.HasPrefix(arg, "help_") {
 		helpModule := strings.Split(arg, "_")[1]
@@ -294,7 +294,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 }
 
 func getAltNamesOfModule(moduleName string) []string {
-	return append(i18n.I18n{LangCode: "config"}.GetStringSlice(fmt.Sprintf("alt_names.%s", moduleName)), strings.ToLower(moduleName))
+	return append(i18n.New("config").GetStringSlice(fmt.Sprintf("alt_names.%s", moduleName)), strings.ToLower(moduleName))
 }
 
 func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbmarkup gotgbot.InlineKeyboardMarkup, _parsemode string) {

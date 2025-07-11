@@ -31,7 +31,7 @@ import (
 var miscModule = moduleStruct{moduleName: "Misc"}
 
 func (moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 
@@ -168,7 +168,7 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
 
@@ -275,7 +275,7 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "ping") {
@@ -292,7 +292,7 @@ func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	sender := ctx.EffectiveSender
 	userId := extraction.ExtractUser(b, ctx)
@@ -364,7 +364,7 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 
@@ -437,7 +437,7 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 
 // This function removes the stuck bot keyboard from your chat!
 func (moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	rMsg, err := msg.Reply(b,
 		tr.GetString("strings.Misc.keyboard.removing"),
@@ -463,7 +463,7 @@ func (moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	if !chat_status.RequireGroup(b, ctx, chat, false) {

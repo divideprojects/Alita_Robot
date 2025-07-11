@@ -41,7 +41,7 @@ Displays connection status and provides a keyboard for user/admin commands.
 func (m moduleStruct) connection(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permission checks
 	if !chat_status.RequirePrivate(b, ctx, nil, false) {
@@ -93,7 +93,7 @@ func (m moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	var text string
 
@@ -148,7 +148,7 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	var text string
 	var replyMarkup gotgbot.ReplyMarkup
 
@@ -208,7 +208,7 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 	query := ctx.Update.CallbackQuery
 	user := query.From
 	msg := query.Message
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	args := strings.Split(query.Data, ".")
 	userType := args[1]
@@ -286,7 +286,7 @@ Can only be used in private messages. Updates the database and replies with the 
 func (m moduleStruct) disconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	var text string
 
@@ -324,7 +324,7 @@ Returns the chat ID if connected, otherwise replies with a message and returns 0
 */
 func (m moduleStruct) isConnected(b *gotgbot.Bot, ctx *ext.Context, userId int64) int64 {
 	conn := db.Connection(userId)
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	if conn.Connected {
 		return conn.ChatId
@@ -350,7 +350,7 @@ Handles both user and admin contexts, checks permissions, and updates the connec
 */
 func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	var (
 		connKeyboard gotgbot.InlineKeyboardMarkup
 		text         string

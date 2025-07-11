@@ -116,7 +116,7 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	qmsg := query.Message
 
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	data := strings.Split(query.Data, ".")
 	chatId, _ := strconv.ParseInt(data[1], 10, 64)

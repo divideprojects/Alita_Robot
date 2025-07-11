@@ -46,7 +46,7 @@ func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permission checks
 	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
@@ -107,7 +107,7 @@ Connection: true, true
 func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// Use helper for permission checks and user extraction
 	userId, _, ok := permissions.PerformCommonPromotionChecks(b, ctx, permissions.CommonPromotionPerms)
@@ -205,7 +205,7 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	extraText := ""
 
@@ -343,7 +343,7 @@ func (moduleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
 	if !chat_status.Caninvite(b, ctx, nil, msg, false) {
 		return ext.EndGroups
 	}
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	if chat.Username != "" {
 		_, _ = msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Admin.here_is_the_invite_link_of_this_chat_percent"), chat.Username), nil)
 	} else {
@@ -370,7 +370,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -491,7 +491,7 @@ func (m moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()
 
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	var text string
 
 	// permission checks
@@ -556,7 +556,7 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	var err error
 
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	debug_bot.PrettyPrintStruct(tr)
 
 	// permission checks
