@@ -1,0 +1,10 @@
+main:
+  language_name: "Broken"
+  language_flag: "🚫"
+
+strings:
+  test:
+    key: "Broken YAML
+  # Missing closing quote above
+  invalid: [unclosed array
+  another: }invalid syntax{ 

@@ -1,0 +1,13 @@
+main:
+  language_name: "Español"
+  language_flag: "🇪🇸"
+
+strings:
+  test:
+    key: "Valor de Prueba"
+    list:
+      - "Elemento 1"
+      - "Elemento 2"
+      - "Elemento 3"
+  welcome:
+    message: "¡Bienvenido a la prueba!"

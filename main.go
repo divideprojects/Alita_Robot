@@ -47,7 +47,9 @@ func main() {
 	}
 
 	// Load Locales
-	i18n.LoadLocaleFiles(&Locales, "locales")
+	if err := i18n.LoadLocaleFiles(&Locales, "locales"); err != nil {
+		log.Fatal("Failed to load locales: ", err)
+	}
 
 	// create a new bot with default HTTP client (BotOpts doesn't support custom client in this version)
 	// BotToken is loaded from config.

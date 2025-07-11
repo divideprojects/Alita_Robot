@@ -463,9 +463,10 @@ GetLangFormat returns the formatted language name and flag for a given language 
 Combines the language name and flag emoji for display.
 */
 func GetLangFormat(langCode string) string {
-	return i18n.I18n{LangCode: langCode}.GetString("main.language_name") +
+	tr := i18n.New(langCode)
+	return tr.GetString("main.language_name") +
 		" " +
-		i18n.I18n{LangCode: langCode}.GetString("main.language_flag")
+		tr.GetString("main.language_flag")
 }
 
 // NOTE: nekobin helper functions
