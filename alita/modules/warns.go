@@ -11,6 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
@@ -23,7 +24,7 @@ import (
 
 var warnsModule = moduleStruct{moduleName: "Warns"}
 
-func (moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -71,7 +72,7 @@ func (moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64, reason, warnType string) (err error) {
+func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64, reason, warnType string) (err error) {
 	var (
 		reply    string
 		keyboard gotgbot.InlineKeyboardMarkup
@@ -79,10 +80,11 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// permissions check
 	if chat_status.IsUserAdmin(b, chat.Id, userId) {
-		_, err = msg.Reply(b, "I'm not going to warn an admin!", nil)
+		_, err = msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.warn_admin"), nil)
 		return err
 	}
 
@@ -116,7 +118,7 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 		switch warnrc.WarnMode {
 		case "kick":
 			_, err = chat.BanMember(b, userId, nil)
-			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been kicked!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
+			reply = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".warn.limit_kick"), numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: kick (%d) - %s", userId, err)
 				return err
@@ -141,14 +143,14 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				},
 				nil,
 			)
-			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been Muted!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
+			reply = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".warn.limit_mute"), numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: mute (%d) - %s", userId, err)
 				return err
 			}
 		case "ban":
 			_, err = chat.BanMember(b, userId, nil)
-			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been banned!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
+			reply = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".warn.limit_ban"), numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: ban (%d) - %s", userId, err)
 				return err
@@ -164,11 +166,11 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "❌ Remove warn",
+							Text:         tr.GetString("strings."+m.moduleName+".warn.remove_warn_button"),
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 						{
-							Text: "Rules 📝",
+							Text: tr.GetString("strings.CommonStrings.buttons.rules_button"),
 							Url:  fmt.Sprintf("t.me/%s?start=rules_%d", b.Username, chat.Id),
 						},
 					},
@@ -179,7 +181,7 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "❌ Remove warn",
+							Text:         tr.GetString("strings."+m.moduleName+".warn.remove_warn_button"),
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 					},
@@ -187,10 +189,10 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 			}
 		}
 
-		reply = fmt.Sprintf("User %s has %d/%d warnings; be careful!", helpers.MentionHtml(u.Id, u.FirstName), numWarns, warnrc.WarnLimit)
+		reply = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".warn.success"), helpers.MentionHtml(u.Id, u.FirstName), numWarns, warnrc.WarnLimit)
 
 		if reason != "" {
-			reply += fmt.Sprintf("\n<b>Reason</b>:\n%s", html.EscapeString(reason))
+			reply += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".warn.reason"), html.EscapeString(reason))
 		}
 	}
 	_, err = b.SendMessage(chat.Id, reply,
@@ -271,7 +273,7 @@ func (m moduleStruct) dWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	return m.warnThisUser(b, ctx, warnusr, reason, "dwarn")
 }
 
-func (moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -302,7 +304,8 @@ func (moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -315,14 +318,14 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		userId = ctx.EffectiveUser.Id
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		_, err := msg.Reply(b, tr.GetString("Warns.errors.anon_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.no_user_specified"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -350,7 +353,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			}
 		} else {
-			_, err := msg.Reply(b, fmt.Sprintf("User has %d/%d warnings, but no reasons for any of them.",
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Warns.warns.list_no_reasons"),
 				numWarns, warnrc.WarnLimit), nil)
 			if err != nil {
 				log.Error(err)
@@ -358,7 +361,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(b, "This user hasn't got any warnings!", nil)
+		_, err := msg.Reply(b, tr.GetString("Warns.warns.no_warns"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -367,7 +370,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
@@ -413,7 +416,7 @@ func (moduleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -460,7 +463,8 @@ func (moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -480,14 +484,14 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		_, err := msg.Reply(b, tr.GetString("Warns.errors.anon_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.no_user_specified"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -497,7 +501,7 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.ResetUserWarns(userId, chat.Id)
-	_, err := msg.Reply(b, "Warnings have been reset!", helpers.Shtml())
+	_, err := msg.Reply(b, tr.GetString("Warns.reset.success"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -506,7 +510,8 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -521,18 +526,18 @@ func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	warnrc := db.GetAllChatWarns(chat.Id)
 	if warnrc == 0 {
-		_, err := msg.Reply(b, "No users are warned in this chat!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Warns.reset_all.no_warns"), helpers.Shtml())
 		return err
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, chat, user.Id, false) {
-		_, err := msg.Reply(b, "Are you sure you want to remove all the warns of all the users in this chat?",
+		_, err := msg.Reply(b, tr.GetString("Warns.reset_all.confirm"),
 			&gotgbot.SendMessageOpts{
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
-							{Text: "Yes", CallbackData: "rmAllChatWarns.yes"},
-							{Text: "No", CallbackData: "rmAllChatWarns.no"},
+							{Text: tr.GetString("strings.CommonStrings.buttons.yes"), CallbackData: "rmAllChatWarns.yes"},
+							{Text: tr.GetString("strings.CommonStrings.buttons.no"), CallbackData: "rmAllChatWarns.no"},
 						},
 					},
 				},
@@ -547,7 +552,7 @@ func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 

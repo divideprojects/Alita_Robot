@@ -16,6 +16,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
 var (
@@ -23,7 +25,7 @@ var (
 	delMsgs      = map[int64]int64{}
 )
 
-func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
+func (m moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
 	if !pFrom {
 		_, err := bot.DeleteMessage(chat.Id, msgId, nil)
 		if err != nil {
@@ -69,6 +71,7 @@ func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, 
 }
 
 func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
+    tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	user := ctx.EffectiveSender.User
 
 	// Permission checks
@@ -127,7 +130,7 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to select where to start purging from.", nil)
+		_, err := msg.Reply(bot, tr.GetString("strings.Purges.reply_to_a_message_to_select_where_to_start_purging_from"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -137,7 +140,7 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	// Permission checks
@@ -161,7 +164,7 @@ func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(bot, "Reply to a message to delete it!", nil)
+		_, err := msg.Reply(bot, tr.GetString("strings.Purges.reply_to_a_message_to_delete_it"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -197,7 +200,7 @@ func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -236,7 +239,7 @@ func (moduleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 	return ext.EndGroups
 }
 
-func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	// Permission checks
@@ -262,7 +265,7 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if msg.ReplyToMessage != nil {
 		TodelId := msg.ReplyToMessage.MessageId
 		if delMsgs[chat.Id] == TodelId {
-			_, _ = msg.Reply(bot, "This message is already marked for purging!", nil)
+			_, _ = msg.Reply(bot, tr.GetString("strings.Purges.this_message_is_already_marked_for_purging"), nil)
 			return ext.EndGroups
 		}
 		_, err := bot.DeleteMessage(chat.Id, msg.MessageId, nil)
@@ -271,7 +274,7 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.EndGroups
 		}
 		pMsg, err := bot.SendMessage(chat.Id,
-			"Message marked for deletion. Reply to another message with /purgeto to delete all messages in between; within 30s!",
+			tr.GetString("strings.Purges.message_marked_for_deletion_reply_to_another_message_with_pu"),
 			&gotgbot.SendMessageOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
 					MessageId:                TodelId,
@@ -294,7 +297,7 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to select where to start purging from.", nil)
+		_, err := msg.Reply(bot, tr.GetString("strings.Purges.reply_to_a_message_to_select_where_to_start_purging_from"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -330,7 +333,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if msg.ReplyToMessage != nil {
 		msgId := delMsgs[chat.Id]
 		if msgId == 0 {
-			_, err := msg.Reply(bot, "You can only use this command after having used the /purgefrom command!", nil)
+			_, err := msg.Reply(bot, tr.GetString("strings.Purges.you_can_only_use_this_command_after_having_used_the_purgefro"), nil)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -339,7 +342,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		deleteTo := msg.ReplyToMessage.MessageId
 		if msgId == deleteTo {
-			_, err := msg.Reply(bot, "Use /del command to delete one message!", nil)
+			_, err := msg.Reply(bot, tr.GetString("strings.Purges.use_del_command_to_delete_one_message"), nil)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -374,7 +377,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to show me till where to purge.", nil)
+		_, err := msg.Reply(bot, tr.GetString("strings.Purges.reply_to_a_message_to_show_me_till_where_to_purge"), nil)
 		if err != nil {
 			log.Error(err)
 			return err

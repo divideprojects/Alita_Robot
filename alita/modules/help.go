@@ -56,7 +56,7 @@ var (
 			CallbackData: "helpq.Help",
 		},
 		{
-			Text:         "Home",
+			Text:         tr.GetString("CommonStrings.buttons.home"),
 			CallbackData: "helpq.BackStart",
 		},
 	}
@@ -64,23 +64,23 @@ var (
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "About me 👨\u200d💻",
+					Text:         tr.GetString("strings.Help.about_me_u200d"),
 					CallbackData: "about.me",
 				},
 			},
 			{
 				{
-					Text: "News Channel 📢",
+					Text: tr.GetString("Help.about.news_channel_button"),
 					Url:  "https://t.me/AlitaRobotUpdates",
 				},
 				{
-					Text: "Support Group 👥",
+					Text: tr.GetString("Help.start.support_group_button"),
 					Url:  "https://t.me/DivideSupport",
 				},
 			},
 			{
 				{
-					Text:         "Configuration ⚙️",
+					Text:         tr.GetString("Help.about.configuration_button"),
 					CallbackData: "configuration.step1",
 				},
 			},
@@ -97,7 +97,7 @@ var (
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "About ✨",
+					Text:         tr.GetString("Help.start.about_button"),
 					CallbackData: "about.main",
 				},
 			},
@@ -107,7 +107,7 @@ var (
 					Url:  "https://t.me/Alita_Robot?startgroup=botstart",
 				},
 				{
-					Text: "Support Group 👥",
+					Text: tr.GetString("Help.start.support_group_button"),
 					Url:  "https://t.me/DivideSupport",
 				},
 			},
@@ -119,7 +119,7 @@ var (
 			},
 			{
 				{
-					Text:         "Language 🌏",
+					Text:         tr.GetString("Help.start.language_button"),
 					CallbackData: "helpq.Languages",
 				},
 			},
@@ -179,7 +179,7 @@ about displays information about the bot, including FAQs and about text.
 
 Handles both command and callback query contexts.
 */
-func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -203,7 +203,7 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "Back",
+							Text:         tr.GetString("strings.CommonStrings.buttons.back"),
 							CallbackData: "about.main",
 						},
 					},
@@ -240,7 +240,7 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: "About",
+							Text: tr.GetString("Help.about.button"),
 							Url:  fmt.Sprintf("https://t.me/%s?start=about", b.Username),
 						},
 					},
@@ -272,7 +272,7 @@ helpButtonHandler handles callback queries for the help menu.
 
 Displays help text and navigation for modules and main help options.
 */
-func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	args := strings.Split(query.Data, ".")
 	module := args[1]
@@ -333,7 +333,7 @@ start introduces the bot and handles /start commands.
 
 Displays the main help menu or processes special start arguments for help, connection, rules, or notes.
 */
-func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -364,7 +364,7 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Info("sed")
 		}
 	} else {
-		_, err := msg.Reply(b, "Hey :) PM me if you have any questions on how to use me!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Help.start.group_prompt"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -376,7 +376,7 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 /*
 donate displays information on how to support the bot and its creator.
 */
-func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
@@ -405,13 +405,13 @@ botConfig handles the interactive configuration menu for the bot.
 
 Only works in private chat. Guides users through configuration steps.
 */
-func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	msg := query.Message
 
 	// just in case
 	if msg.GetChat().Type != "private" {
-		_, _, err := msg.EditText(b, "Configuration only works in private", nil)
+		_, _, err := msg.EditText(b, tr.GetString("Help.configuration.private_only"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -439,7 +439,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 			{
 				{
-					Text:         "Done ✅",
+					Text:         tr.GetString("CommonStrings.buttons.done"),
 					CallbackData: "configuration.step2",
 				},
 			},
@@ -449,7 +449,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "Done ✅",
+					Text:         tr.GetString("CommonStrings.buttons.done"),
 					CallbackData: "configuration.step3",
 				},
 			},
@@ -497,7 +497,7 @@ help displays the help menu or module-specific help.
 
 Handles both private and group chat contexts, and provides navigation to module help or PM help links.
 */
-func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()

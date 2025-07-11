@@ -12,6 +12,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -114,6 +116,8 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	qmsg := query.Message
 
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+
 	data := strings.Split(query.Data, ".")
 	chatId, _ := strconv.ParseInt(data[1], 10, 64)
 	msgId, _ := strconv.ParseInt(data[2], 10, 64)
@@ -123,7 +127,7 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	if !chat_status.IsUserAdmin(b, chatId, query.From.Id) {
 		_, err := query.Answer(b,
 			&gotgbot.AnswerCallbackQueryOpts{
-				Text: "You need to be an admin to do this!",
+				Text: tr.GetString("Utils.chat_status.user.require_admin_btn"),
 			},
 		)
 		if err != nil {
@@ -136,7 +140,7 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chatIdData, errCache := setAdminCache(chatId, msgId)
 
 	if errCache != nil {
-		_, _, err := qmsg.EditText(b, "This button has expired, Please use the command again.", nil)
+		_, _, err := qmsg.EditText(b, tr.GetString("CommonStrings.errors.button_expired"), nil)
 		if err != nil {
 			log.Error(err)
 			return err

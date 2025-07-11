@@ -12,6 +12,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -39,7 +40,7 @@ disable disables one or more commands in the current chat.
 Only admins can use this command. Updates the database and replies with the result.
 Connection: true, true
 */
-func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -49,6 +50,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 	args := ctx.Args()[1:]
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	if len(args) >= 1 {
 		toDisable := make([]string, 0)
@@ -57,7 +59,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toDisable = append(toDisable, i)
-				_, err := msg.Reply(b, fmt.Sprintf("Disabled the use of the following in this chat:"+
+				_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Disabling.success")+
 					"%s",
 					strings.Join(toDisable, "\n - ")),
 					helpers.Smarkdown())
@@ -80,7 +82,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, "You haven't specified a command to disable.", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Disabling.enable.errors.no_command_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -99,7 +101,7 @@ disableable lists all commands that can be disabled.
 
 Anyone can use this command to view the list of disableable commands.
 */
-func (moduleStruct) disableable(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) disableable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	text := "The following commands can be disabled:"
@@ -129,7 +131,7 @@ disabled lists all currently disabled commands in the chat.
 Anyone can use this command to view the list of disabled commands.
 Connection: false, true
 */
-func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "adminlist") {
@@ -197,7 +199,8 @@ disabledel toggles whether messages invoking disabled commands are deleted.
 Only admins can use this command. If no argument is given, replies with the current setting.
 Connection: true, true
 */
-func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -220,7 +223,7 @@ func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.ToggleDel(chat.Id, false)
 			text = "Disabled messages will no longer be deleted."
 		default:
-			text = "Your input was not recognised as one of: yes/no/on/off"
+			text = tr.GetString("strings.CommonStrings.errors.invalid_option_yes_no")
 		}
 	} else {
 		currStatus := db.ShouldDel(chat.Id)
@@ -252,7 +255,7 @@ enable re-enables one or more previously disabled commands in the chat.
 Only admins can use this command. Updates the database and replies with the result.
 Connection: true, true
 */
-func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -262,6 +265,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 	args := ctx.Args()[1:]
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	if len(args) >= 1 {
 		toEnable := make([]string, 0)
@@ -270,7 +274,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toEnable = append(toEnable, i)
-				_, err := msg.Reply(b, fmt.Sprintf("Re-Enabled the use of the following in this chat:"+
+				_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Disabling.enable.success")+
 					"%s",
 					strings.Join(toEnable, "\n - ")),
 					helpers.Smarkdown())
@@ -293,7 +297,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, "You haven't specified a command to disable.", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Disabling.enable.errors.no_command_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

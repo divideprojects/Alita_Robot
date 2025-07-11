@@ -12,6 +12,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
@@ -24,12 +25,12 @@ var rulesModule = moduleStruct{
 	defaultRulesBtn: "Rules",
 }
 
-func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
 	go db.SetChatRules(chat.Id, "")
-	_, err := msg.Reply(bot, "Successfully cleared rules!", nil)
+	_, err := msg.Reply(bot, tr.GetString("strings.Rules.successfully_cleared_rules"), nil)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -38,7 +39,8 @@ func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
@@ -59,7 +61,7 @@ func (moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
 			go db.SetPrivateRules(chat.Id, false)
 			text = fmt.Sprintf("All /rules commands will send the rules to %s.", chat.Title)
 		default:
-			text = "Your input was not recognised as one of: yes/no/on/off"
+			text = tr.GetString("strings.CommonStrings.errors.invalid_option_yes_no")
 		}
 	} else {
 		rulesprefs := db.GetChatRulesInfo(chat.Id)
@@ -150,7 +152,7 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
@@ -227,7 +229,7 @@ func (m moduleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
@@ -238,7 +240,7 @@ func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	go db.SetChatRulesButton(chat.Id, "")
-	_, err := msg.Reply(bot, "Successfully cleared custom rules button text!", nil)
+	_, err := msg.Reply(bot, tr.GetString("strings.Rules.successfully_cleared_custom_rules_button_text"), nil)
 	if err != nil {
 		log.Error(err)
 		return err

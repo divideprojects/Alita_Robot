@@ -157,6 +157,7 @@ func getModuleNameFromAltName(altName string) string {
 func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User, arg string) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	if strings.HasPrefix(arg, "help_") {
 		helpModule := strings.Split(arg, "_")[1]
@@ -188,7 +189,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		rulesrc := db.GetChatRulesInfo(int64(chatID))
 
 		if rulesrc.Rules == "" {
-			_, err := msg.Reply(b, "This chat does not have any rules!", helpers.Shtml())
+			_, err := msg.Reply(b, tr.GetString("strings.Helpers.this_chat_does_not_have_any_rules"), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -228,7 +229,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			noteName := strings.ToLower(nArgs[2])
 			noteData := db.GetNote(chatinfo.Id, noteName)
 			if noteData == nil {
-				_, err := msg.Reply(b, "This note does not exist!", helpers.Shtml())
+				_, err := msg.Reply(b, tr.GetString("strings.Helpers.this_note_does_not_exist"), helpers.Shtml())
 				if err != nil {
 					log.Error(err)
 					return err
@@ -237,7 +238,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			}
 			if noteData.AdminOnly {
 				if !chat_status.IsUserAdmin(b, int64(chatID), user.Id) {
-					_, err := msg.Reply(b, "This note can only be accessed by a admin!", helpers.Shtml())
+					_, err := msg.Reply(b, tr.GetString("Notes.errors.admin_only"), helpers.Shtml())
 					if err != nil {
 						log.Error(err)
 						return err

@@ -9,6 +9,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
@@ -63,13 +64,14 @@ func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 	msg := query.Message
 	memStatus := db.GetTeamMemInfo(user.Id)
 
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// permissions check
 	// only dev can access this
 	if user.Id != config.OwnerId && !memStatus.Dev {
 		query.Answer(
 			b,
 			&gotgbot.AnswerCallbackQueryOpts{
-				Text: "This button can only be used by an admin!",
+				Text: tr.GetString("CommonStrings.errors.admin_only_button"),
 			},
 		)
 		return ext.ContinueGroups

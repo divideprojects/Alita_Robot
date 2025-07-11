@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
@@ -29,7 +30,8 @@ import (
 
 var miscModule = moduleStruct{moduleName: "Misc"}
 
-func (moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 
@@ -42,7 +44,7 @@ func (moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	replyMsg := msg.ReplyToMessage
 	if replyMsg == nil {
-		_, _ = msg.Reply(b, "Reply to someone.", nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.Misc.reply.need_target"), nil)
 		return ext.EndGroups
 	}
 
@@ -63,13 +65,13 @@ func (moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Error(err)
 		}
 	} else {
-		_, _ = msg.Reply(b, "Provide some content to reply!", nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.Misc.reply.need_content"), nil)
 	}
 
 	return ext.EndGroups
 }
 
-func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	sender := ctx.EffectiveSender
 	userId := extraction.ExtractUser(b, ctx)
@@ -165,7 +167,8 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
 
@@ -180,21 +183,21 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	)
 
 	if len(args) == 1 && msg.ReplyToMessage == nil {
-		_, err = msg.Reply(b, "Please give text to paste or reply to a document!", nil)
+		_, err = msg.Reply(b, tr.GetString("strings.Misc.paste.need_text_or_document"), nil)
 		if err != nil {
 			log.Error(err)
 		}
 		return ext.EndGroups
 	}
 	if msg.ReplyToMessage != nil && msg.ReplyToMessage.Text == "" && msg.ReplyToMessage.Document == nil && msg.ReplyToMessage.Caption == "" {
-		_, err = msg.Reply(b, "Please give text to paste or reply to a document!", nil)
+		_, err = msg.Reply(b, tr.GetString("strings.Misc.paste.need_text_or_document"), nil)
 		if err != nil {
 			log.Error(err)
 		}
 		return ext.EndGroups
 	}
 
-	edited, _ := msg.Reply(b, "Pasting ...", nil)
+	edited, _ := msg.Reply(b, tr.GetString("strings.Misc.paste.processing"), nil)
 	extention := "txt"
 	if len(args) >= 2 {
 		text = strings.Join(args[1:], " ")
@@ -208,11 +211,11 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		f, err := b.GetFile(msg.ReplyToMessage.Document.FileId, nil)
 		if err != nil {
-			_, _, _ = edited.EditText(b, "BadRequest on GetFile!", nil)
+			_, _, _ = edited.EditText(b, tr.GetString("strings.Misc.paste.get_file_error"), nil)
 			return ext.EndGroups
 		}
 		if f.FileSize > 600000 {
-			_, _, _ = edited.EditText(b, "File too big to paste; Max. file size that can be pasted is 600 kb!", nil)
+			_, _, _ = edited.EditText(b, tr.GetString("strings.Misc.paste.file_too_big"), nil)
 			return ext.EndGroups
 		}
 		fileName := fmt.Sprintf("paste_%d_%d.txt", msg.Chat.Id, msg.MessageId)
@@ -262,7 +265,7 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Error(err)
 		}
 	} else {
-		_, _, err = edited.EditText(b, "Can't paste the provided data!", nil)
+		_, _, err = edited.EditText(b, tr.GetString("strings.Misc.paste.paste_error"), nil)
 		if err != nil {
 			log.Error(err)
 		}
@@ -270,7 +273,8 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "ping") {
@@ -278,7 +282,7 @@ func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	stime := time.Now()
 	rmsg, _ := msg.Reply(b, "<code>Pinging</code>", &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
-	_, _, err := rmsg.EditText(b, fmt.Sprintf("Pinged in %d ms", int64(time.Since(stime)/time.Millisecond)), nil)
+	_, _, err := rmsg.EditText(b, fmt.Sprintf(tr.GetString("strings.Misc.pinged_in_percent_ms"), int64(time.Since(stime)/time.Millisecond)), nil)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -286,7 +290,8 @@ func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	sender := ctx.EffectiveSender
 	userId := extraction.ExtractUser(b, ctx)
@@ -307,7 +312,7 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	var text string
 
 	if !found {
-		text = "Could not find the any information about this user."
+		text = tr.GetString("strings.Misc.info.user_not_found")
 	} else {
 
 		user := &gotgbot.User{
@@ -356,7 +361,8 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 
@@ -371,7 +377,7 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	)
 
 	if len(args) == 0 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "I need some text and a language code to translate.", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Misc.translate.need_text_and_lang"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -385,7 +391,7 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 		} else if reply.Caption != "" {
 			origText = reply.Caption
 		} else {
-			_, _ = msg.Reply(b, "The replied message does not contain any text to translate.", helpers.Shtml())
+			_, _ = msg.Reply(b, tr.GetString("strings.Misc.translate.no_text_in_reply"), helpers.Shtml())
 			return ext.EndGroups
 		}
 		if len(args) == 0 {
@@ -396,7 +402,7 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else {
 		// args[1:] leaves the language code and takes rest of the text
 		if len(args[1:]) < 1 {
-			_, _ = msg.Reply(b, "Please provide some text to translate.", helpers.Shtml())
+			_, _ = msg.Reply(b, tr.GetString("strings.Misc.translate.need_text"), helpers.Shtml())
 			return ext.EndGroups
 		}
 		// args[0] is the language code
@@ -405,7 +411,7 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	req, err := http.Get(fmt.Sprintf("https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=auto&tl=%s&q=%s", toLang, url.QueryEscape(strings.TrimSpace(origText))))
 	if err != nil {
-		_, _ = msg.Reply(b, "Error making a translation request!", nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.Misc.translate.request_error"), nil)
 		return ext.EndGroups
 	}
 	defer func(Body io.ReadCloser) {
@@ -416,7 +422,7 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	}(req.Body)
 	all, err := io.ReadAll(req.Body)
 	if err != nil {
-		_, _ = msg.Reply(b, "Reading Error: "+err.Error(), nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.Misc.reading_error")+" "+err.Error(), nil)
 		return ext.EndGroups
 	}
 	data := strings.Split(strings.Trim(string(all), `"][`), `","`)
@@ -428,10 +434,11 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // This function removes the stuck bot keyboard from your chat!
-func (moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	rMsg, err := msg.Reply(b,
-		"Removing the stuck bot keyboard...",
+		tr.GetString("strings.Misc.keyboard.removing"),
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: &gotgbot.ReplyKeyboardRemove{
 				RemoveKeyboard: true,
@@ -453,7 +460,8 @@ func (moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	if !chat_status.RequireGroup(b, ctx, chat, false) {
@@ -463,7 +471,7 @@ func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 	if chat_status.CheckDisabledCmd(b, msg, "stat") {
 		return ext.EndGroups
 	}
-	_, err := msg.Reply(b, fmt.Sprintf("Total Messages in %s are: %d", msg.Chat.Title, msg.MessageId+1), nil)
+	_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Misc.total_messages_in_percent_are_percent"), msg.Chat.Title, msg.MessageId+1), nil)
 	if err != nil {
 		log.Error(err)
 	}

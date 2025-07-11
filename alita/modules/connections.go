@@ -174,7 +174,7 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: "Connect to chat",
+							Text: tr.GetString("Connections.connect_to_chat_button"),
 							Url:  fmt.Sprintf("https://t.me/%s?start=connect_%d", b.Username, chat.Id),
 						},
 					},
@@ -219,7 +219,7 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 				{
 					{
-						Text:         "Back",
+						Text:         tr.GetString("strings.CommonStrings.buttons.back"),
 						CallbackData: "connbtns.Main",
 					},
 				},
@@ -403,14 +403,14 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 /*
 adminCmdConnString returns a formatted string of admin connection commands.
 */
-func (moduleStruct) adminCmdConnString() string {
+func (m moduleStruct) adminCmdConnString() string {
 	return "\n - /" + strings.Join(misc.AdminCmds, "\n - /")
 }
 
 /*
 userCmdConnString returns a formatted string of user connection commands.
 */
-func (moduleStruct) userCmdConnString() string {
+func (m moduleStruct) userCmdConnString() string {
 	return "\n - /" + strings.Join(misc.UserCmds, "\n - /")
 }
 

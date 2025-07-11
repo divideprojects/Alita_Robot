@@ -345,8 +345,8 @@ func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: "Yes", CallbackData: "rmAllBlacklist.yes"},
-						{Text: "No", CallbackData: "rmAllBlacklist.no"},
+						{Text: tr.GetString("strings.CommonStrings.buttons.yes"), CallbackData: "rmAllBlacklist.yes"},
+						{Text: tr.GetString("strings.CommonStrings.buttons.no"), CallbackData: "rmAllBlacklist.no"},
 					},
 				},
 			},

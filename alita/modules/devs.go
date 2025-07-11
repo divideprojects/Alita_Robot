@@ -14,6 +14,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
@@ -35,7 +36,7 @@ chatInfo retrieves information about a specified chat.
 
 Only accessible by the owner or devs. Replies with chat name, ID, user count, and invite link.
 */
-func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -80,7 +81,7 @@ chatList generates and sends a list of all chats the bot is in.
 
 Only accessible by the owner or devs. Sends the list as a text file.
 */
-func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -161,9 +162,10 @@ leaveChat makes the bot leave a specified chat.
 
 Only accessible by the owner or devs. Takes the chat ID as an argument.
 */
-func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// only devs and owner can access this
 	if user.Id != config.OwnerId && !memStatus.Dev {
@@ -180,7 +182,7 @@ func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = msg.Reply(b, "Okay, I left the chat!", helpers.Shtml())
+	_, err = msg.Reply(b, tr.GetString("Dev.leavechat.success"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -199,7 +201,7 @@ addSudo adds a user to the sudo list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -244,7 +246,7 @@ addDev adds a user to the dev list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -289,7 +291,7 @@ remSudo removes a user from the sudo list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -334,7 +336,7 @@ remDev removes a user from the dev list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -379,7 +381,7 @@ listTeam lists all members of the bot's development team.
 
 Only accessible by existing team members. Replies with formatted lists of dev and sudo users.
 */
-func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	teamUsers := db.GetTeamMembers()
@@ -452,7 +454,7 @@ getStats fetches and displays bot statistics.
 
 Only accessible by the owner or devs. Replies with stats in a formatted message.
 */
-func (moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 

@@ -20,6 +20,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 )
 
 var reportsModule = moduleStruct{
@@ -27,7 +28,8 @@ var reportsModule = moduleStruct{
 	handlerGroup: 8,
 }
 
-func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
+    tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -52,7 +54,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	)
 
 	if msg.ReplyToMessage.From.Id == user.Id {
-		_, _ = msg.Reply(b, "You can't report your own message!", nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.Reports.you_can_t_report_your_own_message"), nil)
 		return ext.EndGroups
 	}
 
@@ -76,16 +78,16 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if user.Id == 1087968824|777000|136817688 {
-		_, _ = msg.Reply(b, "You need to expose yourself first!", nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.Reports.you_need_to_expose_yourself_first"), nil)
 		return ext.EndGroups
 	}
 	if msg.ReplyToMessage.From.Id == 1087968824|777000|136817688 {
-		_, _ = msg.Reply(b, "It's a special account of telegram!", nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.Reports.it_s_a_special_account_of_telegram"), nil)
 		return ext.EndGroups
 	}
 
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-		_, err := msg.Reply(b, "You're an admin, whom will I report your issues to?", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Reports.you_re_an_admin_whom_will_i_report_your_issues_to"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -111,7 +113,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	reportedMsgId := msg.ReplyToMessage.MessageId
 
 	if reportedUser.Id == b.Id {
-		_, err := msg.Reply(b, "Why would I report myself?", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Reports.why_would_i_report_myself"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -119,7 +121,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if string_handling.FindInInt64Slice(adminArray, reportedUser.Id) {
-		_, err := msg.Reply(b, "Why would I report an admin?", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Reports.why_would_i_report_an_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -193,7 +195,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
@@ -309,7 +311,7 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User

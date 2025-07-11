@@ -18,6 +18,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -50,6 +51,7 @@ Only admins can add new filters. Handles filter limits, overwriting, and input v
 Connection: true, true
 */
 func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
@@ -81,14 +83,14 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage != nil && len(args) <= 1 {
-		_, err := msg.Reply(b, "Please give a keyword to reply to!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Notes.errors.no_keyword_reply"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if len(args) <= 2 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Invalid Filter!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Filters.errors.invalid_filter"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -124,11 +126,11 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
 							{
-								Text:         "Yes",
+								Text:         tr.GetString("strings.CommonStrings.buttons.yes"),
 								CallbackData: "filters_overwrite." + filterWord,
 							},
 							{
-								Text:         "No",
+								Text:         tr.GetString("strings.CommonStrings.buttons.no"),
 								CallbackData: "filters_overwrite.cancel",
 							},
 						},
@@ -145,7 +147,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	go db.AddFilter(chat.Id, filterWord, text, fileid, buttons, dataType)
 
-	_, err := msg.Reply(b, fmt.Sprintf("Added reply for filter word <code>%s</code>", filterWord), helpers.Shtml())
+	_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Filters.add.success"), filterWord), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -167,7 +169,8 @@ rmFilter removes a filter for a specific keyword in the chat.
 Only admins can remove filters. Handles input validation and replies with the result.
 Connection: true, true
 */
-func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
 	if connectedChat == nil {
@@ -179,13 +182,14 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
 
+
 	// check permission
 	if !chat_status.CanUserChangeInfo(b, ctx, chat, user.Id, false) {
 		return ext.EndGroups
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "Please give a filter word to remove!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Filters.remove.no_word_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -195,14 +199,14 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 		filterWord, _ := extraction.ExtractQuotes(strings.Join(args, " "), true, true)
 
 		if !string_handling.FindInStringSlice(db.GetFiltersList(chat.Id), strings.ToLower(filterWord)) {
-			_, err := msg.Reply(b, "Filter does not exist!", helpers.Shtml())
+			_, err := msg.Reply(b, tr.GetString("Filters.errors.does_not_exist"), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
 			}
 		} else {
 			go db.RemoveFilter(chat.Id, strings.ToLower(filterWord))
-			_, err := msg.Reply(b, fmt.Sprintf("Ok!\nI will no longer reply to <code>%s</code>", filterWord), helpers.Shtml())
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Filters.remove.success"), filterWord), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -225,8 +229,9 @@ filtersList lists all filters in the chat.
 Anyone can view the filters. Replies with the current list or a message if none exist.
 Connection: false, true
 */
-func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "filters") {
 		return ext.EndGroups
@@ -248,7 +253,7 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	filterKeys := db.GetFiltersList(chat.Id)
-	info := "There are no filters in this chat!"
+	info := tr.GetString("Filters.remove_all.no_filters")
 	newFilterKeys := make([]string, 0)
 
 	for _, fkey := range filterKeys {
@@ -288,7 +293,8 @@ rmAllFilters removes all filters from the current chat.
 
 Only the chat owner can use this command to clear all filters.
 */
-func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -305,13 +311,13 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, chat, user.Id, false) {
-		_, err := msg.Reply(b, "Are you sure you want to remove all Filters from this chat?",
+		_, err := msg.Reply(b, tr.GetString("Filters.remove_all.confirm"),
 			&gotgbot.SendMessageOpts{
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
-							{Text: "Yes", CallbackData: "rmAllFilters.yes"},
-							{Text: "No", CallbackData: "rmAllFilters.no"},
+							{Text: tr.GetString("strings.CommonStrings.buttons.yes"), CallbackData: "rmAllFilters.yes"},
+							{Text: tr.GetString("strings.CommonStrings.buttons.no"), CallbackData: "rmAllFilters.no"},
 						},
 					},
 				},
@@ -332,7 +338,7 @@ filtersButtonHandler handles callback queries for removing all filters.
 
 Processes the owner's confirmation and removes all filters if confirmed.
 */
-func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
@@ -439,7 +445,7 @@ filtersWatcher monitors messages for filtered keywords and replies with the appr
 
 Handles both formatted and unformatted responses, and enforces admin-only access for noformat requests.
 */
-func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -504,7 +510,7 @@ func LoadFilters(dispatcher *ext.Dispatcher) {
 	HelpModule.helpableKb[filtersModule.moduleName] = [][]gotgbot.InlineKeyboardButton{
 		{
 			{
-				Text:         "Formatting",
+				Text:         tr.GetString("strings.Filters.formatting"),
 				CallbackData: fmt.Sprintf("helpq.%s", "Formatting"),
 			},
 		},

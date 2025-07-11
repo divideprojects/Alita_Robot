@@ -15,6 +15,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -84,7 +85,7 @@ var (
 	}
 )
 
-func (moduleStruct) getLockMapAsArray() (lockTypes []string) {
+func (m moduleStruct) getLockMapAsArray() (lockTypes []string) {
 	tmpMap := map[string]filters.Message{}
 
 	for r, rk := range restrMap {
@@ -103,7 +104,7 @@ func (moduleStruct) getLockMapAsArray() (lockTypes []string) {
 	return
 }
 
-func (moduleStruct) buildLockTypesMessage(chatID int64) (res string) {
+func (m moduleStruct) buildLockTypesMessage(chatID int64) (res string) {
 	chatLocks := db.GetChatLocks(chatID)
 
 	newMapLocks := db.MapLockType(*chatLocks)
@@ -275,7 +276,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -310,7 +311,7 @@ func (moduleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func (moduleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -338,10 +339,11 @@ func (moduleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	mem := ctx.ChatMember.NewChatMember.MergeChatMember().User
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// don't work on admins and approved users
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
@@ -349,7 +351,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if !chat_status.IsBotAdmin(b, ctx, nil) {
-		_, err := b.SendMessage(chat.Id, "I see a bot, and I've been told to stop them joining... but I'm not admin!", nil)
+		_, err := b.SendMessage(chat.Id, tr.GetString("Locks.bot.no_admin_permission"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -377,7 +379,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = b.SendMessage(chat.Id, "Only admins are allowed to add bots to this chat!", nil)
+	_, err = b.SendMessage(chat.Id, tr.GetString("Locks.bot.admin_only"), nil)
 	if err != nil {
 		log.Error(err)
 		return err

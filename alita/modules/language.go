@@ -18,13 +18,13 @@ import (
 
 var languagesModule = moduleStruct{moduleName: "Languages"}
 
-func (moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
+func (m moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
 	keyboard := helpers.MakeLanguageKeyboard()
 	keyboard = append(
 		keyboard,
 		[]gotgbot.InlineKeyboardButton{
 			{
-				Text: "Help Us Translate 🌎",
+				Text: tr.GetString("Languages.help_translate_button"),
 				Url:  "https://crowdin.com/project/alita_robot",
 			},
 		},
@@ -70,7 +70,7 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := query.Message.GetChat()
 	user := query.From

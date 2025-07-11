@@ -16,6 +16,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/chatjoinrequest"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -33,8 +34,9 @@ welcome displays or toggles the welcome message settings for the chat.
 
 Admins can view current settings, toggle welcoming on/off, or display the current welcome message.
 */
-func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -51,10 +53,7 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 		noformat := len(args) > 0 && strings.ToLower(args[0]) == "noformat"
 		welcPrefs := db.GetGreetingSettings(chat.Id)
 		wlcmText = welcPrefs.WelcomeSettings.WelcomeText
-		_, err := msg.Reply(bot, fmt.Sprintf("I am currently welcoming users: <code>%t</code>"+
-			"\nI am currently deleting old welcomes: <code>%t</code>"+
-			"\nI am currently deleting service messages: <code>%t</code>"+
-			"\nThe welcome message not filling the {} is:",
+		_, err := msg.Reply(bot, fmt.Sprintf(tr.GetString("strings."+m.moduleName+".welcome.status"),
 			welcPrefs.WelcomeSettings.ShouldWelcome,
 			welcPrefs.WelcomeSettings.CleanWelcome,
 			welcPrefs.ShouldCleanService), helpers.Shtml())
@@ -88,12 +87,12 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 		switch strings.ToLower(args[0]) {
 		case "on", "yes":
 			db.SetWelcomeToggle(chat.Id, true)
-			_, err = msg.Reply(bot, "I'll welcome users from now on.", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("strings."+m.moduleName+".welcome.enabled"), helpers.Shtml())
 		case "off", "no":
 			db.SetWelcomeToggle(chat.Id, false)
-			_, err = msg.Reply(bot, "I'll not welcome users from now on.", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("strings."+m.moduleName+".welcome.disabled"), helpers.Shtml())
 		default:
-			_, err = msg.Reply(bot, "I understand 'on/yes' or 'off/no' only!", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("strings.CommonStrings.errors.invalid_option_yes_no"), helpers.Shtml())
 		}
 
 		if err != nil {
@@ -109,8 +108,9 @@ setWelcome sets a custom welcome message for the chat.
 
 Admins can set the message content, type, and buttons. Handles input validation and replies with the result.
 */
-func (moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -136,7 +136,7 @@ func (moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.SetWelcomeText(chat.Id, text, content, buttons, dataType)
-	_, err := msg.Reply(bot, "Successfully set custom welcome message!", helpers.Shtml())
+	_, err := msg.Reply(bot, tr.GetString("strings."+m.moduleName+".set_welcome.success"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -150,8 +150,9 @@ resetWelcome resets the welcome message to the default.
 
 Admins can use this to remove any custom welcome message.
 */
-func (moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -166,7 +167,7 @@ func (moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	go db.SetWelcomeText(chat.Id, db.DefaultWelcome, "", nil, db.TEXT)
-	_, err := msg.Reply(bot, "Successfully reset custom welcome message to default!", helpers.Shtml())
+	_, err := msg.Reply(bot, tr.GetString("strings."+m.moduleName+".reset_welcome.success"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -180,8 +181,9 @@ goodbye displays or toggles the goodbye message settings for the chat.
 
 Admins can view current settings, toggle goodbyes on/off, or display the current goodbye message.
 */
-func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -192,13 +194,14 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
 
+
 	var gdbyeText string
 
 	if len(args) == 0 || strings.ToLower(args[0]) == "noformat" {
 		noformat := len(args) > 0 && strings.ToLower(args[0]) == "noformat"
 		gdbyePrefs := db.GetGreetingSettings(chat.Id)
 		gdbyeText = gdbyePrefs.GoodbyeSettings.GoodbyeText
-		_, err := msg.Reply(bot, fmt.Sprintf("I am currently goodbying users: <code>%t</code>"+
+		_, err := msg.Reply(bot, fmt.Sprintf(tr.GetString("strings.Greetings.i_am_currently_goodbying_users_t")+
 			"\nI am currently deleting old goodbyes: <code>%t</code>"+
 			"\nI am currently deleting service messages: <code>%t</code>"+
 			"\nThe goodbye message not filling the {} is:",
@@ -234,12 +237,12 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 		switch strings.ToLower(args[0]) {
 		case "on", "yes":
 			db.SetGoodbyeToggle(chat.Id, true)
-			_, err = msg.Reply(bot, "I'll goodbye users from now on.", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("Greetings.goodbye.enabled"), helpers.Shtml())
 		case "off", "no":
 			db.SetGoodbyeToggle(chat.Id, false)
-			_, err = msg.Reply(bot, "I'll not goodbye users from now on.", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("Greetings.goodbye.disabled"), helpers.Shtml())
 		default:
-			_, err = msg.Reply(bot, "I understand 'on/yes' or 'off/no' only!", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("strings.Greetings.i_understand_on_yes_or_off_no_only"), helpers.Shtml())
 		}
 		if err != nil {
 			log.Error(err)
@@ -254,8 +257,9 @@ setGoodbye sets a custom goodbye message for the chat.
 
 Admins can set the message content, type, and buttons. Handles input validation and replies with the result.
 */
-func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -280,7 +284,7 @@ func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.SetGoodbyeText(chat.Id, text, content, buttons, dataType)
-	_, err := msg.Reply(bot, "Successfully set custom goodbye message!", helpers.Shtml())
+	_, err := msg.Reply(bot, tr.GetString("Greetings.set_goodbye.success"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -293,8 +297,9 @@ resetGoodbye resets the goodbye message to the default.
 
 Admins can use this to remove any custom goodbye message.
 */
-func (moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -313,7 +318,7 @@ func (moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	go db.SetGoodbyeText(chat.Id, db.DefaultGoodbye, "", nil, db.TEXT)
-	_, err := msg.Reply(bot, "Successfully reset custom goodbye message to default!", helpers.Shtml())
+	_, err := msg.Reply(bot, tr.GetString("Greetings.reset_goodbye.success"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -326,8 +331,9 @@ cleanWelcome toggles or displays the setting for deleting old welcome messages.
 
 Admins can enable or disable automatic deletion of old welcome messages.
 */
-func (moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
@@ -347,9 +353,9 @@ func (moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 		var err error
 		cleanPref := db.GetGreetingSettings(chat.Id).WelcomeSettings.CleanWelcome
 		if !cleanPref {
-			_, err = msg.Reply(bot, "I should be deleting welcome messages up to two days old.", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.status_enabled"), helpers.Shtml())
 		} else {
-			_, err = msg.Reply(bot, "I'm currently not deleting old welcome messages!", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.status_disabled"), helpers.Shtml())
 		}
 		if err != nil {
 			log.Error(err)
@@ -361,12 +367,12 @@ func (moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	switch strings.ToLower(args[0]) {
 	case "off", "no":
 		db.SetCleanWelcomeSetting(chat.Id, false)
-		_, err = msg.Reply(bot, "I'll not delete old welcome messages!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("Greetings.clean_welcome.disabled"), helpers.Shtml())
 	case "on", "yes":
 		db.SetCleanWelcomeSetting(chat.Id, true)
-		_, err = msg.Reply(bot, "I'll try to delete old welcome messages!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("Greetings.clean_welcome.enabled"), helpers.Shtml())
 	default:
-		_, err = msg.Reply(bot, "I understand 'on/yes' or 'off/no' only!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("strings.Greetings.i_understand_on_yes_or_off_no_only"), helpers.Shtml())
 	}
 
 	if err != nil {
@@ -381,8 +387,9 @@ cleanGoodbye toggles or displays the setting for deleting old goodbye messages.
 
 Admins can enable or disable automatic deletion of old goodbye messages.
 */
-func (moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	args := ctx.Args()[1:]
 	var err error
 	// connection status
@@ -402,9 +409,9 @@ func (moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 		var err error
 		cleanPref := db.GetGreetingSettings(chat.Id).GoodbyeSettings.CleanGoodbye
 		if !cleanPref {
-			_, err = msg.Reply(bot, "I should be deleting welcome messages up to two days old.", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.status_enabled"), helpers.Shtml())
 		} else {
-			_, err = msg.Reply(bot, "I'm currently not deleting old welcome messages!", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.status_disabled"), helpers.Shtml())
 		}
 		if err != nil {
 			log.Error(err)
@@ -416,12 +423,12 @@ func (moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	switch strings.ToLower(args[0]) {
 	case "off", "no":
 		db.SetCleanGoodbyeSetting(chat.Id, false)
-		_, err = msg.Reply(bot, "I'll not delete old goodbye messages!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.disabled"), helpers.Shtml())
 	case "on", "yes":
 		db.SetCleanGoodbyeSetting(chat.Id, true)
-		_, err = msg.Reply(bot, "I'll try to delete old goodbye messages!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.enabled"), helpers.Shtml())
 	default:
-		_, err = msg.Reply(bot, "I understand 'on/yes' or 'off/no' only!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("strings.Greetings.i_understand_on_yes_or_off_no_only"), helpers.Shtml())
 	}
 
 	if err != nil {
@@ -436,8 +443,9 @@ delJoined toggles or displays the setting for deleting "user joined" service mes
 
 Admins can enable or disable automatic deletion of join messages.
 */
-func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	args := ctx.Args()[1:]
 	var err error
 	// connection status
@@ -456,9 +464,9 @@ func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if len(args) == 0 {
 		delPref := db.GetGreetingSettings(chat.Id).ShouldCleanService
 		if delPref {
-			_, err = msg.Reply(bot, "I should be deleting `user` joined the chat messages now.", helpers.Smarkdown())
+			_, err = msg.Reply(bot, tr.GetString("Greetings.del_joined.status_enabled"), helpers.Smarkdown())
 		} else {
-			_, err = msg.Reply(bot, "I'm currently not deleting joined messages.", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("Greetings.del_joined.status_disabled"), helpers.Shtml())
 		}
 		if err != nil {
 			log.Error(err)
@@ -470,12 +478,12 @@ func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	switch strings.ToLower(args[0]) {
 	case "off", "no":
 		db.SetShouldCleanService(chat.Id, false)
-		_, err = msg.Reply(bot, "I won't delete joined messages.", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("Greetings.del_joined.disabled"), helpers.Shtml())
 	case "on", "yes":
 		db.SetShouldCleanService(chat.Id, true)
-		_, err = msg.Reply(bot, "I'll try to delete joined messages!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("Greetings.del_joined.enabled"), helpers.Shtml())
 	default:
-		_, err = msg.Reply(bot, "I understand 'on/yes' or 'off/no' only!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("strings.Greetings.i_understand_on_yes_or_off_no_only"), helpers.Shtml())
 	}
 
 	if err != nil {
@@ -490,7 +498,7 @@ newMember handles the event when a new member joins the chat.
 
 Sends a welcome message if enabled and manages deletion of previous welcome messages if configured.
 */
-func (moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	newMember := ctx.ChatMember.NewChatMember.MergeChatMember().User
 	greetPrefs := db.GetGreetingSettings(chat.Id)
@@ -534,7 +542,7 @@ leftMember handles the event when a member leaves the chat.
 
 Sends a goodbye message if enabled and manages deletion of previous goodbye messages if configured.
 */
-func (moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	leftMember := ctx.ChatMember.OldChatMember.MergeChatMember().User
 	greetPrefs := db.GetGreetingSettings(chat.Id)
@@ -575,7 +583,7 @@ cleanService deletes service messages if the setting is enabled.
 
 Used for cleaning up join/leave notifications and other service messages.
 */
-func (moduleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -661,7 +669,7 @@ joinRequestHandler handles callback queries for join requests.
 
 Admins can approve, decline, or ban users requesting to join the chat.
 */
-func (moduleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
@@ -725,8 +733,9 @@ autoApprove toggles or displays the setting for auto-approving join requests.
 
 Admins can enable or disable automatic approval of new join requests.
 */
-func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	args := ctx.Args()[1:]
 	var err error
 	// connection status
@@ -746,9 +755,9 @@ func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if len(args) == 0 {
 		delPref := db.GetGreetingSettings(chat.Id).ShouldAutoApprove
 		if delPref {
-			_, err = msg.Reply(bot, "I'm auto-approving new chat join requests now.", helpers.Smarkdown())
+			_, err = msg.Reply(bot, tr.GetString("Greetings.auto_approve.enabled"), helpers.Smarkdown())
 		} else {
-			_, err = msg.Reply(bot, "I'm not auto-approving new chat join requests now..", helpers.Shtml())
+			_, err = msg.Reply(bot, tr.GetString("Greetings.auto_approve.disabled"), helpers.Shtml())
 		}
 		if err != nil {
 			log.Error(err)
@@ -760,12 +769,12 @@ func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	switch strings.ToLower(args[0]) {
 	case "off", "no":
 		db.SetShouldAutoApprove(chat.Id, false)
-		_, err = msg.Reply(bot, "I won't auto-approve new join requests!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("Greetings.auto_approve.disabled_now"), helpers.Shtml())
 	case "on", "yes":
 		db.SetShouldAutoApprove(chat.Id, true)
-		_, err = msg.Reply(bot, "I'll try to auto-approve new join requests!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("Greetings.auto_approve.enabled_now"), helpers.Shtml())
 	default:
-		_, err = msg.Reply(bot, "I understand 'on/yes' or 'off/no' only!", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.GetString("strings.Greetings.i_understand_on_yes_or_off_no_only"), helpers.Shtml())
 	}
 
 	if err != nil {
@@ -781,7 +790,7 @@ loadPendingJoins checks if a join request for a user in a chat is already pendin
 
 Returns true if the request is pending, otherwise false.
 */
-func (moduleStruct) loadPendingJoins(chatId, userId int64) bool {
+func (m moduleStruct) loadPendingJoins(chatId, userId int64) bool {
 	alreadyAsked, _ := cache.Marshal.Get(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chatId, userId), new(bool))
 	if alreadyAsked == nil || !alreadyAsked.(bool) {
 		return false
@@ -794,7 +803,7 @@ setPendingJoins marks a join request as pending for a user in a chat.
 
 Stores the pending state with a 5-minute expiration.
 */
-func (moduleStruct) setPendingJoins(chatId, userId int64) {
+func (m moduleStruct) setPendingJoins(chatId, userId int64) {
 	_ = cache.Marshal.Set(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chatId, userId), true, store.WithExpiration(5*time.Minute))
 }
 
@@ -810,7 +819,7 @@ func LoadGreetings(dispatcher *ext.Dispatcher) {
 	HelpModule.helpableKb[greetingsModule.moduleName] = [][]gotgbot.InlineKeyboardButton{
 		{
 			{
-				Text:         "Formatting",
+				Text:         tr.GetString("strings.Greetings.formatting"),
 				CallbackData: fmt.Sprintf("helpq.%s", "Formatting"),
 			},
 		},
