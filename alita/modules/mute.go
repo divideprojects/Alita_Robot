@@ -23,7 +23,7 @@ var mutesModule = moduleStruct{moduleName: "Mutes"}
 
 The Bot, Muter should be admin with restrict permissions in order to use this */
 
-func (m moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -105,7 +105,7 @@ func (m moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The Bot, Muter should be admin with restrict permissions in order to use this */
 
-func (m moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -187,7 +187,7 @@ The Bot, Muter should be admin with restrict permissions in order to use this
 
 The message of muter will be deleted after sending this command */
 
-func (m moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -237,7 +237,7 @@ The Bot, Muter should be admin with restrict permissions in order to use this
 
 Used as a reply to a message and delete the replied message*/
 
-func (m moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -327,7 +327,7 @@ func (m moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 The Bot, Unmuter should be admin with restrict permissions in order to use this */
 
-func (m moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User

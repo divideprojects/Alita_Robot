@@ -179,7 +179,7 @@ about displays information about the bot, including FAQs and about text.
 
 Handles both command and callback query contexts.
 */
-func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -272,7 +272,7 @@ helpButtonHandler handles callback queries for the help menu.
 
 Displays help text and navigation for modules and main help options.
 */
-func (m moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	args := strings.Split(query.Data, ".")
 	module := args[1]
@@ -333,7 +333,7 @@ start introduces the bot and handles /start commands.
 
 Displays the main help menu or processes special start arguments for help, connection, rules, or notes.
 */
-func (m moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -376,7 +376,7 @@ func (m moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 /*
 donate displays information on how to support the bot and its creator.
 */
-func (m moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
@@ -405,7 +405,7 @@ botConfig handles the interactive configuration menu for the bot.
 
 Only works in private chat. Guides users through configuration steps.
 */
-func (m moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	msg := query.Message
 
@@ -497,7 +497,7 @@ help displays the help menu or module-specific help.
 
 Handles both private and group chat contexts, and provides navigation to module help or PM help links.
 */
-func (m moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()

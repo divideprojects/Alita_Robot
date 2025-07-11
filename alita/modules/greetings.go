@@ -181,7 +181,7 @@ goodbye displays or toggles the goodbye message settings for the chat.
 
 Admins can view current settings, toggle goodbyes on/off, or display the current goodbye message.
 */
-func (m moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
@@ -256,7 +256,7 @@ setGoodbye sets a custom goodbye message for the chat.
 
 Admins can set the message content, type, and buttons. Handles input validation and replies with the result.
 */
-func (m moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
@@ -296,7 +296,7 @@ resetGoodbye resets the goodbye message to the default.
 
 Admins can use this to remove any custom goodbye message.
 */
-func (m moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
@@ -330,7 +330,7 @@ cleanWelcome toggles or displays the setting for deleting old welcome messages.
 
 Admins can enable or disable automatic deletion of old welcome messages.
 */
-func (m moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
@@ -386,7 +386,7 @@ cleanGoodbye toggles or displays the setting for deleting old goodbye messages.
 
 Admins can enable or disable automatic deletion of old goodbye messages.
 */
-func (m moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	args := ctx.Args()[1:]
@@ -442,7 +442,7 @@ delJoined toggles or displays the setting for deleting "user joined" service mes
 
 Admins can enable or disable automatic deletion of join messages.
 */
-func (m moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	args := ctx.Args()[1:]
@@ -497,7 +497,7 @@ newMember handles the event when a new member joins the chat.
 
 Sends a welcome message if enabled and manages deletion of previous welcome messages if configured.
 */
-func (m moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	newMember := ctx.ChatMember.NewChatMember.MergeChatMember().User
 	greetPrefs := db.GetGreetingSettings(chat.Id)
@@ -541,7 +541,7 @@ leftMember handles the event when a member leaves the chat.
 
 Sends a goodbye message if enabled and manages deletion of previous goodbye messages if configured.
 */
-func (m moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	leftMember := ctx.ChatMember.OldChatMember.MergeChatMember().User
 	greetPrefs := db.GetGreetingSettings(chat.Id)
@@ -582,7 +582,7 @@ cleanService deletes service messages if the setting is enabled.
 
 Used for cleaning up join/leave notifications and other service messages.
 */
-func (m moduleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -668,7 +668,7 @@ joinRequestHandler handles callback queries for join requests.
 
 Admins can approve, decline, or ban users requesting to join the chat.
 */
-func (m moduleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
@@ -732,7 +732,7 @@ autoApprove toggles or displays the setting for auto-approving join requests.
 
 Admins can enable or disable automatic approval of new join requests.
 */
-func (m moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	args := ctx.Args()[1:]
@@ -789,7 +789,7 @@ loadPendingJoins checks if a join request for a user in a chat is already pendin
 
 Returns true if the request is pending, otherwise false.
 */
-func (m moduleStruct) loadPendingJoins(chatId, userId int64) bool {
+func (moduleStruct) loadPendingJoins(chatId, userId int64) bool {
 	alreadyAsked, _ := cache.Marshal.Get(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chatId, userId), new(bool))
 	if alreadyAsked == nil || !alreadyAsked.(bool) {
 		return false
@@ -802,7 +802,7 @@ setPendingJoins marks a join request as pending for a user in a chat.
 
 Stores the pending state with a 5-minute expiration.
 */
-func (m moduleStruct) setPendingJoins(chatId, userId int64) {
+func (moduleStruct) setPendingJoins(chatId, userId int64) {
 	_ = cache.Marshal.Set(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chatId, userId), true, store.WithExpiration(5*time.Minute))
 }
 

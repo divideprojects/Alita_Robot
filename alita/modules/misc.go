@@ -30,7 +30,7 @@ import (
 
 var miscModule = moduleStruct{moduleName: "Misc"}
 
-func (m moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
@@ -71,7 +71,7 @@ func (m moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	sender := ctx.EffectiveSender
 	userId := extraction.ExtractUser(b, ctx)
@@ -167,7 +167,7 @@ func (m moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -273,7 +273,7 @@ func (m moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -290,7 +290,7 @@ func (m moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	sender := ctx.EffectiveSender
@@ -361,7 +361,7 @@ func (m moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
@@ -434,7 +434,7 @@ func (m moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // This function removes the stuck bot keyboard from your chat!
-func (m moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	rMsg, err := msg.Reply(b,
@@ -460,7 +460,7 @@ func (m moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error 
 	return ext.EndGroups
 }
 
-func (m moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat

@@ -169,7 +169,7 @@ rmFilter removes a filter for a specific keyword in the chat.
 Only admins can remove filters. Handles input validation and replies with the result.
 Connection: true, true
 */
-func (m moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
@@ -228,7 +228,7 @@ filtersList lists all filters in the chat.
 Anyone can view the filters. Replies with the current list or a message if none exist.
 Connection: false, true
 */
-func (m moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	// if command is disabled, return
@@ -292,7 +292,7 @@ rmAllFilters removes all filters from the current chat.
 
 Only the chat owner can use this command to clear all filters.
 */
-func (m moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -337,7 +337,7 @@ filtersButtonHandler handles callback queries for removing all filters.
 
 Processes the owner's confirmation and removes all filters if confirmed.
 */
-func (m moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
@@ -444,7 +444,7 @@ filtersWatcher monitors messages for filtered keywords and replies with the appr
 
 Handles both formatted and unformatted responses, and enforces admin-only access for noformat requests.
 */
-func (m moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User

@@ -44,7 +44,7 @@ type pinType struct {
 
 This a watcher for 2 functions described above
 */
-func (m moduleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	pinprefs := db.GetPinData(chat.Id)
@@ -82,7 +82,7 @@ func (m moduleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
 
 This function unpins the latest pinned message or message to which user replied */
 
-func (m moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -145,7 +145,7 @@ func (m moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // Callback Query Handler for Unpinall command
-func (m moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -176,7 +176,7 @@ func (m moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by owner to unpin all message in a chat. */
 
-func (m moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	user := ctx.EffectiveSender.User
 
@@ -309,7 +309,7 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 Normally pins message without tagging users but tag can be
 enabled by entering 'notify'/'violent'/'loud' in front of command */
 
-func (m moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -376,7 +376,7 @@ connection - true, true
 
 Sets Preference for checkPinned function to check message for unpinning or not
 */
-func (m moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -450,7 +450,7 @@ connection - true, true
 
 Sets Preference for checkPinned function to check message for cleaning or not
 */
-func (m moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -524,7 +524,7 @@ connection - false, true
 
 User can get the link to latest pinned message of chat using this
 */
-func (m moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -711,7 +711,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 	},
 }
 
-func (m moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataType int, buttons []tgmd2html.ButtonV2) {
+func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataType int, buttons []tgmd2html.ButtonV2) {
 	dataType = -1 // not defined datatype; invalid filter
 	var (
 		rawText string

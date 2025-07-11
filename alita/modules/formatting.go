@@ -96,7 +96,7 @@ genFormattingKb generates the inline keyboard for formatting help options.
 
 Returns a keyboard with buttons for markdown, fillings, and random content.
 */
-func (m moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
+func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
 	fxt := "formatting.%s"
 
 	keyboard := [][]gotgbot.InlineKeyboardButton{
@@ -128,7 +128,7 @@ getMarkdownHelp returns the help text for a given formatting sub-module.
 
 Supports markdown formatting, fillings, and random content.
 */
-func (m moduleStruct) getMarkdownHelp(module string, ctx *ext.Context) string {
+func (moduleStruct) getMarkdownHelp(module string, ctx *ext.Context) string {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	var helpTxt string
 	switch module {

@@ -476,7 +476,7 @@ sBan silently bans a user from the group and deletes the command message.
 
 Performs permission checks, extracts the target user, and bans them without sending a reply. Handles edge cases such as anonymous users and admins.
 */
-func (m moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 

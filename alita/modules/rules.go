@@ -25,7 +25,7 @@ var rulesModule = moduleStruct{
 	defaultRulesBtn: "Rules",
 }
 
-func (m moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
@@ -39,7 +39,7 @@ func (m moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -152,7 +152,7 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)
@@ -229,7 +229,7 @@ func (m moduleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, true)

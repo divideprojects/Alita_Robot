@@ -403,14 +403,14 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 /*
 adminCmdConnString returns a formatted string of admin connection commands.
 */
-func (m moduleStruct) adminCmdConnString() string {
+func (moduleStruct) adminCmdConnString() string {
 	return "\n - /" + strings.Join(misc.AdminCmds, "\n - /")
 }
 
 /*
 userCmdConnString returns a formatted string of user connection commands.
 */
-func (m moduleStruct) userCmdConnString() string {
+func (moduleStruct) userCmdConnString() string {
 	return "\n - /" + strings.Join(misc.UserCmds, "\n - /")
 }
 

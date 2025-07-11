@@ -36,7 +36,7 @@ chatInfo retrieves information about a specified chat.
 
 Only accessible by the owner or devs. Replies with chat name, ID, user count, and invite link.
 */
-func (m moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -81,7 +81,7 @@ chatList generates and sends a list of all chats the bot is in.
 
 Only accessible by the owner or devs. Sends the list as a text file.
 */
-func (m moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 
@@ -162,7 +162,7 @@ leaveChat makes the bot leave a specified chat.
 
 Only accessible by the owner or devs. Takes the chat ID as an argument.
 */
-func (m moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -201,7 +201,7 @@ addSudo adds a user to the sudo list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (m moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -246,7 +246,7 @@ addDev adds a user to the dev list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (m moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -291,7 +291,7 @@ remSudo removes a user from the sudo list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (m moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -336,7 +336,7 @@ remDev removes a user from the dev list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (m moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
 		return ext.ContinueGroups
@@ -381,7 +381,7 @@ listTeam lists all members of the bot's development team.
 
 Only accessible by existing team members. Replies with formatted lists of dev and sudo users.
 */
-func (m moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	teamUsers := db.GetTeamMembers()
@@ -454,7 +454,7 @@ getStats fetches and displays bot statistics.
 
 Only accessible by the owner or devs. Replies with stats in a formatted message.
 */
-func (m moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 

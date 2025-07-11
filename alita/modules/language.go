@@ -18,7 +18,7 @@ import (
 
 var languagesModule = moduleStruct{moduleName: "Languages"}
 
-func (m moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
+func (moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
 	keyboard := helpers.MakeLanguageKeyboard()
 	keyboard = append(
 		keyboard,
@@ -70,7 +70,7 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := query.Message.GetChat()
 	user := query.From

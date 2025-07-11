@@ -28,7 +28,7 @@ var reportsModule = moduleStruct{
 	handlerGroup: 8,
 }
 
-func (m moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -195,7 +195,7 @@ func (m moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
@@ -311,7 +311,7 @@ func (m moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User

@@ -24,7 +24,7 @@ import (
 
 var warnsModule = moduleStruct{moduleName: "Warns"}
 
-func (m moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -273,7 +273,7 @@ func (m moduleStruct) dWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	return m.warnThisUser(b, ctx, warnusr, reason, "dwarn")
 }
 
-func (m moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -304,7 +304,7 @@ func (m moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -370,7 +370,7 @@ func (m moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
@@ -416,7 +416,7 @@ func (m moduleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -463,7 +463,7 @@ func (m moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -510,7 +510,7 @@ func (m moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -552,7 +552,7 @@ func (m moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 

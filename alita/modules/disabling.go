@@ -40,7 +40,7 @@ disable disables one or more commands in the current chat.
 Only admins can use this command. Updates the database and replies with the result.
 Connection: true, true
 */
-func (m moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -101,7 +101,7 @@ disableable lists all commands that can be disabled.
 
 Anyone can use this command to view the list of disableable commands.
 */
-func (m moduleStruct) disableable(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) disableable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	text := "The following commands can be disabled:"
@@ -131,7 +131,7 @@ disabled lists all currently disabled commands in the chat.
 Anyone can use this command to view the list of disabled commands.
 Connection: false, true
 */
-func (m moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "adminlist") {
@@ -199,7 +199,7 @@ disabledel toggles whether messages invoking disabled commands are deleted.
 Only admins can use this command. If no argument is given, replies with the current setting.
 Connection: true, true
 */
-func (m moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -255,7 +255,7 @@ enable re-enables one or more previously disabled commands in the chat.
 Only admins can use this command. Updates the database and replies with the result.
 Connection: true, true
 */
-func (m moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)

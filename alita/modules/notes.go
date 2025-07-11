@@ -140,7 +140,7 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -191,7 +191,7 @@ func (m moduleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) privNote(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) privNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	args := ctx.Args()[1:]
@@ -225,7 +225,7 @@ func (m moduleStruct) privNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -308,7 +308,7 @@ func (m moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (m moduleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -417,7 +417,7 @@ func (m moduleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) err
 	return ext.EndGroups
 }
 
-func (m moduleStruct) notesButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) notesButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 
@@ -671,7 +671,7 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // returns the note in non-formatted text
-func (m moduleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, replyMsgId int64, noteData *db.ChatNotes) error {
+func (moduleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, replyMsgId int64, noteData *db.ChatNotes) error {
 	user := ctx.EffectiveSender.User
 
 	// check if user is admin or not
