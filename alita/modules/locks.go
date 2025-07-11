@@ -18,6 +18,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
@@ -167,7 +168,6 @@ func (m moduleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -179,10 +179,8 @@ func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	args := ctx.Args()[1:]
 	var toLock []string
 
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
+	// Check permissions using helper
+	if !permissions.CheckPermissions(b, ctx, permissions.CommonAdminPerms) {
 		return ext.EndGroups
 	}
 
@@ -230,15 +228,12 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 	var toLock []string
 
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
+	// Check permissions using helper
+	if !permissions.CheckPermissions(b, ctx, permissions.CommonAdminPerms) {
 		return ext.EndGroups
 	}
 

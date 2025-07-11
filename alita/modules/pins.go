@@ -18,6 +18,7 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 )
 
 var pinsModule = moduleStruct{
@@ -81,24 +82,11 @@ func (moduleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
 This function unpins the latest pinned message or message to which user replied */
 
 func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
-	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
-	// Check permissions
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotPin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserPin(b, ctx, nil, user.Id, false) {
+	// Check permissions using helper
+	if !permissions.CheckPermissions(b, ctx, permissions.CommonPinPerms) {
 		return ext.EndGroups
 	}
 
@@ -160,7 +148,8 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 
-	if query.Data == "unpinallbtn(yes)" {
+	switch query.Data {
+	case "unpinallbtn(yes)":
 		status, err := b.UnpinAllChatMessages(chat.Id, nil)
 		if !status && err != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
@@ -171,7 +160,7 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
 			return err
 		}
-	} else if query.Data == "unpinallbtn(no)" {
+	case "unpinallbtn(no)":
 		_, _, err := query.Message.EditText(b, "Cancelled operation to unpin messages!", nil)
 		if err != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
@@ -318,26 +307,13 @@ Normally pins message without tagging users but tag can be
 enabled by entering 'notify'/'violent'/'loud' in front of command */
 
 func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
-	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	isSilent := true
 	args := ctx.Args
 
-	// permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserPin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotPin(b, ctx, nil, false) {
+	// Check permissions using helper
+	if !permissions.CheckPermissions(b, ctx, permissions.CommonPinPerms) {
 		return ext.EndGroups
 	}
 

@@ -159,7 +159,7 @@ func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	return
 }
 
-// deleteMany deletes all documents from the collection matching the filter.
+// deleteMany deletes multiple documents from the collection matching the filter.
 func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 	_, err = collecion.DeleteMany(tdCtx, filter)
 	if err != nil {

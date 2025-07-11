@@ -12,6 +12,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 )
 
 var mutesModule = moduleStruct{moduleName: "Mutes"}
@@ -22,61 +23,11 @@ The Bot, Muter should be admin with restrict permissions in order to use this */
 
 func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 
-	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	// User should be in chat for getting restricted
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "Why would I mute an admin? That sounds like a pretty dumb idea.", helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 
@@ -153,61 +104,11 @@ The Bot, Muter should be admin with restrict permissions in order to use this */
 
 func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 
-	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	// User should be in chat for getting restricted
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "I don't think you'd want me to mute an admin.", helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 
@@ -284,65 +185,15 @@ The message of muter will be deleted after sending this command */
 
 func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 
-	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotDelete(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
+	// Create permission config that also requires delete permissions
+	muteWithDeletePerms := permissions.CommonRestrictionPerms
+	muteWithDeletePerms.RequireBotDelete = true
 
-	userId := extraction.ExtractUser(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	// User should be in chat for getting restricted
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "Why would I mute an admin? That sounds like a pretty dumb idea.", helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, _, ok := permissions.PerformCommonRestrictionChecks(b, ctx, muteWithDeletePerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 
@@ -384,65 +235,15 @@ Used as a reply to a message and delete the replied message*/
 
 func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 
-	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotDelete(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
+	// Create permission config that also requires delete permissions
+	muteWithDeletePerms := permissions.CommonRestrictionPerms
+	muteWithDeletePerms.RequireBotDelete = true
 
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	// User should be in chat for getting restricted
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "I don't think you'd want me to mute an admin.", helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, muteWithDeletePerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 

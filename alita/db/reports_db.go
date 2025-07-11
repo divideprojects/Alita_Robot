@@ -6,7 +6,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type ChatReportSettings struct {
@@ -20,25 +19,29 @@ type UserReportSettings struct {
 	Status bool  `bson:"status,omitempty" json:"status,omitempty"`
 }
 
-func GetChatReportSettings(chatID int64) (reportsrc *ChatReportSettings) {
-	defReportSettings := &ChatReportSettings{
-		ChatId:      chatID,
-		Status:      true,
-		BlockedList: make([]int64, 0),
-	}
-
-	err := findOne(reportChatColl, bson.M{"_id": chatID}).Decode(&reportsrc)
-	if err == mongo.ErrNoDocuments {
-		reportsrc = defReportSettings
-		err := updateOne(reportChatColl, bson.M{"_id": chatID}, reportsrc)
-		if err != nil {
-			log.Error(err)
+var chatReportSettingsHandler = &SettingsHandler[ChatReportSettings]{
+	Collection: reportChatColl,
+	Default: func(chatID int64) *ChatReportSettings {
+		return &ChatReportSettings{
+			ChatId:      chatID,
+			Status:      true,
+			BlockedList: make([]int64, 0),
 		}
-	} else if err != nil {
-		reportsrc = defReportSettings
-		log.Error(err)
-	}
-	return
+	},
+}
+
+var userReportSettingsHandler = &SettingsHandler[UserReportSettings]{
+	Collection: reportUserColl,
+	Default: func(userID int64) *UserReportSettings {
+		return &UserReportSettings{
+			UserId: userID,
+			Status: true,
+		}
+	},
+}
+
+func GetChatReportSettings(chatID int64) *ChatReportSettings {
+	return chatReportSettingsHandler.CheckOrInit(chatID)
 }
 
 func SetChatReportStatus(chatID int64, pref bool) {
@@ -80,25 +83,8 @@ func UnblockReportUser(chatId, userId int64) {
 
 /* user settings below */
 
-func GetUserReportSettings(userId int64) (reportsrc *UserReportSettings) {
-	defReportSettings := &UserReportSettings{
-		UserId: userId,
-		Status: true,
-	}
-
-	err := findOne(reportUserColl, bson.M{"_id": userId}).Decode(&reportsrc)
-	if err == mongo.ErrNoDocuments {
-		reportsrc = defReportSettings
-		err := updateOne(reportUserColl, bson.M{"_id": userId}, reportsrc)
-		if err != nil {
-			log.Error(err)
-		}
-	} else if err != nil {
-		reportsrc = defReportSettings
-		log.Error(err)
-	}
-
-	return
+func GetUserReportSettings(userId int64) *UserReportSettings {
+	return userReportSettingsHandler.CheckOrInit(userId)
 }
 
 func SetUserReportSettings(chatID int64, pref bool) {

@@ -15,6 +15,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -112,14 +113,15 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 
 	if numWarns >= warnrc.WarnLimit {
 		db.ResetUserWarns(userId, chat.Id)
-		if warnrc.WarnMode == "kick" {
+		switch warnrc.WarnMode {
+		case "kick":
 			_, err = chat.BanMember(b, userId, nil)
 			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been kicked!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: kick (%d) - %s", userId, err)
 				return err
 			}
-		} else if warnrc.WarnMode == "mute" {
+		case "mute":
 			_, err = chat.RestrictMember(b, userId,
 				gotgbot.ChatPermissions{
 					CanSendMessages:       false,
@@ -144,7 +146,7 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				log.Errorf("[warn] warnlimit: mute (%d) - %s", userId, err)
 				return err
 			}
-		} else if warnrc.WarnMode == "ban" {
+		case "ban":
 			_, err = chat.BanMember(b, userId, nil)
 			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been banned!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
@@ -213,50 +215,14 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 }
 
 func (m moduleStruct) warnUser(b *gotgbot.Bot, ctx *ext.Context) error {
-	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	user := ctx.EffectiveSender.User
 
-	// Check permissions
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		return ext.EndGroups
-	}
 	var warnusr int64
 	if msg.ReplyToMessage != nil {
 		warnusr = msg.ReplyToMessage.From.Id
@@ -268,50 +234,14 @@ func (m moduleStruct) warnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (m moduleStruct) sWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
-	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	user := ctx.EffectiveSender.User
 
-	// Check permissions
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		return ext.EndGroups
-	}
 	var warnusr int64
 	if msg.ReplyToMessage != nil && msg.ReplyToMessage.From.Id == userId {
 		warnusr = msg.ReplyToMessage.From.Id
@@ -323,50 +253,14 @@ func (m moduleStruct) sWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (m moduleStruct) dWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
-	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	user := ctx.EffectiveSender.User
 
-	// Check permissions
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		return ext.EndGroups
-	}
 	var warnusr int64
 	if msg.ReplyToMessage != nil && msg.ReplyToMessage.From.Id == userId {
 		warnusr = msg.ReplyToMessage.From.Id

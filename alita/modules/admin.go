@@ -12,6 +12,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/debug_bot"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -106,43 +107,11 @@ Connection: true, true
 func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	user := ctx.EffectiveSender.User
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
-	// permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserPromote(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotPromote(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-
-	userId := extraction.ExtractUser(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks and user extraction
+	userId, _, ok := permissions.PerformCommonPromotionChecks(b, ctx, permissions.CommonPromotionPerms)
+	if !ok {
 		return ext.EndGroups
 	}
 
@@ -240,40 +209,9 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	extraText := ""
 
-	// permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserPromote(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotPromote(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-
-	userId, customTitle := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks and user extraction
+	userId, customTitle, ok := permissions.PerformCommonPromotionChecks(b, ctx, permissions.CommonPromotionPerms)
+	if !ok {
 		return ext.EndGroups
 	}
 

@@ -4,7 +4,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Rules struct {
@@ -14,21 +13,16 @@ type Rules struct {
 	RulesBtn string `bson:"rules_button,omitempty" json:"rules_button,omitempty"`
 }
 
-// check chat Flood Settings, used to get data before performing any operation
-func checkRulesSetting(chatID int64) (rulesrc *Rules) {
-	defRulesSrc := &Rules{ChatId: chatID, Rules: "", Private: false}
-	errS := findOne(rulesColl, bson.M{"_id": chatID}).Decode(&rulesrc)
-	if errS == mongo.ErrNoDocuments {
-		rulesrc = defRulesSrc
-		err := updateOne(rulesColl, bson.M{"_id": chatID}, rulesrc)
-		if err != nil {
-			log.Errorf("[Database] checkRulesSetting: %v - %d", err, chatID)
-		}
-	} else if errS != nil {
-		rulesrc = defRulesSrc
-		log.Errorf("[Database] checkRulesSetting: %v - %d", errS, chatID)
-	}
-	return rulesrc
+var rulesSettingsHandler = &SettingsHandler[Rules]{
+	Collection: rulesColl,
+	Default: func(chatID int64) *Rules {
+		return &Rules{ChatId: chatID, Rules: "", Private: false}
+	},
+}
+
+// checkRulesSetting uses the generic handler to get or initialize rules settings
+func checkRulesSetting(chatID int64) *Rules {
+	return rulesSettingsHandler.CheckOrInit(chatID)
 }
 
 func GetChatRulesInfo(chatId int64) *Rules {

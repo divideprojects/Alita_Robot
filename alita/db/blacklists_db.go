@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	log "github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type BlacklistSettings struct {
@@ -71,9 +72,11 @@ func GetBlacklistSettings(chatId int64) *BlacklistSettings {
 }
 
 func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
-	var blacklistStruct []*BlacklistSettings
-
-	cursor := findAll(blacklistsColl, map[string]interface{}{})
+	// Count chats with non-empty triggers array (active blacklists)
+	_, blacklistChats = CountByChat(blacklistsColl, bson.M{"triggers": bson.M{"$exists": true, "$ne": []string{}}}, "_id")
+	
+	// For trigger count, we need manual aggregation since we're counting array elements
+	cursor := findAll(blacklistsColl, bson.M{"triggers": bson.M{"$exists": true, "$ne": []string{}}})
 	defer func(cursor interface{ Close(context.Context) error }, ctx context.Context) {
 		if err := cursor.Close(ctx); err != nil {
 			log.Error(err)
@@ -86,15 +89,7 @@ func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 			log.Error("Failed to decode blacklist setting:", err)
 			continue
 		}
-		blacklistStruct = append(blacklistStruct, &blacklistSetting)
-	}
-
-	for _, i := range blacklistStruct {
-		lenBl := len(i.Triggers)
-		blacklistTriggers += int64(lenBl)
-		if lenBl > 0 {
-			blacklistChats++
-		}
+		blacklistTriggers += int64(len(blacklistSetting.Triggers))
 	}
 
 	return

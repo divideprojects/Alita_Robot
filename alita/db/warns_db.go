@@ -20,20 +20,15 @@ type Warns struct {
 	Reasons  []string `bson:"warns" json:"warns" default:"[]"`
 }
 
-func checkWarnSettings(chatID int64) (warnrc *WarnSettings) {
-	defaultWarnSettings := &WarnSettings{ChatId: chatID, WarnLimit: 3, WarnMode: "mute"}
-	err := findOne(warnSettingsColl, bson.M{"_id": chatID}).Decode(&warnrc)
-	if err == mongo.ErrNoDocuments {
-		warnrc = defaultWarnSettings
-		err := updateOne(warnSettingsColl, bson.M{"_id": chatID}, warnrc)
-		if err != nil {
-			log.Errorf("[Database] checkWarnSettings: %v", err)
-		}
-	} else if err != nil {
-		log.Errorf("[Database][checkWarnSettings]: %d - %v", chatID, err)
-		warnrc = defaultWarnSettings
-	}
-	return
+var warnSettingsHandler = &SettingsHandler[WarnSettings]{
+	Collection: warnSettingsColl,
+	Default: func(chatID int64) *WarnSettings {
+		return &WarnSettings{ChatId: chatID, WarnLimit: 3, WarnMode: "mute"}
+	},
+}
+
+func checkWarnSettings(chatID int64) *WarnSettings {
+	return warnSettingsHandler.CheckOrInit(chatID)
 }
 
 func checkWarns(userId, chatId int64) (warnrc *Warns) {

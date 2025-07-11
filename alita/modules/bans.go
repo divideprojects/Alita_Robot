@@ -19,6 +19,7 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 )
 
 /*
@@ -166,62 +167,12 @@ Checks permissions, extracts the target user, and kicks them. Handles edge cases
 */
 func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
-	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	// User should be in chat for getting restricted
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.user_not_in_chat"), helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.cannot_kick_admin"), helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 
@@ -332,53 +283,12 @@ Performs permission checks, extracts the target user and ban duration, and bans 
 */
 func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
-	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, false)
+	if !ok {
 		return ext.EndGroups
 	}
 
@@ -567,56 +477,15 @@ Performs permission checks, extracts the target user, and bans them without send
 */
 func (m moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
-	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotDelete(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
+	// Create permission config that also requires delete permissions
+	banWithDeletePerms := permissions.CommonRestrictionPerms
+	banWithDeletePerms.RequireBotDelete = true
 
-	userId := extraction.ExtractUser(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, _, ok := permissions.PerformCommonRestrictionChecks(b, ctx, banWithDeletePerms, false)
+	if !ok {
 		return ext.EndGroups
 	}
 
@@ -648,59 +517,17 @@ Checks permissions, extracts the target user, deletes their message, and bans th
 */
 func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
-	// Permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserDelete(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotDelete(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
+	// Create permission config that also requires delete permissions
+	banWithDeletePerms := permissions.CommonRestrictionPerms
+	banWithDeletePerms.RequireUserDelete = true
+	banWithDeletePerms.RequireBotDelete = true
 
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, banWithDeletePerms, false)
+	if !ok {
 		return ext.EndGroups
 	}
 

@@ -1,8 +1,11 @@
 package db
 
 import (
+	"context"
+
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 	log "github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type DisableCommand struct {
@@ -72,18 +75,24 @@ func removeStrfromStr(s []string, r string) []string {
 }
 
 func LoadDisableStats() (disabledCmds, disableEnabledChats int64) {
-	var disbaledStruct []*DisableCommand
-
-	cursor := findAll(disableColl, map[string]interface{}{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &disbaledStruct)
-
-	for _, disrc := range disbaledStruct {
-		disLn := int64(len(disrc.Commands))
-		disabledCmds += disLn
-		if disLn > 0 {
-			disableEnabledChats++
+	// Count chats with non-empty commands array (active disables)
+	_, disableEnabledChats = CountByChat(disableColl, bson.M{"commands": bson.M{"$exists": true, "$ne": []string{}}}, "_id")
+	
+	// For disabled commands count, we need manual aggregation since we're counting array elements
+	cursor := findAll(disableColl, bson.M{"commands": bson.M{"$exists": true, "$ne": []string{}}})
+	defer func(cursor interface{ Close(context.Context) error }, ctx context.Context) {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error(err)
 		}
+	}(cursor, bgCtx)
+
+	for cursor.Next(bgCtx) {
+		var disableCommand DisableCommand
+		if err := cursor.Decode(&disableCommand); err != nil {
+			log.Error("Failed to decode disable command:", err)
+			continue
+		}
+		disabledCmds += int64(len(disableCommand.Commands))
 	}
 
 	return
