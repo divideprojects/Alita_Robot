@@ -443,7 +443,10 @@ strings:
       - <code>{mention}</code>: Mentions the user with their firstname.
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{rules}</code>: Fügt Regeln-Schaltfläche zur Nachricht hinzu.
+      - <code>{protect}</code>: Schützt den Inhalt vor dem Teilen.
+      - <code>{preview}</code>: Aktiviert Vorschauen in Nachrichten.
+      - <code>{nonotif}</code>: Deaktiviert die Benachrichtigung für diese Nachricht.
     Random: |-
       <b>Random Content</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetgoodbye: Setzt die goodbye-Nachricht auf default zurück.
       × /cleanservice `<yes/no/on/off>`: Löschen Sie alle Service-Nachrichten wie 'x beigetreten die Gruppe' Benachrichtigung.
       × /cleanwelcome `<yes/no/on/off>`: Löschen Sie die alte Willkommensnachricht, wann immer ein neues Mitglied tritt.
+      × /autoapprove `<yes/no/on/off>`: Alle neuen Mitglieder automatisch genehmigen.
   Help:
     About: |-
       @%s ist einer der schnellsten und feature-gefüllten Gruppenmanager.

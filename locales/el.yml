@@ -443,7 +443,10 @@ strings:
       - <code>{mention}</code>: Mentions the user with their firstname.
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{rules}</code>: Προσθέτει κουμπί κανόνων στο μήνυμα.
+      - <code>{protect}</code>: Προστατεύει το περιεχόμενο από το να μοιραστεί.
+      - <code>{preview}</code>: Ενεργοποιεί προεπισκοπήσεις στα μηνύματα.
+      - <code>{nonotif}</code>: Απενεργοποιεί την ειδοποίηση για αυτό το μήνυμα.
     Random: |-
       <b>Random Content</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetαντίο: Επαναφέρει το μήνυμα "αντίο" στο προεπιλεγμένο.
       × /cleanservice `<yes/no/on/off>`: Διαγράψτε όλα τα μηνύματα υπηρεσίας όπως 'x εντάχθηκαν στην ομάδα' ειδοποίηση.
       × /cleanwelcome `<yes/no/on/off>`: Διαγράψτε το παλιό μήνυμα καλωσορίσματος, κάθε φορά που ένα νέο μέλος συμμετέχει.
+      × /autoapprove `<yes/no/on/off>`: Αυτόματη έγκριση όλων των νέων μελών.
   Help:
     About: |-
       @%s is one of the fastest and most feature filled group manager.

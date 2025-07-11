@@ -444,6 +444,9 @@ strings:
        - <code>{id}</code>: Användarens ID.
        - <code>{chatname}</code>: Chats namn.
        - <code>{rules}</code>: Lägger till Regler-knappen till meddelandet.
+      - <code>{protect}</code>: Skyddar innehållet från att delas.
+      - <code>{preview}</code>: Aktiverar förhandsvisningar i meddelanden.
+      - <code>{nonotif}</code>: Inaktiverar meddelandet för det meddelandet.
           Random: |-
        <b>Slumpmässigt innehåll</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetFarväl: Återställer avfartsmeddelandet till standardvärdet.
       × /cleanservice "<yes/no/on/off>": Ta bort alla servicemeddelanden, t.ex. "x anslöt till gruppen".
       × /cleankommet "<yes/no/on/off>": Ta bort det gamla välkomstmeddelandet, när en ny medlem ansluter.
+      × /autoapprove "<yes/no/on/off>": Godkänn automatiskt alla nya medlemmar.
   Help:
     About: |-
       @%s är en av den snabbaste och mest funktionsfyllda grupphanteraren.

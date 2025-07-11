@@ -443,7 +443,10 @@ strings:
       - <code>{mention}</code>: Mentions the user with their firstname.
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{rules}</code>: संदेश में नियम बटन जोड़ता है।
+      - <code>{protect}</code>: सामग्री को साझा होने से बचाता है।
+      - <code>{preview}</code>: संदेशों में पूर्वावलोकन सक्षम करता है।
+      - <code>{nonotif}</code>: उस संदेश के लिए अधिसूचना अक्षम करता है।
     Random: |-
       <b>Random Content</b>
 
@@ -476,7 +479,8 @@ strings:
       × /goodbye `<yes/no/on/off>`: Enables or Disables goodbye setting for group.
       × /resetgoodbye: Resets the goodbye message to default.
       × /cleanservice `<yes/no/on/off>`: Delete all service messages such as 'x joined the group' notification.
-      × /cleanwelcome `<yes/no/on/off>`: Delete the old welcome message, whenever a new member joins.
+      × /cleanwelcome `<yes/no/on/off>`: जब भी कोई नया सदस्य जुड़ता है तो पुराना स्वागत संदेश हटाएं।
+      × /autoapprove `<yes/no/on/off>`: सभी नए सदस्यों को स्वचालित रूप से अनुमोदित करें।
   Help:
     About: |-
       @%s is one of the fastest and most feature filled group manager.

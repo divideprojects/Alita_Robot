@@ -443,7 +443,10 @@ strings:
       - <code>{mention}</code>: Mentions the user with their firstname.
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{rules}</code>: Přidá tlačítko pravidel do zprávy.
+      - <code>{protect}</code>: Chrání obsah před sdílením.
+      - <code>{preview}</code>: Povoluje náhledy ve zprávách.
+      - <code>{nonotif}</code>: Zakáže oznámení pro tuto zprávu.
     Random: |-
       <b>Random Content</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetgoodysbohem: Obnovuje se výchozí zpráva sbohem.
       × /cleanservice `<yes/no/on/off>`: Odstraní všechny servisní zprávy, jako např. 'x připojil se k oznámení skupiny'.
       × /cleanwelcome `<yes/no/on/off>`: Odstraní starou uvítací zprávu vždy, když se připojí nový člen.
+      × /autoapprove `<yes/no/on/off>`: Automaticky schválit všechny nové členy.
   Help:
     About: |-
       @%s je jedním z nejrychlejších a nejvíce obsazených funkcí správce skupiny.

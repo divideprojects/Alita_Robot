@@ -444,6 +444,9 @@ strings:
       - <code>{id}</code>: El ID del usuario.
       - <code>{chatname}</code>: El nombre del chat.
       - <code>{rules}</code>: Agrega Botón de Reglas al Mensaje.
+      - <code>{protect}</code>: Protege el contenido de ser compartido.
+      - <code>{preview}</code>: Habilita vistas previas en los mensajes.
+      - <code>{nonotif}</code>: Deshabilita la notificación para ese mensaje.
     Random: |-
       <b>Contenido Aleatorio</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetgoodbye: Reinicia el mensaje de despedida al predeterminado.
       × /cleanservice `<yes/no/on/off>`: Eliminar todos los mensajes de servicio como la notificación 'x se unió al grupo'.
       × /cleanwelcome `<yes/no/on/off>`: Eliminar el mensaje de bienvenida anterior, cada vez que un nuevo miembro se une.
+      × /autoapprove `<yes/no/on/off>`: Aprobar automáticamente todos los nuevos miembros.
   Help:
     About: |-
       @%s es uno de los gestores de grupos más rápidos y llenos de funciones.

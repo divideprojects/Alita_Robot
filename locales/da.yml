@@ -443,7 +443,10 @@ strings:
       - <code>{mention}</code>: Mentions the user with their firstname.
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{rules}</code>: Tilføjer regelknap til besked.
+      - <code>{protect}</code>: Beskytter indholdet mod deling.
+      - <code>{preview}</code>: Aktiverer forhåndsvisninger i beskeder.
+      - <code>{nonotif}</code>: Deaktiverer notifikationen for den besked.
     Random: |-
       <b>Random Content</b>
 
@@ -476,7 +479,8 @@ strings:
       × /goodbye `<yes/no/on/off>`: Enables or Disables goodbye setting for group.
       × /resetgoodbye: Resets the goodbye message to default.
       × /cleanservice `<yes/no/on/off>`: Delete all service messages such as 'x joined the group' notification.
-      × /cleanwelcome `<yes/no/on/off>`: Delete the old welcome message, whenever a new member joins.
+      × /cleanwelcome `<yes/no/on/off>`: Slet den gamle velkomstbesked, når et nyt medlem tilslutter sig.
+      × /autoapprove `<yes/no/on/off>`: Godkend automatisk alle nye medlemmer.
   Help:
     About: |-
       @%s er en af de hurtigste og mest funktionsfyldte gruppebestyrere.

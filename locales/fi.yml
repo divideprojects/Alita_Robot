@@ -444,6 +444,9 @@ strings:
       - <code>{id}</code>: Käyttäjän ID.
       - <code>{chatname}</code>: Keskustelun nimi.
       - <code>{rules}</code>: Lisää säännöt painiketta viestiin.
+      - <code>{protect}</code>: Suojaa sisältöä jakamiselta.
+      - <code>{preview}</code>: Ottaa käyttöön esikatselut viesteissä.
+      - <code>{nonotif}</code>: Poistaa kyseisen viestin ilmoituksen käytöstä.
     Random: |-
       <b>Random Content</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetjäähyväiset: Palauta hyvästit oletusarvolle.
       ×/siivouspalvelu "<kyllä/ei/on/off>": Poista kaikki palveluviestit, kuten "x liittyi ryhmän ilmoitukseen".
       × /puhdistaa "<kyllä/ei/on/off>": Poista vanha tervetuloviesti aina, kun uusi jäsen liittyy.
+      × /autoapprove "<kyllä/ei/on/off>": Hyväksy automaattisesti kaikki uudet jäsenet.
   Help:
     About: |-
       @%s on yksi nopeimmin ja eniten täytetyistä ryhmän johtajista.

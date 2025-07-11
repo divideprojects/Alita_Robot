@@ -444,6 +444,9 @@ strings:
       - <code>{id}</code>: ID użytkownika.
       - <code>{chatname}</code>: Nazwa czatu.
       - <code>{rules}</code>: Dodaje przycisk Rules do wiadomości.
+      - <code>{protect}</code>: Chroni zawartość przed udostępnianiem.
+      - <code>{preview}</code>: Włącza podglądy w wiadomościach.
+      - <code>{nonotif}</code>: Wyłącza powiadomienie dla tej wiadomości.
     Random: |-
       <b>Random Content</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetpożegnania: Resetuj komunikat żegny do wartości domyślnej.
       × /cleanservice `<yes/no/on/off>`: Usuń wszystkie komunikaty serwisowe, takie jak 'x dołączył do grupy' powiadomienie.
       × /cleanwelcome `<yes/no/on/off>`: Usuń stary komunikat powitalny, kiedy dołącza się nowy element.
+      × /autoapprove `<yes/no/on/off>`: Automatycznie zatwierdź wszystkich nowych członków.
   Help:
     About: |-
       @%s jest jednym z najszybszych i najbardziej wypełnionych funkcji menedżera grupy.

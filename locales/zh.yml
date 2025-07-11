@@ -445,7 +445,10 @@ strings:
       - <code>{mention}</code>: Mentions the user with their firstname.
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{rules}</code>: 向消息添加规则按钮。
+      - <code>{protect}</code>: 保护内容不被分享。
+      - <code>{preview}</code>: 在消息中启用预览。
+      - <code>{nonotif}</code>: 禁用该消息的通知。
     Random: |-
       <b>随机内容</b>
 
@@ -479,6 +482,7 @@ strings:
       × / 重置 : 将告别消息重置为缺省值。
       × /cleanservice `<yes/no/on/off>`: 删除所有服务消息，如 "x 加入组 " 通知。
       × / 清洁欢迎 "<yes/no/on/off>": 每当新成员加入时，删除旧欢迎消息。
+      × /autoapprove "<yes/no/on/off>": 自动批准所有新成员。
   Help:
     About: |-
       @%s 是最快和最有功能的填充组管理器之一。

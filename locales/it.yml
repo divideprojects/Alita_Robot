@@ -444,6 +444,9 @@ strings:
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.
       - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{protect}</code>: Protegge il contenuto dalla condivisione.
+      - <code>{preview}</code>: Abilita le anteprime nei messaggi.
+      - <code>{nonotif}</code>: Disabilita la notificazione per quel messaggio.
     Random: |-
       <b>Random Content</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetaddio: Reimposta il messaggio di addio al default.
       × /cleanservice `<yes/no/on/off>`: Elimina tutti i messaggi di servizio come ' x uniti alla notifica del gruppo.
       × /cleanwelcome `<yes/no/on/off>`: Elimina il vecchio messaggio di benvenuto, ogni qualvolta si unisce un nuovo membro.
+      × /autoapprove `<yes/no/on/off>`: Approva automaticamente tutti i nuovi membri.
   Help:
     About: |-
       @%s è uno dei più veloci e più feature manager di gruppo.

@@ -444,6 +444,9 @@ strings:
       - <code>{id}</code>: ID-ul utilizatorului.
       - <code>{chatname}</code>: Numele chat-ului.
       - <code>{rules}</code>: Adaugă butonul de reguli la mesaj.
+      - <code>{protect}</code>: Protejează conținutul de la partajare.
+      - <code>{preview}</code>: Activează previzualizările în mesaje.
+      - <code>{nonotif}</code>: Dezactivează notificarea pentru acel mesaj.
     Random: |-
       <b>Random Content</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetGoodbye: Resetează mesajul de la revedere în mod implicit.
       × /cleanservice `<yes/no/on/off>`: ștergerea tuturor mesajelor de serviciu, cum ar fi ' x, s-a alăturat notificării grupului.
       × /cleanwelcome `<yes/no/on/off>`: ștergeți mesajul vechi de bun venit, de fiecare dată când un nou membru se alătură.
+      × /autoapprove `<yes/no/on/off>`: Aprobă automat toți membrii noi.
   Help:
     About: |-
       @%s este unul dintre cele mai rapide și mai multe caracteristici manager de grup.

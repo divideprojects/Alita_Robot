@@ -445,7 +445,10 @@ strings:
       - <code>{mention}</code>: Mentions the user with their firstname.
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{rules}</code>: Voegt regelknop toe aan bericht.
+      - <code>{protect}</code>: Beschermt de inhoud tegen delen.
+      - <code>{preview}</code>: Schakelt voorvertoningen in berichten in.
+      - <code>{nonotif}</code>: Schakelt de melding voor dat bericht uit.
     Random: |-
       <b>Random Content</b>
 
@@ -479,6 +482,7 @@ strings:
       × /resetdatum: Het afscheidsbericht wordt standaard ingesteld.
       × /cleanservice `<yes/no/on/off>': Verwijder alle serviceberichten zoals' x is toegetreden tot de groep 'notificatie.
       × /cleanwelcome `<yes/no/on/off>': Verwijder het oude welkomstbericht wanneer een nieuw lid toetreedt.
+      × /autoapprove `<yes/no/on/off>': Automatisch alle nieuwe leden goedkeuren.
   Help:
     About: |-
       @%s is een van de snelste en meest functie gevulde groep manager.

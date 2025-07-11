@@ -443,7 +443,10 @@ strings:
       - <code>{mention}</code>: Mentions the user with their firstname.
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{rules}</code>: Добавляет кнопку правил к сообщению.
+      - <code>{protect}</code>: Защищает контент от совместного использования.
+      - <code>{preview}</code>: Включает предварительный просмотр в сообщениях.
+      - <code>{nonotif}</code>: Отключает уведомление для этого сообщения.
     Random: |-
       <b>Random Content</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetщаться: Пересете сообщение "Прощание" по умолчанию.
       × /cleanservice `<yes/no/on/off>`: Удалить все сообщения службы, такие как 'x, присоединились к уведомлению группы'.
       × /cleanweld `<yes/no/on/off>`: Удалить старое приветственное сообщение при добавлении новых членов.
+      × /autoapprove `<yes/no/on/off>`: Автоматически одобрять всех новых участников.
   Help:
     About: |-
       @%s -это один из самых быстрых и наиболее характерных функций администратора групп.

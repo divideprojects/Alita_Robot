@@ -444,7 +444,10 @@ strings:
       - <code>{mention}</code>: Mentions the user with their firstname.
       - <code>{id}</code>: The user's ID.
       - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{rules}</code>: Mesaja Kurallar Düğmesi ekler.
+      - <code>{protect}</code>: İçeriği paylaşılmaktan korur.
+      - <code>{preview}</code>: Mesajlarda önizlemeleri etkinleştirir.
+      - <code>{nonotif}</code>: Bu mesaj için bildirimi devre dışı bırakır.
     Random: |-
       <b>Random Content</b>
 
@@ -478,6 +481,7 @@ strings:
       × /resetveavee: veda mesajını varsayılan olarak yeniden ayarlar.
       × /cleanservice `<yes/no/on/off>`: 'x grubu' bildirimine katıldı gibi tüm hizmet iletilerini silin.
       × /cleanwelcome `<yes/no/on/off>`: yeni bir üye katıldığında eski hoş geldiniz iletisini silin.
+      × /autoapprove `<yes/no/on/off>`: Tüm yeni üyeleri otomatik olarak onaylayın.
   Help:
     About: |-
       @%s en hızlı ve en çok özellik dolu grup yöneticiliklerinden biridir.

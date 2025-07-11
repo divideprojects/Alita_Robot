@@ -444,6 +444,9 @@ strings:
       - <code>{id}</code>: ユーザーのID。
       - <code>{chatname}</code>: チャットの名前。
       - <code>{rules}</code>: メッセージにルールボタンを追加します。
+      - <code>{protect}</code>: コンテンツを共有から保護します。
+      - <code>{preview}</code>: メッセージでプレビューを有効にします。
+      - <code>{nonotif}</code>: そのメッセージの通知を無効にします。
     Random: |-
       <b>ランダムコンテンツ</b>
 
@@ -477,6 +480,7 @@ strings:
       × /resetGoodbye: お別れのメッセージをデフォルトにリセットします。
       × /cleanservice `<yes/no/on/off>`: ' x ' などのすべてのサービス・メッセージを削除します。
       × /cleanようこそ `<yes/no/on/off>`: 新しいメンバーが結合するたびに、古いウェルカム・メッセージを削除します。
+      × /autoapprove `<yes/no/on/off>`: すべての新しいメンバーを自動的に承認します。
   Help:
     About: |-
       @%s は、最も速く、最も機能豊富なグループマネージャーの一つです。
