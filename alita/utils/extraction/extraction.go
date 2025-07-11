@@ -19,6 +19,12 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 )
 
+var (
+	// Pre-compiled regex patterns for better performance
+	quotesPattern = regexp.MustCompile(`(?s)(\s+)?"(.*?)"\s?(.*)?`)
+	wordPattern   = regexp.MustCompile(`(?s)(\s+)?([A-Za-z0-9-_+=}\][{;:'",<.>?/|*\\()]+)\s?(.*)?`)
+)
+
 /*
 ExtractChat extracts the chat from the command arguments or message context.
 
@@ -252,28 +258,16 @@ Returns the extracted text and any remaining text after the match.
 func ExtractQuotes(sentence string, matchQuotes, matchWord bool) (inQuotes, afterWord string) {
 	// if first character starts with '""' and matchQutes is true
 	if sentence[0] == '"' && matchQuotes {
-		// regex pattern to match text between strings
-		pattern, err := regexp.Compile(`(?s)(\s+)?"(.*?)"\s?(.*)?`)
-		if err != nil {
-			log.Error(err)
-			return
-		}
-		if pattern.MatchString(sentence) {
-			pat := pattern.FindStringSubmatch(sentence)
+		if quotesPattern.MatchString(sentence) {
+			pat := quotesPattern.FindStringSubmatch(sentence)
 			// pat[0] would be the whole matched string
 			// pat[1] is the spaces
 			inQuotes, afterWord = pat[2], pat[3]
 			return
 		}
 	} else if matchWord {
-		// regex pattern to detect all words and special character which do not have spaces but can contain special characters
-		pattern, err := regexp.Compile(`(?s)(\s+)?([A-Za-z0-9-_+=}\][{;:'",<.>?/|*\\()]+)\s?(.*)?`)
-		if err != nil {
-			log.Error(err)
-			return
-		}
-		if pattern.MatchString(sentence) {
-			pat := pattern.FindStringSubmatch(sentence)
+		if wordPattern.MatchString(sentence) {
+			pat := wordPattern.FindStringSubmatch(sentence)
 			// pat[0] would be the whole matched string
 			// pat[1] is the spaces
 			inQuotes, afterWord = pat[2], pat[3]

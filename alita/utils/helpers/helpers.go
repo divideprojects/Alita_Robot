@@ -26,6 +26,36 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
+var (
+	// Pre-compiled regex patterns for better performance
+	anchorTagRegex     = regexp.MustCompile(`<a href="(.*?)">(.*?)</a>`)
+	rulesBtnRegex      = regexp.MustCompile(`(?s){rules(:(same|up))?}`)
+	buttonUrlPattern   = regexp.MustCompile(`[(htps)?:/w.a-zA-Z\d@%_+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z\d@:%_+.~#?&/=]*)`)
+	privateRegex       = regexp.MustCompile(`({private})`)
+	noprivateRegex     = regexp.MustCompile(`({noprivate})`)
+	adminRegex         = regexp.MustCompile(`({admin})`)
+	previewRegex       = regexp.MustCompile(`({preview})`)
+	protectRegex       = regexp.MustCompile(`({protect})`)
+	nonotifRegex       = regexp.MustCompile(`({nonotif})`)
+	noteReplacer       = strings.NewReplacer(
+		"{private}", "",
+		"{admin}", "",
+		"{preview}", "",
+		"{noprivate}", "",
+		"{protect}", "",
+		"{nonotif}", "",
+	)
+	// Pre-compiled regex patterns for ReverseHTML2MD
+	htmlTagRegexes = map[string]*regexp.Regexp{
+		"i":    regexp.MustCompile(`<i>(.*?)</i>`),
+		"u":    regexp.MustCompile(`<u>(.*?)</u>`),
+		"b":    regexp.MustCompile(`<b>(.*?)</b>`),
+		"s":    regexp.MustCompile(`<s>(.*?)</s>`),
+		"code": regexp.MustCompile(`<code>(.*?)</code>`),
+		"pre":  regexp.MustCompile(`<pre>(.*?)</pre>`),
+	}
+)
+
 // NOTE: small helper functions
 // constants
 const (
@@ -75,25 +105,48 @@ SplitMessage splits a message into multiple strings if it exceeds MaxMessageLeng
 Returns a slice of message parts, each within the allowed length.
 */
 func SplitMessage(msg string) []string {
-	if len(msg) > MaxMessageLength {
-		tmp := make([]string, 1)
-		tmp[0] = msg
-		return tmp
-	} else {
-		lines := strings.Split(msg, "\n")
-		smallMsg := ""
-		result := make([]string, 0)
-		for _, line := range lines {
-			if len(smallMsg)+len(line) < MaxMessageLength {
-				smallMsg += line + "\n"
-			} else {
-				result = append(result, smallMsg)
-				smallMsg = line + "\n"
-			}
-		}
-		result = append(result, smallMsg)
-		return result
+	if len(msg) <= MaxMessageLength {
+		return []string{msg}
 	}
+	
+	lines := strings.Split(msg, "\n")
+	result := make([]string, 0)
+	var builder strings.Builder
+	
+	for _, line := range lines {
+		// Check if adding this line would exceed the limit
+		if builder.Len()+len(line)+1 > MaxMessageLength {
+			// If we have content, add it to result
+			if builder.Len() > 0 {
+				result = append(result, strings.TrimSuffix(builder.String(), "\n"))
+				builder.Reset()
+			}
+			
+			// If single line is too long, we need to split it further
+			if len(line) > MaxMessageLength {
+				for len(line) > MaxMessageLength {
+					result = append(result, line[:MaxMessageLength])
+					line = line[MaxMessageLength:]
+				}
+			}
+			
+			// Start new message with remaining line
+			if len(line) > 0 {
+				builder.WriteString(line)
+				builder.WriteString("\n")
+			}
+		} else {
+			builder.WriteString(line)
+			builder.WriteString("\n")
+		}
+	}
+	
+	// Add any remaining content
+	if builder.Len() > 0 {
+		result = append(result, strings.TrimSuffix(builder.String(), "\n"))
+	}
+	
+	return result
 }
 
 /*
@@ -472,38 +525,33 @@ ReverseHTML2MD converts HTML-formatted text to Markdown.
 Handles common tags such as <b>, <i>, <u>, <s>, <code>, <pre>, and <a>.
 */
 func ReverseHTML2MD(text string) string {
-	Html2MdMap := map[string]string{
-		"i":    "_%s_",
-		"u":    "__%s__",
-		"b":    "*%s*",
-		"s":    "~%s~",
-		"code": "`%s`",
-		"pre":  "```%s```",
-		"a":    "[%s](%s)",
-	}
-
-	for _, i := range strings.Split(text, " ") {
-		for htmlTag, keyValue := range Html2MdMap {
-			k := ""
-			// using this because <a> uses <href> tag
-			if htmlTag == "a" {
-				re := regexp.MustCompile(`<a href="(.*?)">(.*?)</a>`)
-				if re.MatchString(i) {
-					k = fmt.Sprintf(keyValue, re.FindStringSubmatch(i)[2], re.FindStringSubmatch(i)[1])
-				} else {
-					continue
-				}
-			} else {
-				regexPattern := fmt.Sprintf(`<%s>(.*)<\/%s>`, htmlTag, htmlTag)
-				pattern := regexp.MustCompile(regexPattern)
-				if pattern.MatchString(i) {
-					k = fmt.Sprintf(keyValue, pattern.ReplaceAllString(i, "$1"))
-				} else {
-					continue
-				}
-			}
-			text = strings.ReplaceAll(text, i, k)
+	// Handle anchor tags first (special case)
+	text = anchorTagRegex.ReplaceAllStringFunc(text, func(match string) string {
+		submatch := anchorTagRegex.FindStringSubmatch(match)
+		if len(submatch) >= 3 {
+			return fmt.Sprintf("[%s](%s)", submatch[2], submatch[1])
 		}
+		return match
+	})
+	
+	// Handle other HTML tags with pre-compiled regexes
+	for htmlTag, pattern := range htmlTagRegexes {
+		var replacement string
+		switch htmlTag {
+		case "i":
+			replacement = "_$1_"
+		case "u":
+			replacement = "__$1__"
+		case "b":
+			replacement = "*$1*"
+		case "s":
+			replacement = "~$1~"
+		case "code":
+			replacement = "`$1`"
+		case "pre":
+			replacement = "```$1```"
+		}
+		text = pattern.ReplaceAllString(text, replacement)
 	}
 
 	return text
@@ -519,10 +567,9 @@ Also manages rules button insertion based on chat rules configuration.
 */
 func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, oldMsg string, buttons []db.Button) (res string, btns []db.Button) {
 	var (
-		firstName     string
-		fullName      string
-		username      string
-		rulesBtnRegex = `(?s){rules(:(same|up))?}`
+		firstName string
+		fullName  string
+		username  string
 	)
 
 	firstName = user.FirstName
@@ -564,12 +611,8 @@ func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, 
 
 	// only add rules btn when rules are added in chat
 	if rulesDb.Rules != "" {
-		pattern, err := regexp.Compile(rulesBtnRegex)
-		if err != nil {
-			log.Error(err)
-		}
-		if pattern.MatchString(res) {
-			response := pattern.FindStringSubmatch(res)
+		if rulesBtnRegex.MatchString(res) {
+			response := rulesBtnRegex.FindStringSubmatch(res)
 
 			sameline := false
 			if response[2] == "same" {
@@ -592,7 +635,7 @@ func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, 
 				btns = append(btns, rulesButton)
 
 			}
-			res = pattern.ReplaceAllString(res, "")
+			res = rulesBtnRegex.ReplaceAllString(res, "")
 		}
 	}
 
@@ -855,50 +898,14 @@ Detects flags like {private}, {admin}, {preview}, {noprivate}, {protect}, and {n
 Returns corresponding booleans and the cleaned text.
 */
 func notesParser(sent string) (pvtOnly, grpOnly, adminOnly, webPrev, protectedContent, noNotif bool, sentBack string) {
-	pvtOnly, err := regexp.MatchString(`({private})`, sent)
-	if err != nil {
-		log.Error(err)
-		return
-	}
+	pvtOnly = privateRegex.MatchString(sent)
+	grpOnly = noprivateRegex.MatchString(sent)
+	adminOnly = adminRegex.MatchString(sent)
+	webPrev = previewRegex.MatchString(sent)
+	protectedContent = protectRegex.MatchString(sent)
+	noNotif = nonotifRegex.MatchString(sent)
 
-	grpOnly, err = regexp.MatchString(`({noprivate})`, sent)
-	if err != nil {
-		log.Error(err)
-		return
-	}
-
-	adminOnly, err = regexp.MatchString(`({admin})`, sent)
-	if err != nil {
-		log.Error(err)
-		return
-	}
-
-	webPrev, err = regexp.MatchString(`({preview})`, sent)
-	if err != nil {
-		log.Error(err)
-		return
-	}
-
-	protectedContent, err = regexp.MatchString(`({protect})`, sent)
-	if err != nil {
-		log.Error(err)
-		return
-	}
-
-	noNotif, err = regexp.MatchString(`({nonotif})`, sent)
-	if err != nil {
-		log.Error(err)
-		return
-	}
-
-	sent = strings.NewReplacer(
-		"{private}", "",
-		"{admin}", "",
-		"{preview}", "",
-		"{noprivate}", "",
-		"{protect}", "",
-		"{nonotif}", "",
-	).Replace(sent)
+	sent = noteReplacer.Replace(sent)
 
 	return pvtOnly, grpOnly, adminOnly, webPrev, protectedContent, noNotif, sent
 }
@@ -1388,15 +1395,14 @@ func preFixes(buttons []tgmd2html.ButtonV2, defaultNameButton string, text *stri
 		// temporary variable function until we don't support notes in inline keyboard
 		// will remove non url buttons from keyboard
 		buttonUrlFixer := func(_buttons *[]tgmd2html.ButtonV2) {
-			// regex taken from https://regexr.com/39nr7
-			buttonUrlPattern, _ := regexp.Compile(`[(htps)?:/w.a-zA-Z\d@%_+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z\d@:%_+.~#?&/=]*)`)
 			buttons = *_buttons
-			for i, btn := range *_buttons {
-				if !buttonUrlPattern.MatchString(btn.Content) {
-					buttons = append(buttons[:i], buttons[i+1:]...)
+			validButtons := make([]tgmd2html.ButtonV2, 0, len(buttons))
+			for _, btn := range buttons {
+				if buttonUrlPattern.MatchString(btn.Content) {
+					validButtons = append(validButtons, btn)
 				}
 			}
-			*_buttons = buttons
+			*_buttons = validButtons
 		}
 
 		buttonUrlFixer(&buttons)

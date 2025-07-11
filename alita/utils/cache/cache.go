@@ -25,12 +25,31 @@ AdminCache represents the cached administrator information for a chat.
 Fields:
   - ChatId:   The unique identifier for the chat.
   - UserInfo: A slice of merged chat member information for each admin.
+  - userMap:  Internal map for O(1) user lookups (not marshaled).
   - Cached:   Indicates if the cache is valid and populated.
 */
 type AdminCache struct {
-	ChatId   int64
-	UserInfo []gotgbot.MergedChatMember
-	Cached   bool
+	ChatId   int64                               `json:"chat_id"`
+	UserInfo []gotgbot.MergedChatMember          `json:"user_info"`
+	userMap  map[int64]gotgbot.MergedChatMember  `json:"-"` // not marshaled
+	Cached   bool                                `json:"cached"`
+}
+
+// buildUserMap creates the internal map for fast user lookups
+func (ac *AdminCache) buildUserMap() {
+	ac.userMap = make(map[int64]gotgbot.MergedChatMember, len(ac.UserInfo))
+	for _, user := range ac.UserInfo {
+		ac.userMap[user.User.Id] = user
+	}
+}
+
+// GetUser returns the user from cache with O(1) lookup
+func (ac *AdminCache) GetUser(userId int64) (gotgbot.MergedChatMember, bool) {
+	if ac.userMap == nil {
+		ac.buildUserMap()
+	}
+	user, found := ac.userMap[userId]
+	return user, found
 }
 
 /*
@@ -47,8 +66,8 @@ func InitCache() {
 		DB:       config.RedisDB,       // use default DB
 	})
 	ristrettoCache, err := ristretto.NewCache(&ristretto.Config{
-		NumCounters: 1000,
-		MaxCost:     100,
+		NumCounters: 10000,        // 10x expected keys for better performance
+		MaxCost:     100 * 1024,   // 100KB instead of 100B
 		BufferItems: 64,
 	})
 	if err != nil {
