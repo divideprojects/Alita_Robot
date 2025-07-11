@@ -111,7 +111,7 @@ MentionUrl returns an HTML-formatted link with the given URL and display name.
 Escapes the name for HTML safety.
 */
 func MentionUrl(url, name string) string {
-	return fmt.Sprintf("<a href=\"%s\">%s</a>", url, html.EscapeString(name))
+	return fmt.Sprintf("<a href=%q>%s</a>", url, html.EscapeString(name))
 }
 
 /*
