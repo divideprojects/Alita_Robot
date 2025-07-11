@@ -429,44 +429,44 @@ strings:
       <code>[button 2](buttonurl://example.com:same)</code>
       <code>[button 3](buttonurl://example.com)</code>
       Detta kommer att visa knapp 1 och 2 på samma rad, med 3 under.
-         Fillings: |-
-       <b>Fillings</b>
+    Fillings: |-
+      <b>Fillings</b>
 
-       Du kan också anpassa innehållet i ditt meddelande med kontextuell data. Till exempel kan du nämna en användare med namn i välkomstmeddelandet, eller nämna dem i ett filter!
-       Du kan använda dessa för att nämna en användare i anteckningar också!
+      You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
+      You can use these to mention a user in notes too!
 
-       <b>Supported fillings:</b>
-       - <code>{first}</code>: Användarens första namn.
-       - <code>{last}</code>: Användarens efternamn.
-       - <code>{fullname}</code>: Användarens fulla namn.
-       - <code>{username}</code>: Användarens användarnamn. Om de inte har något, nämn användaren istället.
-       - <code>{mention}</code>: Nämn användaren med deras förnamn.
-       - <code>{id}</code>: Användarens ID.
-       - <code>{chatname}</code>: Chats namn.
-       - <code>{rules}</code>: Lägger till Regler-knappen till meddelandet.
-      - <code>{protect}</code>: Skyddar innehållet från att delas.
-      - <code>{preview}</code>: Aktiverar förhandsvisningar i meddelanden.
-      - <code>{nonotif}</code>: Inaktiverar meddelandet för det meddelandet.
-          Random: |-
-       <b>Slumpmässigt innehåll</b>
+      <b>Supported fillings:</b>
+      - <code>{first}</code>: The user's first name.
+      - <code>{last}</code>: The user's last name.
+      - <code>{fullname}</code>: The user's full name.
+      - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
+      - <code>{mention}</code>: Mentions the user with their firstname.
+      - <code>{id}</code>: The user's ID.
+      - <code>{chatname}</code>: The chat's name.
+      - <code>{rules}</code>: Adds Rules Button to Message.
+      - <code>{protect}</code>: Protects the content from being shared.
+      - <code>{preview}</code>: Enables previews in the messages.
+      - <code>{nonotif}</code>: Disables the notification for that message.
+    Random: |-
+      <b>Random Content</b>
 
-       Ett annat roligt är att slumpa innehållet i ett meddelande. Gör det lite mer personligt genom att ändra välkomstmeddelanden, eller ändra anteckningar!
-       Hur man använder slumpmässigt innehåll:
-       - %%%: Denna separator kan användas för att lägga till slumpmässiga svar till botten.
-       Till exempel:
-       <code>hej
-       %%%
-       hur mår du</code>
-       Detta kommer slumpmässigt att välja mellan att skicka det första meddelandet, "hej", eller det andra meddelandet, "hur mår du".
-       Använd detta för att få Alita att kännas lite mer anpassad! (fungerar bara i filter/anteckningar)
-       Exempel välkomstmeddelande:
-       - Varje gång en ny användare går med, kommer de att presenteras med ett av de tre meddelanden som visas här.
-       -> /filter "hej"
-       hej där <code>{first}</code>!
-       %%%
-       Ooooh, <code>{first}</code> hur mår du?
-       %%%
-       Tjena? <code>{first}</code>
+      Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
+      How to use random contents:
+      - %%%: This separator can be used to add  random replies to the bot.
+      For example:
+      <code>hello
+      %%%
+      how are you</code>
+      This will randomly choose between sending the first message, "hello", or the second message, "how are you".
+      Use this to make Alita feel a bit more customised! (only works in filters/notes)
+      Example welcome message:
+      - Every time a new user joins, they'll be presented with one of the three messages shown here.
+      -> /filter "hey"
+      hello there <code>{first}</code>!
+      %%%
+      Ooooh, <code>{first}</code> how are you?
+      %%%
+      Sup? <code>{first}</code>
   Greetings:
     help_msg: |-
       Välkomna nya medlemmar till grupperna eller säg adjö efter att de har lämnat.
