@@ -1,141 +1,99 @@
----
-#stringcode: string
 main:
-  lang_sample: |-
-    简体中文
-  language_flag: |-
-    🇨🇳
-  language_name: |-
-    中国人
+  lang_sample: 简体中文
+  language_flag: 🇨🇳
+  language_name: 中国人
 strings:
   CommonStrings:
     admin_cache:
-      cache_reloaded: |-
-        成功重新加载管理员缓存。
-      not_found: |-
-        找不到管理员缓存。请联系管理员使用 /admincache 重新加载管理员缓存。
-    errors:  # TODO: Translate - strings.CommonStrings.errors
-      no_user_specified: >-
-        I don't know who you're talking about, you're going to need to specify a
-        user...!
-      anon_user_generic: This command cannot be used on anonymous user.
-      admin_only: You need to be an admin to do this!
-      admin_only_command: Only admins can execute this command!
-      creator_only: You need to be the group creator to do this!
-      creator_only_command: Only group creator to do this!
-      bot_not_admin: I'm not admin!
-      bot_no_restrict_permission: >-
-        I can't restrict people here! Make sure I'm admin and can restrict other
-        members.
-      group_only: This command can only be used in a group!
-      group_only_command: 'This command is made to be used in group chats, not in pm!'
-      private_only_command: 'This command is made for pm, not group chat!'
-      user_not_found: Could not find a user by this name; are you sure I've seen them before?
-      user_not_in_chat: 'This user is not in this chat, how can I restrict them?'
-      action_on_self: I can't perform this action on myself.
-      button_expired: 'This button has expired, Please use the command again.'
-      invalid_option_yes_no: 'Your input was not recognised as one of: yes/no/on/off'
-      invalid_option_on_off: I only understand an option from <on/off/yes/no>
-      invalid_integer: '%s is not a valid integer.'
-      not_enough_args: Not enough arguments.
-      invalid_time_amount: Invalid time amount specified.
-      time_too_long: Cannot set time to more than 1 year!
-      invalid_time_type: 'Invalid time type specified. Expected m, h, d or w got: %s'
-      get_chat_member_failed: 'Failed to get user: unable to getChatMember: Bad Request: chat not found'
-      admin_only_button: This button can only be used by an admin!
-      no_reply: Reply to a user's message to delete and kick him!
-    buttons: # TODO: Translate - strings.CommonStrings.buttons
-      'true': 'Yes'
-      'false': 'No'
-      'yes': Yes
-      'no': No
-      back: Back
-      back_arrow: « Back
-      back_arrow_left: ⬅ Back
-      done: Done ✅
-      continue: ✅ Continue ✅
-      click_me: Click Me!
-      home: Home
-      rules: Rules
-      rules_button: "Rules 📝"
-      close: Close
-      cancel: Cancel
-    actions: # TODO: Translate - strings.CommonStrings.actions
-      ban: Ban
-      kick: Kick
-      mute: Mute
-      unban: Unban
-      unmute: Unmute
-      banned: User banned successfully!
-      unbanned: User unbanned successfully!
-      kicked: User kicked successfully!
-      muted: User muted successfully!
-      unmuted: User unmuted successfully!
-    anon_admin: # TODO: Translate - strings.CommonStrings.anon_admin
-      prompt: >-
-        It looks like you're anonymous. Tap this button to confirm your
-        identity.
-      button: Click to prove admin
-  Admin:
-    adminlist: |-
-      <b>%s</b> 中的管理员：
-    anon_admin:
-      enabled: |-
-        匿名管理员模式目前为 %s <b>已启用</b>。
-        这允许所有匿名管理员无限制地执行管理员操作。
-      disabled: |-
-        匿名管理员模式目前为 %s <b>已禁用</b>。
-        这要求匿名管理员按下按钮确认他们的权限。
-      enabled_now: |-
-        匿名管理员模式现在为 %s <b>已启用</b>。
-        从现在开始，我将要求管理员验证匿名管理员的权限。
-      disabled_now: |-
-        匿名管理员模式现在为 %s <b>已禁用</b>。
-        从现在开始，我不再要求管理员验证匿名管理员的权限。
-      already_enabled: |-
-        匿名管理员模式已经为 %s <b>已启用</b>
-      already_disabled: |-
-        匿名管理员模式已经为 %s <b>已禁用</b>
-      invalid_arg: |-
-        无效参数，我只理解 <code>on</code>、<code>off</code>、<code>yes</code>、<code>no</code>
-    demote:
-      is_owner: |-
-        这个人创建了这个聊天，我怎么能降级他们？
-      is_admin: |-
-        这个人不是管理员，我怎么能降级他们？
-      is_bot_itself: |-
-        我不能降级自己。
-      success_demote: |-
-        成功降级 %s！
-    promote:
-      admin_title_truncated: |-
-        管理员标题从 %d 字符截断为 16 字符
-      is_bot_itself: |-
-        如果我能对自己这样做就好了 ;_;
-      is_owner: |-
-        这个人创建了这个聊天，我怎么能提升他们？
-      is_admin: |-
-        这个人已经是管理员了，我怎么能提升他们？
-      success_promote: |-
-        成功提升 %s！
-    title:
-      success_set: |-
-        成功将 %s 的管理员标题设置为 <b>%s</b>
-      is_bot_itself: |-
-        如果我能对自己这样做就好了 ;_;
-      is_owner: |-
-        这个人创建了这个聊天，我怎么能为他们设置自定义管理员标题？
-      is_admin: |-
-        这个人已经是管理员了，我怎么能为他们设置自定义管理员标题？
+      cache_reloaded: 成功重新加载管理员缓存。
+      not_found: 找不到管理员缓存。请联系管理员使用 /admincache 重新加载管理员缓存。
     errors:
-      err_set_title: |-
-        设置自定义管理员标题失败，标题名称可能不正确或包含表情符号。
-      err_cannot_demote: |-
-        无法降级。我可能不是管理员，或者他们可能由另一个管理员提升。
-      err_cannot_promote: |-
-        无法提升。我可能不是管理员，或者他们可能由另一个管理员提升。
-      title_empty: |-
-        你需要给我一个管理员标题，这样我就能设置它。
+      no_user_specified: 我不知道你在说什么，你需要指定一个用户…！
+      anon_user_generic: 此命令不能用于匿名用户。
+      admin_only: 您需要成为管理员才能执行此操作！
+      admin_only_command: 只有管理员才能执行此命令！
+      creator_only: 您需要成为群组创建者才能执行此操作！
+      creator_only_command: 只有群组创建者才能执行此操作！
+      bot_not_admin: 我不是管理员！
+      bot_no_restrict_permission: 我不能在这里限制他人！请确保我是管理员并可以限制其他成员。
+      group_only: 此命令只能在群组中使用！
+      group_only_command: '此命令用于群组聊天，不用于私聊！'
+      private_only_command: '此命令适用于私聊，不适用于群组聊天！'
+      user_not_found: 找不到此名称的用户；您确定我以前见过他们吗？
+      user_not_in_chat: '此用户不在此聊天中，我该如何限制他们？'
+      action_on_self: 我无法对自己执行此操作。
+      button_expired: '此按钮已过期，请再次使用该命令。'
+      invalid_option_yes_no: '您的输入未被识别为以下之一：yes/no/on/off'
+      invalid_option_on_off: 我只理解 <on/off/yes/no> 中的一个选项
+      invalid_integer: '%s 不是一个有效的整数。'
+      not_enough_args: 参数不足。
+      invalid_time_amount: 指定的时间量无效。
+      time_too_long: 不能将时间设置为超过1年！
+      invalid_time_type: '指定的时间类型无效。预期为 m, h, d 或 w，得到：%s'
+      get_chat_member_failed: '获取用户失败：无法获取ChatMember：错误请求：找不到聊天'
+      admin_only_button: 此按钮只能由管理员使用！
+      no_reply: 回复用户的消息以删除并踢出他！
+    buttons:
+      'true': '是'
+      'false': '否'
+      'yes': 是
+      'no': 否
+      back: 返回
+      back_arrow: « 返回
+      back_arrow_left: ⬅ 返回
+      done: 完成 ✅
+      continue: ✅ 继续 ✅
+      click_me: 点击我！
+      home: 主页
+      rules: 规则
+      rules_button: "规则 📝"
+      close: 关闭
+      cancel: 取消
+    actions:
+      ban: 封禁
+      kick: 踢出
+      mute: 禁言
+      unban: 解封
+      unmute: 解除禁言
+      banned: 用户已成功封禁！
+      unbanned: 用户已成功解封！
+      kicked: 用户已成功踢出！
+      muted: 用户已成功禁言！
+      unmuted: 用户已成功解除禁言！
+    anon_admin:
+      prompt: 您看起来是匿名的。点击此按钮以确认您的身份。
+      button: 点击以证明管理员身份
+  Admin:
+    adminlist: '<b>%s</b> 中的管理员：'
+    anon_admin:
+      enabled: 匿名管理员模式目前为 <b>%s</b> <b>已启用</b>。这允许所有匿名管理员无限制地执行管理员操作。
+      disabled: 匿名管理员模式目前为 <b>%s</b> <b>已禁用</b>。这要求匿名管理员按下按钮确认他们的权限。
+      enabled_now: 匿名管理员模式现在为 <b>%s</b> <b>已启用</b>。从现在开始，我将要求管理员验证匿名管理员的权限。
+      disabled_now: 匿名管理员模式现在为 <b>%s</b> <b>已禁用</b>。从现在开始，我不再要求管理员验证匿名管理员的权限。
+      already_enabled: 匿名管理员模式已经为 <b>%s</b> <b>已启用</b>
+      already_disabled: 匿名管理员模式已经为 <b>%s</b> <b>已禁用</b>
+      invalid_arg: 无效参数，我只理解 <code>on</code>、<code>off</code>、<code>yes</code>、<code>no</code>
+    demote:
+      is_owner: 这个人创建了这个聊天，我怎么能降级他们？
+      is_admin: 这个人不是管理员，我怎么能降级他们？
+      is_bot_itself: 我不能降级自己。
+      success_demote: 成功降级 %s！
+    promote:
+      admin_title_truncated: 管理员标题从 %d 字符截断为 16 字符
+      is_bot_itself: 如果我能对自己这样做就好了 ;_;
+      is_owner: 这个人创建了这个聊天，我怎么能提升他们？
+      is_admin: 这个人已经是管理员了，我怎么能提升他们？
+      success_promote: 成功提升 %s！
+    title:
+      success_set: 成功将 %s 的管理员标题设置为 <b>%s</b>
+      is_bot_itself: 如果我能对自己这样做就好了 ;_;
+      is_owner: 这个人创建了这个聊天，我怎么能为他们设置自定义管理员标题？
+      is_admin: 这个人已经是管理员了，我怎么能为他们设置自定义管理员标题？
+    errors:
+      err_set_title: 设置自定义管理员标题失败，标题名称可能不正确或包含表情符号。
+      err_cannot_demote: 无法降级。我可能不是管理员，或者他们可能由另一个管理员提升。
+      err_cannot_promote: 无法提升。我可能不是管理员，或者他们可能由另一个管理员提升。
+      title_empty: 你需要给我一个管理员标题，这样我就能设置它。
     help_msg: |-
       请使用 admin 模块，从而轻松促进和降级用户！
 
@@ -146,48 +104,33 @@ strings:
       × /promote `<reply/username/mention/userid>`: 提升用户。
       × /demote `<reply/username/mention/userid>`: 降级用户。
       × /title `<reply/username/mention/userid>` `<custom title>`: 为用户设置定制标题。
-    here_is_the_invite_link_of_this_chat_percent: 'Here is the invite link of this chat: %s'  # TODO: Translate - strings.Admin.here_is_the_invite_link_of_this_chat_percent
-    you_need_to_be_admin_to_do_this: You need to be admin to do this! # TODO: Translate - strings.Admin.you_need_to_be_admin_to_do_this
+    here_is_the_invite_link_of_this_chat_percent: '此聊天的邀请链接是：%s'
+    you_need_to_be_admin_to_do_this: 您需要成为管理员才能执行此操作！
   Antiflood:
     checkflood:
-      perform_action: |-
-        是的，我不喜欢你的刷屏。%s 已被 %s！
+      perform_action: 确实，我不喜欢你的刷屏。%s 已被 %s！
     setflood:
-      success: |-
-        Flood Limit 已被设置为 <b>%d</b> 条消息。
+      success: Flood Limit 已被设置为 <b>%d</b> 条消息。
       disabled: |-
         好的。
         我不会因为刷屏警告用户。
     flood:
-      disabled: |-
-        此聊天目前没有执行刷屏控制。
-      show_settings: |-
-        此聊天目前在 %d 条消息后执行刷屏控制。发送超过该数量消息的任何用户将被 %s。
+      disabled: 此聊天目前没有执行刷屏控制。
+      show_settings: 此聊天目前在 %d 条消息后执行刷屏控制。发送超过该数量消息的任何用户将被 %s。
     setfloodmode:
-      success: |-
-        Flood mode 已被设置为 %s。
-      unknown_type: |-
-        未知类型 '%s'。请使用其中之一：ban/kick/mute
-      specify_action: |-
-        您需要指定刷屏时要采取的行动。当前模式有：`ban`/`kick`/`mute`
+      success: Flood mode 已被设置为 %s。
+      unknown_type: '未知类型 ''%s''。请使用其中之一：ban/kick/mute'
+      specify_action: 您需要指定刷屏时要采取的行动。当前模式有：`ban`/`kick`/`mute`
     flood_deleter:
-      enabled: |-
-        开启反刷屏消息删除。导致反刷屏的消息将被删除！
-      disabled: |-
-        关闭反刷屏消息删除。导致反刷屏的消息将被忽略！
-      invalid_option: |-
-        我只理解以下选项：`yes`/`no`/`on`/`off`
-      already_enabled: |-
-        反刷屏消息删除目前在此聊天中*已启用*，导致反刷屏的消息将被删除！
-      already_disabled: |-
-        反刷屏消息删除目前在此聊天中*已禁用*，导致反刷屏的消息将被忽略！
+      enabled: 开启反刷屏消息删除。导致反刷屏的消息将被删除！
+      disabled: 关闭反刷屏消息删除。导致反刷屏的消息将被忽略！
+      invalid_option: 我只理解以下选项：`yes`/`no`/`on`/`off`
+      already_enabled: 反刷屏消息删除目前在此聊天中*已启用*，导致反刷屏的消息将被删除！
+      already_disabled: 反刷屏消息删除目前在此聊天中*已禁用*，导致反刷屏的消息将被忽略！
     errors:
-      expected_args: |-
-        我期望一些参数！要么是 off，要么是整数。例如：`/setflood 5`，或 `/setflood off`
-      invalid_int: |-
-        那不是有效的整数。请给我一个有效的整数，或 `off`。
-      set_in_limit: |-
-        反刷屏限制必须设置在 3 到 100 之间。
+      expected_args: 我期望一些参数！要么是 off，要么是整数。例如：`/setflood 5`，或 `/setflood off`
+      invalid_int: 那不是有效的整数。请给我一个有效的整数，或 `off`。
+      set_in_limit: 反刷屏限制必须设置在 3 到 100 之间。
     help_msg: |-
       您知道有时，人们会加入，发送 100 条消息，并破坏您的交谈吗？使用反刷屏，这种情况将不再发生！
 
@@ -198,28 +141,23 @@ strings:
       × /setflood `<number/off/no>`: 设置要对用户执行操作的消息数。设置为 '0'、'off' 或 'no' 以禁用。
       × /setfloodmode `<action type>`: 选择对已被淹没的用户采取何种行动。选项：ban/kick/mute
       × /delflood `<yes/no/on/off>`: 如果您希望机器人删除用户所淹没的消息。
-    unmute_admins_only: Unmute (Admins Only)  # TODO: Translate - strings.Antiflood.unmute_admins_only
-    unban_admins_only: Unban (Admins Only) # TODO: Translate - strings.Antiflood.unban_admins_only
+    unmute_admins_only: 解除禁言 (仅限管理员)
+    unban_admins_only: 解封 (仅限管理员)
   Approvals:
     approve:
-      is_bot_itself: |-
-        您已经通过让我成为管理员来批准我了！
+      is_bot_itself: 您已经通过让我成为管理员来批准我了！
       user_approved: |-
         已批准用户：%s
         从现在开始，他们将免受自动封禁、黑名单、锁定和反刷屏的影响。
-      user_not_in_chat: |-
-        这个用户不在这个聊天中，我怎么能批准他们？
+      user_not_in_chat: 这个用户不在这个聊天中，我怎么能批准他们？
     unapprove:
-      is_bot_itself: |-
-        我是管理员，我不能被取消批准！
+      is_bot_itself: 我是管理员，我不能被取消批准！
       user_unapproved: |-
         已取消批准用户：%s
         从现在开始，他们将受到自动封禁、黑名单、锁定和反刷屏的限制。
     approval:
-      is_admin: |-
-        %s 是管理员，他们不需要批准。
-      is_bot_itself: |-
-        我是管理员，我不需要批准。
+      is_admin: '%s 是管理员，他们不需要批准。'
+      is_bot_itself: 我是管理员，我不需要批准。
       is_approved: |-
         %s 是 <b>%s</b> 中的已批准用户
         他们免受自动封禁、黑名单、锁定和反刷屏的影响。
@@ -233,157 +171,145 @@ strings:
       none_approved: "<b>%s</b> 中没有已批准的用户！"
       approved_list: |-
         这些用户在 <b>%s</b> 中已被批准：
+
         %s
+
 
         要获取每个用户的更多信息，如批准者和批准时间，请使用 /approval (用户 ID)。
     unapprove_all:
-      ask: |-
-        您确定要从此聊天中移除所有已批准用户吗？
-      chat_creator_only: |-
-        只有聊天创建者可以使用此命令取消批准此聊天中的所有用户。
+      ask: 您确定要从此聊天中移除所有已批准用户吗？
+      chat_creator_only: 只有聊天创建者可以使用此命令取消批准此聊天中的所有用户。
       button_handler:
-        yes: |-
-          已从此聊天中移除所有已批准用户 ✅
-        no: |-
-          已取消从此聊天中移除所有已批准用户 ❌
-        'true': Removed all Approved Users from this Chat ✅  # TODO: Translate - strings.Approvals.unapprove_all.button_handler.true
-        'false': Canceled removing all Approved Users from this Chat ❌ # TODO: Translate - strings.Approvals.unapprove_all.button_handler.false
+        'true': 已从此聊天中移除所有已批准用户 ✅
+        'false': 已取消从此聊天中移除所有已批准用户 ❌
     help_msg: |-
       有时，您可能信任用户不发送不需要的内容。
+
       也许不足以让他们成为管理员，但您可能对锁定、黑名单和反刷屏不适用于他们感到满意。
+
       这就是批准的目的——批准值得信赖的用户，允许他们发送。
 
+
       *User Commands:*
+
       × /approval: 在此交谈中检查用户的核准状态。
 
+
       *Admin Commands:*
+
       × /approve: 核准用户。锁定、黑名单和反刷屏将不再适用于他们。
+
       × /unapprove: 取消批准用户。他们现在将再次受到锁定、黑名单和反刷屏的限制。
+
       × /approved: 列出所有批准的用户。
 
+
       *Owner Commands:*
+
       × /unapproveall: 在交谈中取消批准所有用户。这是无法撤销的。
   Bans:
+    errors:
+      anon_user_kick: 此命令不能用于匿名用户，这些用户只能被封禁/解封。
+      anon_user_ban_reply: 您只能通过回复匿名用户的消息来封禁他们。
+      anon_user_generic: 此命令不能用于匿名用户，这些用户只能被封禁/解封。
+      restrict_admin: 我不能限制管理员。
+    restrict:
+      question: 我该如何限制此用户？
+      kick_success: 管理员 %s 已将 %s 踢出此聊天！
+      mute_success: 管理员 %s 已在聊天中禁言 %s！
+      ban_success: 管理员 %s 已在聊天中封禁 %s！
+    unrestrict:
+      question: 我该如何解除对此用户的限制？
+      unmute_success: 由 %s 解除禁言！
+      unban_success: 由 %s 解封！
     kick:
-      user_not_in_chat: |-
-        该用户不在此聊天中，我该如何限制他们？
-      cannot_kick_admin: |-
-        我为什么要踢管理员？那听起来是个非常愚蠢的主意。
-      is_bot_itself: |-
-        我为什么要踢自己？
-      kicked_user: |-
-        成功踢出 %s。
-      kicked_reason: "\n<b>原因:</b> %s"
+      user_not_in_chat: 该用户不在此聊天中，我该如何限制他们？
+      cannot_kick_admin: 我为什么要踢管理员？那听起来是个非常愚蠢的主意。
+      is_bot_itself: 我为什么要踢自己？
+      kicked_user: 成功踢出 %s。
+      kicked_reason: |-
+
+        <b>原因:</b> %s
     kickme:
-      is_admin: |-
-        您是管理员，您和其他人一样被困在这里！
-      ok_out: |-
-        如您所愿，出去吧！
+      is_admin: 您是管理员，您和其他人一样被困在这里！
+      ok_out: 如您所愿，出去吧！
     ban:
-      is_admin: |-
-        我为什么要封禁管理员？那听起来是个非常愚蠢的主意。
-      is_bot_itself: |-
-        你真的认为我会封禁自己吗？
-      ban_reason: "\n<b>原因:</b> %s"
-      tban: |-
-        已封禁 %s，时长 %s
+      is_admin: 我为什么要封禁管理员？那听起来是个非常愚蠢的主意。
+      is_bot_itself: 你真的认为我会封禁自己吗？
+      ban_reason: |-
+
+        <b>原因:</b> %s
+      tban: 已封禁 %s，时长 %s
       normal_ban: |-
         又一个被淘汰了...！
         已封禁 %s。
       dban:
-        no_reply: |-
-          您需要回复一条消息才能删除它并封禁该用户！
+        no_reply: 您需要回复一条消息才能删除它并封禁该用户！
     unban:
-      is_admin: |-
-        我为什么要解封管理员？
-      is_bot_itself: |-
-        我已经在这里了，为什么要解除对自己的限制？
+      is_admin: 我为什么要解封管理员？
+      is_bot_itself: 我已经在这里了，为什么要解除对自己的限制？
       unbanned_user: |-
         再给他一次机会。
         已解封 %s！
     help_msg: |-
       有时用户可能会很烦人，您可能希望将他们从您的聊天中移除，此模块正是帮助您处理这种情况的！
+
       封禁/踢出聊天中的用户，如果他们表现良好，以后再解封。
 
+
       *User Commands:*
+
       × /kickme: 踢出发出该命令的用户。
 
+
       *Ban Commands* (仅限管理员):
+
       × /ban <userhandle>: 封禁用户。(通过句柄或回复)
+
       × /sban <userhandle>: 静默封禁用户，不向群组发送消息，并删除您的命令。(通过句柄或回复)
+
       × /dban <userhandle>: 封禁用户并删除回复的消息。(通过句柄或回复)
-      × /tban <userhandle> x(m/h/d): 封禁用户 `x` 时间。(通过句柄或回复)。m = 分钟，h = 小时，d = 天。
+
+      × /tban <userhandle> x(m/h/d): 封禁用户 `x` 时间。(通过句柄或回复)。m = minutes, h = hours, d = days.
+
       × /unban <userhandle>: 解封用户。(通过句柄或回复)
 
+
       *Restrict Commands:* (仅限管理员)
+
       × /restrict: 显示内联键盘以选择踢出、封禁和禁言选项。
+
       × /unrestrict: 显示内联键盘以选择解除禁言和解封选项。
-    errors:  # TODO: Translate - strings.Bans.errors
-      anon_user_kick: >-
-        This command cannot be used on anonymous user, these user can only be
-        banned/unbanned.
-      anon_user_ban_reply: You can only ban an anonymous user by replying to their message.
-      anon_user_generic: >-
-        This command cannot be used on anonymous user, these user can only be
-        banned/unbanned.
-      restrict_admin: I can't restrict an admin.
-    restrict: # TODO: Translate - strings.Bans.restrict
-      question: How can I restrict this user?
-      kick_success: Admin %s kicked %s from this chat!
-      mute_success: Admin %s muted %s in chat!
-      ban_success: Admin %s banned %s from this chat!
-    unrestrict: # TODO: Translate - strings.Bans.unrestrict
-      question: How can I unrestrict this user?
-      unmute_success: Unmuted by %s!
-      unban_success: Unbanned by %s !
-    banned_user: 'Banned user:' # TODO: Translate - strings.Bans.banned_user
+    banned_user: '被封禁用户：'
   Blacklists:
     blacklist:
-      give_bl_word: |-
-        请给我一个要添加到黑名单的词！
-      already_blacklisted: |-
-        这些词已被列入黑名单：
-      added_bl: |-
-        已将这些词添加为黑名单：
+      give_bl_word: 请给我一个要添加到黑名单的词！
+      already_blacklisted: 这些词已被列入黑名单：
+      added_bl: 已将这些词添加为黑名单：
     unblacklist:
-      give_bl_word: |-
-        请给我一个要从黑名单中移除的词！
-      no_removed_bl: |-
-        所给词语中没有一个在黑名单中可以被移除！
-      removed_bl: |-
-        已成功从黑名单词语中移除 '%s'！
+      give_bl_word: 请给我一个要从黑名单中移除的词！
+      no_removed_bl: 所给词语中没有一个在黑名单中可以被移除！
+      removed_bl: 已成功从黑名单词语中移除 '%s'！
     ls_bl:
-      no_blacklisted: |-
-        此聊天中没有黑名单词语。
-      list_bl: |-
-        此聊天中黑名单词语：
+      no_blacklisted: 此聊天中没有黑名单词语。
+      list_bl: 此聊天中黑名单词语：
     set_bl_action:
-      current_mode: |-
-        当前黑名单模式为：%s
-      changed_mode: |-
-        已成功将黑名单模式更改为：*%s*
-      choose_correct_option: |-
-        请选择一个选项：<mute/kick/ban/warn/none>
+      current_mode: 当前黑名单模式为：%s
+      changed_mode: 已成功将黑名单模式更改为：*%s*
+      choose_correct_option: 请选择一个选项：<mute/kick/ban/warn/none>
     rm_all_bl:
-      ask: |-
-        您确定要从此聊天中移除所有黑名单词语吗？
+      ask: 您确定要从此聊天中移除所有黑名单词语吗？
       button_handler:
-        yes: |-
-          已从此聊天中移除所有黑名单 ✅
-        no: |-
-          已取消移除此聊天中的所有黑名单 ❌
-        'true': Removed all Blacklists from this Chat ✅  # TODO: Translate - strings.Blacklists.rm_all_bl.button_handler.true
-        'false': Canceled removing all Blacklists of this Chat ❌ # TODO: Translate - strings.Blacklists.rm_all_bl.button_handler.false
+        'true': 已从此聊天中移除所有黑名单 ✅
+        'false': 已取消移除此聊天中的所有黑名单 ❌
     bl_watcher:
-      muted_user: |-
-        由于 %s 已禁言 %s
-      banned_user: |-
-        由于 %s 已封禁 %s
-      kicked_user: |-
-        由于 %s 已踢出 %s
+      muted_user: 由于 %s 已禁言 %s
+      banned_user: 由于 %s 已封禁 %s
+      kicked_user: 由于 %s 已踢出 %s
     help_msg: |-
       *User Commands:*
       × /blacklists: 检查聊天中的所有黑名单。
+
 
       *Admin Commands:*
       × /addblacklist `<trigger>`: 在当前聊天中将词语列入黑名单。
@@ -391,16 +317,21 @@ strings:
       × /blaction `<mute/kick/ban/warn/none>`: 设置机器人检测到黑名单词语时要执行的操作。
       × /blacklistaction: 同上
 
+
       *Owner Only:*
       × /remallbl: 移除聊天中的所有黑名单词语。
+
 
       *Note:*
       黑名单的默认模式为 *none*，它只会删除聊天中的消息。
   Connections:
-    connected: |-
-      您当前已连接到 <b>%s</b>！
-    not_connected: |-
-      您未连接到任何聊天。
+    errors:
+      invalid_option_yes_no: 请给我一个有效的选项：<yes/on/no/off>
+      get_chat_failed: 连接聊天失败：获取聊天失败：无法获取聊天：错误请求：找不到聊天
+      no_chat_id: 我需要一个聊天 ID 才能连接！
+    connect_to_chat_button: 连接到聊天
+    connected: 您当前已连接到 <b>%s</b>！
+    not_connected: 您未连接到任何聊天。
     allow_connect:
       turned_on: |-
         已<b>开启</b>用户连接到此聊天！
@@ -418,290 +349,381 @@ strings:
       connection_disabled: |-
         用户连接当前已<b>禁用</b>到此聊天。
         如果您想连接，请让管理员允许！
-      connected: |-
-        您现在已连接到 <b>%s</b>！
-      tap_btn_connect: |-
-        请按以下按钮将此聊天连接到您的私聊。
+      connected: 您现在已连接到 <b>%s</b>！
+      tap_btn_connect: 请按以下按钮将此聊天连接到您的私聊。
     connections_btns:
-      admin_conn_cmds: |-
-        可用的管理员命令：%s
-      user_conn_cmds: |-
-        可用的用户命令：%s
+      admin_conn_cmds: '可用的管理员命令：%s'
+      user_conn_cmds: '可用的用户命令：%s'
     disconnect:
-      disconnected: |-
-        已成功从连接的聊天中断开。
-      need_pm: |-
-        您需要在我这里发送此消息才能从聊天中断开！
+      disconnected: 已成功从连接的聊天中断开。
+      need_pm: 您需要在我这里发送此消息才能从聊天中断开！
     is_user_connected:
-      need_group: |-
-        此命令用于群组聊天，不用于私聊！
-      bot_not_admin: |-
-        我不是此聊天的管理员！
-      user_not_admin: |-
-        您需要是管理员才能执行此操作。
+      need_group: 此命令用于群组聊天，不用于私聊！
+      bot_not_admin: 我不是此聊天的管理员！
+      user_not_admin: 您需要是管理员才能执行此操作。
     reconnect:
-      reconnected: |-
-        您现在已重新连接到 <b>%s</b>！！
-      no_last_chat: |-
-        您没有上次聊天可重新连接！
-      need_pm: |-
-        您需要与我进行私聊才能重新连接到聊天！
+      reconnected: 您现在已重新连接到 <b>%s</b>！！
+      no_last_chat: 您没有上次聊天可重新连接！
+      need_pm: 您需要与我进行私聊才能重新连接到聊天！
     help_msg: |-
       此模块允许您连接到聊天的数据库，并在聊天不知情的情况下向其中添加内容！出于显而易见的原因，您需要是管理员才能添加内容；但任何成员都可以查看您的数据。(被封禁/被踢的用户除外！)
 
+
       *Commands*:
+
       × /connect `<chatid>`: 连接到指定的聊天，允许您查看/编辑内容。
+
       × /disconnect: 从当前聊天断开连接。
+
       × /reconnect: 重新连接到之前连接的聊天。
+
       × /connection: 查看当前连接的聊天信息。
 
+
       *Admin Commands:*
+
       × /allowconnect <yes/no>: 允许用户连接到聊天或不连接。
 
+
       您可以使用聊天中的 /id 命令检索聊天 ID。如果 ID 是负数，请不要感到惊讶；所有超级群组都有负数 ID。
-    errors:  # TODO: Translate - strings.Connections.errors
-      invalid_option_yes_no: Please give me a vaid option from <yes/on/no/off>
-      get_chat_failed: >-
-        failed to connect to chat: failed to get chat: unable to getChat: Bad
-        Request: chat not found
-      no_chat_id: I need a chat id to connect to!
-    connect_to_chat_button: Connect to chat # TODO: Translate - strings.Connections.connect_to_chat_button
   Disabling:
+    success: '已禁用此聊天中的以下功能：'
+    errors:
+      unknown_command: '未知命令，无法禁用：\n-%s\n请检查 /disableable！'
+      no_command_specified: 您没有指定要禁用的命令。
+    disableable:
+      list: '以下命令可以禁用：'
+    disabled:
+      no_commands: 此聊天中没有禁用的命令。
+      list: '此聊天中禁用的命令：'
+    disabledel:
+      enabled: 禁用的消息现在将被删除。
+      disabled: 禁用的消息将不再被删除。
+      status_enabled: 禁用命令删除功能已*启用*，用户发出的禁用命令将被删除！
+      status_disabled: 禁用命令删除功能已*禁用*，用户发出的禁用命令将*不会*被删除！
+    enable:
+      success: '已重新启用此聊天中的以下功能：'
+      errors:
+        unknown_command: '未知命令，无法重新启用：\n-%s\n请检查 /disableable！'
+        no_command_specified: 您没有指定要禁用的命令。
     help_msg: |-
       此模块允许您禁用一些常用命令，因此无人可以使用它们。它还将允许您自动删除它们，阻止人们滥发消息。
 
+
       *Admin Commands*:
+
       × /disable `<commandname>`: 停止用户在此群组中使用 commandname。
+
       × /enable `<item name>`: 允许用户在此群组中使用 commandname。
+
       × /disableable: 列出所有可禁用的命令。
+
       × /disabledel `<yes/no/on/off>`: 当非管理员使用时删除禁用的命令。
+
       × /disabled: 列出此聊天中禁用的命令。
 
+
       Note:
+
       禁用命令时，命令仅对非管理员禁用。所有管理员仍可使用这些命令。
+
       禁用的命令仍可通过 /connect 功能访问。如果您也有兴趣禁用此功能，请在支持聊天中告诉我。
-    success: 'Disabled the use of the following in this chat:'  # TODO: Translate - strings.Disabling.success
-    errors: # TODO: Translate - strings.Disabling.errors
-      unknown_command: 'Unknown command to disable:\n-%s\nCheck /disableable!'
-      no_command_specified: You haven't specified a command to disable.
-    disableable: # TODO: Translate - strings.Disabling.disableable
-      list: 'The following commands can be disabled:'
-    disabled: # TODO: Translate - strings.Disabling.disabled
-      no_commands: There are no disabled commands in this chat.
-      list: 'The following commands are disabled in this chat:'
-    disabledel: # TODO: Translate - strings.Disabling.disabledel
-      enabled: Disabled messages will now be deleted.
-      disabled: Disabled messages will no longer be deleted.
-      status_enabled: >-
-        Disabled Command deleting is *enabled*, disabled commands from users
-        will be deleted!
-      status_disabled: >-
-        Disabled Command deleting is *disabled*, disabled commands from users
-        will *not* be deleted!
-    enable: # TODO: Translate - strings.Disabling.enable
-      success: 'Re-Enabled the use of the following in this chat:'
-      errors:
-        unknown_command: 'Unknown command to Re-Enable:\n-%s\nCheck /disableable!'
-        no_command_specified: You haven't specified a command to disable.
   Filters:
+    errors:
+      limit_exceeded: 过滤器限制已超出，一个群组最多只能有 150 个过滤器！\n此限制是因为机器人免费运行，没有任何用户捐赠。
+      no_keyword: 请提供一个要回复的关键词！
+      invalid_filter: 无效过滤器！
+      does_not_exist: 过滤器不存在！
+    add:
+      success: 已为过滤词 <code>%s</code> 添加回复
+    remove:
+      no_word_specified: 请提供一个要删除的过滤词！
+      success: 好的！\n我将不再回复 <code>%s</code>
+    list:
+      no_filters: 此聊天中没有过滤器！
+      header: '此聊天中的当前过滤器：'
+    remove_all:
+      no_filters: 此聊天中没有过滤器！
+      confirm: 您确定要从此聊天中删除所有过滤器吗？
+      success: 已从此聊天中删除所有过滤器 ✅
+      cancelled: 已取消删除此聊天中的所有过滤器 ❌
+    overwrite:
+      question: 过滤器已存在！\n您想覆盖它吗？
+      success: 过滤器已成功覆盖 ✅
+      cancelled: 已取消覆盖过滤器 ❌
     help_msg: |-
       过滤器不区分大小写；每当有人说您的触发词时，Alita 就会回复其他内容！如果需要，可以使用它来创建您自己的命令。
 
+
       Commands:
+
       - /filter <trigger> <reply>: 每次有人说触发器，机器人就会用句子回复。对于多个词语过滤器，请引用触发器。
+
       - /filters: 列出所有聊天过滤器。
+
       - /stop <trigger>: 停止机器人回复触发器。
+
       - /stopall: 停止当前聊天中的所有过滤器。这是无法撤销的。
 
+
       Examples:
+
       - 设置一个过滤器:
+
       -> /filter hello 你好！你好吗？
+
       - 设置一个多词过滤器:
+
       -> /filter hello friend 你好！好久不见！
+
       - 设置一个只能由管理员使用的过滤器:
+
       -> /filter example 如果普通用户说出来，这个过滤器就不会发生 {admin}
+
       - 要保存文件、图像、gif或任何其他附件，只需回复该文件并输入:
+
       -> /filter trigger
-    errors:  # TODO: Translate - strings.Filters.errors
-      limit_exceeded: >-
-        Filters limit exceeded, a group can only have maximum 150 filters!\nThis
-        limitation is due to bot running free without any donations by users.
-      no_keyword: Please give a keyword to reply to!
-      invalid_filter: Invalid Filter!
-      does_not_exist: Filter does not exist!
-    add: # TODO: Translate - strings.Filters.add
-      success: Added reply for filter word <code>%s</code>
-    remove: # TODO: Translate - strings.Filters.remove
-      no_word_specified: Please give a filter word to remove!
-      success: Ok!\nI will no longer reply to <code>%s</code>
-    list: # TODO: Translate - strings.Filters.list
-      no_filters: There are no filters in this chat!
-      header: 'These are the current filters in this Chat:'
-    remove_all: # TODO: Translate - strings.Filters.remove_all
-      no_filters: There are no filters in this chat!
-      confirm: Are you sure you want to remove all Filters from this chat?
-      success: Removed all Filters from this Chat ✅
-      cancelled: Cancelled removing all Filters from this Chat ❌
-    overwrite: # TODO: Translate - strings.Filters.overwrite
-      question: Filter already exists!\nDo you want to overwrite it?
-      success: Filter has been overwritten successfully ✅
-      cancelled: Cancelled overwritting of filter ❌
-    formatting: Formatting # TODO: Translate - strings.Filters.formatting
+    formatting: 格式
   Formatting:
     help_msg: |-
       Alita 支持大量格式化选项，使您的消息更有表现力。通过单击下面的按钮来进行查看！
     Markdown: |-
       <b>Markdown 格式</b>
 
+
       您可以使用<b>粗体</b>、<i>斜体</i>、<u>下划线</u>等多种方式格式化您的消息。去尝试一下吧！
+
       <b>支持的 Markdown</b>:
+
       - <code>`code words`</code>: 反引号用于等宽字体。显示为：<code>code words</code>。
+
       - <code>_italic words_</code>: 下划线用于斜体字体。显示为：<i>italic words</i>。
+
       - <code>*bold words*</code>: 星号用于粗体字体。显示为：<b>bold words</b>。
+
       - <code>~strikethrough~</code>: 波浪号用于删除线。显示为：<strike>strikethrough</strike>。
+
       - <code>||spoiler||</code>: 双竖线用于剧透。显示为：<tg-spoiler>Spoiler</tg-spoiler>。
+
       - <code>```pre```</code>: 为了让格式化程序忽略文本中用 '```' 格式化的其他格式化字符，将显示为：<code>**bold** | *bold*</code>。
+
       - <code>__underline__</code>: 双下划线用于下划线。显示为：underline。注意：某些客户端会尝试智能地将其解释为斜体。在这种情况下，请尝试使用您应用程序的内置格式化功能。
+
       - <code>[hyperlink](example.com)</code>: 这是用于超链接的格式。显示为：<a href='https://example.com/'>hyperlink</a>。
+
       - <code>[My Button](buttonurl://example.com)</code>: 这是用于创建按钮的格式。此示例将创建一个名为“我的按钮”的按钮，点击时会打开<code>example.com</code>。
 
+
       如果您想在同一行发送按钮，请使用 <code>:same</code> 格式。
+
       <b>示例:</b>
+
       <code>[button 1](buttonurl:example.com)</code>
+
       <code>[button 2](buttonurl://example.com:same)</code>
+
       <code>[button 3](buttonurl://example.com)</code>
+
       这将使按钮 1 和 2 显示在同一行，按钮 3 显示在下方。
     Fillings: |-
       <b>填充</b>
 
+
       您还可以使用上下文数据自定义消息内容。例如，您可以在欢迎消息中按名称提及用户，或在过滤器中提及他们！
+
       您也可以使用这些在笔记中提及用户！
 
+
       <b>支持的填充：</b>
+
       - <code>{first}</code>: 用户的名字。
+
       - <code>{last}</code>: 用户的姓氏。
+
       - <code>{fullname}</code>: 用户的全名。
+
       - <code>{username}</code>: 用户的用户名。如果他们没有，则直接提及用户。
+
       - <code>{mention}</code>: 提及用户并附带他们的名字。
+
       - <code>{id}</code>: 用户的ID。
+
       - <code>{chatname}</code>: 聊天的名称。
+
       - <code>{rules}</code>: 向消息添加规则按钮。
+
       - <code>{protect}</code>: 保护内容不被分享。
+
       - <code>{preview}</code>: 在消息中启用预览。
+
       - <code>{nonotif}</code>: 禁用该消息的通知。
     Random: |-
       <b>随机内容</b>
 
+
       另一个有趣的功能是随机化消息内容。通过更改欢迎消息或更改笔记，让事情更个性化！
+
       如何使用随机内容：
+
       - %%%: 此分隔符可用于向机器人添加随机回复。
+
       例如：
+
       <code>hello
+
       %%%
+
       how are you</code>
+
       这将随机选择发送第一条消息“hello”或第二条消息“how are you”。
+
       使用此功能让 Alita 感觉更个性化！(仅在过滤器/笔记中有效)
+
       欢迎消息示例：
+
       - 每当新用户加入时，他们将看到此处显示的三个消息中的一个。
+
       -> /filter "hey"
+
       你好 <code>{first}</code>！
+
       %%%
+
       哦，<code>{first}</code> 你好吗？
+
       %%%
+
       嗨？<code>{first}</code>
-    markdown_help: Markdown Help  # TODO: Translate - strings.Formatting.markdown_help
-    markdown_formatting: Markdown Formatting # TODO: Translate - strings.Formatting.markdown_formatting
-    fillings: Fillings # TODO: Translate - strings.Formatting.fillings
-    random_content: Random Content # TODO: Translate - strings.Formatting.random_content
+    markdown_help: Markdown 帮助
+    markdown_formatting: Markdown 格式
+    fillings: 填充
+    random_content: 随机内容
   Greetings:
+    welcome:
+      status: 我目前正在欢迎用户：<code>%t</code>\n我目前正在删除旧的欢迎语：<code>%t</code>\n我目前正在删除服务消息：<code>%t</code>\n未填充 {} 的欢迎消息是：
+      enabled: 我从现在开始会欢迎用户。
+      disabled: 我从现在开始不会欢迎用户。
+      turned_off: 欢迎消息已关闭！
+    set_welcome:
+      success: 成功设置自定义欢迎消息！
+    reset_welcome:
+      success: 成功将自定义欢迎消息重置为默认！
+    goodbye:
+      status: 我目前正在发送再见消息：<code>%t</code>\n我目前正在删除旧的再见消息：<code>%t</code>\n我目前正在删除服务消息：<code>%t</code>\n未填充 {} 的再见消息是：
+      enabled: 我从现在开始会发送再见消息。
+      disabled: 我从现在开始不会发送再见消息。
+      turned_off: 再见消息已关闭！
+    set_goodbye:
+      success: 成功设置自定义再见消息！
+    reset_goodbye:
+      success: 成功将自定义再见消息重置为默认！
+    clean_welcome:
+      status_enabled: 我应该删除两天前的欢迎消息。
+      status_disabled: 我目前没有删除旧的欢迎消息！
+      disabled: 我将不会删除旧的欢迎消息！
+      enabled: 我将尝试删除旧的欢迎消息！
+    clean_goodbye:
+      status_enabled: 我应该删除两天前的欢迎消息。
+      status_disabled: 我目前没有删除旧的欢迎消息！
+      disabled: 我将不会删除旧的再见消息！
+      enabled: 我将尝试删除旧的再见消息！
+    del_joined:
+      status_enabled: 我现在应该删除“用户”加入聊天的消息了。
+      status_disabled: 我目前没有删除加入消息。
+      disabled: 我不会删除加入消息。
+      enabled: 我将尝试删除加入消息！
+    pending_joins:
+      new_request: 有新用户请求加入聊天！
+      user: '用户：%s'
+      user_id: '用户 ID：%d'
+      approve_button: ✅ 批准
+      decline_button: ❌ 拒绝
+      ban_button: ✅ 封禁
+    join_request:
+      accepted: 已在聊天中接受 %s ✅
+      declined: 已拒绝 %s 加入聊天 ❌
+      banned: ✅ 成功封禁！%s
+    auto_approve:
+      enabled: 我现在正在自动批准新的聊天加入请求。
+      disabled: 我现在没有自动批准新的聊天加入请求。
+      disabled_now: 我将不会自动批准新的加入请求！
+      enabled_now: 我将尝试自动批准新的加入请求！
     help_msg: |-
-      欢迎新成员加入您的群组，或在他们离开后说再见！
+      欢迎新成员加入您的群组或在他们离开后说再见！
+
 
       *Admin Commands:*
+
       × /setwelcome `<reply/text>`: 为群组设置欢迎文本。
+
       × /welcome `<yes/no/on/off>`: 启用或禁用群组的欢迎设置。
+
       × /resetwelcome: 将欢迎消息重置为默认值。
+
       × /setgoodbye `<reply/text>`: 为群组设置再见文本。
+
       × /goodbye `<yes/no/on/off>`: 启用或禁用群组的告别设置。
+
       × /resetgoodbye: 将告别消息重置为默认值。
+
       × /cleanservice `<yes/no/on/off>`: 删除所有服务消息，如“x 加入群组”通知。
+
       × /cleanwelcome `<yes/no/on/off>`: 每当新成员加入时，删除旧的欢迎消息。
+
       × /autoapprove `<yes/no/on/off>`: 自动批准所有新成员。
-    welcome:  # TODO: Translate - strings.Greetings.welcome
-      status: >-
-        I am currently welcoming users: <code>%t</code>\nI am currently deleting
-        old welcomes: <code>%t</code>\nI am currently deleting service messages:
-        <code>%t</code>\nThe welcome message not filling the {} is:
-      enabled: I'll welcome users from now on.
-      disabled: I'll not welcome users from now on.
-      turned_off: Welcome message has been turned off!
-    set_welcome: # TODO: Translate - strings.Greetings.set_welcome
-      success: Successfully set custom welcome message!
-    reset_welcome: # TODO: Translate - strings.Greetings.reset_welcome
-      success: Successfully reset custom welcome message to default!
-    goodbye: # TODO: Translate - strings.Greetings.goodbye
-      status: >-
-        I am currently goodbying users: <code>%t</code>\nI am currently deleting
-        old goodbyes: <code>%t</code>\nI am currently deleting service messages:
-        <code>%t</code>\nThe goodbye message not filling the {} is:
-      enabled: I'll goodbye users from now on.
-      disabled: I'll not goodbye users from now on.
-      turned_off: Goodbye message has been turned off!
-    set_goodbye: # TODO: Translate - strings.Greetings.set_goodbye
-      success: Successfully set custom goodbye message!
-    reset_goodbye: # TODO: Translate - strings.Greetings.reset_goodbye
-      success: Successfully reset custom goodbye message to default!
-    clean_welcome: # TODO: Translate - strings.Greetings.clean_welcome
-      status_enabled: I should be deleting welcome messages up to two days old.
-      status_disabled: I'm currently not deleting old welcome messages!
-      disabled: I'll not delete old welcome messages!
-      enabled: I'll try to delete old welcome messages!
-    clean_goodbye: # TODO: Translate - strings.Greetings.clean_goodbye
-      status_enabled: I should be deleting welcome messages up to two days old.
-      status_disabled: I'm currently not deleting old welcome messages!
-      disabled: I'll not delete old goodbye messages!
-      enabled: I'll try to delete old goodbye messages!
-    del_joined: # TODO: Translate - strings.Greetings.del_joined
-      status_enabled: I should be deleting `user` joined the chat messages now.
-      status_disabled: I'm currently not deleting joined messages.
-      disabled: I won't delete joined messages.
-      enabled: I'll try to delete joined messages!
-    pending_joins: # TODO: Translate - strings.Greetings.pending_joins
-      new_request: A new user has requested to join chat!
-      user: 'User: %s'
-      user_id: 'User ID: %d'
-      approve_button: ✅ Approve
-      decline_button: ❌ Decline
-      ban_button: ✅ Ban
-    join_request: # TODO: Translate - strings.Greetings.join_request
-      accepted: Accepted %s in Chat ✅
-      declined: Declined %s to join chat ❌
-      banned: ✅ Successfully Banned! %s
-    auto_approve: # TODO: Translate - strings.Greetings.auto_approve
-      enabled: I'm auto-approving new chat join requests now.
-      disabled: I'm not auto-approving new chat join requests now..
-      disabled_now: I won't auto-approve new join requests!
-      enabled_now: I'll try to auto-approve new join requests!
-    i_am_currently_goodbying_users_t: 'I am currently goodbying users: <code>%t</code>' # TODO: Translate - strings.Greetings.i_am_currently_goodbying_users_t
-    i_understand_on_yes_or_off_no_only: I understand 'on/yes' or 'off/no' only! # TODO: Translate - strings.Greetings.i_understand_on_yes_or_off_no_only
-    formatting: Formatting # TODO: Translate - strings.Greetings.formatting
+    i_am_currently_goodbying_users_t: '我目前正在发送再见消息：<code>%t</code>'
+    i_understand_on_yes_or_off_no_only: 我只理解 'on/yes' 或 'off/no'！
+    formatting: 格式
   Help:
+    about:
+      main: 信息与关于\n\n以下是关于 Alita 的一些常见问题。
+      me_button: "关于我 👨‍💻"
+      news_channel_button: "新闻频道 📢"
+      support_group_button: "支持群组 👥"
+      configuration_button: 配置 ⚙️
+      group_prompt: 点击下方按钮即可获取我的信息！
+      button: 关于
+    start:
+      intro: |-
+        你好！我叫 Alita ✨。\n我在这里帮助您管理您的群组！\n点击 /help 了解如何充分发挥我的潜力。\n加入我的 <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>新闻频道</a> 获取所有最新更新信息。
+      about_button: 关于 ✨
+      add_to_chat_button: ➕ 将我添加到聊天！
+      support_group_button: "支持群组 👥"
+      commands_help_button: "📚 命令与帮助"
+      language_button: "语言 🌏"
+      group_prompt: '嘿 :) 如果您对我如何使用有任何疑问，请私聊我！'
+    main: |-
+      你好 %s！\n我叫 Alita ✨。\n\n我是一个群组管理机器人，在这里帮助您管理群组并维护秩序！\n我有很多便捷的功能，例如防洪、警告系统、笔记系统，甚至还有针对特定关键词的预设回复。\n\n<b>实用命令</b>：\n - /start: 启动我！您可能已经用过了！\n - /help: 发送此消息；我将告诉您更多关于我的信息！\n - /donate: 提供关于如何支持我和我的创建者的信息。\n\n所有命令都可以使用以下前缀：/ 或 !
+    help:
+      button: 点击此处获取帮助！
+      group_prompt_general: 私聊我获取帮助！
+      group_prompt_module: 私聊我获取关于 <code>%s</code> 的帮助！
+    configuration:
+      private_only: 配置仅在私聊中有效
     About: |-
       @%s 是最快和功能最丰富的群组管理器之一。
 
+
       Alita ✨ 由 @DivideProjects 开发并积极维护！
+
 
       Alita 自 2020 年以来一直在线，并为成千上万的群组提供了服务，拥有数十万用户！
 
+
       <b>为什么选择 Alita:</b>
+
       - 简单: 易于使用，并兼容许多机器人命令。
+
       - 功能丰富: 许多其他群组管理机器人不具备的功能。
+
       - 快速: 猜猜看？它不是用 Python 制作的，我们使用 <a href='[https://go.dev/](https://go.dev/)'>Go</a> 作为我们的核心编程语言。
+
 
       <b>当前版本:</b> %s
     Configuration:
       Step-1: |-
         欢迎使用 Alita 配置
+
 
         首先要做的是将 Alita ✨ 添加到您的群组！为此，请按下下方按钮并选择您的群组，然后按“完成”继续教程。
       Step-2: |-
@@ -719,222 +741,233 @@ strings:
         ▫️ 确认
       Step-3: |-
         太棒了！
+
         现在机器人已准备好使用！
+
         所有命令都可以使用 / 或 !
 
+
         如果您在群组设置我时遇到任何困难，请随时前往 @DivideSupport。
+
         我们很乐意为您提供帮助。
     DonateText: |-
       所以你想捐款？太棒了！
+
       当您捐款时，所有资金都将用于我的开发，这使我变得更快、响应更及时。
+
       您的捐款也可能为我带来一两个新功能，由于服务器限制，我无法获得这些功能。
+
       所有资金都将投入到我的服务中，例如数据库、存储和托管！
+
       您可以通过联系我的所有者在此处捐款：@DivideProjectsBot
-    about:  # TODO: Translate - strings.Help.about
-      main: Info & About\n\nHere are some of the FAQs about Alita.
-      me_button: "About me 👨‍💻"
-      news_channel_button: "News Channel 📢"
-      support_group_button: "Support Group 👥"
-      configuration_button: Configuration ⚙️
-      group_prompt: Click on the button below to get info about me!
-      button: About
-    start: # TODO: Translate - strings.Help.start
-      intro: >-
-        Hey there! My name is Alita ✨.\nI'm here to help you manage your
-        groups!\nHit /help to find out more about how to use me to my full
-        potential.\nJoin my <a href='https://t.me/AlitaRobotUpdates'>News
-        Channel</a> to get information on all the latest updates.
-      about_button: About ✨
-      add_to_chat_button: ➕ Add me to chat!
-      support_group_button: "Support Group 👥"
-      commands_help_button: "📚 Commands & Help"
-      language_button: "Language 🌏"
-      group_prompt: 'Hey :) PM me if you have any questions on how to use me!'
-    main: >-
-      Hey %s!\nMy name is Alita ✨.\n\nI am a group management bot, here to help
-      you get around and keep the order in your groups!\nI have lots of handy
-      features, such as flood control, a warning system, a note keeping system,
-      and even predetermined replies on certain keywords.\n\n<b>Helpful
-      commands</b>:\n - /start: Starts me! You've probably already used this!\n
-      - /help: Sends this message; I'll tell you more about myself!\n - /donate:
-      Gives you info on how to support me and my creator.\n\nAll commands can be
-      used with the following: / or !
-# TODO: Translate - strings.Help.main
-    help: # TODO: Translate - strings.Help.help
-      button: Click here for help!
-      group_prompt_general: Contact me in PM for help!
-      group_prompt_module: Contact me in PM for help regarding <code>%s</code>!
-    configuration: # TODO: Translate - strings.Help.configuration
-      private_only: Configuration only works in private
-    about_me_u200d: "About me 👨\\u200d💻" # TODO: Translate - strings.Help.about_me_u200d
+    about_me_u200d: "关于我 👨‍💻"
   Locks:
+    list:
+      header: '此聊天中的锁定：'
+    locktypes:
+      header: '锁定： \n -'
+    lock:
+      no_type_specified: 您想锁定什么？请检查 /locktypes 获取可用选项。
+      success: '在此群组中锁定了以下内容：\n - %s'
+    unlock:
+      no_type_specified: 您想锁定什么？请检查 /locktypes 获取可用选项。
+      success: '在此群组中解锁了以下内容：\n - %s'
+    errors:
+      invalid_type: '`%s` 不是正确的锁定类型，请检查 /locktypes。'
+    bot:
+      no_admin_permission: 我看到了一个机器人，并且我已经收到阻止它们加入的指令……但我不是管理员！
+      no_ban_permission: 我看到了一个机器人，并且我已经收到阻止它们加入的指令……但我没有权限封禁它们！
+      admin_only: 只有管理员才允许将机器人添加到此聊天！
     help_msg: |-
       *仅限管理员*:
+
       × /lock `<permission>`: 锁定聊天权限。
+
       × /unlock `<permission>`: 解锁聊天权限。
+
       × /locks: 查看聊天权限。
+
       × /locktypes: 检查可用的锁定类型！
 
+
       锁定可用于限制群组用户。
+
       锁定 URL 将自动删除所有带有 URL 的消息，锁定贴纸将删除所有贴纸等。
+
       锁定机器人将阻止非管理员向聊天添加机器人。
 
+
       **示例:**
+
       `/lock media`: 这将锁定聊天中的所有媒体消息。
-    list:  # TODO: Translate - strings.Locks.list
-      header: 'These are the locks in this chat:'
-    locktypes: # TODO: Translate - strings.Locks.locktypes
-      header: 'Locks: \n -'
-    lock: # TODO: Translate - strings.Locks.lock
-      no_type_specified: What do you want to lock? Check /locktypes for available options.
-      success: 'Locked the following in this group:\n - %s'
-    unlock: # TODO: Translate - strings.Locks.unlock
-      no_type_specified: What do you want to lock? Check /locktypes for available options.
-      success: 'Un-Locked the following in this group:\n - %s'
-    errors: # TODO: Translate - strings.Locks.errors
-      invalid_type: '`%s` is not a correct lock type, check /locktypes.'
-    bot: # TODO: Translate - strings.Locks.bot
-      no_admin_permission: >-
-        I see a bot, and I've been told to stop them joining... but I'm not
-        admin!
-      no_ban_permission: >-
-        I see a bot, and I've been told to stop them joining... but I don't have
-        permission to ban them!
-      admin_only: Only admins are allowed to add bots to this chat!
-    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'I see a bot, and I''ve been told to stop them joining...' # TODO: Translate - strings.Locks.i_see_a_bot_and_i_ve_been_told_to_stop_them_joining
+    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: '我看到了一个机器人，并且我已经收到阻止它们加入的指令……'
   Languages:
+    help_translate_button: "帮助我们翻译 🌎"
+    change:
+      private_prompt: 您当前的语言是 %s\n请从下方键盘选择一种语言。
+      group_prompt: 此群组的当前语言是 %s\n请从下方键盘选择一种语言。
+      private_success: 您的语言已更改为 %s
+      group_success: 此群组的语言已更改为 %s
     help_msg: |-
       无法更改机器人的语言？
+
       使用此模块轻松更改！
+
 
       只需输入 /lang 并使用内联键盘为您自己或您的群组选择一种语言。
 
+
       您可以通过帮助 [Crowdin](https://crowdin.com/project/alita_robot) 帮助我们让机器人支持更多语言。
-    help_translate_button: "Help Us Translate 🌎"  # TODO: Translate - strings.Languages.help_translate_button
-    change: # TODO: Translate - strings.Languages.change
-      private_prompt: Your Current Language is %s\nChoose a language from keyboard below.
-      group_prompt: >-
-        This Group's Current Language is %s\nChoose a language from keyboard
-        below.
-      private_success: Your language has been changed to %s
-      group_success: This group's language has been changed to %s
   Misc:
+    reply:
+      need_target: 回复某人。
+      need_content: 提供一些内容以供回复！
+    paste:
+      need_text_or_document: 请提供要粘贴的文本或回复文档！
+      processing: 正在粘贴...
+      get_file_error: 获取文件请求错误！
+      file_too_big: 文件太大无法粘贴；最大可粘贴文件大小为 600 kb！
+      paste_error: 无法粘贴提供的数据！
+    info:
+      user_not_found: 找不到此用户的任何信息。
+    translate:
+      need_text_and_lang: 我需要一些文本和一个语言代码来翻译。
+      no_text_in_reply: 回复的消息不包含任何可翻译的文本。
+      need_text: 请提供一些文本进行翻译。
+      request_error: 翻译请求出错！
+    keyboard:
+      removing: 正在移除卡住的机器人键盘...
     help_msg: |-
       × /info: 获取您的用户信息，可以用作回复或通过传递用户ID或用户名。
+
       × /id: 获取当前群组ID。如果通过回复消息使用，则获取该用户的ID。
+
       × /ping: Ping Telegram 服务器！
+
       × /paste: 将文本粘贴到 nekobin 服务器！
+
       × /tr <lang code> <msg/reply to message>: 翻译消息。
+
       × /removebotkeyboard: 从您的聊天中移除卡住的机器人键盘。
+
       × /stat: 获取聊天中消息总数。
-    reply:  # TODO: Translate - strings.Misc.reply
-      need_target: Reply to someone.
-      need_content: Provide some content to reply!
-    paste: # TODO: Translate - strings.Misc.paste
-      need_text_or_document: Please give text to paste or reply to a document!
-      processing: Pasting ...
-      get_file_error: BadRequest on GetFile!
-      file_too_big: File too big to paste; Max. file size that can be pasted is 600 kb!
-      paste_error: Can't paste the provided data!
-    info: # TODO: Translate - strings.Misc.info
-      user_not_found: Could not find the any information about this user.
-    translate: # TODO: Translate - strings.Misc.translate
-      need_text_and_lang: I need some text and a language code to translate.
-      no_text_in_reply: The replied message does not contain any text to translate.
-      need_text: Please provide some text to translate.
-      request_error: Error making a translation request!
-    keyboard: # TODO: Translate - strings.Misc.keyboard
-      removing: Removing the stuck bot keyboard...
-    pinged_in_percent_ms: Pinged in %d ms # TODO: Translate - strings.Misc.pinged_in_percent_ms
-    reading_error: 'Reading Error:' # TODO: Translate - strings.Misc.reading_error
-    total_messages_in_percent_are_percent: 'Total Messages in %s are: %d' # TODO: Translate - strings.Misc.total_messages_in_percent_are_percent
+    pinged_in_percent_ms: ping 耗时 %d 毫秒
+    reading_error: '读取错误：'
+    total_messages_in_percent_are_percent: '%s 中的消息总数为：%d'
   Mutes:
+    errors:
+      restrict_self: 我为什么要限制自己？
+      anon_user: 此命令不能用于匿名用户。
+      invalid_mode: '未知类型 ''%s''。请使用其中之一：ban/kick/mute'
+    tmute:
+      success: 嘘...\n已禁言 %s %s
+    mute:
+      success: 嘘...\n已禁言 %s。
+    dmute:
+      no_reply: 您需要回复一条消息才能删除它并禁言该用户！
+      success: 嘘...\n已禁言 %s。
+    unmute:
+      success: 好的！\n我将允许 %s 再次发言。
     help_msg: |-
       有时用户可能会很烦人，您可能希望限制他们向聊天发送消息，此模块旨在帮助您解决这个问题，您可以使用此模块将群组中的成员禁言。
 
+
       *Mute Commands:* (仅限管理员)
+
       × /mute <userhandle>: 禁言用户。(通过句柄或回复)
+
       × /smute <userhandle>: 静默禁言用户，不向群组发送消息，并删除您的命令。(通过句柄或回复)
+
       × /dmute <userhandle>: 禁言用户并删除回复的消息。(通过句柄或回复)
-      × /tmute <userhandle> x(m/h/d): 禁言用户 `x` 时间。(通过句柄或回复)。m = 分钟，h = 小时，d = 天。
+
+      × /tmute <userhandle> x(m/h/d): 禁言用户 `x` 时间。(通过句柄或回复)。m = minutes, h = hours, d = days.
+
       × /unmute <userhandle>: 解除禁言用户。(通过句柄或回复)
-    errors:  # TODO: Translate - strings.Mutes.errors
-      restrict_self: Why would I restrict myself?
-      anon_user: This command cannot be used on anonymous user.
-    tmute: # TODO: Translate - strings.Mutes.tmute
-      success: Shh...\nMuted %s for %s
-    mute: # TODO: Translate - strings.Mutes.mute
-      success: Shh...\nMuted %s.
-    dmute: # TODO: Translate - strings.Mutes.dmute
-      no_reply: You need to reply to a message to delete it and mute the user!
-      success: Shh...\nMuted %s.
-    unmute: # TODO: Translate - strings.Mutes.unmute
-      success: Alright!\nI'll allow %s to speak again.
   Notes:
+    remove:
+      no_keyword: 请提供一个要删除的关键词！
+    errors:
+      no_keyword_reply: 请提供一个要回复的关键词！
+      invalid_note: 无效笔记！
+      does_not_exist: 笔记不存在！
+      parse_error: 解析笔记时出错，请在支持聊天中报告。
+      admin_only: 此笔记只能由管理员访问！
+    list:
+      no_notes: 此聊天中没有笔记！
+      private_prompt: 点击下方按钮获取笔记！
     help_msg: |-
       使用笔记为将来的用户保存数据！
+
       笔记非常适合保存零散的信息；电话号码、精美gif、搞笑图片——任何东西！
+
       *User Commands:*
+
       - /get <notename>: 获取笔记。
+
       - #notename: 同 /get。
+
       Admin Commands:
+
       - /save <notename> <note text>: 保存一个名为“word”的新笔记。回复消息将保存该消息。甚至适用于媒体！
+
       - /clear <notename>: 删除关联的笔记。
+
       - /notes: 列出当前聊天中的所有笔记。
+
       - /saved: 同 /notes。
+
       - /clearall: 删除聊天中的所有笔记。此操作无法撤销。
+
       - /privatenotes: 是否在私聊中发送笔记。将发送一个带有按钮的消息，用户可以点击该按钮在私聊中获取笔记。
-    remove:  # TODO: Translate - strings.Notes.remove
-      no_keyword: Please give a keyword to remove!
-    errors: # TODO: Translate - strings.Notes.errors
-      no_keyword_reply: Please give a keyword to reply to!
-      invalid_note: Invalid Note!
-      does_not_exist: Note does not exists!
-      parse_error: >-
-        There is some error parsing the note, please report this in support
-        chat.
-      admin_only: This note can only be accessed by a admin!
-    list: # TODO: Translate - strings.Notes.list
-      no_notes: There are no notes in this chat!
-      private_prompt: Check on the button below to get Notes!
-    removed_note_percent: Removed note <b>%s</b>. # TODO: Translate - strings.Notes.removed_note_percent
-    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Are you sure you want to remove all Notes from this chat? # TODO: Translate - strings.Notes.are_you_sure_you_want_to_remove_all_notes_from_this_chat
-    only_chat_creator_can_use_this_command: Only Chat Creator can use this command. # TODO: Translate - strings.Notes.only_chat_creator_can_use_this_command
-    there_s_some_error_parsing_the_note_please_report_this_in_su: 'There''s some error parsing the note, please report this in support chat.' # TODO: Translate - strings.Notes.there_s_some_error_parsing_the_note_please_report_this_in_su
-    note_doesn_t_exists: Note doesn't exists! # TODO: Translate - strings.Notes.note_doesn_t_exists
-    there_s_some_error_parsing_the_note_please_report_this_to_su: 'There''s some error parsing the note, please report this to support chat.' # TODO: Translate - strings.Notes.there_s_some_error_parsing_the_note_please_report_this_to_su
-    formatting: Formatting # TODO: Translate - strings.Notes.formatting
+    removed_note_percent: 已删除笔记 <b>%s</b>。
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: 您确定要从此聊天中删除所有笔记吗？
+    only_chat_creator_can_use_this_command: 只有聊天创建者才能使用此命令。
+    there_s_some_error_parsing_the_note_please_report_this_in_su: 解析笔记时出错，请在支持聊天中报告。
+    note_doesn_t_exists: 笔记不存在！
+    there_s_some_error_parsing_the_note_please_report_this_to_su: 解析笔记时出错，请向支持聊天报告。
+    formatting: 格式
   Pins:
+    errors:
+      bot_need_admin: 我需要成为管理员才能置顶消息！
+      reply_to_pin: 回复一条消息以置顶它！
+      reply_to_unpin: 回复一条消息以取消置顶它！
+    pin:
+      success: 置顶成功！
+    unpin:
+      success: 取消置顶成功！
+    unpin_all:
+      success: 已取消置顶所有聊天消息！
     help_msg: |-
       所有与置顶相关的命令都可以在这里找到；通过简单的置顶消息让您的聊天保持最新消息！
 
+
       *User Commands:*
+
       × /pinned: 获取当前置顶消息。
 
+
       *Admin Commands:*
+
       × /pin: 置顶您回复的消息。添加 'loud' 或 'notify' 以向群组成员发送通知。
+
       × /pinned: 获取当前聊天中最新的置顶消息。
+
       × /permapin <text>: 通过机器人置顶自定义消息。此消息可以包含 Markdown、按钮和所有其他炫酷功能。
+
       × /unpin: 取消置顶当前置顶消息。如果用作回复，则取消置顶被回复的消息。
+
       × /unpinall: 取消置顶所有置顶消息。
+
       × /antichannelpin <yes/no/on/off>: 不要让 Telegram 自动置顶链接频道。如果未给出参数，则显示当前设置。
+
       × /cleanlinked <yes/no/on/off>: 删除链接频道发送的消息。
+
       Note: 使用反频道置顶时，请确保使用 /unpin 命令，而不是手动操作。否则，当频道发送任何消息时，旧消息将重新置顶。
-    errors:  # TODO: Translate - strings.Pins.errors
-      bot_need_admin: I need to be an admin to pin messages!
-      reply_to_pin: Reply to a message to pin it!
-      reply_to_unpin: Reply to a message to unpin it!
-    pin: # TODO: Translate - strings.Pins.pin
-      success: Pinned successfully!
-    unpin: # TODO: Translate - strings.Pins.unpin
-      success: Unpinned successfully!
-    unpin_all: # TODO: Translate - strings.Pins.unpin_all
-      success: Unpinned all chat messages!
-    unpinned_all_pinned_messages_in_this_chat: Unpinned all pinned messages in this chat! # TODO: Translate - strings.Pins.unpinned_all_pinned_messages_in_this_chat
-    cancelled_operation_to_unpin_messages: Cancelled operation to unpin messages! # TODO: Translate - strings.Pins.cancelled_operation_to_unpin_messages
-    are_you_sure_you_want_to_unpin_all_pinned_messages: Are you sure you want to unpin all pinned messages? # TODO: Translate - strings.Pins.are_you_sure_you_want_to_unpin_all_pinned_messages
-    please_reply_to_a_message_or_give_some_text_to_pin: Please reply to a message or give some text to pin. # TODO: Translate - strings.Pins.please_reply_to_a_message_or_give_some_text_to_pin
-    no_message_has_been_pinned_in_the_current_chat: No message has been pinned in the current chat! # TODO: Translate - strings.Pins.no_message_has_been_pinned_in_the_current_chat
+    unpinned_all_pinned_messages_in_this_chat: 已取消置顶此聊天中的所有置顶消息！
+    cancelled_operation_to_unpin_messages: 已取消取消置顶消息的操作！
+    are_you_sure_you_want_to_unpin_all_pinned_messages: 您确定要取消置顶所有置顶消息吗？
+    please_reply_to_a_message_or_give_some_text_to_pin: 请回复一条消息或提供一些文本以置顶。
+    no_message_has_been_pinned_in_the_current_chat: 当前聊天中没有置顶消息！
   Purges:
     help_msg: |-
       *仅限管理员:*
@@ -944,247 +977,218 @@ strings:
       *Examples*:
       - 删除从回复消息到现在的全部消息。
       -> `/purge`
-    reply_to_a_message_to_select_where_to_start_purging_from: Reply to a message to select where to start purging from.  # TODO: Translate - strings.Purges.reply_to_a_message_to_select_where_to_start_purging_from
-    reply_to_a_message_to_delete_it: Reply to a message to delete it! # TODO: Translate - strings.Purges.reply_to_a_message_to_delete_it
-    this_message_is_already_marked_for_purging: This message is already marked for purging! # TODO: Translate - strings.Purges.this_message_is_already_marked_for_purging
-    message_marked_for_deletion_reply_to_another_message_with_pu: >-
-      Message marked for deletion. Reply to another message with /purgeto to
-      delete all messages in between; within 30s!
-# TODO: Translate - strings.Purges.message_marked_for_deletion_reply_to_another_message_with_pu
-    you_can_only_use_this_command_after_having_used_the_purgefro: You can only use this command after having used the /purgefrom command! # TODO: Translate - strings.Purges.you_can_only_use_this_command_after_having_used_the_purgefro
-    use_del_command_to_delete_one_message: Use /del command to delete one message! # TODO: Translate - strings.Purges.use_del_command_to_delete_one_message
-    reply_to_a_message_to_show_me_till_where_to_purge: Reply to a message to show me till where to purge. # TODO: Translate - strings.Purges.reply_to_a_message_to_show_me_till_where_to_purge
+    reply_to_a_message_to_select_where_to_start_purging_from: 回复一条消息以选择从何处开始清除。
+    reply_to_a_message_to_delete_it: 回复一条消息以删除它！
+    this_message_is_already_marked_for_purging: 此消息已标记为清除！
+    message_marked_for_deletion_reply_to_another_message_with_pu: 已标记要删除的消息。在 30 秒内回复另一条消息并带上 /purgeto 以删除其间的所有消息！
+    you_can_only_use_this_command_after_having_used_the_purgefro: 您只能在使用 /purgefrom 命令后才能使用此命令！
+    use_del_command_to_delete_one_message: 使用 /del 命令删除一条消息！
+    reply_to_a_message_to_show_me_till_where_to_purge: 回复一条消息以告诉我清除到哪里。
   Reports:
+    settings:
+      enabled: 管理员报告已启用！
+      disabled: 管理员报告已禁用！
+    report:
+      success: 已报告给管理员！
+      disabled: 此聊天中报告功能已禁用！
     help_msg: |-
       我们都是忙碌的人，没有时间24/7监控我们的群组。但是如果您的群组中有人发送垃圾信息，您会如何反应？
 
+
       × /report `<reason>`: 回复一条消息以向管理员报告。
+
       - @admin: 同 /report，但不是命令。
 
+
       *仅限管理员:*
+
       × /reports `<on/off/yes/no>`: 更改报告设置，或查看当前状态。
+
       - 如果在私聊中操作，则切换您的状态。
+
       - 如果在群组中，则切换该群组的状态。
+
       × /reports `block` (仅通过回复): 阻止用户使用 /report 或 @admin。
+
       × /reports `unblock` (仅通过回复): 解除阻止用户使用 /report 或 @admin。
+
       × /reports `showblocklist`: 检查所有无法使用 /report 或 @admin 的被阻止用户。
 
+
       要报告用户，只需回复其消息并附带 @admin 或 /report；Natalie 将回复一条消息，说明已通知管理员。
+
       您必须回复消息才能报告用户；您不能仅仅使用 @admin 无故标记管理员！
 
+
       *注意:* 如果由管理员使用，这些都不会被触发。
-    settings:  # TODO: Translate - strings.Reports.settings
-      enabled: Admin reports are enabled!
-      disabled: Admin reports are disabled!
-    report: # TODO: Translate - strings.Reports.report
-      success: Reported to admins!
-      disabled: Reports are disabled in this chat!
-    you_can_t_report_your_own_message: You can't report your own message! # TODO: Translate - strings.Reports.you_can_t_report_your_own_message
-    you_need_to_expose_yourself_first: You need to expose yourself first! # TODO: Translate - strings.Reports.you_need_to_expose_yourself_first
-    it_s_a_special_account_of_telegram: It's a special account of telegram! # TODO: Translate - strings.Reports.it_s_a_special_account_of_telegram
-    you_re_an_admin_whom_will_i_report_your_issues_to: 'You''re an admin, whom will I report your issues to?' # TODO: Translate - strings.Reports.you_re_an_admin_whom_will_i_report_your_issues_to
-    why_would_i_report_myself: Why would I report myself? # TODO: Translate - strings.Reports.why_would_i_report_myself
-    why_would_i_report_an_admin: Why would I report an admin? # TODO: Translate - strings.Reports.why_would_i_report_an_admin
+    you_can_t_report_your_own_message: 您不能举报自己的消息！
+    you_need_to_expose_yourself_first: 您需要先公开自己的身份！
+    it_s_a_special_account_of_telegram: 这是一个 Telegram 的特殊账户！
+    you_re_an_admin_whom_will_i_report_your_issues_to: '您是管理员，我将向谁报告您的问题？'
+    why_would_i_report_myself: 我为什么要举报自己？
+    why_would_i_report_an_admin: 我为什么要举报管理员？
   Rules:
     help_msg: |-
       每个聊天都有不同的规则；此模块将帮助使这些规则更清晰！
+
       *User Commands*:
+
       × /rules: 检查当前聊天规则。
+
       *Admin Commands*:
+
       × /setrules `<text>`: 设置此聊天的规则。
+
       × /privaterules `<yes/no/on/off>`: 启用/禁用规则是否应在私聊中发送。
+
       × /resetrules: 将聊天规则重置为默认
+
       × /rulesbtn `<custom text>`: 设置规则按钮的文本。
+
       × /resetrulesbutton: 将规则按钮的文本重置为默认值。
+
       × /resetrulesbtn: 同上。
-    successfully_cleared_rules: Successfully cleared rules!  # TODO: Translate - strings.Rules.successfully_cleared_rules
-    successfully_cleared_custom_rules_button_text: Successfully cleared custom rules button text! # TODO: Translate - strings.Rules.successfully_cleared_custom_rules_button_text
+    successfully_cleared_rules: 规则已成功清除！
+    successfully_cleared_custom_rules_button_text: 自定义规则按钮文本已成功清除！
   Tagger:
     help_msg: |-
       Tagger 是提及群组中所有已订阅成员的基本功能。
+
       任何聊天成员都可以订阅 tagger。
 
+
       *User Commands:*
+
       × /tagme: 允许用户被标记
+
       × /untagme: 不允许用户被标记
 
+
       *Admin Commands:*
+
       × /tagall: 标记/提及所有被标记用户
+
       × /untagall: 清除所有被标记成员
+
       × /addtag <user>: 手动将用户添加到标记列表
+
       × /rmtag <user>: 手动从标记列表中移除用户
   Warns:
-    help_msg: |-
-      通过警告来管理您的成员；阻止他们失控！
-      如果您正在寻找自动警告，请阅读黑名单模块！
-
-      *Admin Commands:*
-      - /warn <reason>: 警告用户。
-      - /dwarn <reason>: 通过回复警告用户，并删除他们的消息。
-      - /swarn <reason>: 静默警告用户，并删除您的消息。
-      - /warns: 查看用户的警告。
-      - /rmwarn: 移除用户最新的警告。
-      - /resetwarn: 将所有用户的警告重置为 0。
-      - /resetallwarns: 删除聊天中的所有警告。所有用户回到 0 警告。
-      - /warnings: 获取聊天的警告设置。
-      - /setwarnmode <ban/kick/mute>: 设置聊天的警告模式。
-      - /setwarnlimit <number>: 设置用户受到惩罚前的警告次数。
-
-      *Examples*
-      - 警告用户。
-      -> `/warn @user 违反规则`
-    errors:  # TODO: Translate - strings.Warns.errors
-      warn_admin: I'm not going to warn an admin!
-      anon_user: This command cannot be used on anonymous user.
-      invalid_mode: 'Unknown type ''%s''. Please use one of: ban/kick/mute'
-      invalid_limit: The warn limit has to be set between 1 and 100.
-    set_mode: # TODO: Translate - strings.Warns.set_mode
-      ban: 'Updated warn mode to: ban'
-      kick: 'Updated warn mode to: kick'
-      mute: 'Updated warn mode to: mute'
-      no_mode_specified: >-
-        You need to specify an action to take upon too many warns. Current modes
-        are: ban/kick/mute
-    warn: # TODO: Translate - strings.Warns.warn
-      limit_kick: That's %d/%d warnings; So %s has been kicked!
-      limit_mute: That's %d/%d warnings; So %s has been Muted!
-      limit_ban: That's %d/%d warnings; So %s has been banned!
-      success: User %s has %d/%d warnings; be careful!
-      reason: '\n<b>Reason</b>:\n%s'
-      remove_warn_button: ❌ Remove warn
-    warns: # TODO: Translate - strings.Warns.warns
-      no_warns: This user hasn't got any warnings!
-      list_header: 'This user has %d/%d warnings, for the following reasons:'
-      list_no_reasons: 'User has %d/%d warnings, but no reasons for any of them.'
-    remove: # TODO: Translate - strings.Warns.remove
-      success: Warn removed by %s.
-      no_warns: User already has no warns!
-    set_limit: # TODO: Translate - strings.Warns.set_limit
-      no_limit_specified: >-
-        Please specify how many warns a user should be allowed to receive before
-        being acted upon. Eg. `/setwarnlimit 5`
-      success: Warn limit settings for this chat have been updated to %d.
-    reset: # TODO: Translate - strings.Warns.reset
-      success: Warnings have been reset!
-    reset_all: # TODO: Translate - strings.Warns.reset_all
-      no_warns: No users are warned in this chat!
-      confirm: >-
-        Are you sure you want to remove all the warns of all the users in this
-        chat?
-      success: Removed all warns of all users in this chat.
-      button_yes: Removed all warns of all the users in this chat !
-      button_no: Cancelled the removal of all the warns of all the users in this chat !
-    warnings: # TODO: Translate - strings.Warns.warnings
-      status: >-
-        The group has the following settings:\n<b>Warn Limit:</b>
-        <code>%d</code>\n<b>Warn Mode:</b> <code>%s</code>
+    errors:
+      warn_admin: 我不会警告管理员！
+      anon_user: 此命令不能用于匿名用户。
+      invalid_mode: '未知类型 ''%s''。请使用其中之一：ban/kick/mute'
+      invalid_limit: 警告限制必须设置在 1 到 100 之间。
+    set_mode:
+      ban: '警告模式已更新为：ban'
+      kick: '警告模式已更新为：kick'
+      mute: '警告模式已更新为：mute'
+      no_mode_specified: 您需要指定对警告过多的用户采取的行动。当前模式有：ban/kick/mute
+    warn:
+      limit_kick: 已达 %d/%d 次警告；所以 %s 已被踢出！
+      limit_mute: 已达 %d/%d 次警告；所以 %s 已被禁言！
+      limit_ban: 已达 %d/%d 次警告；所以 %s 已被封禁！
+      success: 用户 %s 已有 %d/%d 次警告；请注意！
+      reason: '\n<b>原因</b>：\n%s'
+      remove_warn_button: ❌ 移除警告
+    warns:
+      no_warns: 此用户没有任何警告！
+      list_header: '此用户有 %d/%d 次警告，原因如下：'
+      list_no_reasons: '用户有 %d/%d 次警告，但没有具体原因。'
+    remove:
+      success: 警告已由 %s 移除。
+      no_warns: 用户已经没有警告了！
+    set_limit:
+      no_limit_specified: 请指定用户在受到惩罚前可以收到的警告次数。例如：`/setwarnlimit 5`
+      success: 此聊天的警告限制设置已更新为 %d。
+    reset:
+      success: 警告已重置！
+    reset_all:
+      no_warns: 此聊天中没有用户受到警告！
+      confirm: 您确定要移除此聊天中所有用户的警告吗？
+      success: 已移除此聊天中所有用户的警告。
+      button_yes: 已移除此聊天中所有用户的警告！
+      button_no: 已取消移除此聊天中所有用户的警告！
+    warnings:
+      status: '群组设置如下：\n<b>警告限制：</b> <code>%d</code>\n<b>警告模式：</b> <code>%s</code>'
+  Dev:
+    errors:
+      no_user_specified: 您必须指定一个用户才能获取信息
+    chatlist:
+      getting_list: 正在获取我所在的聊天列表...
+      success: 这是我数据库中的聊天列表！
+    leavechat:
+      success: '好的，我离开了聊天！'
+    addsudo:
+      already_sudo: 用户已经是 Sudo！
+      success: 已将 %s 添加到 Sudo 列表！
+    adddev:
+      already_dev: 用户已经是 Dev！
+      success: 已将 %s 添加到 Dev 列表！
+    remsudo:
+      not_sudo: 用户不是 Sudo！
+      success: 已将 %s 从 Sudo 列表中移除！
+    remdev:
+      not_dev: 用户不是 Dev！
+      success: 已将 %s 从 Dev 列表中移除！
+    listteam:
+      dev_users: 'Dev 用户：'
+      sudo_users: 'Sudo 用户：'
+      no_users: 团队中没有添加用户！
+      no_users_in_category: 没有用户
+    getstats:
+      fetching: 正在获取机器人统计数据...
+  DbClean:
+    question: 您想清理什么？
+    chats_button: 聊天
+    no_redundant_chats: 未找到冗余聊天！
+    progress_getting_invalid_chats: '获取无效聊天已完成 %d。'
+    chats_marked_inactive: '%d 个聊天已标记为不活跃！'
+  Users:
+    log:
+      updating_channel: 正在更新数据库中 %d 频道
+      updating_user: 正在更新数据库中 %d 用户
+      updating_replied: 正在更新数据库中 %d 回复
   Utils:
     chat_status:
       user:
-        no_permission_change_info_btn: |-
-          您没有更改信息的权限！！
-        no_permission_change_info_cmd: |-
-          您没有更改此群组中信息的权限！
-        no_permission_restrict_btn: |-
-          您没有权限限制成员！！
-        no_permission_restrict_cmd: |-
-          您没有权限限制此群组中的成员！
-        no_permission_promote_btn: |-
-          您没有提升/降级成员的权限！！
-        no_permission_promote_cmd: |-
-          您不能在这里提升/降级他人！请确保您拥有适当的权限！
-        no_permission_pin: |-
-          您不能在这里置顶消息！请确保您是管理员并可以置顶消息。
-        no_permission_delete: |-
-          您没有删除消息的权限！
-        require_admin_btn: |-
-          您需要是管理员才能执行此操作！
-        require_admin_cmd: |-
-          只有管理员才能执行此命令！
-        require_owner_btn: |-
-          您需要是群组创建者才能执行此操作！
-        require_owner_cmd: |-
-          只有群组创建者才能执行此操作！
+        no_permission_change_info_btn: 您没有更改信息的权限！！
+        no_permission_change_info_cmd: 您没有更改此群组中信息的权限！
+        no_permission_restrict_btn: 您没有权限限制成员！！
+        no_permission_restrict_cmd: 您没有权限限制此群组中的成员！
+        no_permission_promote_btn: 您没有提升/降级成员的权限！！
+        no_permission_promote_cmd: 您不能在这里提升/降级他人！请确保您拥有适当的权限！
+        no_permission_pin: 您不能在这里置顶消息！请确保您是管理员并可以置顶消息。
+        no_permission_delete: 您没有删除消息的权限！
+        require_admin_btn: 您需要是管理员才能执行此操作！
+        require_admin_cmd: 只有管理员才能执行此命令！
+        require_owner_btn: 您需要是群组创建者才能执行此操作！
+        require_owner_cmd: 只有群组创建者才能执行此操作！
       bot:
-        no_permission_restrict: |-
-          我没有权限限制成员！
-        no_permission_restrict_group: |-
-          我不能在这里限制他人！请确保我是管理员并可以限制其他成员。
-        no_permission_promote: |-
-          我不能在这里提升/降级他人！请确保我是管理员并可以任命新管理员。
-        no_permission_pin: |-
-          我不能在这里置顶消息！请确保我是管理员并可以置顶消息。
-        no_permission_delete: |-
-          我没有删除消息的权限！
-        require_admin: |-
-          我不是管理员！请确保我是管理员并拥有适当的权限。
-      require_private: |-
-        此命令适用于私聊，不适用于群组聊天！
-      require_group: |-
-        此命令适用于群组聊天，不适用于私聊！
-      anon_admin_string: |-
-        您看起来是匿名的。点击此按钮以确认您的身份。
-      anon_admin_btn: |-
-        确认您的身份
+        no_permission_restrict: 我没有权限限制成员！
+        no_permission_restrict_group: 我不能在这里限制他人！请确保我是管理员并可以限制其他成员。
+        no_permission_promote: 我不能在这里提升/降级他人！请确保我是管理员并可以任命新管理员。
+        no_permission_pin: 我不能在这里置顶消息！请确保我是管理员并可以置顶消息。
+        no_permission_delete: 我没有删除消息的权限！
+        require_admin: 我不是管理员！请确保我是管理员并拥有适当的权限。
+      require_private: 此命令适用于私聊，不适用于群组聊天！
+      require_group: 此命令适用于群组聊天，不适用于私聊！
+      anon_admin_string: 您看起来是匿名的。点击此按钮以确认您的身份。
+      anon_admin_btn: 确认您的身份
     extraction:
       extract_chat:
-        badrequest_failed_getchat: |-
-          连接聊天失败：获取聊天失败：无法获取聊天：错误请求：找不到聊天
-        fail_need_chat_id: |-
-          我期望一个聊天ID，但这不是一个有效的整数。
-        fail_need_chat: |-
-          我需要一个聊天ID才能连接！
+        badrequest_failed_getchat: 连接聊天失败：获取聊天失败：无法获取聊天：错误请求：找不到聊天
+        fail_need_chat_id: 我期望一个聊天ID，但这不是一个有效的整数。
+        fail_need_chat: 我需要一个聊天ID才能连接！
       extract_user:
-        no_user_found: |-
-          找不到此名称的用户；您确定我以前见过他们吗？
-        badrequest_failed_getchatmember: |-
-          获取用户失败：无法获取ChatMember：错误请求：找不到聊天
+        no_user_found: 找不到此名称的用户；您确定我以前见过他们吗？
+        badrequest_failed_getchatmember: 获取用户失败：无法获取ChatMember：错误请求：找不到聊天
     string_handling:
       extract_time:
-        invalid_time_amount: |-
-          指定的时间量无效。
-        invalid_time_type: |-
-          指定的时间类型无效。预期为 m、h 或 d，得到：%s
-  Dev:  # TODO: Translate - strings.Dev
-    errors:
-      no_user_specified: You must specify a user to get info on
-    chatlist:
-      getting_list: Getting list of chats I'm in...
-      success: Here is the list of chats in my Database!
-    leavechat:
-      success: 'Okay, I left the chat!'
-    addsudo:
-      already_sudo: User is already Sudo!
-      success: Added %s to Sudo List!
-    adddev:
-      already_dev: User is already Dev!
-      success: Added %s to Dev List!
-    remsudo:
-      not_sudo: User is not Sudo!
-      success: Removed %s from Sudo List!
-    remdev:
-      not_dev: User is not Dev!
-      success: Removed %s from Dev List!
-    listteam:
-      dev_users: 'Dev Users:'
-      sudo_users: 'Sudo Users:'
-      no_users: No users are added Added in Team!
-      no_users_in_category: No Users
-    getstats:
-      fetching: Fetching bot stats...
-  DbClean: # TODO: Translate - strings.DbClean
-    question: What do you want to clean?
-    chats_button: Chats
-    no_redundant_chats: No redundant chats found!
-    progress_getting_invalid_chats: '%d completed in getting invalid chats.'
-    chats_marked_inactive: '%d chats marked as inactive!'
-  Users: # TODO: Translate - strings.Users
-    log:
-      updating_channel: Updatting channel %d in db
-      updating_user: Updatting user %d in db
-      updating_replied: Updatting %d in db
-  Mute: # TODO: Translate - strings.Mute
-    unmute_admin_only: Unmute (Admin Only)
-  Helpers: # TODO: Translate - strings.Helpers
-    this_chat_does_not_have_any_rules: This chat does not have any rules!
-    this_note_does_not_exist: This note does not exist!
+        invalid_time_amount: 指定的时间量无效。
+        invalid_time_type: '指定的时间类型无效。预期为 m、h 或 d，得到：%s'
+  Mute:
+    unmute_admin_only: 解除禁言 (仅限管理员)
+  Helpers:
+    this_chat_does_not_have_any_rules: 此聊天没有任何规则！
+    this_note_does_not_exist: 此笔记不存在！

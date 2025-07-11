@@ -1,225 +1,208 @@
----
-#stringcode: string
 main:
-  lang_sample: |-
-    Ελληνικά
-  language_flag: |-
-    🇬🇷
-  language_name: |-
-    Ελληνικά
+  lang_sample: Ελληνικά
+  language_flag: 🇬🇷
+  language_name: Ελληνικά
 strings:
   CommonStrings:
     admin_cache:
-      cache_reloaded: |-
-        Επαναφόρτωση cache διαχειριστή με επιτυχία.
-      not_found: |-
+      cache_reloaded: Επαναφόρτωση cache διαχειριστή με επιτυχία.
+      not_found: >-
         Δεν βρέθηκε cache διαχειριστή. Ζητήστε από έναν διαχειριστή να χρησιμοποιήσει /admincache για επαναφόρτωση.
-    errors:  # TODO: Translate - strings.CommonStrings.errors
+    errors:
       no_user_specified: >-
-        I don't know who you're talking about, you're going to need to specify a
-        user...!
-      anon_user_generic: This command cannot be used on anonymous user.
-      admin_only: You need to be an admin to do this!
-      admin_only_command: Only admins can execute this command!
-      creator_only: You need to be the group creator to do this!
-      creator_only_command: Only group creator to do this!
-      bot_not_admin: I'm not admin!
+        Δεν ξέρω για ποιον μιλάτε, πρέπει να καθορίσετε έναν χρήστη...!
+      anon_user_generic: Αυτή η εντολή δεν μπορεί να χρησιμοποιηθεί σε ανώνυμο χρήστη.
+      admin_only: Πρέπει να είστε διαχειριστής για να το κάνετε αυτό!
+      admin_only_command: Μόνο οι διαχειριστές μπορούν να εκτελέσουν αυτή την εντολή!
+      creator_only: Πρέπει να είστε ο δημιουργός της ομάδας για να το κάνετε αυτό!
+      creator_only_command: Μόνο ο δημιουργός της ομάδας μπορεί να το κάνει αυτό!
+      bot_not_admin: Δεν είμαι διαχειριστής!
       bot_no_restrict_permission: >-
-        I can't restrict people here! Make sure I'm admin and can restrict other
-        members.
-      group_only: This command can only be used in a group!
-      group_only_command: 'This command is made to be used in group chats, not in pm!'
-      private_only_command: 'This command is made for pm, not group chat!'
-      user_not_found: Could not find a user by this name; are you sure I've seen them before?
-      user_not_in_chat: 'This user is not in this chat, how can I restrict them?'
-      action_on_self: I can't perform this action on myself.
-      button_expired: 'This button has expired, Please use the command again.'
-      invalid_option_yes_no: 'Your input was not recognised as one of: yes/no/on/off'
-      invalid_option_on_off: I only understand an option from <on/off/yes/no>
-      invalid_integer: '%s is not a valid integer.'
-      not_enough_args: Not enough arguments.
-      invalid_time_amount: Invalid time amount specified.
-      time_too_long: Cannot set time to more than 1 year!
-      invalid_time_type: 'Invalid time type specified. Expected m, h, d or w got: %s'
-      get_chat_member_failed: 'Failed to get user: unable to getChatMember: Bad Request: chat not found'
-      admin_only_button: This button can only be used by an admin!
-      no_reply: Reply to a user's message to delete and kick him!
-    buttons: # TODO: Translate - strings.CommonStrings.buttons
-      'true': 'Yes'
-      'false': 'No'
-      'yes': Yes
-      'no': No
-      back: Back
-      back_arrow: « Back
-      back_arrow_left: ⬅ Back
-      done: Done ✅
-      continue: ✅ Continue ✅
-      click_me: Click Me!
-      home: Home
-      rules: Rules
-      rules_button: "Rules 📝"
-      close: Close
-      cancel: Cancel
-    actions: # TODO: Translate - strings.CommonStrings.actions
-      ban: Ban
-      kick: Kick
-      mute: Mute
-      unban: Unban
-      unmute: Unmute
-      banned: User banned successfully!
-      unbanned: User unbanned successfully!
-      kicked: User kicked successfully!
-      muted: User muted successfully!
-      unmuted: User unmuted successfully!
-    anon_admin: # TODO: Translate - strings.CommonStrings.anon_admin
-      prompt: >-
-        It looks like you're anonymous. Tap this button to confirm your
-        identity.
-      button: Click to prove admin
-  Admin:
-    adminlist: |-
-      Διαχειριστές στο <b>%s</b>:
+        Δεν μπορώ να περιορίσω άτομα εδώ! Βεβαιωθείτε ότι είμαι διαχειριστής και μπορώ να περιορίζω άλλα μέλη.
+      group_only: Αυτή η εντολή μπορεί να χρησιμοποιηθεί μόνο σε ομάδα!
+      group_only_command: 'Αυτή η εντολή έχει δημιουργηθεί για χρήση σε ομαδικές συνομιλίες, όχι σε προσωπικά μηνύματα!'
+      private_only_command: 'Αυτή η εντολή έχει δημιουργηθεί για προσωπικά μηνύματα, όχι για ομαδική συνομιλία!'
+      user_not_found: Δεν βρέθηκε χρήστης με αυτό το όνομα. Είστε σίγουροι ότι τους έχω ξαναδεί;
+      user_not_in_chat: 'Αυτός ο χρήστης δεν είναι σε αυτή τη συνομιλία, πώς μπορώ να τον περιορίσω;'
+      action_on_self: Δεν μπορώ να εκτελέσω αυτή την ενέργεια στον εαυτό μου.
+      button_expired: 'Αυτό το κουμπί έχει λήξει, Παρακαλώ χρησιμοποιήστε ξανά την εντολή.'
+      invalid_option_yes_no: 'Η είσοδος σας δεν αναγνωρίστηκε ως μία από τις επιλογές: yes/no/on/off'
+      invalid_option_on_off: Καταλαβαίνω μόνο μια επιλογή από <on/off/yes/no>
+      invalid_integer: '%s δεν είναι έγκυρος ακέραιος.'
+      not_enough_args: Δεν υπάρχουν αρκετά ορίσματα.
+      invalid_time_amount: Καθορίστηκε μη έγκυρο χρονικό διάστημα.
+      time_too_long: Δεν μπορώ να ορίσω ώρα μεγαλύτερη από 1 έτος!
+      invalid_time_type: 'Καθορίστηκε μη έγκυρος τύπος ώρας. Αναμενόταν m, h, d ή w, ελήφθη: %s'
+      get_chat_member_failed: 'Αποτυχία λήψης χρήστη: αδυναμία λήψης μέλους συνομιλίας: Κακό αίτημα: η συνομιλία δεν βρέθηκε'
+      admin_only_button: Αυτό το κουμπί μπορεί να χρησιμοποιηθεί μόνο από διαχειριστή!
+      no_reply: Απαντήστε στο μήνυμα ενός χρήστη για να τον διαγράψετε και να τον αποβάλετε!
+    buttons:
+      'true': 'Ναι'
+      'false': 'Όχι'
+      'yes': Ναι
+      'no': Όχι
+      back: Πίσω
+      back_arrow: « Πίσω
+      back_arrow_left: ⬅ Πίσω
+      done: Τέλος ✅
+      continue: ✅ Συνέχεια ✅
+      click_me: Κάντε κλικ εδώ!
+      home: Αρχική
+      rules: Κανόνες
+      rules_button: "Κανόνες 📝"
+      close: Κλείσιμο
+      cancel: Ακύρωση
+    actions:
+      ban: Απαγόρευση
+      kick: Αποβολή
+      mute: Σίγαση
+      unban: Άρση απαγόρευσης
+      unmute: Άρση σίγασης
+      banned: Ο χρήστης απαγορεύτηκε με επιτυχία!
+      unbanned: Άρση απαγόρευσης χρήστη με επιτυχία!
+      kicked: Ο χρήστης αποβλήθηκε με επιτυχία!
+      muted: Ο χρήστης τέθηκε σε σίγαση με επιτυχία!
+      unmuted: Άρση σίγασης χρήστη με επιτυχία!
     anon_admin:
-      enabled: |-
+      prompt: >-
+        Φαίνεται ότι είστε ανώνυμος. Πατήστε αυτό το κουμπί για να επιβεβαιώσετε την ταυτότητά σας.
+      button: Κλικ για να αποδείξετε ότι είστε διαχειριστής
+  Admin:
+    adminlist: 'Διαχειριστές στο <b>%s</b>:'
+    anon_admin:
+      enabled: >-
         Η λειτουργία AnonAdmin είναι αυτή τη στιγμή <b>ενεργή</b> για %s.
+
         Αυτό επιτρέπει σε όλους τους ανώνυμους διαχειριστές να εκτελούν διαχειριστικές ενέργειες χωρίς περιορισμούς.
-      disabled: |-
+      disabled: >-
         Η λειτουργία AnonAdmin είναι αυτή τη στιγμή <b>ανενεργή</b> για %s.
+
         Αυτό απαιτεί από τους ανώνυμους διαχειριστές να πατήσουν ένα κουμπί για επιβεβαίωση των δικαιωμάτων τους.
-      enabled_now: |-
+      enabled_now: >-
         Η λειτουργία AnonAdmin είναι τώρα <b>ενεργοποιημένη</b> για %s.
+
         Από εδώ και στο εξής, θα ζητώ από τους διαχειριστές να επαληθεύουν τα δικαιώματα από ανώνυμους διαχειριστές.
-      disabled_now: |-
+      disabled_now: >-
         Η λειτουργία AnonAdmin είναι τώρα <b>απενεργοποιημένη</b> για %s.
+
         Από εδώ και στο εξής, δεν θα ζητώ πλέον από τους διαχειριστές να επαληθεύουν τα δικαιώματα από ανώνυμους διαχειριστές.
-      already_enabled: |-
-        Η λειτουργία AnonAdmin είναι ήδη <b>ενεργοποιημένη</b> για %s
-      already_disabled: |-
-        Η λειτουργία AnonAdmin είναι ήδη <b>απενεργοποιημένη</b> για %s
-      invalid_arg: |-
+      already_enabled: Η λειτουργία AnonAdmin είναι ήδη <b>ενεργοποιημένη</b> για %s
+      already_disabled: Η λειτουργία AnonAdmin είναι ήδη <b>απενεργοποιημένη</b> για %s
+      invalid_arg: >-
         Μη έγκυρο όρισμα, καταλαβαίνω μόνο <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
-      is_owner: |-
-        Αυτό το άτομο δημιούργησε αυτή τη συνομιλία, πώς θα το υποβίβαζα;
-      is_admin: |-
-        Αυτό το άτομο δεν είναι διαχειριστής, πώς θα το υποβίβαζα;
-      is_bot_itself: |-
-        Δεν πρόκειται να υποβιβάσω τον εαυτό μου.
-      success_demote: |-
-        Υποβιβάστηκε με επιτυχία ο/η %s!
+      is_owner: 'Αυτό το άτομο δημιούργησε αυτή τη συνομιλία, πώς θα το υποβίβαζα;'
+      is_admin: 'Αυτό το άτομο δεν είναι διαχειριστής, πώς θα το υποβίβαζα;'
+      is_bot_itself: Δεν πρόκειται να υποβιβάσω τον εαυτό μου.
+      success_demote: Υποβιβάστηκε με επιτυχία ο/η %s!
     promote:
-      admin_title_truncated: |-
-        Ο τίτλος διαχειριστή περικόπηκε σε 16 χαρακτήρες από %d
-      is_bot_itself: |-
-        Μακάρι να μπορούσα να το κάνω αυτό στον εαυτό μου ;_;
-      is_owner: |-
+      admin_title_truncated: Ο τίτλος διαχειριστή περικόπηκε σε 16 χαρακτήρες από %d
+      is_bot_itself: Μακάρι να μπορούσα να το κάνω αυτό στον εαυτό μου ;_;
+      is_owner: >-
         Αυτό το άτομο δημιούργησε αυτή τη συνομιλία, πώς θα το προήγαγα;
-      is_admin: |-
+      is_admin: >-
         Αυτό το άτομο είναι ήδη διαχειριστής, πώς θα το προήγαγα;
-      success_promote: |-
-        Προήχθη με επιτυχία ο/η %s!
+      success_promote: Προήχθη με επιτυχία ο/η %s!
     title:
-      success_set: |-
-        Ορίστηκε με επιτυχία ο τίτλος διαχειριστή του/της %s σε <b>%s</b>
-      is_bot_itself: |-
-        Μακάρι να μπορούσα να το κάνω αυτό στον εαυτό μου ;_;
-      is_owner: |-
+      success_set: Ορίστηκε με επιτυχία ο τίτλος διαχειριστή του/της %s σε <b>%s</b>
+      is_bot_itself: Μακάρι να μπορούσα να το κάνω αυτό στον εαυτό μου ;_;
+      is_owner: >-
         Αυτό το άτομο δημιούργησε αυτή τη συνομιλία, πώς θα του έθετα προσαρμοσμένο τίτλο διαχειριστή;
-      is_admin: |-
+      is_admin: >-
         Αυτό το άτομο είναι ήδη διαχειριστής, πώς θα του έθετα προσαρμοσμένο τίτλο διαχειριστή;
     errors:
-      err_set_title: |-
+      err_set_title: >-
         Αποτυχία ορισμού προσαρμοσμένου τίτλου διαχειριστή. Ο τίτλος μπορεί να μην είναι σωστός ή να περιέχει emojis.
-      err_cannot_demote: |-
+      err_cannot_demote: >-
         Αποτυχία υποβιβασμού. Μπορεί να μην είμαι διαχειριστής ή να προήχθη από άλλον διαχειριστή.
-      err_cannot_promote: |-
+      err_cannot_promote: >-
         Αποτυχία προαγωγής. Μπορεί να μην είμαι διαχειριστής ή να προήχθη από άλλον διαχειριστή.
-      title_empty: |-
-        Πρέπει να μου δώσετε έναν τίτλο διαχειριστή για να τον ορίσω.
-    help_msg: |-
+      title_empty: Πρέπει να μου δώσετε έναν τίτλο διαχειριστή για να τον ορίσω.
+    help_msg: >-
       Κάντε εύκολη την προαγωγή και τον υποβιβασμό χρηστών με τη μονάδα διαχείρισης!
 
+
       *Εντολές Χρήστη:*
+
       × /adminlist: Εμφανίζει τους διαχειριστές στην τρέχουσα συνομιλία.
 
+
       *Εντολές Διαχειριστή:*
-      × /promote `<απάντηση/όνομα χρήστη/αναφορά/id χρήστη>`: Προάγει έναν χρήστη.
-      × /demote `<απάντηση/όνομα χρήστη/αναφορά/id χρήστη>`: Υποβιβάζει έναν χρήστη.
-      × /title `<απάντηση/όνομα χρήστη/αναφορά/id χρήστη>` `<προσαρμοσμένος τίτλος>`: Ορίζει προσαρμοσμένο τίτλο για τον χρήστη.
-    here_is_the_invite_link_of_this_chat_percent: 'Here is the invite link of this chat: %s'  # TODO: Translate - strings.Admin.here_is_the_invite_link_of_this_chat_percent
-    you_need_to_be_admin_to_do_this: You need to be admin to do this! # TODO: Translate - strings.Admin.you_need_to_be_admin_to_do_this
+
+      × /promote `<reply/username/mention/userid>`: Προάγει έναν χρήστη.
+
+      × /demote `<reply/username/mention/userid>`: Υποβιβάζει έναν χρήστη.
+
+      × /title `<reply/username/mention/userid>` `<custom title>`: Ορίζει προσαρμοσμένο τίτλο για τον χρήστη.
+    here_is_the_invite_link_of_this_chat_percent: 'Εδώ είναι ο σύνδεσμος πρόσκλησης αυτής της συνομιλίας: %s'
+    you_need_to_be_admin_to_do_this: Πρέπει να είστε διαχειριστής για να το κάνετε αυτό!
   Antiflood:
     checkflood:
-      perform_action: |-
-        Ναι, δεν μου αρέσει το flooding σου. Ο/Η %s έχει %s!
+      perform_action: 'Ναι, δεν μου αρέσει το flooding σου. Ο/Η %s έχει %s!'
     setflood:
-      success: |-
-        Το όριο flood έχει οριστεί σε <b>%d</b> μηνύματα.
+      success: Το όριο flood έχει οριστεί σε <b>%d</b> μηνύματα.
       disabled: |-
         Εντάξει.
         Δεν θα προειδοποιώ τους χρήστες για flooding.
     flood:
-      disabled: |-
-        Αυτή η συνομιλία δεν επιβάλλει προς το παρόν έλεγχο flood.
-      show_settings: |-
+      disabled: Αυτή η συνομιλία δεν επιβάλλει προς το παρόν έλεγχο flood.
+      show_settings: >-
         Αυτή η συνομιλία επιβάλλει προς το παρόν έλεγχο flood μετά από %d μηνύματα. Οποιοσδήποτε χρήστης στείλει περισσότερα μηνύματα από αυτόν τον αριθμό θα %s.
     setfloodmode:
-      success: |-
-        Η λειτουργία flood έχει οριστεί σε %s.
-      unknown_type: |-
-        Άγνωστος τύπος '%s'. Παρακαλώ χρησιμοποιήστε ένα από τα: ban/kick/mute
-      specify_action: |-
+      success: Η λειτουργία flood έχει οριστεί σε %s.
+      unknown_type: 'Άγνωστος τύπος ''%s''. Παρακαλώ χρησιμοποιήστε ένα από τα: ban/kick/mute'
+      specify_action: >-
         Πρέπει να καθορίσετε μια ενέργεια που θα ληφθεί κατά το flooding. Οι τρέχουσες λειτουργίες είναι: `ban`/`kick`/`mute`
     flood_deleter:
-      enabled: |-
+      enabled: >-
         Ενεργοποιήθηκε η διαγραφή μηνυμάτων Antiflood. Τα μηνύματα που προκαλούν antiflood θα διαγράφονται!
-      disabled: |-
+      disabled: >-
         Απενεργοποιήθηκε η διαγραφή μηνυμάτων Antiflood. Τα μηνύματα που προκαλούν antiflood θα αγνοούνται!
-      invalid_option: |-
-        Καταλαβαίνω μόνο μια επιλογή από: `yes`/`no`/`on`/`off`
-      already_enabled: |-
+      invalid_option: 'Καταλαβαίνω μόνο μια επιλογή από: `yes`/`no`/`on`/`off`'
+      already_enabled: >-
         Η διαγραφή μηνυμάτων Antiflood είναι προς το παρόν *ενεργοποιημένη* σε αυτή τη συνομιλία. Τα μηνύματα που προκαλούν antiflood θα διαγράφονται!
-      already_disabled: |-
+      already_disabled: >-
         Η διαγραφή μηνυμάτων Antiflood είναι προς το παρόν *απενεργοποιημένη* σε αυτή τη συνομιλία. Τα μηνύματα που προκαλούν antiflood θα αγνοούνται!
     errors:
-      expected_args: |-
+      expected_args: >-
         Περίμενα κάποια ορίσματα! Είτε off, είτε έναν ακέραιο. π.χ.: `/setflood 5`, ή `/setflood off`
-      invalid_int: |-
-        Αυτός δεν είναι έγκυρος ακέραιος. Παρακαλώ δώστε μου έναν έγκυρο ακέραιο, ή `off`.
-      set_in_limit: |-
-        Το όριο antiflood πρέπει να οριστεί μεταξύ 3 και 100.
-    help_msg: |-
+      invalid_int: 'Αυτός δεν είναι έγκυρος ακέραιος. Παρακαλώ δώστε μου έναν έγκυρο ακέραιο, ή `off`.'
+      set_in_limit: Το όριο antiflood πρέπει να οριστεί μεταξύ 3 και 100.
+    help_msg: >-
       Ξέρετε πώς μερικές φορές, οι άνθρωποι μπαίνουν, στέλνουν 100 μηνύματα και καταστρέφουν τη συνομιλία σας; Με το antiflood, αυτό δεν συμβαίνει πια!
+
 
       Το Antiflood σας επιτρέπει να αναλάβετε δράση για χρήστες που στέλνουν περισσότερα από x μηνύματα στη σειρά. Οι ενέργειες είναι: ban/kick/mute
 
+
       *Εντολές Διαχειριστή*:
+
       × /flood: Λάβετε τις τρέχουσες ρυθμίσεις antiflood.
-      × /setflood `<αριθμός/off/no>`: Ορίστε τον αριθμό των μηνυμάτων μετά τον οποίο θα αναληφθεί δράση για έναν χρήστη. Ορίστε σε '0', 'off' ή 'no' για απενεργοποίηση.
-      × /setfloodmode `<τύπος ενέργειας>`: Επιλέξτε ποια ενέργεια θα αναληφθεί για έναν χρήστη που κάνει flood. Επιλογές: ban/kick/mute
+
+      × /setflood `<number/off/no>`: Ορίστε τον αριθμό των μηνυμάτων μετά τον οποίο θα αναληφθεί δράση για έναν χρήστη. Ορίστε σε '0', 'off' ή 'no' για απενεργοποίηση.
+
+      × /setfloodmode `<action type>`: Επιλέξτε ποια ενέργεια θα αναληφθεί για έναν χρήστη που κάνει flood. Επιλογές: ban/kick/mute
+
       × /delflood `<yes/no/on/off>`: Εάν θέλετε το bot να διαγράφει τα μηνύματα που έχουν σταλεί μαζικά από τον χρήστη.
-    unmute_admins_only: Unmute (Admins Only)  # TODO: Translate - strings.Antiflood.unmute_admins_only
-    unban_admins_only: Unban (Admins Only) # TODO: Translate - strings.Antiflood.unban_admins_only
+    unmute_admins_only: Unmute (Admins Only)
+    unban_admins_only: Unban (Admins Only)
   Approvals:
     approve:
-      is_bot_itself: |-
-        Με έχετε ήδη εγκρίνει κάνοντάς με διαχειριστή!
-      user_approved: |-
+      is_bot_itself: Με έχετε ήδη εγκρίνει κάνοντάς με διαχειριστή!
+      user_approved: >-
         Εγκρίθηκε ο χρήστης %s
+
         Από εδώ και στο εξής, θα αγνοούνται από αυτόματες απαγορεύσεις, μαύρες λίστες, κλειδώματα και antiflood.
-      user_not_in_chat: |-
-        Αυτός ο χρήστης δεν είναι σε αυτή τη συνομιλία, πώς μπορώ να τον εγκρίνω;
+      user_not_in_chat: 'Αυτός ο χρήστης δεν είναι σε αυτή τη συνομιλία, πώς μπορώ να τον εγκρίνω;'
     unapprove:
-      is_bot_itself: |-
-        Είμαι διαχειριστής, δεν μπορώ να απο-εγκριθώ!
-      user_unapproved: |-
+      is_bot_itself: 'Είμαι διαχειριστής, δεν μπορώ να απο-εγκριθώ!'
+      user_unapproved: >-
         Απο-εγκρίθηκε ο χρήστης: %s
+
         Από εδώ και στο εξής, θα λαμβάνονται υπόψη για αυτόματες απαγορεύσεις, μαύρες λίστες, κλειδώματα και antiflood.
     approval:
-      is_admin: |-
-        Ο/Η %s είναι διαχειριστής και δεν χρειάζεται έγκριση.
-      is_bot_itself: |-
-        Είμαι διαχειριστής και δεν χρειάζομαι έγκριση.
+      is_admin: 'Ο/Η %s είναι διαχειριστής και δεν χρειάζεται έγκριση.'
+      is_bot_itself: 'Είμαι διαχειριστής και δεν χρειάζομαι έγκριση.'
       is_approved: |-
         Ο/Η %s είναι εγκεκριμένος χρήστης στο <b>%s</b>
         Αγνοείται από αυτόματες απαγορεύσεις, μαύρες λίστες, κλειδώματα και antiflood.
@@ -230,178 +213,183 @@ strings:
         Δεν είστε εγκεκριμένος στο <b>%s</b>
         Θα λαμβάνεστε υπόψη για αυτόματες απαγορεύσεις, μαύρες λίστες, κλειδώματα και antiflood.
     approved:
-      none_approved: |-
-        Κανένας χρήστης δεν είναι εγκεκριμένος στο <b>%s</b>!
-      approved_list: |-
+      none_approved: Κανένας χρήστης δεν είναι εγκεκριμένος στο <b>%s</b>!
+      approved_list: >-
         Αυτοί οι χρήστες είναι εγκεκριμένοι στο <b>%s:</b>
+
         %s
+
 
         Για να λάβετε περισσότερες πληροφορίες για κάθε χρήστη, όπως Εγκρίθηκε Από και Ώρα Έγκρισης, χρησιμοποιήστε /approval (id χρήστη).
     unapprove_all:
-      ask: |-
-        Είστε σίγουροι ότι θέλετε να αφαιρέσετε όλους τους εγκεκριμένους χρήστες από αυτή τη συνομιλία;
-      chat_creator_only: |-
+      ask: Είστε σίγουροι ότι θέλετε να αφαιρέσετε όλους τους εγκεκριμένους χρήστες από αυτή τη συνομιλία;
+      chat_creator_only: >-
         Μόνο ο δημιουργός της συνομιλίας μπορεί να χρησιμοποιήσει αυτή την εντολή για να απο-εγκρίνει όλους τους χρήστες σε αυτή τη συνομιλία.
       button_handler:
-        yes: |-
-          Αφαιρέθηκαν όλοι οι εγκεκριμένοι χρήστες από αυτή τη συνομιλία ✅
-        no: |-
-          Ακυρώθηκε η αφαίρεση όλων των εγκεκριμένων χρηστών από αυτή τη συνομιλία ❌
-        'true': Removed all Approved Users from this Chat ✅  # TODO: Translate - strings.Approvals.unapprove_all.button_handler.true
-        'false': Canceled removing all Approved Users from this Chat ❌ # TODO: Translate - strings.Approvals.unapprove_all.button_handler.false
-    help_msg: |-
+        'true': Αφαιρέθηκαν όλοι οι εγκεκριμένοι χρήστες από αυτή τη συνομιλία ✅
+        'false': Ακυρώθηκε η αφαίρεση όλων των εγκεκριμένων χρηστών από αυτή τη συνομιλία ❌
+        yes: Αφαιρέθηκαν όλοι οι εγκεκριμένοι χρήστες από αυτή τη συνομιλία ✅
+        no: Ακυρώθηκε η αφαίρεση όλων των εγκεκριμένων χρηστών από αυτή τη συνομιλία ❌
+    help_msg: >-
       Μερικές φορές, μπορεί να εμπιστεύεστε έναν χρήστη να μην στέλνει ανεπιθύμητο περιεχόμενο.
+
       Ίσως όχι αρκετά για να τον κάνετε διαχειριστή, αλλά μπορεί να είστε εντάξει με το να μην ισχύουν γι' αυτόν κλειδώματα, μαύρες λίστες και antiflood.
+
       Γι' αυτό υπάρχουν οι εγκρίσεις - εγκρίνετε αξιόπιστους χρήστες.
 
+
       *Εντολές χρήστη:*
+
       × /approval: Ελέγξτε την κατάσταση έγκρισης ενός χρήστη σε αυτή τη συνομιλία.
 
+
       *Εντολές Διαχειριστή:*
+
       × /approve: Εγκρίνετε έναν χρήστη. Κλειδώματα, μαύρες λίστες και antiflood δεν θα ισχύουν πλέον γι' αυτόν.
+
       × /unapprove: Απο-εγκρίνετε έναν χρήστη. Θα υπόκειται πλέον ξανά σε κλειδώματα, μαύρες λίστες και antiflood.
+
       × /approved: Εμφανίζει όλους τους εγκεκριμένους χρήστες.
 
+
       *Εντολές Ιδιοκτήτη:*
+
       × /unapproveall: Απο-εγκρίνετε ΟΛΟΥΣ τους χρήστες σε μια συνομιλία. Αυτό δεν μπορεί να αναιρεθεί.
   Bans:
+    errors:
+      anon_user_kick: >-
+        Αυτή η εντολή δεν μπορεί να χρησιμοποιηθεί σε ανώνυμο χρήστη, αυτοί οι χρήστες μπορούν μόνο να απαγορευτούν/ξεμπλοκαριστούν.
+      anon_user_ban_reply: Μπορείτε να απαγορεύσετε έναν ανώνυμο χρήστη μόνο απαντώντας στο μήνυμά του.
+      anon_user_generic: >-
+        Αυτή η εντολή δεν μπορεί να χρησιμοποιηθεί σε ανώνυμο χρήστη, αυτοί οι χρήστες μπορούν μόνο να απαγορευτούν/ξεμπλοκαριστούν.
+      restrict_admin: Δεν μπορώ να περιορίσω έναν διαχειριστή.
+    restrict:
+      question: Πώς μπορώ να περιορίσω αυτόν τον χρήστη;
+      kick_success: Ο διαχειριστής %s απέβαλε τον %s από αυτή τη συνομιλία!
+      mute_success: Ο διαχειριστής %s έθεσε σε σίγαση τον %s στη συνομιλία!
+      ban_success: Ο διαχειριστής %s απαγόρευσε τον %s από αυτή τη συνομιλία!
+    unrestrict:
+      question: Πώς μπορώ να άρω τον περιορισμό αυτού του χρήστη;
+      unmute_success: Άρση σίγασης από %s!
+      unban_success: Άρση απαγόρευσης από %s!
     kick:
-      user_not_in_chat: |-
-        Αυτός ο χρήστης δεν είναι σε αυτή τη συνομιλία, πώς μπορώ να τον περιορίσω;
-      cannot_kick_admin: |-
-        Γιατί να αποβάλω έναν διαχειριστή; Αυτό ακούγεται σαν μια πολύ ανόητη ιδέα.
-      is_bot_itself: |-
-        Γιατί να αποβάλω τον εαυτό μου;
-      kicked_user: |-
-        Αποβλήθηκε με επιτυχία ο/η %s.
-      kicked_reason: "\n<b>Λόγος:</b> %s"
+      user_not_in_chat: 'Αυτός ο χρήστης δεν είναι σε αυτή τη συνομιλία, πώς μπορώ να τον περιορίσω;'
+      cannot_kick_admin: Γιατί να αποβάλω έναν διαχειριστή; Αυτό ακούγεται σαν μια πολύ ανόητη ιδέα.
+      is_bot_itself: Γιατί να αποβάλω τον εαυτό μου;
+      kicked_user: Αποβλήθηκε με επιτυχία ο/η %s.
+      kicked_reason: |-
+        <b>Λόγος:</b> %s
     kickme:
-      is_admin: |-
-        Είσαι διαχειριστής, έχεις κολλήσει εδώ με όλους τους άλλους!
-      ok_out: |-
-        Όπως επιθυμείτε, έξω!
+      is_admin: 'Είσαι διαχειριστής, έχεις κολλήσει εδώ με όλους τους άλλους!'
+      ok_out: 'Όπως επιθυμείτε, έξω!'
     ban:
-      is_admin: |-
-        Γιατί να απαγορεύσω έναν διαχειριστή; Αυτό ακούγεται σαν μια πολύ ανόητη ιδέα.
-      is_bot_itself: |-
-        Πραγματικά πιστεύετε ότι θα απαγορεύσω τον εαυτό μου;
-      ban_reason: "\n<b>Λόγος:</b> %s"
-      tban: |-
-        Απαγορεύτηκε ο/η %s για %s
+      is_admin: Γιατί να απαγορεύσω έναν διαχειριστή; Αυτό ακούγεται σαν μια πολύ ανόητη ιδέα.
+      is_bot_itself: Πραγματικά πιστεύετε ότι θα απαγορεύσω τον εαυτό μου;
+      ban_reason: |-
+        <b>Λόγος:</b> %s
+      tban: Απαγορεύτηκε ο/η %s για %s
       normal_ban: |-
         Άλλος ένας στο χώμα...!
         Απαγορεύτηκε ο/η %s.
       dban:
-        no_reply: |-
-          Πρέπει να απαντήσετε σε ένα μήνυμα για να το διαγράψετε και να απαγορεύσετε τον χρήστη!
+        no_reply: Πρέπει να απαντήσετε σε ένα μήνυμα για να το διαγράψετε και να απαγορεύσετε τον χρήστη!
     unban:
-      is_admin: |-
-        Γιατί να άρω την απαγόρευση ενός διαχειριστή;
-      is_bot_itself: |-
-        Γιατί να άρω τον περιορισμό από τον εαυτό μου όταν είμαι ήδη εδώ;
+      is_admin: Γιατί να άρω την απαγόρευση ενός διαχειριστή;
+      is_bot_itself: Γιατί να άρω τον περιορισμό από τον εαυτό μου όταν είμαι ήδη εδώ;
       unbanned_user: |-
         Ας του δώσουμε άλλη μια ευκαιρία.
         Άρθηκε η απαγόρευση του/της %s!
-    help_msg: |-
+    help_msg: >-
       Μερικές φορές οι χρήστες μπορεί να είναι ενοχλητικοί και μπορεί να θέλετε να τους αφαιρέσετε από τη συνομιλία σας, αυτή η ενότητα σας βοηθά ακριβώς σε αυτό!
+
       Απαγορεύστε/αποβάλετε χρήστες από τη συνομιλία σας και άρτε την απαγόρευσή τους αργότερα αν συμπεριφέρονται καλά.
 
+
       *Εντολές Χρήστη:*
+
       × /kickme: αποβάλλει τον χρήστη που εξέδωσε την εντολή.
 
+
       *Εντολές Απαγόρευσης* (Μόνο διαχειριστής):
-      × /ban <handle χρήστη>: απαγορεύει έναν χρήστη. (μέσω handle ή απάντησης)
-      × /sban <handle χρήστη>: απαγορεύει έναν χρήστη σιωπηλά, δεν στέλνει μήνυμα στην ομάδα και διαγράφει επίσης την εντολή σας. (μέσω handle ή απάντησης)
-      × /dban <handle χρήστη>: απαγορεύει έναν χρήστη και διαγράφει το απαντημένο μήνυμα. (μέσω handle ή απάντησης)
-      × /tban <handle χρήστη> x(m/h/d): απαγορεύει έναν χρήστη για `x` χρόνο. (μέσω handle ή απάντησης). m = λεπτά, h = ώρες, d = ημέρες.
-      × /unban <handle χρήστη>: αίρει την απαγόρευση ενός χρήστη. (μέσω handle ή απάντησης)
+
+      × /ban <userhandle>: απαγορεύει έναν χρήστη. (μέσω handle ή απάντησης)
+
+      × /sban <userhandle>: απαγορεύει έναν χρήστη σιωπηλά, δεν στέλνει μήνυμα στην ομάδα και διαγράφει επίσης την εντολή σας. (μέσω handle ή απάντησης)
+
+      × /dban <userhandle>: απαγορεύει έναν χρήστη και διαγράφει το απαντημένο μήνυμα. (μέσω handle ή απάντησης)
+
+      × /tban <userhandle> x(m/h/d): απαγορεύει έναν χρήστη για `x` χρόνο. (μέσω handle ή απάντησης). m = λεπτά, h = ώρες, d = ημέρες.
+
+      × /unban <userhandle>: αίρει την απαγόρευση ενός χρήστη. (μέσω handle ή απάντησης)
+
 
       *Εντολές Περιορισμού:* (Μόνο διαχειριστής)
+
       × /restrict: Εμφανίζει ένα InlineKeyboard για να επιλέξετε από kick, ban και mute
+
       × /unrestrict: Εμφανίζει ένα InlineKeyboard για να επιλέξετε από unmute και unban.
-    errors:  # TODO: Translate - strings.Bans.errors
-      anon_user_kick: >-
-        This command cannot be used on anonymous user, these user can only be
-        banned/unbanned.
-      anon_user_ban_reply: You can only ban an anonymous user by replying to their message.
-      anon_user_generic: >-
-        This command cannot be used on anonymous user, these user can only be
-        banned/unbanned.
-      restrict_admin: I can't restrict an admin.
-    restrict: # TODO: Translate - strings.Bans.restrict
-      question: How can I restrict this user?
-      kick_success: Admin %s kicked %s from this chat!
-      mute_success: Admin %s muted %s in chat!
-      ban_success: Admin %s banned %s from this chat!
-    unrestrict: # TODO: Translate - strings.Bans.unrestrict
-      question: How can I unrestrict this user?
-      unmute_success: Unmuted by %s!
-      unban_success: Unbanned by %s !
-    banned_user: 'Banned user:' # TODO: Translate - strings.Bans.banned_user
+    banned_user: 'Απαγορευμένος χρήστης:'
   Blacklists:
     blacklist:
-      give_bl_word: |-
-        Παρακαλώ δώστε μου μια λέξη για να την προσθέσω στη μαύρη λίστα!
-      already_blacklisted: |-
-        Αυτές οι λέξεις είναι ήδη στη μαύρη λίστα:
-      added_bl: |-
-        Προστέθηκαν αυτές οι λέξεις ως μαύρες λίστες:
+      give_bl_word: Παρακαλώ δώστε μου μια λέξη για να την προσθέσω στη μαύρη λίστα!
+      already_blacklisted: 'Αυτές οι λέξεις είναι ήδη στη μαύρη λίστα'
+      added_bl: 'Προστέθηκαν αυτές οι λέξεις ως μαύρες λίστες'
     unblacklist:
-      give_bl_word: |-
-        Παρακαλώ δώστε μου μια λέξη για να την αφαιρέσω από τη μαύρη λίστα!
-      no_removed_bl: |-
-        Καμία από τις δοθείσες λέξεις δεν ήταν στη μαύρη λίστα για να αφαιρεθεί!
-      removed_bl: |-
-        Αφαιρέθηκε με επιτυχία η λέξη '%s' από τις λέξεις της μαύρης λίστας!
+      give_bl_word: Παρακαλώ δώστε μου μια λέξη για να την αφαιρέσω από τη μαύρη λίστα!
+      no_removed_bl: Καμία από τις δοθείσες λέξεις δεν ήταν στη μαύρη λίστα για να αφαιρεθεί!
+      removed_bl: Αφαιρέθηκε με επιτυχία η λέξη '%s' από τις λέξεις της μαύρης λίστας!
     ls_bl:
-      no_blacklisted: |-
-        Δεν υπάρχουν λέξεις στη μαύρη λίστα σε αυτή τη συνομιλία.
-      list_bl: |-
-        Αυτές οι λέξεις είναι στη μαύρη λίστα σε αυτή τη συνομιλία:
+      no_blacklisted: Δεν υπάρχουν λέξεις στη μαύρη λίστα σε αυτή τη συνομιλία.
+      list_bl: 'Αυτές οι λέξεις είναι στη μαύρη λίστα σε αυτή τη συνομιλία'
     set_bl_action:
-      current_mode: |-
-        Η τρέχουσα λειτουργία μαύρης λίστας για αυτή τη συνομιλία είναι: %s
-      changed_mode: |-
-        Η λειτουργία μαύρης λίστας άλλαξε με επιτυχία σε: *%s*
-      choose_correct_option: |-
-        Παρακαλώ επιλέξτε μια επιλογή από <mute/kick/ban/warn/none>
+      current_mode: 'Η τρέχουσα λειτουργία μαύρης λίστας για αυτή τη συνομιλία είναι: %s'
+      changed_mode: 'Η λειτουργία μαύρης λίστας άλλαξε με επιτυχία σε: *%s*'
+      choose_correct_option: Παρακαλώ επιλέξτε μια επιλογή από <mute/kick/ban/warn/none>
     rm_all_bl:
-      ask: |-
-        Είστε σίγουροι ότι θέλετε να αφαιρέσετε όλες τις λέξεις της μαύρης λίστας από αυτή τη συνομιλία;
+      ask: Είστε σίγουροι ότι θέλετε να αφαιρέσετε όλες τις λέξεις της μαύρης λίστας από αυτή τη συνομιλία;
       button_handler:
-        yes: |-
-          Αφαιρέθηκαν όλες οι μαύρες λίστες από αυτή τη συνομιλία ✅
-        no: |-
-          Ακυρώθηκε η αφαίρεση όλων των μαύρων λιστών από αυτή τη συνομιλία ❌
-        'true': Removed all Blacklists from this Chat ✅  # TODO: Translate - strings.Blacklists.rm_all_bl.button_handler.true
-        'false': Canceled removing all Blacklists of this Chat ❌ # TODO: Translate - strings.Blacklists.rm_all_bl.button_handler.false
+        'true': Αφαιρέθηκαν όλες οι μαύρες λίστες από αυτή τη συνομιλία ✅
+        'false': Ακυρώθηκε η αφαίρεση όλων των μαύρων λιστών από αυτή τη συνομιλία ❌
+        yes: Αφαιρέθηκαν όλες οι μαύρες λίστες από αυτή τη συνομιλία ✅
+        no: Ακυρώθηκε η αφαίρεση όλων των μαύρων λιστών από αυτή τη συνομιλία ❌
     bl_watcher:
-      muted_user: |-
-        Σίγαση του/της %s λόγω %s
-      banned_user: |-
-        Απαγόρευση του/της %s λόγω %s
-      kicked_user: |-
-        Αποβολή του/της %s λόγω %s
-    help_msg: |-
+      muted_user: Σίγαση του/της %s λόγω %s
+      banned_user: Απαγόρευση του/της %s λόγω %s
+      kicked_user: Αποβολή του/της %s λόγω %s
+    help_msg: >-
       *Εντολές Χρήστη:*
+
       × /blacklists: Ελέγξτε όλες τις μαύρες λίστες στη συνομιλία.
 
+
       *Εντολές Διαχειριστή:*
+
       × /addblacklist `<trigger>`: Προσθέτει τη λέξη στη μαύρη λίστα στην τρέχουσα συνομιλία.
+
       × /rmblacklist `<trigger>`: Αφαιρεί τη λέξη από τις τρέχουσες λέξεις της μαύρης λίστας στη συνομιλία.
+
       × /blaction `<mute/kick/ban/warn/none>`: Ορίζει την ενέργεια που θα εκτελεστεί από το bot όταν εντοπιστεί μια λέξη της μαύρης λίστας.
+
       × /blacklistaction: Ίδιο με το παραπάνω
 
+
       *Μόνο Ιδιοκτήτης:*
+
       × /remallbl: Αφαιρεί όλες τις λέξεις της μαύρης λίστας από τη συνομιλία
 
+
       *Σημείωση:*
+
       Η προεπιλεγμένη λειτουργία για τη μαύρη λίστα είναι *none*, η οποία απλώς θα διαγράφει τα μηνύματα από τη συνομιλία.
   Connections:
-    connected: |-
-      Είστε συνδεδεμένοι στο <b>%s</b>!
-    not_connected: |-
-      Δεν είστε συνδεδεμένοι σε καμία συνομιλία.
+    errors:
+      invalid_option_yes_no: Παρακαλώ δώστε μου μια έγκυρη επιλογή από <yes/on/no/off>
+      get_chat_failed: >-
+        αποτυχία σύνδεσης στη συνομιλία: αποτυχία λήψης συνομιλίας: αδυναμία λήψης συνομιλίας: Κακό αίτημα: η συνομιλία δεν βρέθηκε
+      no_chat_id: Χρειάζομαι ένα id συνομιλίας για να συνδεθώ!
+    connect_to_chat_button: Σύνδεση στη συνομιλία
+    connected: Είστε συνδεδεμένοι στο <b>%s</b>!
+    not_connected: Δεν είστε συνδεδεμένοι σε καμία συνομιλία.
     allow_connect:
       turned_on: |-
         Ενεργοποιήθηκαν οι συνδέσεις χρηστών σε αυτή τη συνομιλία!
@@ -419,290 +407,389 @@ strings:
       connection_disabled: |-
         Οι συνδέσεις χρηστών είναι προς το παρόν <b>απενεργοποιημένες</b> σε αυτή τη συνομιλία.
         Παρακαλώ ρωτήστε τους διαχειριστές να επιτρέψουν αν θέλετε να συνδεθείτε!
-      connected: |-
-        Είστε τώρα συνδεδεμένοι στο <b>%s</b>!
-      tap_btn_connect: |-
-        Παρακαλώ πατήστε το παρακάτω κουμπί για να συνδέσετε αυτή τη συνομιλία στο PM σας.
+      connected: Είστε τώρα συνδεδεμένοι στο <b>%s</b>!
+      tap_btn_connect: Παρακαλώ πατήστε το παρακάτω κουμπί για να συνδέσετε αυτή τη συνομιλία στο PM σας.
     connections_btns:
-      admin_conn_cmds: |-
-        Διαθέσιμες εντολές διαχειριστή:%s
-      user_conn_cmds: |-
-        Διαθέσιμες εντολές χρήστη:%s
+      admin_conn_cmds: 'Διαθέσιμες εντολές διαχειριστή:%s'
+      user_conn_cmds: 'Διαθέσιμες εντολές χρήστη:%s'
     disconnect:
-      disconnected: |-
-        Αποσυνδέθηκε με επιτυχία από τη συνδεδεμένη συνομιλία.
-      need_pm: |-
-        Πρέπει να το στείλετε σε PM σε μένα για να αποσυνδεθείτε από τη συνομιλία!
+      disconnected: Αποσυνδέθηκε με επιτυχία από τη συνδεδεμένη συνομιλία.
+      need_pm: Πρέπει να το στείλετε σε PM σε μένα για να αποσυνδεθείτε από τη συνομιλία!
     is_user_connected:
-      need_group: |-
-        Αυτή η εντολή είναι φτιαγμένη για χρήση σε ομαδικές συνομιλίες, όχι σε PM!
-      bot_not_admin: |-
-        Δεν είμαι διαχειριστής σε αυτή τη συνομιλία!
-      user_not_admin: |-
-        Πρέπει να είστε διαχειριστής για να το κάνετε αυτό.
+      need_group: 'Αυτή η εντολή είναι φτιαγμένη για χρήση σε ομαδικές συνομιλίες, όχι σε PM!'
+      bot_not_admin: Δεν είμαι διαχειριστής σε αυτή τη συνομιλία!
+      user_not_admin: Πρέπει να είστε διαχειριστής για να το κάνετε αυτό.
     reconnect:
-      reconnected: |-
-        Είστε τώρα επανασυνδεδεμένοι στο <b>%s</b>!!
-      no_last_chat: |-
-        Δεν έχετε τελευταία συνομιλία για επανασύνδεση!
-      need_pm: |-
-        Πρέπει να είστε σε PM μαζί μου για να επανασυνδεθείτε σε μια συνομιλία!
-    help_msg: |-
+      reconnected: Είστε τώρα επανασυνδεδεμένοι στο <b>%s</b>!!
+      no_last_chat: Δεν έχετε τελευταία συνομιλία για επανασύνδεση!
+      need_pm: Πρέπει να είστε σε PM μαζί μου για να επανασυνδεθείτε σε μια συνομιλία!
+    help_msg: >-
       Αυτή η ενότητα σας επιτρέπει να συνδεθείτε στη βάση δεδομένων μιας συνομιλίας και να προσθέσετε πράγματα σε αυτήν χωρίς η συνομιλία να το γνωρίζει! Για προφανείς λόγους, πρέπει να είστε διαχειριστής για να προσθέσετε πράγματα. αλλά οποιοδήποτε μέλος μπορεί να δει τα δεδομένα σας. (οι απαγορευμένοι/αποβεβλημένοι χρήστες δεν μπορούν!)
 
+
       *Εντολές*:
+
       × /connect `<chatid>`: Συνδεθείτε στην καθορισμένη συνομιλία, επιτρέποντάς σας να δείτε/επεξεργαστείτε περιεχόμενο.
+
       × /disconnect: Αποσυνδεθείτε από την τρέχουσα συνομιλία.
+
       × /reconnect: Επανασυνδεθείτε στην προηγουμένως συνδεδεμένη συνομιλία
+
       × /connection: Δείτε πληροφορίες για την τρέχουσα συνδεδεμένη συνομιλία.
 
+
       *Εντολές Διαχειριστή:*
+
       × /allowconnect <yes/no>: Επιτρέψτε στους χρήστες να συνδέονται σε συνομιλίες ή όχι.
 
+
       Μπορείτε να ανακτήσετε το id της συνομιλίας χρησιμοποιώντας την εντολή /id στη συνομιλία σας. Μην εκπλαγείτε αν το id είναι αρνητικό. όλες οι υπερομάδες έχουν αρνητικά id.
-    errors:  # TODO: Translate - strings.Connections.errors
-      invalid_option_yes_no: Please give me a vaid option from <yes/on/no/off>
-      get_chat_failed: >-
-        failed to connect to chat: failed to get chat: unable to getChat: Bad
-        Request: chat not found
-      no_chat_id: I need a chat id to connect to!
-    connect_to_chat_button: Connect to chat # TODO: Translate - strings.Connections.connect_to_chat_button
   Disabling:
-    help_msg: |-
+    success: 'Απενεργοποιήθηκε η χρήση των παρακάτω σε αυτή τη συνομιλία:'
+    errors:
+      unknown_command: 'Άγνωστη εντολή για απενεργοποίηση:\n-%s\nΕλέγξτε το /disableable!'
+      no_command_specified: Δεν έχετε καθορίσει μια εντολή για απενεργοποίηση.
+    disableable:
+      list: 'Οι ακόλουθες εντολές μπορούν να απενεργοποιηθούν:'
+    disabled:
+      no_commands: Δεν υπάρχουν απενεργοποιημένες εντολές σε αυτή τη συνομιλία.
+      list: 'Οι ακόλουθες εντολές είναι απενεργοποιημένες σε αυτή τη συνομιλία:'
+    disabledel:
+      enabled: Τα απενεργοποιημένα μηνύματα θα διαγράφονται τώρα.
+      disabled: Τα απενεργοποιημένα μηνύματα δεν θα διαγράφονται πλέον.
+      status_enabled: >-
+        Η διαγραφή απενεργοποιημένων εντολών είναι *ενεργοποιημένη*, οι απενεργοποιημένες εντολές από χρήστες θα διαγράφονται!
+      status_disabled: >-
+        Η διαγραφή απενεργοποιημένων εντολών είναι *απενεργοποιημένη*, οι απενεργοποιημένες εντολές από χρήστες *δεν* θα διαγράφονται!
+    enable:
+      success: 'Επανενεργοποιήθηκε η χρήση των παρακάτω σε αυτή τη συνομιλία:'
+      errors:
+        unknown_command: 'Άγνωστη εντολή για επανενεργοποίηση:\n-%s\nΕλέγξτε το /disableable!'
+        no_command_specified: Δεν έχετε καθορίσει μια εντολή για απενεργοποίηση.
+    help_msg: >-
       Αυτή η ενότητα σας επιτρέπει να απενεργοποιήσετε ορισμένες συχνά χρησιμοποιούμενες εντολές, ώστε κανείς να μην μπορεί να τις χρησιμοποιήσει. Θα σας επιτρέψει επίσης να τις διαγράφετε αυτόματα, εμποδίζοντας τους ανθρώπους από το blue texting.
 
+
       *Εντολές διαχειριστή*:
-      × /disable `<όνομα εντολής>`: Σταματήστε τους χρήστες από το να χρησιμοποιούν το όνομα εντολής σε αυτή την ομάδα.
-      × /enable `<όνομα στοιχείου>`: Επιτρέψτε στους χρήστες να χρησιμοποιούν το όνομα εντολής σε αυτή την ομάδα.
+
+      × /disable `<commandname>`: Σταματήστε τους χρήστες από το να χρησιμοποιούν το όνομα εντολής σε αυτή την ομάδα.
+
+      × /enable `<item name>`: Επιτρέψτε στους χρήστες να χρησιμοποιούν το όνομα εντολής σε αυτή την ομάδα.
+
       × /disableable: Εμφανίζει όλες τις εντολές που μπορούν να απενεργοποιηθούν.
+
       × /disabledel `<yes/no/on/off>`: Διαγράφει τις απενεργοποιημένες εντολές όταν χρησιμοποιούνται από μη διαχειριστές.
+
       × /disabled: Εμφανίζει τις απενεργοποιημένες εντολές σε αυτή τη συνομιλία.
 
+
       Σημείωση:
+
       Κατά την απενεργοποίηση μιας εντολής, η εντολή απενεργοποιείται μόνο για μη διαχειριστές. Όλοι οι διαχειριστές μπορούν ακόμα να χρησιμοποιούν αυτές τις εντολές.
+
       Οι απενεργοποιημένες εντολές είναι ακόμα προσβάσιμες μέσω της δυνατότητας /connect. Αν ενδιαφέρεστε να το δείτε και αυτό απενεργοποιημένο, ενημερώστε με στη συνομιλία υποστήριξης.
-    success: 'Disabled the use of the following in this chat:'  # TODO: Translate - strings.Disabling.success
-    errors: # TODO: Translate - strings.Disabling.errors
-      unknown_command: 'Unknown command to disable:\n-%s\nCheck /disableable!'
-      no_command_specified: You haven't specified a command to disable.
-    disableable: # TODO: Translate - strings.Disabling.disableable
-      list: 'The following commands can be disabled:'
-    disabled: # TODO: Translate - strings.Disabling.disabled
-      no_commands: There are no disabled commands in this chat.
-      list: 'The following commands are disabled in this chat:'
-    disabledel: # TODO: Translate - strings.Disabling.disabledel
-      enabled: Disabled messages will now be deleted.
-      disabled: Disabled messages will no longer be deleted.
-      status_enabled: >-
-        Disabled Command deleting is *enabled*, disabled commands from users
-        will be deleted!
-      status_disabled: >-
-        Disabled Command deleting is *disabled*, disabled commands from users
-        will *not* be deleted!
-    enable: # TODO: Translate - strings.Disabling.enable
-      success: 'Re-Enabled the use of the following in this chat:'
-      errors:
-        unknown_command: 'Unknown command to Re-Enable:\n-%s\nCheck /disableable!'
-        no_command_specified: You haven't specified a command to disable.
   Filters:
-    help_msg: |-
+    errors:
+      limit_exceeded: >-
+        Το όριο φίλτρων έχει ξεπεραστεί, μια ομάδα μπορεί να έχει το πολύ 150 φίλτρα!\nΑυτός ο περιορισμός οφείλεται στο ότι το bot λειτουργεί δωρεάν χωρίς δωρεές από χρήστες.
+      no_keyword: Παρακαλώ δώστε μια λέξη-κλειδί για απάντηση!
+      invalid_filter: Μη έγκυρο φίλτρο!
+      does_not_exist: Το φίλτρο δεν υπάρχει!
+    add:
+      success: Προστέθηκε απάντηση για τη λέξη φίλτρου <code>%s</code>
+    remove:
+      no_word_specified: Παρακαλώ δώστε μια λέξη φίλτρου για αφαίρεση!
+      success: Εντάξει!\nΔεν θα απαντώ πλέον στο <code>%s</code>
+    list:
+      no_filters: Δεν υπάρχουν φίλτρα σε αυτή τη συνομιλία!
+      header: 'Αυτά είναι τα τρέχοντα φίλτρα σε αυτή τη συνομιλία:'
+    remove_all:
+      no_filters: Δεν υπάρχουν φίλτρα σε αυτή τη συνομιλία!
+      confirm: Είστε σίγουροι ότι θέλετε να αφαιρέσετε όλα τα φίλτρα από αυτή τη συνομιλία;
+      success: Αφαιρέθηκαν όλα τα φίλτρα από αυτή τη συνομιλία ✅
+      cancelled: Ακυρώθηκε η αφαίρεση όλων των φίλτρων από αυτή τη συνομιλία ❌
+    overwrite:
+      question: Το φίλτρο υπάρχει ήδη!\nΘέλετε να το αντικαταστήσετε;
+      success: Το φίλτρο αντικαταστάθηκε με επιτυχία ✅
+      cancelled: Ακυρώθηκε η αντικατάσταση του φίλτρου ❌
+    help_msg: >-
       Τα φίλτρα δεν κάνουν διάκριση πεζών-κεφαλαίων. κάθε φορά που κάποιος λέει τις λέξεις-κλειδιά σας, η Alita θα απαντήσει κάτι άλλο! μπορεί να χρησιμοποιηθεί για να δημιουργήσετε τις δικές σας εντολές, αν το επιθυμείτε.
 
+
       Εντολές:
-      - /filter <trigger> <απάντηση>: Κάθε φορά που κάποιος λέει trigger, το bot θα απαντήσει με πρόταση. Για φίλτρα πολλαπλών λέξεων, βάλτε το trigger σε εισαγωγικά.
+
+      - /filter <trigger> <reply>: Κάθε φορά που κάποιος λέει trigger, το bot θα απαντήσει με πρόταση. Για φίλτρα πολλαπλών λέξεων, βάλτε το trigger σε εισαγωγικά.
+
       - /filters: Εμφανίζει όλα τα φίλτρα συνομιλίας.
+
       - /stop <trigger>: Σταματά το bot από το να απαντά στο trigger.
+
       - /stopall: Σταματά ΟΛΑ τα φίλτρα στην τρέχουσα συνομιλία. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.
 
+
       Παραδείγματα:
+
       - Ορισμός φίλτρου:
+
       -> /filter γεια Γεια σου! Τι κάνεις;
+
       - Ορισμός φίλτρου πολλαπλών λέξεων:
+
       -> /filter γεια σου φίλε Γεια σου κι εσένα! Πολύς καιρός!
+
       - Ορισμός φίλτρου που μπορεί να χρησιμοποιηθεί μόνο από διαχειριστές:
+
       -> /filter παράδειγμα Αυτό το φίλτρο δεν θα συμβεί αν το πει ένας κανονικός χρήστης {admin}
+
       - Για να αποθηκεύσετε ένα αρχείο, εικόνα, gif ή οποιοδήποτε άλλο συνημμένο, απλώς απαντήστε στο αρχείο με:
+
       -> /filter trigger
-    errors:  # TODO: Translate - strings.Filters.errors
-      limit_exceeded: >-
-        Filters limit exceeded, a group can only have maximum 150 filters!\nThis
-        limitation is due to bot running free without any donations by users.
-      no_keyword: Please give a keyword to reply to!
-      invalid_filter: Invalid Filter!
-      does_not_exist: Filter does not exist!
-    add: # TODO: Translate - strings.Filters.add
-      success: Added reply for filter word <code>%s</code>
-    remove: # TODO: Translate - strings.Filters.remove
-      no_word_specified: Please give a filter word to remove!
-      success: Ok!\nI will no longer reply to <code>%s</code>
-    list: # TODO: Translate - strings.Filters.list
-      no_filters: There are no filters in this chat!
-      header: 'These are the current filters in this Chat:'
-    remove_all: # TODO: Translate - strings.Filters.remove_all
-      no_filters: There are no filters in this chat!
-      confirm: Are you sure you want to remove all Filters from this chat?
-      success: Removed all Filters from this Chat ✅
-      cancelled: Cancelled removing all Filters from this Chat ❌
-    overwrite: # TODO: Translate - strings.Filters.overwrite
-      question: Filter already exists!\nDo you want to overwrite it?
-      success: Filter has been overwritten successfully ✅
-      cancelled: Cancelled overwritting of filter ❌
-    formatting: Formatting # TODO: Translate - strings.Filters.formatting
+    formatting: Μορφοποίηση
   Formatting:
-    help_msg: |-
+    help_msg: >-
       Η Alita υποστηρίζει μεγάλο αριθμό επιλογών μορφοποίησης για να κάνει τα μηνύματά σας πιο εκφραστικά. Ρίξτε μια ματιά κάνοντας κλικ στα παρακάτω κουμπιά!
     Markdown: |-
       <b>Μορφοποίηση Markdown</b>
 
+
       Μπορείτε να μορφοποιήσετε το μήνυμά σας χρησιμοποιώντας <b>έντονα</b>, <i>πλάγια</i>, <u>υπογράμμιση</u> και πολλά άλλα. Προχωρήστε και πειραματιστείτε!
+
       <b>Υποστηριζόμενο markdown</b>:
+
       - <code>`λέξεις κώδικα`</code>: Τα backticks χρησιμοποιούνται για γραμματοσειρές monospace. Εμφανίζεται ως: <code>λέξεις κώδικα</code>.
+
       - <code>_πλάγιες λέξεις_</code>: Οι κάτω παύλες χρησιμοποιούνται για πλάγιες γραμματοσειρές. Εμφανίζεται ως: <i>πλάγιες λέξεις</i>.
+
       - <code>*έντονες λέξεις*</code>: Οι αστερίσκοι χρησιμοποιούνται για έντονες γραμματοσειρές. Εμφανίζεται ως: <b>έντονες λέξεις</b>.
+
       - <code>~διαγραφή~</code>: Οι περισπωμένες χρησιμοποιούνται για διαγραφή. Εμφανίζεται ως: <strike>διαγραφή</strike>.
+
       - <code>||spoiler||</code>: Οι διπλές κάθετες μπάρες χρησιμοποιούνται για spoilers. Εμφανίζεται ως: <tg-spoiler>Spoiler</tg-spoiler>.
+
       - <code>```pre```</code>: Για να αγνοήσει ο μορφοποιητής άλλους χαρακτήρες μορφοποίησης μέσα στο κείμενο που έχει μορφοποιηθεί με '```', θα είναι κάπως έτσι: <code>**έντονα** | *έντονα*</code>.
+
       - <code>__υπογράμμιση__</code>: Οι διπλές κάτω παύλες χρησιμοποιούνται για υπογραμμίσεις. Εμφανίζεται ως: υπογράμμιση. ΣΗΜΕΙΩΣΗ: Ορισμένοι πελάτες προσπαθούν να είναι έξυπνοι και το ερμηνεύουν ως πλάγια. Σε αυτή την περίπτωση, προσπαθήστε να χρησιμοποιήσετε την ενσωματωμένη μορφοποίηση της εφαρμογής σας.
+
       - <code>[υπερσύνδεσμος](example.com)</code>: Αυτή είναι η μορφοποίηση που χρησιμοποιείται για υπερσυνδέσμους. Εμφανίζεται ως: <a href='https://example.com/'>υπερσύνδεσμος</a>.
+
       - <code>[Το κουμπί μου](buttonurl://example.com)</code>: Αυτή είναι η μορφοποίηση που χρησιμοποιείται για τη δημιουργία κουμπιών. Αυτό το παράδειγμα θα δημιουργήσει ένα κουμπί με το όνομα "Το κουμπί μου" το οποίο ανοίγει το <code>example.com</code> όταν πατηθεί.
 
+
       Αν θέλετε να στείλετε κουμπιά στην ίδια σειρά, χρησιμοποιήστε τη μορφοποίηση <code>:same</code>.
+
       <b>Παράδειγμα:</b>
+
       <code>[κουμπί 1](buttonurl:example.com)</code>
+
       <code>[κουμπί 2](buttonurl://example.com:same)</code>
+
       <code>[κουμπί 3](buttonurl://example.com)</code>
+
       Αυτό θα εμφανίσει τα κουμπιά 1 και 2 στην ίδια γραμμή, με το 3 από κάτω.
     Fillings: |-
       <b>Συμπληρώματα</b>
 
+
       Μπορείτε επίσης να προσαρμόσετε το περιεχόμενο του μηνύματός σας με δεδομένα με βάση τα συμφραζόμενα. Για παράδειγμα, θα μπορούσατε να αναφέρετε έναν χρήστη με το όνομά του στο μήνυμα καλωσορίσματος ή να τον αναφέρετε σε ένα φίλτρο!
+
       Μπορείτε να τα χρησιμοποιήσετε για να αναφέρετε έναν χρήστη και σε σημειώσεις!
 
+
       <b>Υποστηριζόμενα συμπληρώματα:</b>
+
       - <code>{first}</code>: Το μικρό όνομα του χρήστη.
+
       - <code>{last}</code>: Το επώνυμο του χρήστη.
+
       - <code>{fullname}</code>: Το πλήρες όνομα του χρήστη.
+
       - <code>{username}</code>: Το όνομα χρήστη του χρήστη. Αν δεν έχει, αναφέρει τον χρήστη αντ' αυτού.
+
       - <code>{mention}</code>: Αναφέρει τον χρήστη με το μικρό του όνομα.
+
       - <code>{id}</code>: Το ID του χρήστη.
+
       - <code>{chatname}</code>: Το όνομα της συνομιλίας.
+
       - <code>{rules}</code>: Προσθέτει το κουμπί Κανόνες στο μήνυμα.
+
       - <code>{protect}</code>: Προστατεύει το περιεχόμενο από την κοινοποίηση.
+
       - <code>{preview}</code>: Ενεργοποιεί τις προεπισκοπήσεις στα μηνύματα.
+
       - <code>{nonotif}</code>: Απενεργοποιεί την ειδοποίηση για αυτό το μήνυμα.
     Random: |-
       <b>Τυχαίο Περιεχόμενο</b>
 
+
       Ένα άλλο πράγμα που μπορεί να είναι διασκεδαστικό, είναι να τυχαιοποιήσετε το περιεχόμενο ενός μηνύματος. Κάντε τα πράγματα λίγο πιο προσωπικά αλλάζοντας τα μηνύματα καλωσορίσματος ή αλλάζοντας τις σημειώσεις!
+
       Πώς να χρησιμοποιήσετε τυχαίο περιεχόμενο:
+
       - %%%: Αυτός ο διαχωριστής μπορεί να χρησιμοποιηθεί για την προσθήκη τυχαίων απαντήσεων στο bot.
+
       Για παράδειγμα:
-      <code>γεια
+
+      <code>hello
+
       %%%
-      τι κάνεις</code>
-      Αυτό θα επιλέξει τυχαία μεταξύ της αποστολής του πρώτου μηνύματος, "γεια", ή του δεύτερου μηνύματος, "τι κάνεις".
+
+      how are you</code>
+
+      Αυτό θα επιλέξει τυχαία μεταξύ της αποστολής του πρώτου μηνύματος, "hello", ή του δεύτερου μηνύματος, "how are you".
+
       Χρησιμοποιήστε το για να κάνετε την Alita να αισθάνεται λίγο πιο προσαρμοσμένη! (λειτουργεί μόνο σε φίλτρα/σημειώσεις)
+
       Παράδειγμα μηνύματος καλωσορίσματος:
+
       - Κάθε φορά που ένας νέος χρήστης μπαίνει, θα του παρουσιάζεται ένα από τα τρία μηνύματα που εμφανίζονται εδώ.
-      -> /filter "ε"
-      γεια σου <code>{first}</code>!
+
+      -> /filter "hey"
+
+      hello there <code>{first}</code>!
+
       %%%
-      Ωωω, <code>{first}</code> τι κάνεις;
+
+      Ooooh, <code>{first}</code> how are you?
+
       %%%
-      Τι λέει; <code>{first}</code>
-    markdown_help: Markdown Help  # TODO: Translate - strings.Formatting.markdown_help
-    markdown_formatting: Markdown Formatting # TODO: Translate - strings.Formatting.markdown_formatting
-    fillings: Fillings # TODO: Translate - strings.Formatting.fillings
-    random_content: Random Content # TODO: Translate - strings.Formatting.random_content
+
+      Sup? <code>{first}</code>
+    markdown_help: Βοήθεια Markdown
+    markdown_formatting: Μορφοποίηση Markdown
+    fillings: Συμπληρώματα
+    random_content: Τυχαίο Περιεχόμενο
   Greetings:
-    help_msg: |-
+    welcome:
+      status: >-
+        Αυτή τη στιγμή καλωσορίζω χρήστες: <code>%t</code>\nΑυτή τη στιγμή διαγράφω παλιά καλωσορίσματα: <code>%t</code>\nΑυτή τη στιγμή διαγράφω μηνύματα υπηρεσίας:
+        <code>%t</code>\nΤο μήνυμα καλωσορίσματος που δεν συμπληρώνει το {} είναι:
+      enabled: Θα καλωσορίζω τους χρήστες από τώρα και στο εξής.
+      disabled: Δεν θα καλωσορίζω τους χρήστες από τώρα και στο εξής.
+      turned_off: Το μήνυμα καλωσορίσματος έχει απενεργοποιηθεί!
+    set_welcome:
+      success: Ορίστηκε με επιτυχία προσαρμοσμένο μήνυμα καλωσορίσματος!
+    reset_welcome:
+      success: Επαναφέρθηκε με επιτυχία το προσαρμοσμένο μήνυμα καλωσορίσματος στην προεπιλογή!
+    goodbye:
+      status: >-
+        Αυτή τη στιγμή αποχαιρετώ χρήστες: <code>%t</code>\nΑυτή τη στιγμή διαγράφω παλιούς αποχαιρετισμούς: <code>%t</code>\nΑυτή τη στιγμή διαγράφω μηνύματα υπηρεσίας:
+        <code>%t</code>\nΤο μήνυμα αποχαιρετισμού που δεν συμπληρώνει το {} είναι:
+      enabled: Θα αποχαιρετώ τους χρήστες από τώρα και στο εξής.
+      disabled: Δεν θα αποχαιρετώ τους χρήστες από τώρα και στο εξής.
+      turned_off: Το μήνυμα αποχαιρετισμού έχει απενεργοποιηθεί!
+    set_goodbye:
+      success: Ορίστηκε με επιτυχία προσαρμοσμένο μήνυμα αποχαιρετισμού!
+    reset_goodbye:
+      success: Επαναφέρθηκε με επιτυχία το προσαρμοσμένο μήνυμα αποχαιρετισμού στην προεπιλογή!
+    clean_welcome:
+      status_enabled: Θα πρέπει να διαγράφω μηνύματα καλωσορίσματος έως δύο ημερών.
+      status_disabled: Αυτή τη στιγμή δεν διαγράφω παλιά μηνύματα καλωσορίσματος!
+      disabled: Δεν θα διαγράφω παλιά μηνύματα καλωσορίσματος!
+      enabled: Θα προσπαθήσω να διαγράψω παλιά μηνύματα καλωσορίσματος!
+    clean_goodbye:
+      status_enabled: Θα πρέπει να διαγράφω μηνύματα καλωσορίσματος έως δύο ημερών.
+      status_disabled: Αυτή τη στιγμή δεν διαγράφω παλιά μηνύματα καλωσορίσματος!
+      disabled: Δεν θα διαγράφω παλιά μηνύματα αποχαιρετισμού!
+      enabled: Θα προσπαθήσω να διαγράψω παλιά μηνύματα αποχαιρετισμού!
+    del_joined:
+      status_enabled: Θα πρέπει να διαγράφω μηνύματα `user` που εισήλθαν στη συνομιλία τώρα.
+      status_disabled: Αυτή τη στιγμή δεν διαγράφω μηνύματα εισόδου.
+      disabled: Δεν θα διαγράφω μηνύματα εισόδου.
+      enabled: Θα προσπαθήσω να διαγράψω μηνύματα εισόδου!
+    pending_joins:
+      new_request: Ένας νέος χρήστης ζήτησε να συμμετάσχει στη συνομιλία!
+      user: 'Χρήστης: %s'
+      user_id: 'ID Χρήστη: %d'
+      approve_button: ✅ Έγκριση
+      decline_button: ❌ Απόρριψη
+      ban_button: ✅ Απαγόρευση
+    join_request:
+      accepted: Έγινε αποδεκτό %s στη συνομιλία ✅
+      declined: Απορρίφθηκε %s για συμμετοχή στη συνομιλία ❌
+      banned: ✅ Απαγορεύτηκε με επιτυχία! %s
+    auto_approve:
+      enabled: Αυτόματα εγκρίνω αιτήματα νέων συμμετοχών σε συνομιλίες τώρα.
+      disabled: Δεν αυτόματα εγκρίνω αιτήματα νέων συμμετοχών σε συνομιλίες τώρα..
+      disabled_now: Δεν θα αυτόματα εγκρίνω νέα αιτήματα συμμετοχών!
+      enabled_now: Θα προσπαθήσω να αυτόματα εγκρίνω νέα αιτήματα συμμετοχών!
+    help_msg: >-
       Καλωσορίστε νέα μέλη στις ομάδες σας ή πείτε Αντίο αφού φύγουν!
 
+
       *Εντολές Διαχειριστή:*
-      × /setwelcome `<απάντηση/κείμενο>`: Ορίζει το κείμενο καλωσορίσματος για την ομάδα.
+
+      × /setwelcome `<reply/text>`: Ορίζει το κείμενο καλωσορίσματος για την ομάδα.
+
       × /welcome `<yes/no/on/off>`: Ενεργοποιεί ή απενεργοποιεί τη ρύθμιση καλωσορίσματος για την ομάδα.
+
       × /resetwelcome: Επαναφέρει το μήνυμα καλωσορίσματος στην προεπιλογή.
-      × /setgoodbye `<απάντηση/κείμενο>`: Ορίζει το κείμενο αποχαιρετισμού για την ομάδα.
+
+      × /setgoodbye `<reply/text>`: Ορίζει το κείμενο αποχαιρετισμού για την ομάδα.
+
       × /goodbye `<yes/no/on/off>`: Ενεργοποιεί ή απενεργοποιεί τη ρύθμιση αποχαιρετισμού για την ομάδα.
+
       × /resetgoodbye: Επαναφέρει το μήνυμα αποχαιρετισμού στην προεπιλογή.
+
       × /cleanservice `<yes/no/on/off>`: Διαγράφει όλα τα μηνύματα υπηρεσίας όπως η ειδοποίηση 'ο x μπήκε στην ομάδα'.
+
       × /cleanwelcome `<yes/no/on/off>`: Διαγράφει το παλιό μήνυμα καλωσορίσματος, κάθε φορά που ένας νέος μέλος μπαίνει.
+
       × /autoapprove `<yes/no/on/off>`: Εγκρίνει αυτόματα όλα τα νέα μέλη.
-    welcome:  # TODO: Translate - strings.Greetings.welcome
-      status: >-
-        I am currently welcoming users: <code>%t</code>\nI am currently deleting
-        old welcomes: <code>%t</code>\nI am currently deleting service messages:
-        <code>%t</code>\nThe welcome message not filling the {} is:
-      enabled: I'll welcome users from now on.
-      disabled: I'll not welcome users from now on.
-      turned_off: Welcome message has been turned off!
-    set_welcome: # TODO: Translate - strings.Greetings.set_welcome
-      success: Successfully set custom welcome message!
-    reset_welcome: # TODO: Translate - strings.Greetings.reset_welcome
-      success: Successfully reset custom welcome message to default!
-    goodbye: # TODO: Translate - strings.Greetings.goodbye
-      status: >-
-        I am currently goodbying users: <code>%t</code>\nI am currently deleting
-        old goodbyes: <code>%t</code>\nI am currently deleting service messages:
-        <code>%t</code>\nThe goodbye message not filling the {} is:
-      enabled: I'll goodbye users from now on.
-      disabled: I'll not goodbye users from now on.
-      turned_off: Goodbye message has been turned off!
-    set_goodbye: # TODO: Translate - strings.Greetings.set_goodbye
-      success: Successfully set custom goodbye message!
-    reset_goodbye: # TODO: Translate - strings.Greetings.reset_goodbye
-      success: Successfully reset custom goodbye message to default!
-    clean_welcome: # TODO: Translate - strings.Greetings.clean_welcome
-      status_enabled: I should be deleting welcome messages up to two days old.
-      status_disabled: I'm currently not deleting old welcome messages!
-      disabled: I'll not delete old welcome messages!
-      enabled: I'll try to delete old welcome messages!
-    clean_goodbye: # TODO: Translate - strings.Greetings.clean_goodbye
-      status_enabled: I should be deleting welcome messages up to two days old.
-      status_disabled: I'm currently not deleting old welcome messages!
-      disabled: I'll not delete old goodbye messages!
-      enabled: I'll try to delete old goodbye messages!
-    del_joined: # TODO: Translate - strings.Greetings.del_joined
-      status_enabled: I should be deleting `user` joined the chat messages now.
-      status_disabled: I'm currently not deleting joined messages.
-      disabled: I won't delete joined messages.
-      enabled: I'll try to delete joined messages!
-    pending_joins: # TODO: Translate - strings.Greetings.pending_joins
-      new_request: A new user has requested to join chat!
-      user: 'User: %s'
-      user_id: 'User ID: %d'
-      approve_button: ✅ Approve
-      decline_button: ❌ Decline
-      ban_button: ✅ Ban
-    join_request: # TODO: Translate - strings.Greetings.join_request
-      accepted: Accepted %s in Chat ✅
-      declined: Declined %s to join chat ❌
-      banned: ✅ Successfully Banned! %s
-    auto_approve: # TODO: Translate - strings.Greetings.auto_approve
-      enabled: I'm auto-approving new chat join requests now.
-      disabled: I'm not auto-approving new chat join requests now..
-      disabled_now: I won't auto-approve new join requests!
-      enabled_now: I'll try to auto-approve new join requests!
-    i_am_currently_goodbying_users_t: 'I am currently goodbying users: <code>%t</code>' # TODO: Translate - strings.Greetings.i_am_currently_goodbying_users_t
-    i_understand_on_yes_or_off_no_only: I understand 'on/yes' or 'off/no' only! # TODO: Translate - strings.Greetings.i_understand_on_yes_or_off_no_only
-    formatting: Formatting # TODO: Translate - strings.Greetings.formatting
+    i_am_currently_goodbying_users_t: 'Αυτή τη στιγμή αποχαιρετώ χρήστες: <code>%t</code>'
+    i_understand_on_yes_or_off_no_only: Καταλαβαίνω μόνο 'on/yes' ή 'off/no'!
+    formatting: Μορφοποίηση
   Help:
-    About: |-
+    about:
+      main: Πληροφορίες & Σχετικά\n\nΕδώ είναι μερικές από τις Συχνές Ερωτήσεις για την Alita.
+      me_button: "Σχετικά με μένα 👨‍💻"
+      news_channel_button: "Κανάλι Ειδήσεων 📢"
+      support_group_button: "Ομάδα Υποστήριξης 👥"
+      configuration_button: Ρυθμίσεις ⚙️
+      group_prompt: Κάντε κλικ στο κουμπί παρακάτω για να λάβετε πληροφορίες για μένα!
+      button: Σχετικά
+    start:
+      intro: >-
+        Γεια σας! Το όνομά μου είναι Alita ✨.\nΕίμαι εδώ για να σας βοηθήσω να διαχειριστείτε τις ομάδες σας!\nΠατήστε /help για να μάθετε περισσότερα για το πώς να με χρησιμοποιήσετε στο μέγιστο των δυνατοτήτων μου.\nΕγγραφείτε στο <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>Κανάλι Ειδήσεων</a> μου για να λάβετε πληροφορίες για όλες τις τελευταίες ενημερώσεις.
+      about_button: Σχετικά ✨
+      add_to_chat_button: ➕ Προσθέστε με στη συνομιλία!
+      support_group_button: "Ομάδα Υποστήριξης 👥"
+      commands_help_button: "📚 Εντολές & Βοήθεια"
+      language_button: "Γλώσσα 🌏"
+      group_prompt: 'Γεια :) Στείλτε μου προσωπικό μήνυμα αν έχετε οποιεσδήποτε ερωτήσεις σχετικά με τον τρόπο χρήσης μου!'
+    main: >-
+      Γεια %s!\nΤο όνομά μου είναι Alita ✨.\n\nΕίμαι ένα bot διαχείρισης ομάδων, εδώ για να σας βοηθήσω να κυκλοφορείτε και να διατηρείτε την τάξη στις ομάδες σας!\nΈχω πολλές χρήσιμες λειτουργίες, όπως έλεγχο πλημμύρας, σύστημα προειδοποιήσεων, σύστημα τήρησης σημειώσεων, ακόμα και προκαθορισμένες απαντήσεις σε συγκεκριμένες λέξεις-κλειδιά.\n\n<b>Χρήσιμες εντολές</b>:\n - /start: Με ξεκινάει! Πιθανότατα το έχετε ήδη χρησιμοποιήσει!\n
+      - /help: Στέλνει αυτό το μήνυμα. Θα σας πω περισσότερα για μένα!\n - /donate: Σας δίνει πληροφορίες για το πώς να υποστηρίξετε εμένα και τον δημιουργό μου.\n\nΌλες οι εντολές μπορούν να χρησιμοποιηθούν με τα εξής: / ή !
+    help:
+      button: Κάντε κλικ εδώ για βοήθεια!
+      group_prompt_general: Επικοινωνήστε μαζί μου σε προσωπικό μήνυμα για βοήθεια!
+      group_prompt_module: Επικοινωνήστε μαζί μου σε προσωπικό μήνυμα για βοήθεια σχετικά με το <code>%s</code>!
+    configuration:
+      private_only: Η διαμόρφωση λειτουργεί μόνο σε ιδιωτική συνομιλία
+    About: >-
       Ο @%s είναι ένας από τους ταχύτερους και πιο πλούσιους σε δυνατότητες διαχειριστές ομάδων.
+
 
       Η Alita ✨ αναπτύσσεται και συντηρείται ενεργά από το @DivideProjects!
 
+
       Η Alita είναι online από το 2020 και έχει εξυπηρετήσει χιλιάδες ομάδες με εκατοντάδες χιλιάδες χρήστες!
 
+
       <b>Γιατί η Alita:</b>
+
       - Απλή: Εύκολη χρήση και συμβατή με πολλές εντολές bot.
+
       - Πλούσια σε δυνατότητες: Πολλές δυνατότητες που δεν έχουν άλλα bots διαχείρισης ομάδων.
+
       - Γρήγορη: Μαντέψτε; Δεν είναι φτιαγμένη με Python, χρησιμοποιούμε τη <a href='[https://go.dev/](https://go.dev/)'>Go</a> ως τη βασική μας γλώσσα προγραμματισμού.
+
 
       <b>Τρέχουσα Έκδοση:</b> %s
     Configuration:
       Step-1: |-
         Καλώς ήρθατε στη Διαμόρφωση της Alita
+
 
         Το πρώτο πράγμα που πρέπει να κάνετε είναι να προσθέσετε την Alita ✨ στην ομάδα σας! Για να το κάνετε αυτό, πατήστε το παρακάτω κουμπί και επιλέξτε την ομάδα σας, στη συνέχεια πατήστε Τέλος για να συνεχίσετε τον οδηγό.
       Step-2: |-
@@ -718,224 +805,239 @@ strings:
         ▫️ Πατήστε το Μεγεθυντικό Φακό
         ▫️ Αναζήτηση @%s
         ▫️ Επιβεβαίωση
-      Step-3: |-
+      Step-3: >-
         Εξαιρετικά!
+
         Τώρα το Bot είναι έτοιμο για χρήση!
+
         Όλες οι εντολές μπορούν να χρησιμοποιηθούν με / ή !
 
+
         Αν αντιμετωπίζετε δυσκολίες στη ρύθμισή μου στην ομάδα σας, μη διστάσετε να έρθετε στο @DivideSupport.
+
         Θα χαρούμε να σας βοηθήσουμε.
-    DonateText: |-
+    DonateText: >-
       Θέλετε να κάνετε δωρεά; Καταπληκτικό!
+
       Όταν κάνετε δωρεά, όλα τα χρήματα πηγαίνουν στην ανάπτυξή μου, κάτι που με κάνει γρήγορη και ανταποκρινόμενη.
+
       Η δωρεά σας μπορεί επίσης να μου προσφέρει μια νέα δυνατότητα ή δύο, τις οποίες δεν μπορούσα να αποκτήσω λόγω περιορισμών του διακομιστή.
+
       Όλα τα χρήματα θα διατεθούν στις υπηρεσίες μου, όπως βάση δεδομένων, αποθήκευση και φιλοξενία!
+
       Μπορείτε να κάνετε δωρεά επικοινωνώντας με τον ιδιοκτήτη μου εδώ: @DivideProjectsBot
-    about:  # TODO: Translate - strings.Help.about
-      main: Info & About\n\nHere are some of the FAQs about Alita.
-      me_button: "About me 👨‍💻"
-      news_channel_button: "News Channel 📢"
-      support_group_button: "Support Group 👥"
-      configuration_button: Configuration ⚙️
-      group_prompt: Click on the button below to get info about me!
-      button: About
-    start: # TODO: Translate - strings.Help.start
-      intro: >-
-        Hey there! My name is Alita ✨.\nI'm here to help you manage your
-        groups!\nHit /help to find out more about how to use me to my full
-        potential.\nJoin my <a href='https://t.me/AlitaRobotUpdates'>News
-        Channel</a> to get information on all the latest updates.
-      about_button: About ✨
-      add_to_chat_button: ➕ Add me to chat!
-      support_group_button: "Support Group 👥"
-      commands_help_button: "📚 Commands & Help"
-      language_button: "Language 🌏"
-      group_prompt: 'Hey :) PM me if you have any questions on how to use me!'
-    main: >-
-      Hey %s!\nMy name is Alita ✨.\n\nI am a group management bot, here to help
-      you get around and keep the order in your groups!\nI have lots of handy
-      features, such as flood control, a warning system, a note keeping system,
-      and even predetermined replies on certain keywords.\n\n<b>Helpful
-      commands</b>:\n - /start: Starts me! You've probably already used this!\n
-      - /help: Sends this message; I'll tell you more about myself!\n - /donate:
-      Gives you info on how to support me and my creator.\n\nAll commands can be
-      used with the following: / or !
-# TODO: Translate - strings.Help.main
-    help: # TODO: Translate - strings.Help.help
-      button: Click here for help!
-      group_prompt_general: Contact me in PM for help!
-      group_prompt_module: Contact me in PM for help regarding <code>%s</code>!
-    configuration: # TODO: Translate - strings.Help.configuration
-      private_only: Configuration only works in private
-    about_me_u200d: "About me 👨\\u200d💻" # TODO: Translate - strings.Help.about_me_u200d
+    about_me_u200d: "Σχετικά με μένα 👨‍💻"
   Locks:
-    help_msg: |-
+    list:
+      header: 'Αυτά είναι τα κλειδώματα σε αυτή τη συνομιλία:'
+    locktypes:
+      header: 'Κλειδώματα: \n -'
+    lock:
+      no_type_specified: Τι θέλετε να κλειδώσετε; Ελέγξτε το /locktypes για διαθέσιμες επιλογές.
+      success: 'Κλειδώθηκε το ακόλουθο σε αυτή την ομάδα:\n - %s'
+    unlock:
+      no_type_specified: Τι θέλετε να κλειδώσετε; Ελέγξτε το /locktypes για διαθέσιμες επιλογές.
+      success: 'Ξεκλειδώθηκε το ακόλουθο σε αυτή την ομάδα:\n - %s'
+    errors:
+      invalid_type: '`%s` δεν είναι σωστός τύπος κλειδώματος, ελέγξτε το /locktypes.'
+    bot:
+      no_admin_permission: >-
+        Βλέπω ένα bot, και μου είπαν να σταματήσω τη συμμετοχή του... αλλά δεν είμαι διαχειριστής!
+      no_ban_permission: >-
+        Βλέπω ένα bot, και μου είπαν να σταματήσω τη συμμετοχή του... αλλά δεν έχω
+        άδεια να το απαγορεύσω!
+      admin_only: Μόνο οι διαχειριστές επιτρέπεται να προσθέτουν bots σε αυτή τη συνομιλία!
+    help_msg: >-
       *Μόνο διαχειριστής*:
-      × /lock `<άδεια>`: Κλειδώνει την άδεια συνομιλίας.
-      × /unlock `<άδεια>`: Ξεκλειδώνει την άδεια συνομιλίας.
+
+      × /lock `<permission>`: Κλειδώνει την άδεια συνομιλίας.
+
+      × /unlock `<permission>`: Ξεκλειδώνει την άδεια συνομιλίας.
+
       × /locks: Προβάλλει τις άδειες συνομιλίας.
+
       × /locktypes: Ελέγχει τους διαθέσιμους τύπους κλειδώματος!
 
+
       Τα κλειδώματα μπορούν να χρησιμοποιηθούν για τον περιορισμό των χρηστών μιας ομάδας.
+
       Το κλείδωμα των URL θα διαγράφει αυτόματα όλα τα μηνύματα με URL, το κλείδωμα των αυτοκόλλητων θα διαγράφει όλα τα αυτοκόλλητα, κ.λπ.
+
       Το κλείδωμα των bots θα εμποδίζει τους μη διαχειριστές να προσθέτουν bots στη συνομιλία.
 
+
       **Παράδειγμα:**
+
       `/lock media`: αυτό κλειδώνει όλα τα μηνύματα πολυμέσων στη συνομιλία.
-    list:  # TODO: Translate - strings.Locks.list
-      header: 'These are the locks in this chat:'
-    locktypes: # TODO: Translate - strings.Locks.locktypes
-      header: 'Locks: \n -'
-    lock: # TODO: Translate - strings.Locks.lock
-      no_type_specified: What do you want to lock? Check /locktypes for available options.
-      success: 'Locked the following in this group:\n - %s'
-    unlock: # TODO: Translate - strings.Locks.unlock
-      no_type_specified: What do you want to lock? Check /locktypes for available options.
-      success: 'Un-Locked the following in this group:\n - %s'
-    errors: # TODO: Translate - strings.Locks.errors
-      invalid_type: '`%s` is not a correct lock type, check /locktypes.'
-    bot: # TODO: Translate - strings.Locks.bot
-      no_admin_permission: >-
-        I see a bot, and I've been told to stop them joining... but I'm not
-        admin!
-      no_ban_permission: >-
-        I see a bot, and I've been told to stop them joining... but I don't have
-        permission to ban them!
-      admin_only: Only admins are allowed to add bots to this chat!
-    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'I see a bot, and I''ve been told to stop them joining...' # TODO: Translate - strings.Locks.i_see_a_bot_and_i_ve_been_told_to_stop_them_joining
+    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'Βλέπω ένα bot, και μου είπαν να σταματήσω τη συμμετοχή του...'
   Languages:
-    help_msg: |-
+    help_translate_button: "Βοηθήστε μας να μεταφράσουμε 🌎"
+    change:
+      private_prompt: Η τρέχουσα γλώσσα σας είναι %s\nΕπιλέξτε μια γλώσσα από το παρακάτω πληκτρολόγιο.
+      group_prompt: >-
+        Η τρέχουσα γλώσσα αυτής της ομάδας είναι %s\nΕπιλέξτε μια γλώσσα από το παρακάτω πληκτρολόγιο.
+      private_success: Η γλώσσα σας έχει αλλάξει σε %s
+      group_success: Η γλώσσα αυτής της ομάδας έχει αλλάξει σε %s
+    help_msg: >-
       Δεν μπορείτε να αλλάξετε τη γλώσσα του bot;
+
       Αλλάξτε την εύκολα χρησιμοποιώντας αυτή την ενότητα!
+
 
       Απλώς πληκτρολογήστε /lang και χρησιμοποιήστε το ενσωματωμένο πληκτρολόγιο για να επιλέξετε μια γλώσσα για εσάς ή την ομάδα σας.
 
+
       Μπορείτε να μας βοηθήσετε να φέρουμε το bot σε περισσότερες γλώσσες βοηθώντας στο [Crowdin](https://crowdin.com/project/alita_robot)
-    help_translate_button: "Help Us Translate 🌎"  # TODO: Translate - strings.Languages.help_translate_button
-    change: # TODO: Translate - strings.Languages.change
-      private_prompt: Your Current Language is %s\nChoose a language from keyboard below.
-      group_prompt: >-
-        This Group's Current Language is %s\nChoose a language from keyboard
-        below.
-      private_success: Your language has been changed to %s
-      group_success: This group's language has been changed to %s
   Misc:
-    help_msg: |-
+    reply:
+      need_target: Απαντήστε σε κάποιον.
+      need_content: Παρέχετε κάποιο περιεχόμενο για απάντηση!
+    paste:
+      need_text_or_document: Παρακαλώ δώστε κείμενο για επικόλληση ή απαντήστε σε ένα έγγραφο!
+      processing: Επικόλληση...
+      get_file_error: BadRequest στο GetFile!
+      file_too_big: Το αρχείο είναι πολύ μεγάλο για επικόλληση. Μέγιστο μέγεθος αρχείου που μπορεί να επικολληθεί είναι 600 kb!
+      paste_error: Δεν είναι δυνατή η επικόλληση των παρεχόμενων δεδομένων!
+    info:
+      user_not_found: Δεν βρέθηκαν πληροφορίες για αυτόν τον χρήστη.
+    translate:
+      need_text_and_lang: Χρειάζομαι κάποιο κείμενο και έναν κωδικό γλώσσας για μετάφραση.
+      no_text_in_reply: Το απαντημένο μήνυμα δεν περιέχει κείμενο για μετάφραση.
+      need_text: Παρακαλώ δώστε κάποιο κείμενο για μετάφραση.
+      request_error: Σφάλμα κατά την υποβολή αιτήματος μετάφρασης!
+    keyboard:
+      removing: Αφαιρείται το κολλημένο πληκτρολόγιο του bot...
+    help_msg: >-
       × /info: Λάβετε τις πληροφορίες του χρήστη σας, μπορεί να χρησιμοποιηθεί ως απάντηση ή περνώντας ένα User Id ή Όνομα χρήστη.
+
       × /id: Λάβετε το τρέχον id της ομάδας. Αν χρησιμοποιηθεί απαντώντας σε ένα μήνυμα, λάβετε το id αυτού του χρήστη.
+
       × /ping: Κάντε ping στον διακομιστή του Telegram!
+
       × /paste: Επικολλήστε κείμενα στον διακομιστή nekobin!
-      × /tr <κωδικός γλώσσας> <μήνυμα/απάντηση σε μήνυμα>: Μεταφράστε το μήνυμα.
+
+      × /tr <lang code> <msg/reply to message>: Μεταφράστε το μήνυμα.
+
       × /removebotkeyboard: Αφαιρεί το κολλημένο πληκτρολόγιο του bot από τη συνομιλία σας.
+
       × /stat: Λαμβάνει τον αριθμό των συνολικών μηνυμάτων στη συνομιλία.
-    reply:  # TODO: Translate - strings.Misc.reply
-      need_target: Reply to someone.
-      need_content: Provide some content to reply!
-    paste: # TODO: Translate - strings.Misc.paste
-      need_text_or_document: Please give text to paste or reply to a document!
-      processing: Pasting ...
-      get_file_error: BadRequest on GetFile!
-      file_too_big: File too big to paste; Max. file size that can be pasted is 600 kb!
-      paste_error: Can't paste the provided data!
-    info: # TODO: Translate - strings.Misc.info
-      user_not_found: Could not find the any information about this user.
-    translate: # TODO: Translate - strings.Misc.translate
-      need_text_and_lang: I need some text and a language code to translate.
-      no_text_in_reply: The replied message does not contain any text to translate.
-      need_text: Please provide some text to translate.
-      request_error: Error making a translation request!
-    keyboard: # TODO: Translate - strings.Misc.keyboard
-      removing: Removing the stuck bot keyboard...
-    pinged_in_percent_ms: Pinged in %d ms # TODO: Translate - strings.Misc.pinged_in_percent_ms
-    reading_error: 'Reading Error:' # TODO: Translate - strings.Misc.reading_error
-    total_messages_in_percent_are_percent: 'Total Messages in %s are: %d' # TODO: Translate - strings.Misc.total_messages_in_percent_are_percent
+    pinged_in_percent_ms: Pinged in %d ms
+    reading_error: 'Σφάλμα ανάγνωσης:'
+    total_messages_in_percent_are_percent: 'Συνολικά μηνύματα στο %s είναι: %d'
   Mutes:
-    help_msg: |-
+    errors:
+      restrict_self: Γιατί να περιορίσω τον εαυτό μου;
+      anon_user: Αυτή η εντολή δεν μπορεί να χρησιμοποιηθεί σε ανώνυμο χρήστη.
+    tmute:
+      success: Σσσσ...\nΣίγαση %s για %s
+    mute:
+      success: Σσσσ...\nΣίγαση %s.
+    dmute:
+      no_reply: Πρέπει να απαντήσετε σε ένα μήνυμα για να το διαγράψετε και να βάλετε σε σίγαση τον χρήστη!
+      success: Σσσσ...\nΣίγαση %s.
+    unmute:
+      success: Εντάξει!\nΘα επιτρέψω στον/στην %s να μιλήσει ξανά.
+    help_msg: >-
       Μερικές φορές οι χρήστες μπορεί να είναι ενοχλητικοί και μπορεί να θέλετε να τους περιορίσετε από την αποστολή μηνυμάτων στη συνομιλία, αυτή η ενότητα είναι εδώ για να βοηθήσει, μπορείτε να χρησιμοποιήσετε αυτή την ενότητα για να κάνετε σίγαση στα μέλη της ομάδας σας.
 
+
       *Εντολές Σίγασης:* (Μόνο διαχειριστής)
-      × /mute <handle χρήστη>: κάνει σίγαση σε έναν χρήστη, (μέσω handle ή απάντησης)
-      × /smute <handle χρήστη>: κάνει σίγαση σε έναν χρήστη σιωπηλά, δεν στέλνει μήνυμα στην ομάδα και διαγράφει επίσης την εντολή σας. (μέσω handle ή απάντησης)
-      × /dmute <handle χρήστη>: κάνει σίγαση σε έναν χρήστη και διαγράφει το απαντημένο μήνυμα. (μέσω handle ή απάντησης)
-      × /tmute <handle χρήστη> x(m/h/d): κάνει σίγαση σε έναν χρήστη για `x` χρόνο. (μέσω handle ή απάντησης). m = λεπτά, h = ώρες, d = ημέρες.
-      × /unmute <handle χρήστη>: αναιρεί τη σίγαση ενός χρήστη. (μέσω handle ή απάντησης)
-    errors:  # TODO: Translate - strings.Mutes.errors
-      restrict_self: Why would I restrict myself?
-      anon_user: This command cannot be used on anonymous user.
-    tmute: # TODO: Translate - strings.Mutes.tmute
-      success: Shh...\nMuted %s for %s
-    mute: # TODO: Translate - strings.Mutes.mute
-      success: Shh...\nMuted %s.
-    dmute: # TODO: Translate - strings.Mutes.dmute
-      no_reply: You need to reply to a message to delete it and mute the user!
-      success: Shh...\nMuted %s.
-    unmute: # TODO: Translate - strings.Mutes.unmute
-      success: Alright!\nI'll allow %s to speak again.
+
+      × /mute <userhandle>: κάνει σίγαση σε έναν χρήστη, (μέσω handle ή απάντησης)
+
+      × /smute <userhandle>: κάνει σίγαση σε έναν χρήστη σιωπηλά, δεν στέλνει μήνυμα στην ομάδα και διαγράφει επίσης την εντολή σας. (μέσω handle ή απάντησης)
+
+      × /dmute <userhandle>: κάνει σίγαση σε έναν χρήστη και διαγράφει το απαντημένο μήνυμα. (μέσω handle ή απάντησης)
+
+      × /tmute <userhandle> x(m/h/d): κάνει σίγαση σε έναν χρήστη για `x` χρόνο. (μέσω handle ή απάντησης). m = λεπτά, h = ώρες, d = ημέρες.
+
+      × /unmute <userhandle>: αναιρεί τη σίγαση ενός χρήστη. (μέσω handle ή απάντησης)
   Notes:
-    help_msg: |-
-      Αποθηκεύστε δεδομένα για μελλοντικούς χρήστες με σημειώσεις!
-      Οι σημειώσεις είναι ιδανικές για την αποθήκευση τυχαίων πληροφοριών. έναν αριθμό τηλεφώνου, ένα ωραίο gif, μια αστεία εικόνα - οτιδήποτε!
-      *Εντολές χρήστη:*
-      - /get <όνομα σημείωσης>: Λάβετε μια σημείωση.
-      - #όνομα σημείωσης: Ίδιο με το /get.
-      Εντολές διαχειριστή:
-      - /save <όνομα σημείωσης> <κείμενο σημείωσης>: Αποθηκεύστε μια νέα σημείωση με το όνομα "λέξη". Η απάντηση σε ένα μήνυμα θα αποθηκεύσει αυτό το μήνυμα. Λειτουργεί ακόμη και σε πολυμέσα!
-      - /clear <όνομα σημείωσης>: Διαγράψτε τη σχετική σημείωση.
-      - /notes: Εμφανίζει όλες τις σημειώσεις στην τρέχουσα συνομιλία.
-      - /saved: Ίδιο με το /notes.
-      - /clearall: Διαγράφει ΟΛΕΣ τις σημειώσεις σε μια συνομιλία. Αυτό δεν μπορεί να αναιρεθεί.
-      - /privatenotes: Αν θα αποστέλλονται οι σημειώσεις σε PM. Θα στείλει ένα μήνυμα με ένα κουμπί που οι χρήστες μπορούν να πατήσουν για να λάβουν τη σημείωση σε PM.
-    remove:  # TODO: Translate - strings.Notes.remove
-      no_keyword: Please give a keyword to remove!
-    errors: # TODO: Translate - strings.Notes.errors
-      no_keyword_reply: Please give a keyword to reply to!
-      invalid_note: Invalid Note!
-      does_not_exist: Note does not exists!
+    remove:
+      no_keyword: Παρακαλώ δώστε μια λέξη-κλειδί για αφαίρεση!
+    errors:
+      no_keyword_reply: Παρακαλώ δώστε μια λέξη-κλειδί για απάντηση!
+      invalid_note: Μη έγκυρη σημείωση!
+      does_not_exist: Η σημείωση δεν υπάρχει!
       parse_error: >-
-        There is some error parsing the note, please report this in support
-        chat.
-      admin_only: This note can only be accessed by a admin!
-    list: # TODO: Translate - strings.Notes.list
-      no_notes: There are no notes in this chat!
-      private_prompt: Check on the button below to get Notes!
-    removed_note_percent: Removed note <b>%s</b>. # TODO: Translate - strings.Notes.removed_note_percent
-    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Are you sure you want to remove all Notes from this chat? # TODO: Translate - strings.Notes.are_you_sure_you_want_to_remove_all_notes_from_this_chat
-    only_chat_creator_can_use_this_command: Only Chat Creator can use this command. # TODO: Translate - strings.Notes.only_chat_creator_can_use_this_command
-    there_s_some_error_parsing_the_note_please_report_this_in_su: 'There''s some error parsing the note, please report this in support chat.' # TODO: Translate - strings.Notes.there_s_some_error_parsing_the_note_please_report_this_in_su
-    note_doesn_t_exists: Note doesn't exists! # TODO: Translate - strings.Notes.note_doesn_t_exists
-    there_s_some_error_parsing_the_note_please_report_this_to_su: 'There''s some error parsing the note, please report this to support chat.' # TODO: Translate - strings.Notes.there_s_some_error_parsing_the_note_please_report_this_to_su
-    formatting: Formatting # TODO: Translate - strings.Notes.formatting
+        Υπάρχει κάποιο σφάλμα κατά την ανάλυση της σημείωσης, παρακαλώ αναφέρετε το στη συνομιλία υποστήριξης.
+      admin_only: Αυτή η σημείωση είναι προσβάσιμη μόνο από διαχειριστή!
+    list:
+      no_notes: Δεν υπάρχουν σημειώσεις σε αυτή τη συνομιλία!
+      private_prompt: Ελέγξτε το κουμπί παρακάτω για να λάβετε Σημειώσεις!
+    help_msg: >-
+      Αποθηκεύστε δεδομένα για μελλοντικούς χρήστες με σημειώσεις!
+
+      Οι σημειώσεις είναι ιδανικές για την αποθήκευση τυχαίων πληροφοριών. έναν αριθμό τηλεφώνου, ένα ωραίο gif, μια αστεία εικόνα - οτιδήποτε!
+
+      *Εντολές χρήστη:*
+
+      - /get <notename>: Λάβετε μια σημείωση.
+
+      - #notename: Ίδιο με το /get.
+
+      Εντολές διαχειριστή:
+
+      - /save <notename> <note text>: Αποθηκεύστε μια νέα σημείωση με το όνομα "word". Η απάντηση σε ένα μήνυμα θα αποθηκεύσει αυτό το μήνυμα. Λειτουργεί ακόμη και σε πολυμέσα!
+
+      - /clear <notename>: Διαγράψτε τη σχετική σημείωση.
+
+      - /notes: Εμφανίζει όλες τις σημειώσεις στην τρέχουσα συνομιλία.
+
+      - /saved: Ίδιο με το /notes.
+
+      - /clearall: Διαγράφει ΟΛΕΣ τις σημειώσεις σε μια συνομιλία. Αυτό δεν μπορεί να αναιρεθεί.
+
+      - /privatenotes: Αν θα αποστέλλονται οι σημειώσεις σε PM. Θα στείλει ένα μήνυμα με ένα κουμπί που οι χρήστες μπορούν να πατήσουν για να λάβουν τη σημείωση σε PM.
+    removed_note_percent: Αφαιρέθηκε σημείωση <b>%s</b>.
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Είστε σίγουροι ότι θέλετε να αφαιρέσετε όλες τις σημειώσεις από αυτή τη συνομιλία;
+    only_chat_creator_can_use_this_command: Μόνο ο δημιουργός της συνομιλίας μπορεί να χρησιμοποιήσει αυτή την εντολή.
+    there_s_some_error_parsing_the_note_please_report_this_in_su: 'Υπάρχει κάποιο σφάλμα κατά την ανάλυση της σημείωσης, παρακαλώ αναφέρετε το στη συνομιλία υποστήριξης.'
+    note_doesn_t_exists: Η σημείωση δεν υπάρχει!
+    there_s_some_error_parsing_the_note_please_report_this_to_su: 'Υπάρχει κάποιο σφάλμα κατά την ανάλυση της σημείωσης, παρακαλώ αναφέρετε το στη συνομιλία υποστήριξης.'
+    formatting: Μορφοποίηση
   Pins:
-    help_msg: |-
+    errors:
+      bot_need_admin: Πρέπει να είμαι διαχειριστής για να καρφιτσώσω μηνύματα!
+      reply_to_pin: Απαντήστε σε ένα μήνυμα για να το καρφιτσώσετε!
+      reply_to_unpin: Απαντήστε σε ένα μήνυμα για να το ξεκαρφιτσώσετε!
+    pin:
+      success: Καρφιτσώθηκε με επιτυχία!
+    unpin:
+      success: Ξεκαρφιτσώθηκε με επιτυχία!
+    unpin_all:
+      success: Ξεκαρφιτσώθηκαν όλα τα μηνύματα συνομιλίας!
+    help_msg: >-
       Όλες οι σχετικές με το pin εντολές βρίσκονται εδώ. κρατήστε τη συνομιλία σας ενημερωμένη για τα τελευταία νέα με ένα απλό καρφιτσωμένο μήνυμα!
 
+
       *Εντολές χρήστη:*
+
       × /pinned: Λάβετε το τρέχον καρφιτσωμένο μήνυμα.
 
+
       *Εντολές διαχειριστή:*
+
       × /pin: Καρφιτσώστε το μήνυμα στο οποίο απαντήσατε. Προσθέστε 'loud' ή 'notify' για να στείλετε μια ειδοποίηση στα μέλη της ομάδας.
+
       × /pinned: Λαμβάνει το τελευταίο καρφιτσωμένο μήνυμα στην τρέχουσα συνομιλία.
-      × /permapin <κείμενο>: Καρφιτσώστε ένα προσαρμοσμένο μήνυμα μέσω του bot. Αυτό το μήνυμα μπορεί να περιέχει markdown, κουμπιά και όλες τις άλλες ωραίες δυνατότητες.
+
+      × /permapin <text>: Καρφιτσώστε ένα προσαρμοσμένο μήνυμα μέσω του bot. Αυτό το μήνυμα μπορεί να περιέχει markdown, κουμπιά και όλες τις άλλες ωραίες δυνατότητες.
+
       × /unpin: Ξεκαρφιτσώστε το τρέχον καρφιτσωμένο μήνυμα. Αν χρησιμοποιηθεί ως απάντηση, ξεκαρφιτσώνει το μήνυμα στο οποίο απαντήσατε.
+
       × /unpinall: Ξεκαρφιτσώνει όλα τα καρφιτσωμένα μηνύματα.
+
       × /antichannelpin <yes/no/on/off>: Μην αφήνετε το telegram να καρφιτσώνει αυτόματα συνδεδεμένα κανάλια. Αν δεν δοθούν ορίσματα, εμφανίζεται η τρέχουσα ρύθμιση.
+
       × /cleanlinked <yes/no/on/off>: Διαγράφει τα μηνύματα που αποστέλλονται από το συνδεδεμένο κανάλι.
+
       Σημείωση: Όταν χρησιμοποιείτε anti channel pins, βεβαιωθείτε ότι χρησιμοποιείτε την εντολή /unpin, αντί να το κάνετε χειροκίνητα. Διαφορετικά, το παλιό μήνυμα θα καρφιτσωθεί ξανά όταν το κανάλι στείλει οποιαδήποτε μηνύματα.
-    errors:  # TODO: Translate - strings.Pins.errors
-      bot_need_admin: I need to be an admin to pin messages!
-      reply_to_pin: Reply to a message to pin it!
-      reply_to_unpin: Reply to a message to unpin it!
-    pin: # TODO: Translate - strings.Pins.pin
-      success: Pinned successfully!
-    unpin: # TODO: Translate - strings.Pins.unpin
-      success: Unpinned successfully!
-    unpin_all: # TODO: Translate - strings.Pins.unpin_all
-      success: Unpinned all chat messages!
-    unpinned_all_pinned_messages_in_this_chat: Unpinned all pinned messages in this chat! # TODO: Translate - strings.Pins.unpinned_all_pinned_messages_in_this_chat
-    cancelled_operation_to_unpin_messages: Cancelled operation to unpin messages! # TODO: Translate - strings.Pins.cancelled_operation_to_unpin_messages
-    are_you_sure_you_want_to_unpin_all_pinned_messages: Are you sure you want to unpin all pinned messages? # TODO: Translate - strings.Pins.are_you_sure_you_want_to_unpin_all_pinned_messages
-    please_reply_to_a_message_or_give_some_text_to_pin: Please reply to a message or give some text to pin. # TODO: Translate - strings.Pins.please_reply_to_a_message_or_give_some_text_to_pin
-    no_message_has_been_pinned_in_the_current_chat: No message has been pinned in the current chat! # TODO: Translate - strings.Pins.no_message_has_been_pinned_in_the_current_chat
+    unpinned_all_pinned_messages_in_this_chat: Ξεκαρφιτσώθηκαν όλα τα καρφιτσωμένα μηνύματα σε αυτή τη συνομιλία!
+    cancelled_operation_to_unpin_messages: Ακυρώθηκε η λειτουργία για ξεκαρφίτσωμα μηνυμάτων!
+    are_you_sure_you_want_to_unpin_all_pinned_messages: Είστε σίγουροι ότι θέλετε να ξεκαρφιτσώσετε όλα τα καρφιτσωμένα μηνύματα;
+    please_reply_to_a_message_or_give_some_text_to_pin: Παρακαλώ απαντήστε σε ένα μήνυμα ή δώστε κάποιο κείμενο για καρφίτσωμα.
+    no_message_has_been_pinned_in_the_current_chat: Δεν έχει καρφιτσωθεί κανένα μήνυμα στην τρέχουσα συνομιλία!
   Purges:
     help_msg: |-
       *Μόνο διαχειριστής:*
@@ -945,254 +1047,234 @@ strings:
       *Παραδείγματα*:
       - Διαγραφή όλων των μηνυμάτων από το απαντημένο μήνυμα, μέχρι τώρα.
       -> `/purge`
-    reply_to_a_message_to_select_where_to_start_purging_from: Reply to a message to select where to start purging from.  # TODO: Translate - strings.Purges.reply_to_a_message_to_select_where_to_start_purging_from
-    reply_to_a_message_to_delete_it: Reply to a message to delete it! # TODO: Translate - strings.Purges.reply_to_a_message_to_delete_it
-    this_message_is_already_marked_for_purging: This message is already marked for purging! # TODO: Translate - strings.Purges.this_message_is_already_marked_for_purging
+    reply_to_a_message_to_select_where_to_start_purging_from: Απαντήστε σε ένα μήνυμα για να επιλέξετε από πού να ξεκινήσετε την εκκαθάριση.
+    reply_to_a_message_to_delete_it: Απαντήστε σε ένα μήνυμα για να το διαγράψετε!
+    this_message_is_already_marked_for_purging: Αυτό το μήνυμα έχει ήδη σημειωθεί για εκκαθάριση!
     message_marked_for_deletion_reply_to_another_message_with_pu: >-
-      Message marked for deletion. Reply to another message with /purgeto to
-      delete all messages in between; within 30s!
-# TODO: Translate - strings.Purges.message_marked_for_deletion_reply_to_another_message_with_pu
-    you_can_only_use_this_command_after_having_used_the_purgefro: You can only use this command after having used the /purgefrom command! # TODO: Translate - strings.Purges.you_can_only_use_this_command_after_having_used_the_purgefro
-    use_del_command_to_delete_one_message: Use /del command to delete one message! # TODO: Translate - strings.Purges.use_del_command_to_delete_one_message
-    reply_to_a_message_to_show_me_till_where_to_purge: Reply to a message to show me till where to purge. # TODO: Translate - strings.Purges.reply_to_a_message_to_show_me_till_where_to_purge
+      Μήνυμα σημειωμένο για διαγραφή. Απαντήστε σε άλλο μήνυμα με /purgeto για
+      διαγραφή όλων των ενδιάμεσων μηνυμάτων, εντός 30 δευτ.!
+    you_can_only_use_this_command_after_having_used_the_purgefro: Μπορείτε να χρησιμοποιήσετε αυτήν την εντολή μόνο αφού έχετε χρησιμοποιήσει την εντολή /purgefrom!
+    use_del_command_to_delete_one_message: Χρησιμοποιήστε την εντολή /del για να διαγράψετε ένα μήνυμα!
+    reply_to_a_message_to_show_me_till_where_to_purge: Απαντήστε σε ένα μήνυμα για να μου δείξετε μέχρι πού να καθαρίσω.
   Reports:
-    help_msg: |-
+    settings:
+      enabled: Οι αναφορές διαχειριστών είναι ενεργοποιημένες!
+      disabled: Οι αναφορές διαχειριστών είναι απενεργοποιημένες!
+    report:
+      success: Αναφέρθηκε στους διαχειριστές!
+      disabled: Οι αναφορές είναι απενεργοποιημένες σε αυτή τη συνομιλία!
+    help_msg: >-
       Είμαστε όλοι πολυάσχολοι άνθρωποι που δεν έχουμε χρόνο να παρακολουθούμε τις ομάδες μας 24/7. Αλλά πώς αντιδράτε αν κάποιος στην ομάδα σας κάνει spam;
 
-      × /report `<λόγος>`: απαντήστε σε ένα μήνυμα για να το αναφέρετε στους διαχειριστές.
+
+      × /report `<reason>`: απαντήστε σε ένα μήνυμα για να το αναφέρετε στους διαχειριστές.
+
       - @admin: ίδιο με το /report αλλά όχι εντολή.
 
+
       *Μόνο Διαχειριστές:*
+
       × /reports `<on/off/yes/no>`: αλλάξτε τη ρύθμιση αναφοράς ή δείτε την τρέχουσα κατάσταση.
+
       - Αν γίνει σε PM, αλλάζει την κατάστασή σας.
+
       - Αν είναι σε ομάδα, αλλάζει την κατάσταση αυτής της ομάδας.
+
       × /reports `block` (μόνο μέσω απάντησης): Αποκλείστε έναν χρήστη από τη χρήση του /report ή του @admin.
+
       × /reports `unblock` (μόνο μέσω απάντησης): Ξεμπλοκάρετε έναν χρήστη από τη χρήση του /report ή του @admin.
+
       × /reports `showblocklist`: Ελέγξτε όλους τους αποκλεισμένους χρήστες που δεν μπορούν να χρησιμοποιήσουν το /report ή το @admin.
 
+
       Για να αναφέρετε έναν χρήστη, απλώς απαντήστε στο μήνυμά του με @admin ή /report. Η Natalie θα απαντήσει τότε με ένα μήνυμα που δηλώνει ότι οι διαχειριστές έχουν ειδοποιηθεί.
+
       ΠΡΕΠΕΙ να απαντήσετε σε ένα μήνυμα για να αναφέρετε έναν χρήστη. δεν μπορείτε απλώς να χρησιμοποιήσετε το @admin για να κάνετε tag στους διαχειριστές χωρίς λόγο!
 
+
       *ΣΗΜΕΙΩΣΗ:* Κανένα από αυτά δεν θα ενεργοποιηθεί αν χρησιμοποιηθεί από διαχειριστές.
-    settings:  # TODO: Translate - strings.Reports.settings
-      enabled: Admin reports are enabled!
-      disabled: Admin reports are disabled!
-    report: # TODO: Translate - strings.Reports.report
-      success: Reported to admins!
-      disabled: Reports are disabled in this chat!
-    you_can_t_report_your_own_message: You can't report your own message! # TODO: Translate - strings.Reports.you_can_t_report_your_own_message
-    you_need_to_expose_yourself_first: You need to expose yourself first! # TODO: Translate - strings.Reports.you_need_to_expose_yourself_first
-    it_s_a_special_account_of_telegram: It's a special account of telegram! # TODO: Translate - strings.Reports.it_s_a_special_account_of_telegram
-    you_re_an_admin_whom_will_i_report_your_issues_to: 'You''re an admin, whom will I report your issues to?' # TODO: Translate - strings.Reports.you_re_an_admin_whom_will_i_report_your_issues_to
-    why_would_i_report_myself: Why would I report myself? # TODO: Translate - strings.Reports.why_would_i_report_myself
-    why_would_i_report_an_admin: Why would I report an admin? # TODO: Translate - strings.Reports.why_would_i_report_an_admin
+    you_can_t_report_your_own_message: Δεν μπορείτε να αναφέρετε το δικό σας μήνυμα!
+    you_need_to_expose_yourself_first: Πρέπει πρώτα να εκτεθείτε!
+    it_s_a_special_account_of_telegram: Είναι ένας ειδικός λογαριασμός του Telegram!
+    you_re_an_admin_whom_will_i_report_your_issues_to: 'Είστε διαχειριστής, σε ποιον θα αναφέρω τα προβλήματά σας;'
+    why_would_i_report_myself: Γιατί να αναφέρω τον εαυτό μου;
+    why_would_i_report_an_admin: Γιατί να αναφέρω έναν διαχειριστή;
   Rules:
-    help_msg: |-
+    help_msg: >-
       Κάθε συνομιλία λειτουργεί με διαφορετικούς κανόνες. αυτή η ενότητα θα βοηθήσει να γίνουν αυτοί οι κανόνες σαφέστεροι!
+
       *Εντολές χρήστη*:
+
       × /rules: Ελέγξτε τους τρέχοντες κανόνες συνομιλίας.
+
       *Εντολές διαχειριστή*:
-      × /setrules `<κείμενο>`: Ορίστε τους κανόνες για αυτή τη συνομιλία.
+
+      × /setrules `<text>`: Ορίστε τους κανόνες για αυτή τη συνομιλία.
+
       × /privaterules `<yes/no/on/off>`: Ενεργοποίηση/απενεργοποίηση του αν οι κανόνες πρέπει να αποστέλλονται ιδιωτικά.
+
       × /resetrules: Επαναφορά των κανόνων συνομιλίας στην προεπιλογή
-      × /rulesbtn `<προσαρμοσμένο κείμενο>`: Ορίζει το κείμενο του κουμπιού κανόνων.
+
+      × /rulesbtn `<custom text>`: Ορίζει το κείμενο του κουμπιού κανόνων.
+
       × /resetrulesbutton: Επαναφέρει το κείμενο του κουμπιού κανόνων στην προεπιλογή.
+
       × /resetrulesbtn: Ίδιο με το παραπάνω.
-    successfully_cleared_rules: Successfully cleared rules!  # TODO: Translate - strings.Rules.successfully_cleared_rules
-    successfully_cleared_custom_rules_button_text: Successfully cleared custom rules button text! # TODO: Translate - strings.Rules.successfully_cleared_custom_rules_button_text
+    successfully_cleared_rules: Οι κανόνες διαγράφηκαν με επιτυχία!
+    successfully_cleared_custom_rules_button_text: Το προσαρμοσμένο κείμενο του κουμπιού κανόνων διαγράφηκε με επιτυχία!
   Tagger:
-    help_msg: |-
+    help_msg: >-
       Το Tagger είναι ένα ουσιαστικό χαρακτηριστικό για την αναφορά όλων των εγγεγραμμένων μελών στην ομάδα.
+
       Οποιοδήποτε μέλος της συνομιλίας μπορεί να εγγραφεί στο tagger.
 
+
       *Εντολές Χρήστη:*
+
       × /tagme: Επιτρέπει στον χρήστη να γίνει tag
+
       × /untagme: Απαγορεύει στον χρήστη να γίνει tag
 
+
       *Εντολές Διαχειριστή:*
+
       × /tagall: tag/αναφορά όλων των χρηστών με tag
+
       × /untagall: εκκαθάριση όλων των μελών με tag
-      × /addtag <χρήστης>: Προσθήκη χρήστη χειροκίνητα στη λίστα tag
-      × /rmtag <χρήστης>: Αφαίρεση χρήστη χειροκίνητα από τη λίστα tag
+
+      × /addtag <user>: Προσθήκη χρήστη χειροκίνητα στη λίστα tag
+
+      × /rmtag <user>: Αφαίρεση χρήστη χειροκίνητα από τη λίστα tag
   Warns:
-    help_msg: |-
-      Κρατήστε τα μέλη σας υπό έλεγχο με προειδοποιήσεις. εμποδίστε τα να ξεφύγουν από τον έλεγχο!
-      Αν ψάχνετε για αυτοματοποιημένες προειδοποιήσεις, διαβάστε για την ενότητα της μαύρης λίστας!
-
-      *Εντολές Διαχειριστή:*
-      - /warn <λόγος>: Προειδοποιήστε έναν χρήστη.
-      - /dwarn <λόγος>: Προειδοποιήστε έναν χρήστη απαντώντας και διαγράψτε το μήνυμά του.
-      - /swarn <λόγος>: Προειδοποιήστε σιωπηλά έναν χρήστη και διαγράψτε το μήνυμά σας.
-      - /warns: Δείτε τις προειδοποιήσεις ενός χρήστη.
-      - /rmwarn: Αφαιρέστε την τελευταία προειδοποίηση ενός χρήστη.
-      - /resetwarn: Επαναφέρετε όλες τις προειδοποιήσεις ενός χρήστη στο 0.
-      - /resetallwarns: Διαγράψτε όλες τις προειδοποιήσεις σε μια συνομιλία. Όλοι οι χρήστες επιστρέφουν σε 0 προειδοποιήσεις.
-      - /warnings: Λάβετε τις ρυθμίσεις προειδοποίησης της συνομιλίας.
-      - /setwarnmode <ban/kick/mute>: Ορίστε τη λειτουργία προειδοποίησης της συνομιλίας.
-      - /setwarnlimit <αριθμός>: Ορίστε τον αριθμό των προειδοποιήσεων πριν οι χρήστες τιμωρηθούν.
-
-      *Παραδείγματα*
-      - Προειδοποιήστε έναν χρήστη.
-      -> `/warn @χρήστης Για παραβίαση των κανόνων`
-    errors:  # TODO: Translate - strings.Warns.errors
-      warn_admin: I'm not going to warn an admin!
-      anon_user: This command cannot be used on anonymous user.
-      invalid_mode: 'Unknown type ''%s''. Please use one of: ban/kick/mute'
-      invalid_limit: The warn limit has to be set between 1 and 100.
-    set_mode: # TODO: Translate - strings.Warns.set_mode
-      ban: 'Updated warn mode to: ban'
-      kick: 'Updated warn mode to: kick'
-      mute: 'Updated warn mode to: mute'
+    errors:
+      warn_admin: Δεν πρόκειται να προειδοποιήσω έναν διαχειριστή!
+      anon_user: Αυτή η εντολή δεν μπορεί να χρησιμοποιηθεί σε ανώνυμο χρήστη.
+      invalid_mode: 'Άγνωστος τύπος ''%s''. Παρακαλώ χρησιμοποιήστε ένα από τα: ban/kick/mute'
+      invalid_limit: Το όριο προειδοποίησης πρέπει να οριστεί μεταξύ 1 και 100.
+    set_mode:
+      ban: 'Ενημερώθηκε η λειτουργία προειδοποίησης σε: ban'
+      kick: 'Ενημερώθηκε η λειτουργία προειδοποίησης σε: kick'
+      mute: 'Ενημερώθηκε η λειτουργία προειδοποίησης σε: mute'
       no_mode_specified: >-
-        You need to specify an action to take upon too many warns. Current modes
-        are: ban/kick/mute
-    warn: # TODO: Translate - strings.Warns.warn
-      limit_kick: That's %d/%d warnings; So %s has been kicked!
-      limit_mute: That's %d/%d warnings; So %s has been Muted!
-      limit_ban: That's %d/%d warnings; So %s has been banned!
-      success: User %s has %d/%d warnings; be careful!
-      reason: '\n<b>Reason</b>:\n%s'
-      remove_warn_button: ❌ Remove warn
-    warns: # TODO: Translate - strings.Warns.warns
-      no_warns: This user hasn't got any warnings!
-      list_header: 'This user has %d/%d warnings, for the following reasons:'
-      list_no_reasons: 'User has %d/%d warnings, but no reasons for any of them.'
-    remove: # TODO: Translate - strings.Warns.remove
-      success: Warn removed by %s.
-      no_warns: User already has no warns!
-    set_limit: # TODO: Translate - strings.Warns.set_limit
+        Πρέπει να καθορίσετε μια ενέργεια που θα ληφθεί κατά την υπερβολική προειδοποίηση. Οι τρέχουσες λειτουργίες είναι: ban/kick/mute
+    warn:
+      limit_kick: Αυτές είναι %d/%d προειδοποιήσεις. Άρα ο/η %s έχει αποβληθεί!
+      limit_mute: Αυτές είναι %d/%d προειδοποιήσεις. Άρα ο/η %s έχει τεθεί σε σίγαση!
+      limit_ban: Αυτές είναι %d/%d προειδοποιήσεις. Άρα ο/η %s έχει απαγορευτεί!
+      success: Ο χρήστης %s έχει %d/%d προειδοποιήσεις. Προσοχή!
+      reason: '\n<b>Λόγος</b>:\n%s'
+      remove_warn_button: ❌ Αφαίρεση προειδοποίησης
+    warns:
+      no_warns: Αυτός ο χρήστης δεν έχει προειδοποιήσεις!
+      list_header: 'Αυτός ο χρήστης έχει %d/%d προειδοποιήσεις, για τους εξής λόγους:'
+      list_no_reasons: 'Ο χρήστης έχει %d/%d προειδοποιήσεις, αλλά όχι λόγους για καμία από αυτές.'
+    remove:
+      success: Προειδοποίηση αφαιρέθηκε από %s.
+      no_warns: Ο χρήστης δεν έχει ήδη προειδοποιήσεις!
+    set_limit:
       no_limit_specified: >-
-        Please specify how many warns a user should be allowed to receive before
-        being acted upon. Eg. `/setwarnlimit 5`
-      success: Warn limit settings for this chat have been updated to %d.
-    reset: # TODO: Translate - strings.Warns.reset
-      success: Warnings have been reset!
-    reset_all: # TODO: Translate - strings.Warns.reset_all
-      no_warns: No users are warned in this chat!
+        Παρακαλώ καθορίστε πόσες προειδοποιήσεις επιτρέπεται να λάβει ένας χρήστης πριν αναληφθεί δράση. Π.χ. `/setwarnlimit 5`
+      success: Οι ρυθμίσεις ορίου προειδοποίησης για αυτή τη συνομιλία έχουν ενημερωθεί σε %d.
+    reset:
+      success: Οι προειδοποιήσεις έχουν επαναφερθεί!
+    reset_all:
+      no_warns: Δεν υπάρχουν χρήστες με προειδοποιήσεις σε αυτή τη συνομιλία!
       confirm: >-
-        Are you sure you want to remove all the warns of all the users in this
-        chat?
-      success: Removed all warns of all users in this chat.
-      button_yes: Removed all warns of all the users in this chat !
-      button_no: Cancelled the removal of all the warns of all the users in this chat !
-    warnings: # TODO: Translate - strings.Warns.warnings
+        Είστε σίγουροι ότι θέλετε να αφαιρέσετε όλες τις προειδοποιήσεις όλων των χρηστών σε αυτή τη συνομιλία;
+      success: Αφαιρέθηκαν όλες οι προειδοποιήσεις όλων των χρηστών σε αυτή τη συνομιλία.
+      button_yes: Αφαιρέθηκαν όλες οι προειδοποιήσεις όλων των χρηστών σε αυτή τη συνομιλία !
+      button_no: Ακυρώθηκε η αφαίρεση όλων των προειδοποιήσεων όλων των χρηστών σε αυτή τη συνομιλία !
+    warnings:
       status: >-
-        The group has the following settings:\n<b>Warn Limit:</b>
-        <code>%d</code>\n<b>Warn Mode:</b> <code>%s</code>
+        Η ομάδα έχει τις ακόλουθες ρυθμίσεις:\n<b>Όριο προειδοποίησης:</b>
+        <code>%d</code>\n<b>Λειτουργία προειδοποίησης:</b> <code>%s</code>
+  Dev:
+    errors:
+      no_user_specified: Πρέπει να καθορίσετε έναν χρήστη για να λάβετε πληροφορίες
+    chatlist:
+      getting_list: Λήψη λίστας συνομιλιών στις οποίες βρίσκομαι...
+      success: Εδώ είναι η λίστα των συνομιλιών στη βάση δεδομένων μου!
+    leavechat:
+      success: 'Εντάξει, έφυγα από τη συνομιλία!'
+    addsudo:
+      already_sudo: Ο χρήστης είναι ήδη Sudo!
+      success: Προστέθηκε ο/η %s στη λίστα Sudo!
+    adddev:
+      already_dev: Ο χρήστης είναι ήδη Dev!
+      success: Προστέθηκε ο/η %s στη λίστα Dev!
+    remsudo:
+      not_sudo: Ο χρήστης δεν είναι Sudo!
+      success: Αφαιρέθηκε ο/η %s από τη λίστα Sudo!
+    remdev:
+      not_dev: Ο χρήστης δεν είναι Dev!
+      success: Αφαιρέθηκε ο/η %s από τη λίστα Dev!
+    listteam:
+      dev_users: 'Χρήστες Dev:'
+      sudo_users: 'Χρήστες Sudo:'
+      no_users: Δεν έχουν προστεθεί χρήστες στην ομάδα!
+      no_users_in_category: Κανένας χρήστης
+    getstats:
+      fetching: Ανάκτηση στατιστικών bot...
+  DbClean:
+    question: Τι θέλετε να καθαρίσετε;
+    chats_button: Συνομιλίες
+    no_redundant_chats: Δεν βρέθηκαν περιττές συνομιλίες!
+    progress_getting_invalid_chats: '%d ολοκληρώθηκαν στην ανάκτηση μη έγκυρων συνομιλιών.'
+    chats_marked_inactive: '%d συνομιλίες χαρακτηρίστηκαν ως ανενεργές!'
+  Users:
+    log:
+      updating_channel: Ενημέρωση καναλιού %d στη βάση δεδομένων
+      updating_user: Ενημέρωση χρήστη %d στη βάση δεδομένων
+      updating_replied: Ενημέρωση %d στη βάση δεδομένων
   Utils:
     chat_status:
       user:
-        no_permission_change_info_btn: |-
-          Δεν έχετε άδεια να αλλάξετε πληροφορίες!!
-        no_permission_change_info_cmd: |-
-          Δεν έχετε άδεια να αλλάξετε πληροφορίες σε αυτή την ομάδα!
-        no_permission_restrict_btn: |-
-          Δεν έχετε άδεια να περιορίσετε μέλη!
-        no_permission_restrict_cmd: |-
-          Δεν έχετε άδεια να περιορίσετε μέλη σε αυτή την ομάδα!
-        no_permission_promote_btn: |-
-          Δεν έχετε άδεια να προάγετε/υποβιβάζετε μέλη!!
-        no_permission_promote_cmd: |-
+        no_permission_change_info_btn: Δεν έχετε άδεια να αλλάξετε πληροφορίες!!
+        no_permission_change_info_cmd: Δεν έχετε άδεια να αλλάξετε πληροφορίες σε αυτή την ομάδα!
+        no_permission_restrict_btn: Δεν έχετε άδεια να περιορίσετε μέλη!
+        no_permission_restrict_cmd: Δεν έχετε άδεια να περιορίσετε μέλη σε αυτή την ομάδα!
+        no_permission_promote_btn: Δεν έχετε άδεια να προάγετε/υποβιβάζετε μέλη!!
+        no_permission_promote_cmd: >-
           Δεν μπορείτε να προάγετε/υποβιβάζετε άτομα εδώ! Βεβαιωθείτε ότι έχετε τα κατάλληλα δικαιώματα!
-        no_permission_pin: |-
+        no_permission_pin: >-
           Δεν μπορείτε να καρφιτσώσετε μηνύματα εδώ! Βεβαιωθείτε ότι είστε διαχειριστής και μπορείτε να καρφιτσώνετε μηνύματα.
-        no_permission_delete: |-
-          Δεν έχετε άδεια να διαγράφετε μηνύματα!
-        require_admin_btn: |-
-          Πρέπει να είστε διαχειριστής για να το κάνετε αυτό!
-        require_admin_cmd: |-
-          Μόνο οι διαχειριστές μπορούν να εκτελέσουν αυτή την εντολή!
-        require_owner_btn: |-
-          Πρέπει να είστε ο δημιουργός της ομάδας για να το κάνετε αυτό!
-        require_owner_cmd: |-
-          Μόνο ο δημιουργός της ομάδας μπορεί να το κάνει αυτό!
+        no_permission_delete: Δεν έχετε άδεια να διαγράφετε μηνύματα!
+        require_admin_btn: Πρέπει να είστε διαχειριστής για να το κάνετε αυτό!
+        require_admin_cmd: Μόνο οι διαχειριστές μπορούν να εκτελέσουν αυτή την εντολή!
+        require_owner_btn: Πρέπει να είστε ο δημιουργός της ομάδας για να το κάνετε αυτό!
+        require_owner_cmd: Μόνο ο δημιουργός της ομάδας μπορεί να το κάνει αυτό!
       bot:
-        no_permission_restrict: |-
-          Δεν έχω άδεια να περιορίσω μέλη!
-        no_permission_restrict_group: |-
+        no_permission_restrict: Δεν έχω άδεια να περιορίσω μέλη!
+        no_permission_restrict_group: >-
           Δεν μπορώ να περιορίσω άτομα εδώ! Βεβαιωθείτε ότι είμαι διαχειριστής και μπορώ να περιορίζω άλλα μέλη.
-        no_permission_promote: |-
+        no_permission_promote: >-
           Δεν μπορώ να προάγω/υποβιβάζω άτομα εδώ! Βεβαιωθείτε ότι είμαι διαχειριστής και μπορώ να διορίζω νέους διαχειριστές.
-        no_permission_pin: |-
-          Δεν μπορώ να καρφιτσώσω μηνύματα εδώ! Βεβαιωθείτε ότι είμαι διαχειριστής και μπορώ να καρφιτσώνω μηνύματα.
-        no_permission_delete: |-
-          Δεν έχω άδεια να διαγράφω μηνύματα!
-        require_admin: |-
+        no_permission_pin: Δεν μπορώ να καρφιτσώσω μηνύματα εδώ! Βεβαιωθείτε ότι είμαι διαχειριστής και μπορώ να καρφιτσώνω μηνύματα.
+        no_permission_delete: Δεν έχω άδεια να διαγράφω μηνύματα!
+        require_admin: >-
           Δεν είμαι διαχειριστής! Βεβαιωθείτε ότι είμαι διαχειριστής και έχω τις κατάλληλες άδειες.
-      require_private: 'This command is made for PM, not group chat!'  # TODO: Translate - strings.Utils.chat_status.require_private
-      require_group: 'This command is made to be used in group chats, not in pm!' # TODO: Translate - strings.Utils.chat_status.require_group
+      require_private: 'Αυτή η εντολή είναι φτιαγμένη για PM, όχι για ομαδική συνομιλία!'
+      require_group: 'Αυτή η εντολή είναι φτιαγμένη για χρήση σε ομαδικές συνομιλίες, όχι σε pm!'
       anon_admin_string: >-
-        It looks like you're anonymous. Tap this button to confirm your
-        identity.
-# TODO: Translate - strings.Utils.chat_status.anon_admin_string
-      anon_admin_btn: Confirm your Identity # TODO: Translate - strings.Utils.chat_status.anon_admin_btn
-    require_private: |-
-      Αυτή η εντολή είναι φτιαγμένη για PM, όχι για ομαδική συνομιλία!
-    require_group: |-
-      Αυτή η εντολή είναι φτιαγμένη για χρήση σε ομαδικές συνομιλίες, όχι σε pm!
-    anon_admin_string: |-
-      Φαίνεται ότι είστε ανώνυμος. Πατήστε αυτό το κουμπί για να επιβεβαιώσετε την ταυτότητά σας.
-    anon_admin_btn: |-
-      Επιβεβαιώστε την ταυτότητά σας
+        Φαίνεται ότι είστε ανώνυμος. Πατήστε αυτό το κουμπί για να επιβεβαιώσετε την ταυτότητά σας.
+      anon_admin_btn: Επιβεβαιώστε την ταυτότητά σας
     extraction:
       extract_chat:
-        badrequest_failed_getchat: |-
+        badrequest_failed_getchat: >-
           αποτυχία σύνδεσης στη συνομιλία: αποτυχία λήψης συνομιλίας: αδυναμία λήψης συνομιλίας: Κακό αίτημα: η συνομιλία δεν βρέθηκε
-        fail_need_chat_id: |-
-          Περίμενα ένα ID συνομιλίας, αλλά αυτό δεν είναι έγκυρος ακέραιος.
-        fail_need_chat: |-
-          Χρειάζομαι ένα ID συνομιλίας για να συνδεθώ!
+        fail_need_chat_id: 'Περίμενα ένα ID συνομιλίας, αλλά αυτό δεν είναι έγκυρος ακέραιος.'
+        fail_need_chat: Χρειάζομαι ένα ID συνομιλίας για να συνδεθώ!
       extract_user:
-        no_user_found: |-
+        no_user_found: >-
           Δεν βρέθηκε χρήστης με αυτό το όνομα. είστε σίγουροι ότι τους έχω δει στο παρελθόν;
-        badrequest_failed_getchatmember: |-
+        badrequest_failed_getchatmember: >-
           αποτυχία λήψης χρήστη: αδυναμία λήψης μέλους συνομιλίας: Κακό αίτημα: η συνομιλία δεν βρέθηκε
     string_handling:
       extract_time:
-        invalid_time_amount: |-
-          Καθορίστηκε μη έγκυρο χρονικό διάστημα.
-        invalid_time_type: |-
-          Καθορίστηκε μη έγκυρος τύπος ώρας. Αναμενόταν m, h ή d, ελήφθη: %s
-  Dev:  # TODO: Translate - strings.Dev
-    errors:
-      no_user_specified: You must specify a user to get info on
-    chatlist:
-      getting_list: Getting list of chats I'm in...
-      success: Here is the list of chats in my Database!
-    leavechat:
-      success: 'Okay, I left the chat!'
-    addsudo:
-      already_sudo: User is already Sudo!
-      success: Added %s to Sudo List!
-    adddev:
-      already_dev: User is already Dev!
-      success: Added %s to Dev List!
-    remsudo:
-      not_sudo: User is not Sudo!
-      success: Removed %s from Sudo List!
-    remdev:
-      not_dev: User is not Dev!
-      success: Removed %s from Dev List!
-    listteam:
-      dev_users: 'Dev Users:'
-      sudo_users: 'Sudo Users:'
-      no_users: No users are added Added in Team!
-      no_users_in_category: No Users
-    getstats:
-      fetching: Fetching bot stats...
-  DbClean: # TODO: Translate - strings.DbClean
-    question: What do you want to clean?
-    chats_button: Chats
-    no_redundant_chats: No redundant chats found!
-    progress_getting_invalid_chats: '%d completed in getting invalid chats.'
-    chats_marked_inactive: '%d chats marked as inactive!'
-  Users: # TODO: Translate - strings.Users
-    log:
-      updating_channel: Updatting channel %d in db
-      updating_user: Updatting user %d in db
-      updating_replied: Updatting %d in db
-  Mute: # TODO: Translate - strings.Mute
-    unmute_admin_only: Unmute (Admin Only)
-  Helpers: # TODO: Translate - strings.Helpers
-    this_chat_does_not_have_any_rules: This chat does not have any rules!
-    this_note_does_not_exist: This note does not exist!
+        invalid_time_amount: Καθορίστηκε μη έγκυρο χρονικό διάστημα.
+        invalid_time_type: 'Καθορίστηκε μη έγκυρος τύπος ώρας. Αναμενόταν m, h ή d, ελήφθη: %s'
+  Mute:
+    unmute_admin_only: Unmute (Admins Only)
+  Helpers:
+    this_chat_does_not_have_any_rules: Αυτή η συνομιλία δεν έχει κανόνες!
+    this_note_does_not_exist: Αυτή η σημείωση δεν υπάρχει!
