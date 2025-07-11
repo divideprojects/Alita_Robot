@@ -110,7 +110,7 @@ func Initialize(cfg *config.Config) error {
 	filterColl = mongoClient.Database(cfg.MainDbName).Collection("filters")
 	notesColl = mongoClient.Database(cfg.MainDbName).Collection("notes")
 	notesSettingsColl = mongoClient.Database(cfg.MainDbName).Collection("notes_settings")
-	
+
 	isInitialized = true
 	log.Info("Done opening all database collections!")
 	return nil
