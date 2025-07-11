@@ -39,9 +39,10 @@ Only accessible by the owner or devs. Replies with chat name, ID, user count, an
 func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
+	cfg := config.Get()
 
 	// only devs and owner can access this
-	if user.Id != config.OwnerId && !memStatus.Dev {
+	if user.Id != cfg.OwnerId && !memStatus.Dev {
 		return ext.ContinueGroups
 	}
 
