@@ -53,17 +53,17 @@ func (ac *AdminCache) GetUser(userId int64) (gotgbot.MergedChatMember, bool) {
 }
 
 /*
-InitCache initializes the caching system for the application.
+InitCache initializes the caching system for the application with the provided config.
 
 It sets up both Redis and Ristretto as cache backends, creates a chain cache manager,
 and initializes the marshaler for serializing and deserializing cached data.
 Panics if Ristretto cache initialization fails.
 */
-func InitCache() {
+func InitCache(cfg *config.Config) {
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     config.RedisAddress,
-		Password: config.RedisPassword, // no password set
-		DB:       config.RedisDB,       // use default DB
+		Addr:     cfg.RedisAddress,
+		Password: cfg.RedisPassword, // no password set
+		DB:       cfg.RedisDB,       // use default DB
 	})
 	ristrettoCache, err := ristretto.NewCache(&ristretto.Config{
 		NumCounters: 10000,      // 10x expected keys for better performance

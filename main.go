@@ -18,6 +18,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"github.com/divideprojects/Alita_Robot/alita"
+	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
 //go:embed locales
@@ -30,14 +31,24 @@ func main() {
 	// The function blocks at the end to keep the bot running.
 	// All critical startup errors are logged and cause termination.
 
-	// Load configuration first
-	if err := config.LoadAndSetGlobals(); err != nil {
+	// Load configuration using the new recommended pattern
+	cfg, err := config.Load()
+	if err != nil {
 		log.Fatal("Failed to load configuration: ", err)
 	}
 
+	// Initialize global config for modules that use config.Get()
+	if err := config.Initialize(); err != nil {
+		log.Fatal("Failed to initialize global config: ", err)
+	}
+
 	// Set up logger based on config
-	cfg := config.Get()
 	logger.Setup(cfg.Debug)
+
+	// Initialize database with config
+	if err := db.Initialize(cfg); err != nil {
+		log.Fatal("Failed to initialize database: ", err)
+	}
 
 	// logs if bot is running in debug mode or not
 	if cfg.Debug {
@@ -58,8 +69,8 @@ func main() {
 		panic("failed to create new bot: " + err.Error())
 	}
 
-	// some initial checks before running bot
-	alita.InitialChecks(b)
+	// some initial checks before running bot - now pass config
+	alita.InitialChecks(b, cfg)
 
 	// Create updater and dispatcher with limited max routines.
 	// Dispatcher handles incoming updates and routes them to handlers.

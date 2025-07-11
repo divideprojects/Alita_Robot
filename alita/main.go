@@ -15,6 +15,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
@@ -61,11 +62,11 @@ func ListModules() string {
 // InitialChecks performs startup checks and background initializations before running the bot.
 // It ensures the bot is present in the database, checks for duplicate command aliases,
 // initializes the cache, and starts resource monitoring.
-func InitialChecks(b *gotgbot.Bot) {
+func InitialChecks(b *gotgbot.Bot, cfg *config.Config) {
 	// Create bot in db if not already created
 	go db.EnsureBotInDb(b)
 	checkDuplicateAliases()
-	go cache.InitCache()
+	go cache.InitCache(cfg)
 
 	// Start resource monitoring
 	go ResourceMonitor()
