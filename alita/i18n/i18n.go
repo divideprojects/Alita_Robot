@@ -66,7 +66,7 @@ func (e LoadErrors) Error() string {
 	if len(e) == 1 {
 		return e[0].Error()
 	}
-	
+
 	var msgs []string
 	for _, err := range e {
 		msgs = append(msgs, err.Error())
@@ -78,7 +78,7 @@ func (e LoadErrors) Error() string {
 var (
 	localeMap = make(map[string]*viper.Viper)
 	localeMu  sync.RWMutex
-	
+
 	// fallbackChains defines the fallback sequence for each language
 	fallbackChains = map[string][]string{
 		"pt_BR": {"pt", DefaultLangCode},
@@ -116,7 +116,7 @@ func IsLanguageAvailable(langCode string) bool {
 func GetAvailableLanguages() []string {
 	localeMu.RLock()
 	defer localeMu.RUnlock()
-	
+
 	languages := make([]string, 0, len(localeMap))
 	for lang := range localeMap {
 		languages = append(languages, lang)
@@ -136,11 +136,11 @@ func SetFallbackChain(langCode string, chain []string) {
 func GetFallbackChain(langCode string) []string {
 	fallbackMu.RLock()
 	defer fallbackMu.RUnlock()
-	
+
 	if chain, exists := fallbackChains[langCode]; exists {
 		return append([]string{}, chain...) // return copy
 	}
-	
+
 	// Default fallback to DefaultLangCode if not the same
 	if langCode != DefaultLangCode {
 		return []string{DefaultLangCode}
@@ -156,70 +156,70 @@ func LoadLocaleFiles(fs *embed.FS, path string) error {
 	if err != nil {
 		return fmt.Errorf("failed to read directory %s: %w", path, err)
 	}
-	
+
 	if len(entries) == 0 {
 		return fmt.Errorf("no files found in directory %s", path)
 	}
-	
+
 	var loadErrors LoadErrors
 	newLocaleMap := make(map[string]*viper.Viper)
-	
+
 	for _, entry := range entries {
 		if entry.IsDir() {
 			continue
 		}
-		
+
 		filename := entry.Name()
 		if !strings.HasSuffix(filename, ".yml") && !strings.HasSuffix(filename, ".yaml") {
 			continue
 		}
-		
+
 		fp := filepath.Join(path, filename)
 		content, err := fs.ReadFile(fp)
 		if err != nil {
 			loadErrors = append(loadErrors, LoadError{File: fp, Err: err})
 			continue
 		}
-		
+
 		langCode := extractLangCode(filename)
 		if langCode == "" {
 			loadErrors = append(loadErrors, LoadError{
-				File: fp, 
+				File: fp,
 				Err:  fmt.Errorf("could not extract language code from filename"),
 			})
 			continue
 		}
-		
+
 		vi := viper.New()
 		vi.SetConfigType("yaml")
 		if err := vi.ReadConfig(bytes.NewReader(content)); err != nil {
 			loadErrors = append(loadErrors, LoadError{
-				File: fp, 
+				File: fp,
 				Err:  fmt.Errorf("failed to parse YAML: %w", err),
 			})
 			continue
 		}
-		
+
 		newLocaleMap[langCode] = vi
 	}
-	
+
 	if len(newLocaleMap) == 0 {
 		if len(loadErrors) > 0 {
 			return loadErrors
 		}
 		return errors.New("no valid locale files found")
 	}
-	
+
 	// Atomically update the locale map
 	localeMu.Lock()
 	localeMap = newLocaleMap
 	localeMu.Unlock()
-	
+
 	// Return errors if any occurred, but still loaded some locales
 	if len(loadErrors) > 0 {
 		return loadErrors
 	}
-	
+
 	return nil
 }
 
@@ -262,19 +262,19 @@ func (i I18n) GetString(key string) string {
 	if key == "" {
 		return fmt.Sprintf(MissingKeyMarker, "empty-key")
 	}
-	
+
 	// Try current language first
 	if text := i.getStringFromLang(i.LangCode, key); text != "" {
 		return text
 	}
-	
+
 	// Try fallback chain
 	for _, fallbackLang := range GetFallbackChain(i.LangCode) {
 		if text := i.getStringFromLang(fallbackLang, key); text != "" {
 			return text
 		}
 	}
-	
+
 	// Return marked missing key
 	return fmt.Sprintf(MissingKeyMarker, key)
 }
@@ -285,19 +285,19 @@ func (i I18n) GetStringSlice(key string) []string {
 	if key == "" {
 		return nil
 	}
-	
+
 	// Try current language first
 	if slice := i.getStringSliceFromLang(i.LangCode, key); len(slice) > 0 {
 		return slice
 	}
-	
+
 	// Try fallback chain
 	for _, fallbackLang := range GetFallbackChain(i.LangCode) {
 		if slice := i.getStringSliceFromLang(fallbackLang, key); len(slice) > 0 {
 			return slice
 		}
 	}
-	
+
 	return nil
 }
 
@@ -307,19 +307,19 @@ func (i I18n) GetStringWithError(key string) (string, error) {
 	if key == "" {
 		return "", ErrEmptyKey
 	}
-	
+
 	// Try current language first
 	if text := i.getStringFromLang(i.LangCode, key); text != "" {
 		return text, nil
 	}
-	
+
 	// Try fallback chain
 	for _, fallbackLang := range GetFallbackChain(i.LangCode) {
 		if text := i.getStringFromLang(fallbackLang, key); text != "" {
 			return text, nil
 		}
 	}
-	
+
 	return "", fmt.Errorf("key %q not found in language %q or its fallbacks", key, i.LangCode)
 }
 
@@ -329,19 +329,19 @@ func (i I18n) getStringFromLang(langCode, key string) string {
 	if !exists {
 		return ""
 	}
-	
+
 	// Try the key as-is first
 	if val := locale.GetString(key); val != "" && val != "<nil>" {
 		return val
 	}
-	
+
 	// Try with "strings." prefix if not already present
 	if !strings.HasPrefix(key, "strings.") {
 		if val := locale.GetString("strings." + key); val != "" && val != "<nil>" {
 			return val
 		}
 	}
-	
+
 	return ""
 }
 
@@ -351,19 +351,19 @@ func (i I18n) getStringSliceFromLang(langCode, key string) []string {
 	if !exists {
 		return nil
 	}
-	
+
 	// Try the key as-is first
 	if slice := locale.GetStringSlice(key); len(slice) > 0 {
 		return slice
 	}
-	
+
 	// Try with "strings." prefix if not already present
 	if !strings.HasPrefix(key, "strings.") {
 		if slice := locale.GetStringSlice("strings." + key); len(slice) > 0 {
 			return slice
 		}
 	}
-	
+
 	return nil
 }
 
@@ -372,19 +372,19 @@ func (i I18n) HasKey(key string) bool {
 	if key == "" {
 		return false
 	}
-	
+
 	// Check current language
 	if i.hasKeyInLang(i.LangCode, key) {
 		return true
 	}
-	
+
 	// Check fallback chain
 	for _, fallbackLang := range GetFallbackChain(i.LangCode) {
 		if i.hasKeyInLang(fallbackLang, key) {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
@@ -394,17 +394,17 @@ func (i I18n) hasKeyInLang(langCode, key string) bool {
 	if !exists {
 		return false
 	}
-	
+
 	// Check key as-is
 	if locale.IsSet(key) {
 		return true
 	}
-	
+
 	// Check with "strings." prefix
 	if !strings.HasPrefix(key, "strings.") {
 		return locale.IsSet("strings." + key)
 	}
-	
+
 	return false
 }
 
@@ -430,7 +430,7 @@ func HasKey(langCode, key string) bool {
 func GetCompatLocaleMap() map[string][]byte {
 	localeMu.RLock()
 	defer localeMu.RUnlock()
-	
+
 	result := make(map[string][]byte)
 	// We can't easily convert back to raw bytes, so return empty map
 	// Old code should be updated to use the new API
