@@ -127,12 +127,12 @@ strings:
     help_msg: |-
       Je weet hoe soms mensen zich aansluiten, 100 berichten versturen en je chat ruïneren? Met anti-spam gebeurt dat niet meer!
 
-      Anti-spam stelt je in staat om actie te ondernemen tegen gebruikers die meer dan x berichten achter elkaar sturen. Acties zijn: ban/kick/mute/tban/tmute
+      Anti-spam stelt je in staat om actie te ondernemen tegen gebruikers die meer dan x berichten achter elkaar sturen. Acties zijn: ban/kick/mute
 
       *Admin commando's*:
       × /flood: De huidige anti-spam instellingen ophalen.
       × /setflood `<number/off/no>`: Stel het aantal berichten in waarna actie wordt ondernomen tegen een gebruiker. Stel in op '0', 'off' of 'no' om uit te schakelen.
-      × /setfloodmode `<action type>`: Kies welke actie moet worden ondernomen tegen een gebruiker die spam heeft veroorzaakt. Opties: ban/kick/mute/tban/tmute
+      × /setfloodmode `<action type>`: Kies welke actie moet worden ondernomen tegen een gebruiker die spam heeft veroorzaakt. Opties: ban/kick/mute
       × /delflood `<yes/no/on/off>`: Als je wilt dat berichten die door de gebruiker zijn gespammed worden verwijderd.
   Approvals:
     approve:
@@ -219,7 +219,6 @@ strings:
         Denk je echt dat ik mezelf zou afzetten?
       ban_reason: "\n<b>Reden: </b> %s"
       tban: |-
-        Nog een is gevallen...!
         Gebanned %s voor %s
       normal_ban: |-
         Nog een is gevallen...!
@@ -229,7 +228,7 @@ strings:
           Je moet een reactie geven om het te verwijderen en de gebruiker te bannen!
     unban:
       is_admin: |-
-        Waarom zou ik een admin onbannen? Dat klinkt als een vrij dom idee.
+        Waarom zou ik een admin onbannen?
       is_bot_itself: |-
         Waarom zou ik mezelf niet ontgrendelen als ik al hier ben?
       unbanned_user: |-
@@ -245,8 +244,6 @@ strings:
       *Ban Commands* (Admin only):
       × /ban <userhandle>: een gebruiker bannen. (via handle, of reactie)
       × /sban <userhandle>: een gebruiker stil bannen, stuurt geen bericht naar groep en verwijdert ook uw opdracht. (via handle, of reactie)
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
       × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
       × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
       × /unban <userhandle>: unbans a user. (via handle, or reply)
@@ -310,7 +307,7 @@ strings:
       × /remallbl: Verwijdert alle zwarte woorden uit chat
 
       *Note: *
-      De standaardwerkstand voor Blacklist is * geen *, waardoor de berichten van de chat worden verwijderd.
+      De standaardwerkstand voor Blacklist is *none*, waardoor de berichten van de chat worden verwijderd.
   Connections:
     connected: |-
       Je bent momenteel verbonden met <b>%s</b>
@@ -379,11 +376,11 @@ strings:
       Hiermee kunt u een aantal veelgebruikte opdrachten uitschakelen, zodat niemand ze kan gebruiken. Het zal u ook toestaan om te autodelete, het stoppen van mensen bluetexting.
 
       *Beheeropdrachten *:
-      × /uitschakelen van `<commandname>': Gebruikers stoppen met het gebruik van de opdrachtnaam in deze groep.
+      × /disable `<commandname>': Gebruikers stoppen met het gebruik van de opdrachtnaam in deze groep.
       × /enable `<item name>': Laat gebruikers de naam in deze groep gebruiken.
       × /disableable: List all disableable commands.
       × /disabledel `<yes/no/on/off>`: Uitvalbare opdrachten wissen bij gebruik door niet-beheerders.
-      × /uitgeschakeld: Lijst met uitgeschakelde opdrachten in deze chat.
+      × /disabled: Lijst met uitgeschakelde opdrachten in deze chat.
 
       Opmerking:
       Bij het uitschakelen van een opdracht wordt de opdracht alleen uitgeschakeld voor niet-beheerders. Alle admins kunnen deze opdrachten nog steeds gebruiken.
@@ -478,8 +475,8 @@ strings:
       × /welcome `<yes/no/on/off>': Hiermee kunt u de welkomstinstellingen voor de groep in-of uitschakelen.
       × /resetwelcome: Het welkomstbericht wordt standaard ingesteld.
       × /setgoodbye `<reply/text>`: vaarwel tekst voor groep.
-      × /afscheid `<yes/no/on/off>': Hiermee kunt u de afscheidsinstelling voor groep in-of uitschakelen.
-      × /resetdatum: Het afscheidsbericht wordt standaard ingesteld.
+      × /goodbye `<yes/no/on/off>': Hiermee kunt u de afscheidsinstelling voor groep in-of uitschakelen.
+      × /resetgoodbye: Het afscheidsbericht wordt standaard ingesteld.
       × /cleanservice `<yes/no/on/off>': Verwijder alle serviceberichten zoals' x is toegetreden tot de groep 'notificatie.
       × /cleanwelcome `<yes/no/on/off>': Verwijder het oude welkomstbericht wanneer een nieuw lid toetreedt.
       × /autoapprove `<yes/no/on/off>': Automatisch alle nieuwe leden goedkeuren.
@@ -494,7 +491,7 @@ strings:
       <b>Waarom Alita:</b>
       -Eenvoudig: Gemakkelijk gebruik en compaitble met veel bot commando's.
       -Featured: Veel functies die andere groepsbeheer bots hebben niet.
-      -Fast: Guess what? Het is niet gemaakt met behulp van Python, gebruiken we <a href='https://go.dev/'>Go</a> als onze core programmeertaal.
+      -Fast: Guess what? Het is niet gemaakt met behulp van Python, we gebruiken <a href='[https://go.dev/](https://go.dev/)'>Go</a> als onze core programmeertaal.
 
       <b>Huidige versie:</b> %s
     Configuration:
@@ -512,13 +509,13 @@ strings:
         ▫️ Press Modify
         ▫️ Press on Administrator
         ▫️ Press Add Administrator
-        ▫️ Press the Vergrootglas Glass
+        ▫️ Press the Magnifying Glass
         ▫️ Search @%s
         ▫️ Bevestiging
       Step-3: |-
         Uitstekend!
         Nu is de Bot klaar om te gebruiken!
-        Alle commando's kunnen worden gebruikt met/of!
+        Alle commando's kunnen worden gebruikt met / of !
 
         Als u problemen ondervindt bij het instellen van mij in uw groep, aarzel dan niet om te komen in @DivideSupport.
         Wij willen u graag helpen.
@@ -532,8 +529,8 @@ strings:
     help_msg: |-
       Alleen *Admin *:
       × /lock `<permission>`: Chatmachtiging vergrendelen ..
-      × /ontgrendelen `<permission>`: Chatmachtiging ontgrendelen.
-      × /sloten: Chatmachtiging weergeven.
+      × /unlock `<permission>`: Chatmachtiging ontgrendelen.
+      × /locks: Chatmachtiging weergeven.
       × /locktypes: Controleer beschikbare vergrendelingstypen!
 
       Locks kunnen worden gebruikt om de gebruikers van een groep te beperken.
@@ -541,15 +538,15 @@ strings:
       Vergrendeling bots zullen niet-admins stoppen van het toevoegen van bots aan de chat.
 
       ** Example:**
-      '/vergrendelingsmedium ': hiermee worden alle mediaberichten in de chat vergrendeld.
+      `/lock media`: hiermee worden alle mediaberichten in de chat vergrendeld.
   Languages:
     help_msg: |-
-      Niet in staat om de taal van de bot te veranderen?
+      Niet able om de taal van de bot te veranderen?
       Eenvoudig te wijzigen met behulp van deze module!
 
       Gewoon type /lang en gebruik inline toetsenbord om een taal voor jezelf of uw groep te kiezen.
 
-      U kunt ons helpen bot te brengen naar meer talen door te helpen op [Crowdin](https: //crowdin.com/project/alita_robot)
+      U kunt ons helpen bot te brengen naar meer talen door te helpen op [Crowdin](https://crowdin.com/project/alita_robot)
   Misc:
     help_msg: |-
       × /info: Get your user info, can be used as reply or by passing a User Id or Username.
@@ -567,22 +564,22 @@ strings:
       × /mute <userhandle>: een gebruiker mutes, (via handgreep of antwoord)
       × /smute <userhandle>: een gebruiker automatisch mutes, verzendt geen bericht naar groep en verwijdert ook uw opdracht. (via handgreep, of antwoord)
       × /dmute <userhandle>: een gebruiker mutes en het beantwoorde bericht verwijderen .. (via handgreep, of antwoord)
-      × /tmute <userhandle> x (m/h/d): mutes een gebruiker voor ` x ` tijd. (via handgreep, of antwoord). m = minuten, h = uren, d = dagen.
+      × /tmute <userhandle> x(m/h/d): mutes een gebruiker voor ` x ` tijd. (via handgreep, of antwoord). m = minuten, h = uren, d = dagen.
       × /unmute <userhandle>: een gebruiker ongedaan maken. (via handgreep, of antwoord)
   Notes:
     help_msg: |-
       Sla gegevens voor toekomstige gebruikers met notities!
       Notes zijn geweldig om willekeurige tidbits van informatie op te slaan; een telefoonnummer, een leuke gif, een grappige foto-alles!
       *Gebruikersopdrachten: *
-      -/get <notename>: Get a note.
+      - /get <notename>: Get a note.
       - #notename: Zelfde als /get.
       Beheeropdrachten:
-      -/save <notename> <note text>: Sla een nieuwe notitie op met de naam "word". Als u een bericht beantwoordt, slaat u dat bericht op. Werkt zelfs op media!
-      -/clear <notename>: Verwijder de bijbehorende opmerking.
-      -/notes: Alle notities in de huidige chatsessie afbeelden.
-      -/opgeslagen: Zelfde als /notes.
-      -/clearall: Verwijder alle noten in een chat. Dit kan niet ongedaan worden gemaakt.
-      -/privatenotes: Al dan niet notities verzenden in PM. Zal een bericht verzenden met een knop waarmee gebruikers kunnen klikken om de noot in PM te krijgen.
+      - /save <notename> <note text>: Sla een nieuwe notitie op met de naam "word". Als u een bericht beantwoordt, slaat u dat bericht op. Werkt zelfs op media!
+      - /clear <notename>: Verwijder de bijbehorende opmerking.
+      - /notes: Alle notities in de huidige chatsessie afbeelden.
+      - /saved: Zelfde als /notes.
+      - /clearall: Verwijder alle noten in een chat. Dit kan niet ongedaan worden gemaakt.
+      - /privatenotes: Al dan niet notities verzenden in PM. Zal een bericht verzenden met een knop waarmee gebruikers kunnen klikken om de noot in PM te krijgen.
   Pins:
     help_msg: |-
       Alle pin-gerelateerde commando's zijn hier te vinden; houd uw chat up-to-date op het laatste nieuws met een eenvoudig vastgezette bericht!
@@ -597,31 +594,31 @@ strings:
       × /unpin: Het huidige vastgezette bericht losmaken. Als u deze optie gebruikt als antwoord, kunt u het antwoord op een bericht ongedaan maken.
       × /unpinall: Ontpennen alle vastgezette berichten.
       × /antichannelpin <yes/no/on/off>: Laat de telegram niet automatisch koppelen aan kanalen. Als er geen argumenten zijn opgegeven, wordt de huidige instelling afgebeeld.
-      × /reinigingsgekoppelde <yes/no/on/off>: Berichten wissen die door het gekoppelde kanaal zijn verzonden.
+      × /cleanlinked <yes/no/on/off>: Berichten wissen die door het gekoppelde kanaal zijn verzonden.
       Opmerking: Als u antikanaalpennen gebruikt, moet u ervoor zorgen dat u de opdracht /unpin gebruikt, in plaats van het handmatig te doen. Anders wordt het oude bericht opnieuw vastgezet wanneer het kanaal berichten verzendt.
   Purges:
     help_msg: |-
       Alleen *Admin: *
-      -/purge: hiermee worden alle berichten tussen dit en het antwoord op bericht gewist.
-      -/del: wist het bericht dat u antwoordde.
+      - /purge: hiermee worden alle berichten tussen dit en het antwoord op bericht gewist.
+      - /del: wist het bericht dat u antwoordde.
 
       *Examples*:
       -Verwijder alle berichten van het antwoord op bericht, tot nu toe.
-      -> `/zuivering "
+      -> `/purge`
   Reports:
     help_msg: |-
       We zijn allemaal bezig met mensen die geen tijd hebben om onze groepen 24/7 te volgen. Maar hoe reageer je als iemand in je groep spamming is?
 
-      × /rapport `<reason>`: antwoord op een bericht om het aan admins te melden.
+      × /report `<reason>`: antwoord op een bericht om het aan admins te melden.
       - @admin: zelfde als /report maar geen opdracht.
 
       *Admins Alleen: *
-      × /rapporten `<on/off/yes/no>`: rapportinstelling wijzigen of huidige status bekijken.
+      × /reports `<on/off/yes/no>`: rapportinstelling wijzigen of huidige status bekijken.
       -Als gedaan in PM, schakelt u uw status.
       -Als deze in groep is, schakelt u de status van die groepen in.
-      × /rapporten ` block ` (alleen via antwoord): Een gebruiker blokkeren met behulp van /rapport of @admin.
-      × /reports ` unblock ` (alleen via antwoord): Een gebruiker uitschakelen voor het gebruik van /rapport of @admin.
-      × /rapporten ` showblocklist `: Alle geblokkeerde gebruikers controleren die/rapport of @adminniet kunnen gebruiken.
+      × /reports `block` (alleen via antwoord): Een gebruiker blokkeren met behulp van /rapport of @admin.
+      × /reports `unblock` (alleen via antwoord): Een gebruiker uitschakelen voor het gebruik van /rapport of @admin.
+      × /reports `showblocklist`: Alle geblokkeerde gebruikers controleren die /report of @admin niet kunnen gebruiken.
 
       Om een gebruiker te melden, antwoordt hij zijn bericht eenvoudig met @admin of /report; Natalie antwoordt vervolgens met een bericht waarin wordt aangegeven dat beheerders zijn aangemeld.
       U moet een bericht beantwoorden om een gebruiker te melden; u kunt @admin niet alleen gebruiken voor tagbeheer zonder reden!
@@ -634,9 +631,9 @@ strings:
       × /rules: Controleer de huidige chat-regels.
       *Beheeropdrachten*:
       × /setrules `<text>`: De regels voor deze chat instellen.
-      × /privaterulen "<yes/no/on/off>": Inschakelen/uitschakelen van het verzenden van de regels onder persoonlijk.
-      × /resetregels: De chatregels herstellen als standaard
-      × /rulesbtn `<aangepaste tekst>`: Stelt de tekst van de regelknop in.
+      × /privaterules `<yes/no/on/off>`: Inschakelen/uitschakelen van het verzenden van de regels onder persoonlijk.
+      × /resetrules: De chatregels herstellen als standaard
+      × /rulesbtn `<custom text>`: Stelt de tekst van de regelknop in.
       × /resetrulesbutton: Herstelt de tekst van de regelknop naar standaard.
       × /resetrulesbtn: Hetzelfde als hierboven.
   Tagger:
@@ -646,13 +643,14 @@ strings:
 
       *Gebruikersopdrachten: *
       × /tagme: Gebruiker toestaan om code
-      × /untagme te gebruiken: Gebruiker met de tag
+      × /untagme: Gebruiker met de tag
 
       *Beheeropdrachten: *
       × /tagall: tag/vermelding alle gelabelde gebruikers
       × /untagall: alle gelabelde leden wissen
       × /addtag <user>: Een gebruiker handmatig toevoegen aan taglist
       × /rmtag <user>: Een gebruiker handmatig verwijderen uit taglist
+
   Warns:
     help_msg: |-
       Keep your members in check with warnings; stop them getting out of control!
@@ -667,7 +665,7 @@ strings:
       - /resetwarn: Reset all of a user's warnings to 0.
       - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
       - /warnings: Get the chat's warning settings.
-      - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
+      - /setwarnmode <ban/kick/mute>: Set the chat's warn mode.
       - /setwarnlimit <number>: Set the number of warnings before users are punished.
 
       *Examples*

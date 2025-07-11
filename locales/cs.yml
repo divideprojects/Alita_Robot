@@ -11,729 +11,746 @@ strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: |-
-        Successfully reloaded admin cache.
+        Úspěšně obnovena administrátorská cache.
       not_found: |-
-        Admincache not found. Ask an admin to use /admincache to reload the admin cache.
+        Admincache nenalezen. Požádejte admina o použití /admincache pro obnovení admin cache.
   Admin:
     adminlist: |-
-      Admins in <b>%s</b>:
+      Admini v <b>%s</b>:
     anon_admin:
       enabled: |-
-        AnonAdmin mode is currently <b>enabled</b> for %s.
-        This allows all anonymous admin to perform admin actions without restriction.
+        Režim AnonAdmin je aktuálně <b>povolen</b> pro %s.
+        To umožňuje anonymním adminům provádět akce bez omezení.
       disabled: |-
-        AnonAdmin mode is currently <b>disabled</b> for %s.
-        This requires anonymous admins to press a button to confirm their permissions.
+        Režim AnonAdmin je aktuálně <b>zakázán</b> pro %s.
+        To vyžaduje, aby anonymní admini potvrdili svá oprávnění stisknutím tlačítka.
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        Režim AnonAdmin je nyní <b>povolen</b> pro %s.
+        Odteď budu žádat adminy o ověření oprávnění anonymních adminů.
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        Režim AnonAdmin je nyní <b>zakázán</b> pro %s.
+        Odteď už nebudu žádat adminy o ověření oprávnění anonymních adminů.
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        Režim AnonAdmin je již <b>povolen</b> pro %s
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        Režim AnonAdmin je již <b>zakázán</b> pro %s
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Neplatný argument, rozumím pouze <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        Tato osoba vytvořila tento chat, jak bych ji mohl degradovat?
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        Tato osoba není admin, jak bych ji mohl degradovat?
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        Nemohu degradovat sám sebe!
       success_demote: |-
-        Successfully demoted %s!
+        Úspěšně degradován %s!
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        Admin titul zkrácen na 16 znaků z původních %d
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Kéž bych to mohl udělat sám sobě ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        Tato osoba vytvořila tento chat, jak bych ji mohl povýšit?
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        Tato osoba je již admin, jak bych ji mohl povýšit?
       success_promote: |-
-        Successfully promoted %s!
+        Úspěšně povýšen %s!
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        Úspěšně nastaven admin titul pro %s na <b>%s</b>
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Kéž bych to mohl udělat sám sobě ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        Tato osoba vytvořila tento chat, jak bych mohl nastavit vlastní admin titul?
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        Tato osoba je již admin, jak bych mohl nastavit vlastní admin titul?
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        Nastavení vlastního admin titulu selhalo; název nemusí být správný nebo obsahuje emoji.
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Degradace selhala; možná nejsem admin, nebo byl povýšen jiným adminem.
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Povýšení selhalo; možná nejsem admin, nebo byl povýšen jiným adminem.
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        Musíte mi zadat admin titul, abych jej mohl nastavit.
     help_msg: |-
-      Usnadněte povýšení a snížení úrovně uživatelů pomocí modulu admin!
+      Usnadněte povyšování a degradování uživatelů pomocí admin modulu!
 
-      *User Commands: *
-      × /adminlist: List the admins in the current chat.
+      *Příkazy uživatelů:*
+      × /adminlist: Zobrazí adminy v aktuálním chatu.
 
-      *Admin Commands: *
-      × /promote `<reply/username/mention/userid>`: Postoupit uživatele.
-      × /demote `<reply/username/mention/userid>`: Snížit úroveň uživatele.
-      × /title `<reply/username/mention/userid>` `<custom title>`: Nastavit vlastní titulek pro uživatele
+      *Příkazy adminů:*
+      × /promote `<reply/username/mention/userid>`: Povýšit uživatele.
+      × /demote `<reply/username/mention/userid>`: Degradovat uživatele.
+      × /title `<reply/username/mention/userid>` `<custom title>`: Nastavit vlastní titul uživateli
+
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        Nelíbí se mi tvé floodování. %s byl %s!
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        Limit floodu nastaven na <b>%d</b> zpráv.
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        OK.
+        Nebudu uživatele varovat za floodování.
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        V tomto chatu aktuálně není aktivní ochrana proti floodování.
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        Tento chat aktuálně omezuje floodování po %d zprávách. Uživatelé posílající více zpráv budou %s.
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        Režim floodu nastaven na %s.
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        Neznámý typ '%s'. Použijte jeden z: ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        Musíte určit akci při floodování. Dostupné režimy: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        Zapnuto mazání flood zpráv. Zprávy způsobující flood budou smazány!
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        Vypnuto mazání flood zpráv. Zprávy způsobující flood budou ignorovány!
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        Rozumím pouze možnostem: `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        Mazání flood zpráv je již *zapnuto*, zprávy způsobující flood budou smazány!
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        Mazání flood zpráv je již *vypnuto*, zprávy způsobující flood budou ignorovány!
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        Očekával jsem argumenty! Buď 'off', nebo číslo. Např: `/setflood 5`, nebo `/setflood off`
       invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
+        Neplatné číslo. Zadejte platné číslo, nebo `off`.
       set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+        Limit proti floodu musí být mezi 3 a 100.
     help_msg: |-
-      Víte, jak se lidé k vám někdy připojí, pošlou 100 zpráv a pokazíte si konverzaci? S protipovodněmi, to se stává již více!
+      Znám ty situace, kdy lidé přijdou, pošlou 100 zpráv a zničí váš chat! S antifloodem se to už nestane!
 
-      Protipovodeň umožňuje provádět akce na uživatele, kteří posílají více než x zprávy v řadě. Akce jsou: ban/kick/mute/tban/tmute
+      Antiflood umožňuje zakročit proti uživatelům posílajícím více než X zpráv v řadě. Akce: ban/kick/mute
 
-      *Admin commands *:
-      × /flood: Get the current antiflood settings.
-      × /setflood `<number/off/no>`: Nastavte počet zpráv, po jejichž provedení se má akce provést na uživateli. Nastavte na hodnotu '0', 'vypnuto' nebo 'ne', chcete-li ji zakázat.
-      × /setfluon mode `<action type>`: Vyberte si, která akce má být provedena na uživatele, který byl zaplaven. Možnosti: ban/kick/mute/tban/tmute
-      × /dellain `<yes/no/on/off>`: Pokud chcete, aby robot vymazal zprávy zahlcené uživatelem.
+      *Příkazy adminů:*
+      × /flood: Zobrazí aktuální nastavení antifloodu.
+      × /setflood `<number/off/no>`: Nastaví počet zpráv před akcí proti uživateli. Nastavte '0', 'off' nebo 'no' pro vypnutí.
+      × /setfloodmode `<action type>`: Vybere akci proti floodujícímu uživateli. Možnosti: ban/kick/mute
+      × /delflood `<yes/no/on/off>`: Pokud chcete, aby bot mazal zprávy od floodujícího uživatele.
+
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        Už jste mě schválili tím, že jste mě udělali adminem!
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        Uživatel %s úspěšně schválen
+        Odteď bude ignorován u auto-banů, blacklistů, locků a antifloodu.
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        Tento uživatel není v chatu, jak ho mohu schválit?
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        Jsem admin, nemohu být neschválen!
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        Uživatel zrušen: %s
+        Odteď bude brán v potaz u auto-banů, blacklistů, locků a antifloodu.
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s je admin a nepotřebuje schválení.
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        Jsem admin a nepotřebuji schválení.
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s je schválený uživatel v <b>%s</b>
+        Je ignorován u auto-banů, blacklistů, locků a antifloodu.
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>Schválil:</b> %s (<code>%d</code>)
+        <b>Čas schválení:</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        Nejste schváleni v <b>%s</b>
+        Budete bráni v potaz u auto-banů, blacklistů, locků a antifloodu.
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: |-
+        V <b>%s</b> nejsou žádní schválení uživatelé!
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        Tito uživatelé jsou schváleni v <b>%s:</b>
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        Pro více informací (kdo schválil, čas schválení) použijte /approval (user id).
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        Opravdu chcete odebrat všechny schválené uživatele z tohoto chatu?
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        Pouze tvůrce chatu může použít tento příkaz k neschválení všech uživatelů.
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          Všichni schválení uživatelé odebráni ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          Zrušeno odebrání schválených uživatelů ❌
     help_msg: |-
-      Někdy můžete uživateli důvěřovat, že neodešle nežádoucí obsah.
-      Možná to není dost na to, aby se jim admin, ale můžete být v pořádku s zámky, seznamy černých listin a protipovodně, které se na ně nevztahují.
-      To je to, co schválení jsou pro-schválení důvěryhodných uživatelů, aby mohli poslat
+      Někdy věříte uživateli, že nepošle nechtěný obsah.
+      Možná ne dost na admina, ale nevadí vám, když na něj neplatí locky, blacklisty a antiflood.
+      K tomu slouží schvalování - schvalte důvěryhodné uživatele, aby mohli posílat.
 
-      *Uživatelské příkazy: *
-      × /schválení: Zkontrolujte stav schválení uživatele v této konverzaci.
+      *Příkazy uživatelů:*
+      × /approval: Zkontrolujte stav schválení uživatele v tomto chatu.
 
-      *Admin Commands: *
-      × /approve: Approve of a user. Zámky, černé listiny a protipovodně se na ně už nebudou vztahovat.
-      × /unapprove: Neschválit uživatele. Nyní budou podléhat zámkům, černým seznamům a protipovodním.
-      × /schváleno: Zobrazit seznam všech schválených uživatelů.
+      *Příkazy adminů:*
+      × /approve: Schválit uživatele. Locky, blacklisty a antiflood na něj přestanou platit.
+      × /unapprove: Zrušit schválení uživatele. Znovu na něj budou platit locky, blacklisty a antiflood.
+      × /approved: Seznam všech schválených uživatelů.
 
-      *Owner Commands: *
-      × /unapproveall: Neschválit VŠECHNY uživatele v konverzaci. Tuto operaci nelze vrátit zpět.
+      *Příkazy vlastníka:*
+      × /unapproveall: Zrušit schválení VŠECH uživatelů v chatu. Nelze vrátit.
+
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        Tento uživatel není v chatu, jak ho mohu omezit?
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        Proč bych kickoval admina? To zní jako hloupý nápad.
       is_bot_itself: |-
-        Why would I kick myself?
+        Proč bych kickoval sám sebe?
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        Úspěšně vyhozen %s.
+      kicked_reason: "\n<b>Důvod:</b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        Jste admin, jste tu uvězněn s ostatními!
       ok_out: |-
-        Alright, get out!
+        Jak si přejete, vypadněte!
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        Proč bych banoval admina? To zní jako hloupý nápad.
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        Opravdu si myslíte, že bych se banoval?
+      ban_reason: "\n<b>Důvod:</b> %s"
       tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+        Zabanován %s na %s
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        Další kousek prachu...!
+        Zabanován %s.
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          Pro smazání zprávy a banování uživatele musíte odpovědět na zprávu!
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        Proč bych odbanovával admina?
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        Proč bych se odbanovával, když už jsem tady?
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        Dejme mu další šanci.
+        Odbanován %s!
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      Někdy mohou být uživatelé otravní a budete je chtít z chatu odstranit. Tento modul s tím pomůže!
+      Banujte/kickujte uživatele a později je odbanujte, pokud se chovají slušně.
 
-      *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      *Příkazy uživatelů:*
+      × /kickme: Vyhodí uživatele, který příkaz použil.
 
-      *Ban Commands* (Admin only):
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-      × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-      × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-      × /unban <userhandle>: unbans a user. (via handle, or reply)
+      *Příkazy banů (pouze admini):*
+      × /ban <userhandle>: Zabanuje uživatele. (přes handle, nebo odpověď)
+      × /sban <userhandle>: Potichu zabanuje uživatele, nepošle zprávu do skupiny a smaže váš příkaz. (přes handle, nebo odpověď)
+      × /dban <userhandle>: Zabanuje uživatele a smaže odpověděnou zprávu. (přes handle, nebo odpověď)
+      × /tban <userhandle> x(m/h/d): Zabanuje uživatele na `x` času. (přes handle, nebo odpověď). m = minuty, h = hodiny, d = dny.
+      × /unban <userhandle>: Odbanuje uživatele. (přes handle, nebo odpověď)
 
-      *Restrict Commands:* (Admin only)
-      × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-      × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+      *Příkazy omezení (pouze admini):*
+      × /restrict: Zobrazí inline klávesnici pro výběr kick, ban a mute
+      × /unrestrict: Zobrazí inline klávesnici pro výběr unmute a unban.
+
   Blacklists:
     blacklist:
       give_bl_word: |-
-        Please give me a word to add to the blacklist!
+        Zadejte slovo pro přidání na blacklist!
       already_blacklisted: |-
-        These words are already blacklisted:
+        Tato slova jsou již na blacklistu:
       added_bl: |-
-        Added these words as blacklists:
+        Přidána tato slova na blacklist:
     unblacklist:
       give_bl_word: |-
-        Please give me a word to remove from the blacklist!
+        Zadejte slovo pro odstranění z blacklistu!
       no_removed_bl: |-
-        None of the given words were in the blacklist which can be removed!
+        Žádné zadané slovo nebylo na blacklistu k odstranění!
       removed_bl: |-
-        Removed '%s' from the blacklisted words!
+        Úspěšně odstraněno '%s' z blacklistu!
     ls_bl:
       no_blacklisted: |-
-        There are no blacklisted words in this chat.
+        V tomto chatu nejsou žádná slova na blacklistu.
       list_bl: |-
-        These words are blacklisted in this chat:
+        Tato slova jsou v tomto chatu na blacklistu:
     set_bl_action:
       current_mode: |-
-        The current blacklist mode is: %s
+        Aktuální režim blacklistu: %s
       changed_mode: |-
-        Changed blacklist mode to: *%s*
+        Režim blacklistu úspěšně změněn na: *%s*
       choose_correct_option: |-
-        Please choose an option out of <mute/kick/ban/warn/none>
+        Vyberte možnost z: <mute/kick/ban/warn/none>
     rm_all_bl:
       ask: |-
-        Are you sure you want to remove all blacklisted words from this chat?
+        Opravdu chcete odstranit všechna slova z blacklistu?
       button_handler:
         yes: |-
-          Removed all Blacklists from this Chat ✅
+          Všechna slova z blacklistu odstraněna ✅
         no: |-
-          Cancelled removing all Blacklists from this Chat ❌
+          Zrušeno odstranění blacklistu ❌
     bl_watcher:
       muted_user: |-
-        Muted %s due to %s
+        Umčeno %s kvůli %s
       banned_user: |-
-        Banned %s due to %s
+        Zabanováno %s kvůli %s
       kicked_user: |-
-        Kicked %s due to %s
+        Vyhozen %s kvůli %s
     help_msg: |-
-      *Příkazy pro uživatele: *
-      × /blacklists: Zkontrolujte všechny černé seznamy v konverzaci.
+      *Příkazy uživatelů:*
+      × /blacklists: Zobrazí všechny blacklisty v chatu.
 
-      *Admin Commands: *
-      × /addblacklist `<trigger>`: Blacklists the word in the current chat.
-      × /rmblacklist `<trigger>`: Odstraní slovo z aktuálního slova zakázaných slov v konverzaci.
-      × /blaction `<mute/kick/ban/warn/none>`: Nastaví akci, která má být provedena s robotem, když je zjištěno slovo černé listiny.
-      × /blacklistation: Stejné jako výše
+      *Příkazy adminů:*
+      × /addblacklist `<trigger>`: Přidá slovo na blacklist v aktuálním chatu.
+      × /rmblacklist `<trigger>`: Odstraní slovo z blacklistu.
+      × /blaction `<mute/kick/ban/warn/none>`: Nastaví akci bota při detekci blacklist slova.
+      × /blacklistaction: Stejné jako výše
 
-      *Vlastník Pouze: *
-      × /remallbl: Odebere všechna ignorovaná slova z konverzace
+      *Pouze vlastník:*
+      × /remallbl: Odstraní všechna slova z blacklistu
 
-      *Note: *
-      Výchozí režim pro Blacklist je * none*, který odstraní zprávy z konverzace.
+      *Poznámka:*
+      Výchozí režim blacklistu je *none*, který pouze maže zprávy.
+
   Connections:
     connected: |-
-      You are currently connected to <b>%s</b>
+      Jste připojeni k <b>%s</b>!
     not_connected: |-
-      You aren't connected to any chats.
+      Nejste připojeni k žádnému chatu.
     allow_connect:
       turned_on: |-
-        Turned <b>on</b> User connections to this chat!
-        Users can now connect chat to their PM's!
+        Uživatelská připojení k tomuto chatu <b>zapnuta</b>!
+        Uživatelé si nyní mohou propojit chat se svými PM!
       turned_off: |-
-        Turned <b>off</b> User connections to this chat!
-        Users can't connect chat to their PM's!
+        Uživatelská připojení k tomuto chatu <b>vypnuta</b>!
+        Uživatelé si nemohou propojit chat se svými PM!
       currently_on: |-
-        User connections are currently turned <b>on</b>.
-        Users can connect this chat to their PM's!
+        Uživatelská připojení jsou aktuálně <b>zapnuta</b>.
+        Uživatelé si mohou propojit chat se svými PM!
       currently_off: |-
-        User connections are currently turned <b>off</b>.
-        Users can't connect this chat to their PM's!
+        Uživatelská připojení jsou aktuálně <b>vypnuta</b>.
+        Uživatelé si nemohou propojit chat se svými PM!
     connect:
       connection_disabled: |-
-        User connections are currently <b>disabled</b> to this chat.
-        Please ask admins to allow if you want to connect!
+        Uživatelská připojení jsou aktuálně <b>zakázána</b>.
+        Požádejte adminy o povolení, pokud se chcete připojit!
       connected: |-
-        You are now connected to <b>%s</b>!
+        Nyní jste připojeni k <b>%s</b>!
       tap_btn_connect: |-
-        Please press the button below to connect this chat to your PM
+        Pro připojení chatu k vašim PM stiskněte tlačítko níže.
     connections_btns:
       admin_conn_cmds: |-
-        Admin commands available:%s
+        Dostupné admin příkazy:%s
       user_conn_cmds: |-
-        User commands available:%s
+        Dostupné uživatelské příkazy:%s
     disconnect:
       disconnected: |-
-        Disconnected from the connected chat.
+        Úspěšně odpojeno od chatu.
       need_pm: |-
-        You need to send this in PM to me to disconnect from the chat!
+        Tento příkaz musíte poslat v PM pro odpojení od chatu!
     is_user_connected:
       need_group: |-
-        This command is made to be used in group chats, not in PM!
+        Tento příkaz je pro skupinové chaty, ne pro PM!
       bot_not_admin: |-
-        I'm not an admin in this chat!
+        Nejsem admin v tomto chatu!
       user_not_admin: |-
-        You need to be an admin to do this.
+        Pro tuto akci musíte být admin.
     reconnect:
       reconnected: |-
-        You are now reconnected to <b>%s</b>!
+        Nyní jste znovu připojeni k <b>%s</b>!
       no_last_chat: |-
-        You have no last chat to reconnect to!
+        Nemáte poslední chat pro opětovné připojení!
       need_pm: |-
-        You need to be in a PM with me to reconnect to a chat!
+        Pro opětovné připojení musíte být v PM!
     help_msg: |-
-      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+      Tento modul umožňuje připojit se k databázi chatu a upravovat ji bez vědomí chatu! Z pochopitelných důvodů musíte být admin pro přidávání věcí, ale každý člen může zobrazit vaše data (banovaní/vyhození uživatelé nemohou!).
 
-      *Commands*:
-      × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-      × /disconnect: Disconnect from the current chat.
-      × /reconnect: Reconnect to the previously connect chat
-      × /connection: See information about the currently connected chat.
+      *Příkazy:*
+      × /connect `<chatid>`: Připojí se k danému chatu pro prohlížení/úpravy.
+      × /disconnect: Odpojí aktuální chat.
+      × /reconnect: Znovu se připojí k předchozímu chatu.
+      × /connection: Zobrazí informace o aktuálně připojeném chatu.
 
-      *Admin Commands:*
-      × /allowconnect <yes/no>: Allow users to connect to chats or not.
+      *Příkazy adminů:*
+      × /allowconnect <yes/no>: Povolí nebo zakáže připojování uživatelů.
 
-      You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+      ID chatu získáte pomocí /id. Nenechte se překvapit záporným ID - všechny super skupiny je mají.
+
   Disabling:
     help_msg: |-
-      To vám umožní zakázat některé běžně používané příkazy, takže je nelze použít. To vám také umožní autovymazat je, zastaví lidi z bluetexting.
+      Tento modul umožňuje zakázat běžné příkazy, takže je nikdo nemůže používat. Také umožňuje automatické mazání, aby se zabránilo "blue textování".
 
-      *Admin commands *:
-      × /disable `<commandname>`: Zastavte uživatele pomocí příkazu commandname v této skupině.
-      × /enable `<item name>`: Povolit uživatelům používat název příkazu v této skupině.
-      × /disableable: List all disableable commands.
-      × /disabledel `<yes/no/on/off>`: Odstraní příkazy se zakázaným odstraněním při použití uživatelem bez oprávnění pro administrátory.
-      × /disabled: Vypsat zakázané příkazy v této konverzaci.
+      *Příkazy adminů:*
+      × /disable `<commandname>`: Zakáže příkaz v této skupině.
+      × /enable `<item name>`: Povolí příkaz v této skupině.
+      × /disableable: Zobrazí všechny zakázatelné příkazy.
+      × /disabledel `<yes/no/on/off>`: Maže zakázané příkazy při použití neadminy.
+      × /disabled: Zobrazí zakázané příkazy v tomto chatu.
 
       Poznámka:
-      Při vypínání příkazu je příkaz povolen pouze pro jiné uživatele než administrátory. Všechny administrátory mohou tyto příkazy používat i nadále.
-      Funkce pro zakázání jsou stále přístupné prostřednictvím funkce /connect. Pokud byste měli zájem vidět i tento zakázaný, dejte mi vědět v rámci podpory chatu.
+      Zakázané příkazy jsou stále dostupné přes /connect. Pokud chcete toto také zakázat, dejte vědět v podpůrném chatu.
+
   Filters:
     help_msg: |-
-      Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+      Filtry nerozlišují velikost písmen. Když někdo řekne vaše spouštěcí slova, Alita odpoví něčím jiným! Lze použít k vytváření vlastních příkazů.
 
-      Commands:
-      - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-      - /filters: List all chat filters.
-      - /stop <trigger>: Stop the bot from replying to trigger.
-      - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+      Příkazy:
+      - /filter <trigger> <reply>: Při spouštěči bot odpoví větou. Pro víceslovné triggery použijte uvozovky.
+      - /filters: Zobrazí všechny filtry v chatu.
+      - /stop <trigger>: Zastaví odpovídání bota na trigger.
+      - /stopall: Zastaví VŠECHNY filtry v chatu. Nelze vrátit.
 
-      Examples:
-      - Set a filter:
-      -> /filter hello Hello there! How are you?
-      - Set a multiword filter:
-      -> /filter hello friend Hello back! Long time no see!
-      - Set a filter that can only be used by admins:
-      -> /filter example This filter wont happen if a normal user says it {admin}
-      - To save a file, image, gif, or any other attachment, simply reply to file with:
+      Příklady:
+      - Nastavit filtr:
+      -> /filter hello Ahoj! Jak se máš?
+      - Víceslovný filtr:
+      -> /filter "hello friend" Ahoj příteli! Dlouho jsme se neviděli!
+      - Filtr jen pro adminy:
+      -> /filter example Tento filtr se nespustí pro běžné uživatele {admin}
+      - Pro uložení souboru, obrázku, GIFu nebo jiné přílohy odpovězte na soubor:
       -> /filter trigger
+
   Formatting:
     help_msg: |-
-      Alita podporuje velký počet formátovacích možností, aby vaše zprávy byly výrazněji expresivní. Podívejte se kliknutím na tlačítka níže!
+      Alita podporuje mnoho formátovacích možností. Prozkoumejte je kliknutím na tlačítka níže!
     Markdown: |-
-      <b>Markdown Formatting</b>
+      <b>Markdown formátování</b>
 
-      You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-      <b>Supported markdown</b>:
-      - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-      - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-      - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-      - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-      - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-      - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-      - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-      - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-      - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+      Můžete používat <b>tučné</b>, <i>kurzívu</i>, <u>podtržení</u> a další. Experimentujte!
+      <b>Podporovaný markdown:</b>
+      - <code>`kód`</code>: Zobrazí: <code>kód</code>.
+      - <code>_kurzíva_</code>: Zobrazí: <i>kurzíva</i>.
+      - <code>*tučné*</code>: Zobrazí: <b>tučné</b>.
+      - <code>~přeškrtnuté~</code>: Zobrazí: <strike>přeškrtnuté</strike>.
+      - <code>||spoiler||</code>: Zobrazí: <tg-spoiler>Spoiler</tg-spoiler>.
+      - <code>```předformátovaný text```</code>: Ignoruje formátování uvnitř: <code>**tučné** | *kurzíva*</code>.
+      - <code>__podtržení__</code>: Zobrazí: podtržení. POZN: Někteří klienti to interpretují jako kurzívu.
+      - <code>[odkaz](example.com)</code>: Zobrazí: <a href='https://example.com/'>odkaz</a>.
+      - <code>[Tlačítko](buttonurl://example.com)</code>: Vytvoří tlačítko otevírající <code>example.com</code>.
 
-      If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-      <b>Example:</b>
-      <code>[button 1](buttonurl:example.com)</code>
-      <code>[button 2](buttonurl://example.com:same)</code>
-      <code>[button 3](buttonurl://example.com)</code>
-      This will show button 1 and 2 on the same line, with 3 underneath.
+      Pro tlačítka na stejném řádku použijte <code>:same</code>.
+      <b>Příklad:</b>
+      <code>[tlačítko 1](buttonurl:example.com)</code>
+      <code>[tlačítko 2](buttonurl://example.com:same)</code>
+      <code>[tlačítko 3](buttonurl://example.com)</code>
+      Tlačítka 1 a 2 budou na stejném řádku, 3 pod nimi.
     Fillings: |-
-      <b>Fillings</b>
+      <b>Doplňovače</b>
 
-      You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-      You can use these to mention a user in notes too!
+      Přizpůsobte obsah zpráv kontextovými daty. Např. uvítací zpráva s uživatelským jménem.
 
-      <b>Supported fillings:</b>
-      - <code>{first}</code>: The user's first name.
-      - <code>{last}</code>: The user's last name.
-      - <code>{fullname}</code>: The user's full name.
-      - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-      - <code>{mention}</code>: Mentions the user with their firstname.
-      - <code>{id}</code>: The user's ID.
-      - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Přidá tlačítko pravidel do zprávy.
-      - <code>{protect}</code>: Chrání obsah před sdílením.
-      - <code>{preview}</code>: Povoluje náhledy ve zprávách.
-      - <code>{nonotif}</code>: Zakáže oznámení pro tuto zprávu.
+      <b>Podporované doplňovače:</b>
+      - <code>{first}</code>: Křestní jméno
+      - <code>{last}</code>: Příjmení
+      - <code>{fullname}</code>: Celé jméno
+      - <code>{username}</code>: Uživatelské jméno (nebo zmínka)
+      - <code>{mention}</code>: Zmínka křestním jménem
+      - <code>{id}</code>: Uživatelské ID
+      - <code>{chatname}</code>: Název chatu
+      - <code>{rules}</code>: Přidá tlačítko pravidel
+      - <code>{protect}</code>: Chrání obsah před sdílením
+      - <code>{preview}</code>: Povolí náhledy zpráv
+      - <code>{nonotif}</code>: Zakáže oznámení pro zprávu
     Random: |-
-      <b>Random Content</b>
+      <b>Náhodný obsah</b>
 
-      Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-      How to use random contents:
-      - %%%: This separator can be used to add  random replies to the bot.
-      For example:
-      <code>hello
+      Oživte uvítací zprávy náhodným výběrem! Použijte oddělovač %%%.
+      Příklad:
+      <code>ahoj
       %%%
-      how are you</code>
-      This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-      Use this to make Alita feel a bit more customised! (only works in filters/notes)
-      Example welcome message:
-      - Every time a new user joins, they'll be presented with one of the three messages shown here.
-      -> /filter "hey"
-      hello there <code>{first}</code>!
+      jak se máš</code>
+      Náhodně zvolí "ahoj" nebo "jak se máš".
+      Příklad uvítací zprávy:
+      -> /filter "ahoj"
+      Ahoj <code>{first}</code>!
       %%%
-      Ooooh, <code>{first}</code> how are you?
+      Jak je <code>{first}</code>?
       %%%
-      Sup? <code>{first}</code>
+      Co je <code>{first}</code>?
+
   Greetings:
     help_msg: |-
-      Welcome new members to your groups or say Goodbye after they leave!
+      Vítejte nové členy ve skupinách nebo se rozlučte, když odejdou!
 
-      *Admin Commands: *
-      × /setwelcome `<reply/text>`: Nastaví uvítací text pro skupinu.
-      × /welcome `<yes/no/on/off>`: Povoluje nebo zakazuje úvodní nastavení pro skupinu.
-      × /resetwelcome: Resetuje úvodní zprávu na výchozí hodnotu.
-      × /setgoodbye `<reply/text>`: Deseje text sbohem pro skupinu.
-      × /sbohem `<yes/no/on/off>`: Povolí nebo zakáže nastavení sbohem pro skupinu.
-      × /resetgoodysbohem: Obnovuje se výchozí zpráva sbohem.
-      × /cleanservice `<yes/no/on/off>`: Odstraní všechny servisní zprávy, jako např. 'x připojil se k oznámení skupiny'.
-      × /cleanwelcome `<yes/no/on/off>`: Odstraní starou uvítací zprávu vždy, když se připojí nový člen.
-      × /autoapprove `<yes/no/on/off>`: Automaticky schválit všechny nové členy.
+      *Příkazy adminů:*
+      × /setwelcome `<reply/text>`: Nastaví uvítací zprávu.
+      × /welcome `<yes/no/on/off>`: Zapne/vypne uvítací zprávy.
+      × /resetwelcome: Obnoví výchozí uvítací zprávu.
+      × /setgoodbye `<reply/text>`: Nastaví rozlučkovou zprávu.
+      × /goodbye `<yes/no/on/off>`: Zapne/vypne rozlučkové zprávy.
+      × /cleanservice `<yes/no/on/off>`: Maže servisní zprávy (např. "X se připojil").
+      × /cleanwelcome `<yes/no/on/off>`: Maže předchozí uvítací zprávu při příchodu nového člena.
+      × /autoapprove `<yes/no/on/off>`: Automaticky schválí všechny nové členy.
+
   Help:
     About: |-
-      @%s je jedním z nejrychlejších a nejvíce obsazených funkcí správce skupiny.
+      @%s je jeden z nejrychlejších a nejfunkčnějších správců skupin.
 
-      Alita ✨ je vyvíjena a aktivně udržována produktem @DivideProjects!
+      Alita ✨ je vyvíjena a udržována @DivideProjects!
 
-      Alita byla online od roku 2020 a sloužila tisícům skupin se statisíci uživatelů!
+      Alita je online od roku 2020 a sloužila tisícům skupin se statisíci uživateli!
 
       <b>Proč Alita:</b>
-      -Jednoduché: Snadné použití a optimalizace s mnoha příkazy botů.
-      -Zajímavý: Mnoho funkcí, které ostatní správa skupiny roboty nemají.
-      -Rychle: Hádejte co? Není vyroben s použitím Pythonu, používáme <a href='https://go.dev/'>Go</a> jako náš hlavní programovací jazyk.
+      - Jednoduchá: Snadné použití a kompatibilita s mnoha příkazy.
+      - Funkční: Mnoho funkcí, které jiní správci nemají.
+      - Rychlá: Není v Pythonu, používáme <a href='https://go.dev/'>Go</a>.
 
       <b>Aktuální verze:</b> %s
     Configuration:
       Step-1: |-
         Vítejte v konfiguraci Ality
 
-        První věc, kterou je třeba udělat, je přidat Alitu ✨ do své skupiny! Chcete-li to provést, stiskněte tlačítko pod tlačítkem a vyberte skupinu, pak stiskněte tlačítko Hotovo, abyste pokračovali ve výukovém programu.
+        Nejprve přidejte Alitu ✨ do své skupiny! Stiskněte tlačítko níže, vyberte skupinu a pokračujte tlačítkem "Done".
       Step-2: |-
-        Ok, well done!
+        Skvělé!
 
-        Now to let me work correctly, you need to make me Admin of your Group!
-        To do that, follow this easy steps:
-        ▫️ Go to your group
-        ▫️ Press the Group's name
-        ▫️ Press Modify
-        ▫️ Press on Administrator
-        ▫️ Press Add Administrator
-        ▫️ Press the Magnifying Glass
-        ▫️ Search @%s
-        ▫️ Confirm
+        Pro správnou funkci mě nastavte jako admina:
+        ▫️ Přejděte do skupiny
+        ▫️ Klepněte na název skupiny
+        ▫️ Klepněte na Upravit
+        ▫️ Klepněte na Admini
+        ▫️ Klepněte na Přidat admina
+        ▫️ Klepněte na Lupa
+        ▫️ Vyhledejte @%s
+        ▫️ Potvrďte
       Step-3: |-
-        Vynikající!
-        Nyní je Bot připraven k použití!
-        Všechny příkazy mohou být použity s/nebo!
+        Výborně!
+        Bot je připraven k použití!
+        Všechny příkazy fungují s / nebo !
 
-        Pokud čelíte potížím při zakládání mě ve vaší skupině, tak neváhejte a přijďte do @DivideSupport.
-        Rádi bychom vám pomohli.
+        Pokud máte problémy, navštivte @DivideSupport.
+        Rádi pomůžeme.
     DonateText: |-
-      Takže ty chceš darovat? Úžasné!
-      Když darujete, všechny fondy jdou směrem k mému rozvoji, který dělá na rychlé a citlivé.
-      Váš dar by mi mohl také sehnat novou funkci nebo dvě věci, které jsem se nemohl dostat kvůli omezením serveru.
-      Veškerý fond by byl vložen do mé služby, jako je databáze, úložiště a hostování!
-      Můžete darovat, obraťte se na mého vlastníka zde: @DivideProjectsBot
+      Chcete přispět? Skvělé!
+      Vaše příspěvky podpoří můj vývoj pro rychlost a stabilitu.
+      Příspěvek může přinést nové funkce nedostupné kvůli omezením serverů.
+      Prostředky půjdou na databáze, úložiště a hosting!
+      Přispět můžete kontaktováním mého vlastníka: @DivideProjectsBot
+
   Locks:
     help_msg: |-
-      *Admin only *:
-      × /lock `<permission>`: Lock Chat permission ..
-      × /unlock `<permission>`: Odemknout oprávnění ke konverzaci.
-      × /locks: Zobrazit oprávnění ke konverzaci.
-      × /locktypes: Zkontrolujte dostupné typy uzamčení!
+      *Pouze admini:*
+      × /lock `<permission>`: Zamkne oprávnění v chatu.
+      × /unlock `<permission>`: Odemkne oprávnění v chatu.
+      × /locks: Zobrazí aktuální zámky.
+      × /locktypes: Zobrazí dostupné typy zámků!
 
-      Zámky mohou být použity k omezení uživatelů skupiny.
-      Uzamknutí adres URL způsobí automatické odstranění všech zpráv s použitím adres URL, zamknutí nálepek vymaže všechny nálepky atd.
-      Locking bots will stop non-admins from adding bots to the chat.
+      Zámky omezují uživatele:
+      Uzamčení URL smaže zprávy s odkazy, zamčení botů zabrání neadminům v přidávání botů.
 
-      ** Příklad:**
-      `/lock media `: toto zamkne všechny zprávy médií v konverzaci.
+      **Příklad:**
+      `/lock media`: zamkne všechny mediální zprávy.
+
   Languages:
     help_msg: |-
-      Není možné změnit jazyk botů?
-      Snadné změny pomocí tohoto modulu!
+      Nejde vám změnit jazyk bota?
+      Jednoduše změňte pomocí tohoto modulu!
 
-      Just type /lang a použít vloženou klávesnici pro výběr jazyka pro sebe nebo pro vaši skupinu.
+      Použijte /lang a vyberte si jazyk pro sebe nebo skupinu.
 
-      Můžete nám pomoci přinést více jazyků tím, že vám pomůže s [Crowdin](https: //crowdin.com/project/alita_robot)
+      Pomozte nám přeložit na [Crowdin](https://crowdin.com/project/alita_robot)
+
   Misc:
     help_msg: |-
-      × /info: Get your user info, can be used as reply or by passing a User Id or Username
-      × /id: Get the current group id. If used by replying to a message, get that user's id.
-      × /ping: Ping the Telegram Server!
-      × /paste: Paste texts at nekobin Server!
-      × /tr <lang code> <msg/reply to message>: Translate the message.
-      × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
+      × /info: Zobrazí vaše uživatelské info (odpověď/ID/username).
+      × /id: Zobrazí ID skupiny (nebo uživatele při odpovědi).
+      × /ping: Otestuje odezvu Telegram serveru.
+      × /paste: Vloží text na Nekobin server.
+      × /tr <lang code> <msg/reply>: Přeloží zprávu.
+      × /removebotkeyboard: Odstraní zaseklou bot klávesnici.
+      × /stat: Zobrazí počet zpráv v chatu.
+
   Mutes:
     help_msg: |-
-      Někdy mohou být uživatelé otravní a můžete je omezit odesláním zprávy na konverzaci, tento modul je zde pro nápovědu, můžete použít tento modul pro ztlumení členů ve vaší skupině.
+      Omezte otravné uživatele v posílání zpráv pomocí mute.
 
-      *Mute Commands: * (pouze Admin)
-      × /zmit <userhandle>: mutes a user, (via handle, or reply)
-      × /smute <userhandle>: mutes a user bezobslužně, neodesílá zprávu do skupiny a také vymaže váš příkaz. (via handle, or reply)
-      × /dmute <userhandle>: muts a user and delete the replied message .. (via handle, or reply)
-      × /tumit <userhandle> x (m/h/d): mutes a user for ` x ` time. (prostřednictvím popisovače nebo odpovědi). m = minuty, h = hodiny, d = dny.
-      × /untite <userhandle>: unmutes a user. (přes popisovač nebo odpověď)
+      *Příkazy mute (pouze admini):*
+      × /mute <userhandle>: Umčí uživatele. (přes handle, nebo odpověď)
+      × /smute <userhandle>: Potichu umčí uživatele, smaže váš příkaz. (přes handle, nebo odpověď)
+      × /dmute <userhandle>: Umčí uživatele a smaže odpověděnou zprávu. (přes handle, nebo odpověď)
+      × /tmute <userhandle> x(m/h/d): Umčí uživatele na `x` času. (přes handle, nebo odpověď). m = minuty, h = hodiny, d = dny.
+      × /unmute <userhandle>: Odmčí uživatele. (přes handle, nebo odpověď)
+
   Notes:
     help_msg: |-
-      Save data for future users with notes!
-      Notes are great to save random tidbits of information; a phone number, a nice gif, a funny picture-anything!
-      *User commands: *
-      -/get <notename>: Get a note.
+      Ukládejte data pro budoucí uživatele pomocí poznámek!
+      Poznámky jsou skvělé pro telefonní čísla, GIFy, obrázky - cokoliv!
+      *Příkazy uživatelů:*
+      - /get <notename>: Zobrazí poznámku.
       - #notename: Stejné jako /get.
-      Příkazy administrátora:
-      -/save <notename> <note text>: Uložení nové poznámky s názvem "word". Při odpovědi na zprávu dojde k uložení této zprávy. Even works on media!
-      -/clear <notename>: Delete the associated note.
-      -/notes: Vypsat všechny poznámky v aktuální konverzaci.
-      -/uloženo: Stejné jako /notes.
-      -/clearall: Odstranit VŠECHNY poznámky v konverzaci. Tuto operaci nelze vrátit zpět.
-      -/privatenotes: Určuje, zda mají být odeslány poznámky v PÚ. Odešle zprávu s tlačítkem, které uživatelé mohou klepnutím získat záznam v PÚ.
+
+      *Příkazy adminů:*
+      - /save <notename> <text>: Uloží novou poznámku. Odpověď na zprávu ji uloží (funguje i s médii).
+      - /clear <notename>: Smaže poznámku.
+      - /notes: Zobrazí všechny poznámky v chatu.
+      - /saved: Stejné jako /notes.
+      - /clearall: Smaže VŠECHNY poznámky v chatu. Nelze vrátit.
+      - /privatenotes: Odesílá poznámky do PM (s tlačítkem pro zobrazení).
+
   Pins:
     help_msg: |-
-      Všechny příkazy související s kolíkem zde naleznete; udržujte konverzaci aktuální na nejnovější zprávy s jednoduchou zafixovanou zprávou!
+      Všechny příkazy pro připínání zpráv! Udržujte chat aktuální připnutými zprávami.
 
-      *User commands: *
-      × /zafixovaný: Získat aktuální zafixovanou zprávu.
+      *Příkazy uživatelů:*
+      × /pinned: Zobrazí aktuální připnutou zprávu.
 
-      *Admin příkazy: *
-      × /pin: Připněte zprávu, na kterou jste odpověděli. Přidejte 'hlasitý' nebo 'oznámit', chcete-li odeslat oznámení členům skupiny.
-      × /fixed: Získá poslední zafixovanou zprávu v aktuální konverzaci.
-      × /permapin <text>: Zafixovat vlastní zprávu pomocí botů. Tato zpráva může obsahovat značky markadown, tlačítka a všechny ostatní cool funkce.
-      × /unpin: Zruší ukotvení aktuální zafixované zprávy. Pokud se použije jako odpověď, odpíjí odpověď na zprávu.
-      × /unpinall: Odpne všechny zafixované zprávy.
-      × /antichannelpin <yes/no/on/off>: Don't let telegram auto-pin propojených kanálů. Nejsou-li zadány žádné argumenty, zobrazí se aktuální nastavení.
-      × /cleanlinked <yes/no/on/off>: Odstraní zprávy odeslané propojeným kanálem.
-      Poznámka: Při použití antikanálových fixací se ujistěte, že jste použili příkaz /unpin, místo toho, abyste jej mohli ručně provést. Jinak bude stará zpráva znovu ukotvena, jakmile kanál odešle nějaké zprávy.
+      *Příkazy adminů:*
+      × /pin: Připne zprávu, na kterou odpovíte. Přidejte 'loud' nebo 'notify' pro upozornění členů.
+      × /pinned: Zobrazí poslední připnutou zprávu.
+      × /permapin <text>: Připne vlastní zprávu přes bota (podporuje markdown, tlačítka).
+      × /unpin: Odepne aktuální zprávu (nebo odpověď).
+      × /unpinall: Odepne všechny připnuté zprávy.
+      × /antichannelpin <yes/no/on/off>: Zabrání automatickému připínání propojených kanálů.
+      × /cleanlinked <yes/no/on/off>: Maše zprávy z propojených kanálů.
+
+      Poznámka: Při antichannelpin vždy použijte /unpin, ne ruční odepnutí.
+
   Purges:
     help_msg: |-
-      *Admin pouze: *
-      -/purge: odstraní všechny zprávy mezi touto zprávou a zodpovězené zprávy.
-      -/del: Odstraní zprávu, na kterou jste odpověděli.
+      *Pouze admini:*
+      - /purge: Smaže zprávy mezi touto a odpověděnou zprávou.
+      - /del: Smaže zprávu, na kterou jste odpověděli.
 
-      *Examples*:
-      -Odstranit všechny zprávy z odpovědi na zprávu, až dosud.
-      -> `/purge `
+      *Příklady:*
+      - Smazat zprávy od odpovědi po současnost:
+      -> `/purge`
+
   Reports:
     help_msg: |-
-      Jsme všichni zaneprázdnění lidé, kteří nemají čas sledovat naše skupiny 24/7. Ale jak budete reagovat, když někdo ve vaší skupině je spamming?
+      Všichni jsme zaneprázdnění a nemůžeme sledovat skupiny 24/7. Jak reagovat na spam?
 
-      × /report `<reason>`: odpovědět na zprávu a nahlásit ji administrátorům.
-      - @admin: stejné jako /report, ale ne příkaz.
+      × /report `<reason>`: Nahlaste zprávu adminům (odpověď).
+      - @admin: Stejné jako /report (není příkaz).
 
-      *Admins *Admins: Pouze: *
-      × /reports `<on/off/yes/no>`: change report setting, or view current status.
-      -Pokud se provádí v PÚ, přepíná vaše postavení.
-      -Je-li ve skupině, přepíná se stav skupiny.
-      × /reports ` block ` (pouze odpovědí): Blokování uživatele pomocí /report nebo @admin.
-      × /reports ` unblock ` (pouze prostřednictvím odpovědi): Odblokujte uživatele pomocí /report nebo @admin.
-      × /reports ` showblocklist `: Zkontrolujte všechny blokované uživatele, kteří nemohou používat /report nebo @admin.
+      *Pouze admini:*
+      × /reports `<on/off/yes/no>`: Nastaví nebo zobrazí stav reportů.
+      - V PM: přepne váš stav.
+      - Ve skupině: přepne stav skupiny.
+      × /reports `block` (pouze odpověď): Zablokuje uživatele v reportech.
+      × /reports `unblock` (pouze odpověď): Odblokuje uživatele v reportech.
+      × /reports `showblocklist`: Zobrazí zablokované uživatele pro reporty.
 
-      Chcete-li nahlásit uživatele, jednoduše odpovídejte na jeho zprávu pomocí příkazu @admin nebo /report; Natalie poté odpoví zprávou uvádějící, že správci byli upozorněni.
-      Musíte odpovědět na zprávu a nahlásit uživatele; nemůžete jen použít @admin pro značku admins bez důvodu!
+      Pro nahlášení odpovězte na zprávu s @admin nebo /report.
+      MUSÍTE odpovědět na zprávu! Nemůžete jen tak označit adminy.
 
-      *NOTE: * Ani jedno z nich se nespustí, pokud se použijí administrátory.
+      *POZNÁMKA:* Adminy toto nespustí.
+
   Rules:
     help_msg: |-
-      Každá konverzace pracuje s různými pravidly; tento modul vám pomůže učinit tato pravidla jasnější!
-      *Uživatelské příkazy*:
-      × /rules: Zkontrolujte aktuální pravidla konverzace.
-      *Admin commands*:
-      × /setrules `<text>`: Nastavte pravidla pro tuto konverzaci.
-      × /privaterules `<yes/no/on/off>`: Povolí/zakáže, zda by měla být pravidla odesílána v soukromých.
-      × /resetrules: Resetování pravidel pro konverzaci na výchozí hodnotu
-      × /rulesbtn `<vlastní text>`: Nastaví text tlačítka pravidel.
-      × /resetrulesbutton: Obnoví text tlačítka pravidel na výchozí.
+      Každý chat má jiná pravidla. Tento modul je zpřehlední!
+
+      *Příkazy uživatelů:*
+      × /rules: Zobrazí pravidla chatu.
+
+      *Příkazy adminů:*
+      × /setrules `<text>`: Nastaví pravidla chatu.
+      × /privaterules `<yes/no/on/off>`: Zapne/vypne odesílání pravidel do PM.
+      × /resetrules: Obnoví výchozí pravidla.
+      × /rulesbtn `<custom text>`: Nastaví text tlačítka pravidel.
+      × /resetrulesbutton: Obnoví výchozí text tlačítka.
       × /resetrulesbtn: Stejné jako výše.
+
   Tagger:
     help_msg: |-
-      Tagger is an essential feature to mention all subscribed members in the group.
-      Any chat members can subscribe to tagger.
+      Tagger umožňuje zmínit všechny odebírající členy skupiny.
+      Kdokoliv se může přihlásit k odběru tagů.
 
-      *User Commands:*
-      × /tagme: Allow user to be tagged
-      × /untagme: Disallow user to be tagged
+      *Příkazy uživatelů:*
+      × /tagme: Umožní vám být označován.
+      × /untagme: Zakáže vám být označován.
 
-      *Admin Commands:*
-      × /tagall: tag/mention all tagged users
-      × /untagall: clear all tagged members
-      × /addtag <user>: Add a user manually to taglist
-      × /rmtag <user>: Remove a user manually from taglist
+      *Příkazy adminů:*
+      × /tagall: Označí všechny přihlášené uživatele.
+      × /untagall: Smaže všechny přihlášené uživatele.
+      × /addtag <user>: Přidá uživatele ručně do seznamu.
+      × /rmtag <user>: Odebere uživatele ručně ze seznamu.
+
   Warns:
     help_msg: |-
-      Keep your members in check with warnings; stop them getting out of control!
-      If you're looking for automated warnings, read about the blacklist module!
+      Udržujte členy na uzdě s varováními!
+      Pro automatická varování použijte blacklist modul.
 
-      *Admin Commands:*
-      - /warn <reason>: Warn a user.
-      - /dwarn <reason>: Warn a user by reply, and delete their message.
-      - /swarn <reason>: Silently warn a user, and delete your message.
-      - /warns: See a user's warnings.
-      - /rmwarn: Remove a user's latest warning.
-      - /resetwarn: Reset all of a user's warnings to 0.
-      - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-      - /warnings: Get the chat's warning settings.
-      - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-      - /setwarnlimit <number>: Set the number of warnings before users are punished.
+      *Příkazy adminů:*
+      - /warn <důvod>: Varuje uživatele.
+      - /dwarn <důvod>: Varuje uživatele (odpověď) a smaže jeho zprávu.
+      - /swarn <důvod>: Potichu varuje uživatele a smaže váš příkaz.
+      - /warns: Zobrazí varování uživatele.
+      - /rmwarn: Odstraní poslední varování uživatele.
+      - /resetwarn: Vynuluje všechna varování uživatele.
+      - /resetallwarns: Smaže všechna varování v chatu.
+      - /warnings: Zobrazí nastavení varování chatu.
+      - /setwarnmode <ban/kick/mute>: Nastaví akci po varováních.
+      - /setwarnlimit <číslo>: Nastaví počet varování před trestem.
 
-      *Examples*
-      - Warn a user.
-      -> `/warn @user For disobeying the rules`
+      *Příklady:*
+      - Varovat uživatele:
+      -> `/warn @user Za porušení pravidel`
+
   Utils:
     chat_status:
       user:
         no_permission_change_info_btn: |-
-          Nemáte oprávnění ke změně informací!!
+          Nemáte oprávnění měnit informace!
         no_permission_change_info_cmd: |-
           Nemáte oprávnění měnit informace v této skupině!
         no_permission_restrict_btn: |-
-          Nemáte oprávnění omezit členy!!
+          Nemáte oprávnění omezovat členy!
         no_permission_restrict_cmd: |-
-          Nemáte oprávnění omezit členy v této skupině!
+          Nemáte oprávnění omezovat členy v této skupině!
         no_permission_promote_btn: |-
-          Nemáte oprávnění pro povýšení/snížení úrovně členů!!
+          Nemáte oprávnění povyšovat/degradovat členy!
         no_permission_promote_cmd: |-
-          Sem nemůžete povyšovat nebo pominovat lidi! Ujistěte se, že máte příslušná práva!
+          Nemůžete zde povyšovat/degradovat! Ověřte svá oprávnění.
         no_permission_pin: |-
-          Sem nemůžete připnout zprávy! Ujistěte se, že jste administrátorem a mohou ukotvit zprávy.
+          Nemůžete připínat zprávy! Ověřte, že jste admin a máte oprávnění.
         no_permission_delete: |-
-          Nemáte oprávnění k odstranění zpráv!
+          Nemáte oprávnění mazat zprávy!
         require_admin_btn: |-
-          Chcete-li to provést, musíte být administrátorem.
+          Pro tuto akci musíte být admin!
         require_admin_cmd: |-
-          Tento příkaz mohou provádět pouze administrátoři!
+          Tento příkaz mohou provádět pouze admini!
         require_owner_btn: |-
-          Musíte být tvůrce skupiny, abyste to udělali!
+          Musíte být tvůrce skupiny!
         require_owner_cmd: |-
-          Pouze tvůrce skupiny to udělat!
+          Pouze tvůrce skupiny to může udělat!
       bot:
         no_permission_restrict: |-
-          Nemám oprávnění omezovat členy!!
+          Nemám oprávnění omezovat členy!
         no_permission_restrict_group: |-
-          Nemůžu tady omezovat lidi! Ujistěte se, že jsem administrátor a že mohu omezit další členy.
+          Nemohu omezovat lidi! Ověřte, že jsem admin a mám oprávnění.
         no_permission_promote: |-
-          Nemohu propagovat/demoliovat lidi zde! Ujistěte se, že jsem administrátor a že mohu jmenovat nové administrátory.
+          Nemohu povyšovat/degradovat! Ověřte, že jsem admin a můžu jmenovat adminy.
         no_permission_pin: |-
-          Já tu nemůžu přidržet zprávy! Ujistěte se, že jsem administrátor a že mohu přidržet zprávy.
+          Nemohu připínat zprávy! Ověřte, že jsem admin a mám oprávnění.
         no_permission_delete: |-
-          K odstranění zpráv nemám oprávnění!
+          Nemám oprávnění mazat zprávy!
         require_admin: |-
-          Já nejsem správce! Ujistěte se, že jsem administrátor a že máte příslušná oprávnění.
+          Nejsem admin! Ověřte, že jsem admin a mám potřebná oprávnění.
       require_private: |-
-        Tento příkaz je proveden pro PÚ, ne skupinovou konverzaci!
+        Tento příkaz je pro soukromé zprávy, ne pro skupiny!
       require_group: |-
-        Tento příkaz je určen pro použití ve skupinových konverzacích, ne v pm!
+        Tento příkaz je pro skupinové chaty, ne pro PM!
       anon_admin_string: |-
-        Vypadá to, že jsi anonymní. Ťuknutím na toto tlačítko potvrdíte svou totožnost.
+        Vypadá to, že jste anonymní. Klepnutím potvrďte svou identitu.
       anon_admin_btn: |-
-        Klepnutím zobrazíte administrátora
+        Potvrdit identitu
     extraction:
       extract_chat:
         badrequest_failed_getchat: |-
-          Nezdařilo se připojit ke konverzaci: nezdařilo se získat konverzaci: nelze provést getChat: Chybný požadavek: Konverzace nebyla nalezena
+          Selhalo připojení k chatu: nelze získat chat: Bad Request: chat nebyl nalezen
         fail_need_chat_id: |-
-          Očekával jsem ID konverzace, ale toto není platné celé číslo
+          Očekával jsem ID chatu, ale toto není platné číslo.
         fail_need_chat: |-
-          Potřebuji ID konverzace, ke které se chcete připojit!
+          Potřebuji ID chatu pro připojení!
       extract_user:
         no_user_found: |-
-          Nebyl nalezen uživatel s tímto názvem; jste si jisti, že jsem je již viděl?
+          Uživatel nenalezen; jste si jisti, že jsem ho viděl?
         badrequest_failed_getchatmember: |-
-          Nezdařilo se získat uživatele: nelze provést getChatMember: špatný požadavek: konverzace nebyla nalezena
+          Selhalo získání uživatele: nelze getChatMember: Bad Request: chat nebyl nalezen
     string_handling:
       extract_time:
         invalid_time_amount: |-
-          Byla zadána neplatná časová hodnota.
+          Neplatná časová hodnota.
         invalid_time_type: |-
-          Byl zadán neplatný časový typ. Očekává se m, h, nebo d: %s
+          Neplatný časový typ. Očekáváno m, h, nebo d, obdrženo: %s

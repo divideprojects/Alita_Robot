@@ -42,7 +42,7 @@ strings:
       is_admin: |-
         Această persoană nu este administrator, cum aș putea să o retrogradez?
       is_bot_itself: |-
-        Nu mă pot retrograde pe mine însumi, du-te să găsești persoana care m-a promovat!
+        Nu mă pot retrograda pe mine însumi.
       success_demote: |-
         L-am retrogradat cu succes pe %s!
     promote:
@@ -67,11 +67,11 @@ strings:
         Această persoană este deja administrator, cum aș putea să-i setez un titlu de administrator personalizat?
     errors:
       err_set_title: |-
-        Nu am reușit să setez titlul de administrator personalizat, numele titlului poate să nu fie corect sau să conțină emoji-uri.
+        Nu am reușit să setez titlul de administrator personalizat; Titlul poate să nu fie corect sau să conțină emoji-uri.
       err_cannot_demote: |-
-        Nu am putut retrograde. Poate că nu sunt administrator, sau statutul de administrator a fost acordat de un alt utilizator, așa că nu pot acționa asupra lor!
+        Nu am putut retrograda; Poate că nu sunt administrator, sau a fost promovat de un alt administrator.
       err_cannot_promote: |-
-        Nu am putut promova. Poate că nu sunt administrator, sau statutul de administrator a fost acordat de un alt utilizator, așa că nu pot acționa asupra lor!
+        Nu am putut promova; Poate că nu sunt administrator, sau a fost promovat de un alt administrator.
       title_empty: |-
         Trebuie să-mi dai un titlu de administrator ca să îl pot seta.
     help_msg: |-
@@ -81,16 +81,16 @@ strings:
       × /adminlist: Afișează administratorii din chat-ul curent.
 
       *Comenzi administrator:*
-      × /promote `<răspuns/nume utilizator/mențiune/id utilizator>`: Promovează un utilizator.
-      × /demote `<răspuns/nume utilizator/mențiune/id utilizator>`: Retrogradează un utilizator.
-      × /title `<răspuns/nume utilizator/mențiune/id utilizator>` `<titlu personalizat>`: Setează un titlu personalizat pentru utilizator
+      × /promote `<reply/username/mention/userid>`: Promovează un utilizator.
+      × /demote `<reply/username/mention/userid>`: Retrogradează un utilizator.
+      × /title `<reply/username/mention/userid>` `<custom title>`: Setează un titlu personalizat pentru utilizator
   Antiflood:
     checkflood:
       perform_action: |-
         Da, nu-mi place spam-ul tău. %s a fost %s!
     setflood:
       success: |-
-        Înțeles! Limita maximă de spam este <b>%d</b> mesaje.
+        Limita de spam a fost setată la <b>%d</b> mesaje.
       disabled: |-
         În regulă.
         Nu voi avertiza utilizatorii pentru spam.
@@ -101,22 +101,22 @@ strings:
         Acest chat aplică în prezent controlul spam-ului după %d mesaje. Orice utilizatori care trimit mai mult de atât vor fi %s.
     setfloodmode:
       success: |-
-        Înțeles! Modul de spam va fi %s.
+        Modul de spam a fost setat la %s.
       unknown_type: |-
         Tip necunoscut '%s'. Te rog să folosești unul dintre: ban/kick/mute
       specify_action: |-
         Trebuie să specifici o acțiune de întreprins la spam. Modurile curente sunt: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Am activat ștergerea mesajelor anti-spam. Mesajele care cauzează spam vor fi șterse!
+        Am activat ștergerea mesajelor anti-spam. Mesajele care cauzează anti-spam vor fi șterse!
       disabled: |-
-        Am dezactivat ștergerea mesajelor anti-spam. Mesajele care cauzează spam vor fi ignorate!
+        Am dezactivat ștergerea mesajelor anti-spam. Mesajele care cauzează anti-spam vor fi ignorate!
       invalid_option: |-
         Înțeleg doar o opțiune din: `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Ștergerea mesajelor anti-spam este în prezent *activată* în acest chat, mesajele care cauzează spam vor fi șterse!
+        Ștergerea mesajelor anti-spam este în prezent *activată* în acest chat, mesajele care cauzează anti-spam vor fi șterse!
       already_disabled: |-
-        Ștergerea mesajelor anti-spam este în prezent *dezactivată* în acest chat, mesajele care cauzează spam vor fi ignorate!
+        Ștergerea mesajelor anti-spam este în prezent *dezactivată* în acest chat, mesajele care cauzează anti-spam vor fi ignorate!
     errors:
       expected_args: |-
         Mă așteptam la niște argumente! Fie off, fie un număr întreg. ex: `/setflood 5`, sau `/setflood off`
@@ -127,20 +127,20 @@ strings:
     help_msg: |-
       Știți cum câteodată oamenii se alătură, trimit 100 de mesaje și îți ruinează chat-ul? Cu anti-spam, asta nu se mai întâmplă!
 
-      Anti-spam-ul vă permite să luați măsuri împotriva utilizatorilor care trimit mai mult de x mesaje consecutiv. Acțiunile sunt: ban/kick/mute/tban/tmute
+      Anti-spam-ul vă permite să luați măsuri împotriva utilizatorilor care trimit mai mult de x mesaje consecutiv. Acțiunile sunt: ban/kick/mute
 
       *Comenzi administrator:*
       × /flood: Obțineți setările curente anti-spam.
-      × /setflood `<număr/off/no>`: Setați numărul de mesaje după care să acționați asupra unui utilizator. Setați la '0', 'off', sau 'no' pentru a dezactiva.
-      × /setfloodmode `<tip acțiune>`: Alegeți ce acțiune să luați asupra unui utilizator care a fost spam. Opțiuni: ban/kick/mute/tban/tmute
+      × /setflood `<number/off/no>`: Setați numărul de mesaje după care să acționați asupra unui utilizator. Setați la '0', 'off', sau 'no' pentru a dezactiva.
+      × /setfloodmode `<action type>`: Alegeți ce acțiune să luați asupra unui utilizator care a fost spam. Opțiuni: ban/kick/mute
       × /delflood `<yes/no/on/off>`: Dacă doriți ca bot-ul să șteargă mesajele spam ale utilizatorului.
   Approvals:
     approve:
       is_bot_itself: |-
         M-ai aprobat deja făcându-mă administrator!
       user_approved: |-
-        Utilizator aprobat: %s
-        Acum sunt protejați de interziceri, liste negre, blocări și anti-spam!
+        Utilizator aprobat cu succes %s
+        De acum înainte, vor fi ignorați de la auto-ban-uri, liste negre, blocări și anti-spam.
       user_not_in_chat: |-
         Acest utilizator nu este în acest chat, cum îl pot aproba?
     unapprove:
@@ -148,23 +148,24 @@ strings:
         Sunt administrator, nu pot fi dezaprobat!
       user_unapproved: |-
         Utilizator dezaprobat: %s
-        Nu mai sunt protejați de interziceri, liste negre, blocări și anti-spam!
+        De acum înainte, vor fi observați pentru auto-ban-uri, liste negre, blocări și anti-spam.
     approval:
       is_admin: |-
-        %s este administrator, nu ai nevoie de aprobare.
+        %s este administrator, și nu are nevoie de aprobare.
       is_bot_itself: |-
-        Sunt administrator, nu am nevoie de aprobare.
+        Sunt administrator, și nu am nevoie de aprobare.
       is_approved: |-
         %s este un utilizator aprobat în <b>%s</b>
-        Sunt protejați de liste negre, blocări și anti-spam!
+        Sunt ignorați de la auto-ban-uri, liste negre, blocări și anti-spam.
 
-        <b>Aprobat de:</b> %s (<code>%d</code>)
+        <b>Aprobat de:</b> %s (<code>%d</code>)"
         <b>Timpul aprobării:</b> %s UTC
       is_unapproved: |-
         Nu ești aprobat în <b>%s</b>
-        Nu ești protejat de liste negre, blocări și anti-spam!
+        Vei fi observat pentru auto-ban-uri, liste negre, blocări și anti-spam.
     approved:
-      none_approved: "Niciun utilizator nu este aprobat în <b>%s</b>!"
+      none_approved: |-
+        Niciun utilizator nu este aprobat în <b>%s</b>!
       approved_list: |-
         Acești utilizatori sunt aprobați în <b>%s:</b>
         %s
@@ -198,60 +199,58 @@ strings:
   Bans:
     kick:
       user_not_in_chat: |-
-        Acest utilizator nu este în acest chat, cum îl pot da afară?
+        Acest utilizator nu este în acest chat, și cum am să-l restricționez?
       cannot_kick_admin: |-
-        De ce aș dăuna un administrator? Sună ca o idee destul de prostă.
+        De ce aș da afară un administrator? Asta sună ca o idee destul de proastă.
       is_bot_itself: |-
-        De ce aș dăuna pe mine însumi?
+        De ce m-aș da afară?
       kicked_user: |-
-        Încă unul a fost mâncat...!
-        Aș dăuna %s.
+        L-am dat afară cu succes pe %s.
       kicked_reason: "\n<b>Motiv:</b> %s"
     kickme:
       is_admin: |-
-        Ești administrator, ești blocat aici cu toții ceilalți!
+        Ești administrator, și ești blocat aici cu toți ceilalți!
       ok_out: |-
-        În regulă, ieși!
+        Conform dorinței tale, ieși!
     ban:
       is_admin: |-
-        De ce aș băna un administrator? Sună ca o idee destul de prostă.
+        De ce aș bana un administrator? Asta sună ca o idee destul de proastă.
       is_bot_itself: |-
-        Crezi că îți voi băna pe mine însumi?
+        Chiar crezi că mă voi bana?
       ban_reason: "\n<b>Motiv:</b> %s"
       tban: |-
-        Încă unul a fost mâncat...!
-        Aș bănat %s pentru %s
+        Bănat %s pentru %s
       normal_ban: |-
-        Încă unul a fost mâncat...!
-        Aș bănat %s.
+        Încă unul mușcă praful...!
+        Bănat %s.
       dban:
         no_reply: |-
-          Trebuie să răspunzi la un mesaj pentru a-l șterge și a-l băna pe utilizator!
+          Trebuie să răspunzi la un mesaj pentru a-l șterge și a-l bana pe utilizator!
     unban:
       is_admin: |-
-        De ce aș debloca un administrator? Sună ca o idee destul de prostă.
+        De ce aș debloca un administrator?
       is_bot_itself: |-
-        De ce aș debloca însumi când sunt deja aici?
+        De ce m-aș de-restricționa când sunt deja aici?
       unbanned_user: |-
-        Ok, sigur...!
-        Aș deblocat %s.
+        Să-i dăm o altă șansă.
+        Deblocat %s!
     help_msg: |-
-      Uneori, utilizatorii pot fi deranjați și ai putea dori să îi elimini din chat, acest modul vă ajută exact să le gestionați!
-      Bănați/ștergeți utilizatorii din chat-ul dumneavoastră și le deblocați mai târziu dacă se comportă bine.
+      Uneori, utilizatorii pot fi enervanți și ai putea dori să-i elimini din chat-ul tău, acest modul te ajută exact să te descurci cu asta!
+      Bănează/șterge utilizatori din chat-ul tău și deblochează-i mai târziu dacă se comportă bine.
 
       *Comenzi utilizator:*
       × /kickme: șterge utilizatorul care a emis comanda.
 
       *Comenzi Bănire* (Doar administrator):
-      × /ban <userhandle>: bănați un utilizator. (prin handle, sau răspuns)
-      × /sban <userhandle>: bănați un utilizator în silence, nu trimite mesaj în grup și șterge și comanda dumneavoastră. (prin handle, sau răspuns)
-      × /dban <userhandle>: bănați un utilizator și ștergeți mesajul răspuns. (prin handle, sau răspuns)
-      × /tban <userhandle> x(m/h/d): bănați un utilizator pentru `x` timp. (prin handle, sau răspuns). m = minute, h = ore, d = zile.
-      × /unban <userhandle>: deblocați un utilizator. (prin handle, sau răspuns)
+      × /ban <userhandle>: bănează un utilizator. (prin handle, sau răspuns)
+      × /sban <userhandle>: bănează un utilizator în tăcere, nu trimite mesaj în grup și șterge și comanda ta. (prin handle, sau răspuns)
+      × /dban <userhandle>: bănează un utilizator și șterge mesajul răspuns. (prin handle, sau răspuns)
+      × /tban <userhandle> x(m/h/d): bănează un utilizator pentru `x` timp. (prin handle, sau răspuns). m = minute, h = ore, d = zile.
+      × /unban <userhandle>: deblochează un utilizator. (prin handle, sau răspuns)
 
-      *Comenzi Restrict* (Doar administrator):
-      × /restrict: Afișează un InlineKeyboard pentru a alege opțiuni de la bănire, bănire și tăiere
-      × /unrestrict: Afișează un InlineKeyboard pentru a alege opțiuni de la tăiere și deblocare.
+      *Comenzi Restricție:* (Doar administrator)
+      × /restrict: Afișează o tastatură inline pentru a alege opțiuni de la ștergere, banare și mutare
+      × /unrestrict: Afișează o tastatură inline pentru a alege opțiuni de la mutare și deblocare.
   Blacklists:
     blacklist:
       give_bl_word: |-
@@ -259,14 +258,14 @@ strings:
       already_blacklisted: |-
         Aceste cuvinte sunt deja în lista neagră:
       added_bl: |-
-        Am adăugat aceste cuvinte în lista neagră:
+        Am adăugat aceste cuvinte ca liste negre:
     unblacklist:
       give_bl_word: |-
         Te rog să-mi dai un cuvânt pentru a-l elimina din lista neagră!
       no_removed_bl: |-
-        Niciun cuvânt dintre cele date nu a fost în lista neagră care să poată fi eliminat
+        Niciunul dintre cuvintele date nu a fost pe lista neagră care poate fi eliminat!
       removed_bl: |-
-        Am eliminat '%s' din cuvintele în lista neagră!
+        Am eliminat cu succes '%s' din cuvintele de pe lista neagră!
     ls_bl:
       no_blacklisted: |-
         Nu există cuvinte în lista neagră în acest chat.
@@ -274,11 +273,11 @@ strings:
         Aceste cuvinte sunt în lista neagră în acest chat:
     set_bl_action:
       current_mode: |-
-        Modul curent de lista neagră este: %s
+        Modul curent de listă neagră pentru acest chat este: %s
       changed_mode: |-
-        Am schimbat modul de lista neagră la: *%s*
+        Am schimbat cu succes modul de listă neagră la: *%s*
       choose_correct_option: |-
-        Te rog să alegi o opțiune între <tăiere/ștergere/bănire/avertisment/none>
+        Te rog să alegi o opțiune dintre <mute/kick/ban/warn/none>
     rm_all_bl:
       ask: |-
         Ești sigur că vrei să elimini toate cuvintele în lista neagră din acest chat?
@@ -289,52 +288,52 @@ strings:
           Am anulat eliminarea tuturor listelor negre din acest chat ❌
     bl_watcher:
       muted_user: |-
-        Aș tăia %s din cauza %s
+        Mutat %s din cauza %s
       banned_user: |-
-        Aș bănat %s din cauza %s
+        Bănat %s din cauza %s
       kicked_user: |-
-        Aș șterge %s din cauza %s
+        Dat afară %s din cauza %s
     help_msg: |-
       *Comenzi utilizator:*
-      × /blacklists: Verificați toate listele de blacklist din chat.
+      × /blacklists: Verifică toate listele negre din chat.
 
       *Comenzi administrator:*
-      × /addlist `<trigger>`: Blacklists the word in the current chat.
-      × /rmlist `<trigger>`: Înlătură cuvântul din Cuvintele Blacklistate curente în Chat.
-      × /blaction `<mute/kick/ban/warn/none>`: Setează acțiunea de a fi realizată de bot atunci când este detectat un cuvânt de listă neagră.
-      × /blacklistaction: La fel ca mai sus de
+      × /addblacklist `<trigger>`: Pune cuvântul în lista neagră în chat-ul curent.
+      × /rmblacklist `<trigger>`: Elimină cuvântul din Cuvintele Blacklistate curente în Chat.
+      × /blaction `<mute/kick/ban/warn/none>`: Setează acțiunea de a fi efectuată de bot atunci când este detectat un cuvânt din lista neagră.
+      × /blacklistaction: Același ca mai sus
 
       *Doar proprietar:*
-      × /remallbl: Înlătură toate cuvintele cheie din chat de la chat
+      × /remallbl: Elimină toate cuvintele din lista neagră din chat
 
       *Notă:*
-      Modul implicit pentru Blacklist este * none*, care va șterge doar mesajele de pe chat.
+      Modul implicit pentru Lista Neagră este *none*, care va șterge doar mesajele din chat.
   Connections:
     connected: |-
-      Ești conectat acum la <b>%s</b>
+      Ești conectat acum la <b>%s</b>!
     not_connected: |-
       Nu ești conectat la niciun chat.
     allow_connect:
       turned_on: |-
         Am activat <b>conectarea utilizatorilor</b> la acest chat!
-        Utilizatorii pot acum conecta chat la PM-urile lor!
+        Utilizatorii pot acum conecta chat-ul la PM-urile lor!
       turned_off: |-
         Am dezactivat <b>conectarea utilizatorilor</b> la acest chat!
-        Utilizatorii nu pot conecta chat la PM-urile lor!
+        Utilizatorii nu pot conecta chat-ul la PM-urile lor!
       currently_on: |-
         Conectarea utilizatorilor este în prezent <b>activă</b>.
         Utilizatorii pot conecta acest chat la PM-urile lor!
       currently_off: |-
-        Conectarea utilizatorilor este în prezent <b>dezactivă</b>.
+        Conectarea utilizatorilor este în prezent <b>dezactivată</b>.
         Utilizatorii nu pot conecta acest chat la PM-urile lor!
     connect:
       connection_disabled: |-
-        Conectarea utilizatorilor este în prezent <b>dezactivă</b> la acest chat.
-        Te rog să întrebi administratorii pentru a-mi permite să te conectez!
+        Conectarea utilizatorilor este în prezent <b>dezactivată</b> la acest chat.
+        Te rog să întrebi administratorii să permită conectarea!
       connected: |-
         Ești acum conectat la <b>%s</b>!
       tap_btn_connect: |-
-        Te rog să apăsești butonul de mai jos pentru a conecta acest chat la PM
+        Te rog să apeși butonul de mai jos pentru a conecta acest chat la PM.
     connections_btns:
       admin_conn_cmds: |-
         Comenzi administrator disponibile:%s
@@ -342,12 +341,12 @@ strings:
         Comenzi utilizator disponibile:%s
     disconnect:
       disconnected: |-
-        Te-ai deconectat de la chat conectat.
+        Te-ai deconectat cu succes de la chat-ul conectat.
       need_pm: |-
-        Trebuie să-ți trimiți acest lucru în PM pentru a te deconecta de la chat!
+        Trebuie să trimiți asta în PM către mine pentru a te deconecta de la chat!
     is_user_connected:
       need_group: |-
-        Această comandă este făcută pentru a fi folosită în chat-ul de grup, nu în PM!
+        Această comandă este făcută pentru a fi folosită în chat-urile de grup, nu în PM!
       bot_not_admin: |-
         Nu sunt administrator în acest chat!
       user_not_admin: |-
@@ -356,385 +355,386 @@ strings:
       reconnected: |-
         Ești acum reconectat la <b>%s</b>!
       no_last_chat: |-
-        Nu ai chat-ul de conectat pentru a te reconecta!
+        Nu ai un chat anterior la care să te reconectezi!
       need_pm: |-
         Trebuie să fii în PM cu mine pentru a te reconecta la un chat!
     help_msg: |-
-      Acesta vă permite să te conectezi la baza de date a unui chat și să-i adăugi lucruri fără ca chat-ul să știe despre el! Din motive evidente, ai nevoie să fii administrator pentru a adăuga lucruri; dar orice membru poate vedea datele tale. (utilizatorii bănați/șterși nu pot!)
+      Acest modul vă permite să vă conectați la baza de date a unui chat și să adăugați lucruri la ea fără ca chat-ul să știe despre asta! Din motive evidente, trebuie să fiți administrator pentru a adăuga lucruri; dar orice membru poate vizualiza datele dumneavoastră. (utilizatorii banați/expulzați nu pot!)
 
       *Comenzi:*
-      × /connect `<chatid>`: Conectați la chat specificat, vă permite să vedeți/editați conținutul.
-      × /disconnect: Deconectați de la chat curent.
-      × /reconnect: Reconectați la chat conectat anterior
-      × /connection: Vedeți informații despre chat conectat curent.
+      × /connect `<chatid>`: Conectați-vă la chat-ul specificat, permițându-vă să vizualizați/editați conținutul.
+      × /disconnect: Deconectați-vă de la chat-ul curent.
+      × /reconnect: Reconectați-vă la chat-ul conectat anterior
+      × /connection: Vedeți informații despre chat-ul conectat curent.
 
       *Comenzi administrator:*
-      × /allowconnect <yes/no>: Permite utilizatorilor să se conecteze la chat-uri sau nu.
+      × /allowconnect <yes/no>: Permiteți utilizatorilor să se conecteze la chat-uri sau nu.
 
-      Poți obține id-ul chat-ului folosind comanda /id în chat-ul tău. Nu ești surprins dacă id-ul este negativ; toate grupurile super au id-uri negative.
+      Puteți obține ID-ul chat-ului folosind comanda /id în chat-ul dumneavoastră. Nu fiți surprins dacă ID-ul este negativ; toate supergrupurile au ID-uri negative.
   Disabling:
     help_msg: |-
-      Acest lucru vă permite să dezactivați unele comenzi utilizate în mod obișnuit, astfel că nimeni nu le poate utiliza. Îl vă permite, de asemenea, să le ștergeți, oprind oamenii de la bluetexting.
+      Acest modul vă permite să dezactivați unele comenzi utilizate în mod obișnuit, astfel încât nimeni să nu le poată utiliza. De asemenea, vă va permite să le ștergeți automat, oprind oamenii de la "blue texting".
 
       *Comenzi administrator:*
-      × /disable `<commandname>`: Opriți utilizatorii din utilizarea commandname-ului în acest grup.
-      × /enable `<item name>`: Permite utilizatorilor să utilizeze commandname în acest grup.
-      × /disableble: Lista tuturor comenzilor dezabile.
-      × /disabledel `<yes/no/on/off>`: ștergeți comenzile cu dezactivare când sunt folosite de non-admins.
-      × /dezactivat: Lista comenzilor dezactivate din acest chat.
+      × /disable `<commandname>`: Oprește utilizatorii din utilizarea `commandname` în acest grup.
+      × /enable `<item name>`: Permite utilizatorilor să utilizeze `commandname` în acest grup.
+      × /disableable: Listează toate comenzile care pot fi dezactivate.
+      × /disabledel `<yes/no/on/off>`: Șterge comenzile dezactivate atunci când sunt utilizate de non-administratori.
+      × /disabled: Listează comenzile dezactivate în acest chat.
 
       Notă:
-      La dezactivarea unei comenzi, comanda devine dezactivată doar pentru non-admins. Toți administratorii pot utiliza în continuare acele comenzi.
-      Comenzilor dezactivate încă sunt accesibile prin caracteristica /connect. Dacă v-ar interesa să vedeți și acest lucru, permiteți-mă să știu în chat-ul de suport.
+      La dezactivarea unei comenzi, comanda se dezactivează doar pentru non-administratori. Toți administratorii pot utiliza în continuare acele comenzi.
+      Comenzile dezactivate sunt încă accesibile prin funcția /connect. Dacă ați fi interesați să vedeți și acest lucru dezactivat, anunțați-mă în chat-ul de suport.
   Filters:
     help_msg: |-
-      Filtrul este case insensitive; de fiecare dată când cineva spune cuvintele trigger ale tale, Alita va răspunde altceva! poate fi utilizat pentru a crea comenzi proprii, dacă este dorit.
+      Filtrele sunt insensibile la majuscule/minuscule; de fiecare dată când cineva spune cuvintele tale declanșatoare, Alita va răspunde altceva! Acesta poate fi folosit pentru a crea propriile comenzi, dacă se dorește.
 
       Comenzi:
-      - /filter <trigger> <reply>: De fiecare dată când cineva spune trigger, bot-ul va răspunde cu propoziția. Pentru filtrele cu mai multe cuvinte, quotează triggerul.
-      - /filters: List all chat filters.
-      - /stop <trigger>: Stop the bot from replying to trigger.
-      - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+      - /filter <trigger> <reply>: De fiecare dată când cineva spune trigger, botul va răspunde cu propoziția. Pentru filtrele cu mai multe cuvinte, pune triggerul între ghilimele.
+      - /filters: Listează toate filtrele chat-ului.
+      - /stop <trigger>: Oprește botul să răspundă la trigger.
+      - /stopall: Oprește TOATE filtrele din chat-ul curent. Această acțiune nu poate fi anulată.
 
       Exemple:
-      - Set a filter:
-      -> /filter hello Hello there! How are you?
-      - Set a multiword filter:
-      -> /filter hello friend Hello back! Long time no see!
-      - Set a filter that can only be used by admins:
-      -> /filter example This filter wont happen if a normal user says it {admin}
+      - Setează un filtru:
+      -> /filter hello Salut! Ce mai faci?
+      - Setează un filtru multi-cuvânt:
+      -> /filter hello friend Salut din nou! Nu te-am mai văzut de mult!
+      - Setează un filtru care poate fi folosit doar de administratori:
+      -> /filter example Acest filtru nu se va întâmpla dacă un utilizator normal îl spune {admin}
       - Pentru a salva un fișier, imagine, gif sau orice alt atașament, pur și simplu răspunde la fișier cu:
       -> /filter trigger
   Formatting:
     help_msg: |-
-      Alita susține un număr mare de opțiuni de formatare pentru a face mesajele tale mai expresive. Ia o privire făcând clic pe butoanele de mai jos!
+      Alita suportă un număr mare de opțiuni de formatare pentru a face mesajele tale mai expresive. Aruncă o privire făcând clic pe butoanele de mai jos!
     Markdown: |-
-      <b>Markdown Formatting</b>
+      <b>Formatare Markdown</b>
 
-      Poți formatiza mesajul tău folosind <b>bold</b>, <i>italics</i>, <u>underline</u>, și multe altele. Mergi înainte și încearcă!
-      <b>Supported markdown</b>:
-      - <code>`code words`</code>: Backticks sunt utilizate pentru fonturi monospace. Arată ca: <code>code words</code>.
-      - <code>_italic words_</code>: Sublinierile sunt utilizate pentru fonturi italice. Arată ca: <i>italic words</i>.
-      - <code>*bold words*</code>: Asteriscuri sunt utilizate pentru fonturi bold. Arată ca: <b>bold words</b>.
-      - <code>~strikethrough~</code>: Tildurile sunt utilizate pentru strikethrough. Arată ca: <strike>strikethrough</strike>.
-      - <code>||spoiler||</code>: Duble bare verticale sunt utilizate pentru spoiler-uri. Arată ca: <tg-spoiler>Spoiler</tg-spoiler>.
-      - <code>```pre```</code>: Pentru a face formatatorul să ignore alte caractere de formatare din textul formatat cu '```', va fi ca: <code>**bold** | *bold*</code>.
-      - <code>__underline__</code>: Duble sublinieri sunt utilizate pentru sublinieri. Arată ca: underline. NOTĂ: Unele aplicații încearcă să fie inteligente și îl interpretează ca italic. În acest caz, încearcă să folosești formatarea încorporată din aplicația ta.
-      - <code>[hyperlink](example.com)</code>: Acesta este formatul utilizat pentru hyperlink-uri. Arată ca: <a href='https://example.com/'>hyperlink</a>.
-      - <code>[My Button](buttonurl://example.com)</code>: Acesta este formatul utilizat pentru crearea butoanelor. Acest exemplu va crea un buton numit "My button" care deschide <code>example.com</code> când este apăsat.
+      Poți formata mesajul tău folosind <b>aldin</b>, <i>italic</i>, <u>subliniat</u>, și multe altele. Mergi înainte și experimentează!
+      <b>Markdown suportat</b>:
+      - <code>`cuvinte cod`</code>: Backtick-urile sunt folosite pentru fonturi monospațiate. Arată ca: <code>cuvinte cod</code>.
+      - <code>_cuvinte italic_</code>: Sublinierile sunt folosite pentru fonturi italice. Arată ca: <i>cuvinte italic</i>.
+      - <code>*cuvinte aldin*</code>: Asteriscurile sunt folosite pentru fonturi aldine. Arată ca: <b>cuvinte aldin</b>.
+      - <code>~tăiat~</code>: Tildele sunt folosite pentru tăiere. Arată ca: <strike>tăiat</strike>.
+      - <code>||spoiler||</code>: Barele verticale duble sunt folosite pentru spoilere. Arată ca: <tg-spoiler>Spoiler</tg-spoiler>.
+      - <code>```pre```</code>: Pentru a face formatatorul să ignore alte caractere de formatare din textul formatat cu '```', va fi ca: <code>**aldin** | *aldin*</code>.
+      - <code>__subliniat__</code>: Sublinierile duble sunt folosite pentru subliniere. Arată ca: underline. NOTĂ: Unii clienți încearcă să fie inteligenți și o interpretează ca italic. În acest caz, încearcă să folosești formatarea încorporată a aplicației tale.
+      - <code>[hyperlink](example.com)</code>: Acesta este formatul folosit pentru hyperlink-uri. Arată ca: <a href='https://example.com/'>hyperlink</a>.
+      - <code>[Butonul Meu](buttonurl://example.com)</code>: Acesta este formatul folosit pentru crearea butoanelor. Acest exemplu va crea un buton numit "Butonul Meu" care deschide <code>example.com</code> când este apăsat.
 
-      Dacă ai vrea să trimiți butoane pe aceeași linie, folosește formatarea <code>:same</code>.
+      Dacă dorești să trimiți butoane pe același rând, folosește formatarea <code>:same</code>.
       <b>Exemplu:</b>
-      <code>[button 1](buttonurl:example.com)</code>
-      <code>[button 2](buttonurl://example.com:same)</code>
-      <code>[button 3](buttonurl://example.com)</code>
-      Acesta va arăta butonul 1 și 2 pe aceeași linie, cu 3 sub el.
+      <code>[buton 1](buttonurl:example.com)</code>
+      <code>[buton 2](buttonurl://example.com:same)</code>
+      <code>[buton 3](buttonurl://example.com)</code>
+      Aceasta va afișa butoanele 1 și 2 pe aceeași linie, cu 3 dedesubt.
     Fillings: |-
-      <b>Fillings</b>
+      <b>Completări</b>
 
-      Poți, de asemenea, să personalizezi conținutul mesajului cu date contextului. De exemplu, ai putea menționa un utilizator după nume în mesajul de bun venit, sau în filtru!
-      Poți folosi acestea pentru a menționa un utilizator în note!
+      Poți, de asemenea, să personalizezi conținutul mesajului cu date contextuale. De exemplu, ai putea menționa un utilizator după nume în mesajul de bun venit, sau să-l menționezi într-un filtru!
+      Poți folosi acestea pentru a menționa un utilizator și în note!
 
-      <b>Supported fillings:</b>
-      - <code>{first}</code>: Numele primului utilizator.
-      - <code>{last}</code>: Numele ultimului utilizator.
+      <b>Completări suportate:</b>
+      - <code>{first}</code>: Primul nume al utilizatorului.
+      - <code>{last}</code>: Ultimul nume al utilizatorului.
       - <code>{fullname}</code>: Numele complet al utilizatorului.
-      - <code>{username}</code>: Numele de utilizator al utilizatorului. Dacă nu au unul, menționează utilizatorul în loc.
-      - <code>{mention}</code>: Menționează utilizatorul cu primul nume.
+      - <code>{username}</code>: Numele de utilizator al utilizatorului. Dacă nu are unul, menționează utilizatorul în loc.
+      - <code>{mention}</code>: Menționează utilizatorul cu prenumele său.
       - <code>{id}</code>: ID-ul utilizatorului.
       - <code>{chatname}</code>: Numele chat-ului.
-      - <code>{rules}</code>: Adaugă butonul de reguli la mesaj.
+      - <code>{rules}</code>: Adaugă butonul de Reguli la Mesaj.
       - <code>{protect}</code>: Protejează conținutul de la partajare.
       - <code>{preview}</code>: Activează previzualizările în mesaje.
       - <code>{nonotif}</code>: Dezactivează notificarea pentru acel mesaj.
     Random: |-
-      <b>Random Content</b>
+      <b>Conținut Aleatoriu</b>
 
-      Altceva ce poate fi amuzant, este să randomizezi conținutul unui mesaj. Fă lucrurile mai personale schimbând mesajele de bun venit, sau schimbând note!
-      Cum să folosești conținut random:
-      - %%%: Acest separator poate fi utilizat pentru a adăuga răspunsuri random la bot.
-      Pentru exemplu:
-      <code>hello
+      Un alt lucru care poate fi distractiv este să randomizezi conținutul unui mesaj. Fă lucrurile puțin mai personale schimbând mesajele de bun venit, sau schimbând note!
+      Cum să folosești conținut aleatoriu:
+      - %%%: Acest separator poate fi utilizat pentru a adăuga răspunsuri aleatorii la bot.
+      De exemplu:
+      <code>salut
       %%%
-      how are you</code>
-      Acesta va alege între trimiterea primului mesaj, "hello", sau al doilea mesaj, "how are you".
-      Folosește acest lucru pentru a face Alita să se simtă puțin mai personalizată! (doar funcționează în filtre/note)
-      Exemplu mesaj de bun venit:
-      - De fiecare dată când un nou utilizator se alătură, îi vor fi prezentate una dintre cele trei mesaje afișate aici.
+      ce mai faci</code>
+      Acesta va alege aleatoriu între a trimite primul mesaj, "salut", sau al doilea mesaj, "ce mai faci".
+      Folosește asta pentru a face Alita să se simtă puțin mai personalizată! (funcționează doar în filtre/note)
+      Exemplu de mesaj de bun venit:
+      - De fiecare dată când un nou utilizator se alătură, i se va prezenta unul dintre cele trei mesaje afișate aici.
       -> /filter "hey"
-      hello there <code>{first}</code>!
+      salut acolo <code>{first}</code>!
       %%%
-      Ooooh, <code>{first}</code> how are you?
+      Ooooh, <code>{first}</code> ce mai faci?
       %%%
-      Sup? <code>{first}</code>
+      Ce faci? <code>{first}</code>
   Greetings:
     help_msg: |-
-      Bun venit noi membri în grupurile dvs. sau să spuneți Goodbye după ce pleacă!
+      Bun venit noi membri în grupurile tale sau spune „La revedere” după ce părăsesc!
 
       *Comenzi administrator:*
-      × /setwelcome `<răspuns/text>`: Setează textul de bun venit pentru grup.
-      × /welcome `<yes/no/on/off>`: Activează sau dezactivează setarea pentru grup.
+      × /setwelcome `<reply/text>`: Setează textul de bun venit pentru grup.
+      × /welcome `<yes/no/on/off>`: Activează sau dezactivează setarea de bun venit pentru grup.
       × /resetwelcome: Resetează mesajul de bun venit la valoarea implicită.
-      × /setGoodbye `<răspuns/text>`: Setează textul de la revedere pentru grup.
-      × /Goodbye `<yes/no/on/off>`: Activează sau dezactivează setarea la revedere pentru grup.
-      × /resetGoodbye: Resetează mesajul de la revedere în mod implicit.
-      × /cleanservice `<yes/no/on/off>`: ștergerea tuturor mesajelor de serviciu, cum ar fi ' x, s-a alăturat notificării grupului.
-      × /cleanwelcome `<yes/no/on/off>`: ștergeți mesajul vechi de bun venit, de fiecare dată când un nou membru se alătură.
+      × /setgoodbye `<reply/text>`: Setează textul de la revedere pentru grup.
+      × /goodbye `<yes/no/on/off>`: Activează sau dezactivează setarea de la revedere pentru grup.
+      × /resetgoodbye: Resetează mesajul de la revedere la valoarea implicită.
+      × /cleanservice `<yes/no/on/off>`: Șterge toate mesajele de serviciu, cum ar fi notificarea „x a intrat în grup”.
+      × /cleanwelcome `<yes/no/on/off>`: Șterge mesajul vechi de bun venit, de fiecare dată când un nou membru se alătură.
       × /autoapprove `<yes/no/on/off>`: Aprobă automat toți membrii noi.
   Help:
     About: |-
-      @%s este unul dintre cele mai rapide și mai multe caracteristici manager de grup.
+      @%s este unul dintre cei mai rapizi și mai dotați manageri de grup.
 
-      Alita ✨ este dezvoltat și întreținut activ de @DivideProjects!
+      Alita ✨ este dezvoltată și întreținută activ de @DivideProjects!
 
-      Alita a fost online din 2020 și au servit mii de grupuri cu sute de mii de utilizatori!
+      Alita este online din 2020 și a servit mii de grupuri cu sute de mii de utilizatori!
 
       <b>De ce Alita:</b>
-      -Simplu: Usor de utilizat și compatibil cu multe comenzi bot.
-      -Featured: Multe caracteristici pe care alte bote de management de grup nu le au.
-      -Fast: Guess what? Nu este făcut folosind Python, folosim <a href='https://go.dev/'>Go</a> ca limba noastră de programare de bază.
+      -Simplu: Utilizare ușoară și compatibil cu multe comenzi de bot.
+      -Dotat: Multe caracteristici pe care alte boturi de management de grup nu le au.
+      -Rapid: Ghici ce? Nu este făcută folosind Python, folosim <a href='[https://go.dev/](https://go.dev/)'>Go</a> ca limbaj de programare de bază.
 
       <b>Versiune curentă:</b> %s
     Configuration:
       Step-1: |-
-        Bun venit la Alita Configuration
+        Bun venit la Configurarea Alita
 
-        Primul lucru de făcut este să adăugați Alita ✨ la grupul dvs! Pentru a face asta, apăsați butonul de sub și selectați grupul dumneavoastră, apoi apăsați Gata pentru a continua îndrumarul ..
+        Primul lucru de făcut este să adaugi Alita ✨ în grupul tău! Pentru a face asta, apasă butonul de jos și selectează grupul tău, apoi apasă Gata pentru a continua tutorialul.
       Step-2: |-
-        Ok, bun făcut!
+        Ok, bine făcut!
 
-        Acum să mă lăs să lucrez corect, trebuie să mă faci Admin din Grupul tău!
-        Să faci asta, urmați acești pași ușori:
+        Acum, pentru a mă lăsa să lucrez corect, trebuie să mă faci administratorul grupului tău!
+        Pentru a face asta, urmează acești pași simpli:
         ▫️ Mergi la grupul tău
-        ▫️ Presa numele Grupului
-        ▫️ Comunicat de presă
-        ▫️ Presa pe Administrator
-        ▫️ Presa Add Administrator
-        ▫️ Presa Lupă
-        ▫️ Căutare @%s
-        ▫️ Confirmare
+        ▫️ Apasă numele grupului
+        ▫️ Apasă Modifică
+        ▫️ Apasă pe Administrator
+        ▫️ Apasă Adaugă Administrator
+        ▫️ Apasă Lupa
+        ▫️ Caută @%s
+        ▫️ Confirmă
       Step-3: |-
         Excelent!
         Acum botul este gata de utilizare!
-        Toate comenzile pot fi folosite cu/sau!
+        Toate comenzile pot fi folosite cu / sau !
 
-        Dacă te confrunti cu orice dificultăți în a te stabili în grupul tău, așa că nu ezita să vii în @DivideSupport.
-        Ne-am iubi pentru a te ajuta.
+        Dacă întâmpini dificultăți în configurarea mea în grupul tău, nu ezita să vii în @DivideSupport.
+        Ne-ar plăcea să te ajutăm.
     DonateText: |-
       Deci vrei să donezi? Uimitor!
-      Când donezi, tot fondul merge spre dezvoltarea mea, care face pe rapid și receptiv.
-      Donatiei tale ar putea, de asemenea, să mă primească o nouă caracteristică sau două, pe care nu am fost în măsură să o primesc din cauza limitărilor de server.
-      Tot fondul ar fi pus în serviciile mele cum ar fi baza de date, depozitare și hosting!
-      Poți dona contactarea proprietarului meu aici: @DivideProjectsBot
+      Când donezi, toate fondurile merg spre dezvoltarea mea, ceea ce mă face rapid și receptiv.
+      Donația ta ar putea, de asemenea, să-mi aducă o nouă funcționalitate sau două, pe care nu le-am putut obține din cauza limitărilor serverului.
+      Toate fondurile ar fi investite în serviciile mele, cum ar fi baza de date, stocarea și găzduirea!
+      Poți dona contactând proprietarul meu aici: @DivideProjectsBot
   Locks:
     help_msg: |-
       *Doar administrator:*
-      × /lock `<permission>`: Blocare permisiune de chat ..
-      × /deblocare `<permission>`: Unlock Chat permission.
-      × /blocks: Vizualizare permisiune de Chat.
-      × /locktypes: Verificați tipurile de blocare disponibile!
+      × /lock `<permission>`: Blochează permisiunea de chat.
+      × /unlock `<permission>`: Deblochează permisiunea de chat.
+      × /locks: Vezi permisiunile de chat.
+      × /locktypes: Verifică tipurile de blocare disponibile!
 
-      Locațiile pot fi utilizate pentru a restricționa utilizatorii unui grup.
-      Url-urile de blocare vor auto-șterge toate mesajele cu url-uri, autocolantele de blocare vor șterge toate abțibildurile, etc.
-      Roboții de blocare se vor opri non-adminii de la adăugarea de boți la chat.
+      Blocările pot fi utilizate pentru a restricționa utilizatorii unui grup.
+      Blocarea URL-urilor va șterge automat toate mesajele cu URL-uri, blocarea stickere-lor va șterge toate stickere-le, etc.
+      Blocarea boților va opri non-administratorii să adauge boți în chat.
 
-      ** Exemplu:**
-      E//lock media `: aceasta blochează toate mesajele de mediu din chat.
+      **Exemplu:**
+      `/lock media`: aceasta blochează toate mesajele media din chat.
   Languages:
     help_msg: |-
-      Nu se poate schimba limba de bot?
-      Schimbați ușor prin utilizarea acestui modul!
+      Nu poți schimba limba botului?
+      Schimbă ușor folosind acest modul!
 
-      Doar tastați /lang și folosiți tastatura inline pentru a alege o limbă pentru dumneavoastră sau pentru grupul dumneavoastră.
+      Doar tastează /lang și folosește tastatura inline pentru a alege o limbă pentru tine sau pentru grupul tău.
 
-      Ne puteti ajuta să aducem bot la mai multe limbi ajutandu-ne la [Crowdin](https: //crowdin.com/project/alita_robot)
+      Ne poți ajuta să aducem botul în mai multe limbi, ajutând pe [Crowdin](https://crowdin.com/project/alita_robot)
   Misc:
     help_msg: |-
-      × /info: Get your user info, can be used as reply or by passing a User Id or Username.
-      × /id: Get the current group id. If used by replying to a message, get that user's id.
-      × /ping: Ping the Telegram Server!
-      × /paste: Paste texts at nekobin Server!
-      × /tr <lang code> <msg/reply to message>: Translate the message.
-      × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
-      × /stat: Gets the count of total number of messages in chat.
+      × /info: Obțineți informațiile de utilizator, pot fi folosite ca răspuns sau prin introducerea unui ID de utilizator sau a unui nume de utilizator.
+      × /id: Obțineți ID-ul grupului curent. Dacă este folosit ca răspuns la un mesaj, obțineți ID-ul utilizatorului respectiv.
+      × /ping: Trimite un ping serverului Telegram!
+      × /paste: Lipește texte pe serverul nekobin!
+      × /tr <lang code> <msg/reply to message>: Traduce mesajul.
+      × /removebotkeyboard: Elimină tastatura blocată a botului din chatul tău.
+      × /stat: Obține numărul total de mesaje din chat.
   Mutes:
     help_msg: |-
-      Uneori utilizatorii pot fi supărători și ați putea dori să le restricționați de la trimiterea mesajului la chat, acest modul este aici pentru a vă ajuta, puteți utiliza modul ths pentru a muta membrii în grupul dumneavoastră.
+      Uneori utilizatorii pot fi enervanți și ați putea dori să îi restricționați să trimită mesaje în chat, acest modul este aici pentru a vă ajuta, puteți utiliza acest modul pentru a mutați membrii în grupul dumneavoastră.
 
-      *Comenzi mute:* (Doar administrator)
-      × /mut <userhandle>: mută un utilizator, (prin mâner, sau răspuns)
-      × /smut <userhandle>: mută un utilizator în silence, nu trimite mesaj pentru a grupa și de asemenea șterge comanda dumneavoastră. (prin mâner, sau răspuns)
-      × /dmut <userhandle>: mută un utilizator și șterge mesajul răspuns .. (prin mâner, sau răspuns)
-      × /tmut <userhandle> x (m/h/d): mută un utilizator pentru ` x ` time. (prin mâner sau răspuns). m = minute, h = ore, d = zile.
-      × /unamumut <userhandle>: unmoutes un user. (prin mâner sau răspuns)
+      *Comenzi mutare:* (Doar administrator)
+      × /mute <userhandle>: mută un utilizator, (prin handle, sau răspuns)
+      × /smute <userhandle>: mută un utilizator în tăcere, nu trimite un mesaj grupului și șterge și comanda dumneavoastră. (prin handle, sau răspuns)
+      × /dmute <userhandle>: mută un utilizator și șterge mesajul la care s-a răspuns. (prin handle, sau răspuns)
+      × /tmute <userhandle> x(m/h/d): mută un utilizator pentru `x` timp. (prin handle, sau răspuns). m = minute, h = ore, d = zile.
+      × /unmute <userhandle>: dezmută un utilizator. (prin handle, sau răspuns)
   Notes:
     help_msg: |-
-      Economisiți date pentru viitorii utilizatori cu note!
-      Note sunt mari pentru a salva aleatorii de informații; un număr de telefon, un gif frumos, o imagine amuzantă-orice!
+      Salvează date pentru utilizatorii viitori cu note!
+      Notele sunt excelente pentru a salva fragmente de informații aleatorii; un număr de telefon, un gif drăguț, o poză amuzantă - orice!
       *Comenzi utilizator:*
-      -/get <notename>: Obțineți o notă.
-      - #notename: La fel ca /get.
-      Comenzi Administrator:
-      -/save <notename> <note text>: Salvează o nouă notă numită "cuvânt". Răspunsul la un mesaj va salva acel mesaj. Chiar functionează pe media!
-      -/clar <notename>: ștergerea notei asociate.
-      -/note: Listarea tuturor notelor din chat-ul curent.
-      -/salvat: La fel ca și /notițele.
-      -/clearall: șterge TOATE notele într-un chat. Aceasta nu poate fi anulată.
-      -/privatenotes: Fie ca se trimit sau nu note in PM. Va trimite un mesaj cu un buton pe care utilizatorii il pot face clic pentru a obtine nota in PM.
+      - /get <notename>: Obține o notă.
+      - #notename: Același ca /get.
+      Comenzi administrator:
+      - /save <notename> <note text>: Salvează o nouă notă numită "cuvânt". Răspunsul la un mesaj va salva acel mesaj. Funcționează chiar și pe media!
+      - /clear <notename>: Șterge nota asociată.
+      - /notes: Listează toate notele din chat-ul curent.
+      - /saved: Același ca /notes.
+      - /clearall: Șterge TOATE notele dintr-un chat. Această acțiune nu poate fi anulată.
+      - /privatenotes: Dacă să trimită sau nu note în PM. Va trimite un mesaj cu un buton pe care utilizatorii îl pot apăsa pentru a obține nota în PM.
   Pins:
     help_msg: |-
-      Toate comenzile legate de pin pot fi găsite aici; păstrați chat-ul până la data la ultimele știri cu un mesaj simplu țintuit!
+      Toate comenzile legate de pin pot fi găsite aici; țineți-vă chat-ul la curent cu cele mai recente știri printr-un simplu mesaj fixat!
 
       *Comenzi utilizator:*
-      × /țintuit: Obțineți mesajul țintuit curent.
+      × /pinned: Obține mesajul curent fixat.
 
       *Comenzi administrator:*
-      × /pin: Pin mesajul pe care l-ai răspuns. Adăugați 'voce tare' sau 'notify' pentru a trimite o notificare membrilor de grup.
-      × /țintuit: Obține cel mai recent mesaj țintuit în Chat-ul curent.
-      × /permapin <text>: Pin un mesaj personalizat prin bot. Acest mesaj poate conține markdown, butoane și toate celelalte caracteristici cool.
-      × /unpin: Unpin mesajul țintuit curent. Dacă este folosit ca un răspuns, nu se pină răspunsul la mesaj.
-      × /unpinall: Unpins toate mesajele țintuite.
-      × /antichannelpin <yes/no/on/off>: Nu lăsați să se telegoneze canalele legate cu auto-pin. Dacă nu sunt date argumente, afișează setarea curentă.
-      × /cleanlegat <yes/no/on/off>: ștergerea mesajelor trimise de canalul legat.
-      Notă: La utilizarea pinii anticanal, asigurați-vă că folosiți comanda /unpin, în loc să o faceți manual. Altfel, vechiul mesaj va fi rețintuit când canalul trimite orice mesaje.
+      × /pin: Fixează mesajul la care ai răspuns. Adaugă 'loud' sau 'notify' pentru a trimite o notificare membrilor grupului.
+      × /pinned: Obține cel mai recent mesaj fixat din Chatul curent.
+      × /permapin <text>: Fixează un mesaj personalizat prin bot. Acest mesaj poate conține markdown, butoane și toate celelalte caracteristici interesante.
+      × /unpin: Defixează mesajul curent fixat. Dacă este folosit ca răspuns, defixează mesajul la care s-a răspuns.
+      × /unpinall: Defixează toate mesajele fixate.
+      × /antichannelpin <yes/no/on/off>: Nu lăsați Telegram să fixeze automat canalele legate. Dacă nu sunt date argumente, afișează setarea curentă.
+      × /cleanlinked <yes/no/on/off>: Șterge mesajele trimise de canalul legat.
+      Notă: Când utilizați fixările anti-canal, asigurați-vă că utilizați comanda /unpin, în loc să o faceți manual. În caz contrar, vechiul mesaj va fi refixat atunci când canalul trimite orice mesaje.
   Purges:
     help_msg: |-
       *Doar administrator:*
-      -/epy: șterge toate mesajele dintre acestea și răspunsul la mesaj.
-      -/del: șterge mesajul pe care ți l-ai răspuns.
+      - /purge: șterge toate mesajele dintre acesta și mesajul la care s-a răspuns.
+      - /del: șterge mesajul la care ai răspuns.
 
       *Exemple:*
-      -șterge toate mesajele de la răspuns la mesaj, până acum.
-      -> narezare/epurare "
+      - Șterge toate mesajele de la mesajul la care s-a răspuns, până acum.
+      -> `/purge`
   Reports:
     help_msg: |-
-      Suntem cu totii oameni ocupați care nu au timp să monitorizeze grupurile noastre 24/7. Dar cum reacționați dacă cineva din grupul dvs. este spamming?
+      Suntem cu toții oameni ocupați care nu au timp să-și monitorizeze grupurile 24/7. Dar cum reacționezi dacă cineva din grupul tău face spam?
 
-      × /report `<reason>`: răspunde la un mesaj pentru a-l raporta la admins.
-      - @admin: același ca /raport dar nu o comandă.
+      × /report `<reason>`: răspunde la un mesaj pentru a-l raporta administratorilor.
+      - @admin: același ca /report, dar nu o comandă.
 
-      *Doar administrator:*
-      × /reports `<on/off/yes/no>`: modificarea setării raportului sau vizualizarea stării curente.
-      -Dacă este făcut în PM, comută starea dumneavoastră.
-      -Dacă în grup, comută starea grupurilor.
-      × /reports ` block ` (numai prin răspuns): Block un utilizator din utilizarea /report sau @admin.
-      × /reports ` unblock ` (numai prin răspuns): Dezblocați un utilizator din utilizarea /report sau @admin.
-      × /reports ` showblocklist `: Verificați toți utilizatorii blocați care nu pot utiliza /report sau @admin.
+      *Doar administratori:*
+      × /reports `<on/off/yes/no>`: schimbă setarea raportului sau vizualizează starea curentă.
+      - Dacă este făcut în PM, comută starea ta.
+      - Dacă este într-un grup, comută starea grupului respectiv.
+      × /reports `block` (doar prin răspuns): Blochează un utilizator să folosească /report sau @admin.
+      × /reports `unblock` (doar prin răspuns): Deblochează un utilizator să folosească /report sau @admin.
+      × /reports `showblocklist`: Verifică toți utilizatorii blocați care nu pot folosi /report sau @admin.
 
-      Pentru a raporta un utilizator, pur și simplu răspuns la mesajul său cu @admin sau /report; Natalie va răspunde apoi cu un mesaj care indică faptul că administratorii au fost notificați.
-      Trebuie să răspundeți la un mesaj pentru a raporta un utilizator; nu puteți folosi @admin pentru a eticheta administratorii pentru nici un motiv!
+      Pentru a raporta un utilizator, pur și simplu răspunde la mesajul său cu @admin sau /report; Natalie va răspunde apoi cu un mesaj care indică faptul că administratorii au fost notificați.
+      TREBUIE să răspunzi la un mesaj pentru a raporta un utilizator; nu poți folosi doar @admin pentru a eticheta administratorii fără motiv!
 
-      *NOTĂ:* Nici unul dintre acestea nu va fi declanșat dacă este folosit de admins.
+      *NOTĂ:* Niciuna dintre acestea nu se va declanșa dacă este folosită de administratori.
   Rules:
     help_msg: |-
-      Fiecare chat functionează cu reguli diferite; acest modul va ajuta la realizarea acelor reguli mai clare!
+      Fiecare chat funcționează cu reguli diferite; acest modul va ajuta la clarificarea acestor reguli!
       *Comenzi utilizator:*
-      × /rules: Verifica regulile de chat actuale.
+      × /rules: Verifică regulile curente ale chat-ului.
       *Comenzi administrator:*
-      × /setrules `<text>`: Setați regulile pentru acest chat.
-      × /privaterules `<yes/no/on/off>`: Activați/dezactivați dacă regulile ar trebui trimise în privat.
-      × /resetrules: Resetați regulile de chat la valoarea implicită
-      × /rulesbtn `<text personalizat>`: Setează textul butonului de reguli.
-      × /resetrulesbutton: Resetează textul butonului de reguli la valoarea implicită.
-      × /resetrulesbtn: La fel ca mai sus.
+      × /setrules `<text>`: Setează regulile pentru acest chat.
+      × /privaterules `<yes/no/on/off>`: Activează/dezactivează dacă regulile ar trebui trimise în privat.
+      × /resetrules: Resetează regulile chat-ului la implicit
+      × /rulesbtn `<custom text>`: Setează textul butonului de reguli.
+      × /resetrulesbutton: Resetează textul butonului de reguli la implicit.
+      × /resetrulesbtn: Același ca mai sus.
   Tagger:
     help_msg: |-
       Tagger este o caracteristică esențială pentru a menționa toți membrii abonați din grup.
-      Orice membru de chat se poate abona la tagger.
+      Orice membru al chat-ului se poate abona la tagger.
 
       *Comenzi utilizator:*
       × /tagme: Permite utilizatorului să fie etichetat
-      × /untagme: Renunțați la utilizator să fie tăguit
+      × /untagme: Interzice utilizatorului să fie etichetat
 
       *Comenzi administrator:*
-      × /tagall: tag/mențiune toți utilizatorii tăguiți
-      × /untageall: curățați toți membrii tăguiți
-      × /addtag <user>: Adăugați un utilizator manual la taglist
-      × /rmtag <user>: Înlăturați un utilizator manual din taglist
+      × /tagall: etichetează/menționează toți utilizatorii etichetați
+      × /untagall: șterge toți membrii etichetați
+      × /addtag <user>: Adaugă manual un utilizator la lista de etichete
+      × /rmtag <user>: Elimină manual un utilizator din lista de etichete
   Warns:
     help_msg: |-
-      Keep your members in check with warnings; stop them getting out of control!
-      If you're looking for automated warnings, read about the blacklist module!
+      Țineți-vă membrii sub control cu avertismente; opriți-i să scape de sub control!
+      Dacă căutați avertismente automate, citiți despre modulul de listă neagră!
 
       *Comenzi administrator:*
-      - /warn <reason>: Warn a user.
-      - /dwarn <reason>: Warn a user by reply, and delete their message.
-      - /swarn <reason>: Silently warn a user, and delete your message.
-      - /warns: See a user's warnings.
-      - /rmwarn: Remove a user's latest warning.
-      - /resetwarn: Reset all of a user's warnings to 0.
-      - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-      - /warnings: Get the chat's warning settings.
-      - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-      - /setwarnlimit <number>: Set the number of warnings before users are punished.
+      - /warn <reason>: Avertizează un utilizator.
+      - /dwarn <reason>: Avertizează un utilizator prin răspuns și șterge mesajul acestuia.
+      - /swarn <reason>: Avertizează un utilizator în tăcere și șterge mesajul tău.
+      - /warns: Vezi avertismentele unui utilizator.
+      - /rmwarn: Elimină cel mai recent avertisment al unui utilizator.
+      - /resetwarn: Resetează toate avertismentele unui utilizator la 0.
+      - /resetallwarns: Șterge toate avertismentele dintr-un chat. Toți utilizatorii revin la 0 avertismente.
+      - /warnings: Obține setările de avertizare ale chat-ului.
+      - /setwarnmode <ban/kick/mute>: Setează modul de avertizare al chat-ului.
+      - /setwarnlimit <number>: Setează numărul de avertismente înainte ca utilizatorii să fie pedepsiți.
 
       *Exemple*
-      - Warn a user.
-      -> `/warn @user For disobeying the rules`
+      - Avertizează un utilizator.
+      -> `/warn @user Pentru nerespectarea regulilor`
   Utils:
     chat_status:
       user:
         no_permission_change_info_btn: |-
-          Nu ai permisiuni de a schimba info!!
+          Nu ai permisiuni să schimbi informațiile!
         no_permission_change_info_cmd: |-
           Nu aveți permisiunea de a schimba informații în acest grup!
         no_permission_restrict_btn: |-
-          Nu aveți permisiuni pentru a restricționa membrii!!
+          Nu ai permisiuni să restricționezi membrii!
         no_permission_restrict_cmd: |-
-          Nu aveți permisiunea de a restricționa membrii în acest grup!
+          Nu ai permisiunea de a restricționa membrii în acest grup!
         no_permission_promote_btn: |-
-          Nu ai permisiuni de promovare/demote membri!!
+          Nu ai permisiuni să promovezi/demiți membri!
         no_permission_promote_cmd: |-
-          Nu poti promova/retrograda oamenii aici! Asigurați-vă că aveți drepturi corespunzătoare!
+          Nu poți promova/demite oameni aici! Asigură-te că ai drepturile corespunzătoare!
         no_permission_pin: |-
-          Nu puteți pină mesaje aici! Asigurați-vă că sunteți administrator și puteți ținti mesaje.
+          Nu poți fixa mesaje aici! Asigură-te că ești administrator și poți fixa mesaje.
         no_permission_delete: |-
-          Nu aveți Permisiuni de ștergere Mesaje!
+          Nu ai permisiunea de a șterge mesaje!
         require_admin_btn: |-
-          Trebuie sa fii un administrator pentru a face acest lucru!
+          Trebuie să fii administrator pentru a face asta!
         require_admin_cmd: |-
           Doar administratorii pot executa această comandă!
         require_owner_btn: |-
-          Trebuie să fii creatorul de grup pentru a face acest lucru!
+          Trebuie să fii creatorul grupului pentru a face asta!
         require_owner_cmd: |-
-          Doar creator de grup pentru a face acest lucru!
+          Doar creatorul grupului poate face asta!
       bot:
         no_permission_restrict: |-
-          Nu am permisiuni de a restricționa membrii!!
+          Nu am permisiunea de a restricționa membrii!
         no_permission_restrict_group: |-
-          Nu pot restricționa oamenii aici! Asigurați-vă că sunt administrator și pot restricționa alți membri.
+          Nu pot restricționa oamenii aici! Asigură-te că sunt administrator și pot restricționa alți membri.
         no_permission_promote: |-
-          Nu pot promova/retrograda oamenii aici! Asigurați-vă că sunt administrator și pot numi noi administratorii.
+          Nu pot promova/demite oameni aici! Asigură-te că sunt administrator și pot numi noi administratori.
         no_permission_pin: |-
-          Nu pot sa pin mesaje aici! Asigurați-vă că sunt administrator și pot ținti mesaje.
+          Nu pot fixa mesaje aici! Asigură-te că sunt administrator și pot fixa mesaje.
         no_permission_delete: |-
-          Nu am Permisiuni de ștergere Mesaje!
+          Nu am permisiunea de a șterge mesaje!
         require_admin: |-
-          Nu sunt administrator! Asigurați-vă că sunt administrator și că aveți permisiuni corespunzătoare.
+          Nu sunt administrator! Asigură-te că sunt administrator și că am permisiuni corespunzătoare.
       require_private: |-
-        Această comandă este făcută pentru pm, nu pentru chat-ul de grup!
+        Această comandă este făcută pentru PM, nu pentru chat-ul de grup!
       require_group: |-
-        Această comandă este făcută pentru a fi folosită în chat-ul de grup, nu în pm!
+        Această comandă este făcută pentru a fi folosită în chat-uri de grup, nu în PM!
       anon_admin_string: |-
-        Se pare ca esti anonim. Apăsați acest buton pentru a vă confirma identitatea.
+        Se pare că ești anonim. Atinge acest buton pentru a-ți confirma identitatea.
       anon_admin_btn: |-
-        Click pentru a dovedi admin
+        Confirmă-ți identitatea
+
     extraction:
       extract_chat:
         badrequest_failed_getchat: |-
-          a eșuat conectarea la chat: nu a reușit să facă chat: nu se poate getChat: Cerere greșită: chat-ul nu a fost găsit
+          conectare la chat eșuată: obținere chat eșuată: nu se poate getChat: Cerere greșită: chat-ul nu a fost găsit
         fail_need_chat_id: |-
-          Mă așteptam un ID de Chat, dar acesta nu este un întreg valid
+          Mă așteptam la un ID de Chat, dar acesta nu este un număr întreg valid.
         fail_need_chat: |-
-          Mă trebuie un ID de Chat pentru a te conecta!
+          Am nevoie de un ID de Chat pentru a mă conecta!
       extract_user:
         no_user_found: |-
-          Nu s-a putut găsi un utilizator cu acest nume; sunteți sigur că le-am văzut înainte?
+          Nu am putut găsi un utilizator cu acest nume; ești sigur că l-am mai văzut înainte?
         badrequest_failed_getchatmember: |-
-          A eșuat obținerea utilizatorului: nu se poate getChatMember: Bad Request: chat nu a fost găsit
+          nu a reușit să obțină utilizatorul: nu se poate getChatMember: Cerere greșită: chat-ul nu a fost găsit
     string_handling:
       extract_time:
         invalid_time_amount: |-
-          Cantitate de timp nevalidă specificată.
+          Cantitate de timp specificată invalidă.
         invalid_time_type: |-
-          Tip de timp nevalid specificat. Asteptat m, h, sau d got: %s
+          Tip de timp specificat invalid. Așteptat m, h, sau d, am primit: %s

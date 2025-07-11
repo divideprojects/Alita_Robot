@@ -131,9 +131,9 @@ strings:
 
       *Admin commands *:
       × /flood: Get the current antiflood settings.
-      × /setcrue `<number/off/no>`: Définissez le nombre de messages après lequel agir sur un utilisateur. Définissez la valeur'0','off'ou'no'à désactiver.
+      × /setflood `<number/off/no>`: Définissez le nombre de messages après lequel agir sur un utilisateur. Définissez la valeur'0','off'ou'no'à désactiver.
       × /setfloodmode `<action type>`: Choisissez l'action à prendre pour un utilisateur qui a été submersion. Options: ban/kick/mute/tban/tmute
-      × /delinon`<yes/no/on/off>`: Si vous voulez supprimer les messages inondés par l'utilisateur.
+      × /delflood `<yes/no/on/off>`: Si vous voulez supprimer les messages inondés par l'utilisateur.
   Approvals:
     approve:
       is_bot_itself: |-
@@ -189,9 +189,9 @@ strings:
       × /approval: Vérifiez le statut d'approbation d'un utilisateur dans cette discussion.
 
       *Commandes Admin: *
-      × /approuver: Approuver un utilisateur. Les écluses, les listes noires et les antiinondations ne s'appliqueront plus à eux.
-      × /désapprouver: Désapprouver un utilisateur. Ils seront désormais soumis à des verrous, à des listes noires et à une nouvelle anticrue.
-      × /approuvé: Liste de tous les utilisateurs approuvés.
+      × /approve: Approuver un utilisateur. Les écluses, les listes noires et les antiinondations ne s'appliqueront plus à eux.
+      × /unapprove: Désapprouver un utilisateur. Ils seront désormais soumis à des verrous, à des listes noires et à une nouvelle anticrue.
+      × /approved: Liste de tous les utilisateurs approuvés.
 
       *Commandes du propriétaire: *
       × /unapproveall: Désapprouver TOUS les utilisateurs dans une discussion. Cela ne peut pas être fait.
@@ -381,7 +381,7 @@ strings:
       × /enable `<item name>`: Autoriser les utilisateurs à utiliser le nom de commande dans ce groupe.
       × /disableable: Affiche toutes les commandes désactivables.
       × /disabledel `<yes/no/on/off>`: Supprimer les commandes désactivées lorsqu'ils sont utilisés par des non-administrateurs.
-      × /désactivé: Affiche la liste des commandes désactivées dans cette discussion.
+      × /disabled: Affiche la liste des commandes désactivées dans cette discussion.
 
       Note:
       Lors de la désactivation d'une commande, la commande n'est désactivée que pour les non-administrateurs. Tous les administrateurs peuvent toujours utiliser ces commandes.
@@ -400,7 +400,7 @@ strings:
       - Définir un filtre :
       -> /filter bonjour Bonjour ! Comment allez-vous ?
       - Définir un filtre multi-mots :
-      -> /filter bonjour ami Bonjour en retour ! Ça fait longtemps !
+      -> /filter "bonjour ami" Bonjour en retour ! Ça fait longtemps !
       - Définir un filtre qui ne peut être utilisé que par les administrateurs :
       -> /filter exemple Ce filtre n'arrivera pas si un utilisateur normal le dit {admin}
       - Pour sauvegarder un fichier, image, gif, ou tout autre attachement, répondez simplement au fichier avec :
@@ -492,7 +492,7 @@ strings:
       <b>Pourquoi Alita:</b>
       -Simple: utilisation facile et compaitble avec de nombreuses commandes de bot.
       -Sélectionné: De nombreuses fonctionnalités que d'autres bots de gestion de groupe n'ont pas.
-      -Fast: Guess quoi? Il n'est pas fait avec Python, nous utilisons le <a href='https://go.dev/'>Go</a> comme notre langage de programmation de base.
+      -Fast: Guess quoi? Il n'est pas fait avec Python, nous utilisons le <a href='[https://go.dev/](https://go.dev/)'>Go</a> comme notre langage de programmation de base.
 
       <b>Version actuelle:</b> %s
     Configuration:
@@ -578,7 +578,7 @@ strings:
       -/save <notename> <note text>: Enregistrer une nouvelle note appelée "mot". L'enregistrement d'un message permet d'enregistrer ce message. Même les œuvres sur les médias !
       -/clear <notename>: Supprimer la note associée.
       -/notes: Lister toutes les notes dans la discussion en cours.
-      -/sauvegardé: Identique à /notes.
+      -/saved: Identique à /notes.
       -/clearall: Supprimer TOUTES les notes dans une discussion. Cela ne peut pas être fait.
       -/privatenotes: Indique s'il faut envoyer ou non des notes dans la fiche MP. Enverra un message avec un bouton que les utilisateurs peuvent cliquer pour obtenir la note dans PM.
   Pins:
@@ -586,11 +586,11 @@ strings:
       Toutes les commandes liées à la broche peuvent être trouvées ici ; gardez votre discussion à jour sur les dernières nouvelles avec un message épinglette simple !
 
       *Commandes utilisateur: *
-      × /cloués: Récupère le message réservé en cours.
+      × /pinned: Récupère le message réservé en cours.
 
       *Commandes d'administration: *
       × /pin: Pin le message auquel vous avez répondu. Ajouter "fort" ou "notification" pour envoyer une notification aux membres du groupe.
-      × /cloués: Extrait le dernier message réservé dans la discussion en cours.
+      × /pinned: Extrait le dernier message réservé dans la discussion en cours.
       × /permapin <text>: Pin a custom message through the bot. Ce message peut contenir une démarque, des boutons et toutes les autres fonctions de refroidissement.
       × /unpin: Dépin le message réservé en cours. S'il est utilisé en tant que réponse, unbroches la réponse au message.
       × /unpinall: Unpins tous les messages réservés.
