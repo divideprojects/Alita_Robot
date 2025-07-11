@@ -7,11 +7,11 @@ import (
 
 func TestLoadConfigWithValidData(t *testing.T) {
 	// Set up valid environment variables
-	os.Setenv("BOT_TOKEN", "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11")
-	os.Setenv("DB_URI", "mongodb://localhost:27017/test")
-	os.Setenv("OWNER_ID", "123456789")
-	os.Setenv("MESSAGE_DUMP", "-987654321")
-	os.Setenv("DEBUG", "true")
+	t.Setenv("BOT_TOKEN", "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11")
+	t.Setenv("DB_URI", "mongodb://localhost:27017/test")
+	t.Setenv("OWNER_ID", "123456789")
+	t.Setenv("MESSAGE_DUMP", "-987654321")
+	t.Setenv("DEBUG", "true")
 
 	defer func() {
 		// Clean up
@@ -80,10 +80,10 @@ func TestLoadConfigMissingRequired(t *testing.T) {
 }
 
 func TestLoadConfigInvalidNumbers(t *testing.T) {
-	os.Setenv("BOT_TOKEN", "valid_token")
-	os.Setenv("DB_URI", "mongodb://localhost:27017/test")
-	os.Setenv("OWNER_ID", "not_a_number")
-	os.Setenv("MESSAGE_DUMP", "also_not_a_number")
+	t.Setenv("BOT_TOKEN", "valid_token")
+	t.Setenv("DB_URI", "mongodb://localhost:27017/test")
+	t.Setenv("OWNER_ID", "not_a_number")
+	t.Setenv("MESSAGE_DUMP", "also_not_a_number")
 
 	defer func() {
 		os.Unsetenv("BOT_TOKEN")
