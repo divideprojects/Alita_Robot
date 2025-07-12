@@ -149,7 +149,12 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	go db.AddFilter(chat.Id, filterWord, text, fileid, buttons, dataType)
 
-	_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Filters.add.success"), filterWord), helpers.Shtml())
+	addSuccessMsg, addSuccessErr := tr.GetStringWithError("Filters.add.success")
+	if addSuccessErr != nil {
+		log.Errorf("[filters] missing translation for add.success: %v", addSuccessErr)
+		addSuccessMsg = "Filter '%s' has been added successfully!"
+	}
+	_, err := msg.Reply(b, fmt.Sprintf(addSuccessMsg, filterWord), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -207,7 +212,12 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		} else {
 			go db.RemoveFilter(chat.Id, strings.ToLower(filterWord))
-			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Filters.remove.success"), filterWord), helpers.Shtml())
+			removeSuccessMsg, removeSuccessErr := tr.GetStringWithError("Filters.remove.success")
+			if removeSuccessErr != nil {
+				log.Errorf("[filters] missing translation for remove.success: %v", removeSuccessErr)
+				removeSuccessMsg = "Filter '%s' has been removed successfully!"
+			}
+			_, err := msg.Reply(b, fmt.Sprintf(removeSuccessMsg, filterWord), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err

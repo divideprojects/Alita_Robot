@@ -279,6 +279,99 @@ go test -cover ./alita/i18n/
 5. **Monitor errors**: Log locale loading errors but continue with partial locales if possible
 6. **Test thoroughly**: Verify all translation keys exist in your primary language file
 
+## Production Deployment
+
+### Environment Configuration
+
+Configure the i18n system for production using environment variables:
+
+```bash
+# Production environment
+export ENVIRONMENT=production
+export I18N_FALLBACK_MODE=friendly
+export I18N_LOG_MISSING_KEYS=true
+export I18N_ENABLE_STRUCTURED_LOGGING=true
+
+# Optional: Custom fallback message
+export I18N_FALLBACK_MESSAGE="Service temporarily unavailable"
+```
+
+### Critical Path Error Handling
+
+For user-facing messages in critical modules (warns, admin, bans, etc.), use `GetStringWithError()`:
+
+```go
+// ❌ Bad: Users see @@key@@ in production
+reply := fmt.Sprintf(tr.GetString("warn.limit_kick"), numWarns, limit, user)
+
+// ✅ Good: Graceful fallback with logging
+kickMsg, err := tr.GetStringWithError("warn.limit_kick")
+if err != nil {
+    log.Errorf("Missing translation: %v", err)
+    kickMsg = "User has been kicked after reaching the warning limit."
+}
+reply := fmt.Sprintf(kickMsg, numWarns, limit, user)
+```
+
+### Development Tools
+
+Use the enhanced validation script to check translation coverage:
+
+```bash
+# Check for missing keys and production readiness
+python scripts/check_code_keys.py
+
+# Example output:
+# ✅ All i18n keys are present and production-ready!
+# 📊 Translation Statistics:
+#    Total i18n keys used: 157
+#    Keys using GetStringWithError: 45 (28.7%)
+#    Critical user-facing keys: 22
+#    Critical keys with error handling: 22/22
+```
+
+### Monitoring and Alerts
+
+Monitor translation health in production:
+
+```go
+// Get translation statistics
+logger := i18n.GetLogger()
+stats := logger.GetStats()
+
+// Example metrics:
+// {
+//   "total_tracked_keys": 15,
+//   "rate_limit_threshold": "5m0s",
+//   "logging_enabled": true,
+//   "structured_logging": true
+// }
+```
+
+### Fallback Behavior
+
+The system provides three fallback modes:
+
+- **`friendly`**: Always show user-friendly messages
+- **`debug`**: Always show `@@key@@` markers for debugging
+- **`mixed`**: Friendly in production, debug in development (recommended)
+
+### Structured Logging
+
+Missing keys are logged with full context:
+
+```json
+{
+  "timestamp": "2024-01-15T10:30:00Z",
+  "key": "warn.limit_kick",
+  "language": "es",
+  "fallback_used": true,
+  "environment": "production",
+  "level": "error",
+  "message": "Translation key 'warn.limit_kick' not found in language 'es' or any fallback"
+}
+```
+
 ## API Reference
 
 ### Types

@@ -180,8 +180,13 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 	mem := userMember.MergeChatMember().User
+	demoteMsg, demoteErr := tr.GetStringWithError("strings." + m.moduleName + ".demote.success_demote")
+	if demoteErr != nil {
+		log.Errorf("[admin] missing translation for demote.success_demote: %v", demoteErr)
+		demoteMsg = "User %s has been demoted from admin."
+	}
 	_, err = msg.Reply(b,
-		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".demote.success_demote"), helpers.MentionHtml(mem.Id, mem.FirstName)),
+		fmt.Sprintf(demoteMsg, helpers.MentionHtml(mem.Id, mem.FirstName)),
 		helpers.Shtml(),
 	)
 	if err != nil {
@@ -316,8 +321,13 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 	mem := userMember.MergeChatMember().User
+	promoteMsg, promoteErr := tr.GetStringWithError("strings." + m.moduleName + ".promote.success_promote")
+	if promoteErr != nil {
+		log.Errorf("[admin] missing translation for promote.success_promote: %v", promoteErr)
+		promoteMsg = "User %s has been promoted to admin."
+	}
 	_, err = msg.Reply(b,
-		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".promote.success_promote"), helpers.MentionHtml(mem.Id, mem.FirstName))+extraText,
+		fmt.Sprintf(promoteMsg, helpers.MentionHtml(mem.Id, mem.FirstName))+extraText,
 		helpers.Shtml(),
 	)
 	if err != nil {

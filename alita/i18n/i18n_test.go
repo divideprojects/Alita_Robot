@@ -28,6 +28,18 @@ func resetGlobals() {
 		"zh_TW": {"zh", DefaultLangCode},
 	}
 	fallbackMu.Unlock()
+
+	// Reset configuration and logger
+	configMu.Lock()
+	globalConfig = nil
+	configMu.Unlock()
+	
+	// Reset config sync.Once so GetConfig() can be called again
+	configOnce = sync.Once{}
+	
+	// Reset logger with new sync.Once
+	loggerOnce = sync.Once{}
+	globalLogger = nil
 }
 
 func TestLoadLocaleFiles(t *testing.T) {
@@ -565,4 +577,352 @@ func BenchmarkConcurrentGetString(b *testing.B) {
 			tr.GetString(key)
 		}
 	})
+}
+
+// Tests for new fallback and logging functionality
+
+func TestConfigurationSystem(t *testing.T) {
+	resetGlobals()
+	
+	// Force config initialization
+	ReloadConfig()
+	
+	// Test default configuration
+	config := GetConfig()
+	if config == nil {
+		t.Fatal("Expected config to be non-nil")
+	}
+
+	// Test environment detection
+	if config.Environment == "" {
+		t.Error("Expected environment to be set")
+	}
+
+	// Test fallback messages
+	if len(config.FallbackMessages) == 0 {
+		t.Error("Expected fallback messages to be populated")
+	}
+
+	// Test English fallback message exists
+	if _, exists := config.FallbackMessages["en"]; !exists {
+		t.Error("Expected English fallback message to exist")
+	}
+}
+
+func TestFriendlyFallbackBehavior(t *testing.T) {
+	resetGlobals()
+
+	// Load test data
+	err := LoadLocaleFiles(&testFS, "testdata/valid")
+	if err != nil {
+		t.Fatalf("Failed to load test data: %v", err)
+	}
+
+	// Test with production-like config
+	testConfig := &I18nConfig{
+		Environment:             EnvProduction,
+		FallbackMode:            FallbackModeFriendly,
+		LogMissingKeys:          false, // Disable logging for this test
+		FallbackMessages:        DefaultFallbackMessages,
+		EnableStructuredLogging: false,
+		EnableMetrics:          false,
+	}
+	SetConfig(testConfig)
+	
+	// Reset config and logger sync.Once to use new config
+	configOnce = sync.Once{}
+	loggerOnce = sync.Once{}
+	globalLogger = nil
+
+	tr := New("en")
+	
+	// Test missing key returns friendly message
+	text := tr.GetString("nonexistent.key")
+	if strings.Contains(text, "@@") {
+		t.Errorf("Expected friendly fallback, got debug marker: %s", text)
+	}
+	if text != "Message not available" {
+		t.Errorf("Expected 'Message not available', got: %s", text)
+	}
+
+	// Test empty key returns friendly message
+	text = tr.GetString("")
+	if strings.Contains(text, "@@") {
+		t.Errorf("Expected friendly fallback for empty key, got debug marker: %s", text)
+	}
+}
+
+func TestDebugFallbackBehavior(t *testing.T) {
+	resetGlobals()
+
+	// Load test data
+	err := LoadLocaleFiles(&testFS, "testdata/valid")
+	if err != nil {
+		t.Fatalf("Failed to load test data: %v", err)
+	}
+
+	// Test with debug config
+	testConfig := &I18nConfig{
+		Environment:             EnvDevelopment,
+		FallbackMode:            FallbackModeDebug,
+		LogMissingKeys:          false, // Disable logging for this test
+		FallbackMessages:        DefaultFallbackMessages,
+		EnableStructuredLogging: false,
+		EnableMetrics:          false,
+	}
+	SetConfig(testConfig)
+
+	tr := New("en")
+	
+	// Test missing key returns debug marker
+	text := tr.GetString("nonexistent.key")
+	expectedMarker := fmt.Sprintf(MissingKeyMarker, "nonexistent.key")
+	if text != expectedMarker {
+		t.Errorf("Expected debug marker '%s', got: %s", expectedMarker, text)
+	}
+}
+
+func TestMixedFallbackBehavior(t *testing.T) {
+	resetGlobals()
+
+	// Load test data
+	err := LoadLocaleFiles(&testFS, "testdata/valid")
+	if err != nil {
+		t.Fatalf("Failed to load test data: %v", err)
+	}
+
+	// Test with mixed config in production
+	testConfig := &I18nConfig{
+		Environment:             EnvProduction,
+		FallbackMode:            FallbackModeMixed,
+		LogMissingKeys:          false, // Disable logging for this test
+		FallbackMessages:        DefaultFallbackMessages,
+		EnableStructuredLogging: false,
+		EnableMetrics:          false,
+	}
+	SetConfig(testConfig)
+
+	tr := New("en")
+	
+	// Should use friendly fallback in production
+	text := tr.GetString("nonexistent.key")
+	if strings.Contains(text, "@@") {
+		t.Errorf("Expected friendly fallback in production, got debug marker: %s", text)
+	}
+
+	// Test with mixed config in development
+	testConfig.Environment = EnvDevelopment
+	SetConfig(testConfig)
+
+	// Should use debug markers in development
+	text = tr.GetString("nonexistent.key")
+	expectedMarker := fmt.Sprintf(MissingKeyMarker, "nonexistent.key")
+	if text != expectedMarker {
+		t.Errorf("Expected debug marker in development '%s', got: %s", expectedMarker, text)
+	}
+}
+
+func TestLanguageSpecificFallbackMessages(t *testing.T) {
+	resetGlobals()
+
+	// Load test data
+	err := LoadLocaleFiles(&testFS, "testdata/valid")
+	if err != nil {
+		t.Fatalf("Failed to load test data: %v", err)
+	}
+
+	// Test with production config
+	testConfig := &I18nConfig{
+		Environment:             EnvProduction,
+		FallbackMode:            FallbackModeFriendly,
+		LogMissingKeys:          false,
+		FallbackMessages:        DefaultFallbackMessages,
+		EnableStructuredLogging: false,
+		EnableMetrics:          false,
+	}
+	SetConfig(testConfig)
+
+	// Test Spanish fallback message
+	tr := New("es")
+	text := tr.GetString("nonexistent.key")
+	expected := "Mensaje no disponible"
+	if text != expected {
+		t.Errorf("Expected Spanish fallback '%s', got: %s", expected, text)
+	}
+
+	// Test French fallback message
+	tr = New("fr")
+	text = tr.GetString("nonexistent.key")
+	expected = "Message non disponible"
+	if text != expected {
+		t.Errorf("Expected French fallback '%s', got: %s", expected, text)
+	}
+
+	// Test unknown language falls back to English
+	tr = New("unknown")
+	text = tr.GetString("nonexistent.key")
+	expected = "Message not available"
+	if text != expected {
+		t.Errorf("Expected English fallback for unknown language '%s', got: %s", expected, text)
+	}
+}
+
+func TestLoggingSystem(t *testing.T) {
+	resetGlobals()
+
+	// Load test data
+	err := LoadLocaleFiles(&testFS, "testdata/valid")
+	if err != nil {
+		t.Fatalf("Failed to load test data: %v", err)
+	}
+
+	// Test with logging enabled
+	testConfig := &I18nConfig{
+		Environment:             EnvDevelopment,
+		FallbackMode:            FallbackModeDebug,
+		LogMissingKeys:          true,
+		FallbackMessages:        DefaultFallbackMessages,
+		EnableStructuredLogging: false,
+		EnableMetrics:          false,
+	}
+	SetConfig(testConfig)
+
+	// Create a new logger for testing
+	logger := NewLogger(testConfig)
+	logger.ResetStats()
+
+	// Test missing key logging
+	logger.LogMissingKey("test.missing", "en", false)
+	stats := logger.GetStats()
+	if stats["total_tracked_keys"].(int) == 0 {
+		t.Error("Expected missing key to be tracked")
+	}
+
+	// Test fallback logging
+	logger.LogFallbackUsed("test.key", "es", "en")
+	stats = logger.GetStats()
+	if stats["total_tracked_keys"].(int) < 2 {
+		t.Error("Expected fallback usage to be tracked")
+	}
+
+	// Test key not found logging
+	logger.LogKeyNotFound("test.notfound", "fr")
+	stats = logger.GetStats()
+	if stats["total_tracked_keys"].(int) < 3 {
+		t.Error("Expected key not found to be tracked")
+	}
+}
+
+func TestRateLimiting(t *testing.T) {
+	resetGlobals()
+
+	// Create a rate limiter with very short threshold for testing
+	rateLimiter := NewRateLimiter(100 * time.Millisecond)
+
+	// First call should be allowed
+	if !rateLimiter.ShouldLog("test.key") {
+		t.Error("Expected first call to be allowed")
+	}
+
+	// Immediate second call should be blocked
+	if rateLimiter.ShouldLog("test.key") {
+		t.Error("Expected immediate second call to be blocked")
+	}
+
+	// Wait for threshold and try again
+	time.Sleep(150 * time.Millisecond)
+	if !rateLimiter.ShouldLog("test.key") {
+		t.Error("Expected call after threshold to be allowed")
+	}
+
+	// Test different keys are tracked separately
+	if !rateLimiter.ShouldLog("different.key") {
+		t.Error("Expected different key to be allowed")
+	}
+}
+
+func TestGetStringWithErrorLogging(t *testing.T) {
+	resetGlobals()
+
+	// Load test data
+	err := LoadLocaleFiles(&testFS, "testdata/valid")
+	if err != nil {
+		t.Fatalf("Failed to load test data: %v", err)
+	}
+
+	// Test with logging enabled
+	testConfig := &I18nConfig{
+		Environment:             EnvDevelopment,
+		FallbackMode:            FallbackModeDebug,
+		LogMissingKeys:          true,
+		FallbackMessages:        DefaultFallbackMessages,
+		EnableStructuredLogging: false,
+		EnableMetrics:          false,
+	}
+	SetConfig(testConfig)
+
+	tr := New("en")
+
+	// Test existing key doesn't log
+	logger := GetLogger()
+	logger.ResetStats()
+	
+	_, err = tr.GetStringWithError("test.key")
+	if err != nil {
+		t.Errorf("Expected no error for existing key, got: %v", err)
+	}
+
+	// Test missing key logs error
+	_, err = tr.GetStringWithError("nonexistent.key")
+	if err == nil {
+		t.Error("Expected error for missing key")
+	}
+
+	// Check that logging occurred
+	stats := logger.GetStats()
+	if stats["total_tracked_keys"].(int) == 0 {
+		t.Error("Expected missing key to be logged")
+	}
+}
+
+func TestBackwardCompatibility(t *testing.T) {
+	resetGlobals()
+
+	// Load test data
+	err := LoadLocaleFiles(&testFS, "testdata/valid")
+	if err != nil {
+		t.Fatalf("Failed to load test data: %v", err)
+	}
+
+	// Test with logging disabled (backward compatibility)
+	testConfig := &I18nConfig{
+		Environment:             EnvDevelopment,
+		FallbackMode:            FallbackModeDebug,
+		LogMissingKeys:          false,
+		FallbackMessages:        DefaultFallbackMessages,
+		EnableStructuredLogging: false,
+		EnableMetrics:          false,
+	}
+	SetConfig(testConfig)
+
+	tr := New("en")
+
+	// Test existing functionality still works
+	text := tr.GetString("test.key")
+	if strings.Contains(text, "@@") {
+		t.Errorf("Expected valid text, got: %s", text)
+	}
+
+	// Test missing key still returns marker when logging disabled
+	text = tr.GetString("nonexistent.key")
+	expectedMarker := fmt.Sprintf(MissingKeyMarker, "nonexistent.key")
+	if text != expectedMarker {
+		t.Errorf("Expected debug marker '%s', got: %s", expectedMarker, text)
+	}
+
+	// Test convenience functions still work
+	text = GetString("en", "test.key")
+	if strings.Contains(text, "@@") {
+		t.Errorf("Expected valid text from convenience function, got: %s", text)
+	}
 }

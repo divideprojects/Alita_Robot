@@ -122,7 +122,12 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 		switch warnrc.WarnMode {
 		case "kick":
 			_, err = chat.BanMember(b, userId, nil)
-			reply = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".warn.limit_kick"), numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
+			kickMsg, kickErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.limit_kick")
+			if kickErr != nil {
+				log.Errorf("[warn] missing translation for limit_kick: %v", kickErr)
+				kickMsg = "User has been kicked after reaching the warning limit."
+			}
+			reply = fmt.Sprintf(kickMsg, numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: kick (%d) - %s", userId, err)
 				return err
@@ -147,14 +152,24 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 				},
 				nil,
 			)
-			reply = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".warn.limit_mute"), numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
+			muteMsg, muteErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.limit_mute")
+			if muteErr != nil {
+				log.Errorf("[warn] missing translation for limit_mute: %v", muteErr)
+				muteMsg = "User has been muted after reaching the warning limit."
+			}
+			reply = fmt.Sprintf(muteMsg, numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: mute (%d) - %s", userId, err)
 				return err
 			}
 		case "ban":
 			_, err = chat.BanMember(b, userId, nil)
-			reply = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".warn.limit_ban"), numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
+			banMsg, banErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.limit_ban")
+			if banErr != nil {
+				log.Errorf("[warn] missing translation for limit_ban: %v", banErr)
+				banMsg = "User has been banned after reaching the warning limit."
+			}
+			reply = fmt.Sprintf(banMsg, numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: ban (%d) - %s", userId, err)
 				return err
@@ -193,10 +208,20 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 			}
 		}
 
-		reply = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".warn.success"), helpers.MentionHtml(u.Id, u.FirstName), numWarns, warnrc.WarnLimit)
+		successMsg, successErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.success")
+		if successErr != nil {
+			log.Errorf("[warn] missing translation for warn.success: %v", successErr)
+			successMsg = "User %s has been warned (%d/%d)."
+		}
+		reply = fmt.Sprintf(successMsg, helpers.MentionHtml(u.Id, u.FirstName), numWarns, warnrc.WarnLimit)
 
 		if reason != "" {
-			reply += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".warn.reason"), html.EscapeString(reason))
+			reasonMsg, reasonErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.reason")
+			if reasonErr != nil {
+				log.Errorf("[warn] missing translation for warn.reason: %v", reasonErr)
+				reasonMsg = "\n<b>Reason:</b> %s"
+			}
+			reply += fmt.Sprintf(reasonMsg, html.EscapeString(reason))
 		}
 	}
 	_, err = b.SendMessage(chat.Id, reply,

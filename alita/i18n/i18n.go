@@ -257,9 +257,14 @@ func getLocale(langCode string) (*viper.Viper, bool) {
 
 // GetString retrieves a localized string for the given key.
 // It tries the current language first, then falls back through the fallback chain.
-// If no translation is found, it returns a marked missing key.
+// If no translation is found, it returns either a user-friendly message or a marked missing key
+// depending on the configuration.
 func (i I18n) GetString(key string) string {
 	if key == "" {
+		config := GetConfig()
+		if config != nil && config.ShouldUseFriendlyFallback() {
+			return config.GetFallbackMessage(i.LangCode)
+		}
 		return fmt.Sprintf(MissingKeyMarker, "empty-key")
 	}
 
@@ -271,11 +276,22 @@ func (i I18n) GetString(key string) string {
 	// Try fallback chain
 	for _, fallbackLang := range GetFallbackChain(i.LangCode) {
 		if text := i.getStringFromLang(fallbackLang, key); text != "" {
+			// Log fallback usage
+			LogFallbackUsed(key, i.LangCode, fallbackLang)
 			return text
 		}
 	}
 
-	// Return marked missing key
+	// Log missing key
+	LogKeyNotFound(key, i.LangCode)
+
+	// Return appropriate fallback based on configuration
+	config := GetConfig()
+	if config != nil && config.ShouldUseFriendlyFallback() {
+		return config.GetFallbackMessage(i.LangCode)
+	}
+
+	// Return marked missing key for debugging
 	return fmt.Sprintf(MissingKeyMarker, key)
 }
 
@@ -294,8 +310,16 @@ func (i I18n) GetStringSlice(key string) []string {
 	// Try fallback chain
 	for _, fallbackLang := range GetFallbackChain(i.LangCode) {
 		if slice := i.getStringSliceFromLang(fallbackLang, key); len(slice) > 0 {
+			// Log fallback usage
+			LogFallbackUsed(key, i.LangCode, fallbackLang)
 			return slice
 		}
+	}
+
+	// Log missing key (only if logging is enabled to avoid spam for optional slices)
+	config := GetConfig()
+	if config != nil && config.LogMissingKeys {
+		LogKeyNotFound(key, i.LangCode)
 	}
 
 	return nil
@@ -316,9 +340,14 @@ func (i I18n) GetStringWithError(key string) (string, error) {
 	// Try fallback chain
 	for _, fallbackLang := range GetFallbackChain(i.LangCode) {
 		if text := i.getStringFromLang(fallbackLang, key); text != "" {
+			// Log fallback usage
+			LogFallbackUsed(key, i.LangCode, fallbackLang)
 			return text, nil
 		}
 	}
+
+	// Log missing key
+	LogKeyNotFound(key, i.LangCode)
 
 	return "", fmt.Errorf("key %q not found in language %q or its fallbacks", key, i.LangCode)
 }

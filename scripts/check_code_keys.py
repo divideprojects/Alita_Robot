@@ -68,25 +68,68 @@ def load_locale_keys(locale_path: str) -> Set[str]:
 # .GetStringSlice("foo.bar") – keeps the key in group 1.
 GETSTRING_RE = re.compile(r"\.GetString(?:Slice)?\(\s*\"([^\"]+)\"\s*\)")
 
+# Regex to capture GetStringWithError usage for production readiness analysis
+GETSTRING_WITH_ERROR_RE = re.compile(r"\.GetStringWithError\(\s*\"([^\"]+)\"\s*\)")
 
-def scan_go_files(code_dir: str) -> Dict[str, List[str]]:
-    """Return a mapping of used i18n keys to a list of locations where they're used."""
+
+def scan_go_files(code_dir: str):
+    """Return mappings of used i18n keys to locations, and production readiness analysis."""
     used: Dict[str, List[str]] = defaultdict(list)
+    with_error: Dict[str, List[str]] = defaultdict(list)
+    critical_paths: Dict[str, List[str]] = defaultdict(list)
+
+    # Critical modules that should use GetStringWithError for user-facing messages
+    critical_modules = {
+        "warns.go",
+        "admin.go",
+        "bans.go",
+        "mute.go",
+        "help.go",
+        "filters.go",
+        "notes.go",
+    }
 
     for root, _dirs, files in os.walk(code_dir):
         for filename in files:
             if not filename.endswith(".go"):
                 continue
             path = os.path.join(root, filename)
+            is_critical = any(
+                critical_mod in filename for critical_mod in critical_modules
+            )
+
             try:
                 with open(path, "r", encoding="utf-8", errors="ignore") as fh:
                     for lineno, line in enumerate(fh, 1):
+                        # Check for regular GetString usage
                         for match in GETSTRING_RE.finditer(line):
                             key = match.group(1)
-                            used[key].append(f"{path}:{lineno}")
+                            location = f"{path}:{lineno}"
+                            used[key].append(location)
+
+                            # Mark critical paths that should use GetStringWithError
+                            if is_critical and any(
+                                pattern in key
+                                for pattern in [
+                                    ".success",
+                                    ".error",
+                                    ".warn",
+                                    ".ban",
+                                    ".mute",
+                                    ".kick",
+                                ]
+                            ):
+                                critical_paths[key].append(location)
+
+                        # Check for GetStringWithError usage
+                        for match in GETSTRING_WITH_ERROR_RE.finditer(line):
+                            key = match.group(1)
+                            with_error[key].append(f"{path}:{lineno}")
+
             except (OSError, UnicodeError) as exc:
                 print(f"[WARN] Could not read {path}: {exc}", file=sys.stderr)
-    return used
+
+    return used, with_error, critical_paths
 
 
 # ---------------------------------------------------------------------------
@@ -118,7 +161,7 @@ def main() -> None:
         sys.exit(f"Code directory not found: {args.code_dir}")
 
     en_keys = load_locale_keys(args.locale)
-    used_keys_map = scan_go_files(args.code_dir)
+    used_keys_map, with_error_keys, critical_paths = scan_go_files(args.code_dir)
 
     missing_keys = []
     for k in used_keys_map:
@@ -130,15 +173,56 @@ def main() -> None:
             continue
         missing_keys.append(k)
 
-    if not missing_keys:
-        print("✅ All i18n keys used in the code are present in the English locale.")
-        return
+    # Production readiness analysis
+    critical_without_error = []
+    for key in critical_paths:
+        if key not in with_error_keys:
+            critical_without_error.append(key)
 
-    print(f"❌ Missing i18n keys detected ({len(missing_keys)}):\n")
-    for key in sorted(missing_keys):
-        print(f" - {key}")
-        for location in used_keys_map[key]:
-            print(f"     used at: {location}")
+    # Report results
+    has_issues = False
+
+    if missing_keys:
+        print(f"❌ Missing i18n keys detected ({len(missing_keys)}):\n")
+        for key in sorted(missing_keys):
+            print(f" - {key}")
+            for location in used_keys_map[key]:
+                print(f"     used at: {location}")
+        print()
+        has_issues = True
+
+    if critical_without_error:
+        print(
+            f"⚠️  Critical paths not using GetStringWithError ({len(critical_without_error)}):"
+        )
+        print(
+            "   These user-facing messages should use GetStringWithError for production safety:\n"
+        )
+        for key in sorted(critical_without_error):
+            print(f" - {key}")
+            for location in critical_paths[key]:
+                print(f"     used at: {location}")
+        print()
+        has_issues = True
+
+    # Summary statistics
+    total_keys = len(used_keys_map)
+    with_error_count = len(with_error_keys)
+    critical_count = len(critical_paths)
+
+    print("📊 Translation Statistics:")
+    print(f"   Total i18n keys used: {total_keys}")
+    print(
+        f"   Keys using GetStringWithError: {with_error_count} ({with_error_count/total_keys*100:.1f}%)"
+    )
+    print(f"   Critical user-facing keys: {critical_count}")
+    print(
+        f"   Critical keys with error handling: {critical_count - len(critical_without_error)}/{critical_count}"
+    )
+
+    if not has_issues:
+        print("\n✅ All i18n keys are present and production-ready!")
+        return
 
     # Exit with non-zero status so this can be used in CI.
     sys.exit(1)

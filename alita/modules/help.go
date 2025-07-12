@@ -193,7 +193,11 @@ func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 		currKb   gotgbot.InlineKeyboardMarkup
 	)
 
-	aboutText := tr.GetString("strings.Help.about_text")
+	aboutText, aboutErr := tr.GetStringWithError("strings.Help.about_text")
+	if aboutErr != nil {
+		log.Errorf("[help] missing translation for about_text: %v", aboutErr)
+		aboutText = "I'm Alita, a group management bot built to help you manage your groups effectively!"
+	}
 	aboutKb := gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
@@ -214,7 +218,12 @@ func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			currKb = aboutKb
 		case "me":
 			cfg := m.cfg
-			currText = fmt.Sprintf(tr.GetString("strings.Help.About"), b.Username, cfg.BotVersion)
+			aboutMeText, aboutMeErr := tr.GetStringWithError("strings.Help.About")
+			if aboutMeErr != nil {
+				log.Errorf("[help] missing translation for Help.About: %v", aboutMeErr)
+				aboutMeText = "I'm @%s, version %s. I'm here to help you manage your groups!"
+			}
+			currText = fmt.Sprintf(aboutMeText, b.Username, cfg.BotVersion)
 			currKb = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
