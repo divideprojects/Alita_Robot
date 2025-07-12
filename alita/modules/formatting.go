@@ -195,7 +195,7 @@ Enables the formatting module and adds handlers for markdown help and formatting
 func LoadMkdCmd(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	formattingModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(formattingModule.moduleName, true)
 	HelpModule.helpableKb[formattingModule.moduleName] = formattingModule.genFormattingKb()
 	cmdDecorator.MultiCommand(dispatcher, []string{"markdownhelp", "formatting"}, formattingModule.markdownHelp)

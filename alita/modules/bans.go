@@ -1066,7 +1066,7 @@ Enables the bans module and adds handlers for all moderation-related commands an
 func LoadBans(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	bansModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(bansModule.moduleName, true)
 
 	// ban cmds

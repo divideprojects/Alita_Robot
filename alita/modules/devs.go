@@ -481,7 +481,7 @@ Enables the dev module and adds handlers for team management, chat info, stats, 
 func LoadDev(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	devsModule.cfg = cfg
-	
+
 	dispatcher.AddHandler(handlers.NewCommand("stats", devsModule.getStats))
 	dispatcher.AddHandler(handlers.NewCommand("addsudo", devsModule.addSudo))
 	dispatcher.AddHandler(handlers.NewCommand("adddev", devsModule.addDev))

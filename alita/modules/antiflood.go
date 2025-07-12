@@ -482,7 +482,7 @@ Enables the antiflood module and adds handlers for flood control commands and me
 func LoadAntiflood(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	_normalAntifloodModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(antifloodModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("setflood", antifloodModule.setFlood))

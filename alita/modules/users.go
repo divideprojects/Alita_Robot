@@ -100,6 +100,6 @@ func (moduleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
 func LoadUsers(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	usersModule.cfg = cfg
-	
+
 	dispatcher.AddHandlerToGroup(handlers.NewMessage(message.All, usersModule.logUsers), usersModule.handlerGroup)
 }

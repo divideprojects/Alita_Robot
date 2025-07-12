@@ -769,7 +769,7 @@ func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataT
 func LoadPin(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	pinsModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(pinsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("unpin", pinsModule.unpin))

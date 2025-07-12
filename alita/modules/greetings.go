@@ -818,7 +818,7 @@ Enables the greetings module and adds handlers for welcome/goodbye messages, joi
 func LoadGreetings(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	greetingsModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(greetingsModule.moduleName, true)
 
 	// Adds Formatting kb button to Greetings Menu

@@ -423,7 +423,7 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 func LoadReports(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	reportsModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(reportsModule.moduleName, true)
 
 	dispatcher.AddHandlerToGroup(

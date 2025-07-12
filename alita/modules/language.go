@@ -111,7 +111,7 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 func LoadLanguage(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	languagesModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(languagesModule.moduleName, true)
 	HelpModule.helpableKb[languagesModule.moduleName] = languagesModule.genFullLanguageKb()
 

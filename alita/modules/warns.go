@@ -602,7 +602,7 @@ func (moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 func LoadWarns(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	warnsModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(warnsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("warn", warnsModule.warnUser))

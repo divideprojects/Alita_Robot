@@ -393,7 +393,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 func LoadLocks(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	locksModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(locksModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("lock", locksModule.lockPerm))

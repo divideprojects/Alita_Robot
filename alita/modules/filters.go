@@ -508,7 +508,7 @@ Enables the filters module and adds handlers for filter management and enforceme
 func LoadFilters(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	filtersModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(filtersModule.moduleName, true)
 
 	HelpModule.helpableKb[filtersModule.moduleName] = [][]gotgbot.InlineKeyboardButton{

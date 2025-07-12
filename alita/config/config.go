@@ -69,8 +69,6 @@ type Config struct {
 	ValidLangCodes []string
 }
 
-
-
 // ValidationError represents a configuration validation error
 type ValidationError struct {
 	Field   string
@@ -179,8 +177,6 @@ func Load() (*Config, error) {
 
 	return cfg, nil
 }
-
-
 
 // ConfigValidationError contains multiple validation errors
 type ConfigValidationError struct {

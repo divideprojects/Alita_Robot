@@ -604,7 +604,7 @@ Enables the help module and adds handlers for help, about, configuration, and do
 func LoadHelp(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	helpModule.cfg = cfg
-	
+
 	dispatcher.AddHandler(handlers.NewCommand("start", HelpModule.start))
 	dispatcher.AddHandler(handlers.NewCommand("help", HelpModule.help))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("helpq"), HelpModule.helpButtonHandler))

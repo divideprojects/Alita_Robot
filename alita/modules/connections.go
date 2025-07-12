@@ -426,7 +426,7 @@ Enables the connections module and adds handlers for connect, disconnect, and re
 func LoadConnections(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	ConnectionsModule.cfg = cfg
-	
+
 	// modules.helpModule.ableMap.Store(m.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("connect", ConnectionsModule.connect))

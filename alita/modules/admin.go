@@ -601,7 +601,7 @@ This function enables the admin module and adds handlers for admin commands such
 func LoadAdmin(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	adminModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store("Admin", true)
 
 	dispatcher.AddHandler(handlers.NewCommand("admin", adminModule.promote))

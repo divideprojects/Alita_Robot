@@ -318,7 +318,7 @@ Enables the disabling module and adds handlers for disabling, enabling, and list
 func LoadDisabling(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	disablingModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(disablingModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("disable", disablingModule.disable))

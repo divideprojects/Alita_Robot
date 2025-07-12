@@ -478,7 +478,7 @@ func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 func LoadMisc(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	miscModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(miscModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("stat", miscModule.stat))

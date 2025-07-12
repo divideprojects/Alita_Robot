@@ -541,7 +541,7 @@ Enables the blacklists module and adds handlers for blacklist management and enf
 func LoadBlacklists(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	blacklistsModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(blacklistsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("blacklists", blacklistsModule.listBlacklists))

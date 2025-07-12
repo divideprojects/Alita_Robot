@@ -435,7 +435,7 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 func LoadMutes(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	mutesModule.cfg = cfg
-	
+
 	HelpModule.AbleMap.Store(mutesModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("mute", mutesModule.mute))
