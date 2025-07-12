@@ -9,6 +9,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
@@ -28,6 +29,7 @@ import (
 var notesModule = moduleStruct{
 	moduleName:        "Notes",
 	overwriteNotesMap: make(map[string]overwriteNote),
+	cfg:               nil, // will be set during LoadNotes
 }
 
 func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
@@ -708,7 +710,10 @@ func (moduleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, replyMsgI
 	return nil
 }
 
-func LoadNotes(dispatcher *ext.Dispatcher) {
+func LoadNotes(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	notesModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(notesModule.moduleName, true)
 
 	HelpModule.helpableKb[notesModule.moduleName] = [][]gotgbot.InlineKeyboardButton{

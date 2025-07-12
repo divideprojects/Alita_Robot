@@ -11,6 +11,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/message"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 
@@ -35,6 +36,7 @@ var filtersModule = moduleStruct{
 	moduleName:          "Filters",
 	overwriteFiltersMap: make(map[string]overwriteFilter),
 	handlerGroup:        9,
+	cfg:                 nil, // will be set during LoadFilters
 }
 
 /*
@@ -503,7 +505,10 @@ LoadFilters registers all filter-related command handlers with the dispatcher.
 
 Enables the filters module and adds handlers for filter management and enforcement.
 */
-func LoadFilters(dispatcher *ext.Dispatcher) {
+func LoadFilters(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	filtersModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(filtersModule.moduleName, true)
 
 	HelpModule.helpableKb[filtersModule.moduleName] = [][]gotgbot.InlineKeyboardButton{

@@ -13,6 +13,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
@@ -26,6 +27,7 @@ import (
 var reportsModule = moduleStruct{
 	moduleName:   "Reports",
 	handlerGroup: 8,
+	cfg:          nil, // will be set during LoadReports
 }
 
 func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
@@ -418,7 +420,10 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 	return ext.EndGroups
 }
 
-func LoadReports(dispatcher *ext.Dispatcher) {
+func LoadReports(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	reportsModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(reportsModule.moduleName, true)
 
 	dispatcher.AddHandlerToGroup(

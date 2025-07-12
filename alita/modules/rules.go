@@ -11,6 +11,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
@@ -23,6 +24,7 @@ import (
 var rulesModule = moduleStruct{
 	moduleName:      "Rules",
 	defaultRulesBtn: "Rules",
+	cfg:             nil, // will be set during LoadRules
 }
 
 func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
@@ -249,7 +251,10 @@ func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func LoadRules(dispatcher *ext.Dispatcher) {
+func LoadRules(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	rulesModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(rulesModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("rules", rulesModule.sendRules))

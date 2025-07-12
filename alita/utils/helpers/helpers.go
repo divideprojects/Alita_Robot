@@ -432,13 +432,12 @@ func ChunkKeyboardSlices(slice []gotgbot.InlineKeyboardButton, chunkSize int) (c
 // NOTE: language helper functions
 
 /*
-MakeLanguageKeyboard creates an inline keyboard with buttons for all supported languages.
+MakeLanguageKeyboard creates a keyboard with language selection buttons.
 
-Each button allows the user to change the bot's language setting.
+Returns a 2D slice of InlineKeyboardButton for language selection.
 */
-func MakeLanguageKeyboard() [][]gotgbot.InlineKeyboardButton {
+func MakeLanguageKeyboard(cfg *config.Config) [][]gotgbot.InlineKeyboardButton {
 	var kb []gotgbot.InlineKeyboardButton
-	cfg := config.Get()
 
 	for _, langCode := range cfg.ValidLangCodes {
 		properLang := GetLangFormat(langCode)

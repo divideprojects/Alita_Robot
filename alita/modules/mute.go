@@ -9,6 +9,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
@@ -17,7 +18,10 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 )
 
-var mutesModule = moduleStruct{moduleName: "Mutes"}
+var mutesModule = moduleStruct{
+	moduleName: "Mutes",
+	cfg:        nil, // will be set during LoadMutes
+}
 
 /* Used to temporarily mute a user from group
 
@@ -428,7 +432,10 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func LoadMutes(dispatcher *ext.Dispatcher) {
+func LoadMutes(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	mutesModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(mutesModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("mute", mutesModule.mute))

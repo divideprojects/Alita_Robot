@@ -174,31 +174,46 @@ func (m *moduleEnabled) LoadModules() []string {
 	return modules
 }
 
+// helpModule holds the configuration for the help module
+var helpModule = moduleStruct{
+	moduleName: "Help",
+	cfg:        nil, // will be set during LoadHelp
+}
+
 /*
 about displays information about the bot, including FAQs and about text.
 
 Handles both command and callback query contexts.
 */
-func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
-	msg := ctx.EffectiveMessage
-
+func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.New(db.GetLanguage(ctx))
-
+	msg := ctx.EffectiveMessage
 	var (
 		currText string
 		currKb   gotgbot.InlineKeyboardMarkup
 	)
 
-	if query := ctx.CallbackQuery; query != nil {
-		args := strings.Split(query.Data, ".")
-		response := args[1]
+	aboutText := tr.GetString("strings.Help.about_text")
+	aboutKb := gotgbot.InlineKeyboardMarkup{
+		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
+			{
+				{
+					Text:         tr.GetString("strings.Help.about_me"),
+					CallbackData: "about.me",
+				},
+			},
+		},
+	}
+
+	if query := ctx.Update.CallbackQuery; query != nil {
+		response := strings.Split(query.Data, ".")[1]
 
 		switch response {
 		case "main":
 			currText = aboutText
 			currKb = aboutKb
 		case "me":
-			cfg := config.Get()
+			cfg := m.cfg
 			currText = fmt.Sprintf(tr.GetString("strings.Help.About"), b.Username, cfg.BotVersion)
 			currKb = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
@@ -586,13 +601,16 @@ LoadHelp registers all help-related command handlers with the dispatcher.
 
 Enables the help module and adds handlers for help, about, configuration, and donation commands.
 */
-func LoadHelp(dispatcher *ext.Dispatcher) {
+func LoadHelp(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	helpModule.cfg = cfg
+	
 	dispatcher.AddHandler(handlers.NewCommand("start", HelpModule.start))
 	dispatcher.AddHandler(handlers.NewCommand("help", HelpModule.help))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("helpq"), HelpModule.helpButtonHandler))
 	dispatcher.AddHandler(handlers.NewCommand("donate", HelpModule.donate))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("configuration"), HelpModule.botConfig))
-	dispatcher.AddHandler(handlers.NewCommand("about", HelpModule.about))
-	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("about"), HelpModule.about))
+	dispatcher.AddHandler(handlers.NewCommand("about", helpModule.about))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("about"), helpModule.about))
 	initHelpButtons()
 }

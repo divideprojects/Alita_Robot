@@ -8,6 +8,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -16,6 +17,7 @@ import (
 var usersModule = moduleStruct{
 	moduleName:   "Users",
 	handlerGroup: -1,
+	cfg:          nil, // will be set during LoadUsers
 }
 
 func (moduleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
@@ -95,6 +97,9 @@ func (moduleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func LoadUsers(dispatcher *ext.Dispatcher) {
+func LoadUsers(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	usersModule.cfg = cfg
+	
 	dispatcher.AddHandlerToGroup(handlers.NewMessage(message.All, usersModule.logUsers), usersModule.handlerGroup)
 }

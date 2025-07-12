@@ -10,6 +10,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -27,7 +28,10 @@ bansModule provides ban, kick, restrict, and unrestrict logic for group chats.
 
 Implements all moderation actions related to user removal and restriction.
 */
-var bansModule = moduleStruct{moduleName: "Bans"}
+var bansModule = moduleStruct{
+	moduleName: "Bans",
+	cfg:        nil, // will be set during LoadBans
+}
 
 /* Used to Kick a user from group
 
@@ -1059,7 +1063,10 @@ LoadBans registers all ban, kick, restrict, and unrestrict command handlers with
 
 Enables the bans module and adds handlers for all moderation-related commands and callbacks.
 */
-func LoadBans(dispatcher *ext.Dispatcher) {
+func LoadBans(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	bansModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(bansModule.moduleName, true)
 
 	// ban cmds

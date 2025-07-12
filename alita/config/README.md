@@ -34,9 +34,13 @@ func main() {
     // Setup logger
     logger.Setup(cfg.Debug)
     
-    // Use configuration
+    // Use configuration - pass cfg to functions that need it
     fmt.Printf("Bot token: %s\n", cfg.BotToken)
     fmt.Printf("Owner ID: %d\n", cfg.OwnerId)
+    
+    // Pass config to services
+    // db.Initialize(cfg)
+    // myService.Start(cfg)
 }
 ```
 
@@ -112,4 +116,25 @@ The configuration system follows a simple pattern:
 
 1. **Load configuration**: Use `config.Load()` in `main()` to get a validated Config struct
 2. **Setup services**: Pass the config to services that need it (logger, database, etc.)
-3. **Use throughout app**: Access configuration values through the Config struct fields 
+3. **Use throughout app**: Pass the config struct to functions and modules that need it
+
+### Dependency Injection Pattern
+
+```go
+// Good: Explicit dependency injection
+func MyService(cfg *config.Config) {
+    if cfg.Debug {
+        log.Debug("Debug mode enabled")
+    }
+}
+
+// Load and pass config
+cfg, err := config.Load()
+if err != nil {
+    log.Fatal(err)
+}
+
+MyService(cfg)
+```
+
+This approach makes dependencies explicit, improves testability, and follows Go best practices. 

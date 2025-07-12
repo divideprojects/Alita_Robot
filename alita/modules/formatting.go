@@ -8,6 +8,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	log "github.com/sirupsen/logrus"
 
@@ -22,7 +23,10 @@ formattingModule provides logic for formatting help and markdown support.
 
 Implements commands and handlers for markdown help and formatting options.
 */
-var formattingModule = moduleStruct{moduleName: "Formatting"}
+var formattingModule = moduleStruct{
+	moduleName: "Formatting",
+	cfg:        nil, // will be set during LoadMkdCmd
+}
 
 /*
 markdownHelp provides markdown and formatting help to users.
@@ -188,7 +192,10 @@ LoadMkdCmd registers formatting-related command handlers with the dispatcher.
 
 Enables the formatting module and adds handlers for markdown help and formatting options.
 */
-func LoadMkdCmd(dispatcher *ext.Dispatcher) {
+func LoadMkdCmd(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	formattingModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(formattingModule.moduleName, true)
 	HelpModule.helpableKb[formattingModule.moduleName] = formattingModule.genFormattingKb()
 	cmdDecorator.MultiCommand(dispatcher, []string{"markdownhelp", "formatting"}, formattingModule.markdownHelp)

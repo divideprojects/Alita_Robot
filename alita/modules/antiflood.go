@@ -14,6 +14,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/message"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -48,6 +49,7 @@ type floodControl struct {
 var _normalAntifloodModule = moduleStruct{
 	moduleName:   "Antiflood",
 	handlerGroup: 4,
+	cfg:          nil, // will be set during LoadAntiflood
 }
 
 var antifloodModule = antifloodStruct{
@@ -477,7 +479,10 @@ LoadAntiflood registers antiflood-related command handlers with the dispatcher.
 
 Enables the antiflood module and adds handlers for flood control commands and message group checks.
 */
-func LoadAntiflood(dispatcher *ext.Dispatcher) {
+func LoadAntiflood(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	_normalAntifloodModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(antifloodModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("setflood", antifloodModule.setFlood))

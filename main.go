@@ -37,11 +37,6 @@ func main() {
 		log.Fatal("Failed to load configuration: ", err)
 	}
 
-	// Initialize global config for modules that use config.Get()
-	if err := config.Initialize(); err != nil {
-		log.Fatal("Failed to initialize global config: ", err)
-	}
-
 	// Set up logger based on config
 	logger.Setup(cfg.Debug)
 
@@ -123,7 +118,7 @@ func main() {
 	}
 
 	// Loading Modules
-	alita.LoadModules(dispatcher)
+	alita.LoadModules(dispatcher, cfg)
 
 	// List loaded modules from the modules directory.
 	log.Infof(

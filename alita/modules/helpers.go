@@ -15,6 +15,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/text/cases"
@@ -34,6 +35,7 @@ type moduleStruct struct {
 	AbleMap             moduleEnabled
 	AltHelpOptions      map[string][]string
 	helpableKb          map[string][][]gotgbot.InlineKeyboardButton
+	cfg                 *config.Config
 }
 
 // struct for filters module

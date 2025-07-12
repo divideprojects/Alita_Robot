@@ -11,6 +11,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
@@ -25,7 +26,10 @@ disablingModule provides logic for disabling and enabling commands in group chat
 
 Implements commands to disable, enable, and list disabled commands, as well as related settings.
 */
-var disablingModule = moduleStruct{moduleName: "Disabling"}
+var disablingModule = moduleStruct{
+	moduleName: "Disabling",
+	cfg:        nil, // will be set during LoadDisabling
+}
 
 /*
 	To disable a command
@@ -311,7 +315,10 @@ LoadDisabling registers all disabling/enabling command handlers with the dispatc
 
 Enables the disabling module and adds handlers for disabling, enabling, and listing commands.
 */
-func LoadDisabling(dispatcher *ext.Dispatcher) {
+func LoadDisabling(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	disablingModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(disablingModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("disable", disablingModule.disable))

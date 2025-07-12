@@ -11,6 +11,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
@@ -24,7 +25,10 @@ ConnectionsModule provides logic for managing user-to-chat connections.
 
 Implements commands to connect, disconnect, and manage chat connections for users and admins.
 */
-var ConnectionsModule = moduleStruct{moduleName: "Connections"}
+var ConnectionsModule = moduleStruct{
+	moduleName: "Connections",
+	cfg:        nil, // will be set during LoadConnections
+}
 
 /*
 	Check the status of connection of a user in their PM
@@ -419,7 +423,10 @@ LoadConnections registers all connection-related command handlers with the dispa
 
 Enables the connections module and adds handlers for connect, disconnect, and related commands.
 */
-func LoadConnections(dispatcher *ext.Dispatcher) {
+func LoadConnections(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	ConnectionsModule.cfg = cfg
+	
 	// modules.helpModule.ableMap.Store(m.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("connect", ConnectionsModule.connect))

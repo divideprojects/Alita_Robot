@@ -17,8 +17,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-
-	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 /*
@@ -26,7 +24,10 @@ devsModule provides developer and admin commands for bot management.
 
 Implements commands for team management, chat info, stats, and database cleanup.
 */
-var devsModule = moduleStruct{moduleName: "Dev"}
+var devsModule = moduleStruct{
+	moduleName: "Dev",
+	cfg:        nil, // will be set during LoadDev
+}
 
 // for general purposes for strings in functions below
 var txt string
@@ -36,10 +37,10 @@ chatInfo retrieves information about a specified chat.
 
 Only accessible by the owner or devs. Replies with chat name, ID, user count, and invite link.
 */
-func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
-	cfg := config.Get()
+	cfg := m.cfg
 
 	// only devs and owner can access this
 	if user.Id != cfg.OwnerId && !memStatus.Dev {
@@ -82,10 +83,10 @@ chatList generates and sends a list of all chats the bot is in.
 
 Only accessible by the owner or devs. Sends the list as a text file.
 */
-func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
-	cfg := config.Get()
+	cfg := m.cfg
 
 	// only devs and owner can access this
 	if user.Id != cfg.OwnerId && !memStatus.Dev {
@@ -164,11 +165,11 @@ leaveChat makes the bot leave a specified chat.
 
 Only accessible by the owner or devs. Takes the chat ID as an argument.
 */
-func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
 	tr := i18n.New(db.GetLanguage(ctx))
-	cfg := config.Get()
+	cfg := m.cfg
 
 	// only devs and owner can access this
 	if user.Id != cfg.OwnerId && !memStatus.Dev {
@@ -204,9 +205,9 @@ addSudo adds a user to the sudo list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
-	cfg := config.Get()
+	cfg := m.cfg
 	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
 	}
@@ -232,27 +233,24 @@ func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = fmt.Sprintf("Added %s to Sudo List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.AddSudo(userId)
 	}
-	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
+
+	_, err = msg.Reply(b, txt, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
 	}
+
 	return ext.ContinueGroups
 }
 
-/*
-	Function used to add dev users in database of bot
-
-Can only be used by OWNER
-*/
 /*
 addDev adds a user to the dev list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
-	cfg := config.Get()
+	cfg := m.cfg
 	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
 	}
@@ -278,27 +276,24 @@ func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = fmt.Sprintf("Added %s to Dev List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.AddDev(userId)
 	}
-	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
+
+	_, err = msg.Reply(b, txt, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
 	}
+
 	return ext.ContinueGroups
 }
 
-/*
-	Function used to remove sudo users from database of bot
-
-Can only be used by OWNER
-*/
 /*
 remSudo removes a user from the sudo list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
-	cfg := config.Get()
+	cfg := m.cfg
 	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
 	}
@@ -324,27 +319,24 @@ func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = fmt.Sprintf("Removed %s from Sudo List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.RemSudo(userId)
 	}
-	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
+
+	_, err = msg.Reply(b, txt, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
 	}
+
 	return ext.ContinueGroups
 }
 
-/*
-	Function used to remove dev users from database of bot
-
-Can only be used by OWNER
-*/
 /*
 remDev removes a user from the dev list in the database.
 
 Only the owner can use this command. Replies with the result.
 */
-func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
-	cfg := config.Get()
+	cfg := m.cfg
 	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
 	}
@@ -370,7 +362,67 @@ func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = fmt.Sprintf("Removed %s from Dev List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.RemDev(userId)
 	}
-	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
+
+	_, err = msg.Reply(b, txt, helpers.Shtml())
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return ext.ContinueGroups
+}
+
+/*
+listTeam lists all team members (sudos and devs) in the database.
+
+Only accessible by the owner or devs. Replies with the list.
+*/
+func (m moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
+	user := ctx.EffectiveSender.User
+	memStatus := db.GetTeamMemInfo(user.Id)
+	cfg := m.cfg
+
+	// only devs and owner can access this
+	if user.Id != cfg.OwnerId && !memStatus.Dev {
+		return ext.ContinueGroups
+	}
+
+	msg := ctx.EffectiveMessage
+	edits, err := msg.Reply(
+		b,
+		"<code>Getting team members...</code>",
+		&gotgbot.SendMessageOpts{
+			ParseMode: helpers.HTML,
+		},
+	)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	teamMembers := db.GetTeamMembers()
+	var teamText string
+	if len(teamMembers) == 0 {
+		teamText = "No team members found!"
+	} else {
+		teamText = "<b>Team Members:</b>\n"
+		for userId, role := range teamMembers {
+			reqUser, err := b.GetChat(userId, nil)
+			if err != nil {
+				teamText += fmt.Sprintf("• %d (%s)\n", userId, role)
+			} else {
+				teamText += fmt.Sprintf("• %s (%s)\n", helpers.MentionHtml(reqUser.Id, helpers.GetFullName(reqUser.FirstName, reqUser.LastName)), role)
+			}
+		}
+	}
+
+	_, _, err = edits.EditText(
+		b,
+		teamText,
+		&gotgbot.EditMessageTextOpts{
+			ParseMode: helpers.HTML,
+		},
+	)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -379,93 +431,14 @@ func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 /*
-	Function used to list all members of bot's development team
-
-Can only be used by existing team members
-*/
-/*
-listTeam lists all members of the bot's development team.
-
-Only accessible by existing team members. Replies with formatted lists of dev and sudo users.
-*/
-func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
-	user := ctx.EffectiveSender.User
-	cfg := config.Get()
-
-	teamUsers := db.GetTeamMembers()
-	var teamint64Slice []int64
-	for k := range teamUsers {
-		teamint64Slice = append(teamint64Slice, k)
-	}
-	teamint64Slice = append(teamint64Slice, cfg.OwnerId)
-
-	if !string_handling.FindInInt64Slice(teamint64Slice, user.Id) {
-		return ext.EndGroups
-	}
-
-	var (
-		txt       string
-		dev       = "<b>Dev Users:</b>\n"
-		sudo      = "<b>Sudo Users:</b>\n"
-		sudoUsers = make([]string, 0)
-		devUsers  = make([]string, 0)
-	)
-	msg := ctx.EffectiveMessage
-
-	if len(teamUsers) == 0 {
-		txt = "No users are added Added in Team!"
-	} else {
-		for userId, uPerm := range teamUsers {
-			reqUser, err := b.GetChat(userId, nil)
-			if err != nil {
-				log.Error(err)
-				return err
-			}
-
-			userMentioned := helpers.MentionHtml(reqUser.Id, helpers.GetFullName(reqUser.FirstName, reqUser.LastName))
-			switch uPerm {
-			case "dev":
-				devUsers = append(devUsers, fmt.Sprintf("• %s", userMentioned))
-			case "sudo":
-				sudoUsers = append(sudoUsers, fmt.Sprintf("• %s", userMentioned))
-			}
-		}
-		if len(sudoUsers) == 0 {
-			sudo += "\nNo Users"
-		} else {
-			sudo += strings.Join(sudoUsers, "\n")
-		}
-		if len(devUsers) == 0 {
-			dev += "\nNo Users"
-		} else {
-			dev += strings.Join(devUsers, "\n")
-		}
-		txt = dev + "\n\n" + sudo
-	}
-
-	_, err := msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
-	return ext.EndGroups
-}
-
-/*
-	Function used to fetch stats of bot
-
-Can only be used by OWNER
-*/
-/*
 getStats fetches and displays bot statistics.
 
-Only accessible by the owner or devs. Replies with stats in a formatted message.
+Only accessible by the owner or devs. Replies with database stats.
 */
-func (moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
-	cfg := config.Get()
+	cfg := m.cfg
 
 	// only devs and owner can access this
 	if user.Id != cfg.OwnerId && !memStatus.Dev {
@@ -505,7 +478,10 @@ LoadDev registers all developer/admin command handlers with the dispatcher.
 
 Enables the dev module and adds handlers for team management, chat info, stats, and database cleanup.
 */
-func LoadDev(dispatcher *ext.Dispatcher) {
+func LoadDev(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	devsModule.cfg = cfg
+	
 	dispatcher.AddHandler(handlers.NewCommand("stats", devsModule.getStats))
 	dispatcher.AddHandler(handlers.NewCommand("addsudo", devsModule.addSudo))
 	dispatcher.AddHandler(handlers.NewCommand("adddev", devsModule.addDev))

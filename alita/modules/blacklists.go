@@ -14,6 +14,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/message"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
@@ -32,6 +33,7 @@ Implements commands to add, remove, list, and configure blacklists and their act
 var blacklistsModule = moduleStruct{
 	moduleName:   "Blacklists",
 	handlerGroup: 7,
+	cfg:          nil, // will be set during LoadBlacklists
 }
 
 /*
@@ -536,7 +538,10 @@ LoadBlacklists registers all blacklist-related command handlers with the dispatc
 
 Enables the blacklists module and adds handlers for blacklist management and enforcement.
 */
-func LoadBlacklists(dispatcher *ext.Dispatcher) {
+func LoadBlacklists(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	blacklistsModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(blacklistsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("blacklists", blacklistsModule.listBlacklists))

@@ -69,8 +69,7 @@ type Config struct {
 	ValidLangCodes []string
 }
 
-// Global config instance for modules that use config.Get()
-var globalConfig *Config
+
 
 // ValidationError represents a configuration validation error
 type ValidationError struct {
@@ -181,24 +180,7 @@ func Load() (*Config, error) {
 	return cfg, nil
 }
 
-// Initialize loads and sets the global configuration for modules that use config.Get()
-func Initialize() error {
-	cfg, err := Load()
-	if err != nil {
-		return err
-	}
-	globalConfig = cfg
-	return nil
-}
 
-// Get returns the global configuration instance
-// Panics if called before Initialize()
-func Get() *Config {
-	if globalConfig == nil {
-		panic("config not initialized - call config.Initialize() first")
-	}
-	return globalConfig
-}
 
 // ConfigValidationError contains multiple validation errors
 type ConfigValidationError struct {

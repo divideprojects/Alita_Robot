@@ -14,6 +14,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
@@ -26,9 +27,10 @@ import (
 
 var (
 	locksModule = moduleStruct{
-		moduleName:        "Languages",
+		moduleName:        "Locks",
 		permHandlerGroup:  5,
 		restrHandlerGroup: 6,
+		cfg:               nil, // will be set during LoadLocks
 	}
 	arabmatch, _                 = regexp.Compile("[\u0600-\u06FF]") // the regex detects the arabic language
 	GIF          filters.Message = message.Animation
@@ -388,7 +390,10 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func LoadLocks(dispatcher *ext.Dispatcher) {
+func LoadLocks(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	locksModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(locksModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("lock", locksModule.lockPerm))

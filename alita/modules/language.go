@@ -11,15 +11,19 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
 
-var languagesModule = moduleStruct{moduleName: "Languages"}
+var languagesModule = moduleStruct{
+	moduleName: "Languages",
+	cfg:        nil, // will be set during LoadLanguage
+}
 
-func (moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
-	keyboard := helpers.MakeLanguageKeyboard()
+func (m moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
+	keyboard := helpers.MakeLanguageKeyboard(m.cfg)
 	keyboard = append(
 		keyboard,
 		[]gotgbot.InlineKeyboardButton{
@@ -104,7 +108,10 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func LoadLanguage(dispatcher *ext.Dispatcher) {
+func LoadLanguage(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	languagesModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(languagesModule.moduleName, true)
 	HelpModule.helpableKb[languagesModule.moduleName] = languagesModule.genFullLanguageKb()
 

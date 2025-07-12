@@ -15,6 +15,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/chatjoinrequest"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
@@ -27,7 +28,10 @@ greetingsModule provides logic for managing welcome and goodbye messages in grou
 
 Implements commands to set, reset, and configure greetings, as well as handlers for join/leave events and join requests.
 */
-var greetingsModule = moduleStruct{moduleName: "Greetings"}
+var greetingsModule = moduleStruct{
+	moduleName: "Greetings",
+	cfg:        nil, // will be set during LoadGreetings
+}
 
 /*
 welcome displays or toggles the welcome message settings for the chat.
@@ -811,7 +815,10 @@ LoadGreetings registers all greeting-related command handlers with the dispatche
 
 Enables the greetings module and adds handlers for welcome/goodbye messages, join/leave events, and join requests.
 */
-func LoadGreetings(dispatcher *ext.Dispatcher) {
+func LoadGreetings(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	greetingsModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(greetingsModule.moduleName, true)
 
 	// Adds Formatting kb button to Greetings Menu

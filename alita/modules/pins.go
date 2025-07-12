@@ -9,6 +9,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
@@ -25,6 +26,7 @@ import (
 var pinsModule = moduleStruct{
 	moduleName:   "Pins",
 	handlerGroup: 10,
+	cfg:          nil, // will be set during LoadPin
 }
 
 type pinType struct {
@@ -764,7 +766,10 @@ func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataT
 	return
 }
 
-func LoadPin(dispatcher *ext.Dispatcher) {
+func LoadPin(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	pinsModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(pinsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("unpin", pinsModule.unpin))

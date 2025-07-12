@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
 	log "github.com/sirupsen/logrus"
@@ -21,8 +22,11 @@ import (
 )
 
 var (
-	purgesModule = moduleStruct{moduleName: "Purges"}
-	delMsgs      = map[int64]int64{}
+	purgesModule = moduleStruct{
+		moduleName: "Purges",
+		cfg:        nil, // will be set during LoadPurges
+	}
+	delMsgs = map[int64]int64{}
 )
 
 func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
@@ -386,7 +390,10 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func LoadPurges(dispatcher *ext.Dispatcher) {
+func LoadPurges(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	purgesModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(purgesModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("del", purgesModule.delCmd))

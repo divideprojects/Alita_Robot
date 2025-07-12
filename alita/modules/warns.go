@@ -10,6 +10,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
@@ -22,7 +23,10 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 )
 
-var warnsModule = moduleStruct{moduleName: "Warns"}
+var warnsModule = moduleStruct{
+	moduleName: "Warns",
+	cfg:        nil, // will be set during LoadWarns
+}
 
 func (moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
@@ -595,7 +599,10 @@ func (moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func LoadWarns(dispatcher *ext.Dispatcher) {
+func LoadWarns(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	warnsModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(warnsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("warn", warnsModule.warnUser))

@@ -28,7 +28,11 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
 
-var miscModule = moduleStruct{moduleName: "Misc"}
+// miscModule holds the configuration for the misc module
+var miscModule = moduleStruct{
+	moduleName: "Misc",
+	cfg:        nil, // will be set during LoadMisc
+}
 
 func (moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.New(db.GetLanguage(ctx))
@@ -167,7 +171,7 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -177,78 +181,69 @@ func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
+	edited, err := msg.Reply(b, tr.GetString("strings.Misc.paste.pasting"), helpers.Shtml())
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
 	var (
-		err  error
-		text string
+		text      string
+		extention string
 	)
 
-	if len(args) == 1 && msg.ReplyToMessage == nil {
-		_, err = msg.Reply(b, tr.GetString("strings.Misc.paste.need_text_or_document"), nil)
-		if err != nil {
-			log.Error(err)
-		}
-		return ext.EndGroups
-	}
-	if msg.ReplyToMessage != nil && msg.ReplyToMessage.Text == "" && msg.ReplyToMessage.Document == nil && msg.ReplyToMessage.Caption == "" {
-		_, err = msg.Reply(b, tr.GetString("strings.Misc.paste.need_text_or_document"), nil)
-		if err != nil {
-			log.Error(err)
-		}
-		return ext.EndGroups
-	}
-
-	edited, _ := msg.Reply(b, tr.GetString("strings.Misc.paste.processing"), nil)
-	extention := "txt"
 	if len(args) >= 2 {
 		text = strings.Join(args[1:], " ")
-	} else if len(args) != 2 && msg.ReplyToMessage.Text != "" {
-		text = msg.ReplyToMessage.Text
-	} else if len(args) != 2 && msg.ReplyToMessage.Caption != "" && msg.ReplyToMessage.Document == nil {
-		text = msg.ReplyToMessage.Caption
-	} else if msg.ReplyToMessage.Document != nil {
-		if strings.Contains(msg.ReplyToMessage.Document.FileName, ".") {
-			extention = strings.SplitN(msg.ReplyToMessage.Document.FileName, ".", 2)[1]
-		}
-		f, err := b.GetFile(msg.ReplyToMessage.Document.FileId, nil)
-		if err != nil {
-			_, _, _ = edited.EditText(b, tr.GetString("strings.Misc.paste.get_file_error"), nil)
-			return ext.EndGroups
-		}
-		if f.FileSize > 600000 {
-			_, _, _ = edited.EditText(b, tr.GetString("strings.Misc.paste.file_too_big"), nil)
-			return ext.EndGroups
-		}
-		fileName := fmt.Sprintf("paste_%d_%d.txt", msg.Chat.Id, msg.MessageId)
-		cfg := config.Get()
-		raw, err := http.Get(cfg.ApiServer + "/file/bot" + cfg.BotToken + "/" + f.FilePath)
-		if err != nil {
-			log.Error(err)
-		}
-		defer func(Body io.ReadCloser) {
-			_ = Body.Close()
-		}(raw.Body)
-		out, err := os.Create(fileName)
-		if err != nil {
-			log.Error(err)
-		}
-		_, err = io.Copy(out, raw.Body)
-		if err != nil {
-			log.Error(err)
+		extention = "txt"
+	} else if msg.ReplyToMessage != nil {
+		if msg.ReplyToMessage.Text != "" {
+			text = msg.ReplyToMessage.Text
+			extention = "txt"
+		} else if msg.ReplyToMessage.Caption != "" {
+			text = msg.ReplyToMessage.Caption
+			extention = "txt"
+		} else if msg.ReplyToMessage.Document != nil {
+			f, err := b.GetFile(msg.ReplyToMessage.Document.FileId, nil)
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+			if f.FileSize > 600000 {
+				_, _, _ = edited.EditText(b, tr.GetString("strings.Misc.paste.file_too_big"), nil)
+				return ext.EndGroups
+			}
+			fileName := fmt.Sprintf("paste_%d_%d.txt", msg.Chat.Id, msg.MessageId)
+			cfg := m.cfg
+			raw, err := http.Get(cfg.ApiServer + "/file/bot" + cfg.BotToken + "/" + f.FilePath)
+			if err != nil {
+				log.Error(err)
+			}
+			defer func(Body io.ReadCloser) {
+				_ = Body.Close()
+			}(raw.Body)
+			out, err := os.Create(fileName)
+			if err != nil {
+				log.Error(err)
+			}
+			_, err = io.Copy(out, raw.Body)
+			if err != nil {
+				log.Error(err)
+				err = os.Remove(fileName)
+				if err != nil {
+					log.Error(err)
+				}
+				return ext.EndGroups
+			}
+			data, er := os.ReadFile(fileName)
+			if er != nil {
+				log.Error(er)
+				return ext.EndGroups
+			}
+			text = string(data)
 			err = os.Remove(fileName)
 			if err != nil {
 				log.Error(err)
 			}
-			return ext.EndGroups
-		}
-		data, er := os.ReadFile(fileName)
-		if er != nil {
-			log.Error(er)
-			return ext.EndGroups
-		}
-		text = string(data)
-		err = os.Remove(fileName)
-		if err != nil {
-			log.Error(err)
 		}
 	}
 	pasted, key := helpers.PasteToNekoBin(text)
@@ -291,7 +286,7 @@ func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	sender := ctx.EffectiveSender
@@ -344,7 +339,7 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 				text += fmt.Sprintf("\nUsername: @%s", user.Username)
 			}
 			text += fmt.Sprintf("\nUser link: %s", helpers.MentionHtml(user.Id, "link"))
-			cfg := config.Get()
+			cfg := m.cfg
 			if user.Id == cfg.OwnerId {
 				text += "\nHe is my owner!"
 			}
@@ -480,7 +475,10 @@ func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func LoadMisc(dispatcher *ext.Dispatcher) {
+func LoadMisc(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	miscModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store(miscModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("stat", miscModule.stat))

@@ -12,12 +12,18 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
+
+var botUpdatesModule = moduleStruct{
+	moduleName: "BotUpdates",
+	cfg:        nil, // will be set during LoadBotUpdates
+}
 
 // function used to get status of bot when it joined a group and send a message to the group
 // also send a message to MESSAGE_DUMP telling that it joined a group
@@ -242,7 +248,9 @@ LoadBotUpdates registers handlers for bot join events, admin cache updates, and 
 
 This function ensures the bot responds appropriately to group membership changes and admin actions.
 */
-func LoadBotUpdates(dispatcher *ext.Dispatcher) {
+func LoadBotUpdates(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	botUpdatesModule.cfg = cfg
 	dispatcher.AddHandlerToGroup(
 		handlers.NewMyChatMember(
 			func(u *gotgbot.ChatMemberUpdated) bool {

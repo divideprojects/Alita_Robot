@@ -6,6 +6,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
@@ -22,7 +23,10 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 )
 
-var adminModule = moduleStruct{moduleName: "Admin"}
+var adminModule = moduleStruct{
+	moduleName: "Admin",
+	cfg:        nil, // will be set during LoadAdmin
+}
 
 /*
 	Used to list all the admin in a group
@@ -594,7 +598,10 @@ LoadAdmin registers all admin-related command handlers with the dispatcher.
 
 This function enables the admin module and adds handlers for admin commands such as promote, demote, adminlist, invitelink, title, anonadmin, and admincache.
 */
-func LoadAdmin(dispatcher *ext.Dispatcher) {
+func LoadAdmin(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	adminModule.cfg = cfg
+	
 	HelpModule.AbleMap.Store("Admin", true)
 
 	dispatcher.AddHandler(handlers.NewCommand("admin", adminModule.promote))
