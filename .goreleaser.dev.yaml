@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
+version: 2
+
+project_name: alita_robot
+
+gomod:
+  env:
+    - CGO_ENABLED=1
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod download
+
+builds:
+  - binary: alita_robot
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }}
+
+snapshot:
+  version_template: "dev-{{ .ShortCommit }}"
+
+dockers:
+  - goarch: amd64
+    dockerfile: docker/goreleaser
+    use: buildx
+    image_templates:
+      - "ghcr.io/divideprojects/{{ .ProjectName }}:dev-amd64"
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+  - goarch: arm64
+    dockerfile: docker/goreleaser
+    use: buildx
+    image_templates:
+      - "ghcr.io/divideprojects/{{ .ProjectName }}:dev-arm64v8"
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+
+docker_manifests:
+  - name_template: "ghcr.io/divideprojects/{{ .ProjectName }}:dev"
+    image_templates:
+      - "ghcr.io/divideprojects/{{ .ProjectName }}:dev-amd64"
+      - "ghcr.io/divideprojects/{{ .ProjectName }}:dev-arm64v8"

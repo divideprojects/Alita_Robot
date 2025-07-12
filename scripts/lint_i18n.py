@@ -19,11 +19,10 @@ Exit codes:
 """
 
 import argparse
-import os
 import re
 import sys
 from pathlib import Path
-from typing import List, Tuple, Dict
+from typing import List, Dict
 
 
 # Regex patterns for i18n validation

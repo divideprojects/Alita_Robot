@@ -20,7 +20,6 @@ import argparse
 import sys
 from pathlib import Path
 from ruamel.yaml import YAML
-from ruamel.yaml.tokens import CommentToken
 
 # --- Configuration ---
 SOURCE_LANGUAGE = "en"
