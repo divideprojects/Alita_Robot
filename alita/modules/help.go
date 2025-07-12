@@ -75,25 +75,25 @@ func getAboutKb(tr *i18n.I18n) gotgbot.InlineKeyboardMarkup {
 		log.Errorf("[help] missing translation for about_me: %v", aboutMeErr)
 		aboutMeText = "About Me"
 	}
-	
+
 	newsChannelText, newsChannelErr := tr.GetStringWithError("strings.Help.about.news_channel_button")
 	if newsChannelErr != nil {
 		log.Errorf("[help] missing translation for about.news_channel_button: %v", newsChannelErr)
 		newsChannelText = "News Channel"
 	}
-	
+
 	supportGroupText, supportGroupErr := tr.GetStringWithError("strings.Help.start.support_group_button")
 	if supportGroupErr != nil {
 		log.Errorf("[help] missing translation for start.support_group_button: %v", supportGroupErr)
 		supportGroupText = "Support Group"
 	}
-	
+
 	configurationText, configurationErr := tr.GetStringWithError("strings.Help.about.configuration_button")
 	if configurationErr != nil {
 		log.Errorf("[help] missing translation for about.configuration_button: %v", configurationErr)
 		configurationText = "Configuration"
 	}
-	
+
 	return gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
@@ -136,19 +136,19 @@ func getStartMarkup(tr *i18n.I18n) gotgbot.InlineKeyboardMarkup {
 		log.Errorf("[help] missing translation for start.about_button: %v", aboutButtonErr)
 		aboutButtonText = "About"
 	}
-	
+
 	supportGroupText, supportGroupErr := tr.GetStringWithError("strings.Help.start.support_group_button")
 	if supportGroupErr != nil {
 		log.Errorf("[help] missing translation for start.support_group_button: %v", supportGroupErr)
 		supportGroupText = "Support Group"
 	}
-	
+
 	languageButtonText, languageButtonErr := tr.GetStringWithError("strings.Help.start.language_button")
 	if languageButtonErr != nil {
 		log.Errorf("[help] missing translation for start.language_button: %v", languageButtonErr)
 		languageButtonText = "Language"
 	}
-	
+
 	return gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{

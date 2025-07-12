@@ -175,7 +175,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	baseStr := kickedUserMsg
 
 	if reason != "" {
-		kickedReasonMsg, kickedReasonErr := tr.GetStringWithError("strings."+m.moduleName+".kick.kicked_reason")
+		kickedReasonMsg, kickedReasonErr := tr.GetStringWithError("strings." + m.moduleName + ".kick.kicked_reason")
 		if kickedReasonErr != nil {
 			log.Errorf("[bans] missing translation for kick.kicked_reason: %v", kickedReasonErr)
 			kickedReasonMsg = "\n<b>Reason:</b> %s"
@@ -485,7 +485,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 		baseStr := normalBanMsg
 
 		if reason != "" {
-			banReasonMsg, banReasonErr := tr.GetStringWithError("strings."+m.moduleName+".ban.ban_reason")
+			banReasonMsg, banReasonErr := tr.GetStringWithError("strings." + m.moduleName + ".ban.ban_reason")
 			if banReasonErr != nil {
 				log.Errorf("[bans] missing translation for ban.ban_reason: %v", banReasonErr)
 				banReasonMsg = "\n<b>Reason:</b> %s"
@@ -732,7 +732,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 
-		unbannedUserMsg, unbannedUserErr := tr.GetStringWithError("strings."+m.moduleName+".unban.unbanned_user")
+		unbannedUserMsg, unbannedUserErr := tr.GetStringWithError("strings." + m.moduleName + ".unban.unbanned_user")
 		if unbannedUserErr != nil {
 			log.Errorf("[bans] missing translation for unban.unbanned_user: %v", unbannedUserErr)
 			unbannedUserMsg = "User %s has been unbanned."
