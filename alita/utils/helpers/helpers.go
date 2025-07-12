@@ -11,7 +11,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 
 	tgmd2html "github.com/PaulSonOfLars/gotg_md2html"
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -873,7 +872,6 @@ func SendFilter(b *gotgbot.Bot, ctx *ext.Context, filterData *db.ChatFilters, re
 	buttons = tmpfilterData.Buttons
 
 	// Random data goes there
-	rand.Seed(time.Now().Unix())
 	rstrings := strings.Split(tmpfilterData.FilterReply, "%%%")
 	if len(rstrings) == 1 {
 		sent = rstrings[0]
@@ -928,7 +926,6 @@ func SendNote(b *gotgbot.Bot, chat *gotgbot.Chat, ctx *ext.Context, noteData *db
 	buttons = noteData.Buttons
 
 	// Random data goes there
-	rand.Seed(time.Now().Unix())
 	rstrings := strings.Split(noteData.NoteContent, "%%%")
 	if len(rstrings) == 1 {
 		sent = rstrings[0]
