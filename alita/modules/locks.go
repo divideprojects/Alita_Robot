@@ -14,19 +14,23 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 var (
 	locksModule = moduleStruct{
-		moduleName:        "Languages",
+		moduleName:        "Locks",
 		permHandlerGroup:  5,
 		restrHandlerGroup: 6,
+		cfg:               nil, // will be set during LoadLocks
 	}
 	arabmatch, _                 = regexp.Compile("[\u0600-\u06FF]") // the regex detects the arabic language
 	GIF          filters.Message = message.Animation
@@ -167,7 +171,6 @@ func (m moduleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -179,10 +182,8 @@ func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	args := ctx.Args()[1:]
 	var toLock []string
 
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
+	// Check permissions using helper
+	if !permissions.CheckPermissions(b, ctx, permissions.CommonAdminPerms) {
 		return ext.EndGroups
 	}
 
@@ -230,15 +231,12 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
-	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 	var toLock []string
 
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
+	// Check permissions using helper
+	if !permissions.CheckPermissions(b, ctx, permissions.CommonAdminPerms) {
 		return ext.EndGroups
 	}
 
@@ -347,6 +345,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	mem := ctx.ChatMember.NewChatMember.MergeChatMember().User
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// don't work on admins and approved users
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
@@ -354,7 +353,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if !chat_status.IsBotAdmin(b, ctx, nil) {
-		_, err := b.SendMessage(chat.Id, "I see a bot, and I've been told to stop them joining... but I'm not admin!", nil)
+		_, err := b.SendMessage(chat.Id, tr.GetString("Locks.bot.no_admin_permission"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -382,7 +381,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = b.SendMessage(chat.Id, "Only admins are allowed to add bots to this chat!", nil)
+	_, err = b.SendMessage(chat.Id, tr.GetString("Locks.bot.admin_only"), nil)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -391,7 +390,10 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-func LoadLocks(dispatcher *ext.Dispatcher) {
+func LoadLocks(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	locksModule.cfg = cfg
+
 	HelpModule.AbleMap.Store(locksModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("lock", locksModule.lockPerm))

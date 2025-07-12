@@ -4,7 +4,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Pins holds pin-related settings for a chat.
@@ -19,23 +18,17 @@ type Pins struct {
 	CleanLinked    bool  `bson:"cleanlinked" json:"cleanlinked" default:"false"`
 }
 
+var pinSettingsHandler = &SettingsHandler[Pins]{
+	Collection: pinColl,
+	Default: func(chatID int64) *Pins {
+		return &Pins{ChatId: chatID, AntiChannelPin: false, CleanLinked: false}
+	},
+}
+
 // GetPinData retrieves the pin settings for a given chat ID.
 // If no settings exist, it initializes them with default values.
-func GetPinData(chatID int64) (pinrc *Pins) {
-	defaultPinrc := &Pins{ChatId: chatID, AntiChannelPin: false, CleanLinked: false}
-	err := findOne(pinColl, bson.M{"_id": chatID}).Decode(&pinrc)
-	if err == mongo.ErrNoDocuments {
-		pinrc = defaultPinrc
-		err = updateOne(pinColl, bson.M{"_id": chatID}, pinrc)
-		if err != nil {
-			log.Errorf("[Database] GetPinData: %v - %d", err, chatID)
-		}
-	} else if err != nil {
-		log.Errorf("[Database] GetPinData: %v - %d", err, chatID)
-		pinrc = defaultPinrc
-	}
-	log.Infof("[Database] GetPinData: %d", chatID)
-	return
+func GetPinData(chatID int64) *Pins {
+	return pinSettingsHandler.CheckOrInit(chatID)
 }
 
 // SetCleanLinked sets the CleanLinked flag for a chat and disables AntiChannelPin if enabled.

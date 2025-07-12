@@ -10,17 +10,23 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 )
 
-var warnsModule = moduleStruct{moduleName: "Warns"}
+var warnsModule = moduleStruct{
+	moduleName: "Warns",
+	cfg:        nil, // will be set during LoadWarns
+}
 
 func (moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
@@ -70,7 +76,7 @@ func (moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64, reason, warnType string) (err error) {
+func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64, reason, warnType string) (err error) {
 	var (
 		reply    string
 		keyboard gotgbot.InlineKeyboardMarkup
@@ -78,10 +84,11 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permissions check
 	if chat_status.IsUserAdmin(b, chat.Id, userId) {
-		_, err = msg.Reply(b, "I'm not going to warn an admin!", nil)
+		_, err = msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.warn_admin"), nil)
 		return err
 	}
 
@@ -112,14 +119,20 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 
 	if numWarns >= warnrc.WarnLimit {
 		db.ResetUserWarns(userId, chat.Id)
-		if warnrc.WarnMode == "kick" {
+		switch warnrc.WarnMode {
+		case "kick":
 			_, err = chat.BanMember(b, userId, nil)
-			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been kicked!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
+			kickMsg, kickErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.limit_kick")
+			if kickErr != nil {
+				log.Errorf("[warn] missing translation for limit_kick: %v", kickErr)
+				kickMsg = "User has been kicked after reaching the warning limit."
+			}
+			reply = fmt.Sprintf(kickMsg, numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: kick (%d) - %s", userId, err)
 				return err
 			}
-		} else if warnrc.WarnMode == "mute" {
+		case "mute":
 			_, err = chat.RestrictMember(b, userId,
 				gotgbot.ChatPermissions{
 					CanSendMessages:       false,
@@ -139,14 +152,24 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				},
 				nil,
 			)
-			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been Muted!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
+			muteMsg, muteErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.limit_mute")
+			if muteErr != nil {
+				log.Errorf("[warn] missing translation for limit_mute: %v", muteErr)
+				muteMsg = "User has been muted after reaching the warning limit."
+			}
+			reply = fmt.Sprintf(muteMsg, numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: mute (%d) - %s", userId, err)
 				return err
 			}
-		} else if warnrc.WarnMode == "ban" {
+		case "ban":
 			_, err = chat.BanMember(b, userId, nil)
-			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been banned!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
+			banMsg, banErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.limit_ban")
+			if banErr != nil {
+				log.Errorf("[warn] missing translation for limit_ban: %v", banErr)
+				banMsg = "User has been banned after reaching the warning limit."
+			}
+			reply = fmt.Sprintf(banMsg, numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: ban (%d) - %s", userId, err)
 				return err
@@ -162,11 +185,11 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "❌ Remove warn",
+							Text:         tr.GetString("strings." + m.moduleName + ".warn.remove_warn_button"),
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 						{
-							Text: "Rules 📝",
+							Text: tr.GetString("strings.CommonStrings.buttons.rules_button"),
 							Url:  fmt.Sprintf("t.me/%s?start=rules_%d", b.Username, chat.Id),
 						},
 					},
@@ -177,7 +200,7 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "❌ Remove warn",
+							Text:         tr.GetString("strings." + m.moduleName + ".warn.remove_warn_button"),
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 					},
@@ -185,10 +208,20 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 			}
 		}
 
-		reply = fmt.Sprintf("User %s has %d/%d warnings; be careful!", helpers.MentionHtml(u.Id, u.FirstName), numWarns, warnrc.WarnLimit)
+		successMsg, successErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.success")
+		if successErr != nil {
+			log.Errorf("[warn] missing translation for warn.success: %v", successErr)
+			successMsg = "User %s has been warned (%d/%d)."
+		}
+		reply = fmt.Sprintf(successMsg, helpers.MentionHtml(u.Id, u.FirstName), numWarns, warnrc.WarnLimit)
 
 		if reason != "" {
-			reply += fmt.Sprintf("\n<b>Reason</b>:\n%s", html.EscapeString(reason))
+			reasonMsg, reasonErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.reason")
+			if reasonErr != nil {
+				log.Errorf("[warn] missing translation for warn.reason: %v", reasonErr)
+				reasonMsg = "\n<b>Reason:</b> %s"
+			}
+			reply += fmt.Sprintf(reasonMsg, html.EscapeString(reason))
 		}
 	}
 	_, err = b.SendMessage(chat.Id, reply,
@@ -213,50 +246,14 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 }
 
 func (m moduleStruct) warnUser(b *gotgbot.Bot, ctx *ext.Context) error {
-	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	user := ctx.EffectiveSender.User
 
-	// Check permissions
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		return ext.EndGroups
-	}
 	var warnusr int64
 	if msg.ReplyToMessage != nil {
 		warnusr = msg.ReplyToMessage.From.Id
@@ -268,50 +265,14 @@ func (m moduleStruct) warnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (m moduleStruct) sWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
-	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	user := ctx.EffectiveSender.User
 
-	// Check permissions
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		return ext.EndGroups
-	}
 	var warnusr int64
 	if msg.ReplyToMessage != nil && msg.ReplyToMessage.From.Id == userId {
 		warnusr = msg.ReplyToMessage.From.Id
@@ -323,50 +284,14 @@ func (m moduleStruct) sWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (m moduleStruct) dWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
-	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	user := ctx.EffectiveSender.User
 
-	// Check permissions
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserRestrict(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotRestrict(b, ctx, nil, false) {
+	// Use helper for permission checks, user extraction, and protection validation
+	userId, reason, ok := permissions.PerformCommonRestrictionChecks(b, ctx, permissions.CommonRestrictionPerms, true)
+	if !ok {
 		return ext.EndGroups
 	}
 
-	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	}
-
-	if !chat_status.IsUserInChat(b, chat, userId) {
-		return ext.EndGroups
-	}
 	var warnusr int64
 	if msg.ReplyToMessage != nil && msg.ReplyToMessage.From.Id == userId {
 		warnusr = msg.ReplyToMessage.From.Id
@@ -409,6 +334,7 @@ func (moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.New(db.GetLanguage(ctx))
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -421,14 +347,14 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		userId = ctx.EffectiveUser.Id
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		_, err := msg.Reply(b, tr.GetString("Warns.errors.anon_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.no_user_specified"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -456,7 +382,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			}
 		} else {
-			_, err := msg.Reply(b, fmt.Sprintf("User has %d/%d warnings, but no reasons for any of them.",
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Warns.warns.list_no_reasons"),
 				numWarns, warnrc.WarnLimit), nil)
 			if err != nil {
 				log.Error(err)
@@ -464,7 +390,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(b, "This user hasn't got any warnings!", nil)
+		_, err := msg.Reply(b, tr.GetString("Warns.warns.no_warns"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -567,6 +493,7 @@ func (moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -586,14 +513,14 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		_, err := msg.Reply(b, tr.GetString("Warns.errors.anon_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.no_user_specified"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -603,7 +530,7 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.ResetUserWarns(userId, chat.Id)
-	_, err := msg.Reply(b, "Warnings have been reset!", helpers.Shtml())
+	_, err := msg.Reply(b, tr.GetString("Warns.reset.success"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -613,6 +540,7 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.New(db.GetLanguage(ctx))
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -627,18 +555,18 @@ func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	warnrc := db.GetAllChatWarns(chat.Id)
 	if warnrc == 0 {
-		_, err := msg.Reply(b, "No users are warned in this chat!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Warns.reset_all.no_warns"), helpers.Shtml())
 		return err
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, chat, user.Id, false) {
-		_, err := msg.Reply(b, "Are you sure you want to remove all the warns of all the users in this chat?",
+		_, err := msg.Reply(b, tr.GetString("Warns.reset_all.confirm"),
 			&gotgbot.SendMessageOpts{
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
-							{Text: "Yes", CallbackData: "rmAllChatWarns.yes"},
-							{Text: "No", CallbackData: "rmAllChatWarns.no"},
+							{Text: tr.GetString("strings.CommonStrings.buttons.yes"), CallbackData: "rmAllChatWarns.yes"},
+							{Text: tr.GetString("strings.CommonStrings.buttons.no"), CallbackData: "rmAllChatWarns.no"},
 						},
 					},
 				},
@@ -696,7 +624,10 @@ func (moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-func LoadWarns(dispatcher *ext.Dispatcher) {
+func LoadWarns(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	warnsModule.cfg = cfg
+
 	HelpModule.AbleMap.Store(warnsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("warn", warnsModule.warnUser))

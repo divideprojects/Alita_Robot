@@ -124,19 +124,5 @@ func CountFilters(chatID int64) (filtersNum int64) {
 
 // LoadFilterStats returns the total number of filters and the number of chats using filters.
 func LoadFilterStats() (filtersNum, filtersUsingChats int64) {
-	var filterStruct []*ChatFilters
-	filtersMap := make(map[int64][]ChatFilters)
-
-	cursor := findAll(filterColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &filterStruct)
-
-	for _, filterC := range filterStruct {
-		filtersNum++ // count number of filters
-		filtersMap[filterC.ChatId] = append(filtersMap[filterC.ChatId], *filterC)
-	}
-
-	filtersUsingChats = int64(len(filtersMap))
-
-	return
+	return CountByChat(filterColl, bson.M{}, "chat_id")
 }

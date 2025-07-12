@@ -65,55 +65,55 @@ var (
 	filterColl             *mongo.Collection
 	notesColl              *mongo.Collection
 	notesSettingsColl      *mongo.Collection
+
+	// Flag to track if database has been initialized
+	isInitialized bool
 )
 
-// dbInstance func
-/*
-init initializes the MongoDB client and opens all required collections.
-
-This function is automatically called when the package is imported.
-It sets up global collection variables for use throughout the db package.
-*/
-func init() {
-	mongoClient, err := mongo.NewClient(
-		options.Client().ApplyURI(config.DatabaseURI),
-	)
-	if err != nil {
-		log.Errorf("[Database][Client]: %v", err)
+// Initialize initializes the MongoDB client and opens all required collections.
+// This function should be called explicitly with a config before using the database.
+func Initialize(cfg *config.Config) error {
+	if isInitialized {
+		log.Warn("Database already initialized, skipping re-initialization")
+		return nil
 	}
 
 	ctx, cancel := context.WithTimeout(bgCtx, 10*time.Second)
 	defer cancel()
 
-	err = mongoClient.Connect(ctx)
+	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI(cfg.DatabaseURI))
 	if err != nil {
 		log.Errorf("[Database][Connect]: %v", err)
+		return err
 	}
 
 	// Open Connections to Collections
 	log.Info("Opening Database Collections...")
-	adminSettingsColl = mongoClient.Database(config.MainDbName).Collection("admin")
-	blacklistsColl = mongoClient.Database(config.MainDbName).Collection("blacklists")
-	pinColl = mongoClient.Database(config.MainDbName).Collection("pins")
-	userColl = mongoClient.Database(config.MainDbName).Collection("users")
-	reportChatColl = mongoClient.Database(config.MainDbName).Collection("report_chat_settings")
-	reportUserColl = mongoClient.Database(config.MainDbName).Collection("report_user_settings")
-	devsColl = mongoClient.Database(config.MainDbName).Collection("devs")
-	chatColl = mongoClient.Database(config.MainDbName).Collection("chats")
-	channelColl = mongoClient.Database(config.MainDbName).Collection("channels")
-	antifloodSettingsColl = mongoClient.Database(config.MainDbName).Collection("antiflood_settings")
-	connectionColl = mongoClient.Database(config.MainDbName).Collection("connection")
-	connectionSettingsColl = mongoClient.Database(config.MainDbName).Collection("connection_settings")
-	disableColl = mongoClient.Database(config.MainDbName).Collection("disable")
-	rulesColl = mongoClient.Database(config.MainDbName).Collection("rules")
-	warnSettingsColl = mongoClient.Database(config.MainDbName).Collection("warns_settings")
-	warnUsersColl = mongoClient.Database(config.MainDbName).Collection("warns_users")
-	greetingsColl = mongoClient.Database(config.MainDbName).Collection("greetings")
-	lockColl = mongoClient.Database(config.MainDbName).Collection("locks")
-	filterColl = mongoClient.Database(config.MainDbName).Collection("filters")
-	notesColl = mongoClient.Database(config.MainDbName).Collection("notes")
-	notesSettingsColl = mongoClient.Database(config.MainDbName).Collection("notes_settings")
+	adminSettingsColl = mongoClient.Database(cfg.MainDbName).Collection("admin")
+	blacklistsColl = mongoClient.Database(cfg.MainDbName).Collection("blacklists")
+	pinColl = mongoClient.Database(cfg.MainDbName).Collection("pins")
+	userColl = mongoClient.Database(cfg.MainDbName).Collection("users")
+	reportChatColl = mongoClient.Database(cfg.MainDbName).Collection("report_chat_settings")
+	reportUserColl = mongoClient.Database(cfg.MainDbName).Collection("report_user_settings")
+	devsColl = mongoClient.Database(cfg.MainDbName).Collection("devs")
+	chatColl = mongoClient.Database(cfg.MainDbName).Collection("chats")
+	channelColl = mongoClient.Database(cfg.MainDbName).Collection("channels")
+	antifloodSettingsColl = mongoClient.Database(cfg.MainDbName).Collection("antiflood_settings")
+	connectionColl = mongoClient.Database(cfg.MainDbName).Collection("connection")
+	connectionSettingsColl = mongoClient.Database(cfg.MainDbName).Collection("connection_settings")
+	disableColl = mongoClient.Database(cfg.MainDbName).Collection("disable")
+	rulesColl = mongoClient.Database(cfg.MainDbName).Collection("rules")
+	warnSettingsColl = mongoClient.Database(cfg.MainDbName).Collection("warns_settings")
+	warnUsersColl = mongoClient.Database(cfg.MainDbName).Collection("warns_users")
+	greetingsColl = mongoClient.Database(cfg.MainDbName).Collection("greetings")
+	lockColl = mongoClient.Database(cfg.MainDbName).Collection("locks")
+	filterColl = mongoClient.Database(cfg.MainDbName).Collection("filters")
+	notesColl = mongoClient.Database(cfg.MainDbName).Collection("notes")
+	notesSettingsColl = mongoClient.Database(cfg.MainDbName).Collection("notes_settings")
+
+	isInitialized = true
 	log.Info("Done opening all database collections!")
+	return nil
 }
 
 // updateOne updates a single document in the specified collection.
@@ -159,7 +159,7 @@ func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	return
 }
 
-// deleteMany deletes all documents from the collection matching the filter.
+// deleteMany deletes multiple documents from the collection matching the filter.
 func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 	_, err = collecion.DeleteMany(tdCtx, filter)
 	if err != nil {

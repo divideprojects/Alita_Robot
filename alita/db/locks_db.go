@@ -3,7 +3,6 @@ package db
 import (
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Locks represents all lock and restriction settings for a chat.
@@ -48,20 +47,15 @@ type Restrictions struct {
 	All             bool `bson:"all,omitempty" json:"all,omitempty"`
 }
 
-func checkChatLocks(chatID int64) (lockrc *Locks) {
-	defaultLockrc := &Locks{ChatId: chatID, Permissions: &Permissions{}, Restrictions: &Restrictions{}}
-	errS := findOne(lockColl, bson.M{"_id": chatID}).Decode(&lockrc)
-	if errS == mongo.ErrNoDocuments {
-		lockrc = defaultLockrc
-		err := updateOne(lockColl, bson.M{"_id": chatID}, lockrc)
-		if err != nil {
-			log.Errorf("[Database] checkChatLocks: %v", err)
-		}
-	} else if errS != nil {
-		log.Errorf("[Database][checkChatLocks]: %v", errS)
-		lockrc = defaultLockrc
-	}
-	return lockrc
+var locksSettingsHandler = &SettingsHandler[Locks]{
+	Collection: lockColl,
+	Default: func(chatID int64) *Locks {
+		return &Locks{ChatId: chatID, Permissions: &Permissions{}, Restrictions: &Restrictions{}}
+	},
+}
+
+func checkChatLocks(chatID int64) *Locks {
+	return locksSettingsHandler.CheckOrInit(chatID)
 }
 
 // GetChatLocks retrieves the lock settings for a given chat ID.

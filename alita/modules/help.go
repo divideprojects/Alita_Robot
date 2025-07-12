@@ -56,7 +56,7 @@ var (
 			CallbackData: "helpq.Help",
 		},
 		{
-			Text:         "Home",
+			Text:         tr.GetString("CommonStrings.buttons.home"),
 			CallbackData: "helpq.BackStart",
 		},
 	}
@@ -64,23 +64,23 @@ var (
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "About me 👨\u200d💻",
+					Text:         tr.GetString("strings.Help.about_me_u200d"),
 					CallbackData: "about.me",
 				},
 			},
 			{
 				{
-					Text: "News Channel 📢",
+					Text: tr.GetString("Help.about.news_channel_button"),
 					Url:  "https://t.me/AlitaRobotUpdates",
 				},
 				{
-					Text: "Support Group 👥",
+					Text: tr.GetString("Help.start.support_group_button"),
 					Url:  "https://t.me/DivideSupport",
 				},
 			},
 			{
 				{
-					Text:         "Configuration ⚙️",
+					Text:         tr.GetString("Help.about.configuration_button"),
 					CallbackData: "configuration.step1",
 				},
 			},
@@ -97,7 +97,7 @@ var (
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "About ✨",
+					Text:         tr.GetString("Help.start.about_button"),
 					CallbackData: "about.main",
 				},
 			},
@@ -107,7 +107,7 @@ var (
 					Url:  "https://t.me/Alita_Robot?startgroup=botstart",
 				},
 				{
-					Text: "Support Group 👥",
+					Text: tr.GetString("Help.start.support_group_button"),
 					Url:  "https://t.me/DivideSupport",
 				},
 			},
@@ -119,7 +119,7 @@ var (
 			},
 			{
 				{
-					Text:         "Language 🌏",
+					Text:         tr.GetString("Help.start.language_button"),
 					CallbackData: "helpq.Languages",
 				},
 			},
@@ -174,36 +174,61 @@ func (m *moduleEnabled) LoadModules() []string {
 	return modules
 }
 
+// helpModule holds the configuration for the help module
+var helpModule = moduleStruct{
+	moduleName: "Help",
+	cfg:        nil, // will be set during LoadHelp
+}
+
 /*
 about displays information about the bot, including FAQs and about text.
 
 Handles both command and callback query contexts.
 */
-func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
-
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
-
 	var (
 		currText string
 		currKb   gotgbot.InlineKeyboardMarkup
 	)
 
-	if query := ctx.CallbackQuery; query != nil {
-		args := strings.Split(query.Data, ".")
-		response := args[1]
+	aboutText, aboutErr := tr.GetStringWithError("strings.Help.about_text")
+	if aboutErr != nil {
+		log.Errorf("[help] missing translation for about_text: %v", aboutErr)
+		aboutText = "I'm Alita, a group management bot built to help you manage your groups effectively!"
+	}
+	aboutKb := gotgbot.InlineKeyboardMarkup{
+		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
+			{
+				{
+					Text:         tr.GetString("strings.Help.about_me"),
+					CallbackData: "about.me",
+				},
+			},
+		},
+	}
+
+	if query := ctx.Update.CallbackQuery; query != nil {
+		response := strings.Split(query.Data, ".")[1]
 
 		switch response {
 		case "main":
 			currText = aboutText
 			currKb = aboutKb
 		case "me":
-			currText = fmt.Sprintf(tr.GetString("strings.Help.About"), b.Username, config.BotVersion)
+			cfg := m.cfg
+			aboutMeText, aboutMeErr := tr.GetStringWithError("strings.Help.About")
+			if aboutMeErr != nil {
+				log.Errorf("[help] missing translation for Help.About: %v", aboutMeErr)
+				aboutMeText = "I'm @%s, version %s. I'm here to help you manage your groups!"
+			}
+			currText = fmt.Sprintf(aboutMeText, b.Username, cfg.BotVersion)
 			currKb = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "Back",
+							Text:         tr.GetString("strings.CommonStrings.buttons.back"),
 							CallbackData: "about.main",
 						},
 					},
@@ -240,7 +265,7 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: "About",
+							Text: tr.GetString("Help.about.button"),
 							Url:  fmt.Sprintf("https://t.me/%s?start=about", b.Username),
 						},
 					},
@@ -364,7 +389,7 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Info("sed")
 		}
 	} else {
-		_, err := msg.Reply(b, "Hey :) PM me if you have any questions on how to use me!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Help.start.group_prompt"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -381,7 +406,7 @@ func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	_, err := b.SendMessage(chat.Id,
-		i18n.I18n{LangCode: "en"}.GetString("strings.Help.DonateText"),
+		i18n.New("en").GetString("strings.Help.DonateText"),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
@@ -411,7 +436,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// just in case
 	if msg.GetChat().Type != "private" {
-		_, _, err := msg.EditText(b, "Configuration only works in private", nil)
+		_, _, err := msg.EditText(b, tr.GetString("Help.configuration.private_only"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -426,7 +451,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 		text      string
 	)
 
-	tr := i18n.I18n{LangCode: "en"}
+	tr := i18n.New("en")
 
 	switch response {
 	case "step1":
@@ -439,7 +464,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 			{
 				{
-					Text:         "Done ✅",
+					Text:         tr.GetString("CommonStrings.buttons.done"),
 					CallbackData: "configuration.step2",
 				},
 			},
@@ -449,7 +474,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "Done ✅",
+					Text:         tr.GetString("CommonStrings.buttons.done"),
 					CallbackData: "configuration.step3",
 				},
 			},
@@ -585,13 +610,16 @@ LoadHelp registers all help-related command handlers with the dispatcher.
 
 Enables the help module and adds handlers for help, about, configuration, and donation commands.
 */
-func LoadHelp(dispatcher *ext.Dispatcher) {
+func LoadHelp(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	helpModule.cfg = cfg
+
 	dispatcher.AddHandler(handlers.NewCommand("start", HelpModule.start))
 	dispatcher.AddHandler(handlers.NewCommand("help", HelpModule.help))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("helpq"), HelpModule.helpButtonHandler))
 	dispatcher.AddHandler(handlers.NewCommand("donate", HelpModule.donate))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("configuration"), HelpModule.botConfig))
-	dispatcher.AddHandler(handlers.NewCommand("about", HelpModule.about))
-	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("about"), HelpModule.about))
+	dispatcher.AddHandler(handlers.NewCommand("about", helpModule.about))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("about"), helpModule.about))
 	initHelpButtons()
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/message"
+	"github.com/divideprojects/Alita_Robot/alita/config"
 )
 
 /*
@@ -17,6 +18,7 @@ It tracks spam levels per chat and enforces limits to prevent spammy behavior.
 var antispamModule = moduleStruct{
 	moduleName: "antispam",
 	antiSpam:   map[int64]*antiSpamInfo{},
+	cfg:        nil, // will be set during LoadAntispam
 }
 
 /*
@@ -82,7 +84,9 @@ LoadAntispam registers the anti-spam message handler with the dispatcher.
 
 This handler checks for spam on every message and ends the handler group if spam is detected.
 */
-func LoadAntispam(dispatcher *ext.Dispatcher) {
+func LoadAntispam(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	antispamModule.cfg = cfg
 	dispatcher.AddHandlerToGroup(
 		handlers.NewMessage(
 			message.All,

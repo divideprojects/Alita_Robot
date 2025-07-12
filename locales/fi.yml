@@ -1,738 +1,1306 @@
----
-#stringcode: string
 main:
-  lang_sample: |-
-    Suomi
-  language_flag: |-
-    🇫🇮
-  language_name: |-
-    Suomi
+  lang_sample: Suomi
+  language_flag: 🇫🇮
+  language_name: Suomi
 strings:
   CommonStrings:
     admin_cache:
-      cache_reloaded: |-
-        Ylläpitäjävälimuisti ladattu onnistuneesti uudelleen.
-      not_found: |-
-        Ylläpitäjävälimuistia ei löytynyt. Pyydä ylläpitäjää käyttämään /admincache ladatakseen ylläpitäjävälimuistin uudelleen.
-  Admin:
-    adminlist: |-
-      Ylläpitäjät ryhmässä <b>%s</b>:
-    anon_admin:
-      enabled: |-
-        AnonAdmin-tila on tällä hetkellä <b>käytössä</b> ryhmässä %s.
-        Tämä sallii kaikkien anonyymien ylläpitäjien suorittaa ylläpitotoimintoja ilman rajoituksia.
-      disabled: |-
-        AnonAdmin-tila on tällä hetkellä <b>pois käytöstä</b> ryhmässä %s.
-        Tämä vaatii anonyymejä ylläpitäjiä painamaan painiketta vahvistaakseen oikeutensa.
-      enabled_now: |-
-        AnonAdmin-tila on nyt <b>käytössä</b> ryhmässä %s.
-        Tästä eteenpäin pyydän ylläpitäjiä vahvistamaan oikeudet anonyymeiltä ylläpitäjiltä.
-      disabled_now: |-
-        AnonAdmin-tila on nyt <b>pois käytöstä</b> ryhmässä %s.
-        Tästä eteenpäin en enää pyydä ylläpitäjiä vahvistamaan oikeuksia anonyymeiltä ylläpitäjiltä.
-      already_enabled: |-
-        AnonAdmin-tila on jo <b>käytössä</b> ryhmässä %s
-      already_disabled: |-
-        AnonAdmin-tila on jo <b>pois käytöstä</b> ryhmässä %s
-      invalid_arg: |-
-        Virheellinen argumentti, ymmärrän vain <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
-    demote:
-      is_owner: |-
-        Tämä henkilö loi tämän keskustelun, miten voisin alentaa häntä?
-      is_admin: |-
-        Tämä henkilö ei ole ylläpitäjä, miten voisin alentaa häntä?
-      is_bot_itself: |-
-        En voi alentaa itseäni, mene hakemaan se henkilö joka ylläpiti minut!
-      success_demote: |-
-        Onnistuneesti alennettu %s!
-    promote:
-      admin_title_truncated: |-
-        Ylläpitäjän otsikko lyhennetty 16 merkkiin %d:stä
-      is_bot_itself: |-
-        Jos vain voisin tehdä tämän itselleni ;_;
-      is_owner: |-
-        Tämä henkilö loi tämän keskustelun, miten voisin ylentää häntä?
-      is_admin: |-
-        Tämä henkilö on jo ylläpitäjä, miten voisin ylentää häntä?
-      success_promote: |-
-        Onnistuneesti ylennetty %s!
-    title:
-      success_set: |-
-        Onnistuneesti asetettu %s:n ylläpitäjän otsikoksi <b>%s</b>
-      is_bot_itself: |-
-        Jos vain voisin tehdä tämän itselleni ;_;
-      is_owner: |-
-        Tämä henkilö loi tämän keskustelun, miten voisin asettaa mukautetun ylläpitäjän otsikon hänelle?
-      is_admin: |-
-        Tämä henkilö on jo ylläpitäjä, miten voisin asettaa mukautetun ylläpitäjän otsikon hänelle?
+      cache_reloaded: Ylläpitäjän välimuisti ladattu onnistuneesti uudelleen.
+      not_found: >-
+        Ylläpitäjän välimuistia ei löytynyt. Pyydä ylläpitäjää käyttämään komentoa /admincache ladatakseen välimuistin uudelleen.
     errors:
-      err_set_title: |-
-        Mukautetun ylläpitäjän otsikon asettaminen epäonnistui, otsikon nimi saattaa olla väärä tai sisältää emojeja.
-      err_cannot_demote: |-
-        Ei voitu alentaa. En ehkä ole ylläpitäjä, tai ylläpitäjän aseman nimitti toinen käyttäjä, joten en voi toimia heitä vastaan!
-      err_cannot_promote: |-
-        Ei voitu ylentää. En ehkä ole ylläpitäjä, tai ylläpitäjän aseman nimitti toinen käyttäjä, joten en voi toimia heitä vastaan!
-      title_empty: |-
-        Sinun täytyy antaa minulle ylläpitäjän otsikko, jotta voin asettaa sen.
+      no_user_specified: >-
+        En tiedä kenestä puhut, sinun täytyy määrittää käyttäjä...!
+      anon_user_generic: Tätä komentoa ei voi käyttää anonyymille käyttäjälle.
+      admin_only: Sinun täytyy olla ylläpitäjä tehdäksesi tämän!
+      admin_only_command: Vain ylläpitäjät voivat suorittaa tämän komennon!
+      creator_only: Sinun täytyy olla ryhmän luoja tehdäksesi tämän!
+      creator_only_command: Vain ryhmän luoja voi tehdä tämän!
+      bot_not_admin: En ole ylläpitäjä!
+      bot_no_restrict_permission: >-
+        En voi rajoittaa ihmisiä täällä! Varmista, että olen ylläpitäjä ja voin rajoittaa muita jäseniä.
+      group_only: Tätä komentoa voi käyttää vain ryhmässä!
+      group_only_command: 'Tämä komento on tarkoitettu käytettäväksi ryhmäkeskusteluissa, ei yksityisviesteissä!'
+      private_only_command: 'Tämä komento on tarkoitettu yksityisviesteihin, ei ryhmäkeskusteluun!'
+      user_not_found: Käyttäjää tällä nimellä ei löytynyt; oletko varma, että olen nähnyt hänet aiemmin?
+      user_not_in_chat: 'Tämä käyttäjä ei ole tässä keskustelussa, miten voin rajoittaa häntä?'
+      action_on_self: En voi suorittaa tätä toimenpidettä itseeni.
+      button_expired: 'Tämä painike on vanhentunut. Käytä komentoa uudelleen.'
+      invalid_option_yes_no: 'Antamaasi syötettä ei tunnistettu yhdeksi näistä: yes/no/on/off'
+      invalid_option_on_off: Ymmärrän vain vaihtoehdot <on/off/yes/no>
+      invalid_integer: '%s ei ole kelvollinen kokonaisluku.'
+      not_enough_args: Ei tarpeeksi argumentteja.
+      invalid_time_amount: Määritetty aika on virheellinen.
+      time_too_long: Aikaa ei voi asettaa yli 1 vuoteen!
+      invalid_time_type: 'Virheellinen aikayksikkö. Odotettiin m, h, d tai w, saatiin: %s'
+      get_chat_member_failed: 'Käyttäjän hakeminen epäonnistui: getChatMember epäonnistui: Bad Request: keskustelua ei löytynyt'
+      admin_only_button: Tätä painiketta voi käyttää vain ylläpitäjä!
+      no_reply: Vastaa käyttäjän viestiin poistaaksesi ja potkiaksesi hänet!
+    buttons:
+      'true': 'Kyllä'
+      'false': 'Ei'
+      'yes': Kyllä
+      'no': Ei
+      back: Takaisin
+      back_arrow: « Takaisin
+      back_arrow_left: ⬅ Takaisin
+      done: Valmis ✅
+      continue: ✅ Jatka ✅
+      click_me: Klikkaa minua!
+      home: Koti
+      rules: Säännöt
+      rules_button: "Säännöt 📝"
+      close: Sulje
+      cancel: Peruuta
+    actions:
+      ban: Estä
+      kick: Potki
+      mute: Mykistä
+      unban: Poista esto
+      unmute: Poista mykistys
+      banned: Käyttäjä estetty onnistuneesti!
+      unbanned: Käyttäjän esto poistettu onnistuneesti!
+      kicked: Käyttäjä potkittu onnistuneesti!
+      muted: Käyttäjä mykistetty onnistuneesti!
+      unmuted: Käyttäjän mykistys poistettu onnistuneesti!
+    anon_admin:
+      prompt: >-
+        Näyttää siltä, että olet anonyymi. Napauta tätä painiketta vahvistaaksesi
+        henkilöllisyytesi.
+      button: Klikkaa todistaaksesi ylläpitäjänä
+  Admin:
+    adminlist: 'Ylläpitäjät ryhmässä <b>%s</b>:'
+    anon_admin:
+      enabled: >-
+        Nimetön ylläpitäjä -tila on tällä hetkellä <b>käytössä</b> käyttäjälle %s.
+        Tämä sallii kaikkien nimettömien ylläpitäjien suorittaa ylläpitotoimia ilman rajoituksia.
+      disabled: >-
+        Nimetön ylläpitäjä -tila on tällä hetkellä <b>pois käytöstä</b> käyttäjälle %s.
+        Tämä vaatii nimettömiä ylläpitäjiä vahvistamaan oikeutensa painamalla nappia.
+      enabled_now: >-
+        Nimetön ylläpitäjä -tila on nyt <b>käytössä</b> käyttäjälle %s.
+        Tästä lähtien pyydän ylläpitäjiä vahvistamaan oikeudet nimettömiltä ylläpitäjiltä.
+      disabled_now: >-
+        Nimetön ylläpitäjä -tila on nyt <b>pois käytöstä</b> käyttäjälle %s.
+        Tästä lähtien en enää pyydä ylläpitäjiä vahvistamaan oikeuksia nimettömiltä ylläpitäjiltä.
+      already_enabled: Nimetön ylläpitäjä -tila on jo <b>käytössä</b> käyttäjälle %s
+      already_disabled: Nimetön ylläpitäjä -tila on jo <b>pois käytöstä</b> käyttäjälle %s
+      invalid_arg: >-
+        Virheellinen argumentti, ymmärrän vain <code>on</code>, <code>off</code>,
+        <code>yes</code>, <code>no</code>
+    demote:
+      is_owner: 'Tämä henkilö loi tämän keskustelun, miten voisin alentaa hänet?'
+      is_admin: 'Tämä henkilö ei ole ylläpitäjä, miten voisin alentaa hänet?'
+      is_bot_itself: En aio alentaa itseäni.
+      success_demote: Käyttäjän %s alennus onnistui!
+    promote:
+      admin_title_truncated: Ylläpitäjän titteli lyhennetty 16 merkkiin %d:stä.
+      is_bot_itself: Kunpa voisin tehdä tämän itselleni ;_;
+      is_owner: >-
+        Tämä henkilö loi tämän keskustelun, miten voisin ylentää hänet?
+      is_admin: >-
+        Tämä henkilö on jo ylläpitäjä, miten voisin ylentää hänet?
+      success_promote: Käyttäjän %s ylennys onnistui!
+    title:
+      success_set: Käyttäjän %s ylläpitäjän titteli asetettu onnistuneesti muotoon <b>%s</b>
+      is_bot_itself: Kunpa voisin tehdä tämän itselleni ;_;
+      is_owner: >-
+        Tämä henkilö loi tämän keskustelun, miten voisin asettaa hänelle mukautetun ylläpitäjän tittelin?
+      is_admin: >-
+        Tämä henkilö on jo ylläpitäjä, miten voisin asettaa hänelle mukautetun ylläpitäjän tittelin?
+    errors:
+      err_set_title: >-
+        Mukautetun ylläpitäjän tittelin asettaminen epäonnistui; titteli saattaa olla virheellinen tai sisältää emojeita.
+      err_cannot_demote: >-
+        Alentaminen epäonnistui; en ehkä ole ylläpitäjä, tai toinen ylläpitäjä on ylentänyt hänet.
+      err_cannot_promote: >-
+        Ylentäminen epäonnistui; en ehkä ole ylläpitäjä, tai toinen ylläpitäjä on ylentänyt hänet.
+      title_empty: Sinun täytyy antaa minulle ylläpitäjän titteli, jotta voin asettaa sen.
     help_msg: |-
-      Tee käyttäjien ylentäminen ja alentaminen helpoksi ylläpito-moduulilla!
+      Helpottaa käyttäjien ylentämistä ja alentamista ylläpitomoduulilla!
+
 
       *Käyttäjäkomennot:*
-      × /adminlist: Listaa ylläpitäjät nykyisessä keskustelussa.
+
+      × /adminlist: Listaa nykyisen keskustelun ylläpitäjät.
+
 
       *Ylläpitäjäkomennot:*
-      × /promote `<vastaus/käyttäjänimi/maininta/käyttäjätunnus>`: Ylennä käyttäjä.
-      × /demote `<vastaus/käyttäjänimi/maininta/käyttäjätunnus>`: Alenna käyttäjä.
-      × /title `<vastaus/käyttäjänimi/maininta/käyttäjätunnus>` `<mukautettu otsikko>`: Aseta mukautettu otsikko käyttäjälle
+
+      × /promote `<reply/username/mention/userid>`: Ylennä käyttäjä.
+
+      × /demote `<reply/username/mention/userid>`: Alenna käyttäjä.
+
+      × /title `<reply/username/mention/userid>` `<mukautettu titteli>`: Aseta käyttäjälle mukautettu titteli.
+    here_is_the_invite_link_of_this_chat_percent: 'Tässä on tämän keskustelun kutsulinkki: %s'
+    you_need_to_be_admin_to_do_this: Sinun täytyy olla ylläpitäjä tehdäksesi tämän!
   Antiflood:
     checkflood:
-      perform_action: |-
-        Joo, en pidä roskapostistasi. %s on %s!
+      perform_action: 'Jep, en pidä floodauksestasi. %s on %s!'
     setflood:
-      success: |-
-        Selvä! Maksimi roskapostiraja <b>%d</b> viestissä.
+      success: Flood-raja on asetettu <b>%d</b> viestiin.
       disabled: |-
-        Okei.
-        En varoita käyttäjiä roskapostista.
+        Selvä.
+        En varoita käyttäjiä floodauksesta.
     flood:
-      disabled: |-
-        Tämä keskustelu ei tällä hetkellä valvo roskapostia.
-      show_settings: |-
-        Tämä keskustelu valvoo tällä hetkellä roskapostia %d viestin jälkeen. Käyttäjät, jotka lähettävät enemmän kuin tuon määrän viestejä, %s.
+      disabled: Tässä keskustelussa ei ole tällä hetkellä käytössä flood-valvontaa.
+      show_settings: >-
+        Tässä keskustelussa on tällä hetkellä käytössä flood-valvonta %d viestin jälkeen. Kaikki käyttäjät, jotka lähettävät enemmän viestejä, tullaan %s.
     setfloodmode:
-      success: |-
-        Selvä! Roskapostitila tulee olemaan %s.
-      unknown_type: |-
-        Tuntematon tyyppi '%s'. Käytä yhtä seuraavista: ban/kick/mute
-      specify_action: |-
-        Sinun täytyy määrittää toiminto roskapostille. Nykyiset tilat ovat: `ban`/`kick`/`mute`
+      success: Flood-tila on asetettu muotoon %s.
+      unknown_type: "Tuntematon tyyppi '%s'. Käytä jotakin seuraavista: ban/kick/mute"
+      specify_action: >-
+        Sinun on määritettävä toimenpide floodauksen varalle. Nykyiset tilat ovat: `ban`/`kick`/`mute`
     flood_deleter:
-      enabled: |-
-        Roskapostin vastaiset viestien poistot käytössä. Roskapostia aiheuttavat viestit poistetaan!
-      disabled: |-
-        Roskapostin vastaiset viestien poistot pois käytöstä. Roskapostia aiheuttavat viestit ohitetaan!
-      invalid_option: |-
-        Ymmärrän vain vaihtoehdon: `yes`/`no`/`on`/`off`
-      already_enabled: |-
-        Roskapostin vastainen viestien poisto on tällä hetkellä *käytössä* tässä keskustelussa, roskapostia aiheuttavat viestit poistetaan!
-      already_disabled: |-
-        Roskapostin vastainen viestien poisto on tällä hetkellä *pois käytöstä* tässä keskustelussa, roskapostia aiheuttavat viestit ohitetaan!
+      enabled: >-
+        Antiflood-viestien poisto on otettu käyttöön. Floodauksen aiheuttavat viestit poistetaan!
+      disabled: >-
+        Antiflood-viestien poisto on poistettu käytöstä. Floodauksen aiheuttavat viestit ohitetaan!
+      invalid_option: 'Ymmärrän vain vaihtoehdot: `yes`/`no`/`on`/`off`'
+      already_enabled: >-
+        Antiflood-viestien poisto on tällä hetkellä *käytössä* tässä keskustelussa. Floodauksen aiheuttavat viestit poistetaan!
+      already_disabled: >-
+        Antiflood-viestien poisto on tällä hetkellä *pois käytöstä* tässä keskustelussa. Floodauksen aiheuttavat viestit ohitetaan!
     errors:
-      expected_args: |-
-        Odotin argumentteja! Joko off, tai kokonaisluku. esim: `/setflood 5`, tai `/setflood off`
-      invalid_int: |-
-        Tuo ei ole kelvollinen kokonaisluku. Anna minulle kelvollinen kokonaisluku, tai `off`.
-      set_in_limit: |-
-        Roskapostin vastaiset raja täytyy asettaa 3 ja 100 välille.
+      expected_args: >-
+        Odotin argumentteja! Joko off tai kokonaisluku. Esim: `/setflood 5`,
+        tai `/setflood off`
+      invalid_int: 'Tuo ei ole kelvollinen kokonaisluku. Anna kelvollinen kokonaisluku tai `off`.'
+      set_in_limit: Antiflood-rajan on oltava 3 ja 100 välillä.
     help_msg: |-
-      Tiedätkö miten joskus ihmiset liittyvät, lähettävät 100 viestiä ja pilaavat keskustelusi? Roskapostin vastaisella toiminnolla tämä ei enää tapahdu!
+      Tiedätkö, kun joskus ihmiset liittyvät, lähettävät 100 viestiä ja pilaavat keskustelun? Antifloodin avulla niin ei enää käy!
 
-      Roskapostin vastainen toiminto antaa sinun ryhtyä toimenpiteisiin käyttäjiä vastaan, jotka lähettävät enemmän kuin x viestiä peräkkäin. Toiminnot ovat: ban/kick/mute/tban/tmute
+
+      Antiflood antaa sinun ryhtyä toimiin käyttäjiä vastaan, jotka lähettävät enemmän kuin x viestiä peräkkäin. Toimenpiteet ovat: ban/kick/mute
+
 
       *Ylläpitäjäkomennot*:
-      × /flood: Hae nykyiset roskapostin vastaiset asetukset.
-      × /setflood `<numero/off/no>`: Aseta viestien määrä jonka jälkeen ryhdytään toimenpiteisiin käyttäjää vastaan. Aseta '0', 'off', tai 'no' poistaaksesi käytöstä.
-      × /setfloodmode `<toimintotyyppi>`: Valitse mikä toiminto ryhdytään käyttäjää vastaan joka on roskapostattu. Vaihtoehdot: ban/kick/mute/tban/tmute
-      × /delflood `<yes/no/on/off>`: Jos haluat botin poistavan käyttäjän roskapostaamat viestit.
+
+      × /flood: Hae nykyiset antiflood-asetukset.
+
+      × /setflood `<number/off/no>`: Aseta viestien määrä, jonka jälkeen käyttäjään kohdistetaan toimenpide. Aseta '0', 'off', tai 'no' poistaaksesi käytöstä.
+
+      × /setfloodmode `<action type>`: Valitse, mikä toimenpide kohdistetaan floodanneeseen käyttäjään. Vaihtoehdot: ban/kick/mute
+
+      × /delflood `<yes/no/on/off>`: Jos haluat botin poistavan käyttäjän floodanneet viestit.
+    unmute_admins_only: Mykistyksen poisto (vain ylläpitäjät)
+    unban_admins_only: Eston poisto (vain ylläpitäjät)
   Approvals:
     approve:
-      is_bot_itself: |-
-        Olet jo hyväksynyt minut tekemällä minusta ylläpitäjän!
-      user_approved: |-
-        Hyväksytty käyttäjä: %s
-        He ovat nyt suojattuja estoja, mustia listoja, lukituksia ja roskapostin vastaista toimintaa vastaan!
-      user_not_in_chat: |-
-        Tämä käyttäjä ei ole tässä keskustelussa, miten voin hyväksyä hänet?
+      is_bot_itself: Olet jo hyväksynyt minut tekemällä minusta ylläpitäjän!
+      user_approved: >-
+        Käyttäjä %s on hyväksytty.
+        Tästä lähtien heitä ei huomioida automaattisissa banneissa, mustilla listoilla, lukoissa ja antifloodissa.
+      user_not_in_chat: 'Tämä käyttäjä ei ole tässä keskustelussa, miten voin hyväksyä hänet?'
     unapprove:
-      is_bot_itself: |-
-        Olen ylläpitäjä, minua ei voida hylätä!
-      user_unapproved: |-
-        Hylätty käyttäjä: %s
-        He eivät ole enää suojattuja estoja, mustia listoja, lukituksia ja roskapostin vastaista toimintaa vastaan!
+      is_bot_itself: 'Olen ylläpitäjä, minua ei voi poistaa hyväksynnästä!'
+      user_unapproved: >-
+        Käyttäjän %s hyväksyntä on poistettu.
+        Tästä lähtien heihin sovelletaan automaattisia banneja, mustia listoja, lukkoja ja antifloodia.
     approval:
-      is_admin: |-
-        %s on ylläpitäjä, et tarvitse hyväksyntää.
-      is_bot_itself: |-
-        Olen ylläpitäjä, en tarvitse hyväksyntää.
+      is_admin: '%s on ylläpitäjä, hän ei tarvitse hyväksyntää.'
+      is_bot_itself: 'Olen ylläpitäjä, en tarvitse hyväksyntää.'
       is_approved: |-
         %s on hyväksytty käyttäjä ryhmässä <b>%s</b>
-        He ovat suojattuja mustia listoja, lukituksia ja roskapostin vastaista toimintaa vastaan!
+        Häntä ei huomioida automaattisissa banneissa, mustilla listoilla, lukoissa ja antifloodissa.
 
-        <b>Hyväksynyt:</b> %s (<code>%d</code>)
-        <b>Hyväksymisaika:</b> %s UTC
+        <b>Hyväksyjä:</b> %s (<code>%d</code>)
+        <b>Hyväksyntäaika:</b> %s UTC
       is_unapproved: |-
-        Et ole hyväksytty ryhmässä <b>%s</b>
-        Et ole suojattu mustia listoja, lukituksia ja roskapostin vastaista toimintaa vastaan!
+        Et ole hyväksytty käyttäjä ryhmässä <b>%s</b>
+        Sinua koskevat automaattiset bannit, mustat listat, lukot ja antiflood.
     approved:
-      none_approved: "Yhtään käyttäjää ei ole hyväksytty ryhmässä <b>%s</b>!"
-      approved_list: |-
+      none_approved: Yhtään käyttäjää ei ole hyväksytty ryhmässä <b>%s</b>!
+      approved_list: >-
         Nämä käyttäjät on hyväksytty ryhmässä <b>%s:</b>
+
         %s
 
-        Saadaksesi lisätietoja kustakin käyttäjästä kuten Hyväksynyt ja Hyväksymisaika, käytä /approval (käyttäjätunnus).
+
+        Saadaksesi lisätietoja kustakin käyttäjästä, kuten hyväksyjästä ja hyväksyntäajasta, käytä komentoa /approval (käyttäjä-ID).
     unapprove_all:
-      ask: |-
-        Oletko varma että haluat poistaa kaikki hyväksytyt käyttäjät tästä keskustelusta?
-      chat_creator_only: |-
-        Vain keskustelun luoja voi käyttää tätä komentoa hylätäkseen kaikki käyttäjät tässä keskustelussa.
+      ask: Oletko varma, että haluat poistaa kaikki hyväksytyt käyttäjät tästä keskustelusta?
+      chat_creator_only: >-
+        Vain keskustelun luoja voi käyttää tätä komentoa poistaakseen kaikkien käyttäjien hyväksynnän tässä keskustelussa.
       button_handler:
-        yes: |-
-          Poistettu kaikki hyväksytyt käyttäjät tästä keskustelusta ✅
-        no: |-
-          Peruttu kaikkien hyväksyttyjen käyttäjien poistaminen tästä keskustelusta ❌
+        'true': Kaikki hyväksytyt käyttäjät poistettu tästä keskustelusta ✅
+        'false': Kaikkien hyväksyttyjen käyttäjien poistaminen tästä keskustelusta peruttu ❌
     help_msg: |-
-      Joskus saatat luottaa käyttäjään ettei hän lähetä ei-toivottua sisältöä.
-      Ehkä ei tarpeeksi tehdäksesi hänestä ylläpitäjän, mutta saatat olla ok sen kanssa että lukitukset, mustat listat ja roskapostin vastainen toiminto ei koske heitä.
-      Sitä varten hyväksynnät ovat - hyväksy luotettavia käyttäjiä salliaksesi heidän lähettää
+      Joskus saatat luottaa käyttäjään, ettei hän lähetä ei-toivottua sisältöä.
+      Ehkä ei tarpeeksi, jotta tekisit hänestä ylläpitäjän, mutta saatat olla ok sen kanssa, että lukot, mustat listat ja antiflood eivät koske häntä.
+      Sitä varten hyväksynnät ovat - hyväksy luotettavia käyttäjiä.
+
 
       *Käyttäjäkomennot:*
-      × /approval: Tarkista käyttäjän hyväksyntätila tässä keskustelussa.
+
+      × /approval: Tarkista käyttäjän hyväksynnän tila tässä keskustelussa.
+
 
       *Ylläpitäjäkomennot:*
-      × /approve: Hyväksy käyttäjä. Lukitukset, mustat listat ja roskapostin vastainen toiminto ei enää koske heitä.
-      × /unapprove: Hylkää käyttäjä. He tulevat nyt taas lukitusten, mustien listojen ja roskapostin vastaisen toiminnon alaisiksi.
+
+      × /approve: Hyväksy käyttäjä. Lukot, mustat listat ja antiflood eivät enää koske häntä.
+
+      × /unapprove: Poista käyttäjän hyväksyntä. Häneen sovelletaan jälleen lukkoja, mustia listoja ja antifloodia.
+
       × /approved: Listaa kaikki hyväksytyt käyttäjät.
 
-      *Omistajan komennot:*
-      × /unapproveall: Hylkää KAIKKI käyttäjät keskustelussa. Tätä ei voida peruuttaa.
+
+      *Omistajakomennot:*
+
+      × /unapproveall: Poista KAIKKIEN käyttäjien hyväksyntä keskustelussa. Tätä ei voi peruuttaa.
   Bans:
+    errors:
+      anon_user_kick: >-
+        Tätä komentoa ei voi käyttää anonyymille käyttäjälle, nämä käyttäjät voidaan vain estää/eston poistaa.
+      anon_user_ban_reply: Voit estää anonyymin käyttäjän vain vastaamalla hänen viestiinsä.
+      anon_user_generic: >-
+        Tätä komentoa ei voi käyttää anonyymille käyttäjälle, nämä käyttäjät voidaan vain estää/eston poistaa.
+      restrict_admin: En voi rajoittaa ylläpitäjää.
+    restrict:
+      question: Miten voin rajoittaa tätä käyttäjää?
+      kick_success: Ylläpitäjä %s potkaisi %s ulos tästä keskustelusta!
+      mute_success: Ylläpitäjä %s mykisti %s keskustelussa!
+      ban_success: Ylläpitäjä %s esti %s tästä keskustelusta!
+    unrestrict:
+      question: Miten voin poistaa tämän käyttäjän rajoitukset?
+      unmute_success: Mykistys poistettu käyttäjältä %s!
+      unban_success: Eston poistettu käyttäjältä %s!
     kick:
-      user_not_in_chat: |-
-        Tämä käyttäjä ei ole tässä keskustelussa, miten voin potkia häntä?
-      cannot_kick_admin: |-
-        Miksi mahtaisin potkia ylläpitäjän? Se kuulostaa kuin hyvin tyhmä idea.
-      is_bot_itself: |-
-        Miksi mahtaisin potkia itselleni?
-      kicked_user: |-
-        Toinen yksi törmäsi maahan...!
-        Potkittu %s.
-      kicked_reason: "\n<b>Syy: </b> %s"
+      user_not_in_chat: 'Tämä käyttäjä ei ole tässä keskustelussa, miten voin rajoittaa häntä?'
+      cannot_kick_admin: Miksi potkisin ylläpitäjää? Se kuulostaa aika tyhmältä idealta.
+      is_bot_itself: Miksi potkisin itseäni?
+      kicked_user: Käyttäjä %s potkittu onnistuneesti.
+      kicked_reason: |-
+        <b>Syy:</b> %s
     kickme:
-      is_admin: |-
-        Olet ylläpitäjä, olet kääntynyt tähän kaikkien kanssa!
-      ok_out: |-
-        Selvä, mene ulos!
+      is_admin: 'Olet ylläpitäjä, olet jumissa täällä kaikkien muiden kanssa!'
+      ok_out: 'Toiveesi mukaan, ulos!'
     ban:
-      is_admin: |-
-        Miksi mahtaisin bannata ylläpitäjän? Se kuulostaa kuin hyvin tyhmä idea.
-      is_bot_itself: |-
-        Oletko todella luottanut, että mahtaisin bannata itselleni?
-      ban_reason: "\n<b>Syy: </b> %s"
-      tban: |-
-        Toinen yksi törmäsi maahan...!
-        Banned %s for %s
+      is_admin: Miksi bannaisin ylläpitäjää? Se kuulostaa aika tyhmältä idealta.
+      is_bot_itself: Luuletko todella, että bannaisin itseni?
+      ban_reason: |-
+        <b>Syy:</b> %s
+      tban: Käyttäjä %s bannattu ajaksi %s
       normal_ban: |-
-        Toinen yksi törmäsi maahan...!
-        Banned %s.
+        Ja taas yksi vähemmän...!
+        Käyttäjä %s bannattu.
       dban:
-        no_reply: |-
-          Sinun täytyy vastata viestiin, jotta voit poistaa viestin ja bannata käyttäjän!
+        no_reply: Sinun täytyy vastata viestiin poistaaksesi sen ja bannataksesi käyttäjän!
     unban:
-      is_admin: |-
-        Miksi mahtaisin unbannata ylläpitäjän? Se kuulostaa kuin hyvin tyhmä idea.
-      is_bot_itself: |-
-        Miksi mahtaisin vapauttaa itseäni, kun olen jo tässä?
+      is_admin: Miksi poistaisin ylläpitäjän bannin?
+      is_bot_itself: Miksi poistaisin rajoituksen itseltäni, kun olen jo täällä?
       unbanned_user: |-
-        Okei varmasti...!
-        Unbanned %s.
+        Annetaan hänelle toinen mahdollisuus.
+        Käyttäjän %s banni poistettu!
     help_msg: |-
-      Joskus käyttäjät voivat olla ärsyttäviä, ja ehkä haluat poistaa heidät keskustelustasi, tämä moduuli auttaa sinua tämän tekemiseen!
-      Banna/potkaa käyttäjät keskustelustasi, ja unbanna heitä myöhemmin, jos he ovat käyttäytyneet itseään.
+      Joskus käyttäjät voivat olla ärsyttäviä ja haluat ehkä poistaa heidät keskustelustasi, tämä moduuli auttaa sinua juuri siinä!.
+      Bannaa/potki käyttäjiä keskustelustasi ja poista banni myöhemmin, jos he käyttäytyvät hyvin.
+
 
       *Käyttäjäkomennot:*
-      × /kickme: potkaa käyttäjä, joka antoi tämän komennon.
 
-      *Bannikomennot* (Ylläpitäjälle vain):
-      × /ban <käyttäjätunnus>: banna käyttäjä. (käyttämällä tunnusta tai vastaamalla)
-      × /sban <käyttäjätunnus>: banna käyttäjä hiljalla, ei lähetä viestiä ryhmälle ja myös poistaa komennon. (käyttämällä tunnusta tai vastaamalla)
-      × /dban <käyttäjätunnus>: banna käyttäjä ja poistaa vastaamasi viesti. (käyttämällä tunnusta tai vastaamalla)
-      × /tban <käyttäjätunnus> x(m/h/d): banna käyttäjän `x` aikaa. (käyttämällä tunnusta tai vastaamalla). m = minuutteja, h = tunteja, d = päiviä.
-      × /unban <käyttäjätunnus>: unbanna käyttäjä. (käyttämällä tunnusta tai vastaamalla)
+      × /kickme: potkii komennon antaneen käyttäjän.
 
-      *Rajoituskomennot:* (Ylläpitäjälle vain)
-      × /restrict: Näyttää InlineKeyboard valitaksesi vaihtoehdot käytöstä potkaisesta, bannista ja mutesista
-      × /unrestrict: Näyttää InlineKeyboard valitaksesi vaihtoehdot käytöstä unmute ja unban.
+
+      *Bannikomennot* (Vain ylläpitäjille):
+
+      × /ban <userhandle>: bannaa käyttäjän. (tunnuksella tai vastaamalla)
+
+      × /sban <userhandle>: bannaa käyttäjän hiljaa, ei lähetä viestiä ryhmään ja poistaa myös komentosi. (tunnuksella tai vastaamalla)
+
+      × /dban <userhandle>: bannaa käyttäjän ja poistaa vastatun viestin. (tunnuksella tai vastaamalla)
+
+      × /tban <userhandle> x(m/h/d): bannaa käyttäjän ajaksi `x`. (tunnuksella tai vastaamalla). m = minutes, h = hours, d = days.
+
+      × /unban <userhandle>: poistaa käyttäjän bannin. (tunnuksella tai vastaamalla)
+
+
+      *Rajoituskommennot:* (Vain ylläpitäjille)
+
+      × /restrict: Näyttää InlineKeyboardin, josta voit valita potkimisen, bannaamisen ja mykistämisen väliltä.
+
+      × /unrestrict: Näyttää InlineKeyboardin, josta voit valita mykistyksen poistamisen ja bannin poistamisen väliltä.
+    banned_user: 'Bannattu käyttäjä:'
   Blacklists:
     blacklist:
-      give_bl_word: |-
-        Anna minulle sanoa, joka lisätään mustaan listaan!
-      already_blacklisted: |-
-        Nämä sanat ovat jo mustissa listoissa:
-      added_bl: |-
-        Lisätty nämä sanat mustiksi listaan:
+      give_bl_word: Anna sana, joka lisätään mustalle listalle!
+      already_blacklisted: 'Nämä sanat ovat jo mustalla listalla:'
+      added_bl: 'Lisätty nämä sanat mustalle listalle:'
     unblacklist:
-      give_bl_word: |-
-        Anna minulle sanoa, joka poistetaan mustasta listasta!
-      no_removed_bl: |-
-        Ei yhtään annettuja sanoja ollut mustassa listassa, joka voidaan poistaa!
-      removed_bl: |-
-        Poistettu '%s' mustista sanoista!
+      give_bl_word: Anna sana, joka poistetaan mustalta listalta!
+      no_removed_bl: Yksikään annetuista sanoista ei ollut mustalla listalla, joten niitä ei voitu poistaa!
+      removed_bl: Sana '%s' poistettu onnistuneesti mustalta listalta!
     ls_bl:
-      no_blacklisted: |-
-        Tässä keskustelussa ei ole mustia sanoja.
-      list_bl: |-
-        Nämä sanat ovat mustissa tässä keskustelussa:
+      no_blacklisted: Tässä keskustelussa ei ole mustalla listalla olevia sanoja.
+      list_bl: 'Nämä sanat ovat mustalla listalla tässä keskustelussa:'
     set_bl_action:
-      current_mode: |-
-        Nykyinen musta lista-tila on: %s
-      changed_mode: |-
-        Muutettu musta lista-tilaan: *%s*
-      choose_correct_option: |-
-        Valitse yksi vaihtoehto <mute/kick/ban/warn/none>
+      current_mode: 'Nykyinen mustan listan tila tässä keskustelussa on: %s'
+      changed_mode: 'Mustan listan tila muutettu onnistuneesti muotoon: *%s*'
+      choose_correct_option: Valitse vaihtoehto <mute/kick/ban/warn/none>
     rm_all_bl:
-      ask: |-
-        Oletko varma että haluat poistaa kaikki mustat sanat tästä keskustelusta?
+      ask: Oletko varma, että haluat poistaa kaikki mustalla listalla olevat sanat tästä keskustelusta?
       button_handler:
-        yes: |-
-          Poistettu kaikki mustat sanat tästä keskustelusta ✅
-        no: |-
-          Peruttu kaikkien mustien sanojen poistaminen tästä keskustelusta ❌
+        'true': Kaikki mustan listan sanat poistettu tästä keskustelusta ✅
+        'false': Kaikkien mustan listan sanojen poistaminen tästä keskustelusta peruttu ❌
     bl_watcher:
-      muted_user: |-
-        Muted %s due to %s
-      banned_user: |-
-        Banned %s due to %s
-      kicked_user: |-
-        Kicked %s due to %s
+      muted_user: Mykistetty %s syystä %s
+      banned_user: Bannattu %s syystä %s
+      kicked_user: Potkittu %s syystä %s
     help_msg: |-
       *Käyttäjäkomennot:*
+
       × /blacklists: Tarkista kaikki mustat listat keskustelussa.
 
-      *Ylläpitäjäkomennot:*
-      × /addblacklist `<trigger>`: Mustaa sanaa tässä keskustelussa.
-      × /rmblacklist `<trigger>`: Poista sana nykyisestä mustasta sanasta keskustelussa.
-      × /blaction `<mute/kick/ban/warn/none>`: Aseta toiminto, joka tehdään botti kun musta sana tunnistetaan.
-      × /blacklistaction: Samanlainen kuin yllä.
 
-      *Omistajan vain:*
-      × /remallbl: Poista kaikki mustat sanat keskustelusta
+      *Ylläpitäjäkomennot:*
+
+      × /addblacklist `<trigger>`: Lisää sanan mustalle listalle nykyisessä keskustelussa.
+
+      × /rmblacklist `<trigger>`: Poistaa sanan nykyiseltä mustalta listalta keskustelussa.
+
+      × /blaction `<mute/kick/ban/warn/none>`: Asettaa toimenpiteen, jonka botti suorittaa, kun mustan listan sana havaitaan.
+
+      × /blacklistaction: Sama kuin yllä.
+
+
+      *Vain omistajalle:*
+
+      × /remallbl: Poistaa kaikki mustalla listalla olevat sanat keskustelusta.
+
 
       *Huomautus:*
-      Oletusmoodi mustille on *ei mitään*, joka vain poistaa keskustelun viestit.
+
+      Mustan listan oletustila on *none*, joka vain poistaa viestit keskustelusta.
   Connections:
-    connected: |-
-      Olet tällä hetkellä yhteydessä <b>%s</b>
-    not_connected: |-
-      Olet yhteydessä mihinkään keskusteluihin.
+    errors:
+      invalid_option_yes_no: Anna kelvollinen vaihtoehto <yes/on/no/off>
+      get_chat_failed: >-
+        Yhteyden muodostaminen keskusteluun epäonnistui: keskustelun noutaminen epäonnistui: getChat epäonnistui: Bad Request: keskustelua ei löytynyt
+      no_chat_id: Tarvitsen keskustelu-ID:n yhdistääkseni!
+    connect_to_chat_button: Yhdistä keskusteluun
+    connected: Olet tällä hetkellä yhteydessä <b>%s</b>!
+    not_connected: Et ole yhteydessä mihinkään keskusteluun.
     allow_connect:
       turned_on: |-
-        Kääntänyt <b>päälle</b> käyttäjäyhteydet tähän keskusteluun!
-        Käyttäjät voivat nyt keskusteluun yhteydessä PM:iänsä!
+        Käyttäjäyhteydet tähän keskusteluun on <b>otettu käyttöön</b>!
+        Käyttäjät voivat nyt yhdistää keskustelun PM-viesteihinsä!
       turned_off: |-
-        Kääntänyt <b>pois</b> käyttäjäyhteydet tähän keskusteluun!
-        Käyttäjät eivät voi keskusteluun yhteydessä PM:iänsä!
+        Käyttäjäyhteydet tähän keskusteluun on <b>poistettu käytöstä</b>!
+        Käyttäjät eivät voi yhdistää keskustelua PM-viesteihinsä!
       currently_on: |-
-        Käyttäjäyhteydet ovat tällä hetkellä <b>päällä</b>.
-        Käyttäjät voivat keskusteluun yhteydessä PM:iänsä!
+        Käyttäjäyhteydet ovat tällä hetkellä <b>käytössä</b>.
+        Käyttäjät voivat yhdistää tämän keskustelun PM-viesteihinsä!
       currently_off: |-
-        Käyttäjäyhteydet ovat tällä hetkellä <b>pois päällä</b>.
-        Käyttäjät eivät voi keskusteluun yhteydessä PM:iänsä!
+        Käyttäjäyhteydet ovat tällä hetkellä <b>pois käytöstä</b>.
+        Käyttäjät eivät voi yhdistää tätä keskustelua PM-viesteihinsä!
     connect:
       connection_disabled: |-
-        Käyttäjäyhteydet ovat tällä hetkellä <b>ei käytössä</b> tähän keskusteluun.
-        Pyydä ylläpitäjiä sallimaan, jos haluat yhteydessä olla
-      connected: |-
-        Olet nyt yhteydessä <b>%s</b>!
-      tap_btn_connect: |-
-        Paina alla olevaa painiketta, jotta voit keskusteluun yhteydessä PM
+        Käyttäjäyhteydet ovat tällä hetkellä <b>pois käytöstä</b> tässä keskustelussa.
+        Pyydä ylläpitäjiltä lupaa, jos haluat yhdistää!
+      connected: Olet nyt yhteydessä <b>%s</b>!
+      tap_btn_connect: Paina alla olevaa painiketta yhdistääksesi tämän keskustelun PM-viestiisi.
     connections_btns:
-      admin_conn_cmds: |-
-        Ylläpitäjäkomennot saatavilla:%s
-      user_conn_cmds: |-
-        Käyttäjäkomennot saatavilla:%s
+      admin_conn_cmds: 'Saatavilla olevat ylläpitäjäkomennot:%s'
+      user_conn_cmds: 'Saatavilla olevat käyttäjäkomennot:%s'
     disconnect:
-      disconnected: |-
-        Katkennut yhteydestä keskustelusta.
-      need_pm: |-
-        Sinun täytyy lähettää tämä PM:iin minulle, jotta voit katkaista yhteyden keskustelusta!
+      disconnected: Yhteys yhdistettyyn keskusteluun katkaistu onnistuneesti.
+      need_pm: Sinun täytyy lähettää tämä minulle PM-viestinä katkaistaksesi yhteyden keskustelusta!
     is_user_connected:
-      need_group: |-
-        Tämä komento on tarkoitettu käytettäväksi ryhmässä chats, ei PM!
-      bot_not_admin: |-
-        Minä en ole ylläpitäjä tässä keskustelussa!
-      user_not_admin: |-
-        Sinun täytyy olla ylläpitäjä tämän tehdäksesi!
+      need_group: 'Tämä komento on tarkoitettu käytettäväksi ryhmäkeskusteluissa, ei PM-viesteissä!'
+      bot_not_admin: En ole ylläpitäjä tässä keskustelussa!
+      user_not_admin: Sinun täytyy olla ylläpitäjä tehdäksesi tämän.
     reconnect:
-      reconnected: |-
-        Olet nyt uudelleen yhteydessä <b>%s</b>!
-      no_last_chat: |-
-        Sinulla ei ole viimeksi keskusteltu, jotta voit uudelleen yhteydessä olla
-      need_pm: |-
-        Sinun täytyy olla PM:ssä minun kanssa, jotta voit uudelleen yhteydessä olla keskustelussa!
+      reconnected: Olet nyt uudelleen yhteydessä <b>%s</b>!!
+      no_last_chat: Sinulla ei ole viimeistä keskustelua, johon voisit yhdistää uudelleen!
+      need_pm: Sinun täytyy olla PM-viestissä kanssani yhdistääksesi uudelleen keskusteluun!
     help_msg: |-
-      Tämä antaa sinun yhteydessä keskustelun tietokantaan, ja lisätä asioita sen ulkopuolelle, ilman että keskustelu tiedät! Ilmeisestikin sinun täytyy olla ylläpitäjä lisätä asioita; mutta mikä tahansa jäsen voi nähdä tiedot. (banned/potetut käyttäjät eivät voi!)
+      Tämä moduuli antaa sinun yhdistää keskustelun tietokantaan ja lisätä sinne asioita ilman, että keskustelu tietää siitä! Ilmeisistä syistä sinun täytyy olla ylläpitäjä lisätäksesi asioita; mutta kuka tahansa jäsen voi tarkastella tietojasi. (bannatut/potkitut käyttäjät eivät voi!)
 
-      *Komennot:*
-      × /connect `<käyttäjätunnus>`: Yhteydessä keskusteluun, antaen sinun nähdä/muuttaa sisältöä.
-      × /disconnect: Katkaise yhteyden nykyisestä keskustelusta.
-      × /reconnect: Uudelleen yhteydessä edelliseen keskusteluun
-      × /connection: Näytä tietoa nykyisestä yhteydestä keskustelusta.
+
+      *Komennot*:
+
+      × /connect `<chatid>`: Yhdistä määritettyyn keskusteluun, jolloin voit tarkastella/muokata sisältöä.
+
+      × /disconnect: Katkaise yhteys nykyisestä keskustelusta.
+
+      × /reconnect: Yhdistä uudelleen aiemmin yhdistettyyn keskusteluun.
+
+      × /connection: Katso tietoja nykyisestä yhdistetystä keskustelusta.
+
 
       *Ylläpitäjäkomennot:*
-      × /allowconnect <kyllä/ei>: Salli käyttäjät yhteydessä keskusteluihin vai ei.
 
-      Voit saada keskustelun tunnus käyttämällä /id komentoa keskustelussa. Älä ihmettele, jos tunnus on negatiivinen; kaikki supergroups ovat negatiivisia id:itä.
+      × /allowconnect <yes/no>: Salli käyttäjien yhdistää keskusteluihin tai ei.
+
+
+      Voit hakea keskustelun ID:n käyttämällä /id-komentoa keskustelussasi. Älä ylläty, jos ID on negatiivinen; kaikilla superryhmillä on negatiiviset ID:t.
   Disabling:
+    success: 'Poistettu käytöstä seuraavien käyttö tässä keskustelussa:'
+    errors:
+      unknown_command: 'Tuntematon komento poistettavaksi käytöstä:\n-%s\nTarkista /disableable!'
+      no_command_specified: Et ole määrittänyt komentoa poistettavaksi käytöstä.
+    disableable:
+      list: 'Seuraavat komennot voidaan poistaa käytöstä:'
+    disabled:
+      no_commands: Tässä keskustelussa ei ole poistettuja komentoja.
+      list: 'Seuraavat komennot on poistettu käytöstä tässä keskustelussa:'
+    disabledel:
+      enabled: Poistetut viestit poistetaan nyt.
+      disabled: Poistettuja viestejä ei enää poisteta.
+      status_enabled: >-
+        Poistettu komennon poisto on *käytössä*, käyttäjien poistetut komennot
+        poistetaan!
+      status_disabled: >-
+        Poistettu komennon poisto on *pois käytöstä*, käyttäjien poistettuja komentoja
+        *ei* poisteta!
+    enable:
+      success: 'Otettu uudelleen käyttöön seuraavien käyttö tässä keskustelussa:'
+      errors:
+        unknown_command: 'Tuntematon komento otettavaksi uudelleen käyttöön:\n-%s\nTarkista /disableable!'
+        no_command_specified: Et ole määrittänyt komentoa poistettavaksi käytöstä.
     help_msg: |-
-      Tämä antaa sinun poistaa käytöstä joitakin yleisesti käytettyjä komentoja, joten kukaan ei voi käyttää niitä. Sen avulla voit myös autodelete ne, estää ihmisiä pohjatekstaus.
+      Tämä moduuli antaa sinun poistaa käytöstä joitakin yleisesti käytettyjä komentoja, jotta kukaan ei voi käyttää niitä. Se antaa sinun myös poistaa ne automaattisesti, mikä estää ihmisiä sinisestä tekstistä.
 
-      *Ylläpitäjäkomennot *:
-      x /poista käytöstä "<komentonimi>": Älä käytä käyttäjiä tässä ryhmässä.
-      x /mahdolli "<kohteen nimi>": Salli käyttäjien käyttää tämän ryhmän komentinimeä.
-      × /disableable: Lista kaikista kelvottomista komennoista.
-      × /desabledel "<kyllä/ei/on/off>": Tarpeeton yliviivataan.
-      x /vammaiset: tässä chatissa olevat vammaiset komennot.
+
+      *Ylläpitäjäkomennot*:
+
+      × /disable `<commandname>`: Estä käyttäjiä käyttämästä komennonnimeä tässä ryhmässä.
+
+      × /enable `<item name>`: Salli käyttäjien käyttää komennonnimeä tässä ryhmässä.
+
+      × /disableable: Listaa kaikki poistettavissa olevat komennot.
+
+      × /disabledel `<yes/no/on/off>`: Poistaa käytöstä poistetut komennot, kun niitä käyttävät muut kuin ylläpitäjät.
+
+      × /disabled: Listaa käytöstä poistetut komennot tässä keskustelussa.
+
 
       Huomautus:
-      Kun komento puretaan, komento poistaa käytöstä vain muita kuin pääkäyttäjiä varten. Kaikki valvojat voivat käyttää komentoja.
-      Käytöstä potut komennot ovat edelleen käytettävissä. Jos tekin haluatte nähdä tämän vammaisen, ilmoittakaa minulle tukirasussa.
+
+      Kun komento poistetaan käytöstä, se poistetaan käytöstä vain muilta kuin ylläpitäjiltä. Kaikki ylläpitäjät voivat edelleen käyttää näitä komentoja.
+
+      Käytöstä poistetut komennot ovat edelleen käytettävissä /connect-ominaisuuden kautta. Jos olet kiinnostunut näkemään myös tämän käytöstä poistettuna, kerro minulle tukikeskustelussa.
   Filters:
+    errors:
+      limit_exceeded: >-
+        Suodattimien raja ylitetty, ryhmässä voi olla enintään 150 suodatinta!\nTämä
+        rajoitus johtuu siitä, että botti toimii ilmaiseksi ilman käyttäjien lahjoituksia.
+      no_keyword: Anna avainsana, johon vastata!
+      invalid_filter: Virheellinen suodatin!
+      does_not_exist: Suodatinta ei ole olemassa!
+    add:
+      success: Lisätty vastaus suodatin-sanalle <code>%s</code>
+    remove:
+      no_word_specified: Anna suodatinsana poistettavaksi!
+      success: Ok!\nEn enää vastaa sanalle <code>%s</code>
+    list:
+      no_filters: Tässä keskustelussa ei ole suodattimia!
+      header: 'Nämä ovat nykyiset suodattimet tässä keskustelussa:'
+    remove_all:
+      no_filters: Tässä keskustelussa ei ole suodattimia!
+      confirm: Oletko varma, että haluat poistaa kaikki suodattimet tästä keskustelusta?
+      success: Kaikki suodattimet poistettu tästä keskustelusta ✅
+      cancelled: Suodattimien poistaminen tästä keskustelusta peruttu ❌
+    overwrite:
+      question: Suodatin on jo olemassa!\nHaluatko korvata sen?
+      success: Suodatin on korvattu onnistuneesti ✅
+      cancelled: Suodattimen korvaaminen peruttu ❌
     help_msg: |-
-      Filters ovat case insensitive; jokainen kerta, kun joku sanoo sinun trigger sanoja, Alita vastaa jotain muuta! voidaan käyttää luomaan omia komentoja, jos halutaan.
+      Suodattimet eivät ole kirjainkoon mukaisia; joka kerta kun joku sanoo trigger-sanasi, Alita vastaa jotain muuta! Tätä voidaan käyttää omien komentojen luomiseen, jos niin halutaan.
+
 
       Komennot:
-      - /filter <trigger> <vastaus>: Jokainen kerta, kun joku sanoo trigger, botti vastaa lauseella. Monimutkaisille sanan filterille, lainaa trigger.
-      - /filters: Lista kaikki keskustelun filterit.
-      - /stop <trigger>: Pysäytä botti vastaamaan trigger.
-      - /stopall: Pysäytä KAIKKI filterit nykyisessä keskustelussa. Tätä ei voida peruuttaa.
+
+      - /filter <trigger> <reply>: Joka kerta kun joku sanoo trigger, botti vastaa lauseella. Monisanaisille suodattimille, laita trigger lainausmerkkeihin.
+
+      - /filters: Listaa kaikki keskustelun suodattimet.
+
+      - /stop <trigger>: Pysäytä botti vastaamasta triggeriin.
+
+      - /stopall: Pysäytä KAIKKI suodattimet nykyisessä keskustelussa. Tätä toimenpidettä ei voi peruuttaa.
+
 
       Esimerkkejä:
-      - Aseta filter:
-      -> /filter hello Hello there! How are you?
-      - Aseta monimutkaisfilter:
-      -> /filter hello friend Hello back! Long time no see!
-      - Aseta filter, joka voidaan käyttää vain ylläpitäjän:
-      -> /filter example This filter wont happen if a normal user says it {admin}
-      - Lähetä tiedosto, kuva, gif tai mikä tahansa muu liite, vastaamalla tiedostoon:
+
+      - Aseta suodatin:
+
+      -> /filter hello Hei siellä! Mitä kuuluu?
+
+      - Aseta monisanainen suodatin:
+
+      -> /filter hello friend Hei takaisin! Pitkästä aikaa!
+
+      - Aseta suodatin, jota vain ylläpitäjät voivat käyttää:
+
+      -> /filter example Tämä suodatin ei toimi, jos normaali käyttäjä sanoo sen {admin}
+
+      - Tallentaaksesi tiedoston, kuvan, gifin tai muun liitteen, vastaa tiedostoon yksinkertaisesti:
+
       -> /filter trigger
+    formatting: Muotoilu
   Formatting:
     help_msg: |-
-      Alita tukee useita muotoiluvaihtoehtoja, jotta viestit ovat ilmeisempiä. Katso alla olevia painikkeita!
+      Alita tukee suurta määrää muotoiluvaihtoehtoja tehdäksesi viesteistäsi ilmeikkäämpiä. Tutustu niihin painamalla alla olevia painikkeita!
     Markdown: |-
-      <b>Markdown Formatting</b>
+      <b>Markdown-muotoilu</b>
 
-      Voit muotoilla viestisi käyttämällä <b>bold</b>, <i>italics</i>, <u>underline</u>, ja paljon muuta. Menee eteenpäin ja kokeile!
-      <b>Tuetut markdown</b>:
-      - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-      - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-      - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-      - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-      - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-      - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-      - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-      - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-      - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
 
-      Jos haluat lähettää nappuloita samalla rivillä, käytä <code>:same</code> muotoilua.
+      Voit muotoilla viestisi käyttämällä <b>lihavointia</b>, <i>kursivointia</i>,
+      <u>alleviivausta</u> ja paljon muuta. Kokeile rohkeasti!
+
+      <b>Tuettu markdown</b>:
+
+      - <code>`code words`</code>: Takakenoja käytetään tasalevyisiin fontteihin. Näkyy muodossa: <code>code words</code>.
+
+      - <code>_italic words_</code>: Alaviivoja käytetään kursivoituihin fontteihin. Näkyy muodossa: <i>italic words</i>.
+
+      - <code>*bold words*</code>: Asteriskeja käytetään lihavoituihin fontteihin. Näkyy muodossa: <b>bold words</b>.
+
+      - <code>~strikethrough~</code>: Tildejä käytetään yliviivaukseen. Näkyy muodossa: <strike>strikethrough</strike>.
+
+      - <code>||spoiler||</code>: Kaksoispystyviivoja käytetään spoilereihin. Näkyy muodossa: <tg-spoiler>Spoiler</tg-spoiler>.
+
+      - <code>```pre```</code>: Jotta muotoilija ohittaisi muut muotoilumerkit '```'-muotoillun tekstin sisällä, se näyttää tältä:
+      <code>**bold** | *bold*</code>.
+
+      - <code>__underline__</code>: Kaksoisalaviivoja käytetään alleviivauksiin. Näkyy muodossa: underline. HUOM: Jotkut asiakasohjelmat yrittävät olla älykkäitä ja tulkitsevat sen kursiiviksi. Siinä tapauksessa, yritä käyttää sovelluksesi sisäänrakennettua muotoilua.
+
+      - <code>[hyperlink](example.com)</code>: Tämä on hyperlinkeissä käytettävä muotoilu. Näkyy muodossa: <a href='https://example.com/'>hyperlink</a>.
+
+      - <code>[Oma painike](buttonurl://example.com)</code>: Tämä on painikkeiden luomisessa käytettävä muotoilu. Tämä esimerkki luo painikkeen nimeltä "Oma painike", joka avaa <code>example.com</code>-sivuston napsautettaessa.
+
+
+      Jos haluat lähettää painikkeita samalla rivillä, käytä <code>:same</code>-muotoilua.
+
       <b>Esimerkki:</b>
+
       <code>[button 1](buttonurl:example.com)</code>
+
       <code>[button 2](buttonurl://example.com:same)</code>
+
       <code>[button 3](buttonurl://example.com)</code>
-      Tämä näyttää nappuloita 1 ja 2 samalla rivillä, 3 alla.
+
+      Tämä näyttää painikkeet 1 ja 2 samalla rivillä, ja painikkeen 3 niiden alla.
     Fillings: |-
-      <b>Fillings</b>
+      <b>Täytteet</b>
 
-      Voit myös mukauttaa viestisi sisältöä kontekstuaalisella tiedolla. Esimerkiksi voit mainita käyttäjän nimen tervetuloviestissä, tai mainita heitä filerissä!
-      Voit myös käyttää näitä mainitaksesi käyttäjän myös muissa huomautuksissa!
 
-      <b>Tuetut fillings:</b>
-      - <code>{first}</code>: Käyttäjän ensimmäinen nimi.
-      - <code>{last}</code>: Käyttäjän viimeinen nimi.
-      - <code>{fullname}</code>: Käyttäjän täysi nimi.
-      - <code>{username}</code>: Käyttäjän käyttäjänimi. Jos heillä ei ole, mainita käyttäjä.
-      - <code>{mention}</code>: Mainitsee käyttäjän ensimmäisellä nimellä.
+      Voit myös mukauttaa viestiesi sisältöä kontekstuaalisilla tiedoilla.
+      Voit esimerkiksi mainita käyttäjän nimeltä tervetuloviestissä tai mainita hänet suodattimessa!
+
+      Voit käyttää näitä myös käyttäjän mainitsemiseen muistiinpanoissa!
+
+
+      <b>Tuetut täytteet:</b>
+
+      - <code>{first}</code>: Käyttäjän etunimi.
+
+      - <code>{last}</code>: Käyttäjän sukunimi.
+
+      - <code>{fullname}</code>: Käyttäjän koko nimi.
+
+      - <code>{username}</code>: Käyttäjän käyttäjätunnus. Jos hänellä ei ole sellaista, mainitsee käyttäjän sen sijaan.
+
+      - <code>{mention}</code>: Mainitsee käyttäjän hänen etunimellään.
+
       - <code>{id}</code>: Käyttäjän ID.
+
       - <code>{chatname}</code>: Keskustelun nimi.
-      - <code>{rules}</code>: Lisää säännöt painiketta viestiin.
+
+      - <code>{rules}</code>: Lisää Säännöt-painikkeen viestiin.
+
+      - <code>{protect}</code>: Suojaa sisällön jakamiselta.
+
+      - <code>{preview}</code>: Ottaa esikatselut käyttöön viesteissä.
+
+      - <code>{nonotif}</code>: Poistaa kyseisen viestin ilmoituksen käytöstä.
     Random: |-
-      <b>Random Content</b>
+      <b>Satunnainen sisältö</b>
 
-      Toinen asia, joka voi olla hauskaa, on satunnaisointi viestin sisältöä. Tee asiat vähän henkeämpiä muuttamalla tervetuloviestejä, tai muuttamalla huomautuksia!
+
+      Toinen hauska asia on satunnaistaa viestin sisältöä.
+      Tee asioista hieman persoonallisempia muuttamalla tervetuloviestejä tai
+      muuttamalla muistiinpanoja!
+
       Kuinka käyttää satunnaista sisältöä:
-      - %%%: Tämä erotin voidaan käyttää lisätäksi satunnaisia vastauksia bottiin.
-      Esimerkki:
+
+      - %%%: Tätä erotinta voidaan käyttää lisäämään satunnaisia vastauksia bottiin.
+
+      Esimerkiksi:
+
       <code>hello
+
       %%%
+
       how are you</code>
-      Tämä satunnaisesti valitsee kumpi viestistä lähetetään, "hello" vai "how are you".
-      Käytä tätä tehdäksesi Alita vähän enemmän kustomoitua! (toimii vain filereissä/huomautuksissa)
-      Esimerkki tervetuloviesti:
-      - Jokainen kerta, kun uusi käyttäjä liittyy, heille näytetään yksi kolmesta viestistä, joka näkyy tässä.
+
+      Tämä valitsee satunnaisesti, lähetetäänkö ensimmäinen viesti "hello" vai
+      toinen viesti "how are you".
+
+      Käytä tätä tehdäksesi Alitasta hieman persoonallisemman! (toimii vain
+      suodattimissa/muistiinpanoissa)
+
+      Esimerkki tervetuloviestistä:
+
+      - Joka kerta kun uusi käyttäjä liittyy, hänelle näytetään yksi kolmesta
+      tässä näytetystä viestistä.
+
       -> /filter "hey"
-      hello there <code>{first}</code>!
+
+      hei siellä <code>{first}</code>!
+
       %%%
-      Ooooh, <code>{first}</code> how are you?
+
+      Ooooh, <code>{first}</code> miten voit?
+
       %%%
-      Sup? <code>{first}</code>
+
+      Mitä kuuluu? <code>{first}</code>
+    markdown_help: Markdown-apu
+    markdown_formatting: Markdown-muotoilu
+    fillings: Täytteet
+    random_content: Satunnainen sisältö
   Greetings:
+    welcome:
+      status: >-
+        Toivotan tällä hetkellä käyttäjiä tervetulleeksi: <code>%t</code>\nPoistan
+        tällä hetkellä vanhoja tervetuloviestiä: <code>%t</code>\nPoistan tällä hetkellä
+        palveluviestejä: <code>%t</code>\nTervetuloviesti, joka ei täytä {}:a on:
+      enabled: Toivotan käyttäjiä tästä lähtien tervetulleiksi.
+      disabled: En toivota käyttäjiä tästä lähtien tervetulleiksi.
+      turned_off: Tervetuloviesti on poistettu käytöstä!
+    set_welcome:
+      success: Mukautettu tervetuloviesti asetettu onnistuneesti!
+    reset_welcome:
+      success: Mukautettu tervetuloviesti palautettu onnistuneesti oletukseksi!
+    goodbye:
+      status: >-
+        Jätän parhaillaan hyvästejä käyttäjille: <code>%t</code>\nPoistan
+        parhaillaan vanhoja hyvästejä: <code>%t</code>\nPoistan parhaillaan
+        palveluviestejä: <code>%t</code>\nHyvästiviesti, joka ei täytä {} on:
+      enabled: Jätän hyvästejä käyttäjille tästä lähtien.
+      disabled: En jätä hyvästejä käyttäjille tästä lähtien.
+      turned_off: Hyvästiviesti on poistettu käytöstä!
+    set_goodbye:
+      success: Mukautettu hyvästiviesti asetettu onnistuneesti!
+    reset_goodbye:
+      success: Mukautettu hyvästiviesti palautettu onnistuneesti oletukseksi!
+    clean_welcome:
+      status_enabled: Minun pitäisi poistaa jopa kaksi päivää vanhoja tervetuloviestiä.
+      status_disabled: En poista parhaillaan vanhoja tervetuloviestiä!
+      disabled: En poista vanhoja tervetuloviestiä!
+      enabled: Yritän poistaa vanhoja tervetuloviestiä!
+    clean_goodbye:
+      status_enabled: Minun pitäisi poistaa jopa kaksi päivää vanhoja tervetuloviestiä.
+      status_disabled: En poista parhaillaan vanhoja tervetuloviestiä!
+      disabled: En poista vanhoja hyvästiviestejä!
+      enabled: Yritän poistaa vanhoja hyvästiviestejä!
+    del_joined:
+      status_enabled: Minun pitäisi poistaa 'käyttäjä liittyi keskusteluun' -viestit nyt.
+      status_disabled: En poista parhaillaan liittymisviestejä.
+      disabled: En poista liittymisviestejä.
+      enabled: Yritän poistaa liittymisviestejä!
+    pending_joins:
+      new_request: Uusi käyttäjä on pyytänyt liittyä keskusteluun!
+      user: 'Käyttäjä: %s'
+      user_id: 'Käyttäjä ID: %d'
+      approve_button: ✅ Hyväksy
+      decline_button: ❌ Hylkää
+      ban_button: ✅ Estä
+    join_request:
+      accepted: Hyväksytty %s keskusteluun ✅
+      declined: Hylätty %s liittymään keskusteluun ❌
+      banned: ✅ Estetty onnistuneesti! %s
+    auto_approve:
+      enabled: Hyväksyn uudet keskustelupyynnöt automaattisesti nyt.
+      disabled: En hyväksy uusia keskustelupyynnöjä automaattisesti nyt.
+      disabled_now: En hyväksy uusia liittymispyyntöjä automaattisesti!
+      enabled_now: Yritän hyväksyä uudet liittymispyynnöt automaattisesti!
     help_msg: |-
-      Tervetuloa, uudet jäsenet ryhmääsi tai sano hyvästit heidän lähdettyään!
+      Toivota uudet jäsenet tervetulleiksi ryhmiisi tai sano hyvästit heidän lähtiessään!
 
-      *Ylläpitäjäkomennot: *
-      × /settervetullut "<vastaus/teksti>": Sets toivottaa ryhmän tervetulleeksi.
-      x /tervetuloa "<kyllä/ei/on/off>": Enables tai Disables toivottaa ryhmän tervetulleeksi.
-      × /resetkestä: palauttaa oletusarvon oletusarvon.
-      × /sethyvästit "<vastaus/teksti>": lähetä jäähyväisteksti ryhmälle.
-      × /hyvästit "<kyllä/ei/on/off>": Enables tai Disables hyvästele ryhmän.
-      × /resetjäähyväiset: Palauta hyvästit oletusarvolle.
-      ×/siivouspalvelu "<kyllä/ei/on/off>": Poista kaikki palveluviestit, kuten "x liittyi ryhmän ilmoitukseen".
-      × /puhdistaa "<kyllä/ei/on/off>": Poista vanha tervetuloviesti aina, kun uusi jäsen liittyy.
+
+      *Ylläpitäjäkomennot:*
+
+      × /setwelcome `<reply/text>`: Asettaa tervetuloviestin ryhmälle.
+
+      × /welcome `<yes/no/on/off>`: Ottaa käyttöön tai poistaa käytöstä tervetuloviestin ryhmälle.
+
+      × /resetwelcome: Palauttaa tervetuloviestin oletusarvoon.
+
+      × /setgoodbye `<reply/text>`: Asettaa hyvästelyviestin ryhmälle.
+
+      × /goodbye `<yes/no/on/off>`: Ottaa käyttöön tai poistaa käytöstä hyvästelyviestin ryhmälle.
+
+      × /resetgoodbye: Palauttaa hyvästelyviestin oletusarvoon.
+
+      × /cleanservice `<yes/no/on/off>`: Poistaa kaikki palveluviestit, kuten 'x liittyi ryhmään' -ilmoituksen.
+
+      × /cleanwelcome `<yes/no/on/off>`: Poistaa vanhan tervetuloviestin, kun uusi jäsen liittyy.
+
+      × /autoapprove `<yes/no/on/off>`: Hyväksyy automaattisesti kaikki uudet jäsenet.
+    i_am_currently_goodbying_users_t: 'Jätän parhaillaan hyvästejä käyttäjille: <code>%t</code>'
+    i_understand_on_yes_or_off_no_only: Ymmärrän vain 'on/yes' tai 'off/no'!
+    formatting: Muotoilu
   Help:
+    about:
+      main: Tietoa ja tietoja\n\nTässä joitakin usein kysyttyjä kysymyksiä Alitasta.
+      me_button: "Tietoa minusta 👨‍💻"
+      news_channel_button: "Uutiskanava 📢"
+      support_group_button: "Tukiryhmä 👥"
+      configuration_button: Kokoonpano ⚙️
+      group_prompt: Klikkaa alla olevaa painiketta saadaksesi tietoa minusta!
+      button: Tietoa
+    start:
+      intro: >-
+        Hei! Nimeni on Alita ✨.\nOlen täällä auttamassa sinua hallinnoimaan
+        ryhmiäsi!\nNapauta /help saadaksesi lisätietoja siitä, miten voit
+        hyödyntää minua täysimääräisesti.\nLiity <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>uutiskanavalleni</a>
+        saadaksesi tietoa kaikista uusimmista päivityksistä.
+      about_button: Tietoa ✨
+      add_to_chat_button: ➕ Lisää minut keskusteluun!
+      support_group_button: "Tukiryhmä 👥"
+      commands_help_button: "📚 Komennot ja apu"
+      language_button: "Kieli 🌏"
+      group_prompt: 'Hei :) Lähetä minulle yksityisviesti, jos sinulla on kysyttävää siitä, miten voit käyttää minua!'
+    main: >-
+      Hei %s!\nNimeni on Alita ✨.\n\nOlen ryhmänhallintabotti, auttamassa sinua
+      liikkumaan ja pitämään järjestystä ryhmissäsi!\nMinulla on paljon käteviä
+      ominaisuuksia, kuten tulva-hallinta, varoitusjärjestelmä, muistiinpanojen
+      tallennusjärjestelmä ja jopa ennalta määritetyt vastaukset tietyille
+      avainsanoille.\n\n<b>Hyödylliset komennot</b>:\n - /start: Käynnistää minut!
+      Olet luultavasti jo käyttänyt tätä!\n - /help: Lähettää tämän viestin;
+      kerron sinulle lisää itsestäni!\n - /donate: Antaa sinulle tietoa siitä,
+      miten voit tukea minua ja luojaani.\n\nKaikkia komentoja voi käyttää
+      seuraavien kanssa: / tai !
+    help:
+      button: Klikkaa tästä saadaksesi apua!
+      group_prompt_general: Ota yhteyttä minuun yksityisviestillä saadaksesi apua!
+      group_prompt_module: Ota yhteyttä minuun yksityisviestillä saadaksesi apua liittyen <code>%s</code>!
+    configuration:
+      private_only: Konfigurointi toimii vain yksityisviesteissä
     About: |-
-      @%s on yksi nopeimmin ja eniten täytetyistä ryhmän johtajista.
+      @%s on yksi nopeimmista ja monipuolisimmista ryhmänhallintaboteista.
 
-      Alita ✨ on kehitetty ja aktiivisesti ylläpitää @DivideProjects!
 
-      Alita on ollut verkossa vuodesta 2020 ja ovat palvelleet tuhansia ryhmiä satoja tuhansia käyttäjiä.
+      Alita ✨ on @DivideProjectsin kehittämä ja aktiivisesti ylläpitämä!
+
+
+      Alita on ollut verkossa vuodesta 2020 ja palvellut tuhansia ryhmiä satojen tuhansien käyttäjien kanssa!
+
 
       <b>Miksi Alita:</b>
-      -Simple: Helppo käyttö ja kompatinble monet bot komentoja.
-      -Ominaisuudet, joita muut ryhmähallintabotit eivät ole.
-      -Nopea: arvaa mitä? Se ei ole tehty Pythonin avulla, käytämme <a href='https://go.dev/'>Go</a> ohjelmakielenä.
+
+      - Yksinkertainen: Helppo käyttää ja yhteensopiva monien bottikomentojen kanssa.
+
+      - Monipuolinen: Monia ominaisuuksia, joita muilla ryhmänhallintaboteilla ei ole.
+
+      - Nopea: Arvaa mitä? Se ei ole tehty Pythonilla, me käytämme <a href='[https://go.dev/](https://go.dev/)'>Go</a>-kieltä ydinohjelmointikielenämme.
+
 
       <b>Nykyinen versio:</b> %s
     Configuration:
       Step-1: |-
-        Tervetuloa Alitan kokoonpanoon
+        Tervetuloa Alitan konfigurointiin
 
-        Ensimmäinen asia on lisätä Alita ✨ ryhmäsi! Kun teet tämän, paina alla olevaa painiketta ja valitse ryhmäsi ja jatka opetusohjelmaa.
+
+        Ensimmäinen asia on lisätä Alita ✨ ryhmääsi! Tee se painamalla alla olevaa painiketta ja valitsemalla ryhmäsi, ja jatka sitten opetusohjelmaa painamalla Valmis.
       Step-2: |-
-        Ok, well done!
+        Ok, hyvin tehty!
 
-        Now to let me work correctly, you need to make me Admin of your Group!
-        To do that, follow this easy steps:
-        ▫️ Go to your group
-        ▫️ Press the Group's name
-        ▫️ Press Modify
-        ▫️ Press on Administrator
-        ▫️ Press Add Administrator
-        ▫️ Press the Magnifying Glass
-        ▫️ Search @%s
-        ▫️ Confirm
+        Nyt, jotta voin toimia oikein, sinun täytyy tehdä minusta ryhmäsi ylläpitäjä!
+        Tee se seuraamalla näitä helppoja ohjeita:
+        ▫️ Mene ryhmääsi
+        ▫️ Paina ryhmän nimeä
+        ▫️ Paina Muokkaa
+        ▫️ Paina Järjestelmänvalvoja
+        ▫️ Paina Lisää järjestelmänvalvoja
+        ▫️ Paina suurennuslasia
+        ▫️ Etsi @%s
+        ▫️ Vahvista
       Step-3: |-
         Erinomaista!
-        Nyt Bot on valmis käyttämään!
-        Kaikki komennot voidaan käyttää/tai!
 
-        Jos sinulla on vaikeuksia perustaa minua ryhmäsi, niin älä epäröi tulla @DivideSupport.
-        . Haluaisimme auttaa teitä.
+        Nyt botti on valmis käytettäväksi!
+
+        Kaikkia komentoja voi käyttää / tai !
+
+
+        Jos sinulla on vaikeuksia asettaa minut ryhmääsi, älä epäröi tulla @DivideSupport-kanavalle.
+
+        Autamme mielellämme.
     DonateText: |-
-      Haluatko lahjoittaa? Mahtavaa!
-      Kun lahjoitat, kaikki rahasto menee kohti minun kehitystä, joka tekee nopeasti ja reagoiva.
-      Lahjoituksenne voisi myös tuoda minulle uuden ominaisuuden, - jota en voinut saada palvelinrajoitusten takia.
-      Kaikki rahasto siirrettäisiin minun palveluihini, kuten tietokantaan, varastointiin ja isännöintiin.
-      Voit lahjoittaa ottamalla yhteyttä omistajaan täällä: @DivideProjectsBot
+      Haluatko siis lahjoittaa? Upeaa!
+
+      Kun lahjoitat, kaikki varat menevät kehitykseeni, mikä tekee minut nopeaksi ja reagoivaksi.
+
+      Lahjoituksesi saattaa myös tuoda minulle uuden ominaisuuden tai kaksi, joita en voinut saada palvelinrajoitusten vuoksi.
+
+      Kaikki varat käytetään palveluihini, kuten tietokantaan, tallennustilaan ja isännöintiin!
+
+      Voit lahjoittaa ottamalla yhteyttä omistajaani täällä: @DivideProjectsBot
+    about_me_u200d: "Tietoa minusta 👨‍💻"
   Locks:
+    list:
+      header: 'Nämä ovat tämän keskustelun lukitukset:'
+    locktypes:
+      header: 'Lukitukset: \n -'
+    lock:
+      no_type_specified: Mitä haluat lukita? Tarkista /locktypes saatavilla olevista vaihtoehdoista.
+      success: 'Lukittu seuraavat tässä ryhmässä:\n - %s'
+    unlock:
+      no_type_specified: Mitä haluat avata? Tarkista /locktypes saatavilla olevista vaihtoehdoista.
+      success: 'Avattu seuraavat tässä ryhmässä:\n - %s'
+    errors:
+      invalid_type: '`%s` ei ole oikea lukitustyyppi, tarkista /locktypes.'
+    bot:
+      no_admin_permission: >-
+        Näen botin, ja minulle on sanottu, että estän heitä liittymästä... mutta en ole
+        ylläpitäjä!
+      no_ban_permission: >-
+        Näen botin, ja minulle on sanottu, että estän heitä liittymästä... mutta minulla ei ole
+        oikeutta estää heitä!
+      admin_only: Vain ylläpitäjät saavat lisätä botteja tähän keskusteluun!
     help_msg: |-
-      * *:
-      × /lukitus "<lupa>": Lukitse Chat-lupa.
-      × /vapautetaan "<lupa>": Luvaton Chat-lupa.
-      × /lukitus: Näytä Chat-lupa.
-      × /locklajit: Tarkista käytettävissä olevat lukituslajit.
+      *Vain ylläpitäjille*:
 
-      Lukitukset voidaan käyttää ryhmän käyttäjien rajoittamiseen.
-      Lukitusurls poistaa kaikki viestit, joissa on urls-ja lukitustarrat, poistaa kaikki tarrat jne.
-      Lukitusbotit estävät muita kuin päähenkilöitä lisäämästä boteja keskusteluun.
+      × /lock `<permission>`: Lukitse keskustelun oikeus.
 
-      ** Esimerkki:**
-      /lukkoviestimet ': tämä lukitsee kaikki keskusteluryhmän viestimet.
+      × /unlock `<permission>`: Avaa keskustelun oikeus.
+
+      × /locks: Näytä keskustelun oikeudet.
+
+      × /locktypes: Tarkista saatavilla olevat lukitustyypit!
+
+
+      Lukkoja voidaan käyttää rajoittamaan ryhmän käyttäjiä.
+
+      URL-osoitteiden lukitseminen poistaa automaattisesti kaikki viestit, joissa on URL-osoitteita, tarrojen lukitseminen poistaa kaikki tarrat jne.
+
+      Bottien lukitseminen estää muita kuin ylläpitäjiä lisäämästä botteja keskusteluun.
+
+
+      **Esimerkki:**
+
+      `/lock media`: tämä lukitsee kaikki mediaviestit keskustelussa.
+    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'Näen botin, ja minulle on sanottu, että estän heitä liittymästä...'
   Languages:
+    help_translate_button: "Auta meitä kääntämään 🌎"
+    change:
+      private_prompt: Nykyinen kielesi on %s\nValitse kieli alla olevasta näppäimistöstä.
+      group_prompt: >-
+        Tämän ryhmän nykyinen kieli on %s\nValitse kieli alla olevasta näppäimistöstä.
+      private_success: Kielesi on vaihdettu muotoon %s
+      group_success: Tämän ryhmän kieli on vaihdettu muotoon %s
     help_msg: |-
-      Etkö osaa vaihtaa botin kieltä?
-      Helppo muutos käyttämällä tätä moduulia!
+      Etkö pysty vaihtamaan botin kieltä?
+
+      Vaihda se helposti käyttämällä tätä moduulia!
+
 
       Kirjoita vain /lang ja käytä inline-näppäimistöä valitaksesi kielen itsellesi tai ryhmällesi.
 
-      Voit auttaa meitä tuomaan botin lisää kielille auttamalla [Crowdinissa](https://crowdin.com/project/alita_robot).
-  Misc:
-    help_msg: |-
-      × /info: Hae käyttäjätietosi, voidaan käyttää vastauksena tai antamalla käyttäjätunnus tai käyttäjänimi.
-      × /id: Hae nykyisen ryhmän tunnus. Jos käytetty vastaamalla viestiin, hae sen käyttäjän tunnus.
-      × /ping: Pingaa Telegram-palvelin!
-      × /paste: Liitä tekstit nekobin-palvelimelle!
-      × /tr <kielikoodi> <viesti/vastaa viestiin>: Käännä viesti.
-      × /webping: Pingaa [Telegram API](https://api.telegram.org)!
-      × /google <kysely>: Etsi jotain Googlesta.
-      × /yts <kysely>: Etsi jotain YouTubesta.
-      × /app <kysely>: Etsi jotain Google Playsta.
-      × /github <kysely>: Etsi jotain Githubista.
-      × /reddit <kysely>: Etsi jotain Redditistä.
-      × /removebotkeyboard: Poistaa jumittuneen bot-näppäimistön keskustelustasi.
-  Mutes:
-    help_msg: |-
-      Joskus käyttäjät voivat olla ärsyttäviä, ja saatat haluta rajoittaa heitä lähettämästä viestejä keskusteluun, tämä moduuli on tässä auttamassa, voit mykistää ryhmäsi jäseniä tällä moduulilla.
 
-      *Mute-komennot:* (vain ylläpitäjälle)
-      × /mute <käyttäjätunnus>: mykistä käyttäjä (tunnuksen tai vastauksen kautta)
-      × /smute <käyttäjätunnus>: mykistä käyttäjä hiljaa, ei lähetä viestiä ryhmälle ja poistaa myös komennon. (tunnuksen tai vastauksen kautta)
-      × /dmute <käyttäjätunnus>: mykistä käyttäjä ja poista vastausviesti. (tunnuksen tai vastauksen kautta)
-      × /tmute <käyttäjätunnus> x(m/h/d): mykistä käyttäjä x ajaksi. (tunnuksen tai vastauksen kautta). m = minuutteja, h = tunteja, d = päiviä.
-      × /unmute <käyttäjätunnus>: poista mykistys käyttäjältä. (tunnuksen tai vastauksen kautta)
+      Voit auttaa meitä tuomaan botin useammille kielille auttamalla [Crowdinissa](https://crowdin.com/project/alita_robot)
+  Misc:
+    reply:
+      need_target: Vastaa jollekin.
+      need_content: Anna sisältöä vastattavaksi!
+    paste:
+      need_text_or_document: Anna tekstiä liitettäväksi tai vastaa asiakirjaan!
+      processing: Liitetään...
+      get_file_error: BadRequest on GetFile!
+      file_too_big: Tiedosto liian suuri liitettäväksi; Suurin liitettävä tiedostokoko on 600 kt!
+      paste_error: Annettuja tietoja ei voi liittää!
+    info:
+      user_not_found: Käyttäjästä ei löytynyt tietoja.
+    translate:
+      need_text_and_lang: Tarvitsen tekstiä ja kielikoodin kääntääkseni.
+      no_text_in_reply: Vastattu viesti ei sisällä tekstiä käännettäväksi.
+      need_text: Anna tekstiä käännettäväksi.
+      request_error: Virhe käännöspyynnön tekemisessä!
+    keyboard:
+      removing: Poistetaan jumiutunutta botin näppäimistöä...
+    help_msg: |-
+      × /info: Hae käyttäjätietosi, voidaan käyttää vastauksena tai antamalla käyttäjä-ID:n tai käyttäjätunnuksen.
+
+      × /id: Hae nykyisen ryhmän ID. Jos käytetään vastaamalla viestiin, hae kyseisen käyttäjän ID.
+
+      × /ping: Pingaa Telegram-palvelinta!
+
+      × /paste: Liitä tekstejä Nekobin-palvelimelle!
+
+      × /tr <lang code> <msg/reply to message>: Käännä viesti.
+
+      × /removebotkeyboard: Poistaa jumittuneen bottinäppäimistön keskustelustasi.
+
+      × /stat: Hakee keskustelun viestien kokonaismäärän.
+    pinged_in_percent_ms: Pingattu %d ms
+    reading_error: 'Lukuvirhe:'
+    total_messages_in_percent_are_percent: 'Viestien kokonaismäärä kohteessa %s on: %d'
+  Mutes:
+    errors:
+      restrict_self: Miksi rajoittaisin itseäni?
+      anon_user: Tätä komentoa ei voi käyttää anonyymille käyttäjälle.
+    tmute:
+      success: Shh...\nMykistetty %s ajaksi %s
+    mute:
+      success: Shh...\nMykistetty %s.
+    dmute:
+      no_reply: Sinun täytyy vastata viestiin poistaaksesi sen ja mykistääksesi käyttäjän!
+      success: Shh...\nMykistetty %s.
+    unmute:
+      success: Selvä!\nAnnan %s puhua uudelleen.
+    help_msg: |-
+      Joskus käyttäjät voivat olla ärsyttäviä ja haluat ehkä rajoittaa heidän viestien lähettämistä keskusteluun, tämä moduuli on täällä auttamassa, voit käyttää tätä moduulia mykistääksesi jäseniä ryhmässäsi.
+
+
+      *Mykistyskommennot:* (vain ylläpitäjille)
+
+      × /mute <userhandle>: mykistää käyttäjän, (tunnuksella tai vastaamalla)
+
+      × /smute <userhandle>: mykistää käyttäjän hiljaa, ei lähetä viestiä ryhmään, ja poistaa myös komentosi. (tunnuksella tai vastaamalla)
+
+      × /dmute <userhandle>: mykistää käyttäjän ja poistaa vastatun viestin. (tunnuksella tai vastaamalla)
+
+      × /tmute <userhandle> x(m/h/d): mykistää käyttäjän ajaksi `x`. (tunnuksella tai vastaamalla). m = minutes, h = hours, d = days.
+
+      × /unmute <userhandle>: poistaa käyttäjän mykistyksen. (tunnuksella tai vastaamalla)
   Notes:
+    remove:
+      no_keyword: Anna avainsana poistettavaksi!
+    errors:
+      no_keyword_reply: Anna avainsana, johon vastata!
+      invalid_note: Virheellinen muistiinpano!
+      does_not_exist: Muistiinpanoa ei ole olemassa!
+      parse_error: >-
+        Muistiinpanon jäsentämisessä on virhe, ilmoita tästä tukikeskustelussa.
+      admin_only: Tämän muistiinpanon voi lukea vain ylläpitäjä!
+    list:
+      no_notes: Tässä keskustelussa ei ole muistiinpanoja!
+      private_prompt: Tarkista alla oleva painike saadaksesi muistiinpanoja!
     help_msg: |-
       Tallenna tietoja tuleville käyttäjille muistiinpanoilla!
-      Muistiinpanot ovat loistavia tallentamaan satunnaisia tiedon palasia; puhelinnumero, kiva gif, hauska kuva - mitä tahansa!
+
+      Muistiinpanot ovat loistavia satunnaisten tietojen tallentamiseen; puhelinnumero, kiva gif, hauska kuva - mitä tahansa!
+
       *Käyttäjäkomennot:*
-      - /get <muistiinpanonimi>: Hae muistiinpano.
-      - #muistiinpanonimi: Sama kuin /get.
-      *Ylläpitäjäkomennot:*
-      - /save <muistiinpanonimi> <muistiinpanoteksti>: Tallenna uusi muistiinpano nimeltä "sana". Vastaaminen viestiin tallentaa tuon viestin. Toimii jopa mediassa!
-      - /clear <muistiinpanonimi>: Poista siihen liittyvä muistiinpano.
+
+      - /get <notename>: Hae muistiinpano.
+
+      - #notename: Sama kuin /get.
+
+      Admin commands:
+
+      - /save <notename> <note text>: Tallenna uusi muistiinpano nimellä "sana". Viestiin vastaaminen tallentaa kyseisen viestin. Toimii jopa mediassa!
+
+      - /clear <notename>: Poista siihen liittyvä muistiinpano.
+
       - /notes: Listaa kaikki muistiinpanot nykyisessä keskustelussa.
+
       - /saved: Sama kuin /notes.
-      - /clearall: Poista KAIKKI muistiinpanot keskustelusta. Tätä ei voida peruuttaa.
-      - /privatenotes: Lähetetäänkö muistiinpanot PM:ssä vai ei. Lähettää viestin painikkeella, jota käyttäjät voivat painaa saadakseen muistiinpanon PM:ssä.
+
+      - /clearall: Poista KAIKKI muistiinpanot keskustelusta. Tätä ei voi peruuttaa.
+
+      - /privatenotes: Lähetetäänkö muistiinpanot yksityisviestinä. Lähettää viestin, jossa on painike, jota käyttäjät voivat napsauttaa saadakseen muistiinpanon yksityisviestinä.
+    removed_note_percent: Muistiinpano <b>%s</b> poistettu.
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Oletko varma, että haluat poistaa kaikki muistiinpanot tästä keskustelusta?
+    only_chat_creator_can_use_this_command: Vain keskustelun luoja voi käyttää tätä komentoa.
+    there_s_some_error_parsing_the_note_please_report_this_in_su: 'Muistiinpanon jäsentämisessä on virhe, ilmoita tästä tukikeskustelussa.'
+    note_doesn_t_exists: Muistiinpanoa ei ole olemassa!
+    there_s_some_error_parsing_the_note_please_report_this_to_su: 'Muistiinpanon jäsentämisessä on virhe, ilmoita tästä tukikeskustelussa.'
+    formatting: Muotoilu
   Pins:
+    errors:
+      bot_need_admin: Minun on oltava ylläpitäjä kiinnittääkseni viestejä!
+      reply_to_pin: Vastaa viestiin kiinnittääksesi sen!
+      reply_to_unpin: Vastaa viestiin poistaaksesi sen kiinnityksen!
+    pin:
+      success: Kiinnitetty onnistuneesti!
+    unpin:
+      success: Kiinnitys poistettu onnistuneesti!
+    unpin_all:
+      success: Kaikki keskusteluviestit kiinnitys poistettu!
     help_msg: |-
-      Kaikki tähän liittyvät komennot voidaan löytää täältä; pidä rupattelun ajan tasalla viimeisimmistä uutisista, joissa on yksinkertainen kiinnitetty viesti.
+      Kaikki kiinnittämiseen liittyvät komennot löytyvät täältä; pidä keskustelusi ajan tasalla viimeisimmistä uutisista yksinkertaisella kiinnitetyllä viestillä!
 
-      *Käyttäjän komennot: *
-      × /kiinnitetty: Hae nykyinen tuettu sanoma.
 
-      *Ylläpitäjäkomennot: *
-      × /pin: Pin, johon vastasit. Lisää "äänekäs" tai "ilmoitus", jotta ryhmän jäsenille lähetetään ilmoitus.
-      × /kiinnitetty: Gets viimeisin kiinnitetty viesti nykyisen Chat:
-      × /permapin <text>: Pin on mukautettu viesti botin kautta. Tämä sanoma voi sisältää merkintöjä, painikkeita ja muita hienoja ominaisuuksia.
-      × /unpin: Järjestelmä poistaa nykyisen sanoman. Jos vastaus on vastaus, vastatkaa viestiin.
-      x /unpinall: Kaikki kiinnitetyt viestit
-      × kanavointi <kyllä/ei/on/off>: Älä anna sähkeen linkitettyjen kanavien kautta. Jos argumentteja ei anneta, näyttää nykyinen asetus.
-      x /puhdistava <kyllä/ei/on/off>: linkitetyn kanavan lähettämät viestit.
-      Huomautus: Kun käytät antikanavakeiloja, varmista, että käytät /unpin - komentoa sen sijaan, että teet sen manuaalisesti. Muussa tapauksessa vanha viesti jää jumiin, kun kanava lähettää viestejä.
+      *Käyttäjäkomennot:*
+
+      × /pinned: Hae nykyinen kiinnitetty viesti.
+
+
+      *Ylläpitäjäkomennot:*
+
+      × /pin: Kiinnitä viesti, johon vastasit. Lisää 'loud' tai 'notify' lähettääksesi ilmoituksen ryhmän jäsenille.
+
+      × /pinned: Hakee viimeisimmän kiinnitetyn viestin nykyisessä keskustelussa.
+
+      × /permapin <text>: Kiinnitä mukautettu viesti botin kautta. Tämä viesti voi sisältää markdownia, painikkeita ja kaikkia muita hienoja ominaisuuksia.
+
+      × /unpin: Poista nykyisen kiinnitetyn viestin kiinnitys. Jos käytetään vastauksena, poistaa vastatun viestin kiinnityksen.
+
+      × /unpinall: Poistaa kaikkien kiinnitettyjen viestien kiinnitykset.
+
+      × /antichannelpin <yes/no/on/off>: Älä anna Telegramin kiinnittää linkitettyjä kanavia automaattisesti. Jos argumentteja ei anneta, näyttää nykyisen asetuksen.
+
+      × /cleanlinked <yes/no/on/off>: Poistaa linkitetyn kanavan lähettämät viestit.
+
+      Huomautus: Kun käytät anti channel pins -toimintoa, varmista, että käytät /unpin-komentoa, äläkä tee sitä manuaalisesti. Muuten vanha viesti kiinnitetään uudelleen, kun kanava lähettää viestejä.
+    unpinned_all_pinned_messages_in_this_chat: Kaikkien kiinnitettyjen viestien kiinnitys poistettu tässä keskustelussa!
+    cancelled_operation_to_unpin_messages: Kiinnityksen poisto peruttu!
+    are_you_sure_you_want_to_unpin_all_pinned_messages: Oletko varma, että haluat poistaa kaikkien kiinnitettyjen viestien kiinnityksen?
+    please_reply_to_a_message_or_give_some_text_to_pin: Vastaa viestiin tai anna tekstiä kiinnitettäväksi.
+    no_message_has_been_pinned_in_the_current_chat: Tässä keskustelussa ei ole kiinnitetty viestiä!
   Purges:
     help_msg: |-
-      *Vain ylläpitäjälle:*
+      *Vain ylläpitäjille:*
       - /purge: poistaa kaikki viestit tämän ja vastatun viestin väliltä.
-      - /del: poistaa viestin johon vastasit.
+      - /del: poistaa viestin, johon vastasit.
 
-      *Esimerkkejä:*
-      - Poista kaikki viestit vastatusta viestistä tähän asti.
+
+      *Esimerkkejä*:
+      - Poista kaikki viestit vastatusta viestistä tähän hetkeen asti.
       -> `/purge`
+    reply_to_a_message_to_select_where_to_start_purging_from: Vastaa viestiin valitaksesi, mistä aloitetaan puhdistaminen.
+    reply_to_a_message_to_delete_it: Vastaa viestiin poistaaksesi sen!
+    this_message_is_already_marked_for_purging: Tämä viesti on jo merkitty poistettavaksi!
+    message_marked_for_deletion_reply_to_another_message_with_pu: >-
+      Viesti merkitty poistettavaksi. Vastaa toiseen viestiin /purgeto-komennolla
+      poistaaksesi kaikki viestit niiden väliltä; 30 sekunnin sisällä!
+    you_can_only_use_this_command_after_having_used_the_purgefro: Voit käyttää tätä komentoa vasta sen jälkeen, kun olet käyttänyt /purgefrom-komentoa!
+    use_del_command_to_delete_one_message: Käytä /del-komentoa poistaaksesi yhden viestin!
+    reply_to_a_message_to_show_me_till_where_to_purge: Vastaa viestiin näyttääksesi minulle, mihin asti puhdistaa.
   Reports:
+    settings:
+      enabled: Ylläpitäjän raportit ovat käytössä!
+      disabled: Ylläpitäjän raportit ovat pois käytöstä!
+    report:
+      success: Ilmoitettu ylläpitäjille!
+      disabled: Raportit ovat pois käytöstä tässä keskustelussa!
     help_msg: |-
-      Olemme kaikki kiireisiä ihmisiä, joilla ei ole aikaa valvoa ryhmäämme ympäri vuorokauden. Mutta miten reagoit, jos joku ryhmässäsi roskapostaa?
+      Olemme kaikki kiireisiä ihmisiä, joilla ei ole aikaa valvoa ryhmiämme 24/7. Mutta miten reagoit, jos joku ryhmässäsi spämmää?
 
-      × /report "<syy>": vastaa viestiin raportoidaksesi sen ylläpitäjille.
-      - @admin: sama kuin raportti, mutta ei komento.
 
-      *Vain ylläpitäjälle:*
-      × /reports "<on/off/yes/no>": muuta raportin asetusta, tai näytä nykyinen tila.
-      - Jos tehdään PM:ssä, vaihtaa tilaasi.
-      - Jos ryhmässä, vaihtaa ryhmän tilaa.
-      × /reports "block" (vain vastaamalla): estä käyttäjä käyttämästä /reportia tai @admin.
-      × /reports "unblock" (vain vastaamalla): poista käyttäjän esto /reportin tai @admin käytöstä.
-      × /reports "showblocklist": tarkista kaikki estetyt käyttäjät, jotka eivät voi käyttää /reportia tai @admin.
+      × /report `<reason>`: vastaa viestiin ilmiantaaksesi sen ylläpitäjille.
 
-      Raportoidaksesi käyttäjän, vastaa yksinkertaisesti hänen viestiinsä @admin tai /report; Alita sitten vastaa sanomalla että ylläpitäjille on ilmoitettu.
-      Sinun TÄYTYY vastata viestiin jonka haluat raportoida; et voi vain käyttää @admin ilman syytä.
+      - @admin: sama kuin /report, mutta ei komento.
 
-      *HUOMAUTUS:* Kumpikaan näistä ei laukaise, jos ylläpitäjät käyttävät sitä.
+
+      *Vain ylläpitäjille:*
+
+      × /reports `<on/off/yes/no>`: muuta raportointiasetusta tai tarkastele nykyistä tilaa.
+
+      - Jos tehdään yksityisviestinä, vaihtaa tilasi.
+
+      - Jos ryhmässä, vaihtaa kyseisen ryhmän tilaa.
+
+      × /reports `block` (vain vastaamalla): Estä käyttäjää käyttämästä /reportia tai @adminia.
+
+      × /reports `unblock` (vain vastaamalla): Poista käyttäjän esto /reportin tai @adminin käytöstä.
+
+      × /reports `showblocklist`: Tarkista kaikki estetyt käyttäjät, jotka eivät voi käyttää /reportia tai @adminia.
+
+
+      Ilmianna käyttäjä vastaamalla hänen viestiinsä @admin tai /report; Alita vastaa sitten viestillä, jossa kerrotaan, että ylläpitäjille on ilmoitettu.
+
+      Sinun TÄYTYY vastata viestiin ilmiantaaksesi käyttäjän; et voi vain käyttää @adminia tagataksesi ylläpitäjiä ilman syytä!
+
+
+      *HUOMAUTUS:* Kumpikaan näistä ei aktivoidu, jos ylläpitäjä käyttää niitä.
+    you_can_t_report_your_own_message: Et voi ilmiantaa omaa viestiäsi!
+    you_need_to_expose_yourself_first: Sinun täytyy paljastaa itsesi ensin!
+    it_s_a_special_account_of_telegram: Se on Telegramin erityistili!
+    you_re_an_admin_whom_will_i_report_your_issues_to: 'Olet ylläpitäjä, kenelle ilmoitan ongelmistasi?'
+    why_would_i_report_myself: Miksi ilmiantaisin itseni?
+    why_would_i_report_an_admin: Miksi ilmiantaisin ylläpitäjän?
   Rules:
     help_msg: |-
-      Kaikki keskusteluryhmät toimivat eri sääntöjen kanssa. Tämä moduuli auttaa sääntöjen selkeyttämisessä.
-      *Käyttäjäkomennot:*
+      Jokainen keskustelu toimii eri säännöillä; tämä moduuli auttaa tekemään säännöistä selkeämpiä!
+
+      *Käyttäjäkomennot*:
+
       × /rules: Tarkista nykyiset keskustelun säännöt.
-      *Ylläpitäjäkomennot:*
-      × /setrules "<teksti>": Aseta tämän keskustelun säännöt.
-      × /privaterules "<yes/no/on/off>": Ota käyttöön/poista käytöstä, lähetetäänkö säännöt yksityisesti.
-      × /resetrules: Palauta säännöt oletusarvoon.
+
+      *Ylläpitäjäkomennot*:
+
+      × /setrules `<text>`: Aseta säännöt tälle keskustelulle.
+
+      × /privaterules `<yes/no/on/off>`: Ota käyttöön/poista käytöstä, lähetetäänkö säännöt yksityisesti.
+
+      × /resetrules: Palauta keskustelun säännöt oletusarvoihin.
+
+      × /rulesbtn `<custom text>`: Asettaa sääntöpainikkeen tekstin.
+
+      × /resetrulesbutton: Palauttaa sääntöpainikkeen tekstin oletusarvoon.
+
+      × /resetrulesbtn: Sama kuin yllä.
+    successfully_cleared_rules: Säännöt poistettu onnistuneesti!
+    successfully_cleared_custom_rules_button_text: Mukautetun sääntöpainikkeen teksti poistettu onnistuneesti!
   Tagger:
     help_msg: |-
-      Tagger on olennainen ominaisuus mainita kaikki tilatut jäsenet ryhmässä.
+      Tagger on olennainen ominaisuus kaikkien ryhmän tilanneiden jäsenten mainitsemiseen.
       Kaikki keskustelun jäsenet voivat tilata taggerin.
 
+
       *Käyttäjäkomennot:*
-      × /tagme: Anna käyttäjän tulla merkityksi
-      × /untagme: Älä anna käyttäjän tulla merkityksi
+
+      × /tagme: Salli käyttäjän tulla merkityksi.
+
+      × /untagme: Estä käyttäjää tulemasta merkityksi.
+
 
       *Ylläpitäjäkomennot:*
-      × /tagall: merkitse/mainitse kaikki merkityt käyttäjät
-      × /untagall: tyhjennä kaikki merkityt jäsenet
-      × /addtag <käyttäjä>: Lisää käyttäjä manuaalisesti merkintälistaan
-      × /rmtag <käyttäjä>: Poista käyttäjä manuaalisesti merkintälistasta
+
+      × /tagall: merkitse/mainitse kaikki merkityt käyttäjät.
+
+      × /untagall: tyhjennä kaikki merkityt jäsenet.
+
+      × /addtag <user>: Lisää käyttäjä manuaalisesti merkintälistaan.
+
+      × /rmtag <user>: Poista käyttäjä manuaalisesti merkintälistasta.
   Warns:
-    help_msg: |-
-      Pidä jäsenesi kurissa varoituksilla; estä heitä riistäytymästä käsistä!
-      Jos etsit automaattisia varoituksia, lue mustien listojen moduulista!
-
-      *Ylläpitäjäkomennot:*
-      - /warn <syy>: Varoita käyttäjää.
-      - /dwarn <syy>: Varoita käyttäjää vastaamalla, ja poista hänen viestinsä.
-      - /swarn <syy>: Varoita käyttäjää hiljaa, ja poista oma viestisi.
-      - /warns: Katso käyttäjän varoitukset.
-      - /rmwarn: Poista käyttäjän viimeisin varoitus.
-      - /resetwarn: Nollaa kaikki käyttäjän varoitukset.
-      - /resetallwarns: Poista kaikki varoitukset keskustelusta. Kaikki käyttäjät palaavat 0 varoitukseen.
-      - /warnings: Hae keskustelun varoitusasetukset.
-      - /setwarnmode <ban/kick/mute/tban/tmute>: Aseta keskustelun varoitustila.
-      - /setwarnlimit <numero>: Aseta varoitusten määrä ennen kuin käyttäjät rankaistaan.
-
-      *Esimerkkejä:*
-      - Varoita käyttäjää.
-      -> `/warn @käyttäjä Sääntöjen rikkomisesta`
+    errors:
+      warn_admin: En aio varoittaa ylläpitäjää!
+      anon_user: Tätä komentoa ei voi käyttää anonyymille käyttäjälle.
+      invalid_mode: "Tuntematon tyyppi '%s'. Käytä jotakin seuraavista: ban/kick/mute"
+      invalid_limit: Varoitusrajan on oltava 1 ja 100 välillä.
+    set_mode:
+      ban: 'Varoitustila päivitetty: ban'
+      kick: 'Varoitustila päivitetty: kick'
+      mute: 'Varoitustila päivitetty: mute'
+      no_mode_specified: >-
+        Sinun on määritettävä toimenpide liian monien varoitusten varalle. Nykyiset tilat
+        ovat: ban/kick/mute
+    warn:
+      limit_kick: Se on %d/%d varoitusta; joten %s on potkittu!
+      limit_mute: Se on %d/%d varoitusta; joten %s on mykistetty!
+      limit_ban: Se on %d/%d varoitusta; joten %s on estetty!
+      success: Käyttäjällä %s on %d/%d varoitusta; ole varovainen!
+      reason: '\n<b>Syy</b>:\n%s'
+      remove_warn_button: ❌ Poista varoitus
+    warns:
+      no_warns: Tällä käyttäjällä ei ole varoituksia!
+      list_header: 'Tällä käyttäjällä on %d/%d varoitusta seuraavista syistä:'
+      list_no_reasons: 'Käyttäjällä on %d/%d varoitusta, mutta ei syitä niihin.'
+    remove:
+      success: Varoitus poistettu käyttäjältä %s.
+      no_warns: Käyttäjällä ei ole jo varoituksia!
+    set_limit:
+      no_limit_specified: >-
+        Määritä kuinka monta varoitusta käyttäjän tulisi saada ennen kuin häneen
+        kohdistetaan toimenpide. Esim. `/setwarnlimit 5`
+      success: Keskustelun varoitusraja-asetukset on päivitetty %d.
+    reset:
+      success: Varoitukset on nollattu!
+    reset_all:
+      no_warns: Tässä keskustelussa ei ole varoitettuja käyttäjiä!
+      confirm: >-
+        Oletko varma, että haluat poistaa kaikki varoitukset kaikilta käyttäjiltä
+        tässä keskustelussa?
+      success: Kaikki varoitukset poistettu kaikilta käyttäjiltä tässä keskustelussa.
+      button_yes: Kaikki varoitukset poistettu kaikilta käyttäjiltä tässä keskustelussa!
+      button_no: Kaikkien käyttäjien varoitusten poistaminen tässä keskustelussa peruttu!
+    warnings:
+      status: >-
+        Ryhmässä on seuraavat asetukset:\n<b>Varoitusraja:</b>
+        <code>%d</code>\n<b>Varoitustila:</b> <code>%s</code>
+  Dev:
+    errors:
+      no_user_specified: Sinun täytyy määrittää käyttäjä saadaksesi tietoa hänestä
+    chatlist:
+      getting_list: Haetaan luetteloa keskusteluista, joissa olen mukana...
+      success: Tässä on luettelo keskusteluista tietokannassani!
+    leavechat:
+      success: 'Ok, lähdin keskustelusta!'
+    addsudo:
+      already_sudo: Käyttäjä on jo Sudo!
+      success: Lisätty %s Sudo-listalle!
+    adddev:
+      already_dev: Käyttäjä on jo Dev!
+      success: Lisätty %s Dev-listalle!
+    remsudo:
+      not_sudo: Käyttäjä ei ole Sudo!
+      success: Poistettu %s Sudo-listalta!
+    remdev:
+      not_dev: Käyttäjä ei ole Dev!
+      success: Poistettu %s Dev-listalta!
+    listteam:
+      dev_users: 'Dev-käyttäjät:'
+      sudo_users: 'Sudo-käyttäjät:'
+      no_users: Tiimiin ei ole lisätty käyttäjiä!
+      no_users_in_category: Ei käyttäjiä
+    getstats:
+      fetching: Haetaan botin tilastoja...
+  DbClean:
+    question: Mitä haluat puhdistaa?
+    chats_button: Keskustelut
+    no_redundant_chats: Redundantteja keskusteluja ei löytynyt!
+    progress_getting_invalid_chats: '%d valmiina virheellisten keskustelujen hakemisessa.'
+    chats_marked_inactive: '%d keskustelua merkitty passiivisiksi!'
+  Users:
+    log:
+      updating_channel: Päivitetään kanava %d tietokannassa
+      updating_user: Päivitetään käyttäjä %d tietokannassa
+      updating_replied: Päivitetään %d tietokannassa
   Utils:
     chat_status:
       user:
-        no_permission_change_info_btn: |-
-          Sinulla ei ole valtuuksia muuttaa tietoja!!
-        no_permission_change_info_cmd: |-
-          Sinulla ei ole lupaa vaihtaa tietoja tässä ryhmässä!
-        no_permission_restrict_btn: |-
-          Sinulla ei ole valtuuksia rajoittaa jäseniä!!
-        no_permission_restrict_cmd: |-
-          Sinulla ei ole lupaa rajoittaa ryhmän jäseniä!
-        no_permission_promote_btn: |-
-          Sinulla ei ole valtuuksia edistää/alentaa jäseniä!!
-        no_permission_promote_cmd: |-
-          Et voi edistää/alentaa ihmisiä täällä! Varmista, että sinulla on asianmukaiset oikeudet!
-        no_permission_pin: |-
-          Et voi laittaa viestejä tänne! Varmista, että olet admin ja voit välittää viestejä.
-        no_permission_delete: |-
-          Sinulla ei ole lupaa poistaa viestejä!
-        require_admin_btn: |-
-          Sinun on oltava admin tämän tehdäksesi!
-        require_admin_cmd: |-
-          Vain päähenkilöt voivat toteuttaa tämän komennon!
-        require_owner_btn: |-
-          Sinun täytyy olla ryhmän luoja tätä varten!
-        require_owner_cmd: |-
-          Vain ryhmän luoja tätä varten!
+        no_permission_change_info_btn: Sinulla ei ole oikeutta muuttaa tietoja!
+        no_permission_change_info_cmd: Sinulla ei ole oikeutta muuttaa tietoja tässä ryhmässä!
+        no_permission_restrict_btn: Sinulla ei ole oikeutta rajoittaa jäseniä!
+        no_permission_restrict_cmd: Sinulla ei ole oikeutta rajoittaa jäseniä tässä ryhmässä!
+        no_permission_promote_btn: Sinulla ei ole oikeutta ylentää/alentaa jäseniä!
+        no_permission_promote_cmd: >-
+          Et voi ylentää/alentaa ihmisiä täällä! Varmista, että sinulla on asianmukaiset
+          oikeudet!
+        no_permission_pin: >-
+          Et voi kiinnittää viestejä täällä! Varmista, että olet ylläpitäjä ja voit
+          kiinnittää viestejä.
+        no_permission_delete: Sinulla ei ole oikeutta poistaa viestejä!
+        require_admin_btn: Sinun on oltava ylläpitäjä tehdäksesi tämän!
+        require_admin_cmd: Vain ylläpitäjät voivat suorittaa tämän komennon!
+        require_owner_btn: Sinun on oltava ryhmän luoja tehdäksesi tämän!
+        require_owner_cmd: Vain ryhmän luoja voi tehdä tämän!
       bot:
-        no_permission_restrict: |-
-          Minulla ei ole valtuuksia rajoittaa jäseniä!
-        no_permission_restrict_group: |-
-          En voi rajoittaa ihmisiä täällä! Varmista, että olen admin ja voin rajoittaa muita jäseniä.
-        no_permission_promote: |-
-          En voi edistää/alentaa ihmisiä täällä! Varmista, että olen admin ja että voin nimittää uusia ylläpitäjä.
-        no_permission_pin: |-
-          En voi lähettää viestejä tänne! Varmista, että olen admin ja voin välittää viestejä.
-        no_permission_delete: |-
-          Minulla ei ole lupaa poistaa viestejä!
-        require_admin: |-
-          En ole admin! Varmista, että olen admin ja että minulla on asianmukaiset käyttöoikeudet.
-      require_private: |-
-        Tämä komento on pm, ei ryhmäkeskustelu!
-      require_group: |-
-        Tämä komento on tarkoitettu käytettäväksi ryhmässä chats, ei pm!
-      anon_admin_string: |-
-        Näyttää, että olet anonyymi. Varmistakaa henkilöllisyytenne.
-      anon_admin_btn: |-
-        Todistaa admin
+        no_permission_restrict: Minulla ei ole oikeutta rajoittaa jäseniä!
+        no_permission_restrict_group: >-
+          En voi rajoittaa ihmisiä täällä! Varmista, että olen ylläpitäjä ja voin
+          rajoittaa muita jäseniä.
+        no_permission_promote: >-
+          En voi ylentää/alentaa ihmisiä täällä! Varmista, että olen ylläpitäjä ja voin
+          nimittää uusia ylläpitäjiä.
+        no_permission_pin: En voi kiinnittää viestejä täällä! Varmista, että olen ylläpitäjä ja voin kiinnittää viestejä.
+        no_permission_delete: Minulla ei ole oikeutta poistaa viestejä!
+        require_admin: >-
+          En ole ylläpitäjä! Varmista, että olen ylläpitäjä ja minulla on
+          asianmukaiset oikeudet.
+      require_private: 'Tämä komento on tarkoitettu yksityisviesteihin, ei ryhmäkeskusteluun!'
+      require_group: 'Tämä komento on tarkoitettu käytettäväksi ryhmäkeskusteluissa, ei yksityisviesteissä!'
+      anon_admin_string: >-
+        Näyttää siltä, että olet anonyymi. Napauta tätä painiketta vahvistaaksesi
+        henkilöllisyytesi.
+      anon_admin_btn: Vahvista henkilöllisyytesi
     extraction:
       extract_chat:
-        badrequest_failed_getchat: |-
-          Yhteyden muodostus chattiin ei onnistunut: chatin nouto ei onnistunut: nouto ei onnistunut: Huono pyyntö: keskusteluyhteyttä ei löytynyt
-        fail_need_chat_id: |-
-          Odotin Chat-tunnusta, mutta tämä ei ole kelvollinen kokonaisluku.
-        fail_need_chat: |-
-          Tarvitsen Chat-tunnuksen.
+        badrequest_failed_getchat: >-
+          Yhteyden muodostaminen keskusteluun epäonnistui: keskustelun noutaminen epäonnistui: getChat epäonnistui: Bad
+          Request: keskustelua ei löytynyt
+        fail_need_chat_id: 'Odotin keskustelu-ID:tä, mutta tämä ei ole kelvollinen kokonaisluku.'
+        fail_need_chat: Tarvitsen keskustelu-ID:n yhdistääkseni!
       extract_user:
-        no_user_found: |-
-          Tätä nimeä ei löytynyt. Oletko varma, että olen nähnyt ne ennen?
-        badrequest_failed_getchatmember: |-
-          Käyttäjän nouto ei onnistunut: getchatMember: Virheellinen pyyntö: ei löytynyt
+        no_user_found: >-
+          Käyttäjää tällä nimellä ei löytynyt; oletko varma, että olen nähnyt hänet
+          aiemmin?
+        badrequest_failed_getchatmember: >-
+          Käyttäjän noutaminen epäonnistui: getChatMember epäonnistui: Bad Request:
+          keskustelua ei löytynyt
     string_handling:
       extract_time:
-        invalid_time_amount: |-
-          Määritetty kellonaika ei kelpaa.
-        invalid_time_type: |-
-          Määritetty kellonaika ei kelpaa. Odotettu m, h, tai d sai: %s
+        invalid_time_amount: Määritetty aika on virheellinen.
+        invalid_time_type: 'Virheellinen aikayksikkö. Odotettiin m, h, tai d, saatiin: %s'
+  Mute:
+    unmute_admin_only: Mykistyksen poisto (vain ylläpitäjä)
+  Helpers:
+    this_chat_does_not_have_any_rules: Tässä keskustelussa ei ole sääntöjä!
+    this_note_does_not_exist: Tätä muistiinpanoa ei ole olemassa!

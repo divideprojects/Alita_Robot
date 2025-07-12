@@ -15,6 +15,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/text/cases"
@@ -34,6 +35,7 @@ type moduleStruct struct {
 	AbleMap             moduleEnabled
 	AltHelpOptions      map[string][]string
 	helpableKb          map[string][][]gotgbot.InlineKeyboardButton
+	cfg                 *config.Config
 }
 
 // struct for filters module
@@ -102,7 +104,7 @@ func initHelpButtons() {
 func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgbot.InlineKeyboardMarkup) {
 	ModName := cases.Title(language.English).String(module)
 	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) +
-		i18n.I18n{LangCode: lang}.GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
+		i18n.New(lang).GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
 
 	replyMarkup = gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: append(
@@ -144,7 +146,7 @@ func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.M
 
 func getModuleNameFromAltName(altName string) string {
 	for _, modName := range listModules() {
-		altNames := append(i18n.I18n{LangCode: "config"}.GetStringSlice(fmt.Sprintf("alt_names.%s", modName)), strings.ToLower(modName))
+		altNames := append(i18n.New("config").GetStringSlice(fmt.Sprintf("alt_names.%s", modName)), strings.ToLower(modName))
 		for _, altNameInSlice := range altNames {
 			if altNameInSlice == altName {
 				return modName
@@ -157,6 +159,7 @@ func getModuleNameFromAltName(altName string) string {
 func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User, arg string) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	if strings.HasPrefix(arg, "help_") {
 		helpModule := strings.Split(arg, "_")[1]
@@ -188,7 +191,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		rulesrc := db.GetChatRulesInfo(int64(chatID))
 
 		if rulesrc.Rules == "" {
-			_, err := msg.Reply(b, "This chat does not have any rules!", helpers.Shtml())
+			_, err := msg.Reply(b, tr.GetString("strings.Helpers.this_chat_does_not_have_any_rules"), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -228,7 +231,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			noteName := strings.ToLower(nArgs[2])
 			noteData := db.GetNote(chatinfo.Id, noteName)
 			if noteData == nil {
-				_, err := msg.Reply(b, "This note does not exist!", helpers.Shtml())
+				_, err := msg.Reply(b, tr.GetString("strings.Helpers.this_note_does_not_exist"), helpers.Shtml())
 				if err != nil {
 					log.Error(err)
 					return err
@@ -237,7 +240,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			}
 			if noteData.AdminOnly {
 				if !chat_status.IsUserAdmin(b, int64(chatID), user.Id) {
-					_, err := msg.Reply(b, "This note can only be accessed by a admin!", helpers.Shtml())
+					_, err := msg.Reply(b, tr.GetString("Notes.errors.admin_only"), helpers.Shtml())
 					if err != nil {
 						log.Error(err)
 						return err
@@ -293,7 +296,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 }
 
 func getAltNamesOfModule(moduleName string) []string {
-	return append(i18n.I18n{LangCode: "config"}.GetStringSlice(fmt.Sprintf("alt_names.%s", moduleName)), strings.ToLower(moduleName))
+	return append(i18n.New("config").GetStringSlice(fmt.Sprintf("alt_names.%s", moduleName)), strings.ToLower(moduleName))
 }
 
 func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbmarkup gotgbot.InlineKeyboardMarkup, _parsemode string) {

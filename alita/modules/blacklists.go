@@ -14,6 +14,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/message"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
@@ -32,6 +33,7 @@ Implements commands to add, remove, list, and configure blacklists and their act
 var blacklistsModule = moduleStruct{
 	moduleName:   "Blacklists",
 	handlerGroup: 7,
+	cfg:          nil, // will be set during LoadBlacklists
 }
 
 /*
@@ -57,7 +59,7 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	var (
 		alreadyBlacklisted, newBlacklist []string
@@ -136,7 +138,7 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	var removedBlacklists []string
 
@@ -203,7 +205,7 @@ Anyone can view the blacklist. Replies with the current list or a message if non
 Connection: false, true
 */
 func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "adminlist") {
@@ -282,7 +284,7 @@ func (m moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	var rMsg string
 
@@ -330,7 +332,7 @@ func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -345,8 +347,8 @@ func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: "Yes", CallbackData: "rmAllBlacklist.yes"},
-						{Text: "No", CallbackData: "rmAllBlacklist.no"},
+						{Text: tr.GetString("strings.CommonStrings.buttons.yes"), CallbackData: "rmAllBlacklist.yes"},
+						{Text: tr.GetString("strings.CommonStrings.buttons.no"), CallbackData: "rmAllBlacklist.no"},
 					},
 				},
 			},
@@ -369,7 +371,7 @@ Processes the creator's confirmation and removes all blacklist words if confirme
 func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permission checks
 	if !chat_status.RequireUserOwner(b, ctx, nil, user.Id, false) {
@@ -436,7 +438,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	msg := ctx.EffectiveMessage
 	blSettings := db.GetBlacklistSettings(chat.Id)
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	for _, i := range blSettings.Triggers {
 		match, _ := regexp.MatchString(fmt.Sprintf(`(\b|\s)%s\b`, i), strings.ToLower(msg.Text))
@@ -536,7 +538,10 @@ LoadBlacklists registers all blacklist-related command handlers with the dispatc
 
 Enables the blacklists module and adds handlers for blacklist management and enforcement.
 */
-func LoadBlacklists(dispatcher *ext.Dispatcher) {
+func LoadBlacklists(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	blacklistsModule.cfg = cfg
+
 	HelpModule.AbleMap.Store(blacklistsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("blacklists", blacklistsModule.listBlacklists))

@@ -7,8 +7,8 @@ import (
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
-	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
@@ -20,12 +20,13 @@ dbClean presents a UI for developers to initiate database cleanup actions.
 
 Only accessible by the owner or devs. Presents options via inline keyboard.
 */
-func (moduleStruct) dbClean(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) dbClean(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
+	cfg := m.cfg
 
 	// only dev can access this
-	if user.Id != config.OwnerId && !memStatus.Dev {
+	if user.Id != cfg.OwnerId && !memStatus.Dev {
 		return ext.ContinueGroups
 	}
 
@@ -57,19 +58,21 @@ dbCleanButtonHandler handles callback queries for database cleanup actions.
 Performs cleanup of redundant or inactive chats, marks them as inactive in the database, and updates the user with progress.
 Only accessible by the owner or devs.
 */
-func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := ctx.EffectiveSender.User
 	msg := query.Message
 	memStatus := db.GetTeamMemInfo(user.Id)
+	cfg := m.cfg
 
+	tr := i18n.New(db.GetLanguage(ctx))
 	// permissions check
 	// only dev can access this
-	if user.Id != config.OwnerId && !memStatus.Dev {
+	if user.Id != cfg.OwnerId && !memStatus.Dev {
 		query.Answer(
 			b,
 			&gotgbot.AnswerCallbackQueryOpts{
-				Text: "This button can only be used by an admin!",
+				Text: tr.GetString("CommonStrings.errors.admin_only_button"),
 			},
 		)
 		return ext.ContinueGroups

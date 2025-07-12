@@ -11,7 +11,9 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -24,7 +26,10 @@ disablingModule provides logic for disabling and enabling commands in group chat
 
 Implements commands to disable, enable, and list disabled commands, as well as related settings.
 */
-var disablingModule = moduleStruct{moduleName: "Disabling"}
+var disablingModule = moduleStruct{
+	moduleName: "Disabling",
+	cfg:        nil, // will be set during LoadDisabling
+}
 
 /*
 	To disable a command
@@ -49,6 +54,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 	args := ctx.Args()[1:]
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	if len(args) >= 1 {
 		toDisable := make([]string, 0)
@@ -57,7 +63,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toDisable = append(toDisable, i)
-				_, err := msg.Reply(b, fmt.Sprintf("Disabled the use of the following in this chat:"+
+				_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Disabling.success")+
 					"%s",
 					strings.Join(toDisable, "\n - ")),
 					helpers.Smarkdown())
@@ -80,7 +86,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, "You haven't specified a command to disable.", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Disabling.enable.errors.no_command_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -198,6 +204,7 @@ Only admins can use this command. If no argument is given, replies with the curr
 Connection: true, true
 */
 func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -220,7 +227,7 @@ func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.ToggleDel(chat.Id, false)
 			text = "Disabled messages will no longer be deleted."
 		default:
-			text = "Your input was not recognised as one of: yes/no/on/off"
+			text = tr.GetString("strings.CommonStrings.errors.invalid_option_yes_no")
 		}
 	} else {
 		currStatus := db.ShouldDel(chat.Id)
@@ -262,6 +269,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 	args := ctx.Args()[1:]
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	if len(args) >= 1 {
 		toEnable := make([]string, 0)
@@ -270,7 +278,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toEnable = append(toEnable, i)
-				_, err := msg.Reply(b, fmt.Sprintf("Re-Enabled the use of the following in this chat:"+
+				_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Disabling.enable.success")+
 					"%s",
 					strings.Join(toEnable, "\n - ")),
 					helpers.Smarkdown())
@@ -293,7 +301,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, "You haven't specified a command to disable.", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("Disabling.enable.errors.no_command_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -307,7 +315,10 @@ LoadDisabling registers all disabling/enabling command handlers with the dispatc
 
 Enables the disabling module and adds handlers for disabling, enabling, and listing commands.
 */
-func LoadDisabling(dispatcher *ext.Dispatcher) {
+func LoadDisabling(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	disablingModule.cfg = cfg
+
 	HelpModule.AbleMap.Store(disablingModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("disable", disablingModule.disable))

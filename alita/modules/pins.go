@@ -9,6 +9,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
@@ -17,12 +18,15 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 )
 
 var pinsModule = moduleStruct{
 	moduleName:   "Pins",
 	handlerGroup: 10,
+	cfg:          nil, // will be set during LoadPin
 }
 
 type pinType struct {
@@ -81,24 +85,11 @@ func (moduleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
 This function unpins the latest pinned message or message to which user replied */
 
 func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
-	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
-	// Check permissions
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotPin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserPin(b, ctx, nil, user.Id, false) {
+	// Check permissions using helper
+	if !permissions.CheckPermissions(b, ctx, permissions.CommonPinPerms) {
 		return ext.EndGroups
 	}
 
@@ -159,20 +150,22 @@ func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
+	tr := i18n.New(db.GetLanguage(ctx))
 
-	if query.Data == "unpinallbtn(yes)" {
+	switch query.Data {
+	case "unpinallbtn(yes)":
 		status, err := b.UnpinAllChatMessages(chat.Id, nil)
 		if !status && err != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
 			return err
 		}
-		_, _, erredit := query.Message.EditText(b, "Unpinned all pinned messages in this chat!", nil)
+		_, _, erredit := query.Message.EditText(b, tr.GetString("strings.Pins.unpinned_all_pinned_messages_in_this_chat"), nil)
 		if erredit != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
 			return err
 		}
-	} else if query.Data == "unpinallbtn(no)" {
-		_, _, err := query.Message.EditText(b, "Cancelled operation to unpin messages!", nil)
+	case "unpinallbtn(no)":
+		_, _, err := query.Message.EditText(b, tr.GetString("strings.Pins.cancelled_operation_to_unpin_messages"), nil)
 		if err != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
 			return err
@@ -186,6 +179,7 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 Can only be used by owner to unpin all message in a chat. */
 
 func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.New(db.GetLanguage(ctx))
 	user := ctx.EffectiveSender.User
 
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -201,13 +195,13 @@ func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	_, err := b.SendMessage(ctx.EffectiveChat.Id, "Are you sure you want to unpin all pinned messages?",
+	_, err := b.SendMessage(ctx.EffectiveChat.Id, tr.GetString("strings.Pins.are_you_sure_you_want_to_unpin_all_pinned_messages"),
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: "Yes", CallbackData: "unpinallbtn(yes)"},
-						{Text: "No", CallbackData: "unpinallbtn(no)"},
+						{Text: tr.GetString("strings.CommonStrings.buttons.yes"), CallbackData: "unpinallbtn(yes)"},
+						{Text: tr.GetString("strings.CommonStrings.buttons.no"), CallbackData: "unpinallbtn(no)"},
 					},
 				},
 			},
@@ -249,7 +243,7 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// if command is empty (i.e. Without Arguments) not replied to a message, return and end group
 	if len(args) == 1 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Please reply to a message or give some text to pin.", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Pins.please_reply_to_a_message_or_give_some_text_to_pin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -318,31 +312,19 @@ Normally pins message without tagging users but tag can be
 enabled by entering 'notify'/'violent'/'loud' in front of command */
 
 func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
-	user := ctx.EffectiveSender.User
+	tr := i18n.New(db.GetLanguage(ctx))
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	isSilent := true
 	args := ctx.Args
 
-	// permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserPin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotPin(b, ctx, nil, false) {
+	// Check permissions using helper
+	if !permissions.CheckPermissions(b, ctx, permissions.CommonPinPerms) {
 		return ext.EndGroups
 	}
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Reply to a message to pin it", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Pins.errors.reply_to_pin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -397,6 +379,7 @@ connection - true, true
 Sets Preference for checkPinned function to check message for unpinning or not
 */
 func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -430,7 +413,7 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 		default:
-			_, err := msg.Reply(b, "Your input was not recognised as one of: yes/no/on/off", helpers.Shtml())
+			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.invalid_option_yes_no"), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -470,6 +453,7 @@ connection - true, true
 Sets Preference for checkPinned function to check message for cleaning or not
 */
 func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -503,7 +487,7 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 		default:
-			_, err := msg.Reply(b, "Your input was not recognised as one of: yes/no/on/off", helpers.Shtml())
+			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.invalid_option_yes_no"), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -574,7 +558,7 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	pinnedMsg := chatInfo.PinnedMessage
 
 	if pinnedMsg == nil {
-		_, err = msg.Reply(b, "No message has been pinned in the current chat!", helpers.Shtml())
+		_, err = msg.Reply(b, tr.GetString("strings.Pins.no_message_has_been_pinned_in_the_current_chat"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -782,7 +766,10 @@ func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataT
 	return
 }
 
-func LoadPin(dispatcher *ext.Dispatcher) {
+func LoadPin(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	pinsModule.cfg = cfg
+
 	HelpModule.AbleMap.Store(pinsModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("unpin", pinsModule.unpin))

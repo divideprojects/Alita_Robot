@@ -1,0 +1,13 @@
+main:
+  language_name: "English"
+  language_flag: "🇺🇸"
+
+strings:
+  test:
+    key: "Test Value"
+    list:
+      - "Item 1"
+      - "Item 2"
+      - "Item 3"
+  welcome:
+    message: "Welcome to the test!"

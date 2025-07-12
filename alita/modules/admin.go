@@ -6,12 +6,14 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/debug_bot"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -21,7 +23,10 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 )
 
-var adminModule = moduleStruct{moduleName: "Admin"}
+var adminModule = moduleStruct{
+	moduleName: "Admin",
+	cfg:        nil, // will be set during LoadAdmin
+}
 
 /*
 	Used to list all the admin in a group
@@ -45,7 +50,7 @@ func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permission checks
 	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
@@ -106,43 +111,11 @@ Connection: true, true
 func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	user := ctx.EffectiveSender.User
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
-	// permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserPromote(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotPromote(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-
-	userId := extraction.ExtractUser(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks and user extraction
+	userId, _, ok := permissions.PerformCommonPromotionChecks(b, ctx, permissions.CommonPromotionPerms)
+	if !ok {
 		return ext.EndGroups
 	}
 
@@ -207,8 +180,13 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 	mem := userMember.MergeChatMember().User
+	demoteMsg, demoteErr := tr.GetStringWithError("strings." + m.moduleName + ".demote.success_demote")
+	if demoteErr != nil {
+		log.Errorf("[admin] missing translation for demote.success_demote: %v", demoteErr)
+		demoteMsg = "User %s has been demoted from admin."
+	}
 	_, err = msg.Reply(b,
-		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".demote.success_demote"), helpers.MentionHtml(mem.Id, mem.FirstName)),
+		fmt.Sprintf(demoteMsg, helpers.MentionHtml(mem.Id, mem.FirstName)),
 		helpers.Shtml(),
 	)
 	if err != nil {
@@ -236,44 +214,13 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	extraText := ""
 
-	// permission checks
-	if !chat_status.RequireGroup(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanUserPromote(b, ctx, nil, user.Id, false) {
-		return ext.EndGroups
-	}
-	if !chat_status.CanBotPromote(b, ctx, nil, false) {
-		return ext.EndGroups
-	}
-
-	userId, customTitle := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
-		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		return ext.EndGroups
-	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+	// Use helper for permission checks and user extraction
+	userId, customTitle, ok := permissions.PerformCommonPromotionChecks(b, ctx, permissions.CommonPromotionPerms)
+	if !ok {
 		return ext.EndGroups
 	}
 
@@ -374,8 +321,13 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 	mem := userMember.MergeChatMember().User
+	promoteMsg, promoteErr := tr.GetStringWithError("strings." + m.moduleName + ".promote.success_promote")
+	if promoteErr != nil {
+		log.Errorf("[admin] missing translation for promote.success_promote: %v", promoteErr)
+		promoteMsg = "User %s has been promoted to admin."
+	}
 	_, err = msg.Reply(b,
-		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".promote.success_promote"), helpers.MentionHtml(mem.Id, mem.FirstName))+extraText,
+		fmt.Sprintf(promoteMsg, helpers.MentionHtml(mem.Id, mem.FirstName))+extraText,
 		helpers.Shtml(),
 	)
 	if err != nil {
@@ -405,15 +357,16 @@ func (moduleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
 	if !chat_status.Caninvite(b, ctx, nil, msg, false) {
 		return ext.EndGroups
 	}
+	tr := i18n.New(db.GetLanguage(ctx))
 	if chat.Username != "" {
-		_, _ = msg.Reply(b, fmt.Sprintf("Here is the invite link of this chat: %s", chat.Username), nil)
+		_, _ = msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Admin.here_is_the_invite_link_of_this_chat_percent"), chat.Username), nil)
 	} else {
 		nchat, err := b.GetChat(chat.Id, nil)
 		if err != nil {
 			_, _ = msg.Reply(b, err.Error(), nil)
 			return ext.EndGroups
 		}
-		_, _ = msg.Reply(b, fmt.Sprintf("Here is the invite link of this chat: %s", nchat.InviteLink), nil)
+		_, _ = msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Admin.here_is_the_invite_link_of_this_chat_percent"), nchat.InviteLink), nil)
 	}
 	return ext.EndGroups
 }
@@ -431,7 +384,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -454,14 +407,14 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		_, err := msg.Reply(b, tr.GetString("Warns.errors.anon_user"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.no_user_specified"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -552,7 +505,7 @@ func (m moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()
 
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	var text string
 
 	// permission checks
@@ -617,14 +570,14 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	var err error
 
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	debug_bot.PrettyPrintStruct(tr)
 
 	// permission checks
 	userMember, _ := chat.GetMember(b, user.Id, nil)
 	mem := userMember.MergeChatMember()
 	if mem.Status == "member" {
-		_, err = msg.Reply(b, "You need to be admin to do this!", nil)
+		_, err = msg.Reply(b, tr.GetString("strings.Admin.you_need_to_be_admin_to_do_this"), nil)
 		if err != nil {
 			log.Error(err)
 		}
@@ -655,7 +608,10 @@ LoadAdmin registers all admin-related command handlers with the dispatcher.
 
 This function enables the admin module and adds handlers for admin commands such as promote, demote, adminlist, invitelink, title, anonadmin, and admincache.
 */
-func LoadAdmin(dispatcher *ext.Dispatcher) {
+func LoadAdmin(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	adminModule.cfg = cfg
+
 	HelpModule.AbleMap.Store("Admin", true)
 
 	dispatcher.AddHandler(handlers.NewCommand("admin", adminModule.promote))

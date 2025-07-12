@@ -48,19 +48,15 @@ type ChatNotes struct {
 	Buttons     []Button `bson:"note_buttons,omitempty" json:"note_buttons,omitempty"`
 }
 
-func getNotesSettings(chatID int64) (noteSrc *NoteSettings) {
-	defaultNotesSrc := &NoteSettings{ChatId: chatID, PrivateNotesEnabled: false}
-	err := findOne(notesSettingsColl, bson.M{"_id": chatID}).Decode(&noteSrc)
-	if err == mongo.ErrNoDocuments {
-		noteSrc = defaultNotesSrc
-		err := updateOne(notesSettingsColl, bson.M{"_id": chatID}, noteSrc)
-		if err != nil {
-			log.Errorf("[Database][getNotesSettings]: %d - %v", chatID, err)
-		}
-	} else if err != nil {
-		log.Errorf("[Database] getNotesSettings: %v - %d", err, chatID)
-	}
-	return
+var noteSettingsHandler = &SettingsHandler[NoteSettings]{
+	Collection: notesSettingsColl,
+	Default: func(chatID int64) *NoteSettings {
+		return &NoteSettings{ChatId: chatID, PrivateNotesEnabled: false}
+	},
+}
+
+func getNotesSettings(chatID int64) *NoteSettings {
+	return noteSettingsHandler.CheckOrInit(chatID)
 }
 
 func getAllChatNotes(chatId int64) (notes []*ChatNotes) {
@@ -174,19 +170,5 @@ func TooglePrivateNote(chatID int64, pref bool) {
 
 // LoadNotesStats returns the total number of notes and the number of chats using notes.
 func LoadNotesStats() (notesNum, notesUsingChats int64) {
-	var notesArray []*ChatNotes
-	notesMap := make(map[int64][]ChatNotes)
-
-	cursor := findAll(notesColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &notesArray)
-
-	for _, noteC := range notesArray {
-		notesNum++ // count number of filters
-		notesMap[noteC.ChatId] = append(notesMap[noteC.ChatId], *noteC)
-	}
-
-	notesUsingChats = int64(len(notesMap))
-
-	return
+	return CountByChat(notesColl, bson.M{}, "chat_id")
 }

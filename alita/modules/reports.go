@@ -13,21 +13,25 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 var reportsModule = moduleStruct{
 	moduleName:   "Reports",
 	handlerGroup: 8,
+	cfg:          nil, // will be set during LoadReports
 }
 
 func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.New(db.GetLanguage(ctx))
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -52,7 +56,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	)
 
 	if msg.ReplyToMessage.From.Id == user.Id {
-		_, _ = msg.Reply(b, "You can't report your own message!", nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.Reports.you_can_t_report_your_own_message"), nil)
 		return ext.EndGroups
 	}
 
@@ -76,16 +80,16 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if user.Id == 1087968824|777000|136817688 {
-		_, _ = msg.Reply(b, "You need to expose yourself first!", nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.Reports.you_need_to_expose_yourself_first"), nil)
 		return ext.EndGroups
 	}
 	if msg.ReplyToMessage.From.Id == 1087968824|777000|136817688 {
-		_, _ = msg.Reply(b, "It's a special account of telegram!", nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.Reports.it_s_a_special_account_of_telegram"), nil)
 		return ext.EndGroups
 	}
 
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-		_, err := msg.Reply(b, "You're an admin, whom will I report your issues to?", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Reports.you_re_an_admin_whom_will_i_report_your_issues_to"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -111,7 +115,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	reportedMsgId := msg.ReplyToMessage.MessageId
 
 	if reportedUser.Id == b.Id {
-		_, err := msg.Reply(b, "Why would I report myself?", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Reports.why_would_i_report_myself"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -119,7 +123,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if string_handling.FindInInt64Slice(adminArray, reportedUser.Id) {
-		_, err := msg.Reply(b, "Why would I report an admin?", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Reports.why_would_i_report_an_admin"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -416,7 +420,10 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 	return ext.EndGroups
 }
 
-func LoadReports(dispatcher *ext.Dispatcher) {
+func LoadReports(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	reportsModule.cfg = cfg
+
 	HelpModule.AbleMap.Store(reportsModule.moduleName, true)
 
 	dispatcher.AddHandlerToGroup(

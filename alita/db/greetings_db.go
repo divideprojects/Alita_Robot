@@ -4,7 +4,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // default strings when no settings are set
@@ -69,38 +68,33 @@ type WelcomeSettings struct {
 	Button        []Button `bson:"btns,omitempty" json:"btns,omitempty"`
 }
 
-// check Chat Welcome Settings, used to get data before performing any operation
-func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
-	defaultGreetSrc := &GreetingSettings{
-		ChatID:             chatID,
-		ShouldCleanService: false,
-		WelcomeSettings: &WelcomeSettings{
-			LastMsgId:     0,
-			CleanWelcome:  false,
-			ShouldWelcome: true,
-			WelcomeText:   DefaultWelcome,
-			WelcomeType:   TEXT,
-		},
-		GoodbyeSettings: &GoodbyeSettings{
-			LastMsgId:     0,
-			CleanGoodbye:  false,
-			ShouldGoodbye: false,
-			GoodbyeText:   DefaultGoodbye,
-			GoodbyeType:   TEXT,
-		},
-	}
-	errS := findOne(greetingsColl, bson.M{"_id": chatID}).Decode(&greetingSrc)
-	if errS == mongo.ErrNoDocuments {
-		greetingSrc = defaultGreetSrc
-		err := updateOne(greetingsColl, bson.M{"_id": chatID}, defaultGreetSrc)
-		if err != nil {
-			log.Errorf("[Database][checkGreetingSettings]: %v ", err)
+var greetingSettingsHandler = &SettingsHandler[GreetingSettings]{
+	Collection: greetingsColl,
+	Default: func(chatID int64) *GreetingSettings {
+		return &GreetingSettings{
+			ChatID:             chatID,
+			ShouldCleanService: false,
+			WelcomeSettings: &WelcomeSettings{
+				LastMsgId:     0,
+				CleanWelcome:  false,
+				ShouldWelcome: true,
+				WelcomeText:   DefaultWelcome,
+				WelcomeType:   TEXT,
+			},
+			GoodbyeSettings: &GoodbyeSettings{
+				LastMsgId:     0,
+				CleanGoodbye:  false,
+				ShouldGoodbye: false,
+				GoodbyeText:   DefaultGoodbye,
+				GoodbyeType:   TEXT,
+			},
 		}
-	} else if errS != nil {
-		log.Errorf("[Database][checkGreetingSettings]: %v", errS)
-		greetingSrc = defaultGreetSrc
-	}
-	return greetingSrc
+	},
+}
+
+// checkGreetingSettings uses the generic handler to get or initialize greeting settings
+func checkGreetingSettings(chatID int64) *GreetingSettings {
+	return greetingSettingsHandler.CheckOrInit(chatID)
 }
 
 // GetGreetingSettings retrieves the greeting settings for a given chat ID.
@@ -246,30 +240,12 @@ func SetCleanGoodbyeMsgId(chatId, msgId int64) {
 //   - cleanWelcomeEnabled: Number of chats cleaning previous welcome messages.
 //   - cleanGoodbyeEnabled: Number of chats cleaning previous goodbye messages.
 func LoadGreetingsStats() (enabledWelcome, enabledGoodbye, cleanServiceEnabled, cleanWelcomeEnabled, cleanGoodbyeEnabled int64) {
-	var greetRcStruct []*GreetingSettings
-
-	cursor := findAll(greetingsColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &greetRcStruct)
-
-	for _, greetRc := range greetRcStruct {
-		// count things
-		if greetRc.WelcomeSettings.ShouldWelcome {
-			enabledWelcome++
-		}
-		if greetRc.GoodbyeSettings.ShouldGoodbye {
-			enabledGoodbye++
-		}
-		if greetRc.ShouldCleanService {
-			cleanServiceEnabled++
-		}
-		if greetRc.WelcomeSettings.CleanWelcome {
-			cleanWelcomeEnabled++
-		}
-		if greetRc.GoodbyeSettings.CleanGoodbye {
-			cleanGoodbyeEnabled++
-		}
-	}
+	// Use CountByChat for efficient counting with specific filters
+	_, enabledWelcome = CountByChat(greetingsColl, bson.M{"welcome_settings.enabled": true}, "_id")
+	_, enabledGoodbye = CountByChat(greetingsColl, bson.M{"goodbye_settings.enabled": true}, "_id")
+	_, cleanServiceEnabled = CountByChat(greetingsColl, bson.M{"clean_service_settings": true}, "_id")
+	_, cleanWelcomeEnabled = CountByChat(greetingsColl, bson.M{"welcome_settings.clean_old": true}, "_id")
+	_, cleanGoodbyeEnabled = CountByChat(greetingsColl, bson.M{"goodbye_settings.clean_old": true}, "_id")
 
 	return
 }

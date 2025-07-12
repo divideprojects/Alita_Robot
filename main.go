@@ -12,11 +12,13 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/logger"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"github.com/divideprojects/Alita_Robot/alita"
+	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
 //go:embed locales
@@ -29,25 +31,41 @@ func main() {
 	// The function blocks at the end to keep the bot running.
 	// All critical startup errors are logged and cause termination.
 
+	// Load configuration using the new recommended pattern
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatal("Failed to load configuration: ", err)
+	}
+
+	// Set up logger based on config
+	logger.Setup(cfg.Debug)
+
+	// Initialize database with config
+	if err := db.Initialize(cfg); err != nil {
+		log.Fatal("Failed to initialize database: ", err)
+	}
+
 	// logs if bot is running in debug mode or not
-	if config.Debug {
+	if cfg.Debug {
 		log.Info("Running in DEBUG Mode...")
 	} else {
 		log.Info("Running in RELEASE Mode...")
 	}
 
 	// Load Locales
-	i18n.LoadLocaleFiles(&Locales, "locales")
+	if err := i18n.LoadLocaleFiles(&Locales, "locales"); err != nil {
+		log.Fatal("Failed to load locales: ", err)
+	}
 
 	// create a new bot with default HTTP client (BotOpts doesn't support custom client in this version)
 	// BotToken is loaded from config.
-	b, err := gotgbot.NewBot(config.BotToken, nil)
+	b, err := gotgbot.NewBot(cfg.BotToken, nil)
 	if err != nil {
 		panic("failed to create new bot: " + err.Error())
 	}
 
-	// some initial checks before running bot
-	alita.InitialChecks(b)
+	// some initial checks before running bot - now pass config
+	alita.InitialChecks(b, cfg)
 
 	// Create updater and dispatcher with limited max routines.
 	// Dispatcher handles incoming updates and routes them to handlers.
@@ -69,9 +87,9 @@ func main() {
 	// start the bot in polling mode
 	err = updater.StartPolling(b,
 		&ext.PollingOpts{
-			DropPendingUpdates: config.DropPendingUpdates,
+			DropPendingUpdates: cfg.DropPendingUpdates,
 			GetUpdatesOpts: &gotgbot.GetUpdatesOpts{
-				AllowedUpdates: config.AllowedUpdates,
+				AllowedUpdates: cfg.AllowedUpdates,
 			},
 		},
 	)
@@ -100,7 +118,7 @@ func main() {
 	}
 
 	// Loading Modules
-	alita.LoadModules(dispatcher)
+	alita.LoadModules(dispatcher, cfg)
 
 	// List loaded modules from the modules directory.
 	log.Infof(
@@ -110,8 +128,8 @@ func main() {
 	)
 
 	// send message to log group
-	_, err = b.SendMessage(config.MessageDump,
-		fmt.Sprintf("<b>Started Bot!</b>\n<b>Mode:</b> %s\n<b>Loaded Modules:</b>\n%s", config.WorkingMode, alita.ListModules()),
+	_, err = b.SendMessage(cfg.MessageDump,
+		fmt.Sprintf("<b>Started Bot!</b>\n<b>Mode:</b> %s\n<b>Loaded Modules:</b>\n%s", cfg.WorkingMode, alita.ListModules()),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 		},

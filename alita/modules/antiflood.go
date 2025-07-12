@@ -14,6 +14,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/message"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -48,6 +49,7 @@ type floodControl struct {
 var _normalAntifloodModule = moduleStruct{
 	moduleName:   "Antiflood",
 	handlerGroup: 4,
+	cfg:          nil, // will be set during LoadAntiflood
 }
 
 var antifloodModule = antifloodStruct{
@@ -114,7 +116,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.ContinueGroups
 	}
 
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	var (
 		fmode    string
@@ -202,7 +204,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 		keyboard = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "Unmute (Admins Only)",
+					Text:         tr.GetString("strings.Antiflood.unmute_admins_only"),
 					CallbackData: fmt.Sprintf("unrestrict.unmute.%d", user.Id()),
 				},
 			},
@@ -262,7 +264,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 			keyboard = [][]gotgbot.InlineKeyboardButton{
 				{
 					{
-						Text:         "Unban (Admins Only)",
+						Text:         tr.GetString("strings.Antiflood.unban_admins_only"),
 						CallbackData: fmt.Sprintf("unrestrict.unban.%d", user.Id()),
 					},
 				},
@@ -305,7 +307,7 @@ func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	args := ctx.Args()[1:]
 
 	var replyText string
@@ -361,7 +363,7 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	flood := db.GetFlood(chat.Id)
 	if flood.Limit == 0 {
@@ -399,7 +401,7 @@ func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	args := ctx.Args()[1:]
 
 	if len(args) > 0 {
@@ -440,7 +442,7 @@ func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.New(db.GetLanguage(ctx))
 	args := ctx.Args()[1:]
 	var text string
 
@@ -477,7 +479,10 @@ LoadAntiflood registers antiflood-related command handlers with the dispatcher.
 
 Enables the antiflood module and adds handlers for flood control commands and message group checks.
 */
-func LoadAntiflood(dispatcher *ext.Dispatcher) {
+func LoadAntiflood(dispatcher *ext.Dispatcher, cfg *config.Config) {
+	// Store config in the module
+	_normalAntifloodModule.cfg = cfg
+
 	HelpModule.AbleMap.Store(antifloodModule.moduleName, true)
 
 	dispatcher.AddHandler(handlers.NewCommand("setflood", antifloodModule.setFlood))

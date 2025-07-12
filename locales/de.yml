@@ -1,732 +1,1299 @@
----
-#stringcode: string
 main:
-  lang_sample: |-
-    Deutsch
-  language_flag: |-
-    🇩🇪
-  language_name: |-
-    Deutsch
+  lang_sample: Deutsch
+  language_flag: 🇩🇪
+  language_name: Deutsch
 strings:
   CommonStrings:
     admin_cache:
-      cache_reloaded: |-
-        Admin-Cache erfolgreich neu geladen.
-      not_found: |-
-        Admin-Cache nicht gefunden. Bitten Sie einen Admin, /admincache zu verwenden, um den Admin-Cache neu zu laden.
+      cache_reloaded: Admin-Cache erfolgreich neu geladen.
+      not_found: Admin-Cache nicht gefunden. Bitten Sie einen Admin, /admincache zu verwenden.
+    errors:
+      no_user_specified: Ich weiß nicht, wen Sie meinen, Sie müssen einen Benutzer angeben...!
+      anon_user_generic: Dieser Befehl kann nicht für anonyme Benutzer verwendet werden.
+      admin_only: Sie müssen ein Admin sein, um dies zu tun!
+      admin_only_command: Nur Admins können diesen Befehl ausführen!
+      creator_only: Sie müssen der Gruppenersteller sein, um dies zu tun!
+      creator_only_command: Nur der Gruppenersteller kann dies tun!
+      bot_not_admin: Ich bin kein Admin!
+      bot_no_restrict_permission: Ich kann hier keine Leute einschränken! Stellen Sie sicher, dass ich Admin bin und andere Mitglieder einschränken kann.
+      group_only: Dieser Befehl kann nur in einer Gruppe verwendet werden!
+      group_only_command: Dieser Befehl ist für Gruppenchats gedacht, nicht für PM!
+      private_only_command: Dieser Befehl ist für PM gedacht, nicht für Gruppenchats!
+      user_not_found: Benutzer mit diesem Namen nicht gefunden; sind Sie sicher, dass ich sie schon einmal gesehen habe?
+      user_not_in_chat: Dieser Benutzer ist nicht in diesem Chat, wie kann ich ihn einschränken?
+      action_on_self: Ich kann diese Aktion nicht an mir selbst durchführen.
+      button_expired: Dieser Button ist abgelaufen. Bitte verwenden Sie den Befehl erneut.
+      invalid_option_yes_no: 'Ihre Eingabe wurde nicht als eine von: <yes/no/on/off> erkannt'
+      invalid_option_on_off: Ich verstehe nur eine Option von <on/off/yes/no>
+      invalid_integer: '%s ist keine gültige Ganzzahl.'
+      not_enough_args: Nicht genügend Argumente.
+      invalid_time_amount: Ungültiger Zeitbetrag angegeben.
+      time_too_long: Zeit kann nicht auf mehr als 1 Jahr eingestellt werden!
+      invalid_time_type: 'Ungültiger Zeittyp angegeben. Erwartet m, h, d oder w, erhalten: %s'
+      get_chat_member_failed: 'Fehler beim Abrufen des Benutzers: getChatMember nicht möglich: Bad Request: Chat nicht gefunden'
+      admin_only_button: Dieser Button kann nur von einem Admin verwendet werden!
+      no_reply: Antworten Sie auf die Nachricht eines Benutzers, um ihn zu löschen und zu kicken!
+    buttons:
+      'true': Ja
+      'false': Nein
+      'yes': Ja
+      'no': Nein
+      back: Zurück
+      back_arrow: « Zurück
+      back_arrow_left: ⬅ Zurück
+      done: Fertig ✅
+      continue: ✅ Weiter ✅
+      click_me: Klick mich!
+      home: Startseite
+      rules: Regeln
+      rules_button: "Regeln 📝"
+      close: Schließen
+      cancel: Abbrechen
+    actions:
+      ban: Bannen
+      kick: Kicken
+      mute: Stummschalten
+      unban: Entbannen
+      unmute: Stummschaltung aufheben
+      banned: Benutzer erfolgreich gebannt!
+      unbanned: Benutzer erfolgreich entbannt!
+      kicked: Benutzer erfolgreich gekickt!
+      muted: Benutzer erfolgreich stummgeschaltet!
+      unmuted: Benutzer erfolgreich Stummschaltung aufgehoben!
+    anon_admin:
+      prompt: Sie scheinen anonym zu sein. Tippen Sie auf diese Schaltfläche, um Ihre Identität zu bestätigen.
+      button: Klicken, um Admin zu beweisen
   Admin:
-    adminlist: |-
-      Admins in <b>%s</b>:
+    adminlist: 'Admins in <b>%s</b>:'
     anon_admin:
       enabled: |-
         AnonAdmin-Modus ist derzeit <b>aktiviert</b> für %s.
-        Dies ermöglicht es allen anonymen Admins, Admin-Aktionen ohne Einschränkungen durchzuführen.
+        Anonyme Admins können ohne Einschränkungen handeln.
       disabled: |-
         AnonAdmin-Modus ist derzeit <b>deaktiviert</b> für %s.
-        Dies erfordert, dass anonyme Admins eine Schaltfläche drücken, um ihre Berechtigungen zu bestätigen.
+        Anonyme Admins müssen ihre Berechtigungen bestätigen.
       enabled_now: |-
         AnonAdmin-Modus ist jetzt <b>aktiviert</b> für %s.
-        Von nun an werde ich die Admins bitten, Berechtigungen von anonymen Admins zu überprüfen.
+        Admins werden um Bestätigung für anonyme Admins gebeten.
       disabled_now: |-
         AnonAdmin-Modus ist jetzt <b>deaktiviert</b> für %s.
-        Von nun an werde ich die Admins nicht mehr bitten, Berechtigungen von anonymen Admins zu überprüfen.
+        Admins werden nicht mehr für anonyme Admins benachrichtigt.
       already_enabled: |-
         AnonAdmin-Modus ist bereits <b>aktiviert</b> für %s
       already_disabled: |-
         AnonAdmin-Modus ist bereits <b>deaktiviert</b> für %s
-      invalid_arg: |-
-        Ungültiges Argument, ich verstehe nur <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+      invalid_arg: 'Ungültiges Argument. Akzeptiert: <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>'
     demote:
-      is_owner: |-
-        Diese Person hat diesen Chat erstellt, wie soll ich sie degradieren?
-      is_admin: |-
-        Diese Person ist kein Admin, wie soll ich sie degradieren?
-      is_bot_itself: |-
-        Ich kann mich nicht selbst degradieren, hol dir die Person, die mich befördert hat!
-      success_demote: |-
-        %s erfolgreich degradiert!
+      is_owner: Dieser Nutzer hat den Chat erstellt - Degradierung nicht möglich.
+      is_admin: Dieser Nutzer ist kein Admin - Degradierung nicht möglich.
+      is_bot_itself: Ich kann mich nicht selbst degradieren!
+      success_demote: '%s erfolgreich degradiert!'
     promote:
-      admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
-      is_bot_itself: |-
-        If only I could do this to myself ;_;
-      is_owner: |-
-        This person created this chat, how would I promote them?
-      is_admin: |-
-        This person is already an admin, how would I promote them?
-      success_promote: |-
-        Successfully promoted %s!
+      admin_title_truncated: Admin-Titel auf 16 Zeichen gekürzt (ursprünglich %d)
+      is_bot_itself: Wenn ich das nur selbst könnte ;_;
+      is_owner: Dieser Nutzer hat den Chat erstellt - Beförderung nicht möglich.
+      is_admin: Dieser Nutzer ist bereits Admin - Beförderung nicht möglich.
+      success_promote: '%s erfolgreich befördert!'
     title:
-      success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
-      is_bot_itself: |-
-        If only I could do this to myself ;_;
-      is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
-      is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+      success_set: 'Admin-Titel für %s auf <b>%s</b> gesetzt'
+      is_bot_itself: Wenn ich das nur selbst könnte ;_;
+      is_owner: Dieser Nutzer hat den Chat erstellt - Titel nicht änderbar.
+      is_admin: Dieser Nutzer ist bereits Admin - Titel nicht änderbar.
     errors:
-      err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
-      err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
-      err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
-      title_empty: |-
-        You need to give me an admin title so I can set it.
+      err_set_title: 'Titel konnte nicht gesetzt werden: Ungültig oder enthält Emojis.'
+      err_cannot_demote: 'Degradierung fehlgeschlagen: Keine Admin-Rechte oder anderer Admin.'
+      err_cannot_promote: 'Beförderung fehlgeschlagen: Keine Admin-Rechte oder anderer Admin.'
+      title_empty: Bitte geben Sie einen Admin-Titel an.
     help_msg: |-
-      Mit dem Admin-Modul!
+      Einfache Beförderung und Degradierung mit dem Admin-Modul!
 
-      *User Commands: *
-      × /adminlist: listen Sie die Admins im aktuellen Chat auf.
+      *Nutzerbefehle:*
 
-      *Admin-Befehle: *
-      × /promote `<reply/username/mention/userid>`: Einen Benutzer hochstufen.
-      × /demote `<reply/username/mention/userid>`: Einen Benutzer herabstufen.
-      × /title `<reply/username/mention/userid>` `<custom title>`: angepassten Titel für den Benutzer festlegen
+      × /adminlist: Zeigt Admins im aktuellen Chat.
+
+
+      *Admin-Befehle:*
+
+      × /promote `<reply/username/mention/userid>`: Nutzer befördern.
+
+      × /demote `<reply/username/mention/userid>`: Nutzer degradieren.
+
+      × /title `<reply/username/mention/userid>` `<custom title>`: Benutzerdefinierten Titel setzen
+    here_is_the_invite_link_of_this_chat_percent: 'Hier ist der Einladungslink dieses Chats: %s'
+    you_need_to_be_admin_to_do_this: Sie müssen Admin sein, um dies zu tun!
   Antiflood:
     checkflood:
-      perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+      perform_action: Zu viele Nachrichten! %s wurde %s!
     setflood:
-      success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+      success: 'Flood-Limit auf <b>%d</b> Nachrichten gesetzt.'
       disabled: |-
         Okay.
-        I won't warn users for flooding.
+        Flood-Schutz deaktiviert.
     flood:
-      disabled: |-
-        This chat is not currently enforcing flood control.
-      show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+      disabled: Flood-Schutz ist deaktiviert.
+      show_settings: 'Flood-Schutz aktiv nach %d Nachrichten. Verstoß führt zu: %s.'
     setfloodmode:
-      success: |-
-        Got it! Flood mode will be %s.
-      unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
-      specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+      success: 'Flood-Modus auf %s gesetzt.'
+      unknown_type: "Unbekannter Typ '%s'. Verwende: ban/kick/mute"
+      specify_action: 'Bitte Aktion angeben: `ban`/`kick`/`mute`'
     flood_deleter:
-      enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
-      disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
-      invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
-      already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
-      already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+      enabled: Flood-Nachrichten werden jetzt gelöscht!
+      disabled: Flood-Nachrichten werden ignoriert!
+      invalid_option: 'Akzeptiert: `yes`/`no`/`on`/`off`'
+      already_enabled: Flood-Nachrichten werden bereits gelöscht!
+      already_disabled: Flood-Nachrichten werden bereits ignoriert!
     errors:
-      expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
-      invalid_int: |-
-        That's not a valid integer. Please give me a valid integer, or `off`.
-      set_in_limit: |-
-        The antiflood limit has to be set between 3 and 100.
+      expected_args: 'Argument benötigt! Zahl oder ''off''. Z.B.: `/setflood 5`, oder `/setflood off`'
+      invalid_int: 'Ungültige Zahl. Bitte gültige Zahl oder `off` eingeben.'
+      set_in_limit: Limit muss zwischen 3 und 100 liegen.
     help_msg: |-
-      Weißt du, wie manchmal, Leute beitreten, 100 Nachrichten senden und deinen Chat ruinieren? Mit Anti-Flut, das passiert nicht mehr!
+      Verhindert Spam durch Nutzer, die zu viele Nachrichten senden.
 
-      Antiflood ermöglicht es Ihnen, Aktionen für Benutzer, die mehr als x Nachrichten in einer Reihe zu senden. Aktionen: ban/kick/mute/tban/tmute
 
-      *Admin-Befehle *:
-      × /flood: Erhalten Sie die aktuellen Anti-Hochwasser-Einstellungen.
-      × /setflood `<number/off/no>`: Legen Sie die Anzahl der Nachrichten fest, nach denen die Aktion für einen Benutzer ausgeführt werden soll. Setzen Sie die Einstellung auf '0', 'off' oder 'no', um die Einstellung zu inaktivieren.
-      × /setfloodmode `<action type>`: Wählen Sie aus, welche Aktion für einen Benutzer ausgeführt werden soll, der von einer Überflutung betroffen ist. Optionen: ban/kick/mute/tban/tmute
-      × /delflood `<yes/no/on/off>`: Wenn Sie Bot Nachrichten löschen möchten, die vom Benutzer überflutet werden.
+      Antiflood ermöglicht es Ihnen, Maßnahmen gegen Benutzer zu ergreifen, die mehr als X Nachrichten hintereinander senden. Aktionen sind: ban/kick/mute
+
+
+      *Admin-Befehle:*
+
+      × /flood: Zeigt aktuelle Flood-Einstellungen.
+
+      × /setflood `<number/off/no>`: Setzt Nachrichtenlimit vor Maßnahme. Auf '0', 'off' oder 'no' setzen, um zu deaktivieren.
+
+      × /setfloodmode `<action type>`: Maßnahme bei Verstoß: ban/kick/mute
+
+      × /delflood `<yes/no/on/off>`: Löscht Flood-Nachrichten.
+    unmute_admins_only: Stummschaltung aufheben (nur Admins)
+    unban_admins_only: Entbannen (nur Admins)
   Approvals:
     approve:
-      is_bot_itself: |-
-        You have already approved me by making me admin!
+      is_bot_itself: Ich bin bereits Admin - benötige keine Freigabe.
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
-      user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        Nutzer %s freigegeben
+        Ignoriert bei Auto-Bans, Blacklists, Locks und Antiflood.
+      user_not_in_chat: Nutzer nicht im Chat - Freigabe nicht möglich.
     unapprove:
-      is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+      is_bot_itself: Ich bin Admin - kann nicht entfreigt werden.
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        Freigabe für %s aufgehoben
+        Wird wieder bei Schutzmaßnahmen berücksichtigt.
     approval:
-      is_admin: |-
-        %s is an admin, you don't need approval.
-      is_bot_itself: |-
-        I'm an admin, I don't need approval.
+      is_admin: '%s ist Admin - benötigt keine Freigabe.'
+      is_bot_itself: Ich bin Admin - benötige keine Freigabe.
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s ist freigegeben in <b>%s</b>
+        Ignoriert bei Schutzmaßnahmen.
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>Freigegeben von:</b> %s (<code>%d</code>)"
+        <b>Zeitpunkt:</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        Sie sind nicht freigegeben in <b>%s</b>
+        Sie werden bei Schutzmaßnahmen berücksichtigt.
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: 'Keine freigegebenen Nutzer in <b>%s</b>!'
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        Freigegebene Nutzer in <b>%s:</b>
+
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+
+        Details mit /approval (Nutzer-ID).
     unapprove_all:
-      ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
-      chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+      ask: Alle Freigaben in diesem Chat aufheben?
+      chat_creator_only: Nur Chat-Ersteller können alle Freigaben aufheben.
       button_handler:
-        yes: |-
-          Removed all Approved Users from this Chat ✅
-        no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+        'true': Alle freigegebenen Benutzer aus diesem Chat entfernt ✅
+        'false': Das Entfernen aller freigegebenen Benutzer aus diesem Chat abgebrochen ❌
+        yes: Alle Freigaben aufgehoben ✅
+        no: Abgebrochen ❌
     help_msg: |-
-      Manchmal können Sie einem Benutzer vertrauen, dass er nicht unerwünschte Inhalte sendet.
-      Vielleicht nicht genug, um sie Admin zu machen, aber Sie könnten in Ordnung sein mit Schlössern, Blacklists und Antiflut, die nicht auf sie angewendet werden.
-      Das ist die Genehmigung von vertrauenswürdigen Benutzern, damit sie
+      Vertrauenswürdige Nutzer von Schutzmaßnahmen ausnehmen.
 
-      *User-Befehle senden können: *
-      × /Genehmigung: Überprüfen Sie den Genehmigungsstatus eines Benutzers in diesem Chat.
+      Manchmal vertrauen Sie einem Benutzer, dass er keine unerwünschten Inhalte sendet.
 
-      *Admin-Befehle: *
-      × /genehmigen: Genehmigen eines Benutzers. Schlösser, Blacklists und Antiflut werden für sie nicht mehr gelten.
-      × /ungenehmigen: Unapbeweisen für einen Benutzer. Sie werden nun wieder Schlössern, Blacklists und Antifluten unterworfen.
-      × /genehmigt: Liste aller zugelassenen Benutzer auflisten.
+      Vielleicht nicht genug, um sie zum Admin zu machen, aber Sie könnten damit einverstanden sein, dass Sperren, Blacklists und Antiflood nicht auf sie angewendet werden.
 
-      *Eignerbefehle: *
-      × /unapproveall: Unapbeweisen Sie ALLE Benutzer in einem Chat. Das kann nicht rückgängig gemacht werden.
+      Dafür sind Genehmigungen da - vertrauenswürdige Benutzer genehmigen, damit sie senden können
+
+
+      *Nutzerbefehle:*
+
+      × /approval: Überprüft eigenen Freigabestatus.
+
+
+      *Admin-Befehle:*
+
+      × /approve: Nimmt Nutzer von Schutzmaßnahmen aus. Sperren, Blacklists und Antiflood werden nicht mehr auf sie angewendet.
+
+      × /unapprove: Bezieht Nutzer wieder ein. Sie unterliegen nun wieder Sperren, Blacklists und Antiflood.
+
+      × /approved: Liste freigegebener Nutzer.
+
+
+      *Eigner-Befehle:*
+
+      × /unapproveall: Hebt ALLE Freigaben auf (unwiderruflich).
   Bans:
+    errors:
+      anon_user_kick: Dieser Befehl kann nicht für anonyme Benutzer verwendet werden, diese Benutzer können nur gebannt/entbannt werden.
+      anon_user_ban_reply: Sie können einen anonymen Benutzer nur bannen, indem Sie auf dessen Nachricht antworten.
+      anon_user_generic: Dieser Befehl kann nicht für anonyme Benutzer verwendet werden, diese Benutzer können nur gebannt/entbannt werden.
+      restrict_admin: Ich kann einen Admin nicht einschränken.
+    restrict:
+      question: Wie kann ich diesen Benutzer einschränken?
+      kick_success: Admin %s hat %s aus diesem Chat gekickt!
+      mute_success: Admin %s hat %s im Chat stummgeschaltet!
+      ban_success: Admin %s hat %s aus diesem Chat gebannt!
+    unrestrict:
+      question: Wie kann ich die Einschränkung dieses Benutzers aufheben?
+      unmute_success: Stummschaltung von %s aufgehoben!
+      unban_success: Entbannt von %s!
     kick:
-      user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
-      cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
-      is_bot_itself: |-
-        Why would I kick myself?
-      kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+      user_not_in_chat: Nutzer nicht im Chat - Einschränkung nicht möglich.
+      cannot_kick_admin: Kann Admins nicht kicken.
+      is_bot_itself: Kann mich nicht selbst kicken.
+      kicked_user: '%s gekickt!'
+      kicked_reason: "<b>Grund:</b> %s"
     kickme:
-      is_admin: |-
-        You are an admin, you're stuck here with everyone else!
-      ok_out: |-
-        Alright, get out!
+      is_admin: Sie sind Admin - können nicht gekickt werden.
+      ok_out: Wie Sie wünschen - raus hier!
     ban:
-      is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
-      is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
-      tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+      is_admin: Kann Admins nicht bannen.
+      is_bot_itself: Werde mich nicht selbst bannen.
+      ban_reason: "<b>Grund:</b> %s"
+      tban: '%s für %s gebannt'
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        Der nächste...!
+        %s gebannt.
       dban:
-        no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+        no_reply: Auf Nachricht antworten zum Löschen und Bannen!
     unban:
-      is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
-      is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+      is_admin: Warum sollte ich einen Admin entbannen?
+      is_bot_itself: Warum sollte ich mich selbst freigeben, wenn ich schon hier bin?
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        Geben wir ihm noch eine Chance.
+        %s entbannt!
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      Verwaltet unerwünschte Nutzer mit Banns und Kicks.
 
-      *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      Manchmal können Benutzer nervig sein und Sie möchten sie aus Ihrem Chat entfernen, dieses Modul hilft Ihnen genau dabei!.
 
-      *Ban Commands* (Admin only):
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-      × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-      × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-      × /unban <userhandle>: unbans a user. (via handle, or reply)
+      Bannen/kicken Sie Benutzer aus Ihrem Chat und entbannen Sie sie später, wenn sie sich benehmen.
 
-      *Restrict Commands:* (Admin only)
-      × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-      × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+
+      *Nutzerbefehle:*
+
+      × /kickme: kickt den Nutzer, der den Befehl ausgeführt hat.
+
+
+      *Bann-Befehle* (nur Admins):
+
+      × /ban <userhandle>: bannt einen Nutzer. (per Handle, oder Reply)
+
+      × /sban <userhandle>: bannt einen Nutzer stillschweigend, sendet keine Nachricht an die Gruppe und löscht auch Ihren Befehl. (per Handle, oder Reply)
+
+      × /dban <userhandle>: bannt einen Nutzer und löscht die beantwortete Nachricht. (per Handle, oder Reply)
+
+      × /tban <userhandle> x(m/h/d): bannt einen Nutzer für `x` Zeit. (per Handle, oder Reply). m = minutes, h = hours, d = days.
+
+      × /unban <userhandle>: entbannt einen Nutzer. (per Handle, oder Reply)
+
+
+      *Einschränkungsbefehle:* (nur Admins)
+
+      × /restrict: Zeigt eine Inline-Tastatur, um Optionen aus Kick, Ban und Mute zu wählen
+
+      × /unrestrict: Zeigt eine Inline-Tastatur, um Optionen aus Unmute und Unban zu wählen.
+    banned_user: 'Gebannter Benutzer:'
   Blacklists:
     blacklist:
-      give_bl_word: |-
-        Please give me a word to add to the blacklist!
-      already_blacklisted: |-
-        These words are already blacklisted:
-      added_bl: |-
-        Added these words as blacklists:
+      give_bl_word: Bitte Wort für Blacklist eingeben!
+      already_blacklisted: 'Bereits auf Blacklist:'
+      added_bl: 'Zur Blacklist hinzugefügt:'
     unblacklist:
-      give_bl_word: |-
-        Please give me a word to remove from the blacklist!
-      no_removed_bl: |-
-        None of the given words were in the blacklist which can be removed!
-      removed_bl: |-
-        Removed '%s' from the blacklisted words!
+      give_bl_word: Bitte zu entfernendes Wort eingeben!
+      no_removed_bl: Keine passenden Wörter auf der Blacklist.
+      removed_bl: "'%s' von Blacklist entfernt!"
     ls_bl:
-      no_blacklisted: |-
-        There are no blacklisted words in this chat.
-      list_bl: |-
-        These words are blacklisted in this chat:
+      no_blacklisted: Keine Blacklist-Wörter in diesem Chat.
+      list_bl: 'Blacklist-Wörter in diesem Chat:'
     set_bl_action:
-      current_mode: |-
-        The current blacklist mode is: %s
-      changed_mode: |-
-        Changed blacklist mode to: *%s*
-      choose_correct_option: |-
-        Please choose an option out of <mute/kick/ban/warn/none>
+      current_mode: 'Aktuelle Blacklist-Aktion: %s'
+      changed_mode: 'Blacklist-Aktion geändert zu: *%s*'
+      choose_correct_option: 'Wählen Sie: mute/kick/ban/warn/none'
     rm_all_bl:
-      ask: |-
-        Are you sure you want to remove all blacklisted words from this chat?
+      ask: Alle Blacklist-Wörter entfernen?
       button_handler:
-        yes: |-
-          Removed all Blacklists from this Chat ✅
-        no: |-
-          Cancelled removing all Blacklists from this Chat ❌
+        'true': Alle Blacklists aus diesem Chat entfernt ✅
+        'false': Das Entfernen aller Blacklists aus diesem Chat abgebrochen ❌
+        yes: Alle entfernt ✅
+        no: Abgebrochen ❌
     bl_watcher:
-      muted_user: |-
-        Muted %s due to %s
-      banned_user: |-
-        Banned %s due to %s
-      kicked_user: |-
-        Kicked %s due to %s
+      muted_user: '%s gemutet wegen %s'
+      banned_user: '%s gebannt wegen %s'
+      kicked_user: '%s gekickt wegen %s'
     help_msg: |-
-      *Benutzerbefehle: *
-      × /blacklists: Überprüfen Sie alle Blacklists im Chat.
+      *Nutzerbefehle:*
 
-      *Admin-Befehle: *
-      × /addblacklist `<trigger>`: Blacklists das Wort im aktuellen Chat.
-      × /rmblacklist `<trigger>`: Entfernt das Wort aus aktuellen Blacklist-Words im Chat.
-      × /blaction `<mute/kick/ban/warn/none>`: Legt die Aktion fest, die von Bot ausgeführt werden soll, wenn ein Blacklist-Wort erkannt wird.
-      × /blacklistaction: Gleiche wie oben
+      × /blacklists: Zeigt Blacklist-Wörter.
 
-      *Owner Only: *
-      × /remallbl: Entfernt alle Blacklist-Wörter aus dem Chat
 
-      *Note: *
-      Der Standardmodus für Blacklist ist * none*, wodurch die Nachrichten aus dem Chat gelöscht werden.
+      *Admin-Befehle:*
+
+      × /addblacklist `<trigger>`: Fügt Wort zur Blacklist hinzu.
+
+      × /rmblacklist `<trigger>`: Entfernt Wort von Blacklist.
+
+      × /blaction `<mute/kick/ban/warn/none>`: Setzt Reaktion auf Blacklist-Wörter.
+
+      × /blacklistaction: Wie oben
+
+
+      *Nur Eigner:*
+
+      × /remallbl: Löscht ALLE Blacklist-Wörter.
+
+
+      *Hinweis:*
+
+      Standardaktion ist *none* (löscht nur Nachrichten).
   Connections:
-    connected: |-
-      You are currently connected to <b>%s</b>
-    not_connected: |-
-      You aren't connected to any chats.
+    errors:
+      invalid_option_yes_no: Bitte geben Sie mir eine gültige Option von <yes/on/no/off>
+      get_chat_failed: 'Fehler beim Verbinden mit dem Chat: Chat konnte nicht abgerufen werden: getChat nicht möglich: Bad Request: Chat nicht gefunden'
+      no_chat_id: Ich brauche eine Chat-ID, um mich zu verbinden!
+    connect_to_chat_button: Mit Chat verbinden
+    connected: 'Verbunden mit <b>%s</b>!'
+    not_connected: Mit keinem Chat verbunden.
     allow_connect:
       turned_on: |-
-        Turned <b>on</b> User connections to this chat!
-        Users can now connect chat to their PM's!
+        Nutzerverbindungen <b>aktiviert</b>!
+        Nutzer können Chat mit PM verbinden.
       turned_off: |-
-        Turned <b>off</b> User connections to this chat!
-        Users can't connect chat to their PM's!
+        Nutzerverbindungen <b>deaktiviert</b>!
+        Verbindungen nicht möglich.
       currently_on: |-
-        User connections are currently turned <b>on</b>.
-        Users can connect this chat to their PM's!
+        Nutzerverbindungen aktiviert.
+        Nutzer können diesen Chat mit ihren PMs verbinden!
       currently_off: |-
-        User connections are currently turned <b>off</b>.
-        Users can't connect this chat to their PM's!
+        Nutzerverbindungen deaktiviert.
+        Nutzer können diesen Chat nicht mit ihren PMs verbinden!
     connect:
       connection_disabled: |-
-        User connections are currently <b>disabled</b> to this chat.
-        Please ask admins to allow if you want to connect!
-      connected: |-
-        You are now connected to <b>%s</b>!
-      tap_btn_connect: |-
-        Please press the button below to connect this chat to your PM
+        Verbindungen deaktiviert. Admins um Freigabe bitten!
+      connected: 'Verbunden mit <b>%s</b>!'
+      tap_btn_connect: 'Zum Verbinden Button drücken:'
     connections_btns:
-      admin_conn_cmds: |-
-        Admin commands available:%s
-      user_conn_cmds: |-
-        User commands available:%s
+      admin_conn_cmds: 'Admin-Befehle:%s'
+      user_conn_cmds: 'Nutzerbefehle:%s'
     disconnect:
-      disconnected: |-
-        Disconnected from the connected chat.
-      need_pm: |-
-        You need to send this in PM to me to disconnect from the chat!
+      disconnected: Verbindung getrennt.
+      need_pm: Bitte in PM senden zum Trennen!
     is_user_connected:
-      need_group: |-
-        This command is made to be used in group chats, not in PM!
-      bot_not_admin: |-
-        I'm not an admin in this chat!
-      user_not_admin: |-
-        You need to be an admin to do this.
+      need_group: Nur in Gruppenchats nutzbar!
+      bot_not_admin: Bin kein Admin in diesem Chat.
+      user_not_admin: Nur Admins können dies tun.
     reconnect:
-      reconnected: |-
-        You are now reconnected to <b>%s</b>!
-      no_last_chat: |-
-        You have no last chat to reconnect to!
-      need_pm: |-
-        You need to be in a PM with me to reconnect to a chat!
+      reconnected: 'Erneut verbunden mit <b>%s</b>!'
+      no_last_chat: Kein vorheriger Chat zum Verbinden.
+      need_pm: Nur in PM nutzbar!
     help_msg: |-
-      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+      Verbindung zu Chats für Datenverwaltung.
 
-      *Commands*:
-      × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-      × /disconnect: Disconnect from the current chat.
-      × /reconnect: Reconnect to the previously connect chat
-      × /connection: See information about the currently connected chat.
+      Dieses Modul ermöglicht es Ihnen, sich mit der Datenbank eines Chats zu verbinden und Dinge hinzuzufügen, ohne dass der Chat davon weiß! Aus offensichtlichen Gründen müssen Sie ein Admin sein, um Dinge hinzuzufügen; aber jedes Mitglied kann Ihre Daten einsehen. (Gebannte/gekickte Benutzer können das nicht!)
 
-      *Admin Commands:*
-      × /allowconnect <yes/no>: Allow users to connect to chats or not.
 
-      You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+      *Befehle*:
+
+      × /connect `<chatid>`: Verbindet mit dem angegebenen Chat, sodass Sie Inhalte anzeigen/bearbeiten können.
+
+      × /disconnect: Trennt die aktuelle Verbindung zum Chat.
+
+      × /reconnect: Verbindet sich wieder mit dem zuvor verbundenen Chat
+
+      × /connection: Zeigt Informationen zur Verbindungsinfo.
+
+
+      *Admin-Befehle:*
+
+      × /allowconnect <yes/no>: Erlaubt Nutzerverbindungen.
+
+
+      Die Chat-ID können Sie mit dem Befehl /id in Ihrem Chat abrufen. Wundern Sie sich nicht, wenn die ID negativ ist; alle Supergruppen haben negative IDs.
   Disabling:
+    success: 'Die Verwendung der folgenden in diesem Chat wurde deaktiviert:'
+    errors:
+      unknown_command: 'Unbekannter Befehl zum Deaktivieren:\n-%s\nÜberprüfen Sie /disableable!'
+      no_command_specified: Sie haben keinen Befehl zum Deaktivieren angegeben.
+    disableable:
+      list: 'Die folgenden Befehle können deaktiviert werden:'
+    disabled:
+      no_commands: Es sind keine Befehle in diesem Chat deaktiviert.
+      list: 'Die folgenden Befehle sind in diesem Chat deaktiviert:'
+    disabledel:
+      enabled: Deaktivierte Nachrichten werden jetzt gelöscht.
+      disabled: Deaktivierte Nachrichten werden nicht mehr gelöscht.
+      status_enabled: 'Das Löschen deaktivierter Befehle ist *aktiviert*, deaktivierte Befehle von Benutzern werden gelöscht!'
+      status_disabled: 'Das Löschen deaktivierter Befehle ist *deaktiviert*, deaktivierte Befehle von Benutzern werden *nicht* gelöscht!'
+    enable:
+      success: 'Die Verwendung der folgenden in diesem Chat wurde reaktiviert:'
+      errors:
+        unknown_command: 'Unbekannter Befehl zum Reaktivieren:\n-%s\nÜberprüfen Sie /disableable!'
+        no_command_specified: Sie haben keinen Befehl zum Deaktivieren angegeben.
     help_msg: |-
-      Dies ermöglicht es Ihnen, einige häufig verwendete Befehle zu deaktivieren, so dass noone sie verwenden können. Es wird Ihnen auch erlauben, sie automatisch zu löschen, die Menschen von bluetexting zu stoppen.
+      Deaktiviert Befehle und löscht deren Nutzung.
 
-      *Admin-Befehle *:
-      × /disable `<commandname>`: Stoppt die Benutzer mit dem Befehl 'commandname' in dieser Gruppe.
-      × /enable `<item name>`: Benutzern die Verwendung von Befehlsnamen in dieser Gruppe ermöglichen.
-      × /disableable: Alle nicht ablegebaren Befehle auflisten.
-      × /disabledel `<yes/no/on/off>`: Löschen von inaktivierten Befehlen, wenn sie von Nicht-Admins verwendet werden.
-      × /disabled: Listet die inaktivierten Befehle in diesem Chat auf.
+      Dieses Modul ermöglicht es Ihnen, einige häufig verwendete Befehle zu deaktivieren, sodass niemand sie verwenden kann. Es ermöglicht Ihnen auch, sie automatisch zu löschen, um zu verhindern, dass Personen „blue texting“ verwenden.
+
+
+      *Admin-Befehle:*
+
+      × /disable `<commandname>`: Deaktiviert Befehl für Nicht-Admins in dieser Gruppe.
+
+      × /enable `<item name>`: Aktiviert Befehl wieder.
+
+      × /disableable: Zeigt deaktivierbare Befehle.
+
+      × /disabledel `<yes/no/on/off>`: Löscht deaktivierte Befehle, wenn sie von Nicht-Admins verwendet werden.
+
+      × /disabled: Zeigt deaktivierte Befehle.
+
 
       Hinweis:
-      Beim Inaktivieren eines Befehls wird der Befehl nur für Nicht-Admins inaktiviert. Alle Admins können diese Befehle weiterhin verwenden.
-      Die behindertengerechten Befehle sind noch über die Funktion '/connect' zugänglich. Wenn Sie daran interessiert wären, auch diese deaktiviert zu sehen, lassen Sie mich im Support-Chat Bescheid wissen.
+
+      Beim Deaktivieren eines Befehls wird der Befehl nur für Nicht-Admins deaktiviert. Alle Admins können diese Befehle weiterhin verwenden.
+
+      Deaktivierte Befehle sind weiterhin über die /connect-Funktion zugänglich. Wenn Sie daran interessiert wären, dies auch zu deaktivieren, lassen Sie es mich im Support-Chat wissen.
   Filters:
+    errors:
+      limit_exceeded: Filterlimit überschritten, eine Gruppe kann maximal 150 Filter haben!\nDiese Einschränkung ist darauf zurückzuführen, dass der Bot ohne Spenden von Benutzern kostenlos läuft.
+      no_keyword: Bitte geben Sie ein Stichwort an, auf das geantwortet werden soll!
+      invalid_filter: Ungültiger Filter!
+      does_not_exist: Filter existiert nicht!
+    add:
+      success: Antwort für Filterwort <code>%s</code> hinzugefügt
+    remove:
+      no_word_specified: Bitte geben Sie ein Filterwort zum Entfernen an!
+      success: 'Ok!\nIch werde nicht mehr auf <code>%s</code> antworten'
+    list:
+      no_filters: Es gibt keine Filter in diesem Chat!
+      header: 'Dies sind die aktuellen Filter in diesem Chat:'
+    remove_all:
+      no_filters: Es gibt keine Filter in diesem Chat!
+      confirm: Sind Sie sicher, dass Sie alle Filter aus diesem Chat entfernen möchten?
+      success: Alle Filter aus diesem Chat entfernt ✅
+      cancelled: Das Entfernen aller Filter aus diesem Chat abgebrochen ❌
+    overwrite:
+      question: Filter existiert bereits!\nMöchten Sie ihn überschreiben?
+      success: Filter erfolgreich überschrieben ✅
+      cancelled: Überschreiben des Filters abgebrochen ❌
     help_msg: |-
-      Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+      Automatische Antworten auf Schlüsselwörter.
 
-      Commands:
-      - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-      - /filters: List all chat filters.
-      - /stop <trigger>: Stop the bot from replying to trigger.
-      - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+      Filter sind nicht Groß- und Kleinschreibungsempfindlich; jedes Mal, wenn jemand Ihre Triggerwörter sagt, antwortet Alita etwas anderes! Dies kann verwendet werden, um eigene Befehle zu erstellen, falls gewünscht.
 
-      Examples:
-      - Set a filter:
-      -> /filter hello Hello there! How are you?
-      - Set a multiword filter:
-      -> /filter hello friend Hello back! Long time no see!
-      - Set a filter that can only be used by admins:
-      -> /filter example This filter wont happen if a normal user says it {admin}
-      - To save a file, image, gif, or any other attachment, simply reply to file with:
+
+      Befehle:
+
+      - /filter <trigger> <reply>: Jedes Mal, wenn jemand den Trigger sagt, antwortet der Bot mit dem Satz. Für Filter mit mehreren Wörtern den Trigger in Anführungszeichen setzen.
+
+      - /filters: Zeigt alle Filter.
+
+      - /stop <trigger>: Entfernt Filter.
+
+      - /stopall: Entfernt ALLE Filter (unwiderruflich).
+
+
+      Beispiele:
+
+      - Einfacher Filter:
+
+      -> /filter hallo Hallo! Wie geht's?
+
+      - Mehrwort-Filter (in Anführungszeichen):
+
+      -> /filter hello friend Hallo zurück! Lange nicht gesehen!
+
+      - Nur für Admins:
+
+      -> /filter example Dieser Filter wird nicht ausgeführt, wenn ein normaler Benutzer ihn sagt {admin}
+
+      - Medien-Filter: Auf Datei antworten mit:
+
       -> /filter trigger
+    formatting: Formatierung
   Formatting:
     help_msg: |-
-      Alita unterstützt eine große Anzahl von Formatierungsoptionen, um Ihre Nachrichten expressiver zu machen. Klicken Sie auf die unten stehenden Buttons!
+      Formatierungsoptionen für ausdrucksstarke Nachrichten.
+      Sehen Sie sich die Optionen an, indem Sie auf die Schaltflächen unten klicken!
     Markdown: |-
-      <b>Markdown Formatting</b>
+      <b>Markdown-Formatierung</b>
 
-      You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-      <b>Supported markdown</b>:
-      - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-      - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-      - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-      - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-      - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-      - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-      - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-      - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-      - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
 
-      If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-      <b>Example:</b>
+      Sie können Ihre Nachricht mit <b>fett</b>, <i>kursiv</i>, <u>unterstrichen</u> und vielem mehr formatieren. Experimentieren Sie einfach!
+
+      <b>Unterstütztes Markdown</b>:
+
+      - <code>`code words`</code>: Backticks werden für Monospace-Schriftarten verwendet. Wird angezeigt als: <code>code words</code>.
+
+      - <code>_italic words_</code>: Unterstriche werden für kursive Schriftarten verwendet. Wird angezeigt als: <i>kursiver Text</i>.
+
+      - <code>*bold words*</code>: Sternchen werden für fette Schriftarten verwendet. Wird angezeigt als: <b>fetter Text</b>.
+
+      - <code>~strikethrough~</code>: Tilden werden für Durchstreichungen verwendet. Wird angezeigt als: <strike>durchgestrichen</strike>.
+
+      - <code>||spoiler||</code>: Doppelte vertikale Balken werden für Spoiler verwendet. Wird angezeigt als: <tg-spoiler>Spoiler</tg-spoiler>.
+
+      - <code>```pre```</code>: Damit der Formatierer andere Formatierungszeichen innerhalb des mit '```' formatierten Textes ignoriert, wird es so aussehen: <code>**fett** | *fett*</code>.
+
+      - <code>__underline__</code>: Doppelte Unterstriche werden für Unterstreichungen verwendet. Wird angezeigt als: unterstrichen. HINWEIS: Einige Clients versuchen, intelligent zu sein und interpretieren es als kursiv. Verwenden Sie in diesem Fall die integrierte Formatierung Ihrer App.
+
+      - <code>[hyperlink](example.com)</code>: Dies ist die Formatierung für Hyperlinks. Wird angezeigt als: <a href='https://example.com/'>Hyperlink</a>.
+
+      - <code>[My Button](buttonurl://example.com)</code>: Dies ist die Formatierung zum Erstellen von Schaltflächen. Dieses Beispiel erstellt eine Schaltfläche mit dem Namen "Mein Button", die beim Klicken <code>example.com</code> öffnet.
+
+
+      Wenn Sie Schaltflächen in derselben Zeile senden möchten, verwenden Sie die Formatierung <code>:same</code>.
+
+      <b>Beispiel:</b>
+
       <code>[button 1](buttonurl:example.com)</code>
+
       <code>[button 2](buttonurl://example.com:same)</code>
+
       <code>[button 3](buttonurl://example.com)</code>
-      This will show button 1 and 2 on the same line, with 3 underneath.
+
+      Dies zeigt Button 1 und 2 in derselben Zeile, mit 3 darunter.
     Fillings: |-
-      <b>Fillings</b>
+      <b>Platzhalter</b>
 
-      You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-      You can use these to mention a user in notes too!
 
-      <b>Supported fillings:</b>
-      - <code>{first}</code>: The user's first name.
-      - <code>{last}</code>: The user's last name.
-      - <code>{fullname}</code>: The user's full name.
-      - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-      - <code>{mention}</code>: Mentions the user with their firstname.
-      - <code>{id}</code>: The user's ID.
-      - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
+      Sie können den Inhalt Ihrer Nachricht auch mit Kontextdaten anpassen. Zum Beispiel könnten Sie einen Benutzer in der Willkommensnachricht namentlich erwähnen oder ihn in einem Filter erwähnen!
+
+      Sie können diese auch verwenden, um einen Benutzer in Notizen zu erwähnen!
+
+
+      <b>Unterstützte Platzhalter:</b>
+
+      - <code>{first}</code>: Der Vorname des Benutzers.
+
+      - <code>{last}</code>: Der Nachname des Benutzers.
+
+      - <code>{fullname}</code>: Der vollständige Name des Benutzers.
+
+      - <code>{username}</code>: Der Benutzername des Benutzers. Wenn er keinen hat, wird der Benutzer stattdessen erwähnt.
+
+      - <code>{mention}</code>: Erwähnt den Benutzer mit seinem Vornamen.
+
+      - <code>{id}</code>: Die ID des Benutzers.
+
+      - <code>{chatname}</code>: Der Name des Chats.
+
+      - <code>{rules}</code>: Fügt einen Regeln-Button zur Nachricht hinzu.
+
+      - <code>{protect}</code>: Schützt den Inhalt vor der Weitergabe.
+
+      - <code>{preview}</code>: Aktiviert Vorschauen in den Nachrichten.
+
+      - <code>{nonotif}</code>: Deaktiviert die Benachrichtigung für diese Nachricht.
     Random: |-
-      <b>Random Content</b>
+      <b>Zufällige Inhalte</b>
 
-      Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-      How to use random contents:
-      - %%%: This separator can be used to add  random replies to the bot.
-      For example:
-      <code>hello
+
+      Eine weitere unterhaltsame Möglichkeit ist die Randomisierung des Nachrichteninhalts. Machen Sie die Dinge ein wenig persönlicher, indem Sie Willkommensnachrichten oder Notizen ändern!
+
+      So verwenden Sie zufällige Inhalte:
+
+      - %%%: Dieser Separator kann verwendet werden, um zufällige Antworten zum Bot hinzuzufügen.
+
+      Zum Beispiel:
+
+      <code>hallo
+
       %%%
-      how are you</code>
-      This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-      Use this to make Alita feel a bit more customised! (only works in filters/notes)
-      Example welcome message:
-      - Every time a new user joins, they'll be presented with one of the three messages shown here.
+
+      wie geht es dir</code>
+
+      Dadurch wird zufällig zwischen dem Senden der ersten Nachricht, "hallo", oder der zweiten Nachricht, "wie geht es dir", gewählt.
+
+      Verwenden Sie dies, um Alita etwas persönlicher zu gestalten! (funktioniert nur in Filtern/Notizen)
+
+      Beispiel Willkommensnachricht:
+
+      - Jedes Mal, wenn ein neuer Benutzer beitritt, werden ihm eine der drei hier gezeigten Nachrichten präsentiert.
+
       -> /filter "hey"
-      hello there <code>{first}</code>!
+
+      hallo <code>{first}</code>!
+
       %%%
-      Ooooh, <code>{first}</code> how are you?
+
+      Ooooh, <code>{first}</code> wie geht es dir?
+
       %%%
-      Sup? <code>{first}</code>
+
+      Was geht? <code>{first}</code>
+    markdown_help: Markdown Hilfe
+    markdown_formatting: Markdown Formatierung
+    fillings: Platzhalter
+    random_content: Zufälliger Inhalt
   Greetings:
+    welcome:
+      status: 'Ich heiße derzeit Benutzer willkommen: <code>%t</code>\nIch lösche derzeit alte Willkommensnachrichten: <code>%t</code>\nIch lösche derzeit Dienstnachrichten: <code>%t</code>\nDie Willkommensnachricht, die die {} nicht füllt, ist:'
+      enabled: Ich werde Benutzer von nun an willkommen heißen.
+      disabled: Ich werde Benutzer von nun an nicht willkommen heißen.
+      turned_off: Willkommensnachricht wurde deaktiviert!
+    set_welcome:
+      success: Eigene Willkommensnachricht erfolgreich gesetzt!
+    reset_welcome:
+      success: Eigene Willkommensnachricht erfolgreich auf Standard zurückgesetzt!
+    goodbye:
+      status: 'Ich verabschiede mich derzeit von Benutzern: <code>%t</code>\nIch lösche derzeit alte Abschiedsnachrichten: <code>%t</code>\nIch lösche derzeit Dienstnachrichten: <code>%t</code>\nDie Abschiedsnachricht, die die {} nicht füllt, ist:'
+      enabled: Ich werde mich von nun an von Benutzern verabschieden.
+      disabled: Ich werde mich von nun an nicht von Benutzern verabschieden.
+      turned_off: Abschiedsnachricht wurde deaktiviert!
+    set_goodbye:
+      success: Eigene Abschiedsnachricht erfolgreich gesetzt!
+    reset_goodbye:
+      success: Eigene Abschiedsnachricht erfolgreich auf Standard zurückgesetzt!
+    clean_welcome:
+      status_enabled: Ich sollte Willkommensnachrichten löschen, die bis zu zwei Tage alt sind.
+      status_disabled: Ich lösche derzeit keine alten Willkommensnachrichten!
+      disabled: Ich werde keine alten Willkommensnachrichten löschen!
+      enabled: Ich werde versuchen, alte Willkommensnachrichten zu löschen!
+    clean_goodbye:
+      status_enabled: Ich sollte Willkommensnachrichten löschen, die bis zu zwei Tage alt sind.
+      status_disabled: Ich lösche derzeit keine alten Willkommensnachrichten!
+      disabled: Ich werde keine alten Abschiedsnachrichten löschen!
+      enabled: Ich werde versuchen, alte Abschiedsnachrichten zu löschen!
+    del_joined:
+      status_enabled: Ich sollte jetzt die Nachrichten "Benutzer ist dem Chat beigetreten" löschen.
+      status_disabled: Ich lösche derzeit keine beigetretenen Nachrichten.
+      disabled: Ich werde keine beigetretenen Nachrichten löschen.
+      enabled: Ich werde versuchen, beigetretene Nachrichten zu löschen!
+    pending_joins:
+      new_request: Ein neuer Benutzer hat angefragt, dem Chat beizutreten!
+      user: 'Benutzer: %s'
+      user_id: 'Benutzer-ID: %d'
+      approve_button: ✅ Genehmigen
+      decline_button: ❌ Ablehnen
+      ban_button: ✅ Bannen
+    join_request:
+      accepted: '%s im Chat akzeptiert ✅'
+      declined: '%s wurde der Beitritt zum Chat verweigert ❌'
+      banned: '✅ Erfolgreich gebannt! %s'
+    auto_approve:
+      enabled: Ich genehmige jetzt neue Chat-Beitrittsanfragen automatisch.
+      disabled: Ich genehmige neue Chat-Beitrittsanfragen jetzt nicht automatisch.
+      disabled_now: Ich werde neue Beitrittsanfragen nicht automatisch genehmigen!
+      enabled_now: Ich werde versuchen, neue Beitrittsanfragen automatisch zu genehmigen!
     help_msg: |-
-      Begrüßen Sie neue Mitglieder zu Ihren Gruppen oder verabschieden Sie sich nach dem Urlaub!
+      Begrüßungs- und Abschiedsnachrichten.
 
-      *Admin Commands: *
-      × /setwelcome `<reply/text>`: Setzt den Willkommenstext für die Gruppe.
-      × /welcome `<yes/no/on/off>`: Aktiviert oder inaktiviert die Einstellung für die Gruppe.
-      × /resetwelcome: Setzt die Begrüßungsansage auf den Standardwert zurück.
-      × /setgoodbye `<reply/text>`: Setzt den Abschied-Text für die Gruppe.
-      × /goodbye `<yes/no/on/off>`: Aktiviert oder inaktiviert die Abschiebeeinstellung für die Gruppe.
-      × /resetgoodbye: Setzt die goodbye-Nachricht auf default zurück.
-      × /cleanservice `<yes/no/on/off>`: Löschen Sie alle Service-Nachrichten wie 'x beigetreten die Gruppe' Benachrichtigung.
-      × /cleanwelcome `<yes/no/on/off>`: Löschen Sie die alte Willkommensnachricht, wann immer ein neues Mitglied tritt.
+      Begrüßen Sie neue Mitglieder in Ihren Gruppen oder verabschieden Sie sich, nachdem sie gegangen sind!
+
+
+      *Admin-Befehle:*
+
+      × /setwelcome `<reply/text>`: Setzt Willkommenstext für die Gruppe.
+
+      × /welcome `<yes/no/on/off>`: Aktiviert oder Deaktiviert die Willkommens-Einstellung für die Gruppe.
+
+      × /resetwelcome: Setzt die Willkommensnachricht auf Standard zurück.
+
+      × /setgoodbye `<reply/text>`: Setzt den Abschiedstext für die Gruppe.
+
+      × /goodbye `<yes/no/on/off>`: Aktiviert oder Deaktiviert die Abschieds-Einstellung für die Gruppe.
+
+      × /resetgoodbye: Setzt die Abschiedsnachricht auf Standard zurück.
+
+      × /cleanservice `<yes/no/on/off>`: Löscht alle Dienstnachrichten wie die Benachrichtigung "X ist der Gruppe beigetreten".
+
+      × /cleanwelcome `<yes/no/on/off>`: Löscht die alte Willkommensnachricht, wenn ein neues Mitglied beitritt.
+
+      × /autoapprove `<yes/no/on/off>`: Genehmigt automatisch alle neuen Mitglieder.
+    i_am_currently_goodbying_users_t: 'Ich verabschiede mich derzeit von Benutzern: <code>%t</code>'
+    i_understand_on_yes_or_off_no_only: Ich verstehe nur 'on/yes' oder 'off/no'!
+    formatting: Formatierung
   Help:
-    About: |-
-      @%s ist einer der schnellsten und feature-gefüllten Gruppenmanager.
+    about:
+      main: Info & Über\n\nHier sind einige häufig gestellte Fragen zu Alita.
+      me_button: "Über mich 👨‍💻"
+      news_channel_button: "Nachrichtenkanal 📢"
+      support_group_button: "Support-Gruppe 👥"
+      configuration_button: Konfiguration ⚙️
+      group_prompt: Klicken Sie auf die Schaltfläche unten, um Informationen über mich zu erhalten!
+      button: Über
+    start:
+      intro: |-
+        Hallo! Mein Name ist Alita ✨.
+        Ich bin hier, um Ihnen bei der Verwaltung Ihrer Gruppen zu helfen!
+        Geben Sie /help ein, um mehr darüber zu erfahren, wie Sie mich optimal nutzen können.
+        Treten Sie meinem <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>Nachrichtenkanal</a> bei, um Informationen zu allen neuesten Updates zu erhalten.
+      about_button: Über ✨
+      add_to_chat_button: ➕ Füge mich zum Chat hinzu!
+      support_group_button: "Support-Gruppe 👥"
+      commands_help_button: "📚 Befehle & Hilfe"
+      language_button: "Sprache 🌏"
+      group_prompt: 'Hey :) Schicken Sie mir eine private Nachricht, wenn Sie Fragen zur Nutzung haben!'
+    main: |-
+      Hey %s!
+      Mein Name ist Alita ✨.
 
-      Alita ✨ @DivideProjectsentwickelt und aktiv gepflegt!
+      Ich bin ein Gruppenverwaltungs-Bot, der Ihnen hilft, sich zurechtzufinden und die Ordnung in Ihren Gruppen aufrechtzuerhalten!
+      Ich habe viele praktische Funktionen, wie z.B. Flood-Kontrolle, ein Warnsystem, ein Notizverwaltungssystem und sogar vorbestimmte Antworten auf bestimmte Schlüsselwörter.
+
+      <b>Hilfreiche Befehle</b>:
+      - /start: Startet mich! Das haben Sie wahrscheinlich schon benutzt!
+      - /help: Sendet diese Nachricht; ich erzähle Ihnen mehr über mich!
+      - /donate: Gibt Ihnen Informationen, wie Sie mich und meinen Ersteller unterstützen können.
+
+      Alle Befehle können mit den folgenden verwendet werden: / oder !
+    help:
+      button: Hier klicken für Hilfe!
+      group_prompt_general: Kontaktieren Sie mich in PM für Hilfe!
+      group_prompt_module: Kontaktieren Sie mich in PM für Hilfe bezüglich <code>%s</code>!
+    configuration:
+      private_only: Konfiguration funktioniert nur in privaten Chats
+    About: |-
+      @%s ist einer der schnellsten und funktionsreichsten Gruppenmanager.
+
+
+      Alita ✨ wird von @DivideProjects entwickelt und aktiv gewartet!
+
 
       Alita ist seit 2020 online und hat Tausende von Gruppen mit Hunderttausenden von Benutzern bedient!
 
+
       <b>Warum Alita:</b>
-      -Einfach: Einfache Bedienung und Compaitble mit vielen Bot-Befehlen.
-      -Featured: Viele Funktionen, die andere Gruppen-Management-Bots nicht haben.
-      -Schnell: Guess was? Es wird nicht mit Python gemacht, wir verwenden <a href='https://go.dev/'>Go</a> als unsere Kernprogrammiersprache.
+
+      - Einfach: Einfache Bedienung und kompatibel mit vielen Bot-Befehlen.
+
+      - Funktionsreich: Viele Funktionen, die andere Gruppenverwaltungs-Bots nicht haben.
+
+      - Schnell: Ratet mal? Es wurde nicht mit Python erstellt, wir verwenden <a href='[https://go.dev/](https://go.dev/)'>Go</a> als unsere Kernprogrammiersprache.
+
 
       <b>Aktuelle Version:</b> %s
     Configuration:
       Step-1: |-
-        Willkommen bei der Alita-Konfiguration
+        Willkommen zur Alita-Konfiguration
 
-        Das erste, was zu tun ist, ist, Alita ✨ zu Ihrer Gruppe hinzuzufügen! Um dies zu tun, drücken Sie die unter-Taste und wählen Sie Ihre Gruppe, dann drücken Sie Fertig, um das Tutorial fortzusetzen ..
+
+        Das erste, was zu tun ist, ist Alita ✨ zu Ihrer Gruppe hinzuzufügen! Dazu drücken Sie den unteren Button und wählen Ihre Gruppe aus, dann drücken Sie auf "Fertig", um das Tutorial fortzusetzen.
       Step-2: |-
+        Gut gemacht!
 
-
-        Nun, um mich richtig arbeiten zu lassen, müssen Sie mich Admin Ihrer Gruppe machen!
-        Um dies zu tun, folgen Sie diesen einfachen Schritten:
+        Damit ich richtig funktioniere, müssen Sie mich zum Admin Ihrer Gruppe machen!
+        Gehen Sie dazu wie folgt vor:
         ▫️ Gehen Sie zu Ihrer Gruppe
-        ▫️ Press the Group's name
-        ▫️ Press Modify
-        ▫️ Press on Administrator
-        ▫️ Press Add Administrator
-        ▫️ Press the Magnifying Glass
-        ▫️ Search @%s
-        ▫️ Bestätigen
+        ▫️ Tippen Sie auf den Gruppennamen
+        ▫️ Tippen Sie auf "Bearbeiten"
+        ▫️ Tippen Sie auf "Administratoren"
+        ▫️ Tippen Sie auf "Administrator hinzufügen"
+        ▫️ Tippen Sie auf die Lupe
+        ▫️ Suchen Sie @%s
+        ▫️ Bestätigen Sie
       Step-3: |-
-        Exzellent!
-        Jetzt ist der Bot einsatzbereit!
-        Alle Befehle können mit/oder verwendet werden!
+        Perfekt!
 
-        Wenn Sie Schwierigkeiten haben, mich in Ihrer Gruppe einzurichten, dann zögern Sie nicht, in @DivideSupportzu kommen.
-        Wir würden uns freuen, Ihnen zu helfen.
+        Der Bot ist jetzt einsatzbereit!
+
+        Alle Befehle können mit / oder ! verwendet werden.
+
+
+        Wenn Sie Schwierigkeiten bei der Einrichtung in Ihrer Gruppe haben, zögern Sie nicht, uns unter @DivideSupport zu kontaktieren.
+
+        Wir helfen Ihnen gerne.
     DonateText: |-
-      Also willst du spenden? Erstaunlich!
-      Wenn Sie spenden, geht der gesamte Fonds auf meine Entwicklung hin, die schnell und reaktionsschnell macht.
-      Ihre Spende könnte mir auch eine neue Funktion oder zwei bekommen, die ich aufgrund von Servereinschränkungen nicht bekommen konnte.
-      Alle Fonds werden in meine Dienste wie Datenbank, Speicher und Hosting bereitgestellt!
-      Sie können spenden, indem Sie meinen Besitzer kontaktieren hier: @DivideProjectsBot
+      Spenden? Großartig!
+
+      Wenn Sie spenden, fließt das gesamte Geld in meine Entwicklung, was sie schnell und reaktionsschnell macht.
+
+      Ihre Spende könnte mir auch ein oder zwei neue Funktionen ermöglichen, die ich aufgrund von Serverbeschränkungen nicht bekommen konnte.
+
+      Alle Gelder würden in meine Dienste wie Datenbank, Speicher und Hosting investiert!
+
+      Sie können spenden, indem Sie meinen Besitzer hier kontaktieren: @DivideProjectsBot
+    about_me_u200d: "Über mich 👨‍💻"
   Locks:
+    list:
+      header: 'Dies sind die Sperren in diesem Chat:'
+    locktypes:
+      header: 'Sperren: \n -'
+    lock:
+      no_type_specified: Was möchten Sie sperren? Überprüfen Sie /locktypes für verfügbare Optionen.
+      success: 'Folgendes wurde in dieser Gruppe gesperrt:\n - %s'
+    unlock:
+      no_type_specified: Was möchten Sie sperren? Überprüfen Sie /locktypes für verfügbare Optionen.
+      success: 'Folgendes wurde in dieser Gruppe entsperrt:\n - %s'
+    errors:
+      invalid_type: '`%s` ist kein korrekter Sperrtyp, überprüfen Sie /locktypes.'
+    bot:
+      no_admin_permission: Ich sehe einen Bot, und mir wurde gesagt, ich solle sie vom Beitritt abhalten... aber ich bin kein Admin!
+      no_ban_permission: Ich sehe einen Bot, und mir wurde gesagt, ich solle sie vom Beitritt abhalten... aber ich habe keine Berechtigung, sie zu bannen!
+      admin_only: Nur Admins dürfen Bots zu diesem Chat hinzufügen!
     help_msg: |-
-      *Admin nur *:
-      × /lock `<permission>`: Chat-Berechtigung sperren.
-      × /unlock `<permission>`: Die Chat-Berechtigung entsperren.
-      × /locks: Chat-Berechtigung anzeigen.
-      × /locktypes: Die verfügbaren Sperrtypen überprüfen!
+      *Nur Admins:*
 
-      Sperren können verwendet werden, um die Benutzer einer Gruppe zu beschränken.
-      Sperrungsurls werden automatisch alle Nachrichten mit urls löschen, Sperrsticker werden alle Aufkleber löschen, etc.
-      Sperrbots stoppen Nicht-Admins vom Hinzufügen von Bots zu dem Chat.
+      × /lock `<permission>`: Sperrt Chat-Berechtigung.
 
-      ** Example:**
-      `/lock media `: Dies schließt alle Mediennachrichten im Chat ab.
+      × /unlock `<permission>`: Entsperrt Chat-Berechtigung.
+
+      × /locks: Zeigt Chat-Berechtigungen.
+
+      × /locktypes: Zeigt sperrbare Typen!
+
+
+      Sperren können verwendet werden, um die Benutzer einer Gruppe einzuschränken.
+
+      Das Sperren von URLs löscht automatisch alle Nachrichten mit URLs, das Sperren von Stickern löscht alle Sticker usw.
+
+      Das Sperren von Bots verhindert, dass Nicht-Admins Bots zum Chat hinzufügen.
+
+
+      **Beispiel:**
+
+      `/lock media`: dies sperrt alle Mediennachrichten im Chat.
+    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: Ich sehe einen Bot, und mir wurde gesagt, ich solle sie vom Beitritt abhalten...
   Languages:
+    help_translate_button: "Hilf uns zu übersetzen 🌎"
+    change:
+      private_prompt: Ihre aktuelle Sprache ist %s\nWählen Sie eine Sprache von der Tastatur unten.
+      group_prompt: 'Die aktuelle Sprache dieser Gruppe ist %s\nWählen Sie eine Sprache von der Tastatur unten.'
+      private_success: Ihre Sprache wurde auf %s geändert
+      group_success: Die Sprache dieser Gruppe wurde auf %s geändert
     help_msg: |-
-      Nicht in der Lage, Sprache des Bot zu ändern?
-      Leicht ändern Sie mit diesem Modul!
+      Einfacher Sprachwechsel für Bot und Gruppe.
 
-      Einfach/lang Typ/lang und verwenden Sie Inline-Tastatur, um eine Sprache für sich selbst oder Ihre Gruppe zu wählen.
+      Sie können die Sprache des Bots nicht ändern?
 
-      Sie können uns helfen, Bot in mehr Sprachen zu bringen, indem Sie auf [Crowdin]helfen (https: //crowdin.com/project/alita_robot)
+      Ändern Sie sie einfach mit diesem Modul!
+
+
+      Geben Sie einfach /lang ein und verwenden Sie die Inline-Tastatur, um eine Sprache für sich selbst oder Ihre Gruppe auszuwählen.
+
+
+      Sie können uns helfen, den Bot in weitere Sprachen zu bringen, indem Sie auf [Crowdin](https://crowdin.com/project/alita_robot) helfen
   Misc:
+    reply:
+      need_target: Antworte jemandem.
+      need_content: Geben Sie einen Inhalt an, auf den geantwortet werden soll!
+    paste:
+      need_text_or_document: Bitte geben Sie Text zum Einfügen ein oder antworten Sie auf ein Dokument!
+      processing: Einfügen ...
+      get_file_error: BadRequest auf GetFile!
+      file_too_big: Datei zu groß zum Einfügen; Max. Dateigröße, die eingefügt werden kann, beträgt 600 kb!
+      paste_error: Die bereitgestellten Daten können nicht eingefügt werden!
+    info:
+      user_not_found: Konnte keine Informationen über diesen Benutzer finden.
+    translate:
+      need_text_and_lang: Ich brauche Text und einen Sprachcode zum Übersetzen.
+      no_text_in_reply: Die beantwortete Nachricht enthält keinen Text zum Übersetzen.
+      need_text: Bitte geben Sie einen Text zum Übersetzen an.
+      request_error: Fehler bei der Übersetzungsanfrage!
+    keyboard:
+      removing: Entferne die festsitzende Bot-Tastatur...
     help_msg: |-
-      × /info: Get your user info, can be used as reply or by passing a User Id or Username
-      × /id: Get the current group id. If used by replying to a message, get that user's id.
-      × /ping: Ping the Telegram Server!
-      × /paste: Paste texts at nekobin Server!
-      × /tr <lang code> <msg/reply to message>: Translate the message.
-      × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
+      × /info: Ruft Ihre Benutzerinformationen ab, die als Antwort oder durch Übergabe einer Benutzer-ID oder eines Benutzernamens verwendet werden können.
+
+      × /id: Ruft die aktuelle Gruppen-ID ab. Wenn Sie auf eine Nachricht antworten, erhalten Sie die ID dieses Benutzers.
+
+      × /ping: Ping den Telegram-Server!
+
+      × /paste: Fügt Texte auf dem nekobin Server ein!
+
+      × /tr <lang code> <msg/reply to message>: Übersetzt die Nachricht.
+
+      × /removebotkeyboard: Entfernt die festsitzende Bot-Tastatur aus Ihrem Chat.
+
+      × /stat: Ruft die Anzahl der Nachrichten im Chat ab.
+    pinged_in_percent_ms: Gepingt in %d ms
+    reading_error: 'Lesefehler:'
+    total_messages_in_percent_are_percent: 'Gesamtnachrichten in %s sind: %d'
   Mutes:
+    errors:
+      restrict_self: Warum sollte ich mich selbst einschränken?
+      anon_user: Dieser Befehl kann nicht für anonyme Benutzer verwendet werden.
+      invalid_mode: "Unbekannter Typ '%s'. Bitte verwenden Sie eine der folgenden Optionen: ban/kick/mute"
+      invalid_limit: Das Warnlimit muss zwischen 1 und 100 liegen.
+    tmute:
+      success: 'Shh...\n%s für %s stummgeschaltet'
+    mute:
+      success: 'Shh...\n%s stummgeschaltet.'
+    dmute:
+      no_reply: Sie müssen auf eine Nachricht antworten, um sie zu löschen und den Benutzer stummzuschalten!
+      success: 'Shh...\n%s stummgeschaltet.'
+    unmute:
+      success: 'In Ordnung!\nIch erlaube %s, wieder zu sprechen.'
     help_msg: |-
-      Manchmal können Benutzer lästig sein, und Sie möchten sie möglicherweise darauf beschränken, Nachrichten zum Chatten zu senden. Dieses Modul ist hier, um zu helfen. Sie können das Modul 'ths' verwenden, um Mitglieder in Ihrer Gruppe zu stumm zu machen.
+      Schaltet lästige Nutzer stumm.
 
-      *Mute Commands: * (Admin only)
-      × /mute <userhandle>: mutes a user, (via handle, or reply)
-      × /smute <userhandle>: miert einen Benutzer im unbeaufsichtigten Modus, sendet keine Nachricht an die Gruppe und löscht auch den Befehl. (per Griff, oder Antwort)
-      × /dmute <userhandle>: Mutes einen Benutzer und löschen Sie die repliierte Nachricht .. (per Griff, oder Antwort)
-      × /tmute <userhandle> x (m/h/d): Mutes ein Benutzer für ` x ` Zeit. (über Kennung oder Antwort). m = Minuten, h = Stunden, d = Tage.
-      × /unmute <userhandle>: unmiert einen Benutzer. (über Kennung oder Antwort)
+      Manchmal können Benutzer nervig sein und Sie möchten sie daran hindern, eine Nachricht in den Chat zu senden. Dieses Modul ist hier, um zu helfen. Sie können dieses Modul verwenden, um Mitglieder in Ihrer Gruppe stummzuschalten.
+
+
+      *Stummschaltungsbefehle:* (nur Admins)
+
+      × /mute <userhandle>: schaltet einen Benutzer stumm (per Handle oder Reply)
+
+      × /smute <userhandle>: schaltet einen Benutzer stillschweigend stumm, sendet keine Nachricht an die Gruppe und löscht auch Ihren Befehl. (per Handle oder Reply)
+
+      × /dmute <userhandle>: schaltet einen Benutzer stumm und löscht die beantwortete Nachricht. (per Handle oder Reply)
+
+      × /tmute <userhandle> x(m/h/d): schaltet einen Benutzer für `x` Zeit stumm. (per Handle oder Reply). m = minutes, h = hours, d = days.
+
+      × /unmute <userhandle>: hebt die Stummschaltung eines Benutzers auf. (per Handle oder Reply)
   Notes:
+    remove:
+      no_keyword: Bitte geben Sie ein Stichwort zum Entfernen an!
+    errors:
+      no_keyword_reply: Bitte geben Sie ein Stichwort an, auf das geantwortet werden soll!
+      invalid_note: Ungültige Notiz!
+      does_not_exist: Notiz existiert nicht!
+      parse_error: Es gibt einen Fehler beim Parsen der Notiz, bitte melden Sie dies im Support-Chat.
+      admin_only: Diese Notiz kann nur von einem Admin abgerufen werden!
+    list:
+      no_notes: Es gibt keine Notizen in diesem Chat!
+      private_prompt: Klicken Sie auf die Schaltfläche unten, um Notizen zu erhalten!
     help_msg: |-
+      Speichert Informationen für späteren Abruf.
+
       Speichern Sie Daten für zukünftige Benutzer mit Notizen!
-      Hinweise sind groß, um zufällige Tidbits von Informationen zu speichern; eine Telefonnummer, eine schöne gif, ein lustiges Bild-alles!
-      *User Befehle: *
-      -/get <notename>: Erhalten Sie eine Notiz.
-      - #notename: Das Gleiche wie /get.
-      Admin-Befehle:
-      -/save <notename> <note text>: Speichern Sie einen neuen Hinweis mit dem Namen "word". Wenn Sie auf eine Nachricht antworten, wird diese Nachricht gespeichert. Selbst funktioniert auf Medien!
-      -/clear <notename>: Löschen Sie die zugehörige Notiz.
-      -/note: Liste aller Notizen im aktuellen Chat.
-      -/gespeichert: Das Gleiche wie /Notes.
-      -/clearall: Löschen Sie ALLE Notizen in einem Chat. Das kann nicht rückgängig gemacht werden.
-      -/privatenotes: Ob Sie Notizen in PM senden möchten oder nicht. Wird eine Nachricht mit einer Schaltfläche senden, die Benutzer anklicken können, um den Hinweis in PM zu erhalten.
+
+      Notizen eignen sich hervorragend zum Speichern zufälliger Informationen; eine Telefonnummer, ein nettes GIF, ein lustiges Bild - alles!
+
+      *Nutzerbefehle:*
+
+      - /get <notename>: Ruft Notiz ab.
+
+      - #notename: Wie /get.
+
+      *Admin-Befehle:*
+
+      - /save <notename> <note text>: Speichert eine neue Notiz namens "Wort". Wenn Sie auf eine Nachricht antworten, wird diese Nachricht gespeichert. Funktioniert sogar mit Medien!
+
+      - /clear <notename>: Löscht die zugehörige Notiz.
+
+      - /notes: Zeigt alle Notizen.
+
+      - /saved: Wie /notes.
+
+      - /clearall: Löscht ALLE Notizen (unwiderruflich).
+
+      - /privatenotes: Ob Notizen in PM gesendet werden sollen oder nicht. Sendet eine Nachricht mit einem Button, den Benutzer anklicken können, um die Notiz in PM zu erhalten.
+    removed_note_percent: Notiz <b>%s</b> entfernt.
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Sind Sie sicher, dass Sie alle Notizen aus diesem Chat entfernen möchten?
+    only_chat_creator_can_use_this_command: Nur der Chat-Ersteller kann diesen Befehl verwenden.
+    there_s_some_error_parsing_the_note_please_report_this_in_su: Es gibt einen Fehler beim Parsen der Notiz, bitte melden Sie dies im Support-Chat.
+    note_doesn_t_exists: Notiz existiert nicht!
+    there_s_some_error_parsing_the_note_please_report_this_to_su: Es gibt einen Fehler beim Parsen der Notiz, bitte melden Sie dies dem Support-Chat.
+    formatting: Formatierung
   Pins:
+    errors:
+      bot_need_admin: Ich muss ein Admin sein, um Nachrichten anzuheften!
+      reply_to_pin: Antworten Sie auf eine Nachricht, um sie anzuheften!
+      reply_to_unpin: Antworten Sie auf eine Nachricht, um sie loszulösen!
+    pin:
+      success: Erfolgreich angeheftet!
+    unpin:
+      success: Erfolgreich losgelöst!
+    unpin_all:
+      success: Alle Chat-Nachrichten losgelöst!
     help_msg: |-
-      Alle Pin-bezogenen Befehle können hier gefunden werden; halten Sie Ihren Chat auf dem Laufenden über die neuesten Nachrichten mit einer einfachen gepinnten Nachricht!
+      Verwaltung angehefteter Nachrichten.
 
-      *User Befehle: *
-      × /pinned: Erhalten Sie die aktuelle gepinnte Nachricht.
+      Alle anheften-bezogenen Befehle finden Sie hier; halten Sie Ihren Chat mit einer einfach angehefteten Nachricht auf dem Laufenden!
 
-      *Admin-Befehle: *
-      × /pin: Pin die Nachricht, auf die Sie geantwortet haben. Fügen Sie 'loud' oder 'notify' hinzu, um eine Benachrichtigung an Gruppenmitglieder zu senden.
-      × /pinned: Gets die neueste gepinnte Nachricht im aktuellen Chat.
-      × /permapin <text>: Pin eine benutzerdefinierte Nachricht durch den Bot. Diese Nachricht kann Markdown, Schaltflächen und alle anderen coolen Features enthalten.
-      × /unpin: Die aktuelle gepinnte Nachricht aufheben. Wenn Sie als Antwort verwendet werden, müssen Sie die Antwort auf die Nachricht aufheben.
-      × /unpinall: Alle gepinnten Nachrichten werden rückgängig gemacht.
-      × /antichannelpin <yes/no/on/off>: Lassen Sie sich keine Telegramm-Auto-Pin-Kanäle verbinden. Wenn keine Argumente angegeben werden, zeigt die aktuelle Einstellung an.
-      × /cleanlinked <yes/no/on/off>: Löschen von Nachrichten, die von dem verlinkten Kanal gesendet wurden.
-      Hinweis: Wenn Sie Antikanalstifte verwenden, stellen Sie sicher, dass Sie den Befehl /unpin verwenden, anstatt ihn manuell zu verwenden. Andernfalls wird die alte Nachricht erneut gepinnt, wenn der Kanal Nachrichten sendet.
+
+      *Nutzerbefehle:*
+
+      × /pinned: Zeigt aktuelle angeheftete Nachricht.
+
+
+      *Admin-Befehle:*
+
+      × /pin: Heftet geantwortete Nachricht an. Fügen Sie 'loud' oder 'notify' hinzu, um eine Benachrichtigung an Gruppenmitglieder zu senden.
+
+      × /pinned: Zeigt die letzte angeheftete Nachricht im aktuellen Chat.
+
+      × /permapin <text>: Heftet eine benutzerdefinierte Nachricht über den Bot an. Diese Nachricht kann Markdown, Buttons und alle anderen coolen Funktionen enthalten.
+
+      × /unpin: Löst die aktuelle angeheftete Nachricht. Wenn als Antwort verwendet, löst die beantwortete Nachricht.
+
+      × /unpinall: Löst ALLE angehefteten Nachrichten.
+
+      × /antichannelpin <yes/no/on/off>: Verhindert automatisches Anheften von verknüpften Kanälen durch Telegram. Wenn keine Argumente angegeben sind, wird die aktuelle Einstellung angezeigt.
+
+      × /cleanlinked <yes/no/on/off>: Löscht Nachrichten, die vom verknüpften Kanal gesendet wurden.
+
+      Hinweis: Wenn Sie Anti-Kanal-Pins verwenden, stellen Sie sicher, dass Sie den Befehl /unpin verwenden, anstatt ihn manuell zu tun. Andernfalls wird die alte Nachricht erneut angeheftet, wenn der Kanal Nachrichten sendet.
+    unpinned_all_pinned_messages_in_this_chat: Alle angehefteten Nachrichten in diesem Chat wurden losgelöst!
+    cancelled_operation_to_unpin_messages: Vorgang zum Loslösen von Nachrichten abgebrochen!
+    are_you_sure_you_want_to_unpin_all_pinned_messages: Sind Sie sicher, dass Sie alle angehefteten Nachrichten loslösen möchten?
+    please_reply_to_a_message_or_give_some_text_to_pin: Bitte antworten Sie auf eine Nachricht oder geben Sie Text zum Anheften an.
+    no_message_has_been_pinned_in_the_current_chat: Im aktuellen Chat wurde keine Nachricht angeheftet!
   Purges:
     help_msg: |-
-      *Admin nur: *
-      -/purge: Löscht alle Nachrichten zwischen diesem und dem antworteten Nachrichten.
-      -/del: Löscht die Nachricht, auf die Sie geantwortet haben.
+      *Nur Admins:*
+      - /purge: Löscht alle Nachrichten zwischen dieser und der beantworteten Nachricht.
+      - /del: Löscht die Nachricht, auf die Sie geantwortet haben.
 
-      *Examples*:
-      -Löschen Sie alle Nachrichten von der Antwort auf die Nachricht, bis jetzt.
-      -> Neun/Säuberung `
+      *Beispiel:*
+      - Löscht Nachrichten von Antwort bis jetzt:
+      -> `/purge`
+    reply_to_a_message_to_select_where_to_start_purging_from: Antworten Sie auf eine Nachricht, um auszuwählen, wo mit dem Löschen begonnen werden soll.
+    reply_to_a_message_to_delete_it: Antworten Sie auf eine Nachricht, um sie zu löschen!
+    this_message_is_already_marked_for_purging: Diese Nachricht ist bereits zum Löschen markiert!
+    message_marked_for_deletion_reply_to_another_message_with_pu: Nachricht zum Löschen markiert. Antworten Sie auf eine andere Nachricht mit /purgeto, um alle Nachrichten dazwischen zu löschen; innerhalb von 30 Sekunden!
+    you_can_only_use_this_command_after_having_used_the_purgefro: Sie können diesen Befehl nur verwenden, nachdem Sie den Befehl /purgefrom verwendet haben!
+    use_del_command_to_delete_one_message: Verwenden Sie den Befehl /del, um eine Nachricht zu löschen!
+    reply_to_a_message_to_show_me_till_where_to_purge: Antworten Sie auf eine Nachricht, um mir zu zeigen, bis wohin gelöscht werden soll.
   Reports:
+    settings:
+      enabled: Admin-Berichte sind aktiviert!
+      disabled: Admin-Berichte sind deaktiviert!
+    report:
+      success: An Admins gemeldet!
+      disabled: Berichte sind in diesem Chat deaktiviert!
     help_msg: |-
-      Wir sind alle beschäftigt Leute, die keine Zeit haben, unsere Gruppen zu überwachen 24/7. Aber wie reagieren Sie, wenn jemand in Ihrer Gruppe spammt?
+      Melden Sie störende Nutzer an Admins.
 
-      × /report `<reason>`: Antwort auf eine Nachricht, um sie den Admins zu melden.
-      - @admin: identisch mit /report, aber nicht ein Befehl.
+      Wir alle sind vielbeschäftigte Menschen, die keine Zeit haben, unsere Gruppen 24/7 zu überwachen. Aber wie reagieren Sie, wenn jemand in Ihrer Gruppe Spam sendet?
 
-      *Admins Only: *
-      × /reports `<on/off/yes/no>`: Berichtseinstellung ändern oder den aktuellen Status anzeigen.
-      -Wenn dies in der PM geschehen ist, schaltet den Status ein.
-      -Wenn in der Gruppe der Status dieser Gruppen aktiviert wird.
-      × /reports ` block ` (nur durch Antwort): Blockieren Sie einen Benutzer über die Verwendung von /report oder @admin.
-      × /reports ` unblock ` (nur über Antwort): Entsperren Sie einen Benutzer über die Verwendung von /report oder @admin.
-      × /reports ` showblocklist `: Überprüfen Sie alle blockierten Benutzer, die nicht /report oder @adminverwenden können.
 
-      Um einen Benutzer zu melden, antworten Sie einfach auf seine Nachricht mit @admin oder /report; Natalie antwortet dann mit einer Nachricht, die besagt, dass Admins benachrichtigt wurden.
-      Sie MÜSSEN auf eine Nachricht antworten, um einen Benutzer zu melden; Sie können nicht nur @admin verwenden, um Admins ohne Grund zu kennzeichnen!
+      × /report `<reason>`: Antwort auf eine Nachricht, um sie an Admins zu melden.
 
-      *NOTE: * Keiner dieser Elemente wird ausgelöst, wenn er von Admins verwendet wird.
+      - @admin: wie /report, aber kein Befehl.
+
+
+      *Nur Admins:*
+
+      × /reports `<on/off/yes/no>`: Berichtseinstellung ändern oder aktuellen Status anzeigen.
+
+      - In PM: Eigener Status wird umgeschaltet.
+
+      - In Gruppe: Gruppenstatus wird umgeschaltet.
+
+      × /reports `block` (per Reply): Blockiert einen Benutzer von der Verwendung von /report oder @admin.
+
+      × /reports `unblock` (per Reply): Entblockiert einen Benutzer von der Verwendung von /report oder @admin.
+
+      × /reports `showblocklist`: Zeigt alle blockierten Benutzer an, die /report oder @admin nicht verwenden können.
+
+
+      Um einen Benutzer zu melden, antworten Sie einfach auf seine Nachricht mit @admin oder /report; Natalie antwortet dann mit einer Nachricht, dass die Admins benachrichtigt wurden.
+
+      Sie MÜSSEN auf eine Nachricht antworten, um einen Benutzer zu melden; Sie können @admin nicht einfach verwenden, um Admins grundlos zu markieren!
+
+
+      *HINWEIS:* Keiner dieser Befehle wird ausgelöst, wenn er von Admins verwendet wird.
+    you_can_t_report_your_own_message: Sie können Ihre eigene Nachricht nicht melden!
+    you_need_to_expose_yourself_first: Sie müssen sich zuerst offenbaren!
+    it_s_a_special_account_of_telegram: Es ist ein spezielles Telegram-Konto!
+    you_re_an_admin_whom_will_i_report_your_issues_to: Sie sind ein Admin, wem soll ich Ihre Probleme melden?
+    why_would_i_report_myself: Warum sollte ich mich selbst melden?
+    why_would_i_report_an_admin: Warum sollte ich einen Admin melden?
   Rules:
     help_msg: |-
-      Jeder Chat funktioniert mit verschiedenen Regeln; dieses Modul hilft Ihnen, diese Regeln klarer zu machen!
-      *User Befehle *:
-      × /rules: Überprüfen Sie die aktuellen Chat-Regeln.
-      *Admin-Befehle *:
-      × /setrules `<text>`: Legen Sie die Regeln für diesen Chat fest.
-      × /privaterules `<yes/no/on/off>`: Aktivieren/Deaktivieren, ob die Regeln im privaten Bereich gesendet werden sollen.
-      × /resetrules: Die Chatregeln auf default zurücksetzen
+      Klare Gruppenregeln für alle Mitglieder.
+
+      Jeder Chat funktioniert mit unterschiedlichen Regeln; dieses Modul hilft, diese Regeln klarer zu machen!
+
+      *Nutzerbefehle*:
+
+      × /rules: Zeigt Gruppenregeln.
+
+      *Admin-Befehle*:
+
+      × /setrules `<text>`: Setzt Regeln.
+
+      × /privaterules `<yes/no/on/off>`: Aktiviert/Deaktiviert, ob die Regeln privat gesendet werden sollen.
+
+      × /resetrules: Setzt Regeln zurück.
+
+      × /rulesbtn `<custom text>`: Setzt Regeln-Button-Text.
+
+      × /resetrulesbutton: Setzt Button-Text zurück.
+
+      × /resetrulesbtn: Wie oben.
+    successfully_cleared_rules: Regeln erfolgreich gelöscht!
+    successfully_cleared_custom_rules_button_text: Benutzerdefinierter Regeln-Button-Text erfolgreich gelöscht!
   Tagger:
     help_msg: |-
-      Tagger ist ein wesentliches Merkmal, um alle gezeichneten Mitglieder in der Gruppe zu erwähnen.
-      Alle Chat-Mitglieder können den Tagger abonnieren.
+      Erwähnt alle abonnierten Mitglieder.
 
-      *User Commands: *
-      × /tagme: Allow user to be tagged
-      × /untagme: Disallow user to be tagged
+      Tagger ist eine wesentliche Funktion, um alle abonnierten Mitglieder in der Gruppe zu erwähnen.
 
-      *Admin Commands: *
-      × /tagall: tag/Erwähnung alle Benutzer
-      × /untagall: clear all tagged members
-      × /addtag <user>: Add a user manuell to taglist
-      × /rmtag <user>: Einen Benutzer manuell aus der Tagliste entfernen
+      Jedes Chat-Mitglied kann sich für den Tagger anmelden.
+
+
+      *Nutzerbefehle:*
+
+      × /tagme: Ermöglicht dem Benutzer, markiert zu werden
+
+      × /untagme: Deaktiviert die Markierung für den Benutzer
+
+
+      *Admin-Befehle:*
+
+      × /tagall: markiert/erwähnt alle markierten Benutzer
+
+      × /untagall: löscht alle markierten Mitglieder
+
+      × /addtag <user>: Fügt einen Benutzer manuell zur Tag-Liste hinzu
+
+      × /rmtag <user>: Entfernt einen Benutzer manuell aus der Tag-Liste
   Warns:
+    errors:
+      warn_admin: Ich werde keinen Admin warnen!
+      anon_user: Dieser Befehl kann nicht für anonyme Benutzer verwendet werden.
+      invalid_mode: "Unbekannter Typ '%s'. Bitte verwenden Sie eine der folgenden Optionen: ban/kick/mute"
+      invalid_limit: Das Warnlimit muss zwischen 1 und 100 liegen.
+    set_mode:
+      ban: 'Warnmodus aktualisiert auf: ban'
+      kick: 'Warnmodus aktualisiert auf: kick'
+      mute: 'Warnmodus aktualisiert auf: mute'
+      no_mode_specified: 'Sie müssen eine Aktion angeben, die bei zu vielen Warnungen ausgeführt werden soll. Aktuelle Modi sind: ban/kick/mute'
+    warn:
+      limit_kick: Das sind %d/%d Warnungen; also wurde %s gekickt!
+      limit_mute: Das sind %d/%d Warnungen; also wurde %s stummgeschaltet!
+      limit_ban: Das sind %d/%d Warnungen; also wurde %s gebannt!
+      success: Benutzer %s hat %d/%d Warnungen; seien Sie vorsichtig!
+      reason: '\n<b>Grund</b>:\n%s'
+      remove_warn_button: ❌ Warnung entfernen
+    warns:
+      no_warns: Dieser Benutzer hat keine Warnungen!
+      list_header: 'Dieser Benutzer hat %d/%d Warnungen, aus den folgenden Gründen:'
+      list_no_reasons: 'Der Benutzer hat %d/%d Warnungen, aber keine Gründe dafür.'
+    remove:
+      success: Warnung entfernt von %s.
+      no_warns: Benutzer hat bereits keine Warnungen!
+    set_limit:
+      no_limit_specified: 'Bitte geben Sie an, wie viele Warnungen ein Benutzer erhalten darf, bevor Maßnahmen ergriffen werden. Z.B. `/setwarnlimit 5`'
+      success: Die Warnlimit-Einstellungen für diesen Chat wurden auf %d aktualisiert.
+    reset:
+      success: Warnungen wurden zurückgesetzt!
+    reset_all:
+      no_warns: Es sind keine Benutzer in diesem Chat gewarnt!
+      confirm: Sind Sie sicher, dass Sie alle Warnungen aller Benutzer in diesem Chat entfernen möchten?
+      success: Alle Warnungen aller Benutzer in diesem Chat entfernt.
+      button_yes: Alle Warnungen aller Benutzer in diesem Chat wurden entfernt!
+      button_no: Das Entfernen aller Warnungen aller Benutzer in diesem Chat wurde abgebrochen!
+    warnings:
+      status: 'Die Gruppe hat die folgenden Einstellungen:\n<b>Warnlimit:</b> <code>%d</code>\n<b>Warnmodus:</b> <code>%s</code>'
     help_msg: |-
-      Keep your members in check with warnings; stop them getting out of control!
-      If you're looking for automated warnings, read about the blacklist module!
+      Verwaltet Verwarnungen für Mitglieder.
 
-      *Admin Commands:*
-      - /warn <reason>: Warn a user.
-      - /dwarn <reason>: Warn a user by reply, and delete their message.
-      - /swarn <reason>: Silently warn a user, and delete your message.
-      - /warns: See a user's warnings.
-      - /rmwarn: Remove a user's latest warning.
-      - /resetwarn: Reset all of a user's warnings to 0.
-      - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-      - /warnings: Get the chat's warning settings.
-      - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-      - /setwarnlimit <number>: Set the number of warnings before users are punished.
+      Halten Sie Ihre Mitglieder mit Warnungen in Schach; verhindern Sie, dass sie außer Kontrolle geraten!
 
-      *Examples*
-      - Warn a user.
-      -> `/warn @user For disobeying the rules`
+      Wenn Sie nach automatischen Warnungen suchen, lesen Sie das Blacklist-Modul!
+
+
+      *Admin-Befehle:*
+
+      - /warn <reason>: Verwarnt einen Benutzer.
+
+      - /dwarn <reason>: Verwarnt einen Benutzer per Antwort und löscht dessen Nachricht.
+
+      - /swarn <reason>: Verwarnt einen Benutzer stillschweigend und löscht Ihre Nachricht.
+
+      - /warns: Zeigt die Warnungen eines Benutzers an.
+
+      - /rmwarn: Entfernt die letzte Warnung eines Benutzers.
+
+      - /resetwarn: Setzt alle Warnungen eines Benutzers auf 0 zurück.
+
+      - /resetallwarns: Löscht alle Warnungen in einem Chat. Alle Benutzer kehren zu 0 Warnungen zurück.
+
+      - /warnings: Ruft die Warneinstellungen des Chats ab.
+
+      - /setwarnmode <ban/kick/mute>: Legt den Warnmodus des Chats fest.
+
+      - /setwarnlimit <number>: Legt die Anzahl der Warnungen fest, bevor Benutzer bestraft werden.
+
+
+      *Beispiele*
+
+      - Einen Benutzer warnen.
+
+      -> `/warn @user Für Missachtung der Regeln`
+  Dev:
+    errors:
+      no_user_specified: Sie müssen einen Benutzer angeben, um Informationen zu erhalten
+    chatlist:
+      getting_list: Rufe Liste der Chats ab, in denen ich bin...
+      success: Hier ist die Liste der Chats in meiner Datenbank!
+    leavechat:
+      success: 'Okay, ich habe den Chat verlassen!'
+    addsudo:
+      already_sudo: Benutzer ist bereits Sudo!
+      success: "%s zur Sudo-Liste hinzugefügt!"
+    adddev:
+      already_dev: Benutzer ist bereits Dev!
+      success: '%s zur Dev-Liste hinzugefügt!'
+    remsudo:
+      not_sudo: Benutzer ist nicht Sudo!
+      success: '%s aus der Sudo-Liste entfernt!'
+    remdev:
+      not_dev: Benutzer ist nicht Dev!
+      success: '%s aus der Dev-Liste entfernt!'
+    listteam:
+      dev_users: 'Dev-Benutzer:'
+      sudo_users: 'Sudo-Benutzer:'
+      no_users: Es sind keine Benutzer im Team hinzugefügt!
+      no_users_in_category: Keine Benutzer
+    getstats:
+      fetching: Bot-Statistiken werden abgerufen...
+  DbClean:
+    question: Was möchten Sie bereinigen?
+    chats_button: Chats
+    no_redundant_chats: Keine redundanten Chats gefunden!
+    progress_getting_invalid_chats: '%d abgeschlossen beim Abrufen ungültiger Chats.'
+    chats_marked_inactive: '%d Chats als inaktiv markiert!'
+  Users:
+    log:
+      updating_channel: Kanal %d in der Datenbank wird aktualisiert
+      updating_user: Benutzer %d in der Datenbank wird aktualisiert
+      updating_replied: '%d in der Datenbank wird aktualisiert'
   Utils:
     chat_status:
       user:
-        no_permission_change_info_btn: |-
-          Sie haben keine Berechtigungen zum Ändern von Informationen!!
-        no_permission_change_info_cmd: |-
-          Sie haben keine Berechtigung, Informationen in dieser Gruppe zu ändern!
-        no_permission_restrict_btn: |-
-          Sie haben keine Berechtigungen, um Mitglieder zu beschränken!!
-        no_permission_restrict_cmd: |-
-          Sie haben keine Erlaubnis, Mitglieder in dieser Gruppe zu beschränken!
-        no_permission_promote_btn: |-
-          Sie haben keine Berechtigungen zum Fördern/Abstufen von Mitgliedern!!
-        no_permission_promote_cmd: |-
-          Sie können hier keine Menschen fördern/demotieren! Stellen Sie sicher, dass Sie über entsprechende Rechte verfügen!
-        no_permission_pin: |-
-          Sie können keine Nachrichten hier anheften! Stellen Sie sicher, dass Sie Admin sind und Nachrichten senden können.
-        no_permission_delete: |-
-          Sie haben keine Berechtigungen zum Löschen von Nachrichten!
-        require_admin_btn: |-
-          Du musst ein Admin sein, um das zu tun!
-        require_admin_cmd: |-
-          Nur Admins können diesen Befehl ausführen!
-        require_owner_btn: |-
-          Du musst der Schöpfer der Gruppe sein, um das zu tun!
-        require_owner_cmd: |-
-          Nur Gruppenschöpfer, dies zu tun!
+        no_permission_change_info_btn: Keine Berechtigung zum Ändern von Infos!
+        no_permission_change_info_cmd: Keine Berechtigung in dieser Gruppe!
+        no_permission_restrict_btn: Keine Berechtigung zum Einschränken!
+        no_permission_restrict_cmd: Keine Berechtigung in dieser Gruppe!
+        no_permission_promote_btn: Keine Beförderungsberechtigung!
+        no_permission_promote_cmd: Keine Beförderungsberechtigung hier! Stellen Sie sicher, dass Sie die entsprechenden Rechte haben!
+        no_permission_pin: Keine Anheftungsberechtigung! Stellen Sie sicher, dass Sie Admin sind und Nachrichten anheften können.
+        no_permission_delete: Keine Löschberechtigung!
+        require_admin_btn: Nur für Admins!
+        require_admin_cmd: Nur Admins können diesen Befehl nutzen!
+        require_owner_btn: Nur für Chat-Ersteller!
+        require_owner_cmd: Nur Chat-Ersteller können dies tun!
       bot:
-        no_permission_restrict: |-
-          Ich habe keine Rechte, Mitglieder zu beschränken!!
-        no_permission_restrict_group: |-
-          Ich kann die Leute hier nicht einschränken! Stellen Sie sicher, dass ich admin bin und andere Mitglieder beschränken kann.
-        no_permission_promote: |-
-          Ich kann die Leute hier nicht fördern/demotieren! Stellen Sie sicher, dass ich admin bin und neue Admins ernennen kann.
-        no_permission_pin: |-
-          Ich kann keine Nachrichten hier anheften! Stellen Sie sicher, dass ich admin bin und Nachrichten anheften kann.
-        no_permission_delete: |-
-          Ich habe keine Berechtigungen zum Löschen von Nachrichten!
-        require_admin: |-
-          Ich bin nicht Admin! Stellen Sie sicher, dass ich admin bin und entsprechende Berechtigungen habe.
-      require_private: |-
-        Dieser Befehl wird für pm gemacht, nicht Gruppenchat!
-      require_group: |-
-        Dieser Befehl wird in Gruppen-Chats verwendet, nicht in pm!
-      anon_admin_string: |-
-        Es sieht so aus, als wären Sie anonym. Tippen Sie auf diese Schaltfläche, um Ihre Identität zu bestätigen.
-      anon_admin_btn: |-
-        Klicken Sie, um admin nachzuweisen
+        no_permission_restrict: Keine Einschränkungsberechtigung!
+        no_permission_restrict_group: Keine Berechtigung in dieser Gruppe! Stellen Sie sicher, dass ich Admin bin und andere Mitglieder einschränken kann.
+        no_permission_promote: Keine Beförderungsberechtigung! Stellen Sie sicher, dass ich Admin bin und neue Admins ernennen kann.
+        no_permission_pin: Keine Anheftungsberechtigung! Stellen Sie sicher, dass ich Admin bin und Nachrichten anheften kann.
+        no_permission_delete: Keine Löschberechtigung!
+        require_admin: Bin kein Admin! Bitte Adminrechte erteilen und entsprechende Berechtigungen haben.
+      require_private: Nur für private Chats gedacht!
+      require_group: Nur für Gruppenchats gedacht!
+      anon_admin_string: "Bitte Identität als Admin bestätigen:"
+      anon_admin_btn: Identität bestätigen
     extraction:
       extract_chat:
-        badrequest_failed_getchat: |-
-          Verbindung zum Chatten konnte nicht hergestellt werden: Chat konnte nicht abgerufen werden: getChat nicht möglich: Ungültige Anforderung: Chat nicht gefunden
-        fail_need_chat_id: |-
-          Ich habe eine Chat-ID erwartet, aber es handelt sich nicht um eine gültige ganze Zahl.
-        fail_need_chat: |-
-          Ich brauche eine Chat-ID, um eine Verbindung herzustellen!
+        badrequest_failed_getchat: "Verbindung fehlgeschlagen: Chat nicht gefunden."
+        fail_need_chat_id: Ungültige Chat-ID.
+        fail_need_chat: Chat-ID benötigt!
       extract_user:
-        no_user_found: |-
-          Konnte einen Benutzer mit diesem Namen nicht finden; bist du sicher, dass ich sie schon vorher gesehen habe?
-        badrequest_failed_getchatmember: |-
-          Fehler beim Abrufen des Benutzers: 'getChatMember' kann nicht abgerufen werden: Fehlerhafte Anforderung: Chat nicht gefunden
+        no_user_found: "Nutzer nicht gefunden."
+        badrequest_failed_getchatmember: "Nutzerabruf fehlgeschlagen: Chat nicht gefunden."
     string_handling:
       extract_time:
-        invalid_time_amount: |-
-          Ungültiger Zeitbetrag angegeben.
-        invalid_time_type: |-
-          Es wurde ein ungültiger Zeittyp angegeben. Erwartete m, h, oder d got: %s
+        invalid_time_amount: "Ungültige Zeitangabe."
+        invalid_time_type: "Ungültiges Zeitformat. Erwartet: m, h oder d. Erhalten: %s"
+  Mute:
+    unmute_admin_only: Stummschaltung aufheben (nur Admins)
+  Helpers:
+    this_chat_does_not_have_any_rules: Dieser Chat hat keine Regeln!
+    this_note_does_not_exist: Diese Notiz existiert nicht!
