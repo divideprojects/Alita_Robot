@@ -106,6 +106,8 @@ func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgb
 	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) +
 		i18n.New(lang).GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
 
+	tr := i18n.New(lang)
+	backBtnSuffix := getBackBtnSuffix(tr)
 	replyMarkup = gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: append(
 			HelpModule.helpableKb[ModName],
@@ -240,7 +242,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			}
 			if noteData.AdminOnly {
 				if !chat_status.IsUserAdmin(b, int64(chatID), user.Id) {
-					_, err := msg.Reply(b, tr.GetString("Notes.errors.admin_only"), helpers.Shtml())
+					_, err := msg.Reply(b, tr.GetString("strings.Notes.errors.admin_only"), helpers.Shtml())
 					if err != nil {
 						log.Error(err)
 						return err
@@ -256,6 +258,8 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			}
 		}
 	} else if arg == "about" {
+		tr := i18n.New(db.GetLanguage(ctx))
+		aboutKb := getAboutKb(tr)
 		_, err := b.SendMessage(chat.Id,
 			aboutText,
 			&gotgbot.SendMessageOpts{
@@ -276,6 +280,8 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		}
 	} else {
 		// This sends the normal help block
+		tr := i18n.New(db.GetLanguage(ctx))
+		startMarkup := getStartMarkup(tr)
 		_, err := b.SendMessage(chat.Id,
 			startHelp,
 			&gotgbot.SendMessageOpts{

@@ -178,7 +178,7 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: tr.GetString("Connections.connect_to_chat_button"),
+							Text: tr.GetString("strings.Connections.connect_to_chat_button"),
 							Url:  fmt.Sprintf("https://t.me/%s?start=connect_%d", b.Username, chat.Id),
 						},
 					},

@@ -33,6 +33,16 @@ var greetingsModule = moduleStruct{
 	cfg:        nil, // will be set during LoadGreetings
 }
 
+// getGreetingMsg is a helper function to safely get greeting messages with fallback
+func getGreetingMsg(tr *i18n.I18n, key, fallback string) string {
+	text, err := tr.GetStringWithError(key)
+	if err != nil {
+		log.Error(err)
+		return fallback
+	}
+	return text
+}
+
 /*
 welcome displays or toggles the welcome message settings for the chat.
 
@@ -96,7 +106,12 @@ func (m moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 			db.SetWelcomeToggle(chat.Id, false)
 			_, err = msg.Reply(bot, tr.GetString("strings."+m.moduleName+".welcome.disabled"), helpers.Shtml())
 		default:
-			_, err = msg.Reply(bot, tr.GetString("strings.CommonStrings.errors.invalid_option_yes_no"), helpers.Shtml())
+			invalidOptionMsg, invalidErr := tr.GetStringWithError("strings.CommonStrings.errors.invalid_option_yes_no")
+			if invalidErr != nil {
+				log.Error(invalidErr)
+				invalidOptionMsg = "Invalid option. Please use yes/no or on/off"
+			}
+			_, err = msg.Reply(bot, invalidOptionMsg, helpers.Shtml())
 		}
 
 		if err != nil {
@@ -204,7 +219,12 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 		noformat := len(args) > 0 && strings.ToLower(args[0]) == "noformat"
 		gdbyePrefs := db.GetGreetingSettings(chat.Id)
 		gdbyeText = gdbyePrefs.GoodbyeSettings.GoodbyeText
-		_, err := msg.Reply(bot, fmt.Sprintf(tr.GetString("strings.Greetings.i_am_currently_goodbying_users_t")+
+		goodbyeStatusMsg, goodbyeStatusErr := tr.GetStringWithError("strings.Greetings.i_am_currently_goodbying_users_t")
+		if goodbyeStatusErr != nil {
+			log.Errorf("[greetings] missing translation for i_am_currently_goodbying_users_t: %v", goodbyeStatusErr)
+			goodbyeStatusMsg = "I am currently goodbying users: <code>%t</code>"
+		}
+		_, err := msg.Reply(bot, fmt.Sprintf(goodbyeStatusMsg+
 			"\nI am currently deleting old goodbyes: <code>%t</code>"+
 			"\nI am currently deleting service messages: <code>%t</code>"+
 			"\nThe goodbye message not filling the {} is:",
@@ -240,12 +260,12 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 		switch strings.ToLower(args[0]) {
 		case "on", "yes":
 			db.SetGoodbyeToggle(chat.Id, true)
-			_, err = msg.Reply(bot, tr.GetString("Greetings.goodbye.enabled"), helpers.Shtml())
+			_, err = msg.Reply(bot, getGreetingMsg(tr, "strings.Greetings.goodbye.enabled", "Goodbye messages enabled"), helpers.Shtml())
 		case "off", "no":
 			db.SetGoodbyeToggle(chat.Id, false)
-			_, err = msg.Reply(bot, tr.GetString("Greetings.goodbye.disabled"), helpers.Shtml())
+			_, err = msg.Reply(bot, getGreetingMsg(tr, "strings.Greetings.goodbye.disabled", "Goodbye messages disabled"), helpers.Shtml())
 		default:
-			_, err = msg.Reply(bot, tr.GetString("strings.Greetings.i_understand_on_yes_or_off_no_only"), helpers.Shtml())
+			_, err = msg.Reply(bot, getGreetingMsg(tr, "strings.Greetings.i_understand_on_yes_or_off_no_only", "I understand only on/yes or off/no"), helpers.Shtml())
 		}
 		if err != nil {
 			log.Error(err)
@@ -287,7 +307,12 @@ func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.SetGoodbyeText(chat.Id, text, content, buttons, dataType)
-	_, err := msg.Reply(bot, tr.GetString("Greetings.set_goodbye.success"), helpers.Shtml())
+	setGoodbyeSuccessMsg, setGoodbyeSuccessErr := tr.GetStringWithError("strings.Greetings.set_goodbye.success")
+	if setGoodbyeSuccessErr != nil {
+		log.Errorf("[greetings] missing translation for set_goodbye.success: %v", setGoodbyeSuccessErr)
+		setGoodbyeSuccessMsg = "Goodbye message set successfully."
+	}
+	_, err := msg.Reply(bot, setGoodbyeSuccessMsg, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -321,7 +346,12 @@ func (moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	go db.SetGoodbyeText(chat.Id, db.DefaultGoodbye, "", nil, db.TEXT)
-	_, err := msg.Reply(bot, tr.GetString("Greetings.reset_goodbye.success"), helpers.Shtml())
+	resetGoodbyeSuccessMsg, resetGoodbyeSuccessErr := tr.GetStringWithError("strings.Greetings.reset_goodbye.success")
+	if resetGoodbyeSuccessErr != nil {
+		log.Errorf("[greetings] missing translation for reset_goodbye.success: %v", resetGoodbyeSuccessErr)
+		resetGoodbyeSuccessMsg = "Goodbye message reset successfully."
+	}
+	_, err := msg.Reply(bot, resetGoodbyeSuccessMsg, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -356,9 +386,19 @@ func (moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 		var err error
 		cleanPref := db.GetGreetingSettings(chat.Id).WelcomeSettings.CleanWelcome
 		if !cleanPref {
-			_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.status_enabled"), helpers.Shtml())
+			statusEnabledMsg, statusEnabledErr := tr.GetStringWithError("strings.Greetings.clean_welcome.status_enabled")
+			if statusEnabledErr != nil {
+				log.Errorf("[greetings] missing translation for clean_welcome.status_enabled: %v", statusEnabledErr)
+				statusEnabledMsg = "Clean welcome is currently enabled."
+			}
+			_, err = msg.Reply(bot, statusEnabledMsg, helpers.Shtml())
 		} else {
-			_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.status_disabled"), helpers.Shtml())
+			statusDisabledMsg, statusDisabledErr := tr.GetStringWithError("strings.Greetings.clean_welcome.status_disabled")
+			if statusDisabledErr != nil {
+				log.Errorf("[greetings] missing translation for clean_welcome.status_disabled: %v", statusDisabledErr)
+				statusDisabledMsg = "Clean welcome is currently disabled."
+			}
+			_, err = msg.Reply(bot, statusDisabledMsg, helpers.Shtml())
 		}
 		if err != nil {
 			log.Error(err)
@@ -370,12 +410,27 @@ func (moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	switch strings.ToLower(args[0]) {
 	case "off", "no":
 		db.SetCleanWelcomeSetting(chat.Id, false)
-		_, err = msg.Reply(bot, tr.GetString("Greetings.clean_welcome.disabled"), helpers.Shtml())
+		disabledMsg, disabledErr := tr.GetStringWithError("strings.Greetings.clean_welcome.disabled")
+		if disabledErr != nil {
+			log.Errorf("[greetings] missing translation for clean_welcome.disabled: %v", disabledErr)
+			disabledMsg = "Clean welcome has been disabled."
+		}
+		_, err = msg.Reply(bot, disabledMsg, helpers.Shtml())
 	case "on", "yes":
 		db.SetCleanWelcomeSetting(chat.Id, true)
-		_, err = msg.Reply(bot, tr.GetString("Greetings.clean_welcome.enabled"), helpers.Shtml())
+		enabledMsg, enabledErr := tr.GetStringWithError("strings.Greetings.clean_welcome.enabled")
+		if enabledErr != nil {
+			log.Errorf("[greetings] missing translation for clean_welcome.enabled: %v", enabledErr)
+			enabledMsg = "Clean welcome has been enabled."
+		}
+		_, err = msg.Reply(bot, enabledMsg, helpers.Shtml())
 	default:
-		_, err = msg.Reply(bot, tr.GetString("strings.Greetings.i_understand_on_yes_or_off_no_only"), helpers.Shtml())
+		invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.Greetings.i_understand_on_yes_or_off_no_only")
+		if invalidOptionErr != nil {
+			log.Errorf("[greetings] missing translation for i_understand_on_yes_or_off_no_only: %v", invalidOptionErr)
+			invalidOptionMsg = "I understand only on/yes or off/no."
+		}
+		_, err = msg.Reply(bot, invalidOptionMsg, helpers.Shtml())
 	}
 
 	if err != nil {
@@ -412,9 +467,19 @@ func (moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 		var err error
 		cleanPref := db.GetGreetingSettings(chat.Id).GoodbyeSettings.CleanGoodbye
 		if !cleanPref {
-			_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.status_enabled"), helpers.Shtml())
+			statusEnabledMsg, statusEnabledErr := tr.GetStringWithError("strings.Greetings.clean_goodbye.status_enabled")
+			if statusEnabledErr != nil {
+				log.Errorf("[greetings] missing translation for clean_goodbye.status_enabled: %v", statusEnabledErr)
+				statusEnabledMsg = "Clean goodbye is currently enabled."
+			}
+			_, err = msg.Reply(bot, statusEnabledMsg, helpers.Shtml())
 		} else {
-			_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.status_disabled"), helpers.Shtml())
+			statusDisabledMsg, statusDisabledErr := tr.GetStringWithError("strings.Greetings.clean_goodbye.status_disabled")
+			if statusDisabledErr != nil {
+				log.Errorf("[greetings] missing translation for clean_goodbye.status_disabled: %v", statusDisabledErr)
+				statusDisabledMsg = "Clean goodbye is currently disabled."
+			}
+			_, err = msg.Reply(bot, statusDisabledMsg, helpers.Shtml())
 		}
 		if err != nil {
 			log.Error(err)
@@ -426,12 +491,27 @@ func (moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	switch strings.ToLower(args[0]) {
 	case "off", "no":
 		db.SetCleanGoodbyeSetting(chat.Id, false)
-		_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.disabled"), helpers.Shtml())
+		disabledMsg, disabledErr := tr.GetStringWithError("strings.Greetings.clean_goodbye.disabled")
+		if disabledErr != nil {
+			log.Errorf("[greetings] missing translation for clean_goodbye.disabled: %v", disabledErr)
+			disabledMsg = "Clean goodbye has been disabled."
+		}
+		_, err = msg.Reply(bot, disabledMsg, helpers.Shtml())
 	case "on", "yes":
 		db.SetCleanGoodbyeSetting(chat.Id, true)
-		_, err = msg.Reply(bot, tr.GetString("Greetings.clean_goodbye.enabled"), helpers.Shtml())
+		enabledMsg, enabledErr := tr.GetStringWithError("strings.Greetings.clean_goodbye.enabled")
+		if enabledErr != nil {
+			log.Errorf("[greetings] missing translation for clean_goodbye.enabled: %v", enabledErr)
+			enabledMsg = "Clean goodbye has been enabled."
+		}
+		_, err = msg.Reply(bot, enabledMsg, helpers.Shtml())
 	default:
-		_, err = msg.Reply(bot, tr.GetString("strings.Greetings.i_understand_on_yes_or_off_no_only"), helpers.Shtml())
+		invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.Greetings.i_understand_on_yes_or_off_no_only")
+		if invalidOptionErr != nil {
+			log.Errorf("[greetings] missing translation for i_understand_on_yes_or_off_no_only: %v", invalidOptionErr)
+			invalidOptionMsg = "I understand only on/yes or off/no."
+		}
+		_, err = msg.Reply(bot, invalidOptionMsg, helpers.Shtml())
 	}
 
 	if err != nil {
@@ -467,9 +547,19 @@ func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if len(args) == 0 {
 		delPref := db.GetGreetingSettings(chat.Id).ShouldCleanService
 		if delPref {
-			_, err = msg.Reply(bot, tr.GetString("Greetings.del_joined.status_enabled"), helpers.Smarkdown())
+			statusEnabledMsg, statusEnabledErr := tr.GetStringWithError("strings.Greetings.del_joined.status_enabled")
+			if statusEnabledErr != nil {
+				log.Errorf("[greetings] missing translation for del_joined.status_enabled: %v", statusEnabledErr)
+				statusEnabledMsg = "Delete joined messages is currently enabled."
+			}
+			_, err = msg.Reply(bot, statusEnabledMsg, helpers.Smarkdown())
 		} else {
-			_, err = msg.Reply(bot, tr.GetString("Greetings.del_joined.status_disabled"), helpers.Shtml())
+			statusDisabledMsg, statusDisabledErr := tr.GetStringWithError("strings.Greetings.del_joined.status_disabled")
+			if statusDisabledErr != nil {
+				log.Errorf("[greetings] missing translation for del_joined.status_disabled: %v", statusDisabledErr)
+				statusDisabledMsg = "Delete joined messages is currently disabled."
+			}
+			_, err = msg.Reply(bot, statusDisabledMsg, helpers.Shtml())
 		}
 		if err != nil {
 			log.Error(err)
@@ -481,12 +571,27 @@ func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	switch strings.ToLower(args[0]) {
 	case "off", "no":
 		db.SetShouldCleanService(chat.Id, false)
-		_, err = msg.Reply(bot, tr.GetString("Greetings.del_joined.disabled"), helpers.Shtml())
+		disabledMsg, disabledErr := tr.GetStringWithError("strings.Greetings.del_joined.disabled")
+		if disabledErr != nil {
+			log.Errorf("[greetings] missing translation for del_joined.disabled: %v", disabledErr)
+			disabledMsg = "Delete joined messages has been disabled."
+		}
+		_, err = msg.Reply(bot, disabledMsg, helpers.Shtml())
 	case "on", "yes":
 		db.SetShouldCleanService(chat.Id, true)
-		_, err = msg.Reply(bot, tr.GetString("Greetings.del_joined.enabled"), helpers.Shtml())
+		enabledMsg, enabledErr := tr.GetStringWithError("strings.Greetings.del_joined.enabled")
+		if enabledErr != nil {
+			log.Errorf("[greetings] missing translation for del_joined.enabled: %v", enabledErr)
+			enabledMsg = "Delete joined messages has been enabled."
+		}
+		_, err = msg.Reply(bot, enabledMsg, helpers.Shtml())
 	default:
-		_, err = msg.Reply(bot, tr.GetString("strings.Greetings.i_understand_on_yes_or_off_no_only"), helpers.Shtml())
+		invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.Greetings.i_understand_on_yes_or_off_no_only")
+		if invalidOptionErr != nil {
+			log.Errorf("[greetings] missing translation for i_understand_on_yes_or_off_no_only: %v", invalidOptionErr)
+			invalidOptionMsg = "I understand only on/yes or off/no."
+		}
+		_, err = msg.Reply(bot, invalidOptionMsg, helpers.Shtml())
 	}
 
 	if err != nil {
@@ -758,9 +863,19 @@ func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if len(args) == 0 {
 		delPref := db.GetGreetingSettings(chat.Id).ShouldAutoApprove
 		if delPref {
-			_, err = msg.Reply(bot, tr.GetString("Greetings.auto_approve.enabled"), helpers.Smarkdown())
+			enabledMsg, enabledErr := tr.GetStringWithError("strings.Greetings.auto_approve.enabled")
+			if enabledErr != nil {
+				log.Errorf("[greetings] missing translation for auto_approve.enabled: %v", enabledErr)
+				enabledMsg = "Auto approve is currently enabled."
+			}
+			_, err = msg.Reply(bot, enabledMsg, helpers.Smarkdown())
 		} else {
-			_, err = msg.Reply(bot, tr.GetString("Greetings.auto_approve.disabled"), helpers.Shtml())
+			disabledMsg, disabledErr := tr.GetStringWithError("strings.Greetings.auto_approve.disabled")
+			if disabledErr != nil {
+				log.Errorf("[greetings] missing translation for auto_approve.disabled: %v", disabledErr)
+				disabledMsg = "Auto approve is currently disabled."
+			}
+			_, err = msg.Reply(bot, disabledMsg, helpers.Shtml())
 		}
 		if err != nil {
 			log.Error(err)
@@ -772,12 +887,27 @@ func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	switch strings.ToLower(args[0]) {
 	case "off", "no":
 		db.SetShouldAutoApprove(chat.Id, false)
-		_, err = msg.Reply(bot, tr.GetString("Greetings.auto_approve.disabled_now"), helpers.Shtml())
+		disabledNowMsg, disabledNowErr := tr.GetStringWithError("strings.Greetings.auto_approve.disabled_now")
+		if disabledNowErr != nil {
+			log.Errorf("[greetings] missing translation for auto_approve.disabled_now: %v", disabledNowErr)
+			disabledNowMsg = "Auto approve has been disabled."
+		}
+		_, err = msg.Reply(bot, disabledNowMsg, helpers.Shtml())
 	case "on", "yes":
 		db.SetShouldAutoApprove(chat.Id, true)
-		_, err = msg.Reply(bot, tr.GetString("Greetings.auto_approve.enabled_now"), helpers.Shtml())
+		enabledNowMsg, enabledNowErr := tr.GetStringWithError("strings.Greetings.auto_approve.enabled_now")
+		if enabledNowErr != nil {
+			log.Errorf("[greetings] missing translation for auto_approve.enabled_now: %v", enabledNowErr)
+			enabledNowMsg = "Auto approve has been enabled."
+		}
+		_, err = msg.Reply(bot, enabledNowMsg, helpers.Shtml())
 	default:
-		_, err = msg.Reply(bot, tr.GetString("strings.Greetings.i_understand_on_yes_or_off_no_only"), helpers.Shtml())
+		invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.Greetings.i_understand_on_yes_or_off_no_only")
+		if invalidOptionErr != nil {
+			log.Errorf("[greetings] missing translation for i_understand_on_yes_or_off_no_only: %v", invalidOptionErr)
+			invalidOptionMsg = "I understand only on/yes or off/no."
+		}
+		_, err = msg.Reply(bot, invalidOptionMsg, helpers.Shtml())
 	}
 
 	if err != nil {
@@ -825,7 +955,7 @@ func LoadGreetings(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	HelpModule.helpableKb[greetingsModule.moduleName] = [][]gotgbot.InlineKeyboardButton{
 		{
 			{
-				Text:         tr.GetString("strings.Greetings.formatting"),
+				Text:         "Formatting", // Note: tr is not available in LoadGreetings, using fallback
 				CallbackData: fmt.Sprintf("helpq.%s", "Formatting"),
 			},
 		},

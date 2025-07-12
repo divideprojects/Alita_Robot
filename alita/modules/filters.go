@@ -39,6 +39,26 @@ var filtersModule = moduleStruct{
 	cfg:                 nil, // will be set during LoadFilters
 }
 
+// getFilterButtonText is a helper function to safely get button text with fallback
+func getFilterButtonText(tr *i18n.I18n, key, fallback string) string {
+	text, err := tr.GetStringWithError(key)
+	if err != nil {
+		log.Error(err)
+		return fallback
+	}
+	return text
+}
+
+// getFilterErrorMsg is a helper function to safely get error messages with fallback
+func getFilterErrorMsg(tr *i18n.I18n, key, fallback string) string {
+	text, err := tr.GetStringWithError(key)
+	if err != nil {
+		log.Error(err)
+		return fallback
+	}
+	return text
+}
+
 /*
 	Used to add a filter to a specific keyword in chat!
 
@@ -85,14 +105,14 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage != nil && len(args) <= 1 {
-		_, err := msg.Reply(b, tr.GetString("Notes.errors.no_keyword_reply"), helpers.Shtml())
+		_, err := msg.Reply(b, getFilterErrorMsg(tr, "strings.Notes.errors.no_keyword_reply", "Please specify a keyword for the filter"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if len(args) <= 2 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, tr.GetString("Filters.errors.invalid_filter"), helpers.Shtml())
+		_, err := msg.Reply(b, getFilterErrorMsg(tr, "strings.Filters.errors.invalid_filter", "Invalid filter format"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -128,11 +148,11 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
 							{
-								Text:         tr.GetString("strings.CommonStrings.buttons.yes"),
+								Text:         getFilterButtonText(tr, "strings.CommonStrings.buttons.yes", "Yes"),
 								CallbackData: "filters_overwrite." + filterWord,
 							},
 							{
-								Text:         tr.GetString("strings.CommonStrings.buttons.no"),
+								Text:         getFilterButtonText(tr, "strings.CommonStrings.buttons.no", "No"),
 								CallbackData: "filters_overwrite.cancel",
 							},
 						},
@@ -149,7 +169,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	go db.AddFilter(chat.Id, filterWord, text, fileid, buttons, dataType)
 
-	addSuccessMsg, addSuccessErr := tr.GetStringWithError("Filters.add.success")
+	addSuccessMsg, addSuccessErr := tr.GetStringWithError("strings.Filters.add.success")
 	if addSuccessErr != nil {
 		log.Errorf("[filters] missing translation for add.success: %v", addSuccessErr)
 		addSuccessMsg = "Filter '%s' has been added successfully!"
@@ -195,7 +215,7 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, tr.GetString("Filters.remove.no_word_specified"), helpers.Shtml())
+		_, err := msg.Reply(b, getFilterErrorMsg(tr, "strings.Filters.remove.no_word_specified", "Please specify a word to remove"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -205,14 +225,14 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 		filterWord, _ := extraction.ExtractQuotes(strings.Join(args, " "), true, true)
 
 		if !string_handling.FindInStringSlice(db.GetFiltersList(chat.Id), strings.ToLower(filterWord)) {
-			_, err := msg.Reply(b, tr.GetString("Filters.errors.does_not_exist"), helpers.Shtml())
+			_, err := msg.Reply(b, getFilterErrorMsg(tr, "strings.Filters.errors.does_not_exist", "Filter does not exist"), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
 			}
 		} else {
 			go db.RemoveFilter(chat.Id, strings.ToLower(filterWord))
-			removeSuccessMsg, removeSuccessErr := tr.GetStringWithError("Filters.remove.success")
+			removeSuccessMsg, removeSuccessErr := tr.GetStringWithError("strings.Filters.remove.success")
 			if removeSuccessErr != nil {
 				log.Errorf("[filters] missing translation for remove.success: %v", removeSuccessErr)
 				removeSuccessMsg = "Filter '%s' has been removed successfully!"
@@ -264,7 +284,12 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	filterKeys := db.GetFiltersList(chat.Id)
-	info := tr.GetString("Filters.remove_all.no_filters")
+	noFiltersMsg, getErr := tr.GetStringWithError("strings.Filters.remove_all.no_filters")
+	if getErr != nil {
+		log.Error(getErr)
+		noFiltersMsg = "No filters saved in this chat"
+	}
+	info := noFiltersMsg
 	newFilterKeys := make([]string, 0)
 
 	for _, fkey := range filterKeys {
@@ -322,13 +347,18 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, chat, user.Id, false) {
-		_, err := msg.Reply(b, tr.GetString("Filters.remove_all.confirm"),
+		confirmMsg, err := tr.GetStringWithError("strings.Filters.remove_all.confirm")
+		if err != nil {
+			log.Error(err)
+			confirmMsg = "Are you sure you want to remove all filters from this chat?"
+		}
+		_, err = msg.Reply(b, confirmMsg,
 			&gotgbot.SendMessageOpts{
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
-							{Text: tr.GetString("strings.CommonStrings.buttons.yes"), CallbackData: "rmAllFilters.yes"},
-							{Text: tr.GetString("strings.CommonStrings.buttons.no"), CallbackData: "rmAllFilters.no"},
+							{Text: getFilterButtonText(tr, "strings.CommonStrings.buttons.yes", "Yes"), CallbackData: "rmAllFilters.yes"},
+							{Text: getFilterButtonText(tr, "strings.CommonStrings.buttons.no", "No"), CallbackData: "rmAllFilters.no"},
 						},
 					},
 				},
@@ -524,7 +554,7 @@ func LoadFilters(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	HelpModule.helpableKb[filtersModule.moduleName] = [][]gotgbot.InlineKeyboardButton{
 		{
 			{
-				Text:         tr.GetString("strings.Filters.formatting"),
+				Text:         "Formatting", // Note: tr is not available in LoadFilters, using fallback
 				CallbackData: fmt.Sprintf("helpq.%s", "Formatting"),
 			},
 		},

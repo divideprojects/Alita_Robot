@@ -23,6 +23,16 @@ var mutesModule = moduleStruct{
 	cfg:        nil, // will be set during LoadMutes
 }
 
+// getMuteErrorMsg is a helper function to safely get error messages with fallback
+func getMuteErrorMsg(tr *i18n.I18n, key, fallback string) string {
+	text, err := tr.GetStringWithError(key)
+	if err != nil {
+		log.Error(err)
+		return fallback
+	}
+	return text
+}
+
 /* Used to temporarily mute a user from group
 
 The Bot, Muter should be admin with restrict permissions in order to use this */
@@ -39,7 +49,12 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("Mutes.errors.restrict_self"), helpers.Shtml())
+		restrictSelfMsg, restrictSelfErr := tr.GetStringWithError("strings.Mutes.errors.restrict_self")
+		if restrictSelfErr != nil {
+			log.Errorf("[mute] missing translation for errors.restrict_self: %v", restrictSelfErr)
+			restrictSelfMsg = "I can't restrict myself!"
+		}
+		_, err := msg.Reply(b, restrictSelfMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -121,7 +136,12 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("Mutes.errors.restrict_self"), helpers.Shtml())
+		restrictSelfMsg, restrictSelfErr := tr.GetStringWithError("strings.Mutes.errors.restrict_self")
+		if restrictSelfErr != nil {
+			log.Errorf("[mute] missing translation for errors.restrict_self: %v", restrictSelfErr)
+			restrictSelfMsg = "I can't restrict myself!"
+		}
+		_, err := msg.Reply(b, restrictSelfMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -161,6 +181,11 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 		baseStr += "\n<b>Reason: </b>" + reason
 	}
 
+	unmuteAdminOnlyText, unmuteAdminOnlyErr := tr.GetStringWithError("strings.Mute.unmute_admin_only")
+	if unmuteAdminOnlyErr != nil {
+		log.Errorf("[mute] missing translation for unmute_admin_only: %v", unmuteAdminOnlyErr)
+		unmuteAdminOnlyText = "Unmute (Admin Only)"
+	}
 	_, err = msg.Reply(b,
 		fmt.Sprintf(baseStr, helpers.MentionHtml(muteUser.Id, muteUser.FirstName)),
 		&gotgbot.SendMessageOpts{
@@ -169,7 +194,7 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         tr.GetString("strings.Mute.unmute_admin_only"),
+							Text:         unmuteAdminOnlyText,
 							CallbackData: fmt.Sprintf("unrestrict.unmute.%d", userId),
 						},
 					},
@@ -257,7 +282,12 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, tr.GetString("Mutes.dmute.no_reply"), helpers.Shtml())
+		noReplyMsg, noReplyErr := tr.GetStringWithError("strings.Mutes.dmute.no_reply")
+		if noReplyErr != nil {
+			log.Errorf("[mute] missing translation for dmute.no_reply: %v", noReplyErr)
+			noReplyMsg = "Reply to a message to delete and mute the user."
+		}
+		_, err := msg.Reply(b, noReplyMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -303,6 +333,11 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 		baseStr += "\n<b>Reason: </b>" + reason
 	}
 
+	unmuteAdminOnlyText, unmuteAdminOnlyErr := tr.GetStringWithError("strings.Mute.unmute_admin_only")
+	if unmuteAdminOnlyErr != nil {
+		log.Errorf("[mute] missing translation for unmute_admin_only: %v", unmuteAdminOnlyErr)
+		unmuteAdminOnlyText = "Unmute (Admin Only)"
+	}
 	_, err = msg.Reply(b,
 		fmt.Sprintf(baseStr, helpers.MentionHtml(muteUser.Id, muteUser.FirstName)),
 		&gotgbot.SendMessageOpts{
@@ -311,7 +346,7 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         tr.GetString("strings.Mute.unmute_admin_only"),
+							Text:         unmuteAdminOnlyText,
 							CallbackData: fmt.Sprintf("unrestrict.unmute.%d", userId),
 						},
 					},
@@ -358,14 +393,19 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, tr.GetString("Warns.errors.anon_user"), nil)
+		anonUserMsg, anonUserErr := tr.GetStringWithError("strings.Warns.errors.anon_user")
+		if anonUserErr != nil {
+			log.Errorf("[mute] missing translation for errors.anon_user: %v", anonUserErr)
+			anonUserMsg = "Anonymous users cannot be restricted."
+		}
+		_, err := msg.Reply(b, anonUserMsg, nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.no_user_specified"),
+		_, err := msg.Reply(b, getMuteErrorMsg(tr, "strings.CommonStrings.errors.no_user_specified", "No user specified"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -376,7 +416,7 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, tr.GetString("CommonStrings.errors.user_not_in_chat"), helpers.Shtml())
+		_, err := msg.Reply(b, getMuteErrorMsg(tr, "strings.CommonStrings.errors.user_not_in_chat", "User not in chat"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -385,7 +425,12 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("Mutes.errors.restrict_self"), helpers.Shtml())
+		restrictSelfMsg, restrictSelfErr := tr.GetStringWithError("strings.Mutes.errors.restrict_self")
+		if restrictSelfErr != nil {
+			log.Errorf("[mute] missing translation for errors.restrict_self: %v", restrictSelfErr)
+			restrictSelfMsg = "I can't restrict myself!"
+		}
+		_, err := msg.Reply(b, restrictSelfMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

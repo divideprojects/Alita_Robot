@@ -28,7 +28,7 @@ func (m moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
 		keyboard,
 		[]gotgbot.InlineKeyboardButton{
 			{
-				Text: tr.GetString("Languages.help_translate_button"),
+				Text: tr.GetString("strings.Languages.help_translate_button"),
 				Url:  "https://crowdin.com/project/alita_robot",
 			},
 		},

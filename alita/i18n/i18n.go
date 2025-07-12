@@ -3,6 +3,8 @@
 // The package loads localized YAML files from embedded filesystem and provides
 // methods to retrieve localized strings with configurable fallback chains.
 //
+// All i18n keys MUST start with the "strings." prefix for consistency and clarity.
+//
 // Basic usage:
 //
 //	// Load locales once at startup
@@ -12,10 +14,20 @@
 //
 //	// Create i18n instance with language code
 //	tr := i18n.New("en")
-//	text := tr.GetString("welcome.message")
+//	text := tr.GetString("strings.welcome.message")
 //
 //	// Or use the convenience constructor
-//	text := i18n.GetString("en", "welcome.message")
+//	text := i18n.GetString("en", "strings.welcome.message")
+//
+// Key Format Requirements:
+//
+//	// ✅ Correct - keys must start with "strings." prefix:
+//	tr.GetString("strings.welcome.message")
+//	tr.GetString("strings.errors.not_found")
+//
+//	// ❌ Incorrect - keys without prefix will not be found:
+//	tr.GetString("welcome.message")     // Will fail
+//	tr.GetString("errors.not_found")    // Will fail
 package i18n
 
 import (
@@ -359,16 +371,9 @@ func (i I18n) getStringFromLang(langCode, key string) string {
 		return ""
 	}
 
-	// Try the key as-is first
+	// Only try the key as-is - no automatic prefix fallback
 	if val := locale.GetString(key); val != "" && val != "<nil>" {
 		return val
-	}
-
-	// Try with "strings." prefix if not already present
-	if !strings.HasPrefix(key, "strings.") {
-		if val := locale.GetString("strings." + key); val != "" && val != "<nil>" {
-			return val
-		}
 	}
 
 	return ""
@@ -381,16 +386,9 @@ func (i I18n) getStringSliceFromLang(langCode, key string) []string {
 		return nil
 	}
 
-	// Try the key as-is first
+	// Only try the key as-is - no automatic prefix fallback
 	if slice := locale.GetStringSlice(key); len(slice) > 0 {
 		return slice
-	}
-
-	// Try with "strings." prefix if not already present
-	if !strings.HasPrefix(key, "strings.") {
-		if slice := locale.GetStringSlice("strings." + key); len(slice) > 0 {
-			return slice
-		}
 	}
 
 	return nil
@@ -424,17 +422,8 @@ func (i I18n) hasKeyInLang(langCode, key string) bool {
 		return false
 	}
 
-	// Check key as-is
-	if locale.IsSet(key) {
-		return true
-	}
-
-	// Check with "strings." prefix
-	if !strings.HasPrefix(key, "strings.") {
-		return locale.IsSet("strings." + key)
-	}
-
-	return false
+	// Only check key as-is - no automatic prefix fallback
+	return locale.IsSet(key)
 }
 
 // Convenience functions for common use cases

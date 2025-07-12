@@ -353,7 +353,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if !chat_status.IsBotAdmin(b, ctx, nil) {
-		_, err := b.SendMessage(chat.Id, tr.GetString("Locks.bot.no_admin_permission"), nil)
+		_, err := b.SendMessage(chat.Id, tr.GetString("strings.Locks.bot.no_admin_permission"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -381,7 +381,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = b.SendMessage(chat.Id, tr.GetString("Locks.bot.admin_only"), nil)
+	_, err = b.SendMessage(chat.Id, tr.GetString("strings.Locks.bot.admin_only"), nil)
 	if err != nil {
 		log.Error(err)
 		return err

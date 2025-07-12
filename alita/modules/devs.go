@@ -186,7 +186,7 @@ func (m moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = msg.Reply(b, tr.GetString("Dev.leavechat.success"), helpers.Shtml())
+	_, err = msg.Reply(b, tr.GetString("strings.Dev.leavechat.success"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err

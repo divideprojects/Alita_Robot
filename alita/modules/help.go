@@ -49,39 +49,73 @@ const (
 		"All commands can be used with the following: / or !"
 )
 
-var (
-	backBtnSuffix = []gotgbot.InlineKeyboardButton{
+// getBackBtnSuffix returns the back button suffix with proper translations
+func getBackBtnSuffix(tr *i18n.I18n) []gotgbot.InlineKeyboardButton {
+	homeText, homeErr := tr.GetStringWithError("strings.CommonStrings.buttons.home")
+	if homeErr != nil {
+		log.Errorf("[help] missing translation for buttons.home: %v", homeErr)
+		homeText = "Home"
+	}
+	return []gotgbot.InlineKeyboardButton{
 		{
 			Text:         "« Back",
 			CallbackData: "helpq.Help",
 		},
 		{
-			Text:         tr.GetString("CommonStrings.buttons.home"),
-			CallbackData: "helpq.BackStart",
+			Text:         homeText,
+			CallbackData: "help.home",
 		},
 	}
-	aboutKb = gotgbot.InlineKeyboardMarkup{
+}
+
+// getAboutKb returns the about keyboard with proper translations
+func getAboutKb(tr *i18n.I18n) gotgbot.InlineKeyboardMarkup {
+	aboutMeText, aboutMeErr := tr.GetStringWithError("strings.Help.about_me")
+	if aboutMeErr != nil {
+		log.Errorf("[help] missing translation for about_me: %v", aboutMeErr)
+		aboutMeText = "About Me"
+	}
+	
+	newsChannelText, newsChannelErr := tr.GetStringWithError("strings.Help.about.news_channel_button")
+	if newsChannelErr != nil {
+		log.Errorf("[help] missing translation for about.news_channel_button: %v", newsChannelErr)
+		newsChannelText = "News Channel"
+	}
+	
+	supportGroupText, supportGroupErr := tr.GetStringWithError("strings.Help.start.support_group_button")
+	if supportGroupErr != nil {
+		log.Errorf("[help] missing translation for start.support_group_button: %v", supportGroupErr)
+		supportGroupText = "Support Group"
+	}
+	
+	configurationText, configurationErr := tr.GetStringWithError("strings.Help.about.configuration_button")
+	if configurationErr != nil {
+		log.Errorf("[help] missing translation for about.configuration_button: %v", configurationErr)
+		configurationText = "Configuration"
+	}
+	
+	return gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         tr.GetString("strings.Help.about_me_u200d"),
-					CallbackData: "about.me",
+					Text:         aboutMeText,
+					CallbackData: "help.about",
 				},
 			},
 			{
 				{
-					Text: tr.GetString("Help.about.news_channel_button"),
-					Url:  "https://t.me/AlitaRobotUpdates",
+					Text: newsChannelText,
+					Url:  "https://t.me/AlitaUpdates",
 				},
 				{
-					Text: tr.GetString("Help.start.support_group_button"),
-					Url:  "https://t.me/DivideSupport",
+					Text: supportGroupText,
+					Url:  "https://t.me/AlitaSupport",
 				},
 			},
 			{
 				{
-					Text:         tr.GetString("Help.about.configuration_button"),
-					CallbackData: "configuration.step1",
+					Text:         configurationText,
+					CallbackData: "help.config",
 				},
 			},
 			{
@@ -93,12 +127,34 @@ var (
 			},
 		},
 	}
-	startMarkup = gotgbot.InlineKeyboardMarkup{
+}
+
+// getStartMarkup returns the start markup with proper translations
+func getStartMarkup(tr *i18n.I18n) gotgbot.InlineKeyboardMarkup {
+	aboutButtonText, aboutButtonErr := tr.GetStringWithError("strings.Help.start.about_button")
+	if aboutButtonErr != nil {
+		log.Errorf("[help] missing translation for start.about_button: %v", aboutButtonErr)
+		aboutButtonText = "About"
+	}
+	
+	supportGroupText, supportGroupErr := tr.GetStringWithError("strings.Help.start.support_group_button")
+	if supportGroupErr != nil {
+		log.Errorf("[help] missing translation for start.support_group_button: %v", supportGroupErr)
+		supportGroupText = "Support Group"
+	}
+	
+	languageButtonText, languageButtonErr := tr.GetStringWithError("strings.Help.start.language_button")
+	if languageButtonErr != nil {
+		log.Errorf("[help] missing translation for start.language_button: %v", languageButtonErr)
+		languageButtonText = "Language"
+	}
+	
+	return gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         tr.GetString("Help.start.about_button"),
-					CallbackData: "about.main",
+					Text:         aboutButtonText,
+					CallbackData: "help.about",
 				},
 			},
 			{
@@ -107,8 +163,8 @@ var (
 					Url:  "https://t.me/Alita_Robot?startgroup=botstart",
 				},
 				{
-					Text: tr.GetString("Help.start.support_group_button"),
-					Url:  "https://t.me/DivideSupport",
+					Text: supportGroupText,
+					Url:  "https://t.me/AlitaSupport",
 				},
 			},
 			{
@@ -119,13 +175,13 @@ var (
 			},
 			{
 				{
-					Text:         tr.GetString("Help.start.language_button"),
-					CallbackData: "helpq.Languages",
+					Text:         languageButtonText,
+					CallbackData: "chlang.start",
 				},
 			},
 		},
 	}
-)
+}
 
 /*
 moduleEnabled tracks which modules are enabled for help and configuration.
@@ -180,6 +236,16 @@ var helpModule = moduleStruct{
 	cfg:        nil, // will be set during LoadHelp
 }
 
+// getHelpButtonText is a helper function to safely get button text with fallback
+func getHelpButtonText(tr *i18n.I18n, key, fallback string) string {
+	text, err := tr.GetStringWithError(key)
+	if err != nil {
+		log.Error(err)
+		return fallback
+	}
+	return text
+}
+
 /*
 about displays information about the bot, including FAQs and about text.
 
@@ -228,7 +294,7 @@ func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         tr.GetString("strings.CommonStrings.buttons.back"),
+							Text:         getHelpButtonText(tr, "strings.CommonStrings.buttons.back", "Back"),
 							CallbackData: "about.main",
 						},
 					},
@@ -260,12 +326,17 @@ func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			currText = aboutText
 			currKb = aboutKb
 		} else {
+			aboutButtonText, aboutButtonErr := tr.GetStringWithError("strings.Help.about.button")
+			if aboutButtonErr != nil {
+				log.Errorf("[help] missing translation for about.button: %v", aboutButtonErr)
+				aboutButtonText = "About"
+			}
 			currText = "Click on the button below to get info about me!"
 			currKb = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: tr.GetString("Help.about.button"),
+							Text: aboutButtonText,
 							Url:  fmt.Sprintf("https://t.me/%s?start=about", b.Username),
 						},
 					},
@@ -317,8 +388,9 @@ func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 			replyKb = markup
 		case "BackStart":
 			// This shows the modules menu
+			tr := i18n.New(db.GetLanguage(ctx))
 			helpText = startHelp
-			replyKb = startMarkup
+			replyKb = getStartMarkup(tr)
 		}
 	} else {
 		// For all remainging modules
@@ -365,6 +437,8 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if ctx.Update.Message.Chat.Type == "private" {
 		if len(args) == 1 {
+			tr := i18n.New(db.GetLanguage(ctx))
+			startMarkup := getStartMarkup(tr)
 			_, err := msg.Reply(b,
 				startHelp,
 				&gotgbot.SendMessageOpts{
@@ -389,7 +463,13 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Info("sed")
 		}
 	} else {
-		_, err := msg.Reply(b, tr.GetString("Help.start.group_prompt"), helpers.Shtml())
+		tr := i18n.New(db.GetLanguage(ctx))
+		groupPromptMsg, groupPromptErr := tr.GetStringWithError("strings.Help.start.group_prompt")
+		if groupPromptErr != nil {
+			log.Errorf("[help] missing translation for start.group_prompt: %v", groupPromptErr)
+			groupPromptMsg = "Contact me in PM for help!"
+		}
+		_, err := msg.Reply(b, groupPromptMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -405,8 +485,14 @@ func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
+	tr := i18n.New("en")
+	donateText, donateErr := tr.GetStringWithError("strings.Help.DonateText")
+	if donateErr != nil {
+		log.Errorf("[help] missing translation for DonateText: %v", donateErr)
+		donateText = "Support the development of this bot by donating!"
+	}
 	_, err := b.SendMessage(chat.Id,
-		i18n.New("en").GetString("strings.Help.DonateText"),
+		donateText,
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
@@ -436,7 +522,12 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// just in case
 	if msg.GetChat().Type != "private" {
-		_, _, err := msg.EditText(b, tr.GetString("Help.configuration.private_only"), nil)
+		privateOnlyMsg, privateOnlyErr := tr.GetStringWithError("strings.Help.configuration.private_only")
+		if privateOnlyErr != nil {
+			log.Errorf("[help] missing translation for configuration.private_only: %v", privateOnlyErr)
+			privateOnlyMsg = "This command can only be used in private chat."
+		}
+		_, _, err := msg.EditText(b, privateOnlyMsg, nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -464,22 +555,32 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 			{
 				{
-					Text:         tr.GetString("CommonStrings.buttons.done"),
+					Text:         getHelpButtonText(tr, "strings.CommonStrings.buttons.done", "Done"),
 					CallbackData: "configuration.step2",
 				},
 			},
 		}
-		text = tr.GetString("strings.Help.Configuration.Step-1")
+		step1Text, step1Err := tr.GetStringWithError("strings.Help.Configuration.Step-1")
+		if step1Err != nil {
+			log.Errorf("[help] missing translation for Configuration.Step-1: %v", step1Err)
+			step1Text = "First, add me to your group!"
+		}
+		text = step1Text
 	case "step2":
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         tr.GetString("CommonStrings.buttons.done"),
+					Text:         getHelpButtonText(tr, "strings.CommonStrings.buttons.done", "Done"),
 					CallbackData: "configuration.step3",
 				},
 			},
 		}
-		text = fmt.Sprintf(tr.GetString("strings.Help.Configuration.Step-2"), b.Username)
+		step2Text, step2Err := tr.GetStringWithError("strings.Help.Configuration.Step-2")
+		if step2Err != nil {
+			log.Errorf("[help] missing translation for Configuration.Step-2: %v", step2Err)
+			step2Text = "Now, make me an admin in your group by typing /promote @%s"
+		}
+		text = fmt.Sprintf(step2Text, b.Username)
 	case "step3":
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
@@ -489,7 +590,12 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 				},
 			},
 		}
-		text = tr.GetString("strings.Help.Configuration.Step-3")
+		step3Text, step3Err := tr.GetStringWithError("strings.Help.Configuration.Step-3")
+		if step3Err != nil {
+			log.Errorf("[help] missing translation for Configuration.Step-3: %v", step3Err)
+			step3Text = "Great! Now you can start using me. Type /help to see all available commands."
+		}
+		text = step3Text
 	}
 	_, _, err := msg.EditText(
 		b,

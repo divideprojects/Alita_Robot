@@ -181,18 +181,28 @@ direct:
   key: "Direct access value"
 ```
 
-### Key Lookup
 
-The package supports both direct keys and the `strings.` prefix:
+
+### Key Format Requirements
+
+**IMPORTANT:** All i18n keys MUST start with the "strings." prefix for consistency and clarity.
 
 ```go
-tr := i18n.New("en")
+// ✅ Correct - keys must start with "strings." prefix:
+tr.GetString("strings.welcome.message")
+tr.GetString("strings.errors.not_found")
+tr.GetStringWithError("strings.admin.success")
 
-// Both of these work the same way:
-msg1 := tr.GetString("welcome.message")
-msg2 := tr.GetString("strings.welcome.message")
-// msg1 == msg2
+// ❌ Incorrect - keys without prefix will fail:
+tr.GetString("welcome.message")     // Will return @@welcome.message@@
+tr.GetString("errors.not_found")    // Will return @@errors.not_found@@
 ```
+
+The package no longer supports automatic fallback to add the "strings." prefix. This ensures:
+- **Consistent codebase** - all i18n usage follows the same pattern
+- **Clear intent** - developers explicitly specify the namespace
+- **Better performance** - no fallback logic overhead
+- **Easier maintenance** - no confusion about key formats
 
 ## Error Handling
 
@@ -274,10 +284,13 @@ go test -cover ./alita/i18n/
 
 1. **Load once at startup**: Call `LoadLocaleFiles` once during application initialization
 2. **Use constructor**: Create instances with `i18n.New(langCode)` rather than struct literals
-3. **Handle missing keys**: Check for missing key markers (`@@key@@`) in development
-4. **Configure fallbacks**: Set up appropriate fallback chains for regional languages
-5. **Monitor errors**: Log locale loading errors but continue with partial locales if possible
-6. **Test thoroughly**: Verify all translation keys exist in your primary language file
+3. **Always use "strings." prefix**: All i18n keys must start with "strings." for consistency
+4. **Use GetStringWithError for critical messages**: User-facing messages in production should use `GetStringWithError` for graceful fallback
+5. **Handle missing keys properly**: Check for missing key markers (`@@key@@`) in development
+6. **Configure fallbacks**: Set up appropriate fallback chains for regional languages
+7. **Monitor errors**: Log locale loading errors but continue with partial locales if possible
+8. **Validate with scripts**: Use `python scripts/check_code_keys.py` to ensure all keys follow proper format
+9. **Test thoroughly**: Verify all translation keys exist in your primary language file
 
 ## Production Deployment
 
@@ -315,20 +328,27 @@ reply := fmt.Sprintf(kickMsg, numWarns, limit, user)
 
 ### Development Tools
 
-Use the enhanced validation script to check translation coverage:
+Use the enhanced validation script to check translation coverage and format compliance:
 
 ```bash
-# Check for missing keys and production readiness
+# Check for missing keys, invalid formats, and production readiness
 python scripts/check_code_keys.py
 
 # Example output:
-# ✅ All i18n keys are present and production-ready!
+# ✅ All i18n keys follow proper format and are production-ready!
 # 📊 Translation Statistics:
 #    Total i18n keys used: 157
+#    Keys with valid 'strings.' prefix: 157
+#    Keys with invalid format: 0
 #    Keys using GetStringWithError: 45 (28.7%)
 #    Critical user-facing keys: 22
 #    Critical keys with error handling: 22/22
 ```
+
+The validation script now enforces:
+- **Strict "strings." prefix requirement** - all keys must start with "strings."
+- **Production readiness** - tracks GetStringWithError usage in critical modules
+- **Format compliance** - identifies any keys using the old format
 
 ### Monitoring and Alerts
 

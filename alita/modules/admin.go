@@ -358,15 +358,20 @@ func (moduleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	tr := i18n.New(db.GetLanguage(ctx))
+	inviteLinkMsg, err := tr.GetStringWithError("strings.Admin.here_is_the_invite_link_of_this_chat_percent")
+	if err != nil {
+		log.Error(err)
+		inviteLinkMsg = "Here is the invite link of this chat: %s"
+	}
 	if chat.Username != "" {
-		_, _ = msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Admin.here_is_the_invite_link_of_this_chat_percent"), chat.Username), nil)
+		_, _ = msg.Reply(b, fmt.Sprintf(inviteLinkMsg, chat.Username), nil)
 	} else {
 		nchat, err := b.GetChat(chat.Id, nil)
 		if err != nil {
 			_, _ = msg.Reply(b, err.Error(), nil)
 			return ext.EndGroups
 		}
-		_, _ = msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Admin.here_is_the_invite_link_of_this_chat_percent"), nchat.InviteLink), nil)
+		_, _ = msg.Reply(b, fmt.Sprintf(inviteLinkMsg, nchat.InviteLink), nil)
 	}
 	return ext.EndGroups
 }
@@ -407,15 +412,24 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, tr.GetString("Warns.errors.anon_user"), nil)
+		anonUserMsg, anonUserErr := tr.GetStringWithError("strings.Warns.errors.anon_user")
+		if anonUserErr != nil {
+			log.Errorf("[admin] missing translation for errors.anon_user: %v", anonUserErr)
+			anonUserMsg = "Anonymous users cannot be managed."
+		}
+		_, err := msg.Reply(b, anonUserMsg, nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.no_user_specified"),
-			helpers.Shtml())
+		noUserMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.no_user_specified")
+		if err != nil {
+			log.Error(err)
+			noUserMsg = "No user specified"
+		}
+		_, err = msg.Reply(b, noUserMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -577,7 +591,12 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 	userMember, _ := chat.GetMember(b, user.Id, nil)
 	mem := userMember.MergeChatMember()
 	if mem.Status == "member" {
-		_, err = msg.Reply(b, tr.GetString("strings.Admin.you_need_to_be_admin_to_do_this"), nil)
+		adminMsg, err := tr.GetStringWithError("strings.Admin.you_need_to_be_admin_to_do_this")
+		if err != nil {
+			log.Error(err)
+			adminMsg = "You need to be admin to do this"
+		}
+		_, err = msg.Reply(b, adminMsg, nil)
 		if err != nil {
 			log.Error(err)
 		}
@@ -592,9 +611,13 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	cache.LoadAdminCache(b, chat.Id)
 
-	k := tr.GetString("strings.CommonStrings.admin_cache.cache_reloaded")
-	debug_bot.PrettyPrintStruct(k)
-	_, err = msg.Reply(b, k, helpers.Shtml())
+	cacheMsg, err := tr.GetStringWithError("strings.CommonStrings.admin_cache.cache_reloaded")
+	if err != nil {
+		log.Error(err)
+		cacheMsg = "Admin cache reloaded"
+	}
+	debug_bot.PrettyPrintStruct(cacheMsg)
+	_, err = msg.Reply(b, cacheMsg, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err

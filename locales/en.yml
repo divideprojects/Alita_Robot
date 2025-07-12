@@ -941,7 +941,8 @@ strings:
       hosting!
 
       You can donate by contacting my owner here: @DivideProjectsBot
-    about_me_u200d: "About me \U0001F468\\u200d\U0001F4BB"
+    about_me: "About me \U0001F468\\u200d\U0001F4BB"
+    about_text: "I'm Alita, a group management bot built to help you manage your groups effectively!"
   Locks:
     list:
       header: 'These are the locks in this chat:'

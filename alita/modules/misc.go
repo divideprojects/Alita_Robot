@@ -181,7 +181,7 @@ func (m moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	edited, err := msg.Reply(b, tr.GetString("strings.Misc.paste.pasting"), helpers.Shtml())
+	edited, err := msg.Reply(b, tr.GetString("strings.Misc.paste.processing"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err

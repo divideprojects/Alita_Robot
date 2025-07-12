@@ -63,7 +63,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toDisable = append(toDisable, i)
-				_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Disabling.success")+
+				_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Disabling.success")+
 					"%s",
 					strings.Join(toDisable, "\n - ")),
 					helpers.Smarkdown())
@@ -86,7 +86,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, tr.GetString("Disabling.enable.errors.no_command_specified"), helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Disabling.enable.errors.no_command_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -278,7 +278,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toEnable = append(toEnable, i)
-				_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("Disabling.enable.success")+
+				_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Disabling.enable.success")+
 					"%s",
 					strings.Join(toEnable, "\n - ")),
 					helpers.Smarkdown())
@@ -301,7 +301,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, tr.GetString("Disabling.enable.errors.no_command_specified"), helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Disabling.enable.errors.no_command_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

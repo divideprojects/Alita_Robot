@@ -65,11 +65,38 @@ def load_locale_keys(locale_path: str) -> Set[str]:
 # ---------------------------------------------------------------------------
 
 # Regex to capture string literals passed to .GetString("foo.bar") or
-# .GetStringSlice("foo.bar") – keeps the key in group 1.
-GETSTRING_RE = re.compile(r"\.GetString(?:Slice)?\(\s*\"([^\"]+)\"\s*\)")
+# .GetStringSlice("foo.bar") – requires "strings." prefix for consistency.
+GETSTRING_RE = re.compile(r"\.GetString(?:Slice)?\(\s*\"(strings\.[^\"]+)\"\s*\)")
 
 # Regex to capture GetStringWithError usage for production readiness analysis
-GETSTRING_WITH_ERROR_RE = re.compile(r"\.GetStringWithError\(\s*\"([^\"]+)\"\s*\)")
+GETSTRING_WITH_ERROR_RE = re.compile(
+    r"\.GetStringWithError\(\s*\"(strings\.[^\"]+)\"\s*\)"
+)
+
+# Regex to capture any GetString calls that don't start with "strings." prefix (invalid)
+INVALID_GETSTRING_RE = re.compile(
+    r"\.GetString(?:Slice|WithError)?\(\s*\"([^s][^\"]*|s[^t][^\"]*|st[^r][^\"]*|str[^i][^\"]*|stri[^n][^\"]*|strin[^g][^\"]*|string[^s][^\"]*|strings[^\.][^\"]*)\"\s*\)"
+)
+
+# Special cases that are allowed (main namespace keys)
+ALLOWED_NON_STRINGS_KEYS = {
+    "main.language_name",
+    "main.language_flag",
+    "main.lang_sample",
+}
+
+# Test keys that should be ignored for missing key validation
+TEST_KEYS = {
+    "strings.test.key",
+    "strings.test.list",
+    "nonexistent.key",
+    "nonexistent.list",
+    "test.key",
+    "strings.welcome.message",  # Documentation example
+    "strings.errors.not_found",  # Documentation example
+    "welcome.message",  # Documentation example
+    "errors.not_found",  # Documentation example
+}
 
 
 def scan_go_files(code_dir: str):
@@ -77,6 +104,7 @@ def scan_go_files(code_dir: str):
     used: Dict[str, List[str]] = defaultdict(list)
     with_error: Dict[str, List[str]] = defaultdict(list)
     critical_paths: Dict[str, List[str]] = defaultdict(list)
+    invalid_keys: Dict[str, List[str]] = defaultdict(list)
 
     # Critical modules that should use GetStringWithError for user-facing messages
     critical_modules = {
@@ -87,49 +115,78 @@ def scan_go_files(code_dir: str):
         "help.go",
         "filters.go",
         "notes.go",
+        "greetings.go",
     }
 
-    for root, _dirs, files in os.walk(code_dir):
-        for filename in files:
-            if not filename.endswith(".go"):
+    for root, dirs, files in os.walk(code_dir):
+        for file in files:
+            if not file.endswith(".go"):
                 continue
-            path = os.path.join(root, filename)
-            is_critical = any(
-                critical_mod in filename for critical_mod in critical_modules
-            )
 
+            # Skip test files for key validation
+            is_test_file = file.endswith("_test.go")
+
+            filepath = os.path.join(root, file)
             try:
-                with open(path, "r", encoding="utf-8", errors="ignore") as fh:
-                    for lineno, line in enumerate(fh, 1):
-                        # Check for regular GetString usage
-                        for match in GETSTRING_RE.finditer(line):
-                            key = match.group(1)
-                            location = f"{path}:{lineno}"
-                            used[key].append(location)
+                with open(filepath, "r", encoding="utf-8") as f:
+                    content = f.read()
+            except UnicodeDecodeError:
+                continue
 
-                            # Mark critical paths that should use GetStringWithError
-                            if is_critical and any(
-                                pattern in key
-                                for pattern in [
-                                    ".success",
-                                    ".error",
-                                    ".warn",
-                                    ".ban",
-                                    ".mute",
-                                    ".kick",
-                                ]
-                            ):
-                                critical_paths[key].append(location)
+            lines = content.split("\n")
+            for line_num, line in enumerate(lines, 1):
+                # Skip comment lines
+                stripped_line = line.strip()
+                if (
+                    stripped_line.startswith("//")
+                    or stripped_line.startswith("*")
+                    or stripped_line.startswith("/*")
+                ):
+                    continue
 
-                        # Check for GetStringWithError usage
-                        for match in GETSTRING_WITH_ERROR_RE.finditer(line):
-                            key = match.group(1)
-                            with_error[key].append(f"{path}:{lineno}")
+                # Find valid GetString calls with "strings." prefix
+                for match in GETSTRING_RE.finditer(line):
+                    key = match.group(1)
+                    location = f"{filepath}:{line_num}"
 
-            except (OSError, UnicodeError) as exc:
-                print(f"[WARN] Could not read {path}: {exc}", file=sys.stderr)
+                    # Skip test keys for missing key validation
+                    if not is_test_file and key not in TEST_KEYS:
+                        used[key].append(location)
 
-    return used, with_error, critical_paths
+                # Find GetStringWithError calls
+                for match in GETSTRING_WITH_ERROR_RE.finditer(line):
+                    key = match.group(1)
+                    location = f"{filepath}:{line_num}"
+                    with_error[key].append(location)
+
+                    # Skip test keys for missing key validation
+                    if not is_test_file and key not in TEST_KEYS:
+                        used[key].append(location)
+
+                    # Track critical paths
+                    if any(critical_mod in file for critical_mod in critical_modules):
+                        critical_paths[key].append(location)
+
+                # Find invalid GetString calls (without "strings." prefix)
+                for match in INVALID_GETSTRING_RE.finditer(line):
+                    key = match.group(1)
+
+                    # Skip allowed special cases and test keys
+                    if key in ALLOWED_NON_STRINGS_KEYS or key in TEST_KEYS:
+                        continue
+
+                    invalid_keys[key].append(f"{filepath}:{line_num}")
+
+                # Find regular GetString calls in critical modules for tracking
+                for match in re.finditer(
+                    r"\.GetString\(\s*\"(strings\.[^\"]+)\"\s*\)", line
+                ):
+                    key = match.group(1)
+                    location = f"{filepath}:{line_num}"
+                    if any(critical_mod in file for critical_mod in critical_modules):
+                        critical_paths[key].append(location)
+
+    return used, with_error, critical_paths, invalid_keys
 
 
 # ---------------------------------------------------------------------------
@@ -161,17 +218,15 @@ def main() -> None:
         sys.exit(f"Code directory not found: {args.code_dir}")
 
     en_keys = load_locale_keys(args.locale)
-    used_keys_map, with_error_keys, critical_paths = scan_go_files(args.code_dir)
+    used_keys_map, with_error_keys, critical_paths, invalid_keys = scan_go_files(
+        args.code_dir
+    )
 
     missing_keys = []
     for k in used_keys_map:
-        # direct match
-        if k in en_keys:
-            continue
-        # fallback try with "strings." prefix
-        if not k.startswith("strings.") and f"strings.{k}" in en_keys:
-            continue
-        missing_keys.append(k)
+        # All keys should start with "strings." prefix now
+        if k not in en_keys:
+            missing_keys.append(k)
 
     # Production readiness analysis
     critical_without_error = []
@@ -181,6 +236,21 @@ def main() -> None:
 
     # Report results
     has_issues = False
+
+    # Check for invalid key formats (keys without "strings." prefix)
+    if invalid_keys:
+        print(f"❌ Invalid i18n key format detected ({len(invalid_keys)}):")
+        print("   All i18n keys MUST start with 'strings.' prefix for consistency.\n")
+        for key in sorted(invalid_keys):
+            print(f" - {key}")
+            for location in invalid_keys[key]:
+                print(f"     used at: {location}")
+        print()
+        print("💡 Fix: Update these keys to use 'strings.' prefix:")
+        for key in sorted(invalid_keys):
+            print(f'   tr.GetString("{key}") → tr.GetString("strings.{key}")')
+        print()
+        has_issues = True
 
     if missing_keys:
         print(f"❌ Missing i18n keys detected ({len(missing_keys)}):\n")
@@ -209,11 +279,14 @@ def main() -> None:
     total_keys = len(used_keys_map)
     with_error_count = len(with_error_keys)
     critical_count = len(critical_paths)
+    invalid_count = len(invalid_keys)
 
     print("📊 Translation Statistics:")
     print(f"   Total i18n keys used: {total_keys}")
+    print(f"   Keys with valid 'strings.' prefix: {total_keys}")
+    print(f"   Keys with invalid format: {invalid_count}")
     print(
-        f"   Keys using GetStringWithError: {with_error_count} ({with_error_count/total_keys*100:.1f}%)"
+        f"   Keys using GetStringWithError: {with_error_count} ({with_error_count/max(total_keys,1)*100:.1f}%)"
     )
     print(f"   Critical user-facing keys: {critical_count}")
     print(
@@ -221,7 +294,7 @@ def main() -> None:
     )
 
     if not has_issues:
-        print("\n✅ All i18n keys are present and production-ready!")
+        print("\n✅ All i18n keys follow proper format and are production-ready!")
         return
 
     # Exit with non-zero status so this can be used in CI.

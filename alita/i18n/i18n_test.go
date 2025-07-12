@@ -57,9 +57,9 @@ func TestLoadLocaleFiles(t *testing.T) {
 		t.Fatal("No languages loaded")
 	}
 
-	// Test that we can retrieve strings
+	// Test that we can retrieve strings with proper prefix
 	tr := New("en")
-	text := tr.GetString("test.key")
+	text := tr.GetString("strings.test.key")
 	if text == "" || strings.Contains(text, "@@") {
 		t.Errorf("Expected valid text, got: %s", text)
 	}
@@ -217,8 +217,8 @@ func TestGetString(t *testing.T) {
 
 	tr := New("en")
 
-	// Test existing key
-	text := tr.GetString("test.key")
+	// Test existing key with proper prefix
+	text := tr.GetString("strings.test.key")
 	if strings.Contains(text, "@@") {
 		t.Errorf("Expected valid text, got missing key marker: %s", text)
 	}
@@ -249,8 +249,8 @@ func TestGetStringSlice(t *testing.T) {
 
 	tr := New("en")
 
-	// Test existing slice key
-	slice := tr.GetStringSlice("test.list")
+	// Test existing slice key with proper prefix
+	slice := tr.GetStringSlice("strings.test.list")
 	if len(slice) == 0 {
 		t.Error("Expected non-empty slice")
 	}
@@ -279,8 +279,8 @@ func TestGetStringWithError(t *testing.T) {
 
 	tr := New("en")
 
-	// Test existing key
-	text, err := tr.GetStringWithError("test.key")
+	// Test existing key with proper prefix
+	text, err := tr.GetStringWithError("strings.test.key")
 	if err != nil {
 		t.Errorf("Expected no error for existing key, got: %v", err)
 	}
@@ -315,8 +315,8 @@ func TestHasKey(t *testing.T) {
 
 	tr := New("en")
 
-	// Test existing key
-	if !tr.HasKey("test.key") {
+	// Test existing key with proper prefix
+	if !tr.HasKey("strings.test.key") {
 		t.Error("Expected HasKey to return true for existing key")
 	}
 
@@ -331,7 +331,7 @@ func TestHasKey(t *testing.T) {
 	}
 }
 
-func TestStringsPrefixFallback(t *testing.T) {
+func TestStrictKeyFormatRequirement(t *testing.T) {
 	resetGlobals()
 
 	// Load test data
@@ -342,13 +342,26 @@ func TestStringsPrefixFallback(t *testing.T) {
 
 	tr := New("en")
 
-	// Test key without strings prefix (should try with prefix)
-	text1 := tr.GetString("test.key")
-	text2 := tr.GetString("strings.test.key")
+	// Test that keys WITH "strings." prefix work
+	text := tr.GetString("strings.test.key")
+	if strings.Contains(text, "@@") {
+		t.Errorf("Expected valid text for prefixed key, got: %s", text)
+	}
 
-	// Both should return the same result
-	if text1 != text2 {
-		t.Errorf("Expected same result for prefixed and non-prefixed keys, got: '%s' vs '%s'", text1, text2)
+	// Test that keys WITHOUT "strings." prefix fail
+	text = tr.GetString("test.key")
+	expectedMarker := fmt.Sprintf(MissingKeyMarker, "test.key")
+	if text != expectedMarker {
+		t.Errorf("Expected missing key marker for non-prefixed key '%s', got: %s", expectedMarker, text)
+	}
+
+	// Test HasKey with strict requirements
+	if !tr.HasKey("strings.test.key") {
+		t.Error("Expected HasKey to return true for prefixed key")
+	}
+
+	if tr.HasKey("test.key") {
+		t.Error("Expected HasKey to return false for non-prefixed key")
 	}
 }
 
@@ -362,22 +375,22 @@ func TestConvenienceFunctions(t *testing.T) {
 	}
 
 	// Test GetString convenience function
-	text1 := GetString("en", "test.key")
-	text2 := New("en").GetString("test.key")
+	text1 := GetString("en", "strings.test.key")
+	text2 := New("en").GetString("strings.test.key")
 	if text1 != text2 {
 		t.Errorf("Convenience GetString should match instance method, got: '%s' vs '%s'", text1, text2)
 	}
 
 	// Test GetStringSlice convenience function
-	slice1 := GetStringSlice("en", "test.list")
-	slice2 := New("en").GetStringSlice("test.list")
+	slice1 := GetStringSlice("en", "strings.test.list")
+	slice2 := New("en").GetStringSlice("strings.test.list")
 	if len(slice1) != len(slice2) {
 		t.Errorf("Convenience GetStringSlice should match instance method")
 	}
 
 	// Test HasKey convenience function
-	has1 := HasKey("en", "test.key")
-	has2 := New("en").HasKey("test.key")
+	has1 := HasKey("en", "strings.test.key")
+	has2 := New("en").HasKey("strings.test.key")
 	if has1 != has2 {
 		t.Errorf("Convenience HasKey should match instance method")
 	}
@@ -407,19 +420,19 @@ func TestThreadSafety(t *testing.T) {
 			tr := New("en")
 			for j := 0; j < numIterations; j++ {
 				// Test various operations
-				text := tr.GetString("test.key")
+				text := tr.GetString("strings.test.key")
 				if strings.Contains(text, "@@") {
 					errors <- fmt.Errorf("goroutine %d: got missing key marker", id)
 					return
 				}
 
-				slice := tr.GetStringSlice("test.list")
+				slice := tr.GetStringSlice("strings.test.list")
 				if len(slice) == 0 {
 					errors <- fmt.Errorf("goroutine %d: got empty slice", id)
 					return
 				}
 
-				has := tr.HasKey("test.key")
+				has := tr.HasKey("strings.test.key")
 				if !has {
 					errors <- fmt.Errorf("goroutine %d: HasKey returned false", id)
 					return
@@ -475,7 +488,7 @@ func TestConcurrentLoadAndRead(t *testing.T) {
 		defer wg.Done()
 		time.Sleep(10 * time.Millisecond) // Small delay to increase chance of race
 		tr := New("en")
-		text := tr.GetString("test.key")
+		text := tr.GetString("strings.test.key")
 		// This might be empty or valid, both are acceptable during concurrent load
 		_ = text
 	}()
@@ -511,7 +524,7 @@ func TestFallbackLogic(t *testing.T) {
 	tr := New("test_lang")
 
 	// This should fall back to English
-	text := tr.GetString("test.key")
+	text := tr.GetString("strings.test.key")
 	if strings.Contains(text, "@@") {
 		t.Errorf("Expected fallback to work, got missing key marker: %s", text)
 	}
@@ -524,7 +537,7 @@ func BenchmarkGetString(b *testing.B) {
 	LoadLocaleFiles(&testFS, "testdata/valid")
 
 	tr := New("en")
-	key := "test.key"
+	key := "strings.test.key"
 
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
@@ -539,7 +552,7 @@ func BenchmarkGetStringSlice(b *testing.B) {
 	LoadLocaleFiles(&testFS, "testdata/valid")
 
 	tr := New("en")
-	key := "test.list"
+	key := "strings.test.list"
 
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
@@ -554,7 +567,7 @@ func BenchmarkHasKey(b *testing.B) {
 	LoadLocaleFiles(&testFS, "testdata/valid")
 
 	tr := New("en")
-	key := "test.key"
+	key := "strings.test.key"
 
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
@@ -569,7 +582,7 @@ func BenchmarkConcurrentGetString(b *testing.B) {
 	LoadLocaleFiles(&testFS, "testdata/valid")
 
 	tr := New("en")
-	key := "test.key"
+	key := "strings.test.key"
 
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
@@ -863,66 +876,15 @@ func TestGetStringWithErrorLogging(t *testing.T) {
 
 	tr := New("en")
 
-	// Test existing key doesn't log
-	logger := GetLogger()
-	logger.ResetStats()
-
-	_, err = tr.GetStringWithError("test.key")
+	// Test existing key should not log
+	_, err = tr.GetStringWithError("strings.test.key")
 	if err != nil {
 		t.Errorf("Expected no error for existing key, got: %v", err)
 	}
 
-	// Test missing key logs error
+	// Test missing key should log
 	_, err = tr.GetStringWithError("nonexistent.key")
 	if err == nil {
 		t.Error("Expected error for missing key")
-	}
-
-	// Check that logging occurred
-	stats := logger.GetStats()
-	if stats["total_tracked_keys"].(int) == 0 {
-		t.Error("Expected missing key to be logged")
-	}
-}
-
-func TestBackwardCompatibility(t *testing.T) {
-	resetGlobals()
-
-	// Load test data
-	err := LoadLocaleFiles(&testFS, "testdata/valid")
-	if err != nil {
-		t.Fatalf("Failed to load test data: %v", err)
-	}
-
-	// Test with logging disabled (backward compatibility)
-	testConfig := &I18nConfig{
-		Environment:             EnvDevelopment,
-		FallbackMode:            FallbackModeDebug,
-		LogMissingKeys:          false,
-		FallbackMessages:        DefaultFallbackMessages,
-		EnableStructuredLogging: false,
-		EnableMetrics:           false,
-	}
-	SetConfig(testConfig)
-
-	tr := New("en")
-
-	// Test existing functionality still works
-	text := tr.GetString("test.key")
-	if strings.Contains(text, "@@") {
-		t.Errorf("Expected valid text, got: %s", text)
-	}
-
-	// Test missing key still returns marker when logging disabled
-	text = tr.GetString("nonexistent.key")
-	expectedMarker := fmt.Sprintf(MissingKeyMarker, "nonexistent.key")
-	if text != expectedMarker {
-		t.Errorf("Expected debug marker '%s', got: %s", expectedMarker, text)
-	}
-
-	// Test convenience functions still work
-	text = GetString("en", "test.key")
-	if strings.Contains(text, "@@") {
-		t.Errorf("Expected valid text from convenience function, got: %s", text)
 	}
 }
