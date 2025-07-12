@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""check_i18n_keys.py
+# -*- coding: utf-8 -*-
 
+"""
 Utility to verify that every i18n lookup present in the Go source code
 exists in the default English locale file (locales/en.yml).
 
@@ -9,13 +10,13 @@ literals passed to `GetString` and `GetStringSlice` calls, and checks that
 corresponding keys are defined in the YAML locale.
 
 Usage (from repository root):
-    python scripts/check_i18n_keys.py
+    python scripts/check_code_keys.py
 
 Optional flags:
     -c / --code-dir   Path to the directory with Go source files (default: alita)
     -l / --locale     Path to the YAML locale file (default: locales/en.yml)
 
-Requires: PyYAML (install with `pip install pyyaml`).
+Requires: ruamel.yaml (install with `pip install ruamel.yaml`).
 """
 from __future__ import annotations
 
@@ -27,9 +28,9 @@ from collections import defaultdict
 from typing import Dict, List, Set
 
 try:
-    import yaml  # type: ignore
-except ImportError as exc:
-    sys.exit("PyYAML is required for this script: pip install pyyaml")
+    from ruamel.yaml import YAML
+except ImportError:
+    sys.exit("ruamel.yaml is required for this script: pip install ruamel.yaml")
 
 # ---------------------------------------------------------------------------
 # Helpers for YAML key extraction
@@ -53,8 +54,9 @@ def _collect_yaml_keys(data: object, prefix: str = "") -> Set[str]:
 
 def load_locale_keys(locale_path: str) -> Set[str]:
     """Load all dotted key paths from the given YAML locale file."""
+    yaml = YAML(typ="safe")  # typ='safe' is equivalent to safe_load
     with open(locale_path, "r", encoding="utf-8") as fh:
-        yaml_data = yaml.safe_load(fh) or {}
+        yaml_data = yaml.load(fh) or {}
     return _collect_yaml_keys(yaml_data)
 
 
@@ -93,7 +95,7 @@ def scan_go_files(code_dir: str) -> Dict[str, List[str]]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Detect missing i18n keys.")
+    parser = argparse.ArgumentParser(description="Detect missing i18n keys in Go code.")
     parser.add_argument(
         "-c",
         "--code-dir",
