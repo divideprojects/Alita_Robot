@@ -33,10 +33,10 @@ func resetGlobals() {
 	configMu.Lock()
 	globalConfig = nil
 	configMu.Unlock()
-	
+
 	// Reset config sync.Once so GetConfig() can be called again
 	configOnce = sync.Once{}
-	
+
 	// Reset logger with new sync.Once
 	loggerOnce = sync.Once{}
 	globalLogger = nil
@@ -583,10 +583,10 @@ func BenchmarkConcurrentGetString(b *testing.B) {
 
 func TestConfigurationSystem(t *testing.T) {
 	resetGlobals()
-	
+
 	// Force config initialization
 	ReloadConfig()
-	
+
 	// Test default configuration
 	config := GetConfig()
 	if config == nil {
@@ -625,17 +625,17 @@ func TestFriendlyFallbackBehavior(t *testing.T) {
 		LogMissingKeys:          false, // Disable logging for this test
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:          false,
+		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
-	
+
 	// Reset config and logger sync.Once to use new config
 	configOnce = sync.Once{}
 	loggerOnce = sync.Once{}
 	globalLogger = nil
 
 	tr := New("en")
-	
+
 	// Test missing key returns friendly message
 	text := tr.GetString("nonexistent.key")
 	if strings.Contains(text, "@@") {
@@ -668,12 +668,12 @@ func TestDebugFallbackBehavior(t *testing.T) {
 		LogMissingKeys:          false, // Disable logging for this test
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:          false,
+		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
 	tr := New("en")
-	
+
 	// Test missing key returns debug marker
 	text := tr.GetString("nonexistent.key")
 	expectedMarker := fmt.Sprintf(MissingKeyMarker, "nonexistent.key")
@@ -698,12 +698,12 @@ func TestMixedFallbackBehavior(t *testing.T) {
 		LogMissingKeys:          false, // Disable logging for this test
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:          false,
+		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
 	tr := New("en")
-	
+
 	// Should use friendly fallback in production
 	text := tr.GetString("nonexistent.key")
 	if strings.Contains(text, "@@") {
@@ -738,7 +738,7 @@ func TestLanguageSpecificFallbackMessages(t *testing.T) {
 		LogMissingKeys:          false,
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:          false,
+		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
@@ -783,7 +783,7 @@ func TestLoggingSystem(t *testing.T) {
 		LogMissingKeys:          true,
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:          false,
+		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
@@ -857,7 +857,7 @@ func TestGetStringWithErrorLogging(t *testing.T) {
 		LogMissingKeys:          true,
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:          false,
+		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
@@ -866,7 +866,7 @@ func TestGetStringWithErrorLogging(t *testing.T) {
 	// Test existing key doesn't log
 	logger := GetLogger()
 	logger.ResetStats()
-	
+
 	_, err = tr.GetStringWithError("test.key")
 	if err != nil {
 		t.Errorf("Expected no error for existing key, got: %v", err)
@@ -901,7 +901,7 @@ func TestBackwardCompatibility(t *testing.T) {
 		LogMissingKeys:          false,
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:          false,
+		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
