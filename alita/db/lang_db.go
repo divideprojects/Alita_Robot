@@ -22,7 +22,17 @@ func GetLanguage(ctx *ext.Context) string {
 			return getUserLanguage(user.Id)
 		}
 	} else {
-		chat = ctx.Update.Message.Chat
+		// ctx.Update.Message can be nil for some update types (edited_message, channel_post, etc.).
+		if ctx.Update.Message != nil {
+			chat = ctx.Update.Message.Chat
+		} else {
+			// Fallback to user language when no chat is present
+			user := ctx.EffectiveSender.User
+			if user == nil {
+				return "en"
+			}
+			return getUserLanguage(user.Id)
+		}
 	}
 	// FIXME: this is a hack
 	// if ctx.Update.Message.Chat.Type == "private" || ctx.CallbackQuery.Message.Chat.Type == "private" {
