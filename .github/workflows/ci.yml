@@ -70,6 +70,6 @@ jobs:
         uses: goreleaser/goreleaser-action@v6
         with:
           version: latest
-          args: release --clean --skip=sign --skip=validate --config .goreleaser.dev.yaml
+          args: release --clean --skip=sign --skip=validate --skip=publish --config .goreleaser.dev.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
