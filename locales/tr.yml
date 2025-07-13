@@ -1,4 +1,3 @@
----
 #stringcode: string
 main:
   lang_sample: |-
@@ -28,9 +27,11 @@ strings:
         I can't restrict people here! Make sure I'm admin and can restrict other
         members.
       group_only: This command can only be used in a group!
-      group_only_command: 'This command is made to be used in group chats, not in pm!'
+      group_only_command: 'This command is made to be used in group chats, not in
+        pm!'
       private_only_command: 'This command is made for pm, not group chat!'
-      user_not_found: Could not find a user by this name; are you sure I've seen them before?
+      user_not_found: Could not find a user by this name; are you sure I've seen
+        them before?
       user_not_in_chat: 'This user is not in this chat, how can I restrict them?'
       action_on_self: I can't perform this action on myself.
       button_expired: 'This button has expired, Please use the command again.'
@@ -40,8 +41,10 @@ strings:
       not_enough_args: Not enough arguments.
       invalid_time_amount: Invalid time amount specified.
       time_too_long: Cannot set time to more than 1 year!
-      invalid_time_type: 'Invalid time type specified. Expected m, h, d or w got: %s'
-      get_chat_member_failed: 'Failed to get user: unable to getChatMember: Bad Request: chat not found'
+      invalid_time_type: 'Invalid time type specified. Expected m, h, d or w got:
+        %s'
+      get_chat_member_failed: 'Failed to get user: unable to getChatMember: Bad Request:
+        chat not found'
       admin_only_button: This button can only be used by an admin!
       no_reply: Reply to a user's message to delete and kick him!
     buttons: # TODO: Translate - strings.CommonStrings.buttons
@@ -146,7 +149,8 @@ strings:
       × /promote `<yanıt/kullanıcıadı/bahsetme/kullanıcıid>`: Bir kullanıcıyı terfi ettir.
       × /demote `<yanıt/kullanıcıadı/bahsetme/kullanıcıid>`: Bir kullanıcının rütbesini düşür.
       × /title `<yanıt/kullanıcıadı/bahsetme/kullanıcıid>` `<özel başlık>`: Kullanıcı için özel başlık ayarla
-    here_is_the_invite_link_of_this_chat_percent: 'Here is the invite link of this chat: %s'  # TODO: Translate - strings.Admin.here_is_the_invite_link_of_this_chat_percent
+    here_is_the_invite_link_of_this_chat_percent: 'Here is the invite link of this
+      chat: %s'                                                                               # TODO: Translate - strings.Admin.here_is_the_invite_link_of_this_chat_percent
     you_need_to_be_admin_to_do_this: You need to be admin to do this! # TODO: Translate - strings.Admin.you_need_to_be_admin_to_do_this
   Antiflood:
     checkflood:
@@ -270,7 +274,8 @@ strings:
       anon_user_kick: >-
         This command cannot be used on anonymous user, these user can only be
         banned/unbanned.
-      anon_user_ban_reply: You can only ban an anonymous user by replying to their message.
+      anon_user_ban_reply: You can only ban an anonymous user by replying to 
+        their message.
       anon_user_generic: >-
         This command cannot be used on anonymous user, these user can only be
         banned/unbanned.
@@ -285,11 +290,13 @@ strings:
       unmute_success: Unmuted by %s!
       unban_success: Unbanned by %s !
     kick:
-      user_not_in_chat: 'This user is not in this chat, and how am I supposed to restrict them?'
-      cannot_kick_admin: Why would I kick an admin? That sounds like a pretty dumb idea.
+      user_not_in_chat: 'This user is not in this chat, and how am I supposed to restrict
+        them?'
+      cannot_kick_admin: Why would I kick an admin? That sounds like a pretty 
+        dumb idea.
       is_bot_itself: Why would I kick myself?
       kicked_user: Successfully Kicked %s.
-      kicked_reason: |-
+      kicked_reason: |2-
 
         <b>Reason:</b> %s
     kickme:
@@ -298,7 +305,7 @@ strings:
     ban:
       is_admin: Why would I ban an admin? That sounds like a pretty dumb idea.
       is_bot_itself: Do you really think I will ban myself?
-      ban_reason: |-
+      ban_reason: |2-
 
         <b>Reason:</b> %s
       tban: Banned %s for %s
@@ -357,7 +364,8 @@ strings:
       added_bl: 'Added these words as blacklists:'
     unblacklist:
       give_bl_word: Please give me a word to remove it from the blacklist!
-      no_removed_bl: None of the given words were on the blacklist which can be removed!
+      no_removed_bl: None of the given words were on the blacklist which can be 
+        removed!
       removed_bl: Successfully removed '%s' from the blacklisted words!
     ls_bl:
       no_blacklisted: There are no blacklisted words in this chat.
@@ -365,7 +373,8 @@ strings:
     set_bl_action:
       current_mode: 'The current blacklist mode for this chat is: %s'
       changed_mode: 'Successfully Changed blacklist mode to: *%s*'
-      choose_correct_option: Please choose an option out of <mute/kick/ban/warn/none>
+      choose_correct_option: Please choose an option out of 
+        <mute/kick/ban/warn/none>
     rm_all_bl:
       ask: Are you sure you want to remove all blacklisted words from this chat?
       button_handler:
@@ -420,7 +429,8 @@ strings:
         User connections are currently <b>disabled</b> to this chat.
         Please ask admins to allow if you want to connect!
       connected: You are now connected to <b>%s</b>!
-      tap_btn_connect: Please press the button below to connect this chat to your PM.
+      tap_btn_connect: Please press the button below to connect this chat to 
+        your PM.
     connections_btns:
       admin_conn_cmds: 'Available Admin commands:%s'
       user_conn_cmds: 'Available User commands:%s'
@@ -804,9 +814,9 @@ strings:
   Help:
     about:
       main: Info & About\n\nHere are some of the FAQs about Alita.
-      me_button: "About me \U0001F468‍\U0001F4BB"
-      news_channel_button: "News Channel \U0001F4E2"
-      support_group_button: "Support Group \U0001F465"
+      me_button: "About me 👨‍💻"
+      news_channel_button: "News Channel 📢"
+      support_group_button: "Support Group 👥"
       configuration_button: Configuration ⚙️
       group_prompt: Click on the button below to get info about me!
       button: About
@@ -818,9 +828,9 @@ strings:
         Channel</a> to get information on all the latest updates.
       about_button: About ✨
       add_to_chat_button: ➕ Add me to chat!
-      support_group_button: "Support Group \U0001F465"
-      commands_help_button: "\U0001F4DA Commands & Help"
-      language_button: "Language \U0001F30F"
+      support_group_button: "Support Group 👥"
+      commands_help_button: "📚 Commands & Help"
+      language_button: "Language 🌏"
       group_prompt: 'Hey :) PM me if you have any questions on how to use me!'
     main: >-
       Hey %s!\nMy name is Alita ✨.\n\nI am a group management bot, here to help
@@ -905,17 +915,24 @@ strings:
       hosting!
 
       You can donate by contacting my owner here: @DivideProjectsBot
-    about_me_u200d: "About me \U0001F468\\u200d\U0001F4BB" # TODO: Translate - strings.Help.about
+    about_me_u200d: "About me 👨\\u200d💻"                   # TODO: Translate - strings.Help.about
+#  TODO: INCOMPLETE TRANSLATION 
+    about_me: "About me 👨\\u200d💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_text: "I'm Alita, a group management bot built to help you manage your groups
+      effectively!"
   Locks:
     list:
       header: 'These are the locks in this chat:'
     locktypes:
       header: 'Locks: \n -'
     lock:
-      no_type_specified: What do you want to lock? Check /locktypes for available options.
+      no_type_specified: What do you want to lock? Check /locktypes for 
+        available options.
       success: 'Locked the following in this group:\n - %s'
     unlock:
-      no_type_specified: What do you want to lock? Check /locktypes for available options.
+      no_type_specified: What do you want to lock? Check /locktypes for 
+        available options.
       success: 'Un-Locked the following in this group:\n - %s'
     errors:
       invalid_type: '`%s` is not a correct lock type, check /locktypes.'
@@ -950,11 +967,13 @@ strings:
       **Example:**
 
       `/lock media`: this locks all the media messages in the chat.
-    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'I see a bot, and I''ve been told to stop them joining...' # TODO: Translate - strings.Locks.i_see_a_bot_and_i_ve_been_told_to_stop_them_joining
+    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'I see a bot, and I''ve been
+      told to stop them joining...'                                                                                 # TODO: Translate - strings.Locks.i_see_a_bot_and_i_ve_been_told_to_stop_them_joining
   Languages:
-    help_translate_button: "Help Us Translate \U0001F30E" # TODO: Translate - strings.Languages.help_translate_button
+    help_translate_button: "Help Us Translate 🌎"          # TODO: Translate - strings.Languages.help_translate_button
     change:
-      private_prompt: Your Current Language is %s\nChoose a language from keyboard below.
+      private_prompt: Your Current Language is %s\nChoose a language from 
+        keyboard below.
       group_prompt: >-
         This Group's Current Language is %s\nChoose a language from keyboard
         below.
@@ -980,13 +999,15 @@ strings:
       need_text_or_document: Please give text to paste or reply to a document!
       processing: Pasting ...
       get_file_error: BadRequest on GetFile!
-      file_too_big: File too big to paste; Max. file size that can be pasted is 600 kb!
+      file_too_big: File too big to paste; Max. file size that can be pasted is 
+        600 kb!
       paste_error: Can't paste the provided data!
     info:
       user_not_found: Could not find the any information about this user.
     translate:
       need_text_and_lang: I need some text and a language code to translate.
-      no_text_in_reply: The replied message does not contain any text to translate.
+      no_text_in_reply: The replied message does not contain any text to 
+        translate.
       need_text: Please provide some text to translate.
       request_error: Error making a translation request!
     keyboard:
@@ -1085,11 +1106,15 @@ strings:
       - /privatenotes: Whether or not to send notes in PM. Will send a message
       with a button which users can click to get the note in PM.
     removed_note_percent: Removed note <b>%s</b>. # TODO: Translate - strings.Notes.removed_note_percent
-    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Are you sure you want to remove all Notes from this chat? # TODO: Translate - strings.Notes.are_you_sure_you_want_to_remove_all_notes_from_this_chat
-    only_chat_creator_can_use_this_command: Only Chat Creator can use this command. # TODO: Translate - strings.Notes.only_chat_creator_can_use_this_command
-    there_s_some_error_parsing_the_note_please_report_this_in_su: 'There''s some error parsing the note, please report this in support chat.' # TODO: Translate - strings.Notes.there_s_some_error_parsing_the_note_please_report_this_in_su
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Are you sure you 
+      want to remove all Notes from this chat?                                                                          # TODO: Translate - strings.Notes.are_you_sure_you_want_to_remove_all_notes_from_this_chat
+    only_chat_creator_can_use_this_command: Only Chat Creator can use this 
+      command.                                                                      # TODO: Translate - strings.Notes.only_chat_creator_can_use_this_command
+    there_s_some_error_parsing_the_note_please_report_this_in_su: 'There''s some error
+      parsing the note, please report this in support chat.'                                                                                  # TODO: Translate - strings.Notes.there_s_some_error_parsing_the_note_please_report_this_in_su
     note_doesn_t_exists: Note doesn't exists! # TODO: Translate - strings.Notes.note_doesn_t_exists
-    there_s_some_error_parsing_the_note_please_report_this_to_su: 'There''s some error parsing the note, please report this to support chat.' # TODO: Translate - strings.Notes.there_s_some_error_parsing_the_note_please_report_this_to_su
+    there_s_some_error_parsing_the_note_please_report_this_to_su: 'There''s some error
+      parsing the note, please report this to support chat.'                                                                                  # TODO: Translate - strings.Notes.there_s_some_error_parsing_the_note_please_report_this_to_su
     formatting: Formatting # TODO: Translate - strings.Notes.formatting
   Pins:
     errors:
@@ -1136,11 +1161,16 @@ strings:
       Note: When using anti channel pins, make sure to use the /unpin command,
       instead of doing it manually. Otherwise, the old message will get
       re-pinned when the channel sends any messages.
-    unpinned_all_pinned_messages_in_this_chat: Unpinned all pinned messages in this chat! # TODO: Translate - strings.Pins.unpinned_all_pinned_messages_in_this_chat
-    cancelled_operation_to_unpin_messages: Cancelled operation to unpin messages! # TODO: Translate - strings.Pins.cancelled_operation_to_unpin_messages
-    are_you_sure_you_want_to_unpin_all_pinned_messages: Are you sure you want to unpin all pinned messages? # TODO: Translate - strings.Pins.are_you_sure_you_want_to_unpin_all_pinned_messages
-    please_reply_to_a_message_or_give_some_text_to_pin: Please reply to a message or give some text to pin. # TODO: Translate - strings.Pins.please_reply_to_a_message_or_give_some_text_to_pin
-    no_message_has_been_pinned_in_the_current_chat: No message has been pinned in the current chat! # TODO: Translate - strings.Pins.no_message_has_been_pinned_in_the_current_chat
+    unpinned_all_pinned_messages_in_this_chat: Unpinned all pinned messages in 
+      this chat!                                                                          # TODO: Translate - strings.Pins.unpinned_all_pinned_messages_in_this_chat
+    cancelled_operation_to_unpin_messages: Cancelled operation to unpin 
+      messages!                                                                   # TODO: Translate - strings.Pins.cancelled_operation_to_unpin_messages
+    are_you_sure_you_want_to_unpin_all_pinned_messages: Are you sure you want to
+      unpin all pinned messages?                                                                            # TODO: Translate - strings.Pins.are_you_sure_you_want_to_unpin_all_pinned_messages
+    please_reply_to_a_message_or_give_some_text_to_pin: Please reply to a 
+      message or give some text to pin.                                                                     # TODO: Translate - strings.Pins.please_reply_to_a_message_or_give_some_text_to_pin
+    no_message_has_been_pinned_in_the_current_chat: No message has been pinned 
+      in the current chat!                                                                          # TODO: Translate - strings.Pins.no_message_has_been_pinned_in_the_current_chat
   Purges:
     help_msg: |-
       *Admin only:*
@@ -1150,16 +1180,21 @@ strings:
       *Examples*:
       - Delete all messages from the replied message, until now.
       -> `/purge`
-    reply_to_a_message_to_select_where_to_start_purging_from: Reply to a message to select where to start purging from.  # TODO: Translate - strings.Purges.reply_to_a_message_to_select_where_to_start_purging_from
+    reply_to_a_message_to_select_where_to_start_purging_from: Reply to a message
+      to select where to start purging from.                                                                             # TODO: Translate - strings.Purges.reply_to_a_message_to_select_where_to_start_purging_from
     reply_to_a_message_to_delete_it: Reply to a message to delete it! # TODO: Translate - strings.Purges.reply_to_a_message_to_delete_it
-    this_message_is_already_marked_for_purging: This message is already marked for purging! # TODO: Translate - strings.Purges.this_message_is_already_marked_for_purging
+    this_message_is_already_marked_for_purging: This message is already marked 
+      for purging!                                                                          # TODO: Translate - strings.Purges.this_message_is_already_marked_for_purging
     message_marked_for_deletion_reply_to_another_message_with_pu: >-
       Message marked for deletion. Reply to another message with /purgeto to
       delete all messages in between; within 30s!
 # TODO: Translate - strings.Purges.message_marked_for_deletion_reply_to_another_message_with_pu
-    you_can_only_use_this_command_after_having_used_the_purgefro: You can only use this command after having used the /purgefrom command! # TODO: Translate - strings.Purges.you_can_only_use_this_command_after_having_used_the_purgefro
-    use_del_command_to_delete_one_message: Use /del command to delete one message! # TODO: Translate - strings.Purges.use_del_command_to_delete_one_message
-    reply_to_a_message_to_show_me_till_where_to_purge: Reply to a message to show me till where to purge. # TODO: Translate - strings.Purges.reply_to_a_message_to_show_me_till_where_to_purge
+    you_can_only_use_this_command_after_having_used_the_purgefro: You can only 
+      use this command after having used the /purgefrom command!                                                                          # TODO: Translate - strings.Purges.you_can_only_use_this_command_after_having_used_the_purgefro
+    use_del_command_to_delete_one_message: Use /del command to delete one 
+      message!                                                                     # TODO: Translate - strings.Purges.use_del_command_to_delete_one_message
+    reply_to_a_message_to_show_me_till_where_to_purge: Reply to a message to 
+      show me till where to purge.                                                                        # TODO: Translate - strings.Purges.reply_to_a_message_to_show_me_till_where_to_purge
   Reports:
     settings:
       enabled: Admin reports are enabled!
@@ -1208,7 +1243,8 @@ strings:
     you_can_t_report_your_own_message: You can't report your own message! # TODO: Translate - strings.Reports.you_can_t_report_your_own_message
     you_need_to_expose_yourself_first: You need to expose yourself first! # TODO: Translate - strings.Reports.you_need_to_expose_yourself_first
     it_s_a_special_account_of_telegram: It's a special account of telegram! # TODO: Translate - strings.Reports.it_s_a_special_account_of_telegram
-    you_re_an_admin_whom_will_i_report_your_issues_to: 'You''re an admin, whom will I report your issues to?' # TODO: Translate - strings.Reports.you_re_an_admin_whom_will_i_report_your_issues_to
+    you_re_an_admin_whom_will_i_report_your_issues_to: 'You''re an admin, whom will
+      I report your issues to?'                                                                               # TODO: Translate - strings.Reports.you_re_an_admin_whom_will_i_report_your_issues_to
     why_would_i_report_myself: Why would I report myself? # TODO: Translate - strings.Reports.why_would_i_report_myself
     why_would_i_report_an_admin: Why would I report an admin? # TODO: Translate - strings.Reports.why_would_i_report_an_admin
   Rules:
@@ -1235,7 +1271,8 @@ strings:
 
       × /resetrulesbtn: Same as above.
     successfully_cleared_rules: Successfully cleared rules! # TODO: Translate - strings.Rules.successfully_cleared_rules
-    successfully_cleared_custom_rules_button_text: Successfully cleared custom rules button text! # TODO: Translate - strings.Rules.successfully_cleared_custom_rules_button_text
+    successfully_cleared_custom_rules_button_text: Successfully cleared custom 
+      rules button text!                                                                          # TODO: Translate - strings.Rules.successfully_cleared_custom_rules_button_text
   Tagger:
     help_msg: >-
       Tagger is an essential feature to mention all subscribed members in the
@@ -1301,7 +1338,8 @@ strings:
         chat?
       success: Removed all warns of all users in this chat.
       button_yes: Removed all warns of all the users in this chat !
-      button_no: Cancelled the removal of all the warns of all the users in this chat !
+      button_no: Cancelled the removal of all the warns of all the users in this
+        chat !
     warnings:
       status: >-
         The group has the following settings:\n<b>Warn Limit:</b>
@@ -1384,11 +1422,16 @@ strings:
   Utils:
     chat_status:
       user:
-        no_permission_change_info_btn: You don't have permission to change info!!
-        no_permission_change_info_cmd: You don't have permission to change info in this group!
-        no_permission_restrict_btn: You don't have permission to restrict members!
-        no_permission_restrict_cmd: You don't have permission to restrict members in this group!
-        no_permission_promote_btn: You don't have permission to promote/demote members!!
+        no_permission_change_info_btn: You don't have permission to change 
+          info!!
+        no_permission_change_info_cmd: You don't have permission to change info 
+          in this group!
+        no_permission_restrict_btn: You don't have permission to restrict 
+          members!
+        no_permission_restrict_cmd: You don't have permission to restrict 
+          members in this group!
+        no_permission_promote_btn: You don't have permission to promote/demote 
+          members!!
         no_permission_promote_cmd: >-
           You can't promote/demote people here! Make sure you have appropriate
           rights!
@@ -1408,7 +1451,8 @@ strings:
         no_permission_promote: >-
           I can't promote/demote people here! Make sure I'm an admin and can
           appoint new admins.
-        no_permission_pin: I can't pin messages here! Make sure I'm admin and can pin messages.
+        no_permission_pin: I can't pin messages here! Make sure I'm admin and 
+          can pin messages.
         no_permission_delete: I don't have Permission to Delete Messages!
         require_admin: >-
           I'm not an admin! Make sure I'm an admin and have appropriate
@@ -1436,4 +1480,5 @@ strings:
     string_handling:
       extract_time:
         invalid_time_amount: Invalid time amount specified.
-        invalid_time_type: 'Invalid time type specified. Expected m, h, or d got: %s'
+        invalid_time_type: 'Invalid time type specified. Expected m, h, or d got:
+          %s'

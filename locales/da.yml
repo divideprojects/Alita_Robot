@@ -6,21 +6,27 @@ strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: Admin-cache genindlæst.
-      not_found: Admincache ikke fundet. Bed en administrator om at bruge /admincache for at genindlæse admin-cachen.
+      not_found: Admincache ikke fundet. Bed en administrator om at bruge 
+        /admincache for at genindlæse admin-cachen.
     errors:
-      no_user_specified: Jeg ved ikke, hvem du taler om, du bliver nødt til at specificere en bruger...!
+      no_user_specified: Jeg ved ikke, hvem du taler om, du bliver nødt til at 
+        specificere en bruger...!
       anon_user_generic: Denne kommando kan ikke bruges på en anonym bruger.
       admin_only: Du skal være administrator for at gøre dette!
       admin_only_command: Kun administratorer kan udføre denne kommando!
       creator_only: Du skal være gruppens opretter for at gøre dette!
       creator_only_command: Kun gruppens opretter kan gøre dette!
       bot_not_admin: Jeg er ikke administrator!
-      bot_no_restrict_permission: Jeg kan ikke begrænse folk her! Sørg for, at jeg er administrator og kan begrænse andre medlemmer.
+      bot_no_restrict_permission: Jeg kan ikke begrænse folk her! Sørg for, at 
+        jeg er administrator og kan begrænse andre medlemmer.
       group_only: Denne kommando kan kun bruges i en gruppe!
-      group_only_command: 'Denne kommando er lavet til brug i gruppechats, ikke i PM!'
+      group_only_command: 'Denne kommando er lavet til brug i gruppechats, ikke i
+        PM!'
       private_only_command: 'Denne kommando er lavet til PM, ikke gruppechat!'
-      user_not_found: Kunne ikke finde en bruger med dette navn; er du sikker på, at jeg har set dem før?
-      user_not_in_chat: 'Denne bruger er ikke i denne chat, hvordan kan jeg begrænse dem?'
+      user_not_found: Kunne ikke finde en bruger med dette navn; er du sikker 
+        på, at jeg har set dem før?
+      user_not_in_chat: 'Denne bruger er ikke i denne chat, hvordan kan jeg begrænse
+        dem?'
       action_on_self: Jeg kan ikke udføre denne handling på mig selv.
       button_expired: 'Denne knap er udløbet. Brug venligst kommandoen igen.'
       invalid_option_yes_no: 'Dit input blev ikke genkendt som en af: yes/no/on/off'
@@ -29,8 +35,10 @@ strings:
       not_enough_args: Ikke nok argumenter.
       invalid_time_amount: Ugyldigt tidsbeløb angivet.
       time_too_long: Kan ikke sætte tid til mere end 1 år!
-      invalid_time_type: 'Ugyldig tidstype angivet. Forventede m, h, d eller w, fik: %s'
-      get_chat_member_failed: 'Kunne ikke hente bruger: kunne ikke getChatMember: Dårlig anmodning: chat ikke fundet'
+      invalid_time_type: 'Ugyldig tidstype angivet. Forventede m, h, d eller w, fik:
+        %s'
+      get_chat_member_failed: 'Kunne ikke hente bruger: kunne ikke getChatMember:
+        Dårlig anmodning: chat ikke fundet'
       admin_only_button: Denne knap kan kun bruges af en administrator!
       no_reply: Svar på en brugers besked for at slette og smide ham ud!
     buttons:
@@ -61,7 +69,8 @@ strings:
       muted: Bruger muted!
       unmuted: Bruger unmutes!
     anon_admin:
-      prompt: Det ser ud til, at du er anonym. Tryk på denne knap for at bekræfte din identitet.
+      prompt: Det ser ud til, at du er anonym. Tryk på denne knap for at 
+        bekræfte din identitet.
       button: Klik for at bevise admin
   Admin:
     adminlist: 'Admins i <b>%s</b>:'
@@ -80,27 +89,37 @@ strings:
         Fra nu af vil jeg ikke længere bede administratorerne om at bekræfte tilladelser fra anonyme administratorer.
       already_enabled: AnonAdmin-tilstand er allerede <b>aktiveret</b> for %s
       already_disabled: AnonAdmin-tilstand er allerede <b>deaktiveret</b> for %s
-      invalid_arg: Ugyldigt argument, jeg forstår kun <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+      invalid_arg: Ugyldigt argument, jeg forstår kun <code>on</code>, 
+        <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
-      is_owner: Denne person oprettede denne chat, hvordan skulle jeg kunne degradere dem?
-      is_admin: Denne person er ikke en administrator, hvordan skal jeg kunne degradere dem?
+      is_owner: Denne person oprettede denne chat, hvordan skulle jeg kunne 
+        degradere dem?
+      is_admin: Denne person er ikke en administrator, hvordan skal jeg kunne 
+        degradere dem?
       is_bot_itself: Jeg kommer ikke til at degradere mig selv.
       success_demote: Har degraderet %s!
     promote:
       admin_title_truncated: Admin-titel afkortet til 16 tegn fra %d
       is_bot_itself: Hvis bare jeg kunne gøre dette ved mig selv ;_;
-      is_owner: Denne person oprettede denne chat, hvordan skulle jeg kunne forfremme dem?
-      is_admin: Denne person er allerede administrator, hvordan skulle jeg kunne forfremme dem?
+      is_owner: Denne person oprettede denne chat, hvordan skulle jeg kunne 
+        forfremme dem?
+      is_admin: Denne person er allerede administrator, hvordan skulle jeg kunne
+        forfremme dem?
       success_promote: Har forfremmet %s!
     title:
       success_set: Har sat %s's admin-titel til <b>%s</b>
       is_bot_itself: Hvis bare jeg kunne gøre dette ved mig selv ;_;
-      is_owner: Denne person oprettede denne chat, hvordan skulle jeg kunne sætte en admin-titel for dem?
-      is_admin: Denne person er allerede en administrator, hvordan skulle jeg kunne sætte en brugerdefineret admin-titel for dem?
+      is_owner: Denne person oprettede denne chat, hvordan skulle jeg kunne 
+        sætte en admin-titel for dem?
+      is_admin: Denne person er allerede en administrator, hvordan skulle jeg 
+        kunne sætte en brugerdefineret admin-titel for dem?
     errors:
-      err_set_title: Kunne ikke sætte brugerdefineret admin-titel; Titlen er muligvis ikke korrekt eller kan indeholde emojis.
-      err_cannot_demote: Kunne ikke degradere; Jeg er muligvis ikke administrator, eller de er blevet forfremmet af en anden administrator.
-      err_cannot_promote: Kunne ikke forfremme; Jeg er muligvis ikke administrator, eller de er blevet forfremmet af en anden administrator.
+      err_set_title: Kunne ikke sætte brugerdefineret admin-titel; Titlen er 
+        muligvis ikke korrekt eller kan indeholde emojis.
+      err_cannot_demote: Kunne ikke degradere; Jeg er muligvis ikke 
+        administrator, eller de er blevet forfremmet af en anden administrator.
+      err_cannot_promote: Kunne ikke forfremme; Jeg er muligvis ikke 
+        administrator, eller de er blevet forfremmet af en anden administrator.
       title_empty: Du skal give mig en admin-titel for at sætte den.
     help_msg: |-
       Gør det nemt at forfremme og degradere brugere med admin-modulet!
@@ -112,8 +131,10 @@ strings:
       × /promote `<reply/username/mention/userid>`: Forfrem en bruger.
       × /demote `<reply/username/mention/userid>`: Degrader en bruger.
       × /title `<reply/username/mention/userid>` `<custom title>`: Sæt en brugerdefineret titel for brugeren.
-    here_is_the_invite_link_of_this_chat_percent: 'Her er invitationlinket til denne chat: %s'
-    you_need_to_be_admin_to_do_this: Du skal være administrator for at gøre dette!
+    here_is_the_invite_link_of_this_chat_percent: 'Her er invitationlinket til denne
+      chat: %s'
+    you_need_to_be_admin_to_do_this: Du skal være administrator for at gøre 
+      dette!
   Antiflood:
     checkflood:
       perform_action: 'Ja, jeg kan ikke lide din flooding. %s er blevet %s!'
@@ -124,20 +145,29 @@ strings:
         Jeg vil ikke advare brugere om flooding.
     flood:
       disabled: Denne chat håndhæver i øjeblikket ikke flood-kontrol.
-      show_settings: Denne chat håndhæver i øjeblikket flood-kontrol efter %d beskeder. Enhver bruger, der sender flere beskeder end det, vil blive %s.
+      show_settings: Denne chat håndhæver i øjeblikket flood-kontrol efter %d 
+        beskeder. Enhver bruger, der sender flere beskeder end det, vil blive 
+        %s.
     setfloodmode:
       success: Flood-tilstand er blevet sat til %s.
       unknown_type: 'Ukendt type ''%s''. Brug venligst en af: ban/kick/mute'
-      specify_action: 'Du skal angive en handling, der skal udføres ved flooding. Nuværende tilstande er: `ban`/`kick`/`mute`'
+      specify_action: 'Du skal angive en handling, der skal udføres ved flooding.
+        Nuværende tilstande er: `ban`/`kick`/`mute`'
     flood_deleter:
-      enabled: Antiflood-beskedsletning er slået til. Beskeder, der forårsager antiflood, vil blive slettet!
-      disabled: Antiflood-beskedsletning er slået fra. Beskeder, der forårsager antiflood, vil blive ignoreret!
+      enabled: Antiflood-beskedsletning er slået til. Beskeder, der forårsager 
+        antiflood, vil blive slettet!
+      disabled: Antiflood-beskedsletning er slået fra. Beskeder, der forårsager 
+        antiflood, vil blive ignoreret!
       invalid_option: 'Jeg forstår kun en mulighed fra: `yes`/`no`/`on`/`off`'
-      already_enabled: Antiflood-beskedsletning er i øjeblikket *aktiveret* i denne chat. Beskeder, der forårsager antiflood, vil blive slettet!
-      already_disabled: Antiflood-beskedsletning er i øjeblikket *deaktiveret* i denne chat. Beskeder, der forårsager antiflood, vil blive ignoreret!
+      already_enabled: Antiflood-beskedsletning er i øjeblikket *aktiveret* i 
+        denne chat. Beskeder, der forårsager antiflood, vil blive slettet!
+      already_disabled: Antiflood-beskedsletning er i øjeblikket *deaktiveret* i
+        denne chat. Beskeder, der forårsager antiflood, vil blive ignoreret!
     errors:
-      expected_args: 'Jeg forventede nogle argumenter! Enten off, eller et heltal. f.eks.: `/setflood 5`, eller `/setflood off`'
-      invalid_int: 'Det er ikke et gyldigt heltal. Giv mig venligst et gyldigt heltal eller `off`.'
+      expected_args: 'Jeg forventede nogle argumenter! Enten off, eller et heltal.
+        f.eks.: `/setflood 5`, eller `/setflood off`'
+      invalid_int: 'Det er ikke et gyldigt heltal. Giv mig venligst et gyldigt heltal
+        eller `off`.'
       set_in_limit: Antiflood-grænsen skal sættes mellem 3 og 100.
     help_msg: |-
       Du ved, hvordan nogle gange slutter folk sig til, sender 100 beskeder og ødelægger din chat? Med antiflood sker det ikke mere!
@@ -153,13 +183,16 @@ strings:
     unban_admins_only: Fjern banlysning (kun administratorer)
   Approvals:
     approve:
-      is_bot_itself: Du har allerede godkendt mig ved at gøre mig til administrator!
+      is_bot_itself: Du har allerede godkendt mig ved at gøre mig til 
+        administrator!
       user_approved: |-
         Bruger %s er blevet godkendt.
         Fra nu af vil de blive ignoreret af auto-bans, blacklister, låse og antiflood.
-      user_not_in_chat: Denne bruger er ikke i denne chat, hvordan kan jeg godkende dem?
+      user_not_in_chat: Denne bruger er ikke i denne chat, hvordan kan jeg 
+        godkende dem?
     unapprove:
-      is_bot_itself: Jeg er administrator, jeg kan ikke blive fjernet fra godkendelseslisten!
+      is_bot_itself: Jeg er administrator, jeg kan ikke blive fjernet fra 
+        godkendelseslisten!
       user_unapproved: |-
         Bruger %s er ikke længere godkendt.
         Fra nu af vil de blive påvirket af auto-bans, blacklister, låse og antiflood.
@@ -185,11 +218,14 @@ strings:
 
         For at få mere information om hver bruger, såsom Godkendt Af og Godkendelsestidspunkt, brug /approval (bruger-id).
     unapprove_all:
-      ask: Er du sikker på, at du vil fjerne alle godkendte brugere fra denne chat?
-      chat_creator_only: Kun chat-opretteren kan bruge denne kommando til at fjerne godkendelsen af alle brugere i denne chat.
+      ask: Er du sikker på, at du vil fjerne alle godkendte brugere fra denne 
+        chat?
+      chat_creator_only: Kun chat-opretteren kan bruge denne kommando til at 
+        fjerne godkendelsen af alle brugere i denne chat.
       button_handler:
         'true': Fjernede alle godkendte brugere fra denne chat ✅
-        'false': Annullerede fjernelse af alle godkendte brugere fra denne chat ❌
+        'false': Annullerede fjernelse af alle godkendte brugere fra denne chat 
+          ❌
     help_msg: |-
       Nogle gange stoler du måske på, at en bruger ikke sender uønsket indhold.
 
@@ -217,9 +253,12 @@ strings:
       × /unapproveall: Fjern godkendelsen af ALLE brugere i en chat. Dette kan ikke fortrydes.
   Bans:
     errors:
-      anon_user_kick: Denne kommando kan ikke bruges på anonyme brugere, disse brugere kan kun banlyses/få banlysningen fjernet.
-      anon_user_ban_reply: Du kan kun banlyse en anonym bruger ved at svare på deres besked.
-      anon_user_generic: Denne kommando kan ikke bruges på anonyme brugere, disse brugere kan kun banlyses/få banlysningen fjernet.
+      anon_user_kick: Denne kommando kan ikke bruges på anonyme brugere, disse 
+        brugere kan kun banlyses/få banlysningen fjernet.
+      anon_user_ban_reply: Du kan kun banlyse en anonym bruger ved at svare på 
+        deres besked.
+      anon_user_generic: Denne kommando kan ikke bruges på anonyme brugere, 
+        disse brugere kan kun banlyses/få banlysningen fjernet.
       restrict_admin: Jeg kan ikke begrænse en administrator.
     restrict:
       question: Hvordan kan jeg begrænse denne bruger?
@@ -231,20 +270,23 @@ strings:
       unmute_success: Mute fjernet af %s!
       unban_success: Banlysning fjernet af %s!
     kick:
-      user_not_in_chat: 'Denne bruger er ikke i denne chat, hvordan skal jeg kunne begrænse dem?'
-      cannot_kick_admin: Hvorfor skulle jeg smide en administrator ud? Det lyder som en ret dum idé.
+      user_not_in_chat: 'Denne bruger er ikke i denne chat, hvordan skal jeg kunne
+        begrænse dem?'
+      cannot_kick_admin: Hvorfor skulle jeg smide en administrator ud? Det lyder
+        som en ret dum idé.
       is_bot_itself: Hvorfor skulle jeg smide mig selv ud?
       kicked_user: Har smidt %s ud.
-      kicked_reason: |-
+      kicked_reason: |2-
 
         <b>Grund:</b> %s
     kickme:
       is_admin: 'Du er administrator, du sidder fast her med alle andre!'
       ok_out: 'Som du ønsker, forsvind!'
     ban:
-      is_admin: Hvorfor skulle jeg banlyse en administrator? Det lyder som en ret dum idé.
+      is_admin: Hvorfor skulle jeg banlyse en administrator? Det lyder som en 
+        ret dum idé.
       is_bot_itself: Tror du virkelig, jeg vil banlyse mig selv?
-      ban_reason: |-
+      ban_reason: |2-
 
         <b>Grund:</b> %s
       tban: Banlyste %s i %s
@@ -252,10 +294,12 @@ strings:
         Endnu en røg i svinget...!
         Banlyste %s.
       dban:
-        no_reply: Du skal svare på en besked for at slette den og banlyse brugeren!
+        no_reply: Du skal svare på en besked for at slette den og banlyse 
+          brugeren!
     unban:
       is_admin: Hvorfor skulle jeg fjerne banlysningen af en administrator?
-      is_bot_itself: Hvorfor skulle jeg fjerne begrænsningen på mig selv, når jeg allerede er her?
+      is_bot_itself: Hvorfor skulle jeg fjerne begrænsningen på mig selv, når 
+        jeg allerede er her?
       unbanned_user: |-
         Lad os give ham en chance til.
         Fjernede banlysning af %s!
@@ -305,9 +349,11 @@ strings:
     set_bl_action:
       current_mode: 'Den nuværende blacklist-tilstand for denne chat er: %s'
       changed_mode: 'Blacklist-tilstand er ændret til: *%s*'
-      choose_correct_option: Vælg venligst en mulighed fra <mute/kick/ban/warn/none>
+      choose_correct_option: Vælg venligst en mulighed fra 
+        <mute/kick/ban/warn/none>
     rm_all_bl:
-      ask: Er du sikker på, at du vil fjerne alle blacklistede ord fra denne chat?
+      ask: Er du sikker på, at du vil fjerne alle blacklistede ord fra denne 
+        chat?
       button_handler:
         'true': Fjernede alle blacklister fra denne chat ✅
         'false': Annullerede fjernelse af alle blacklister fra denne chat ❌
@@ -342,8 +388,10 @@ strings:
       Standardtilstanden for Blacklist er *none*, som kun sletter beskederne fra chatten.
   Connections:
     errors:
-      invalid_option_yes_no: Giv mig venligst en gyldig mulighed fra <yes/on/no/off>
-      get_chat_failed: 'kunne ikke oprette forbindelse til chat: kunne ikke hente chat: kunne ikke henteChat: Dårlig anmodning: chat ikke fundet'
+      invalid_option_yes_no: Giv mig venligst en gyldig mulighed fra 
+        <yes/on/no/off>
+      get_chat_failed: 'kunne ikke oprette forbindelse til chat: kunne ikke hente
+        chat: kunne ikke henteChat: Dårlig anmodning: chat ikke fundet'
       no_chat_id: Jeg har brug for et chat-id for at oprette forbindelse til!
     connect_to_chat_button: Opret forbindelse til chat
     connected: Du er i øjeblikket forbundet til <b>%s</b>!
@@ -366,13 +414,15 @@ strings:
         Brugerforbindelser er i øjeblikket <b>deaktiveret</b> for denne chat.
         Spørg venligst administratorerne, hvis du vil have lov til at oprette forbindelse!
       connected: Du er nu forbundet til <b>%s</b>!
-      tap_btn_connect: Tryk venligst på knappen nedenfor for at forbinde denne chat til din PM.
+      tap_btn_connect: Tryk venligst på knappen nedenfor for at forbinde denne 
+        chat til din PM.
     connections_btns:
       admin_conn_cmds: 'Tilgængelige admin-kommandoer:%s'
       user_conn_cmds: 'Tilgængelige bruger-kommandoer:%s'
     disconnect:
       disconnected: Forbindelsen til den tilsluttede chat er afbrudt.
-      need_pm: Du skal sende dette i en PM til mig for at afbryde forbindelsen til chatten!
+      need_pm: Du skal sende dette i en PM til mig for at afbryde forbindelsen 
+        til chatten!
     is_user_connected:
       need_group: Denne kommando er beregnet til brug i gruppechats, ikke i PM!
       bot_not_admin: Jeg er ikke administrator i denne chat!
@@ -380,7 +430,8 @@ strings:
     reconnect:
       reconnected: Du er nu genforbundet til <b>%s</b>!!
       no_last_chat: Du har ingen seneste chat at genoprette forbindelse til!
-      need_pm: Du skal være i en PM med mig for at genoprette forbindelse til en chat!
+      need_pm: Du skal være i en PM med mig for at genoprette forbindelse til en
+        chat!
     help_msg: |-
       Dette modul giver dig mulighed for at oprette forbindelse til en chats database, og tilføje ting til den uden at chatten ved det! Af indlysende grunde skal du være administrator for at tilføje ting; men ethvert medlem kan se dine data. (banlyste/sparkede brugere kan ikke!)
 
@@ -415,8 +466,10 @@ strings:
     disabledel:
       enabled: Deaktiverede beskeder vil nu blive slettet.
       disabled: Deaktiverede beskeder vil ikke længere blive slettet.
-      status_enabled: Deaktiveret kommando-sletning er *aktiveret*, deaktiverede kommandoer fra brugere vil blive slettet!
-      status_disabled: Deaktiveret kommando-sletning er *deaktiveret*, deaktiverede kommandoer fra brugere vil *ikke* blive slettet!
+      status_enabled: Deaktiveret kommando-sletning er *aktiveret*, deaktiverede
+        kommandoer fra brugere vil blive slettet!
+      status_disabled: Deaktiveret kommando-sletning er *deaktiveret*, 
+        deaktiverede kommandoer fra brugere vil *ikke* blive slettet!
     enable:
       success: 'Genaktiverede brugen af følgende i denne chat:'
       errors:
@@ -446,7 +499,9 @@ strings:
       Deaktiverede kommandoer er stadig tilgængelige via /connect-funktionen. Hvis du er interesseret i at se dette deaktiveret også, så lad mig det vide i support-chatten.
   Filters:
     errors:
-      limit_exceeded: 'Filtergrænsen er overskredet, en gruppe kan kun have maksimalt 150 filtre!\nDenne begrænsning skyldes, at botten kører gratis uden donationer fra brugere.'
+      limit_exceeded: 'Filtergrænsen er overskredet, en gruppe kan kun have maksimalt
+        150 filtre!\nDenne begrænsning skyldes, at botten kører gratis uden donationer
+        fra brugere.'
       no_keyword: Giv mig venligst et nøgleord at svare på!
       invalid_filter: Ugyldigt filter!
       does_not_exist: Filteret eksisterer ikke!
@@ -502,7 +557,9 @@ strings:
       -> /filter trigger
     formatting: Formatering
   Formatting:
-    help_msg: Alita understøtter et stort antal formateringsmuligheder for at gøre dine beskeder mere udtryksfulde. Tag et kig ved at klikke på knapperne nedenfor!
+    help_msg: Alita understøtter et stort antal formateringsmuligheder for at 
+      gøre dine beskeder mere udtryksfulde. Tag et kig ved at klikke på 
+      knapperne nedenfor!
     Markdown: |-
       <b>Markdown-formatering</b>
 
@@ -616,7 +673,9 @@ strings:
     random_content: Tilfældigt indhold
   Greetings:
     welcome:
-      status: 'Jeg byder i øjeblikket brugere velkommen: <code>%t</code>\nJeg sletter i øjeblikket gamle velkomster: <code>%t</code>\nJeg sletter i øjeblikket servicebeskeder: <code>%t</code>\nVelkomstbeskeden, der ikke udfylder {}, er:'
+      status: 'Jeg byder i øjeblikket brugere velkommen: <code>%t</code>\nJeg sletter
+        i øjeblikket gamle velkomster: <code>%t</code>\nJeg sletter i øjeblikket servicebeskeder:
+        <code>%t</code>\nVelkomstbeskeden, der ikke udfylder {}, er:'
       enabled: Jeg vil byde brugere velkommen fra nu af.
       disabled: Jeg vil ikke byde brugere velkommen fra nu af.
       turned_off: Velkomstbeskeden er slået fra!
@@ -625,7 +684,9 @@ strings:
     reset_welcome:
       success: Har nulstillet brugerdefineret velkomstbesked til standard!
     goodbye:
-      status: 'Jeg siger i øjeblikket farvel til brugere: <code>%t</code>\nJeg sletter i øjeblikket gamle farvelhilsner: <code>%t</code>\nJeg sletter i øjeblikket servicebeskeder: <code>%t</code>\nFarvelbeskeden, der ikke udfylder {}, er:'
+      status: 'Jeg siger i øjeblikket farvel til brugere: <code>%t</code>\nJeg sletter
+        i øjeblikket gamle farvelhilsner: <code>%t</code>\nJeg sletter i øjeblikket
+        servicebeskeder: <code>%t</code>\nFarvelbeskeden, der ikke udfylder {}, er:'
       enabled: Jeg vil sige farvel til brugere fra nu af.
       disabled: Jeg vil ikke sige farvel til brugere fra nu af.
       turned_off: Farvel-beskeden er slået fra!
@@ -634,17 +695,20 @@ strings:
     reset_goodbye:
       success: Har nulstillet brugerdefineret farvel-besked til standard!
     clean_welcome:
-      status_enabled: Jeg burde slette velkomstbeskeder, der er op til to dage gamle.
+      status_enabled: Jeg burde slette velkomstbeskeder, der er op til to dage 
+        gamle.
       status_disabled: Jeg sletter i øjeblikket ikke gamle velkomstbeskeder!
       disabled: Jeg vil ikke slette gamle velkomstbeskeder!
       enabled: Jeg vil prøve at slette gamle velkomstbeskeder!
     clean_goodbye:
-      status_enabled: Jeg burde slette velkomstbeskeder, der er op til to dage gamle.
+      status_enabled: Jeg burde slette velkomstbeskeder, der er op til to dage 
+        gamle.
       status_disabled: Jeg sletter i øjeblikket ikke gamle velkomstbeskeder!
       disabled: Jeg vil ikke slette gamle farvel-beskeder!
       enabled: Jeg vil prøve at slette gamle farvel-beskeder!
     del_joined:
-      status_enabled: Jeg burde slette 'bruger' tilsluttede sig chat-beskeder nu.
+      status_enabled: Jeg burde slette 'bruger' tilsluttede sig chat-beskeder 
+        nu.
       status_disabled: Jeg sletter i øjeblikket ikke tilsluttede beskeder.
       disabled: Jeg vil ikke slette tilsluttede beskeder.
       enabled: Jeg vil prøve at slette tilsluttede beskeder!
@@ -687,7 +751,8 @@ strings:
       × /cleanwelcome `<yes/no/on/off>`: Slet den gamle velkomstbesked, hver gang et nyt medlem tilslutter sig.
 
       × /autoapprove `<yes/no/on/off>`: Godkend automatisk alle nye medlemmer.
-    i_am_currently_goodbying_users_t: 'Jeg siger i øjeblikket farvel til brugere: <code>%t</code>'
+    i_am_currently_goodbying_users_t: 'Jeg siger i øjeblikket farvel til brugere:
+      <code>%t</code>'
     i_understand_on_yes_or_off_no_only: Jeg forstår kun 'on/yes' eller 'off/no'!
     formatting: Formatering
   Help:
@@ -710,7 +775,8 @@ strings:
       support_group_button: "Supportgruppe 👥"
       commands_help_button: "📚 Kommandoer og hjælp"
       language_button: "Sprog 🌏"
-      group_prompt: 'Hej :) Send mig en PM, hvis du har spørgsmål til, hvordan du bruger mig!'
+      group_prompt: 'Hej :) Send mig en PM, hvis du har spørgsmål til, hvordan du
+        bruger mig!'
     main: |-
       Hej %s!
       Mit navn er Alita ✨.
@@ -727,7 +793,8 @@ strings:
     help:
       button: Klik her for hjælp!
       group_prompt_general: Kontakt mig i PM for hjælp!
-      group_prompt_module: Kontakt mig i PM for hjælp vedrørende <code>%s</code>!
+      group_prompt_module: Kontakt mig i PM for hjælp vedrørende 
+        <code>%s</code>!
     configuration:
       private_only: Konfiguration virker kun privat
     About: |-
@@ -791,23 +858,33 @@ strings:
 
       Du kan donere ved at kontakte min ejer her: @DivideProjectsBot
     about_me_u200d: "Om mig 👨‍💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_me: "About me 👨\\u200d💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_text: "I'm Alita, a group management bot built to help you manage your groups
+      effectively!"
   Locks:
     list:
       header: 'Disse er låsene i denne chat:'
     locktypes:
       header: 'Låse: \n -'
     lock:
-      no_type_specified: Hvad vil du låse? Tjek /locktypes for tilgængelige muligheder.
+      no_type_specified: Hvad vil du låse? Tjek /locktypes for tilgængelige 
+        muligheder.
       success: 'Låste følgende i denne gruppe:\n - %s'
     unlock:
-      no_type_specified: Hvad vil du låse? Tjek /locktypes for tilgængelige muligheder.
+      no_type_specified: Hvad vil du låse? Tjek /locktypes for tilgængelige 
+        muligheder.
       success: 'Fjernede låsen for følgende i denne gruppe:\n - %s'
     errors:
       invalid_type: '`%s` er ikke en korrekt låsetype, tjek /locktypes.'
     bot:
-      no_admin_permission: 'Jeg ser en bot, og jeg er blevet bedt om at forhindre dem i at deltage... men jeg er ikke administrator!'
-      no_ban_permission: 'Jeg ser en bot, og jeg er blevet bedt om at forhindre dem i at deltage... men jeg har ikke tilladelse til at banlyse dem!'
-      admin_only: Kun administratorer har tilladelse til at tilføje bots til denne chat!
+      no_admin_permission: 'Jeg ser en bot, og jeg er blevet bedt om at forhindre
+        dem i at deltage... men jeg er ikke administrator!'
+      no_ban_permission: 'Jeg ser en bot, og jeg er blevet bedt om at forhindre dem
+        i at deltage... men jeg har ikke tilladelse til at banlyse dem!'
+      admin_only: Kun administratorer har tilladelse til at tilføje bots til 
+        denne chat!
     help_msg: |-
       *Kun administrator*:
 
@@ -830,12 +907,15 @@ strings:
       **Eksempel:**
 
       `/lock media`: dette låser alle mediebeskeder i chatten.
-    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'Jeg ser en bot, og jeg er blevet bedt om at forhindre dem i at deltage...'
+    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'Jeg ser en bot, og jeg er
+      blevet bedt om at forhindre dem i at deltage...'
   Languages:
     help_translate_button: "Hjælp os med at oversætte 🌎"
     change:
-      private_prompt: Din nuværende sprog er %s\nVælg et sprog fra tastaturet nedenfor.
-      group_prompt: 'Denne gruppes nuværende sprog er %s\nVælg et sprog fra tastaturet nedenfor.'
+      private_prompt: Din nuværende sprog er %s\nVælg et sprog fra tastaturet 
+        nedenfor.
+      group_prompt: 'Denne gruppes nuværende sprog er %s\nVælg et sprog fra tastaturet
+        nedenfor.'
       private_success: Dit sprog er blevet ændret til %s
       group_success: Denne gruppes sprog er blevet ændret til %s
     help_msg: |-
@@ -853,16 +933,20 @@ strings:
       need_target: Svar til nogen.
       need_content: Angiv noget indhold at svare med!
     paste:
-      need_text_or_document: Giv mig venligst tekst til at indsætte eller svar på et dokument!
+      need_text_or_document: Giv mig venligst tekst til at indsætte eller svar 
+        på et dokument!
       processing: Indsætter ...
       get_file_error: BadRequest på GetFile!
-      file_too_big: Filen er for stor til at indsætte; Maks. filstørrelse, der kan indsættes, er 600 kb!
+      file_too_big: Filen er for stor til at indsætte; Maks. filstørrelse, der 
+        kan indsættes, er 600 kb!
       paste_error: Kan ikke indsætte de angivne data!
     info:
       user_not_found: Kunne ikke finde nogen oplysninger om denne bruger.
     translate:
-      need_text_and_lang: Jeg har brug for noget tekst og en sprogkode for at oversætte.
-      no_text_in_reply: Den besvarede besked indeholder ikke tekst, der skal oversættes.
+      need_text_and_lang: Jeg har brug for noget tekst og en sprogkode for at 
+        oversætte.
+      no_text_in_reply: Den besvarede besked indeholder ikke tekst, der skal 
+        oversættes.
       need_text: Angiv venligst noget tekst at oversætte.
       request_error: Fejl ved oversættelsesanmodning!
     keyboard:
@@ -922,7 +1006,8 @@ strings:
       no_keyword_reply: Giv mig venligst et nøgleord at svare på!
       invalid_note: Ugyldig note!
       does_not_exist: Noten eksisterer ikke!
-      parse_error: Der er en fejl ved parsing af noten, rapporter venligst dette i support-chatten.
+      parse_error: Der er en fejl ved parsing af noten, rapporter venligst dette
+        i support-chatten.
       admin_only: Denne note kan kun tilgås af en administrator!
     list:
       no_notes: Der er ingen noter i denne chat!
@@ -952,11 +1037,15 @@ strings:
 
       - /privatenotes: Om noter skal sendes i PM eller ej. Sender en besked med en knap, som brugere kan klikke på for at få noten i PM.
     removed_note_percent: Fjernede note <b>%s</b>.
-    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Er du sikker på, at du vil fjerne alle noter fra denne chat?
-    only_chat_creator_can_use_this_command: Kun chat-opretteren kan bruge denne kommando.
-    there_s_some_error_parsing_the_note_please_report_this_in_su: 'Der er en fejl ved parsing af noten, rapporter venligst dette i support-chatten.'
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Er du sikker på, 
+      at du vil fjerne alle noter fra denne chat?
+    only_chat_creator_can_use_this_command: Kun chat-opretteren kan bruge denne 
+      kommando.
+    there_s_some_error_parsing_the_note_please_report_this_in_su: 'Der er en fejl
+      ved parsing af noten, rapporter venligst dette i support-chatten.'
     note_doesn_t_exists: Noten eksisterer ikke!
-    there_s_some_error_parsing_the_note_please_report_this_to_su: 'Der er en fejl ved parsing af noten, rapporter venligst dette til support-chatten.'
+    there_s_some_error_parsing_the_note_please_report_this_to_su: 'Der er en fejl
+      ved parsing af noten, rapporter venligst dette til support-chatten.'
     formatting: Formatering
   Pins:
     errors:
@@ -995,11 +1084,16 @@ strings:
       × /cleanlinked <yes/no/on/off>: Slet beskeder sendt af den linkede kanal.
 
       Bemærk: Når du bruger anti-kanal-pins, skal du sørge for at bruge /unpin-kommandoen i stedet for at gøre det manuelt. Ellers vil den gamle besked blive fastgjort igen, når kanalen sender nogen beskeder.
-    unpinned_all_pinned_messages_in_this_chat: Alle fastgjorte beskeder i denne chat er frigjort!
-    cancelled_operation_to_unpin_messages: Annulleret handling for at frigøre beskeder!
-    are_you_sure_you_want_to_unpin_all_pinned_messages: Er du sikker på, at du vil frigøre alle fastgjorte beskeder?
-    please_reply_to_a_message_or_give_some_text_to_pin: Svar venligst på en besked eller giv noget tekst til at fastgøre.
-    no_message_has_been_pinned_in_the_current_chat: Ingen besked er blevet fastgjort i den aktuelle chat!
+    unpinned_all_pinned_messages_in_this_chat: Alle fastgjorte beskeder i denne 
+      chat er frigjort!
+    cancelled_operation_to_unpin_messages: Annulleret handling for at frigøre 
+      beskeder!
+    are_you_sure_you_want_to_unpin_all_pinned_messages: Er du sikker på, at du 
+      vil frigøre alle fastgjorte beskeder?
+    please_reply_to_a_message_or_give_some_text_to_pin: Svar venligst på en 
+      besked eller giv noget tekst til at fastgøre.
+    no_message_has_been_pinned_in_the_current_chat: Ingen besked er blevet 
+      fastgjort i den aktuelle chat!
   Purges:
     help_msg: |-
       *Kun administrator:*
@@ -1009,13 +1103,20 @@ strings:
       *Eksempler*:
       - Slet alle beskeder fra den besvarede besked og frem til nu.
       -> `/purge`
-    reply_to_a_message_to_select_where_to_start_purging_from: Svar på en besked for at vælge, hvorfra udrensningen skal starte.
+    reply_to_a_message_to_select_where_to_start_purging_from: Svar på en besked 
+      for at vælge, hvorfra udrensningen skal starte.
     reply_to_a_message_to_delete_it: Svar på en besked for at slette den!
-    this_message_is_already_marked_for_purging: Denne besked er allerede markeret til udrensning!
-    message_marked_for_deletion_reply_to_another_message_with_pu: 'Besked markeret til sletning. Svar på en anden besked med /purgeto for at slette alle beskeder imellem; inden for 30s!'
-    you_can_only_use_this_command_after_having_used_the_purgefro: Du kan kun bruge denne kommando efter at have brugt /purgefrom-kommandoen!
-    use_del_command_to_delete_one_message: Brug /del-kommandoen til at slette én besked!
-    reply_to_a_message_to_show_me_till_where_to_purge: Svar på en besked for at vise mig, hvor langt der skal udrenses.
+    this_message_is_already_marked_for_purging: Denne besked er allerede 
+      markeret til udrensning!
+    message_marked_for_deletion_reply_to_another_message_with_pu: 'Besked markeret
+      til sletning. Svar på en anden besked med /purgeto for at slette alle beskeder
+      imellem; inden for 30s!'
+    you_can_only_use_this_command_after_having_used_the_purgefro: Du kan kun 
+      bruge denne kommando efter at have brugt /purgefrom-kommandoen!
+    use_del_command_to_delete_one_message: Brug /del-kommandoen til at slette én
+      besked!
+    reply_to_a_message_to_show_me_till_where_to_purge: Svar på en besked for at 
+      vise mig, hvor langt der skal udrenses.
   Reports:
     settings:
       enabled: Administratorrapporter er aktiveret!
@@ -1056,7 +1157,8 @@ strings:
     you_can_t_report_your_own_message: Du kan ikke rapportere din egen besked!
     you_need_to_expose_yourself_first: Du skal først afsløre dig selv!
     it_s_a_special_account_of_telegram: Det er en særlig konto på Telegram!
-    you_re_an_admin_whom_will_i_report_your_issues_to: 'Du er administrator, hvem skal jeg rapportere dine problemer til?'
+    you_re_an_admin_whom_will_i_report_your_issues_to: 'Du er administrator, hvem
+      skal jeg rapportere dine problemer til?'
     why_would_i_report_myself: Hvorfor skulle jeg rapportere mig selv?
     why_would_i_report_an_admin: Hvorfor skulle jeg rapportere en administrator?
   Rules:
@@ -1081,7 +1183,8 @@ strings:
 
       × /resetrulesbtn: Samme som ovenfor.
     successfully_cleared_rules: Reglerne er ryddet!
-    successfully_cleared_custom_rules_button_text: Teksten til den brugerdefinerede regelknap er ryddet!
+    successfully_cleared_custom_rules_button_text: Teksten til den 
+      brugerdefinerede regelknap er ryddet!
   Tagger:
     help_msg: |-
       Tagger er en essentiel funktion til at nævne alle tilmeldte medlemmer i gruppen. 
@@ -1115,7 +1218,8 @@ strings:
       ban: 'Advarselstilstand opdateret til: banlys'
       kick: 'Advarselstilstand opdateret til: smid ud'
       mute: 'Advarselstilstand opdateret til: mute'
-      no_mode_specified: 'Du skal angive en handling, der skal udføres ved for mange advarsler. Nuværende tilstande er: ban/kick/mute'
+      no_mode_specified: 'Du skal angive en handling, der skal udføres ved for mange
+        advarsler. Nuværende tilstande er: ban/kick/mute'
     warn:
       limit_kick: Det er %d/%d advarsler; Så %s er blevet smidt ud!
       limit_mute: Det er %d/%d advarsler; Så %s er blevet muted!
@@ -1126,23 +1230,67 @@ strings:
     warns:
       no_warns: Denne bruger har ingen advarsler!
       list_header: 'Denne bruger har %d/%d advarsler, af følgende grunde:'
-      list_no_reasons: 'Bruger har %d/%d advarsler, men ingen grunde til nogen af dem.'
+      list_no_reasons: 'Bruger har %d/%d advarsler, men ingen grunde til nogen af
+        dem.'
     remove:
       success: Advarsel fjernet af %s.
       no_warns: Brugeren har allerede ingen advarsler!
     set_limit:
-      no_limit_specified: Angiv venligst, hvor mange advarsler en bruger må modtage, før der handles. F.eks. `/setwarnlimit 5`
-      success: Advarselsgrænseindstillingerne for denne chat er blevet opdateret til %d.
+      no_limit_specified: Angiv venligst, hvor mange advarsler en bruger må 
+        modtage, før der handles. F.eks. `/setwarnlimit 5`
+      success: Advarselsgrænseindstillingerne for denne chat er blevet opdateret
+        til %d.
     reset:
       success: Advarsler er blevet nulstillet!
     reset_all:
       no_warns: Ingen brugere er advaret i denne chat!
-      confirm: Er du sikker på, at du vil fjerne alle advarsler for alle brugere i denne chat?
+      confirm: Er du sikker på, at du vil fjerne alle advarsler for alle brugere
+        i denne chat?
       success: Fjernede alle advarsler for alle brugere i denne chat.
       button_yes: Fjernede alle advarsler for alle brugere i denne chat!
-      button_no: Annullerede fjernelsen af alle advarsler for alle brugere i denne chat!
+      button_no: Annullerede fjernelsen af alle advarsler for alle brugere i 
+        denne chat!
     warnings:
-      status: 'Gruppen har følgende indstillinger:\n<b>Advarselsgrænse:</b> <code>%d</code>\n<b>Advarselstilstand:</b> <code>%s</code>'
+      status: 'Gruppen har følgende indstillinger:\n<b>Advarselsgrænse:</b> <code>%d</code>\n<b>Advarselstilstand:</b>
+        <code>%s</code>'
+#  TODO: INCOMPLETE TRANSLATION 
+    help_msg: >-
+      Keep your members in check with warnings; stop them getting out of
+      control!
+
+      If you're looking for automated warnings, read about the blacklist module!
+
+
+      *Admin Commands:*
+
+      - /warn <reason>: Warn a user.
+
+      - /dwarn <reason>: Warn a user by reply, and delete their message.
+
+      - /swarn <reason>: Silently warn a user, and delete your message.
+
+      - /warns: See a user's warnings.
+
+      - /rmwarn: Remove a user's latest warning.
+
+      - /resetwarn: Reset all of a user's warnings to 0.
+
+      - /resetallwarns: Delete all the warnings in a chat. All users return to 0
+      warns.
+
+      - /warnings: Get the chat's warning settings.
+
+      - /setwarnmode <ban/kick/mute>: Set the chat's warn mode.
+
+      - /setwarnlimit <number>: Set the number of warnings before users are
+      punished.
+
+
+      *Examples*
+
+      - Warn a user.
+
+      -> `/warn @user For disobeying the rules`
   Dev:
     errors:
       no_user_specified: Du skal angive en bruger for at få oplysninger om
@@ -1184,41 +1332,59 @@ strings:
   Utils:
     chat_status:
       user:
-        no_permission_change_info_btn: Du har ikke tilladelse til at ændre oplysninger!
-        no_permission_change_info_cmd: Du har ikke tilladelse til at ændre oplysninger i denne gruppe!
-        no_permission_restrict_btn: Du har ikke tilladelse til at begrænse medlemmer!
-        no_permission_restrict_cmd: Du har ikke tilladelse til at begrænse medlemmer i denne gruppe!
-        no_permission_promote_btn: Du har ikke tilladelse til at forfremme/degradere medlemmer!
-        no_permission_promote_cmd: Du kan ikke forfremme/degradere folk her! Sørg for, at du har de rette rettigheder!
-        no_permission_pin: Du kan ikke fastgøre beskeder her! Sørg for, at du er administrator og kan fastgøre beskeder.
+        no_permission_change_info_btn: Du har ikke tilladelse til at ændre 
+          oplysninger!
+        no_permission_change_info_cmd: Du har ikke tilladelse til at ændre 
+          oplysninger i denne gruppe!
+        no_permission_restrict_btn: Du har ikke tilladelse til at begrænse 
+          medlemmer!
+        no_permission_restrict_cmd: Du har ikke tilladelse til at begrænse 
+          medlemmer i denne gruppe!
+        no_permission_promote_btn: Du har ikke tilladelse til at 
+          forfremme/degradere medlemmer!
+        no_permission_promote_cmd: Du kan ikke forfremme/degradere folk her! 
+          Sørg for, at du har de rette rettigheder!
+        no_permission_pin: Du kan ikke fastgøre beskeder her! Sørg for, at du er
+          administrator og kan fastgøre beskeder.
         no_permission_delete: Du har ikke tilladelse til at slette beskeder!
         require_admin_btn: Du skal være administrator for at gøre dette!
         require_admin_cmd: Kun administratorer kan udføre denne kommando!
         require_owner_btn: Du skal være gruppens opretter for at gøre dette!
         require_owner_cmd: Kun gruppens opretter kan gøre dette!
       bot:
-        no_permission_restrict: Jeg har ikke tilladelse til at begrænse medlemmer!
-        no_permission_restrict_group: Jeg kan ikke begrænse folk her! Sørg for, at jeg er administrator og kan begrænse andre medlemmer.
-        no_permission_promote: Jeg kan ikke forfremme/degradere folk her! Sørg for, at jeg er administrator og kan udpege nye administratorer.
-        no_permission_pin: Jeg kan ikke fastgøre beskeder her! Sørg for, at jeg er administrator og kan fastgøre beskeder.
+        no_permission_restrict: Jeg har ikke tilladelse til at begrænse 
+          medlemmer!
+        no_permission_restrict_group: Jeg kan ikke begrænse folk her! Sørg for, 
+          at jeg er administrator og kan begrænse andre medlemmer.
+        no_permission_promote: Jeg kan ikke forfremme/degradere folk her! Sørg 
+          for, at jeg er administrator og kan udpege nye administratorer.
+        no_permission_pin: Jeg kan ikke fastgøre beskeder her! Sørg for, at jeg 
+          er administrator og kan fastgøre beskeder.
         no_permission_delete: Jeg har ikke tilladelse til at slette beskeder!
-        require_admin: Jeg er ikke administrator! Sørg for, at jeg er administrator og har de relevante tilladelser.
+        require_admin: Jeg er ikke administrator! Sørg for, at jeg er 
+          administrator og har de relevante tilladelser.
       require_private: 'Denne kommando er lavet til PM, ikke gruppechat!'
       require_group: 'Denne kommando er lavet til brug i gruppechats, ikke i PM!'
-      anon_admin_string: Det ser ud til, at du er anonym. Tryk på denne knap for at bekræfte din identitet.
+      anon_admin_string: Det ser ud til, at du er anonym. Tryk på denne knap for
+        at bekræfte din identitet.
       anon_admin_btn: Bekræft din identitet
     extraction:
       extract_chat:
-        badrequest_failed_getchat: 'kunne ikke oprette forbindelse til chat: kunne ikke hente chat: kunne ikke henteChat: Dårlig anmodning: chat ikke fundet'
-        fail_need_chat_id: 'Jeg forventede et chat-id, men dette er ikke et gyldigt heltal.'
+        badrequest_failed_getchat: 'kunne ikke oprette forbindelse til chat: kunne
+          ikke hente chat: kunne ikke henteChat: Dårlig anmodning: chat ikke fundet'
+        fail_need_chat_id: 'Jeg forventede et chat-id, men dette er ikke et gyldigt
+          heltal.'
         fail_need_chat: Jeg har brug for et chat-id for at oprette forbindelse!
       extract_user:
-        no_user_found: 'Kunne ikke finde en bruger med dette navn; er du sikker på, at jeg har set dem før?'
-        badrequest_failed_getchatmember: 'kunne ikke hente bruger: kunne ikke henteChatMember: Dårlig anmodning: chat ikke fundet'
+        no_user_found: 'Kunne ikke finde en bruger med dette navn; er du sikker på,
+          at jeg har set dem før?'
+        badrequest_failed_getchatmember: 'kunne ikke hente bruger: kunne ikke henteChatMember:
+          Dårlig anmodning: chat ikke fundet'
     string_handling:
       extract_time:
         invalid_time_amount: Ugyldigt tidsbeløb angivet.
-        invalid_time_type: 'Ugyldig tidstype angivet. Forventede m, h eller d, fik: %s'
+        invalid_time_type: 'Ugyldig tidstype angivet. Forventede m, h eller d, fik:
+          %s'
   Mute:
     unmute_admin_only: Fjern mute (kun administratorer)
   Helpers:

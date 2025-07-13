@@ -39,7 +39,8 @@ strings:
       not_enough_args: Nedostatek argumentů.
       invalid_time_amount: Zadán neplatný časový údaj.
       time_too_long: Nelze nastavit čas delší než 1 rok!
-      invalid_time_type: 'Zadán neplatný typ času. Očekáváno m, h, d nebo w, dostal: %s'
+      invalid_time_type: 'Zadán neplatný typ času. Očekáváno m, h, d nebo w, dostal:
+        %s'
       get_chat_member_failed: >-
         Nepodařilo se získat uživatele: nelze getChatMember: Bad Request: chat
         nenalezen
@@ -149,8 +150,10 @@ strings:
 
       × /title `<reply/username/mention/userid>` `<custom title>`: Nastavit
       vlastní titul uživateli
-    here_is_the_invite_link_of_this_chat_percent: 'Zde je odkaz na pozvánku tohoto chatu: %s'
-    you_need_to_be_admin_to_do_this: K provedení tohoto musíte být administrátor!
+    here_is_the_invite_link_of_this_chat_percent: 'Zde je odkaz na pozvánku tohoto
+      chatu: %s'
+    you_need_to_be_admin_to_do_this: K provedení tohoto musíte být 
+      administrátor!
   Antiflood:
     checkflood:
       perform_action: 'Nelíbí se mi tvé floodování. %s byl %s!'
@@ -289,7 +292,8 @@ strings:
       anon_user_kick: >-
         Tento příkaz nelze použít na anonymního uživatele, tito uživatelé mohou
         být pouze zabanováni/odbanováni.
-      anon_user_ban_reply: Anonymního uživatele můžete zabanovat pouze odpovědí na jeho zprávu.
+      anon_user_ban_reply: Anonymního uživatele můžete zabanovat pouze odpovědí 
+        na jeho zprávu.
       anon_user_generic: >-
         Tento příkaz nelze použít na anonymního uživatele, tito uživatelé mohou
         být pouze zabanováni/odbanováni.
@@ -308,7 +312,7 @@ strings:
       cannot_kick_admin: Proč bych kickoval admina? To zní jako hloupý nápad.
       is_bot_itself: Proč bych kickoval sám sebe?
       kicked_user: Úspěšně vyhozen %s.
-      kicked_reason: |-
+      kicked_reason: |2-
 
         <b>Důvod:</b> %s
     kickme:
@@ -317,7 +321,7 @@ strings:
     ban:
       is_admin: Proč bych banoval admina? To zní jako hloupý nápad.
       is_bot_itself: Opravdu si myslíte, že bych se banoval?
-      ban_reason: |-
+      ban_reason: |2-
 
         <b>Důvod:</b> %s
       tban: Zabanován %s na %s
@@ -325,7 +329,8 @@ strings:
         Další kousek prachu...!
         Zabanován %s.
       dban:
-        no_reply: Pro smazání zprávy a banování uživatele musíte odpovědět na zprávu!
+        no_reply: Pro smazání zprávy a banování uživatele musíte odpovědět na 
+          zprávu!
     unban:
       is_admin: Proč bych odbanovával admina?
       is_bot_itself: Proč bych se odbanovával, když už jsem tady?
@@ -448,7 +453,8 @@ strings:
         Uživatelská připojení jsou aktuálně <b>zakázána</b> k tomuto chatu.
         Požádejte adminy o povolení, pokud se chcete připojit!
       connected: 'Nyní jste připojeni k <b>%s</b>!'
-      tap_btn_connect: Prosím, stiskněte tlačítko níže pro připojení tohoto chatu k vašim PM.
+      tap_btn_connect: Prosím, stiskněte tlačítko níže pro připojení tohoto 
+        chatu k vašim PM.
     connections_btns:
       admin_conn_cmds: 'Dostupné admin příkazy:%s'
       user_conn_cmds: 'Dostupné uživatelské příkazy:%s'
@@ -844,7 +850,8 @@ strings:
       intro: >-
         Ahoj! Jmenuji se Alita ✨.\nJsem tu, abych vám pomohl spravovat vaše
         skupiny!\nZadejte /help pro zjištění více o tom, jak mě plně využít.\nPřipojte
-        se k mému <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>kanálu novinek</a>
+        se k mému <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>kanálu
+        novinek</a>
         pro získání informací o všech nejnovějších aktualizacích.
       about_button: O mně ✨
       add_to_chat_button: ➕ Přidat do chatu!
@@ -937,16 +944,23 @@ strings:
 
       Přispět můžete kontaktováním mého vlastníka zde: @DivideProjectsBot
     about_me_u200d: "O mně 👨‍💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_me: "About me 👨\\u200d💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_text: "I'm Alita, a group management bot built to help you manage your groups
+      effectively!"
   Locks:
     list:
       header: 'Toto jsou zámky v tomto chatu:'
     locktypes:
       header: 'Zámky: \n -'
     lock:
-      no_type_specified: Co chcete zamknout? Zkontrolujte /locktypes pro dostupné možnosti.
+      no_type_specified: Co chcete zamknout? Zkontrolujte /locktypes pro 
+        dostupné možnosti.
       success: 'Zamčeno následující v této skupině:\n - %s'
     unlock:
-      no_type_specified: Co chcete odemknout? Zkontrolujte /locktypes pro dostupné možnosti.
+      no_type_specified: Co chcete odemknout? Zkontrolujte /locktypes pro 
+        dostupné možnosti.
       success: 'Odemčeno následující v této skupině:\n - %s'
     errors:
       invalid_type: '`%s` není správný typ zámku, zkontrolujte /locktypes.'
@@ -1009,10 +1023,12 @@ strings:
       need_target: Odpovězte někomu.
       need_content: Poskytněte nějaký obsah k odpovědi!
     paste:
-      need_text_or_document: Prosím, zadejte text k vložení nebo odpovězte na dokument!
+      need_text_or_document: Prosím, zadejte text k vložení nebo odpovězte na 
+        dokument!
       processing: Vkládání ...
       get_file_error: BadRequest při GetFile!
-      file_too_big: Soubor je příliš velký k vložení; Maximální velikost souboru, který lze vložit, je 600 kb!
+      file_too_big: Soubor je příliš velký k vložení; Maximální velikost 
+        souboru, který lze vložit, je 600 kb!
       paste_error: Nelze vložit poskytnutá data!
     info:
       user_not_found: Nepodařilo se najít žádné informace o tomto uživateli.
@@ -1052,7 +1068,8 @@ strings:
     mute:
       success: Shh...\nUmlčen %s.
     dmute:
-      no_reply: Pro smazání zprávy a umlčení uživatele musíte odpovědět na zprávu!
+      no_reply: Pro smazání zprávy a umlčení uživatele musíte odpovědět na 
+        zprávu!
       success: Shh...\nUmlčen %s.
     unmute:
       success: Dobře!\nPovolím %s znovu mluvit.
@@ -1118,8 +1135,10 @@ strings:
       - /privatenotes: Zda odesílat poznámky do PM. Odešle zprávu s tlačítkem,
       na které mohou uživatelé kliknout, aby získali poznámku v PM.
     removed_note_percent: Poznámka <b>%s</b> odstraněna.
-    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Opravdu chcete odstranit všechny poznámky z tohoto chatu?
-    only_chat_creator_can_use_this_command: Tento příkaz může použít pouze tvůrce chatu.
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Opravdu chcete 
+      odstranit všechny poznámky z tohoto chatu?
+    only_chat_creator_can_use_this_command: Tento příkaz může použít pouze 
+      tvůrce chatu.
     there_s_some_error_parsing_the_note_please_report_this_in_su: >-
       Při parsování poznámky došlo k chybě, prosím, nahlaste to v chatu
       podpory.
@@ -1174,11 +1193,15 @@ strings:
       Poznámka: Při použití anti channel pins se ujistěte, že používáte příkaz
       /unpin, místo ručního provádění. V opačném případě se stará zpráva znovu
       připne, když kanál odešle jakékoli zprávy.
-    unpinned_all_pinned_messages_in_this_chat: Všechny připnuté zprávy v tomto chatu byly odepnuty!
+    unpinned_all_pinned_messages_in_this_chat: Všechny připnuté zprávy v tomto 
+      chatu byly odepnuty!
     cancelled_operation_to_unpin_messages: Operace odepnutí zpráv zrušena!
-    are_you_sure_you_want_to_unpin_all_pinned_messages: Opravdu chcete odepnout všechny připnuté zprávy?
-    please_reply_to_a_message_or_give_some_text_to_pin: Prosím, odpovězte na zprávu nebo zadejte text k připnutí.
-    no_message_has_been_pinned_in_the_current_chat: V aktuálním chatu nebyla připnuta žádná zpráva!
+    are_you_sure_you_want_to_unpin_all_pinned_messages: Opravdu chcete odepnout 
+      všechny připnuté zprávy?
+    please_reply_to_a_message_or_give_some_text_to_pin: Prosím, odpovězte na 
+      zprávu nebo zadejte text k připnutí.
+    no_message_has_been_pinned_in_the_current_chat: V aktuálním chatu nebyla 
+      připnuta žádná zpráva!
   Purges:
     help_msg: |-
       *Pouze admini:*
@@ -1188,15 +1211,20 @@ strings:
       *Příklady*:
       - Smaže všechny zprávy od odpovědi po současnost.
       -> `/purge`
-    reply_to_a_message_to_select_where_to_start_purging_from: Odpovězte na zprávu, abyste vybrali, odkud začít mazat.
+    reply_to_a_message_to_select_where_to_start_purging_from: Odpovězte na 
+      zprávu, abyste vybrali, odkud začít mazat.
     reply_to_a_message_to_delete_it: Odpovězte na zprávu, abyste ji smazali!
-    this_message_is_already_marked_for_purging: Tato zpráva je již označena k vymazání!
+    this_message_is_already_marked_for_purging: Tato zpráva je již označena k 
+      vymazání!
     message_marked_for_deletion_reply_to_another_message_with_pu: >-
       Zpráva označena k vymazání. Odpovězte na jinou zprávu pomocí /purgeto pro
       smazání všech zpráv mezi; do 30s!
-    you_can_only_use_this_command_after_having_used_the_purgefro: Tento příkaz můžete použít pouze poté, co jste použili příkaz /purgefrom!
-    use_del_command_to_delete_one_message: Použijte příkaz /del pro smazání jedné zprávy!
-    reply_to_a_message_to_show_me_till_where_to_purge: Odpovězte na zprávu, abyste mi ukázali, kam až mazat.
+    you_can_only_use_this_command_after_having_used_the_purgefro: Tento příkaz 
+      můžete použít pouze poté, co jste použili příkaz /purgefrom!
+    use_del_command_to_delete_one_message: Použijte příkaz /del pro smazání 
+      jedné zprávy!
+    reply_to_a_message_to_show_me_till_where_to_purge: Odpovězte na zprávu, 
+      abyste mi ukázali, kam až mazat.
   Reports:
     settings:
       enabled: Hlášení administrátorům jsou povolena!
@@ -1246,7 +1274,8 @@ strings:
     you_can_t_report_your_own_message: Nemůžete nahlásit vlastní zprávu!
     you_need_to_expose_yourself_first: Nejprve se musíte odhalit!
     it_s_a_special_account_of_telegram: Jedná se o speciální účet Telegramu!
-    you_re_an_admin_whom_will_i_report_your_issues_to: 'Jste administrátor, komu nahlásím vaše problémy?'
+    you_re_an_admin_whom_will_i_report_your_issues_to: 'Jste administrátor, komu nahlásím
+      vaše problémy?'
     why_would_i_report_myself: Proč bych nahlásil sám sebe?
     why_would_i_report_an_admin: Proč bych nahlásil administrátora?
   Rules:
@@ -1274,7 +1303,8 @@ strings:
 
       × /resetrulesbtn: Stejné jako výše.
     successfully_cleared_rules: Pravidla úspěšně smazána!
-    successfully_cleared_custom_rules_button_text: Vlastní text tlačítka pravidel úspěšně smazán!
+    successfully_cleared_custom_rules_button_text: Vlastní text tlačítka 
+      pravidel úspěšně smazán!
   Tagger:
     help_msg: >-
       Tagger je zásadní funkce pro zmínku všech přihlášených členů ve skupině.
@@ -1329,7 +1359,8 @@ strings:
       no_limit_specified: >-
         Prosím, zadejte, kolik varování by uživatel měl povolit, než bude potrestán.
         Např. `/setwarnlimit 5`
-      success: Nastavení limitu varování pro tento chat bylo aktualizováno na %d.
+      success: Nastavení limitu varování pro tento chat bylo aktualizováno na 
+        %d.
     reset:
       success: Varování byla resetována!
     reset_all:
@@ -1338,14 +1369,54 @@ strings:
         Opravdu chcete odstranit všechna varování všech uživatelů v tomto chatu?
       success: Odstraněna všechna varování všech uživatelů v tomto chatu.
       button_yes: Odstraněna všechna varování všech uživatelů v tomto chatu!
-      button_no: Zrušeno odstranění všech varování všech uživatelů v tomto chatu!
+      button_no: Zrušeno odstranění všech varování všech uživatelů v tomto 
+        chatu!
     warnings:
       status: >-
         Skupina má následující nastavení:\n<b>Limit varování:</b>
         <code>%d</code>\n<b>Režim varování:</b> <code>%s</code>
+#  TODO: INCOMPLETE TRANSLATION 
+    help_msg: >-
+      Keep your members in check with warnings; stop them getting out of
+      control!
+
+      If you're looking for automated warnings, read about the blacklist module!
+
+
+      *Admin Commands:*
+
+      - /warn <reason>: Warn a user.
+
+      - /dwarn <reason>: Warn a user by reply, and delete their message.
+
+      - /swarn <reason>: Silently warn a user, and delete your message.
+
+      - /warns: See a user's warnings.
+
+      - /rmwarn: Remove a user's latest warning.
+
+      - /resetwarn: Reset all of a user's warnings to 0.
+
+      - /resetallwarns: Delete all the warnings in a chat. All users return to 0
+      warns.
+
+      - /warnings: Get the chat's warning settings.
+
+      - /setwarnmode <ban/kick/mute>: Set the chat's warn mode.
+
+      - /setwarnlimit <number>: Set the number of warnings before users are
+      punished.
+
+
+      *Examples*
+
+      - Warn a user.
+
+      -> `/warn @user For disobeying the rules`
   Dev:
     errors:
-      no_user_specified: Musíte zadat uživatele, o kterém chcete získat informace
+      no_user_specified: Musíte zadat uživatele, o kterém chcete získat 
+        informace
     chatlist:
       getting_list: Získávám seznam chatů, ve kterých jsem...
       success: Zde je seznam chatů v mé databázi!
@@ -1385,9 +1456,11 @@ strings:
     chat_status:
       user:
         no_permission_change_info_btn: Nemáte oprávnění měnit informace!
-        no_permission_change_info_cmd: Nemáte oprávnění měnit informace v této skupině!
+        no_permission_change_info_cmd: Nemáte oprávnění měnit informace v této 
+          skupině!
         no_permission_restrict_btn: Nemáte oprávnění omezovat členy!
-        no_permission_restrict_cmd: Nemáte oprávnění omezovat členy v této skupině!
+        no_permission_restrict_cmd: Nemáte oprávnění omezovat členy v této 
+          skupině!
         no_permission_promote_btn: Nemáte oprávnění povyšovat/degradovat členy!
         no_permission_promote_cmd: >-
           Nemůžete zde povyšovat/degradovat lidi! Ujistěte se, že máte
@@ -1438,7 +1511,8 @@ strings:
     string_handling:
       extract_time:
         invalid_time_amount: Zadán neplatný časový údaj.
-        invalid_time_type: 'Zadán neplatný typ času. Očekáváno m, h, nebo d, dostal: %s'
+        invalid_time_type: 'Zadán neplatný typ času. Očekáváno m, h, nebo d, dostal:
+          %s'
   Mute:
     unmute_admin_only: Odmlčet (pouze admini)
   Helpers:

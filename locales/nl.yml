@@ -6,20 +6,27 @@ strings:
   CommonStrings:
     admin_cache:
       cache_reloaded: Admin cache succesvol opnieuw geladen.
-      not_found: Admin cache niet gevonden. Vraag een admin om /admincache te gebruiken om de admin cache opnieuw te laden.
+      not_found: Admin cache niet gevonden. Vraag een admin om /admincache te 
+        gebruiken om de admin cache opnieuw te laden.
     errors:
-      no_user_specified: Ik weet niet over wie je het hebt, je moet een gebruiker specificeren...!
-      anon_user_generic: Deze opdracht kan niet worden gebruikt voor anonieme gebruikers.
+      no_user_specified: Ik weet niet over wie je het hebt, je moet een 
+        gebruiker specificeren...!
+      anon_user_generic: Deze opdracht kan niet worden gebruikt voor anonieme 
+        gebruikers.
       admin_only: Je moet een admin zijn om dit te doen!
       admin_only_command: Alleen admins kunnen deze opdracht uitvoeren!
       creator_only: Je moet de groepmaker zijn om dit te doen!
       creator_only_command: Alleen de groepmaker kan dit doen!
       bot_not_admin: Ik ben geen admin!
-      bot_no_restrict_permission: Ik kan hier mensen niet beperken! Zorg ervoor dat ik admin ben en andere leden kan beperken.
+      bot_no_restrict_permission: Ik kan hier mensen niet beperken! Zorg ervoor 
+        dat ik admin ben en andere leden kan beperken.
       group_only: Deze opdracht kan alleen in een groep worden gebruikt!
-      group_only_command: 'Deze opdracht is gemaakt om in groepschats te worden gebruikt, niet in privéberichten!'
-      private_only_command: 'Deze opdracht is gemaakt voor privéberichten, niet voor groepschats!'
-      user_not_found: Kon geen gebruiker vinden met deze naam; weet je zeker dat ik ze eerder heb gezien?
+      group_only_command: 'Deze opdracht is gemaakt om in groepschats te worden gebruikt,
+        niet in privéberichten!'
+      private_only_command: 'Deze opdracht is gemaakt voor privéberichten, niet voor
+        groepschats!'
+      user_not_found: Kon geen gebruiker vinden met deze naam; weet je zeker dat
+        ik ze eerder heb gezien?
       user_not_in_chat: 'Deze gebruiker is niet in deze chat, hoe kan ik ze beperken?'
       action_on_self: Ik kan deze actie niet op mezelf uitvoeren.
       button_expired: 'Deze knop is verlopen, gebruik de opdracht opnieuw.'
@@ -29,10 +36,13 @@ strings:
       not_enough_args: Niet genoeg argumenten.
       invalid_time_amount: Ongeldige tijdsduur opgegeven.
       time_too_long: Kan tijd niet langer dan 1 jaar instellen!
-      invalid_time_type: 'Ongeldig tijdstype opgegeven. Verwacht m, h, d of w, kreeg: %s'
-      get_chat_member_failed: 'Kon gebruiker niet ophalen: kan getChatMember niet ophalen: Ongeldige aanvraag: chat niet gevonden'
+      invalid_time_type: 'Ongeldig tijdstype opgegeven. Verwacht m, h, d of w, kreeg:
+        %s'
+      get_chat_member_failed: 'Kon gebruiker niet ophalen: kan getChatMember niet
+        ophalen: Ongeldige aanvraag: chat niet gevonden'
       admin_only_button: Deze knop kan alleen door een admin worden gebruikt!
-      no_reply: Antwoord op het bericht van een gebruiker om hem te verwijderen en te schoppen!
+      no_reply: Antwoord op het bericht van een gebruiker om hem te verwijderen 
+        en te schoppen!
     buttons:
       'true': Ja
       'false': Nee
@@ -61,39 +71,60 @@ strings:
       muted: Gebruiker succesvol gedempt!
       unmuted: Dempen van gebruiker succesvol opgeheven!
     anon_admin:
-      prompt: Het lijkt erop dat je anoniem bent. Tik op deze knop om je identiteit te bevestigen.
+      prompt: Het lijkt erop dat je anoniem bent. Tik op deze knop om je 
+        identiteit te bevestigen.
       button: Klik om admin te bewijzen
   Admin:
     adminlist: 'Admins in <b>%s</b>:'
     anon_admin:
-      enabled: AnonAdmin modus is momenteel <b>ingeschakeld</b> voor %s. Dit stelt alle anonieme admins in staat om admin acties uit te voeren zonder beperking.
-      disabled: AnonAdmin modus is momenteel <b>uitgeschakeld</b> voor %s. Dit vereist dat anonieme admins op een knop drukken om hun toestemmingen te bevestigen.
-      enabled_now: AnonAdmin modus is nu <b>ingeschakeld</b> voor %s. Vanaf nu zal ik de admins vragen om toestemmingen van anonieme admins te verifiëren.
-      disabled_now: AnonAdmin modus is nu <b>uitgeschakeld</b> voor %s. Vanaf nu zal ik de admins niet meer vragen om toestemmingen van anonieme admins te verifiëren.
+      enabled: AnonAdmin modus is momenteel <b>ingeschakeld</b> voor %s. Dit 
+        stelt alle anonieme admins in staat om admin acties uit te voeren zonder
+        beperking.
+      disabled: AnonAdmin modus is momenteel <b>uitgeschakeld</b> voor %s. Dit 
+        vereist dat anonieme admins op een knop drukken om hun toestemmingen te 
+        bevestigen.
+      enabled_now: AnonAdmin modus is nu <b>ingeschakeld</b> voor %s. Vanaf nu 
+        zal ik de admins vragen om toestemmingen van anonieme admins te 
+        verifiëren.
+      disabled_now: AnonAdmin modus is nu <b>uitgeschakeld</b> voor %s. Vanaf nu
+        zal ik de admins niet meer vragen om toestemmingen van anonieme admins 
+        te verifiëren.
       already_enabled: AnonAdmin modus is al <b>ingeschakeld</b> voor %s
       already_disabled: AnonAdmin modus is al <b>uitgeschakeld</b> voor %s
-      invalid_arg: Ongeldig argument, ik begrijp alleen <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+      invalid_arg: Ongeldig argument, ik begrijp alleen <code>on</code>, 
+        <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
-      is_owner: Deze persoon heeft deze chat aangemaakt, hoe zou ik hen degraderen?
+      is_owner: Deze persoon heeft deze chat aangemaakt, hoe zou ik hen 
+        degraderen?
       is_admin: Deze persoon is geen admin, hoe zou ik hen degraderen?
-      is_bot_itself: Ik kan mezelf niet degraderen, ga de persoon halen die mij heeft gepromoot!
+      is_bot_itself: Ik kan mezelf niet degraderen, ga de persoon halen die mij 
+        heeft gepromoot!
       success_demote: '%s succesvol gedegradeerd!'
     promote:
       admin_title_truncated: Admin titel ingekort tot 16 karakters van %d
       is_bot_itself: Was het maar zo dat ik dit bij mezelf kon doen ;_;
-      is_owner: Deze persoon heeft deze chat aangemaakt, hoe zou ik hen promoten?
+      is_owner: Deze persoon heeft deze chat aangemaakt, hoe zou ik hen 
+        promoten?
       is_admin: Deze persoon is al een admin, hoe zou ik hen promoten?
       success_promote: '%s succesvol gepromoot!'
     title:
       success_set: Admin titel van %s succesvol ingesteld op <b>%s</b>
       is_bot_itself: Was het maar zo dat ik dit bij mezelf kon doen ;_;
-      is_owner: Deze persoon heeft deze chat aangemaakt, hoe zou ik een aangepaste admin titel voor hen instellen?
-      is_admin: Deze persoon is al een admin, hoe zou ik een aangepaste admin titel voor hen instellen?
+      is_owner: Deze persoon heeft deze chat aangemaakt, hoe zou ik een 
+        aangepaste admin titel voor hen instellen?
+      is_admin: Deze persoon is al een admin, hoe zou ik een aangepaste admin 
+        titel voor hen instellen?
     errors:
-      err_set_title: Kon aangepaste admin titel niet instellen, de titel naam is mogelijk niet correct of bevat emoji's.
-      err_cannot_demote: Kon niet degraderen. Ik ben mogelijk geen admin, of de admin status werd aangesteld door een andere gebruiker, dus ik kan geen actie ondernemen!
-      err_cannot_promote: Kon niet promoten. Ik ben mogelijk geen admin, of de admin status werd aangesteld door een andere gebruiker, dus ik kan geen actie ondernemen!
-      title_empty: Je moet mij een admin titel geven zodat ik deze kan instellen.
+      err_set_title: Kon aangepaste admin titel niet instellen, de titel naam is
+        mogelijk niet correct of bevat emoji's.
+      err_cannot_demote: Kon niet degraderen. Ik ben mogelijk geen admin, of de 
+        admin status werd aangesteld door een andere gebruiker, dus ik kan geen 
+        actie ondernemen!
+      err_cannot_promote: Kon niet promoten. Ik ben mogelijk geen admin, of de 
+        admin status werd aangesteld door een andere gebruiker, dus ik kan geen 
+        actie ondernemen!
+      title_empty: Je moet mij een admin titel geven zodat ik deze kan 
+        instellen.
     help_msg: |-
       Maak het gemakkelijk om gebruikers te promoten en te degraderen met de admin module!
 
@@ -109,7 +140,8 @@ strings:
       × /demote `<reply/username/mention/userid>`: Een gebruiker degraderen.
 
       × /title `<reply/username/mention/userid>` `<custom title>`: Aangepaste titel voor gebruiker instellen
-    here_is_the_invite_link_of_this_chat_percent: 'Hier is de uitnodigingslink van deze chat: %s'
+    here_is_the_invite_link_of_this_chat_percent: 'Hier is de uitnodigingslink van
+      deze chat: %s'
     you_need_to_be_admin_to_do_this: Je moet admin zijn om dit te doen!
   Antiflood:
     checkflood:
@@ -121,20 +153,30 @@ strings:
         Ik zal gebruikers niet waarschuwen voor spam.
     flood:
       disabled: Deze chat heeft momenteel geen spam controle actief.
-      show_settings: Deze chat heeft momenteel spam controle actief na %d berichten. Gebruikers die meer dan dat aantal berichten sturen worden %s.
+      show_settings: Deze chat heeft momenteel spam controle actief na %d 
+        berichten. Gebruikers die meer dan dat aantal berichten sturen worden 
+        %s.
     setfloodmode:
       success: 'Begrepen! Spam modus wordt %s.'
       unknown_type: 'Onbekend type ''%s''. Gebruik een van: ban/kick/mute'
-      specify_action: 'Je moet een actie specificeren om uit te voeren bij spam. Huidige modi zijn: `ban`/`kick`/`mute`'
+      specify_action: 'Je moet een actie specificeren om uit te voeren bij spam. Huidige
+        modi zijn: `ban`/`kick`/`mute`'
     flood_deleter:
-      enabled: Anti-spam berichtverwijdering ingeschakeld. Berichten die anti-spam veroorzaken worden verwijderd!
-      disabled: Anti-spam berichtverwijdering uitgeschakeld. Berichten die anti-spam veroorzaken worden genegeerd!
+      enabled: Anti-spam berichtverwijdering ingeschakeld. Berichten die 
+        anti-spam veroorzaken worden verwijderd!
+      disabled: Anti-spam berichtverwijdering uitgeschakeld. Berichten die 
+        anti-spam veroorzaken worden genegeerd!
       invalid_option: 'Ik begrijp alleen een optie van: `yes`/`no`/`on`/`off`'
-      already_enabled: Anti-spam berichtverwijdering is momenteel *ingeschakeld* in deze chat, Berichten die anti-spam veroorzaken worden verwijderd!
-      already_disabled: Anti-spam berichtverwijdering is momenteel *uitgeschakeld* in deze chat, Berichten die anti-spam veroorzaken worden genegeerd!
+      already_enabled: Anti-spam berichtverwijdering is momenteel *ingeschakeld*
+        in deze chat, Berichten die anti-spam veroorzaken worden verwijderd!
+      already_disabled: Anti-spam berichtverwijdering is momenteel 
+        *uitgeschakeld* in deze chat, Berichten die anti-spam veroorzaken worden
+        genegeerd!
     errors:
-      expected_args: 'Ik verwachtte wat argumenten! Ofwel off, of een geheel getal. bijv: `/setflood 5`, of `/setflood off`'
-      invalid_int: 'Dat is geen geldig geheel getal. Geef mij een geldig geheel getal, of `off`.'
+      expected_args: 'Ik verwachtte wat argumenten! Ofwel off, of een geheel getal.
+        bijv: `/setflood 5`, of `/setflood off`'
+      invalid_int: 'Dat is geen geldig geheel getal. Geef mij een geldig geheel getal,
+        of `off`.'
       set_in_limit: De anti-spam limiet moet ingesteld worden tussen 3 en 100.
     help_msg: |-
       Je weet hoe soms mensen zich aansluiten, 100 berichten versturen en je chat ruïneren? Met anti-spam gebeurt dat niet meer!
@@ -159,7 +201,8 @@ strings:
       user_approved: |-
         Goedgekeurde Gebruiker: %s
         Ze zijn nu beschermd tegen bans, zwarte lijsten, vergrendelingen en anti-spam!
-      user_not_in_chat: Deze gebruiker is niet in deze chat, hoe kan ik hen goedkeuren?
+      user_not_in_chat: Deze gebruiker is niet in deze chat, hoe kan ik hen 
+        goedkeuren?
     unapprove:
       is_bot_itself: Ik ben een admin, ik kan niet niet-goedgekeurd worden!
       user_unapproved: |-
@@ -187,13 +230,17 @@ strings:
 
         Om meer informatie over elke gebruiker te krijgen zoals Goedgekeurd Door en Goedkeuringstijd, gebruik /approval (user id).
     unapprove_all:
-      ask: Weet je zeker dat je alle Goedgekeurde Gebruikers uit deze chat wilt verwijderen?
-      chat_creator_only: Alleen de Chat Maker kan dit commando gebruiken om alle gebruikers in deze chat niet goed te keuren.
+      ask: Weet je zeker dat je alle Goedgekeurde Gebruikers uit deze chat wilt 
+        verwijderen?
+      chat_creator_only: Alleen de Chat Maker kan dit commando gebruiken om alle
+        gebruikers in deze chat niet goed te keuren.
       button_handler:
         'true': Alle Goedgekeurde Gebruikers uit deze Chat verwijderd ✅
-        'false': Het verwijderen van alle Goedgekeurde Gebruikers uit deze Chat geannuleerd ❌
+        'false': Het verwijderen van alle Goedgekeurde Gebruikers uit deze Chat 
+          geannuleerd ❌
         yes: Alle Goedgekeurde Gebruikers uit deze Chat verwijderd ✅
-        no: Het verwijderen van alle Goedgekeurde Gebruikers uit deze Chat geannuleerd ❌
+        no: Het verwijderen van alle Goedgekeurde Gebruikers uit deze Chat 
+          geannuleerd ❌
     help_msg: |-
       Soms kun je een gebruiker vertrouwen om geen ongewenste content te verzenden.
 
@@ -221,9 +268,12 @@ strings:
       × /unapproveall: Alle gebruikers in een chat niet goedkeuren. Dit kan niet ongedaan gemaakt worden.
   Bans:
     errors:
-      anon_user_kick: Deze opdracht kan niet worden gebruikt voor anonieme gebruikers, deze gebruikers kunnen alleen worden verbannen/ontbannen.
-      anon_user_ban_reply: Je kunt een anonieme gebruiker alleen verbannen door te antwoorden op hun bericht.
-      anon_user_generic: Deze opdracht kan niet worden gebruikt voor anonieme gebruikers, deze gebruikers kunnen alleen worden verbannen/ontbannen.
+      anon_user_kick: Deze opdracht kan niet worden gebruikt voor anonieme 
+        gebruikers, deze gebruikers kunnen alleen worden verbannen/ontbannen.
+      anon_user_ban_reply: Je kunt een anonieme gebruiker alleen verbannen door 
+        te antwoorden op hun bericht.
+      anon_user_generic: Deze opdracht kan niet worden gebruikt voor anonieme 
+        gebruikers, deze gebruikers kunnen alleen worden verbannen/ontbannen.
       restrict_admin: Ik kan een admin niet beperken.
     restrict:
       question: Hoe kan ik deze gebruiker beperken?
@@ -235,20 +285,23 @@ strings:
       unmute_success: Dempen opgeheven door %s!
       unban_success: Ban opgeheven door %s!
     kick:
-      user_not_in_chat: Deze gebruiker is niet in deze chat, hoe kan ik ze wegschoppen?
-      cannot_kick_admin: Waarom zou ik een admin afzetten? Dat klinkt als een vrij dom idee.
+      user_not_in_chat: Deze gebruiker is niet in deze chat, hoe kan ik ze 
+        wegschoppen?
+      cannot_kick_admin: Waarom zou ik een admin afzetten? Dat klinkt als een 
+        vrij dom idee.
       is_bot_itself: Waarom zou ik mezelf afzetten?
       kicked_user: Succesvol %s geschopt.
-      kicked_reason: |-
+      kicked_reason: |2-
 
         <b>Reden:</b> %s
     kickme:
       is_admin: Je bent een admin, je zit hier met iedereen!
       ok_out: 'Oké, ga weg!'
     ban:
-      is_admin: Waarom zou ik een admin afzetten? Dat klinkt als een vrij dom idee.
+      is_admin: Waarom zou ik een admin afzetten? Dat klinkt als een vrij dom 
+        idee.
       is_bot_itself: Denk je echt dat ik mezelf zou afzetten?
-      ban_reason: |-
+      ban_reason: |2-
 
         <b>Reden:</b> %s
       tban: Gebanned %s voor %s
@@ -256,7 +309,8 @@ strings:
         Nog een is gevallen...!
         Gebanned %s.
       dban:
-        no_reply: Je moet een reactie geven om het te verwijderen en de gebruiker te bannen!
+        no_reply: Je moet een reactie geven om het te verwijderen en de 
+          gebruiker te bannen!
     unban:
       is_admin: Waarom zou ik een admin onbannen?
       is_bot_itself: Waarom zou ik mezelf niet ontgrendelen als ik al hier ben?
@@ -295,12 +349,15 @@ strings:
     banned_user: 'Gebannede gebruiker:'
   Blacklists:
     blacklist:
-      give_bl_word: Geef me alstublieft een woord om toe te voegen aan de zwarte lijst!
+      give_bl_word: Geef me alstublieft een woord om toe te voegen aan de zwarte
+        lijst!
       already_blacklisted: 'Deze woorden staan al op de zwarte lijst:'
       added_bl: 'Deze woorden toegevoegd als zwarte lijsten:'
     unblacklist:
-      give_bl_word: Geef me alstublieft een woord om te verwijderen van de zwarte lijst!
-      no_removed_bl: Geen van de gegeven woorden stond op de zwarte lijst die verwijderd kon worden!
+      give_bl_word: Geef me alstublieft een woord om te verwijderen van de 
+        zwarte lijst!
+      no_removed_bl: Geen van de gegeven woorden stond op de zwarte lijst die 
+        verwijderd kon worden!
       removed_bl: '%s'' verwijderd van de zwarte lijst woorden!'
     ls_bl:
       no_blacklisted: Er zijn geen woorden op de zwarte lijst in deze chat.
@@ -308,12 +365,15 @@ strings:
     set_bl_action:
       current_mode: 'De huidige zwarte lijst modus is: %s'
       changed_mode: 'Zwarte lijst modus gewijzigd naar: *%s*'
-      choose_correct_option: Kies alstublieft een optie uit <mute/kick/ban/warn/none>
+      choose_correct_option: Kies alstublieft een optie uit 
+        <mute/kick/ban/warn/none>
     rm_all_bl:
-      ask: Weet je zeker dat je alle woorden van de zwarte lijst uit deze chat wilt verwijderen?
+      ask: Weet je zeker dat je alle woorden van de zwarte lijst uit deze chat 
+        wilt verwijderen?
       button_handler:
         'true': Alle zwarte lijsten uit deze chat verwijderd ✅
-        'false': Het verwijderen van alle zwarte lijsten uit deze chat geannuleerd ❌
+        'false': Het verwijderen van alle zwarte lijsten uit deze chat 
+          geannuleerd ❌
         yes: Alle zwarte lijsten uit deze chat verwijderd ✅
         no: Het verwijderen van alle zwarte lijsten uit deze chat geannuleerd ❌
     bl_watcher:
@@ -348,7 +408,8 @@ strings:
   Connections:
     errors:
       invalid_option_yes_no: Geef me een geldige optie van <yes/on/no/off>
-      get_chat_failed: 'verbinden met chat is mislukt: fout bij ophalen van chat: getChat is mislukt: Bad Request: chat niet gevonden'
+      get_chat_failed: 'verbinden met chat is mislukt: fout bij ophalen van chat:
+        getChat is mislukt: Bad Request: chat niet gevonden'
       no_chat_id: Ik heb een chat ID nodig om mee te verbinden!
     connect_to_chat_button: Verbind met chat
     connected: Je bent momenteel verbonden met <b>%s</b>
@@ -371,21 +432,25 @@ strings:
         Gebruikersverbindingen zijn momenteel <b>uitgeschakeld</b> voor deze chat.
         Vraag admins om toestemming als je wilt verbinden!
       connected: Je bent nu verbonden met <b>%s</b>!
-      tap_btn_connect: Druk op de knop hieronder om deze chat te verbinden met je PM
+      tap_btn_connect: Druk op de knop hieronder om deze chat te verbinden met 
+        je PM
     connections_btns:
       admin_conn_cmds: 'Admin commando''s beschikbaar:%s'
       user_conn_cmds: 'Gebruiker commando''s beschikbaar:%s'
     disconnect:
       disconnected: Verbinding verbroken met de verbonden chat.
-      need_pm: Je moet dit in PM naar mij sturen om de verbinding met de chat te verbreken!
+      need_pm: Je moet dit in PM naar mij sturen om de verbinding met de chat te
+        verbreken!
     is_user_connected:
-      need_group: Dit commando is gemaakt om gebruikt te worden in groepschats, niet in PM!
+      need_group: Dit commando is gemaakt om gebruikt te worden in groepschats, 
+        niet in PM!
       bot_not_admin: Ik ben geen admin in deze chat!
       user_not_admin: Je moet een admin zijn om dit te doen.
     reconnect:
       reconnected: Je bent nu opnieuw verbonden met <b>%s</b>!
       no_last_chat: Je hebt geen laatste chat om opnieuw mee te verbinden!
-      need_pm: Je moet in een PM met mij zijn om opnieuw te verbinden met een chat!
+      need_pm: Je moet in een PM met mij zijn om opnieuw te verbinden met een 
+        chat!
     help_msg: |-
       Dit stelt je in staat om te verbinden met een chat's database, en dingen toe te voegen zonder dat de chat ervan weet! Om voor de hand liggende redenen moet je een admin zijn om dingen toe te voegen; maar elk lid kan je data bekijken. (verbannen/weggeschopte gebruikers kunnen dat niet!)
 
@@ -420,13 +485,17 @@ strings:
     disabledel:
       enabled: Uitgeschakelde berichten worden nu verwijderd.
       disabled: Uitgeschakelde berichten worden niet langer verwijderd.
-      status_enabled: Commandoverwijdering is *ingeschakeld*, uitgeschakelde commando's van gebruikers worden verwijderd!
-      status_disabled: Commandoverwijdering is *uitgeschakeld*, uitgeschakelde commando's van gebruikers worden *niet* verwijderd!
+      status_enabled: Commandoverwijdering is *ingeschakeld*, uitgeschakelde 
+        commando's van gebruikers worden verwijderd!
+      status_disabled: Commandoverwijdering is *uitgeschakeld*, uitgeschakelde 
+        commando's van gebruikers worden *niet* verwijderd!
     enable:
       success: 'Het gebruik van het volgende in deze chat is opnieuw ingeschakeld:'
       errors:
-        unknown_command: 'Onbekende opdracht om opnieuw in te schakelen:\n-%s\nControleer /disableable!'
-        no_command_specified: Je hebt geen opdracht opgegeven om uit te schakelen.
+        unknown_command: 'Onbekende opdracht om opnieuw in te schakelen:\n-%s\nControleer
+          /disableable!'
+        no_command_specified: Je hebt geen opdracht opgegeven om uit te 
+          schakelen.
     help_msg: |-
       Hiermee kunt u een aantal veelgebruikte opdrachten uitschakelen, zodat niemand ze kan gebruiken. Het zal u ook toestaan om te autodelete, het stoppen van mensen bluetexting.
 
@@ -450,7 +519,9 @@ strings:
       Uitgeschakelde opdrachten zijn nog steeds toegankelijk via de functie /connect. Als u geïnteresseerd zou zijn om dit ook gehandicapt te zien, laat het me weten in de support chat.
   Filters:
     errors:
-      limit_exceeded: Filters limiet overschreden, een groep kan maximaal 150 filters hebben!\nDeze beperking is te wijten aan de bot die gratis werkt zonder enige donaties van gebruikers.
+      limit_exceeded: Filters limiet overschreden, een groep kan maximaal 150 
+        filters hebben!\nDeze beperking is te wijten aan de bot die gratis werkt
+        zonder enige donaties van gebruikers.
       no_keyword: Geef een trefwoord om op te antwoorden!
       invalid_filter: Ongeldig filter!
       does_not_exist: Filter bestaat niet!
@@ -505,7 +576,9 @@ strings:
       -> /filter trigger
     formatting: Opmaak
   Formatting:
-    help_msg: Alita ondersteunt een groot aantal opmaakopties om uw berichten meer expressief te maken. Neem een kijkje door te klikken op de knoppen hieronder!
+    help_msg: Alita ondersteunt een groot aantal opmaakopties om uw berichten 
+      meer expressief te maken. Neem een kijkje door te klikken op de knoppen 
+      hieronder!
     Markdown: |-
       <b>Markdown Opmaak</b>
 
@@ -619,7 +692,10 @@ strings:
     random_content: Willekeurige Inhoud
   Greetings:
     welcome:
-      status: 'Ik heet momenteel gebruikers welkom: <code>%t</code>\nIk verwijder momenteel oude welkomstberichten: <code>%t</code>\nIk verwijder momenteel serviceberichten: <code>%t</code>\nHet welkomstbericht dat de {} niet vult is:'
+      status: 'Ik heet momenteel gebruikers welkom: <code>%t</code>\nIk verwijder
+        momenteel oude welkomstberichten: <code>%t</code>\nIk verwijder momenteel
+        serviceberichten: <code>%t</code>\nHet welkomstbericht dat de {} niet vult
+        is:'
       enabled: Ik zal gebruikers voortaan welkom heten.
       disabled: Ik zal gebruikers voortaan niet welkom heten.
       turned_off: Welkomstbericht is uitgeschakeld!
@@ -628,7 +704,10 @@ strings:
     reset_welcome:
       success: Aangepast welkomstbericht succesvol teruggezet naar standaard!
     goodbye:
-      status: 'Ik neem momenteel afscheid van gebruikers: <code>%t</code>\nIk verwijder momenteel oude afscheidsberichten: <code>%t</code>\nIk verwijder momenteel serviceberichten: <code>%t</code>\nHet afscheidsbericht dat de {} niet vult is:'
+      status: 'Ik neem momenteel afscheid van gebruikers: <code>%t</code>\nIk verwijder
+        momenteel oude afscheidsberichten: <code>%t</code>\nIk verwijder momenteel
+        serviceberichten: <code>%t</code>\nHet afscheidsbericht dat de {} niet vult
+        is:'
       enabled: Ik zal voortaan afscheid nemen van gebruikers.
       disabled: Ik zal voortaan geen afscheid nemen van gebruikers.
       turned_off: Afscheidsbericht is uitgeschakeld!
@@ -637,22 +716,26 @@ strings:
     reset_goodbye:
       success: Aangepast afscheidsbericht succesvol teruggezet naar standaard!
     clean_welcome:
-      status_enabled: Ik zou welkomstberichten van maximaal twee dagen oud moeten verwijderen.
+      status_enabled: Ik zou welkomstberichten van maximaal twee dagen oud 
+        moeten verwijderen.
       status_disabled: Ik verwijder momenteel geen oude welkomstberichten!
       disabled: Ik zal geen oude welkomstberichten verwijderen!
       enabled: Ik zal proberen oude welkomstberichten te verwijderen!
     clean_goodbye:
-      status_enabled: Ik zou welkomstberichten van maximaal twee dagen oud moeten verwijderen.
+      status_enabled: Ik zou welkomstberichten van maximaal twee dagen oud 
+        moeten verwijderen.
       status_disabled: Ik verwijder momenteel geen oude welkomstberichten!
       disabled: Ik zal geen oude afscheidsberichten verwijderen!
       enabled: Ik zal proberen oude afscheidsberichten te verwijderen!
     del_joined:
-      status_enabled: Ik zou nu 'gebruiker' heeft de chatberichten verwijderd moeten worden.
+      status_enabled: Ik zou nu 'gebruiker' heeft de chatberichten verwijderd 
+        moeten worden.
       status_disabled: Ik verwijder momenteel geen gekoppelde berichten.
       disabled: Ik zal geen gekoppelde berichten verwijderen.
       enabled: Ik zal proberen gekoppelde berichten te verwijderen!
     pending_joins:
-      new_request: Een nieuwe gebruiker heeft gevraagd om lid te worden van de chat!
+      new_request: Een nieuwe gebruiker heeft gevraagd om lid te worden van de 
+        chat!
       user: 'Gebruiker: %s'
       user_id: 'Gebruikers-ID: %d'
       approve_button: ✅ Goedkeuren
@@ -666,7 +749,8 @@ strings:
       enabled: Ik keur nieuwe chatverzoeken nu automatisch goed.
       disabled: Ik keur nieuwe chatverzoeken nu niet automatisch goed.
       disabled_now: Ik keur nieuwe deelnameverzoeken niet automatisch goed!
-      enabled_now: Ik zal proberen nieuwe deelnameverzoeken automatisch goed te keuren!
+      enabled_now: Ik zal proberen nieuwe deelnameverzoeken automatisch goed te 
+        keuren!
     help_msg: |-
       Verwelkom nieuwe leden in uw groepen of zeg vaarwel nadat ze vertrekken!
 
@@ -690,7 +774,8 @@ strings:
       × /cleanwelcome `<yes/no/on/off>': Verwijder het oude welkomstbericht wanneer een nieuw lid toetreedt.
 
       × /autoapprove `<yes/no/on/off>': Automatisch alle nieuwe leden goedkeuren.
-    i_am_currently_goodbying_users_t: 'Ik neem momenteel afscheid van gebruikers: <code>%t</code>'
+    i_am_currently_goodbying_users_t: 'Ik neem momenteel afscheid van gebruikers:
+      <code>%t</code>'
     i_understand_on_yes_or_off_no_only: Ik begrijp alleen 'on/yes' of 'off/no'!
     formatting: Opmaak
   Help:
@@ -713,7 +798,8 @@ strings:
       support_group_button: "Ondersteuningsgroep 👥"
       commands_help_button: "📚 Commando's & Help"
       language_button: "Taal 🌏"
-      group_prompt: 'Hé :) Stuur me een privébericht als je vragen hebt over hoe je me moet gebruiken!'
+      group_prompt: 'Hé :) Stuur me een privébericht als je vragen hebt over hoe je
+        me moet gebruiken!'
     main: |-
       Hallo %s!
       Mijn naam is Alita ✨.
@@ -730,7 +816,8 @@ strings:
     help:
       button: Klik hier voor hulp!
       group_prompt_general: Neem contact met mij op in PM voor hulp!
-      group_prompt_module: Neem contact met mij op in PM voor hulp betreffende <code>%s</code>!
+      group_prompt_module: Neem contact met mij op in PM voor hulp betreffende 
+        <code>%s</code>!
     configuration:
       private_only: Configuratie werkt alleen privé
     About: |-
@@ -794,22 +881,31 @@ strings:
 
       U kunt doneren door contact op te nemen met mijn eigenaar hier: @DivideProjectsBot
     about_me_u200d: "Over mij 👨‍💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_me: "About me 👨\\u200d💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_text: "I'm Alita, a group management bot built to help you manage your groups
+      effectively!"
   Locks:
     list:
       header: 'Dit zijn de vergrendelingen in deze chat:'
     locktypes:
       header: 'Vergrendelingen: \n -'
     lock:
-      no_type_specified: Wat wil je vergrendelen? Controleer /locktypes voor beschikbare opties.
+      no_type_specified: Wat wil je vergrendelen? Controleer /locktypes voor 
+        beschikbare opties.
       success: 'Het volgende is vergrendeld in deze groep:\n - %s'
     unlock:
-      no_type_specified: Wat wil je vergrendelen? Controleer /locktypes voor beschikbare opties.
+      no_type_specified: Wat wil je vergrendelen? Controleer /locktypes voor 
+        beschikbare opties.
       success: 'Het volgende is ontgrendeld in deze groep:\n - %s'
     errors:
       invalid_type: '`%s` is geen correct vergrendelingstype, controleer /locktypes.'
     bot:
-      no_admin_permission: Ik zie een bot, en ik heb opdracht gekregen om ze te stoppen met joinen... maar ik ben geen admin!
-      no_ban_permission: Ik zie een bot, en ik heb opdracht gekregen om ze te stoppen met joinen... maar ik heb geen toestemming om ze te bannen!
+      no_admin_permission: Ik zie een bot, en ik heb opdracht gekregen om ze te 
+        stoppen met joinen... maar ik ben geen admin!
+      no_ban_permission: Ik zie een bot, en ik heb opdracht gekregen om ze te 
+        stoppen met joinen... maar ik heb geen toestemming om ze te bannen!
       admin_only: Alleen admins mogen bots toevoegen aan deze chat!
     help_msg: |-
       *Admin alleen*:
@@ -833,12 +929,15 @@ strings:
       ** Example:**
 
       `/lock media`: hiermee worden alle mediaberichten in de chat vergrendeld.
-    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: Ik zie een bot, en ik heb opdracht gekregen om ze te stoppen met joinen...
+    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: Ik zie een bot, en ik 
+      heb opdracht gekregen om ze te stoppen met joinen...
   Languages:
     help_translate_button: "Help ons vertalen 🌎"
     change:
-      private_prompt: Uw huidige taal is %s\nKies een taal uit het onderstaande toetsenbord.
-      group_prompt: 'De huidige taal van deze groep is %s\nKies een taal uit het onderstaande toetsenbord.'
+      private_prompt: Uw huidige taal is %s\nKies een taal uit het onderstaande 
+        toetsenbord.
+      group_prompt: 'De huidige taal van deze groep is %s\nKies een taal uit het onderstaande
+        toetsenbord.'
       private_success: Uw taal is gewijzigd naar %s
       group_success: De taal van deze groep is gewijzigd naar %s
     help_msg: |-
@@ -856,10 +955,12 @@ strings:
       need_target: Antwoord op iemand.
       need_content: Geef wat inhoud om te antwoorden!
     paste:
-      need_text_or_document: Geef tekst om te plakken of antwoord op een document!
+      need_text_or_document: Geef tekst om te plakken of antwoord op een 
+        document!
       processing: Plakken ...
       get_file_error: BadRequest bij GetFile!
-      file_too_big: Bestand te groot om te plakken; Max. bestandsgrootte die geplakt kan worden is 600 kb!
+      file_too_big: Bestand te groot om te plakken; Max. bestandsgrootte die 
+        geplakt kan worden is 600 kb!
       paste_error: Kan de opgegeven gegevens niet plakken!
     info:
       user_not_found: Kon geen informatie over deze gebruiker vinden.
@@ -890,7 +991,8 @@ strings:
   Mutes:
     errors:
       restrict_self: Waarom zou ik mezelf beperken?
-      anon_user: Deze opdracht kan niet worden gebruikt voor anonieme gebruikers.
+      anon_user: Deze opdracht kan niet worden gebruikt voor anonieme 
+        gebruikers.
       invalid_mode: 'Onbekend type ''%s''. Gebruik een van: ban/kick/mute'
       invalid_limit: De waarschuwingslimiet moet tussen 1 en 100 liggen.
     tmute:
@@ -898,7 +1000,8 @@ strings:
     mute:
       success: Shh...\n%s gedempt.
     dmute:
-      no_reply: Je moet antwoorden op een bericht om het te verwijderen en de gebruiker te dempen!
+      no_reply: Je moet antwoorden op een bericht om het te verwijderen en de 
+        gebruiker te dempen!
       success: Shh...\n%s gedempt.
     unmute:
       success: Oké!\nIk sta %s weer toe om te spreken.
@@ -924,7 +1027,8 @@ strings:
       no_keyword_reply: Geef een trefwoord om op te antwoorden!
       invalid_note: Ongeldige notitie!
       does_not_exist: Notitie bestaat niet!
-      parse_error: Er is een fout bij het parseren van de notitie, meld dit alstublieft in de supportchat.
+      parse_error: Er is een fout bij het parseren van de notitie, meld dit 
+        alstublieft in de supportchat.
       admin_only: Deze notitie kan alleen door een admin worden geopend!
     list:
       no_notes: Er zijn geen notities in deze chat!
@@ -954,11 +1058,15 @@ strings:
 
       - /privatenotes: Al dan niet notities verzenden in PM. Zal een bericht verzenden met een knop waarmee gebruikers kunnen klikken om de noot in PM te krijgen.
     removed_note_percent: Notitie <b>%s</b> verwijderd.
-    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Weet je zeker dat je alle notities uit deze chat wilt verwijderen?
-    only_chat_creator_can_use_this_command: Alleen de chatmaker kan deze opdracht gebruiken.
-    there_s_some_error_parsing_the_note_please_report_this_in_su: Er is een fout bij het parseren van de notitie, meld dit alstublieft in de supportchat.
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Weet je zeker dat 
+      je alle notities uit deze chat wilt verwijderen?
+    only_chat_creator_can_use_this_command: Alleen de chatmaker kan deze 
+      opdracht gebruiken.
+    there_s_some_error_parsing_the_note_please_report_this_in_su: Er is een fout
+      bij het parseren van de notitie, meld dit alstublieft in de supportchat.
     note_doesn_t_exists: Notitie bestaat niet!
-    there_s_some_error_parsing_the_note_please_report_this_to_su: Er is een fout bij het parseren van de notitie, meld dit alstublieft bij de supportchat.
+    there_s_some_error_parsing_the_note_please_report_this_to_su: Er is een fout
+      bij het parseren van de notitie, meld dit alstublieft bij de supportchat.
     formatting: Opmaak
   Pins:
     errors:
@@ -997,11 +1105,16 @@ strings:
       × /cleanlinked <yes/no/on/off>: Berichten wissen die door het gekoppelde kanaal zijn verzonden.
 
       Opmerking: Als u antikanaalpennen gebruikt, moet u ervoor zorgen dat u de opdracht /unpin gebruikt, in plaats van het handmatig te doen. Anders wordt het oude bericht opnieuw vastgezet wanneer het kanaal berichten verzendt.
-    unpinned_all_pinned_messages_in_this_chat: Alle vastgezette berichten in deze chat zijn losgemaakt!
-    cancelled_operation_to_unpin_messages: Bewerking om berichten los te maken geannuleerd!
-    are_you_sure_you_want_to_unpin_all_pinned_messages: Weet je zeker dat je alle vastgezette berichten wilt losmaken?
-    please_reply_to_a_message_or_give_some_text_to_pin: Antwoord op een bericht of geef wat tekst om vast te zetten.
-    no_message_has_been_pinned_in_the_current_chat: Er is geen bericht vastgezet in de huidige chat!
+    unpinned_all_pinned_messages_in_this_chat: Alle vastgezette berichten in 
+      deze chat zijn losgemaakt!
+    cancelled_operation_to_unpin_messages: Bewerking om berichten los te maken 
+      geannuleerd!
+    are_you_sure_you_want_to_unpin_all_pinned_messages: Weet je zeker dat je 
+      alle vastgezette berichten wilt losmaken?
+    please_reply_to_a_message_or_give_some_text_to_pin: Antwoord op een bericht 
+      of geef wat tekst om vast te zetten.
+    no_message_has_been_pinned_in_the_current_chat: Er is geen bericht vastgezet
+      in de huidige chat!
   Purges:
     help_msg: |-
       *Alleen Admin:*
@@ -1011,13 +1124,21 @@ strings:
       *Voorbeelden*:
       - Verwijder alle berichten vanaf het beantwoorde bericht tot nu.
       -> `/purge`
-    reply_to_a_message_to_select_where_to_start_purging_from: Antwoord op een bericht om te selecteren waar te beginnen met opschonen.
-    reply_to_a_message_to_delete_it: Antwoord op een bericht om het te verwijderen!
-    this_message_is_already_marked_for_purging: Dit bericht is al gemarkeerd voor opschoning!
-    message_marked_for_deletion_reply_to_another_message_with_pu: Bericht gemarkeerd voor verwijdering. Antwoord op een ander bericht met /purgeto om alle berichten ertussen te verwijderen; binnen 30s!
-    you_can_only_use_this_command_after_having_used_the_purgefro: Je kunt deze opdracht alleen gebruiken nadat je de opdracht /purgefrom hebt gebruikt!
-    use_del_command_to_delete_one_message: Gebruik /del opdracht om één bericht te verwijderen!
-    reply_to_a_message_to_show_me_till_where_to_purge: Antwoord op een bericht om me te laten zien tot waar ik moet opschonen.
+    reply_to_a_message_to_select_where_to_start_purging_from: Antwoord op een 
+      bericht om te selecteren waar te beginnen met opschonen.
+    reply_to_a_message_to_delete_it: Antwoord op een bericht om het te 
+      verwijderen!
+    this_message_is_already_marked_for_purging: Dit bericht is al gemarkeerd 
+      voor opschoning!
+    message_marked_for_deletion_reply_to_another_message_with_pu: Bericht 
+      gemarkeerd voor verwijdering. Antwoord op een ander bericht met /purgeto 
+      om alle berichten ertussen te verwijderen; binnen 30s!
+    you_can_only_use_this_command_after_having_used_the_purgefro: Je kunt deze 
+      opdracht alleen gebruiken nadat je de opdracht /purgefrom hebt gebruikt!
+    use_del_command_to_delete_one_message: Gebruik /del opdracht om één bericht 
+      te verwijderen!
+    reply_to_a_message_to_show_me_till_where_to_purge: Antwoord op een bericht 
+      om me te laten zien tot waar ik moet opschonen.
   Reports:
     settings:
       enabled: Admin rapporten zijn ingeschakeld!
@@ -1055,10 +1176,13 @@ strings:
 
 
       *OPMERKING: * Geen van beide wordt geactiveerd als deze worden gebruikt door admins.
-    you_can_t_report_your_own_message: Je kunt je eigen bericht niet rapporteren!
+    you_can_t_report_your_own_message: Je kunt je eigen bericht niet 
+      rapporteren!
     you_need_to_expose_yourself_first: Je moet jezelf eerst blootstellen!
-    it_s_a_special_account_of_telegram: Het is een speciaal account van Telegram!
-    you_re_an_admin_whom_will_i_report_your_issues_to: 'Je bent een admin, aan wie zal ik je problemen rapporteren?'
+    it_s_a_special_account_of_telegram: Het is een speciaal account van 
+      Telegram!
+    you_re_an_admin_whom_will_i_report_your_issues_to: 'Je bent een admin, aan wie
+      zal ik je problemen rapporteren?'
     why_would_i_report_myself: Waarom zou ik mezelf rapporteren?
     why_would_i_report_an_admin: Waarom zou ik een admin rapporteren?
   Rules:
@@ -1083,7 +1207,8 @@ strings:
 
       × /resetrulesbtn: Hetzelfde als hierboven.
     successfully_cleared_rules: Regels succesvol gewist!
-    successfully_cleared_custom_rules_button_text: Aangepaste regels knoptekst succesvol gewist!
+    successfully_cleared_custom_rules_button_text: Aangepaste regels knoptekst 
+      succesvol gewist!
   Tagger:
     help_msg: |-
       Tagger is een essentieel kenmerk om alle leden van de groep te vermelden.
@@ -1110,14 +1235,16 @@ strings:
   Warns:
     errors:
       warn_admin: Ik ga een admin niet waarschuwen!
-      anon_user: Deze opdracht kan niet worden gebruikt voor anonieme gebruikers.
+      anon_user: Deze opdracht kan niet worden gebruikt voor anonieme 
+        gebruikers.
       invalid_mode: 'Onbekend type ''%s''. Gebruik een van: ban/kick/mute'
       invalid_limit: De waarschuwingslimiet moet tussen 1 en 100 liggen.
     set_mode:
       ban: 'Waarschuwingsmodus bijgewerkt naar: ban'
       kick: 'Waarschuwingsmodus bijgewerkt naar: kick'
       mute: 'Waarschuwingsmodus bijgewerkt naar: mute'
-      no_mode_specified: 'Je moet een actie specificeren die moet worden ondernomen bij te veel waarschuwingen. Huidige modi zijn: ban/kick/mute'
+      no_mode_specified: 'Je moet een actie specificeren die moet worden ondernomen
+        bij te veel waarschuwingen. Huidige modi zijn: ban/kick/mute'
     warn:
       limit_kick: Dat zijn %d/%d waarschuwingen; Dus %s is geschopt!
       limit_mute: Dat zijn %d/%d waarschuwingen; Dus %s is gedempt!
@@ -1128,23 +1255,30 @@ strings:
     warns:
       no_warns: Deze gebruiker heeft geen waarschuwingen!
       list_header: 'Deze gebruiker heeft %d/%d waarschuwingen, om de volgende redenen:'
-      list_no_reasons: 'Gebruiker heeft %d/%d waarschuwingen, maar geen redenen voor een daarvan.'
+      list_no_reasons: 'Gebruiker heeft %d/%d waarschuwingen, maar geen redenen voor
+        een daarvan.'
     remove:
       success: Waarschuwing verwijderd door %s.
       no_warns: Gebruiker heeft al geen waarschuwingen!
     set_limit:
-      no_limit_specified: Geef aan hoeveel waarschuwingen een gebruiker mag ontvangen voordat er actie wordt ondernomen. Bijv. `/setwarnlimit 5`
-      success: Waarschuwingslimietinstellingen voor deze chat zijn bijgewerkt naar %d.
+      no_limit_specified: Geef aan hoeveel waarschuwingen een gebruiker mag 
+        ontvangen voordat er actie wordt ondernomen. Bijv. `/setwarnlimit 5`
+      success: Waarschuwingslimietinstellingen voor deze chat zijn bijgewerkt 
+        naar %d.
     reset:
       success: Waarschuwingen zijn gereset!
     reset_all:
       no_warns: Geen gebruikers zijn gewaarschuwd in deze chat!
-      confirm: Weet je zeker dat je alle waarschuwingen van alle gebruikers in deze chat wilt verwijderen?
+      confirm: Weet je zeker dat je alle waarschuwingen van alle gebruikers in 
+        deze chat wilt verwijderen?
       success: Alle waarschuwingen van alle gebruikers in deze chat verwijderd.
-      button_yes: Alle waarschuwingen van alle gebruikers in deze chat verwijderd!
-      button_no: Het verwijderen van alle waarschuwingen van alle gebruikers in deze chat geannuleerd!
+      button_yes: Alle waarschuwingen van alle gebruikers in deze chat 
+        verwijderd!
+      button_no: Het verwijderen van alle waarschuwingen van alle gebruikers in 
+        deze chat geannuleerd!
     warnings:
-      status: 'De groep heeft de volgende instellingen:\n<b>Waarschuwingslimiet:</b> <code>%d</code>\n<b>Waarschuwingsmodus:</b> <code>%s</code>'
+      status: 'De groep heeft de volgende instellingen:\n<b>Waarschuwingslimiet:</b>
+        <code>%d</code>\n<b>Waarschuwingsmodus:</b> <code>%s</code>'
     help_msg: |-
       Houd uw leden onder controle met waarschuwingen; voorkom dat ze uit de hand lopen!
 
@@ -1181,7 +1315,8 @@ strings:
       -> `/warn @user Voor het negeren van de regels`
   Dev:
     errors:
-      no_user_specified: Je moet een gebruiker specificeren om informatie over te krijgen
+      no_user_specified: Je moet een gebruiker specificeren om informatie over 
+        te krijgen
     chatlist:
       getting_list: Lijst met chats ophalen waar ik in zit...
       success: Hier is de lijst met chats in mijn database!

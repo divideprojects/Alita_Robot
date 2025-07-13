@@ -7,35 +7,48 @@ strings:
     admin_cache:
       cache_reloaded: Cache administrateur rechargé avec succès.
       not_found: >-
-        Cache administrateur introuvable. Demandez à un administrateur d'utiliser /admincache pour recharger le cache administrateur.
+        Cache administrateur introuvable. Demandez à un administrateur d'utiliser
+        /admincache pour recharger le cache administrateur.
     errors:
       no_user_specified: >-
         Je ne sais pas de qui vous parlez, vous allez devoir spécifier un utilisateur...!
-      anon_user_generic: Cette commande ne peut pas être utilisée par un utilisateur anonyme.
+      anon_user_generic: Cette commande ne peut pas être utilisée par un 
+        utilisateur anonyme.
       admin_only: Vous devez être un administrateur pour faire ça !
-      admin_only_command: Seuls les administrateurs peuvent exécuter cette commande !
+      admin_only_command: Seuls les administrateurs peuvent exécuter cette 
+        commande !
       creator_only: Vous devez être le créateur du groupe pour faire ça !
       creator_only_command: Seul le créateur du groupe peut faire ça !
       bot_not_admin: Je ne suis pas administrateur !
       bot_no_restrict_permission: >-
-        Je ne peux pas restreindre les gens ici ! Assurez-vous que je suis administrateur et que je peux restreindre les autres membres.
+        Je ne peux pas restreindre les gens ici ! Assurez-vous que je suis administrateur
+        et que je peux restreindre les autres membres.
       group_only: Cette commande ne peut être utilisée que dans un groupe !
-      group_only_command: 'Cette commande est conçue pour être utilisée dans les discussions de groupe, pas en message privé !'
-      private_only_command: 'Cette commande est conçue pour les messages privés, pas les discussions de groupe !'
-      user_not_found: Impossible de trouver un utilisateur avec ce nom ; êtes-vous sûr que je l'ai déjà vu ?
-      user_not_in_chat: 'Cet utilisateur n''est pas dans cette discussion, comment puis-je le restreindre ?'
+      group_only_command: 'Cette commande est conçue pour être utilisée dans les discussions
+        de groupe, pas en message privé !'
+      private_only_command: 'Cette commande est conçue pour les messages privés, pas
+        les discussions de groupe !'
+      user_not_found: Impossible de trouver un utilisateur avec ce nom ; 
+        êtes-vous sûr que je l'ai déjà vu ?
+      user_not_in_chat: 'Cet utilisateur n''est pas dans cette discussion, comment
+        puis-je le restreindre ?'
       action_on_self: Je ne peux pas effectuer cette action sur moi-même.
       button_expired: 'Ce bouton a expiré, veuillez utiliser la commande à nouveau.'
-      invalid_option_yes_no: 'Votre saisie n''a pas été reconnue comme l''une des options suivantes : yes/no/on/off'
+      invalid_option_yes_no: 'Votre saisie n''a pas été reconnue comme l''une des
+        options suivantes : yes/no/on/off'
       invalid_option_on_off: Je ne comprends qu'une option parmi <on/off/yes/no>
       invalid_integer: '%s n''est pas un entier valide.'
       not_enough_args: Pas assez d'arguments.
       invalid_time_amount: Montant de temps invalide spécifié.
       time_too_long: Impossible de définir le temps à plus de 1 an !
-      invalid_time_type: 'Type de temps invalide spécifié. Attendu m, h, d ou w, obtenu : %s'
-      get_chat_member_failed: 'Échec de l''obtention de l''utilisateur : impossible d''obtenirChatMember : Mauvaise Requête : discussion introuvable'
-      admin_only_button: Ce bouton ne peut être utilisé que par un administrateur !
-      no_reply: Répondez au message d'un utilisateur pour le supprimer et l'expulser !
+      invalid_time_type: 'Type de temps invalide spécifié. Attendu m, h, d ou w, obtenu
+        : %s'
+      get_chat_member_failed: 'Échec de l''obtention de l''utilisateur : impossible
+        d''obtenirChatMember : Mauvaise Requête : discussion introuvable'
+      admin_only_button: Ce bouton ne peut être utilisé que par un 
+        administrateur !
+      no_reply: Répondez au message d'un utilisateur pour le supprimer et 
+        l'expulser !
     buttons:
       'true': Oui
       'false': Non
@@ -65,57 +78,75 @@ strings:
       unmuted: Utilisateur rétabli avec succès !
     anon_admin:
       prompt: >-
-        Il semble que vous soyez anonyme. Appuyez sur ce bouton pour confirmer votre identité.
+        Il semble que vous soyez anonyme. Appuyez sur ce bouton pour confirmer votre
+        identité.
       button: Cliquez pour prouver l'administration
   Admin:
     adminlist: 'Administrateurs dans <b>%s</b> :'
     anon_admin:
       enabled: >-
         Le mode AnonAdmin est actuellement <b>activé</b> pour %s.
-        Cela permet à tous les administrateurs anonymes d'effectuer des actions d'administration sans restriction.
+        Cela permet à tous les administrateurs anonymes d'effectuer des actions d'administration
+        sans restriction.
       disabled: >-
         Le mode AnonAdmin est actuellement <b>désactivé</b> pour %s.
-        Cela oblige les administrateurs anonymes à appuyer sur un bouton pour confirmer leurs permissions.
+        Cela oblige les administrateurs anonymes à appuyer sur un bouton pour confirmer
+        leurs permissions.
       enabled_now: >-
         Le mode AnonAdmin est maintenant <b>activé</b> pour %s.
-        À partir de maintenant, je demanderai aux administrateurs de vérifier les permissions des administrateurs anonymes.
+        À partir de maintenant, je demanderai aux administrateurs de vérifier les
+        permissions des administrateurs anonymes.
       disabled_now: >-
         Le mode AnonAdmin est maintenant <b>désactivé</b> pour %s.
-        À partir de maintenant, je ne demanderai plus aux administrateurs de vérifier les permissions des administrateurs anonymes.
+        À partir de maintenant, je ne demanderai plus aux administrateurs de vérifier
+        les permissions des administrateurs anonymes.
       already_enabled: Le mode AnonAdmin est déjà <b>activé</b> pour %s
       already_disabled: Le mode AnonAdmin est déjà <b>désactivé</b> pour %s
       invalid_arg: >-
-        Argument invalide, je ne comprends que <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Argument invalide, je ne comprends que <code>on</code>, <code>off</code>,
+        <code>yes</code>, <code>no</code>
     demote:
-      is_owner: 'Cette personne a créé cette discussion, comment pourrais-je la rétrograder ?'
-      is_admin: 'Cette personne n''est pas un administrateur, comment pourrais-je la rétrograder ?'
+      is_owner: 'Cette personne a créé cette discussion, comment pourrais-je la rétrograder
+        ?'
+      is_admin: 'Cette personne n''est pas un administrateur, comment pourrais-je
+        la rétrograder ?'
       is_bot_itself: Je ne vais pas me rétrograder moi-même.
       success_demote: '%s rétrogradé avec succès !'
     promote:
-      admin_title_truncated: Titre d'administrateur tronqué à 16 caractères depuis %d
+      admin_title_truncated: Titre d'administrateur tronqué à 16 caractères 
+        depuis %d
       is_bot_itself: Si seulement je pouvais me faire ça à moi-même ;_;
       is_owner: >-
-        Cette personne a créé cette discussion, comment pourrais-je la promouvoir ?
+        Cette personne a créé cette discussion, comment pourrais-je la promouvoir
+        ?
       is_admin: >-
-        Cette personne est déjà un administrateur, comment pourrais-je la promouvoir ?
+        Cette personne est déjà un administrateur, comment pourrais-je la promouvoir
+        ?
       success_promote: '%s promu avec succès !'
     title:
-      success_set: Le titre d'administrateur de %s a été défini avec succès sur <b>%s</b>
+      success_set: Le titre d'administrateur de %s a été défini avec succès sur 
+        <b>%s</b>
       is_bot_itself: Si seulement je pouvais me faire ça à moi-même ;_;
       is_owner: >-
-        Cette personne a créé cette discussion, comment pourrais-je lui définir un titre d'administrateur ?
+        Cette personne a créé cette discussion, comment pourrais-je lui définir un
+        titre d'administrateur ?
       is_admin: >-
-        Cette personne est déjà un administrateur, comment pourrais-je lui définir un titre d'administrateur personnalisé ?
+        Cette personne est déjà un administrateur, comment pourrais-je lui définir
+        un titre d'administrateur personnalisé ?
     errors:
       err_set_title: >-
-        Échec de la définition du titre d'administrateur personnalisé ; le titre pourrait ne pas être correct ou contenir des emojis.
+        Échec de la définition du titre d'administrateur personnalisé ; le titre pourrait
+        ne pas être correct ou contenir des emojis.
       err_cannot_demote: >-
-        Échec de la rétrogradation ; je ne suis peut-être pas administrateur, ou ils peuvent avoir été promus par un autre administrateur.
+        Échec de la rétrogradation ; je ne suis peut-être pas administrateur, ou ils
+        peuvent avoir été promus par un autre administrateur.
       err_cannot_promote: >-
-        Échec de la promotion ; je ne suis peut-être pas administrateur, ou ils peuvent avoir été promus par un autre administrateur.
+        Échec de la promotion ; je ne suis peut-être pas administrateur, ou ils peuvent
+        avoir été promus par un autre administrateur.
       title_empty: Vous devez me donner un titre d'administrateur à définir.
     help_msg: >-
-      Facilitez la promotion et la rétrogradation des utilisateurs avec le module d'administration !
+      Facilitez la promotion et la rétrogradation des utilisateurs avec le module
+      d'administration !
 
       *Commandes utilisateur :*
 
@@ -128,9 +159,12 @@ strings:
 
       × /demote `<reply/username/mention/userid>`: Rétrograde un utilisateur.
 
-      × /title `<reply/username/mention/userid>` `<custom title>`: Définit un titre personnalisé pour l'utilisateur
-    here_is_the_invite_link_of_this_chat_percent: 'Voici le lien d''invitation de cette discussion : %s'
-    you_need_to_be_admin_to_do_this: Vous devez être administrateur pour faire ça !
+      × /title `<reply/username/mention/userid>` `<custom title>`: Définit un titre
+      personnalisé pour l'utilisateur
+    here_is_the_invite_link_of_this_chat_percent: 'Voici le lien d''invitation de
+      cette discussion : %s'
+    you_need_to_be_admin_to_do_this: Vous devez être administrateur pour faire 
+      ça !
   Antiflood:
     checkflood:
       perform_action: 'Oui, je n''aime pas votre inondation. %s a été %s !'
@@ -140,45 +174,61 @@ strings:
         D'accord.
         Je n'avertirai pas les utilisateurs en cas d'inondation.
     flood:
-      disabled: Cette discussion n'applique actuellement pas le contrôle des inondations.
+      disabled: Cette discussion n'applique actuellement pas le contrôle des 
+        inondations.
       show_settings: >-
-        Cette discussion applique actuellement le contrôle des inondations après %d messages. Tout utilisateur envoyant plus que ce nombre de messages sera %s.
+        Cette discussion applique actuellement le contrôle des inondations après %d
+        messages. Tout utilisateur envoyant plus que ce nombre de messages sera %s.
     setfloodmode:
       success: Le mode d'inondation a été défini sur %s.
       unknown_type: 'Type inconnu ''%s''. Veuillez utiliser l''un de : ban/kick/mute'
       specify_action: >-
-        Vous devez spécifier une action à entreprendre en cas d'inondation. Les modes actuels sont : `ban`/`kick`/`mute`
+        Vous devez spécifier une action à entreprendre en cas d'inondation. Les modes
+        actuels sont : `ban`/`kick`/`mute`
     flood_deleter:
       enabled: >-
-        Suppression des messages anti-inondation activée. Les messages causant l'anti-inondation seront supprimés !
+        Suppression des messages anti-inondation activée. Les messages causant l'anti-inondation
+        seront supprimés !
       disabled: >-
-        Suppression des messages anti-inondation désactivée. Les messages causant l'anti-inondation seront ignorés !
+        Suppression des messages anti-inondation désactivée. Les messages causant
+        l'anti-inondation seront ignorés !
       invalid_option: 'Je ne comprends qu''une option parmi : `yes`/`no`/`on`/`off`'
       already_enabled: >-
-        La suppression des messages anti-inondation est actuellement *activée* dans cette discussion, les messages causant l'anti-inondation seront supprimés !
+        La suppression des messages anti-inondation est actuellement *activée* dans
+        cette discussion, les messages causant l'anti-inondation seront supprimés
+        !
       already_disabled: >-
-        La suppression des messages anti-inondation est actuellement *désactivée* dans cette discussion, les messages causant l'anti-inondation seront ignorés !
+        La suppression des messages anti-inondation est actuellement *désactivée*
+        dans cette discussion, les messages causant l'anti-inondation seront ignorés
+        !
     errors:
       expected_args: >-
-        J'attendais des arguments ! Soit off, soit un entier. ex : `/setflood 5`, ou `/setflood off`
-      invalid_int: 'Ce n''est pas un entier valide. Veuillez me donner un entier valide, ou `off`.'
+        J'attendais des arguments ! Soit off, soit un entier. ex : `/setflood 5`,
+        ou `/setflood off`
+      invalid_int: 'Ce n''est pas un entier valide. Veuillez me donner un entier valide,
+        ou `off`.'
       set_in_limit: La limite anti-inondation doit être définie entre 3 et 100.
     help_msg: >-
-      Vous savez comment parfois, les gens rejoignent, envoient 100 messages, et ruinent votre discussion ? Avec l'anti-inondation, cela n'arrive plus !
+      Vous savez comment parfois, les gens rejoignent, envoient 100 messages, et ruinent
+      votre discussion ? Avec l'anti-inondation, cela n'arrive plus !
 
 
-      L'anti-inondation vous permet d'agir sur les utilisateurs qui envoient plus de x messages d'affilée. Les actions sont : ban/kick/mute
+      L'anti-inondation vous permet d'agir sur les utilisateurs qui envoient plus
+      de x messages d'affilée. Les actions sont : ban/kick/mute
 
 
       *Commandes administrateur :*
 
       × /flood: Obtenir les paramètres actuels de l'anti-inondation.
 
-      × /setflood `<number/off/no>`: Définissez le nombre de messages après lequel agir sur un utilisateur. Mettez à '0', 'off', ou 'no' pour désactiver.
+      × /setflood `<number/off/no>`: Définissez le nombre de messages après lequel
+      agir sur un utilisateur. Mettez à '0', 'off', ou 'no' pour désactiver.
 
-      × /setfloodmode `<action type>`: Choisissez l'action à entreprendre sur un utilisateur qui a inondé. Options : ban/kick/mute
+      × /setfloodmode `<action type>`: Choisissez l'action à entreprendre sur un utilisateur
+      qui a inondé. Options : ban/kick/mute
 
-      × /delflood `<yes/no/on/off>`: Si vous voulez que le bot supprime les messages inondés par l'utilisateur.
+      × /delflood `<yes/no/on/off>`: Si vous voulez que le bot supprime les messages
+      inondés par l'utilisateur.
     unmute_admins_only: Rétablir le son (Administrateurs seulement)
     unban_admins_only: Débannir (Administrateurs seulement)
   Approvals:
@@ -187,14 +237,17 @@ strings:
       user_approved: >-
         Utilisateur %s approuvé avec succès
 
-        À partir de maintenant, ils seront ignorés des auto-bannissements, listes noires, verrous et anti-inondation.
-      user_not_in_chat: 'Cet utilisateur n''est pas dans cette discussion, et comment puis-je l''approuver ?'
+        À partir de maintenant, ils seront ignorés des auto-bannissements, listes
+        noires, verrous et anti-inondation.
+      user_not_in_chat: 'Cet utilisateur n''est pas dans cette discussion, et comment
+        puis-je l''approuver ?'
     unapprove:
       is_bot_itself: 'Je suis un administrateur, je ne peux pas être désapprouvé !'
       user_unapproved: >-
         Utilisateur désapprouvé : %s
 
-        À partir de maintenant, ils seront pris en compte pour les auto-bannissements, listes noires, verrous et anti-inondation.
+        À partir de maintenant, ils seront pris en compte pour les auto-bannissements,
+        listes noires, verrous et anti-inondation.
     approval:
       is_admin: '%s est un administrateur, et il n''a pas besoin d''approbation.'
       is_bot_itself: 'Je suis un administrateur, et je n''ai pas besoin d''approbation.'
@@ -215,22 +268,33 @@ strings:
         %s
 
 
-        Pour obtenir plus d'informations sur chaque utilisateur comme "Approuvé par" et "Heure d'approbation", utilisez /approval (ID utilisateur).
+        Pour obtenir plus d'informations sur chaque utilisateur comme "Approuvé par"
+        et "Heure d'approbation", utilisez /approval (ID utilisateur).
     unapprove_all:
-      ask: Êtes-vous sûr de vouloir supprimer tous les utilisateurs approuvés de cette discussion ?
+      ask: Êtes-vous sûr de vouloir supprimer tous les utilisateurs approuvés de
+        cette discussion ?
       chat_creator_only: >-
-        Seul le créateur de la discussion peut utiliser cette commande pour désapprouver tous les utilisateurs dans cette discussion.
+        Seul le créateur de la discussion peut utiliser cette commande pour désapprouver
+        tous les utilisateurs dans cette discussion.
       button_handler:
-        'true': Tous les utilisateurs approuvés ont été supprimés de cette discussion ✅
-        'false': Annulation de la suppression de tous les utilisateurs approuvés de cette discussion ❌
-        yes: Tous les utilisateurs approuvés ont été supprimés de cette discussion ✅
-        no: Annulation de la suppression de tous les utilisateurs approuvés de cette discussion ❌
+        'true': Tous les utilisateurs approuvés ont été supprimés de cette 
+          discussion ✅
+        'false': Annulation de la suppression de tous les utilisateurs approuvés
+          de cette discussion ❌
+        yes: Tous les utilisateurs approuvés ont été supprimés de cette 
+          discussion ✅
+        no: Annulation de la suppression de tous les utilisateurs approuvés de 
+          cette discussion ❌
     help_msg: >-
-      Parfois, vous pourriez faire confiance à un utilisateur pour ne pas envoyer de contenu indésirable.
+      Parfois, vous pourriez faire confiance à un utilisateur pour ne pas envoyer
+      de contenu indésirable.
 
-      Peut-être pas assez pour en faire un administrateur, mais vous pourriez être d'accord pour que les verrous, les listes noires et l'anti-inondation ne s'appliquent pas à eux.
+      Peut-être pas assez pour en faire un administrateur, mais vous pourriez être
+      d'accord pour que les verrous, les listes noires et l'anti-inondation ne s'appliquent
+      pas à eux.
 
-      C'est à cela que servent les approbations - approuver les utilisateurs dignes de confiance pour leur permettre d'envoyer
+      C'est à cela que servent les approbations - approuver les utilisateurs dignes
+      de confiance pour leur permettre d'envoyer
 
 
       *Commandes utilisateur :*
@@ -240,23 +304,29 @@ strings:
 
       *Commandes administrateur :*
 
-      × /approve: Approuve un utilisateur. Les verrous, les listes noires et l'anti-inondation ne s'appliqueront plus à eux.
+      × /approve: Approuve un utilisateur. Les verrous, les listes noires et l'anti-inondation
+      ne s'appliqueront plus à eux.
 
-      × /unapprove: Désapprouve un utilisateur. Ils seront désormais soumis aux verrous, aux listes noires et à l'anti-inondation à nouveau.
+      × /unapprove: Désapprouve un utilisateur. Ils seront désormais soumis aux verrous,
+      aux listes noires et à l'anti-inondation à nouveau.
 
       × /approved: Liste tous les utilisateurs approuvés.
 
 
       *Commandes du propriétaire :*
 
-      × /unapproveall: Désapprouve TOUS les utilisateurs dans une discussion. Cela ne peut pas être annulé.
+      × /unapproveall: Désapprouve TOUS les utilisateurs dans une discussion. Cela
+      ne peut pas être annulé.
   Bans:
     errors:
       anon_user_kick: >-
-        Cette commande ne peut pas être utilisée par un utilisateur anonyme, ces utilisateurs ne peuvent être que bannis/débannis.
-      anon_user_ban_reply: Vous ne pouvez bannir un utilisateur anonyme qu'en répondant à son message.
+        Cette commande ne peut pas être utilisée par un utilisateur anonyme, ces utilisateurs
+        ne peuvent être que bannis/débannis.
+      anon_user_ban_reply: Vous ne pouvez bannir un utilisateur anonyme qu'en 
+        répondant à son message.
       anon_user_generic: >-
-        Cette commande ne peut pas être utilisée par un utilisateur anonyme, ces utilisateurs ne peuvent être que bannis/débannis.
+        Cette commande ne peut pas être utilisée par un utilisateur anonyme, ces utilisateurs
+        ne peuvent être que bannis/débannis.
       restrict_admin: Je ne peux pas restreindre un administrateur.
     restrict:
       question: Comment puis-je restreindre cet utilisateur ?
@@ -268,20 +338,24 @@ strings:
       unmute_success: Rétabli par %s !
       unban_success: Débanni par %s !
     kick:
-      user_not_in_chat: 'Cet utilisateur n''est pas dans cette discussion, comment suis-je censé le restreindre ?'
-      cannot_kick_admin: Pourquoi expulserais-je un administrateur ? Ça semble être une idée plutôt stupide.
+      user_not_in_chat: 'Cet utilisateur n''est pas dans cette discussion, comment
+        suis-je censé le restreindre ?'
+      cannot_kick_admin: Pourquoi expulserais-je un administrateur ? Ça semble 
+        être une idée plutôt stupide.
       is_bot_itself: Pourquoi m'expulserais-je moi-même ?
       kicked_user: '%s expulsé avec succès.'
-      kicked_reason: |-
+      kicked_reason: |2-
 
         <b>Raison :</b> %s
     kickme:
-      is_admin: 'Vous êtes un administrateur, et vous êtes bloqué ici avec tout le monde !'
+      is_admin: 'Vous êtes un administrateur, et vous êtes bloqué ici avec tout le
+        monde !'
       ok_out: 'Selon votre souhait, Sortez !'
     ban:
-      is_admin: Pourquoi bannirais-je un administrateur ? Ça semble être une idée plutôt stupide.
+      is_admin: Pourquoi bannirais-je un administrateur ? Ça semble être une 
+        idée plutôt stupide.
       is_bot_itself: Pensez-vous vraiment que je vais me bannir moi-même ?
-      ban_reason: |-
+      ban_reason: |2-
 
         <b>Raison :</b> %s
       tban: '%s banni pour %s'
@@ -289,17 +363,21 @@ strings:
         Un autre qui mord la poussière... !
         %s banni.
       dban:
-        no_reply: Vous devez répondre à un message pour le supprimer et bannir l'utilisateur !
+        no_reply: Vous devez répondre à un message pour le supprimer et bannir 
+          l'utilisateur !
     unban:
       is_admin: Pourquoi débannirais-je un administrateur ?
-      is_bot_itself: Pourquoi me dé-restreindrais-je alors que je suis déjà ici ?
+      is_bot_itself: Pourquoi me dé-restreindrais-je alors que je suis déjà ici 
+        ?
       unbanned_user: |-
         Donnons-lui une autre chance.
         %s débanni !
     help_msg: >-
-      Parfois, les utilisateurs peuvent être ennuyeux et vous pourriez vouloir les supprimer de votre discussion, ce module vous aide exactement à gérer cela !
+      Parfois, les utilisateurs peuvent être ennuyeux et vous pourriez vouloir les
+      supprimer de votre discussion, ce module vous aide exactement à gérer cela !
 
-      Bannissez/expulsez les utilisateurs de votre discussion, et débannissez-les plus tard s'ils se comportent bien.
+      Bannissez/expulsez les utilisateurs de votre discussion, et débannissez-les
+      plus tard s'ils se comportent bien.
 
 
       *Commandes utilisateur :*
@@ -311,20 +389,25 @@ strings:
 
       × /ban <userhandle>: bannit un utilisateur. (via pseudo, ou réponse)
 
-      × /sban <userhandle>: bannit un utilisateur silencieusement, n'envoie pas de message au groupe et supprime aussi votre commande. (via pseudo, ou réponse)
+      × /sban <userhandle>: bannit un utilisateur silencieusement, n'envoie pas de
+      message au groupe et supprime aussi votre commande. (via pseudo, ou réponse)
 
-      × /dban <userhandle>: bannit un utilisateur et supprime le message auquel vous avez répondu. (via pseudo, ou réponse)
+      × /dban <userhandle>: bannit un utilisateur et supprime le message auquel vous
+      avez répondu. (via pseudo, ou réponse)
 
-      × /tban <userhandle> x(m/h/d): bannit un utilisateur pour `x` temps. (via pseudo, ou réponse). m = minutes, h = heures, d = jours.
+      × /tban <userhandle> x(m/h/d): bannit un utilisateur pour `x` temps. (via pseudo,
+      ou réponse). m = minutes, h = heures, d = jours.
 
       × /unban <userhandle>: débannit un utilisateur. (via pseudo, ou réponse)
 
 
       *Commandes de restriction :* (Admin seulement)
 
-      × /restrict: Affiche un clavier en ligne pour choisir des options parmi kick, ban et mute
+      × /restrict: Affiche un clavier en ligne pour choisir des options parmi kick,
+      ban et mute
 
-      × /unrestrict: Affiche un clavier en ligne pour choisir des options parmi unmute et unban.
+      × /unrestrict: Affiche un clavier en ligne pour choisir des options parmi unmute
+      et unban.
     banned_user: 'Utilisateur banni :'
   Blacklists:
     blacklist:
@@ -333,22 +416,29 @@ strings:
       added_bl: 'Ajouté ces mots comme listes noires :'
     unblacklist:
       give_bl_word: Veuillez me donner un mot à supprimer de la liste noire !
-      no_removed_bl: Aucun des mots donnés ne figurait sur la liste noire et ne peut être supprimé !
+      no_removed_bl: Aucun des mots donnés ne figurait sur la liste noire et ne 
+        peut être supprimé !
       removed_bl: '%s a été supprimé avec succès des mots de la liste noire !'
     ls_bl:
-      no_blacklisted: Il n'y a pas de mots sur la liste noire dans cette discussion.
+      no_blacklisted: Il n'y a pas de mots sur la liste noire dans cette 
+        discussion.
       list_bl: 'Ces mots sont sur la liste noire dans cette discussion :'
     set_bl_action:
       current_mode: 'Le mode de liste noire actuel pour cette discussion est : %s'
       changed_mode: 'Mode de liste noire modifié avec succès en : *%s*'
-      choose_correct_option: Veuillez choisir une option parmi <mute/kick/ban/warn/none>
+      choose_correct_option: Veuillez choisir une option parmi 
+        <mute/kick/ban/warn/none>
     rm_all_bl:
-      ask: Êtes-vous sûr de vouloir supprimer tous les mots de la liste noire de cette discussion ?
+      ask: Êtes-vous sûr de vouloir supprimer tous les mots de la liste noire de
+        cette discussion ?
       button_handler:
-        'true': Toutes les listes noires ont été supprimées de cette discussion ✅
-        'false': Annulation de la suppression de toutes les listes noires de cette discussion ❌
+        'true': Toutes les listes noires ont été supprimées de cette discussion 
+          ✅
+        'false': Annulation de la suppression de toutes les listes noires de 
+          cette discussion ❌
         yes: Toutes les listes noires ont été supprimées de cette discussion ✅
-        no: Annulation de la suppression de toutes les listes noires de cette discussion ❌
+        no: Annulation de la suppression de toutes les listes noires de cette 
+          discussion ❌
     bl_watcher:
       muted_user: '%s a été rendu muet à cause de %s'
       banned_user: '%s a été banni à cause de %s'
@@ -361,11 +451,14 @@ strings:
 
       *Commandes administrateur :*
 
-      × /addblacklist `<trigger>`: Ajoute le mot à la liste noire dans la discussion actuelle.
+      × /addblacklist `<trigger>`: Ajoute le mot à la liste noire dans la discussion
+      actuelle.
 
-      × /rmblacklist `<trigger>`: Supprime le mot des mots actuellement sur la liste noire dans la discussion.
+      × /rmblacklist `<trigger>`: Supprime le mot des mots actuellement sur la liste
+      noire dans la discussion.
 
-      × /blaction `<mute/kick/ban/warn/none>`: Définit l'action à effectuer par le bot lorsqu'un mot de la liste noire est détecté.
+      × /blaction `<mute/kick/ban/warn/none>`: Définit l'action à effectuer par le
+      bot lorsqu'un mot de la liste noire est détecté.
 
       × /blacklistaction: Identique à ci-dessus
 
@@ -377,12 +470,15 @@ strings:
 
       *Note :*
 
-      Le mode par défaut pour la liste noire est *none*, ce qui supprimera simplement les messages de la discussion.
+      Le mode par défaut pour la liste noire est *none*, ce qui supprimera simplement
+      les messages de la discussion.
   Connections:
     errors:
-      invalid_option_yes_no: Veuillez me donner une option valide parmi <yes/on/no/off>
+      invalid_option_yes_no: Veuillez me donner une option valide parmi 
+        <yes/on/no/off>
       get_chat_failed: >-
-        Échec de la connexion à la discussion : échec de l'obtention de la discussion : impossible d'obtenirChat : Mauvaise Requête : discussion introuvable
+        Échec de la connexion à la discussion : échec de l'obtention de la discussion
+        : impossible d'obtenirChat : Mauvaise Requête : discussion introuvable
       no_chat_id: J'ai besoin d'un identifiant de discussion pour me connecter !
     connect_to_chat_button: Se connecter à la discussion
     connected: Vous êtes actuellement connecté à <b>%s</b> !
@@ -405,28 +501,38 @@ strings:
         Les connexions utilisateur sont actuellement <b>désactivées</b> pour cette discussion.
         Veuillez demander aux administrateurs de les autoriser si vous voulez vous connecter !
       connected: Vous êtes maintenant connecté à <b>%s</b> !
-      tap_btn_connect: Veuillez appuyer sur le bouton ci-dessous pour connecter cette discussion à votre message privé.
+      tap_btn_connect: Veuillez appuyer sur le bouton ci-dessous pour connecter 
+        cette discussion à votre message privé.
     connections_btns:
       admin_conn_cmds: 'Commandes administrateur disponibles :%s'
       user_conn_cmds: 'Commandes utilisateur disponibles :%s'
     disconnect:
       disconnected: Déconnecté avec succès de la discussion connectée.
-      need_pm: Vous devez m'envoyer ceci en message privé pour vous déconnecter de la discussion !
+      need_pm: Vous devez m'envoyer ceci en message privé pour vous déconnecter 
+        de la discussion !
     is_user_connected:
-      need_group: 'Cette commande est faite pour être utilisée dans les discussions de groupe, pas en message privé !'
+      need_group: 'Cette commande est faite pour être utilisée dans les discussions
+        de groupe, pas en message privé !'
       bot_not_admin: Je ne suis pas administrateur dans cette discussion !
       user_not_admin: Vous devez être un administrateur pour faire cela.
     reconnect:
       reconnected: Vous êtes maintenant reconnecté à <b>%s</b> !!
-      no_last_chat: Vous n'avez pas de dernière discussion à laquelle vous reconnecter !
-      need_pm: Vous devez être en message privé avec moi pour vous reconnecter à une discussion !
+      no_last_chat: Vous n'avez pas de dernière discussion à laquelle vous 
+        reconnecter !
+      need_pm: Vous devez être en message privé avec moi pour vous reconnecter à
+        une discussion !
     help_msg: >-
-      Ce module vous permet de vous connecter à la base de données d'une discussion, et d'y ajouter des choses sans que la discussion le sache ! Pour des raisons évidentes, vous devez être un administrateur pour ajouter des choses ; mais tout membre peut voir vos données. (les utilisateurs bannis/expulsés ne peuvent pas !)
+      Ce module vous permet de vous connecter à la base de données d'une discussion,
+      et d'y ajouter des choses sans que la discussion le sache ! Pour des raisons
+      évidentes, vous devez être un administrateur pour ajouter des choses ; mais
+      tout membre peut voir vos données. (les utilisateurs bannis/expulsés ne peuvent
+      pas !)
 
 
       *Commandes :*
 
-      × /connect `<chatid>`: Se connecter à la discussion spécifiée, vous permettant de voir/modifier le contenu.
+      × /connect `<chatid>`: Se connecter à la discussion spécifiée, vous permettant
+      de voir/modifier le contenu.
 
       × /disconnect: Se déconnecter de la discussion actuelle.
 
@@ -437,14 +543,18 @@ strings:
 
       *Commandes administrateur :*
 
-      × /allowconnect <yes/no>: Permettre ou non aux utilisateurs de se connecter aux discussions.
+      × /allowconnect <yes/no>: Permettre ou non aux utilisateurs de se connecter
+      aux discussions.
 
 
-      Vous pouvez récupérer l'identifiant de discussion en utilisant la commande /id dans votre discussion. Ne soyez pas surpris si l'identifiant est négatif ; tous les super groupes ont des identifiants négatifs.
+      Vous pouvez récupérer l'identifiant de discussion en utilisant la commande /id
+      dans votre discussion. Ne soyez pas surpris si l'identifiant est négatif ; tous
+      les super groupes ont des identifiants négatifs.
   Disabling:
     success: 'Utilisation désactivée des éléments suivants dans cette discussion :'
     errors:
-      unknown_command: 'Commande inconnue à désactiver :\n-%s\nVérifiez /disableable !'
+      unknown_command: 'Commande inconnue à désactiver :\n-%s\nVérifiez /disableable
+        !'
       no_command_specified: Vous n'avez pas spécifié de commande à désactiver.
     disableable:
       list: 'Les commandes suivantes peuvent être désactivées :'
@@ -455,41 +565,56 @@ strings:
       enabled: Les messages désactivés seront maintenant supprimés.
       disabled: Les messages désactivés ne seront plus supprimés.
       status_enabled: >-
-        La suppression des commandes désactivées est *activée*, les commandes désactivées des utilisateurs seront supprimées !
+        La suppression des commandes désactivées est *activée*, les commandes désactivées
+        des utilisateurs seront supprimées !
       status_disabled: >-
-        La suppression des commandes désactivées est *désactivée*, les commandes désactivées des utilisateurs ne seront *pas* supprimées !
+        La suppression des commandes désactivées est *désactivée*, les commandes désactivées
+        des utilisateurs ne seront *pas* supprimées !
     enable:
-      success: 'Utilisation réactivée des éléments suivants dans cette discussion :'
+      success: 'Utilisation réactivée des éléments suivants dans cette discussion
+        :'
       errors:
-        unknown_command: 'Commande inconnue à réactiver :\n-%s\nVérifiez /disableable !'
+        unknown_command: 'Commande inconnue à réactiver :\n-%s\nVérifiez /disableable
+          !'
         no_command_specified: Vous n'avez pas spécifié de commande à désactiver.
     help_msg: >-
-      Ce module vous permet de désactiver certaines commandes couramment utilisées, afin que personne ne puisse les utiliser. Il vous permettra également de les supprimer automatiquement, empêchant les gens de « blue texting ».
+      Ce module vous permet de désactiver certaines commandes couramment utilisées,
+      afin que personne ne puisse les utiliser. Il vous permettra également de les
+      supprimer automatiquement, empêchant les gens de « blue texting ».
 
 
       *Commandes administrateur :*
 
-      × /disable `<commandname>`: Empêche les utilisateurs d'utiliser le nom de commande dans ce groupe.
+      × /disable `<commandname>`: Empêche les utilisateurs d'utiliser le nom de commande
+      dans ce groupe.
 
-      × /enable `<item name>`: Autorise les utilisateurs à utiliser le nom de commande dans ce groupe.
+      × /enable `<item name>`: Autorise les utilisateurs à utiliser le nom de commande
+      dans ce groupe.
 
       × /disableable: Liste toutes les commandes désactivables.
 
-      × /disabledel `<yes/no/on/off>`: Supprime les commandes désactivées lorsqu'elles sont utilisées par des non-administrateurs.
+      × /disabledel `<yes/no/on/off>`: Supprime les commandes désactivées lorsqu'elles
+      sont utilisées par des non-administrateurs.
 
       × /disabled: Liste les commandes désactivées dans cette discussion.
 
 
       Note :
 
-      Lors de la désactivation d'une commande, la commande n'est désactivée que pour les non-administrateurs. Tous les administrateurs peuvent toujours utiliser ces commandes.
+      Lors de la désactivation d'une commande, la commande n'est désactivée que pour
+      les non-administrateurs. Tous les administrateurs peuvent toujours utiliser
+      ces commandes.
 
-      Les commandes désactivées sont toujours accessibles via la fonction /connect. Si vous souhaitez également que cela soit désactivé, faites-le moi savoir dans le chat de support.
+      Les commandes désactivées sont toujours accessibles via la fonction /connect.
+      Si vous souhaitez également que cela soit désactivé, faites-le moi savoir dans
+      le chat de support.
   Filters:
     errors:
       limit_exceeded: >-
-        Limite de filtres dépassée, un groupe ne peut avoir qu'un maximum de 150 filtres !\nCette
-        limitation est due au fait que le bot fonctionne gratuitement sans aucune donation des utilisateurs.
+        Limite de filtres dépassée, un groupe ne peut avoir qu'un maximum de 150 filtres
+        !\nCette
+        limitation est due au fait que le bot fonctionne gratuitement sans aucune
+        donation des utilisateurs.
       no_keyword: Veuillez donner un mot-clé pour répondre !
       invalid_filter: Filtre invalide !
       does_not_exist: Le filtre n'existe pas !
@@ -503,26 +628,33 @@ strings:
       header: 'Voici les filtres actuels dans cette discussion :'
     remove_all:
       no_filters: Il n'y a pas de filtres dans cette discussion !
-      confirm: Êtes-vous sûr de vouloir supprimer tous les filtres de cette discussion ?
+      confirm: Êtes-vous sûr de vouloir supprimer tous les filtres de cette 
+        discussion ?
       success: Tous les filtres ont été supprimés de cette discussion ✅
-      cancelled: Annulation de la suppression de tous les filtres de cette discussion ❌
+      cancelled: Annulation de la suppression de tous les filtres de cette 
+        discussion ❌
     overwrite:
       question: Le filtre existe déjà !\nVoulez-vous l'écraser ?
       success: Le filtre a été écrasé avec succès ✅
       cancelled: Annulation de l'écrasement du filtre ❌
     help_msg: >-
-      Les filtres sont insensibles à la casse ; chaque fois que quelqu'un dit vos mots déclencheurs, Alita répondra autre chose ! Cela peut être utilisé pour créer vos commandes, si désiré.
+      Les filtres sont insensibles à la casse ; chaque fois que quelqu'un dit vos
+      mots déclencheurs, Alita répondra autre chose ! Cela peut être utilisé pour
+      créer vos commandes, si désiré.
 
 
       Commandes :
 
-      - /filter <déclencheur> <réponse> : Chaque fois que quelqu'un dit le déclencheur, le bot répondra avec la phrase. Pour les filtres de plusieurs mots, citez le déclencheur.
+      - /filter <déclencheur> <réponse> : Chaque fois que quelqu'un dit le déclencheur,
+      le bot répondra avec la phrase. Pour les filtres de plusieurs mots, citez le
+      déclencheur.
 
       - /filters: Liste tous les filtres de la discussion.
 
       - /stop <déclencheur>: Arrête le bot de répondre au déclencheur.
 
-      - /stopall: Arrête TOUS les filtres dans la discussion actuelle. Cette action ne peut pas être annulée.
+      - /stopall: Arrête TOUS les filtres dans la discussion actuelle. Cette action
+      ne peut pas être annulée.
 
 
       Exemples :
@@ -537,43 +669,62 @@ strings:
 
       - Définir un filtre qui ne peut être utilisé que par les administrateurs :
 
-      -> /filter exemple Ce filtre ne se déclenchera pas si un utilisateur normal le dit {admin}
+      -> /filter exemple Ce filtre ne se déclenchera pas si un utilisateur normal
+      le dit {admin}
 
-      - Pour enregistrer un fichier, une image, un gif ou toute autre pièce jointe, répondez simplement au fichier avec :
+      - Pour enregistrer un fichier, une image, un gif ou toute autre pièce jointe,
+      répondez simplement au fichier avec :
 
       -> /filter trigger
     formatting: Formatage
   Formatting:
     help_msg: >-
-      Alita prend en charge un grand nombre d'options de formatage pour rendre vos messages plus expressifs. Jetez un coup d'œil en cliquant sur les boutons ci-dessous !
+      Alita prend en charge un grand nombre d'options de formatage pour rendre vos
+      messages plus expressifs. Jetez un coup d'œil en cliquant sur les boutons ci-dessous
+      !
     Markdown: >-
       <b>Formatage Markdown</b>
 
 
-      Vous pouvez formater votre message en utilisant le <b>gras</b>, l'<i>italique</i>, le <u>soulignement</u>, et bien plus encore. N'hésitez pas à expérimenter !
+      Vous pouvez formater votre message en utilisant le <b>gras</b>, l'<i>italique</i>,
+      le <u>soulignement</u>, et bien plus encore. N'hésitez pas à expérimenter !
 
       <b>Markdown pris en charge</b> :
 
-      - <code>`mots de code`</code>: Les guillemets inversés sont utilisés pour les polices monospace. S'affiche comme : <code>mots de code</code>.
+      - <code>`mots de code`</code>: Les guillemets inversés sont utilisés pour les
+      polices monospace. S'affiche comme : <code>mots de code</code>.
 
-      - <code>_mots en italique_</code>: Les tirets bas sont utilisés pour les polices en italique. S'affiche comme : <i>mots en italique</i>.
+      - <code>_mots en italique_</code>: Les tirets bas sont utilisés pour les polices
+      en italique. S'affiche comme : <i>mots en italique</i>.
 
-      - <code>*mots en gras*</code>: Les astérisques sont utilisés pour les polices en gras. S'affiche comme : <b>mots en gras</b>.
+      - <code>*mots en gras*</code>: Les astérisques sont utilisés pour les polices
+      en gras. S'affiche comme : <b>mots en gras</b>.
 
-      - <code>~barré~</code>: Les tildes sont utilisés pour le barré. S'affiche comme : <strike>barré</strike>.
+      - <code>~barré~</code>: Les tildes sont utilisés pour le barré. S'affiche comme
+      : <strike>barré</strike>.
 
-      - <code>||spoiler||</code>: Les doubles barres verticales sont utilisées pour les spoilers. S'affiche comme : <tg-spoiler>Spoiler</tg-spoiler>.
+      - <code>||spoiler||</code>: Les doubles barres verticales sont utilisées pour
+      les spoilers. S'affiche comme : <tg-spoiler>Spoiler</tg-spoiler>.
 
-      - <code>```pre```</code>: Pour que le formateur ignore les autres caractères de formatage à l'intérieur du texte formaté avec '```', sera comme : <code>**gras** | *gras*</code>.
+      - <code>```pre```</code>: Pour que le formateur ignore les autres caractères
+      de formatage à l'intérieur du texte formaté avec '```', sera comme : <code>**gras**
+      | *gras*</code>.
 
-      - <code>__souligné__</code>: Les doubles tirets bas sont utilisés pour le soulignement. S'affiche comme : souligné. REMARQUE : Certains clients essaient d'être intelligents et l'interprètent comme de l'italique. Dans ce cas, essayez d'utiliser le formatage intégré de votre application.
+      - <code>__souligné__</code>: Les doubles tirets bas sont utilisés pour le soulignement.
+      S'affiche comme : souligné. REMARQUE : Certains clients essaient d'être intelligents
+      et l'interprètent comme de l'italique. Dans ce cas, essayez d'utiliser le formatage
+      intégré de votre application.
 
-      - <code>[hyperlien](example.com)</code>: C'est le formatage utilisé pour les hyperliens. S'affiche comme : <a href='https://example.com/'>hyperlien</a>.
+      - <code>[hyperlien](example.com)</code>: C'est le formatage utilisé pour les
+      hyperliens. S'affiche comme : <a href='https://example.com/'>hyperlien</a>.
 
-      - <code>[Mon Bouton](buttonurl://example.com)</code>: C'est le formatage utilisé pour créer des boutons. Cet exemple créera un bouton nommé "Mon bouton" qui ouvre <code>example.com</code> lorsque cliqué.
+      - <code>[Mon Bouton](buttonurl://example.com)</code>: C'est le formatage utilisé
+      pour créer des boutons. Cet exemple créera un bouton nommé "Mon bouton" qui
+      ouvre <code>example.com</code> lorsque cliqué.
 
 
-      Si vous souhaitez envoyer des boutons sur la même ligne, utilisez le formatage <code>:same</code>.
+      Si vous souhaitez envoyer des boutons sur la même ligne, utilisez le formatage
+      <code>:same</code>.
 
       <b>Exemple :</b>
 
@@ -588,9 +739,12 @@ strings:
       <b>Remplissages</b>
 
 
-      Vous pouvez également personnaliser le contenu de votre message avec des données contextuelles. Par exemple, vous pourriez mentionner un utilisateur par son nom dans le message de bienvenue, ou le mentionner dans un filtre !
+      Vous pouvez également personnaliser le contenu de votre message avec des données
+      contextuelles. Par exemple, vous pourriez mentionner un utilisateur par son
+      nom dans le message de bienvenue, ou le mentionner dans un filtre !
 
-      Vous pouvez les utiliser pour mentionner un utilisateur dans les notes aussi !
+      Vous pouvez les utiliser pour mentionner un utilisateur dans les notes aussi
+      !
 
 
       <b>Remplissages pris en charge :</b>
@@ -601,7 +755,8 @@ strings:
 
       - <code>{fullname}</code>: Le nom complet de l'utilisateur.
 
-      - <code>{username}</code>: Le nom d'utilisateur de l'utilisateur. S'il n'en a pas, mentionne l'utilisateur à la place.
+      - <code>{username}</code>: Le nom d'utilisateur de l'utilisateur. S'il n'en
+      a pas, mentionne l'utilisateur à la place.
 
       - <code>{mention}</code>: Mentionne l'utilisateur avec son prénom.
 
@@ -620,11 +775,14 @@ strings:
       <b>Contenu aléatoire</b>
 
 
-      Une autre chose qui peut être amusante est de randomiser le contenu d'un message. Rendez les choses un peu plus personnelles en modifiant les messages de bienvenue ou en modifiant les notes !
+      Une autre chose qui peut être amusante est de randomiser le contenu d'un message.
+      Rendez les choses un peu plus personnelles en modifiant les messages de bienvenue
+      ou en modifiant les notes !
 
       Comment utiliser les contenus aléatoires :
 
-      - %%%: Ce séparateur peut être utilisé pour ajouter des réponses aléatoires au bot.
+      - %%%: Ce séparateur peut être utilisé pour ajouter des réponses aléatoires
+      au bot.
 
       Par exemple :
 
@@ -634,13 +792,16 @@ strings:
 
       comment allez-vous</code>
 
-      Cela choisira au hasard entre l'envoi du premier message, "bonjour", ou du second message, "comment allez-vous".
+      Cela choisira au hasard entre l'envoi du premier message, "bonjour", ou du second
+      message, "comment allez-vous".
 
-      Utilisez ceci pour rendre Alita un peu plus personnalisée ! (ne fonctionne que dans les filtres/notes)
+      Utilisez ceci pour rendre Alita un peu plus personnalisée ! (ne fonctionne que
+      dans les filtres/notes)
 
       Exemple de message de bienvenue :
 
-      - Chaque fois qu'un nouvel utilisateur rejoint, il se verra présenter l'un des trois messages affichés ici.
+      - Chaque fois qu'un nouvel utilisateur rejoint, il se verra présenter l'un des
+      trois messages affichés ici.
 
       -> /filter "hey"
 
@@ -660,38 +821,52 @@ strings:
   Greetings:
     welcome:
       status: >-
-        Je souhaite actuellement la bienvenue aux utilisateurs : <code>%t</code>\nJe supprime actuellement les anciens messages de bienvenue : <code>%t</code>\nJe supprime actuellement les messages de service :
+        Je souhaite actuellement la bienvenue aux utilisateurs : <code>%t</code>\nJe
+        supprime actuellement les anciens messages de bienvenue : <code>%t</code>\nJe
+        supprime actuellement les messages de service :
         <code>%t</code>\nLe message de bienvenue ne remplissant pas les {} est :
-      enabled: Je souhaiterai la bienvenue aux utilisateurs à partir de maintenant.
-      disabled: Je ne souhaiterai plus la bienvenue aux utilisateurs à partir de maintenant.
+      enabled: Je souhaiterai la bienvenue aux utilisateurs à partir de 
+        maintenant.
+      disabled: Je ne souhaiterai plus la bienvenue aux utilisateurs à partir de
+        maintenant.
       turned_off: Le message de bienvenue a été désactivé !
     set_welcome:
       success: Message de bienvenue personnalisé défini avec succès !
     reset_welcome:
-      success: Message de bienvenue personnalisé réinitialisé avec succès par défaut !
+      success: Message de bienvenue personnalisé réinitialisé avec succès par 
+        défaut !
     goodbye:
       status: >-
-        Je dis actuellement au revoir aux utilisateurs : <code>%t</code>\nJe supprime actuellement les anciens messages d'au revoir : <code>%t</code>\nJe supprime actuellement les messages de service :
+        Je dis actuellement au revoir aux utilisateurs : <code>%t</code>\nJe supprime
+        actuellement les anciens messages d'au revoir : <code>%t</code>\nJe supprime
+        actuellement les messages de service :
         <code>%t</code>\nLe message d'au revoir ne remplissant pas les {} est :
       enabled: Je dirai au revoir aux utilisateurs à partir de maintenant.
-      disabled: Je ne dirai plus au revoir aux utilisateurs à partir de maintenant.
+      disabled: Je ne dirai plus au revoir aux utilisateurs à partir de 
+        maintenant.
       turned_off: Le message d'au revoir a été désactivé !
     set_goodbye:
       success: Message d'au revoir personnalisé défini avec succès !
     reset_goodbye:
-      success: Message d'au revoir personnalisé réinitialisé avec succès par défaut !
+      success: Message d'au revoir personnalisé réinitialisé avec succès par 
+        défaut !
     clean_welcome:
-      status_enabled: Je devrais supprimer les messages de bienvenue de moins de deux jours.
-      status_disabled: Je ne supprime actuellement pas les anciens messages de bienvenue !
+      status_enabled: Je devrais supprimer les messages de bienvenue de moins de
+        deux jours.
+      status_disabled: Je ne supprime actuellement pas les anciens messages de 
+        bienvenue !
       disabled: Je ne supprimerai pas les anciens messages de bienvenue !
       enabled: Je vais essayer de supprimer les anciens messages de bienvenue !
     clean_goodbye:
-      status_enabled: Je devrais supprimer les messages de bienvenue de moins de deux jours.
-      status_disabled: Je ne supprime actuellement pas les anciens messages de bienvenue !
+      status_enabled: Je devrais supprimer les messages de bienvenue de moins de
+        deux jours.
+      status_disabled: Je ne supprime actuellement pas les anciens messages de 
+        bienvenue !
       disabled: Je ne supprimerai pas les anciens messages d'au revoir !
       enabled: Je vais essayer de supprimer les anciens messages d'au revoir !
     del_joined:
-      status_enabled: Je devrais supprimer les messages "utilisateur" a rejoint le chat maintenant.
+      status_enabled: Je devrais supprimer les messages "utilisateur" a rejoint 
+        le chat maintenant.
       status_disabled: Je ne supprime actuellement pas les messages de jonction.
       disabled: Je ne supprimerai pas les messages de jonction.
       enabled: Je vais essayer de supprimer les messages de jonction !
@@ -707,35 +882,47 @@ strings:
       declined: '%s refusé de rejoindre le chat ❌'
       banned: '✅ Banni avec succès ! %s'
     auto_approve:
-      enabled: J'approuve automatiquement les nouvelles demandes d'adhésion au chat maintenant.
-      disabled: Je n'approuve pas automatiquement les nouvelles demandes d'adhésion au chat maintenant.
-      disabled_now: Je n'approuverai pas automatiquement les nouvelles demandes d'adhésion !
-      enabled_now: Je vais essayer d'approuver automatiquement les nouvelles demandes d'adhésion !
+      enabled: J'approuve automatiquement les nouvelles demandes d'adhésion au 
+        chat maintenant.
+      disabled: Je n'approuve pas automatiquement les nouvelles demandes 
+        d'adhésion au chat maintenant.
+      disabled_now: Je n'approuverai pas automatiquement les nouvelles demandes 
+        d'adhésion !
+      enabled_now: Je vais essayer d'approuver automatiquement les nouvelles 
+        demandes d'adhésion !
     help_msg: >-
-      Accueillez les nouveaux membres dans vos groupes ou dites au revoir après leur départ !
+      Accueillez les nouveaux membres dans vos groupes ou dites au revoir après leur
+      départ !
 
 
       *Commandes administrateur :*
 
       × /setwelcome `<reply/text>`: Définit le texte de bienvenue pour le groupe.
 
-      × /welcome `<yes/no/on/off>`: Active ou désactive le paramètre de bienvenue pour le groupe.
+      × /welcome `<yes/no/on/off>`: Active ou désactive le paramètre de bienvenue
+      pour le groupe.
 
       × /resetwelcome: Réinitialise le message de bienvenue par défaut.
 
       × /setgoodbye `<reply/text>`: Définit le texte d'adieu pour le groupe.
 
-      × /goodbye `<yes/no/on/off>`: Active ou désactive le paramètre d'adieu pour le groupe.
+      × /goodbye `<yes/no/on/off>`: Active ou désactive le paramètre d'adieu pour
+      le groupe.
 
       × /resetgoodbye: Réinitialise le message d'adieu par défaut.
 
-      × /cleanservice `<yes/no/on/off>`: Supprime tous les messages de service tels que la notification 'x a rejoint le groupe'.
+      × /cleanservice `<yes/no/on/off>`: Supprime tous les messages de service tels
+      que la notification 'x a rejoint le groupe'.
 
-      × /cleanwelcome `<yes/no/on/off>`: Supprime l'ancien message de bienvenue, chaque fois qu'un nouveau membre rejoint.
+      × /cleanwelcome `<yes/no/on/off>`: Supprime l'ancien message de bienvenue, chaque
+      fois qu'un nouveau membre rejoint.
 
-      × /autoapprove `<yes/no/on/off>`: Approuve automatiquement tous les nouveaux membres.
-    i_am_currently_goodbying_users_t: 'Je dis actuellement au revoir aux utilisateurs : <code>%t</code>'
-    i_understand_on_yes_or_off_no_only: Je ne comprends que 'on/yes' ou 'off/no' !
+      × /autoapprove `<yes/no/on/off>`: Approuve automatiquement tous les nouveaux
+      membres.
+    i_am_currently_goodbying_users_t: 'Je dis actuellement au revoir aux utilisateurs
+      : <code>%t</code>'
+    i_understand_on_yes_or_off_no_only: Je ne comprends que 'on/yes' ou 'off/no'
+      !
     formatting: Formatage
   Help:
     about:
@@ -744,43 +931,63 @@ strings:
       news_channel_button: "Chaîne d'actualités 📢"
       support_group_button: "Groupe de support 👥"
       configuration_button: Configuration ⚙️
-      group_prompt: Cliquez sur le bouton ci-dessous pour obtenir des informations sur moi !
+      group_prompt: Cliquez sur le bouton ci-dessous pour obtenir des 
+        informations sur moi !
       button: À propos
     start:
       intro: >-
-        Salut ! Je m'appelle Alita ✨.\nJe suis là pour vous aider à gérer vos groupes !\nAppuyez sur /help pour en savoir plus sur la façon de m'utiliser à mon plein potentiel.\nRejoignez ma <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>Chaîne d'actualités</a> pour obtenir des informations sur toutes les dernières mises à jour.
+        Salut ! Je m'appelle Alita ✨.\nJe suis là pour vous aider à gérer vos groupes
+        !\nAppuyez sur /help pour en savoir plus sur la façon de m'utiliser à mon
+        plein potentiel.\nRejoignez ma <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>Chaîne
+        d'actualités</a> pour obtenir des informations sur toutes les dernières mises
+        à jour.
       about_button: À propos ✨
       add_to_chat_button: ➕ Ajoutez-moi à la discussion !
       support_group_button: "Groupe de support 👥"
       commands_help_button: "📚 Commandes & Aide"
       language_button: "Langue 🌏"
-      group_prompt: 'Salut :) Envoyez-moi un message privé si vous avez des questions sur la façon de m''utiliser !'
+      group_prompt: 'Salut :) Envoyez-moi un message privé si vous avez des questions
+        sur la façon de m''utiliser !'
     main: >-
-      Salut %s !\nJe m'appelle Alita ✨.\n\nJe suis un bot de gestion de groupe, ici pour vous aider à vous débrouiller et à maintenir l'ordre dans vos groupes !\nJ'ai de nombreuses fonctionnalités pratiques, telles que le contrôle des inondations, un système d'avertissement, un système de prise de notes, et même des réponses prédéfinies sur certains mots-clés.\n\n<b>Commandes utiles</b> :\n - /start: Me démarre ! Vous l'avez probablement déjà utilisé !\n
-      - /help: Envoie ce message ; je vous en dirai plus sur moi-même !\n - /donate: Vous donne des informations sur la façon de me soutenir, moi et mon créateur.\n\nToutes les commandes peuvent être utilisées avec les éléments suivants : / ou !
+      Salut %s !\nJe m'appelle Alita ✨.\n\nJe suis un bot de gestion de groupe, ici
+      pour vous aider à vous débrouiller et à maintenir l'ordre dans vos groupes !\nJ'ai
+      de nombreuses fonctionnalités pratiques, telles que le contrôle des inondations,
+      un système d'avertissement, un système de prise de notes, et même des réponses
+      prédéfinies sur certains mots-clés.\n\n<b>Commandes utiles</b> :\n - /start:
+      Me démarre ! Vous l'avez probablement déjà utilisé !\n
+      - /help: Envoie ce message ; je vous en dirai plus sur moi-même !\n - /donate:
+      Vous donne des informations sur la façon de me soutenir, moi et mon créateur.\n\nToutes
+      les commandes peuvent être utilisées avec les éléments suivants : / ou !
     help:
       button: Cliquez ici pour obtenir de l'aide !
-      group_prompt_general: Contactez-moi en message privé pour obtenir de l'aide !
-      group_prompt_module: Contactez-moi en message privé pour obtenir de l'aide concernant <code>%s</code> !
+      group_prompt_general: Contactez-moi en message privé pour obtenir de 
+        l'aide !
+      group_prompt_module: Contactez-moi en message privé pour obtenir de l'aide
+        concernant <code>%s</code> !
     configuration:
       private_only: La configuration ne fonctionne qu'en privé
     About: >-
-      @%s est l'un des gestionnaires de groupe les plus rapides et les plus riches en fonctionnalités.
+      @%s est l'un des gestionnaires de groupe les plus rapides et les plus riches
+      en fonctionnalités.
 
 
       Alita ✨ est développé et activement maintenu par @DivideProjects !
 
 
-      Alita est en ligne depuis 2020 et a servi des milliers de groupes avec des centaines de milliers d'utilisateurs !
+      Alita est en ligne depuis 2020 et a servi des milliers de groupes avec des centaines
+      de milliers d'utilisateurs !
 
 
       <b>Pourquoi Alita :</b>
 
-      -Simple : Facilité d'utilisation et compatibilité avec de nombreuses commandes de bot.
+      -Simple : Facilité d'utilisation et compatibilité avec de nombreuses commandes
+      de bot.
 
-      -Fonctionnalités : De nombreuses fonctionnalités que d'autres bots de gestion de groupe n'ont pas.
+      -Fonctionnalités : De nombreuses fonctionnalités que d'autres bots de gestion
+      de groupe n'ont pas.
 
-      -Rapide : Devinez quoi ? Il n'est pas fait en Python, nous utilisons <a href='[https://go.dev/](https://go.dev/)'>Go</a> comme langage de programmation principal.
+      -Rapide : Devinez quoi ? Il n'est pas fait en Python, nous utilisons <a href='[https://go.dev/](https://go.dev/)'>Go</a>
+      comme langage de programmation principal.
 
 
       <b>Version actuelle :</b> %s
@@ -811,39 +1018,53 @@ strings:
         Toutes les commandes peuvent être utilisées avec / ou !
 
 
-        Si vous rencontrez des difficultés à me configurer dans votre groupe, n'hésitez pas à venir sur @DivideSupport.
+        Si vous rencontrez des difficultés à me configurer dans votre groupe, n'hésitez
+        pas à venir sur @DivideSupport.
 
         Nous serions ravis de vous aider.
     DonateText: >-
       Alors vous voulez faire un don ? Génial !
 
-      Lorsque vous faites un don, tous les fonds sont destinés à mon développement, ce qui me rend rapide et réactif.
+      Lorsque vous faites un don, tous les fonds sont destinés à mon développement,
+      ce qui me rend rapide et réactif.
 
-      Votre don pourrait également m'apporter une ou deux nouvelles fonctionnalités, que je n'ai pas pu obtenir en raison des limitations du serveur.
+      Votre don pourrait également m'apporter une ou deux nouvelles fonctionnalités,
+      que je n'ai pas pu obtenir en raison des limitations du serveur.
 
-      Tous les fonds seraient utilisés pour mes services tels que la base de données, le stockage et l'hébergement !
+      Tous les fonds seraient utilisés pour mes services tels que la base de données,
+      le stockage et l'hébergement !
 
       Vous pouvez faire un don en contactant mon propriétaire ici : @DivideProjectsBot
     about_me_u200d: "À propos de moi 👨‍💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_me: "About me 👨\\u200d💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_text: "I'm Alita, a group management bot built to help you manage your groups
+      effectively!"
   Locks:
     list:
       header: 'Voici les verrous dans cette discussion :'
     locktypes:
       header: 'Verrous : \n -'
     lock:
-      no_type_specified: Que voulez-vous verrouiller ? Vérifiez /locktypes pour les options disponibles.
+      no_type_specified: Que voulez-vous verrouiller ? Vérifiez /locktypes pour 
+        les options disponibles.
       success: 'Verrouillé les éléments suivants dans ce groupe :\n - %s'
     unlock:
-      no_type_specified: Que voulez-vous déverrouiller ? Vérifiez /locktypes pour les options disponibles.
+      no_type_specified: Que voulez-vous déverrouiller ? Vérifiez /locktypes 
+        pour les options disponibles.
       success: 'Déverrouillé les éléments suivants dans ce groupe :\n - %s'
     errors:
       invalid_type: '`%s` n''est pas un type de verrou correct, vérifiez /locktypes.'
     bot:
       no_admin_permission: >-
-        Je vois un bot, et on m'a dit de l'empêcher de rejoindre... mais je ne suis pas administrateur !
+        Je vois un bot, et on m'a dit de l'empêcher de rejoindre... mais je ne suis
+        pas administrateur !
       no_ban_permission: >-
-        Je vois un bot, et on m'a dit de l'empêcher de rejoindre... mais je n'ai pas la permission de le bannir !
-      admin_only: Seuls les administrateurs sont autorisés à ajouter des bots à cette discussion !
+        Je vois un bot, et on m'a dit de l'empêcher de rejoindre... mais je n'ai pas
+        la permission de le bannir !
+      admin_only: Seuls les administrateurs sont autorisés à ajouter des bots à 
+        cette discussion !
     help_msg: >-
       *Admin uniquement :*
 
@@ -858,21 +1079,27 @@ strings:
 
       Les verrous peuvent être utilisés pour restreindre les utilisateurs d'un groupe.
 
-      Le verrouillage des URL supprimera automatiquement tous les messages contenant des URL, le verrouillage des autocollants supprimera tous les autocollants, etc.
+      Le verrouillage des URL supprimera automatiquement tous les messages contenant
+      des URL, le verrouillage des autocollants supprimera tous les autocollants,
+      etc.
 
-      Le verrouillage des bots empêchera les non-administrateurs d'ajouter des bots à la discussion.
+      Le verrouillage des bots empêchera les non-administrateurs d'ajouter des bots
+      à la discussion.
 
 
       **Exemple :**
 
       `/lock media`: cela verrouille tous les messages média dans la discussion.
-    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'Je vois un bot, et on m''a dit de l''empêcher de rejoindre...'
+    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'Je vois un bot, et on m''a
+      dit de l''empêcher de rejoindre...'
   Languages:
     help_translate_button: "Aidez-nous à traduire 🌎"
     change:
-      private_prompt: Votre langue actuelle est %s\nChoisissez une langue parmi le clavier ci-dessous.
+      private_prompt: Votre langue actuelle est %s\nChoisissez une langue parmi 
+        le clavier ci-dessous.
       group_prompt: >-
-        La langue actuelle de ce groupe est %s\nChoisissez une langue parmi le clavier ci-dessous.
+        La langue actuelle de ce groupe est %s\nChoisissez une langue parmi le clavier
+        ci-dessous.
       private_success: Votre langue a été changée en %s
       group_success: La langue de ce groupe a été changée en %s
     help_msg: >-
@@ -881,33 +1108,42 @@ strings:
       Changez-la facilement en utilisant ce module !
 
 
-      Tapez simplement /lang et utilisez le clavier en ligne pour choisir une langue pour vous-même ou pour votre groupe.
+      Tapez simplement /lang et utilisez le clavier en ligne pour choisir une langue
+      pour vous-même ou pour votre groupe.
 
 
-      Vous pouvez nous aider à traduire le bot dans plus de langues en participant à [Crowdin](https://crowdin.com/project/alita_robot)
+      Vous pouvez nous aider à traduire le bot dans plus de langues en participant
+      à [Crowdin](https://crowdin.com/project/alita_robot)
   Misc:
     reply:
       need_target: Répondre à quelqu'un.
       need_content: Fournissez du contenu à répondre !
     paste:
-      need_text_or_document: Veuillez donner du texte à coller ou répondre à un document !
+      need_text_or_document: Veuillez donner du texte à coller ou répondre à un 
+        document !
       processing: Collage...
       get_file_error: Mauvaise requête sur GetFile !
-      file_too_big: Fichier trop volumineux à coller ; la taille maximale du fichier qui peut être collé est de 600 ko !
+      file_too_big: Fichier trop volumineux à coller ; la taille maximale du 
+        fichier qui peut être collé est de 600 ko !
       paste_error: Impossible de coller les données fournies !
     info:
-      user_not_found: Impossible de trouver des informations sur cet utilisateur.
+      user_not_found: Impossible de trouver des informations sur cet 
+        utilisateur.
     translate:
-      need_text_and_lang: J'ai besoin de texte et d'un code de langue pour traduire.
-      no_text_in_reply: Le message auquel il a été répondu ne contient aucun texte à traduire.
+      need_text_and_lang: J'ai besoin de texte et d'un code de langue pour 
+        traduire.
+      no_text_in_reply: Le message auquel il a été répondu ne contient aucun 
+        texte à traduire.
       need_text: Veuillez fournir du texte à traduire.
       request_error: Erreur lors de la requête de traduction !
     keyboard:
       removing: Suppression du clavier de bot bloqué...
     help_msg: >-
-      × /info: Obtenez vos informations d'utilisateur, qui peuvent être utilisées en réponse ou en passant un ID utilisateur ou un nom d'utilisateur.
+      × /info: Obtenez vos informations d'utilisateur, qui peuvent être utilisées
+      en réponse ou en passant un ID utilisateur ou un nom d'utilisateur.
 
-      × /id: Obtenez l'ID du groupe actuel. Si utilisé en répondant à un message, obtenez l'ID de cet utilisateur.
+      × /id: Obtenez l'ID du groupe actuel. Si utilisé en répondant à un message,
+      obtenez l'ID de cet utilisateur.
 
       × /ping: Ping le serveur Telegram !
 
@@ -924,31 +1160,40 @@ strings:
   Mutes:
     errors:
       restrict_self: Pourquoi me restreindrais-je ?
-      anon_user: Cette commande ne peut pas être utilisée par un utilisateur anonyme.
+      anon_user: Cette commande ne peut pas être utilisée par un utilisateur 
+        anonyme.
     tmute:
       success: Chut...\n%s mis en sourdine pendant %s
     mute:
       success: Chut...\n%s mis en sourdine.
     dmute:
-      no_reply: Vous devez répondre à un message pour le supprimer et rendre l'utilisateur muet !
+      no_reply: Vous devez répondre à un message pour le supprimer et rendre 
+        l'utilisateur muet !
       success: Chut...\n%s mis en sourdine.
     unmute:
       success: D'accord !\nJe vais permettre à %s de parler à nouveau.
     help_msg: >-
-      Parfois, les utilisateurs peuvent être ennuyeux et vous pourriez vouloir les empêcher d'envoyer un message au chat, ce module est là pour vous aider, vous pouvez utiliser ce module pour rendre les membres muets dans votre groupe.
+      Parfois, les utilisateurs peuvent être ennuyeux et vous pourriez vouloir les
+      empêcher d'envoyer un message au chat, ce module est là pour vous aider, vous
+      pouvez utiliser ce module pour rendre les membres muets dans votre groupe.
 
 
       *Commandes de mise en sourdine :* (Admin seulement)
 
       × /mute <userhandle>: rend un utilisateur muet, (via un identifiant, ou réponse)
 
-      × /smute <userhandle>: rend un utilisateur muet silencieusement, n'envoie pas de message au groupe et supprime également votre commande. (via un identifiant, ou réponse)
+      × /smute <userhandle>: rend un utilisateur muet silencieusement, n'envoie pas
+      de message au groupe et supprime également votre commande. (via un identifiant,
+      ou réponse)
 
-      × /dmute <userhandle>: rend un utilisateur muet et supprime le message auquel il a été répondu. (via un identifiant, ou réponse)
+      × /dmute <userhandle>: rend un utilisateur muet et supprime le message auquel
+      il a été répondu. (via un identifiant, ou réponse)
 
-      × /tmute <userhandle> x(m/h/d): rend un utilisateur muet pendant `x` temps. (via un identifiant, ou réponse). m = minutes, h = heures, d = jours.
+      × /tmute <userhandle> x(m/h/d): rend un utilisateur muet pendant `x` temps.
+      (via un identifiant, ou réponse). m = minutes, h = heures, d = jours.
 
-      × /unmute <userhandle>: rétablit le son d'un utilisateur. (via un identifiant, ou réponse)
+      × /unmute <userhandle>: rétablit le son d'un utilisateur. (via un identifiant,
+      ou réponse)
   Notes:
     remove:
       no_keyword: Veuillez donner un mot-clé à supprimer !
@@ -957,7 +1202,8 @@ strings:
       invalid_note: Note invalide !
       does_not_exist: La note n'existe pas !
       parse_error: >-
-        Il y a une erreur lors de l'analyse de la note, veuillez la signaler dans le chat de support.
+        Il y a une erreur lors de l'analyse de la note, veuillez la signaler dans
+        le chat de support.
       admin_only: Cette note n'est accessible que par un administrateur !
     list:
       no_notes: Il n'y a pas de notes dans cette discussion !
@@ -965,7 +1211,8 @@ strings:
     help_msg: >-
       Sauvegardez des données pour les futurs utilisateurs avec des notes !
 
-      Les notes sont excellentes pour enregistrer des informations aléatoires ; un numéro de téléphone, un joli gif, une image amusante - n'importe quoi !
+      Les notes sont excellentes pour enregistrer des informations aléatoires ; un
+      numéro de téléphone, un joli gif, une image amusante - n'importe quoi !
 
       *Commandes utilisateur :*
 
@@ -975,7 +1222,9 @@ strings:
 
       Commandes administrateur :
 
-      - /save <notename> <note text>: Enregistre une nouvelle note appelée "mot". Répondre à un message enregistrera ce message. Fonctionne même sur les médias !
+      - /save <notename> <note text>: Enregistre une nouvelle note appelée "mot".
+      Répondre à un message enregistrera ce message. Fonctionne même sur les médias
+      !
 
       - /clear <notename>: Supprime la note associée.
 
@@ -983,15 +1232,22 @@ strings:
 
       - /saved: Idem que /notes.
 
-      - /clearall: Supprime TOUTES les notes dans une discussion. Cela ne peut pas être annulé.
+      - /clearall: Supprime TOUTES les notes dans une discussion. Cela ne peut pas
+      être annulé.
 
-      - /privatenotes: Indique s'il faut envoyer les notes en message privé. Enverra un message avec un bouton sur lequel les utilisateurs peuvent cliquer pour obtenir la note en message privé.
+      - /privatenotes: Indique s'il faut envoyer les notes en message privé. Enverra
+      un message avec un bouton sur lequel les utilisateurs peuvent cliquer pour obtenir
+      la note en message privé.
     removed_note_percent: Note <b>%s</b> supprimée.
-    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Êtes-vous sûr de vouloir supprimer toutes les notes de cette discussion ?
-    only_chat_creator_can_use_this_command: Seul le créateur de la discussion peut utiliser cette commande.
-    there_s_some_error_parsing_the_note_please_report_this_in_su: 'Il y a une erreur lors de l''analyse de la note, veuillez la signaler dans le chat de support.'
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Êtes-vous sûr de 
+      vouloir supprimer toutes les notes de cette discussion ?
+    only_chat_creator_can_use_this_command: Seul le créateur de la discussion 
+      peut utiliser cette commande.
+    there_s_some_error_parsing_the_note_please_report_this_in_su: 'Il y a une erreur
+      lors de l''analyse de la note, veuillez la signaler dans le chat de support.'
     note_doesn_t_exists: La note n'existe pas !
-    there_s_some_error_parsing_the_note_please_report_this_to_su: 'Il y a une erreur lors de l''analyse de la note, veuillez la signaler au chat de support.'
+    there_s_some_error_parsing_the_note_please_report_this_to_su: 'Il y a une erreur
+      lors de l''analyse de la note, veuillez la signaler au chat de support.'
     formatting: Formatage
   Pins:
     errors:
@@ -1005,7 +1261,8 @@ strings:
     unpin_all:
       success: Tous les messages de discussion ont été désépinglés !
     help_msg: >-
-      Toutes les commandes liées à l'épinglage se trouvent ici ; tenez votre discussion informée des dernières nouvelles avec un simple message épinglé !
+      Toutes les commandes liées à l'épinglage se trouvent ici ; tenez votre discussion
+      informée des dernières nouvelles avec un simple message épinglé !
 
 
       *Commandes utilisateur :*
@@ -1015,26 +1272,38 @@ strings:
 
       *Commandes administrateur :*
 
-      × /pin: Épingler le message auquel vous avez répondu. Ajoutez 'loud' ou 'notify' pour envoyer une notification aux membres du groupe.
+      × /pin: Épingler le message auquel vous avez répondu. Ajoutez 'loud' ou 'notify'
+      pour envoyer une notification aux membres du groupe.
 
       × /pinned: Obtient le dernier message épinglé dans la discussion actuelle.
 
-      × /permapin <text>: Épingler un message personnalisé via le bot. Ce message peut contenir du markdown, des boutons et toutes les autres fonctionnalités géniales.
+      × /permapin <text>: Épingler un message personnalisé via le bot. Ce message
+      peut contenir du markdown, des boutons et toutes les autres fonctionnalités
+      géniales.
 
-      × /unpin: Désépingler le message épinglé actuel. Si utilisé en réponse, désépingle le message auquel il a été répondu.
+      × /unpin: Désépingler le message épinglé actuel. Si utilisé en réponse, désépingle
+      le message auquel il a été répondu.
 
       × /unpinall: Désépingle tous les messages épinglés.
 
-      × /antichannelpin <yes/no/on/off>: Ne laissez pas Telegram épingler automatiquement les canaux liés. Si aucun argument n'est donné, affiche le paramètre actuel.
+      × /antichannelpin <yes/no/on/off>: Ne laissez pas Telegram épingler automatiquement
+      les canaux liés. Si aucun argument n'est donné, affiche le paramètre actuel.
 
       × /cleanlinked <yes/no/on/off>: Supprime les messages envoyés par le canal lié.
 
-      Note : Lorsque vous utilisez les épingles anti-canal, assurez-vous d'utiliser la commande /unpin, au lieu de le faire manuellement. Sinon, l'ancien message sera réépinglé lorsque le canal enverra des messages.
-    unpinned_all_pinned_messages_in_this_chat: Tous les messages épinglés dans cette discussion ont été désépinglés !
-    cancelled_operation_to_unpin_messages: Opération de désépinglage des messages annulée !
-    are_you_sure_you_want_to_unpin_all_pinned_messages: Êtes-vous sûr de vouloir désépingler tous les messages épinglés ?
-    please_reply_to_a_message_or_give_some_text_to_pin: Veuillez répondre à un message ou donner du texte à épingler.
-    no_message_has_been_pinned_in_the_current_chat: Aucun message n'a été épinglé dans la discussion actuelle !
+      Note : Lorsque vous utilisez les épingles anti-canal, assurez-vous d'utiliser
+      la commande /unpin, au lieu de le faire manuellement. Sinon, l'ancien message
+      sera réépinglé lorsque le canal enverra des messages.
+    unpinned_all_pinned_messages_in_this_chat: Tous les messages épinglés dans 
+      cette discussion ont été désépinglés !
+    cancelled_operation_to_unpin_messages: Opération de désépinglage des 
+      messages annulée !
+    are_you_sure_you_want_to_unpin_all_pinned_messages: Êtes-vous sûr de vouloir
+      désépingler tous les messages épinglés ?
+    please_reply_to_a_message_or_give_some_text_to_pin: Veuillez répondre à un 
+      message ou donner du texte à épingler.
+    no_message_has_been_pinned_in_the_current_chat: Aucun message n'a été 
+      épinglé dans la discussion actuelle !
   Purges:
     help_msg: |-
       *Admin seulement :*
@@ -1044,15 +1313,20 @@ strings:
       *Exemples :*
       - Supprimer tous les messages à partir du message auquel il a été répondu, jusqu'à maintenant.
       -> `/purge`
-    reply_to_a_message_to_select_where_to_start_purging_from: Répondez à un message pour sélectionner où commencer la purge.
+    reply_to_a_message_to_select_where_to_start_purging_from: Répondez à un 
+      message pour sélectionner où commencer la purge.
     reply_to_a_message_to_delete_it: Répondez à un message pour le supprimer !
-    this_message_is_already_marked_for_purging: Ce message est déjà marqué pour purge !
+    this_message_is_already_marked_for_purging: Ce message est déjà marqué pour 
+      purge !
     message_marked_for_deletion_reply_to_another_message_with_pu: >-
       Message marqué pour suppression. Répondez à un autre message avec /purgeto pour
       supprimer tous les messages intermédiaires ; dans les 30s !
-    you_can_only_use_this_command_after_having_used_the_purgefro: Vous ne pouvez utiliser cette commande qu'après avoir utilisé la commande /purgefrom !
-    use_del_command_to_delete_one_message: Utilisez la commande /del pour supprimer un message !
-    reply_to_a_message_to_show_me_till_where_to_purge: Répondez à un message pour me montrer jusqu'où purger.
+    you_can_only_use_this_command_after_having_used_the_purgefro: Vous ne pouvez
+      utiliser cette commande qu'après avoir utilisé la commande /purgefrom !
+    use_del_command_to_delete_one_message: Utilisez la commande /del pour 
+      supprimer un message !
+    reply_to_a_message_to_show_me_till_where_to_purge: Répondez à un message 
+      pour me montrer jusqu'où purger.
   Reports:
     settings:
       enabled: Les rapports d'administrateur sont activés !
@@ -1061,7 +1335,9 @@ strings:
       success: Signalé aux administrateurs !
       disabled: Les rapports sont désactivés dans cette discussion !
     help_msg: >-
-      Nous sommes tous des gens occupés qui n'avons pas le temps de surveiller nos groupes 24h/24 et 7j/7. Mais comment réagir si quelqu'un dans votre groupe spamme ?
+      Nous sommes tous des gens occupés qui n'avons pas le temps de surveiller nos
+      groupes 24h/24 et 7j/7. Mais comment réagir si quelqu'un dans votre groupe spamme
+      ?
 
 
       × /report `<reason>`: répondre à un message pour le signaler aux administrateurs.
@@ -1071,34 +1347,44 @@ strings:
 
       *Admins seulement :*
 
-      × /reports `<on/off/yes/no>`: modifie le paramètre de rapport, ou affiche le statut actuel.
+      × /reports `<on/off/yes/no>`: modifie le paramètre de rapport, ou affiche le
+      statut actuel.
 
       - Si fait en message privé, bascule votre statut.
 
       - Si dans un groupe, bascule le statut de ce groupe.
 
-      × /reports `block` (via réponse seulement): Bloque un utilisateur d'utiliser /report ou @admin.
+      × /reports `block` (via réponse seulement): Bloque un utilisateur d'utiliser
+      /report ou @admin.
 
-      × /reports `unblock` (via réponse seulement): Débloque un utilisateur d'utiliser /report ou @admin.
+      × /reports `unblock` (via réponse seulement): Débloque un utilisateur d'utiliser
+      /report ou @admin.
 
-      × /reports `showblocklist`: Vérifie tous les utilisateurs bloqués qui ne peuvent pas utiliser /report ou @admin.
+      × /reports `showblocklist`: Vérifie tous les utilisateurs bloqués qui ne peuvent
+      pas utiliser /report ou @admin.
 
 
-      Pour signaler un utilisateur, répondez simplement à son message avec @admin ou /report ; Natalie répondra alors avec un message indiquant que les administrateurs ont été notifiés.
+      Pour signaler un utilisateur, répondez simplement à son message avec @admin
+      ou /report ; Natalie répondra alors avec un message indiquant que les administrateurs
+      ont été notifiés.
 
-      Vous DEVEZ répondre à un message pour signaler un utilisateur ; vous ne pouvez pas utiliser simplement @admin pour taguer les administrateurs sans raison !
+      Vous DEVEZ répondre à un message pour signaler un utilisateur ; vous ne pouvez
+      pas utiliser simplement @admin pour taguer les administrateurs sans raison !
 
 
       *NOTE :* Aucun de ces éléments ne sera déclenché s'il est utilisé par les administrateurs.
-    you_can_t_report_your_own_message: Vous ne pouvez pas signaler votre propre message !
+    you_can_t_report_your_own_message: Vous ne pouvez pas signaler votre propre 
+      message !
     you_need_to_expose_yourself_first: Vous devez d'abord vous exposer !
     it_s_a_special_account_of_telegram: C'est un compte spécial de Telegram !
-    you_re_an_admin_whom_will_i_report_your_issues_to: 'Vous êtes un administrateur, à qui signalerai-je vos problèmes ?'
+    you_re_an_admin_whom_will_i_report_your_issues_to: 'Vous êtes un administrateur,
+      à qui signalerai-je vos problèmes ?'
     why_would_i_report_myself: Pourquoi me signalerais-je ?
     why_would_i_report_an_admin: Pourquoi signalerais-je un administrateur ?
   Rules:
     help_msg: >-
-      Chaque discussion fonctionne avec des règles différentes ; ce module vous aidera à rendre ces règles plus claires !
+      Chaque discussion fonctionne avec des règles différentes ; ce module vous aidera
+      à rendre ces règles plus claires !
 
       *Commandes utilisateur :*
 
@@ -1118,10 +1404,12 @@ strings:
 
       × /resetrulesbtn: Idem que ci-dessus.
     successfully_cleared_rules: Règles effacées avec succès !
-    successfully_cleared_custom_rules_button_text: Texte du bouton des règles personnalisées effacé avec succès !
+    successfully_cleared_custom_rules_button_text: Texte du bouton des règles 
+      personnalisées effacé avec succès !
   Tagger:
     help_msg: >-
-      Tagger est une fonctionnalité essentielle pour mentionner tous les membres abonnés du groupe.
+      Tagger est une fonctionnalité essentielle pour mentionner tous les membres abonnés
+      du groupe.
 
       Tout membre de discussion peut s'abonner au tagger.
 
@@ -1145,15 +1433,18 @@ strings:
   Warns:
     errors:
       warn_admin: Je ne vais pas avertir un administrateur !
-      anon_user: Cette commande ne peut pas être utilisée par un utilisateur anonyme.
+      anon_user: Cette commande ne peut pas être utilisée par un utilisateur 
+        anonyme.
       invalid_mode: 'Type inconnu ''%s''. Veuillez utiliser l''un de : ban/kick/mute'
-      invalid_limit: La limite d'avertissement doit être comprise entre 1 et 100.
+      invalid_limit: La limite d'avertissement doit être comprise entre 1 et 
+        100.
     set_mode:
       ban: 'Mode d''avertissement mis à jour vers : ban'
       kick: 'Mode d''avertissement mis à jour vers : kick'
       mute: 'Mode d''avertissement mis à jour vers : mute'
       no_mode_specified: >-
-        Vous devez spécifier une action à entreprendre après trop d'avertissements. Les modes actuels
+        Vous devez spécifier une action à entreprendre après trop d'avertissements.
+        Les modes actuels
         sont : ban/kick/mute
     warn:
       limit_kick: C'est %d/%d avertissements ; donc %s a été expulsé !
@@ -1164,35 +1455,83 @@ strings:
       remove_warn_button: ❌ Supprimer l'avertissement
     warns:
       no_warns: Cet utilisateur n'a aucun avertissement !
-      list_header: 'Cet utilisateur a %d/%d avertissements, pour les raisons suivantes :'
-      list_no_reasons: 'L''utilisateur a %d/%d avertissements, mais aucune raison pour aucun d''eux.'
+      list_header: 'Cet utilisateur a %d/%d avertissements, pour les raisons suivantes
+        :'
+      list_no_reasons: 'L''utilisateur a %d/%d avertissements, mais aucune raison
+        pour aucun d''eux.'
     remove:
       success: Avertissement supprimé par %s.
       no_warns: L'utilisateur n'a déjà aucun avertissement !
     set_limit:
       no_limit_specified: >-
-        Veuillez spécifier combien d'avertissements un utilisateur doit pouvoir recevoir avant
+        Veuillez spécifier combien d'avertissements un utilisateur doit pouvoir recevoir
+        avant
         d'être sanctionné. Ex. `/setwarnlimit 5`
-      success: Les paramètres de limite d'avertissement pour cette discussion ont été mis à jour à %d.
+      success: Les paramètres de limite d'avertissement pour cette discussion 
+        ont été mis à jour à %d.
     reset:
       success: Les avertissements ont été réinitialisés !
     reset_all:
       no_warns: Aucun utilisateur n'est averti dans cette discussion !
       confirm: >-
-        Êtes-vous sûr de vouloir supprimer tous les avertissements de tous les utilisateurs dans cette
+        Êtes-vous sûr de vouloir supprimer tous les avertissements de tous les utilisateurs
+        dans cette
         discussion ?
-      success: Tous les avertissements de tous les utilisateurs de cette discussion ont été supprimés.
-      button_yes: Tous les avertissements de tous les utilisateurs de cette discussion ont été supprimés !
-      button_no: Annulation de la suppression de tous les avertissements de tous les utilisateurs de cette discussion !
+      success: Tous les avertissements de tous les utilisateurs de cette 
+        discussion ont été supprimés.
+      button_yes: Tous les avertissements de tous les utilisateurs de cette 
+        discussion ont été supprimés !
+      button_no: Annulation de la suppression de tous les avertissements de tous
+        les utilisateurs de cette discussion !
     warnings:
       status: >-
         Le groupe a les paramètres suivants :\n<b>Limite d'avertissement :</b>
         <code>%d</code>\n<b>Mode d'avertissement :</b> <code>%s</code>
+#  TODO: INCOMPLETE TRANSLATION 
+    help_msg: >-
+      Keep your members in check with warnings; stop them getting out of
+      control!
+
+      If you're looking for automated warnings, read about the blacklist module!
+
+
+      *Admin Commands:*
+
+      - /warn <reason>: Warn a user.
+
+      - /dwarn <reason>: Warn a user by reply, and delete their message.
+
+      - /swarn <reason>: Silently warn a user, and delete your message.
+
+      - /warns: See a user's warnings.
+
+      - /rmwarn: Remove a user's latest warning.
+
+      - /resetwarn: Reset all of a user's warnings to 0.
+
+      - /resetallwarns: Delete all the warnings in a chat. All users return to 0
+      warns.
+
+      - /warnings: Get the chat's warning settings.
+
+      - /setwarnmode <ban/kick/mute>: Set the chat's warn mode.
+
+      - /setwarnlimit <number>: Set the number of warnings before users are
+      punished.
+
+
+      *Examples*
+
+      - Warn a user.
+
+      -> `/warn @user For disobeying the rules`
   Dev:
     errors:
-      no_user_specified: Vous devez spécifier un utilisateur pour obtenir des informations
+      no_user_specified: Vous devez spécifier un utilisateur pour obtenir des 
+        informations
     chatlist:
-      getting_list: Récupération de la liste des discussions dans lesquelles je me trouve...
+      getting_list: Récupération de la liste des discussions dans lesquelles je 
+        me trouve...
       success: Voici la liste des discussions dans ma base de données !
     leavechat:
       success: 'Ok, j''ai quitté la discussion !'
@@ -1219,7 +1558,8 @@ strings:
     question: Que voulez-vous nettoyer ?
     chats_button: Discussions
     no_redundant_chats: Aucune discussion redondante trouvée !
-    progress_getting_invalid_chats: '%d terminé pour l''obtention des discussions invalides.'
+    progress_getting_invalid_chats: '%d terminé pour l''obtention des discussions
+      invalides.'
     chats_marked_inactive: '%d discussions marquées comme inactives !'
   Users:
     log:
@@ -1229,50 +1569,74 @@ strings:
   Utils:
     chat_status:
       user:
-        no_permission_change_info_btn: Vous n'avez pas la permission de modifier les informations !!
-        no_permission_change_info_cmd: Vous n'avez pas la permission de modifier les informations dans ce groupe !
-        no_permission_restrict_btn: Vous n'avez pas la permission de restreindre les membres !
-        no_permission_restrict_cmd: Vous n'avez pas la permission de restreindre les membres dans ce groupe !
-        no_permission_promote_btn: Vous n'avez pas la permission de promouvoir/rétrograder des membres !!
+        no_permission_change_info_btn: Vous n'avez pas la permission de modifier
+          les informations !!
+        no_permission_change_info_cmd: Vous n'avez pas la permission de modifier
+          les informations dans ce groupe !
+        no_permission_restrict_btn: Vous n'avez pas la permission de restreindre
+          les membres !
+        no_permission_restrict_cmd: Vous n'avez pas la permission de restreindre
+          les membres dans ce groupe !
+        no_permission_promote_btn: Vous n'avez pas la permission de 
+          promouvoir/rétrograder des membres !!
         no_permission_promote_cmd: >-
-          Vous ne pouvez pas promouvoir/rétrograder des personnes ici ! Assurez-vous d'avoir les droits appropriés !
+          Vous ne pouvez pas promouvoir/rétrograder des personnes ici ! Assurez-vous
+          d'avoir les droits appropriés !
         no_permission_pin: >-
-          Vous ne pouvez pas épingler de messages ici ! Assurez-vous que vous êtes administrateur et que vous pouvez épingler des messages.
-        no_permission_delete: Vous n'avez pas la permission de supprimer des messages !
+          Vous ne pouvez pas épingler de messages ici ! Assurez-vous que vous êtes
+          administrateur et que vous pouvez épingler des messages.
+        no_permission_delete: Vous n'avez pas la permission de supprimer des 
+          messages !
         require_admin_btn: Vous devez être un administrateur pour faire ça !
-        require_admin_cmd: Seuls les administrateurs peuvent exécuter cette commande !
+        require_admin_cmd: Seuls les administrateurs peuvent exécuter cette 
+          commande !
         require_owner_btn: Vous devez être le créateur du groupe pour faire ça !
         require_owner_cmd: Seul le créateur du groupe peut faire ça !
       bot:
-        no_permission_restrict: Je n'ai pas la permission de restreindre les membres !
+        no_permission_restrict: Je n'ai pas la permission de restreindre les 
+          membres !
         no_permission_restrict_group: >-
-          Je ne peux pas restreindre les gens ici ! Assurez-vous que je suis administrateur et que je peux restreindre les autres membres.
+          Je ne peux pas restreindre les gens ici ! Assurez-vous que je suis administrateur
+          et que je peux restreindre les autres membres.
         no_permission_promote: >-
-          Je ne peux pas promouvoir/rétrograder des personnes ici ! Assurez-vous que je suis administrateur et que je peux nommer de nouveaux administrateurs.
-        no_permission_pin: Je ne peux pas épingler de messages ici ! Assurez-vous que je suis administrateur et que je peux épingler des messages.
-        no_permission_delete: Je n'ai pas la permission de supprimer des messages !
+          Je ne peux pas promouvoir/rétrograder des personnes ici ! Assurez-vous que
+          je suis administrateur et que je peux nommer de nouveaux administrateurs.
+        no_permission_pin: Je ne peux pas épingler de messages ici ! 
+          Assurez-vous que je suis administrateur et que je peux épingler des 
+          messages.
+        no_permission_delete: Je n'ai pas la permission de supprimer des 
+          messages !
         require_admin: >-
-          Je ne suis pas administrateur ! Assurez-vous que je suis administrateur et que j'ai les permissions appropriées.
-      require_private: 'Cette commande est faite pour les messages privés, pas pour les discussions de groupe !'
-      require_group: 'Cette commande est faite pour être utilisée dans les discussions de groupe, pas en message privé !'
+          Je ne suis pas administrateur ! Assurez-vous que je suis administrateur
+          et que j'ai les permissions appropriées.
+      require_private: 'Cette commande est faite pour les messages privés, pas pour
+        les discussions de groupe !'
+      require_group: 'Cette commande est faite pour être utilisée dans les discussions
+        de groupe, pas en message privé !'
       anon_admin_string: >-
-        Il semble que vous soyez anonyme. Appuyez sur ce bouton pour confirmer votre identité.
+        Il semble que vous soyez anonyme. Appuyez sur ce bouton pour confirmer votre
+        identité.
       anon_admin_btn: Confirmer votre identité
     extraction:
       extract_chat:
         badrequest_failed_getchat: >-
-          Échec de la connexion au chat : échec de l'obtention du chat : impossible d'obtenirChat : Mauvaise Requête : chat introuvable
-        fail_need_chat_id: 'J''attendais un ID de chat, mais ce n''est pas un entier valide.'
+          Échec de la connexion au chat : échec de l'obtention du chat : impossible
+          d'obtenirChat : Mauvaise Requête : chat introuvable
+        fail_need_chat_id: 'J''attendais un ID de chat, mais ce n''est pas un entier
+          valide.'
         fail_need_chat: J'ai besoin d'un ID de chat pour me connecter !
       extract_user:
         no_user_found: >-
-          Impossible de trouver un utilisateur avec ce nom ; êtes-vous sûr que je l'ai déjà vu ?
+          Impossible de trouver un utilisateur avec ce nom ; êtes-vous sûr que je
+          l'ai déjà vu ?
         badrequest_failed_getchatmember: >-
-          Échec de l'obtention de l'utilisateur : impossible d'obtenirChatMember : Mauvaise Requête : chat introuvable
+          Échec de l'obtention de l'utilisateur : impossible d'obtenirChatMember :
+          Mauvaise Requête : chat introuvable
     string_handling:
       extract_time:
         invalid_time_amount: Montant de temps invalide spécifié.
-        invalid_time_type: 'Type de temps invalide spécifié. Attendu m, h, ou d, obtenu : %s'
+        invalid_time_type: 'Type de temps invalide spécifié. Attendu m, h, ou d, obtenu
+          : %s'
   Mute:
     unmute_admin_only: Rétablir le son (Admin seulement)
   Helpers:

@@ -10,34 +10,44 @@ strings:
     admin_cache:
       cache_reloaded: Cache admin ricaricata con successo.
       not_found: >-
-        Cache admin non trovata. Chiedi a un amministratore di usare /admincache per ricaricare la cache degli amministratori.
+        Cache admin non trovata. Chiedi a un amministratore di usare /admincache per
+        ricaricare la cache degli amministratori.
     errors:
       no_user_specified: >-
         Non so di chi tu stia parlando, devi specificare un utente...!
-      anon_user_generic: Questo comando non può essere usato su un utente anonimo.
+      anon_user_generic: Questo comando non può essere usato su un utente 
+        anonimo.
       admin_only: Devi essere un amministratore per farlo!
-      admin_only_command: Solo gli amministratori possono eseguire questo comando!
+      admin_only_command: Solo gli amministratori possono eseguire questo 
+        comando!
       creator_only: Devi essere il creatore del gruppo per farlo!
       creator_only_command: Solo il creatore del gruppo può farlo!
       bot_not_admin: Non sono un amministratore!
       bot_no_restrict_permission: >-
-        Non posso limitare le persone qui! Assicurati che io sia amministratore e possa limitare altri membri.
+        Non posso limitare le persone qui! Assicurati che io sia amministratore e
+        possa limitare altri membri.
       group_only: Questo comando può essere usato solo in un gruppo!
-      group_only_command: 'Questo comando è fatto per essere usato nelle chat di gruppo, non in PM!'
+      group_only_command: 'Questo comando è fatto per essere usato nelle chat di gruppo,
+        non in PM!'
       private_only_command: 'Questo comando è fatto per i PM, non per la chat di gruppo!'
-      user_not_found: Impossibile trovare un utente con questo nome; sei sicuro di averlo già visto?
+      user_not_found: Impossibile trovare un utente con questo nome; sei sicuro 
+        di averlo già visto?
       user_not_in_chat: 'Questo utente non è in questa chat, come posso limitarlo?'
       action_on_self: Non posso eseguire questa azione su me stesso.
       button_expired: 'Questo pulsante è scaduto, per favore usa di nuovo il comando.'
-      invalid_option_yes_no: 'La tua input non è stata riconosciuta come una delle seguenti: yes/no/on/off'
+      invalid_option_yes_no: 'La tua input non è stata riconosciuta come una delle
+        seguenti: yes/no/on/off'
       invalid_option_on_off: Capisco solo un'opzione tra <on/off/yes/no>
       invalid_integer: '%s non è un numero intero valido.'
       not_enough_args: Non abbastanza argomenti.
       invalid_time_amount: Quantità di tempo specificata non valida.
       time_too_long: Non è possibile impostare il tempo a più di 1 anno!
-      invalid_time_type: 'Tipo di tempo specificato non valido. Previsto m, h, d o w ma ricevuto: %s'
-      get_chat_member_failed: 'Impossibile ottenere l''utente: impossibile getChatMember: Richiesta non valida: chat non trovata'
-      admin_only_button: Questo pulsante può essere usato solo da un amministratore!
+      invalid_time_type: 'Tipo di tempo specificato non valido. Previsto m, h, d o
+        w ma ricevuto: %s'
+      get_chat_member_failed: 'Impossibile ottenere l''utente: impossibile getChatMember:
+        Richiesta non valida: chat non trovata'
+      admin_only_button: Questo pulsante può essere usato solo da un 
+        amministratore!
       no_reply: Rispondi al messaggio di un utente per eliminarlo e cacciarlo!
     buttons:
       'true': 'Sì'
@@ -145,7 +155,8 @@ strings:
       × /demote `<reply/username/mention/userid>`: Retrocedi un utente.
 
       × /title `<reply/username/mention/userid>` `<custom title>`: Imposta un titolo personalizzato per l'utente.
-    here_is_the_invite_link_of_this_chat_percent: 'Ecco il link di invito di questa chat: %s'
+    here_is_the_invite_link_of_this_chat_percent: 'Ecco il link di invito di questa
+      chat: %s'
     you_need_to_be_admin_to_do_this: Devi essere amministratore per farlo!
   Antiflood:
     checkflood:
@@ -247,7 +258,8 @@ strings:
         Solo il creatore della chat può usare questo comando per disapprovare tutti gli utenti in questa chat.
       button_handler:
         'true': Rimossi tutti gli utenti approvati da questa chat ✅
-        'false': Annullata la rimozione di tutti gli utenti approvati da questa chat ❌
+        'false': Annullata la rimozione di tutti gli utenti approvati da questa 
+          chat ❌
         yes: |-
           Rimossi tutti gli utenti approvati da questa chat ✅
         no: |-
@@ -275,10 +287,13 @@ strings:
   Bans:
     errors:
       anon_user_kick: >-
-        Questo comando non può essere usato su un utente anonimo, questi utenti possono essere solo bannati/sbannati.
-      anon_user_ban_reply: Puoi bannare un utente anonimo solo rispondendo al suo messaggio.
+        Questo comando non può essere usato su un utente anonimo, questi utenti possono
+        essere solo bannati/sbannati.
+      anon_user_ban_reply: Puoi bannare un utente anonimo solo rispondendo al 
+        suo messaggio.
       anon_user_generic: >-
-        Questo comando non può essere usato su un utente anonimo, questi utenti possono essere solo bannati/sbannati.
+        Questo comando non può essere usato su un utente anonimo, questi utenti possono
+        essere solo bannati/sbannati.
       restrict_admin: Non posso limitare un amministratore.
     restrict:
       question: Come posso limitare questo utente?
@@ -298,8 +313,8 @@ strings:
         Perché dovrei cacciare me stesso?
       kicked_user: |-
         Cacciato %s con successo.
-      kicked_reason: |-
-        
+      kicked_reason: |2-
+
         <b>Motivo:</b> %s
     kickme:
       is_admin: |-
@@ -311,8 +326,8 @@ strings:
         Perché dovrei bannare un amministratore? Sembra un'idea piuttosto stupida.
       is_bot_itself: |-
         Pensi davvero che mi bannerò da solo?
-      ban_reason: |-
-        
+      ban_reason: |2-
+
         <b>Motivo:</b> %s
       tban: |-
         Bannato %s per %s
@@ -425,9 +440,11 @@ strings:
       La modalità predefinita per la blacklist è *none*, che cancellerà semplicemente i messaggi dalla chat.
   Connections:
     errors:
-      invalid_option_yes_no: Per favore dammi un'opzione valida tra <yes/on/no/off>
+      invalid_option_yes_no: Per favore dammi un'opzione valida tra 
+        <yes/on/no/off>
       get_chat_failed: >-
-        connessione alla chat fallita: impossibile ottenere la chat: impossibile getChat: Richiesta non valida: chat non trovata
+        connessione alla chat fallita: impossibile ottenere la chat: impossibile getChat:
+        Richiesta non valida: chat non trovata
       no_chat_id: Ho bisogno di un ID chat per connettermi!
     connect_to_chat_button: Connetti alla chat
     connected: |-
@@ -511,9 +528,11 @@ strings:
       enabled: I messaggi disabilitati verranno ora eliminati.
       disabled: I messaggi disabilitati non verranno più eliminati.
       status_enabled: >-
-        L'eliminazione dei comandi disabilitati è *abilitata*, i comandi disabilitati dagli utenti verranno eliminati!
+        L'eliminazione dei comandi disabilitati è *abilitata*, i comandi disabilitati
+        dagli utenti verranno eliminati!
       status_disabled: >-
-        L'eliminazione dei comandi disabilitati è *disabilitata*, i comandi disabilitati dagli utenti *non* verranno eliminati!
+        L'eliminazione dei comandi disabilitati è *disabilitata*, i comandi disabilitati
+        dagli utenti *non* verranno eliminati!
     enable:
       success: 'Riabilitato l''uso dei seguenti in questa chat:'
       errors:
@@ -543,14 +562,16 @@ strings:
     errors:
       limit_exceeded: >-
         Limite filtri superato, un gruppo può avere al massimo 150 filtri!\nQuesta
-        limitazione è dovuta al bot che funziona gratuitamente senza donazioni da parte degli utenti.
+        limitazione è dovuta al bot che funziona gratuitamente senza donazioni da
+        parte degli utenti.
       no_keyword: Per favore, dammi una parola chiave a cui rispondere!
       invalid_filter: Filtro non valido!
       does_not_exist: Il filtro non esiste!
     add:
       success: Aggiunta risposta per la parola chiave del filtro <code>%s</code>
     remove:
-      no_word_specified: Per favore, dammi una parola chiave del filtro da rimuovere!
+      no_word_specified: Per favore, dammi una parola chiave del filtro da 
+        rimuovere!
       success: Ok!\nNon risponderò più a <code>%s</code>
     list:
       no_filters: Non ci sono filtri in questa chat!
@@ -664,7 +685,9 @@ strings:
   Greetings:
     welcome:
       status: >-
-        Sto attualmente dando il benvenuto agli utenti: <code>%t</code>\nSto attualmente eliminando i vecchi saluti: <code>%t</code>\nSto attualmente eliminando i messaggi di servizio:
+        Sto attualmente dando il benvenuto agli utenti: <code>%t</code>\nSto attualmente
+        eliminando i vecchi saluti: <code>%t</code>\nSto attualmente eliminando i
+        messaggi di servizio:
         <code>%t</code>\nIl messaggio di benvenuto che non riempie {} è:
       enabled: D'ora in poi darò il benvenuto agli utenti.
       disabled: D'ora in poi non darò il benvenuto agli utenti.
@@ -672,10 +695,13 @@ strings:
     set_welcome:
       success: Messaggio di benvenuto personalizzato impostato con successo!
     reset_welcome:
-      success: Messaggio di benvenuto personalizzato ripristinato con successo al valore predefinito!
+      success: Messaggio di benvenuto personalizzato ripristinato con successo 
+        al valore predefinito!
     goodbye:
       status: >-
-        Sto attualmente dando l'addio agli utenti: <code>%t</code>\nSto attualmente eliminando i vecchi saluti: <code>%t</code>\nSto attualmente eliminando i messaggi di servizio:
+        Sto attualmente dando l'addio agli utenti: <code>%t</code>\nSto attualmente
+        eliminando i vecchi saluti: <code>%t</code>\nSto attualmente eliminando i
+        messaggi di servizio:
         <code>%t</code>\nIl messaggio di addio che non riempie {} è:
       enabled: D'ora in poi saluterò gli utenti.
       disabled: D'ora in poi non saluterò gli utenti.
@@ -683,19 +709,25 @@ strings:
     set_goodbye:
       success: Messaggio di addio personalizzato impostato con successo!
     reset_goodbye:
-      success: Messaggio di addio personalizzato ripristinato con successo al valore predefinito!
+      success: Messaggio di addio personalizzato ripristinato con successo al 
+        valore predefinito!
     clean_welcome:
-      status_enabled: Dovrei eliminare i messaggi di benvenuto fino a due giorni fa.
-      status_disabled: Attualmente non sto eliminando i vecchi messaggi di benvenuto!
+      status_enabled: Dovrei eliminare i messaggi di benvenuto fino a due giorni
+        fa.
+      status_disabled: Attualmente non sto eliminando i vecchi messaggi di 
+        benvenuto!
       disabled: Non eliminerò i vecchi messaggi di benvenuto!
       enabled: Proverò a eliminare i vecchi messaggi di benvenuto!
     clean_goodbye:
-      status_enabled: Dovrei eliminare i messaggi di benvenuto fino a due giorni fa.
-      status_disabled: Attualmente non sto eliminando i vecchi messaggi di benvenuto!
+      status_enabled: Dovrei eliminare i messaggi di benvenuto fino a due giorni
+        fa.
+      status_disabled: Attualmente non sto eliminando i vecchi messaggi di 
+        benvenuto!
       disabled: Non eliminerò i vecchi messaggi di addio!
       enabled: Proverò a eliminare i vecchi messaggi di addio!
     del_joined:
-      status_enabled: Dovrei eliminare i messaggi 'utente' si è unito alla chat ora.
+      status_enabled: Dovrei eliminare i messaggi 'utente' si è unito alla chat 
+        ora.
       status_disabled: Attualmente non sto eliminando i messaggi di unione.
       disabled: Non eliminerò i messaggi di unione.
       enabled: Proverò a eliminare i messaggi di unione!
@@ -711,10 +743,13 @@ strings:
       declined: Rifiutato %s di unirsi alla chat ❌
       banned: ✅ Bannato con successo! %s
     auto_approve:
-      enabled: Ora sto approvando automaticamente le nuove richieste di unione alla chat.
-      disabled: Ora non sto approvando automaticamente le nuove richieste di unione alla chat.
+      enabled: Ora sto approvando automaticamente le nuove richieste di unione 
+        alla chat.
+      disabled: Ora non sto approvando automaticamente le nuove richieste di 
+        unione alla chat.
       disabled_now: Non approverò automaticamente le nuove richieste di unione!
-      enabled_now: Proverò ad approvare automaticamente le nuove richieste di unione!
+      enabled_now: Proverò ad approvare automaticamente le nuove richieste di 
+        unione!
     help_msg: |-
       Dai il benvenuto ai nuovi membri nei tuoi gruppi o dì addio dopo che se ne vanno!
 
@@ -737,7 +772,8 @@ strings:
       × /cleanwelcome `<yes/no/on/off>`: Cancella il vecchio messaggio di benvenuto, ogni volta che un nuovo membro si unisce.
 
       × /autoapprove `<yes/no/on/off>`: Approva automaticamente tutti i nuovi membri.
-    i_am_currently_goodbying_users_t: 'Sto attualmente dando l''addio agli utenti: <code>%t</code>'
+    i_am_currently_goodbying_users_t: 'Sto attualmente dando l''addio agli utenti:
+      <code>%t</code>'
     i_understand_on_yes_or_off_no_only: Capisco solo 'on/yes' o 'off/no'!
     formatting: Formattazione
   Help:
@@ -747,13 +783,15 @@ strings:
       news_channel_button: "Canale notizie 📢"
       support_group_button: "Gruppo di supporto 👥"
       configuration_button: Configurazione ⚙️
-      group_prompt: Clicca sul pulsante qui sotto per avere informazioni su di me!
+      group_prompt: Clicca sul pulsante qui sotto per avere informazioni su di 
+        me!
       button: Info
     start:
       intro: >-
         Ciao! Il mio nome è Alita ✨.\nSono qui per aiutarti a gestire i tuoi
         gruppi!\nDigita /help per scoprire di più su come usarmi al massimo del mio
-        potenziale.\nUnisciti al mio <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>Canale notizie</a> per ricevere
+        potenziale.\nUnisciti al mio <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>Canale
+        notizie</a> per ricevere
         informazioni su tutti gli ultimi aggiornamenti.
       about_button: Info ✨
       add_to_chat_button: ➕ Aggiungimi alla chat!
@@ -762,17 +800,22 @@ strings:
       language_button: "Lingua 🌏"
       group_prompt: 'Ciao :) Scrivimi in PM se hai domande su come usarmi!'
     main: >-
-      Ciao %s!\nIl mio nome è Alita ✨.\n\nSono un bot di gestione di gruppo, qui per aiutarti
-      a destreggiarti e a mantenere l'ordine nei tuoi gruppi!\nHoe molte funzioni utili,
-      come il controllo anti-flood, un sistema di avvertimento, un sistema di gestione delle note,
+      Ciao %s!\nIl mio nome è Alita ✨.\n\nSono un bot di gestione di gruppo, qui per
+      aiutarti
+      a destreggiarti e a mantenere l'ordine nei tuoi gruppi!\nHoe molte funzioni
+      utili,
+      come il controllo anti-flood, un sistema di avvertimento, un sistema di gestione
+      delle note,
       e persino risposte predefinite a determinate parole chiave.\n\n<b>Comandi utili</b>:\n
       - /start: Mi avvia! Probabilmente l'hai già usato!\n - /help: Invia questo messaggio;
-      ti dirò di più su di me!\n - /donate: Ti dà informazioni su come supportare me e il mio
+      ti dirò di più su di me!\n - /donate: Ti dà informazioni su come supportare
+      me e il mio
       creatore.\n\nTutti i comandi possono essere usati con i seguenti: / o !
     help:
       button: Clicca qui per aiuto!
       group_prompt_general: Contattami in PM per aiuto!
-      group_prompt_module: Contattami in PM per aiuto riguardo a <code>%s</code>!
+      group_prompt_module: Contattami in PM per aiuto riguardo a 
+        <code>%s</code>!
     configuration:
       private_only: La configurazione funziona solo in privato
     About: |-
@@ -822,16 +865,23 @@ strings:
       Tutti i fondi saranno destinati ai miei servizi come database, storage e hosting!
       Puoi donare contattando il mio proprietario qui: @DivideProjectsBot
     about_me_u200d: "Chi sono 👨‍💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_me: "About me 👨\\u200d💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_text: "I'm Alita, a group management bot built to help you manage your groups
+      effectively!"
   Locks:
     list:
       header: 'Questi sono i blocchi in questa chat:'
     locktypes:
       header: 'Blocchi: \n -'
     lock:
-      no_type_specified: Cosa vuoi bloccare? Controlla /locktypes per le opzioni disponibili.
+      no_type_specified: Cosa vuoi bloccare? Controlla /locktypes per le opzioni
+        disponibili.
       success: 'Bloccato il seguente in questo gruppo:\n - %s'
     unlock:
-      no_type_specified: Cosa vuoi sbloccare? Controlla /locktypes per le opzioni disponibili.
+      no_type_specified: Cosa vuoi sbloccare? Controlla /locktypes per le 
+        opzioni disponibili.
       success: 'Sbloccato il seguente in questo gruppo:\n - %s'
     errors:
       invalid_type: '`%s` non è un tipo di blocco corretto, controlla /locktypes.'
@@ -839,7 +889,8 @@ strings:
       no_admin_permission: >-
         Vedo un bot, e mi è stato detto di impedirgli di unirsi... ma non sono amministratore!
       no_ban_permission: >-
-        Vedo un bot, e mi è stato detto di impedirgli di unirsi... ma non ho il permesso di bannarlo!
+        Vedo un bot, e mi è stato detto di impedirgli di unirsi... ma non ho il permesso
+        di bannarlo!
       admin_only: Solo gli amministratori possono aggiungere bot a questa chat!
     help_msg: |-
       *Solo amministratore*:
@@ -859,11 +910,13 @@ strings:
       **Esempio:**
 
       `/lock media`: questo blocca tutti i messaggi multimediali nella chat.
-    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'Vedo un bot, e mi è stato detto di impedirgli di unirsi...'
+    i_see_a_bot_and_i_ve_been_told_to_stop_them_joining: 'Vedo un bot, e mi è stato
+      detto di impedirgli di unirsi...'
   Languages:
     help_translate_button: "Aiutaci a tradurre 🌎"
     change:
-      private_prompt: La tua lingua attuale è %s\nScegli una lingua dalla tastiera qui sotto.
+      private_prompt: La tua lingua attuale è %s\nScegli una lingua dalla 
+        tastiera qui sotto.
       group_prompt: >-
         La lingua attuale di questo gruppo è %s\nScegli una lingua dalla tastiera
         qui sotto.
@@ -882,16 +935,20 @@ strings:
       need_target: Rispondi a qualcuno.
       need_content: Fornisci del contenuto a cui rispondere!
     paste:
-      need_text_or_document: Per favore, dai testo da incollare o rispondi a un documento!
+      need_text_or_document: Per favore, dai testo da incollare o rispondi a un 
+        documento!
       processing: Incollando...
       get_file_error: BadRequest su GetFile!
-      file_too_big: File troppo grande da incollare; la dimensione massima del file che può essere incollata è 600 kb!
+      file_too_big: File troppo grande da incollare; la dimensione massima del 
+        file che può essere incollata è 600 kb!
       paste_error: Impossibile incollare i dati forniti!
     info:
       user_not_found: Impossibile trovare alcuna informazione su questo utente.
     translate:
-      need_text_and_lang: Ho bisogno di testo e di un codice lingua per tradurre.
-      no_text_in_reply: Il messaggio a cui si è risposto non contiene testo da tradurre.
+      need_text_and_lang: Ho bisogno di testo e di un codice lingua per 
+        tradurre.
+      no_text_in_reply: Il messaggio a cui si è risposto non contiene testo da 
+        tradurre.
       need_text: Per favore, fornisci del testo da tradurre.
       request_error: Errore durante la richiesta di traduzione!
     keyboard:
@@ -948,7 +1005,8 @@ strings:
       invalid_note: Nota non valida!
       does_not_exist: La nota non esiste!
       parse_error: >-
-        C'è un errore durante il parsing della nota, per favore segnalalo nella chat di supporto.
+        C'è un errore durante il parsing della nota, per favore segnalalo nella chat
+        di supporto.
       admin_only: Questa nota può essere accessibile solo da un amministratore!
     list:
       no_notes: Non ci sono note in questa chat!
@@ -978,15 +1036,20 @@ strings:
 
       - /privatenotes: Se inviare o meno le note in PM. Invierà un messaggio con un pulsante che gli utenti possono cliccare per ottenere la nota in PM.
     removed_note_percent: Nota rimossa <b>%s</b>.
-    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Sei sicuro di voler rimuovere tutte le Note da questa chat?
-    only_chat_creator_can_use_this_command: Solo il creatore della chat può usare questo comando.
-    there_s_some_error_parsing_the_note_please_report_this_in_su: 'C''è un errore durante il parsing della nota, per favore segnalalo nella chat di supporto.'
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: Sei sicuro di 
+      voler rimuovere tutte le Note da questa chat?
+    only_chat_creator_can_use_this_command: Solo il creatore della chat può 
+      usare questo comando.
+    there_s_some_error_parsing_the_note_please_report_this_in_su: 'C''è un errore
+      durante il parsing della nota, per favore segnalalo nella chat di supporto.'
     note_doesn_t_exists: La nota non esiste!
-    there_s_some_error_parsing_the_note_please_report_this_to_su: 'C''è un errore durante il parsing della nota, per favore segnalalo nella chat di supporto.'
+    there_s_some_error_parsing_the_note_please_report_this_to_su: 'C''è un errore
+      durante il parsing della nota, per favore segnalalo nella chat di supporto.'
     formatting: Formattazione
   Pins:
     errors:
-      bot_need_admin: Ho bisogno di essere un amministratore per fissare i messaggi!
+      bot_need_admin: Ho bisogno di essere un amministratore per fissare i 
+        messaggi!
       reply_to_pin: Rispondi a un messaggio per fissarlo!
       reply_to_unpin: Rispondi a un messaggio per sbloccarlo!
     pin:
@@ -995,11 +1058,16 @@ strings:
       success: Sbloccato con successo!
     unpin_all:
       success: Sbloccati tutti i messaggi della chat!
-    unpinned_all_pinned_messages_in_this_chat: Sbloccati tutti i messaggi fissati in questa chat!
-    cancelled_operation_to_unpin_messages: Operazione di sblocco dei messaggi annullata!
-    are_you_sure_you_want_to_unpin_all_pinned_messages: Sei sicuro di voler sbloccare tutti i messaggi fissati?
-    please_reply_to_a_message_or_give_some_text_to_pin: Per favore rispondi a un messaggio o fornisci del testo da fissare.
-    no_message_has_been_pinned_in_the_current_chat: Nessun messaggio è stato fissato nella chat corrente!
+    unpinned_all_pinned_messages_in_this_chat: Sbloccati tutti i messaggi 
+      fissati in questa chat!
+    cancelled_operation_to_unpin_messages: Operazione di sblocco dei messaggi 
+      annullata!
+    are_you_sure_you_want_to_unpin_all_pinned_messages: Sei sicuro di voler 
+      sbloccare tutti i messaggi fissati?
+    please_reply_to_a_message_or_give_some_text_to_pin: Per favore rispondi a un
+      messaggio o fornisci del testo da fissare.
+    no_message_has_been_pinned_in_the_current_chat: Nessun messaggio è stato 
+      fissato nella chat corrente!
     help_msg: |-
       Tutti i comandi relativi ai pin si trovano qui; tieni la tua chat aggiornata sulle ultime notizie con un semplice messaggio fissato!
 
@@ -1033,15 +1101,21 @@ strings:
       *Esempi*:
       - Cancella tutti i messaggi dal messaggio di risposta, fino ad ora.
       -> `/purge`
-    reply_to_a_message_to_select_where_to_start_purging_from: Rispondi a un messaggio per selezionare da dove iniziare la purga.
+    reply_to_a_message_to_select_where_to_start_purging_from: Rispondi a un 
+      messaggio per selezionare da dove iniziare la purga.
     reply_to_a_message_to_delete_it: Rispondi a un messaggio per eliminarlo!
-    this_message_is_already_marked_for_purging: Questo messaggio è già contrassegnato per la purga!
+    this_message_is_already_marked_for_purging: Questo messaggio è già 
+      contrassegnato per la purga!
     message_marked_for_deletion_reply_to_another_message_with_pu: >-
-      Messaggio contrassegnato per l'eliminazione. Rispondi a un altro messaggio con /purgeto per
+      Messaggio contrassegnato per l'eliminazione. Rispondi a un altro messaggio con
+      /purgeto per
       eliminare tutti i messaggi intermedi; entro 30s!
-    you_can_only_use_this_command_after_having_used_the_purgefro: Puoi usare questo comando solo dopo aver usato il comando /purgefrom!
-    use_del_command_to_delete_one_message: Usa il comando /del per eliminare un messaggio!
-    reply_to_a_message_to_show_me_till_where_to_purge: Rispondi a un messaggio per mostrarmi fino a dove purgare.
+    you_can_only_use_this_command_after_having_used_the_purgefro: Puoi usare 
+      questo comando solo dopo aver usato il comando /purgefrom!
+    use_del_command_to_delete_one_message: Usa il comando /del per eliminare un 
+      messaggio!
+    reply_to_a_message_to_show_me_till_where_to_purge: Rispondi a un messaggio 
+      per mostrarmi fino a dove purgare.
   Reports:
     settings:
       enabled: Le segnalazioni admin sono abilitate!
@@ -1074,10 +1148,12 @@ strings:
       DEVI rispondere a un messaggio per segnalare un utente; non puoi semplicemente usare @admin per taggare gli amministratori senza motivo!
 
       *NOTA:* Nessuno di questi si attiverà se usato dagli amministratori.
-    you_can_t_report_your_own_message: Non puoi segnalare il tuo stesso messaggio!
+    you_can_t_report_your_own_message: Non puoi segnalare il tuo stesso 
+      messaggio!
     you_need_to_expose_yourself_first: Devi esporti prima!
     it_s_a_special_account_of_telegram: È un account speciale di Telegram!
-    you_re_an_admin_whom_will_i_report_your_issues_to: 'Sei un amministratore, a chi dovrei segnalare i tuoi problemi?'
+    you_re_an_admin_whom_will_i_report_your_issues_to: 'Sei un amministratore, a chi
+      dovrei segnalare i tuoi problemi?'
     why_would_i_report_myself: Perché dovrei segnalare me stesso?
     why_would_i_report_an_admin: Perché dovrei segnalare un amministratore?
   Rules:
@@ -1101,7 +1177,8 @@ strings:
 
       × /resetrulesbtn: Come sopra.
     successfully_cleared_rules: Regole cancellate con successo!
-    successfully_cleared_custom_rules_button_text: Testo del pulsante delle regole personalizzato cancellato con successo!
+    successfully_cleared_custom_rules_button_text: Testo del pulsante delle 
+      regole personalizzato cancellato con successo!
   Tagger:
     help_msg: |-
       Il Tagger è una funzionalità essenziale per menzionare tutti i membri iscritti nel gruppo. 
@@ -1128,13 +1205,15 @@ strings:
       warn_admin: Non avvertirò un amministratore!
       anon_user: Questo comando non può essere usato su un utente anonimo.
       invalid_mode: 'Tipo sconosciuto ''%s''. Per favore usa uno di: ban/kick/mute'
-      invalid_limit: Il limite di avvertimenti deve essere impostato tra 1 e 100.
+      invalid_limit: Il limite di avvertimenti deve essere impostato tra 1 e 
+        100.
     set_mode:
       ban: 'Modalità avvertimento aggiornata a: ban'
       kick: 'Modalità avvertimento aggiornata a: kick'
       mute: 'Modalità avvertimento aggiornata a: mute'
       no_mode_specified: >-
-        Devi specificare un'azione da intraprendere dopo troppi avvertimenti. Le modalità attuali sono: ban/kick/mute
+        Devi specificare un'azione da intraprendere dopo troppi avvertimenti. Le modalità
+        attuali sono: ban/kick/mute
     warn:
       limit_kick: Questo è il %d/%d avvertimenti; quindi %s è stato cacciato!
       limit_mute: Questo è il %d/%d avvertimenti; quindi %s è stato mutato!
@@ -1145,25 +1224,32 @@ strings:
     warns:
       no_warns: Questo utente non ha avvertimenti!
       list_header: 'Questo utente ha %d/%d avvertimenti, per le seguenti ragioni:'
-      list_no_reasons: 'L''utente ha %d/%d avvertimenti, ma nessuna ragione per nessuno di essi.'
+      list_no_reasons: 'L''utente ha %d/%d avvertimenti, ma nessuna ragione per nessuno
+        di essi.'
     remove:
       success: Avvertimento rimosso da %s.
       no_warns: L'utente non ha già avvertimenti!
     set_limit:
       no_limit_specified: >-
-        Per favore specifica quanti avvertimenti un utente dovrebbe poter ricevere prima
+        Per favore specifica quanti avvertimenti un utente dovrebbe poter ricevere
+        prima
         di essere punito. Es. `/setwarnlimit 5`
-      success: Le impostazioni del limite di avvertimenti per questa chat sono state aggiornate a %d.
+      success: Le impostazioni del limite di avvertimenti per questa chat sono 
+        state aggiornate a %d.
     reset:
       success: Avvertimenti resettati!
     reset_all:
       no_warns: Nessun utente è avvertito in questa chat!
       confirm: >-
-        Sei sicuro di voler rimuovere tutti gli avvertimenti di tutti gli utenti in questa
+        Sei sicuro di voler rimuovere tutti gli avvertimenti di tutti gli utenti in
+        questa
         chat?
-      success: Rimossi tutti gli avvertimenti di tutti gli utenti in questa chat.
-      button_yes: Rimossi tutti gli avvertimenti di tutti gli utenti in questa chat!
-      button_no: Annullata la rimozione di tutti gli avvertimenti di tutti gli utenti in questa chat!
+      success: Rimossi tutti gli avvertimenti di tutti gli utenti in questa 
+        chat.
+      button_yes: Rimossi tutti gli avvertimenti di tutti gli utenti in questa 
+        chat!
+      button_no: Annullata la rimozione di tutti gli avvertimenti di tutti gli 
+        utenti in questa chat!
     warnings:
       status: >-
         Il gruppo ha le seguenti impostazioni:\n<b>Limite avvertimenti:</b>

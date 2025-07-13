@@ -33,7 +33,8 @@ strings:
       invalid_time_amount: 無効な時間量が指定されました。
       time_too_long: 時間を1年以上に設定することはできません！
       invalid_time_type: '無効な時間タイプが指定されました。m、h、d、またはw が期待されました: %s'
-      get_chat_member_failed: 'ユーザーの取得に失敗しました: getChatMemberに失敗しました: Bad Request: チャットが見つかりません'
+      get_chat_member_failed: 'ユーザーの取得に失敗しました: getChatMemberに失敗しました: Bad Request:
+        チャットが見つかりません'
       admin_only_button: このボタンは管理者のみが使用できます！
       no_reply: ユーザーのメッセージに返信して削除し、キックしてください！
     buttons:
@@ -292,7 +293,7 @@ strings:
         なぜ自分をキックしますか？
       kicked_user: |-
         %s を正常にキックしました。
-      kicked_reason: |-
+      kicked_reason: |2-
 
         <b>理由:</b> %s
     kickme:
@@ -305,7 +306,7 @@ strings:
         なぜ管理者をBANしますか？それはかなり愚かなアイデアのように聞こえます。
       is_bot_itself: |-
         本当に私をBANすると思いますか？
-      ban_reason: |-
+      ban_reason: |2-
 
         <b>理由:</b> %s
       tban: |-
@@ -847,6 +848,11 @@ strings:
 
       私のオーナーに連絡して寄付できます: @DivideProjectsBot
     about_me_u200d: "私について 👨‍💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_me: "About me 👨\\u200d💻"
+#  TODO: INCOMPLETE TRANSLATION 
+    about_text: "I'm Alita, a group management bot built to help you manage your groups
+      effectively!"
   Locks:
     list:
       header: 'このチャットのロック:'
@@ -1009,7 +1015,8 @@ strings:
 
       - /privatenotes: PMでノートを送信するかどうか。ユーザーがクリックするとPMでノートを取得できるボタン付きのメッセージが送信されます。
     removed_note_percent: ノート <b>%s</b> を削除しました。
-    are_you_sure_you_want_to_remove_all_notes_from_this_chat: このチャットからすべてのノートを削除してもよろしいですか？
+    are_you_sure_you_want_to_remove_all_notes_from_this_chat: 
+      このチャットからすべてのノートを削除してもよろしいですか？
     only_chat_creator_can_use_this_command: チャット作成者のみがこのコマンドを使用できます。
     there_s_some_error_parsing_the_note_please_report_this_in_su: 'ノートの解析中にエラーが発生しました。サポートチャットで報告してください。'
     note_doesn_t_exists: ノートが存在しません！
@@ -1054,8 +1061,10 @@ strings:
       注意: アンチチャンネルピンを使用する場合、手動で行うのではなく、 /unpin コマンドを使用してください。そうしないと、チャンネルがメッセージを送信したときに古いメッセージが再ピン留めされます。
     unpinned_all_pinned_messages_in_this_chat: このチャットのすべてのピン留めされたメッセージをピン解除しました！
     cancelled_operation_to_unpin_messages: メッセージのピン解除操作をキャンセルしました！
-    are_you_sure_you_want_to_unpin_all_pinned_messages: すべてのピン留めされたメッセージをピン解除してもよろしいですか？
-    please_reply_to_a_message_or_give_some_text_to_pin: メッセージに返信するか、ピン留めするテキストを入力してください。
+    are_you_sure_you_want_to_unpin_all_pinned_messages: 
+      すべてのピン留めされたメッセージをピン解除してもよろしいですか？
+    please_reply_to_a_message_or_give_some_text_to_pin: 
+      メッセージに返信するか、ピン留めするテキストを入力してください。
     no_message_has_been_pinned_in_the_current_chat: 現在のチャットにはメッセージがピン留めされていません！
   Purges:
     help_msg: |-
@@ -1066,15 +1075,18 @@ strings:
       *例*:
       - 返信されたメッセージから現在までのすべてのメッセージを削除します。
       -> `/purge`
-    reply_to_a_message_to_select_where_to_start_purging_from: メッセージに返信して、どこからパージを開始するかを選択してください。
+    reply_to_a_message_to_select_where_to_start_purging_from: 
+      メッセージに返信して、どこからパージを開始するかを選択してください。
     reply_to_a_message_to_delete_it: メッセージに返信して削除してください！
     this_message_is_already_marked_for_purging: このメッセージはすでにパージ対象としてマークされています！
     message_marked_for_deletion_reply_to_another_message_with_pu: >-
       削除対象としてマークされたメッセージ。別のメッセージに /purgeto
       と返信して、その間のすべてのメッセージを削除してください（30秒以内）！
-    you_can_only_use_this_command_after_having_used_the_purgefro: /purgefrom コマンドを使用した後にのみ、このコマンドを使用できます！
+    you_can_only_use_this_command_after_having_used_the_purgefro: /purgefrom 
+      コマンドを使用した後にのみ、このコマンドを使用できます！
     use_del_command_to_delete_one_message: 1つのメッセージを削除するには /del コマンドを使用してください！
-    reply_to_a_message_to_show_me_till_where_to_purge: どこまでパージするかを私に表示するには、メッセージに返信してください。
+    reply_to_a_message_to_show_me_till_where_to_purge: 
+      どこまでパージするかを私に表示するには、メッセージに返信してください。
   Reports:
     settings:
       enabled: 管理者レポートが有効になりました！

@@ -48,26 +48,22 @@ def get_all_keys(data, parent_key=""):
     return keys
 
 
-def add_missing_keys_recursively(source_data, target_data, missing_keys_paths):
+def add_missing_keys_recursively(
+    source_data, target_data, missing_keys_paths, current_path=""
+):
     """
     Recursively adds missing keys from source_data to target_data.
     It attaches a 'TODO' comment to the newly added keys.
     """
     modified = False
     for key, source_value in source_data.items():
-        # Construct the full path for the current key for lookup
-        current_path_tuple = tuple(key.split("."))
+        # Build the full path for the current key
+        full_path = f"{current_path}.{key}" if current_path else key
 
         # Check if the key is missing in the target
         if key not in target_data:
             # Check if this specific key or any of its children are in the missing set
-            is_missing = False
-            for missing_path in missing_keys_paths:
-                if missing_path.startswith(key):
-                    is_missing = True
-                    break
-
-            if is_missing:
+            if full_path in missing_keys_paths:
                 # Add the key and its value from the source
                 target_data[key] = source_value
                 # Add a comment to the newly added key
@@ -78,7 +74,7 @@ def add_missing_keys_recursively(source_data, target_data, missing_keys_paths):
         # If the key exists and both values are dicts, recurse
         elif isinstance(source_value, dict) and isinstance(target_data.get(key), dict):
             if add_missing_keys_recursively(
-                source_value, target_data[key], missing_keys_paths
+                source_value, target_data[key], missing_keys_paths, full_path
             ):
                 modified = True
 
@@ -172,7 +168,7 @@ def main():
         modified_data = deepcopy(data)
 
         if add_missing_keys_recursively(
-            source_data_for_fix, modified_data, missing_keys
+            source_data_for_fix, modified_data, missing_keys, ""
         ):
             with open(file_path, "w", encoding="utf-8") as f:
                 yaml.dump(modified_data, f)
