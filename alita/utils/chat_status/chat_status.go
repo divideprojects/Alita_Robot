@@ -569,6 +569,7 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 			chat = &ctx.Update.Message.Chat
 		}
 	}
+	tr := i18n.New(db.GetLanguage(ctx))
 	if chat.Username != "" {
 		return true
 	}
@@ -576,7 +577,7 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 	error_handling.HandleErr(err)
 	if !botChatMember.MergeChatMember().CanInviteUsers {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "I don't have access to invite links! Make sure I'm admin and can invite users.",
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.bot.no_permission_invite_link"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -612,7 +613,7 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 	}
 	if !userMember.CanInviteUsers && userMember.Status != "creator" {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "You don't have access to invite links; You need to be admin to get this!",
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.user.no_permission_invite_link"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -846,6 +847,7 @@ func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 	}
 
 	msg := ctx.EffectiveMessage
+	tr := i18n.New(db.GetLanguage(ctx))
 	mem, err := b.GetChatMember(chat.Id, userId, nil)
 	error_handling.HandleErr(err)
 	if mem == nil {
@@ -865,7 +867,7 @@ func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 			return false
 		}
 		if !justCheck {
-			_, err := msg.Reply(b, "Only group creator to do this!", nil)
+			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.only_group_creator_to_do_this"), nil)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -889,10 +891,11 @@ func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 			chat = &ctx.Update.Message.Chat
 		}
 	}
+	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 	if chat.Type != "private" {
 		if !justCheck {
-			_, err := msg.Reply(b, "This command is made for pm, not group chat!",
+			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.private_only_command"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId: msg.MessageId,
@@ -922,9 +925,10 @@ func RequireGroup(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 		}
 	}
 	msg := ctx.EffectiveMessage
+	tr := i18n.New(db.GetLanguage(ctx))
 	if chat.Type == "private" {
 		if !justCheck {
-			_, err := msg.Reply(b, "This command is made to be used in group chats, not in pm!",
+			_, err := msg.Reply(b, tr.GetString("strings.Connections.disconnect.is_user_connected.need_group"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId: msg.MessageId,

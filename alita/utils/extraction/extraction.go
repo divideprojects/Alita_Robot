@@ -35,12 +35,13 @@ If not, it prompts the user for a chat ID. Returns the chat or nil on failure.
 func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
+	tr := i18n.New(db.GetLanguage(ctx))
 	if len(args) != 0 {
 		if _, err := strconv.Atoi(args[0]); err == nil {
 			chatId, _ := strconv.Atoi(args[0])
 			chat, err := b.GetChat(int64(chatId), nil)
 			if err != nil {
-				_, err := msg.Reply(b, "failed to connect to chat: failed to get chat: unable to getChat: Bad Request: chat not found", nil)
+				_, err := msg.Reply(b, tr.GetString("strings.Utils.extraction.extract_chat.failed_to_get_chat"), nil)
 				if err != nil {
 					log.Error(err)
 					return nil
@@ -52,7 +53,7 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 		} else {
 			chat, err := chat_status.GetChat(b, args[0])
 			if err != nil {
-				_, err := msg.Reply(b, "failed to connect to chat: failed to get chat: unable to getChat: Bad Request: chat not found", nil)
+				_, err := msg.Reply(b, tr.GetString("strings.Utils.extraction.extract_chat.failed_to_get_chat"), nil)
 				if err != nil {
 					log.Error(err)
 					return nil
@@ -62,7 +63,6 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 			return chat
 		}
 	}
-	tr := i18n.New(db.GetLanguage(ctx))
 	_, err := msg.Reply(b, tr.GetString("strings.Connections.errors.no_chat_id"), nil)
 	if err != nil {
 		log.Error(err)
@@ -121,6 +121,8 @@ func ExtractUserAndText(b *gotgbot.Bot, ctx *ext.Context) (int64, string) {
 		ent = nil
 	}
 
+	tr := i18n.New(db.GetLanguage(ctx))
+
 	// only parse if the entity is a text mention
 	if entities != nil && ent != nil && int(ent.Offset) == (len(msg.Text)-len(textToParse)) {
 		ent = &entities[0]
@@ -130,7 +132,7 @@ func ExtractUserAndText(b *gotgbot.Bot, ctx *ext.Context) (int64, string) {
 		user := args[1]
 		userId = GetUserId(user)
 		if userId == 0 {
-			_, err := msg.Reply(b, "Could not find a user by this name; are you sure I've seen them before?", nil)
+			_, err := msg.Reply(b, tr.GetString("strings.Utils.extraction.could_not_get_user"), nil)
 			error_handling.HandleErr(err)
 			return -1, ""
 		} else {
@@ -173,7 +175,7 @@ func ExtractUserAndText(b *gotgbot.Bot, ctx *ext.Context) (int64, string) {
 
 	_, _, found := GetUserInfo(userId)
 	if !found {
-		_, err := msg.Reply(b, "Failed to get user: unable to getChatMember: Bad Request: chat not found", nil)
+		_, err := msg.Reply(b, tr.GetString("strings.Utils.extraction.failed_to_get_chatMember"), nil)
 		error_handling.HandleErr(err)
 		return -1, ""
 	}
@@ -291,6 +293,7 @@ func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int
 	msg := ctx.EffectiveMessage
 	timeNow := time.Now().Unix()
 	yearTime := timeNow + int64(365*24*60*60)
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	args := strings.Fields(inputVal)
 	timeVal := args[0] // first word will be the time specification
@@ -302,7 +305,7 @@ func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int
 		t := timeVal[:len(timeVal)-1]
 		timeNum, err := strconv.Atoi(t)
 		if err != nil {
-			_, err := msg.Reply(b, "Invalid time amount specified.", nil)
+			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.invalid_time_amount_specified"), nil)
 			error_handling.HandleErr(err)
 			return -1, "", ""
 		}
@@ -325,14 +328,14 @@ func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int
 		}
 
 		if banTime >= yearTime {
-			_, err := msg.Reply(b, "Cannot set time to more than 1 year!", nil)
+			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.time_too_long"), nil)
 			error_handling.HandleErr(err)
 			return -1, "", ""
 		}
 
 		return banTime, timeStr, reason
 	} else {
-		_, err := msg.Reply(b, fmt.Sprintf("Invalid time type specified. Expected m, h, d or w got: %s", timeVal), nil)
+		_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Utils.string_handling.extract_time.invalid_time_type"), timeVal), nil)
 		error_handling.HandleErr(err)
 		return -1, "", ""
 	}

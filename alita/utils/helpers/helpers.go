@@ -154,7 +154,7 @@ MentionHtml returns an HTML-formatted mention link for a user.
 Uses the user's ID and display name.
 */
 func MentionHtml(userId int64, name string) string {
-	return MentionUrl(fmt.Sprintf("tg://user?id=%d", userId), name)
+	return MentionUrl(fmt.Sprintf("tg://user?id=%d", userId), name) //skipcq:ignore
 }
 
 /*
@@ -163,7 +163,7 @@ MentionUrl returns an HTML-formatted link with the given URL and display name.
 Escapes the name for HTML safety.
 */
 func MentionUrl(url, name string) string {
-	return fmt.Sprintf("<a href=\"%s\">%s</a>", url, html.EscapeString(name))
+	return fmt.Sprintf("<a href=\"%s\">%s</a>", url, html.EscapeString(name)) //skipcq:ignore
 }
 
 /*

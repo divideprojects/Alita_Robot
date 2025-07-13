@@ -117,7 +117,7 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		if purge {
-			Text := fmt.Sprintf("Purged %d messages.", totalMsgs)
+			Text := fmt.Sprintf(tr.GetString("strings.Purges.purged_n_messages"), totalMsgs)
 			if len(args) >= 1 {
 				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
 			}
@@ -403,7 +403,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			log.Error(err)
 		}
 		if purge {
-			Text := fmt.Sprintf("Purged %d messages.", totalMsgs)
+			Text := fmt.Sprintf(tr.GetString("strings.Purges.purged_n_messages"), totalMsgs)
 			if len(args) >= 1 {
 				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
 			}
