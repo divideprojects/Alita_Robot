@@ -125,24 +125,24 @@ Shows the language selection menu when the language button is clicked from the s
 func (moduleStruct) langStartHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	args := strings.Split(query.Data, ".")
-	
+
 	if len(args) < 2 {
 		log.Warnf("[languages] Invalid callback data format: %s", query.Data)
 		return ext.EndGroups
 	}
-	
+
 	action := args[1]
-	
+
 	switch action {
 	case "start":
 		// Show language selection menu (same as /lang command)
 		// Create a modified context that simulates a message instead of callback query
 		user := query.From
 		chat := query.Message.GetChat()
-		
+
 		var replyString string
 		cLang := db.GetLanguage(ctx)
-		
+
 		if chat.Type == "private" {
 			replyString = fmt.Sprintf("Your Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
 		} else {
@@ -152,7 +152,7 @@ func (moduleStruct) langStartHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 			replyString = fmt.Sprintf("This Group's Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
 		}
-		
+
 		_, _, err := query.Message.EditText(
 			b,
 			replyString,
@@ -166,13 +166,13 @@ func (moduleStruct) langStartHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Error(err)
 			return err
 		}
-		
+
 		_, err = query.Answer(b, nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
-		
+
 		return ext.EndGroups
 	default:
 		log.Warnf("[languages] Unknown chlang action: %s", action)

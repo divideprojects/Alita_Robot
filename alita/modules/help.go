@@ -722,10 +722,10 @@ func createModifiedCallbackContext(ctx *ext.Context, newCallbackData string) *ex
 		Update: &gotgbot.Update{
 			UpdateId: ctx.Update.UpdateId,
 			CallbackQuery: &gotgbot.CallbackQuery{
-				Id:   ctx.Update.CallbackQuery.Id,
-				From: ctx.Update.CallbackQuery.From,
+				Id:      ctx.Update.CallbackQuery.Id,
+				From:    ctx.Update.CallbackQuery.From,
 				Message: ctx.Update.CallbackQuery.Message,
-				Data: newCallbackData,
+				Data:    newCallbackData,
 			},
 		},
 	}
@@ -740,14 +740,14 @@ Routes help.* callbacks to their appropriate handlers by modifying the callback 
 func (moduleStruct) helpCallbackHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	args := strings.Split(query.Data, ".")
-	
+
 	if len(args) < 2 {
 		log.Warnf("[help] Invalid callback data format: %s", query.Data)
 		return ext.EndGroups
 	}
-	
+
 	action := args[1]
-	
+
 	switch action {
 	case "about":
 		// Redirect to about.main
