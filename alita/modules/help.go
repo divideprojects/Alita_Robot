@@ -467,7 +467,7 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 		groupPromptMsg, groupPromptErr := tr.GetStringWithError("strings.Help.start.group_prompt")
 		if groupPromptErr != nil {
 			log.Errorf("[help] missing translation for start.group_prompt: %v", groupPromptErr)
-			groupPromptMsg = "Contact me in PM for help!"
+			groupPromptMsg = tr.GetString("strings.Help.start.group_prompt")
 		}
 		_, err := msg.Reply(b, groupPromptMsg, helpers.Shtml())
 		if err != nil {
@@ -633,6 +633,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	if ctx.Update.Message.Chat.Type == "private" {
 		if len(args) == 1 {
@@ -667,9 +668,9 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		pmMeKbText := "Click here for help!"
+		pmMeKbText := tr.GetString("strings.Help.help.button")
 		pmMeKbUri := fmt.Sprintf("https://t.me/%s?start=help_help", b.Username)
-		moduleHelpString := "Contact me in PM for help!"
+		moduleHelpString := tr.GetString("strings.Help.start.group_prompt")
 		replyMsgId := msg.MessageId
 		var lowerModName string
 

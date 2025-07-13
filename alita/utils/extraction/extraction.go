@@ -15,6 +15,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 )
@@ -61,7 +62,8 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 			return chat
 		}
 	}
-	_, err := msg.Reply(b, "I need a chat id to connect to!", nil)
+	tr := i18n.New(db.GetLanguage(ctx))
+	_, err := msg.Reply(b, tr.GetString("strings.Connections.errors.no_chat_id"), nil)
 	if err != nil {
 		log.Error(err)
 		return nil

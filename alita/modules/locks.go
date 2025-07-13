@@ -174,6 +174,7 @@ func (m moduleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
 
 func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.New(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
 	if connectedChat == nil {
@@ -190,7 +191,7 @@ func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "What do you want to lock? Check /locktypes for available options.", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Locks.lock.no_type_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -234,6 +235,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
+	tr := i18n.New(db.GetLanguage(ctx))
 	args := ctx.Args()[1:]
 	var toLock []string
 
@@ -243,7 +245,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "What do you want to lock? Check /locktypes for available options.", helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.Locks.unlock.no_type_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
