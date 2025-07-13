@@ -105,11 +105,11 @@ func getAboutKb(tr *i18n.I18n) gotgbot.InlineKeyboardMarkup {
 			{
 				{
 					Text: newsChannelText,
-					Url:  "https://t.me/AlitaUpdates",
+					Url:  "https://t.me/DivideProjects",
 				},
 				{
 					Text: supportGroupText,
-					Url:  "https://t.me/AlitaSupport",
+					Url:  "https://t.me/DivideSupport",
 				},
 			},
 			{
@@ -164,7 +164,7 @@ func getStartMarkup(tr *i18n.I18n) gotgbot.InlineKeyboardMarkup {
 				},
 				{
 					Text: supportGroupText,
-					Url:  "https://t.me/AlitaSupport",
+					Url:  "https://t.me/DivideSupport",
 				},
 			},
 			{
@@ -712,6 +712,62 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 /*
+createModifiedCallbackContext creates a new context with modified callback data.
+
+This is used to redirect help.* callbacks to their appropriate handlers.
+*/
+func createModifiedCallbackContext(ctx *ext.Context, newCallbackData string) *ext.Context {
+	// Create a copy of the context with modified callback data
+	newCtx := &ext.Context{
+		Update: &gotgbot.Update{
+			UpdateId: ctx.Update.UpdateId,
+			CallbackQuery: &gotgbot.CallbackQuery{
+				Id:   ctx.Update.CallbackQuery.Id,
+				From: ctx.Update.CallbackQuery.From,
+				Message: ctx.Update.CallbackQuery.Message,
+				Data: newCallbackData,
+			},
+		},
+	}
+	return newCtx
+}
+
+/*
+helpCallbackHandler handles callback queries with "help" prefix.
+
+Routes help.* callbacks to their appropriate handlers by modifying the callback data.
+*/
+func (moduleStruct) helpCallbackHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+	query := ctx.Update.CallbackQuery
+	args := strings.Split(query.Data, ".")
+	
+	if len(args) < 2 {
+		log.Warnf("[help] Invalid callback data format: %s", query.Data)
+		return ext.EndGroups
+	}
+	
+	action := args[1]
+	
+	switch action {
+	case "about":
+		// Redirect to about.main
+		newCtx := createModifiedCallbackContext(ctx, "about.main")
+		return helpModule.about(b, newCtx)
+	case "config":
+		// Redirect to configuration.step1
+		newCtx := createModifiedCallbackContext(ctx, "configuration.step1")
+		return HelpModule.botConfig(b, newCtx)
+	case "home":
+		// Redirect to start menu
+		newCtx := createModifiedCallbackContext(ctx, "helpq.BackStart")
+		return HelpModule.helpButtonHandler(b, newCtx)
+	default:
+		log.Warnf("[help] Unknown help action: %s", action)
+		return ext.EndGroups
+	}
+}
+
+/*
 LoadHelp registers all help-related command handlers with the dispatcher.
 
 Enables the help module and adds handlers for help, about, configuration, and donation commands.
@@ -723,6 +779,7 @@ func LoadHelp(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	dispatcher.AddHandler(handlers.NewCommand("start", HelpModule.start))
 	dispatcher.AddHandler(handlers.NewCommand("help", HelpModule.help))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("helpq"), HelpModule.helpButtonHandler))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("help"), HelpModule.helpCallbackHandler))
 	dispatcher.AddHandler(handlers.NewCommand("donate", HelpModule.donate))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("configuration"), HelpModule.botConfig))
 	dispatcher.AddHandler(handlers.NewCommand("about", helpModule.about))

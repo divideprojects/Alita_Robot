@@ -117,6 +117,69 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+/*
+langStartHandler handles callback queries with "chlang" prefix.
+
+Shows the language selection menu when the language button is clicked from the start menu.
+*/
+func (moduleStruct) langStartHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+	query := ctx.Update.CallbackQuery
+	args := strings.Split(query.Data, ".")
+	
+	if len(args) < 2 {
+		log.Warnf("[languages] Invalid callback data format: %s", query.Data)
+		return ext.EndGroups
+	}
+	
+	action := args[1]
+	
+	switch action {
+	case "start":
+		// Show language selection menu (same as /lang command)
+		// Create a modified context that simulates a message instead of callback query
+		user := query.From
+		chat := query.Message.GetChat()
+		
+		var replyString string
+		cLang := db.GetLanguage(ctx)
+		
+		if chat.Type == "private" {
+			replyString = fmt.Sprintf("Your Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
+		} else {
+			// language won't be changed if user is not admin
+			if !chat_status.RequireUserAdmin(b, ctx, &chat, user.Id, false) {
+				return ext.EndGroups
+			}
+			replyString = fmt.Sprintf("This Group's Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
+		}
+		
+		_, _, err := query.Message.EditText(
+			b,
+			replyString,
+			&gotgbot.EditMessageTextOpts{
+				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
+					InlineKeyboard: languagesModule.genFullLanguageKb(),
+				},
+			},
+		)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		
+		_, err = query.Answer(b, nil)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		
+		return ext.EndGroups
+	default:
+		log.Warnf("[languages] Unknown chlang action: %s", action)
+		return ext.EndGroups
+	}
+}
+
 func LoadLanguage(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	// Store config in the module
 	languagesModule.cfg = cfg
@@ -125,5 +188,6 @@ func LoadLanguage(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	HelpModule.helpableKb[languagesModule.moduleName] = languagesModule.genFullLanguageKb()
 
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("change_language."), languagesModule.langBtnHandler))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("chlang"), languagesModule.langStartHandler))
 	dispatcher.AddHandler(handlers.NewCommand("lang", languagesModule.changeLanguage))
 }
