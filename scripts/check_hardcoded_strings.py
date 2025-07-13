@@ -133,6 +133,20 @@ class HardcodedStringChecker:
         # Directories to skip
         self.skip_dirs = {"vendor", "testdata", ".git", "node_modules"}
 
+        # File patterns to skip (without extension)
+        self.skip_file_patterns = ["_test"]
+
+    def should_skip_file(self, file_name: str) -> bool:
+        """Check if a file should be skipped based on patterns."""
+        # Remove extension to check the base name
+        base_name = os.path.splitext(file_name)[0]
+
+        for pattern in self.skip_file_patterns:
+            if base_name.endswith(pattern):
+                return True
+
+        return False
+
     def should_ignore_string(self, string_content: str) -> bool:
         """Check if a string should be ignored (not user-facing)."""
         if len(string_content.strip()) < 3:
@@ -229,6 +243,10 @@ class HardcodedStringChecker:
 
             for file in files:
                 if any(file.endswith(ext) for ext in self.file_extensions):
+                    # Skip files matching skip patterns
+                    if self.should_skip_file(file):
+                        continue
+
                     file_path = os.path.join(root, file)
                     self.check_file(file_path)
 
