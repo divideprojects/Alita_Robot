@@ -44,6 +44,7 @@ dockers:
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=ci.run={{ .Env.GITHUB_RUN_ID }}"
       - "--label=org.opencontainers.image.version={{.Version}}"
   - goarch: arm64
     dockerfile: docker/goreleaser
@@ -57,6 +58,7 @@ dockers:
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=ci.run={{ .Env.GITHUB_RUN_ID }}"
       - "--label=org.opencontainers.image.version={{.Version}}"
 
 docker_manifests:
