@@ -26,7 +26,7 @@ ConnectionsModule provides logic for managing user-to-chat connections.
 Implements commands to connect, disconnect, and manage chat connections for users and admins.
 */
 var ConnectionsModule = moduleStruct{
-	moduleName: "Connections",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadConnections
 }
 

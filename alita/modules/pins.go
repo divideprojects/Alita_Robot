@@ -24,7 +24,7 @@ import (
 )
 
 var pinsModule = moduleStruct{
-	moduleName:   "Pins",
+	moduleName: autoModuleName(),
 	handlerGroup: 10,
 	cfg:          nil, // will be set during LoadPin
 }

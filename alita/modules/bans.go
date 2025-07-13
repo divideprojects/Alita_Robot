@@ -29,7 +29,7 @@ bansModule provides ban, kick, restrict, and unrestrict logic for group chats.
 Implements all moderation actions related to user removal and restriction.
 */
 var bansModule = moduleStruct{
-	moduleName: "Bans",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadBans
 }
 

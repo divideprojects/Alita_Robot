@@ -30,7 +30,7 @@ import (
 
 // miscModule holds the configuration for the misc module
 var miscModule = moduleStruct{
-	moduleName: "Misc",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadMisc
 }
 

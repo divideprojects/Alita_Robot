@@ -27,7 +27,7 @@ disablingModule provides logic for disabling and enabling commands in group chat
 Implements commands to disable, enable, and list disabled commands, as well as related settings.
 */
 var disablingModule = moduleStruct{
-	moduleName: "Disabling",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadDisabling
 }
 

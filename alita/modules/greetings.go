@@ -29,7 +29,7 @@ greetingsModule provides logic for managing welcome and goodbye messages in grou
 Implements commands to set, reset, and configure greetings, as well as handlers for join/leave events and join requests.
 */
 var greetingsModule = moduleStruct{
-	moduleName: "Greetings",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadGreetings
 }
 

@@ -25,7 +25,7 @@ devsModule provides developer and admin commands for bot management.
 Implements commands for team management, chat info, stats, and database cleanup.
 */
 var devsModule = moduleStruct{
-	moduleName: "Dev",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadDev
 }
 

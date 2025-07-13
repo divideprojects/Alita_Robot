@@ -26,7 +26,7 @@ import (
 )
 
 var notesModule = moduleStruct{
-	moduleName:        "Notes",
+	moduleName: autoModuleName(),
 	overwriteNotesMap: make(map[string]overwriteNote),
 	cfg:               nil, // will be set during LoadNotes
 }

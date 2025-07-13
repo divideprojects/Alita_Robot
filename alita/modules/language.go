@@ -19,7 +19,7 @@ import (
 )
 
 var languagesModule = moduleStruct{
-	moduleName: "Languages",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadLanguage
 }
 

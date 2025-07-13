@@ -24,7 +24,7 @@ import (
 )
 
 var warnsModule = moduleStruct{
-	moduleName: "Warns",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadWarns
 }
 

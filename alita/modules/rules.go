@@ -21,7 +21,7 @@ import (
 )
 
 var rulesModule = moduleStruct{
-	moduleName:      "Rules",
+	moduleName: autoModuleName(),
 	defaultRulesBtn: "Rules",
 	cfg:             nil, // will be set during LoadRules
 }

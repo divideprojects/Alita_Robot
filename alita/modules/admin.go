@@ -23,7 +23,7 @@ import (
 )
 
 var adminModule = moduleStruct{
-	moduleName: "Admin",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadAdmin
 }
 

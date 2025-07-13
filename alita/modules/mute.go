@@ -19,7 +19,7 @@ import (
 )
 
 var mutesModule = moduleStruct{
-	moduleName: "Mutes",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadMutes
 }
 

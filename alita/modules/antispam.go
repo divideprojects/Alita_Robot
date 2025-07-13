@@ -16,7 +16,7 @@ antispamModule provides anti-spam logic for group chats.
 It tracks spam levels per chat and enforces limits to prevent spammy behavior.
 */
 var antispamModule = moduleStruct{
-	moduleName: "antispam",
+	moduleName: autoModuleName(),
 	antiSpam:   map[int64]*antiSpamInfo{},
 	cfg:        nil, // will be set during LoadAntispam
 }

@@ -21,7 +21,7 @@ import (
 )
 
 var botUpdatesModule = moduleStruct{
-	moduleName: "BotUpdates",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadBotUpdates
 }
 

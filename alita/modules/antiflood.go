@@ -47,7 +47,7 @@ type floodControl struct {
 }
 
 var _normalAntifloodModule = moduleStruct{
-	moduleName:   "Antiflood",
+	moduleName: autoModuleName(),
 	handlerGroup: 4,
 	cfg:          nil, // will be set during LoadAntiflood
 }

@@ -25,7 +25,7 @@ HelpModule provides logic for the bot's help and about system.
 Implements commands and handlers for help menus, about info, configuration, and donation instructions.
 */
 var HelpModule = moduleStruct{
-	moduleName:     "Help",
+	moduleName: autoModuleName(),
 	AbleMap:        moduleEnabled{},
 	AltHelpOptions: make(map[string][]string),
 	helpableKb:     make(map[string][][]gotgbot.InlineKeyboardButton),
@@ -232,7 +232,7 @@ func (m *moduleEnabled) LoadModules() []string {
 
 // helpModule holds the configuration for the help module
 var helpModule = moduleStruct{
-	moduleName: "Help",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadHelp
 }
 

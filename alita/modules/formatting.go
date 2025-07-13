@@ -21,7 +21,7 @@ formattingModule provides logic for formatting help and markdown support.
 Implements commands and handlers for markdown help and formatting options.
 */
 var formattingModule = moduleStruct{
-	moduleName: "Formatting",
+	moduleName: autoModuleName(),
 	cfg:        nil, // will be set during LoadMkdCmd
 }
 

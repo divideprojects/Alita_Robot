@@ -23,7 +23,7 @@ import (
 
 var (
 	purgesModule = moduleStruct{
-		moduleName: "Purges",
+		moduleName: autoModuleName(),
 		cfg:        nil, // will be set during LoadPurges
 	}
 	delMsgs = map[int64]int64{}
