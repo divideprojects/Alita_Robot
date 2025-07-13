@@ -22,7 +22,7 @@ func Setup(debug bool) {
 	log.SetFormatter(
 		&log.JSONFormatter{
 			DisableHTMLEscape: true,
-			PrettyPrint:       true,
+			PrettyPrint:       false,
 			CallerPrettyfier: func(f *runtime.Frame) (string, string) {
 				return f.Function, fmt.Sprintf("%s:%d", path.Base(f.File), f.Line)
 			},
