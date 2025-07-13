@@ -33,7 +33,7 @@ filtersModule provides logic for managing keyword-based filters in group chats.
 Implements commands to add, remove, list, and configure filters and their actions.
 */
 var filtersModule = moduleStruct{
-	moduleName: autoModuleName(),
+	moduleName:          autoModuleName(),
 	overwriteFiltersMap: make(map[string]overwriteFilter),
 	handlerGroup:        9,
 	cfg:                 nil, // will be set during LoadFilters

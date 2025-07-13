@@ -25,7 +25,7 @@ HelpModule provides logic for the bot's help and about system.
 Implements commands and handlers for help menus, about info, configuration, and donation instructions.
 */
 var HelpModule = moduleStruct{
-	moduleName: autoModuleName(),
+	moduleName:     autoModuleName(),
 	AbleMap:        moduleEnabled{},
 	AltHelpOptions: make(map[string][]string),
 	helpableKb:     make(map[string][][]gotgbot.InlineKeyboardButton),

@@ -30,7 +30,7 @@ blacklistsModule provides blacklist management logic for group chats.
 Implements commands to add, remove, list, and configure blacklists and their actions.
 */
 var blacklistsModule = moduleStruct{
-	moduleName: autoModuleName(),
+	moduleName:   autoModuleName(),
 	handlerGroup: 7,
 	cfg:          nil, // will be set during LoadBlacklists
 }

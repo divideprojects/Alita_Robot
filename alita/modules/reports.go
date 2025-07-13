@@ -25,7 +25,7 @@ import (
 )
 
 var reportsModule = moduleStruct{
-	moduleName: autoModuleName(),
+	moduleName:   autoModuleName(),
 	handlerGroup: 8,
 	cfg:          nil, // will be set during LoadReports
 }

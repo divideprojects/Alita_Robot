@@ -15,7 +15,7 @@ import (
 )
 
 var usersModule = moduleStruct{
-	moduleName: autoModuleName(),
+	moduleName:   autoModuleName(),
 	handlerGroup: -1,
 	cfg:          nil, // will be set during LoadUsers
 }

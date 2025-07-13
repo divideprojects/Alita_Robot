@@ -29,7 +29,7 @@ import (
 
 var (
 	locksModule = moduleStruct{
-		moduleName: autoModuleName(),
+		moduleName:        autoModuleName(),
 		permHandlerGroup:  5,
 		restrHandlerGroup: 6,
 		cfg:               nil, // will be set during LoadLocks
