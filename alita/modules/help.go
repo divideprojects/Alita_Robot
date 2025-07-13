@@ -268,7 +268,7 @@ func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         tr.GetString("strings.Help.about_me"),
+					Text:         getHelpButtonText(tr, "strings.Help.about_me", "About Me"),
 					CallbackData: "about.me",
 				},
 			},

@@ -193,7 +193,12 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		rulesrc := db.GetChatRulesInfo(int64(chatID))
 
 		if rulesrc.Rules == "" {
-			_, err := msg.Reply(b, tr.GetString("strings.Helpers.this_chat_does_not_have_any_rules"), helpers.Shtml())
+			noRulesMsg, noRulesErr := tr.GetStringWithError("strings.Helpers.this_chat_does_not_have_any_rules")
+			if noRulesErr != nil {
+				log.Errorf("[helpers] missing translation for Helpers.this_chat_does_not_have_any_rules: %v", noRulesErr)
+				noRulesMsg = "This chat doesn't have any rules set."
+			}
+			_, err := msg.Reply(b, noRulesMsg, helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -233,7 +238,12 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			noteName := strings.ToLower(nArgs[2])
 			noteData := db.GetNote(chatinfo.Id, noteName)
 			if noteData == nil {
-				_, err := msg.Reply(b, tr.GetString("strings.Helpers.this_note_does_not_exist"), helpers.Shtml())
+				noteNotExistMsg, noteNotExistErr := tr.GetStringWithError("strings.Helpers.this_note_does_not_exist")
+				if noteNotExistErr != nil {
+					log.Errorf("[helpers] missing translation for Helpers.this_note_does_not_exist: %v", noteNotExistErr)
+					noteNotExistMsg = "This note doesn't exist."
+				}
+				_, err := msg.Reply(b, noteNotExistMsg, helpers.Shtml())
 				if err != nil {
 					log.Error(err)
 					return err
@@ -242,7 +252,12 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			}
 			if noteData.AdminOnly {
 				if !chat_status.IsUserAdmin(b, int64(chatID), user.Id) {
-					_, err := msg.Reply(b, tr.GetString("strings.Notes.errors.admin_only"), helpers.Shtml())
+					adminOnlyMsg, adminOnlyErr := tr.GetStringWithError("strings.Notes.errors.admin_only")
+					if adminOnlyErr != nil {
+						log.Errorf("[helpers] missing translation for Notes.errors.admin_only: %v", adminOnlyErr)
+						adminOnlyMsg = "This note is only available to admins."
+					}
+					_, err := msg.Reply(b, adminOnlyMsg, helpers.Shtml())
 					if err != nil {
 						log.Error(err)
 						return err

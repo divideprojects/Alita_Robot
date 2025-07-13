@@ -69,10 +69,15 @@ func (m moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) err
 	// permissions check
 	// only dev can access this
 	if user.Id != cfg.OwnerId && !memStatus.Dev {
+		adminOnlyButtonMsg, adminOnlyButtonErr := tr.GetStringWithError("strings.CommonStrings.errors.admin_only_button")
+		if adminOnlyButtonErr != nil {
+			log.Errorf("[dbclean] missing translation for CommonStrings.errors.admin_only_button: %v", adminOnlyButtonErr)
+			adminOnlyButtonMsg = "This button is for admins only."
+		}
 		query.Answer(
 			b,
 			&gotgbot.AnswerCallbackQueryOpts{
-				Text: tr.GetString("strings.CommonStrings.errors.admin_only_button"),
+				Text: adminOnlyButtonMsg,
 			},
 		)
 		return ext.ContinueGroups

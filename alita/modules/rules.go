@@ -32,7 +32,12 @@ func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	go db.SetChatRules(chat.Id, "")
-	_, err := msg.Reply(bot, tr.GetString("strings.Rules.successfully_cleared_rules"), nil)
+	successClearedMsg, successClearedErr := tr.GetStringWithError("strings.Rules.successfully_cleared_rules")
+	if successClearedErr != nil {
+		log.Errorf("[rules] missing translation for key: %v", successClearedErr)
+		successClearedMsg = "Successfully cleared rules!"
+	}
+	_, err := msg.Reply(bot, successClearedMsg, nil)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -63,7 +68,12 @@ func (moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
 			go db.SetPrivateRules(chat.Id, false)
 			text = fmt.Sprintf("All /rules commands will send the rules to %s.", chat.Title)
 		default:
-			text = tr.GetString("strings.CommonStrings.errors.invalid_option_yes_no")
+			invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.CommonStrings.errors.invalid_option_yes_no")
+			if invalidOptionErr != nil {
+				log.Errorf("[rules] missing translation for key: %v", invalidOptionErr)
+				invalidOptionMsg = "Please give me a valid option from <yes/on/no/off>"
+			}
+			text = invalidOptionMsg
 		}
 	} else {
 		rulesprefs := db.GetChatRulesInfo(chat.Id)
@@ -242,7 +252,12 @@ func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	go db.SetChatRulesButton(chat.Id, "")
-	_, err := msg.Reply(bot, tr.GetString("strings.Rules.successfully_cleared_custom_rules_button_text"), nil)
+	successClearedBtnMsg, successClearedBtnErr := tr.GetStringWithError("strings.Rules.successfully_cleared_custom_rules_button_text")
+	if successClearedBtnErr != nil {
+		log.Errorf("[rules] missing translation for key: %v", successClearedBtnErr)
+		successClearedBtnMsg = "Successfully cleared custom rules button text!"
+	}
+	_, err := msg.Reply(bot, successClearedBtnMsg, nil)
 	if err != nil {
 		log.Error(err)
 		return err

@@ -81,7 +81,12 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".blacklist.give_bl_word"), helpers.Shtml())
+		giveBlWordMsg, giveBlWordErr := tr.GetStringWithError("strings."+m.moduleName+".blacklist.give_bl_word")
+		if giveBlWordErr != nil {
+			log.Errorf("[blacklists] missing translation for key: %v", giveBlWordErr)
+			giveBlWordMsg = "Please give me a word to add to the blacklist!"
+		}
+		_, err := msg.Reply(b, giveBlWordMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -99,10 +104,20 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		if len(alreadyBlacklisted) >= 1 {
-			text += tr.GetString("strings."+m.moduleName+".blacklist.already_blacklisted") + fmt.Sprintf("\n - %s\n\n", strings.Join(alreadyBlacklisted, "\n - "))
+			alreadyBlacklistedMsg, alreadyBlacklistedErr := tr.GetStringWithError("strings."+m.moduleName+".blacklist.already_blacklisted")
+			if alreadyBlacklistedErr != nil {
+				log.Errorf("[blacklists] missing translation for key: %v", alreadyBlacklistedErr)
+				alreadyBlacklistedMsg = "These words are already blacklisted:"
+			}
+			text += alreadyBlacklistedMsg + fmt.Sprintf("\n - %s\n\n", strings.Join(alreadyBlacklisted, "\n - "))
 		}
 		if len(newBlacklist) >= 1 {
-			text += tr.GetString("strings."+m.moduleName+".blacklist.added_bl") + fmt.Sprintf("\n - %s\n\n", strings.Join(newBlacklist, "\n - "))
+			addedBlMsg, addedBlErr := tr.GetStringWithError("strings."+m.moduleName+".blacklist.added_bl")
+			if addedBlErr != nil {
+				log.Errorf("[blacklists] missing translation for key: %v", addedBlErr)
+				addedBlMsg = "Added these words as blacklists:"
+			}
+			text += addedBlMsg + fmt.Sprintf("\n - %s\n\n", strings.Join(newBlacklist, "\n - "))
 		}
 
 		_, err := msg.Reply(b, text, helpers.Shtml())
@@ -157,7 +172,12 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".unblacklist.give_bl_word"), helpers.Shtml())
+		giveBlWordMsg, giveBlWordErr := tr.GetStringWithError("strings."+m.moduleName+".unblacklist.give_bl_word")
+		if giveBlWordErr != nil {
+			log.Errorf("[blacklists] missing translation for key: %v", giveBlWordErr)
+			giveBlWordMsg = "Please give me a word to remove it from the blacklist!"
+		}
+		_, err := msg.Reply(b, giveBlWordMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -172,15 +192,24 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 		if len(removedBlacklists) <= 0 {
-			_, err := msg.Reply(b, fmt.Sprint("strings."+m.moduleName+".unblacklist.no_removed_bl"),
-				nil)
+			noRemovedBlMsg, noRemovedBlErr := tr.GetStringWithError("strings."+m.moduleName+".unblacklist.no_removed_bl")
+			if noRemovedBlErr != nil {
+				log.Errorf("[blacklists] missing translation for key: %v", noRemovedBlErr)
+				noRemovedBlMsg = "None of the given words were on the blacklist which can be removed!"
+			}
+			_, err := msg.Reply(b, noRemovedBlMsg, nil)
 			if err != nil {
 				log.Error(err)
 				return err
 			}
 		} else {
+			removedBlMsg, removedBlErr := tr.GetStringWithError("strings."+m.moduleName+".unblacklist.removed_bl")
+			if removedBlErr != nil {
+				log.Errorf("[blacklists] missing translation for key: %v", removedBlErr)
+				removedBlMsg = "Successfully removed '%s' from the blacklisted words!"
+			}
 			_, err := msg.Reply(b,
-				fmt.Sprintf(tr.GetString("strings."+m.moduleName+".unblacklist.removed_bl"), strings.Join(removedBlacklists, ", ")),
+				fmt.Sprintf(removedBlMsg, strings.Join(removedBlacklists, ", ")),
 				nil,
 			)
 			if err != nil {
@@ -237,9 +266,19 @@ func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if blacklistsText != "" {
-		blacklistsText = tr.GetString("strings."+m.moduleName+".ls_bl.list_bl") + blacklistsText
+		listBlMsg, listBlErr := tr.GetStringWithError("strings."+m.moduleName+".ls_bl.list_bl")
+		if listBlErr != nil {
+			log.Errorf("[blacklists] missing translation for key: %v", listBlErr)
+			listBlMsg = "These words are blacklisted in this chat:"
+		}
+		blacklistsText = listBlMsg + blacklistsText
 	} else {
-		blacklistsText = tr.GetString("strings." + m.moduleName + ".ls_bl.no_blacklisted")
+		noBlacklistedMsg, noBlacklistedErr := tr.GetStringWithError("strings." + m.moduleName + ".ls_bl.no_blacklisted")
+		if noBlacklistedErr != nil {
+			log.Errorf("[blacklists] missing translation for key: %v", noBlacklistedErr)
+			noBlacklistedMsg = "There are no blacklisted words in this chat."
+		}
+		blacklistsText = noBlacklistedMsg
 	}
 
 	_, err := msg.Reply(b,
@@ -298,17 +337,37 @@ func (m moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error
 
 	if len(args) == 0 {
 		currAction := db.GetBlacklistSettings(chat.Id).Action
-		rMsg = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".set_bl_action.current_mode"), currAction)
+		currentModeMsg, currentModeErr := tr.GetStringWithError("strings."+m.moduleName+".set_bl_action.current_mode")
+		if currentModeErr != nil {
+			log.Errorf("[blacklists] missing translation for key: %v", currentModeErr)
+			currentModeMsg = "The current blacklist mode for this chat is: %s"
+		}
+		rMsg = fmt.Sprintf(currentModeMsg, currAction)
 	} else if len(args) == 1 {
 		action := strings.ToLower(args[0])
 		if string_handling.FindInStringSlice([]string{"mute", "kick", "warn", "ban", "none"}, action) {
-			rMsg = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".set_bl_action.changed_mode"), action)
+			changedModeMsg, changedModeErr := tr.GetStringWithError("strings."+m.moduleName+".set_bl_action.changed_mode")
+			if changedModeErr != nil {
+				log.Errorf("[blacklists] missing translation for key: %v", changedModeErr)
+				changedModeMsg = "Successfully Changed blacklist mode to: *%s*"
+			}
+			rMsg = fmt.Sprintf(changedModeMsg, action)
 			go db.SetBlacklistAction(chat.Id, action)
 		} else {
-			rMsg = tr.GetString("strings." + m.moduleName + ".set_bl_action.choose_correct_option")
+			chooseCorrectOptionMsg, chooseCorrectOptionErr := tr.GetStringWithError("strings." + m.moduleName + ".set_bl_action.choose_correct_option")
+			if chooseCorrectOptionErr != nil {
+				log.Errorf("[blacklists] missing translation for key: %v", chooseCorrectOptionErr)
+				chooseCorrectOptionMsg = "Please choose an option out of <mute/kick/ban/warn/none>"
+			}
+			rMsg = chooseCorrectOptionMsg
 		}
 	} else {
-		rMsg = tr.GetString("strings." + m.moduleName + ".set_bl_action.choose_correct_option")
+		chooseCorrectOptionMsg, chooseCorrectOptionErr := tr.GetStringWithError("strings." + m.moduleName + ".set_bl_action.choose_correct_option")
+		if chooseCorrectOptionErr != nil {
+			log.Errorf("[blacklists] missing translation for key: %v", chooseCorrectOptionErr)
+			chooseCorrectOptionMsg = "Please choose an option out of <mute/kick/ban/warn/none>"
+		}
+		rMsg = chooseCorrectOptionMsg
 	}
 	_, err := msg.Reply(b, rMsg, helpers.Smarkdown())
 	if err != nil {
@@ -342,13 +401,31 @@ func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".rm_all_bl.ask"),
+	askMsg, askErr := tr.GetStringWithError("strings."+m.moduleName+".rm_all_bl.ask")
+	if askErr != nil {
+		log.Errorf("[blacklists] missing translation for key: %v", askErr)
+		askMsg = "Are you sure you want to remove all blacklisted words from this chat?"
+	}
+
+	yesMsg, yesErr := tr.GetStringWithError("strings.CommonStrings.buttons.yes")
+	if yesErr != nil {
+		log.Errorf("[blacklists] missing translation for key: %v", yesErr)
+		yesMsg = "Yes"
+	}
+
+	noMsg, noErr := tr.GetStringWithError("strings.CommonStrings.buttons.no")
+	if noErr != nil {
+		log.Errorf("[blacklists] missing translation for key: %v", noErr)
+		noMsg = "No"
+	}
+
+	_, err := msg.Reply(b, askMsg,
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: tr.GetString("strings.CommonStrings.buttons.yes"), CallbackData: "rmAllBlacklist.yes"},
-						{Text: tr.GetString("strings.CommonStrings.buttons.no"), CallbackData: "rmAllBlacklist.no"},
+						{Text: yesMsg, CallbackData: "rmAllBlacklist.yes"},
+						{Text: noMsg, CallbackData: "rmAllBlacklist.no"},
 					},
 				},
 			},
@@ -385,9 +462,19 @@ func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	switch creatorAction {
 	case "yes":
 		go db.RemoveAllBlacklist(query.Message.GetChat().Id)
-		helpText = tr.GetString("strings." + m.moduleName + ".rm_all_bl.button_handler.yes")
+		yesButtonMsg, yesButtonErr := tr.GetStringWithError("strings." + m.moduleName + ".rm_all_bl.button_handler.true")
+		if yesButtonErr != nil {
+			log.Errorf("[blacklists] missing translation for key: %v", yesButtonErr)
+			yesButtonMsg = "Removed all Blacklists from this Chat ✅"
+		}
+		helpText = yesButtonMsg
 	case "no":
-		helpText = tr.GetString("strings." + m.moduleName + ".rm_all_bl.button_handler.yes")
+		noButtonMsg, noButtonErr := tr.GetStringWithError("strings." + m.moduleName + ".rm_all_bl.button_handler.false")
+		if noButtonErr != nil {
+			log.Errorf("[blacklists] missing translation for key: %v", noButtonErr)
+			noButtonMsg = "Canceled removing all Blacklists of this Chat ❌"
+		}
+		helpText = noButtonMsg
 	}
 
 	_, _, err := query.Message.EditText(b,
@@ -461,8 +548,14 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 					return err
 				}
 
+				mutedUserMsg, mutedUserErr := tr.GetStringWithError("strings."+m.moduleName+".bl_watcher.muted_user")
+				if mutedUserErr != nil {
+					log.Errorf("[blacklists] missing translation for key: %v", mutedUserErr)
+					mutedUserMsg = "Muted %s due to %s"
+				}
+
 				_, err = msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.muted_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
+					fmt.Sprintf(mutedUserMsg, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
 					helpers.Shtml())
 				if err != nil {
 					log.Error(err)
@@ -480,8 +573,14 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 					return err
 				}
 
+				bannedUserMsg, bannedUserErr := tr.GetStringWithError("strings."+m.moduleName+".bl_watcher.banned_user")
+				if bannedUserErr != nil {
+					log.Errorf("[blacklists] missing translation for key: %v", bannedUserErr)
+					bannedUserMsg = "Banned %s due to %s"
+				}
+
 				_, err = msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.banned_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
+					fmt.Sprintf(bannedUserMsg, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
 					helpers.Shtml())
 				if err != nil {
 					log.Error(err)
@@ -499,8 +598,14 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 					return err
 				}
 
+				kickedUserMsg, kickedUserErr := tr.GetStringWithError("strings."+m.moduleName+".bl_watcher.kicked_user")
+				if kickedUserErr != nil {
+					log.Errorf("[blacklists] missing translation for key: %v", kickedUserErr)
+					kickedUserMsg = "Kicked %s due to %s"
+				}
+
 				_, err = msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.kicked_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
+					fmt.Sprintf(kickedUserMsg, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
 					helpers.Shtml())
 				if err != nil {
 					log.Error(err)

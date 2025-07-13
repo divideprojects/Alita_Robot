@@ -353,7 +353,12 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if !chat_status.IsBotAdmin(b, ctx, nil) {
-		_, err := b.SendMessage(chat.Id, tr.GetString("strings.Locks.bot.no_admin_permission"), nil)
+		noAdminPermMsg, noAdminPermErr := tr.GetStringWithError("strings.Locks.bot.no_admin_permission")
+		if noAdminPermErr != nil {
+			log.Errorf("[locks] missing translation for key: %v", noAdminPermErr)
+			noAdminPermMsg = "I need admin permissions to restrict bots!"
+		}
+		_, err := b.SendMessage(chat.Id, noAdminPermMsg, nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -381,7 +386,12 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = b.SendMessage(chat.Id, tr.GetString("strings.Locks.bot.admin_only"), nil)
+	adminOnlyMsg, adminOnlyErr := tr.GetStringWithError("strings.Locks.bot.admin_only")
+	if adminOnlyErr != nil {
+		log.Errorf("[locks] missing translation for key: %v", adminOnlyErr)
+		adminOnlyMsg = "Only admins are allowed to add bots to this chat!"
+	}
+	_, err = b.SendMessage(chat.Id, adminOnlyMsg, nil)
 	if err != nil {
 		log.Error(err)
 		return err

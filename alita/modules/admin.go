@@ -60,7 +60,12 @@ func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	text := fmt.Sprintf(tr.GetString("strings."+m.moduleName+".adminlist"), chat.Title)
+	adminlistMsg, adminlistErr := tr.GetStringWithError("strings." + m.moduleName + ".adminlist")
+	if adminlistErr != nil {
+		log.Errorf("[admin] missing translation for adminlist: %v", adminlistErr)
+		adminlistMsg = "Admins in <b>%s</b>:"
+	}
+	text := fmt.Sprintf(adminlistMsg, chat.Title)
 
 	adminsAvail, admins := cache.GetAdminCacheList(chat.Id)
 	if !adminsAvail {
@@ -120,7 +125,12 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, nil, userId, true) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_owner"), helpers.Shtml())
+		demoteOwnerMsg, demoteOwnerErr := tr.GetStringWithError("strings." + m.moduleName + ".demote.is_owner")
+		if demoteOwnerErr != nil {
+			log.Errorf("[admin] missing translation for demote.is_owner: %v", demoteOwnerErr)
+			demoteOwnerMsg = "This person created this chat, and how would I demote them?"
+		}
+		_, err := msg.Reply(b, demoteOwnerMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -129,7 +139,12 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_bot_itself"), helpers.Shtml())
+		demoteBotMsg, demoteBotErr := tr.GetStringWithError("strings." + m.moduleName + ".demote.is_bot_itself")
+		if demoteBotErr != nil {
+			log.Errorf("[admin] missing translation for demote.is_bot_itself: %v", demoteBotErr)
+			demoteBotMsg = "I am not going to demote myself."
+		}
+		_, err := msg.Reply(b, demoteBotMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -138,7 +153,12 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if !chat_status.IsUserAdmin(b, chat.Id, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".demote.is_admin"), helpers.Shtml())
+		demoteAdminMsg, demoteAdminErr := tr.GetStringWithError("strings." + m.moduleName + ".demote.is_admin")
+		if demoteAdminErr != nil {
+			log.Errorf("[admin] missing translation for demote.is_admin: %v", demoteAdminErr)
+			demoteAdminMsg = "This person is not an admin, and how I am supposed to demote them?"
+		}
+		_, err := msg.Reply(b, demoteAdminMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -162,10 +182,12 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if err != nil || !bb {
 		log.Error(err)
-		_, err = msg.Reply(b,
-			tr.GetString("strings."+m.moduleName+".errors.err_cannot_demote"),
-			nil,
-		)
+		demoteErrorMsg, demoteErrorErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.err_cannot_demote")
+		if demoteErrorErr != nil {
+			log.Errorf("[admin] missing translation for errors.err_cannot_demote: %v", demoteErrorErr)
+			demoteErrorMsg = "Failed to demote; I might not be the admin, or they may be promoted by another admin."
+		}
+		_, err = msg.Reply(b, demoteErrorMsg, nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -225,7 +247,12 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".promote.is_bot_itself"), helpers.Shtml())
+		promoteBotMsg, promoteBotErr := tr.GetStringWithError("strings." + m.moduleName + ".promote.is_bot_itself")
+		if promoteBotErr != nil {
+			log.Errorf("[admin] missing translation for promote.is_bot_itself: %v", promoteBotErr)
+			promoteBotMsg = "If only I could do this to myself ;_;"
+		}
+		_, err := msg.Reply(b, promoteBotMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -236,7 +263,12 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// checks if user being promoted is already admin or owner
 	if chat_status.RequireUserOwner(b, ctx, nil, userId, true) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".promote.is_owner"), helpers.Shtml())
+		promoteOwnerMsg, promoteOwnerErr := tr.GetStringWithError("strings." + m.moduleName + ".promote.is_owner")
+		if promoteOwnerErr != nil {
+			log.Errorf("[admin] missing translation for promote.is_owner: %v", promoteOwnerErr)
+			promoteOwnerMsg = "This person created this chat, and how would am I supposed to promote them?"
+		}
+		_, err := msg.Reply(b, promoteOwnerMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -245,7 +277,12 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if chat_status.IsUserAdmin(b, chat.Id, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".promote.is_admin"), helpers.Shtml())
+		promoteAdminMsg, promoteAdminErr := tr.GetStringWithError("strings." + m.moduleName + ".promote.is_admin")
+		if promoteAdminErr != nil {
+			log.Errorf("[admin] missing translation for promote.is_admin: %v", promoteAdminErr)
+			promoteAdminMsg = "This person is already an admin, and how would am I supposed to promote them?"
+		}
+		_, err := msg.Reply(b, promoteAdminMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -291,13 +328,23 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 		},
 	)
 	if err != nil {
-		_, _ = msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.err_cannot_promote"), helpers.Shtml())
+		promoteErrorMsg, promoteErrorErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.err_cannot_promote")
+		if promoteErrorErr != nil {
+			log.Errorf("[admin] missing translation for errors.err_cannot_promote: %v", promoteErrorErr)
+			promoteErrorMsg = "Failed to promote; I might not be the admin, or they may be promoted by another admin."
+		}
+		_, _ = msg.Reply(b, promoteErrorMsg, helpers.Shtml())
 		return err
 	}
 
 	if len(customTitle) > 16 {
 		// trim title to 16 characters (telegram restriction)
-		extraText += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".promote.admin_title_truncated"), len(customTitle))
+		titleTruncatedMsg, titleTruncatedErr := tr.GetStringWithError("strings." + m.moduleName + ".promote.admin_title_truncated")
+		if titleTruncatedErr != nil {
+			log.Errorf("[admin] missing translation for promote.admin_title_truncated: %v", titleTruncatedErr)
+			titleTruncatedMsg = "Admin title truncated to 16 characters from %d"
+		}
+		extraText += fmt.Sprintf(titleTruncatedMsg, len(customTitle))
 		customTitle = customTitle[0:16]
 	}
 
@@ -310,10 +357,12 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 			nil,
 		)
 		if err != nil {
-			_, err = msg.Reply(b,
-				tr.GetString("strings."+m.moduleName+".errors.err_set_title"),
-				nil,
-			)
+			setTitleErrorMsg, setTitleErrorErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.err_set_title")
+			if setTitleErrorErr != nil {
+				log.Errorf("[admin] missing translation for errors.err_set_title: %v", setTitleErrorErr)
+				setTitleErrorMsg = "Failed to set custom admin title; The Title may not be correct or may contain emojis."
+			}
+			_, err = msg.Reply(b, setTitleErrorMsg, nil)
 			if err != nil {
 				log.Error(err)
 			}
@@ -438,7 +487,12 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, nil, userId, true) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".title.is_owner"), helpers.Shtml())
+		titleOwnerMsg, titleOwnerErr := tr.GetStringWithError("strings." + m.moduleName + ".title.is_owner")
+		if titleOwnerErr != nil {
+			log.Errorf("[admin] missing translation for title.is_owner: %v", titleOwnerErr)
+			titleOwnerMsg = "This person created this chat, and how would am I supposed to set a admin title to them?"
+		}
+		_, err := msg.Reply(b, titleOwnerMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -446,7 +500,12 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if !chat_status.IsUserAdmin(b, chat.Id, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".title.is_admin"), helpers.Shtml())
+		titleAdminMsg, titleAdminErr := tr.GetStringWithError("strings." + m.moduleName + ".title.is_admin")
+		if titleAdminErr != nil {
+			log.Errorf("[admin] missing translation for title.is_admin: %v", titleAdminErr)
+			titleAdminMsg = "This person is already an admin, how would I set a custom admin title for them?"
+		}
+		_, err := msg.Reply(b, titleAdminMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -455,7 +514,12 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".title.is_bot_itself"), helpers.Shtml())
+		titleBotMsg, titleBotErr := tr.GetStringWithError("strings." + m.moduleName + ".title.is_bot_itself")
+		if titleBotErr != nil {
+			log.Errorf("[admin] missing translation for title.is_bot_itself: %v", titleBotErr)
+			titleBotMsg = "If only I could do this to myself ;_;"
+		}
+		_, err := msg.Reply(b, titleBotMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -466,7 +530,12 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// for managing custom title
 	if customTitle == "" {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.title_empty"), helpers.Shtml())
+		titleEmptyMsg, titleEmptyErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.title_empty")
+		if titleEmptyErr != nil {
+			log.Errorf("[admin] missing translation for errors.title_empty: %v", titleEmptyErr)
+			titleEmptyMsg = "You need to give me an admin title to set it."
+		}
+		_, err := msg.Reply(b, titleEmptyMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -484,7 +553,12 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	)
 	if err != nil {
 		log.Error(err)
-		_, _ = msg.Reply(b, tr.GetString("strings."+m.moduleName+".errors.err_set_title"), helpers.Shtml())
+		setTitleErrorMsg2, setTitleErrorErr2 := tr.GetStringWithError("strings." + m.moduleName + ".errors.err_set_title")
+		if setTitleErrorErr2 != nil {
+			log.Errorf("[admin] missing translation for errors.err_set_title: %v", setTitleErrorErr2)
+			setTitleErrorMsg2 = "Failed to set custom admin title; The Title may not be correct or may contain emojis."
+		}
+		_, _ = msg.Reply(b, setTitleErrorMsg2, helpers.Shtml())
 		return err
 	}
 
@@ -496,8 +570,13 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	mem := userMember.MergeChatMember()
 
+	titleSuccessMsg, titleSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".title.success_set")
+	if titleSuccessErr != nil {
+		log.Errorf("[admin] missing translation for title.success_set: %v", titleSuccessErr)
+		titleSuccessMsg = "Successfully set %s's admin title to <b>%s</b>"
+	}
 	_, err = msg.Reply(b,
-		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".title.success_set"), mem.User.FirstName, mem.CustomTitle),
+		fmt.Sprintf(titleSuccessMsg, mem.User.FirstName, mem.CustomTitle),
 		helpers.Shtml(),
 	)
 	if err != nil {
@@ -534,9 +613,19 @@ func (m moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if len(args) == 1 {
 		if adminSettings.AnonAdmin {
-			text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".anon_admin.enabled"), chat.Title)
+			anonEnabledMsg, anonEnabledErr := tr.GetStringWithError("strings." + m.moduleName + ".anon_admin.enabled")
+			if anonEnabledErr != nil {
+				log.Errorf("[admin] missing translation for anon_admin.enabled: %v", anonEnabledErr)
+				anonEnabledMsg = "AnonAdmin mode is currently <b>enabled</b> for %s.\n\nThis allows all anonymous admin to perform admin actions without restriction."
+			}
+			text = fmt.Sprintf(anonEnabledMsg, chat.Title)
 		} else {
-			text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".anon_admin.disabled"), chat.Title)
+			anonDisabledMsg, anonDisabledErr := tr.GetStringWithError("strings." + m.moduleName + ".anon_admin.disabled")
+			if anonDisabledErr != nil {
+				log.Errorf("[admin] missing translation for anon_admin.disabled: %v", anonDisabledErr)
+				anonDisabledMsg = "AnonAdmin mode is currently <b>disabled</b> for %s.\n\nThis requires anonymous admins to press a button to confirm their permissions."
+			}
+			text = fmt.Sprintf(anonDisabledMsg, chat.Title)
 		}
 	} else {
 		// only need owner if you want to change value
@@ -546,20 +635,45 @@ func (m moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 		switch args[1] {
 		case "on", "true", "yes":
 			if adminSettings.AnonAdmin {
-				text = tr.GetString("strings." + m.moduleName + ".anon_admin.already_enabled")
+				anonAlreadyEnabledMsg, anonAlreadyEnabledErr := tr.GetStringWithError("strings." + m.moduleName + ".anon_admin.already_enabled")
+				if anonAlreadyEnabledErr != nil {
+					log.Errorf("[admin] missing translation for anon_admin.already_enabled: %v", anonAlreadyEnabledErr)
+					anonAlreadyEnabledMsg = "AnonAdmin mode is already <b>enabled</b> for %s"
+				}
+				text = anonAlreadyEnabledMsg
 			} else {
 				go db.SetAnonAdminMode(chat.Id, true)
-				text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".anon_admin.enabled_now"), chat.Title)
+				anonEnabledNowMsg, anonEnabledNowErr := tr.GetStringWithError("strings." + m.moduleName + ".anon_admin.enabled_now")
+				if anonEnabledNowErr != nil {
+					log.Errorf("[admin] missing translation for anon_admin.enabled_now: %v", anonEnabledNowErr)
+					anonEnabledNowMsg = "AnonAdmin mode is now <b>enabled</b> for %s.\n\nFrom now onwards, I will ask the admins to verify permissions from anonymous admins."
+				}
+				text = fmt.Sprintf(anonEnabledNowMsg, chat.Title)
 			}
 		case "off", "no", "false":
 			if !adminSettings.AnonAdmin {
-				text = tr.GetString("strings." + m.moduleName + ".anon_admin.already_disabled")
+				anonAlreadyDisabledMsg, anonAlreadyDisabledErr := tr.GetStringWithError("strings." + m.moduleName + ".anon_admin.already_disabled")
+				if anonAlreadyDisabledErr != nil {
+					log.Errorf("[admin] missing translation for anon_admin.already_disabled: %v", anonAlreadyDisabledErr)
+					anonAlreadyDisabledMsg = "AnonAdmin mode is already <b>disabled</b> for %s"
+				}
+				text = anonAlreadyDisabledMsg
 			} else {
 				go db.SetAnonAdminMode(chat.Id, false)
-				text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".anon_admin.disabled_now"), chat.Title)
+				anonDisabledNowMsg, anonDisabledNowErr := tr.GetStringWithError("strings." + m.moduleName + ".anon_admin.disabled_now")
+				if anonDisabledNowErr != nil {
+					log.Errorf("[admin] missing translation for anon_admin.disabled_now: %v", anonDisabledNowErr)
+					anonDisabledNowMsg = "AnonAdmin mode is now <b>disabled</b> for %s.\n\nFrom now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins."
+				}
+				text = fmt.Sprintf(anonDisabledNowMsg, chat.Title)
 			}
 		default:
-			text = tr.GetString("strings." + m.moduleName + ".anon_admin.invalid_arg")
+			anonInvalidArgMsg, anonInvalidArgErr := tr.GetStringWithError("strings." + m.moduleName + ".anon_admin.invalid_arg")
+			if anonInvalidArgErr != nil {
+				log.Errorf("[admin] missing translation for anon_admin.invalid_arg: %v", anonInvalidArgErr)
+				anonInvalidArgMsg = "Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>"
+			}
+			text = anonInvalidArgMsg
 		}
 	}
 

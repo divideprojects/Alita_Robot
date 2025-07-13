@@ -55,8 +55,14 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		err        error
 	)
 
+	// if user is replying to his own message
 	if msg.ReplyToMessage.From.Id == user.Id {
-		_, _ = msg.Reply(b, tr.GetString("strings.Reports.you_can_t_report_your_own_message"), nil)
+		cantReportOwnMsg, cantReportOwnErr := tr.GetStringWithError("strings.Reports.you_can_t_report_your_own_message")
+		if cantReportOwnErr != nil {
+			log.Errorf("[reports] missing translation for key: %v", cantReportOwnErr)
+			cantReportOwnMsg = "You can't report your own message!"
+		}
+		_, _ = msg.Reply(b, cantReportOwnMsg, nil)
 		return ext.EndGroups
 	}
 
@@ -79,17 +85,32 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	if user.Id == 1087968824|777000|136817688 {
-		_, _ = msg.Reply(b, tr.GetString("strings.Reports.you_need_to_expose_yourself_first"), nil)
+	rptUser := msg.ReplyToMessage.From
+	if rptUser.IsBot {
+		needExposeMsg, needExposeErr := tr.GetStringWithError("strings.Reports.you_need_to_expose_yourself_first")
+		if needExposeErr != nil {
+			log.Errorf("[reports] missing translation for key: %v", needExposeErr)
+			needExposeMsg = "You need to expose yourself first!"
+		}
+		_, _ = msg.Reply(b, needExposeMsg, nil)
 		return ext.EndGroups
-	}
-	if msg.ReplyToMessage.From.Id == 1087968824|777000|136817688 {
-		_, _ = msg.Reply(b, tr.GetString("strings.Reports.it_s_a_special_account_of_telegram"), nil)
+	} else if rptUser.Id == 777000 {
+		specialAccountMsg, specialAccountErr := tr.GetStringWithError("strings.Reports.it_s_a_special_account_of_telegram")
+		if specialAccountErr != nil {
+			log.Errorf("[reports] missing translation for key: %v", specialAccountErr)
+			specialAccountMsg = "It's a special account of telegram!"
+		}
+		_, _ = msg.Reply(b, specialAccountMsg, nil)
 		return ext.EndGroups
 	}
 
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-		_, err := msg.Reply(b, tr.GetString("strings.Reports.you_re_an_admin_whom_will_i_report_your_issues_to"), helpers.Shtml())
+		adminReportMsg, adminReportErr := tr.GetStringWithError("strings.Reports.you_re_an_admin_whom_will_i_report_your_issues_to")
+		if adminReportErr != nil {
+			log.Errorf("[reports] missing translation for key: %v", adminReportErr)
+			adminReportMsg = "You're an admin, whom will I report your issues to?"
+		}
+		_, err := msg.Reply(b, adminReportMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -115,15 +136,24 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	reportedMsgId := msg.ReplyToMessage.MessageId
 
 	if reportedUser.Id == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings.Reports.why_would_i_report_myself"), helpers.Shtml())
+		whyReportMyselfMsg, whyReportMyselfErr := tr.GetStringWithError("strings.Reports.why_would_i_report_myself")
+		if whyReportMyselfErr != nil {
+			log.Errorf("[reports] missing translation for key: %v", whyReportMyselfErr)
+			whyReportMyselfMsg = "Why would I report myself?"
+		}
+		_, err := msg.Reply(b, whyReportMyselfMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
-	}
-	if string_handling.FindInInt64Slice(adminArray, reportedUser.Id) {
-		_, err := msg.Reply(b, tr.GetString("strings.Reports.why_would_i_report_an_admin"), helpers.Shtml())
+	} else if string_handling.FindInInt64Slice(adminArray, rptUser.Id) {
+		whyReportAdminMsg, whyReportAdminErr := tr.GetStringWithError("strings.Reports.why_would_i_report_an_admin")
+		if whyReportAdminErr != nil {
+			log.Errorf("[reports] missing translation for key: %v", whyReportAdminErr)
+			whyReportAdminMsg = "Why would I report an admin?"
+		}
+		_, err := msg.Reply(b, whyReportAdminMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

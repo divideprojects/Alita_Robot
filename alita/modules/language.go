@@ -13,6 +13,7 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
@@ -23,12 +24,20 @@ var languagesModule = moduleStruct{
 }
 
 func (m moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
+	tr := i18n.New("en") // Use default language for this function
 	keyboard := helpers.MakeLanguageKeyboard(m.cfg)
+
+	helpTranslateText, helpTranslateErr := tr.GetStringWithError("strings.Languages.help_translate_button")
+	if helpTranslateErr != nil {
+		log.Errorf("[languages] missing translation for Languages.help_translate_button: %v", helpTranslateErr)
+		helpTranslateText = "Help Translate"
+	}
+
 	keyboard = append(
 		keyboard,
 		[]gotgbot.InlineKeyboardButton{
 			{
-				Text: tr.GetString("strings.Languages.help_translate_button"),
+				Text: helpTranslateText,
 				Url:  "https://crowdin.com/project/alita_robot",
 			},
 		},

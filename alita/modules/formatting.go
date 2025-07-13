@@ -1,7 +1,6 @@
 package modules
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -43,16 +42,27 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 		if msg.ReplyToMessage != nil {
 			reply = msg.ReplyToMessage.Reply
 		}
+		markdownHelpMsg, markdownHelpErr := tr.GetStringWithError("strings.Formatting.markdown_help")
+		if markdownHelpErr != nil {
+			log.Errorf("[formatting] missing translation for key: %v", markdownHelpErr)
+			markdownHelpMsg = "You can use markdown in your messages. This allows for more expressive formatting."
+		}
+
+		backButtonMsg, backButtonErr := tr.GetStringWithError("strings.CommonStrings.buttons.back")
+		if backButtonErr != nil {
+			log.Errorf("[formatting] missing translation for key: %v", backButtonErr)
+			backButtonMsg = "Back"
+		}
+
 		_, err := reply(b,
-			"Press the button below to get Markdown Help!",
+			markdownHelpMsg,
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
 							{
-								Text: tr.GetString("strings.Formatting.markdown_help"),
-								Url:  fmt.Sprintf("https://t.me/%s?start=help_formatting", b.Username),
+								Text: backButtonMsg, CallbackData: "helpq.Help",
 							},
 						},
 					},
@@ -66,13 +76,55 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else {
 
 		// Keyboard for markdown help menu
-		Mkdkb := append(m.genFormattingKb(),
-			[]gotgbot.InlineKeyboardButton{
+		markdownFormattingMsg, markdownFormattingErr := tr.GetStringWithError("strings.Formatting.markdown_formatting")
+		if markdownFormattingErr != nil {
+			log.Errorf("[formatting] missing translation for key: %v", markdownFormattingErr)
+			markdownFormattingMsg = "Markdown Formatting"
+		}
+
+		fillingsMsg, fillingsErr := tr.GetStringWithError("strings.Formatting.fillings")
+		if fillingsErr != nil {
+			log.Errorf("[formatting] missing translation for key: %v", fillingsErr)
+			fillingsMsg = "Fillings"
+		}
+
+		randomContentMsg, randomContentErr := tr.GetStringWithError("strings.Formatting.random_content")
+		if randomContentErr != nil {
+			log.Errorf("[formatting] missing translation for key: %v", randomContentErr)
+			randomContentMsg = "Random Content"
+		}
+
+		backButtonMsg, backButtonErr := tr.GetStringWithError("strings.CommonStrings.buttons.back")
+		if backButtonErr != nil {
+			log.Errorf("[formatting] missing translation for key: %v", backButtonErr)
+			backButtonMsg = "Back"
+		}
+
+		keyboard := gotgbot.InlineKeyboardMarkup{
+			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 				{
-					Text: tr.GetString("strings.CommonStrings.buttons.back"), CallbackData: "helpq.Help",
+					{
+						Text:         markdownFormattingMsg,
+						CallbackData: "helpq.Formatting.Markdown",
+					},
+				},
+				{
+					{
+						Text:         fillingsMsg,
+						CallbackData: "helpq.Formatting.Fillings",
+					},
+				},
+				{
+					{
+						Text:         randomContentMsg,
+						CallbackData: "helpq.Formatting.Random",
+					},
+				},
+				{
+					{Text: backButtonMsg, CallbackData: "helpq.Formatting"},
 				},
 			},
-		)
+		}
 
 		_, err := msg.Reply(b,
 			// help.HELPABLE[ModName],
@@ -81,9 +133,7 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 			"Alita supports a large number of formatting options to make your messages more expressive. Take a look!",
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
-				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
-					InlineKeyboard: Mkdkb,
-				},
+				ReplyMarkup: keyboard,
 			},
 		)
 		if err != nil {
@@ -100,31 +150,27 @@ genFormattingKb generates the inline keyboard for formatting help options.
 
 Returns a keyboard with buttons for markdown, fillings, and random content.
 */
-func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
-	fxt := "formatting.%s"
-
-	keyboard := [][]gotgbot.InlineKeyboardButton{
-		make([]gotgbot.InlineKeyboardButton, 2),
-		make([]gotgbot.InlineKeyboardButton, 1),
+func (m moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
+	return [][]gotgbot.InlineKeyboardButton{
+		{
+			{
+				Text:         "Markdown Formatting",
+				CallbackData: "helpq.Formatting.Markdown",
+			},
+		},
+		{
+			{
+				Text:         "Fillings",
+				CallbackData: "helpq.Formatting.Fillings",
+			},
+		},
+		{
+			{
+				Text:         "Random Content",
+				CallbackData: "helpq.Formatting.Random",
+			},
+		},
 	}
-
-	// First row
-	keyboard[0][0] = gotgbot.InlineKeyboardButton{
-		Text:         tr.GetString("strings.Formatting.markdown_formatting"),
-		CallbackData: fmt.Sprintf(fxt, "md_formatting"),
-	}
-	keyboard[0][1] = gotgbot.InlineKeyboardButton{
-		Text:         tr.GetString("strings.Formatting.fillings"),
-		CallbackData: fmt.Sprintf(fxt, "fillings"),
-	}
-
-	// Second Row
-	keyboard[1][0] = gotgbot.InlineKeyboardButton{
-		Text:         tr.GetString("strings.Formatting.random_content"),
-		CallbackData: fmt.Sprintf(fxt, "random"),
-	}
-
-	return keyboard
 }
 
 /*
@@ -132,16 +178,31 @@ getMarkdownHelp returns the help text for a given formatting sub-module.
 
 Supports markdown formatting, fillings, and random content.
 */
-func (moduleStruct) getMarkdownHelp(module string, ctx *ext.Context) string {
-	tr := i18n.New(db.GetLanguage(ctx))
+func (m moduleStruct) getFormattingHelp(formattingType string, tr *i18n.I18n) string {
 	var helpTxt string
-	switch module {
-	case "md_formatting":
-		helpTxt = tr.GetString("strings.Formatting.Markdown")
-	case "fillings":
-		helpTxt = tr.GetString("strings.Formatting.Fillings")
-	case "random":
-		helpTxt = tr.GetString("strings.Formatting.Random")
+
+	switch formattingType {
+	case "Markdown":
+		markdownMsg, markdownErr := tr.GetStringWithError("strings.Formatting.Markdown")
+		if markdownErr != nil {
+			log.Errorf("[formatting] missing translation for key: %v", markdownErr)
+			markdownMsg = "Markdown formatting help"
+		}
+		helpTxt = markdownMsg
+	case "Fillings":
+		fillingsMsg, fillingsErr := tr.GetStringWithError("strings.Formatting.Fillings")
+		if fillingsErr != nil {
+			log.Errorf("[formatting] missing translation for key: %v", fillingsErr)
+			fillingsMsg = "Fillings help"
+		}
+		helpTxt = fillingsMsg
+	case "Random":
+		randomMsg, randomErr := tr.GetStringWithError("strings.Formatting.Random")
+		if randomErr != nil {
+			log.Errorf("[formatting] missing translation for key: %v", randomErr)
+			randomMsg = "Random content help"
+		}
+		helpTxt = randomMsg
 	}
 	return helpTxt
 }
@@ -152,26 +213,30 @@ formattingHandler handles callback queries for formatting help sub-modules.
 Edits the help message to display the selected formatting topic.
 */
 func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	tr := i18n.New(db.GetLanguage(ctx))
 	query := ctx.Update.CallbackQuery
-	msg := query.Message
+	tr := i18n.New(db.GetLanguage(ctx))
+	args := strings.SplitN(query.Data, ".", 3)
+	module := strings.ToLower(args[2])
 
-	// Get the sub-module
-	module := strings.Split(query.Data, ".")[1]
+	helpTxt := m.getFormattingHelp(module, tr)
 
-	// Edit the help as per sub-module selected in markdownhelp
-	_, _, err := msg.EditText(b,
-		m.getMarkdownHelp(module, ctx),
+	backButtonMsg, backButtonErr := tr.GetStringWithError("strings.CommonStrings.buttons.back")
+	if backButtonErr != nil {
+		log.Errorf("[formatting] missing translation for key: %v", backButtonErr)
+		backButtonMsg = "Back"
+	}
+
+	_, _, err := query.Message.EditText(b,
+		helpTxt,
 		&gotgbot.EditMessageTextOpts{
-			MessageId: msg.GetMessageId(),
+			ParseMode: helpers.HTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: tr.GetString("strings.CommonStrings.buttons.back"), CallbackData: "helpq.Formatting"},
+						{Text: backButtonMsg, CallbackData: "helpq.Formatting"},
 					},
 				},
 			},
-			ParseMode: helpers.HTML,
 		},
 	)
 	if err != nil {
@@ -179,7 +244,7 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 		return err
 	}
 
-	_, err = query.Answer(b, nil)
+	_, err = query.Answer(b, &gotgbot.AnswerCallbackQueryOpts{})
 	if err != nil {
 		log.Error(err)
 		return err

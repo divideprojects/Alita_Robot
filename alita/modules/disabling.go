@@ -63,7 +63,12 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toDisable = append(toDisable, i)
-				_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Disabling.success")+
+				successMsg, successErr := tr.GetStringWithError("strings.Disabling.success")
+				if successErr != nil {
+					log.Errorf("[disabling] missing translation for key: %v", successErr)
+					successMsg = "Disabled the use of the following in this chat:"
+				}
+				_, err := msg.Reply(b, fmt.Sprintf(successMsg+
 					"%s",
 					strings.Join(toDisable, "\n - ")),
 					helpers.Smarkdown())
@@ -86,7 +91,12 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, tr.GetString("strings.Disabling.enable.errors.no_command_specified"), helpers.Shtml())
+		noCommandMsg, noCommandErr := tr.GetStringWithError("strings.Disabling.enable.errors.no_command_specified")
+		if noCommandErr != nil {
+			log.Errorf("[disabling] missing translation for key: %v", noCommandErr)
+			noCommandMsg = "You haven't specified a command to disable."
+		}
+		_, err := msg.Reply(b, noCommandMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -227,7 +237,12 @@ func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.ToggleDel(chat.Id, false)
 			text = "Disabled messages will no longer be deleted."
 		default:
-			text = tr.GetString("strings.CommonStrings.errors.invalid_option_yes_no")
+			invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.CommonStrings.errors.invalid_option_yes_no")
+			if invalidOptionErr != nil {
+				log.Errorf("[disabling] missing translation for key: %v", invalidOptionErr)
+				invalidOptionMsg = "Please give me a valid option from <yes/on/no/off>"
+			}
+			text = invalidOptionMsg
 		}
 	} else {
 		currStatus := db.ShouldDel(chat.Id)
@@ -278,7 +293,12 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toEnable = append(toEnable, i)
-				_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Disabling.enable.success")+
+				enableSuccessMsg, enableSuccessErr := tr.GetStringWithError("strings.Disabling.enable.success")
+				if enableSuccessErr != nil {
+					log.Errorf("[disabling] missing translation for key: %v", enableSuccessErr)
+					enableSuccessMsg = "Re-Enabled the use of the following in this chat:"
+				}
+				_, err := msg.Reply(b, fmt.Sprintf(enableSuccessMsg+
 					"%s",
 					strings.Join(toEnable, "\n - ")),
 					helpers.Smarkdown())
@@ -301,7 +321,12 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, tr.GetString("strings.Disabling.enable.errors.no_command_specified"), helpers.Shtml())
+		noCommandMsg, noCommandErr := tr.GetStringWithError("strings.Disabling.enable.errors.no_command_specified")
+		if noCommandErr != nil {
+			log.Errorf("[disabling] missing translation for key: %v", noCommandErr)
+			noCommandMsg = "You haven't specified a command to disable."
+		}
+		_, err := msg.Reply(b, noCommandMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

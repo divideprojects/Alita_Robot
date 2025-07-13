@@ -201,10 +201,15 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.ContinueGroups
 		}
 		fmode = "muted"
+		unmuteAdminsOnlyMsg, unmuteAdminsOnlyErr := tr.GetStringWithError("strings.Antiflood.unmute_admins_only")
+		if unmuteAdminsOnlyErr != nil {
+			log.Errorf("[antiflood] missing translation for unmute_admins_only: %v", unmuteAdminsOnlyErr)
+			unmuteAdminsOnlyMsg = "Unmute (Admins Only)"
+		}
 		keyboard = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         tr.GetString("strings.Antiflood.unmute_admins_only"),
+					Text:         unmuteAdminsOnlyMsg,
 					CallbackData: fmt.Sprintf("unrestrict.unmute.%d", user.Id()),
 				},
 			},
@@ -261,10 +266,15 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 		} else {
+			unbanAdminsOnlyMsg, unbanAdminsOnlyErr := tr.GetStringWithError("strings.Antiflood.unban_admins_only")
+			if unbanAdminsOnlyErr != nil {
+				log.Errorf("[antiflood] missing translation for unban_admins_only: %v", unbanAdminsOnlyErr)
+				unbanAdminsOnlyMsg = "Unban (Admins Only)"
+			}
 			keyboard = [][]gotgbot.InlineKeyboardButton{
 				{
 					{
-						Text:         tr.GetString("strings.Antiflood.unban_admins_only"),
+						Text:         unbanAdminsOnlyMsg,
 						CallbackData: fmt.Sprintf("unrestrict.unban.%d", user.Id()),
 					},
 				},
@@ -276,8 +286,13 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	}
+	performActionMsg, performActionErr := tr.GetStringWithError("strings." + m.moduleName + ".checkflood.perform_action")
+	if performActionErr != nil {
+		log.Errorf("[antiflood] missing translation for checkflood.perform_action: %v", performActionErr)
+		performActionMsg = "Yeah, I don't like your flooding. %s has been %s!"
+	}
 	if _, err := b.SendMessage(chat.Id,
-		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".checkflood.perform_action"), helpers.MentionHtml(userId, user.Name()), fmode),
+		fmt.Sprintf(performActionMsg, helpers.MentionHtml(userId, user.Name()), fmode),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -313,21 +328,46 @@ func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	var replyText string
 
 	if len(args) == 0 {
-		replyText = tr.GetString("strings." + m.moduleName + ".errors.expected_args")
+		expectedArgsMsg, expectedArgsErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.expected_args")
+		if expectedArgsErr != nil {
+			log.Errorf("[antiflood] missing translation for errors.expected_args: %v", expectedArgsErr)
+			expectedArgsMsg = "I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`"
+		}
+		replyText = expectedArgsMsg
 	} else {
 		if string_handling.FindInStringSlice([]string{"off", "no", "false", "0"}, strings.ToLower(args[0])) {
-			replyText = tr.GetString("strings." + m.moduleName + ".setflood.disabled")
+			setfloodDisabledMsg, setfloodDisabledErr := tr.GetStringWithError("strings." + m.moduleName + ".setflood.disabled")
+			if setfloodDisabledErr != nil {
+				log.Errorf("[antiflood] missing translation for setflood.disabled: %v", setfloodDisabledErr)
+				setfloodDisabledMsg = "Okay.\nI won't warn users for flooding."
+			}
+			replyText = setfloodDisabledMsg
 			go db.SetFlood(chat.Id, 0)
 		} else {
 			num, err := strconv.Atoi(args[0])
 			if err != nil {
-				replyText = tr.GetString("strings." + m.moduleName + ".errors.invalid_int")
+				invalidIntMsg, invalidIntErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.invalid_int")
+				if invalidIntErr != nil {
+					log.Errorf("[antiflood] missing translation for errors.invalid_int: %v", invalidIntErr)
+					invalidIntMsg = "That's not a valid integer. Please give me a valid integer, or `off`."
+				}
+				replyText = invalidIntMsg
 			} else {
 				if num < 3 || num > 100 {
-					replyText = tr.GetString("strings." + m.moduleName + ".errors.set_in_limit")
+					setInLimitMsg, setInLimitErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.set_in_limit")
+					if setInLimitErr != nil {
+						log.Errorf("[antiflood] missing translation for errors.set_in_limit: %v", setInLimitErr)
+						setInLimitMsg = "The antiflood limit has to be set between 3 and 100."
+					}
+					replyText = setInLimitMsg
 				} else {
 					go db.SetFlood(chat.Id, num)
-					replyText = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".setflood.success"), num)
+					setfloodSuccessMsg, setfloodSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".setflood.success")
+					if setfloodSuccessErr != nil {
+						log.Errorf("[antiflood] missing translation for setflood.success: %v", setfloodSuccessErr)
+						setfloodSuccessMsg = "Flood Limit has been set to <b>%d</b> messages."
+					}
+					replyText = fmt.Sprintf(setfloodSuccessMsg, num)
 				}
 			}
 		}
@@ -367,7 +407,12 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	flood := db.GetFlood(chat.Id)
 	if flood.Limit == 0 {
-		text = tr.GetString("strings." + m.moduleName + ".flood.disabled")
+		floodDisabledMsg, floodDisabledErr := tr.GetStringWithError("strings." + m.moduleName + ".flood.disabled")
+		if floodDisabledErr != nil {
+			log.Errorf("[antiflood] missing translation for flood.disabled: %v", floodDisabledErr)
+			floodDisabledMsg = "This chat is not currently enforcing flood control."
+		}
+		text = floodDisabledMsg
 	} else {
 		var mode string
 		switch flood.Mode {
@@ -378,7 +423,12 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 		case "kick":
 			mode = "kicked"
 		}
-		text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".flood.show_settings"), flood.Limit, mode)
+		showSettingsMsg, showSettingsErr := tr.GetStringWithError("strings." + m.moduleName + ".flood.show_settings")
+		if showSettingsErr != nil {
+			log.Errorf("[antiflood] missing translation for flood.show_settings: %v", showSettingsErr)
+			showSettingsMsg = "This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s."
+		}
+		text = fmt.Sprintf(showSettingsMsg, flood.Limit, mode)
 	}
 	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
@@ -407,20 +457,35 @@ func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	if len(args) > 0 {
 		selectedMode := strings.ToLower(args[0])
 		if string_handling.FindInStringSlice([]string{"ban", "kick", "mute"}, selectedMode) {
-			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings."+m.moduleName+".setfloodmode.success"), selectedMode), helpers.Shtml())
+			setfloodmodeSuccessMsg, setfloodmodeSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".setfloodmode.success")
+			if setfloodmodeSuccessErr != nil {
+				log.Errorf("[antiflood] missing translation for setfloodmode.success: %v", setfloodmodeSuccessErr)
+				setfloodmodeSuccessMsg = "Flood mode has been set to %s."
+			}
+			_, err := msg.Reply(b, fmt.Sprintf(setfloodmodeSuccessMsg, selectedMode), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 			}
 			go db.SetFloodMode(chat.Id, selectedMode)
 			return ext.EndGroups
 		} else {
-			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings."+m.moduleName+".setfloodmode.unknown_type"), args[0]), helpers.Shtml())
+			unknownTypeMsg, unknownTypeErr := tr.GetStringWithError("strings." + m.moduleName + ".setfloodmode.unknown_type")
+			if unknownTypeErr != nil {
+				log.Errorf("[antiflood] missing translation for setfloodmode.unknown_type: %v", unknownTypeErr)
+				unknownTypeMsg = "Unknown type '%s'. Please use one of: ban/kick/mute"
+			}
+			_, err := msg.Reply(b, fmt.Sprintf(unknownTypeMsg, args[0]), helpers.Shtml())
 			if err != nil {
 				return err
 			}
 		}
 	} else {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".setfloodmode.specify_action"), helpers.Smarkdown())
+		specifyActionMsg, specifyActionErr := tr.GetStringWithError("strings." + m.moduleName + ".setfloodmode.specify_action")
+		if specifyActionErr != nil {
+			log.Errorf("[antiflood] missing translation for setfloodmode.specify_action: %v", specifyActionErr)
+			specifyActionMsg = "You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`"
+		}
+		_, err := msg.Reply(b, specifyActionMsg, helpers.Smarkdown())
 		if err != nil {
 			return err
 		}
@@ -451,19 +516,44 @@ func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 		switch selectedMode {
 		case "on", "yes":
 			go db.SetFloodMsgDel(chat.Id, true)
-			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.enabled")
+			floodDeleterEnabledMsg, floodDeleterEnabledErr := tr.GetStringWithError("strings." + m.moduleName + ".flood_deleter.enabled")
+			if floodDeleterEnabledErr != nil {
+				log.Errorf("[antiflood] missing translation for flood_deleter.enabled: %v", floodDeleterEnabledErr)
+				floodDeleterEnabledMsg = "Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!"
+			}
+			text = floodDeleterEnabledMsg
 		case "off", "no":
 			go db.SetFloodMsgDel(chat.Id, true)
-			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.disabled")
+			floodDeleterDisabledMsg, floodDeleterDisabledErr := tr.GetStringWithError("strings." + m.moduleName + ".flood_deleter.disabled")
+			if floodDeleterDisabledErr != nil {
+				log.Errorf("[antiflood] missing translation for flood_deleter.disabled: %v", floodDeleterDisabledErr)
+				floodDeleterDisabledMsg = "Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!"
+			}
+			text = floodDeleterDisabledMsg
 		default:
-			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.invalid_option")
+			floodDeleterInvalidMsg, floodDeleterInvalidErr := tr.GetStringWithError("strings." + m.moduleName + ".flood_deleter.invalid_option")
+			if floodDeleterInvalidErr != nil {
+				log.Errorf("[antiflood] missing translation for flood_deleter.invalid_option: %v", floodDeleterInvalidErr)
+				floodDeleterInvalidMsg = "I only understand an option from: `yes`/`no`/`on`/`off`"
+			}
+			text = floodDeleterInvalidMsg
 		}
 	} else {
 		currSet := db.GetFlood(chat.Id).DeleteAntifloodMessage
 		if currSet {
-			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.already_enabled")
+			floodDeleterAlreadyEnabledMsg, floodDeleterAlreadyEnabledErr := tr.GetStringWithError("strings." + m.moduleName + ".flood_deleter.already_enabled")
+			if floodDeleterAlreadyEnabledErr != nil {
+				log.Errorf("[antiflood] missing translation for flood_deleter.already_enabled: %v", floodDeleterAlreadyEnabledErr)
+				floodDeleterAlreadyEnabledMsg = "Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!"
+			}
+			text = floodDeleterAlreadyEnabledMsg
 		} else {
-			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.already_disabled")
+			floodDeleterAlreadyDisabledMsg, floodDeleterAlreadyDisabledErr := tr.GetStringWithError("strings." + m.moduleName + ".flood_deleter.already_disabled")
+			if floodDeleterAlreadyDisabledErr != nil {
+				log.Errorf("[antiflood] missing translation for flood_deleter.already_disabled: %v", floodDeleterAlreadyDisabledErr)
+				floodDeleterAlreadyDisabledMsg = "Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!"
+			}
+			text = floodDeleterAlreadyDisabledMsg
 		}
 	}
 	_, err := msg.Reply(b, text, helpers.Smarkdown())

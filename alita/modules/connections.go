@@ -63,7 +63,12 @@ func (m moduleStruct) connection(b *gotgbot.Bot, ctx *ext.Context) error {
 		log.Error(err)
 		return err
 	}
-	_text := fmt.Sprintf(tr.GetString("strings."+m.moduleName+".connected"), chat.Title)
+	connectedMsg, connectedErr := tr.GetStringWithError("strings." + m.moduleName + ".connected")
+	if connectedErr != nil {
+		log.Errorf("[connections] missing translation for connected: %v", connectedErr)
+		connectedMsg = "You are currently connected to <b>%s</b>!"
+	}
+	_text := fmt.Sprintf(connectedMsg, chat.Title)
 	connKeyboard := helpers.InitButtons(b, chat.Id, user.Id)
 	_, err = msg.Reply(b,
 		_text,
@@ -110,10 +115,20 @@ func (m moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		toogleOption := args[1]
 		switch toogleOption {
 		case "on", "true", "yes":
-			text = tr.GetString("strings." + m.moduleName + ".allow_connect.turned_on")
+			allowConnectTurnedOnMsg, allowConnectTurnedOnErr := tr.GetStringWithError("strings." + m.moduleName + ".allow_connect.turned_on")
+			if allowConnectTurnedOnErr != nil {
+				log.Errorf("[connections] missing translation for allow_connect.turned_on: %v", allowConnectTurnedOnErr)
+				allowConnectTurnedOnMsg = "Turned <b>on</b> User connections to this chat!\nUsers can now connect chat to their PMs!"
+			}
+			text = allowConnectTurnedOnMsg
 			go db.ToggleAllowConnect(chat.Id, true)
 		case "off", "false", "no":
-			text = tr.GetString("strings." + m.moduleName + ".allow_connect.turned_off")
+			allowConnectTurnedOffMsg, allowConnectTurnedOffErr := tr.GetStringWithError("strings." + m.moduleName + ".allow_connect.turned_off")
+			if allowConnectTurnedOffErr != nil {
+				log.Errorf("[connections] missing translation for allow_connect.turned_off: %v", allowConnectTurnedOffErr)
+				allowConnectTurnedOffMsg = "Turned <b>off</b> User connections to this chat!\nUsers can't connect chat to their PM's!"
+			}
+			text = allowConnectTurnedOffMsg
 			go db.ToggleAllowConnect(chat.Id, false)
 		default:
 			text = "Please give me a vaid option from <yes/on/no/off>"
@@ -121,9 +136,19 @@ func (m moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else {
 		currSetting := db.GetChatConnectionSetting(chat.Id).AllowConnect
 		if currSetting {
-			text = tr.GetString("strings." + m.moduleName + ".allow_connect.currently_on")
+			allowConnectCurrentlyOnMsg, allowConnectCurrentlyOnErr := tr.GetStringWithError("strings." + m.moduleName + ".allow_connect.currently_on")
+			if allowConnectCurrentlyOnErr != nil {
+				log.Errorf("[connections] missing translation for allow_connect.currently_on: %v", allowConnectCurrentlyOnErr)
+				allowConnectCurrentlyOnMsg = "User connections are currently turned <b>on</b>.\nUsers can connect this chat to their PMs!"
+			}
+			text = allowConnectCurrentlyOnMsg
 		} else {
-			text = tr.GetString("strings." + m.moduleName + ".allow_connect.currently_off")
+			allowConnectCurrentlyOffMsg, allowConnectCurrentlyOffErr := tr.GetStringWithError("strings." + m.moduleName + ".allow_connect.currently_off")
+			if allowConnectCurrentlyOffErr != nil {
+				log.Errorf("[connections] missing translation for allow_connect.currently_off: %v", allowConnectCurrentlyOffErr)
+				allowConnectCurrentlyOffMsg = "User connections are currently turned <b>off</b>.\nUsers can't connect this chat to their PMs!"
+			}
+			text = allowConnectCurrentlyOffMsg
 		}
 	}
 
@@ -163,22 +188,47 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		if !db.GetChatConnectionSetting(chat.Id).AllowConnect && !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			text = tr.GetString("strings." + m.moduleName + ".connect.connection_disabled")
+			connectionDisabledMsg, connectionDisabledErr := tr.GetStringWithError("strings." + m.moduleName + ".connect.connection_disabled")
+			if connectionDisabledErr != nil {
+				log.Errorf("[connections] missing translation for connect.connection_disabled: %v", connectionDisabledErr)
+				connectionDisabledMsg = "User connections are currently <b>disabled</b> to this chat.\nPlease ask admins to allow if you want to connect!"
+			}
+			text = connectionDisabledMsg
 		} else {
 			go db.ConnectId(user.Id, chat.Id)
-			text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".connect.connected"), chat.Title)
+			connectConnectedMsg, connectConnectedErr := tr.GetStringWithError("strings." + m.moduleName + ".connect.connected")
+			if connectConnectedErr != nil {
+				log.Errorf("[connections] missing translation for connect.connected: %v", connectConnectedErr)
+				connectConnectedMsg = "You are now connected to <b>%s</b>!"
+			}
+			text = fmt.Sprintf(connectConnectedMsg, chat.Title)
 			replyMarkup = helpers.InitButtons(b, chat.Id, user.Id)
 		}
 	} else {
 		if !db.GetChatConnectionSetting(chat.Id).AllowConnect && !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			text = tr.GetString("strings." + m.moduleName + ".connect.connection_disabled")
+			connectionDisabledMsg2, connectionDisabledErr2 := tr.GetStringWithError("strings." + m.moduleName + ".connect.connection_disabled")
+			if connectionDisabledErr2 != nil {
+				log.Errorf("[connections] missing translation for connect.connection_disabled: %v", connectionDisabledErr2)
+				connectionDisabledMsg2 = "User connections are currently <b>disabled</b> to this chat.\nPlease ask admins to allow if you want to connect!"
+			}
+			text = connectionDisabledMsg2
 		} else {
-			text = tr.GetString("strings." + m.moduleName + ".connect.tap_btn_connect")
+			tapBtnConnectMsg, tapBtnConnectErr := tr.GetStringWithError("strings." + m.moduleName + ".connect.tap_btn_connect")
+			if tapBtnConnectErr != nil {
+				log.Errorf("[connections] missing translation for connect.tap_btn_connect: %v", tapBtnConnectErr)
+				tapBtnConnectMsg = "Please press the button below to connect this chat to your PM."
+			}
+			text = tapBtnConnectMsg
+			connectToChatButtonMsg, connectToChatButtonErr := tr.GetStringWithError("strings.Connections.connect_to_chat_button")
+			if connectToChatButtonErr != nil {
+				log.Errorf("[connections] missing translation for connect_to_chat_button: %v", connectToChatButtonErr)
+				connectToChatButtonMsg = "Connect to chat"
+			}
 			replyMarkup = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: tr.GetString("strings.Connections.connect_to_chat_button"),
+							Text: connectToChatButtonMsg,
 							Url:  fmt.Sprintf("https://t.me/%s?start=connect_%d", b.Username, chat.Id),
 						},
 					},
@@ -217,13 +267,18 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 	args := strings.Split(query.Data, ".")
 	userType := args[1]
 
+	backButtonMsg, backButtonErr := tr.GetStringWithError("strings.CommonStrings.buttons.back")
+	if backButtonErr != nil {
+		log.Errorf("[connections] missing translation for buttons.back: %v", backButtonErr)
+		backButtonMsg = "Back"
+	}
 	var (
 		replyText string
 		replyKb   = gotgbot.InlineKeyboardMarkup{
 			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 				{
 					{
-						Text:         tr.GetString("strings.CommonStrings.buttons.back"),
+						Text:         backButtonMsg,
 						CallbackData: "connbtns.Main",
 					},
 				},
@@ -238,9 +293,19 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 
 	switch userType {
 	case "Admin":
-		replyText = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".connections_btns.admin_conn_cmds"), m.adminCmdConnString())
+		adminConnCmdsMsg, adminConnCmdsErr := tr.GetStringWithError("strings." + m.moduleName + ".connections_btns.admin_conn_cmds")
+		if adminConnCmdsErr != nil {
+			log.Errorf("[connections] missing translation for connections_btns.admin_conn_cmds: %v", adminConnCmdsErr)
+			adminConnCmdsMsg = "Available Admin commands:%s"
+		}
+		replyText = fmt.Sprintf(adminConnCmdsMsg, m.adminCmdConnString())
 	case "User":
-		replyText = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".connections_btns.user_conn_cmds"), m.userCmdConnString())
+		userConnCmdsMsg, userConnCmdsErr := tr.GetStringWithError("strings." + m.moduleName + ".connections_btns.user_conn_cmds")
+		if userConnCmdsErr != nil {
+			log.Errorf("[connections] missing translation for connections_btns.user_conn_cmds: %v", userConnCmdsErr)
+			userConnCmdsMsg = "Available User commands:%s"
+		}
+		replyText = fmt.Sprintf(userConnCmdsMsg, m.userCmdConnString())
 	case "Main":
 		chatId := m.isConnected(b, ctx, user.Id)
 		if chatId == 0 {
@@ -252,7 +317,12 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 			return err
 		}
 
-		replyText = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".connected"), pchat.Title)
+		connectedMsg2, connectedErr2 := tr.GetStringWithError("strings." + m.moduleName + ".connected")
+		if connectedErr2 != nil {
+			log.Errorf("[connections] missing translation for connected: %v", connectedErr2)
+			connectedMsg2 = "You are currently connected to <b>%s</b>!"
+		}
+		replyText = fmt.Sprintf(connectedMsg2, pchat.Title)
 		replyKb = helpers.InitButtons(b, pchat.Id, user.Id)
 	}
 
@@ -302,9 +372,19 @@ func (m moduleStruct) disconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		go db.DisconnectId(user.Id)
 
-		text = tr.GetString("strings." + m.moduleName + ".disconnect.disconnected")
+		disconnectedMsg, disconnectedErr := tr.GetStringWithError("strings." + m.moduleName + ".disconnect.disconnected")
+		if disconnectedErr != nil {
+			log.Errorf("[connections] missing translation for disconnect.disconnected: %v", disconnectedErr)
+			disconnectedMsg = "Successfully disconnected from the connected chat."
+		}
+		text = disconnectedMsg
 	} else {
-		text = tr.GetString("strings." + m.moduleName + ".disconnect.need_pm")
+		needPmMsg, needPmErr := tr.GetStringWithError("strings." + m.moduleName + ".disconnect.need_pm")
+		if needPmErr != nil {
+			log.Errorf("[connections] missing translation for disconnect.need_pm: %v", needPmErr)
+			needPmMsg = "You need to send this in PM to me to disconnect from the chat!"
+		}
+		text = needPmMsg
 	}
 
 	_, err := msg.Reply(b, text, helpers.Shtml())
@@ -334,7 +414,12 @@ func (m moduleStruct) isConnected(b *gotgbot.Bot, ctx *ext.Context, userId int64
 		return conn.ChatId
 	}
 
-	_, err := ctx.EffectiveMessage.Reply(b, tr.GetString("strings."+m.moduleName+".not_connected"), nil)
+	notConnectedMsg, notConnectedErr := tr.GetStringWithError("strings." + m.moduleName + ".not_connected")
+	if notConnectedErr != nil {
+		log.Errorf("[connections] missing translation for not_connected: %v", notConnectedErr)
+		notConnectedMsg = "You aren't connected to any chats."
+	}
+	_, err := ctx.EffectiveMessage.Reply(b, notConnectedMsg, nil)
 	if err != nil {
 		log.Error(err)
 	}
@@ -378,10 +463,20 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 				return ext.EndGroups
 			}
 
-			text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".reconnect.reconnected"), gchat.Title)
+			reconnectedMsg, reconnectedErr := tr.GetStringWithError("strings." + m.moduleName + ".reconnect.reconnected")
+			if reconnectedErr != nil {
+				log.Errorf("[connections] missing translation for reconnect.reconnected: %v", reconnectedErr)
+				reconnectedMsg = "You are now reconnected to <b>%s</b>!!"
+			}
+			text = fmt.Sprintf(reconnectedMsg, gchat.Title)
 			connKeyboard = helpers.InitButtons(b, gchat.Id, user.Id)
 		} else {
-			text = tr.GetString("strings." + m.moduleName + ".reconnect.no_last_chat")
+			noLastChatMsg, noLastChatErr := tr.GetStringWithError("strings." + m.moduleName + ".reconnect.no_last_chat")
+			if noLastChatErr != nil {
+				log.Errorf("[connections] missing translation for reconnect.no_last_chat: %v", noLastChatErr)
+				noLastChatMsg = "You have no last chat to reconnect!"
+			}
+			text = noLastChatMsg
 		}
 		_, err := msg.Reply(b, text,
 			&gotgbot.SendMessageOpts{
@@ -395,7 +490,12 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".reconnect.need_pm"), helpers.Shtml())
+		reconnectNeedPmMsg, reconnectNeedPmErr := tr.GetStringWithError("strings." + m.moduleName + ".reconnect.need_pm")
+		if reconnectNeedPmErr != nil {
+			log.Errorf("[connections] missing translation for reconnect.need_pm: %v", reconnectNeedPmErr)
+			reconnectNeedPmMsg = "You need to be in a PM with me to reconnect to a chat!"
+		}
+		_, err := msg.Reply(b, reconnectNeedPmMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

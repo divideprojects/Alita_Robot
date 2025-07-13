@@ -186,7 +186,12 @@ func (m moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = msg.Reply(b, tr.GetString("strings.Dev.leavechat.success"), helpers.Shtml())
+	leaveChatSuccessMsg, leaveChatSuccessErr := tr.GetStringWithError("strings.Dev.leavechat.success")
+	if leaveChatSuccessErr != nil {
+		log.Errorf("[devs] missing translation for Dev.leavechat.success: %v", leaveChatSuccessErr)
+		leaveChatSuccessMsg = "Successfully left the chat."
+	}
+	_, err = msg.Reply(b, leaveChatSuccessMsg, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err

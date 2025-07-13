@@ -265,8 +265,13 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 			_chat := chatFullInfo.ToChat() // need to convert to Chat type
 			chat = &_chat
 		} else {
+			needGroupMsg, needGroupErr := tr.GetStringWithError("strings.Connections.is_user_connected.need_group")
+			if needGroupErr != nil {
+				log.Errorf("[helpers] missing translation for Connections.is_user_connected.need_group: %v", needGroupErr)
+				needGroupMsg = "This command can only be used in groups."
+			}
 			_, err := msg.Reply(b,
-				tr.GetString("strings.Connections.is_user_connected.need_group"),
+				needGroupMsg,
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                msg.MessageId,
@@ -286,7 +291,12 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if botAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, b.Id) {
-			_, err := msg.Reply(b, tr.GetString("strings.Connections.is_user_connected.bot_not_admin"), Shtml())
+			botNotAdminMsg, botNotAdminErr := tr.GetStringWithError("strings.Connections.is_user_connected.bot_not_admin")
+			if botNotAdminErr != nil {
+				log.Errorf("[helpers] missing translation for Connections.is_user_connected.bot_not_admin: %v", botNotAdminErr)
+				botNotAdminMsg = "I need to be an admin to perform this action."
+			}
+			_, err := msg.Reply(b, botNotAdminMsg, Shtml())
 			if err != nil {
 				log.Error(err)
 				return nil
@@ -297,7 +307,12 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if chatAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			_, err := msg.Reply(b, tr.GetString("strings.Connections.is_user_connected.user_not_admin"), Shtml())
+			userNotAdminMsg, userNotAdminErr := tr.GetStringWithError("strings.Connections.is_user_connected.user_not_admin")
+			if userNotAdminErr != nil {
+				log.Errorf("[helpers] missing translation for Connections.is_user_connected.user_not_admin: %v", userNotAdminErr)
+				userNotAdminMsg = "You need to be an admin to perform this action."
+			}
+			_, err := msg.Reply(b, userNotAdminMsg, Shtml())
 			if err != nil {
 				log.Error(err)
 				return nil
@@ -463,9 +478,20 @@ Combines the language name and flag emoji for display.
 */
 func GetLangFormat(langCode string) string {
 	tr := i18n.New(langCode)
-	return tr.GetString("main.language_name") +
-		" " +
-		tr.GetString("main.language_flag")
+	
+	languageName, languageNameErr := tr.GetStringWithError("main.language_name")
+	if languageNameErr != nil {
+		log.Errorf("[helpers] missing translation for main.language_name in %s: %v", langCode, languageNameErr)
+		languageName = langCode // fallback to language code
+	}
+	
+	languageFlag, languageFlagErr := tr.GetStringWithError("main.language_flag")
+	if languageFlagErr != nil {
+		log.Errorf("[helpers] missing translation for main.language_flag in %s: %v", langCode, languageFlagErr)
+		languageFlag = "🏳️" // fallback to generic flag
+	}
+	
+	return languageName + " " + languageFlag
 }
 
 // NOTE: nekobin helper functions
