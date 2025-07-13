@@ -112,8 +112,29 @@ func Initialize(cfg *config.Config) error {
 	notesSettingsColl = mongoClient.Database(cfg.MainDbName).Collection("notes_settings")
 
 	isInitialized = true
+	// Attach collection references to settings handlers now that collections are ready
+	attachHandlers()
 	log.Info("Done opening all database collections!")
 	return nil
+}
+
+// attachHandlers wires the opened mongo collections into the generic SettingsHandlers.
+func attachHandlers() {
+    greetingSettingsHandler.Collection = greetingsColl
+    chatSettingsHandler.Collection = chatColl
+    locksSettingsHandler.Collection = lockColl
+    blacklistSettingsHandler.Collection = blacklistsColl
+    warnSettingsHandler.Collection = warnSettingsColl
+    floodSettingsHandler.Collection = antifloodSettingsColl
+    disableSettingsHandler.Collection = disableColl
+    pinSettingsHandler.Collection = pinColl
+    rulesSettingsHandler.Collection = rulesColl
+    noteSettingsHandler.Collection = notesColl
+    connectionSettingsHandler.Collection = connectionSettingsColl
+    channelSettingsHandler.Collection = channelColl
+    adminSettingsHandler.Collection = adminSettingsColl
+    chatReportSettingsHandler.Collection = reportChatColl
+    userReportSettingsHandler.Collection = reportUserColl
 }
 
 // updateOne updates a single document in the specified collection.

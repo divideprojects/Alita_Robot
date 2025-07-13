@@ -14,6 +14,9 @@ type SettingsHandler[T any] struct {
 }
 
 func (h *SettingsHandler[T]) CheckOrInit(chatID int64) *T {
+	if h.Collection == nil {
+		log.Panic("[SettingsHandler] Collection is nil; database not initialised?")
+	}
 	defaultVal := h.Default(chatID)
 	var result T
 
