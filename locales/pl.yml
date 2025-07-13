@@ -695,50 +695,41 @@ strings:
     help_msg: |-
       Witamy nowych członków w swoich grupach lub żegnamy się po ich wyjściu!
 
-
       *Polecenia administratorów:*
 
       × /setwelcome `<reply/text>`: Ustawia tekst powitalny dla grupy.
-
       × /welcome `<yes/no/on/off>`: Włącza lub wyłącza ustawienie powitania dla grupy.
-
       × /resetwelcome: Resetuje wiadomość powitalną do wartości domyślnej.
-
       × /setgoodbye `<reply/text>`: Ustawia tekst pożegnalny dla grupy.
-
       × /goodbye `<yes/no/on/off>`: Włącza lub wyłącza ustawienie pożegnania dla grupy.
-
       × /resetgoodbye: Resetuje wiadomość pożegnalną do wartości domyślnej.
-
       × /cleanservice `<yes/no/on/off>`: Usuń wszystkie wiadomości serwisowe, takie jak powiadomienie 'x dołączył do grupy'.
-
       × /cleanwelcome `<yes/no/on/off>`: Usuń starą wiadomość powitalną, gdy dołączy nowy członek.
-
       × /autoapprove `<yes/no/on/off>`: Automatycznie zatwierdzaj wszystkich nowych członków.
     i_am_currently_goodbying_users_t: 'I am currently goodbying users: <code>%t</code>'
     i_understand_on_yes_or_off_no_only: I understand 'on/yes' or 'off/no' only!
     formatting: Formatting
   Help:
     about:
-      main: Info & About\n\nHere are some of the FAQs about Alita.
-      me_button: "About me 👨‍💻"
-      news_channel_button: "News Channel 📢"
-      support_group_button: "Support Group 👥"
-      configuration_button: Configuration ⚙️
-      group_prompt: Click on the button below to get info about me!
-      button: About
+      main: Informacje i FAQ\n\nOto kilka najczęściej zadawanych pytań o Alitę.
+      me_button: "O mnie 👨‍💻"
+      news_channel_button: "Kanał z nowościami 📢"
+      support_group_button: "Grupa wsparcia 👥"
+      configuration_button: Konfiguracja ⚙️
+      group_prompt: Kliknij poniższy przycisk, aby uzyskać informacje o mnie!
+      button: O mnie
     start:
       intro: |-
-        Hey there! My name is Alita ✨.
-        I'm here to help you manage your groups!
-        Hit /help to find out more about how to use me to my full potential.
-        Join my <a href='[https://t.me/AlitaRobotUpdates](https://t.me/AlitaRobotUpdates)'>News Channel</a> to get information on all the latest updates.
-      about_button: About ✨
-      add_to_chat_button: ➕ Add me to chat!
-      support_group_button: "Support Group 👥"
-      commands_help_button: "📚 Commands & Help"
-      language_button: "Language 🌏"
-      group_prompt: 'Hey :) PM me if you have any questions on how to use me!'
+        Cześć! Nazywam się Alita ✨.
+        Jestem tutaj, aby pomóc Ci zarządzać Twoimi grupami!
+        Użyj /help, aby dowiedzieć się więcej o tym, jak w pełni wykorzystać moje możliwości.
+        Dołącz do mojego <a href='https://t.me/AlitaRobotUpdates'>kanału z nowościami</a>, aby otrzymywać informacje o wszystkich najnowszych aktualizacjach.
+      about_button: O mnie ✨
+      add_to_chat_button: ➕ Dodaj mnie do czatu!
+      support_group_button: "Grupa wsparcia 👥"
+      commands_help_button: "📚 Polecenia i pomoc"
+      language_button: "Język 🌏"
+      group_prompt: 'Hej :) Napisz do mnie w prywatnej wiadomości, jeśli masz pytania dotyczące obsługi!'
     main: |-
       Witaj %s!
       Nazywam się Alita ✨.
@@ -753,29 +744,22 @@ strings:
 
       Wszystkie polecenia mogą być używane z następującymi: / lub !
     help:
-      button: Click here for help!
-      group_prompt_general: Contact me in PM for help!
+      button: Kliknij tutaj, aby uzyskać pomoc!
+      group_prompt_general: Skontaktuj się ze mną w prywatnej wiadomości, aby uzyskać pomoc!
       group_prompt_module: Contact me in PM for help regarding <code>%s</code>!
     configuration:
       private_only: Configuration only works in private
     About: |-
       @%s jest jednym z najszybszych i najbardziej bogatych w funkcje menedżerów grup.
 
-
       Alita ✨ jest rozwijana i aktywnie utrzymywana przez @DivideProjects!
-
 
       Alita jest online od 2020 roku i służyła tysiącom grup z setkami tysięcy użytkowników!
 
-
       <b>Dlaczego Alita:</b>
-
       - Prosty: Łatwe użycie i kompatybilność z wieloma poleceniami bota.
-
       - Funkcjonalny: Wiele funkcji, których inne boty do zarządzania grupami nie mają.
-
       - Szybki: Zgadnij co? Nie jest napisany w Pythonie, używamy <a href='[https://go.dev/](https://go.dev/)'>Go</a> jako naszego podstawowego języka programowania.
-
 
       <b>Aktualna wersja:</b> %s
     Configuration:
