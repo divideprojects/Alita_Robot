@@ -265,7 +265,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 			_chat := chatFullInfo.ToChat() // need to convert to Chat type
 			chat = &_chat
 		} else {
-			needGroupMsg, needGroupErr := tr.GetStringWithError("strings.Connections.is_user_connected.need_group")
+			needGroupMsg, needGroupErr := tr.GetStringWithError("strings.connections.is_user_connected.need_group")
 			if needGroupErr != nil {
 				log.Errorf("[helpers] missing translation for Connections.is_user_connected.need_group: %v", needGroupErr)
 				needGroupMsg = "This command can only be used in groups."
@@ -291,7 +291,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if botAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, b.Id) {
-			botNotAdminMsg, botNotAdminErr := tr.GetStringWithError("strings.Connections.is_user_connected.bot_not_admin")
+			botNotAdminMsg, botNotAdminErr := tr.GetStringWithError("strings.connections.is_user_connected.bot_not_admin")
 			if botNotAdminErr != nil {
 				log.Errorf("[helpers] missing translation for Connections.is_user_connected.bot_not_admin: %v", botNotAdminErr)
 				botNotAdminMsg = "I need to be an admin to perform this action."
@@ -307,7 +307,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if chatAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			userNotAdminMsg, userNotAdminErr := tr.GetStringWithError("strings.Connections.is_user_connected.user_not_admin")
+			userNotAdminMsg, userNotAdminErr := tr.GetStringWithError("strings.connections.is_user_connected.user_not_admin")
 			if userNotAdminErr != nil {
 				log.Errorf("[helpers] missing translation for Connections.is_user_connected.user_not_admin: %v", userNotAdminErr)
 				userNotAdminMsg = "You need to be an admin to perform this action."

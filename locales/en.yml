@@ -684,6 +684,7 @@ strings:
   languages.change.group_prompt: This Group's Current Language is %s\nChoose a language
     from keyboard below.
   languages.change.private_success: Your language has been changed to %s
+  warns.warns.num_warns: 'Here are the reasons for the warns:'
   languages.change.group_success: This group's language has been changed to %s
   languages.help_msg: 'Not able to change language of the bot?
 

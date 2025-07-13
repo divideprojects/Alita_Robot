@@ -191,7 +191,7 @@ func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, tr.GetString("strings.Locks.lock.no_type_specified"), helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.locks.lock.no_type_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -200,7 +200,7 @@ func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	for _, perm := range args {
 		if !string_handling.FindInStringSlice(m.getLockMapAsArray(), perm) {
-			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Locks.lock.errors.incorrect_lock_type"), perm), helpers.Smarkdown())
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.locks.lock.errors.incorrect_lock_type"), perm), helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -245,7 +245,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, tr.GetString("strings.Locks.unlock.no_type_specified"), helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.locks.unlock.no_type_specified"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -255,7 +255,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	for _, perm := range args {
 		if !string_handling.FindInStringSlice(m.getLockMapAsArray(), perm) {
-			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Locks.unlock.errors.incorrect_lock_type"), perm), helpers.Smarkdown())
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.locks.unlock.errors.incorrect_lock_type"), perm), helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -270,7 +270,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	_, err := msg.Reply(b,
-		fmt.Sprintf(tr.GetString("strings.Locks.unlock.success"),
+		fmt.Sprintf(tr.GetString("strings.locks.unlock.success"),
 			strings.Join(toLock, "\n - ")),
 		helpers.Smarkdown(),
 	)
@@ -357,7 +357,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if !chat_status.IsBotAdmin(b, ctx, nil) {
-		noAdminPermMsg, noAdminPermErr := tr.GetStringWithError("strings.Locks.bot.no_admin_permission")
+		noAdminPermMsg, noAdminPermErr := tr.GetStringWithError("strings.locks.bot.no_admin_permission")
 		if noAdminPermErr != nil {
 			log.Errorf("[locks] missing translation for key: %v", noAdminPermErr)
 			noAdminPermMsg = "I need admin permissions to restrict bots!"
@@ -390,7 +390,7 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	adminOnlyMsg, adminOnlyErr := tr.GetStringWithError("strings.Locks.bot.admin_only")
+	adminOnlyMsg, adminOnlyErr := tr.GetStringWithError("strings.locks.bot.admin_only")
 	if adminOnlyErr != nil {
 		log.Errorf("[locks] missing translation for key: %v", adminOnlyErr)
 		adminOnlyMsg = "Only admins are allowed to add bots to this chat!"

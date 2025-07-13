@@ -117,7 +117,7 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		if purge {
-			Text := fmt.Sprintf(tr.GetString("strings.Purges.purged_n_messages"), totalMsgs)
+			Text := fmt.Sprintf(tr.GetString("strings.purges.purged_n_messages"), totalMsgs)
 			if len(args) >= 1 {
 				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
 			}
@@ -134,7 +134,7 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		replyToMsgMsg, replyToMsgErr := tr.GetStringWithError("strings.Purges.reply_to_a_message_to_select_where_to_start_purging_from")
+		replyToMsgMsg, replyToMsgErr := tr.GetStringWithError("strings.purges.reply_to_a_message_to_select_where_to_start_purging_from")
 		if replyToMsgErr != nil {
 			log.Errorf("[purges] missing translation for key: %v", replyToMsgErr)
 			replyToMsgMsg = "Reply to a message to select where to start purging from."
@@ -174,7 +174,7 @@ func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	if msg.ReplyToMessage == nil {
-		replyToDeleteMsg, replyToDeleteErr := tr.GetStringWithError("strings.Purges.reply_to_a_message_to_delete_it")
+		replyToDeleteMsg, replyToDeleteErr := tr.GetStringWithError("strings.purges.reply_to_a_message_to_delete_it")
 		if replyToDeleteErr != nil {
 			log.Errorf("[purges] missing translation for key: %v", replyToDeleteErr)
 			replyToDeleteMsg = "Reply to a message to delete it!"
@@ -281,7 +281,7 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if msg.ReplyToMessage != nil {
 		TodelId := msg.ReplyToMessage.MessageId
 		if delMsgs[chat.Id] == TodelId {
-			alreadyMarkedMsg, alreadyMarkedErr := tr.GetStringWithError("strings.Purges.this_message_is_already_marked_for_purging")
+			alreadyMarkedMsg, alreadyMarkedErr := tr.GetStringWithError("strings.purges.this_message_is_already_marked_for_purging")
 			if alreadyMarkedErr != nil {
 				log.Errorf("[purges] missing translation for key: %v", alreadyMarkedErr)
 				alreadyMarkedMsg = "This message is already marked for purging!"
@@ -294,7 +294,7 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			_, _ = msg.Reply(bot, err.Error(), nil)
 			return ext.EndGroups
 		}
-		markedForDeletionMsg, markedForDeletionErr := tr.GetStringWithError("strings.Purges.message_marked_for_deletion_reply_to_another_message_with_pu")
+		markedForDeletionMsg, markedForDeletionErr := tr.GetStringWithError("strings.purges.message_marked_for_deletion_reply_to_another_message_with_pu")
 		if markedForDeletionErr != nil {
 			log.Errorf("[purges] missing translation for key: %v", markedForDeletionErr)
 			markedForDeletionMsg = "Message marked for deletion. Reply to another message with /purgeto to delete all messages in between; within 30s!"
@@ -323,7 +323,7 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 	} else {
-		replyToMsgMsg, replyToMsgErr := tr.GetStringWithError("strings.Purges.reply_to_a_message_to_select_where_to_start_purging_from")
+		replyToMsgMsg, replyToMsgErr := tr.GetStringWithError("strings.purges.reply_to_a_message_to_select_where_to_start_purging_from")
 		if replyToMsgErr != nil {
 			log.Errorf("[purges] missing translation for key: %v", replyToMsgErr)
 			replyToMsgMsg = "Reply to a message to select where to start purging from."
@@ -365,7 +365,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if msg.ReplyToMessage != nil {
 		msgId := delMsgs[chat.Id]
 		if msgId == 0 {
-			afterPurgeFromMsg, afterPurgeFromErr := tr.GetStringWithError("strings.Purges.you_can_only_use_this_command_after_having_used_the_purgefro")
+			afterPurgeFromMsg, afterPurgeFromErr := tr.GetStringWithError("strings.purges.you_can_only_use_this_command_after_having_used_the_purgefro")
 			if afterPurgeFromErr != nil {
 				log.Errorf("[purges] missing translation for key: %v", afterPurgeFromErr)
 				afterPurgeFromMsg = "You can only use this command after having used the /purgefrom command!"
@@ -379,7 +379,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		deleteTo := msg.ReplyToMessage.MessageId
 		if msgId == deleteTo {
-			useDelCmdMsg, useDelCmdErr := tr.GetStringWithError("strings.Purges.use_del_command_to_delete_one_message")
+			useDelCmdMsg, useDelCmdErr := tr.GetStringWithError("strings.purges.use_del_command_to_delete_one_message")
 			if useDelCmdErr != nil {
 				log.Errorf("[purges] missing translation for key: %v", useDelCmdErr)
 				useDelCmdMsg = "Use /del command to delete one message!"
@@ -403,7 +403,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			log.Error(err)
 		}
 		if purge {
-			Text := fmt.Sprintf(tr.GetString("strings.Purges.purged_n_messages"), totalMsgs)
+			Text := fmt.Sprintf(tr.GetString("strings.purges.purged_n_messages"), totalMsgs)
 			if len(args) >= 1 {
 				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
 			}
@@ -419,7 +419,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		replyTillWhereMsg, replyTillWhereErr := tr.GetStringWithError("strings.Purges.reply_to_a_message_to_show_me_till_where_to_purge")
+		replyTillWhereMsg, replyTillWhereErr := tr.GetStringWithError("strings.purges.reply_to_a_message_to_show_me_till_where_to_purge")
 		if replyTillWhereErr != nil {
 			log.Errorf("[purges] missing translation for key: %v", replyTillWhereErr)
 			replyTillWhereMsg = "Reply to a message to show me till where to purge."

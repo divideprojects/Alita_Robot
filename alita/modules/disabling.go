@@ -237,7 +237,7 @@ func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.ToggleDel(chat.Id, false)
 			text = "Disabled messages will no longer be deleted."
 		default:
-			invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.CommonStrings.errors.invalid_option_yes_no")
+			invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.commonstrings.errors.invalid_option_yes_no")
 			if invalidOptionErr != nil {
 				log.Errorf("[disabling] missing translation for key: %v", invalidOptionErr)
 				invalidOptionMsg = "Please give me a valid option from <yes/on/no/off>"

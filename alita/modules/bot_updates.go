@@ -130,7 +130,7 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	// if non-admins try to press it
 	// using this func because it's the only one that can be called by taking chatId from callback query
 	if !chat_status.IsUserAdmin(b, chatId, query.From.Id) {
-		requireAdminBtnMsg, requireAdminBtnErr := tr.GetStringWithError("strings.Utils.chat_status.user.require_admin_btn")
+		requireAdminBtnMsg, requireAdminBtnErr := tr.GetStringWithError("strings.utils.chat_status.user.require_admin_btn")
 		if requireAdminBtnErr != nil {
 			log.Errorf("[bot_updates] missing translation for Utils.chat_status.user.require_admin_btn: %v", requireAdminBtnErr)
 			requireAdminBtnMsg = "This button is for admins only."
@@ -150,7 +150,7 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chatIdData, errCache := setAdminCache(chatId, msgId)
 
 	if errCache != nil {
-		buttonExpiredMsg, buttonExpiredErr := tr.GetStringWithError("strings.CommonStrings.errors.button_expired")
+		buttonExpiredMsg, buttonExpiredErr := tr.GetStringWithError("strings.commonstrings.errors.button_expired")
 		if buttonExpiredErr != nil {
 			log.Errorf("[bot_updates] missing translation for CommonStrings.errors.button_expired: %v", buttonExpiredErr)
 			buttonExpiredMsg = "This button has expired."

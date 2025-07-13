@@ -406,7 +406,7 @@ func (moduleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	tr := i18n.New(db.GetLanguage(ctx))
-	inviteLinkMsg, err := tr.GetStringWithError("strings.Admin.here_is_the_invite_link_of_this_chat_percent")
+	inviteLinkMsg, err := tr.GetStringWithError("strings.admin.here_is_the_invite_link_of_this_chat_percent")
 	if err != nil {
 		log.Error(err)
 		inviteLinkMsg = "Here is the invite link of this chat: %s"
@@ -460,7 +460,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		anonUserMsg, anonUserErr := tr.GetStringWithError("strings.Warns.errors.anon_user")
+		anonUserMsg, anonUserErr := tr.GetStringWithError("strings.warns.errors.anon_user")
 		if anonUserErr != nil {
 			log.Errorf("[admin] missing translation for errors.anon_user: %v", anonUserErr)
 			anonUserMsg = "Anonymous users cannot be managed."
@@ -472,7 +472,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		noUserMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.no_user_specified")
+		noUserMsg, err := tr.GetStringWithError("strings.commonstrings.errors.no_user_specified")
 		if err != nil {
 			log.Error(err)
 			noUserMsg = "No user specified"
@@ -703,7 +703,7 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 	userMember, _ := b.GetChatMember(chat.Id, user.Id, nil)
 	mem := userMember.MergeChatMember()
 	if mem.Status == "member" {
-		adminMsg, err := tr.GetStringWithError("strings.Admin.you_need_to_be_admin_to_do_this")
+		adminMsg, err := tr.GetStringWithError("strings.admin.you_need_to_be_admin_to_do_this")
 		if err != nil {
 			log.Error(err)
 			adminMsg = "You need to be admin to do this"
@@ -723,7 +723,7 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	cache.LoadAdminCache(b, chat.Id)
 
-	cacheMsg, err := tr.GetStringWithError("strings.CommonStrings.admin_cache.cache_reloaded")
+	cacheMsg, err := tr.GetStringWithError("strings.commonstrings.admin_cache.cache_reloaded")
 	if err != nil {
 		log.Error(err)
 		cacheMsg = "Admin cache reloaded"

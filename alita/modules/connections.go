@@ -219,7 +219,7 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 				tapBtnConnectMsg = "Please press the button below to connect this chat to your PM."
 			}
 			text = tapBtnConnectMsg
-			connectToChatButtonMsg, connectToChatButtonErr := tr.GetStringWithError("strings.Connections.connect_to_chat_button")
+			connectToChatButtonMsg, connectToChatButtonErr := tr.GetStringWithError("strings.connections.connect_to_chat_button")
 			if connectToChatButtonErr != nil {
 				log.Errorf("[connections] missing translation for connect_to_chat_button: %v", connectToChatButtonErr)
 				connectToChatButtonMsg = "Connect to chat"
@@ -267,7 +267,7 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 	args := strings.Split(query.Data, ".")
 	userType := args[1]
 
-	backButtonMsg, backButtonErr := tr.GetStringWithError("strings.CommonStrings.buttons.back")
+	backButtonMsg, backButtonErr := tr.GetStringWithError("strings.commonstrings.buttons.back")
 	if backButtonErr != nil {
 		log.Errorf("[connections] missing translation for buttons.back: %v", backButtonErr)
 		backButtonMsg = "Back"

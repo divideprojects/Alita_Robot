@@ -40,13 +40,13 @@ func (moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 		if msg.ReplyToMessage != nil {
 			reply = msg.ReplyToMessage.Reply
 		}
-		markdownHelpMsg, markdownHelpErr := tr.GetStringWithError("strings.Formatting.markdown_help")
+		markdownHelpMsg, markdownHelpErr := tr.GetStringWithError("strings.formatting.markdown_help")
 		if markdownHelpErr != nil {
 			log.Errorf("[formatting] missing translation for key: %v", markdownHelpErr)
 			markdownHelpMsg = "You can use markdown in your messages. This allows for more expressive formatting."
 		}
 
-		backButtonMsg, backButtonErr := tr.GetStringWithError("strings.CommonStrings.buttons.back")
+		backButtonMsg, backButtonErr := tr.GetStringWithError("strings.commonstrings.buttons.back")
 		if backButtonErr != nil {
 			log.Errorf("[formatting] missing translation for key: %v", backButtonErr)
 			backButtonMsg = "Back"
@@ -74,25 +74,25 @@ func (moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else {
 
 		// Keyboard for markdown help menu
-		markdownFormattingMsg, markdownFormattingErr := tr.GetStringWithError("strings.Formatting.markdown_formatting")
+		markdownFormattingMsg, markdownFormattingErr := tr.GetStringWithError("strings.formatting.markdown_formatting")
 		if markdownFormattingErr != nil {
 			log.Errorf("[formatting] missing translation for key: %v", markdownFormattingErr)
 			markdownFormattingMsg = "Markdown Formatting"
 		}
 
-		fillingsMsg, fillingsErr := tr.GetStringWithError("strings.Formatting.fillings")
+		fillingsMsg, fillingsErr := tr.GetStringWithError("strings.formatting.fillings")
 		if fillingsErr != nil {
 			log.Errorf("[formatting] missing translation for key: %v", fillingsErr)
 			fillingsMsg = "Fillings"
 		}
 
-		randomContentMsg, randomContentErr := tr.GetStringWithError("strings.Formatting.random_content")
+		randomContentMsg, randomContentErr := tr.GetStringWithError("strings.formatting.random_content")
 		if randomContentErr != nil {
 			log.Errorf("[formatting] missing translation for key: %v", randomContentErr)
 			randomContentMsg = "Random Content"
 		}
 
-		backButtonMsg, backButtonErr := tr.GetStringWithError("strings.CommonStrings.buttons.back")
+		backButtonMsg, backButtonErr := tr.GetStringWithError("strings.commonstrings.buttons.back")
 		if backButtonErr != nil {
 			log.Errorf("[formatting] missing translation for key: %v", backButtonErr)
 			backButtonMsg = "Back"
@@ -181,21 +181,21 @@ func (moduleStruct) getFormattingHelp(formattingType string, tr *i18n.I18n) stri
 
 	switch formattingType {
 	case "Markdown":
-		markdownMsg, markdownErr := tr.GetStringWithError("strings.Formatting.Markdown")
+		markdownMsg, markdownErr := tr.GetStringWithError("strings.formatting.Markdown")
 		if markdownErr != nil {
 			log.Errorf("[formatting] missing translation for key: %v", markdownErr)
 			markdownMsg = "Markdown formatting help"
 		}
 		helpTxt = markdownMsg
 	case "Fillings":
-		fillingsMsg, fillingsErr := tr.GetStringWithError("strings.Formatting.Fillings")
+		fillingsMsg, fillingsErr := tr.GetStringWithError("strings.formatting.Fillings")
 		if fillingsErr != nil {
 			log.Errorf("[formatting] missing translation for key: %v", fillingsErr)
 			fillingsMsg = "Fillings help"
 		}
 		helpTxt = fillingsMsg
 	case "Random":
-		randomMsg, randomErr := tr.GetStringWithError("strings.Formatting.Random")
+		randomMsg, randomErr := tr.GetStringWithError("strings.formatting.Random")
 		if randomErr != nil {
 			log.Errorf("[formatting] missing translation for key: %v", randomErr)
 			randomMsg = "Random content help"
@@ -218,7 +218,7 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 
 	helpTxt := m.getFormattingHelp(module, tr)
 
-	backButtonMsg, backButtonErr := tr.GetStringWithError("strings.CommonStrings.buttons.back")
+	backButtonMsg, backButtonErr := tr.GetStringWithError("strings.commonstrings.buttons.back")
 	if backButtonErr != nil {
 		log.Errorf("[formatting] missing translation for key: %v", backButtonErr)
 		backButtonMsg = "Back"

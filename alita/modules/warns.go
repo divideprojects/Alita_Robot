@@ -214,7 +214,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 						{
-							Text: getWarnButtonText(tr, "strings.CommonStrings.buttons.rules_button", "Rules"),
+							Text: getWarnButtonText(tr, "strings.commonstrings.buttons.rules_button", "Rules"),
 							Url:  fmt.Sprintf("t.me/%s?start=rules_%d", b.Username, chat.Id),
 						},
 					},
@@ -372,14 +372,14 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		userId = ctx.EffectiveUser.Id
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, getWarnErrorMsg(tr, "strings.Warns.errors.anon_user", "Anonymous users cannot be warned"), nil)
+		_, err := msg.Reply(b, getWarnErrorMsg(tr, "strings.warns.errors.anon_user", "Anonymous users cannot be warned"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, getWarnErrorMsg(tr, "strings.CommonStrings.errors.no_user_specified", "No user specified"),
+		_, err := msg.Reply(b, getWarnErrorMsg(tr, "strings.commonstrings.errors.no_user_specified", "No user specified"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -394,7 +394,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	if numWarns != 0 {
 		warnrc := db.GetWarnSetting(chat.Id)
 		if len(reasons) > 0 {
-			text = fmt.Sprintf(tr.GetString("strings.Warns.warns.list_reasons"), numWarns, warnrc.WarnLimit)
+			text = fmt.Sprintf(tr.GetString("strings.warns.num_warns"), numWarns, warnrc.WarnLimit)
 			for _, reason := range reasons {
 				text += fmt.Sprintf("\n - %s", reason)
 			}
@@ -407,10 +407,10 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			}
 		} else {
-			listNoReasonsMsg, err := tr.GetStringWithError("strings.Warns.warns.list_no_reasons")
+			listNoReasonsMsg, err := tr.GetStringWithError("strings.warns.warns.list_no_reasons")
 			if err != nil {
 				log.Error(err)
-				listNoReasonsMsg = tr.GetString("strings.Warns.warns.list_no_reasons")
+				listNoReasonsMsg = tr.GetString("strings.warns.warns.list_no_reasons")
 			}
 			_, err = msg.Reply(b, fmt.Sprintf(listNoReasonsMsg, numWarns, warnrc.WarnLimit), nil)
 			if err != nil {
@@ -419,7 +419,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(b, getWarnErrorMsg(tr, "strings.Warns.warns.no_warns", "This user has no warnings"), nil)
+		_, err := msg.Reply(b, getWarnErrorMsg(tr, "strings.warns.warns.no_warns", "This user has no warnings"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -542,14 +542,14 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, getWarnErrorMsg(tr, "strings.Warns.errors.anon_user", "Anonymous users cannot be warned"), nil)
+		_, err := msg.Reply(b, getWarnErrorMsg(tr, "strings.warns.errors.anon_user", "Anonymous users cannot be warned"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, getWarnErrorMsg(tr, "strings.CommonStrings.errors.no_user_specified", "No user specified"),
+		_, err := msg.Reply(b, getWarnErrorMsg(tr, "strings.commonstrings.errors.no_user_specified", "No user specified"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -559,7 +559,7 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.ResetUserWarns(userId, chat.Id)
-	resetSuccessMsg, resetSuccessErr := tr.GetStringWithError("strings.Warns.reset.success")
+	resetSuccessMsg, resetSuccessErr := tr.GetStringWithError("strings.warns.reset.success")
 	if resetSuccessErr != nil {
 		log.Errorf("[warns] missing translation for reset.success: %v", resetSuccessErr)
 		resetSuccessMsg = "User warnings have been reset."
@@ -589,7 +589,7 @@ func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	warnrc := db.GetAllChatWarns(chat.Id)
 	if warnrc == 0 {
-		noWarnsMsg, noWarnsErr := tr.GetStringWithError("strings.Warns.reset_all.no_warns")
+		noWarnsMsg, noWarnsErr := tr.GetStringWithError("strings.warns.reset_all.no_warns")
 		if noWarnsErr != nil {
 			log.Errorf("[warns] missing translation for reset_all.no_warns: %v", noWarnsErr)
 			noWarnsMsg = "No users have warnings in this chat."
@@ -603,7 +603,7 @@ func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, chat, user.Id, false) {
-		confirmMsg, confirmErr := tr.GetStringWithError("strings.Warns.reset_all.confirm")
+		confirmMsg, confirmErr := tr.GetStringWithError("strings.warns.reset_all.confirm")
 		if confirmErr != nil {
 			log.Errorf("[warns] missing translation for reset_all.confirm: %v", confirmErr)
 			confirmMsg = "Are you sure you want to reset all warnings in this chat?"
@@ -613,8 +613,8 @@ func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
-							{Text: getWarnButtonText(tr, "strings.CommonStrings.buttons.yes", "Yes"), CallbackData: "rmAllChatWarns.yes"},
-							{Text: getWarnButtonText(tr, "strings.CommonStrings.buttons.no", "No"), CallbackData: "rmAllChatWarns.no"},
+							{Text: getWarnButtonText(tr, "strings.commonstrings.buttons.yes", "Yes"), CallbackData: "rmAllChatWarns.yes"},
+							{Text: getWarnButtonText(tr, "strings.commonstrings.buttons.no", "No"), CallbackData: "rmAllChatWarns.no"},
 						},
 					},
 				},

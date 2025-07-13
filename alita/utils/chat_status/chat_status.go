@@ -225,7 +225,7 @@ func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, use
 		}
 		if !justCheck {
 			tr := i18n.New(db.GetLanguage(ctx))
-			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.user.no_permission_change_info_cmd"),
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.utils.chat_status.user.no_permission_change_info_cmd"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -294,7 +294,7 @@ func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userI
 		}
 		if !justCheck {
 			tr := i18n.New(db.GetLanguage(ctx))
-			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.user.no_permission_restrict_cmd"),
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.utils.chat_status.user.no_permission_restrict_cmd"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -341,7 +341,7 @@ func CanBotRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 		}
 		if !justCheck {
 			tr := i18n.New(db.GetLanguage(ctx))
-			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.bot.no_permission_restrict_group"),
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.utils.chat_status.bot.no_permission_restrict_group"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -410,7 +410,7 @@ func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId
 		}
 		if !justCheck {
 			tr := i18n.New(db.GetLanguage(ctx))
-			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.user.no_permission_promote_cmd"),
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.utils.chat_status.user.no_permission_promote_cmd"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -446,7 +446,7 @@ func CanBotPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChe
 	if !botChatMember.MergeChatMember().CanPromoteMembers {
 		if !justCheck {
 			tr := i18n.New(db.GetLanguage(ctx))
-			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.bot.no_permission_promote"),
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.utils.chat_status.bot.no_permission_promote"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -504,7 +504,7 @@ func CanUserPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int
 	if !userMember.CanPinMessages && userMember.Status != "creator" {
 		if !justCheck {
 			tr := i18n.New(db.GetLanguage(ctx))
-			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.user.no_permission_pin"), &gotgbot.SendMessageOpts{
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.utils.chat_status.user.no_permission_pin"), &gotgbot.SendMessageOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
 					MessageId:                ctx.EffectiveMessage.MessageId,
 					AllowSendingWithoutReply: true,
@@ -539,7 +539,7 @@ func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck b
 	error_handling.HandleErr(err)
 	if !botChatMember.MergeChatMember().CanPinMessages {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.bot.no_permission_pin"),
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.utils.chat_status.bot.no_permission_pin"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -577,7 +577,7 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 	error_handling.HandleErr(err)
 	if !botChatMember.MergeChatMember().CanInviteUsers {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.bot.no_permission_invite_link"),
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.utils.chat_status.bot.no_permission_invite_link"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -613,7 +613,7 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 	}
 	if !userMember.CanInviteUsers && userMember.Status != "creator" {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.user.no_permission_invite_link"),
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.utils.chat_status.user.no_permission_invite_link"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -683,7 +683,7 @@ func CanUserDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId 
 		}
 		if !justCheck {
 			tr := i18n.New(db.GetLanguage(ctx))
-			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.admin_only_command"), nil)
+			_, err := msg.Reply(b, tr.GetString("strings.commonstrings.errors.admin_only_command"), nil)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -717,7 +717,7 @@ func CanBotDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 	if !botChatMember.MergeChatMember().CanDeleteMessages {
 		if !justCheck {
 			tr := i18n.New(db.GetLanguage(ctx))
-			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.admin_only_command"), nil)
+			_, err := msg.Reply(b, tr.GetString("strings.commonstrings.errors.admin_only_command"), nil)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -745,7 +745,7 @@ func RequireBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justC
 	if !IsBotAdmin(b, ctx, chat) {
 		if !justCheck {
 			tr := i18n.New(db.GetLanguage(ctx))
-			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.bot_not_admin"), nil)
+			_, err := msg.Reply(b, tr.GetString("strings.commonstrings.errors.bot_not_admin"), nil)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -822,7 +822,7 @@ func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 			return false
 		}
 		if !justCheck {
-			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.chat_status.user.no_permission_admin"), nil)
+			_, err := msg.Reply(b, tr.GetString("strings.commonstrings.chat_status.user.no_permission_admin"), nil)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -867,7 +867,7 @@ func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 			return false
 		}
 		if !justCheck {
-			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.only_group_creator_to_do_this"), nil)
+			_, err := msg.Reply(b, tr.GetString("strings.commonstrings.only_group_creator_to_do_this"), nil)
 			error_handling.HandleErr(err)
 		}
 		return false
@@ -895,7 +895,7 @@ func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 	msg := ctx.EffectiveMessage
 	if chat.Type != "private" {
 		if !justCheck {
-			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.errors.private_only_command"),
+			_, err := msg.Reply(b, tr.GetString("strings.commonstrings.errors.private_only_command"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId: msg.MessageId,
@@ -928,7 +928,7 @@ func RequireGroup(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 	tr := i18n.New(db.GetLanguage(ctx))
 	if chat.Type == "private" {
 		if !justCheck {
-			_, err := msg.Reply(b, tr.GetString("strings.Connections.disconnect.is_user_connected.need_group"),
+			_, err := msg.Reply(b, tr.GetString("strings.connections.disconnect.is_user_connected.need_group"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId: msg.MessageId,

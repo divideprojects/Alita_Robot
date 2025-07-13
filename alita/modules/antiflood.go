@@ -201,7 +201,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.ContinueGroups
 		}
 		fmode = "muted"
-		unmuteAdminsOnlyMsg, unmuteAdminsOnlyErr := tr.GetStringWithError("strings.Antiflood.unmute_admins_only")
+		unmuteAdminsOnlyMsg, unmuteAdminsOnlyErr := tr.GetStringWithError("strings.antiflood.unmute_admins_only")
 		if unmuteAdminsOnlyErr != nil {
 			log.Errorf("[antiflood] missing translation for unmute_admins_only: %v", unmuteAdminsOnlyErr)
 			unmuteAdminsOnlyMsg = "Unmute (Admins Only)"
@@ -266,7 +266,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 		} else {
-			unbanAdminsOnlyMsg, unbanAdminsOnlyErr := tr.GetStringWithError("strings.Antiflood.unban_admins_only")
+			unbanAdminsOnlyMsg, unbanAdminsOnlyErr := tr.GetStringWithError("strings.antiflood.unban_admins_only")
 			if unbanAdminsOnlyErr != nil {
 				log.Errorf("[antiflood] missing translation for unban_admins_only: %v", unbanAdminsOnlyErr)
 				unbanAdminsOnlyMsg = "Unban (Admins Only)"

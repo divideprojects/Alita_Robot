@@ -186,7 +186,7 @@ func (m moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	leaveChatSuccessMsg, leaveChatSuccessErr := tr.GetStringWithError("strings.Dev.leavechat.success")
+	leaveChatSuccessMsg, leaveChatSuccessErr := tr.GetStringWithError("strings.dev.leavechat.success")
 	if leaveChatSuccessErr != nil {
 		log.Errorf("[devs] missing translation for Dev.leavechat.success: %v", leaveChatSuccessErr)
 		leaveChatSuccessMsg = "Successfully left the chat."
@@ -234,9 +234,9 @@ func (m moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if memStatus.Sudo {
-		txt = tr.GetString("strings.Dev.addsudo.already_sudo")
+		txt = tr.GetString("strings.dev.addsudo.already_sudo")
 	} else {
-		txt = fmt.Sprintf(tr.GetString("strings.Dev.addsudo.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = fmt.Sprintf(tr.GetString("strings.dev.addsudo.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.AddSudo(userId)
 	}
 
@@ -278,9 +278,9 @@ func (m moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if memStatus.Dev {
-		txt = tr.GetString("strings.Dev.adddev.already_dev")
+		txt = tr.GetString("strings.dev.adddev.already_dev")
 	} else {
-		txt = fmt.Sprintf(tr.GetString("strings.Dev.adddev.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = fmt.Sprintf(tr.GetString("strings.dev.adddev.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.AddDev(userId)
 	}
 
@@ -322,9 +322,9 @@ func (m moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if !memStatus.Sudo {
-		txt = tr.GetString("strings.Dev.remsudo.not_sudo")
+		txt = tr.GetString("strings.dev.remsudo.not_sudo")
 	} else {
-		txt = fmt.Sprintf(tr.GetString("strings.Dev.remsudo.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = fmt.Sprintf(tr.GetString("strings.dev.remsudo.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.RemSudo(userId)
 	}
 
@@ -366,9 +366,9 @@ func (m moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if !memStatus.Dev {
-		txt = tr.GetString("strings.Dev.remdev.not_dev")
+		txt = tr.GetString("strings.dev.remdev.not_dev")
 	} else {
-		txt = fmt.Sprintf(tr.GetString("strings.Dev.remdev.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = fmt.Sprintf(tr.GetString("strings.dev.remdev.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.RemDev(userId)
 	}
 

@@ -27,7 +27,7 @@ func (m moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
 	tr := i18n.New("en") // Use default language for this function
 	keyboard := helpers.MakeLanguageKeyboard(m.cfg)
 
-	helpTranslateText, helpTranslateErr := tr.GetStringWithError("strings.Languages.help_translate_button")
+	helpTranslateText, helpTranslateErr := tr.GetStringWithError("strings.languages.help_translate_button")
 	if helpTranslateErr != nil {
 		log.Errorf("[languages] missing translation for Languages.help_translate_button: %v", helpTranslateErr)
 		helpTranslateText = "Help Translate"
@@ -56,7 +56,7 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 	cLang := db.GetLanguage(ctx)
 
 	if ctx.Update.Message.Chat.Type == "private" {
-		replyString = fmt.Sprintf(tr.GetString("strings.Language.private_prompt"), helpers.GetLangFormat(cLang))
+		replyString = fmt.Sprintf(tr.GetString("strings.language.private_prompt"), helpers.GetLangFormat(cLang))
 	} else {
 
 		// language won't be changed if user is not admin
@@ -64,7 +64,7 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.EndGroups
 		}
 
-		replyString = fmt.Sprintf(tr.GetString("strings.Language.group_prompt"), helpers.GetLangFormat(cLang))
+		replyString = fmt.Sprintf(tr.GetString("strings.language.group_prompt"), helpers.GetLangFormat(cLang))
 	}
 
 	_, err := msg.Reply(
@@ -95,10 +95,10 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if chat.Type == "private" {
 		go db.ChangeUserLanguage(user.Id, language)
-		replyString = fmt.Sprintf(tr.GetString("strings.Language.private_prompt"), helpers.GetLangFormat(language))
+		replyString = fmt.Sprintf(tr.GetString("strings.language.private_prompt"), helpers.GetLangFormat(language))
 	} else {
 		go db.ChangeGroupLanguage(chat.Id, language)
-		replyString = fmt.Sprintf(tr.GetString("strings.Language.group_prompt"), helpers.GetLangFormat(language))
+		replyString = fmt.Sprintf(tr.GetString("strings.language.group_prompt"), helpers.GetLangFormat(language))
 	}
 
 	_, _, err := query.Message.EditText(
@@ -147,13 +147,13 @@ func (moduleStruct) langStartHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		cLang := db.GetLanguage(ctx)
 
 		if chat.Type == "private" {
-			replyString = fmt.Sprintf(tr.GetString("strings.Language.private_prompt"), helpers.GetLangFormat(cLang))
+			replyString = fmt.Sprintf(tr.GetString("strings.language.private_prompt"), helpers.GetLangFormat(cLang))
 		} else {
 			// language won't be changed if user is not admin
 			if !chat_status.RequireUserAdmin(b, ctx, &chat, user.Id, false) {
 				return ext.EndGroups
 			}
-			replyString = fmt.Sprintf(tr.GetString("strings.Language.group_prompt"), helpers.GetLangFormat(cLang))
+			replyString = fmt.Sprintf(tr.GetString("strings.language.group_prompt"), helpers.GetLangFormat(cLang))
 		}
 
 		_, _, err := query.Message.EditText(

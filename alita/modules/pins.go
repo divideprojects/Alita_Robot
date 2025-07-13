@@ -159,7 +159,7 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
 			return err
 		}
-		unpinnedAllMsg, unpinnedAllErr := tr.GetStringWithError("strings.Pins.unpinned_all_pinned_messages_in_this_chat")
+		unpinnedAllMsg, unpinnedAllErr := tr.GetStringWithError("strings.pins.unpinned_all_pinned_messages_in_this_chat")
 		if unpinnedAllErr != nil {
 			log.Errorf("[pins] missing translation for key: %v", unpinnedAllErr)
 			unpinnedAllMsg = "Unpinned all pinned messages in this chat!"
@@ -170,7 +170,7 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 	case "unpinallbtn(no)":
-		cancelledOpMsg, cancelledOpErr := tr.GetStringWithError("strings.Pins.cancelled_operation_to_unpin_messages")
+		cancelledOpMsg, cancelledOpErr := tr.GetStringWithError("strings.pins.cancelled_operation_to_unpin_messages")
 		if cancelledOpErr != nil {
 			log.Errorf("[pins] missing translation for key: %v", cancelledOpErr)
 			cancelledOpMsg = "Cancelled operation to unpin messages!"
@@ -205,19 +205,19 @@ func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	areYouSureMsg, areYouSureErr := tr.GetStringWithError("strings.Pins.are_you_sure_you_want_to_unpin_all_pinned_messages")
+	areYouSureMsg, areYouSureErr := tr.GetStringWithError("strings.pins.are_you_sure_you_want_to_unpin_all_pinned_messages")
 	if areYouSureErr != nil {
 		log.Errorf("[pins] missing translation for key: %v", areYouSureErr)
 		areYouSureMsg = "Are you sure you want to unpin all pinned messages?"
 	}
 
-	yesMsg, yesErr := tr.GetStringWithError("strings.CommonStrings.buttons.yes")
+	yesMsg, yesErr := tr.GetStringWithError("strings.commonstrings.buttons.yes")
 	if yesErr != nil {
 		log.Errorf("[pins] missing translation for key: %v", yesErr)
 		yesMsg = "Yes"
 	}
 
-	noMsg, noErr := tr.GetStringWithError("strings.CommonStrings.buttons.no")
+	noMsg, noErr := tr.GetStringWithError("strings.commonstrings.buttons.no")
 	if noErr != nil {
 		log.Errorf("[pins] missing translation for key: %v", noErr)
 		noMsg = "No"
@@ -272,7 +272,7 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// if command is empty (i.e. Without Arguments) not replied to a message, return and end group
 	if len(args) == 1 && msg.ReplyToMessage == nil {
-		replyOrTextMsg, replyOrTextErr := tr.GetStringWithError("strings.Pins.please_reply_to_a_message_or_give_some_text_to_pin")
+		replyOrTextMsg, replyOrTextErr := tr.GetStringWithError("strings.pins.please_reply_to_a_message_or_give_some_text_to_pin")
 		if replyOrTextErr != nil {
 			log.Errorf("[pins] missing translation for key: %v", replyOrTextErr)
 			replyOrTextMsg = "Please reply to a message or give some text to pin."
@@ -358,7 +358,7 @@ func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage == nil {
-		replyToPinMsg, replyToPinErr := tr.GetStringWithError("strings.Pins.errors.reply_to_pin")
+		replyToPinMsg, replyToPinErr := tr.GetStringWithError("strings.pins.errors.reply_to_pin")
 		if replyToPinErr != nil {
 			log.Errorf("[pins] missing translation for key: %v", replyToPinErr)
 			replyToPinMsg = "Reply to a message to pin it!"
@@ -452,7 +452,7 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 		default:
-			invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.CommonStrings.errors.invalid_option_yes_no")
+			invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.commonstrings.errors.invalid_option_yes_no")
 			if invalidOptionErr != nil {
 				log.Errorf("[pins] missing translation for key: %v", invalidOptionErr)
 				invalidOptionMsg = "Please give me a valid option from <yes/on/no/off>"
@@ -531,7 +531,7 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 		default:
-			invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.CommonStrings.errors.invalid_option_yes_no")
+			invalidOptionMsg, invalidOptionErr := tr.GetStringWithError("strings.commonstrings.errors.invalid_option_yes_no")
 			if invalidOptionErr != nil {
 				log.Errorf("[pins] missing translation for key: %v", invalidOptionErr)
 				invalidOptionMsg = "Please give me a valid option from <yes/on/no/off>"
@@ -608,7 +608,7 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	pinnedMsg := chatInfo.PinnedMessage
 
 	if pinnedMsg == nil {
-		noPinnedMsg, noPinnedErr := tr.GetStringWithError("strings.Pins.no_message_has_been_pinned_in_the_current_chat")
+		noPinnedMsg, noPinnedErr := tr.GetStringWithError("strings.pins.no_message_has_been_pinned_in_the_current_chat")
 		if noPinnedErr != nil {
 			log.Errorf("[pins] missing translation for key: %v", noPinnedErr)
 			noPinnedMsg = "No message has been pinned in the current chat!"

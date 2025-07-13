@@ -84,7 +84,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	if msg.ReplyToMessage == nil {
 		tr := i18n.New(db.GetLanguage(ctx))
-		noReplyMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.no_reply")
+		noReplyMsg, err := tr.GetStringWithError("strings.commonstrings.errors.no_reply")
 		if err != nil {
 			log.Error(err)
 			noReplyMsg = "Reply to a message to use this command"
@@ -110,7 +110,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		noUserMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.no_user_specified")
+		noUserMsg, err := tr.GetStringWithError("strings.commonstrings.errors.no_user_specified")
 		if err != nil {
 			log.Error(err)
 			noUserMsg = "No user specified"
@@ -479,7 +479,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if userId == 0 {
-		noUserMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.no_user_specified")
+		noUserMsg, err := tr.GetStringWithError("strings.commonstrings.errors.no_user_specified")
 		if err != nil {
 			log.Error(err)
 			noUserMsg = "No user specified"
@@ -528,7 +528,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 				log.Error(err)
 				return err
 			}
-			bannedUserMsg, err := tr.GetStringWithError("strings.Bans.banned_user")
+			bannedUserMsg, err := tr.GetStringWithError("strings.bans.banned_user")
 			if err != nil {
 				log.Error(err)
 				bannedUserMsg = "User has been banned: "
@@ -576,7 +576,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         getActionText(tr, "strings.CommonStrings.actions.unban", "Unban") + " (Admin Only)",
+							Text:         getActionText(tr, "strings.commonstrings.actions.unban", "Unban") + " (Admin Only)",
 							CallbackData: fmt.Sprintf("unrestrict.unban.%d", userId),
 						},
 					},
@@ -716,7 +716,7 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         getActionText(tr, "strings.CommonStrings.actions.unban", "Unban") + " (Admin Only)",
+							Text:         getActionText(tr, "strings.commonstrings.actions.unban", "Unban") + " (Admin Only)",
 							CallbackData: fmt.Sprintf("unrestrict.unban.%d", userId),
 						},
 					},
@@ -769,7 +769,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if userId == 0 {
-		noUserMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.no_user_specified")
+		noUserMsg, err := tr.GetStringWithError("strings.commonstrings.errors.no_user_specified")
 		if err != nil {
 			log.Error(err)
 			noUserMsg = "No user specified"
@@ -804,7 +804,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 				log.Error(err)
 				return err
 			}
-			bannedUserMsg, err := tr.GetStringWithError("strings.Bans.banned_user")
+			bannedUserMsg, err := tr.GetStringWithError("strings.bans.banned_user")
 			if err != nil {
 				log.Error(err)
 				bannedUserMsg = "User has been banned: "
@@ -882,7 +882,7 @@ func (m moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if userId == 0 {
-		noUserMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.no_user_specified")
+		noUserMsg, err := tr.GetStringWithError("strings.commonstrings.errors.no_user_specified")
 		if err != nil {
 			log.Error(err)
 			noUserMsg = "No user specified"
@@ -897,7 +897,7 @@ func (m moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		userNotInChatMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.user_not_in_chat")
+		userNotInChatMsg, err := tr.GetStringWithError("strings.commonstrings.errors.user_not_in_chat")
 		if err != nil {
 			log.Error(err)
 			userNotInChatMsg = "User not in chat"
@@ -925,7 +925,7 @@ func (m moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		actionOnSelfMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.action_on_self")
+		actionOnSelfMsg, err := tr.GetStringWithError("strings.commonstrings.errors.action_on_self")
 		if err != nil {
 			log.Error(err)
 			actionOnSelfMsg = "Cannot perform action on self"
@@ -948,10 +948,10 @@ func (m moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: getActionText(tr, "strings.CommonStrings.actions.ban", "Ban"), CallbackData: fmt.Sprintf("restrict.ban.%d", userId)},
-						{Text: getActionText(tr, "strings.CommonStrings.actions.kick", "Kick"), CallbackData: fmt.Sprintf("restrict.kick.%d", userId)},
+						{Text: getActionText(tr, "strings.commonstrings.actions.ban", "Ban"), CallbackData: fmt.Sprintf("restrict.ban.%d", userId)},
+						{Text: getActionText(tr, "strings.commonstrings.actions.kick", "Kick"), CallbackData: fmt.Sprintf("restrict.kick.%d", userId)},
 					},
-					{{Text: getActionText(tr, "strings.CommonStrings.actions.mute", "Mute"), CallbackData: fmt.Sprintf("restrict.mute.%d", userId)}},
+					{{Text: getActionText(tr, "strings.commonstrings.actions.mute", "Mute"), CallbackData: fmt.Sprintf("restrict.mute.%d", userId)}},
 				},
 			},
 		},
@@ -1113,7 +1113,7 @@ func (m moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if userId == 0 {
-		noUserMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.no_user_specified")
+		noUserMsg, err := tr.GetStringWithError("strings.commonstrings.errors.no_user_specified")
 		if err != nil {
 			log.Error(err)
 			noUserMsg = "No user specified"
@@ -1128,7 +1128,7 @@ func (m moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		userNotInChatMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.user_not_in_chat")
+		userNotInChatMsg, err := tr.GetStringWithError("strings.commonstrings.errors.user_not_in_chat")
 		if err != nil {
 			log.Error(err)
 			userNotInChatMsg = "User not in chat"
@@ -1156,7 +1156,7 @@ func (m moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		actionOnSelfMsg, err := tr.GetStringWithError("strings.CommonStrings.errors.action_on_self")
+		actionOnSelfMsg, err := tr.GetStringWithError("strings.commonstrings.errors.action_on_self")
 		if err != nil {
 			log.Error(err)
 			actionOnSelfMsg = "Cannot perform action on self"
@@ -1179,8 +1179,8 @@ func (m moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: getActionText(tr, "strings.CommonStrings.actions.unban", "Unban"), CallbackData: fmt.Sprintf("unrestrict.unban.%d", userId)},
-						{Text: getActionText(tr, "strings.CommonStrings.actions.unmute", "Unmute"), CallbackData: fmt.Sprintf("unrestrict.unmute.%d", userId)},
+						{Text: getActionText(tr, "strings.commonstrings.actions.unban", "Unban"), CallbackData: fmt.Sprintf("unrestrict.unban.%d", userId)},
+						{Text: getActionText(tr, "strings.commonstrings.actions.unmute", "Unmute"), CallbackData: fmt.Sprintf("unrestrict.unmute.%d", userId)},
 					},
 				},
 			},

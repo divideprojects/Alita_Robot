@@ -406,13 +406,13 @@ func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 		askMsg = "Are you sure you want to remove all blacklisted words from this chat?"
 	}
 
-	yesMsg, yesErr := tr.GetStringWithError("strings.CommonStrings.buttons.yes")
+	yesMsg, yesErr := tr.GetStringWithError("strings.commonstrings.buttons.yes")
 	if yesErr != nil {
 		log.Errorf("[blacklists] missing translation for key: %v", yesErr)
 		yesMsg = "Yes"
 	}
 
-	noMsg, noErr := tr.GetStringWithError("strings.CommonStrings.buttons.no")
+	noMsg, noErr := tr.GetStringWithError("strings.commonstrings.buttons.no")
 	if noErr != nil {
 		log.Errorf("[blacklists] missing translation for key: %v", noErr)
 		noMsg = "No"
