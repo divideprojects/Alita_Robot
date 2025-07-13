@@ -638,7 +638,6 @@ func TestFriendlyFallbackBehavior(t *testing.T) {
 		LogMissingKeys:          false, // Disable logging for this test
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
@@ -681,7 +680,6 @@ func TestDebugFallbackBehavior(t *testing.T) {
 		LogMissingKeys:          false, // Disable logging for this test
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
@@ -711,7 +709,6 @@ func TestMixedFallbackBehavior(t *testing.T) {
 		LogMissingKeys:          false, // Disable logging for this test
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
@@ -751,7 +748,6 @@ func TestLanguageSpecificFallbackMessages(t *testing.T) {
 		LogMissingKeys:          false,
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
@@ -796,7 +792,6 @@ func TestLoggingSystem(t *testing.T) {
 		LogMissingKeys:          true,
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 
@@ -870,7 +865,6 @@ func TestGetStringWithErrorLogging(t *testing.T) {
 		LogMissingKeys:          true,
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: false,
-		EnableMetrics:           false,
 	}
 	SetConfig(testConfig)
 

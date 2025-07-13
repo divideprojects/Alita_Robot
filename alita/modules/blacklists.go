@@ -18,7 +18,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
-	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
@@ -656,7 +655,8 @@ func LoadBlacklists(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	dispatcher.AddHandler(handlers.NewCommand("rmblacklist", blacklistsModule.removeBlacklist))
 	dispatcher.AddHandler(handlers.NewCommand("blaction", blacklistsModule.setBlacklistAction))
 	dispatcher.AddHandler(handlers.NewCommand("blacklistaction", blacklistsModule.setBlacklistAction))
-	cmdDecorator.MultiCommand(dispatcher, []string{"remallbl", "rmallbl"}, blacklistsModule.rmAllBlacklists)
+	dispatcher.AddHandler(handlers.NewCommand("remallbl", blacklistsModule.rmAllBlacklists))
+	dispatcher.AddHandler(handlers.NewCommand("rmallbl", blacklistsModule.rmAllBlacklists))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("rmAllBlacklist"), blacklistsModule.buttonHandler))
 	dispatcher.AddHandlerToGroup(handlers.NewMessage(message.Text, blacklistsModule.blacklistWatcher), blacklistsModule.handlerGroup)
 }

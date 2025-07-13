@@ -519,6 +519,7 @@ Only works in private chat. Guides users through configuration steps.
 func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	msg := query.Message
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	// just in case
 	if msg.GetChat().Type != "private" {
@@ -542,7 +543,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 		text      string
 	)
 
-	tr := i18n.New("en")
+	tr = i18n.New("en")
 
 	switch response {
 	case "step1":

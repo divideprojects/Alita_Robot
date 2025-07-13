@@ -12,15 +12,14 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 
-	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
+	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
-	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
@@ -780,7 +779,8 @@ func LoadNotes(dispatcher *ext.Dispatcher, cfg *config.Config) {
 			notesModule.notesWatcher,
 		),
 	)
-	cmdDecorator.MultiCommand(dispatcher, []string{"privnote", "privatenotes"}, notesModule.privNote)
+	dispatcher.AddHandler(handlers.NewCommand("privnote", notesModule.privNote))
+	dispatcher.AddHandler(handlers.NewCommand("privatenotes", notesModule.privNote))
 	dispatcher.AddHandler(handlers.NewCommand("get", notesModule.getNotes))
 	misc.AddCmdToDisableable("get")
 }

@@ -10,7 +10,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
-	"github.com/divideprojects/Alita_Robot/alita/utils/debug_bot"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/permissions"
@@ -699,7 +698,6 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 	var err error
 
 	tr := i18n.New(db.GetLanguage(ctx))
-	debug_bot.PrettyPrintStruct(tr)
 
 	// permission checks
 	userMember, _ := b.GetChatMember(chat.Id, user.Id, nil)
@@ -730,7 +728,6 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 		log.Error(err)
 		cacheMsg = "Admin cache reloaded"
 	}
-	debug_bot.PrettyPrintStruct(cacheMsg)
 	_, err = msg.Reply(b, cacheMsg, helpers.Shtml())
 	if err != nil {
 		log.Error(err)

@@ -37,7 +37,6 @@ type I18nConfig struct {
 
 	// Feature flags
 	EnableStructuredLogging bool
-	EnableMetrics           bool
 }
 
 var (
@@ -108,7 +107,6 @@ func loadConfig() *I18nConfig {
 		LogLevel:                getStringEnv("I18N_LOG_LEVEL", "info"),
 		FallbackMessages:        DefaultFallbackMessages,
 		EnableStructuredLogging: getBoolEnv("I18N_ENABLE_STRUCTURED_LOGGING", true),
-		EnableMetrics:           getBoolEnv("I18N_ENABLE_METRICS", true),
 	}
 
 	// Allow custom fallback messages via environment

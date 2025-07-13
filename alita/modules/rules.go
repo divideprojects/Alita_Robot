@@ -17,7 +17,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
-	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 )
 
@@ -31,6 +30,7 @@ func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
+	tr := i18n.New(db.GetLanguage(ctx))
 	go db.SetChatRules(chat.Id, "")
 	successClearedMsg, successClearedErr := tr.GetStringWithError("strings.Rules.successfully_cleared_rules")
 	if successClearedErr != nil {
@@ -251,6 +251,7 @@ func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 
+	tr := i18n.New(db.GetLanguage(ctx))
 	go db.SetChatRulesButton(chat.Id, "")
 	successClearedBtnMsg, successClearedBtnErr := tr.GetStringWithError("strings.Rules.successfully_cleared_custom_rules_button_text")
 	if successClearedBtnErr != nil {
@@ -275,12 +276,11 @@ func LoadRules(dispatcher *ext.Dispatcher, cfg *config.Config) {
 	dispatcher.AddHandler(handlers.NewCommand("rules", rulesModule.sendRules))
 	misc.AddCmdToDisableable("rules")
 	dispatcher.AddHandler(handlers.NewCommand("setrules", rulesModule.setRules))
-	cmdDecorator.MultiCommand(dispatcher, []string{"resetrules", "clearrules"}, rulesModule.clearRules)
+	dispatcher.AddHandler(handlers.NewCommand("resetrules", rulesModule.clearRules))
+	dispatcher.AddHandler(handlers.NewCommand("clearrules", rulesModule.clearRules))
 	dispatcher.AddHandler(handlers.NewCommand("privaterules", rulesModule.privaterules))
 	dispatcher.AddHandler(handlers.NewCommand("rulesbutton", rulesModule.rulesBtn))
 	dispatcher.AddHandler(handlers.NewCommand("rulesbtn", rulesModule.rulesBtn))
 	dispatcher.AddHandler(handlers.NewCommand("clearrulesbutton", rulesModule.resetRulesBtn))
 	dispatcher.AddHandler(handlers.NewCommand("clearrulesbtn", rulesModule.resetRulesBtn))
-	dispatcher.AddHandler(handlers.NewCommand("resetrulesbutton", rulesModule.resetRulesBtn))
-	dispatcher.AddHandler(handlers.NewCommand("resetrulesbtn", rulesModule.resetRulesBtn))
 }

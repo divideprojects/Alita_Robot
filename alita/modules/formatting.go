@@ -13,7 +13,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
-	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
 )
 
 /*
@@ -262,6 +261,7 @@ func LoadMkdCmd(dispatcher *ext.Dispatcher, cfg *config.Config) {
 
 	HelpModule.AbleMap.Store(formattingModule.moduleName, true)
 	HelpModule.helpableKb[formattingModule.moduleName] = formattingModule.genFormattingKb()
-	cmdDecorator.MultiCommand(dispatcher, []string{"markdownhelp", "formatting"}, formattingModule.markdownHelp)
+	dispatcher.AddHandler(handlers.NewCommand("markdownhelp", formattingModule.markdownHelp))
+	dispatcher.AddHandler(handlers.NewCommand("formatting", formattingModule.markdownHelp))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("formatting."), formattingModule.formattingHandler))
 }
