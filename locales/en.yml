@@ -782,8 +782,8 @@ strings:
       disabled: I'll not delete old welcome messages!
       enabled: I'll try to delete old welcome messages!
     clean_goodbye:
-      status_enabled: I should be deleting welcome messages up to two days old.
-      status_disabled: I'm currently not deleting old welcome messages!
+      status_enabled: I should be deleting goodbye messages up to two days old.
+      status_disabled: I'm currently not deleting old goodbye messages!
       disabled: I'll not delete old goodbye messages!
       enabled: I'll try to delete old goodbye messages!
     del_joined:
