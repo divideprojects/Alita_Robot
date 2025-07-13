@@ -13,7 +13,14 @@ import (
 func GetLanguage(ctx *ext.Context) string {
 	var chat gotgbot.Chat
 	if ctx.CallbackQuery != nil {
-		chat = ctx.CallbackQuery.Message.GetChat()
+		// CallbackQuery.Message can be nil for inline messages, so guard against nil dereference.
+		if ctx.CallbackQuery.Message != nil {
+			chat = ctx.CallbackQuery.Message.GetChat()
+		} else {
+			// No associated chat (inline button), fallback to user language.
+			user := ctx.EffectiveSender.User
+			return getUserLanguage(user.Id)
+		}
 	} else {
 		chat = ctx.Update.Message.Chat
 	}
