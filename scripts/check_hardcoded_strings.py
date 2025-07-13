@@ -201,6 +201,10 @@ class HardcodedStringChecker:
                 if line_stripped.startswith("//") or not line_stripped:
                     continue
 
+                # Skip lines with ignore comment
+                if "//skipcq:ignore" in line:
+                    continue
+
                 # Skip lines that already use tr.GetString
                 if "tr.GetString" in line or "strings." in line:
                     continue
