@@ -23,6 +23,14 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install python dependencies
+        run: pip install -r scripts/requirements.txt
+      - name: Validate i18n usage
+        run: make validate
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
