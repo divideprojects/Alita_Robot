@@ -74,7 +74,7 @@ func (m moduleStruct) connection(b *gotgbot.Bot, ctx *ext.Context) error {
 		_text,
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: connKeyboard,
-			ParseMode:   helpers.HTML,
+			ParseMode:   gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {
@@ -241,7 +241,7 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 		text,
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: replyMarkup,
-			ParseMode:   helpers.HTML,
+			ParseMode:   gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {
@@ -330,7 +330,7 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 		replyText,
 		&gotgbot.EditMessageTextOpts{
 			ReplyMarkup: replyKb,
-			ParseMode:   helpers.HTML,
+			ParseMode:   gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {
@@ -481,7 +481,7 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b, text,
 			&gotgbot.SendMessageOpts{
 				ReplyMarkup: connKeyboard,
-				ParseMode:   helpers.HTML,
+				ParseMode:   gotgbot.ParseModeHTML,
 			},
 		)
 		if err != nil {

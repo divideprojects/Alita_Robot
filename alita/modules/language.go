@@ -103,7 +103,7 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		replyString,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 				IsDisabled: true,
 			},

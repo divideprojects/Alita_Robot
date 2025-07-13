@@ -397,7 +397,7 @@ func (m moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		"<code>Getting team members...</code>",
 		&gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {
@@ -425,7 +425,7 @@ func (m moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		teamText,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {
@@ -455,7 +455,7 @@ func (m moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		"<code>Fetching bot stats...</code>",
 		&gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {
@@ -468,7 +468,7 @@ func (m moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 		b,
 		stats,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {

@@ -365,7 +365,7 @@ func (moduleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	mem, err := chat.GetMember(b, user.Id, nil)
+	mem, err := b.GetChatMember(chat.Id, user.Id, nil)
 	if err != nil {
 		log.Error(err)
 		return err

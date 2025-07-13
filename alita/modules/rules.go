@@ -153,7 +153,7 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 				MessageId:                replyMsgId,
 				AllowSendingWithoutReply: true,
 			},
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {

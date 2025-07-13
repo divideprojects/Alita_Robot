@@ -271,7 +271,7 @@ func (m moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
 	if pasted {
 		_, _, err = edited.EditText(b, fmt.Sprintf("<b>Pasted Successfully!</b>\nhttps://www.nekobin.com/%s.%s", key, extention),
 			&gotgbot.EditMessageTextOpts{
-				ParseMode: helpers.HTML,
+				ParseMode: gotgbot.ParseModeHTML,
 				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 					IsDisabled: true,
 				},
@@ -302,7 +302,7 @@ func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	stime := time.Now()
-	rmsg, _ := msg.Reply(b, "<code>Pinging</code>", &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
+	rmsg, _ := msg.Reply(b, "<code>Pinging</code>", &gotgbot.SendMessageOpts{ParseMode: gotgbot.ParseModeHTML})
 	pingedMsg, pingedErr := tr.GetStringWithError("strings.Misc.pinged_in_percent_ms")
 	if pingedErr != nil {
 		log.Errorf("[misc] missing translation for Misc.pinged_in_percent_ms: %v", pingedErr)

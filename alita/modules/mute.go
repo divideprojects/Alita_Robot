@@ -189,7 +189,7 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err = msg.Reply(b,
 		fmt.Sprintf(baseStr, helpers.MentionHtml(muteUser.Id, muteUser.FirstName)),
 		&gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
@@ -341,7 +341,7 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err = msg.Reply(b,
 		fmt.Sprintf(baseStr, helpers.MentionHtml(muteUser.Id, muteUser.FirstName)),
 		&gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{

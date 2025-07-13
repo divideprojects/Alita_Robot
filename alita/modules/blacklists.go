@@ -288,7 +288,7 @@ func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 				MessageId:                replyMsgId,
 				AllowSendingWithoutReply: true,
 			},
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {
@@ -480,7 +480,7 @@ func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, _, err := query.Message.EditText(b,
 		helpText,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {

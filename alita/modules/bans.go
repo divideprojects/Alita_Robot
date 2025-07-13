@@ -571,7 +571,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 		text = fmt.Sprintf(baseStr, helpers.MentionHtml(userId, name))
 
 		sendMsgOptns = &gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
@@ -711,7 +711,7 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err = msg.Reply(b,
 		fmt.Sprintf(baseStr, helpers.MentionHtml(banUser.Id, banUser.FirstName)),
 		&gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
@@ -1069,7 +1069,7 @@ func (m moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) er
 	_, _, err = query.Message.EditText(b,
 		helpText,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {
@@ -1280,7 +1280,7 @@ func (m moduleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 		b,
 		fmt.Sprint(_updatedMsg.Text, helpText),
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {

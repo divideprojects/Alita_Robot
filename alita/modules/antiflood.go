@@ -294,7 +294,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	if _, err := b.SendMessage(chat.Id,
 		fmt.Sprintf(performActionMsg, helpers.MentionHtml(userId, user.Name()), fmode),
 		&gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: keyboard,
 			},

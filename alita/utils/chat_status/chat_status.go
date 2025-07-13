@@ -163,7 +163,7 @@ func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {
 		return true
 	}
 
-	mem, err := chat.GetMember(b, b.Id, nil)
+	mem, err := b.GetChatMember(chat.Id, b.Id, nil)
 	error_handling.HandleErr(err)
 
 	return mem.MergeChatMember().Status == "administrator"
@@ -205,7 +205,7 @@ func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, use
 
 	found, userMember := cache.GetAdminCacheUser(chat.Id, userId)
 	if !found {
-		tmpUserMember, err := chat.GetMember(b, userId, nil)
+		tmpUserMember, err := b.GetChatMember(chat.Id, userId, nil)
 		userMember = tmpUserMember.MergeChatMember()
 		error_handling.HandleErr(err)
 	}
@@ -274,7 +274,7 @@ func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userI
 
 	found, userMember := cache.GetAdminCacheUser(chat.Id, userId)
 	if !found {
-		tmpUserMember, err := chat.GetMember(b, userId, nil)
+		tmpUserMember, err := b.GetChatMember(chat.Id, userId, nil)
 		userMember = tmpUserMember.MergeChatMember()
 		error_handling.HandleErr(err)
 	}
@@ -322,7 +322,7 @@ func CanBotRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 		}
 	}
 
-	botMember, err := chat.GetMember(b, b.Id, nil)
+	botMember, err := b.GetChatMember(chat.Id, b.Id, nil)
 	error_handling.HandleErr(err)
 	if !botMember.MergeChatMember().CanRestrictMembers {
 		query := ctx.Update.CallbackQuery
@@ -388,7 +388,7 @@ func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId
 
 	found, userMember := cache.GetAdminCacheUser(chat.Id, userId)
 	if !found {
-		tmpUserMember, err := chat.GetMember(b, userId, nil)
+		tmpUserMember, err := b.GetChatMember(chat.Id, userId, nil)
 		userMember = tmpUserMember.MergeChatMember()
 		error_handling.HandleErr(err)
 	}
@@ -436,7 +436,7 @@ func CanBotPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChe
 		}
 	}
 
-	botChatMember, err := chat.GetMember(b, b.Id, nil)
+	botChatMember, err := b.GetChatMember(chat.Id, b.Id, nil)
 	error_handling.HandleErr(err)
 	if !botChatMember.MergeChatMember().CanPromoteMembers {
 		if !justCheck {
@@ -491,7 +491,7 @@ func CanUserPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int
 
 	found, userMember := cache.GetAdminCacheUser(chat.Id, userId)
 	if !found {
-		tmpUserMember, err := chat.GetMember(b, userId, nil)
+		tmpUserMember, err := b.GetChatMember(chat.Id, userId, nil)
 		userMember = tmpUserMember.MergeChatMember()
 		error_handling.HandleErr(err)
 	}
@@ -527,7 +527,7 @@ func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck b
 		}
 	}
 
-	botChatMember, err := chat.GetMember(b, b.Id, nil)
+	botChatMember, err := b.GetChatMember(chat.Id, b.Id, nil)
 	error_handling.HandleErr(err)
 	if !botChatMember.MergeChatMember().CanPinMessages {
 		if !justCheck {
@@ -564,7 +564,7 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 	if chat.Username != "" {
 		return true
 	}
-	botChatMember, err := chat.GetMember(b, b.Id, nil)
+	botChatMember, err := b.GetChatMember(chat.Id, b.Id, nil)
 	error_handling.HandleErr(err)
 	if !botChatMember.MergeChatMember().CanInviteUsers {
 		if !justCheck {
@@ -598,7 +598,7 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 	userid := msg.From.Id
 	found, userMember := cache.GetAdminCacheUser(chat.Id, userid)
 	if !found {
-		tmpUserMember, err := chat.GetMember(b, userid, nil)
+		tmpUserMember, err := b.GetChatMember(chat.Id, userid, nil)
 		userMember = tmpUserMember.MergeChatMember()
 		error_handling.HandleErr(err)
 	}
@@ -655,7 +655,7 @@ func CanUserDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId 
 
 	found, userMember := cache.GetAdminCacheUser(chat.Id, userId)
 	if !found {
-		tmpUserMember, err := chat.GetMember(b, userId, nil)
+		tmpUserMember, err := b.GetChatMember(chat.Id, userId, nil)
 		userMember = tmpUserMember.MergeChatMember()
 		error_handling.HandleErr(err)
 	}
@@ -701,7 +701,7 @@ func CanBotDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 	}
 
 	msg := ctx.EffectiveMessage
-	botChatMember, err := chat.GetMember(b, b.Id, nil)
+	botChatMember, err := b.GetChatMember(chat.Id, b.Id, nil)
 	if err != nil {
 		log.Error(err)
 		return false
@@ -757,7 +757,7 @@ func IsUserInChat(b *gotgbot.Bot, chat *gotgbot.Chat, userId int64) bool {
 	if userId == tgUserId {
 		return false
 	}
-	member, err := chat.GetMember(b, userId, nil)
+	member, err := b.GetChatMember(chat.Id, userId, nil)
 	error_handling.HandleErr(err)
 	userStatus := member.MergeChatMember().Status
 	return !string_handling.FindInStringSlice([]string{"left", "kicked"}, userStatus)
@@ -840,7 +840,7 @@ func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 	}
 
 	msg := ctx.EffectiveMessage
-	mem, err := chat.GetMember(b, userId, nil)
+	mem, err := b.GetChatMember(chat.Id, userId, nil)
 	error_handling.HandleErr(err)
 	if mem == nil {
 		return false

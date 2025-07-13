@@ -143,7 +143,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b,
 			"Filter already exists!\nDo you want to overwrite it?",
 			&gotgbot.SendMessageOpts{
-				ParseMode: helpers.HTML,
+				ParseMode: gotgbot.ParseModeHTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
@@ -304,7 +304,7 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err := msg.Reply(b,
 		info,
 		&gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			ReplyParameters: &gotgbot.ReplyParameters{
 				MessageId:                replyMsgId,
 				AllowSendingWithoutReply: true,

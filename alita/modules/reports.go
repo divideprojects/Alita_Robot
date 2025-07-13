@@ -180,7 +180,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err = msg.Reply(b,
 		reported,
 		&gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			ReplyParameters: &gotgbot.ReplyParameters{
 				MessageId:                replyMsgId,
 				AllowSendingWithoutReply: true,
@@ -429,7 +429,7 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 		replyText,
 		&gotgbot.EditMessageTextOpts{
 			ChatId:    chat.Id,
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {

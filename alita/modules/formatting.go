@@ -8,7 +8,6 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	"github.com/divideprojects/Alita_Robot/alita/config"
-	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
@@ -57,7 +56,7 @@ func (moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := reply(b,
 			markdownHelpMsg,
 			&gotgbot.SendMessageOpts{
-				ParseMode: helpers.HTML,
+				ParseMode: gotgbot.ParseModeHTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
@@ -132,7 +131,7 @@ func (moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 			// TODO: Fix help msg here
 			"Alita supports a large number of formatting options to make your messages more expressive. Take a look!",
 			&gotgbot.SendMessageOpts{
-				ParseMode:   helpers.HTML,
+				ParseMode:   gotgbot.ParseModeHTML,
 				ReplyMarkup: keyboard,
 			},
 		)
@@ -229,7 +228,7 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 	_, _, err := query.Message.EditText(b,
 		helpTxt,
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{

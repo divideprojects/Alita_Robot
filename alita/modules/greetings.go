@@ -761,7 +761,7 @@ func (m moduleStruct) pendingJoins(bot *gotgbot.Bot, ctx *ext.Context) error {
 				fmt.Sprintf("\nUser ID: %d", user.Id),
 			),
 			&gotgbot.SendMessageOpts{
-				ParseMode: helpers.HTML,
+				ParseMode: gotgbot.ParseModeHTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
@@ -838,7 +838,7 @@ func (moduleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, _, err = msg.EditText(b,
 		fmt.Sprintf(helpText, helpers.MentionHtml(joinUser.Id, joinUser.FirstName)),
 		&gotgbot.EditMessageTextOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 		},
 	)
 	if err != nil {

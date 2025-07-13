@@ -308,7 +308,7 @@ func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 					IsDisabled: true,
 				},
-				ParseMode: helpers.HTML,
+				ParseMode: gotgbot.ParseModeHTML,
 			},
 		)
 		if err != nil {
@@ -347,7 +347,7 @@ func (m moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			b,
 			currText,
 			&gotgbot.SendMessageOpts{
-				ParseMode: helpers.HTML,
+				ParseMode: gotgbot.ParseModeHTML,
 				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 					IsDisabled: true,
 				},
@@ -380,7 +380,7 @@ func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// Sort the module names
 	if string_handling.FindInStringSlice([]string{"BackStart", "Help"}, module) {
-		parsemode = helpers.HTML
+		parsemode = gotgbot.ParseModeHTML
 		switch module {
 		case "Help":
 			// This shows the main start menu
@@ -442,7 +442,7 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 			_, err := msg.Reply(b,
 				startHelp,
 				&gotgbot.SendMessageOpts{
-					ParseMode: helpers.HTML,
+					ParseMode: gotgbot.ParseModeHTML,
 					LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 						IsDisabled: true,
 					},
@@ -494,7 +494,7 @@ func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err := b.SendMessage(chat.Id,
 		donateText,
 		&gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 				IsDisabled: true,
 			},
@@ -641,7 +641,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 					html.EscapeString(msg.From.FirstName),
 				),
 				&gotgbot.SendMessageOpts{
-					ParseMode:   helpers.HTML,
+					ParseMode:   gotgbot.ParseModeHTML,
 					ReplyMarkup: &markup,
 				},
 			)
@@ -689,7 +689,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b,
 			moduleHelpString,
 			&gotgbot.SendMessageOpts{
-				ParseMode: helpers.HTML,
+				ParseMode: gotgbot.ParseModeHTML,
 				ReplyParameters: &gotgbot.ReplyParameters{
 					MessageId:                replyMsgId,
 					AllowSendingWithoutReply: true,

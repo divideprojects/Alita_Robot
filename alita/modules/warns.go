@@ -132,7 +132,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 		}
 	}
 
-	chatMember, err := chat.GetMember(b, userId, nil)
+	chatMember, err := b.GetChatMember(chat.Id, userId, nil)
 	if err != nil {
 		log.Error(err)
 		return err

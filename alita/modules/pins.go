@@ -321,7 +321,7 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err = msg.Reply(b,
 			fmt.Sprintf("I have pinned <a href='%s'>this message</a>", pinLink),
 			&gotgbot.SendMessageOpts{
-				ParseMode: helpers.HTML,
+				ParseMode: gotgbot.ParseModeHTML,
 				ReplyParameters: &gotgbot.ReplyParameters{
 					MessageId:                msgToPin,
 					AllowSendingWithoutReply: true,
@@ -626,7 +626,7 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err = msg.Reply(b,
 		fmt.Sprintf("<a href='%s'>Here</a> is the pinned message.", pinLink),
 		&gotgbot.SendMessageOpts{
-			ParseMode: helpers.HTML,
+			ParseMode: gotgbot.ParseModeHTML,
 			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 				IsDisabled: true,
 			},
@@ -659,7 +659,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 			ctx.EffectiveChat.Id,
 			pinT.MsgText,
 			&gotgbot.SendMessageOpts{
-				ParseMode: helpers.HTML,
+				ParseMode: gotgbot.ParseModeHTML,
 				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 					IsDisabled: true,
 				},
@@ -695,7 +695,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 					MessageId:                replyMsgId,
 					AllowSendingWithoutReply: true,
 				},
-				ParseMode:       helpers.HTML,
+				ParseMode:       gotgbot.ParseModeHTML,
 				ReplyMarkup:     keyb,
 				Caption:         pinT.MsgText,
 				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
@@ -711,7 +711,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 					MessageId:                replyMsgId,
 					AllowSendingWithoutReply: true,
 				},
-				ParseMode:       helpers.HTML,
+				ParseMode:       gotgbot.ParseModeHTML,
 				ReplyMarkup:     keyb,
 				Caption:         pinT.MsgText,
 				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
@@ -727,7 +727,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 					MessageId:                replyMsgId,
 					AllowSendingWithoutReply: true,
 				},
-				ParseMode:       helpers.HTML,
+				ParseMode:       gotgbot.ParseModeHTML,
 				ReplyMarkup:     keyb,
 				Caption:         pinT.MsgText,
 				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
@@ -743,7 +743,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 					MessageId:                replyMsgId,
 					AllowSendingWithoutReply: true,
 				},
-				ParseMode:       helpers.HTML,
+				ParseMode:       gotgbot.ParseModeHTML,
 				ReplyMarkup:     keyb,
 				Caption:         pinT.MsgText,
 				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
@@ -759,7 +759,7 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 					MessageId:                replyMsgId,
 					AllowSendingWithoutReply: true,
 				},
-				ParseMode:       helpers.HTML,
+				ParseMode:       gotgbot.ParseModeHTML,
 				ReplyMarkup:     keyb,
 				Caption:         pinT.MsgText,
 				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,

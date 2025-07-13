@@ -127,7 +127,7 @@ func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.M
 				html.EscapeString(ctx.EffectiveMessage.From.FirstName),
 			),
 			&gotgbot.SendMessageOpts{
-				ParseMode:   helpers.HTML,
+				ParseMode:   gotgbot.ParseModeHTML,
 				ReplyMarkup: &markup,
 			},
 		)
@@ -300,7 +300,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		_, err := b.SendMessage(chat.Id,
 			startHelp,
 			&gotgbot.SendMessageOpts{
-				ParseMode: helpers.HTML,
+				ParseMode: gotgbot.ParseModeHTML,
 				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 					IsDisabled: true,
 				},
@@ -339,7 +339,7 @@ func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbm
 		_parsemode = helpers.Markdown
 		helpText, kbmarkup = getModuleHelpAndKb(moduleName, userOrGroupLanguage)
 	} else {
-		_parsemode = helpers.HTML
+		_parsemode = gotgbot.ParseModeHTML
 		helpText = fmt.Sprintf(mainhlp, html.EscapeString(ctx.EffectiveUser.FirstName))
 		kbmarkup = markup
 	}

@@ -196,7 +196,7 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	userMember, err := chat.GetMember(b, userId, nil)
+	userMember, err := b.GetChatMember(chat.Id, userId, nil)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -291,13 +291,13 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	userMember, err := chat.GetMember(b, userId, nil)
+	userMember, err := b.GetChatMember(chat.Id, userId, nil)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
-	botMember, err := chat.GetMember(b, b.Id, nil)
+	botMember, err := b.GetChatMember(chat.Id, b.Id, nil)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -562,7 +562,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	userMember, err := chat.GetMember(b, userId, nil)
+	userMember, err := b.GetChatMember(chat.Id, userId, nil)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -702,7 +702,7 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 	debug_bot.PrettyPrintStruct(tr)
 
 	// permission checks
-	userMember, _ := chat.GetMember(b, user.Id, nil)
+	userMember, _ := b.GetChatMember(chat.Id, user.Id, nil)
 	mem := userMember.MergeChatMember()
 	if mem.Status == "member" {
 		adminMsg, err := tr.GetStringWithError("strings.Admin.you_need_to_be_admin_to_do_this")
