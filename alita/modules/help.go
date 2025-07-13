@@ -99,7 +99,7 @@ func getAboutKb(tr *i18n.I18n) gotgbot.InlineKeyboardMarkup {
 			{
 				{
 					Text:         aboutMeText,
-					CallbackData: "help.about",
+					CallbackData: "about.me",
 				},
 			},
 			{
