@@ -31,6 +31,9 @@ builds:
 snapshot:
   version_template: "dev-{{ .ShortCommit }}"
 
+release:
+  disable: true
+
 dockers:
   - goarch: amd64
     dockerfile: docker/goreleaser
