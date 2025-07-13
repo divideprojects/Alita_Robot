@@ -120,21 +120,21 @@ func Initialize(cfg *config.Config) error {
 
 // attachHandlers wires the opened mongo collections into the generic SettingsHandlers.
 func attachHandlers() {
-    greetingSettingsHandler.Collection = greetingsColl
-    chatSettingsHandler.Collection = chatColl
-    locksSettingsHandler.Collection = lockColl
-    blacklistSettingsHandler.Collection = blacklistsColl
-    warnSettingsHandler.Collection = warnSettingsColl
-    floodSettingsHandler.Collection = antifloodSettingsColl
-    disableSettingsHandler.Collection = disableColl
-    pinSettingsHandler.Collection = pinColl
-    rulesSettingsHandler.Collection = rulesColl
-    noteSettingsHandler.Collection = notesColl
-    connectionSettingsHandler.Collection = connectionSettingsColl
-    channelSettingsHandler.Collection = channelColl
-    adminSettingsHandler.Collection = adminSettingsColl
-    chatReportSettingsHandler.Collection = reportChatColl
-    userReportSettingsHandler.Collection = reportUserColl
+	greetingSettingsHandler.Collection = greetingsColl
+	chatSettingsHandler.Collection = chatColl
+	locksSettingsHandler.Collection = lockColl
+	blacklistSettingsHandler.Collection = blacklistsColl
+	warnSettingsHandler.Collection = warnSettingsColl
+	floodSettingsHandler.Collection = antifloodSettingsColl
+	disableSettingsHandler.Collection = disableColl
+	pinSettingsHandler.Collection = pinColl
+	rulesSettingsHandler.Collection = rulesColl
+	noteSettingsHandler.Collection = notesColl
+	connectionSettingsHandler.Collection = connectionSettingsColl
+	channelSettingsHandler.Collection = channelColl
+	adminSettingsHandler.Collection = adminSettingsColl
+	chatReportSettingsHandler.Collection = reportChatColl
+	userReportSettingsHandler.Collection = reportUserColl
 }
 
 // updateOne updates a single document in the specified collection.
