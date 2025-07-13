@@ -365,7 +365,7 @@ func (i I18n) GetStringWithError(key string) (string, error) {
 }
 
 // getStringFromLang retrieves a string from a specific language.
-func (i I18n) getStringFromLang(langCode, key string) string {
+func (I18n) getStringFromLang(langCode, key string) string {
 	locale, exists := getLocale(langCode)
 	if !exists {
 		return ""
@@ -380,7 +380,7 @@ func (i I18n) getStringFromLang(langCode, key string) string {
 }
 
 // getStringSliceFromLang retrieves a string slice from a specific language.
-func (i I18n) getStringSliceFromLang(langCode, key string) []string {
+func (I18n) getStringSliceFromLang(langCode, key string) []string {
 	locale, exists := getLocale(langCode)
 	if !exists {
 		return nil
@@ -416,7 +416,7 @@ func (i I18n) HasKey(key string) bool {
 }
 
 // hasKeyInLang checks if a key exists in a specific language.
-func (i I18n) hasKeyInLang(langCode, key string) bool {
+func (I18n) hasKeyInLang(langCode, key string) bool {
 	locale, exists := getLocale(langCode)
 	if !exists {
 		return false

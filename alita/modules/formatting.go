@@ -32,7 +32,7 @@ markdownHelp provides markdown and formatting help to users.
 
 Displays help in private chat or via a button in group chats, with a keyboard for navigation.
 */
-func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
 
@@ -150,7 +150,7 @@ genFormattingKb generates the inline keyboard for formatting help options.
 
 Returns a keyboard with buttons for markdown, fillings, and random content.
 */
-func (m moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
+func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
 	return [][]gotgbot.InlineKeyboardButton{
 		{
 			{
@@ -178,7 +178,7 @@ getMarkdownHelp returns the help text for a given formatting sub-module.
 
 Supports markdown formatting, fillings, and random content.
 */
-func (m moduleStruct) getFormattingHelp(formattingType string, tr *i18n.I18n) string {
+func (moduleStruct) getFormattingHelp(formattingType string, tr *i18n.I18n) string {
 	var helpTxt string
 
 	switch formattingType {

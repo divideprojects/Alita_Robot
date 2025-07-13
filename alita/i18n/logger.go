@@ -200,7 +200,7 @@ func (l *Logger) logEvent(event MissingKeyEvent) {
 }
 
 // logStructured outputs structured JSON logs
-func (l *Logger) logStructured(event MissingKeyEvent) {
+func (*Logger) logStructured(event MissingKeyEvent) {
 	jsonData, err := json.Marshal(event)
 	if err != nil {
 		log.Printf("[i18n] Failed to marshal log event: %v", err)
@@ -221,7 +221,7 @@ func (l *Logger) logStructured(event MissingKeyEvent) {
 }
 
 // logSimple outputs simple text logs
-func (l *Logger) logSimple(event MissingKeyEvent) {
+func (*Logger) logSimple(event MissingKeyEvent) {
 	switch event.Level {
 	case "error":
 		log.Printf("[i18n:ERROR] %s", event.Message)
