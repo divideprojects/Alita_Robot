@@ -634,10 +634,11 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
 	tr := i18n.New(db.GetLanguage(ctx))
+	var err error
 
 	if ctx.Update.Message.Chat.Type == "private" {
 		if len(args) == 1 {
-			_, err := b.SendMessage(chat.Id,
+			_, err = b.SendMessage(chat.Id,
 				fmt.Sprintf(
 					mainhlp,
 					html.EscapeString(msg.From.FirstName),
@@ -654,7 +655,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 		} else if len(args) == 2 {
 			module := strings.ToLower(args[1])
 			helpText, replyMarkup, _parsemode := getHelpTextAndMarkup(ctx, module)
-			_, err := b.SendMessage(
+			_, err = b.SendMessage(
 				chat.Id,
 				helpText,
 				&gotgbot.SendMessageOpts{
@@ -668,7 +669,12 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		pmMeKbText := tr.GetString("strings.Help.help.button")
+		var pmMeKbText string
+		pmMeKbText, err = tr.GetStringWithError("strings.Help.help.button")
+		if err != nil {
+			log.Error(err)
+			return err
+		}
 		pmMeKbUri := fmt.Sprintf("https://t.me/%s?start=help_help", b.Username)
 		moduleHelpString := tr.GetString("strings.Help.start.group_prompt")
 		replyMsgId := msg.MessageId
@@ -688,7 +694,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 			replyMsgId = msg.ReplyToMessage.MessageId
 		}
 
-		_, err := msg.Reply(b,
+		_, err = msg.Reply(b,
 			moduleHelpString,
 			&gotgbot.SendMessageOpts{
 				ParseMode: gotgbot.ParseModeHTML,

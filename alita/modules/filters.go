@@ -337,7 +337,12 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	filterKeys := db.GetFiltersList(chat.Id)
 
 	if len(filterKeys) == 0 {
-		_, err := msg.Reply(b, tr.GetString("strings.Filters.list.no_filters"), helpers.Shtml())
+		noFiltersMsg, err := tr.GetStringWithError("strings.Filters.list.no_filters")
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		_, err = msg.Reply(b, noFiltersMsg, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
