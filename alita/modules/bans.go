@@ -98,7 +98,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		anonUserKickMsg, anonUserKickErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.anon_user_kick")
+		anonUserKickMsg, anonUserKickErr := tr.GetStringWithError("strings.bans.errors.anon_user_kick")
 		if anonUserKickErr != nil {
 			log.Errorf("[bans] missing translation for errors.anon_user_kick: %v", anonUserKickErr)
 			anonUserKickMsg = "This command cannot be used on anonymous user, these user can only be banned/unbanned."
@@ -127,7 +127,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		userNotInChatMsg, userNotInChatErr := tr.GetStringWithError("strings." + m.moduleName + ".kick.user_not_in_chat")
+		userNotInChatMsg, userNotInChatErr := tr.GetStringWithError("strings.bans.kick.user_not_in_chat")
 		if userNotInChatErr != nil {
 			log.Errorf("[bans] missing translation for kick.user_not_in_chat: %v", userNotInChatErr)
 			userNotInChatMsg = "This user is not in this chat, and how am I supposed to restrict them?"
@@ -140,7 +140,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		cannotKickAdminMsg, cannotKickAdminErr := tr.GetStringWithError("strings." + m.moduleName + ".kick.cannot_kick_admin")
+		cannotKickAdminMsg, cannotKickAdminErr := tr.GetStringWithError("strings.bans.kick.cannot_kick_admin")
 		if cannotKickAdminErr != nil {
 			log.Errorf("[bans] missing translation for kick.cannot_kick_admin: %v", cannotKickAdminErr)
 			cannotKickAdminMsg = "Why would I kick an admin? That sounds like a pretty dumb idea."
@@ -154,7 +154,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		kickBotItselfMsg, kickBotItselfErr := tr.GetStringWithError("strings." + m.moduleName + ".kick.is_bot_itself")
+		kickBotItselfMsg, kickBotItselfErr := tr.GetStringWithError("strings.bans.kick.is_bot_itself")
 		if kickBotItselfErr != nil {
 			log.Errorf("[bans] missing translation for kick.is_bot_itself: %v", kickBotItselfErr)
 			kickBotItselfMsg = "Why would I kick myself?"
@@ -187,7 +187,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	kickedUserMsg, kickedUserErr := tr.GetStringWithError("strings." + m.moduleName + ".kick.kicked_user")
+	kickedUserMsg, kickedUserErr := tr.GetStringWithError("strings.bans.kick.kicked_user")
 	if kickedUserErr != nil {
 		log.Errorf("[bans] missing translation for kick.kicked_user: %v", kickedUserErr)
 		kickedUserMsg = "User has been kicked."
@@ -195,7 +195,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	baseStr := kickedUserMsg
 
 	if reason != "" {
-		kickedReasonMsg, kickedReasonErr := tr.GetStringWithError("strings." + m.moduleName + ".kick.kicked_reason")
+		kickedReasonMsg, kickedReasonErr := tr.GetStringWithError("strings.bans.kick.kicked_reason")
 		if kickedReasonErr != nil {
 			log.Errorf("[bans] missing translation for kick.kicked_reason: %v", kickedReasonErr)
 			kickedReasonMsg = "\n<b>Reason:</b> %s"
@@ -232,7 +232,7 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		kickBotItselfMsg2, kickBotItselfErr2 := tr.GetStringWithError("strings." + m.moduleName + ".kick.is_bot_itself")
+		kickBotItselfMsg2, kickBotItselfErr2 := tr.GetStringWithError("strings.bans.kick.is_bot_itself")
 		if kickBotItselfErr2 != nil {
 			log.Errorf("[bans] missing translation for kick.is_bot_itself: %v", kickBotItselfErr2)
 			kickBotItselfMsg2 = "Why would I kick myself?"
@@ -265,14 +265,14 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	kickedUserMsg2, kickedUserErr2 := tr.GetStringWithError("strings." + m.moduleName + ".kick.kicked_user")
+	kickedUserMsg2, kickedUserErr2 := tr.GetStringWithError("strings.bans.kick.kicked_user")
 	if kickedUserErr2 != nil {
 		log.Errorf("[bans] missing translation for kick.kicked_user: %v", kickedUserErr2)
 		kickedUserMsg2 = "Successfully Kicked %s."
 	}
 	baseStr := kickedUserMsg2
 	if reason != "" {
-		kickedReasonMsg2, kickedReasonErr2 := tr.GetStringWithError("strings." + m.moduleName + ".kick.kicked_reason")
+		kickedReasonMsg2, kickedReasonErr2 := tr.GetStringWithError("strings.bans.kick.kicked_reason")
 		if kickedReasonErr2 != nil {
 			log.Errorf("[bans] missing translation for kick.kicked_reason: %v", kickedReasonErr2)
 			kickedReasonMsg2 = "\n<b>Reason:</b> %s"
@@ -318,7 +318,7 @@ func (m moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// Don't allow admins to use the command
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-		kickmeIsAdminMsg, kickmeIsAdminErr := tr.GetStringWithError("strings." + m.moduleName + ".kickme.is_admin")
+		kickmeIsAdminMsg, kickmeIsAdminErr := tr.GetStringWithError("strings.bans.kickme.is_admin")
 		if kickmeIsAdminErr != nil {
 			log.Errorf("[bans] missing translation for kickme.is_admin: %v", kickmeIsAdminErr)
 			kickmeIsAdminMsg = "You are an admin, and you are stuck here with everyone else!"
@@ -338,7 +338,7 @@ func (m moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	kickmeOkOutMsg, kickmeOkOutErr := tr.GetStringWithError("strings." + m.moduleName + ".kickme.ok_out")
+	kickmeOkOutMsg, kickmeOkOutErr := tr.GetStringWithError("strings.bans.kickme.ok_out")
 	if kickmeOkOutErr != nil {
 		log.Errorf("[bans] missing translation for kickme.ok_out: %v", kickmeOkOutErr)
 		kickmeOkOutMsg = "As per your wish, Get out!"
@@ -373,7 +373,7 @@ func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		banBotItselfMsg, banBotItselfErr := tr.GetStringWithError("strings." + m.moduleName + ".ban.is_bot_itself")
+		banBotItselfMsg, banBotItselfErr := tr.GetStringWithError("strings.bans.ban.is_bot_itself")
 		if banBotItselfErr != nil {
 			log.Errorf("[bans] missing translation for ban.is_bot_itself: %v", banBotItselfErr)
 			banBotItselfMsg = "Do you really think I will ban myself?"
@@ -409,7 +409,7 @@ func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	tbanMsg, tbanErr := tr.GetStringWithError("strings." + m.moduleName + ".ban.tban")
+	tbanMsg, tbanErr := tr.GetStringWithError("strings.bans.ban.tban")
 	if tbanErr != nil {
 		log.Errorf("[bans] missing translation for ban.tban: %v", tbanErr)
 		tbanMsg = "Banned %s for %s"
@@ -420,7 +420,7 @@ func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 		timeVal,
 	)
 	if reason != "" {
-		banReasonMsg, banReasonErr := tr.GetStringWithError("strings." + m.moduleName + ".ban.ban_reason")
+		banReasonMsg, banReasonErr := tr.GetStringWithError("strings.bans.ban.ban_reason")
 		if banReasonErr != nil {
 			log.Errorf("[bans] missing translation for ban.ban_reason: %v", banReasonErr)
 			banReasonMsg = "\n<b>Reason:</b> %s"
@@ -493,7 +493,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		banIsAdminMsg, banIsAdminErr := tr.GetStringWithError("strings." + m.moduleName + ".ban.is_admin")
+		banIsAdminMsg, banIsAdminErr := tr.GetStringWithError("strings.bans.ban.is_admin")
 		if banIsAdminErr != nil {
 			log.Errorf("[bans] missing translation for ban.is_admin: %v", banIsAdminErr)
 			banIsAdminMsg = "Why would I ban an admin? That sounds like a pretty dumb idea."
@@ -507,7 +507,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		banBotItselfMsg2, banBotItselfErr2 := tr.GetStringWithError("strings." + m.moduleName + ".ban.is_bot_itself")
+		banBotItselfMsg2, banBotItselfErr2 := tr.GetStringWithError("strings.bans.ban.is_bot_itself")
 		if banBotItselfErr2 != nil {
 			log.Errorf("[bans] missing translation for ban.is_bot_itself: %v", banBotItselfErr2)
 			banBotItselfMsg2 = "Do you really think I will ban myself?"
@@ -535,7 +535,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 			text = bannedUserMsg + helpers.MentionHtml(userId, msg.ReplyToMessage.GetSender().Name())
 		} else {
-			anonUserBanReplyMsg, anonUserBanReplyErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.anon_user_ban_reply")
+			anonUserBanReplyMsg, anonUserBanReplyErr := tr.GetStringWithError("strings.bans.errors.anon_user_ban_reply")
 			if anonUserBanReplyErr != nil {
 				log.Errorf("[bans] missing translation for errors.anon_user_ban_reply: %v", anonUserBanReplyErr)
 				anonUserBanReplyMsg = "You can only ban an anonymous user by replying to their message."
@@ -552,7 +552,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		_, name, _ := extraction.GetUserInfo(userId)
 
-		normalBanMsg, normalBanErr := tr.GetStringWithError("strings." + m.moduleName + ".ban.normal_ban")
+		normalBanMsg, normalBanErr := tr.GetStringWithError("strings.bans.ban.normal_ban")
 		if normalBanErr != nil {
 			log.Errorf("[bans] missing translation for ban.normal_ban: %v", normalBanErr)
 			normalBanMsg = "User has been banned."
@@ -560,7 +560,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 		baseStr := normalBanMsg
 
 		if reason != "" {
-			banReasonMsg, banReasonErr := tr.GetStringWithError("strings." + m.moduleName + ".ban.ban_reason")
+			banReasonMsg, banReasonErr := tr.GetStringWithError("strings.bans.ban.ban_reason")
 			if banReasonErr != nil {
 				log.Errorf("[bans] missing translation for ban.ban_reason: %v", banReasonErr)
 				banReasonMsg = "\n<b>Reason:</b> %s"
@@ -662,7 +662,7 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage == nil {
-		noReplyMsg, noReplyErr := tr.GetStringWithError("strings." + m.moduleName + ".ban.dban.no_reply")
+		noReplyMsg, noReplyErr := tr.GetStringWithError("strings.bans.ban.dban.no_reply")
 		if noReplyErr != nil {
 			log.Errorf("[bans] missing translation for ban.dban.no_reply: %v", noReplyErr)
 			noReplyMsg = "Reply to a message to delete and ban the user."
@@ -693,14 +693,14 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	normalBanMsg2, normalBanErr2 := tr.GetStringWithError("strings." + m.moduleName + ".ban.normal_ban")
+	normalBanMsg2, normalBanErr2 := tr.GetStringWithError("strings.bans.ban.normal_ban")
 	if normalBanErr2 != nil {
 		log.Errorf("[bans] missing translation for ban.normal_ban: %v", normalBanErr2)
 		normalBanMsg2 = "Another one bites the dust...!\nBanned %s."
 	}
 	baseStr := normalBanMsg2
 	if reason != "" {
-		banReasonMsg2, banReasonErr2 := tr.GetStringWithError("strings." + m.moduleName + ".ban.ban_reason")
+		banReasonMsg2, banReasonErr2 := tr.GetStringWithError("strings.bans.ban.ban_reason")
 		if banReasonErr2 != nil {
 			log.Errorf("[bans] missing translation for ban.ban_reason: %v", banReasonErr2)
 			banReasonMsg2 = "\n<b>Reason:</b> %s"
@@ -783,7 +783,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		unbanBotItselfMsg, unbanBotItselfErr := tr.GetStringWithError("strings." + m.moduleName + ".unban.is_bot_itself")
+		unbanBotItselfMsg, unbanBotItselfErr := tr.GetStringWithError("strings.bans.unban.is_bot_itself")
 		if unbanBotItselfErr != nil {
 			log.Errorf("[bans] missing translation for unban.is_bot_itself: %v", unbanBotItselfErr)
 			unbanBotItselfMsg = "I'm not banned here, why would I unban myself?"
@@ -811,7 +811,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 			text = bannedUserMsg + helpers.MentionHtml(userId, msg.ReplyToMessage.GetSender().Name())
 		} else {
-			anonUserBanReplyMsg2, anonUserBanReplyErr2 := tr.GetStringWithError("strings." + m.moduleName + ".errors.anon_user_ban_reply")
+			anonUserBanReplyMsg2, anonUserBanReplyErr2 := tr.GetStringWithError("strings.bans.errors.anon_user_ban_reply")
 			if anonUserBanReplyErr2 != nil {
 				log.Errorf("[bans] missing translation for errors.anon_user_ban_reply: %v", anonUserBanReplyErr2)
 				anonUserBanReplyMsg2 = "You can only unban an anonymous user by replying to their message."
@@ -832,7 +832,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 
-		unbannedUserMsg, unbannedUserErr := tr.GetStringWithError("strings." + m.moduleName + ".unban.unbanned_user")
+		unbannedUserMsg, unbannedUserErr := tr.GetStringWithError("strings.bans.unban.unbanned_user")
 		if unbannedUserErr != nil {
 			log.Errorf("[bans] missing translation for unban.unbanned_user: %v", unbannedUserErr)
 			unbannedUserMsg = "User %s has been unbanned."
@@ -911,7 +911,7 @@ func (m moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		restrictAdminMsg, restrictAdminErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.restrict_admin")
+		restrictAdminMsg, restrictAdminErr := tr.GetStringWithError("strings.bans.errors.restrict_admin")
 		if restrictAdminErr != nil {
 			log.Errorf("[bans] missing translation for errors.restrict_admin: %v", restrictAdminErr)
 			restrictAdminMsg = "I can't restrict an admin! They have immunity powers."
@@ -938,7 +938,7 @@ func (m moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	restrictQuestionMsg, restrictQuestionErr := tr.GetStringWithError("strings." + m.moduleName + ".restrict.question")
+	restrictQuestionMsg, restrictQuestionErr := tr.GetStringWithError("strings.bans.restrict.question")
 	if restrictQuestionErr != nil {
 		log.Errorf("[bans] missing translation for restrict.question: %v", restrictQuestionErr)
 		restrictQuestionMsg = "What do you want to do with this user?"
@@ -1000,7 +1000,7 @@ func (m moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) er
 			log.Error(err)
 			return err
 		}
-		kickSuccessMsg, kickSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".restrict.kick_success")
+		kickSuccessMsg, kickSuccessErr := tr.GetStringWithError("strings.bans.restrict.kick_success")
 		if kickSuccessErr != nil {
 			log.Errorf("[bans] missing translation for restrict.kick_success: %v", kickSuccessErr)
 			kickSuccessMsg = "%s kicked %s from the chat."
@@ -1040,7 +1040,7 @@ func (m moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) er
 			log.Error(err)
 			return err
 		}
-		muteSuccessMsg, muteSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".restrict.mute_success")
+		muteSuccessMsg, muteSuccessErr := tr.GetStringWithError("strings.bans.restrict.mute_success")
 		if muteSuccessErr != nil {
 			log.Errorf("[bans] missing translation for restrict.mute_success: %v", muteSuccessErr)
 			muteSuccessMsg = "%s muted %s in the chat."
@@ -1055,7 +1055,7 @@ func (m moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) er
 			log.Error(err)
 			return err
 		}
-		banSuccessMsg, banSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".restrict.ban_success")
+		banSuccessMsg, banSuccessErr := tr.GetStringWithError("strings.bans.restrict.ban_success")
 		if banSuccessErr != nil {
 			log.Errorf("[bans] missing translation for restrict.ban_success: %v", banSuccessErr)
 			banSuccessMsg = "%s banned %s from the chat."
@@ -1142,7 +1142,7 @@ func (m moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		restrictAdminMsg2, restrictAdminErr2 := tr.GetStringWithError("strings." + m.moduleName + ".errors.restrict_admin")
+		restrictAdminMsg2, restrictAdminErr2 := tr.GetStringWithError("strings.bans.errors.restrict_admin")
 		if restrictAdminErr2 != nil {
 			log.Errorf("[bans] missing translation for errors.restrict_admin: %v", restrictAdminErr2)
 			restrictAdminMsg2 = "I can't unrestrict an admin! They have immunity powers."
@@ -1169,7 +1169,7 @@ func (m moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	unrestrictQuestionMsg, unrestrictQuestionErr := tr.GetStringWithError("strings." + m.moduleName + ".unrestrict.question")
+	unrestrictQuestionMsg, unrestrictQuestionErr := tr.GetStringWithError("strings.bans.unrestrict.question")
 	if unrestrictQuestionErr != nil {
 		log.Errorf("[bans] missing translation for unrestrict.question: %v", unrestrictQuestionErr)
 		unrestrictQuestionMsg = "What do you want to undo for this user?"
@@ -1236,7 +1236,7 @@ func (m moduleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 			return err
 		}
 
-		unmuteSuccessMsg, unmuteSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".unrestrict.unmute_success")
+		unmuteSuccessMsg, unmuteSuccessErr := tr.GetStringWithError("strings.bans.unrestrict.unmute_success")
 		if unmuteSuccessErr != nil {
 			log.Errorf("[bans] missing translation for unrestrict.unmute_success: %v", unmuteSuccessErr)
 			unmuteSuccessMsg = "%s unmuted the user."
@@ -1257,7 +1257,7 @@ func (m moduleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 			return err
 		}
 
-		unbanSuccessMsg, unbanSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".unrestrict.unban_success")
+		unbanSuccessMsg, unbanSuccessErr := tr.GetStringWithError("strings.bans.unrestrict.unban_success")
 		if unbanSuccessErr != nil {
 			log.Errorf("[bans] missing translation for unrestrict.unban_success: %v", unbanSuccessErr)
 			unbanSuccessMsg = "%s unbanned the user."

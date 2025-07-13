@@ -63,7 +63,7 @@ func (m moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toDisable = append(toDisable, i)
-				successMsg, successErr := tr.GetStringWithError("strings." + m.moduleName + ".success")
+				successMsg, successErr := tr.GetStringWithError("strings.disabling.success")
 				if successErr != nil {
 					log.Errorf("[disabling] missing translation for key: %v", successErr)
 					successMsg = "Disabled the use of the following in this chat:"
@@ -78,7 +78,7 @@ func (m moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			} else {
 				_, err := msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".errors.unknown_command"), i), nil)
+					fmt.Sprintf(tr.GetString("strings.disabling.errors.unknown_command"), i), nil)
 				if err != nil {
 					log.Error(err)
 					return err
@@ -91,7 +91,7 @@ func (m moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		noCommandMsg, noCommandErr := tr.GetStringWithError("strings." + m.moduleName + ".enable.errors.no_command_specified")
+		noCommandMsg, noCommandErr := tr.GetStringWithError("strings.disabling.enable.errors.no_command_specified")
 		if noCommandErr != nil {
 			log.Errorf("[disabling] missing translation for key: %v", noCommandErr)
 			noCommandMsg = "You haven't specified a command to disable."
@@ -293,7 +293,7 @@ func (m moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toEnable = append(toEnable, i)
-				enableSuccessMsg, enableSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".enable.success")
+				enableSuccessMsg, enableSuccessErr := tr.GetStringWithError("strings.disabling.enable.success")
 				if enableSuccessErr != nil {
 					log.Errorf("[disabling] missing translation for key: %v", enableSuccessErr)
 					enableSuccessMsg = "Re-Enabled the use of the following in this chat:"
@@ -308,7 +308,7 @@ func (m moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			} else {
 				_, err := msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".enable.errors.unknown_command"), i), nil)
+					fmt.Sprintf(tr.GetString("strings.disabling.enable.errors.unknown_command"), i), nil)
 				if err != nil {
 					log.Error(err)
 					return err
@@ -321,7 +321,7 @@ func (m moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		noCommandMsg, noCommandErr := tr.GetStringWithError("strings." + m.moduleName + ".enable.errors.no_command_specified")
+		noCommandMsg, noCommandErr := tr.GetStringWithError("strings.disabling.enable.errors.no_command_specified")
 		if noCommandErr != nil {
 			log.Errorf("[disabling] missing translation for key: %v", noCommandErr)
 			noCommandMsg = "You haven't specified a command to disable."

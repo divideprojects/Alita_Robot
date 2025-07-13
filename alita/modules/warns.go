@@ -108,7 +108,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 
 	// permissions check
 	if chat_status.IsUserAdmin(b, chat.Id, userId) {
-		warnAdminMsg, warnAdminErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.warn_admin")
+		warnAdminMsg, warnAdminErr := tr.GetStringWithError("strings.warns.errors.warn_admin")
 		if warnAdminErr != nil {
 			log.Errorf("[warns] missing translation for key: %v", warnAdminErr)
 			warnAdminMsg = "I'm not going to warn an admin!"
@@ -147,7 +147,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 		switch warnrc.WarnMode {
 		case "kick":
 			_, err = chat.BanMember(b, userId, nil)
-			kickMsg, kickErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.limit_kick")
+			kickMsg, kickErr := tr.GetStringWithError("strings.warns.warn.limit_kick")
 			if kickErr != nil {
 				log.Errorf("[warn] missing translation for limit_kick: %v", kickErr)
 				kickMsg = "User has been kicked after reaching the warning limit."
@@ -177,7 +177,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 				},
 				nil,
 			)
-			muteMsg, muteErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.limit_mute")
+			muteMsg, muteErr := tr.GetStringWithError("strings.warns.warn.limit_mute")
 			if muteErr != nil {
 				log.Errorf("[warn] missing translation for limit_mute: %v", muteErr)
 				muteMsg = "User has been muted after reaching the warning limit."
@@ -189,7 +189,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 			}
 		case "ban":
 			_, err = chat.BanMember(b, userId, nil)
-			banMsg, banErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.limit_ban")
+			banMsg, banErr := tr.GetStringWithError("strings.warns.warn.limit_ban")
 			if banErr != nil {
 				log.Errorf("[warn] missing translation for limit_ban: %v", banErr)
 				banMsg = "User has been banned after reaching the warning limit."
@@ -210,7 +210,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         getWarnButtonText(tr, "strings."+m.moduleName+".warn.remove_warn_button", "❌ Remove warn"),
+							Text:         getWarnButtonText(tr, "strings.warns.warn.remove_warn_button", "❌ Remove warn"),
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 						{
@@ -225,7 +225,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         getWarnButtonText(tr, "strings."+m.moduleName+".warn.remove_warn_button", "❌ Remove warn"),
+							Text:         getWarnButtonText(tr, "strings.warns.warn.remove_warn_button", "❌ Remove warn"),
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 					},
@@ -233,7 +233,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 			}
 		}
 
-		successMsg, successErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.success")
+		successMsg, successErr := tr.GetStringWithError("strings.warns.warn.success")
 		if successErr != nil {
 			log.Errorf("[warn] missing translation for warn.success: %v", successErr)
 			successMsg = "User %s has been warned (%d/%d)."
@@ -241,7 +241,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 		reply = fmt.Sprintf(successMsg, helpers.MentionHtml(u.Id, u.FirstName), numWarns, warnrc.WarnLimit)
 
 		if reason != "" {
-			reasonMsg, reasonErr := tr.GetStringWithError("strings." + m.moduleName + ".warn.reason")
+			reasonMsg, reasonErr := tr.GetStringWithError("strings.warns.warn.reason")
 			if reasonErr != nil {
 				log.Errorf("[warn] missing translation for warn.reason: %v", reasonErr)
 				reasonMsg = "\n<b>Reason:</b> %s"
