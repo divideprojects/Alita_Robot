@@ -200,7 +200,7 @@ func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	for _, perm := range args {
 		if !string_handling.FindInStringSlice(m.getLockMapAsArray(), perm) {
-			_, err := msg.Reply(b, fmt.Sprintf("`%s` is not a correct lock type, check /locktypes.", perm), helpers.Smarkdown())
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Locks.lock.errors.incorrect_lock_type"), perm), helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -255,7 +255,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	for _, perm := range args {
 		if !string_handling.FindInStringSlice(m.getLockMapAsArray(), perm) {
-			_, err := msg.Reply(b, fmt.Sprintf("`%s` is not a correct lock type, check /locktypes.", perm), helpers.Smarkdown())
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.Locks.unlock.errors.incorrect_lock_type"), perm), helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -270,7 +270,7 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	_, err := msg.Reply(b,
-		fmt.Sprintf("Un-Locked the following in this group:\n - %s",
+		fmt.Sprintf(tr.GetString("strings.Locks.unlock.success"),
 			strings.Join(toLock, "\n - ")),
 		helpers.Smarkdown(),
 	)

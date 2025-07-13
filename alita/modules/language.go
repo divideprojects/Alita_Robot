@@ -47,6 +47,7 @@ func (m moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
 
 func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+	tr := i18n.New(db.GetLanguage(ctx))
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
@@ -55,7 +56,7 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 	cLang := db.GetLanguage(ctx)
 
 	if ctx.Update.Message.Chat.Type == "private" {
-		replyString = fmt.Sprintf("Your Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
+		replyString = fmt.Sprintf(tr.GetString("strings.Language.private_prompt"), helpers.GetLangFormat(cLang))
 	} else {
 
 		// language won't be changed if user is not admin
@@ -63,7 +64,7 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.EndGroups
 		}
 
-		replyString = fmt.Sprintf("This Group's Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
+		replyString = fmt.Sprintf(tr.GetString("strings.Language.group_prompt"), helpers.GetLangFormat(cLang))
 	}
 
 	_, err := msg.Reply(
@@ -85,6 +86,7 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 
 func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
+	tr := i18n.New(db.GetLanguage(ctx))
 	chat := query.Message.GetChat()
 	user := query.From
 
@@ -93,10 +95,10 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if chat.Type == "private" {
 		go db.ChangeUserLanguage(user.Id, language)
-		replyString = fmt.Sprintf("Your language has been changed to %s", helpers.GetLangFormat(language))
+		replyString = fmt.Sprintf(tr.GetString("strings.Language.private_prompt"), helpers.GetLangFormat(language))
 	} else {
 		go db.ChangeGroupLanguage(chat.Id, language)
-		replyString = fmt.Sprintf("This group's language has been changed to %s", helpers.GetLangFormat(language))
+		replyString = fmt.Sprintf(tr.GetString("strings.Language.group_prompt"), helpers.GetLangFormat(language))
 	}
 
 	_, _, err := query.Message.EditText(
@@ -125,6 +127,7 @@ Shows the language selection menu when the language button is clicked from the s
 func (moduleStruct) langStartHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	args := strings.Split(query.Data, ".")
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	if len(args) < 2 {
 		log.Warnf("[languages] Invalid callback data format: %s", query.Data)
@@ -144,13 +147,13 @@ func (moduleStruct) langStartHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		cLang := db.GetLanguage(ctx)
 
 		if chat.Type == "private" {
-			replyString = fmt.Sprintf("Your Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
+			replyString = fmt.Sprintf(tr.GetString("strings.Language.private_prompt"), helpers.GetLangFormat(cLang))
 		} else {
 			// language won't be changed if user is not admin
 			if !chat_status.RequireUserAdmin(b, ctx, &chat, user.Id, false) {
 				return ext.EndGroups
 			}
-			replyString = fmt.Sprintf("This Group's Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
+			replyString = fmt.Sprintf(tr.GetString("strings.Language.group_prompt"), helpers.GetLangFormat(cLang))
 		}
 
 		_, _, err := query.Message.EditText(

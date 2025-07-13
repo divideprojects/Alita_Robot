@@ -212,6 +212,7 @@ Only the owner can use this command. Replies with the result.
 */
 func (m moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+	tr := i18n.New(db.GetLanguage(ctx))
 	cfg := m.cfg
 	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
@@ -233,9 +234,9 @@ func (m moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if memStatus.Sudo {
-		txt = "User is already Sudo!"
+		txt = tr.GetString("strings.Dev.addsudo.already_sudo")
 	} else {
-		txt = fmt.Sprintf("Added %s to Sudo List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = fmt.Sprintf(tr.GetString("strings.Dev.addsudo.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.AddSudo(userId)
 	}
 
@@ -255,6 +256,7 @@ Only the owner can use this command. Replies with the result.
 */
 func (m moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+	tr := i18n.New(db.GetLanguage(ctx))
 	cfg := m.cfg
 	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
@@ -276,9 +278,9 @@ func (m moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if memStatus.Dev {
-		txt = "User is already Dev!"
+		txt = tr.GetString("strings.Dev.adddev.already_dev")
 	} else {
-		txt = fmt.Sprintf("Added %s to Dev List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = fmt.Sprintf(tr.GetString("strings.Dev.adddev.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.AddDev(userId)
 	}
 
@@ -298,6 +300,7 @@ Only the owner can use this command. Replies with the result.
 */
 func (m moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+	tr := i18n.New(db.GetLanguage(ctx))
 	cfg := m.cfg
 	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
@@ -319,9 +322,9 @@ func (m moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if !memStatus.Sudo {
-		txt = "User is not Sudo!"
+		txt = tr.GetString("strings.Dev.remsudo.not_sudo")
 	} else {
-		txt = fmt.Sprintf("Removed %s from Sudo List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = fmt.Sprintf(tr.GetString("strings.Dev.remsudo.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.RemSudo(userId)
 	}
 
@@ -341,6 +344,7 @@ Only the owner can use this command. Replies with the result.
 */
 func (m moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+	tr := i18n.New(db.GetLanguage(ctx))
 	cfg := m.cfg
 	if user.Id != cfg.OwnerId {
 		return ext.ContinueGroups
@@ -362,9 +366,9 @@ func (m moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if !memStatus.Dev {
-		txt = "User is not Dev!"
+		txt = tr.GetString("strings.Dev.remdev.not_dev")
 	} else {
-		txt = fmt.Sprintf("Removed %s from Dev List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = fmt.Sprintf(tr.GetString("strings.Dev.remdev.success"), helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
 		go db.RemDev(userId)
 	}
 

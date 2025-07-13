@@ -906,7 +906,7 @@ strings:
     bot:
       no_admin_permission: I see a bot, and I've been told to stop them joining...
         but I'm not admin!
-      no_ban_permission: I see a bot, and I've been told to stop them joining... but
+      no_ban_permission: I see a bot, and I've been told to ban them... but
         I don't have permission to ban them!
       admin_only: Only admins are allowed to add bots to this chat!
     help_msg: '*Admin only*:

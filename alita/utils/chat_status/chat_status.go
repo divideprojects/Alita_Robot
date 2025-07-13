@@ -533,11 +533,13 @@ func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck b
 		}
 	}
 
+	tr := i18n.New(db.GetLanguage(ctx))
+
 	botChatMember, err := b.GetChatMember(chat.Id, b.Id, nil)
 	error_handling.HandleErr(err)
 	if !botChatMember.MergeChatMember().CanPinMessages {
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "I can't pin messages here! Make sure I'm admin and can pin messages.",
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.Utils.chat_status.bot.no_permission_pin"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,
@@ -803,6 +805,7 @@ func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 			chat = &ctx.Update.Message.Chat
 		}
 	}
+	tr := i18n.New(db.GetLanguage(ctx))
 
 	msg := ctx.EffectiveMessage
 	if !IsUserAdmin(b, chat.Id, userId) {
@@ -818,7 +821,7 @@ func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 			return false
 		}
 		if !justCheck {
-			_, err := msg.Reply(b, "Only admins can execute this command!", nil)
+			_, err := msg.Reply(b, tr.GetString("strings.CommonStrings.chat_status.user.no_permission_admin"), nil)
 			error_handling.HandleErr(err)
 		}
 		return false

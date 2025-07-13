@@ -394,7 +394,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	if numWarns != 0 {
 		warnrc := db.GetWarnSetting(chat.Id)
 		if len(reasons) > 0 {
-			text = fmt.Sprintf("This user has %d/%d warnings, for the following reasons:", numWarns, warnrc.WarnLimit)
+			text = fmt.Sprintf(tr.GetString("strings.Warns.warns.list_reasons"), numWarns, warnrc.WarnLimit)
 			for _, reason := range reasons {
 				text += fmt.Sprintf("\n - %s", reason)
 			}
@@ -410,7 +410,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 			listNoReasonsMsg, err := tr.GetStringWithError("strings.Warns.warns.list_no_reasons")
 			if err != nil {
 				log.Error(err)
-				listNoReasonsMsg = "This user has %d/%d warnings, but no reasons for any of them."
+				listNoReasonsMsg = tr.GetString("strings.Warns.warns.list_no_reasons")
 			}
 			_, err = msg.Reply(b, fmt.Sprintf(listNoReasonsMsg, numWarns, warnrc.WarnLimit), nil)
 			if err != nil {

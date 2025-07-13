@@ -44,7 +44,7 @@ disable disables one or more commands in the current chat.
 Only admins can use this command. Updates the database and replies with the result.
 Connection: true, true
 */
-func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -63,7 +63,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toDisable = append(toDisable, i)
-				successMsg, successErr := tr.GetStringWithError("strings.Disabling.success")
+				successMsg, successErr := tr.GetStringWithError("strings."+m.moduleName+".success")
 				if successErr != nil {
 					log.Errorf("[disabling] missing translation for key: %v", successErr)
 					successMsg = "Disabled the use of the following in this chat:"
@@ -78,7 +78,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			} else {
 				_, err := msg.Reply(b,
-					fmt.Sprintf("Unknown command to disable:\n-%s\nCheck /disableable!", i), nil)
+					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".errors.unknown_command"), i), nil)
 				if err != nil {
 					log.Error(err)
 					return err
@@ -91,7 +91,7 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		noCommandMsg, noCommandErr := tr.GetStringWithError("strings.Disabling.enable.errors.no_command_specified")
+		noCommandMsg, noCommandErr := tr.GetStringWithError("strings."+m.moduleName+".enable.errors.no_command_specified")
 		if noCommandErr != nil {
 			log.Errorf("[disabling] missing translation for key: %v", noCommandErr)
 			noCommandMsg = "You haven't specified a command to disable."
@@ -274,7 +274,7 @@ enable re-enables one or more previously disabled commands in the chat.
 Only admins can use this command. Updates the database and replies with the result.
 Connection: true, true
 */
-func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
+func (m moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -293,7 +293,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toEnable = append(toEnable, i)
-				enableSuccessMsg, enableSuccessErr := tr.GetStringWithError("strings.Disabling.enable.success")
+				enableSuccessMsg, enableSuccessErr := tr.GetStringWithError("strings."+m.moduleName+".enable.success")
 				if enableSuccessErr != nil {
 					log.Errorf("[disabling] missing translation for key: %v", enableSuccessErr)
 					enableSuccessMsg = "Re-Enabled the use of the following in this chat:"
@@ -308,7 +308,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			} else {
 				_, err := msg.Reply(b,
-					fmt.Sprintf("Unknown command to Re-Enable:\n-%s\nCheck /disableable!", i), nil)
+					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".enable.errors.unknown_command"), i), nil)
 				if err != nil {
 					log.Error(err)
 					return err
@@ -321,7 +321,7 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		noCommandMsg, noCommandErr := tr.GetStringWithError("strings.Disabling.enable.errors.no_command_specified")
+		noCommandMsg, noCommandErr := tr.GetStringWithError("strings."+m.moduleName+".enable.errors.no_command_specified")
 		if noCommandErr != nil {
 			log.Errorf("[disabling] missing translation for key: %v", noCommandErr)
 			noCommandMsg = "You haven't specified a command to disable."

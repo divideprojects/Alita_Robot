@@ -106,7 +106,6 @@ func adminCacheAutoUpdate(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if !adminsAvail {
 		cache.LoadAdminCache(b, chat.Id)
-		log.Info(fmt.Sprintf("Reloaded admin cache for %d (%s)", chat.Id, chat.Title))
 	}
 
 	return ext.ContinueGroups

@@ -685,7 +685,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 			lowerModName = strings.ToLower(helpModName)
 			originalModuleName := getModuleNameFromAltName(lowerModName)
 			if originalModuleName != "" && string_handling.FindInStringSlice(getAltNamesOfModule(originalModuleName), lowerModName) {
-				moduleHelpString = fmt.Sprintf("Contact me in PM for help regarding <code>%s</code>!", originalModuleName)
+				moduleHelpString = fmt.Sprintf(tr.GetString("strings.Help.help.group_prompt_module"), originalModuleName)
 				pmMeKbUri = fmt.Sprintf("https://t.me/%s?start=help_%s", b.Username, lowerModName)
 			}
 		}
