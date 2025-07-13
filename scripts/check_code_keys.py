@@ -106,6 +106,10 @@ def scan_go_files(code_dir: str):
     critical_paths: Dict[str, List[str]] = defaultdict(list)
     invalid_keys: Dict[str, List[str]] = defaultdict(list)
 
+    # Track total function calls for accurate statistics
+    total_getstring_calls = 0
+    total_getstring_with_error_calls = 0
+
     # Critical modules that should use GetStringWithError for user-facing messages
     critical_modules = {
         "warns.go",
@@ -144,24 +148,43 @@ def scan_go_files(code_dir: str):
                 ):
                     continue
 
-                # Find valid GetString calls with "strings." prefix
-                for match in GETSTRING_RE.finditer(line):
+                # Find valid GetString calls with "strings." prefix (but NOT GetStringWithError)
+                for match in re.finditer(
+                    r"\.GetString\(\s*\"(strings\.[^\"]+)\"\s*\)", line
+                ):
                     key = match.group(1)
                     location = f"{filepath}:{line_num}"
 
-                    # Skip test keys for missing key validation
                     if not is_test_file and key not in TEST_KEYS:
+                        total_getstring_calls += 1
+                        used[key].append(location)
+
+                    # Track critical paths for regular GetString calls
+                    if any(critical_mod in file for critical_mod in critical_modules):
+                        critical_paths[key].append(location)
+
+                # Find GetStringSlice calls with "strings." prefix
+                for match in re.finditer(
+                    r"\.GetStringSlice\(\s*\"(strings\.[^\"]+)\"\s*\)", line
+                ):
+                    key = match.group(1)
+                    location = f"{filepath}:{line_num}"
+
+                    if not is_test_file and key not in TEST_KEYS:
+                        total_getstring_calls += 1
                         used[key].append(location)
 
                 # Find GetStringWithError calls
                 for match in GETSTRING_WITH_ERROR_RE.finditer(line):
                     key = match.group(1)
                     location = f"{filepath}:{line_num}"
-                    with_error[key].append(location)
 
-                    # Skip test keys for missing key validation
                     if not is_test_file and key not in TEST_KEYS:
-                        used[key].append(location)
+                        total_getstring_with_error_calls += 1
+                        with_error[key].append(location)
+                        used[key].append(
+                            location
+                        )  # Also count as used for missing key validation
 
                     # Track critical paths
                     if any(critical_mod in file for critical_mod in critical_modules):
@@ -177,16 +200,14 @@ def scan_go_files(code_dir: str):
 
                     invalid_keys[key].append(f"{filepath}:{line_num}")
 
-                # Find regular GetString calls in critical modules for tracking
-                for match in re.finditer(
-                    r"\.GetString\(\s*\"(strings\.[^\"]+)\"\s*\)", line
-                ):
-                    key = match.group(1)
-                    location = f"{filepath}:{line_num}"
-                    if any(critical_mod in file for critical_mod in critical_modules):
-                        critical_paths[key].append(location)
-
-    return used, with_error, critical_paths, invalid_keys
+    return (
+        used,
+        with_error,
+        critical_paths,
+        invalid_keys,
+        total_getstring_calls,
+        total_getstring_with_error_calls,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -218,9 +239,14 @@ def main() -> None:
         sys.exit(f"Code directory not found: {args.code_dir}")
 
     en_keys = load_locale_keys(args.locale)
-    used_keys_map, with_error_keys, critical_paths, invalid_keys = scan_go_files(
-        args.code_dir
-    )
+    (
+        used_keys_map,
+        with_error_keys,
+        critical_paths,
+        invalid_keys,
+        total_getstring_calls,
+        total_getstring_with_error_calls,
+    ) = scan_go_files(args.code_dir)
 
     missing_keys = []
     for k in used_keys_map:
@@ -277,20 +303,30 @@ def main() -> None:
 
     # Summary statistics
     total_keys = len(used_keys_map)
-    with_error_count = len(with_error_keys)
+    with_error_unique_keys = len(with_error_keys)
     critical_count = len(critical_paths)
     invalid_count = len(invalid_keys)
+    total_function_calls = total_getstring_calls + total_getstring_with_error_calls
+
+    # Calculate percentages
+    error_handling_percentage = (
+        (total_getstring_with_error_calls / max(total_function_calls, 1)) * 100
+        if total_function_calls > 0
+        else 0
+    )
+    critical_with_error_count = critical_count - len(critical_without_error)
 
     print("📊 Translation Statistics:")
-    print(f"   Total i18n keys used: {total_keys}")
+    print(f"   Total unique i18n keys used: {total_keys}")
+    print(f"   Total i18n function calls: {total_function_calls}")
     print(f"   Keys with valid 'strings.' prefix: {total_keys}")
     print(f"   Keys with invalid format: {invalid_count}")
-    print(
-        f"   Keys using GetStringWithError: {with_error_count} ({with_error_count/max(total_keys,1)*100:.1f}%)"
-    )
+    print(f"   GetString() calls: {total_getstring_calls}")
+    print(f"   GetStringWithError() calls: {total_getstring_with_error_calls}")
+    print(f"   Error handling coverage: {error_handling_percentage:.1f}%")
     print(f"   Critical user-facing keys: {critical_count}")
     print(
-        f"   Critical keys with error handling: {critical_count - len(critical_without_error)}/{critical_count}"
+        f"   Critical keys with error handling: {critical_with_error_count}/{critical_count}"
     )
 
     if not has_issues:
