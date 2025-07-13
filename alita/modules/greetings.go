@@ -67,7 +67,7 @@ func (m moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 		noformat := len(args) > 0 && strings.ToLower(args[0]) == "noformat"
 		welcPrefs := db.GetGreetingSettings(chat.Id)
 		wlcmText = welcPrefs.WelcomeSettings.WelcomeText
-		welcomeStatusMsg, welcomeStatusErr := tr.GetStringWithError("strings."+m.moduleName+".welcome.status")
+		welcomeStatusMsg, welcomeStatusErr := tr.GetStringWithError("strings." + m.moduleName + ".welcome.status")
 		if welcomeStatusErr != nil {
 			log.Errorf("[greetings] missing translation for key: %v", welcomeStatusErr)
 			welcomeStatusMsg = "I am currently welcoming users: `%s`"
@@ -104,7 +104,7 @@ func (m moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 		switch strings.ToLower(args[0]) {
 		case "on", "yes":
 			db.SetWelcomeToggle(chat.Id, true)
-			welcomeEnabledMsg, welcomeEnabledErr := tr.GetStringWithError("strings."+m.moduleName+".welcome.enabled")
+			welcomeEnabledMsg, welcomeEnabledErr := tr.GetStringWithError("strings." + m.moduleName + ".welcome.enabled")
 			if welcomeEnabledErr != nil {
 				log.Errorf("[greetings] missing translation for key: %v", welcomeEnabledErr)
 				welcomeEnabledMsg = "I'll now welcome users!"
@@ -112,7 +112,7 @@ func (m moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 			_, err = msg.Reply(bot, welcomeEnabledMsg, helpers.Shtml())
 		case "off", "no":
 			db.SetWelcomeToggle(chat.Id, false)
-			welcomeDisabledMsg, welcomeDisabledErr := tr.GetStringWithError("strings."+m.moduleName+".welcome.disabled")
+			welcomeDisabledMsg, welcomeDisabledErr := tr.GetStringWithError("strings." + m.moduleName + ".welcome.disabled")
 			if welcomeDisabledErr != nil {
 				log.Errorf("[greetings] missing translation for key: %v", welcomeDisabledErr)
 				welcomeDisabledMsg = "I'll no longer welcome users."
@@ -168,7 +168,7 @@ func (m moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.SetWelcomeText(chat.Id, text, content, buttons, dataType)
-	setWelcomeSuccessMsg, setWelcomeSuccessErr := tr.GetStringWithError("strings."+m.moduleName+".set_welcome.success")
+	setWelcomeSuccessMsg, setWelcomeSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".set_welcome.success")
 	if setWelcomeSuccessErr != nil {
 		log.Errorf("[greetings] missing translation for key: %v", setWelcomeSuccessErr)
 		setWelcomeSuccessMsg = "I'll now welcome users with that message!"
@@ -204,7 +204,7 @@ func (m moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	go db.SetWelcomeText(chat.Id, db.DefaultWelcome, "", nil, db.TEXT)
-	resetWelcomeSuccessMsg, resetWelcomeSuccessErr := tr.GetStringWithError("strings."+m.moduleName+".reset_welcome.success")
+	resetWelcomeSuccessMsg, resetWelcomeSuccessErr := tr.GetStringWithError("strings." + m.moduleName + ".reset_welcome.success")
 	if resetWelcomeSuccessErr != nil {
 		log.Errorf("[greetings] missing translation for key: %v", resetWelcomeSuccessErr)
 		resetWelcomeSuccessMsg = "I have reset the welcome message back to default!"

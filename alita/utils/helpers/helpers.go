@@ -478,19 +478,19 @@ Combines the language name and flag emoji for display.
 */
 func GetLangFormat(langCode string) string {
 	tr := i18n.New(langCode)
-	
+
 	languageName, languageNameErr := tr.GetStringWithError("main.language_name")
 	if languageNameErr != nil {
 		log.Errorf("[helpers] missing translation for main.language_name in %s: %v", langCode, languageNameErr)
 		languageName = langCode // fallback to language code
 	}
-	
+
 	languageFlag, languageFlagErr := tr.GetStringWithError("main.language_flag")
 	if languageFlagErr != nil {
 		log.Errorf("[helpers] missing translation for main.language_flag in %s: %v", langCode, languageFlagErr)
 		languageFlag = "🏳️" // fallback to generic flag
 	}
-	
+
 	return languageName + " " + languageFlag
 }
 

@@ -693,20 +693,20 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-			normalBanMsg2, normalBanErr2 := tr.GetStringWithError("strings." + m.moduleName + ".ban.normal_ban")
-		if normalBanErr2 != nil {
-			log.Errorf("[bans] missing translation for ban.normal_ban: %v", normalBanErr2)
-			normalBanMsg2 = "Another one bites the dust...!\nBanned %s."
+	normalBanMsg2, normalBanErr2 := tr.GetStringWithError("strings." + m.moduleName + ".ban.normal_ban")
+	if normalBanErr2 != nil {
+		log.Errorf("[bans] missing translation for ban.normal_ban: %v", normalBanErr2)
+		normalBanMsg2 = "Another one bites the dust...!\nBanned %s."
+	}
+	baseStr := normalBanMsg2
+	if reason != "" {
+		banReasonMsg2, banReasonErr2 := tr.GetStringWithError("strings." + m.moduleName + ".ban.ban_reason")
+		if banReasonErr2 != nil {
+			log.Errorf("[bans] missing translation for ban.ban_reason: %v", banReasonErr2)
+			banReasonMsg2 = "\n<b>Reason:</b> %s"
 		}
-		baseStr := normalBanMsg2
-		if reason != "" {
-			banReasonMsg2, banReasonErr2 := tr.GetStringWithError("strings." + m.moduleName + ".ban.ban_reason")
-			if banReasonErr2 != nil {
-				log.Errorf("[bans] missing translation for ban.ban_reason: %v", banReasonErr2)
-				banReasonMsg2 = "\n<b>Reason:</b> %s"
-			}
-			baseStr += fmt.Sprintf(banReasonMsg2, reason)
-		}
+		baseStr += fmt.Sprintf(banReasonMsg2, reason)
+	}
 
 	_, err = msg.Reply(b,
 		fmt.Sprintf(baseStr, helpers.MentionHtml(banUser.Id, banUser.FirstName)),

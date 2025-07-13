@@ -108,7 +108,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 
 	// permissions check
 	if chat_status.IsUserAdmin(b, chat.Id, userId) {
-		warnAdminMsg, warnAdminErr := tr.GetStringWithError("strings."+m.moduleName+".errors.warn_admin")
+		warnAdminMsg, warnAdminErr := tr.GetStringWithError("strings." + m.moduleName + ".errors.warn_admin")
 		if warnAdminErr != nil {
 			log.Errorf("[warns] missing translation for key: %v", warnAdminErr)
 			warnAdminMsg = "I'm not going to warn an admin!"
@@ -210,7 +210,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         getWarnButtonText(tr, "strings." + m.moduleName + ".warn.remove_warn_button", "❌ Remove warn"),
+							Text:         getWarnButtonText(tr, "strings."+m.moduleName+".warn.remove_warn_button", "❌ Remove warn"),
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 						{
@@ -225,7 +225,7 @@ func (m moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int6
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         getWarnButtonText(tr, "strings." + m.moduleName + ".warn.remove_warn_button", "❌ Remove warn"),
+							Text:         getWarnButtonText(tr, "strings."+m.moduleName+".warn.remove_warn_button", "❌ Remove warn"),
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 					},

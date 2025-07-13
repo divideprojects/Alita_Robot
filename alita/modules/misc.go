@@ -494,13 +494,13 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.New(db.GetLanguage(ctx))
 	msg := ctx.EffectiveMessage
-	
+
 	removingKeyboardMsg, removingKeyboardErr := tr.GetStringWithError("strings.Misc.keyboard.removing")
 	if removingKeyboardErr != nil {
 		log.Errorf("[misc] missing translation for Misc.keyboard.removing: %v", removingKeyboardErr)
 		removingKeyboardMsg = "Removing keyboard..."
 	}
-	
+
 	rMsg, err := msg.Reply(b,
 		removingKeyboardMsg,
 		&gotgbot.SendMessageOpts{
@@ -535,13 +535,13 @@ func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 	if chat_status.CheckDisabledCmd(b, msg, "stat") {
 		return ext.EndGroups
 	}
-	
+
 	totalMessagesMsg, totalMessagesErr := tr.GetStringWithError("strings.Misc.total_messages_in_percent_are_percent")
 	if totalMessagesErr != nil {
 		log.Errorf("[misc] missing translation for Misc.total_messages_in_percent_are_percent: %v", totalMessagesErr)
 		totalMessagesMsg = "Total messages in %s are %d"
 	}
-	
+
 	_, err := msg.Reply(b, fmt.Sprintf(totalMessagesMsg, msg.Chat.Title, msg.MessageId+1), nil)
 	if err != nil {
 		log.Error(err)

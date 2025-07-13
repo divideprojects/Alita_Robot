@@ -132,7 +132,7 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 			// TODO: Fix help msg here
 			"Alita supports a large number of formatting options to make your messages more expressive. Take a look!",
 			&gotgbot.SendMessageOpts{
-				ParseMode: helpers.HTML,
+				ParseMode:   helpers.HTML,
 				ReplyMarkup: keyboard,
 			},
 		)
