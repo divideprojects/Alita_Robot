@@ -869,11 +869,8 @@ strings:
 
       Sie können spenden, indem Sie meinen Besitzer hier kontaktieren: @DivideProjectsBot
     about_me_u200d: "Über mich 👨‍💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_me: "About me 👨\\u200d💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_text: "I'm Alita, a group management bot built to help you manage your groups
-      effectively!"
+    about_me: "Über mich 👨‍💻"
+    about_text: "Ich bin Alita, ein Gruppenverwaltungsbot, der dir dabei hilft, deine Gruppen effektiv zu verwalten!"
   Locks:
     list:
       header: 'Dies sind die Sperren in diesem Chat:'

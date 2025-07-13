@@ -62,13 +62,26 @@ def add_missing_keys_recursively(
 
         # Check if the key is missing in the target
         if key not in target_data:
-            # Check if this specific key or any of its children are in the missing set
-            if full_path in missing_keys_paths:
-                # Add the key and its value from the source
+            # Add the key if *itself* is missing OR if any of its descendant paths
+            # are among the missing keys detected earlier. This ensures we recreate
+            # intermediate dictionaries that lead to the final missing leaf keys.
+            should_add = full_path in missing_keys_paths or any(
+                p.startswith(f"{full_path}.") for p in missing_keys_paths
+            )
+
+            if should_add:
+                # Add the key and its entire subtree from the source locale
                 target_data[key] = source_value
-                # Add a comment to the newly added key
+
+                # Add a TODO comment so translators can easily locate untranslated strings
                 comment = f" {TODO_COMMENT} "
-                target_data.yaml_set_comment_before_after_key(key, before=comment)
+                try:
+                    target_data.yaml_set_comment_before_after_key(key, before=comment)
+                except AttributeError:
+                    # In rare cases where target_data is a plain dict (e.g. after deepcopy),
+                    # silently skip adding the comment to avoid crashing.
+                    pass
+
                 modified = True
 
         # If the key exists and both values are dicts, recurse

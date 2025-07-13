@@ -818,12 +818,9 @@ strings:
       Wszystkie fundusze zostaną przeznaczone na moje usługi, takie jak baza danych, przechowywanie i hosting!
 
       Możesz wesprzeć, kontaktując się z moim właścicielem tutaj: @DivideProjectsBot
-    about_me_u200d: "About me 👨‍💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_me: "About me 👨\\u200d💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_text: "I'm Alita, a group management bot built to help you manage your groups
-      effectively!"
+    about_me_u200d: "O mnie 👨‍💻"
+    about_me: "O mnie 👨‍💻"
+    about_text: "Jestem Alita, bot do zarządzania grupami stworzony, aby pomóc ci efektywnie zarządzać twoimi grupami!"
   Locks:
     list:
       header: 'Te są blokady w tym czacie:'
@@ -1196,44 +1193,42 @@ strings:
     warnings:
       status: 'The group has the following settings:\n<b>Warn Limit:</b> <code>%d</code>\n<b>Warn
         Mode:</b> <code>%s</code>'
-#  TODO: INCOMPLETE TRANSLATION 
     help_msg: >-
-      Keep your members in check with warnings; stop them getting out of
-      control!
+      Trzymaj swoich członków w ryzach ostrzeżeniami; zatrzymaj ich przed
+      wymknięciem się spod kontroli!
 
-      If you're looking for automated warnings, read about the blacklist module!
-
-
-      *Admin Commands:*
-
-      - /warn <reason>: Warn a user.
-
-      - /dwarn <reason>: Warn a user by reply, and delete their message.
-
-      - /swarn <reason>: Silently warn a user, and delete your message.
-
-      - /warns: See a user's warnings.
-
-      - /rmwarn: Remove a user's latest warning.
-
-      - /resetwarn: Reset all of a user's warnings to 0.
-
-      - /resetallwarns: Delete all the warnings in a chat. All users return to 0
-      warns.
-
-      - /warnings: Get the chat's warning settings.
-
-      - /setwarnmode <ban/kick/mute>: Set the chat's warn mode.
-
-      - /setwarnlimit <number>: Set the number of warnings before users are
-      punished.
+      Jeśli szukasz automatycznych ostrzeżeń, przeczytaj o module czarnej listy!
 
 
-      *Examples*
+      *Polecenia administratora:*
 
-      - Warn a user.
+      - /warn <powód>: Ostrzeż użytkownika.
 
-      -> `/warn @user For disobeying the rules`
+      - /dwarn <powód>: Ostrzeż użytkownika odpowiadając i usuń jego wiadomość.
+
+      - /swarn <powód>: Cicho ostrzeż użytkownika i usuń swoją wiadomość.
+
+      - /warns: Zobacz ostrzeżenia użytkownika.
+
+      - /rmwarn: Usuń najnowsze ostrzeżenie użytkownika.
+
+      - /resetwarn: Zresetuj wszystkie ostrzeżenia użytkownika do 0.
+
+      - /resetallwarns: Usuń wszystkie ostrzeżenia na czacie. Wszyscy użytkownicy wracają do 0
+      ostrzeżeń.
+
+      - /warnings: Uzyskaj ustawienia ostrzeżeń czatu.
+
+      - /setwarnmode <ban/kick/mute>: Ustaw tryb ostrzeżeń czatu.
+
+      - /setwarnlimit <liczba>: Ustaw liczbę ostrzeżeń przed ukaraniem użytkowników.
+
+
+      *Przykłady*
+
+      - Ostrzeż użytkownika.
+
+      -> `/warn @user Za nieprzestrzeganie zasad`
   Dev:
     errors:
       no_user_specified: You must specify a user to get info on

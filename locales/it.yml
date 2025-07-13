@@ -865,11 +865,8 @@ strings:
       Tutti i fondi saranno destinati ai miei servizi come database, storage e hosting!
       Puoi donare contattando il mio proprietario qui: @DivideProjectsBot
     about_me_u200d: "Chi sono 👨‍💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_me: "About me 👨\\u200d💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_text: "I'm Alita, a group management bot built to help you manage your groups
-      effectively!"
+    about_me: "Chi sono 👨‍💻"
+    about_text: "Sono Alita, un bot per la gestione dei gruppi costruito per aiutarti a gestire i tuoi gruppi in modo efficace!"
   Locks:
     list:
       header: 'Questi sono i blocchi in questa chat:'

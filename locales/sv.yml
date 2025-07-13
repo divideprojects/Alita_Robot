@@ -1003,11 +1003,8 @@ strings:
 
       Du kan donera genom att kontakta min ägare här: @DivideProjectsBot
     about_me_u200d: "Om mig 👨‍💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_me: "About me 👨\\u200d💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_text: "I'm Alita, a group management bot built to help you manage your groups
-      effectively!"
+    about_me: "Om mig 👨‍💻"
+    about_text: "Jag är Alita, en grupphanteringsbot byggd för att hjälpa dig hantera dina grupper effektivt!"
   Locks:
     list:
       header: 'Dessa är låsen i den här chatten:'

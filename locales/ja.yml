@@ -848,11 +848,8 @@ strings:
 
       私のオーナーに連絡して寄付できます: @DivideProjectsBot
     about_me_u200d: "私について 👨‍💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_me: "About me 👨\\u200d💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_text: "I'm Alita, a group management bot built to help you manage your groups
-      effectively!"
+    about_me: "私について 👨‍💻"
+    about_text: "私はAlita、あなたのグループを効果的に管理するのを助けるために構築されたグループ管理ボットです！"
   Locks:
     list:
       header: 'このチャットのロック:'

@@ -1036,11 +1036,8 @@ strings:
 
       Vous pouvez faire un don en contactant mon propriétaire ici : @DivideProjectsBot
     about_me_u200d: "À propos de moi 👨‍💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_me: "About me 👨\\u200d💻"
-#  TODO: INCOMPLETE TRANSLATION 
-    about_text: "I'm Alita, a group management bot built to help you manage your groups
-      effectively!"
+    about_me: "À propos de moi 👨‍💻"
+    about_text: "Je suis Alita, un bot de gestion de groupe conçu pour vous aider à gérer vos groupes efficacement !"
   Locks:
     list:
       header: 'Voici les verrous dans cette discussion :'
@@ -1487,44 +1484,43 @@ strings:
       status: >-
         Le groupe a les paramètres suivants :\n<b>Limite d'avertissement :</b>
         <code>%d</code>\n<b>Mode d'avertissement :</b> <code>%s</code>
-#  TODO: INCOMPLETE TRANSLATION 
     help_msg: >-
-      Keep your members in check with warnings; stop them getting out of
-      control!
+      Gardez vos membres sous contrôle avec des avertissements ; empêchez-les de
+      devenir incontrôlables !
 
-      If you're looking for automated warnings, read about the blacklist module!
-
-
-      *Admin Commands:*
-
-      - /warn <reason>: Warn a user.
-
-      - /dwarn <reason>: Warn a user by reply, and delete their message.
-
-      - /swarn <reason>: Silently warn a user, and delete your message.
-
-      - /warns: See a user's warnings.
-
-      - /rmwarn: Remove a user's latest warning.
-
-      - /resetwarn: Reset all of a user's warnings to 0.
-
-      - /resetallwarns: Delete all the warnings in a chat. All users return to 0
-      warns.
-
-      - /warnings: Get the chat's warning settings.
-
-      - /setwarnmode <ban/kick/mute>: Set the chat's warn mode.
-
-      - /setwarnlimit <number>: Set the number of warnings before users are
-      punished.
+      Si vous cherchez des avertissements automatiques, lisez le module de liste noire !
 
 
-      *Examples*
+      *Commandes d'administration :*
 
-      - Warn a user.
+      - /warn <raison> : Avertir un utilisateur.
 
-      -> `/warn @user For disobeying the rules`
+      - /dwarn <raison> : Avertir un utilisateur en répondant et supprimer son message.
+
+      - /swarn <raison> : Avertir un utilisateur silencieusement et supprimer votre message.
+
+      - /warns : Voir les avertissements d'un utilisateur.
+
+      - /rmwarn : Supprimer le dernier avertissement d'un utilisateur.
+
+      - /resetwarn : Remettre tous les avertissements d'un utilisateur à 0.
+
+      - /resetallwarns : Supprimer tous les avertissements dans un chat. Tous les utilisateurs reviennent à 0
+      avertissement.
+
+      - /warnings : Obtenir les paramètres d'avertissement du chat.
+
+      - /setwarnmode <ban/kick/mute> : Définir le mode d'avertissement du chat.
+
+      - /setwarnlimit <nombre> : Définir le nombre d'avertissements avant que les utilisateurs ne soient
+      punis.
+
+
+      *Exemples*
+
+      - Avertir un utilisateur.
+
+      -> `/warn @user Pour avoir désobéi aux règles`
   Dev:
     errors:
       no_user_specified: Vous devez spécifier un utilisateur pour obtenir des 
