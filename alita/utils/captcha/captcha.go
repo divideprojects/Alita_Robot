@@ -7,7 +7,6 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/mojocn/base64Captcha"
@@ -458,9 +457,4 @@ func ValidateAnswer(challengeData, mode, userAnswer string) (bool, error) {
 	default:
 		return false, fmt.Errorf("unsupported CAPTCHA mode for validation: %s", mode)
 	}
-}
-
-// Initialize the random seed
-func init() {
-	rand.Seed(time.Now().UnixNano())
 }
