@@ -51,22 +51,22 @@ func buildBlacklistRegex(triggers []string) *regexp.Regexp {
 	if len(triggers) == 0 {
 		return nil
 	}
-	
+
 	// Escape special regex characters in triggers and build pattern
 	escapedTriggers := make([]string, len(triggers))
 	for i, trigger := range triggers {
 		escapedTriggers[i] = regexp.QuoteMeta(trigger)
 	}
-	
+
 	// Create pattern that matches any trigger with word boundaries
 	pattern := fmt.Sprintf(`(\b|\s)(%s)\b`, strings.Join(escapedTriggers, "|"))
-	
+
 	regex, err := regexp.Compile(pattern)
 	if err != nil {
 		log.Errorf("[Blacklists] Failed to compile regex pattern: %v", err)
 		return nil
 	}
-	
+
 	return regex
 }
 
@@ -79,21 +79,21 @@ func getOrBuildBlacklistRegex(chatId int64, currentTriggers []string) *regexp.Re
 	cachedRegex, regexExists := blacklistsModule.filterRegexCache[chatId]
 	cachedTriggers, triggersExist := blacklistsModule.filterKeywordsCache[chatId]
 	blacklistCacheMutex.RUnlock()
-	
+
 	// Check if cache is valid (regex exists and triggers haven't changed)
 	if regexExists && triggersExist && slicesEqual(cachedTriggers, currentTriggers) {
 		return cachedRegex
 	}
-	
+
 	// Cache is invalid, rebuild regex
 	newRegex := buildBlacklistRegex(currentTriggers)
-	
+
 	blacklistCacheMutex.Lock()
 	blacklistsModule.filterRegexCache[chatId] = newRegex
 	blacklistsModule.filterKeywordsCache[chatId] = make([]string, len(currentTriggers))
 	copy(blacklistsModule.filterKeywordsCache[chatId], currentTriggers)
 	blacklistCacheMutex.Unlock()
-	
+
 	return newRegex
 }
 
@@ -114,12 +114,12 @@ Returns the matched trigger if found.
 */
 func findMatchingBlacklistTrigger(regex *regexp.Regexp, text string, triggers []string) string {
 	lowerText := strings.ToLower(text)
-	
+
 	// First check if any trigger matches
 	if !regex.MatchString(lowerText) {
 		return ""
 	}
-	
+
 	// Find which specific trigger matched (fallback to individual checks)
 	for _, trigger := range triggers {
 		triggerPattern := fmt.Sprintf(`(\b|\s)%s\b`, regexp.QuoteMeta(trigger))
@@ -127,7 +127,7 @@ func findMatchingBlacklistTrigger(regex *regexp.Regexp, text string, triggers []
 			return trigger
 		}
 	}
-	
+
 	return ""
 }
 
@@ -281,7 +281,7 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 		} else {
 			// Invalidate cache after removing blacklists
 			invalidateBlacklistCache(chat.Id)
-			
+
 			_, err := msg.Reply(b,
 				fmt.Sprintf(tr.GetString("strings."+m.moduleName+".unblacklist.removed_bl"), strings.Join(removedBlacklists, ", ")),
 				nil,
@@ -547,20 +547,20 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// Use optimized regex matching
 	regex := getOrBuildBlacklistRegex(chat.Id, blSettings.Triggers)
-	
+
 	if regex == nil {
 		return ext.ContinueGroups
 	}
 
 	matchedTrigger := findMatchingBlacklistTrigger(regex, msg.Text, blSettings.Triggers)
-	
+
 	if matchedTrigger != "" {
 		_, err := msg.Delete(b, nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
-		
+
 		switch blSettings.Action {
 		case "mute":
 			// don't work on anonymous channels

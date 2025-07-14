@@ -52,22 +52,22 @@ func buildFilterRegex(keywords []string) *regexp.Regexp {
 	if len(keywords) == 0 {
 		return nil
 	}
-	
+
 	// Escape special regex characters in keywords and build pattern
 	escapedKeywords := make([]string, len(keywords))
 	for i, keyword := range keywords {
 		escapedKeywords[i] = regexp.QuoteMeta(keyword)
 	}
-	
+
 	// Create pattern that matches any keyword with word boundaries
 	pattern := fmt.Sprintf(`(\b|\s)(%s)\b`, strings.Join(escapedKeywords, "|"))
-	
+
 	regex, err := regexp.Compile(pattern)
 	if err != nil {
 		log.Errorf("[Filters] Failed to compile regex pattern: %v", err)
 		return nil
 	}
-	
+
 	return regex
 }
 
@@ -80,21 +80,21 @@ func getOrBuildFilterRegex(chatId int64, currentKeywords []string) *regexp.Regex
 	cachedRegex, regexExists := filtersModule.filterRegexCache[chatId]
 	cachedKeywords, keywordsExist := filtersModule.filterKeywordsCache[chatId]
 	filterCacheMutex.RUnlock()
-	
+
 	// Check if cache is valid (regex exists and keywords haven't changed)
 	if regexExists && keywordsExist && slicesEqual(cachedKeywords, currentKeywords) {
 		return cachedRegex
 	}
-	
+
 	// Cache is invalid, rebuild regex
 	newRegex := buildFilterRegex(currentKeywords)
-	
+
 	filterCacheMutex.Lock()
 	filtersModule.filterRegexCache[chatId] = newRegex
 	filtersModule.filterKeywordsCache[chatId] = make([]string, len(currentKeywords))
 	copy(filtersModule.filterKeywordsCache[chatId], currentKeywords)
 	filterCacheMutex.Unlock()
-	
+
 	return newRegex
 }
 
@@ -131,12 +131,12 @@ Returns the matched keyword and whether it was a noformat match.
 */
 func findMatchingKeyword(regex *regexp.Regexp, text string, keywords []string) (matchedKeyword string, isNoformat bool) {
 	lowerText := strings.ToLower(text)
-	
+
 	// First check if any keyword matches
 	if !regex.MatchString(lowerText) {
 		return "", false
 	}
-	
+
 	// Find which specific keyword matched (fallback to individual checks)
 	for _, keyword := range keywords {
 		keywordPattern := fmt.Sprintf(`(\b|\s)%s\b`, regexp.QuoteMeta(keyword))
@@ -147,7 +147,7 @@ func findMatchingKeyword(regex *regexp.Regexp, text string, keywords []string) (
 			return keyword, isNoformat
 		}
 	}
-	
+
 	return "", false
 }
 
@@ -521,7 +521,7 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 		db.RemoveFilter(chat.Id, filterWord)
 		db.AddFilter(chat.Id, filterData.filterWord, filterData.text, filterData.fileid, filterData.buttons, filterData.dataType)
 		delete(m.overwriteFiltersMap, filterWordKey) // delete the key to make map clear
-		invalidateFilterCache(chat.Id) // Invalidate cache after overwriting a filter
+		invalidateFilterCache(chat.Id)               // Invalidate cache after overwriting a filter
 		helpText = "Filter has been overwritten successfully ✅"
 	} else {
 		helpText = "Cancelled overwritting of filter ❌"

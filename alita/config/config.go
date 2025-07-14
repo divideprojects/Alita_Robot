@@ -77,7 +77,7 @@ func init() {
 
 	// Create and configure a structured logger instance (modern approach)
 	Logger = log.New()
-	
+
 	if Debug {
 		Logger.SetLevel(log.DebugLevel)
 		Logger.SetReportCaller(true)
@@ -93,7 +93,7 @@ func init() {
 		Logger.SetReportCaller(false)
 		Logger.SetFormatter(&log.JSONFormatter{DisableHTMLEscape: true})
 	}
-	
+
 	// Set global logger to use the configured instance (for backward compatibility)
 	log.SetOutput(Logger.Out)
 	log.SetLevel(Logger.Level)

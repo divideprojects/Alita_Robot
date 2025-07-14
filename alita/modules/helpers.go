@@ -37,8 +37,8 @@ type moduleStruct struct {
 	AltHelpOptions      map[string][]string
 	helpableKb          map[string][][]gotgbot.InlineKeyboardButton
 	// Regex cache for optimized filter matching - used by filters.go and blacklists.go modules
-	filterRegexCache    map[int64]*regexp.Regexp  // chatId -> compiled regex for all filters
-	filterKeywordsCache map[int64][]string        // chatId -> filter keywords for cache invalidation
+	filterRegexCache    map[int64]*regexp.Regexp // chatId -> compiled regex for all filters
+	filterKeywordsCache map[int64][]string       // chatId -> filter keywords for cache invalidation
 }
 
 // struct for filters module

@@ -98,7 +98,7 @@ func adminCacheAutoUpdate(b *gotgbot.Bot, ctx *ext.Context) error {
 	// This ensures that any external admin changes (via other bots or Telegram clients)
 	// are reflected immediately on the next cache access
 	go cache.InvalidateAdminCache(chat.Id)
-	
+
 	log.WithFields(log.Fields{
 		"chatId": chat.Id,
 		"title":  chat.Title,

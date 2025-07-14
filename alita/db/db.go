@@ -128,7 +128,7 @@ func createIndexes() {
 // It sets up global collection variables for use throughout the db package.
 func init() {
 	var err error
-	
+
 	ctx, cancel := context.WithTimeout(bgCtx, 10*time.Second)
 	defer cancel()
 

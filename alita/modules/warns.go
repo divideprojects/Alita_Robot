@@ -112,14 +112,15 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 
 	if numWarns >= warnrc.WarnLimit {
 		db.ResetUserWarns(userId, chat.Id)
-		if warnrc.WarnMode == "kick" {
+		switch warnrc.WarnMode {
+		case "kick":
 			_, err = chat.BanMember(b, userId, nil)
 			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been kicked!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {
 				log.Errorf("[warn] warnlimit: kick (%d) - %s", userId, err)
 				return err
 			}
-		} else if warnrc.WarnMode == "mute" {
+		case "mute":
 			_, err = chat.RestrictMember(b, userId,
 				gotgbot.ChatPermissions{
 					CanSendMessages:       false,
@@ -144,7 +145,7 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				log.Errorf("[warn] warnlimit: mute (%d) - %s", userId, err)
 				return err
 			}
-		} else if warnrc.WarnMode == "ban" {
+		case "ban":
 			_, err = chat.BanMember(b, userId, nil)
 			reply = fmt.Sprintf("That's %d/%d warnings; So %s has been banned!", numWarns, warnrc.WarnLimit, helpers.MentionHtml(u.Id, u.FirstName))
 			if err != nil {

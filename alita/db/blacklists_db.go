@@ -105,14 +105,14 @@ func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 	pipeline := []bson.M{
 		{
 			"$project": bson.M{
-				"_id":           1,
-				"triggerCount":  bson.M{"$size": "$triggers"},
-				"hasTriggers":   bson.M{"$gt": []interface{}{bson.M{"$size": "$triggers"}, 0}},
+				"_id":          1,
+				"triggerCount": bson.M{"$size": "$triggers"},
+				"hasTriggers":  bson.M{"$gt": []interface{}{bson.M{"$size": "$triggers"}, 0}},
 			},
 		},
 		{
 			"$group": bson.M{
-				"_id": nil,
+				"_id":           nil,
 				"totalTriggers": bson.M{"$sum": "$triggerCount"},
 				"chatsWithTriggers": bson.M{
 					"$sum": bson.M{

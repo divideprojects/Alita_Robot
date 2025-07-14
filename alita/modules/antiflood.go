@@ -116,16 +116,6 @@ func (rb *ringBuffer) getAll() []int64 {
 	return result
 }
 
-// clear resets the buffer
-func (rb *ringBuffer) clear() {
-	rb.mu.Lock()
-	defer rb.mu.Unlock()
-
-	rb.head = 0
-	rb.tail = 0
-	rb.count = 0
-}
-
 /*
 antifloodStruct implements the antiflood module logic using a token bucket algorithm.
 
@@ -205,7 +195,7 @@ updateFlood updates the flood control state for a user in a chat using token buc
 
 Returns true if the user has exceeded the flood limit, along with the token bucket containing message IDs.
 */
-func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, bucket *tokenBucket) {
+func (*moduleStruct) updateFlood(chatId, _ /* userId */, msgId int64) (returnVar bool, bucket *tokenBucket) {
 	floodSrc := db.GetFlood(chatId)
 
 	if floodSrc.Limit != 0 {
