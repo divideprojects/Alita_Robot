@@ -122,28 +122,22 @@ func createIndexes() {
 	log.Info("Done creating database indexes!")
 }
 
-// dbInstance func
-/*
-init initializes the MongoDB client and opens all required collections.
-
-This function is automatically called when the package is imported.
-It sets up global collection variables for use throughout the db package.
-*/
+// init initializes the MongoDB client and opens all required collections.
+//
+// This function is automatically called when the package is imported.
+// It sets up global collection variables for use throughout the db package.
 func init() {
 	var err error
-	mongoClient, err = mongo.NewClient(
-		options.Client().ApplyURI(config.DatabaseURI),
-	)
-	if err != nil {
-		log.Errorf("[Database][Client]: %v", err)
-	}
-
+	
 	ctx, cancel := context.WithTimeout(bgCtx, 10*time.Second)
 	defer cancel()
 
-	err = mongoClient.Connect(ctx)
+	// Use modern single-step client creation pattern (MongoDB driver v1.4+)
+	mongoClient, err = mongo.Connect(ctx, options.Client().ApplyURI(config.DatabaseURI))
 	if err != nil {
 		log.Errorf("[Database][Connect]: %v", err)
+		// Return early if connection fails to prevent nil pointer panic
+		return
 	}
 
 	// Open Connections to Collections

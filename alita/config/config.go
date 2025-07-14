@@ -41,6 +41,8 @@ var (
 	RedisPassword string
 	// RedisDB is the Redis database number to use.
 	RedisDB int
+	// Logger is the configured logger instance
+	Logger *log.Logger
 )
 
 // defaultAllowedUpdates defines the complete set of Telegram update types the bot can subscribe to.
@@ -73,11 +75,13 @@ func init() {
 	// Determine debug mode early
 	Debug = typeConvertor{str: os.Getenv("DEBUG")}.Bool()
 
-	// Configure logger – expensive caller/pretty printing only when debug is enabled
+	// Create and configure a structured logger instance (modern approach)
+	Logger = log.New()
+	
 	if Debug {
-		log.SetLevel(log.DebugLevel)
-		log.SetReportCaller(true)
-		log.SetFormatter(&log.JSONFormatter{
+		Logger.SetLevel(log.DebugLevel)
+		Logger.SetReportCaller(true)
+		Logger.SetFormatter(&log.JSONFormatter{
 			DisableHTMLEscape: true,
 			PrettyPrint:       true,
 			CallerPrettyfier: func(f *runtime.Frame) (string, string) {
@@ -85,10 +89,16 @@ func init() {
 			},
 		})
 	} else {
-		log.SetLevel(log.InfoLevel)
-		log.SetReportCaller(false)
-		log.SetFormatter(&log.JSONFormatter{DisableHTMLEscape: true})
+		Logger.SetLevel(log.InfoLevel)
+		Logger.SetReportCaller(false)
+		Logger.SetFormatter(&log.JSONFormatter{DisableHTMLEscape: true})
 	}
+	
+	// Set global logger to use the configured instance (for backward compatibility)
+	log.SetOutput(Logger.Out)
+	log.SetLevel(Logger.Level)
+	log.SetFormatter(Logger.Formatter)
+	log.SetReportCaller(Logger.ReportCaller)
 
 	// set necessary variables
 	DatabaseURI = os.Getenv("DB_URI")
