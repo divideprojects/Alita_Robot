@@ -1,6 +1,7 @@
 package captcha
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"math/rand"
@@ -9,6 +10,7 @@ import (
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
+	"github.com/mojocn/base64Captcha"
 )
 
 // Challenge data structures for different CAPTCHA modes
@@ -37,6 +39,13 @@ type Text2Challenge struct {
 	Answer     string   `json:"answer"`
 }
 
+// CaptchaResult contains both the challenge data and image bytes (if applicable)
+type CaptchaResult struct {
+	ChallengeData string
+	CorrectAnswer string
+	ImageBytes    []byte // nil for non-image modes like button and math
+}
+
 // CaptchaGenerator handles creation of different CAPTCHA challenges
 type CaptchaGenerator struct{}
 
@@ -46,7 +55,7 @@ func NewCaptchaGenerator() *CaptchaGenerator {
 }
 
 // GenerateChallenge creates a CAPTCHA challenge based on the specified mode
-func (cg *CaptchaGenerator) GenerateChallenge(mode string) (challengeData, correctAnswer string, err error) {
+func (cg *CaptchaGenerator) GenerateChallenge(mode string) (*CaptchaResult, error) {
 	switch mode {
 	case "button":
 		return cg.generateButtonChallenge()
@@ -57,27 +66,31 @@ func (cg *CaptchaGenerator) GenerateChallenge(mode string) (challengeData, corre
 	case "text2":
 		return cg.generateText2Challenge()
 	default:
-		return "", "", fmt.Errorf("unsupported CAPTCHA mode: %s", mode)
+		return nil, fmt.Errorf("unsupported CAPTCHA mode: %s", mode)
 	}
 }
 
 // generateButtonChallenge creates a simple button click challenge
-func (cg *CaptchaGenerator) generateButtonChallenge() (string, string, error) {
+func (cg *CaptchaGenerator) generateButtonChallenge() (*CaptchaResult, error) {
 	challenge := ButtonChallenge{
 		Type: "button",
 	}
 
 	data, err := json.Marshal(challenge)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 
-	return string(data), "button_click", nil
+	return &CaptchaResult{
+		ChallengeData: string(data),
+		CorrectAnswer: "button_click",
+		ImageBytes:    nil, // No image for button mode
+	}, nil
 }
 
-// generateTextChallenge creates a text selection challenge with a simulated image
-func (cg *CaptchaGenerator) generateTextChallenge() (string, string, error) {
-	// Simulated text options (in a real implementation, this would use actual images)
+// generateTextChallenge creates a text selection challenge with an actual generated image
+func (cg *CaptchaGenerator) generateTextChallenge() (*CaptchaResult, error) {
+	// Text options
 	words := []string{
 		"HOUSE", "TREE", "CAR", "BOOK", "PHONE", "LAMP", "DOOR", "WINDOW",
 		"CHAIR", "TABLE", "PLANT", "CLOCK", "GLASS", "PENCIL", "PAPER", "MOUSE",
@@ -111,6 +124,25 @@ func (cg *CaptchaGenerator) generateTextChallenge() (string, string, error) {
 		}
 	}
 
+	// Generate the actual image using base64Captcha with DrawCaptcha
+	driver := base64Captcha.NewDriverString(80, 240, 0, base64Captcha.OptionShowHollowLine, 4, correctWord, nil, base64Captcha.DefaultEmbeddedFonts, nil)
+
+	// Use DrawCaptcha directly with our chosen word
+	item, err := driver.DrawCaptcha(correctWord)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate text captcha image: %v", err)
+	}
+
+	// Get the base64 string
+	b64s := item.EncodeB64string()
+
+	// Decode base64 to bytes (remove data:image/png;base64, prefix if present)
+	b64Data := strings.TrimPrefix(b64s, "data:image/png;base64,")
+	imgBytes, err := base64.StdEncoding.DecodeString(b64Data)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode captcha image: %v", err)
+	}
+
 	challenge := TextChallenge{
 		Type:    "text",
 		Image:   fmt.Sprintf("text_image_%s", strings.ToLower(correctWord)),
@@ -120,14 +152,18 @@ func (cg *CaptchaGenerator) generateTextChallenge() (string, string, error) {
 
 	data, err := json.Marshal(challenge)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 
-	return string(data), strconv.Itoa(correctIndex), nil
+	return &CaptchaResult{
+		ChallengeData: string(data),
+		CorrectAnswer: correctWord,
+		ImageBytes:    imgBytes,
+	}, nil
 }
 
 // generateMathChallenge creates a basic math question
-func (cg *CaptchaGenerator) generateMathChallenge() (string, string, error) {
+func (cg *CaptchaGenerator) generateMathChallenge() (*CaptchaResult, error) {
 	operations := []string{"+", "-", "*"}
 	operation := operations[rand.Intn(len(operations))]
 
@@ -195,24 +231,46 @@ func (cg *CaptchaGenerator) generateMathChallenge() (string, string, error) {
 
 	data, err := json.Marshal(challenge)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 
-	return string(data), strconv.Itoa(result), nil
+	return &CaptchaResult{
+		ChallengeData: string(data),
+		CorrectAnswer: strconv.Itoa(result),
+		ImageBytes:    nil, // No image for math mode
+	}, nil
 }
 
-// generateText2Challenge creates a character-by-character text selection challenge
-func (cg *CaptchaGenerator) generateText2Challenge() (string, string, error) {
-	// Generate a random 4-6 character code
-	codeLength := rand.Intn(3) + 4 // 4-6 characters
-	characters := "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+// generateText2Challenge creates a character input challenge with an actual generated image
+func (cg *CaptchaGenerator) generateText2Challenge() (*CaptchaResult, error) {
+	// Character set for the code
+	characters := "ABCDEFGHJKLMNPQRSTUVWXYZ23456789" // Excluding confusing characters like I, O, 0, 1
+	codeLength := 4 + rand.Intn(2)                   // Random length between 4-5
 
-	var code strings.Builder
+	// Generate random code
+	correctCode := ""
 	for i := 0; i < codeLength; i++ {
-		code.WriteByte(characters[rand.Intn(len(characters))])
+		correctCode += string(characters[rand.Intn(len(characters))])
 	}
 
-	correctCode := code.String()
+	// Generate the actual image using base64Captcha with DrawCaptcha
+	driver := base64Captcha.NewDriverString(80, 240, 0, base64Captcha.OptionShowHollowLine|base64Captcha.OptionShowSlimeLine, codeLength, correctCode, nil, base64Captcha.DefaultEmbeddedFonts, nil)
+
+	// Use DrawCaptcha directly with our chosen code
+	item, err := driver.DrawCaptcha(correctCode)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate text2 captcha image: %v", err)
+	}
+
+	// Get the base64 string
+	b64s := item.EncodeB64string()
+
+	// Decode base64 to bytes (remove data:image/png;base64, prefix if present)
+	b64Data := strings.TrimPrefix(b64s, "data:image/png;base64,")
+	imgBytes, err := base64.StdEncoding.DecodeString(b64Data)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode captcha image: %v", err)
+	}
 
 	// Generate character options (all possible characters)
 	allChars := make([]string, len(characters))
@@ -229,10 +287,14 @@ func (cg *CaptchaGenerator) generateText2Challenge() (string, string, error) {
 
 	data, err := json.Marshal(challenge)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 
-	return string(data), correctCode, nil
+	return &CaptchaResult{
+		ChallengeData: string(data),
+		CorrectAnswer: correctCode,
+		ImageBytes:    imgBytes,
+	}, nil
 }
 
 // CreateCaptchaKeyboard generates the appropriate inline keyboard for a CAPTCHA challenge

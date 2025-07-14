@@ -1,6 +1,7 @@
 package modules
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"time"
@@ -14,9 +15,11 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/chatjoinrequest"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/captcha"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/eko/gocache/lib/v4/store"
 )
 
 /*
@@ -542,7 +545,7 @@ func (moduleStruct) newMemberCaptcha(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	// Create CAPTCHA challenge
-	challengeData, correctAnswer, err := captchaGenerator.GenerateChallenge(captchaSettings.Mode)
+	result, err := captchaGenerator.GenerateChallenge(captchaSettings.Mode)
 	if err != nil {
 		log.Errorf("CAPTCHA: Failed to generate challenge: %v", err)
 		return ext.ContinueGroups
@@ -555,14 +558,14 @@ func (moduleStruct) newMemberCaptcha(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	// Store challenge in database
-	err = db.CreateCaptchaChallenge(newMember.Id, chat.Id, challengeData, correctAnswer, expiresAt)
+	err = db.CreateCaptchaChallenge(newMember.Id, chat.Id, result.ChallengeData, result.CorrectAnswer, expiresAt)
 	if err != nil {
 		log.Errorf("CAPTCHA: Failed to store challenge: %v", err)
 		return ext.ContinueGroups
 	}
 
 	// Create welcome message with CAPTCHA
-	err = sendCaptchaChallenge(bot, ctx, &newMember, captchaSettings, challengeData)
+	err = sendCaptchaChallenge(bot, ctx, &newMember, captchaSettings, result)
 	if err != nil {
 		log.Errorf("CAPTCHA: Failed to send challenge: %v", err)
 	}
@@ -585,7 +588,7 @@ func (moduleStruct) captchaJoinRequest(bot *gotgbot.Bot, ctx *ext.Context) error
 	}
 
 	// Create CAPTCHA challenge
-	challengeData, correctAnswer, err := captchaGenerator.GenerateChallenge(captchaSettings.Mode)
+	result, err := captchaGenerator.GenerateChallenge(captchaSettings.Mode)
 	if err != nil {
 		log.Errorf("CAPTCHA: Failed to generate challenge for join request: %v", err)
 		return ext.ContinueGroups
@@ -595,14 +598,14 @@ func (moduleStruct) captchaJoinRequest(bot *gotgbot.Bot, ctx *ext.Context) error
 	expiresAt := time.Now().Add(captchaSettings.KickTime)
 
 	// Store challenge in database
-	err = db.CreateCaptchaChallenge(user.Id, chat.Id, challengeData, correctAnswer, expiresAt)
+	err = db.CreateCaptchaChallenge(user.Id, chat.Id, result.ChallengeData, result.CorrectAnswer, expiresAt)
 	if err != nil {
 		log.Errorf("CAPTCHA: Failed to store join request challenge: %v", err)
 		return ext.ContinueGroups
 	}
 
 	// Send CAPTCHA in private message
-	err = sendJoinRequestCaptcha(bot, &user, &chat, captchaSettings, challengeData)
+	err = sendJoinRequestCaptcha(bot, &user, &chat, captchaSettings, result)
 	if err != nil {
 		log.Errorf("CAPTCHA: Failed to send join request challenge: %v", err)
 	}
@@ -634,7 +637,7 @@ func (moduleStruct) captchaCallback(bot *gotgbot.Bot, ctx *ext.Context) error {
 
 // Helper functions
 
-func sendCaptchaChallenge(bot *gotgbot.Bot, ctx *ext.Context, newMember *gotgbot.User, settings *db.CaptchaSettings, challengeData string) error {
+func sendCaptchaChallenge(bot *gotgbot.Bot, ctx *ext.Context, newMember *gotgbot.User, settings *db.CaptchaSettings, result *captcha.CaptchaResult) error {
 	chat := ctx.EffectiveChat
 
 	// Create welcome message
@@ -654,14 +657,14 @@ func sendCaptchaChallenge(bot *gotgbot.Bot, ctx *ext.Context, newMember *gotgbot
 	}
 
 	// Get challenge description
-	description, err := captcha.GetChallengeDescription(challengeData, settings.Mode)
+	description, err := captcha.GetChallengeDescription(result.ChallengeData, settings.Mode)
 	if err != nil {
 		return err
 	}
 	welcomeText += "\n\n" + description
 
 	// Create keyboard
-	keyboard, err := captcha.CreateCaptchaKeyboard(challengeData, settings.Mode)
+	keyboard, err := captcha.CreateCaptchaKeyboard(result.ChallengeData, settings.Mode)
 	if err != nil {
 		return err
 	}
@@ -671,16 +674,26 @@ func sendCaptchaChallenge(bot *gotgbot.Bot, ctx *ext.Context, newMember *gotgbot
 		keyboard.InlineKeyboard[0][0].Text = settings.ButtonText
 	}
 
-	// Send message
-	_, err = bot.SendMessage(chat.Id, welcomeText, &gotgbot.SendMessageOpts{
-		ParseMode:   helpers.HTML,
-		ReplyMarkup: keyboard,
-	})
+	// Send message or photo based on whether we have image bytes
+	if result.ImageBytes != nil {
+		// For image-based modes (text, text2), send as photo
+		_, err = bot.SendPhoto(chat.Id, gotgbot.InputFileByReader("captcha.png", bytes.NewReader(result.ImageBytes)), &gotgbot.SendPhotoOpts{
+			Caption:     welcomeText,
+			ParseMode:   helpers.HTML,
+			ReplyMarkup: keyboard,
+		})
+	} else {
+		// For non-image modes (button, math), send as regular message
+		_, err = bot.SendMessage(chat.Id, welcomeText, &gotgbot.SendMessageOpts{
+			ParseMode:   helpers.HTML,
+			ReplyMarkup: keyboard,
+		})
+	}
 
 	return err
 }
 
-func sendJoinRequestCaptcha(bot *gotgbot.Bot, user *gotgbot.User, chat *gotgbot.Chat, settings *db.CaptchaSettings, challengeData string) error {
+func sendJoinRequestCaptcha(bot *gotgbot.Bot, user *gotgbot.User, chat *gotgbot.Chat, settings *db.CaptchaSettings, result *captcha.CaptchaResult) error {
 	// Create message
 	messageText := fmt.Sprintf(
 		"Hello %s!\n\n"+
@@ -699,14 +712,14 @@ func sendJoinRequestCaptcha(bot *gotgbot.Bot, user *gotgbot.User, chat *gotgbot.
 	}
 
 	// Get challenge description
-	description, err := captcha.GetChallengeDescription(challengeData, settings.Mode)
+	description, err := captcha.GetChallengeDescription(result.ChallengeData, settings.Mode)
 	if err != nil {
 		return err
 	}
 	messageText += "\n\n" + description
 
 	// Create keyboard
-	keyboard, err := captcha.CreateCaptchaKeyboard(challengeData, settings.Mode)
+	keyboard, err := captcha.CreateCaptchaKeyboard(result.ChallengeData, settings.Mode)
 	if err != nil {
 		return err
 	}
@@ -716,11 +729,21 @@ func sendJoinRequestCaptcha(bot *gotgbot.Bot, user *gotgbot.User, chat *gotgbot.
 		keyboard.InlineKeyboard[0][0].Text = settings.ButtonText
 	}
 
-	// Send private message
-	_, err = bot.SendMessage(user.Id, messageText, &gotgbot.SendMessageOpts{
-		ParseMode:   helpers.HTML,
-		ReplyMarkup: keyboard,
-	})
+	// Send private message or photo based on whether we have image bytes
+	if result.ImageBytes != nil {
+		// For image-based modes (text, text2), send as photo
+		_, err = bot.SendPhoto(user.Id, gotgbot.InputFileByReader("captcha.png", bytes.NewReader(result.ImageBytes)), &gotgbot.SendPhotoOpts{
+			Caption:     messageText,
+			ParseMode:   helpers.HTML,
+			ReplyMarkup: keyboard,
+		})
+	} else {
+		// For non-image modes (button, math), send as regular message
+		_, err = bot.SendMessage(user.Id, messageText, &gotgbot.SendMessageOpts{
+			ParseMode:   helpers.HTML,
+			ReplyMarkup: keyboard,
+		})
+	}
 
 	return err
 }
@@ -790,7 +813,7 @@ func handleCaptchaAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID int64, callb
 	} else if strings.HasPrefix(callbackData, "captcha_solve_math_") {
 		userAnswer = strings.TrimPrefix(callbackData, "captcha_solve_math_")
 		log.Infof("CAPTCHA: Math answer '%s' for user %d", userAnswer, userID)
-	} else if strings.HasPrefix(callbackData, "captcha_text2_") {
+	} else if strings.HasPrefix(callbackData, "captcha_text2_") || strings.HasPrefix(callbackData, "captcha_char_") {
 		// Handle text2 mode
 		log.Infof("CAPTCHA: Text2 interaction for user %d", userID)
 		return handleText2Interaction(bot, ctx, userID, chatID, challenge, callbackData)
@@ -863,33 +886,132 @@ func handleText2Interaction(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID i
 
 	query := ctx.Update.CallbackQuery
 
-	// For text2 mode, we need to track the user's input
-	// This would typically be stored in cache or database
-	// For simplicity, we'll implement basic handling
+	// Get or initialize user's current input from cache
+	cacheKey := fmt.Sprintf("captcha_text2_input_%d_%d", userID, chatID)
+	currentInput := ""
+	if cachedInput, err := cache.Marshal.Get(cache.Context, cacheKey, new(string)); err == nil && cachedInput != nil {
+		currentInput = *cachedInput.(*string)
+	}
 
 	if callbackData == "captcha_text2_submit" {
-		// Submit current answer (would need to track user input)
-		// For now, just show a message
-		_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
-			Text: "Text2 mode not fully implemented yet.",
-		})
-		return err
+		// Submit current answer
+		if currentInput == challenge.CorrectAnswer {
+			// Correct answer - clean up cache and handle success
+			cache.Marshal.Delete(cache.Context, cacheKey)
+			return handleCorrectAnswer(bot, ctx, userID, chatID, challenge)
+		} else {
+			// Wrong answer - increment attempts
+			challenge.Attempts++
+			if challenge.Attempts >= 3 {
+				// Too many attempts - clean up cache and handle failure
+				cache.Marshal.Delete(cache.Context, cacheKey)
+				return handleIncorrectAnswer(bot, ctx, userID, chatID, challenge)
+			}
+
+			// Update challenge in database
+			db.UpdateCaptchaChallenge(userID, chatID, challenge)
+
+			// Show error and update keyboard
+			_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
+				Text: fmt.Sprintf("❌ Wrong answer! You have %d attempts left.", 3-challenge.Attempts),
+			})
+			if err != nil {
+				return err
+			}
+
+			// Update the message with current input
+			return updateText2Display(bot, ctx, challenge, currentInput, challenge.Attempts)
+		}
 	} else if callbackData == "captcha_text2_delete" {
 		// Delete last character
-		_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
-			Text: "Character deleted.",
-		})
-		return err
+		if len(currentInput) > 0 {
+			currentInput = currentInput[:len(currentInput)-1]
+
+			// Update cache
+			cache.Marshal.Set(cache.Context, cacheKey, &currentInput, store.WithExpiration(time.Minute*10))
+
+			// Update the message
+			err := updateText2Display(bot, ctx, challenge, currentInput, challenge.Attempts)
+			if err != nil {
+				return err
+			}
+
+			_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
+				Text: "Character deleted.",
+			})
+			return err
+		} else {
+			_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
+				Text: "Nothing to delete.",
+			})
+			return err
+		}
 	} else if strings.HasPrefix(callbackData, "captcha_char_") {
 		// Add character to input
 		char := strings.TrimPrefix(callbackData, "captcha_char_")
-		_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
-			Text: fmt.Sprintf("Added: %s", char),
-		})
-		return err
+
+		// Limit input length to prevent abuse
+		if len(currentInput) < 20 {
+			currentInput += char
+
+			// Update cache
+			cache.Marshal.Set(cache.Context, cacheKey, &currentInput, store.WithExpiration(time.Minute*10))
+
+			// Update the message
+			err := updateText2Display(bot, ctx, challenge, currentInput, challenge.Attempts)
+			if err != nil {
+				return err
+			}
+
+			_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
+				Text: fmt.Sprintf("Added: %s", char),
+			})
+			return err
+		} else {
+			_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
+				Text: "Input too long!",
+			})
+			return err
+		}
 	}
 
 	return ext.ContinueGroups
+}
+
+// updateText2Display updates the CAPTCHA message with current user input
+func updateText2Display(bot *gotgbot.Bot, ctx *ext.Context, challenge *db.CaptchaChallenge, currentInput string, attempts int) error {
+	query := ctx.Update.CallbackQuery
+
+	// Create keyboard with current input state using stored challenge JSON
+	keyboard, err := captcha.CreateCaptchaKeyboard(challenge.ChallengeData, db.CaptchaModeText2)
+	if err != nil {
+		log.Errorf("CAPTCHA: Failed to create keyboard: %v", err)
+		return err
+	}
+
+	// Create display text showing current input
+	displayInput := currentInput
+	if displayInput == "" {
+		displayInput = "_" // Show placeholder when empty
+	}
+
+	// Create updated text with current input and attempts info
+	captionText := "🔒 Please enter the code shown in the image above.\n\n"
+	captionText += fmt.Sprintf("Current input: `%s`\n", displayInput)
+	if attempts > 0 {
+		captionText += fmt.Sprintf("❌ Wrong attempts: %d/3", attempts)
+	}
+
+	// Update the message
+	if query.Message != nil {
+		_, _, err = query.Message.EditCaption(bot, &gotgbot.EditMessageCaptionOpts{
+			Caption:     captionText,
+			ParseMode:   "Markdown",
+			ReplyMarkup: *keyboard,
+		})
+	}
+
+	return err
 }
 
 func handleCorrectAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID int64, challenge *db.CaptchaChallenge) error {
@@ -975,6 +1097,63 @@ func handleWrongAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID int64,
 		if query.Message != nil {
 			_, _, err = query.Message.EditText(bot,
 				"❌ <b>CAPTCHA Failed!</b>\n\nToo many incorrect attempts. You have been temporarily banned.",
+				&gotgbot.EditMessageTextOpts{
+					ParseMode: helpers.HTML,
+				},
+			)
+			if err != nil {
+				log.Errorf("CAPTCHA: Failed to edit message: %v", err)
+			}
+		}
+
+		// Answer callback query
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
+			Text: "❌ Too many attempts! Banned.",
+		})
+
+		return err
+	} else {
+		// Update challenge attempts
+		err := db.UpdateCaptchaChallenge(userID, chatID, challenge)
+		if err != nil {
+			log.Errorf("CAPTCHA: Failed to update challenge: %v", err)
+		}
+
+		// Answer callback query
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
+			Text: fmt.Sprintf("❌ Wrong answer! %d/%d attempts used.", challenge.Attempts, 3),
+		})
+
+		return err
+	}
+}
+
+func handleIncorrectAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID int64, challenge *db.CaptchaChallenge) error {
+	query := ctx.Update.CallbackQuery
+
+	// Increment attempts
+	challenge.Attempts++
+
+	if challenge.Attempts >= 3 {
+		// Too many attempts - ban user
+		chat := &gotgbot.Chat{Id: chatID}
+		_, err := chat.BanMember(bot, userID, &gotgbot.BanChatMemberOpts{
+			UntilDate: time.Now().Add(24 * time.Hour).Unix(), // 24 hour ban
+		})
+		if err != nil {
+			log.Errorf("CAPTCHA: Failed to ban user %d: %v", userID, err)
+		}
+
+		// Delete challenge
+		err = db.DeleteCaptchaChallenge(userID, chatID)
+		if err != nil {
+			log.Errorf("CAPTCHA: Failed to delete challenge: %v", err)
+		}
+
+		// Update message
+		if query.Message != nil {
+			_, _, err = query.Message.EditText(bot,
+				"❌ <b>CAPTCHA Failed!</b>\n\nToo many incorrect attempts. You have been permanently banned.",
 				&gotgbot.EditMessageTextOpts{
 					ParseMode: helpers.HTML,
 				},
