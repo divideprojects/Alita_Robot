@@ -16,10 +16,10 @@ It fetches the list of chat administrators using the provided bot instance, conv
 and stores the result in the cache with retries on failure. If the bot is nil, or if no administrators are found,
 an empty AdminCache is returned. The caching operation is performed asynchronously.
 */
-func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
+func LoadAdminCache(b *gotgbot.Bot, chatId int64) *AdminCache {
 	if b == nil {
 		log.Error("LoadAdminCache: bot is nil")
-		return AdminCache{}
+		return &AdminCache{}
 	}
 
 	// Create context with timeout to prevent indefinite blocking
@@ -32,14 +32,14 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 			"chatId": chatId,
 			"error":  err,
 		}).Error("LoadAdminCache: Failed to get chat administrators")
-		return AdminCache{}
+		return &AdminCache{}
 	}
 
 	if len(adminList) == 0 {
 		log.WithFields(log.Fields{
 			"chatId": chatId,
 		}).Warning("LoadAdminCache: No administrators found")
-		return AdminCache{}
+		return &AdminCache{}
 	}
 
 	// Convert ChatMember to MergedChatMember and build map
@@ -62,7 +62,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	go func() {
 		maxRetries := 3
 		for i := 0; i < maxRetries; i++ {
-			if err := Marshal.Set(Context, AdminCache{ChatId: chatId}, adminCache, store.WithExpiration(time.Minute*10)); err != nil {
+			if err := Marshal.Set(Context, AdminCache{ChatId: chatId}, &adminCache, store.WithExpiration(time.Minute*10)); err != nil {
 				log.WithFields(log.Fields{
 					"chatId": chatId,
 					"error":  err,
@@ -82,7 +82,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 		}
 	}()
 
-	return adminCache
+	return &adminCache
 }
 
 /*
@@ -91,7 +91,7 @@ GetAdminCacheList retrieves the admin cache for the specified chat ID.
 Returns a boolean indicating if the cache was found, and the AdminCache object.
 If the cache is not found or an error occurs, returns false and an empty AdminCache.
 */
-func GetAdminCacheList(chatId int64) (bool, AdminCache) {
+func GetAdminCacheList(chatId int64) (bool, *AdminCache) {
 	gotAdminlist, err := Marshal.Get(
 		Context,
 		AdminCache{
@@ -101,12 +101,12 @@ func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 	)
 	if err != nil {
 		log.Error(err)
-		return false, AdminCache{}
+		return false, &AdminCache{}
 	}
 	if gotAdminlist == nil {
-		return false, AdminCache{}
+		return false, &AdminCache{}
 	}
-	return true, *gotAdminlist.(*AdminCache)
+	return true, gotAdminlist.(*AdminCache)
 }
 
 /*
