@@ -3,7 +3,11 @@ package db
 import (
 	log "github.com/sirupsen/logrus"
 
+	"time"
+
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
+	"github.com/eko/gocache/lib/v4/store"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -20,6 +24,12 @@ type UserReportSettings struct {
 }
 
 func GetChatReportSettings(chatID int64) (reportsrc *ChatReportSettings) {
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(ChatReportSettings)); err == nil && cached != nil {
+		reportsrc = cached.(*ChatReportSettings)
+		return
+	}
+
 	reportsrc = &ChatReportSettings{}
 
 	filter := bson.M{"_id": chatID}
@@ -41,6 +51,10 @@ func GetChatReportSettings(chatID int64) (reportsrc *ChatReportSettings) {
 		}
 		log.Error(err)
 	}
+	// Cache the result
+	if reportsrc != nil {
+		_ = cache.Marshal.Set(cache.Context, chatID, reportsrc, store.WithExpiration(10*time.Minute))
+	}
 	return
 }
 
@@ -51,6 +65,8 @@ func SetChatReportStatus(chatID int64, pref bool) {
 	if err != nil {
 		log.Error(err)
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, chatID, reportsUpdate, store.WithExpiration(10*time.Minute))
 }
 
 func BlockReportUser(chatId, userId int64) {
@@ -65,6 +81,8 @@ func BlockReportUser(chatId, userId int64) {
 	if err != nil {
 		log.Error(err)
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, chatId, reportsUpdate, store.WithExpiration(10*time.Minute))
 }
 
 func UnblockReportUser(chatId, userId int64) {

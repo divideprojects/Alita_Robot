@@ -8,6 +8,8 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
 
+	"math/rand"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -266,15 +268,15 @@ func createIndexes() {
 // It sets up global collection variables for use throughout the db package.
 func init() {
 	var err error
-
 	ctx, cancel := context.WithTimeout(bgCtx, 10*time.Second)
 	defer cancel()
-
-	// Use modern single-step client creation pattern (MongoDB driver v1.4+)
-	mongoClient, err = mongo.Connect(ctx, options.Client().ApplyURI(config.DatabaseURI))
+	clientOpts := options.Client().ApplyURI(config.DatabaseURI).
+		SetMaxPoolSize(config.MongoMaxPoolSize).
+		SetMinPoolSize(config.MongoMinPoolSize).
+		SetMaxConnIdleTime(config.MongoMaxConnIdleTime)
+	mongoClient, err = mongo.Connect(ctx, clientOpts)
 	if err != nil {
 		log.Errorf("[Database][Connect]: %v", err)
-		// Return early if connection fails to prevent nil pointer panic
 		return
 	}
 
@@ -310,66 +312,136 @@ func init() {
 	createIndexes()
 }
 
-// updateOne updates a single document in the specified collection.
-// If no document matches the filter, a new one is inserted (upsert).
+// Helper for retrying DB ops
+func retryDB(fn func() error) error {
+	var err error
+	for i := 0; i < 3; i++ {
+		err = fn()
+		if err == nil {
+			return nil
+		}
+		if i < 2 {
+			time.Sleep(time.Duration(rand.Intn(100)+50) * time.Millisecond)
+		}
+	}
+	return err
+}
+
+// updateOne with timing, retry, and slow query log
 func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (err error) {
-	_, err = collecion.UpdateOne(tdCtx, filter, bson.M{"$set": data}, options.Update().SetUpsert(true))
+	start := time.Now()
+	err = retryDB(func() error {
+		_, e := collecion.UpdateOne(tdCtx, filter, bson.M{"$set": data}, options.Update().SetUpsert(true))
+		return e
+	})
+	dur := time.Since(start)
+	if dur > 100*time.Millisecond {
+		log.Warnf("[Database][SLOW][updateOne] %v %v took %v", collecion.Name(), filter, dur)
+	}
 	if err != nil {
 		log.Errorf("[Database][updateOne]: %v", err)
 	}
 	return
 }
 
-// findOne finds a single document in the specified collection matching the filter.
+// findOne with timing, retry, and slow query log
 func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResult) {
-	res = collecion.FindOne(tdCtx, filter)
-	return
+	start := time.Now()
+	var result *mongo.SingleResult
+	retryDB(func() error {
+		result = collecion.FindOne(tdCtx, filter)
+		return result.Err()
+	})
+	dur := time.Since(start)
+	if dur > 100*time.Millisecond {
+		log.Warnf("[Database][SLOW][findOne] %v %v took %v", collecion.Name(), filter, dur)
+	}
+	return result
 }
 
-// countDocs returns the number of documents in the collection matching the filter.
+// countDocs with timing, retry, and slow query log
 func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err error) {
-	count, err = collecion.CountDocuments(tdCtx, filter)
+	start := time.Now()
+	err = retryDB(func() error {
+		c, e := collecion.CountDocuments(tdCtx, filter)
+		count = c
+		return e
+	})
+	dur := time.Since(start)
+	if dur > 100*time.Millisecond {
+		log.Warnf("[Database][SLOW][countDocs] %v %v took %v", collecion.Name(), filter, dur)
+	}
 	if err != nil {
 		log.Errorf("[Database][countDocs]: %v", err)
 	}
 	return
 }
 
-// findAll returns a cursor for all documents in the collection matching the filter.
+// findAll with timing, retry, and slow query log
 func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
-	cur, err := collecion.Find(tdCtx, filter)
-	if err != nil {
-		log.Errorf("[Database][findAll]: %v", err)
+	start := time.Now()
+	var cursor *mongo.Cursor
+	retryDB(func() error {
+		c, e := collecion.Find(tdCtx, filter)
+		cursor = c
+		return e
+	})
+	dur := time.Since(start)
+	if dur > 100*time.Millisecond {
+		log.Warnf("[Database][SLOW][findAll] %v %v took %v", collecion.Name(), filter, dur)
 	}
-	return
+	return cursor
 }
 
-// deleteOne deletes a single document from the collection matching the filter.
+// deleteOne with timing, retry, and slow query log
 func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
-	_, err = collecion.DeleteOne(tdCtx, filter)
+	start := time.Now()
+	err = retryDB(func() error {
+		_, e := collecion.DeleteOne(tdCtx, filter)
+		return e
+	})
+	dur := time.Since(start)
+	if dur > 100*time.Millisecond {
+		log.Warnf("[Database][SLOW][deleteOne] %v %v took %v", collecion.Name(), filter, dur)
+	}
 	if err != nil {
 		log.Errorf("[Database][deleteOne]: %v", err)
 	}
 	return
 }
 
-// deleteMany deletes all documents from the collection matching the filter.
+// deleteMany with timing, retry, and slow query log
 func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
-	_, err = collecion.DeleteMany(tdCtx, filter)
+	start := time.Now()
+	err = retryDB(func() error {
+		_, e := collecion.DeleteMany(tdCtx, filter)
+		return e
+	})
+	dur := time.Since(start)
+	if dur > 100*time.Millisecond {
+		log.Warnf("[Database][SLOW][deleteMany] %v %v took %v", collecion.Name(), filter, dur)
+	}
 	if err != nil {
 		log.Errorf("[Database][deleteMany]: %v", err)
 	}
 	return
 }
 
-// findOneAndUpsert performs an atomic find-and-update operation with upsert.
-// Returns the document after the operation (either existing or newly created).
+// findOneAndUpsert with timing, retry, and slow query log
 func findOneAndUpsert(collection *mongo.Collection, filter bson.M, update bson.M, result interface{}) error {
-	opts := options.FindOneAndUpdate().
-		SetUpsert(true).
-		SetReturnDocument(options.After)
-
-	err := collection.FindOneAndUpdate(tdCtx, filter, update, opts).Decode(result)
+	start := time.Now()
+	var err error
+	err = retryDB(func() error {
+		opts := options.FindOneAndUpdate().
+			SetUpsert(true).
+			SetReturnDocument(options.After)
+		err = collection.FindOneAndUpdate(tdCtx, filter, update, opts).Decode(result)
+		return err
+	})
+	dur := time.Since(start)
+	if dur > 100*time.Millisecond {
+		log.Warnf("[Database][SLOW][findOneAndUpsert] %v %v took %v", collection.Name(), filter, dur)
+	}
 	if err != nil {
 		log.Errorf("[Database][findOneAndUpsert]: %v", err)
 	}

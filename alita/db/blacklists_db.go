@@ -3,7 +3,10 @@ package db
 import (
 	"context"
 	"strings"
+	"time"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/eko/gocache/lib/v4/store"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -27,6 +30,10 @@ type BlacklistSettings struct {
 
 // check Chat Blacklists Settings, used to get data before performing any operation
 func checkBlacklistSetting(chatID int64) (blSrc *BlacklistSettings) {
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(BlacklistSettings)); err == nil && cached != nil {
+		return cached.(*BlacklistSettings)
+	}
 	defaultBlacklistSrc := &BlacklistSettings{
 		ChatId:   chatID,
 		Action:   "none",
@@ -44,6 +51,10 @@ func checkBlacklistSetting(chatID int64) (blSrc *BlacklistSettings) {
 		log.Errorf("[Database][GetBlacklistSettings]: %v - %d", errS, chatID)
 		blSrc = defaultBlacklistSrc
 	}
+	// Cache the result
+	if blSrc != nil {
+		_ = cache.Marshal.Set(cache.Context, chatID, blSrc, store.WithExpiration(10*time.Minute))
+	}
 	return blSrc
 }
 
@@ -56,6 +67,8 @@ func AddBlacklist(chatId int64, trigger string) {
 	if err != nil {
 		log.Errorf("[Database] AddBlacklist: %v - %d", err, chatId)
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, chatId, blSrc, store.WithExpiration(10*time.Minute))
 }
 
 // RemoveBlacklist removes a trigger word from the blacklist for the specified chat.

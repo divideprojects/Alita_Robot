@@ -3,6 +3,10 @@ package db
 import (
 	log "github.com/sirupsen/logrus"
 
+	"time"
+
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/eko/gocache/lib/v4/store"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -36,6 +40,10 @@ func GetFlood(chatID int64) *FloodSettings {
 // If no document exists, it creates one with default values.
 // Returns a pointer to the FloodSettings struct.
 func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(FloodSettings)); err == nil && cached != nil {
+		return cached.(*FloodSettings)
+	}
 	defaultFloodSrc := &FloodSettings{ChatId: chatID, Limit: 0, Mode: defaultFloodsettingsMode}
 
 	err := findOne(antifloodSettingsColl, bson.M{"_id": chatID}).Decode(&floodSrc)
@@ -48,6 +56,10 @@ func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
 	} else if err != nil {
 		floodSrc = defaultFloodSrc
 		log.Errorf("[Database][checkGreetingSettings]: %v ", err)
+	}
+	// Cache the result
+	if floodSrc != nil {
+		_ = cache.Marshal.Set(cache.Context, chatID, floodSrc, store.WithExpiration(10*time.Minute))
 	}
 	return floodSrc
 }
@@ -68,6 +80,8 @@ func SetFlood(chatID int64, limit int) {
 	if err != nil {
 		log.Errorf("[Database] SetFlood: %v - %d", err, chatID)
 	}
+	// Invalidate cache
+	_ = cache.Marshal.Delete(cache.Context, chatID)
 }
 
 // SetFloodMode updates the flood action mode for a specific chat.
@@ -80,6 +94,8 @@ func SetFloodMode(chatID int64, mode string) {
 	if err != nil {
 		log.Errorf("[Database] SetFloodMode: %v - %d", err, chatID)
 	}
+	// Invalidate cache
+	_ = cache.Marshal.Delete(cache.Context, chatID)
 }
 
 // SetFloodMsgDel sets whether messages that trigger the flood filter should be deleted for a chat.
@@ -91,6 +107,8 @@ func SetFloodMsgDel(chatID int64, val bool) {
 	if err != nil {
 		log.Errorf("[Database] SetFloodMsgDel: %v - %d", err, chatID)
 	}
+	// Invalidate cache
+	_ = cache.Marshal.Delete(cache.Context, chatID)
 }
 
 /*

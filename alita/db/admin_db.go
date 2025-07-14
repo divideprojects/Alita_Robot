@@ -3,6 +3,10 @@ package db
 import (
 	log "github.com/sirupsen/logrus"
 
+	"time"
+
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/eko/gocache/lib/v4/store"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -29,6 +33,10 @@ func GetAdminSettings(chatID int64) *AdminSettings {
 // If no document exists, it creates one with default values.
 // Returns a pointer to the AdminSettings struct.
 func checkAdminSetting(chatID int64) (adminSrc *AdminSettings) {
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(AdminSettings)); err == nil && cached != nil {
+		return cached.(*AdminSettings)
+	}
 	defaultAdminSrc := &AdminSettings{ChatId: chatID, AnonAdmin: false}
 
 	err := findOne(adminSettingsColl, bson.M{"_id": chatID}).Decode(&adminSrc)
@@ -41,6 +49,10 @@ func checkAdminSetting(chatID int64) (adminSrc *AdminSettings) {
 	} else if err != nil {
 		adminSrc = defaultAdminSrc
 		log.Errorf("[Database][checkAdminSetting]: %v ", err)
+	}
+	// Cache the result
+	if adminSrc != nil {
+		_ = cache.Marshal.Set(cache.Context, chatID, adminSrc, store.WithExpiration(10*time.Minute))
 	}
 	return adminSrc
 }
@@ -55,4 +67,6 @@ func SetAnonAdminMode(chatID int64, val bool) {
 	if err != nil {
 		log.Errorf("[Database] SetAnonAdminMode: %v - %d", err, chatID)
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, chatID, adminSrc, store.WithExpiration(10*time.Minute))
 }

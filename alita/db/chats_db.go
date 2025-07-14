@@ -3,7 +3,11 @@ package db
 import (
 	log "github.com/sirupsen/logrus"
 
+	"time"
+
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
+	"github.com/eko/gocache/lib/v4/store"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -28,12 +32,20 @@ type Chat struct {
 // GetChatSettings retrieves the chat settings for a given chat ID.
 // If no settings exist, it returns a new Chat struct with default values.
 func GetChatSettings(chatId int64) (chatSrc *Chat) {
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, chatId, new(Chat)); err == nil && cached != nil {
+		return cached.(*Chat)
+	}
 	err := findOne(chatColl, bson.M{"_id": chatId}).Decode(&chatSrc)
 	if err == mongo.ErrNoDocuments {
 		chatSrc = &Chat{}
 	} else if err != nil {
 		log.Errorf("[Database] getChatSettings: %v - %d ", err, chatId)
 		return
+	}
+	// Cache the result
+	if chatSrc != nil {
+		_ = cache.Marshal.Set(cache.Context, chatId, chatSrc, store.WithExpiration(10*time.Minute))
 	}
 	return
 }
@@ -65,6 +77,8 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 			log.Errorf("[Database] UpdateChat: %v - %d (%d)", err2, chatId, userid)
 			return
 		}
+		// Update cache
+		_ = cache.Marshal.Set(cache.Context, chatId, usersUpdate, store.WithExpiration(10*time.Minute))
 	}
 }
 

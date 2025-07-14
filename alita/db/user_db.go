@@ -3,7 +3,11 @@ package db
 import (
 	log "github.com/sirupsen/logrus"
 
+	"time"
+
 	"github.com/PaulSonOfLars/gotgbot/v2"
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/eko/gocache/lib/v4/store"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -25,6 +29,10 @@ func EnsureBotInDb(b *gotgbot.Bot) {
 }
 
 func checkUserInfo(userId int64) (userc *User) {
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, userId, new(User)); err == nil && cached != nil {
+		return cached.(*User)
+	}
 	defaultUser := &User{UserId: userId}
 	errS := findOne(userColl, bson.M{"_id": userId}).Decode(&userc)
 	if errS == mongo.ErrNoDocuments {
@@ -32,6 +40,10 @@ func checkUserInfo(userId int64) (userc *User) {
 	} else if errS != nil {
 		log.Errorf("[Database] checkUserInfo: %v - %d", errS, userId)
 		userc = defaultUser
+	}
+	// Cache the result (even if nil, to avoid repeated DB hits)
+	if userc != nil {
+		_ = cache.Marshal.Set(cache.Context, userId, userc, store.WithExpiration(10*time.Minute))
 	}
 	return userc
 }
@@ -58,6 +70,8 @@ func UpdateUser(userId int64, username, name string) {
 		log.Errorf("[Database] UpdateUser: %v - %d", err2, userId)
 		return
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, userId, userc, store.WithExpiration(10*time.Minute))
 	log.Infof("[Database] UpdateUser: %d", userId)
 }
 

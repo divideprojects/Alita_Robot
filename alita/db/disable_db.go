@@ -6,7 +6,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
+	"time"
+
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
+	"github.com/eko/gocache/lib/v4/store"
 )
 
 type DisableCommand struct {
@@ -17,6 +21,10 @@ type DisableCommand struct {
 
 // check Chat Disable Settings, used to get data before performing any operation
 func checkDisableSettings(chatID int64) (disSrc *DisableCommand) {
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(DisableCommand)); err == nil && cached != nil {
+		return cached.(*DisableCommand)
+	}
 	defaultDisrc := &DisableCommand{ChatID: chatID, Commands: make([]string, 0), ShouldDelete: false}
 	errS := findOne(disableColl, bson.M{"_id": chatID}).Decode(&disSrc)
 	if errS == mongo.ErrNoDocuments {
@@ -29,6 +37,10 @@ func checkDisableSettings(chatID int64) (disSrc *DisableCommand) {
 		log.Errorf("[Database][checkDisableSettings]: %v", errS)
 		disSrc = defaultDisrc
 	}
+	// Cache the result
+	if disSrc != nil {
+		_ = cache.Marshal.Set(cache.Context, chatID, disSrc, store.WithExpiration(10*time.Minute))
+	}
 	return disSrc
 }
 
@@ -40,6 +52,8 @@ func DisableCMD(chatID int64, cmd string) {
 	if err != nil {
 		log.Errorf("[Database][DisableCMD]: %v", err)
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, chatID, disableCmd, store.WithExpiration(10*time.Minute))
 }
 
 // EnableCMD Enable CMD in chat
@@ -50,6 +64,8 @@ func EnableCMD(chatID int64, cmd string) {
 	if err != nil {
 		log.Errorf("[Database][EnableCMD]: %v", err)
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, chatID, disableCmd, store.WithExpiration(10*time.Minute))
 }
 
 // GetChatDisabledCMDs Get disabled comands of chat

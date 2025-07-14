@@ -5,6 +5,8 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"strconv"
+	"time"
 
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
@@ -43,6 +45,11 @@ var (
 	RedisDB int
 	// Logger is the configured logger instance
 	Logger *log.Logger
+	// MongoDB connection pool settings
+	MongoMaxPoolSize     uint64
+	MongoMinPoolSize     uint64
+	MongoMaxConnIdleTime time.Duration
+	MongoMaxIdleTime     time.Duration
 )
 
 // defaultAllowedUpdates defines the complete set of Telegram update types the bot can subscribe to.
@@ -65,6 +72,30 @@ var defaultAllowedUpdates = []string{
 
 // defaultValidLangCodes holds the language codes enabled when no explicit value is provided.
 var defaultValidLangCodes = []string{"en"}
+
+func parseUint64Env(key string, def uint64) uint64 {
+	val := os.Getenv(key)
+	if val == "" {
+		return def
+	}
+	u, err := strconv.ParseUint(val, 10, 64)
+	if err != nil {
+		return def
+	}
+	return u
+}
+
+func parseDurationEnv(key string, def time.Duration) time.Duration {
+	val := os.Getenv(key)
+	if val == "" {
+		return def
+	}
+	d, err := time.ParseDuration(val)
+	if err != nil {
+		return def
+	}
+	return d
+}
 
 // init initializes the config variables from environment variables and sets up logging.
 // It loads .env files, parses environment variables, and applies defaults for unset values.
@@ -141,4 +172,9 @@ func init() {
 	if os.Getenv("REDIS_DB") == "" {
 		RedisDB = 0
 	}
+
+	MongoMaxPoolSize = parseUint64Env("MONGO_MAX_POOL_SIZE", 100)
+	MongoMinPoolSize = parseUint64Env("MONGO_MIN_POOL_SIZE", 10)
+	MongoMaxConnIdleTime = parseDurationEnv("MONGO_MAX_CONN_IDLE_TIME", 30*time.Second)
+	MongoMaxIdleTime = parseDurationEnv("MONGO_MAX_IDLE_TIME", 30*time.Second)
 }
