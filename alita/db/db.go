@@ -67,6 +67,33 @@ var (
 	notesSettingsColl      *mongo.Collection
 )
 
+// createIndexes creates database indexes for optimal performance
+func createIndexes() {
+	log.Info("Creating database indexes...")
+
+	// Create index for filters collection: (chat_id, keyword) - unique
+	filterIndexModel := mongo.IndexModel{
+		Keys:    bson.D{{Key: "chat_id", Value: 1}, {Key: "keyword", Value: 1}},
+		Options: options.Index().SetUnique(true),
+	}
+	_, err := filterColl.Indexes().CreateOne(bgCtx, filterIndexModel)
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create filter index: %v", err)
+	}
+
+	// Create index for notes collection: (chat_id, note_name) - unique
+	notesIndexModel := mongo.IndexModel{
+		Keys:    bson.D{{Key: "chat_id", Value: 1}, {Key: "note_name", Value: 1}},
+		Options: options.Index().SetUnique(true),
+	}
+	_, err = notesColl.Indexes().CreateOne(bgCtx, notesIndexModel)
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create notes index: %v", err)
+	}
+
+	log.Info("Done creating database indexes!")
+}
+
 // dbInstance func
 /*
 init initializes the MongoDB client and opens all required collections.
@@ -114,6 +141,9 @@ func init() {
 	notesColl = mongoClient.Database(config.MainDbName).Collection("notes")
 	notesSettingsColl = mongoClient.Database(config.MainDbName).Collection("notes_settings")
 	log.Info("Done opening all database collections!")
+
+	// Create indexes for optimal performance
+	createIndexes()
 }
 
 // updateOne updates a single document in the specified collection.
@@ -166,4 +196,18 @@ func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 		log.Errorf("[Database][deleteMany]: %v", err)
 	}
 	return
+}
+
+// findOneAndUpsert performs an atomic find-and-update operation with upsert.
+// Returns the document after the operation (either existing or newly created).
+func findOneAndUpsert(collection *mongo.Collection, filter bson.M, update bson.M, result interface{}) error {
+	opts := options.FindOneAndUpdate().
+		SetUpsert(true).
+		SetReturnDocument(options.After)
+
+	err := collection.FindOneAndUpdate(tdCtx, filter, update, opts).Decode(result)
+	if err != nil {
+		log.Errorf("[Database][findOneAndUpsert]: %v", err)
+	}
+	return err
 }

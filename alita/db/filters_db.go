@@ -69,26 +69,29 @@ func DoesFilterExists(chatId int64, keyword string) bool {
 
 // AddFilter adds a new filter to the chat with the specified properties.
 // If a filter with the same keyword already exists, no action is taken.
-func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button, filtType int) {
-	if string_handling.FindInStringSlice(GetFiltersList(chatID), keyWord) {
-		return
+// Returns true if a new filter was added, false if it already existed.
+func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button, filtType int) bool {
+	filter := bson.M{"chat_id": chatID, "keyword": keyWord}
+	update := bson.M{
+		"$setOnInsert": bson.M{
+			"chat_id":        chatID,
+			"keyword":        keyWord,
+			"filter_reply":   replyText,
+			"msgtype":        filtType,
+			"fileid":         fileID,
+			"filter_buttons": buttons,
+		},
 	}
 
-	// add the filter
-	newFilter := ChatFilters{
-		ChatId:      chatID,
-		KeyWord:     keyWord,
-		FilterReply: replyText,
-		MsgType:     filtType,
-		FileID:      fileID,
-		Buttons:     buttons,
-	}
-
-	err := updateOne(filterColl, bson.M{"chat_id": chatID, "keyword": keyWord}, newFilter)
+	result := &ChatFilters{}
+	err := findOneAndUpsert(filterColl, filter, update, result)
 	if err != nil {
 		log.Errorf("[Database][AddFilter]: %d - %v", chatID, err)
-		return
+		return false
 	}
+
+	// Return true if this was a new insert (the document should have our values)
+	return result.ChatId == chatID && result.KeyWord == keyWord
 }
 
 // RemoveFilter deletes a filter by keyword from the chat.

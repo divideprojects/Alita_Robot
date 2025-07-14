@@ -113,31 +113,35 @@ func DoesNoteExists(chatID int64, noteName string) bool {
 
 // AddNote adds a new note to the chat with the specified properties.
 // If a note with the same name already exists, no action is taken.
-func AddNote(chatID int64, noteName, replyText, fileID string, buttons []Button, filtType int, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool) {
-	if string_handling.FindInStringSlice(GetNotesList(chatID, true), noteName) {
-		return
+// Returns true if a new note was added, false if it already existed.
+func AddNote(chatID int64, noteName, replyText, fileID string, buttons []Button, filtType int, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool) bool {
+	filter := bson.M{"chat_id": chatID, "note_name": noteName}
+	update := bson.M{
+		"$setOnInsert": bson.M{
+			"chat_id":      chatID,
+			"note_name":    noteName,
+			"note_content": replyText,
+			"msgtype":      filtType,
+			"fileid":       fileID,
+			"note_buttons": buttons,
+			"private_only": pvtOnly,
+			"group_only":   grpOnly,
+			"webpreview":   webPrev,
+			"admin_only":   adminOnly,
+			"is_protected": isProtected,
+			"no_notif":     noNotif,
+		},
 	}
 
-	noterc := ChatNotes{
-		ChatId:      chatID,
-		NoteName:    noteName,
-		NoteContent: replyText,
-		MsgType:     filtType,
-		FileID:      fileID,
-		Buttons:     buttons,
-		PrivateOnly: pvtOnly,
-		GroupOnly:   grpOnly,
-		WebPreview:  webPrev,
-		AdminOnly:   adminOnly,
-		IsProtected: isProtected,
-		NoNotif:     noNotif,
-	}
-
-	err := updateOne(notesColl, bson.M{"chat_id": chatID, "note_name": noteName}, noterc)
+	result := &ChatNotes{}
+	err := findOneAndUpsert(notesColl, filter, update, result)
 	if err != nil {
 		log.Errorf("[Database][AddNotes]: %d - %v", chatID, err)
-		return
+		return false
 	}
+
+	// Return true if this was a new insert (the document should have our values)
+	return result.ChatId == chatID && result.NoteName == noteName
 }
 
 // RemoveNote deletes a note by name from the chat.

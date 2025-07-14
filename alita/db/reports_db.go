@@ -6,7 +6,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type ChatReportSettings struct {
@@ -21,21 +20,25 @@ type UserReportSettings struct {
 }
 
 func GetChatReportSettings(chatID int64) (reportsrc *ChatReportSettings) {
-	defReportSettings := &ChatReportSettings{
-		ChatId:      chatID,
-		Status:      true,
-		BlockedList: make([]int64, 0),
+	reportsrc = &ChatReportSettings{}
+
+	filter := bson.M{"_id": chatID}
+	update := bson.M{
+		"$setOnInsert": bson.M{
+			"_id":          chatID,
+			"status":       true,
+			"blocked_list": make([]int64, 0),
+		},
 	}
 
-	err := findOne(reportChatColl, bson.M{"_id": chatID}).Decode(&reportsrc)
-	if err == mongo.ErrNoDocuments {
-		reportsrc = defReportSettings
-		err := updateOne(reportChatColl, bson.M{"_id": chatID}, reportsrc)
-		if err != nil {
-			log.Error(err)
+	err := findOneAndUpsert(reportChatColl, filter, update, reportsrc)
+	if err != nil {
+		// Fallback to default values in case of error
+		reportsrc = &ChatReportSettings{
+			ChatId:      chatID,
+			Status:      true,
+			BlockedList: make([]int64, 0),
 		}
-	} else if err != nil {
-		reportsrc = defReportSettings
 		log.Error(err)
 	}
 	return
@@ -81,20 +84,23 @@ func UnblockReportUser(chatId, userId int64) {
 /* user settings below */
 
 func GetUserReportSettings(userId int64) (reportsrc *UserReportSettings) {
-	defReportSettings := &UserReportSettings{
-		UserId: userId,
-		Status: true,
+	reportsrc = &UserReportSettings{}
+
+	filter := bson.M{"_id": userId}
+	update := bson.M{
+		"$setOnInsert": bson.M{
+			"_id":    userId,
+			"status": true,
+		},
 	}
 
-	err := findOne(reportUserColl, bson.M{"_id": userId}).Decode(&reportsrc)
-	if err == mongo.ErrNoDocuments {
-		reportsrc = defReportSettings
-		err := updateOne(reportUserColl, bson.M{"_id": userId}, reportsrc)
-		if err != nil {
-			log.Error(err)
+	err := findOneAndUpsert(reportUserColl, filter, update, reportsrc)
+	if err != nil {
+		// Fallback to default values in case of error
+		reportsrc = &UserReportSettings{
+			UserId: userId,
+			Status: true,
 		}
-	} else if err != nil {
-		reportsrc = defReportSettings
 		log.Error(err)
 	}
 
