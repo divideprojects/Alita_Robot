@@ -57,14 +57,10 @@ func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	text := fmt.Sprintf(tr.GetString("strings."+m.moduleName+".adminlist"), chat.Title)
 
-	adminsAvail, admins := cache.GetAdminCacheList(chat.Id)
-	if !adminsAvail {
-		admins = cache.LoadAdminCache(b, chat.Id)
-		cached = false
-	}
+	adminList, cached := cache.GetAdmins(b, chat.Id)
 
-	for i := range admins.UserInfo {
-		admin := &admins.UserInfo[i]
+	for i := range adminList {
+		admin := &adminList[i]
 		user := admin.User
 		if user.IsBot || admin.IsAnonymous {
 			// don't list bots and anonymous admins
@@ -200,6 +196,9 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		return ext.EndGroups
 	}
+
+	// Invalidate admin cache since admin list has changed
+	go cache.InvalidateAdminCache(chat.Id)
 
 	userMember, err := chat.GetMember(b, userId, nil)
 	if err != nil {
@@ -373,6 +372,9 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.EndGroups
 		}
 	}
+	// Invalidate admin cache since admin list has changed
+	go cache.InvalidateAdminCache(chat.Id)
+
 	mem := userMember.MergeChatMember().User
 	_, err = msg.Reply(b,
 		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".promote.success_promote"), helpers.MentionHtml(mem.Id, mem.FirstName))+extraText,
@@ -637,7 +639,9 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	cache.LoadAdminCache(b, chat.Id)
+	// Force reload of admin cache
+	cache.InvalidateAdminCache(chat.Id)
+	cache.GetAdmins(b, chat.Id)
 
 	k := tr.GetString("strings.CommonStrings.admin_cache.cache_reloaded")
 	debug_bot.PrettyPrintStruct(k)
@@ -671,7 +675,7 @@ func LoadAdmin(dispatcher *ext.Dispatcher) {
 			"clearadmincache",
 			func(b *gotgbot.Bot, ctx *ext.Context) error {
 				chat := ctx.EffectiveChat
-				err := cache.Marshal.Delete(cache.Context, cache.AdminCache{ChatId: chat.Id})
+				err := cache.InvalidateAdminCache(chat.Id)
 				if err != nil {
 					log.Error(err)
 					return err

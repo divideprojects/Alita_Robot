@@ -89,17 +89,20 @@ func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 /*
 adminCacheAutoUpdate ensures the admin cache is up-to-date when an admin update event occurs.
 
-If the cache is missing, it reloads the admin list for the chat.
+Invalidates existing cache when admin changes occur, ensuring fresh data on next access.
 */
 func adminCacheAutoUpdate(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
-	adminsAvail, _ := cache.GetAdminCacheList(chat.Id)
-
-	if !adminsAvail {
-		cache.LoadAdminCache(b, chat.Id)
-		log.Info(fmt.Sprintf("Reloaded admin cache for %d (%s)", chat.Id, chat.Title))
-	}
+	// Always invalidate cache when admin changes occur
+	// This ensures that any external admin changes (via other bots or Telegram clients)
+	// are reflected immediately on the next cache access
+	go cache.InvalidateAdminCache(chat.Id)
+	
+	log.WithFields(log.Fields{
+		"chatId": chat.Id,
+		"title":  chat.Title,
+	}).Debug("Invalidated admin cache due to member update")
 
 	return ext.ContinueGroups
 }

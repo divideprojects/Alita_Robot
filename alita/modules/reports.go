@@ -97,13 +97,10 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	adminsAvail, admins := cache.GetAdminCacheList(chat.Id)
-	if !adminsAvail {
-		admins = cache.LoadAdminCache(b, chat.Id)
-	}
+	adminList, _ := cache.GetAdmins(b, chat.Id)
 
-	for i := range admins.UserInfo {
-		admin := &admins.UserInfo[i]
+	for i := range adminList {
+		admin := &adminList[i]
 		adminArray = append(adminArray, admin.User.Id)
 	}
 

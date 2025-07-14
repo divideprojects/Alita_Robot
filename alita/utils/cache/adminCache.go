@@ -58,7 +58,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	go func() {
 		maxRetries := 3
 		for i := 0; i < maxRetries; i++ {
-			if err := Marshal.Set(Context, AdminCache{ChatId: chatId}, adminCache, store.WithExpiration(time.Minute*30)); err != nil {
+			if err := Marshal.Set(Context, AdminCache{ChatId: chatId}, adminCache, store.WithExpiration(time.Minute*10)); err != nil {
 				log.WithFields(log.Fields{
 					"chatId": chatId,
 					"error":  err,
@@ -119,4 +119,41 @@ func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
 		}
 	}
 	return false, gotgbot.MergedChatMember{}
+}
+
+/*
+GetAdmins retrieves the admin list for the specified chat, using cache if available.
+
+This function abstracts the caching logic by checking the cache first and loading fresh data if needed.
+Returns the list of admin users and a boolean indicating whether the data came from cache.
+*/
+func GetAdmins(b *gotgbot.Bot, chatId int64) ([]gotgbot.MergedChatMember, bool) {
+	if adminsAvail, admins := GetAdminCacheList(chatId); adminsAvail {
+		return admins.UserInfo, true
+	}
+	
+	admins := LoadAdminCache(b, chatId)
+	return admins.UserInfo, false
+}
+
+/*
+InvalidateAdminCache removes the admin cache for the specified chat ID.
+
+This function should be called when the admin list is known to have changed,
+ensuring that subsequent calls will fetch fresh data from Telegram.
+*/
+func InvalidateAdminCache(chatId int64) error {
+	err := Marshal.Delete(Context, AdminCache{ChatId: chatId})
+	if err != nil {
+		log.WithFields(log.Fields{
+			"chatId": chatId,
+			"error":  err,
+		}).Error("InvalidateAdminCache: Failed to delete admin cache")
+		return err
+	}
+	
+	log.WithFields(log.Fields{
+		"chatId": chatId,
+	}).Debug("InvalidateAdminCache: Successfully invalidated admin cache")
+	return nil
 }

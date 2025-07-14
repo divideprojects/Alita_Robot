@@ -102,11 +102,11 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 	defer cancel()
 
 	// Check cache first - avoid GetChat call if possible
-	adminsAvail, admins := cache.GetAdminCacheList(chatID)
-	if adminsAvail && admins.Cached {
+	adminList, cached := cache.GetAdmins(b, chatID)
+	if cached {
 		// Use cached data without making API calls
-		for i := range admins.UserInfo {
-			admin := &admins.UserInfo[i]
+		for i := range adminList {
+			admin := &adminList[i]
 			if admin.User.Id == userId {
 				return true
 			}
@@ -130,12 +130,9 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 		return false
 	}
 
-	// Load admin cache with timeout protection
-	adminList := cache.LoadAdminCache(b, chatID)
-
-	// Check if user is in admin list
-	for i := range adminList.UserInfo {
-		admin := &adminList.UserInfo[i]
+	// Check if user is in admin list (adminList already contains fresh data from GetAdmins)
+	for i := range adminList {
+		admin := &adminList[i]
 		if admin.User.Id == userId {
 			return true
 		}
