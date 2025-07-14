@@ -999,3 +999,41 @@ strings:
   utils.string_handling.extract_time.invalid_time_type:
     "Invalid time type specified.
     Expected m, h, or d got: %s"
+  captcha.help_msg:
+    "Protect your chat from spam and bot attacks with CAPTCHA verification for new members!
+
+    When enabled, new members will be muted and must solve a challenge to gain full chat permissions.
+
+
+    *Admin Commands:*
+
+    × /captcha `<on/off>`: Enable or disable CAPTCHA for new members.
+
+    × /captchamode `<button/text/math/text2>`: Set the type of CAPTCHA challenge.
+    • button - Simple button click
+    • text - Text selection from image
+    • math - Basic math question
+    • text2 - Character-by-character selection
+
+    × /setcaptchatext `<text>`: Set custom text for the CAPTCHA button (max 64 chars).
+
+    × /resetcaptchatext: Reset CAPTCHA button text to default.
+
+    × /captchakick `<on/off>`: Enable/disable kicking users who fail CAPTCHA.
+
+    × /captchakicktime `<time>`: Set how long users have to solve CAPTCHA (e.g., 5m, 1h).
+
+    × /captcharules `<on/off>`: Enable/disable showing chat rules in CAPTCHA message.
+
+    × /captchamutetime `<time/off>`: Set auto-unmute time for failed CAPTCHA (e.g., 1h, 12h).
+
+
+    *How it works:*
+
+    1. New member joins → automatically muted
+    2. CAPTCHA challenge sent → member must solve it
+    3. Success → unmuted and welcomed
+    4. Failure → kicked/banned or remains muted (based on settings)
+
+
+    *Note:* Admins are exempt from CAPTCHA challenges."

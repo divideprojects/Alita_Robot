@@ -68,6 +68,8 @@ var (
 	filterColl             *mongo.Collection
 	notesColl              *mongo.Collection
 	notesSettingsColl      *mongo.Collection
+	captchasColl           *mongo.Collection
+	captchaChallengesColl  *mongo.Collection
 )
 
 // createIndexes creates database indexes for optimal performance
@@ -164,6 +166,8 @@ func init() {
 	filterColl = mongoClient.Database(config.MainDbName).Collection("filters")
 	notesColl = mongoClient.Database(config.MainDbName).Collection("notes")
 	notesSettingsColl = mongoClient.Database(config.MainDbName).Collection("notes_settings")
+	captchasColl = mongoClient.Database(config.MainDbName).Collection("captchas")
+	captchaChallengesColl = mongoClient.Database(config.MainDbName).Collection("captcha_challenges")
 	log.Info("Done opening all database collections!")
 
 	// Create indexes for optimal performance

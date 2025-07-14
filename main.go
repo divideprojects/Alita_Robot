@@ -102,6 +102,9 @@ func main() {
 	// Loading Modules
 	alita.LoadModules(dispatcher)
 
+	// Start CAPTCHA scheduler
+	alita.StartCaptchaScheduler(b)
+
 	// List loaded modules from the modules directory.
 	log.Infof(
 		fmt.Sprintf(
