@@ -30,6 +30,21 @@ var (
 	anonChatMapExpirartion = 20 * time.Second
 )
 
+// safeGetChat safely retrieves chat information from context, handling different update types
+func safeGetChat(ctx *ext.Context) *gotgbot.Chat {
+	if ctx.CallbackQuery != nil {
+		_chatValue := ctx.CallbackQuery.Message.GetChat()
+		return &_chatValue
+	} else if ctx.Update.Message != nil {
+		return &ctx.Update.Message.Chat
+	} else if ctx.Update.ChatMember != nil {
+		return &ctx.Update.ChatMember.Chat
+	} else {
+		// Fallback to EffectiveChat if available
+		return ctx.EffectiveChat
+	}
+}
+
 // GetChat So that we can getchat with username also
 /*
 GetChat retrieves chat information for the given chat ID.
@@ -149,12 +164,7 @@ Returns true if the bot has administrator status, otherwise false.
 */
 func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	if chat.Type == "private" {
@@ -175,12 +185,7 @@ Handles anonymous admin cases and provides feedback if permissions are lacking.
 */
 func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -244,12 +249,7 @@ Handles anonymous admin and provides feedback if permissions are lacking.
 */
 func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -312,12 +312,7 @@ Provides feedback if permissions are lacking.
 */
 func CanBotRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	botMember, err := chat.GetMember(b, b.Id, nil)
@@ -358,12 +353,7 @@ Handles anonymous admin and provides feedback if permissions are lacking.
 */
 func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -426,12 +416,7 @@ Provides feedback if permissions are lacking.
 */
 func CanBotPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	botChatMember, err := chat.GetMember(b, b.Id, nil)
@@ -461,12 +446,7 @@ Handles anonymous admin and provides feedback if permissions are lacking.
 */
 func CanUserPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -517,12 +497,7 @@ Provides feedback if permissions are lacking.
 */
 func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	botChatMember, err := chat.GetMember(b, b.Id, nil)
@@ -552,12 +527,7 @@ Handles anonymous admin and provides feedback if permissions are lacking.
 */
 func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbot.Message, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 	if chat.Username != "" {
 		return true
@@ -625,12 +595,7 @@ Handles anonymous admin and provides feedback if permissions are lacking.
 */
 func CanUserDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -690,12 +655,7 @@ Provides feedback if permissions are lacking.
 */
 func CanBotDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -726,12 +686,7 @@ Provides feedback if the bot lacks admin rights.
 */
 func RequireBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -768,12 +723,7 @@ Returns true if the user is an admin or a Telegram special user, otherwise false
 */
 func IsUserBanProtected(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	if chat.Type == "private" {
@@ -791,12 +741,7 @@ Provides feedback if the user lacks admin rights.
 */
 func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -829,12 +774,7 @@ Provides feedback if the user lacks ownership rights.
 */
 func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -874,12 +814,7 @@ Provides feedback if used in a group context.
 */
 func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 	msg := ctx.EffectiveMessage
 	if chat.Type != "private" {
@@ -906,12 +841,7 @@ Provides feedback if used in a private context.
 */
 func RequireGroup(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 	msg := ctx.EffectiveMessage
 	if chat.Type == "private" {
