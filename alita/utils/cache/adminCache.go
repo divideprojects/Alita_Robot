@@ -109,13 +109,19 @@ func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 GetAdminCacheUser retrieves the cached admin user for the given chat and user ID.
 
 Returns true and the MergedChatMember if found, otherwise returns false and an empty MergedChatMember.
+Uses optimized map-based lookup for O(1) performance.
 */
 func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
 	adminList, _ := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
-	for i := range adminList.(*AdminCache).UserInfo {
-		admin := &adminList.(*AdminCache).UserInfo[i]
+	if adminList == nil {
+		return false, gotgbot.MergedChatMember{}
+	}
+	
+	// Create a map for O(1) lookup
+	adminCache := adminList.(*AdminCache)
+	for _, admin := range adminCache.UserInfo {
 		if admin.User.Id == userId {
-			return true, *admin
+			return true, admin
 		}
 	}
 	return false, gotgbot.MergedChatMember{}
@@ -156,4 +162,34 @@ func InvalidateAdminCache(chatId int64) error {
 		"chatId": chatId,
 	}).Debug("InvalidateAdminCache: Successfully invalidated admin cache")
 	return nil
+}
+
+/*
+GetAdminIds retrieves a list of admin user IDs for the specified chat.
+
+Returns a slice of int64 user IDs for all administrators in the chat.
+Uses cache if available, otherwise loads fresh data.
+*/
+func GetAdminIds(b *gotgbot.Bot, chatId int64) []int64 {
+	admins, _ := GetAdmins(b, chatId)
+	adminIds := make([]int64, len(admins))
+	for i, admin := range admins {
+		adminIds[i] = admin.User.Id
+	}
+	return adminIds
+}
+
+/*
+IsUserAdminCached checks if a user is an admin using cached data with optimized lookup.
+
+Returns true if the user is an admin, false otherwise.
+Uses map-based lookup for O(1) performance when multiple checks are needed.
+*/
+func IsUserAdminCached(b *gotgbot.Bot, chatId, userId int64) bool {
+	adminIds := GetAdminIds(b, chatId)
+	adminMap := make(map[int64]bool, len(adminIds))
+	for _, id := range adminIds {
+		adminMap[id] = true
+	}
+	return adminMap[userId]
 }

@@ -21,6 +21,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
+	"sync"
+
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -28,10 +30,105 @@ import (
 blacklistsModule provides blacklist management logic for group chats.
 
 Implements commands to add, remove, list, and configure blacklists and their actions.
+Includes optimized regex caching for high-performance blacklist matching.
 */
 var blacklistsModule = moduleStruct{
 	moduleName:   "Blacklists",
 	handlerGroup: 7,
+	// Initialize regex cache maps for blacklists
+	filterRegexCache:    make(map[int64]*regexp.Regexp),
+	filterKeywordsCache: make(map[int64][]string),
+}
+
+// Mutex to protect blacklist regex cache from concurrent access
+var blacklistCacheMutex sync.RWMutex
+
+/*
+buildBlacklistRegex creates an optimized regex pattern that matches any of the blacklist triggers.
+Returns nil if no triggers or if regex compilation fails.
+*/
+func buildBlacklistRegex(triggers []string) *regexp.Regexp {
+	if len(triggers) == 0 {
+		return nil
+	}
+	
+	// Escape special regex characters in triggers and build pattern
+	escapedTriggers := make([]string, len(triggers))
+	for i, trigger := range triggers {
+		escapedTriggers[i] = regexp.QuoteMeta(trigger)
+	}
+	
+	// Create pattern that matches any trigger with word boundaries
+	pattern := fmt.Sprintf(`(\b|\s)(%s)\b`, strings.Join(escapedTriggers, "|"))
+	
+	regex, err := regexp.Compile(pattern)
+	if err != nil {
+		log.Errorf("[Blacklists] Failed to compile regex pattern: %v", err)
+		return nil
+	}
+	
+	return regex
+}
+
+/*
+getOrBuildBlacklistRegex retrieves cached regex or builds new one if cache is invalid.
+Thread-safe with read-write locking for optimal performance.
+*/
+func getOrBuildBlacklistRegex(chatId int64, currentTriggers []string) *regexp.Regexp {
+	blacklistCacheMutex.RLock()
+	cachedRegex, regexExists := blacklistsModule.filterRegexCache[chatId]
+	cachedTriggers, triggersExist := blacklistsModule.filterKeywordsCache[chatId]
+	blacklistCacheMutex.RUnlock()
+	
+	// Check if cache is valid (regex exists and triggers haven't changed)
+	if regexExists && triggersExist && slicesEqual(cachedTriggers, currentTriggers) {
+		return cachedRegex
+	}
+	
+	// Cache is invalid, rebuild regex
+	newRegex := buildBlacklistRegex(currentTriggers)
+	
+	blacklistCacheMutex.Lock()
+	blacklistsModule.filterRegexCache[chatId] = newRegex
+	blacklistsModule.filterKeywordsCache[chatId] = make([]string, len(currentTriggers))
+	copy(blacklistsModule.filterKeywordsCache[chatId], currentTriggers)
+	blacklistCacheMutex.Unlock()
+	
+	return newRegex
+}
+
+/*
+invalidateBlacklistCache removes cached regex for a chat when blacklists are modified.
+Should be called whenever blacklists are added, removed, or modified.
+*/
+func invalidateBlacklistCache(chatId int64) {
+	blacklistCacheMutex.Lock()
+	delete(blacklistsModule.filterRegexCache, chatId)
+	delete(blacklistsModule.filterKeywordsCache, chatId)
+	blacklistCacheMutex.Unlock()
+}
+
+/*
+findMatchingBlacklistTrigger uses the optimized regex to find which trigger matched.
+Returns the matched trigger if found.
+*/
+func findMatchingBlacklistTrigger(regex *regexp.Regexp, text string, triggers []string) string {
+	lowerText := strings.ToLower(text)
+	
+	// First check if any trigger matches
+	if !regex.MatchString(lowerText) {
+		return ""
+	}
+	
+	// Find which specific trigger matched (fallback to individual checks)
+	for _, trigger := range triggers {
+		triggerPattern := fmt.Sprintf(`(\b|\s)%s\b`, regexp.QuoteMeta(trigger))
+		if matched, _ := regexp.MatchString(triggerPattern, lowerText); matched {
+			return trigger
+		}
+	}
+	
+	return ""
 }
 
 /*
@@ -94,6 +191,11 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 				go db.AddBlacklist(chat.Id, blWord)
 				newBlacklist = append(newBlacklist, fmt.Sprintf("<code>%s</code>", blWord))
 			}
+		}
+
+		// Invalidate cache after adding blacklists
+		if len(newBlacklist) > 0 {
+			invalidateBlacklistCache(chat.Id)
 		}
 
 		if len(alreadyBlacklisted) >= 1 {
@@ -177,6 +279,9 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 		} else {
+			// Invalidate cache after removing blacklists
+			invalidateBlacklistCache(chat.Id)
+			
 			_, err := msg.Reply(b,
 				fmt.Sprintf(tr.GetString("strings."+m.moduleName+".unblacklist.removed_bl"), strings.Join(removedBlacklists, ", ")),
 				nil,
@@ -383,6 +488,7 @@ func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	switch creatorAction {
 	case "yes":
 		go db.RemoveAllBlacklist(query.Message.GetChat().Id)
+		invalidateBlacklistCache(query.Message.GetChat().Id) // Invalidate cache after removing all blacklists
 		helpText = tr.GetString("strings." + m.moduleName + ".rm_all_bl.button_handler.yes")
 	case "no":
 		helpText = tr.GetString("strings." + m.moduleName + ".rm_all_bl.button_handler.yes")
@@ -421,6 +527,7 @@ Watcher for blacklisted words, if any of the sentence contains the word, it will
 blacklistWatcher monitors messages for blacklisted words and enforces the configured action.
 
 Deletes messages containing blacklisted words and applies the configured action (mute, ban, kick, warn) to the user.
+Uses optimized regex caching for high-performance pattern matching.
 */
 func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -438,93 +545,99 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	blSettings := db.GetBlacklistSettings(chat.Id)
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
-	for _, i := range blSettings.Triggers {
-		match, _ := regexp.MatchString(fmt.Sprintf(`(\b|\s)%s\b`, i), strings.ToLower(msg.Text))
-		if match {
-			_, err := msg.Delete(b, nil)
+	// Use optimized regex matching
+	regex := getOrBuildBlacklistRegex(chat.Id, blSettings.Triggers)
+	
+	if regex == nil {
+		return ext.ContinueGroups
+	}
+
+	matchedTrigger := findMatchingBlacklistTrigger(regex, msg.Text, blSettings.Triggers)
+	
+	if matchedTrigger != "" {
+		_, err := msg.Delete(b, nil)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		
+		switch blSettings.Action {
+		case "mute":
+			// don't work on anonymous channels
+			if user.IsAnonymousChannel() {
+				return ext.ContinueGroups
+			}
+
+			_, err = b.RestrictChatMember(chat.Id, user.Id(), gotgbot.ChatPermissions{CanSendMessages: false}, nil)
 			if err != nil {
 				log.Error(err)
 				return err
 			}
-			switch blSettings.Action {
-			case "mute":
-				// don't work on anonymous channels
-				if user.IsAnonymousChannel() {
-					return ext.ContinueGroups
-				}
 
-				_, err = b.RestrictChatMember(chat.Id, user.Id(), gotgbot.ChatPermissions{CanSendMessages: false}, nil)
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-
-				_, err = msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.muted_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
-					helpers.Shtml())
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-			case "ban":
-				// ban anonymous channels as well
-				if user.IsAnonymousChannel() {
-					_, err = b.BanChatSenderChat(chat.Id, user.Id(), nil)
-				} else {
-					_, err = b.BanChatMember(chat.Id, user.Id(), nil)
-				}
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-
-				_, err = msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.banned_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
-					helpers.Shtml())
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-			case "kick":
-				// don't work on anonymous channels
-				if user.IsAnonymousChannel() {
-					return ext.ContinueGroups
-				}
-
-				_, err = b.BanChatMember(chat.Id, user.Id(), nil)
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-
-				_, err = msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.kicked_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
-					helpers.Shtml())
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-
-				// unban the member
-				time.Sleep(3 * time.Second)
-				_, err = chat.UnbanMember(b, user.Id(), nil)
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-			case "warn":
-				// don't work on anonymous channels
-				if user.IsAnonymousChannel() {
-					return ext.ContinueGroups
-				}
-
-				err = warnsModule.warnThisUser(b, ctx, user.Id(), fmt.Sprintf(blSettings.Reason, i), "warn")
-				if err != nil {
-					log.Error(err)
-					return err
-				}
+			_, err = msg.Reply(b,
+				fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.muted_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, matchedTrigger)),
+				helpers.Shtml())
+			if err != nil {
+				log.Error(err)
+				return err
 			}
-			break
+		case "ban":
+			// ban anonymous channels as well
+			if user.IsAnonymousChannel() {
+				_, err = b.BanChatSenderChat(chat.Id, user.Id(), nil)
+			} else {
+				_, err = b.BanChatMember(chat.Id, user.Id(), nil)
+			}
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+
+			_, err = msg.Reply(b,
+				fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.banned_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, matchedTrigger)),
+				helpers.Shtml())
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+		case "kick":
+			// don't work on anonymous channels
+			if user.IsAnonymousChannel() {
+				return ext.ContinueGroups
+			}
+
+			_, err = b.BanChatMember(chat.Id, user.Id(), nil)
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+
+			_, err = msg.Reply(b,
+				fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.kicked_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, matchedTrigger)),
+				helpers.Shtml())
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+
+			// unban the member
+			time.Sleep(3 * time.Second)
+			_, err = chat.UnbanMember(b, user.Id(), nil)
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+		case "warn":
+			// don't work on anonymous channels
+			if user.IsAnonymousChannel() {
+				return ext.ContinueGroups
+			}
+
+			err = warnsModule.warnThisUser(b, ctx, user.Id(), fmt.Sprintf(blSettings.Reason, matchedTrigger), "warn")
+			if err != nil {
+				log.Error(err)
+				return err
+			}
 		}
 	}
 

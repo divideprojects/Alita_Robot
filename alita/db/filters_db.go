@@ -64,7 +64,9 @@ func GetFiltersList(chatID int64) (allFilterWords []string) {
 
 // DoesFilterExists returns true if a filter with the given keyword exists in the chat.
 func DoesFilterExists(chatId int64, keyword string) bool {
-	return string_handling.FindInStringSlice(GetFiltersList(chatId), strings.ToLower(keyword))
+	filtersList := GetFiltersList(chatId)
+	filtersMap := string_handling.StringSliceToMap(filtersList)
+	return string_handling.FindInStringMap(filtersMap, strings.ToLower(keyword))
 }
 
 // AddFilter adds a new filter to the chat with the specified properties.
@@ -126,7 +128,57 @@ func CountFilters(chatID int64) (filtersNum int64) {
 }
 
 // LoadFilterStats returns the total number of filters and the number of chats using filters.
+// Uses MongoDB aggregation pipeline for optimal performance.
 func LoadFilterStats() (filtersNum, filtersUsingChats int64) {
+	// Use MongoDB aggregation for optimal performance
+	pipeline := []bson.M{
+		{
+			"$group": bson.M{
+				"_id":         "$chat_id",
+				"filterCount": bson.M{"$sum": 1},
+			},
+		},
+		{
+			"$group": bson.M{
+				"_id": nil,
+				"totalFilters": bson.M{"$sum": "$filterCount"},
+				"totalChats":   bson.M{"$sum": 1},
+			},
+		},
+	}
+
+	cursor, err := filterColl.Aggregate(bgCtx, pipeline)
+	if err != nil {
+		log.Error("Failed to aggregate filter stats:", err)
+		// Fallback to manual method if aggregation fails
+		return loadFilterStatsManual()
+	}
+	defer cursor.Close(bgCtx)
+
+	var result struct {
+		TotalFilters int64 `bson:"totalFilters"`
+		TotalChats   int64 `bson:"totalChats"`
+	}
+
+	if cursor.Next(bgCtx) {
+		if err := cursor.Decode(&result); err != nil {
+			log.Error("Failed to decode filter stats:", err)
+			// Fallback to manual method if decode fails
+			return loadFilterStatsManual()
+		}
+		return result.TotalFilters, result.TotalChats
+	}
+
+	// No results found, return zeros
+	return 0, 0
+}
+
+/*
+loadFilterStatsManual is the fallback manual implementation.
+
+Used when MongoDB aggregation fails for any reason.
+*/
+func loadFilterStatsManual() (filtersNum, filtersUsingChats int64) {
 	var filterStruct []*ChatFilters
 	filtersMap := make(map[int64][]ChatFilters)
 

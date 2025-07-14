@@ -90,10 +90,12 @@ IsUserAdmin checks if the specified user is an admin in the given chat.
 
 Uses cached admin data if available, otherwise fetches from Telegram.
 Returns true if the user is an admin, otherwise false.
+Optimized with map-based lookups for O(1) performance.
 */
 func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
-	// Placing this first would not make additional queries if check is success!
-	if string_handling.FindInInt64Slice(tgAdminList, userId) {
+	// Check global admin list first with optimized lookup
+	tgAdminMap := string_handling.Int64SliceToMap(tgAdminList)
+	if string_handling.FindInInt64Map(tgAdminMap, userId) {
 		return true
 	}
 
@@ -104,14 +106,13 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 	// Check cache first - avoid GetChat call if possible
 	adminList, cached := cache.GetAdmins(b, chatID)
 	if cached {
-		// Use cached data without making API calls
-		for i := range adminList {
-			admin := &adminList[i]
-			if admin.User.Id == userId {
-				return true
-			}
+		// Use optimized map-based lookup for cached data
+		adminIds := make([]int64, len(adminList))
+		for i, admin := range adminList {
+			adminIds[i] = admin.User.Id
 		}
-		return false
+		adminMap := string_handling.Int64SliceToMap(adminIds)
+		return string_handling.FindInInt64Map(adminMap, userId)
 	}
 
 	// Only make GetChat call if cache miss - use context with timeout

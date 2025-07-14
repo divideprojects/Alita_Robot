@@ -85,8 +85,67 @@ func GetAllChats() map[int64]Chat {
 }
 
 // LoadChatStats returns the number of active and inactive chats.
-// Active chats are those not marked as inactive.
+// Uses MongoDB aggregation pipeline for optimal performance.
 func LoadChatStats() (activeChats, inactiveChats int) {
+	// Use MongoDB aggregation for optimal performance
+	pipeline := []bson.M{
+		{
+			"$group": bson.M{
+				"_id": nil,
+				"activeChats": bson.M{
+					"$sum": bson.M{
+						"$cond": []interface{}{
+							bson.M{"$eq": []interface{}{"$is_inactive", false}},
+							1,
+							0,
+						},
+					},
+				},
+				"inactiveChats": bson.M{
+					"$sum": bson.M{
+						"$cond": []interface{}{
+							bson.M{"$eq": []interface{}{"$is_inactive", true}},
+							1,
+							0,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	cursor, err := chatColl.Aggregate(bgCtx, pipeline)
+	if err != nil {
+		log.Error("Failed to aggregate chat stats:", err)
+		// Fallback to manual method if aggregation fails
+		return loadChatStatsManual()
+	}
+	defer cursor.Close(bgCtx)
+
+	var result struct {
+		ActiveChats   int `bson:"activeChats"`
+		InactiveChats int `bson:"inactiveChats"`
+	}
+
+	if cursor.Next(bgCtx) {
+		if err := cursor.Decode(&result); err != nil {
+			log.Error("Failed to decode chat stats:", err)
+			// Fallback to manual method if decode fails
+			return loadChatStatsManual()
+		}
+		return result.ActiveChats, result.InactiveChats
+	}
+
+	// No results found, return zeros
+	return 0, 0
+}
+
+/*
+loadChatStatsManual is the fallback manual implementation.
+
+Used when MongoDB aggregation fails for any reason.
+*/
+func loadChatStatsManual() (activeChats, inactiveChats int) {
 	chats := GetAllChats()
 	for _, i := range chats {
 		if i.IsInactive {

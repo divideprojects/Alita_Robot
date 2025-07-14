@@ -98,9 +98,63 @@ func GetBlacklistSettings(chatId int64) *BlacklistSettings {
 /*
 LoadBlacklistsStats returns the total number of blacklist triggers and the number of chats with at least one blacklist trigger.
 
-It iterates through all blacklist settings, counting triggers and chats with non-empty trigger lists.
+Uses MongoDB aggregation pipeline for optimal performance instead of manual loops.
 */
 func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
+	// Use MongoDB aggregation for optimal performance
+	pipeline := []bson.M{
+		{
+			"$project": bson.M{
+				"_id":           1,
+				"triggerCount":  bson.M{"$size": "$triggers"},
+				"hasTriggers":   bson.M{"$gt": []interface{}{bson.M{"$size": "$triggers"}, 0}},
+			},
+		},
+		{
+			"$group": bson.M{
+				"_id": nil,
+				"totalTriggers": bson.M{"$sum": "$triggerCount"},
+				"chatsWithTriggers": bson.M{
+					"$sum": bson.M{
+						"$cond": []interface{}{"$hasTriggers", 1, 0},
+					},
+				},
+			},
+		},
+	}
+
+	cursor, err := blacklistsColl.Aggregate(bgCtx, pipeline)
+	if err != nil {
+		log.Error("Failed to aggregate blacklist stats:", err)
+		// Fallback to manual method if aggregation fails
+		return loadBlacklistsStatsManual()
+	}
+	defer cursor.Close(bgCtx)
+
+	var result struct {
+		TotalTriggers     int64 `bson:"totalTriggers"`
+		ChatsWithTriggers int64 `bson:"chatsWithTriggers"`
+	}
+
+	if cursor.Next(bgCtx) {
+		if err := cursor.Decode(&result); err != nil {
+			log.Error("Failed to decode blacklist stats:", err)
+			// Fallback to manual method if decode fails
+			return loadBlacklistsStatsManual()
+		}
+		return result.TotalTriggers, result.ChatsWithTriggers
+	}
+
+	// No results found, return zeros
+	return 0, 0
+}
+
+/*
+loadBlacklistsStatsManual is the fallback manual implementation.
+
+Used when MongoDB aggregation fails for any reason.
+*/
+func loadBlacklistsStatsManual() (blacklistTriggers, blacklistChats int64) {
 	var blacklistStruct []*BlacklistSettings
 
 	cursor := findAll(blacklistsColl, bson.M{})
