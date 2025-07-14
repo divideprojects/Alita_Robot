@@ -1,12 +1,15 @@
 package db
 
 import (
+	"time"
+
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
+	"github.com/eko/gocache/lib/v4/store"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type ChatReportSettings struct {
@@ -21,22 +24,36 @@ type UserReportSettings struct {
 }
 
 func GetChatReportSettings(chatID int64) (reportsrc *ChatReportSettings) {
-	defReportSettings := &ChatReportSettings{
-		ChatId:      chatID,
-		Status:      true,
-		BlockedList: make([]int64, 0),
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(ChatReportSettings)); err == nil && cached != nil {
+		reportsrc = cached.(*ChatReportSettings)
+		return
 	}
 
-	err := findOne(reportChatColl, bson.M{"_id": chatID}).Decode(&reportsrc)
-	if err == mongo.ErrNoDocuments {
-		reportsrc = defReportSettings
-		err := updateOne(reportChatColl, bson.M{"_id": chatID}, reportsrc)
-		if err != nil {
-			log.Error(err)
+	reportsrc = &ChatReportSettings{}
+
+	filter := bson.M{"_id": chatID}
+	update := bson.M{
+		"$setOnInsert": bson.M{
+			"_id":          chatID,
+			"status":       true,
+			"blocked_list": make([]int64, 0),
+		},
+	}
+
+	err := findOneAndUpsert(reportChatColl, filter, update, reportsrc)
+	if err != nil {
+		// Fallback to default values in case of error
+		reportsrc = &ChatReportSettings{
+			ChatId:      chatID,
+			Status:      true,
+			BlockedList: make([]int64, 0),
 		}
-	} else if err != nil {
-		reportsrc = defReportSettings
 		log.Error(err)
+	}
+	// Cache the result
+	if reportsrc != nil {
+		_ = cache.Marshal.Set(cache.Context, chatID, reportsrc, store.WithExpiration(10*time.Minute))
 	}
 	return
 }
@@ -48,6 +65,8 @@ func SetChatReportStatus(chatID int64, pref bool) {
 	if err != nil {
 		log.Error(err)
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, chatID, reportsUpdate, store.WithExpiration(10*time.Minute))
 }
 
 func BlockReportUser(chatId, userId int64) {
@@ -62,6 +81,8 @@ func BlockReportUser(chatId, userId int64) {
 	if err != nil {
 		log.Error(err)
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, chatId, reportsUpdate, store.WithExpiration(10*time.Minute))
 }
 
 func UnblockReportUser(chatId, userId int64) {
@@ -81,20 +102,23 @@ func UnblockReportUser(chatId, userId int64) {
 /* user settings below */
 
 func GetUserReportSettings(userId int64) (reportsrc *UserReportSettings) {
-	defReportSettings := &UserReportSettings{
-		UserId: userId,
-		Status: true,
+	reportsrc = &UserReportSettings{}
+
+	filter := bson.M{"_id": userId}
+	update := bson.M{
+		"$setOnInsert": bson.M{
+			"_id":    userId,
+			"status": true,
+		},
 	}
 
-	err := findOne(reportUserColl, bson.M{"_id": userId}).Decode(&reportsrc)
-	if err == mongo.ErrNoDocuments {
-		reportsrc = defReportSettings
-		err := updateOne(reportUserColl, bson.M{"_id": userId}, reportsrc)
-		if err != nil {
-			log.Error(err)
+	err := findOneAndUpsert(reportUserColl, filter, update, reportsrc)
+	if err != nil {
+		// Fallback to default values in case of error
+		reportsrc = &UserReportSettings{
+			UserId: userId,
+			Status: true,
 		}
-	} else if err != nil {
-		reportsrc = defReportSettings
 		log.Error(err)
 	}
 

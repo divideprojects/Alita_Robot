@@ -7,6 +7,17 @@ alt_names:
   Bans:
     [ban, kick, dkick, restrict, kickme, unrestrict, sban, dban, tban, unban]
   Blacklists: [blacklist, unblacklist]
+  Captcha:
+    [
+      captcha,
+      captchamode,
+      setcaptchatext,
+      resetcaptchatext,
+      captchakick,
+      captchakicktime,
+      captcharules,
+      captchamutetime,
+    ]
   Connections: [connection, connect]
   Disabling: [disable, enable]
   Filters: [filter]

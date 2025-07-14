@@ -1,8 +1,12 @@
 package db
 
 import (
+	"time"
+
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/eko/gocache/lib/v4/store"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -28,21 +32,31 @@ func GetLanguage(ctx *ext.Context) string {
 }
 
 func getGroupLanguage(GroupID int64) string {
-	groupc := GetChatSettings(GroupID)
-	if groupc.Language == "" {
-		return "en"
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, GroupID, new(string)); err == nil && cached != nil {
+		return *(cached.(*string))
 	}
-	return groupc.Language
+	groupc := GetChatSettings(GroupID)
+	lang := "en"
+	if groupc.Language != "" {
+		lang = groupc.Language
+	}
+	_ = cache.Marshal.Set(cache.Context, GroupID, &lang, store.WithExpiration(10*time.Minute))
+	return lang
 }
 
 func getUserLanguage(UserID int64) string {
-	userc := checkUserInfo(UserID)
-	if userc == nil {
-		return "en"
-	} else if userc.Language == "" {
-		return "en"
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, UserID, new(string)); err == nil && cached != nil {
+		return *(cached.(*string))
 	}
-	return userc.Language
+	userc := checkUserInfo(UserID)
+	lang := "en"
+	if userc != nil && userc.Language != "" {
+		lang = userc.Language
+	}
+	_ = cache.Marshal.Set(cache.Context, UserID, &lang, store.WithExpiration(10*time.Minute))
+	return lang
 }
 
 // ChangeUserLanguage sets the language code for a specific user.
@@ -60,6 +74,8 @@ func ChangeUserLanguage(UserID int64, lang string) {
 		log.Errorf("[Database] ChangeUserLanguage: %v - %d", err, UserID)
 		return
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, UserID, &lang, store.WithExpiration(10*time.Minute))
 	log.Infof("[Database] ChangeUserLanguage: %d", UserID)
 }
 
@@ -70,11 +86,13 @@ func ChangeGroupLanguage(GroupID int64, lang string) {
 	if groupc.Language == lang {
 		return
 	}
-	groupc.Language = lang // change group language
+	groupc.Language = lang
 	err := updateOne(chatColl, bson.M{"_id": GroupID}, groupc)
 	if err != nil {
 		log.Errorf("[Database] ChangeGroupLanguage: %v - %d", err, GroupID)
 		return
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, GroupID, &lang, store.WithExpiration(10*time.Minute))
 	log.Infof("[Database] ChangeGroupLanguage: %d", GroupID)
 }

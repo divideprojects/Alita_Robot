@@ -1,8 +1,12 @@
 package db
 
 import (
+	"time"
+
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/eko/gocache/lib/v4/store"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -21,6 +25,10 @@ type Warns struct {
 }
 
 func checkWarnSettings(chatID int64) (warnrc *WarnSettings) {
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(WarnSettings)); err == nil && cached != nil {
+		return cached.(*WarnSettings)
+	}
 	defaultWarnSettings := &WarnSettings{ChatId: chatID, WarnLimit: 3, WarnMode: "mute"}
 	err := findOne(warnSettingsColl, bson.M{"_id": chatID}).Decode(&warnrc)
 	if err == mongo.ErrNoDocuments {
@@ -32,6 +40,10 @@ func checkWarnSettings(chatID int64) (warnrc *WarnSettings) {
 	} else if err != nil {
 		log.Errorf("[Database][checkWarnSettings]: %d - %v", chatID, err)
 		warnrc = defaultWarnSettings
+	}
+	// Cache the result
+	if warnrc != nil {
+		_ = cache.Marshal.Set(cache.Context, chatID, warnrc, store.WithExpiration(10*time.Minute))
 	}
 	return
 }

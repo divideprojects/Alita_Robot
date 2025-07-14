@@ -1,7 +1,6 @@
 package modules
 
 import (
-	"context"
 	"fmt"
 	"strconv"
 	"strings"
@@ -24,25 +23,148 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-/*
-antifloodStruct implements the antiflood module logic.
+// tokenBucket implements a thread-safe token bucket rate limiter
+type tokenBucket struct {
+	capacity   int           // max tokens (burst capacity)
+	refillRate time.Duration // time between token refills
+	tokens     int           // current tokens
+	lastRefill time.Time     // last refill time
+	mu         sync.Mutex    // mutex for thread safety
+	messageIDs *ringBuffer   // track message IDs for deletion
+}
 
-It embeds moduleStruct and manages flood control state per chat, including a semaphore to limit concurrent admin checks for performance and safety.
+// newTokenBucket creates a new token bucket with given capacity and refill rate
+func newTokenBucket(capacity int, refillRate time.Duration) *tokenBucket {
+	return &tokenBucket{
+		capacity:   capacity,
+		refillRate: refillRate,
+		tokens:     capacity,
+		lastRefill: time.Now(),
+		messageIDs: newRingBuffer(100),
+	}
+}
+
+// take attempts to take a token from the bucket
+// returns true if token was available, false if rate limited
+func (tb *tokenBucket) take() bool {
+	tb.mu.Lock()
+	defer tb.mu.Unlock()
+
+	// Refill tokens based on time elapsed
+	now := time.Now()
+	elapsed := now.Sub(tb.lastRefill)
+	tokensToAdd := int(elapsed / tb.refillRate)
+
+	if tokensToAdd > 0 {
+		tb.tokens = min(tb.tokens+tokensToAdd, tb.capacity)
+		tb.lastRefill = now
+	}
+
+	if tb.tokens > 0 {
+		tb.tokens--
+		return true
+	}
+	return false
+}
+
+// ringBuffer implements a fixed-size circular buffer for message IDs
+type ringBuffer struct {
+	buffer []int64
+	size   int
+	head   int
+	tail   int
+	count  int
+	mu     sync.Mutex
+}
+
+// newRingBuffer creates a new ring buffer with specified capacity
+func newRingBuffer(capacity int) *ringBuffer {
+	return &ringBuffer{
+		buffer: make([]int64, capacity),
+		size:   capacity,
+	}
+}
+
+// push adds a message ID to the buffer, overwriting oldest if full
+func (rb *ringBuffer) push(msgID int64) {
+	rb.mu.Lock()
+	defer rb.mu.Unlock()
+
+	rb.buffer[rb.head] = msgID
+	rb.head = (rb.head + 1) % rb.size
+	if rb.count < rb.size {
+		rb.count++
+	} else {
+		rb.tail = (rb.tail + 1) % rb.size
+	}
+}
+
+// getAll returns all message IDs in order (newest first)
+func (rb *ringBuffer) getAll() []int64 {
+	rb.mu.Lock()
+	defer rb.mu.Unlock()
+
+	if rb.count == 0 {
+		return []int64{}
+	}
+
+	result := make([]int64, rb.count)
+	for i := 0; i < rb.count; i++ {
+		idx := (rb.head - 1 - i + rb.size) % rb.size
+		result[i] = rb.buffer[idx]
+	}
+	return result
+}
+
+/*
+antifloodStruct implements the antiflood module logic using a token bucket algorithm.
+
+It embeds moduleStruct and manages:
+- Rate limiting state per chat using token buckets
+- Admin status caching to reduce API calls
+- Flood detection and enforcement
+
+Configuration:
+- Flood limit sets the bucket capacity (burst size)
+- Refill rate is automatically calculated as 1 token per (limit) seconds
+- Admin cache TTL is 5 minutes
 */
 type antifloodStruct struct {
 	moduleStruct  // inheritance
 	syncHelperMap sync.Map
-	// Add semaphore to limit concurrent admin checks
-	adminCheckSemaphore chan struct{}
+
+	// Admin status cache with TTL
+	adminCache map[int64]struct {
+		isAdmin bool
+		expires time.Time
+	}
+	adminCacheMu sync.RWMutex
 }
 
-/*
-floodControl tracks message counts and IDs for a user in a chat to enforce flood limits.
-*/
-type floodControl struct {
-	userId       int64
-	messageCount int
-	messageIDs   []int64
+// isAdminCached checks if user is admin using cache
+func (a *antifloodStruct) isAdminCached(b *gotgbot.Bot, chatId, userId int64) bool {
+	a.adminCacheMu.RLock()
+	cached, exists := a.adminCache[userId]
+	a.adminCacheMu.RUnlock()
+
+	if exists && time.Now().Before(cached.expires) {
+		return cached.isAdmin
+	}
+
+	// Cache miss - check actual status
+	isAdmin := chat_status.IsUserAdmin(b, chatId, userId)
+
+	a.adminCacheMu.Lock()
+	a.adminCache[userId] = struct {
+		isAdmin bool
+		expires time.Time
+	}{
+		isAdmin: isAdmin,
+		expires: time.Now().Add(5 * time.Minute), // Cache for 5 minutes
+	}
+	a.adminCacheMu.Unlock()
+
+	return isAdmin
 }
 
 var _normalAntifloodModule = moduleStruct{
@@ -51,47 +173,48 @@ var _normalAntifloodModule = moduleStruct{
 }
 
 var antifloodModule = antifloodStruct{
-	moduleStruct:        _normalAntifloodModule,
-	syncHelperMap:       sync.Map{},
-	adminCheckSemaphore: make(chan struct{}, 50), // Limit to 50 concurrent admin checks
+	moduleStruct:  _normalAntifloodModule,
+	syncHelperMap: sync.Map{},
+	adminCache: make(map[int64]struct {
+		isAdmin bool
+		expires time.Time
+	}),
 }
 
 /*
-updateFlood updates the flood control state for a user in a chat.
+updateFlood updates the flood control state for a user in a chat using token bucket algorithm.
 
-Returns true if the user has exceeded the flood limit, along with the updated floodControl struct.
+Returns true if the user has exceeded the flood limit, along with the token bucket containing message IDs.
 */
-func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, floodCrc floodControl) {
+func (*moduleStruct) updateFlood(chatId, _ /* userId */, msgId int64) (returnVar bool, bucket *tokenBucket) {
 	floodSrc := db.GetFlood(chatId)
 
 	if floodSrc.Limit != 0 {
-
 		// Read from map
 		tmpInterface, valExists := antifloodModule.syncHelperMap.Load(chatId)
 		if valExists && tmpInterface != nil {
-			floodCrc = tmpInterface.(floodControl)
+			bucket = tmpInterface.(*tokenBucket)
 		}
 
-		if floodCrc.userId != userId || floodCrc.userId == 0 {
-			floodCrc.userId = userId
-			floodCrc.messageCount = 0
-			floodCrc.messageIDs = make([]int64, 0)
+		// Initialize new bucket if needed
+		if bucket == nil {
+			// Default refill rate: 1 token per second (adjustable via config)
+			refillRate := time.Second / time.Duration(floodSrc.Limit)
+			bucket = newTokenBucket(floodSrc.Limit, refillRate)
 		}
 
-		floodCrc.messageCount++
-		floodCrc.messageIDs = append([]int64{msgId}, floodCrc.messageIDs...) // prepend at first
+		// Track message ID for potential deletion
+		bucket.messageIDs.push(msgId)
 
-		if floodCrc.messageCount > floodSrc.Limit {
+		// Check rate limit
+		if !bucket.take() {
+			// Reset bucket for next user
 			antifloodModule.syncHelperMap.Store(chatId,
-				floodControl{
-					userId:       0,
-					messageCount: 0,
-					messageIDs:   make([]int64, 0),
-				},
+				newTokenBucket(floodSrc.Limit, bucket.refillRate),
 			)
 			returnVar = true
 		} else {
-			antifloodModule.syncHelperMap.Store(chatId, floodCrc)
+			antifloodModule.syncHelperMap.Store(chatId, bucket)
 		}
 	}
 
@@ -122,41 +245,10 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	)
 	userId := user.Id()
 
-	// Use semaphore to limit concurrent admin checks and add timeout
-	select {
-	case antifloodModule.adminCheckSemaphore <- struct{}{}:
-		// Got semaphore, proceed with admin check
-		defer func() { <-antifloodModule.adminCheckSemaphore }()
-
-		// Create context with timeout for admin check
-		ctx_timeout, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-		defer cancel()
-
-		// Check if user is admin with timeout
-		isAdmin := make(chan bool, 1)
-		go func() {
-			isAdmin <- chat_status.IsUserAdmin(b, chat.Id, userId)
-		}()
-
-		select {
-		case admin := <-isAdmin:
-			if admin {
-				m.updateFlood(chat.Id, 0, 0) // empty message queue when admin sends a message
-				return ext.ContinueGroups
-			}
-		case <-ctx_timeout.Done():
-			// Admin check timed out, treat as non-admin for safety
-			log.WithFields(log.Fields{
-				"chatId": chat.Id,
-				"userId": userId,
-			}).Warn("Admin check timed out, treating user as non-admin")
-		}
-	default:
-		// Semaphore full, skip admin check for performance (treat as non-admin)
-		log.WithFields(log.Fields{
-			"chatId": chat.Id,
-			"userId": userId,
-		}).Debug("Admin check semaphore full, skipping admin check")
+	// Check admin status using cache
+	if antifloodModule.isAdminCached(b, chat.Id, userId) {
+		m.updateFlood(chat.Id, 0, 0) // empty message queue when admin sends a message
+		return ext.ContinueGroups
 	}
 
 	// update flood for user
@@ -168,7 +260,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	flood := db.GetFlood(chat.Id)
 
 	if flood.DeleteAntifloodMessage {
-		for _, i := range floodCrc.messageIDs {
+		for _, i := range floodCrc.messageIDs.getAll() {
 			_, err := b.DeleteMessage(chat.Id, i, nil)
 			// if err.Error() == "unable to deleteMessage: Bad Request: message to delete not found" {
 			// 	log.WithFields(
@@ -275,7 +367,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 	if _, err := b.SendMessage(chat.Id,
-		fmt.Sprintf(tr.GetString("strings."+m.moduleName+".checkflood.perform_action"), helpers.MentionHtml(userId, user.Name()), fmode),
+		fmt.Sprintf(tr.GetString("strings.antiflood.checkflood.perform_action"), helpers.MentionHtml(userId, user.Name()), fmode),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -296,7 +388,7 @@ setFlood sets the flood limit for a chat.
 
 Allows admins to enable, disable, or change the flood limit. Handles argument parsing and updates the database accordingly.
 */
-func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
+func (*moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -311,21 +403,21 @@ func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	var replyText string
 
 	if len(args) == 0 {
-		replyText = tr.GetString("strings." + m.moduleName + ".errors.expected_args")
+		replyText = tr.GetString("strings.antiflood.errors.expected_args")
 	} else {
 		if string_handling.FindInStringSlice([]string{"off", "no", "false", "0"}, strings.ToLower(args[0])) {
-			replyText = tr.GetString("strings." + m.moduleName + ".setflood.disabled")
+			replyText = tr.GetString("strings.antiflood.setflood.disabled")
 			go db.SetFlood(chat.Id, 0)
 		} else {
 			num, err := strconv.Atoi(args[0])
 			if err != nil {
-				replyText = tr.GetString("strings." + m.moduleName + ".errors.invalid_int")
+				replyText = tr.GetString("strings.antiflood.errors.invalid_int")
 			} else {
 				if num < 3 || num > 100 {
-					replyText = tr.GetString("strings." + m.moduleName + ".errors.set_in_limit")
+					replyText = tr.GetString("strings.antiflood.errors.set_in_limit")
 				} else {
 					go db.SetFlood(chat.Id, num)
-					replyText = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".setflood.success"), num)
+					replyText = fmt.Sprintf(tr.GetString("strings.antiflood.setflood.success"), num)
 				}
 			}
 		}
@@ -345,7 +437,7 @@ flood displays the current flood settings for the chat.
 
 Shows whether flood control is enabled and the current action mode (mute, ban, kick).
 */
-func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
+func (*moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	var text string
 	msg := ctx.EffectiveMessage
 
@@ -365,7 +457,7 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	flood := db.GetFlood(chat.Id)
 	if flood.Limit == 0 {
-		text = tr.GetString("strings." + m.moduleName + ".flood.disabled")
+		text = tr.GetString("strings.antiflood.flood.disabled")
 	} else {
 		var mode string
 		switch flood.Mode {
@@ -376,7 +468,7 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 		case "kick":
 			mode = "kicked"
 		}
-		text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".flood.show_settings"), flood.Limit, mode)
+		text = fmt.Sprintf(tr.GetString("strings.antiflood.flood.show_settings"), flood.Limit, mode)
 	}
 	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
@@ -390,7 +482,7 @@ setFloodMode sets the action mode for flood control.
 
 Admins can choose between "ban", "kick", or "mute" as the action when flood limits are exceeded.
 */
-func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
+func (*moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -405,20 +497,20 @@ func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	if len(args) > 0 {
 		selectedMode := strings.ToLower(args[0])
 		if string_handling.FindInStringSlice([]string{"ban", "kick", "mute"}, selectedMode) {
-			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings."+m.moduleName+".setfloodmode.success"), selectedMode), helpers.Shtml())
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.antiflood.setfloodmode.success"), selectedMode), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 			}
 			go db.SetFloodMode(chat.Id, selectedMode)
 			return ext.EndGroups
 		} else {
-			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings."+m.moduleName+".setfloodmode.unknown_type"), args[0]), helpers.Shtml())
+			_, err := msg.Reply(b, fmt.Sprintf(tr.GetString("strings.antiflood.setfloodmode.unknown_type"), args[0]), helpers.Shtml())
 			if err != nil {
 				return err
 			}
 		}
 	} else {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".setfloodmode.specify_action"), helpers.Smarkdown())
+		_, err := msg.Reply(b, tr.GetString("strings.antiflood.setfloodmode.specify_action"), helpers.Smarkdown())
 		if err != nil {
 			return err
 		}
@@ -431,7 +523,7 @@ setFloodDeleter enables or disables deletion of messages that trigger flood cont
 
 Admins can toggle this setting or view its current status.
 */
-func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
+func (*moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -449,19 +541,19 @@ func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 		switch selectedMode {
 		case "on", "yes":
 			go db.SetFloodMsgDel(chat.Id, true)
-			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.enabled")
+			text = tr.GetString("strings.antiflood.flood_deleter.enabled")
 		case "off", "no":
 			go db.SetFloodMsgDel(chat.Id, true)
-			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.disabled")
+			text = tr.GetString("strings.antiflood.flood_deleter.disabled")
 		default:
-			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.invalid_option")
+			text = tr.GetString("strings.antiflood.flood_deleter.invalid_option")
 		}
 	} else {
 		currSet := db.GetFlood(chat.Id).DeleteAntifloodMessage
 		if currSet {
-			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.already_enabled")
+			text = tr.GetString("strings.antiflood.flood_deleter.already_enabled")
 		} else {
-			text = tr.GetString("strings." + m.moduleName + ".flood_deleter.already_disabled")
+			text = tr.GetString("strings.antiflood.flood_deleter.already_disabled")
 		}
 	}
 	_, err := msg.Reply(b, text, helpers.Smarkdown())

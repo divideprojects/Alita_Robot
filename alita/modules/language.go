@@ -25,7 +25,7 @@ func (moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
 		[]gotgbot.InlineKeyboardButton{
 			{
 				Text: "Help Us Translate 🌎",
-				Url:  "https://crowdin.com/project/alita_robot",
+				Url:  "https://github.com/divideprojects/alita_robot",
 			},
 		},
 	)
@@ -78,7 +78,7 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	var replyString string
 	language := strings.Split(query.Data, ".")[1]
 
-	if ctx.Update.Message.Chat.Type == "private" {
+	if chat.Type == "private" {
 		go db.ChangeUserLanguage(user.Id, language)
 		replyString = fmt.Sprintf("Your language has been changed to %s", helpers.GetLangFormat(language))
 	} else {

@@ -16,6 +16,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/divideprojects/Alita_Robot/alita/utils/scheduler"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -115,7 +116,14 @@ func LoadModules(dispatcher *ext.Dispatcher) {
 	modules.LoadDisabling(dispatcher)
 	modules.LoadRules(dispatcher)
 	modules.LoadWarns(dispatcher)
+	modules.LoadCaptcha(dispatcher)
 	modules.LoadGreetings(dispatcher)
 	modules.LoadBlacklists(dispatcher)
 	modules.LoadMkdCmd(dispatcher)
+}
+
+// StartCaptchaScheduler initializes and starts the CAPTCHA scheduler
+func StartCaptchaScheduler(bot *gotgbot.Bot) {
+	log.Info("Starting CAPTCHA scheduler...")
+	scheduler.StartCaptchaScheduler(bot)
 }

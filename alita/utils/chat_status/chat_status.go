@@ -30,6 +30,21 @@ var (
 	anonChatMapExpirartion = 20 * time.Second
 )
 
+// safeGetChat safely retrieves chat information from context, handling different update types
+func safeGetChat(ctx *ext.Context) *gotgbot.Chat {
+	if ctx.CallbackQuery != nil {
+		_chatValue := ctx.CallbackQuery.Message.GetChat()
+		return &_chatValue
+	} else if ctx.Update.Message != nil {
+		return &ctx.Update.Message.Chat
+	} else if ctx.Update.ChatMember != nil {
+		return &ctx.Update.ChatMember.Chat
+	} else {
+		// Fallback to EffectiveChat if available
+		return ctx.EffectiveChat
+	}
+}
+
 // GetChat So that we can getchat with username also
 /*
 GetChat retrieves chat information for the given chat ID.
@@ -90,10 +105,12 @@ IsUserAdmin checks if the specified user is an admin in the given chat.
 
 Uses cached admin data if available, otherwise fetches from Telegram.
 Returns true if the user is an admin, otherwise false.
+Optimized with map-based lookups for O(1) performance.
 */
 func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
-	// Placing this first would not make additional queries if check is success!
-	if string_handling.FindInInt64Slice(tgAdminList, userId) {
+	// Check global admin list first with optimized lookup
+	tgAdminMap := string_handling.Int64SliceToMap(tgAdminList)
+	if string_handling.FindInInt64Map(tgAdminMap, userId) {
 		return true
 	}
 
@@ -102,16 +119,15 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 	defer cancel()
 
 	// Check cache first - avoid GetChat call if possible
-	adminsAvail, admins := cache.GetAdminCacheList(chatID)
-	if adminsAvail && admins.Cached {
-		// Use cached data without making API calls
-		for i := range admins.UserInfo {
-			admin := &admins.UserInfo[i]
-			if admin.User.Id == userId {
-				return true
-			}
+	adminList, cached := cache.GetAdmins(b, chatID)
+	if cached {
+		// Use optimized map-based lookup for cached data
+		adminIds := make([]int64, len(adminList))
+		for i, admin := range adminList {
+			adminIds[i] = admin.User.Id
 		}
-		return false
+		adminMap := string_handling.Int64SliceToMap(adminIds)
+		return string_handling.FindInInt64Map(adminMap, userId)
 	}
 
 	// Only make GetChat call if cache miss - use context with timeout
@@ -130,12 +146,9 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 		return false
 	}
 
-	// Load admin cache with timeout protection
-	adminList := cache.LoadAdminCache(b, chatID)
-
-	// Check if user is in admin list
-	for i := range adminList.UserInfo {
-		admin := &adminList.UserInfo[i]
+	// Check if user is in admin list (adminList already contains fresh data from GetAdmins)
+	for i := range adminList {
+		admin := &adminList[i]
 		if admin.User.Id == userId {
 			return true
 		}
@@ -151,12 +164,7 @@ Returns true if the bot has administrator status, otherwise false.
 */
 func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	if chat.Type == "private" {
@@ -177,12 +185,7 @@ Handles anonymous admin cases and provides feedback if permissions are lacking.
 */
 func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -246,12 +249,7 @@ Handles anonymous admin and provides feedback if permissions are lacking.
 */
 func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -314,12 +312,7 @@ Provides feedback if permissions are lacking.
 */
 func CanBotRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	botMember, err := chat.GetMember(b, b.Id, nil)
@@ -360,12 +353,7 @@ Handles anonymous admin and provides feedback if permissions are lacking.
 */
 func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -428,12 +416,7 @@ Provides feedback if permissions are lacking.
 */
 func CanBotPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	botChatMember, err := chat.GetMember(b, b.Id, nil)
@@ -463,12 +446,7 @@ Handles anonymous admin and provides feedback if permissions are lacking.
 */
 func CanUserPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -519,12 +497,7 @@ Provides feedback if permissions are lacking.
 */
 func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	botChatMember, err := chat.GetMember(b, b.Id, nil)
@@ -554,12 +527,7 @@ Handles anonymous admin and provides feedback if permissions are lacking.
 */
 func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbot.Message, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 	if chat.Username != "" {
 		return true
@@ -627,12 +595,7 @@ Handles anonymous admin and provides feedback if permissions are lacking.
 */
 func CanUserDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -692,12 +655,7 @@ Provides feedback if permissions are lacking.
 */
 func CanBotDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -728,12 +686,7 @@ Provides feedback if the bot lacks admin rights.
 */
 func RequireBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -770,12 +723,7 @@ Returns true if the user is an admin or a Telegram special user, otherwise false
 */
 func IsUserBanProtected(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	if chat.Type == "private" {
@@ -793,12 +741,7 @@ Provides feedback if the user lacks admin rights.
 */
 func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -831,12 +774,7 @@ Provides feedback if the user lacks ownership rights.
 */
 func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int64, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 
 	msg := ctx.EffectiveMessage
@@ -876,12 +814,7 @@ Provides feedback if used in a group context.
 */
 func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 	msg := ctx.EffectiveMessage
 	if chat.Type != "private" {
@@ -908,12 +841,7 @@ Provides feedback if used in a private context.
 */
 func RequireGroup(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck bool) bool {
 	if chat == nil {
-		if ctx.CallbackQuery != nil {
-			_chatValue := ctx.CallbackQuery.Message.GetChat()
-			chat = &_chatValue
-		} else {
-			chat = &ctx.Update.Message.Chat
-		}
+		chat = safeGetChat(ctx)
 	}
 	msg := ctx.EffectiveMessage
 	if chat.Type == "private" {

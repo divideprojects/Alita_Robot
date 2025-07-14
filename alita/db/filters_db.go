@@ -33,7 +33,7 @@ type ChatFilters struct {
 // GetFilter retrieves a filter by keyword for a chat.
 // Returns a new ChatFilters struct if the filter does not exist.
 func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
-	err := findOne(filterColl, bson.M{"chat_id": chatID, "keyword": keyword}).Decode(&filtSrc)
+	err := findOne(getCollection("filters"), bson.M{"chat_id": chatID, "keyword": keyword}).Decode(&filtSrc)
 	if err == mongo.ErrNoDocuments {
 		filtSrc = &ChatFilters{}
 	} else if err != nil {
@@ -42,18 +42,33 @@ func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
 	return
 }
 
-// GetAllFilters returns all filters for a chat.
-func GetAllFilters(chatID int64) (allFilters []*ChatFilters) {
-	cursor := findAll(filterColl, bson.M{"chat_id": chatID})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &allFilters)
-	return
+// GetAllFiltersPaginated returns paginated filters for a chat.
+func GetAllFiltersPaginated(_ int64, opts PaginationOptions) (PaginatedResult[*ChatFilters], error) {
+	paginator := NewMongoPagination[*ChatFilters](getCollection("filters"))
+
+	if opts.Cursor == nil && opts.Offset == 0 {
+		// Default to cursor-based pagination
+		return paginator.GetNextPage(bgCtx, PaginationOptions{
+			Limit:         opts.Limit,
+			SortDirection: 1,
+		})
+	}
+
+	if opts.Offset > 0 {
+		return paginator.GetPageByOffset(bgCtx, PaginationOptions{
+			Offset:        opts.Offset,
+			Limit:         opts.Limit,
+			SortDirection: 1,
+		})
+	}
+
+	return paginator.GetNextPage(bgCtx, opts)
 }
 
 // GetFiltersList returns a list of all filter keywords for a chat.
 func GetFiltersList(chatID int64) (allFilterWords []string) {
 	var results []*ChatFilters
-	cursor := findAll(filterColl, bson.M{"chat_id": chatID})
+	cursor := findAll(getCollection("filters"), bson.M{"chat_id": chatID})
 	defer cursor.Close(bgCtx)
 	cursor.All(bgCtx, &results)
 	for _, j := range results {
@@ -64,31 +79,36 @@ func GetFiltersList(chatID int64) (allFilterWords []string) {
 
 // DoesFilterExists returns true if a filter with the given keyword exists in the chat.
 func DoesFilterExists(chatId int64, keyword string) bool {
-	return string_handling.FindInStringSlice(GetFiltersList(chatId), strings.ToLower(keyword))
+	filtersList := GetFiltersList(chatId)
+	filtersMap := string_handling.StringSliceToMap(filtersList)
+	return string_handling.FindInStringMap(filtersMap, strings.ToLower(keyword))
 }
 
 // AddFilter adds a new filter to the chat with the specified properties.
 // If a filter with the same keyword already exists, no action is taken.
-func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button, filtType int) {
-	if string_handling.FindInStringSlice(GetFiltersList(chatID), keyWord) {
-		return
+// Returns true if a new filter was added, false if it already existed.
+func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button, filtType int) bool {
+	filter := bson.M{"chat_id": chatID, "keyword": keyWord}
+	update := bson.M{
+		"$setOnInsert": bson.M{
+			"chat_id":        chatID,
+			"keyword":        keyWord,
+			"filter_reply":   replyText,
+			"msgtype":        filtType,
+			"fileid":         fileID,
+			"filter_buttons": buttons,
+		},
 	}
 
-	// add the filter
-	newFilter := ChatFilters{
-		ChatId:      chatID,
-		KeyWord:     keyWord,
-		FilterReply: replyText,
-		MsgType:     filtType,
-		FileID:      fileID,
-		Buttons:     buttons,
-	}
-
-	err := updateOne(filterColl, bson.M{"chat_id": chatID, "keyword": keyWord}, newFilter)
+	result := &ChatFilters{}
+	err := findOneAndUpsert(getCollection("filters"), filter, update, result)
 	if err != nil {
 		log.Errorf("[Database][AddFilter]: %d - %v", chatID, err)
-		return
+		return false
 	}
+
+	// Return true if this was a new insert (the document should have our values)
+	return result.ChatId == chatID && result.KeyWord == keyWord
 }
 
 // RemoveFilter deletes a filter by keyword from the chat.
@@ -98,7 +118,7 @@ func RemoveFilter(chatID int64, keyWord string) {
 		return
 	}
 
-	err := deleteOne(filterColl, bson.M{"chat_id": chatID, "keyword": keyWord})
+	err := deleteOne(getCollection("filters"), bson.M{"chat_id": chatID, "keyword": keyWord})
 	if err != nil {
 		log.Errorf("[Database][RemoveFilter]: %d - %v", chatID, err)
 		return
@@ -107,7 +127,7 @@ func RemoveFilter(chatID int64, keyWord string) {
 
 // RemoveAllFilters deletes all filters from the specified chat.
 func RemoveAllFilters(chatID int64) {
-	err := deleteMany(filterColl, bson.M{"chat_id": chatID})
+	err := deleteMany(getCollection("filters"), bson.M{"chat_id": chatID})
 	if err != nil {
 		log.Errorf("[Database][RemoveAllFilters]: %d - %v", chatID, err)
 	}
@@ -115,7 +135,7 @@ func RemoveAllFilters(chatID int64) {
 
 // CountFilters returns the number of filters for a chat.
 func CountFilters(chatID int64) (filtersNum int64) {
-	filtersNum, err := countDocs(filterColl, bson.M{"chat_id": chatID})
+	filtersNum, err := countDocs(getCollection("filters"), bson.M{"chat_id": chatID})
 	if err != nil {
 		log.Errorf("[Database][CountFilters]: %d - %v", chatID, err)
 	}
@@ -123,20 +143,74 @@ func CountFilters(chatID int64) (filtersNum int64) {
 }
 
 // LoadFilterStats returns the total number of filters and the number of chats using filters.
+// Uses MongoDB aggregation pipeline for optimal performance.
 func LoadFilterStats() (filtersNum, filtersUsingChats int64) {
-	var filterStruct []*ChatFilters
-	filtersMap := make(map[int64][]ChatFilters)
-
-	cursor := findAll(filterColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &filterStruct)
-
-	for _, filterC := range filterStruct {
-		filtersNum++ // count number of filters
-		filtersMap[filterC.ChatId] = append(filtersMap[filterC.ChatId], *filterC)
+	// Use MongoDB aggregation for optimal performance
+	pipeline := []bson.M{
+		{
+			"$group": bson.M{
+				"_id":         "$chat_id",
+				"filterCount": bson.M{"$sum": 1},
+			},
+		},
+		{
+			"$group": bson.M{
+				"_id":          nil,
+				"totalFilters": bson.M{"$sum": "$filterCount"},
+				"totalChats":   bson.M{"$sum": 1},
+			},
+		},
 	}
 
-	filtersUsingChats = int64(len(filtersMap))
+	cursor, err := getCollection("filters").Aggregate(bgCtx, pipeline)
+	if err != nil {
+		log.Error("Failed to aggregate filter stats:", err)
+		// Fallback to manual method if aggregation fails
+		return loadFilterStatsManual()
+	}
+	defer cursor.Close(bgCtx)
 
-	return
+	var result struct {
+		TotalFilters int64 `bson:"totalFilters"`
+		TotalChats   int64 `bson:"totalChats"`
+	}
+
+	if cursor.Next(bgCtx) {
+		if err := cursor.Decode(&result); err != nil {
+			log.Error("Failed to decode filter stats:", err)
+			// Fallback to manual method if decode fails
+			return loadFilterStatsManual()
+		}
+		return result.TotalFilters, result.TotalChats
+	}
+
+	// No results found, return zeros
+	return 0, 0
+}
+
+/*
+loadFilterStatsManual is the fallback manual implementation with pagination.
+Used when MongoDB aggregation fails for any reason.
+*/
+func loadFilterStatsManual() (filtersNum, filtersUsingChats int64) {
+	paginator := NewMongoPagination[*ChatFilters](getCollection("filters"))
+	chatsMap := make(map[int64]struct{})
+
+	// Process in paginated batches
+	for {
+		result, err := paginator.GetNextPage(bgCtx, PaginationOptions{
+			Limit:         1000, // Process 1000 docs at a time
+			SortDirection: 1,
+		})
+		if err != nil || len(result.Data) == 0 {
+			break
+		}
+
+		for _, filter := range result.Data {
+			filtersNum++
+			chatsMap[filter.ChatId] = struct{}{}
+		}
+	}
+
+	return filtersNum, int64(len(chatsMap))
 }

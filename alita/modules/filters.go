@@ -5,6 +5,7 @@ import (
 	"html"
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
@@ -29,11 +30,125 @@ import (
 filtersModule provides logic for managing keyword-based filters in group chats.
 
 Implements commands to add, remove, list, and configure filters and their actions.
+Includes optimized regex caching for high-performance filter matching.
 */
 var filtersModule = moduleStruct{
 	moduleName:          "Filters",
 	overwriteFiltersMap: make(map[string]overwriteFilter),
 	handlerGroup:        9,
+	// Initialize regex cache maps
+	filterRegexCache:    make(map[int64]*regexp.Regexp),
+	filterKeywordsCache: make(map[int64][]string),
+}
+
+// Mutex to protect regex cache from concurrent access
+var filterCacheMutex sync.RWMutex
+
+/*
+buildFilterRegex creates an optimized regex pattern that matches any of the filter keywords.
+Returns nil if no keywords or if regex compilation fails.
+*/
+func buildFilterRegex(keywords []string) *regexp.Regexp {
+	if len(keywords) == 0 {
+		return nil
+	}
+
+	// Escape special regex characters in keywords and build pattern
+	escapedKeywords := make([]string, len(keywords))
+	for i, keyword := range keywords {
+		escapedKeywords[i] = regexp.QuoteMeta(keyword)
+	}
+
+	// Create pattern that matches any keyword with word boundaries
+	pattern := fmt.Sprintf(`(\b|\s)(%s)\b`, strings.Join(escapedKeywords, "|"))
+
+	regex, err := regexp.Compile(pattern)
+	if err != nil {
+		log.Errorf("[Filters] Failed to compile regex pattern: %v", err)
+		return nil
+	}
+
+	return regex
+}
+
+/*
+getOrBuildFilterRegex retrieves cached regex or builds new one if cache is invalid.
+Thread-safe with read-write locking for optimal performance.
+*/
+func getOrBuildFilterRegex(chatId int64, currentKeywords []string) *regexp.Regexp {
+	filterCacheMutex.RLock()
+	cachedRegex, regexExists := filtersModule.filterRegexCache[chatId]
+	cachedKeywords, keywordsExist := filtersModule.filterKeywordsCache[chatId]
+	filterCacheMutex.RUnlock()
+
+	// Check if cache is valid (regex exists and keywords haven't changed)
+	if regexExists && keywordsExist && slicesEqual(cachedKeywords, currentKeywords) {
+		return cachedRegex
+	}
+
+	// Cache is invalid, rebuild regex
+	newRegex := buildFilterRegex(currentKeywords)
+
+	filterCacheMutex.Lock()
+	filtersModule.filterRegexCache[chatId] = newRegex
+	filtersModule.filterKeywordsCache[chatId] = make([]string, len(currentKeywords))
+	copy(filtersModule.filterKeywordsCache[chatId], currentKeywords)
+	filterCacheMutex.Unlock()
+
+	return newRegex
+}
+
+/*
+invalidateFilterCache removes cached regex for a chat when filters are modified.
+Should be called whenever filters are added, removed, or modified.
+*/
+func invalidateFilterCache(chatId int64) {
+	filterCacheMutex.Lock()
+	delete(filtersModule.filterRegexCache, chatId)
+	delete(filtersModule.filterKeywordsCache, chatId)
+	filterCacheMutex.Unlock()
+}
+
+/*
+slicesEqual compares two string slices for equality.
+Used to determine if filter keywords have changed.
+*/
+func slicesEqual(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+/*
+findMatchingKeyword uses the optimized regex to find which keyword matched.
+Returns the matched keyword and whether it was a noformat match.
+*/
+func findMatchingKeyword(regex *regexp.Regexp, text string, keywords []string) (matchedKeyword string, isNoformat bool) {
+	lowerText := strings.ToLower(text)
+
+	// First check if any keyword matches
+	if !regex.MatchString(lowerText) {
+		return "", false
+	}
+
+	// Find which specific keyword matched (fallback to individual checks)
+	for _, keyword := range keywords {
+		keywordPattern := fmt.Sprintf(`(\b|\s)%s\b`, regexp.QuoteMeta(keyword))
+		if matched, _ := regexp.MatchString(keywordPattern, lowerText); matched {
+			// Check for noformat variant
+			noformatPattern := fmt.Sprintf(`%s noformat`, regexp.QuoteMeta(keyword))
+			isNoformat, _ := regexp.MatchString(noformatPattern, lowerText)
+			return keyword, isNoformat
+		}
+	}
+
+	return "", false
 }
 
 /*
@@ -144,6 +259,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	go db.AddFilter(chat.Id, filterWord, text, fileid, buttons, dataType)
+	invalidateFilterCache(chat.Id) // Invalidate cache after adding a filter
 
 	_, err := msg.Reply(b, fmt.Sprintf("Added reply for filter word <code>%s</code>", filterWord), helpers.Shtml())
 	if err != nil {
@@ -202,6 +318,7 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		} else {
 			go db.RemoveFilter(chat.Id, strings.ToLower(filterWord))
+			invalidateFilterCache(chat.Id) // Invalidate cache after removing a filter
 			_, err := msg.Reply(b, fmt.Sprintf("Ok!\nI will no longer reply to <code>%s</code>", filterWord), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
@@ -323,6 +440,7 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 
+	invalidateFilterCache(chat.Id) // Invalidate cache after removing all filters
 	return ext.EndGroups
 }
 
@@ -349,6 +467,7 @@ func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 	switch response {
 	case "yes":
 		db.RemoveAllFilters(chat.Id)
+		invalidateFilterCache(chat.Id) // Invalidate cache after removing all filters
 		helpText = "Removed all Filters from this Chat ✅"
 	case "no":
 		helpText = "Cancelled removing all Filters from this Chat ❌"
@@ -402,6 +521,7 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 		db.RemoveFilter(chat.Id, filterWord)
 		db.AddFilter(chat.Id, filterData.filterWord, filterData.text, filterData.fileid, filterData.buttons, filterData.dataType)
 		delete(m.overwriteFiltersMap, filterWordKey) // delete the key to make map clear
+		invalidateFilterCache(chat.Id)               // Invalidate cache after overwriting a filter
 		helpText = "Filter has been overwritten successfully ✅"
 	} else {
 		helpText = "Cancelled overwritting of filter ❌"
@@ -446,48 +566,50 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	var err error
 
 	filterKeys := db.GetFiltersList(chat.Id)
+	regex := getOrBuildFilterRegex(chat.Id, filterKeys)
 
-	for _, i := range filterKeys {
-		match, _ := regexp.MatchString(fmt.Sprintf(`(\b|\s)%s\b`, i), strings.ToLower(msg.Text))
-		noformatMatch, _ := regexp.MatchString(fmt.Sprintf("%s noformat", i), strings.ToLower(msg.Text))
+	if regex == nil {
+		return ext.ContinueGroups
+	}
 
-		if match {
-			filtData := db.GetFilter(chat.Id, i)
+	matchedKeyword, isNoformat := findMatchingKeyword(regex, msg.Text, filterKeys)
 
-			if noformatMatch {
-				// check if user is admin or not
-				if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-					return ext.EndGroups
-				}
+	if matchedKeyword != "" {
+		filtData := db.GetFilter(chat.Id, matchedKeyword)
 
-				// Reverse notedata
-				filtData.FilterReply = helpers.ReverseHTML2MD(filtData.FilterReply)
-
-				// show the buttons back as text
-				filtData.FilterReply += helpers.RevertButtons(filtData.Buttons)
-
-				// using true as last argument to prevent the message from being formatted
-				_, err = helpers.FiltersEnumFuncMap[filtData.MsgType](
-					b,
-					ctx,
-					*filtData,
-					&gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil},
-					msg.MessageId,
-					true,
-					filtData.NoNotif,
-				)
-
-			} else {
-				_, err = helpers.SendFilter(b, ctx, filtData, msg.MessageId)
+		if isNoformat {
+			// check if user is admin or not
+			if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
+				return ext.EndGroups
 			}
 
-			if err != nil {
-				log.Error(err)
-				return err
-			}
+			// Reverse notedata
+			filtData.FilterReply = helpers.ReverseHTML2MD(filtData.FilterReply)
 
-			return ext.ContinueGroups
+			// show the buttons back as text
+			filtData.FilterReply += helpers.RevertButtons(filtData.Buttons)
+
+			// using true as last argument to prevent the message from being formatted
+			_, err = helpers.FiltersEnumFuncMap[filtData.MsgType](
+				b,
+				ctx,
+				*filtData,
+				&gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil},
+				msg.MessageId,
+				true,
+				filtData.NoNotif,
+			)
+
+		} else {
+			_, err = helpers.SendFilter(b, ctx, filtData, msg.MessageId)
 		}
+
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+
+		return ext.ContinueGroups
 	}
 
 	return ext.ContinueGroups

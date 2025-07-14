@@ -42,7 +42,7 @@ More languages can be managed in the _locales_ folder. Although we have added su
 
 More langauges have been added to locales folder but need some configuration.
 
-Help us bring more languages to the bot by contributing to the project on [Crowdin](https://crowdin.com/project/alitarobot)
+Help us bring more languages to the bot by contributing to the project on [GitHub](https://github.com/divideprojects/alita_robot)
 
 ## Requirements
 - You need to have a *Mongo Database* (Cluster Preferred)

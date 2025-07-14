@@ -35,7 +35,12 @@ func (t typeConvertor) Int64() int64 {
 	return val
 }
 
-// Bool returns true if the string is "yes" or "true" (case-sensitive).
+// Bool converts the string to a boolean using strconv.ParseBool which
+// recognises a wider range of truthy/falsey values ("1", "t", "T", "true", "TRUE", "yes", etc.).
 func (t typeConvertor) Bool() bool {
-	return t.str == "yes" || t.str == "true"
+	v, err := strconv.ParseBool(strings.ToLower(strings.TrimSpace(t.str)))
+	if err != nil {
+		return false
+	}
+	return v
 }

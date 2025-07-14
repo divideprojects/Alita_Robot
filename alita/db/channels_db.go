@@ -1,8 +1,12 @@
 package db
 
 import (
+	"time"
+
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/eko/gocache/lib/v4/store"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -22,12 +26,20 @@ type Channel struct {
 // GetChannelSettings retrieves the channel settings for a given channel ID.
 // Returns nil if the channel does not exist in the database.
 func GetChannelSettings(channelId int64) (channelSrc *Channel) {
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, channelId, new(Channel)); err == nil && cached != nil {
+		return cached.(*Channel)
+	}
 	err := findOne(channelColl, bson.M{"_id": channelId}).Decode(&channelSrc)
 	if err == mongo.ErrNoDocuments {
 		channelSrc = nil
 	} else if err != nil {
 		log.Errorf("[Database] getChannelSettings: %v - %d ", err, channelId)
 		return
+	}
+	// Cache the result
+	if channelSrc != nil {
+		_ = cache.Marshal.Set(cache.Context, channelId, channelSrc, store.WithExpiration(10*time.Minute))
 	}
 	return
 }
@@ -56,6 +68,8 @@ func UpdateChannel(channelId int64, channelName, username string) {
 		log.Errorf("[Database] UpdateChannel: %v - %d (%s)", err2, channelId, username)
 		return
 	}
+	// Update cache
+	_ = cache.Marshal.Set(cache.Context, channelId, channelSrc, store.WithExpiration(10*time.Minute))
 	log.Infof("[Database] UpdateChannel: %s", channelName)
 }
 

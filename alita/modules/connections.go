@@ -59,7 +59,7 @@ func (m moduleStruct) connection(b *gotgbot.Bot, ctx *ext.Context) error {
 		log.Error(err)
 		return err
 	}
-	_text := fmt.Sprintf(tr.GetString("strings."+m.moduleName+".connected"), chat.Title)
+	_text := fmt.Sprintf(tr.GetString("strings.connections.connected"), chat.Title)
 	connKeyboard := helpers.InitButtons(b, chat.Id, user.Id)
 	_, err = msg.Reply(b,
 		_text,
@@ -88,7 +88,7 @@ allowConnect allows admins to enable or disable user connections to the chat.
 
 Admins can toggle the setting or view the current status.
 */
-func (m moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -106,10 +106,10 @@ func (m moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		toogleOption := args[1]
 		switch toogleOption {
 		case "on", "true", "yes":
-			text = tr.GetString("strings." + m.moduleName + ".allow_connect.turned_on")
+			text = tr.GetString("strings.connections.allow_connect.turned_on")
 			go db.ToggleAllowConnect(chat.Id, true)
 		case "off", "false", "no":
-			text = tr.GetString("strings." + m.moduleName + ".allow_connect.turned_off")
+			text = tr.GetString("strings.connections.allow_connect.turned_off")
 			go db.ToggleAllowConnect(chat.Id, false)
 		default:
 			text = "Please give me a vaid option from <yes/on/no/off>"
@@ -117,9 +117,9 @@ func (m moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else {
 		currSetting := db.GetChatConnectionSetting(chat.Id).AllowConnect
 		if currSetting {
-			text = tr.GetString("strings." + m.moduleName + ".allow_connect.currently_on")
+			text = tr.GetString("strings.connections.allow_connect.currently_on")
 		} else {
-			text = tr.GetString("strings." + m.moduleName + ".allow_connect.currently_off")
+			text = tr.GetString("strings.connections.allow_connect.currently_off")
 		}
 	}
 
@@ -144,7 +144,7 @@ connect allows a user or admin to connect to a chat.
 
 Handles both private and group chat contexts, checks permissions, and updates the connection status.
 */
-func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -159,17 +159,17 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		if !db.GetChatConnectionSetting(chat.Id).AllowConnect && !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			text = tr.GetString("strings." + m.moduleName + ".connect.connection_disabled")
+			text = tr.GetString("strings.connections.connect.connection_disabled")
 		} else {
 			go db.ConnectId(user.Id, chat.Id)
-			text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".connect.connected"), chat.Title)
+			text = fmt.Sprintf(tr.GetString("strings.connections.connect.connected"), chat.Title)
 			replyMarkup = helpers.InitButtons(b, chat.Id, user.Id)
 		}
 	} else {
 		if !db.GetChatConnectionSetting(chat.Id).AllowConnect && !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			text = tr.GetString("strings." + m.moduleName + ".connect.connection_disabled")
+			text = tr.GetString("strings.connections.connect.connection_disabled")
 		} else {
-			text = tr.GetString("strings." + m.moduleName + ".connect.tap_btn_connect")
+			text = tr.GetString("strings.connections.connect.tap_btn_connect")
 			replyMarkup = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
@@ -234,9 +234,9 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 
 	switch userType {
 	case "Admin":
-		replyText = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".connections_btns.admin_conn_cmds"), m.adminCmdConnString())
+		replyText = fmt.Sprintf(tr.GetString("strings.connections.connections_btns.admin_conn_cmds"), m.adminCmdConnString())
 	case "User":
-		replyText = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".connections_btns.user_conn_cmds"), m.userCmdConnString())
+		replyText = fmt.Sprintf(tr.GetString("strings.connections.connections_btns.user_conn_cmds"), m.userCmdConnString())
 	case "Main":
 		chatId := m.isConnected(b, ctx, user.Id)
 		if chatId == 0 {
@@ -248,7 +248,7 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 			return err
 		}
 
-		replyText = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".connected"), pchat.Title)
+		replyText = fmt.Sprintf(tr.GetString("strings.connections.connected"), pchat.Title)
 		replyKb = helpers.InitButtons(b, pchat.Id, user.Id)
 	}
 
@@ -298,9 +298,9 @@ func (m moduleStruct) disconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		go db.DisconnectId(user.Id)
 
-		text = tr.GetString("strings." + m.moduleName + ".disconnect.disconnected")
+		text = tr.GetString("strings.connections.disconnect.disconnected")
 	} else {
-		text = tr.GetString("strings." + m.moduleName + ".disconnect.need_pm")
+		text = tr.GetString("strings.connections.disconnect.need_pm")
 	}
 
 	_, err := msg.Reply(b, text, helpers.Shtml())
@@ -322,7 +322,7 @@ isConnected checks if a user is connected to a chat.
 
 Returns the chat ID if connected, otherwise replies with a message and returns 0.
 */
-func (m moduleStruct) isConnected(b *gotgbot.Bot, ctx *ext.Context, userId int64) int64 {
+func (moduleStruct) isConnected(b *gotgbot.Bot, ctx *ext.Context, userId int64) int64 {
 	conn := db.Connection(userId)
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
@@ -330,7 +330,7 @@ func (m moduleStruct) isConnected(b *gotgbot.Bot, ctx *ext.Context, userId int64
 		return conn.ChatId
 	}
 
-	_, err := ctx.EffectiveMessage.Reply(b, tr.GetString("strings."+m.moduleName+".not_connected"), nil)
+	_, err := ctx.EffectiveMessage.Reply(b, tr.GetString("strings.connections.not_connected"), nil)
 	if err != nil {
 		log.Error(err)
 	}
@@ -348,7 +348,7 @@ reconnect reconnects a user to their last connected chat.
 
 Handles both user and admin contexts, checks permissions, and updates the connection status.
 */
-func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	var (
@@ -374,10 +374,10 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 				return ext.EndGroups
 			}
 
-			text = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".reconnect.reconnected"), gchat.Title)
+			text = fmt.Sprintf(tr.GetString("strings.connections.reconnect.reconnected"), gchat.Title)
 			connKeyboard = helpers.InitButtons(b, gchat.Id, user.Id)
 		} else {
-			text = tr.GetString("strings." + m.moduleName + ".reconnect.no_last_chat")
+			text = tr.GetString("strings.connections.reconnect.no_last_chat")
 		}
 		_, err := msg.Reply(b, text,
 			&gotgbot.SendMessageOpts{
@@ -391,7 +391,7 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".reconnect.need_pm"), helpers.Shtml())
+		_, err := msg.Reply(b, tr.GetString("strings.connections.reconnect.need_pm"), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -420,8 +420,6 @@ LoadConnections registers all connection-related command handlers with the dispa
 Enables the connections module and adds handlers for connect, disconnect, and related commands.
 */
 func LoadConnections(dispatcher *ext.Dispatcher) {
-	// modules.helpModule.ableMap.Store(m.moduleName, true)
-
 	dispatcher.AddHandler(handlers.NewCommand("connect", ConnectionsModule.connect))
 	dispatcher.AddHandler(handlers.NewCommand("disconnect", ConnectionsModule.disconnect))
 	dispatcher.AddHandler(handlers.NewCommand("connection", ConnectionsModule.connection))
