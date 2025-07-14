@@ -36,7 +36,7 @@ const (
 	startHelp = "Hey there! My name is Alita ✨.\n" +
 		"I'm here to help you manage your groups!\n" +
 		"Hit /help to find out more about how to use me to my full potential.\n" +
-		"Join my <a href='https://t.me/AlitaRobotUpdates'>News Channel</a> to get information on all the latest updates."
+		"Join my <a href='https://t.me/DivideProjects'>News Channel</a> to get information on all the latest updates."
 	mainhlp = "Hey %s!\n" +
 		"My name is Alita ✨.\n\n" +
 		"I am a group management bot, here to help you get around and keep the order in your groups!\n" +
@@ -71,7 +71,7 @@ var (
 			{
 				{
 					Text: "News Channel 📢",
-					Url:  "https://t.me/AlitaRobotUpdates",
+					Url:  "https://t.me/DivideProjects",
 				},
 				{
 					Text: "Support Group 👥",
