@@ -167,15 +167,6 @@ func (a *antifloodStruct) isAdminCached(b *gotgbot.Bot, chatId, userId int64) bo
 	return isAdmin
 }
 
-/*
-floodControl tracks message counts and IDs for a user in a chat to enforce flood limits.
-*/
-type floodControl struct {
-	userId       int64
-	messageCount int
-	messageIDs   *ringBuffer
-}
-
 var _normalAntifloodModule = moduleStruct{
 	moduleName:   "Antiflood",
 	handlerGroup: 4,
