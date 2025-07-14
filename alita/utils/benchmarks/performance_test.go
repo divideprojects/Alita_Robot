@@ -5,6 +5,10 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+
+	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
 // Test data for benchmarks
@@ -249,4 +253,38 @@ func TestFilterOptimization_Correctness(b *testing.T) {
 			b.Errorf("Test case %d: expected keyword %s, got %s", i, tc.keyword, optimizedKeyword)
 		}
 	}
+}
+
+// Benchmark for user collection queries by user_id and username
+func BenchmarkUserCollectionIndexes(b *testing.B) {
+	// Setup: insert test users
+	const numUsers = 10000
+	users := make([]interface{}, numUsers)
+	for i := 0; i < numUsers; i++ {
+		users[i] = map[string]interface{}{
+			"user_id":  int64(i),
+			"username": fmt.Sprintf("user%d", i),
+			"name":     fmt.Sprintf("Test User %d", i),
+			"language": "en",
+		}
+	}
+	userColl := getUserCollection()
+	userColl.DeleteMany(nil, map[string]interface{}{}) // Clean up before test
+	userColl.InsertMany(nil, users)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Query by user_id
+		_ = userColl.FindOne(nil, map[string]interface{}{"user_id": int64(i % numUsers)})
+		// Query by username
+		_ = userColl.FindOne(nil, map[string]interface{}{"username": fmt.Sprintf("user%d", i%numUsers)})
+	}
+
+	b.StopTimer()
+	userColl.DeleteMany(nil, map[string]interface{}{}) // Clean up after test
+}
+
+// Helper to get user collection
+func getUserCollection() *mongo.Collection {
+	return db.GetTestCollection() // Replace with db.userColl if accessible
 }

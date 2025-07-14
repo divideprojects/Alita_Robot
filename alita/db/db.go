@@ -121,6 +121,142 @@ func createIndexes() {
 		log.Warnf("[Database][Index] Failed to create notes indexes: %v", err)
 	}
 
+	// Warn users collection indexes
+	// Compound index on (user_id, chat_id) to speed up warning lookups and enforce uniqueness per user per chat
+	_, err = warnUsersColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys:    bson.D{{Key: "user_id", Value: 1}, {Key: "chat_id", Value: 1}},
+			Options: options.Index().SetUnique(true),
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create warnUsers indexes: %v", err)
+	}
+
+	// User collection indexes
+	// Unique indexes on username and user_id for fast lookups and to prevent duplicates
+	_, err = userColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys:    bson.D{{Key: "username", Value: 1}},
+			Options: options.Index().SetUnique(true),
+		},
+		{
+			Keys:    bson.D{{Key: "user_id", Value: 1}},
+			Options: options.Index().SetUnique(true),
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create user indexes: %v", err)
+	}
+
+	// Chat collection indexes
+	// Unique index on chat_id for fast chat lookups, index on chat_type for filtering
+	_, err = chatColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys:    bson.D{{Key: "chat_id", Value: 1}},
+			Options: options.Index().SetUnique(true),
+		},
+		{
+			Keys: bson.D{{Key: "chat_type", Value: 1}},
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create chat indexes: %v", err)
+	}
+
+	// Captcha collection indexes
+	// Compound index on (user_id, chat_id) for challenge lookups, index on message_id for message-based queries
+	_, err = captchasColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys: bson.D{{Key: "user_id", Value: 1}, {Key: "chat_id", Value: 1}},
+		},
+		{
+			Keys: bson.D{{Key: "message_id", Value: 1}},
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create captcha indexes: %v", err)
+	}
+
+	// Admin collection indexes
+	// Compound unique index on (user_id, chat_id) to ensure one admin record per user per chat
+	_, err = adminSettingsColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys:    bson.D{{Key: "user_id", Value: 1}, {Key: "chat_id", Value: 1}},
+			Options: options.Index().SetUnique(true),
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create admin indexes: %v", err)
+	}
+
+	// Antiflood collection indexes
+	// Compound index on (user_id, chat_id) for fast flood checks per user per chat
+	_, err = antifloodSettingsColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys: bson.D{{Key: "user_id", Value: 1}, {Key: "chat_id", Value: 1}},
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create antiflood indexes: %v", err)
+	}
+
+	// Blacklists collection indexes
+	// Compound unique index on (chat_id, trigger) to prevent duplicate triggers per chat
+	_, err = blacklistsColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys:    bson.D{{Key: "chat_id", Value: 1}, {Key: "trigger", Value: 1}},
+			Options: options.Index().SetUnique(true),
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create blacklist indexes: %v", err)
+	}
+
+	// Greetings collection indexes
+	// Index on chat_id for fast greeting settings lookup per chat
+	_, err = greetingsColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys: bson.D{{Key: "chat_id", Value: 1}},
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create greetings indexes: %v", err)
+	}
+
+	// Locks collection indexes
+	// Index on chat_id for fast lock settings lookup per chat
+	_, err = lockColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys: bson.D{{Key: "chat_id", Value: 1}},
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create locks indexes: %v", err)
+	}
+
+	// Reports collection indexes
+	// Index on chat_id for fast report settings lookup per chat
+	_, err = reportChatColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys: bson.D{{Key: "chat_id", Value: 1}},
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create reports indexes: %v", err)
+	}
+
+	// Rules collection indexes
+	// Index on chat_id for fast rules lookup per chat
+	_, err = rulesColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		{
+			Keys: bson.D{{Key: "chat_id", Value: 1}},
+		},
+	})
+	if err != nil {
+		log.Warnf("[Database][Index] Failed to create rules indexes: %v", err)
+	}
+
 	log.Info("Done creating database indexes!")
 }
 
