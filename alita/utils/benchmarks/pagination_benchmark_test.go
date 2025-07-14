@@ -18,26 +18,6 @@ var (
 	testCollection *mongo.Collection
 )
 
-func BenchmarkGetAllFilters(b *testing.B) {
-	setupBenchmarkCollection(b)
-	defer cleanupBenchmarkCollection(b)
-
-	b.Run("LegacyImplementation", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
-			_ = db.GetAllFilters(0) // 0 gets all records
-		}
-	})
-
-	b.Run("PaginatedImplementation", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
-			result, _ := db.GetAllFiltersPaginated(0, db.PaginationOptions{
-				Limit: benchmarkPageSize,
-			})
-			_ = result.Data
-		}
-	})
-}
-
 func BenchmarkCursorPagination(b *testing.B) {
 	setupBenchmarkCollection(b)
 	defer cleanupBenchmarkCollection(b)

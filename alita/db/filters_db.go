@@ -42,12 +42,6 @@ func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
 	return
 }
 
-// GetAllFilters returns all filters for a chat (deprecated, use GetAllFiltersPaginated instead).
-func GetAllFilters(chatID int64) (allFilters []*ChatFilters) {
-	result, _ := GetAllFiltersPaginated(chatID, PaginationOptions{Limit: 0})
-	return result.Data
-}
-
 // GetAllFiltersPaginated returns paginated filters for a chat.
 func GetAllFiltersPaginated(chatID int64, opts PaginationOptions) (PaginatedResult[*ChatFilters], error) {
 	paginator := NewMongoPagination[*ChatFilters](getCollection("filters"))
