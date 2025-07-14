@@ -39,6 +39,9 @@ const (
 )
 
 var (
+	// Package-level MongoDB client
+	mongoClient *mongo.Client
+
 	// Contexts
 	tdCtx = context.TODO()
 	bgCtx = context.Background()
@@ -71,24 +74,49 @@ var (
 func createIndexes() {
 	log.Info("Creating database indexes...")
 
-	// Create index for filters collection: (chat_id, keyword) - unique
-	filterIndexModel := mongo.IndexModel{
-		Keys:    bson.D{{Key: "chat_id", Value: 1}, {Key: "keyword", Value: 1}},
-		Options: options.Index().SetUnique(true),
-	}
-	_, err := filterColl.Indexes().CreateOne(bgCtx, filterIndexModel)
+	// Filter collection indexes
+	_, err := filterColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		// Existing unique index
+		{
+			Keys:    bson.D{{Key: "chat_id", Value: 1}, {Key: "keyword", Value: 1}},
+			Options: options.Index().SetUnique(true),
+		},
+		// Pagination optimization: (_id) for cursor-based pagination
+		{
+			Keys: bson.D{{Key: "_id", Value: 1}},
+		},
+		// Compound index for paginated queries
+		{
+			Keys: bson.D{
+				{Key: "chat_id", Value: 1},
+				{Key: "_id", Value: 1},
+			},
+		},
+	})
 	if err != nil {
-		log.Warnf("[Database][Index] Failed to create filter index: %v", err)
+		log.Warnf("[Database][Index] Failed to create filter indexes: %v", err)
 	}
 
-	// Create index for notes collection: (chat_id, note_name) - unique
-	notesIndexModel := mongo.IndexModel{
-		Keys:    bson.D{{Key: "chat_id", Value: 1}, {Key: "note_name", Value: 1}},
-		Options: options.Index().SetUnique(true),
-	}
-	_, err = notesColl.Indexes().CreateOne(bgCtx, notesIndexModel)
+	// Notes collection indexes
+	_, err = notesColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+		// Existing unique index
+		{
+			Keys:    bson.D{{Key: "chat_id", Value: 1}, {Key: "note_name", Value: 1}},
+			Options: options.Index().SetUnique(true),
+		},
+		// Pagination optimization
+		{
+			Keys: bson.D{{Key: "_id", Value: 1}},
+		},
+		{
+			Keys: bson.D{
+				{Key: "chat_id", Value: 1},
+				{Key: "_id", Value: 1},
+			},
+		},
+	})
 	if err != nil {
-		log.Warnf("[Database][Index] Failed to create notes index: %v", err)
+		log.Warnf("[Database][Index] Failed to create notes indexes: %v", err)
 	}
 
 	log.Info("Done creating database indexes!")
@@ -102,7 +130,8 @@ This function is automatically called when the package is imported.
 It sets up global collection variables for use throughout the db package.
 */
 func init() {
-	mongoClient, err := mongo.NewClient(
+	var err error
+	mongoClient, err = mongo.NewClient(
 		options.Client().ApplyURI(config.DatabaseURI),
 	)
 	if err != nil {
@@ -119,6 +148,7 @@ func init() {
 
 	// Open Connections to Collections
 	log.Info("Opening Database Collections...")
+	log.Debugf("[DB] Initializing collections with client status: %t", mongoClient != nil)
 	adminSettingsColl = mongoClient.Database(config.MainDbName).Collection("admin")
 	blacklistsColl = mongoClient.Database(config.MainDbName).Collection("blacklists")
 	pinColl = mongoClient.Database(config.MainDbName).Collection("pins")
@@ -210,4 +240,17 @@ func findOneAndUpsert(collection *mongo.Collection, filter bson.M, update bson.M
 		log.Errorf("[Database][findOneAndUpsert]: %v", err)
 	}
 	return err
+}
+
+// GetTestCollection returns a collection for benchmark testing
+func GetTestCollection() *mongo.Collection {
+	return getCollection("benchmark_test")
+}
+
+// getCollection is a helper to safely access collections
+func getCollection(name string) *mongo.Collection {
+	if mongoClient == nil {
+		return nil
+	}
+	return mongoClient.Database(config.MainDbName).Collection(name)
 }

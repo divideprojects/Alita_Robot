@@ -42,15 +42,19 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 		return AdminCache{}
 	}
 
-	// Convert ChatMember to MergedChatMember
+	// Convert ChatMember to MergedChatMember and build map
 	var userList []gotgbot.MergedChatMember
+	userMap := make(map[int64]gotgbot.MergedChatMember, len(adminList))
 	for _, admin := range adminList {
-		userList = append(userList, admin.MergeChatMember())
+		member := admin.MergeChatMember()
+		userList = append(userList, member)
+		userMap[member.User.Id] = member
 	}
 
 	adminCache := AdminCache{
 		ChatId:   chatId,
 		UserInfo: userList,
+		UserMap:  userMap,
 		Cached:   true,
 	}
 
@@ -116,13 +120,13 @@ func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
 	if adminList == nil {
 		return false, gotgbot.MergedChatMember{}
 	}
-	
-	// Create a map for O(1) lookup
+
 	adminCache := adminList.(*AdminCache)
-	for _, admin := range adminCache.UserInfo {
-		if admin.User.Id == userId {
-			return true, admin
-		}
+	adminCache.mux.RLock()
+	defer adminCache.mux.RUnlock()
+
+	if member, ok := adminCache.UserMap[userId]; ok {
+		return true, member
 	}
 	return false, gotgbot.MergedChatMember{}
 }
@@ -137,7 +141,7 @@ func GetAdmins(b *gotgbot.Bot, chatId int64) ([]gotgbot.MergedChatMember, bool) 
 	if adminsAvail, admins := GetAdminCacheList(chatId); adminsAvail {
 		return admins.UserInfo, true
 	}
-	
+
 	admins := LoadAdminCache(b, chatId)
 	return admins.UserInfo, false
 }
@@ -157,7 +161,7 @@ func InvalidateAdminCache(chatId int64) error {
 		}).Error("InvalidateAdminCache: Failed to delete admin cache")
 		return err
 	}
-	
+
 	log.WithFields(log.Fields{
 		"chatId": chatId,
 	}).Debug("InvalidateAdminCache: Successfully invalidated admin cache")
@@ -186,10 +190,15 @@ Returns true if the user is an admin, false otherwise.
 Uses map-based lookup for O(1) performance when multiple checks are needed.
 */
 func IsUserAdminCached(b *gotgbot.Bot, chatId, userId int64) bool {
-	adminIds := GetAdminIds(b, chatId)
-	adminMap := make(map[int64]bool, len(adminIds))
-	for _, id := range adminIds {
-		adminMap[id] = true
+	adminList, _ := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
+	if adminList == nil {
+		return false
 	}
-	return adminMap[userId]
+
+	adminCache := adminList.(*AdminCache)
+	adminCache.mux.RLock()
+	defer adminCache.mux.RUnlock()
+
+	_, ok := adminCache.UserMap[userId]
+	return ok
 }

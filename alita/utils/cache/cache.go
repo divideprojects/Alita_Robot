@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"sync"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/dgraph-io/ristretto"
@@ -30,7 +31,9 @@ Fields:
 type AdminCache struct {
 	ChatId   int64
 	UserInfo []gotgbot.MergedChatMember
+	UserMap  map[int64]gotgbot.MergedChatMember
 	Cached   bool
+	mux      sync.RWMutex
 }
 
 /*

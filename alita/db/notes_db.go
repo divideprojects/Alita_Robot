@@ -64,10 +64,31 @@ func getNotesSettings(chatID int64) (noteSrc *NoteSettings) {
 }
 
 func getAllChatNotes(chatId int64) (notes []*ChatNotes) {
-	cursor := findAll(notesColl, bson.M{"chat_id": chatId})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &notes)
-	return
+	result, _ := GetAllNotesPaginated(chatId, PaginationOptions{Limit: 0})
+	return result.Data
+}
+
+// GetAllNotesPaginated returns paginated notes for a chat.
+func GetAllNotesPaginated(chatID int64, opts PaginationOptions) (PaginatedResult[*ChatNotes], error) {
+	paginator := NewMongoPagination[*ChatNotes](notesColl)
+
+	filter := bson.M{"chat_id": chatID}
+	if opts.Cursor != nil {
+		filter["_id"] = bson.M{"$gt": opts.Cursor}
+	}
+
+	if opts.Offset > 0 {
+		return paginator.GetPageByOffset(bgCtx, PaginationOptions{
+			Offset:        opts.Offset,
+			Limit:         opts.Limit,
+			SortDirection: 1,
+		})
+	}
+
+	return paginator.GetNextPage(bgCtx, PaginationOptions{
+		Limit:         opts.Limit,
+		SortDirection: 1,
+	})
 }
 
 // GetNotes retrieves the note settings for a given chat ID.
