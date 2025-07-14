@@ -420,7 +420,6 @@ LoadConnections registers all connection-related command handlers with the dispa
 Enables the connections module and adds handlers for connect, disconnect, and related commands.
 */
 func LoadConnections(dispatcher *ext.Dispatcher) {
-
 	dispatcher.AddHandler(handlers.NewCommand("connect", ConnectionsModule.connect))
 	dispatcher.AddHandler(handlers.NewCommand("disconnect", ConnectionsModule.disconnect))
 	dispatcher.AddHandler(handlers.NewCommand("connection", ConnectionsModule.connection))

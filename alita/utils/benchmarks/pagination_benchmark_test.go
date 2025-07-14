@@ -14,9 +14,7 @@ const (
 	benchmarkPageSize       = 100
 )
 
-var (
-	testCollection *mongo.Collection
-)
+var testCollection *mongo.Collection
 
 func BenchmarkCursorPagination(b *testing.B) {
 	setupBenchmarkCollection(b)

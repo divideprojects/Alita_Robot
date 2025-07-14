@@ -1,9 +1,9 @@
 package db
 
 import (
-	log "github.com/sirupsen/logrus"
-
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"

@@ -2,13 +2,12 @@ package db
 
 import (
 	"context"
+	"math/rand"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
-
-	"math/rand"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

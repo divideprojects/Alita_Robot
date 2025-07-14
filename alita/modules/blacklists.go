@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -20,8 +21,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-
-	"sync"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
