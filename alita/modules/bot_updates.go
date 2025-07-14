@@ -91,7 +91,7 @@ adminCacheAutoUpdate ensures the admin cache is up-to-date when an admin update 
 
 Invalidates existing cache when admin changes occur, ensuring fresh data on next access.
 */
-func adminCacheAutoUpdate(b *gotgbot.Bot, ctx *ext.Context) error {
+func adminCacheAutoUpdate(_ *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	// Always invalidate cache when admin changes occur

@@ -43,7 +43,7 @@ func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
 }
 
 // GetAllFiltersPaginated returns paginated filters for a chat.
-func GetAllFiltersPaginated(chatID int64, opts PaginationOptions) (PaginatedResult[*ChatFilters], error) {
+func GetAllFiltersPaginated(_ int64, opts PaginationOptions) (PaginatedResult[*ChatFilters], error) {
 	paginator := NewMongoPagination[*ChatFilters](getCollection("filters"))
 
 	if opts.Cursor == nil && opts.Offset == 0 {

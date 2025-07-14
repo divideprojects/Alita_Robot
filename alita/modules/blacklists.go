@@ -142,7 +142,7 @@ addBlacklist adds one or more blacklist words to the group.
 Checks permissions, updates the blacklist in the database, and replies with the result.
 Connection: true, true
 */
-func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -226,7 +226,7 @@ removeBlacklist removes one or more blacklist words from the group.
 Checks permissions, updates the blacklist in the database, and replies with the result.
 Connection: true, true
 */
-func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -306,7 +306,7 @@ listBlacklists lists all blacklist words in the group.
 Anyone can view the blacklist. Replies with the current list or a message if none exist.
 Connection: false, true
 */
-func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -375,7 +375,7 @@ setBlacklistAction sets the action to take when a blacklist word is triggered.
 Admins can set the action to "mute", "kick", "warn", "ban", or "none".
 Connection: true, true
 */
-func (m moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -430,7 +430,7 @@ rmAllBlacklists removes all blacklist words from the group.
 
 Only the chat creator can use this command to clear the blacklist.
 */
-func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -470,7 +470,7 @@ buttonHandler handles callback queries for removing all blacklists.
 
 Processes the creator's confirmation and removes all blacklist words if confirmed.
 */
-func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -528,7 +528,7 @@ blacklistWatcher monitors messages for blacklisted words and enforces the config
 Deletes messages containing blacklisted words and applies the configured action (mute, ban, kick, warn) to the user.
 Uses optimized regex caching for high-performance pattern matching.
 */
-func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender
 	if user.IsAnonymousAdmin() {

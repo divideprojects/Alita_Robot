@@ -1,6 +1,7 @@
 package benchmarks
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"strings"
@@ -269,19 +270,19 @@ func BenchmarkUserCollectionIndexes(b *testing.B) {
 		}
 	}
 	userColl := getUserCollection()
-	userColl.DeleteMany(nil, map[string]interface{}{}) // Clean up before test
-	userColl.InsertMany(nil, users)
+	userColl.DeleteMany(context.TODO(), map[string]interface{}{}) // Clean up before test
+	userColl.InsertMany(context.TODO(), users)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		// Query by user_id
-		_ = userColl.FindOne(nil, map[string]interface{}{"user_id": int64(i % numUsers)})
+		_ = userColl.FindOne(context.TODO(), map[string]interface{}{"user_id": int64(i % numUsers)})
 		// Query by username
-		_ = userColl.FindOne(nil, map[string]interface{}{"username": fmt.Sprintf("user%d", i%numUsers)})
+		_ = userColl.FindOne(context.TODO(), map[string]interface{}{"username": fmt.Sprintf("user%d", i%numUsers)})
 	}
 
 	b.StopTimer()
-	userColl.DeleteMany(nil, map[string]interface{}{}) // Clean up after test
+	userColl.DeleteMany(context.TODO(), map[string]interface{}{}) // Clean up after test
 }
 
 // Helper to get user collection

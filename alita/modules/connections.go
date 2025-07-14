@@ -88,7 +88,7 @@ allowConnect allows admins to enable or disable user connections to the chat.
 
 Admins can toggle the setting or view the current status.
 */
-func (m moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -144,7 +144,7 @@ connect allows a user or admin to connect to a chat.
 
 Handles both private and group chat contexts, checks permissions, and updates the connection status.
 */
-func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -322,7 +322,7 @@ isConnected checks if a user is connected to a chat.
 
 Returns the chat ID if connected, otherwise replies with a message and returns 0.
 */
-func (m moduleStruct) isConnected(b *gotgbot.Bot, ctx *ext.Context, userId int64) int64 {
+func (moduleStruct) isConnected(b *gotgbot.Bot, ctx *ext.Context, userId int64) int64 {
 	conn := db.Connection(userId)
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
@@ -348,7 +348,7 @@ reconnect reconnects a user to their last connected chat.
 
 Handles both user and admin contexts, checks permissions, and updates the connection status.
 */
-func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	var (

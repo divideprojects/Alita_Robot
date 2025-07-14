@@ -189,7 +189,7 @@ IsUserAdminCached checks if a user is an admin using cached data with optimized 
 Returns true if the user is an admin, false otherwise.
 Uses map-based lookup for O(1) performance when multiple checks are needed.
 */
-func IsUserAdminCached(b *gotgbot.Bot, chatId, userId int64) bool {
+func IsUserAdminCached(_ *gotgbot.Bot, chatId, userId int64) bool {
 	adminList, _ := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
 	if adminList == nil {
 		return false

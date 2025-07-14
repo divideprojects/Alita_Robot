@@ -388,7 +388,7 @@ setFlood sets the flood limit for a chat.
 
 Allows admins to enable, disable, or change the flood limit. Handles argument parsing and updates the database accordingly.
 */
-func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
+func (*moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -437,7 +437,7 @@ flood displays the current flood settings for the chat.
 
 Shows whether flood control is enabled and the current action mode (mute, ban, kick).
 */
-func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
+func (*moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	var text string
 	msg := ctx.EffectiveMessage
 
@@ -482,7 +482,7 @@ setFloodMode sets the action mode for flood control.
 
 Admins can choose between "ban", "kick", or "mute" as the action when flood limits are exceeded.
 */
-func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
+func (*moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -523,7 +523,7 @@ setFloodDeleter enables or disables deletion of messages that trigger flood cont
 
 Admins can toggle this setting or view its current status.
 */
-func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
+func (*moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)

@@ -39,7 +39,7 @@ Performs permission checks, extracts the target user from a reply, deletes their
 
 The Bot and the user issuing the command must have appropriate permissions.
 */
-func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -164,7 +164,7 @@ kick removes a user from the group.
 
 Checks permissions, extracts the target user, and kicks them. Handles edge cases such as anonymous users, admins, and the bot itself.
 */
-func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -281,7 +281,7 @@ kickme allows a user to remove themselves from the group.
 
 Admins are not allowed to use this command. The bot must have restriction permissions.
 */
-func (m moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -330,7 +330,7 @@ tBan temporarily bans a user from the chat.
 
 Performs permission checks, extracts the target user and ban duration, and bans them for the specified time. Handles edge cases such as anonymous users and admins.
 */
-func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -445,7 +445,7 @@ ban bans a user from the group indefinitely.
 
 Checks permissions, extracts the target user, and bans them. Handles anonymous users, admins, and the bot itself. Provides an inline button for unbanning.
 */
-func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -566,7 +566,7 @@ sBan silently bans a user from the group and deletes the command message.
 
 Performs permission checks, extracts the target user, and bans them without sending a reply. Handles edge cases such as anonymous users and admins.
 */
-func (m moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -647,7 +647,7 @@ dBan bans a user from the group and deletes their message.
 
 Checks permissions, extracts the target user, deletes their message, and bans them. Handles anonymous users, admins, and edge cases.
 */
-func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -770,7 +770,7 @@ unban removes a ban from a user in the group.
 
 Checks permissions, extracts the target user, and unbans them. Handles anonymous users, admins, and the bot itself.
 */
-func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage

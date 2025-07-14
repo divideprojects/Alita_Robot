@@ -70,7 +70,7 @@ func (cg *CaptchaGenerator) GenerateChallenge(mode string) (*CaptchaResult, erro
 }
 
 // generateButtonChallenge creates a simple button click challenge
-func (cg *CaptchaGenerator) generateButtonChallenge() (*CaptchaResult, error) {
+func (*CaptchaGenerator) generateButtonChallenge() (*CaptchaResult, error) {
 	challenge := ButtonChallenge{
 		Type: "button",
 	}
@@ -88,7 +88,7 @@ func (cg *CaptchaGenerator) generateButtonChallenge() (*CaptchaResult, error) {
 }
 
 // generateTextChallenge creates a text selection challenge with an actual generated image
-func (cg *CaptchaGenerator) generateTextChallenge() (*CaptchaResult, error) {
+func (*CaptchaGenerator) generateTextChallenge() (*CaptchaResult, error) {
 	// Text options
 	words := []string{
 		"HOUSE", "TREE", "CAR", "BOOK", "PHONE", "LAMP", "DOOR", "WINDOW",
@@ -162,7 +162,7 @@ func (cg *CaptchaGenerator) generateTextChallenge() (*CaptchaResult, error) {
 }
 
 // generateMathChallenge creates a basic math question
-func (cg *CaptchaGenerator) generateMathChallenge() (*CaptchaResult, error) {
+func (*CaptchaGenerator) generateMathChallenge() (*CaptchaResult, error) {
 	operations := []string{"+", "-", "*"}
 	operation := operations[rand.Intn(len(operations))]
 
@@ -241,7 +241,7 @@ func (cg *CaptchaGenerator) generateMathChallenge() (*CaptchaResult, error) {
 }
 
 // generateText2Challenge creates a character input challenge with an actual generated image
-func (cg *CaptchaGenerator) generateText2Challenge() (*CaptchaResult, error) {
+func (*CaptchaGenerator) generateText2Challenge() (*CaptchaResult, error) {
 	// Character set for the code
 	characters := "ABCDEFGHJKLMNPQRSTUVWXYZ23456789" // Excluding confusing characters like I, O, 0, 1
 	codeLength := 4 + rand.Intn(2)                   // Random length between 4-5

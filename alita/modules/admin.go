@@ -35,7 +35,7 @@ It checks for required permissions, retrieves the admin list (using cache if ava
 
 Connection: false, false
 */
-func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	cached := true
@@ -99,7 +99,7 @@ Performs permission checks, extracts the target user, and demotes them if possib
 
 Connection: true, true
 */
-func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -231,7 +231,7 @@ Checks permissions, extracts the target user and optional custom title, and prom
 
 Connection: true, true
 */
-func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -429,7 +429,7 @@ setTitle sets a custom admin title for a user.
 
 Only works for admins promoted by the bot. Checks permissions, extracts the target user and title, and sets the custom title (truncated to 16 characters if necessary).
 */
-func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -548,7 +548,7 @@ anonAdmin toggles or displays the anonymous admin mode for the chat.
 
 Allows the chat owner to enable or disable anonymous admin mode. If called with no arguments, displays the current status.
 */
-func (m moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
+func (moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
