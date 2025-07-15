@@ -276,7 +276,7 @@ func CleanupExpiredChallenges() error {
 	if captchaChallengesColl == nil {
 		return fmt.Errorf("captcha challenges collection is not initialized")
 	}
-	
+
 	now := time.Now()
 	err := deleteMany(captchaChallengesColl, bson.M{
 		"expires_at": bson.M{"$lt": now},
