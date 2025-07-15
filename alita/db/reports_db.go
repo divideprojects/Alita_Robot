@@ -52,9 +52,7 @@ func GetChatReportSettings(chatID int64) (reportsrc *ChatReportSettings) {
 		log.Error(err)
 	}
 	// Cache the result
-	if reportsrc != nil {
-		_ = cache.Marshal.Set(cache.Context, chatID, reportsrc, store.WithExpiration(10*time.Minute))
-	}
+	_ = cache.Marshal.Set(cache.Context, chatID, reportsrc, store.WithExpiration(10*time.Minute))
 	return
 }
 
