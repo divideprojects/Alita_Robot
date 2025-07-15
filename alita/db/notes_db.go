@@ -183,7 +183,7 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons []Button,
 	}
 
 	result := &ChatNotes{}
-	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(_ mongo.SessionContext) error {
 		// Perform the upsert operation within the transaction
 		err := findOneAndUpsert(notesColl, filter, update, result)
 		if err != nil {
@@ -209,7 +209,7 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons []Button,
 
 // RemoveNote deletes a note by name from the chat.
 func RemoveNote(chatID int64, noteName string) {
-	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(_ mongo.SessionContext) error {
 		// Perform the delete operation within the transaction
 		err := deleteOne(notesColl, bson.M{"chat_id": chatID, "note_name": noteName})
 		if err != nil && err != mongo.ErrNoDocuments {

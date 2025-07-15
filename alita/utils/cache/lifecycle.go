@@ -151,7 +151,7 @@ func (c *CacheLifecycleManager) initializeCacheWithFallback(ctx context.Context)
 /*
 initRedisWithTimeout initializes Redis with a timeout context.
 */
-func (c *CacheLifecycleManager) initRedisWithTimeout(ctx context.Context) (*redis.Client, error) {
+func (*CacheLifecycleManager) initRedisWithTimeout(ctx context.Context) (*redis.Client, error) {
 	// Create a timeout context for Redis initialization
 	redisCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
@@ -167,7 +167,7 @@ func (c *CacheLifecycleManager) initRedisWithTimeout(ctx context.Context) (*redi
 /*
 setupRistrettoOnlyCache sets up the cache system with Ristretto only.
 */
-func (c *CacheLifecycleManager) setupRistrettoOnlyCache(ristrettoCache *ristretto.Cache) error {
+func (*CacheLifecycleManager) setupRistrettoOnlyCache(ristrettoCache *ristretto.Cache) error {
 	ristrettoStore := ristretto_store.NewRistretto(ristrettoCache)
 	cacheManager := cache.New[any](ristrettoStore)
 	Marshal = marshaler.New(cacheManager)
@@ -180,7 +180,7 @@ func (c *CacheLifecycleManager) setupRistrettoOnlyCache(ristrettoCache *ristrett
 /*
 setupChainCache sets up the cache system with both Redis and Ristretto.
 */
-func (c *CacheLifecycleManager) setupChainCache(ristrettoCache *ristretto.Cache, redisClient *redis.Client) error {
+func (*CacheLifecycleManager) setupChainCache(ristrettoCache *ristretto.Cache, redisClient *redis.Client) error {
 	redisStore := redis_store.NewRedis(redisClient, store.WithExpiration(10*time.Minute))
 	ristrettoStore := ristretto_store.NewRistretto(ristrettoCache)
 	cacheManager := cache.NewChain(cache.New[any](ristrettoStore), cache.New[any](redisStore))

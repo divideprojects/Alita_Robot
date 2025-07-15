@@ -33,7 +33,7 @@ func (m *MongoLifecycleManager) Name() string {
 
 // Priority returns the shutdown priority (higher numbers shutdown first)
 // MongoDB should have high priority (100) to ensure it shuts down after other components
-func (m *MongoLifecycleManager) Priority() int {
+func (*MongoLifecycleManager) Priority() int {
 	return 100
 }
 
@@ -132,7 +132,7 @@ func (m *MongoLifecycleManager) HealthCheck(ctx context.Context) error {
 }
 
 // validateDatabaseAccess validates that we can access the database
-func (m *MongoLifecycleManager) validateDatabaseAccess(ctx context.Context) error {
+func (*MongoLifecycleManager) validateDatabaseAccess(ctx context.Context) error {
 	// Try to list collections to verify database access
 	if adminSettingsColl == nil {
 		return fmt.Errorf("database collections are not initialized")

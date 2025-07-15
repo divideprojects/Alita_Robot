@@ -70,7 +70,7 @@ func AddBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = append(blSrc.Triggers, strings.ToLower(trigger))
 
-	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(_ mongo.SessionContext) error {
 		// Perform the update operation within the transaction
 		err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
 		if err != nil {
@@ -94,7 +94,7 @@ func RemoveBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = removeStrfromStr(blSrc.Triggers, strings.ToLower(trigger))
 
-	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(_ mongo.SessionContext) error {
 		// Perform the update operation within the transaction
 		err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
 		if err != nil {

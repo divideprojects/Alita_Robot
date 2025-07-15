@@ -105,7 +105,7 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 	}
 
 	result := &ChatFilters{}
-	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(_ mongo.SessionContext) error {
 		// Perform the upsert operation within the transaction
 		err := findOneAndUpsert(getCollection("filters"), filter, update, result)
 		if err != nil {
@@ -131,7 +131,7 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 
 // RemoveFilter deletes a filter by keyword from the chat.
 func RemoveFilter(chatID int64, keyWord string) {
-	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(_ mongo.SessionContext) error {
 		// Perform the delete operation within the transaction
 		err := deleteOne(getCollection("filters"), bson.M{"chat_id": chatID, "keyword": keyWord})
 		if err != nil && err != mongo.ErrNoDocuments {

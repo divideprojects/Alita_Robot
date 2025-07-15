@@ -270,17 +270,17 @@ func NewSchedulerLifecycleManager(bot *gotgbot.Bot) *SchedulerLifecycleManager {
 }
 
 // Name returns the component name
-func (s *SchedulerLifecycleManager) Name() string {
+func (*SchedulerLifecycleManager) Name() string {
 	return "scheduler"
 }
 
 // Priority returns the shutdown priority
-func (s *SchedulerLifecycleManager) Priority() int {
+func (*SchedulerLifecycleManager) Priority() int {
 	return 30 // Lower priority for shutdown
 }
 
 // Initialize starts the scheduler
-func (s *SchedulerLifecycleManager) Initialize(ctx context.Context) error {
+func (s *SchedulerLifecycleManager) Initialize(_ context.Context) error {
 	log.Info("Initializing CAPTCHA scheduler...")
 
 	if s.bot == nil {
@@ -333,7 +333,7 @@ func (s *SchedulerLifecycleManager) Shutdown(ctx context.Context) error {
 }
 
 // HealthCheck verifies the scheduler is running
-func (s *SchedulerLifecycleManager) HealthCheck(ctx context.Context) error {
+func (s *SchedulerLifecycleManager) HealthCheck(_ context.Context) error {
 	if s.scheduler == nil {
 		return fmt.Errorf("scheduler is not initialized")
 	}

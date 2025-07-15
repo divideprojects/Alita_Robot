@@ -82,7 +82,7 @@ func (h *SignalHandler) initiateShutdown(ctx context.Context, sig os.Signal) {
 }
 
 // forceShutdown performs emergency shutdown
-func (h *SignalHandler) forceShutdown() {
+func (*SignalHandler) forceShutdown() {
 	log.Error("Performing emergency shutdown")
 
 	// Give a small grace period for cleanup

@@ -127,7 +127,7 @@ func LoadModules(dispatcher *ext.Dispatcher) {
 
 // StartCaptchaScheduler initializes and starts the CAPTCHA scheduler
 // DEPRECATED: This function is deprecated. Scheduler is now managed by lifecycle manager.
-func StartCaptchaScheduler(bot *gotgbot.Bot) {
+func StartCaptchaScheduler(_ *gotgbot.Bot) {
 	log.Warn("StartCaptchaScheduler is deprecated. Scheduler is now managed by lifecycle manager.")
 	// Keep for backwards compatibility but don't start scheduler
 	// scheduler.StartCaptchaScheduler(bot)
