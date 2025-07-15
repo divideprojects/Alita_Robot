@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/divideprojects/Alita_Robot/alita/config"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
@@ -41,11 +42,11 @@ func ResourceMonitor() {
 		}).Info("Resource usage stats")
 
 		// Warning thresholds
-		if numGoroutines > 1000 {
+		if numGoroutines > config.HighGoroutineThreshold {
 			log.WithField("goroutines", numGoroutines).Warn("High goroutine count detected")
 		}
 
-		if m.Alloc/1024/1024 > 500 { // 500MB
+		if int(m.Alloc/1024/1024) > config.HighMemoryThresholdMB {
 			log.WithField("memory_mb", m.Alloc/1024/1024).Warn("High memory usage detected")
 		}
 	}
@@ -78,7 +79,9 @@ func checkDuplicateAliases() {
 	var althelp []string
 
 	for _, i := range modules.HelpModule.AltHelpOptions {
-		althelp = append(althelp, i...)
+		for _, alias := range i {
+			althelp = append(althelp, strings.ToLower(alias))
+		}
 	}
 
 	duplicateAlias, val := string_handling.IsDuplicateInStringSlice(althelp)
