@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -38,6 +39,9 @@ type moduleStruct struct {
 	// Regex cache for optimized filter matching - used by filters.go and blacklists.go modules
 	filterRegexCache    map[int64]*regexp.Regexp // chatId -> compiled regex for all filters
 	filterKeywordsCache map[int64][]string       // chatId -> filter keywords for cache invalidation
+	// Mutexes for thread-safe access to overwrite maps
+	overwriteFiltersMutex sync.RWMutex
+	overwriteNotesMutex   sync.RWMutex
 }
 
 // struct for filters module

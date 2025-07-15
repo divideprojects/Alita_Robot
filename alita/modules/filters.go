@@ -224,6 +224,8 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	filterWord = strings.ToLower(filterWord) // convert string to it's lower form
 
 	if db.DoesFilterExists(chat.Id, filterWord) {
+		// Thread-safe access to overwrite filters map
+		m.overwriteFiltersMutex.Lock()
 		m.overwriteFiltersMap[fmt.Sprint(filterWord, "_", chat.Id)] = overwriteFilter{
 			filterWord: filterWord,
 			text:       text,
@@ -231,6 +233,8 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 			buttons:    buttons,
 			dataType:   dataType,
 		}
+		m.overwriteFiltersMutex.Unlock()
+		
 		_, err := msg.Reply(b,
 			"Filter already exists!\nDo you want to overwrite it?",
 			&gotgbot.SendMessageOpts{
@@ -258,7 +262,15 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	go db.AddFilter(chat.Id, filterWord, text, fileid, buttons, dataType)
+	// Add filter to database - make this synchronous to catch errors
+	if !db.AddFilter(chat.Id, filterWord, text, fileid, buttons, dataType) {
+		_, err := msg.Reply(b, "Failed to save filter to database. Please try again.", helpers.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		return ext.EndGroups
+	}
 	invalidateFilterCache(chat.Id) // Invalidate cache after adding a filter
 
 	_, err := msg.Reply(b, fmt.Sprintf("Added reply for filter word <code>%s</code>", filterWord), helpers.Shtml())
@@ -515,13 +527,19 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 	filterWord := args[1]
 	filterWordKey := fmt.Sprint(filterWord, "_", chat.Id)
 	var helpText string
-	filterData := m.overwriteFiltersMap[filterWordKey]
+	
+	// Thread-safe access to overwrite filters map
+	m.overwriteFiltersMutex.Lock()
+	filterData, exists := m.overwriteFiltersMap[filterWordKey]
+	if exists {
+		delete(m.overwriteFiltersMap, filterWordKey) // delete the key to make map clear
+	}
+	m.overwriteFiltersMutex.Unlock()
 
-	if db.DoesFilterExists(chat.Id, filterWord) {
+	if exists && db.DoesFilterExists(chat.Id, filterWord) {
 		db.RemoveFilter(chat.Id, filterWord)
 		db.AddFilter(chat.Id, filterData.filterWord, filterData.text, filterData.fileid, filterData.buttons, filterData.dataType)
-		delete(m.overwriteFiltersMap, filterWordKey) // delete the key to make map clear
-		invalidateFilterCache(chat.Id)               // Invalidate cache after overwriting a filter
+		invalidateFilterCache(chat.Id) // Invalidate cache after overwriting a filter
 		helpText = "Filter has been overwritten successfully ✅"
 	} else {
 		helpText = "Cancelled overwritting of filter ❌"

@@ -324,9 +324,13 @@ func retryDB(fn func() error) error {
 
 // updateOne with timing, retry, and slow query log
 func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (err error) {
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
 	start := time.Now()
 	err = retryDB(func() error {
-		_, e := collecion.UpdateOne(tdCtx, filter, bson.M{"$set": data}, options.Update().SetUpsert(true))
+		_, e := collecion.UpdateOne(ctx, filter, bson.M{"$set": data}, options.Update().SetUpsert(true))
 		return e
 	})
 	dur := time.Since(start)
@@ -341,10 +345,14 @@ func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (er
 
 // findOne with timing, retry, and slow query log
 func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResult) {
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
 	start := time.Now()
 	var result *mongo.SingleResult
 	retryDB(func() error {
-		result = collecion.FindOne(tdCtx, filter)
+		result = collecion.FindOne(ctx, filter)
 		return result.Err()
 	})
 	dur := time.Since(start)
@@ -357,8 +365,12 @@ func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResul
 // countDocs with timing, retry, and slow query log
 func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err error) {
 	start := time.Now()
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
 	err = retryDB(func() error {
-		c, e := collecion.CountDocuments(tdCtx, filter)
+		c, e := collecion.CountDocuments(ctx, filter)
 		count = c
 		return e
 	})
@@ -376,8 +388,12 @@ func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err err
 func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	start := time.Now()
 	var cursor *mongo.Cursor
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
 	retryDB(func() error {
-		c, e := collecion.Find(tdCtx, filter)
+		c, e := collecion.Find(ctx, filter)
 		cursor = c
 		return e
 	})
@@ -391,8 +407,12 @@ func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 // deleteOne with timing, retry, and slow query log
 func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	start := time.Now()
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
 	err = retryDB(func() error {
-		_, e := collecion.DeleteOne(tdCtx, filter)
+		_, e := collecion.DeleteOne(ctx, filter)
 		return e
 	})
 	dur := time.Since(start)
@@ -408,8 +428,12 @@ func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 // deleteMany with timing, retry, and slow query log
 func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 	start := time.Now()
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
 	err = retryDB(func() error {
-		_, e := collecion.DeleteMany(tdCtx, filter)
+		_, e := collecion.DeleteMany(ctx, filter)
 		return e
 	})
 	dur := time.Since(start)
@@ -426,11 +450,15 @@ func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 func findOneAndUpsert(collection *mongo.Collection, filter bson.M, update bson.M, result interface{}) error {
 	start := time.Now()
 	var err error
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
 	err = retryDB(func() error {
 		opts := options.FindOneAndUpdate().
 			SetUpsert(true).
 			SetReturnDocument(options.After)
-		err = collection.FindOneAndUpdate(tdCtx, filter, update, opts).Decode(result)
+		err = collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(result)
 		return err
 	})
 	dur := time.Since(start)
