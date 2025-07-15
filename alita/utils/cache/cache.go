@@ -3,12 +3,14 @@ package cache
 import (
 	"context"
 	"sync"
+	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/dgraph-io/ristretto"
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/marshaler"
+	"github.com/eko/gocache/lib/v4/store"
 	redis_store "github.com/eko/gocache/store/redis/v4"
 	ristretto_store "github.com/eko/gocache/store/ristretto/v4"
 	"github.com/redis/go-redis/v9"
@@ -58,11 +60,29 @@ func InitCache() {
 		panic(err)
 	}
 
-	// initialize cache manager
-	redisStore := redis_store.NewRedis(redisClient)
+	// initialize cache manager with default TTL of 10 minutes
+	redisStore := redis_store.NewRedis(redisClient, store.WithExpiration(10*time.Minute))
 	ristrettoStore := ristretto_store.NewRistretto(ristrettoCache)
 	cacheManager := cache.NewChain(cache.New[any](ristrettoStore), cache.New[any](redisStore))
 
 	// Initializes marshaler
 	Marshal = marshaler.New(cacheManager)
+}
+
+/*
+PurgeCache clears all cached data from both Redis and Ristretto backends.
+Returns error if any operation fails.
+*/
+func PurgeCache() error {
+	if Marshal == nil {
+		return nil
+	}
+
+	// Clear all cached items
+	err := Marshal.Clear(Context)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

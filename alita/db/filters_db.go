@@ -2,11 +2,14 @@ package db
 
 import (
 	"strings"
+	"time"
 
+	"github.com/eko/gocache/lib/v4/store"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -101,27 +104,49 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 	}
 
 	result := &ChatFilters{}
-	err := findOneAndUpsert(getCollection("filters"), filter, update, result)
+	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+		// Perform the upsert operation within the transaction
+		err := findOneAndUpsert(getCollection("filters"), filter, update, result)
+		if err != nil {
+			return err
+		}
+
+		// Update cache only if this was a new insert
+		if result.ChatId == chatID && result.KeyWord == keyWord {
+			if err := cache.Marshal.Set(cache.Context, chatID, result, store.WithExpiration(10*time.Minute)); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
 	if err != nil {
 		log.Errorf("[Database][AddFilter]: %d - %v", chatID, err)
 		return false
 	}
 
-	// Return true if this was a new insert (the document should have our values)
+	// Return true if this was a new insert
 	return result.ChatId == chatID && result.KeyWord == keyWord
 }
 
 // RemoveFilter deletes a filter by keyword from the chat.
-// If the filter does not exist, no action is taken.
 func RemoveFilter(chatID int64, keyWord string) {
-	if !string_handling.FindInStringSlice(GetFiltersList(chatID), keyWord) {
-		return
-	}
+	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+		// Perform the delete operation within the transaction
+		err := deleteOne(getCollection("filters"), bson.M{"chat_id": chatID, "keyword": keyWord})
+		if err != nil && err != mongo.ErrNoDocuments {
+			return err
+		}
 
-	err := deleteOne(getCollection("filters"), bson.M{"chat_id": chatID, "keyword": keyWord})
+		// Invalidate cache after successful deletion
+		if err := cache.Marshal.Delete(cache.Context, chatID); err != nil {
+			return err
+		}
+		return nil
+	})
+
 	if err != nil {
 		log.Errorf("[Database][RemoveFilter]: %d - %v", chatID, err)
-		return
 	}
 }
 

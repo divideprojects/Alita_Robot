@@ -3,7 +3,10 @@ package db
 import (
 	"fmt"
 	"runtime"
+	"time"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/eko/gocache/lib/v4/store"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/dustin/go-humanize"
@@ -11,7 +14,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+const teamMemberCacheTTL = 10 * time.Minute
+
 func GetTeamMemInfo(userID int64) (devrc *Team) {
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, userID, new(Team)); err == nil && cached != nil {
+		return cached.(*Team)
+	}
+
 	defaultTeamMember := &Team{UserId: userID, Dev: false, Sudo: false}
 	err := findOne(devsColl, bson.M{"_id": userID}).Decode(&devrc)
 	if err == mongo.ErrNoDocuments {
@@ -20,29 +30,57 @@ func GetTeamMemInfo(userID int64) (devrc *Team) {
 		devrc = defaultTeamMember
 		log.Errorf("[Database] GetTeamMemInfo: %v - %d", err, userID)
 	}
+
+	// Cache the result
+	_ = cache.Marshal.Set(cache.Context, userID, devrc, store.WithExpiration(teamMemberCacheTTL))
 	log.Infof("[Database] GetTeamMemInfo: %d", userID)
 	return
 }
 
-func GetTeamMembers() map[int64]string {
-	var teamArray []*Team
-	array := make(map[int64]string)
-	cursor := findAll(devsColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	err := cursor.All(bgCtx, &teamArray)
+func InvalidateTeamMemberCache(userID int64) error {
+	err := cache.Marshal.Delete(cache.Context, userID)
 	if err != nil {
-		log.Error(err)
-		return nil
+		log.WithFields(log.Fields{
+			"userId": userID,
+			"error":  err,
+		}).Error("InvalidateTeamMemberCache: Failed to delete team member cache")
+		return err
 	}
+	log.WithFields(log.Fields{
+		"userId": userID,
+	}).Debug("InvalidateTeamMemberCache: Successfully invalidated team member cache")
+	return nil
+}
 
-	for _, result := range teamArray {
-		var uPerm string
-		if result.Dev {
-			uPerm = "dev"
-		} else if result.Sudo {
-			uPerm = "sudo"
+func GetTeamMembers() map[int64]string {
+	array := make(map[int64]string)
+	paginator := NewMongoPagination[*Team](devsColl)
+
+	var cursor interface{}
+	for {
+		result, err := paginator.GetNextPage(bgCtx, bson.M{}, PaginationOptions{
+			Cursor:        cursor,
+			Limit:         100, // Process 100 docs at a time
+			SortDirection: 1,
+		})
+		if err != nil || len(result.Data) == 0 {
+			break
 		}
-		array[result.UserId] = uPerm
+
+		for _, team := range result.Data {
+			var uPerm string
+			if team.Dev {
+				uPerm = "dev"
+			} else if team.Sudo {
+				uPerm = "sudo"
+			}
+			array[team.UserId] = uPerm
+		}
+
+		cursor = result.NextCursor
+		if cursor == nil {
+			break
+		}
 	}
 
 	return array
@@ -60,6 +98,8 @@ func AddDev(userID int64) {
 		log.Errorf("[Database] AddDev: %v - %d", err, userID)
 		return
 	}
+	// Invalidate cache
+	_ = InvalidateTeamMemberCache(userID)
 	log.Infof("[Database] AddDev: %d", userID)
 }
 
@@ -67,7 +107,10 @@ func RemDev(userID int64) {
 	err := deleteOne(devsColl, bson.M{"_id": userID})
 	if err != nil {
 		log.Errorf("[Database] RemDev: %v - %d", err, userID)
+		return
 	}
+	// Invalidate cache
+	_ = InvalidateTeamMemberCache(userID)
 }
 
 func LoadAllStats() string {
@@ -159,6 +202,8 @@ func AddSudo(userID int64) {
 		log.Errorf("[Database] AddSudo: %v - %d", err, userID)
 		return
 	}
+	// Invalidate cache
+	_ = InvalidateTeamMemberCache(userID)
 	log.Infof("[Database] AddSudo: %d", userID)
 }
 
@@ -168,4 +213,6 @@ func RemSudo(userID int64) {
 		log.Errorf("[Database] RemSudo: %v - %d", err, userID)
 		return
 	}
+	// Invalidate cache
+	_ = InvalidateTeamMemberCache(userID)
 }

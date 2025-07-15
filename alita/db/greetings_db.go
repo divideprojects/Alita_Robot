@@ -246,28 +246,40 @@ func SetCleanGoodbyeMsgId(chatId, msgId int64) {
 //   - cleanWelcomeEnabled: Number of chats cleaning previous welcome messages.
 //   - cleanGoodbyeEnabled: Number of chats cleaning previous goodbye messages.
 func LoadGreetingsStats() (enabledWelcome, enabledGoodbye, cleanServiceEnabled, cleanWelcomeEnabled, cleanGoodbyeEnabled int64) {
-	var greetRcStruct []*GreetingSettings
+	paginator := NewMongoPagination[*GreetingSettings](greetingsColl)
 
-	cursor := findAll(greetingsColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &greetRcStruct)
+	var cursor interface{}
+	for {
+		result, err := paginator.GetNextPage(bgCtx, bson.M{}, PaginationOptions{
+			Cursor:        cursor,
+			Limit:         100, // Process 100 docs at a time
+			SortDirection: 1,
+		})
+		if err != nil || len(result.Data) == 0 {
+			break
+		}
 
-	for _, greetRc := range greetRcStruct {
-		// count things
-		if greetRc.WelcomeSettings.ShouldWelcome {
-			enabledWelcome++
+		for _, greetRc := range result.Data {
+			if greetRc.WelcomeSettings.ShouldWelcome {
+				enabledWelcome++
+			}
+			if greetRc.GoodbyeSettings.ShouldGoodbye {
+				enabledGoodbye++
+			}
+			if greetRc.ShouldCleanService {
+				cleanServiceEnabled++
+			}
+			if greetRc.WelcomeSettings.CleanWelcome {
+				cleanWelcomeEnabled++
+			}
+			if greetRc.GoodbyeSettings.CleanGoodbye {
+				cleanGoodbyeEnabled++
+			}
 		}
-		if greetRc.GoodbyeSettings.ShouldGoodbye {
-			enabledGoodbye++
-		}
-		if greetRc.ShouldCleanService {
-			cleanServiceEnabled++
-		}
-		if greetRc.WelcomeSettings.CleanWelcome {
-			cleanWelcomeEnabled++
-		}
-		if greetRc.GoodbyeSettings.CleanGoodbye {
-			cleanGoodbyeEnabled++
+
+		cursor = result.NextCursor
+		if cursor == nil {
+			break
 		}
 	}
 

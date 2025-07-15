@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
@@ -28,8 +29,13 @@ type BlacklistSettings struct {
 	Reason   string   `bson:"reason,omitempty" json:"reason,omitempty"`
 }
 
+var blacklistSettingsMutex sync.Mutex
+
 // check Chat Blacklists Settings, used to get data before performing any operation
 func checkBlacklistSetting(chatID int64) (blSrc *BlacklistSettings) {
+	blacklistSettingsMutex.Lock()
+	defer blacklistSettingsMutex.Unlock()
+
 	// Try cache first
 	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(BlacklistSettings)); err == nil && cached != nil {
 		return cached.(*BlacklistSettings)
@@ -63,12 +69,24 @@ func checkBlacklistSetting(chatID int64) (blSrc *BlacklistSettings) {
 func AddBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = append(blSrc.Triggers, strings.ToLower(trigger))
-	err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
+
+	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+		// Perform the update operation within the transaction
+		err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
+		if err != nil {
+			return err
+		}
+
+		// Update cache after successful update
+		if err := cache.Marshal.Set(cache.Context, chatId, blSrc, store.WithExpiration(10*time.Minute)); err != nil {
+			return err
+		}
+		return nil
+	})
+
 	if err != nil {
 		log.Errorf("[Database] AddBlacklist: %v - %d", err, chatId)
 	}
-	// Update cache
-	_ = cache.Marshal.Set(cache.Context, chatId, blSrc, store.WithExpiration(10*time.Minute))
 }
 
 // RemoveBlacklist removes a trigger word from the blacklist for the specified chat.
@@ -76,7 +94,21 @@ func AddBlacklist(chatId int64, trigger string) {
 func RemoveBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = removeStrfromStr(blSrc.Triggers, strings.ToLower(trigger))
-	err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
+
+	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+		// Perform the update operation within the transaction
+		err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
+		if err != nil {
+			return err
+		}
+
+		// Update cache after successful update
+		if err := cache.Marshal.Set(cache.Context, chatId, blSrc, store.WithExpiration(10*time.Minute)); err != nil {
+			return err
+		}
+		return nil
+	})
+
 	if err != nil {
 		log.Errorf("[Database] RemoveBlacklist: %v - %d", err, chatId)
 	}

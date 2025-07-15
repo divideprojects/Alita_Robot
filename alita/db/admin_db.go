@@ -1,6 +1,7 @@
 package db
 
 import (
+	"sync"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -23,6 +24,8 @@ type AdminSettings struct {
 	AnonAdmin bool  `bson:"anon_admin" json:"anon_admin"`
 }
 
+var adminSettingsMutex sync.Mutex
+
 // GetAdminSettings retrieves the admin settings for a given chat ID.
 // If no settings exist, it initializes them with default values.
 func GetAdminSettings(chatID int64) *AdminSettings {
@@ -33,10 +36,14 @@ func GetAdminSettings(chatID int64) *AdminSettings {
 // If no document exists, it creates one with default values.
 // Returns a pointer to the AdminSettings struct.
 func checkAdminSetting(chatID int64) (adminSrc *AdminSettings) {
+	adminSettingsMutex.Lock()
+	defer adminSettingsMutex.Unlock()
+
 	// Try cache first
 	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(AdminSettings)); err == nil && cached != nil {
 		return cached.(*AdminSettings)
 	}
+
 	defaultAdminSrc := &AdminSettings{ChatId: chatID, AnonAdmin: false}
 
 	err := findOne(adminSettingsColl, bson.M{"_id": chatID}).Decode(&adminSrc)
@@ -50,6 +57,7 @@ func checkAdminSetting(chatID int64) (adminSrc *AdminSettings) {
 		adminSrc = defaultAdminSrc
 		log.Errorf("[Database][checkAdminSetting]: %v ", err)
 	}
+
 	// Cache the result
 	if adminSrc != nil {
 		_ = cache.Marshal.Set(cache.Context, chatID, adminSrc, store.WithExpiration(10*time.Minute))

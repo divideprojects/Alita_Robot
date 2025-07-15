@@ -1,12 +1,35 @@
 package db
 
 import (
+	"context"
+	"time"
+
+	"github.com/eko/gocache/lib/v4/store"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
+
+// withTransaction executes operations within a MongoDB transaction
+func withTransaction(ctx context.Context, fn func(sessCtx mongo.SessionContext) error) error {
+	session, err := mongoClient.StartSession()
+	if err != nil {
+		log.Errorf("[Database][withTransaction] Failed to start session: %v", err)
+		return err
+	}
+	defer session.EndSession(ctx)
+
+	_, err = session.WithTransaction(ctx, func(sessCtx mongo.SessionContext) (interface{}, error) {
+		return nil, fn(sessCtx)
+	})
+	if err != nil {
+		log.Errorf("[Database][withTransaction] Transaction failed: %v", err)
+	}
+	return err
+}
 
 // NoteSettings holds note-related configuration for a chat.
 //
@@ -155,27 +178,49 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons []Button,
 	}
 
 	result := &ChatNotes{}
-	err := findOneAndUpsert(notesColl, filter, update, result)
+	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+		// Perform the upsert operation within the transaction
+		err := findOneAndUpsert(notesColl, filter, update, result)
+		if err != nil {
+			return err
+		}
+
+		// Update cache only if this was a new insert
+		if result.ChatId == chatID && result.NoteName == noteName {
+			if err := cache.Marshal.Set(cache.Context, chatID, result, store.WithExpiration(10*time.Minute)); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
 	if err != nil {
 		log.Errorf("[Database][AddNotes]: %d - %v", chatID, err)
 		return false
 	}
 
-	// Return true if this was a new insert (the document should have our values)
+	// Return true if this was a new insert
 	return result.ChatId == chatID && result.NoteName == noteName
 }
 
 // RemoveNote deletes a note by name from the chat.
-// If the note does not exist, no action is taken.
 func RemoveNote(chatID int64, noteName string) {
-	if !string_handling.FindInStringSlice(GetNotesList(chatID, true), noteName) {
-		return
-	}
+	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+		// Perform the delete operation within the transaction
+		err := deleteOne(notesColl, bson.M{"chat_id": chatID, "note_name": noteName})
+		if err != nil && err != mongo.ErrNoDocuments {
+			return err
+		}
 
-	err := deleteOne(notesColl, bson.M{"chat_id": chatID, "note_name": noteName})
+		// Invalidate cache after successful deletion
+		if err := cache.Marshal.Delete(cache.Context, chatID); err != nil {
+			return err
+		}
+		return nil
+	})
+
 	if err != nil {
 		log.Errorf("[Database][RemoveNote]: %d - %v", chatID, err)
-		return
 	}
 }
 
@@ -199,19 +244,31 @@ func TooglePrivateNote(chatID int64, pref bool) {
 
 // LoadNotesStats returns the total number of notes and the number of chats using notes.
 func LoadNotesStats() (notesNum, notesUsingChats int64) {
-	var notesArray []*ChatNotes
-	notesMap := make(map[int64][]ChatNotes)
+	notesMap := make(map[int64]struct{})
+	paginator := NewMongoPagination[*ChatNotes](notesColl)
 
-	cursor := findAll(notesColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &notesArray)
+	var cursor interface{}
+	for {
+		result, err := paginator.GetNextPage(bgCtx, bson.M{}, PaginationOptions{
+			Cursor:        cursor,
+			Limit:         100, // Process 100 docs at a time
+			SortDirection: 1,
+		})
+		if err != nil || len(result.Data) == 0 {
+			break
+		}
 
-	for _, noteC := range notesArray {
-		notesNum++ // count number of filters
-		notesMap[noteC.ChatId] = append(notesMap[noteC.ChatId], *noteC)
+		for _, note := range result.Data {
+			notesNum++
+			notesMap[note.ChatId] = struct{}{}
+		}
+
+		cursor = result.NextCursor
+		if cursor == nil {
+			break
+		}
 	}
 
 	notesUsingChats = int64(len(notesMap))
-
 	return
 }
