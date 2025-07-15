@@ -13,11 +13,11 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
-	"github.com/divideprojects/Alita_Robot/alita/i18n"
-	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-	"github.com/divideprojects/Alita_Robot/alita/lifecycle"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/lifecycle"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/scheduler"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"

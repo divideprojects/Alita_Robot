@@ -65,7 +65,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) *AdminCache {
 			err := SafeCacheOperation(func() error {
 				return Marshal.Set(Context, AdminCache{ChatId: chatId}, &adminCache, store.WithExpiration(time.Minute*10))
 			})
-			
+
 			if err != nil {
 				log.WithFields(log.Fields{
 					"chatId": chatId,
@@ -99,7 +99,7 @@ func GetAdminCacheList(chatId int64) (bool, *AdminCache) {
 	if !IsCacheEnabled() {
 		return false, &AdminCache{}
 	}
-	
+
 	var gotAdminlist interface{}
 	err := SafeCacheOperation(func() error {
 		var err error
@@ -112,7 +112,6 @@ func GetAdminCacheList(chatId int64) (bool, *AdminCache) {
 		)
 		return err
 	})
-	
 	if err != nil {
 		log.WithFields(log.Fields{
 			"chatId": chatId,
@@ -136,14 +135,14 @@ func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
 	if !IsCacheEnabled() {
 		return false, gotgbot.MergedChatMember{}
 	}
-	
+
 	var adminList interface{}
 	err := SafeCacheOperation(func() error {
 		var err error
 		adminList, err = Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
 		return err
 	})
-	
+
 	if err != nil || adminList == nil {
 		return false, gotgbot.MergedChatMember{}
 	}
@@ -183,7 +182,6 @@ func InvalidateAdminCache(chatId int64) error {
 	err := SafeCacheOperation(func() error {
 		return Marshal.Delete(Context, AdminCache{ChatId: chatId})
 	})
-	
 	if err != nil {
 		log.WithFields(log.Fields{
 			"chatId": chatId,
@@ -223,14 +221,14 @@ func IsUserAdminCached(_ *gotgbot.Bot, chatId, userId int64) bool {
 	if !IsCacheEnabled() {
 		return false
 	}
-	
+
 	var adminList interface{}
 	err := SafeCacheOperation(func() error {
 		var err error
 		adminList, err = Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
 		return err
 	})
-	
+
 	if err != nil || adminList == nil {
 		return false
 	}

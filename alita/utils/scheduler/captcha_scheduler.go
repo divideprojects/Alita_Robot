@@ -88,7 +88,7 @@ func (cs *CaptchaScheduler) Stop() {
 	}
 
 	log.Info("Stopping CAPTCHA scheduler...")
-	
+
 	// Use select to prevent blocking
 	select {
 	case cs.stopChan <- struct{}{}:
@@ -282,7 +282,7 @@ func (s *SchedulerLifecycleManager) Priority() int {
 // Initialize starts the scheduler
 func (s *SchedulerLifecycleManager) Initialize(ctx context.Context) error {
 	log.Info("Initializing CAPTCHA scheduler...")
-	
+
 	if s.bot == nil {
 		return fmt.Errorf("bot instance is nil")
 	}
@@ -304,7 +304,7 @@ func (s *SchedulerLifecycleManager) Initialize(ctx context.Context) error {
 // Shutdown stops the scheduler
 func (s *SchedulerLifecycleManager) Shutdown(ctx context.Context) error {
 	log.Info("Shutting down CAPTCHA scheduler...")
-	
+
 	if s.scheduler == nil {
 		log.Debug("Scheduler is nil, nothing to shutdown")
 		return nil

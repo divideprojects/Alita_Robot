@@ -69,7 +69,7 @@ func (m *Manager) Initialize(ctx context.Context) error {
 	for _, component := range components {
 		name := component.Name()
 		status := m.statuses[name]
-		
+
 		log.WithField("component", name).Info("Initializing component")
 		status.State = StateInitializing
 		status.StartTime = time.Now()
@@ -81,7 +81,7 @@ func (m *Manager) Initialize(ctx context.Context) error {
 				"component": name,
 				"error":     err,
 			}).Error("Failed to initialize component")
-			
+
 			// Cleanup already initialized components
 			m.shutdownInitializedComponents(ctx)
 			return fmt.Errorf("failed to initialize component %s: %w", name, err)
@@ -120,7 +120,7 @@ func (m *Manager) Shutdown(ctx context.Context, options ShutdownOptions) error {
 	for _, component := range components {
 		name := component.Name()
 		status := m.statuses[name]
-		
+
 		if status.State != StateReady {
 			continue
 		}
@@ -163,7 +163,7 @@ func (m *Manager) HealthCheck(ctx context.Context) map[string]error {
 
 	for name, component := range m.components {
 		status := m.statuses[name]
-		
+
 		if status.State != StateReady {
 			results[name] = fmt.Errorf("component not ready: %s", status.State)
 			continue
@@ -173,7 +173,7 @@ func (m *Manager) HealthCheck(ctx context.Context) map[string]error {
 			results[name] = err
 			status.LastError = err
 		}
-		
+
 		status.LastHealthCheck = time.Now()
 	}
 
@@ -249,7 +249,7 @@ func (m *Manager) getSortedComponents(reverse bool) []ManagedComponent {
 // shutdownInitializedComponents shuts down components that were already initialized
 func (m *Manager) shutdownInitializedComponents(ctx context.Context) {
 	log.Info("Shutting down already initialized components due to initialization failure")
-	
+
 	shutdownCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
@@ -259,7 +259,7 @@ func (m *Manager) shutdownInitializedComponents(ctx context.Context) {
 	for _, component := range components {
 		name := component.Name()
 		status := m.statuses[name]
-		
+
 		if status.State != StateReady {
 			continue
 		}

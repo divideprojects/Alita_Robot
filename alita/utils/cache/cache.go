@@ -22,11 +22,11 @@ var (
 	Context = context.Background()
 	Marshal *marshaler.Marshaler
 	Manager *cache.ChainCache[any]
-	
+
 	// Cache state tracking
 	isCacheEnabled bool
 	cacheMutex     sync.RWMutex
-	
+
 	// Error types for cache operations
 	ErrCacheNotEnabled  = errors.New("cache is not enabled")
 	ErrCacheUnavailable = errors.New("cache is temporarily unavailable")
@@ -72,14 +72,14 @@ without caching functionality.
 func InitCacheWithFallback() error {
 	cacheMutex.Lock()
 	defer cacheMutex.Unlock()
-	
+
 	// Try to initialize Ristretto cache
 	ristrettoCache, err := initRistrettoCache()
 	if err != nil {
 		log.WithError(err).Error("Failed to initialize Ristretto cache")
 		return err
 	}
-	
+
 	// Try to initialize Redis cache
 	redisClient, err := initRedisCache()
 	if err != nil {
@@ -91,17 +91,17 @@ func InitCacheWithFallback() error {
 		isCacheEnabled = true
 		return nil
 	}
-	
+
 	// Both caches available, use chain cache
 	redisStore := redis_store.NewRedis(redisClient, store.WithExpiration(10*time.Minute))
 	ristrettoStore := ristretto_store.NewRistretto(ristrettoCache)
 	cacheManager := cache.NewChain(cache.New[any](ristrettoStore), cache.New[any](redisStore))
-	
+
 	// Assign global variables
 	Manager = cacheManager
 	Marshal = marshaler.New(cacheManager)
 	isCacheEnabled = true
-	
+
 	log.Info("Cache system initialized successfully with Redis and Ristretto")
 	return nil
 }
@@ -120,7 +120,7 @@ func initRistrettoCache() (*ristretto.Cache, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	log.Debug("Ristretto cache initialized successfully")
 	return ristrettoCache, nil
 }
@@ -136,16 +136,16 @@ func initRedisCache() (*redis.Client, error) {
 		Password: config.RedisPassword,
 		DB:       config.RedisDB,
 	})
-	
+
 	// Test Redis connection
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	
+
 	if err := redisClient.Ping(ctx).Err(); err != nil {
 		redisClient.Close()
 		return nil, err
 	}
-	
+
 	log.Debug("Redis cache initialized successfully")
 	return redisClient, nil
 }
@@ -177,37 +177,37 @@ Returns error if cache is unhealthy or unavailable.
 func HealthCheckCache() error {
 	cacheMutex.RLock()
 	defer cacheMutex.RUnlock()
-	
+
 	if !isCacheEnabled {
 		return ErrCacheNotEnabled
 	}
-	
+
 	if Marshal == nil {
 		return ErrCacheUnavailable
 	}
-	
+
 	// Test basic cache operations
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	
+
 	testKey := "health_check_test"
 	testValue := "health_check_value"
-	
+
 	// Test set operation
 	if err := Marshal.Set(ctx, testKey, testValue, store.WithExpiration(10*time.Second)); err != nil {
 		return err
 	}
-	
+
 	// Test get operation
 	if _, err := Marshal.Get(ctx, testKey, new(string)); err != nil {
 		return err
 	}
-	
+
 	// Test delete operation
 	if err := Marshal.Delete(ctx, testKey); err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
@@ -219,7 +219,7 @@ func PurgeCache() error {
 	if !IsCacheEnabled() {
 		return ErrCacheNotEnabled
 	}
-	
+
 	if Marshal == nil {
 		return ErrCacheUnavailable
 	}
@@ -230,7 +230,7 @@ func PurgeCache() error {
 		log.WithError(err).Error("Failed to purge cache")
 		return err
 	}
-	
+
 	log.Info("Cache purged successfully")
 	return nil
 }
@@ -244,10 +244,10 @@ func SafeCacheOperation(operation func() error) error {
 	if !IsCacheEnabled() {
 		return ErrCacheNotEnabled
 	}
-	
+
 	if Marshal == nil {
 		return ErrCacheUnavailable
 	}
-	
+
 	return operation()
 }

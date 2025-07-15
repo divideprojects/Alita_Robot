@@ -19,7 +19,7 @@ func withTransaction(ctx context.Context, fn func(sessCtx mongo.SessionContext) 
 	if mongoClient == nil {
 		return fmt.Errorf("database client is not initialized")
 	}
-	
+
 	session, err := mongoClient.StartSession()
 	if err != nil {
 		log.Errorf("[Database][withTransaction] Failed to start session: %v", err)

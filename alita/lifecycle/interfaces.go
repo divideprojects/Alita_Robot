@@ -24,7 +24,7 @@ type HealthCheckable interface {
 type Component interface {
 	// Name returns the unique name of the component
 	Name() string
-	
+
 	// Priority returns the shutdown priority (higher numbers shutdown first)
 	Priority() int
 }
@@ -71,19 +71,19 @@ func (s ComponentState) String() string {
 
 // ComponentStatus holds the status information of a component
 type ComponentStatus struct {
-	Name         string
-	State        ComponentState
-	LastError    error
+	Name            string
+	State           ComponentState
+	LastError       error
 	LastHealthCheck time.Time
-	StartTime    time.Time
-	ShutdownTime time.Time
+	StartTime       time.Time
+	ShutdownTime    time.Time
 }
 
 // ShutdownOptions contains options for graceful shutdown
 type ShutdownOptions struct {
 	// Timeout is the maximum time to wait for shutdown
 	Timeout time.Duration
-	
+
 	// Force indicates whether to force shutdown after timeout
 	Force bool
 }

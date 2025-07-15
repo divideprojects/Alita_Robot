@@ -2,7 +2,7 @@ package db
 
 import (
 	"context"
-	
+
 	log "github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"

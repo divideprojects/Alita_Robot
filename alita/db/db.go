@@ -261,12 +261,12 @@ func InitializeDatabase(ctx context.Context) error {
 	var err error
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
-	
+
 	clientOpts := options.Client().ApplyURI(config.DatabaseURI).
 		SetMaxPoolSize(config.MongoMaxPoolSize).
 		SetMinPoolSize(config.MongoMinPoolSize).
 		SetMaxConnIdleTime(config.MongoMaxConnIdleTime)
-	
+
 	mongoClient, err = mongo.Connect(ctx, clientOpts)
 	if err != nil {
 		log.Errorf("[Database][Connect]: %v", err)
@@ -284,7 +284,7 @@ func InitializeDatabase(ctx context.Context) error {
 
 	// Create indexes for optimal performance
 	createIndexes(ctx)
-	
+
 	log.Info("Database initialized successfully")
 	return nil
 }
@@ -293,7 +293,7 @@ func InitializeDatabase(ctx context.Context) error {
 func initializeCollections() {
 	log.Info("Opening Database Collections...")
 	log.Debugf("[DB] Initializing collections with client status: %t", mongoClient != nil)
-	
+
 	adminSettingsColl = mongoClient.Database(config.MainDbName).Collection("admin")
 	blacklistsColl = mongoClient.Database(config.MainDbName).Collection("blacklists")
 	pinColl = mongoClient.Database(config.MainDbName).Collection("pins")
@@ -317,7 +317,7 @@ func initializeCollections() {
 	notesSettingsColl = mongoClient.Database(config.MainDbName).Collection("notes_settings")
 	captchasColl = mongoClient.Database(config.MainDbName).Collection("captchas")
 	captchaChallengesColl = mongoClient.Database(config.MainDbName).Collection("captcha_challenges")
-	
+
 	log.Info("Done opening all database collections!")
 }
 

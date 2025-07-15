@@ -96,9 +96,9 @@ cache systems fail to initialize.
 */
 func (c *CacheLifecycleManager) Initialize(ctx context.Context) error {
 	c.setState(lifecycle.StateInitializing)
-	
+
 	log.WithField("component", c.name).Info("Initializing cache system")
-	
+
 	// Initialize cache with fallback mechanisms
 	err := c.initializeCacheWithFallback(ctx)
 	if err != nil {
@@ -109,10 +109,10 @@ func (c *CacheLifecycleManager) Initialize(ctx context.Context) error {
 		}).Error("Failed to initialize cache system")
 		return err
 	}
-	
+
 	// Start health check monitoring
 	c.startHealthCheckMonitoring()
-	
+
 	c.setState(lifecycle.StateReady)
 	log.WithField("component", c.name).Info("Cache system initialized successfully")
 	return nil
@@ -127,14 +127,14 @@ if Redis fails, and returns error only if both fail.
 func (c *CacheLifecycleManager) initializeCacheWithFallback(ctx context.Context) error {
 	cacheMutex.Lock()
 	defer cacheMutex.Unlock()
-	
+
 	// Try to initialize Ristretto cache first
 	ristrettoCache, err := initRistrettoCache()
 	if err != nil {
 		log.WithError(err).Error("Failed to initialize Ristretto cache")
 		return err
 	}
-	
+
 	// Try to initialize Redis cache
 	redisClient, err := c.initRedisWithTimeout(ctx)
 	if err != nil {
@@ -142,7 +142,7 @@ func (c *CacheLifecycleManager) initializeCacheWithFallback(ctx context.Context)
 		// Use only Ristretto cache
 		return c.setupRistrettoOnlyCache(ristrettoCache)
 	}
-	
+
 	// Both caches available, use chain cache
 	c.redisClient = redisClient
 	return c.setupChainCache(ristrettoCache, redisClient)
@@ -155,7 +155,7 @@ func (c *CacheLifecycleManager) initRedisWithTimeout(ctx context.Context) (*redi
 	// Create a timeout context for Redis initialization
 	redisCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
-	
+
 	select {
 	case <-redisCtx.Done():
 		return nil, redisCtx.Err()
@@ -172,7 +172,7 @@ func (c *CacheLifecycleManager) setupRistrettoOnlyCache(ristrettoCache *ristrett
 	cacheManager := cache.New[any](ristrettoStore)
 	Marshal = marshaler.New(cacheManager)
 	isCacheEnabled = true
-	
+
 	log.Info("Cache system initialized with Ristretto only")
 	return nil
 }
@@ -184,11 +184,11 @@ func (c *CacheLifecycleManager) setupChainCache(ristrettoCache *ristretto.Cache,
 	redisStore := redis_store.NewRedis(redisClient, store.WithExpiration(10*time.Minute))
 	ristrettoStore := ristretto_store.NewRistretto(ristrettoCache)
 	cacheManager := cache.NewChain(cache.New[any](ristrettoStore), cache.New[any](redisStore))
-	
+
 	Manager = cacheManager
 	Marshal = marshaler.New(cacheManager)
 	isCacheEnabled = true
-	
+
 	log.Info("Cache system initialized with Redis and Ristretto")
 	return nil
 }
@@ -200,23 +200,23 @@ Closes Redis connections and stops health check monitoring.
 */
 func (c *CacheLifecycleManager) Shutdown(ctx context.Context) error {
 	c.setState(lifecycle.StateShuttingDown)
-	
+
 	log.WithField("component", c.name).Info("Shutting down cache system")
-	
+
 	// Stop health check monitoring
 	c.stopHealthCheckMonitoring()
-	
+
 	// Create shutdown timeout context
 	shutdownCtx, cancel := context.WithTimeout(ctx, c.shutdownTimeout)
 	defer cancel()
-	
+
 	var shutdownErr error
-	
+
 	// Disable cache first
 	cacheMutex.Lock()
 	isCacheEnabled = false
 	cacheMutex.Unlock()
-	
+
 	// Close Redis connection if available
 	if c.redisClient != nil {
 		if err := c.redisClient.Close(); err != nil {
@@ -226,11 +226,11 @@ func (c *CacheLifecycleManager) Shutdown(ctx context.Context) error {
 			log.Debug("Redis connection closed successfully")
 		}
 	}
-	
+
 	// Clear global variables
 	Marshal = nil
 	Manager = nil
-	
+
 	// Wait for shutdown timeout or completion
 	select {
 	case <-shutdownCtx.Done():
@@ -240,7 +240,7 @@ func (c *CacheLifecycleManager) Shutdown(ctx context.Context) error {
 	default:
 		// Shutdown completed successfully
 	}
-	
+
 	c.setState(lifecycle.StateShutdown)
 	log.WithField("component", c.name).Info("Cache system shutdown completed")
 	return shutdownErr
@@ -255,17 +255,17 @@ func (c *CacheLifecycleManager) HealthCheck(ctx context.Context) error {
 	if c.getState() != lifecycle.StateReady {
 		return ErrCacheNotEnabled
 	}
-	
+
 	// Create health check timeout context
 	healthCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	
+
 	// Perform cache health check
 	healthCheckErr := make(chan error, 1)
 	go func() {
 		healthCheckErr <- HealthCheckCache()
 	}()
-	
+
 	select {
 	case <-healthCtx.Done():
 		return healthCtx.Err()
@@ -307,7 +307,7 @@ healthCheckLoop runs periodic health checks in the background.
 func (c *CacheLifecycleManager) healthCheckLoop() {
 	ticker := time.NewTicker(c.healthCheckFreq)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-ticker.C:
@@ -331,34 +331,34 @@ GetCacheStats returns cache statistics and status information.
 */
 func (c *CacheLifecycleManager) GetCacheStats() map[string]interface{} {
 	stats := map[string]interface{}{
-		"enabled":      IsCacheEnabled(),
-		"state":        c.getState().String(),
-		"has_redis":    c.redisClient != nil,
-		"has_marshal":  Marshal != nil,
-		"has_manager":  Manager != nil,
+		"enabled":     IsCacheEnabled(),
+		"state":       c.getState().String(),
+		"has_redis":   c.redisClient != nil,
+		"has_marshal": Marshal != nil,
+		"has_manager": Manager != nil,
 	}
-	
+
 	// Add Redis stats if available
 	if c.redisClient != nil {
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 		defer cancel()
-		
+
 		if info, err := c.redisClient.Info(ctx, "memory").Result(); err == nil {
 			stats["redis_info"] = info
 		}
-		
+
 		if poolStats := c.redisClient.PoolStats(); poolStats != nil {
 			stats["redis_pool_stats"] = map[string]interface{}{
-				"hits":         poolStats.Hits,
-				"misses":       poolStats.Misses,
-				"timeouts":     poolStats.Timeouts,
-				"total_conns":  poolStats.TotalConns,
-				"idle_conns":   poolStats.IdleConns,
-				"stale_conns":  poolStats.StaleConns,
+				"hits":        poolStats.Hits,
+				"misses":      poolStats.Misses,
+				"timeouts":    poolStats.Timeouts,
+				"total_conns": poolStats.TotalConns,
+				"idle_conns":  poolStats.IdleConns,
+				"stale_conns": poolStats.StaleConns,
 			}
 		}
 	}
-	
+
 	return stats
 }
 

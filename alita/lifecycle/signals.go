@@ -12,18 +12,18 @@ import (
 
 // SignalHandler handles OS signals for graceful shutdown
 type SignalHandler struct {
-	manager   *Manager
-	options   ShutdownOptions
-	signalCh  chan os.Signal
+	manager    *Manager
+	options    ShutdownOptions
+	signalCh   chan os.Signal
 	shutdownCh chan struct{}
 }
 
 // NewSignalHandler creates a new signal handler
 func NewSignalHandler(manager *Manager, options ShutdownOptions) *SignalHandler {
 	return &SignalHandler{
-		manager:   manager,
-		options:   options,
-		signalCh:  make(chan os.Signal, 1),
+		manager:    manager,
+		options:    options,
+		signalCh:   make(chan os.Signal, 1),
 		shutdownCh: make(chan struct{}),
 	}
 }
@@ -71,7 +71,7 @@ func (h *SignalHandler) initiateShutdown(ctx context.Context, sig os.Signal) {
 	// Perform graceful shutdown
 	if err := h.manager.Shutdown(shutdownCtx, h.options); err != nil {
 		log.WithError(err).Error("Error during graceful shutdown")
-		
+
 		if h.options.Force {
 			log.Error("Force shutdown initiated")
 			h.forceShutdown()
@@ -84,10 +84,10 @@ func (h *SignalHandler) initiateShutdown(ctx context.Context, sig os.Signal) {
 // forceShutdown performs emergency shutdown
 func (h *SignalHandler) forceShutdown() {
 	log.Error("Performing emergency shutdown")
-	
+
 	// Give a small grace period for cleanup
 	time.Sleep(1 * time.Second)
-	
+
 	// Force exit
 	os.Exit(1)
 }
