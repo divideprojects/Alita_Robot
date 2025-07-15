@@ -82,13 +82,13 @@ func GetAllNotesPaginated(chatID int64, opts PaginationOptions) (PaginatedResult
 			Offset:        opts.Offset,
 			Limit:         opts.Limit,
 			SortDirection: 1,
-		})
+		}, filter)
 	}
 
 	return paginator.GetNextPage(bgCtx, PaginationOptions{
 		Limit:         opts.Limit,
 		SortDirection: 1,
-	})
+	}, filter)
 }
 
 // GetNotes retrieves the note settings for a given chat ID.

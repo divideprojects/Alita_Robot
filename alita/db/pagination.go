@@ -50,12 +50,19 @@ func applySafetyLimits(opts *PaginationOptions) {
 	}
 }
 
-func (mp *MongoPagination[T]) GetNextPage(ctx context.Context, opts PaginationOptions) (PaginatedResult[T], error) {
+func (mp *MongoPagination[T]) GetNextPage(ctx context.Context, opts PaginationOptions, additionalFilter ...bson.M) (PaginatedResult[T], error) {
 	applySafetyLimits(&opts)
 
 	filter := bson.M{}
 	if opts.Cursor != nil {
 		filter["_id"] = bson.M{"$gt": opts.Cursor}
+	}
+
+	// Merge additional filter if provided
+	if len(additionalFilter) > 0 {
+		for key, value := range additionalFilter[0] {
+			filter[key] = value
+		}
 	}
 
 	findOpts := options.Find().
@@ -86,20 +93,28 @@ func (mp *MongoPagination[T]) GetNextPage(ctx context.Context, opts PaginationOp
 	}, nil
 }
 
-func (mp *MongoPagination[T]) GetPageByOffset(ctx context.Context, opts PaginationOptions) (PaginatedResult[T], error) {
+func (mp *MongoPagination[T]) GetPageByOffset(ctx context.Context, opts PaginationOptions, additionalFilter ...bson.M) (PaginatedResult[T], error) {
 	applySafetyLimits(&opts)
+
+	filter := bson.M{}
+	// Merge additional filter if provided
+	if len(additionalFilter) > 0 {
+		for key, value := range additionalFilter[0] {
+			filter[key] = value
+		}
+	}
 
 	findOpts := options.Find().
 		SetSkip(int64(opts.Offset)).
 		SetLimit(int64(opts.Limit)).
 		SetSort(bson.D{{Key: "_id", Value: opts.SortDirection}})
 
-	total, err := mp.collection.CountDocuments(ctx, bson.M{})
+	total, err := mp.collection.CountDocuments(ctx, filter)
 	if err != nil {
 		return PaginatedResult[T]{}, err
 	}
 
-	cur, err := mp.collection.Find(ctx, bson.M{}, findOpts)
+	cur, err := mp.collection.Find(ctx, filter, findOpts)
 	if err != nil {
 		return PaginatedResult[T]{}, err
 	}
