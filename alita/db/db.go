@@ -327,7 +327,7 @@ func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (er
 	// Create a context with timeout for this operation
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	start := time.Now()
 	err = retryDB(func() error {
 		_, e := collecion.UpdateOne(ctx, filter, bson.M{"$set": data}, options.Update().SetUpsert(true))
@@ -348,7 +348,7 @@ func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResul
 	// Create a context with timeout for this operation
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	start := time.Now()
 	var result *mongo.SingleResult
 	retryDB(func() error {
@@ -368,7 +368,7 @@ func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err err
 	// Create a context with timeout for this operation
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	err = retryDB(func() error {
 		c, e := collecion.CountDocuments(ctx, filter)
 		count = c
@@ -391,7 +391,7 @@ func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	// Create a context with timeout for this operation
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	retryDB(func() error {
 		c, e := collecion.Find(ctx, filter)
 		cursor = c
@@ -410,7 +410,7 @@ func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	// Create a context with timeout for this operation
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	err = retryDB(func() error {
 		_, e := collecion.DeleteOne(ctx, filter)
 		return e
@@ -431,7 +431,7 @@ func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 	// Create a context with timeout for this operation
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	err = retryDB(func() error {
 		_, e := collecion.DeleteMany(ctx, filter)
 		return e
@@ -453,7 +453,7 @@ func findOneAndUpsert(collection *mongo.Collection, filter bson.M, update bson.M
 	// Create a context with timeout for this operation
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	err = retryDB(func() error {
 		opts := options.FindOneAndUpdate().
 			SetUpsert(true).

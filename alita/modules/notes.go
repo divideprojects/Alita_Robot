@@ -87,7 +87,7 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	// check if note already exists or not
 	if db.DoesNoteExists(chat.Id, noteWord) {
 		noteWordMapKey := fmt.Sprintf("%d_%s", chat.Id, noteWord)
-		
+
 		// Thread-safe access to overwrite notes map
 		m.overwriteNotesMutex.Lock()
 		m.overwriteNotesMap[noteWordMapKey] = overwriteNote{
@@ -104,7 +104,7 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 			noNotif:     noNotif,
 		}
 		m.overwriteNotesMutex.Unlock()
-		
+
 		_, err := msg.Reply(b,
 			"Note already exists!\nDo you want to overwrite it?",
 			&gotgbot.SendMessageOpts{
@@ -392,7 +392,7 @@ func (m moduleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) err
 		dataSplit := strings.Split(noteWordMapKey, "_")
 		strChatId, noteWord := dataSplit[0], dataSplit[1]
 		chatId, _ := strconv.ParseInt(strChatId, 10, 64)
-		
+
 		// Thread-safe access to overwrite notes map
 		m.overwriteNotesMutex.Lock()
 		noteData, exists := m.overwriteNotesMap[noteWordMapKey]
@@ -400,7 +400,7 @@ func (m moduleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) err
 			delete(m.overwriteNotesMap, noteWordMapKey) // delete the key to make map clear
 		}
 		m.overwriteNotesMutex.Unlock()
-		
+
 		if exists {
 			fmt.Println(strChatId, noteWord, chatId, noteData)
 			if db.DoesNoteExists(chatId, noteWord) {

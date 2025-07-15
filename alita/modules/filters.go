@@ -234,7 +234,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 			dataType:   dataType,
 		}
 		m.overwriteFiltersMutex.Unlock()
-		
+
 		_, err := msg.Reply(b,
 			"Filter already exists!\nDo you want to overwrite it?",
 			&gotgbot.SendMessageOpts{
@@ -527,7 +527,7 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 	filterWord := args[1]
 	filterWordKey := fmt.Sprint(filterWord, "_", chat.Id)
 	var helpText string
-	
+
 	// Thread-safe access to overwrite filters map
 	m.overwriteFiltersMutex.Lock()
 	filterData, exists := m.overwriteFiltersMap[filterWordKey]
