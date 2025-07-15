@@ -136,20 +136,21 @@ func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 		},
 	}
 
-	cursor, err := blacklistsColl.Aggregate(bgCtx, pipeline)
+	ctx := context.Background()
+	cursor, err := blacklistsColl.Aggregate(ctx, pipeline)
 	if err != nil {
 		log.Error("Failed to aggregate blacklist stats:", err)
 		// Fallback to manual method if aggregation fails
 		return loadBlacklistsStatsManual()
 	}
-	defer cursor.Close(bgCtx)
+	defer cursor.Close(ctx)
 
 	var result struct {
 		TotalTriggers     int64 `bson:"totalTriggers"`
 		ChatsWithTriggers int64 `bson:"chatsWithTriggers"`
 	}
 
-	if cursor.Next(bgCtx) {
+	if cursor.Next(ctx) {
 		if err := cursor.Decode(&result); err != nil {
 			log.Error("Failed to decode blacklist stats:", err)
 			// Fallback to manual method if decode fails
@@ -169,6 +170,7 @@ Used when MongoDB aggregation fails for any reason.
 */
 func loadBlacklistsStatsManual() (blacklistTriggers, blacklistChats int64) {
 	var blacklistStruct []*BlacklistSettings
+	ctx := context.Background()
 
 	cursor := findAll(blacklistsColl, bson.M{})
 	defer func(cursor *mongo.Cursor, ctx context.Context) {
@@ -176,9 +178,9 @@ func loadBlacklistsStatsManual() (blacklistTriggers, blacklistChats int64) {
 		if err != nil {
 			log.Error(err)
 		}
-	}(cursor, bgCtx)
+	}(cursor, ctx)
 
-	for cursor.Next(bgCtx) {
+	for cursor.Next(ctx) {
 		var blacklistSetting BlacklistSettings
 		if err := cursor.Decode(&blacklistSetting); err != nil {
 			log.Error("Failed to decode blacklist setting:", err)

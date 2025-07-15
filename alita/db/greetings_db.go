@@ -1,6 +1,8 @@
 package db
 
 import (
+	"context"
+
 	log "github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -249,8 +251,9 @@ func LoadGreetingsStats() (enabledWelcome, enabledGoodbye, cleanServiceEnabled, 
 	var greetRcStruct []*GreetingSettings
 
 	cursor := findAll(greetingsColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &greetRcStruct)
+	ctx := context.Background()
+	defer cursor.Close(ctx)
+	cursor.All(ctx, &greetRcStruct)
 
 	for _, greetRc := range greetRcStruct {
 		// count things

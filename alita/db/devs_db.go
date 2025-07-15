@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"fmt"
 	"runtime"
 
@@ -28,8 +29,9 @@ func GetTeamMembers() map[int64]string {
 	var teamArray []*Team
 	array := make(map[int64]string)
 	cursor := findAll(devsColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	err := cursor.All(bgCtx, &teamArray)
+	ctx := context.Background()
+	defer cursor.Close(ctx)
+	err := cursor.All(ctx, &teamArray)
 	if err != nil {
 		log.Error(err)
 		return nil

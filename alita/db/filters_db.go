@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
@@ -46,31 +47,33 @@ func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
 func GetAllFiltersPaginated(_ int64, opts PaginationOptions) (PaginatedResult[*ChatFilters], error) {
 	paginator := NewMongoPagination[*ChatFilters](getCollection("filters"))
 
+	ctx := context.Background()
 	if opts.Cursor == nil && opts.Offset == 0 {
 		// Default to cursor-based pagination
-		return paginator.GetNextPage(bgCtx, PaginationOptions{
+		return paginator.GetNextPage(ctx, PaginationOptions{
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		})
 	}
 
 	if opts.Offset > 0 {
-		return paginator.GetPageByOffset(bgCtx, PaginationOptions{
+		return paginator.GetPageByOffset(ctx, PaginationOptions{
 			Offset:        opts.Offset,
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		})
 	}
 
-	return paginator.GetNextPage(bgCtx, opts)
+	return paginator.GetNextPage(ctx, opts)
 }
 
 // GetFiltersList returns a list of all filter keywords for a chat.
 func GetFiltersList(chatID int64) (allFilterWords []string) {
 	var results []*ChatFilters
 	cursor := findAll(getCollection("filters"), bson.M{"chat_id": chatID})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &results)
+	ctx := context.Background()
+	defer cursor.Close(ctx)
+	cursor.All(ctx, &results)
 	for _, j := range results {
 		allFilterWords = append(allFilterWords, j.KeyWord)
 	}
@@ -78,10 +81,14 @@ func GetFiltersList(chatID int64) (allFilterWords []string) {
 }
 
 // DoesFilterExists returns true if a filter with the given keyword exists in the chat.
+// Uses direct database query to avoid race conditions.
 func DoesFilterExists(chatId int64, keyword string) bool {
-	filtersList := GetFiltersList(chatId)
-	filtersMap := string_handling.StringSliceToMap(filtersList)
-	return string_handling.FindInStringMap(filtersMap, strings.ToLower(keyword))
+	count, err := countDocs(getCollection("filters"), bson.M{"chat_id": chatId, "keyword": strings.ToLower(keyword)})
+	if err != nil {
+		log.Errorf("[Database][DoesFilterExists]: %d - %v", chatId, err)
+		return false
+	}
+	return count > 0
 }
 
 // AddFilter adds a new filter to the chat with the specified properties.
@@ -162,20 +169,21 @@ func LoadFilterStats() (filtersNum, filtersUsingChats int64) {
 		},
 	}
 
-	cursor, err := getCollection("filters").Aggregate(bgCtx, pipeline)
+	ctx := context.Background()
+	cursor, err := getCollection("filters").Aggregate(ctx, pipeline)
 	if err != nil {
 		log.Error("Failed to aggregate filter stats:", err)
 		// Fallback to manual method if aggregation fails
 		return loadFilterStatsManual()
 	}
-	defer cursor.Close(bgCtx)
+	defer cursor.Close(ctx)
 
 	var result struct {
 		TotalFilters int64 `bson:"totalFilters"`
 		TotalChats   int64 `bson:"totalChats"`
 	}
 
-	if cursor.Next(bgCtx) {
+	if cursor.Next(ctx) {
 		if err := cursor.Decode(&result); err != nil {
 			log.Error("Failed to decode filter stats:", err)
 			// Fallback to manual method if decode fails
@@ -197,8 +205,9 @@ func loadFilterStatsManual() (filtersNum, filtersUsingChats int64) {
 	chatsMap := make(map[int64]struct{})
 
 	// Process in paginated batches
+	ctx := context.Background()
 	for {
-		result, err := paginator.GetNextPage(bgCtx, PaginationOptions{
+		result, err := paginator.GetNextPage(ctx, PaginationOptions{
 			Limit:         1000, // Process 1000 docs at a time
 			SortDirection: 1,
 		})

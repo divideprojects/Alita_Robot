@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -237,9 +238,10 @@ func GetExpiredCaptchaChallenges() ([]*CaptchaChallenge, error) {
 		"expires_at": bson.M{"$lt": now},
 		"solved":     false,
 	})
-	defer cursor.Close(bgCtx)
+	ctx := context.Background()
+	defer cursor.Close(ctx)
 
-	err := cursor.All(bgCtx, &challenges)
+	err := cursor.All(ctx, &challenges)
 	if err != nil {
 		log.Errorf("[Database] GetExpiredCaptchaChallenges: %v", err)
 		return nil, err

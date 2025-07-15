@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -53,6 +54,13 @@ func applySafetyLimits(opts *PaginationOptions) {
 func (mp *MongoPagination[T]) GetNextPage(ctx context.Context, opts PaginationOptions, additionalFilter ...bson.M) (PaginatedResult[T], error) {
 	applySafetyLimits(&opts)
 
+	// Create context with timeout if not already provided
+	if ctx == nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+	}
+
 	filter := bson.M{}
 	if opts.Cursor != nil {
 		filter["_id"] = bson.M{"$gt": opts.Cursor}
@@ -95,6 +103,13 @@ func (mp *MongoPagination[T]) GetNextPage(ctx context.Context, opts PaginationOp
 
 func (mp *MongoPagination[T]) GetPageByOffset(ctx context.Context, opts PaginationOptions, additionalFilter ...bson.M) (PaginatedResult[T], error) {
 	applySafetyLimits(&opts)
+
+	// Create context with timeout if not already provided
+	if ctx == nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+	}
 
 	filter := bson.M{}
 	// Merge additional filter if provided

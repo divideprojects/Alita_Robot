@@ -1,6 +1,8 @@
 package db
 
 import (
+	"context"
+
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -77,15 +79,16 @@ func GetAllNotesPaginated(chatID int64, opts PaginationOptions) (PaginatedResult
 		filter["_id"] = bson.M{"$gt": opts.Cursor}
 	}
 
+	ctx := context.Background()
 	if opts.Offset > 0 {
-		return paginator.GetPageByOffset(bgCtx, PaginationOptions{
+		return paginator.GetPageByOffset(ctx, PaginationOptions{
 			Offset:        opts.Offset,
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		}, filter)
 	}
 
-	return paginator.GetNextPage(bgCtx, PaginationOptions{
+	return paginator.GetNextPage(ctx, PaginationOptions{
 		Limit:         opts.Limit,
 		SortDirection: 1,
 	}, filter)
@@ -128,8 +131,14 @@ func GetNotesList(chatID int64, admin bool) (allNotes []string) {
 }
 
 // DoesNoteExists returns true if a note with the given name exists in the chat.
+// Uses direct database query to avoid race conditions.
 func DoesNoteExists(chatID int64, noteName string) bool {
-	return string_handling.FindInStringSlice(GetNotesList(chatID, true), noteName)
+	count, err := countDocs(notesColl, bson.M{"chat_id": chatID, "note_name": noteName})
+	if err != nil {
+		log.Errorf("[Database][DoesNoteExists]: %d - %v", chatID, err)
+		return false
+	}
+	return count > 0
 }
 
 // AddNote adds a new note to the chat with the specified properties.
@@ -203,8 +212,9 @@ func LoadNotesStats() (notesNum, notesUsingChats int64) {
 	notesMap := make(map[int64][]ChatNotes)
 
 	cursor := findAll(notesColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &notesArray)
+	ctx := context.Background()
+	defer cursor.Close(ctx)
+	cursor.All(ctx, &notesArray)
 
 	for _, noteC := range notesArray {
 		notesNum++ // count number of filters

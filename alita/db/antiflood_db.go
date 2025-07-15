@@ -65,50 +65,84 @@ func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
 }
 
 // SetFlood updates the flood limit for a specific chat.
-// If the mode is not set, it initializes the FloodSettings with the default mode.
+// Uses atomic operations to prevent race conditions.
 func SetFlood(chatID int64, limit int) {
-	floodSrc := checkFloodSetting(chatID)
-
-	if floodSrc.Mode == "" {
-		floodSrc = &FloodSettings{ChatId: chatID, Limit: limit, Mode: defaultFloodsettingsMode}
-	} else {
-		floodSrc.Limit = limit // update floodSrc.limit
+	// Use atomic upsert to avoid race conditions
+	filter := bson.M{"_id": chatID}
+	update := bson.M{
+		"$set": bson.M{
+			"limit": limit,
+		},
+		"$setOnInsert": bson.M{
+			"_id":     chatID,
+			"mode":    defaultFloodsettingsMode,
+			"del_msg": false,
+		},
 	}
 
-	// update the value in db
-	err := updateOne(antifloodSettingsColl, bson.M{"_id": chatID}, floodSrc)
+	result := &FloodSettings{}
+	err := findOneAndUpsert(antifloodSettingsColl, filter, update, result)
 	if err != nil {
 		log.Errorf("[Database] SetFlood: %v - %d", err, chatID)
+		return
 	}
-	// Invalidate cache
-	_ = cache.Marshal.Delete(cache.Context, chatID)
+
+	// Update cache with actual result from database
+	_ = cache.Marshal.Set(cache.Context, chatID, result, store.WithExpiration(10*time.Minute))
 }
 
 // SetFloodMode updates the flood action mode for a specific chat.
-// The mode determines what action is taken when flooding is detected.
+// Uses atomic operations to prevent race conditions.
 func SetFloodMode(chatID int64, mode string) {
-	floodSrc := checkFloodSetting(chatID)
-	floodSrc.Mode = mode
+	// Use atomic upsert to avoid race conditions
+	filter := bson.M{"_id": chatID}
+	update := bson.M{
+		"$set": bson.M{
+			"mode": mode,
+		},
+		"$setOnInsert": bson.M{
+			"_id":     chatID,
+			"limit":   0,
+			"del_msg": false,
+		},
+	}
 
-	err := updateOne(antifloodSettingsColl, bson.M{"_id": chatID}, floodSrc)
+	result := &FloodSettings{}
+	err := findOneAndUpsert(antifloodSettingsColl, filter, update, result)
 	if err != nil {
 		log.Errorf("[Database] SetFloodMode: %v - %d", err, chatID)
+		return
 	}
-	// Invalidate cache
-	_ = cache.Marshal.Delete(cache.Context, chatID)
+
+	// Update cache with actual result from database
+	_ = cache.Marshal.Set(cache.Context, chatID, result, store.WithExpiration(10*time.Minute))
 }
 
 // SetFloodMsgDel sets whether messages that trigger the flood filter should be deleted for a chat.
+// Uses atomic operations to prevent race conditions.
 func SetFloodMsgDel(chatID int64, val bool) {
-	floodSrc := checkFloodSetting(chatID)
-	floodSrc.DeleteAntifloodMessage = val
+	// Use atomic upsert to avoid race conditions
+	filter := bson.M{"_id": chatID}
+	update := bson.M{
+		"$set": bson.M{
+			"del_msg": val,
+		},
+		"$setOnInsert": bson.M{
+			"_id":   chatID,
+			"limit": 0,
+			"mode":  defaultFloodsettingsMode,
+		},
+	}
 
-	err := updateOne(antifloodSettingsColl, bson.M{"_id": chatID}, floodSrc)
+	result := &FloodSettings{}
+	err := findOneAndUpsert(antifloodSettingsColl, filter, update, result)
 	if err != nil {
 		log.Errorf("[Database] SetFloodMsgDel: %v - %d", err, chatID)
+		return
 	}
-	// Invalidate cache
-	_ = cache.Marshal.Delete(cache.Context, chatID)
+
+	// Update cache with actual result from database
+	_ = cache.Marshal.Set(cache.Context, chatID, result, store.WithExpiration(10*time.Minute))
 }
 
 /*

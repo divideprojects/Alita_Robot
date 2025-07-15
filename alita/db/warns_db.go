@@ -65,47 +65,59 @@ func checkWarns(userId, chatId int64) (warnrc *Warns) {
 }
 
 func WarnUser(userId, chatId int64, reason string) (int, []string) {
-	warnrc := checkWarns(userId, chatId)
-
-	warnrc.NumWarns++ // Increment warns - Add 1 warn
-
-	// Add reason if it exists
-	if reason != "" {
-		if len(reason) >= 3001 {
-			reason = reason[:3000]
-		}
-		warnrc.Reasons = append(warnrc.Reasons, reason)
-	} else {
-		warnrc.Reasons = append(warnrc.Reasons, "No Reason")
+	// Prepare reason
+	if reason == "" {
+		reason = "No Reason"
+	} else if len(reason) >= 3001 {
+		reason = reason[:3000]
 	}
 
-	err := updateOne(warnUsersColl, bson.M{"user_id": userId, "chat_id": chatId}, warnrc)
+	// Use atomic increment and push to avoid race conditions
+	filter := bson.M{"user_id": userId, "chat_id": chatId}
+	update := bson.M{
+		"$inc": bson.M{"num_warns": 1},
+		"$push": bson.M{"warns": reason},
+		"$setOnInsert": bson.M{
+			"user_id": userId,
+			"chat_id": chatId,
+		},
+	}
+
+	result := &Warns{}
+	err := findOneAndUpsert(warnUsersColl, filter, update, result)
 	if err != nil {
 		log.Errorf("[Database] WarnUser: %v", err)
+		// Return default values on error
+		return 0, []string{}
 	}
 
-	return warnrc.NumWarns, warnrc.Reasons
+	return result.NumWarns, result.Reasons
 }
 
 func RemoveWarn(userId, chatId int64) bool {
-	removed := false
-	warnrc := checkWarns(userId, chatId)
-
-	// only remove if user has warns
-	if warnrc.NumWarns > 0 {
-		warnrc.NumWarns--                                       // Remove last warn num
-		warnrc.Reasons = warnrc.Reasons[:len(warnrc.Reasons)-1] // Remove last warn reason
-		removed = true
+	// Use atomic decrement and pop to avoid race conditions
+	filter := bson.M{
+		"user_id": userId,
+		"chat_id": chatId,
+		"num_warns": bson.M{"$gt": 0}, // Only update if warns > 0
+	}
+	update := bson.M{
+		"$inc": bson.M{"num_warns": -1},
+		"$pop": bson.M{"warns": 1}, // Remove last element
 	}
 
-	// update record in db
-	err := updateOne(warnUsersColl, bson.M{"user_id": userId, "chat_id": chatId}, warnrc)
+	result := &Warns{}
+	err := findOneAndUpsert(warnUsersColl, filter, update, result)
 	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			// No document found means user has no warns to remove
+			return false
+		}
 		log.Errorf("[Database] RemoveWarn: %v", err)
-		return false // force return false to show error
+		return false
 	}
 
-	return removed
+	return true
 }
 
 func ResetUserWarns(userId, chatId int64) (removed bool) {

@@ -1,12 +1,12 @@
 package db
 
 import (
+	"context"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
-	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 	"github.com/eko/gocache/lib/v4/store"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -62,24 +62,33 @@ func ToggleInactiveChat(chatId int64, toggle bool) {
 }
 
 // UpdateChat updates the chat name and adds a user ID to the chat's user list if not already present.
-// If both the chat name and user are unchanged, no update is performed.
+// Uses atomic operations to prevent race conditions.
 func UpdateChat(chatId int64, chatname string, userid int64) {
-	chatr := GetChatSettings(chatId)
-	foundUser := string_handling.FindInInt64Slice(chatr.Users, userid)
-	if chatr.ChatName == chatname && foundUser {
-		return
-	} else {
-		newUsers := chatr.Users
-		newUsers = append(newUsers, userid)
-		usersUpdate := &Chat{ChatId: chatId, ChatName: chatname, Users: newUsers, IsInactive: false}
-		err2 := updateOne(chatColl, bson.M{"_id": chatId}, usersUpdate)
-		if err2 != nil {
-			log.Errorf("[Database] UpdateChat: %v - %d (%d)", err2, chatId, userid)
-			return
-		}
-		// Update cache
-		_ = cache.Marshal.Set(cache.Context, chatId, usersUpdate, store.WithExpiration(10*time.Minute))
+	// Use atomic upsert with $addToSet to prevent duplicate users
+	filter := bson.M{"_id": chatId}
+	update := bson.M{
+		"$set": bson.M{
+			"chat_name":   chatname,
+			"is_inactive": false,
+		},
+		"$addToSet": bson.M{
+			"users": userid,
+		},
+		"$setOnInsert": bson.M{
+			"_id":      chatId,
+			"language": "en",
+		},
 	}
+
+	result := &Chat{}
+	err := findOneAndUpsert(chatColl, filter, update, result)
+	if err != nil {
+		log.Errorf("[Database] UpdateChat: %v - %d (%d)", err, chatId, userid)
+		return
+	}
+
+	// Update cache with the actual result from database
+	_ = cache.Marshal.Set(cache.Context, chatId, result, store.WithExpiration(10*time.Minute))
 }
 
 // GetAllChats returns a map of all chats, keyed by ChatId.
@@ -89,7 +98,8 @@ func GetAllChats() map[int64]Chat {
 		chatMap   = make(map[int64]Chat)
 	)
 	cursor := findAll(chatColl, bson.M{})
-	cursor.All(bgCtx, &chatArray)
+	ctx := context.Background()
+	cursor.All(ctx, &chatArray)
 
 	for _, i := range chatArray {
 		chatMap[i.ChatId] = *i
@@ -128,20 +138,21 @@ func LoadChatStats() (activeChats, inactiveChats int) {
 		},
 	}
 
-	cursor, err := chatColl.Aggregate(bgCtx, pipeline)
+	ctx := context.Background()
+	cursor, err := chatColl.Aggregate(ctx, pipeline)
 	if err != nil {
 		log.Error("Failed to aggregate chat stats:", err)
 		// Fallback to manual method if aggregation fails
 		return loadChatStatsManual()
 	}
-	defer cursor.Close(bgCtx)
+	defer cursor.Close(ctx)
 
 	var result struct {
 		ActiveChats   int `bson:"activeChats"`
 		InactiveChats int `bson:"inactiveChats"`
 	}
 
-	if cursor.Next(bgCtx) {
+	if cursor.Next(ctx) {
 		if err := cursor.Decode(&result); err != nil {
 			log.Error("Failed to decode chat stats:", err)
 			// Fallback to manual method if decode fails

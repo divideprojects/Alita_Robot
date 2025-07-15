@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -108,8 +109,9 @@ func LoadDisableStats() (disabledCmds, disableEnabledChats int64) {
 	var disbaledStruct []*DisableCommand
 
 	cursor := findAll(disableColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &disbaledStruct)
+	ctx := context.Background()
+	defer cursor.Close(ctx)
+	cursor.All(ctx, &disbaledStruct)
 
 	for _, disrc := range disbaledStruct {
 		disLn := int64(len(disrc.Commands))

@@ -49,29 +49,28 @@ func checkUserInfo(userId int64) (userc *User) {
 }
 
 func UpdateUser(userId int64, username, name string) {
-	userc := checkUserInfo(userId)
-
-	if userc != nil {
-		if userc.Name == name && userc.UserName == username {
-			return
-		}
-		userc.Name = name
-		userc.UserName = username
-	} else {
-		userc = &User{
-			UserId:   userId,
-			UserName: username,
-			Name:     name,
-		}
+	// Use atomic upsert to avoid race conditions
+	filter := bson.M{"_id": userId}
+	update := bson.M{
+		"$set": bson.M{
+			"username": username,
+			"name":     name,
+		},
+		"$setOnInsert": bson.M{
+			"_id":      userId,
+			"language": "en",
+		},
 	}
 
-	err2 := updateOne(userColl, bson.M{"_id": userId}, userc)
-	if err2 != nil {
-		log.Errorf("[Database] UpdateUser: %v - %d", err2, userId)
+	result := &User{}
+	err := findOneAndUpsert(userColl, filter, update, result)
+	if err != nil {
+		log.Errorf("[Database] UpdateUser: %v - %d", err, userId)
 		return
 	}
-	// Update cache
-	_ = cache.Marshal.Set(cache.Context, userId, userc, store.WithExpiration(10*time.Minute))
+
+	// Update cache with the actual result from database
+	_ = cache.Marshal.Set(cache.Context, userId, result, store.WithExpiration(10*time.Minute))
 	log.Infof("[Database] UpdateUser: %d", userId)
 }
 
