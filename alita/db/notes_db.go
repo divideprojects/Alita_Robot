@@ -78,14 +78,14 @@ func GetAllNotesPaginated(chatID int64, opts PaginationOptions) (PaginatedResult
 	}
 
 	if opts.Offset > 0 {
-		return paginator.GetPageByOffset(bgCtx, PaginationOptions{
+		return paginator.GetPageByOffset(bgCtx, filter, PaginationOptions{
 			Offset:        opts.Offset,
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		})
 	}
 
-	return paginator.GetNextPage(bgCtx, PaginationOptions{
+	return paginator.GetNextPage(bgCtx, filter, PaginationOptions{
 		Limit:         opts.Limit,
 		SortDirection: 1,
 	})

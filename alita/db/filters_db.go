@@ -48,21 +48,21 @@ func GetAllFiltersPaginated(_ int64, opts PaginationOptions) (PaginatedResult[*C
 
 	if opts.Cursor == nil && opts.Offset == 0 {
 		// Default to cursor-based pagination
-		return paginator.GetNextPage(bgCtx, PaginationOptions{
+		return paginator.GetNextPage(bgCtx, bson.M{}, PaginationOptions{
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		})
 	}
 
 	if opts.Offset > 0 {
-		return paginator.GetPageByOffset(bgCtx, PaginationOptions{
+		return paginator.GetPageByOffset(bgCtx, bson.M{}, PaginationOptions{
 			Offset:        opts.Offset,
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		})
 	}
 
-	return paginator.GetNextPage(bgCtx, opts)
+	return paginator.GetNextPage(bgCtx, bson.M{}, opts)
 }
 
 // GetFiltersList returns a list of all filter keywords for a chat.
@@ -198,7 +198,7 @@ func loadFilterStatsManual() (filtersNum, filtersUsingChats int64) {
 
 	// Process in paginated batches
 	for {
-		result, err := paginator.GetNextPage(bgCtx, PaginationOptions{
+		result, err := paginator.GetNextPage(bgCtx, bson.M{}, PaginationOptions{
 			Limit:         1000, // Process 1000 docs at a time
 			SortDirection: 1,
 		})

@@ -26,7 +26,7 @@ func BenchmarkCursorPagination(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		var cursor interface{}
 		for {
-			result, _ := paginator.GetNextPage(context.Background(), db.PaginationOptions{
+			result, _ := paginator.GetNextPage(context.Background(), bson.M{}, db.PaginationOptions{
 				Cursor: cursor,
 				Limit:  benchmarkPageSize,
 			})
@@ -48,7 +48,7 @@ func BenchmarkOffsetPagination(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		offset := 0
 		for {
-			result, _ := paginator.GetPageByOffset(context.Background(), db.PaginationOptions{
+			result, _ := paginator.GetPageByOffset(context.Background(), bson.M{}, db.PaginationOptions{
 				Offset: offset,
 				Limit:  benchmarkPageSize,
 			})
