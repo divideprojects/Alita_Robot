@@ -87,6 +87,9 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	// check if note already exists or not
 	if db.DoesNoteExists(chat.Id, noteWord) {
 		noteWordMapKey := fmt.Sprintf("%d_%s", chat.Id, noteWord)
+
+		// Thread-safe access to overwrite notes map
+		m.overwriteNotesMutex.Lock()
 		m.overwriteNotesMap[noteWordMapKey] = overwriteNote{
 			noteWord:    noteWord,
 			text:        text,
@@ -100,6 +103,8 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 			isProtected: isProtected,
 			noNotif:     noNotif,
 		}
+		m.overwriteNotesMutex.Unlock()
+
 		_, err := msg.Reply(b,
 			"Note already exists!\nDo you want to overwrite it?",
 			&gotgbot.SendMessageOpts{
@@ -127,7 +132,15 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	go db.AddNote(chat.Id, noteWord, text, fileid, buttons, dataType, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif)
+	// Add note to database - make this synchronous to catch errors
+	if !db.AddNote(chat.Id, noteWord, text, fileid, buttons, dataType, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif) {
+		_, err := msg.Reply(b, "Failed to save note to database. Please try again.", helpers.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		return ext.EndGroups
+	}
 
 	_, err := msg.Reply(b, fmt.Sprintf(noteString, noteWord, noteWord, noteWord), helpers.Shtml())
 	if err != nil {
@@ -379,13 +392,22 @@ func (m moduleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) err
 		dataSplit := strings.Split(noteWordMapKey, "_")
 		strChatId, noteWord := dataSplit[0], dataSplit[1]
 		chatId, _ := strconv.ParseInt(strChatId, 10, 64)
-		noteData := m.overwriteNotesMap[noteWordMapKey]
-		fmt.Println(strChatId, noteWord, chatId, noteData)
-		if db.DoesNoteExists(chatId, noteWord) {
-			db.RemoveNote(chatId, noteWord)
-			db.AddNote(chatId, noteData.noteWord, noteData.text, noteData.fileId, noteData.buttons, noteData.dataType, noteData.pvtOnly, noteData.grpOnly, noteData.adminOnly, noteData.webPrev, noteData.isProtected, noteData.noNotif)
+
+		// Thread-safe access to overwrite notes map
+		m.overwriteNotesMutex.Lock()
+		noteData, exists := m.overwriteNotesMap[noteWordMapKey]
+		if exists {
 			delete(m.overwriteNotesMap, noteWordMapKey) // delete the key to make map clear
-			helpText = "Note has been overwritten successfully ✅"
+		}
+		m.overwriteNotesMutex.Unlock()
+
+		if exists {
+			fmt.Println(strChatId, noteWord, chatId, noteData)
+			if db.DoesNoteExists(chatId, noteWord) {
+				db.RemoveNote(chatId, noteWord)
+				db.AddNote(chatId, noteData.noteWord, noteData.text, noteData.fileId, noteData.buttons, noteData.dataType, noteData.pvtOnly, noteData.grpOnly, noteData.adminOnly, noteData.webPrev, noteData.isProtected, noteData.noNotif)
+				helpText = "Note has been overwritten successfully ✅"
+			}
 		}
 	}
 

@@ -1,10 +1,13 @@
 package db
 
 import (
+	"context"
+	"sync"
 	"time"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
+	"github.com/eko/gocache/lib/v4/store"
 	log "github.com/sirupsen/logrus"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -68,9 +71,19 @@ type CaptchaChallenge struct {
 	Solved        bool      `bson:"solved" json:"solved" default:"false"`
 }
 
+var captchaSettingsMutex sync.Mutex
+
 // checkCaptchaSettings fetches CAPTCHA settings for a chat from the database.
 // If no document exists, it creates one with default values.
 func checkCaptchaSettings(chatID int64) (captchaSrc *CaptchaSettings) {
+	captchaSettingsMutex.Lock()
+	defer captchaSettingsMutex.Unlock()
+
+	// Try cache first
+	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(CaptchaSettings)); err == nil && cached != nil {
+		return cached.(*CaptchaSettings)
+	}
+
 	defaultCaptchaSrc := &CaptchaSettings{
 		ChatID:       chatID,
 		Enabled:      false,
@@ -92,6 +105,11 @@ func checkCaptchaSettings(chatID int64) (captchaSrc *CaptchaSettings) {
 	} else if err != nil {
 		captchaSrc = defaultCaptchaSrc
 		log.Errorf("[Database][checkCaptchaSettings]: %v", err)
+	}
+
+	// Cache the result
+	if captchaSrc != nil {
+		_ = cache.Marshal.Set(cache.Context, chatID, captchaSrc, store.WithExpiration(10*time.Minute))
 	}
 	return captchaSrc
 }
@@ -237,9 +255,9 @@ func GetExpiredCaptchaChallenges() ([]*CaptchaChallenge, error) {
 		"expires_at": bson.M{"$lt": now},
 		"solved":     false,
 	})
-	defer cursor.Close(bgCtx)
+	defer cursor.Close(context.Background())
 
-	err := cursor.All(bgCtx, &challenges)
+	err := cursor.All(context.Background(), &challenges)
 	if err != nil {
 		log.Errorf("[Database] GetExpiredCaptchaChallenges: %v", err)
 		return nil, err

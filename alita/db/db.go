@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"math/rand"
 	"time"
 
@@ -43,10 +44,6 @@ var (
 	// Package-level MongoDB client
 	mongoClient *mongo.Client
 
-	// Contexts
-	tdCtx = context.TODO()
-	bgCtx = context.Background()
-
 	// define collections
 	adminSettingsColl      *mongo.Collection
 	blacklistsColl         *mongo.Collection
@@ -74,11 +71,11 @@ var (
 )
 
 // createIndexes creates database indexes for optimal performance
-func createIndexes() {
+func createIndexes(ctx context.Context) {
 	log.Info("Creating database indexes...")
 
 	// Filter collection indexes
-	_, err := filterColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err := filterColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		// Existing unique index
 		{
 			Keys:    bson.D{{Key: "chat_id", Value: 1}, {Key: "keyword", Value: 1}},
@@ -101,7 +98,7 @@ func createIndexes() {
 	}
 
 	// Notes collection indexes
-	_, err = notesColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = notesColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		// Existing unique index
 		{
 			Keys:    bson.D{{Key: "chat_id", Value: 1}, {Key: "note_name", Value: 1}},
@@ -124,7 +121,7 @@ func createIndexes() {
 
 	// Warn users collection indexes
 	// Compound index on (user_id, chat_id) to speed up warning lookups and enforce uniqueness per user per chat
-	_, err = warnUsersColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = warnUsersColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys:    bson.D{{Key: "user_id", Value: 1}, {Key: "chat_id", Value: 1}},
 			Options: options.Index().SetUnique(true),
@@ -136,13 +133,9 @@ func createIndexes() {
 
 	// User collection indexes
 	// Unique indexes on username and user_id for fast lookups and to prevent duplicates
-	_, err = userColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = userColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys:    bson.D{{Key: "username", Value: 1}},
-			Options: options.Index().SetUnique(true),
-		},
-		{
-			Keys:    bson.D{{Key: "user_id", Value: 1}},
 			Options: options.Index().SetUnique(true),
 		},
 	})
@@ -152,7 +145,7 @@ func createIndexes() {
 
 	// Chat collection indexes
 	// Unique index on chat_id for fast chat lookups, index on chat_type for filtering
-	_, err = chatColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = chatColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys:    bson.D{{Key: "chat_id", Value: 1}},
 			Options: options.Index().SetUnique(true),
@@ -167,7 +160,7 @@ func createIndexes() {
 
 	// Captcha collection indexes
 	// Compound index on (user_id, chat_id) for challenge lookups, index on message_id for message-based queries
-	_, err = captchasColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = captchasColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys: bson.D{{Key: "user_id", Value: 1}, {Key: "chat_id", Value: 1}},
 		},
@@ -181,7 +174,7 @@ func createIndexes() {
 
 	// Admin collection indexes
 	// Compound unique index on (user_id, chat_id) to ensure one admin record per user per chat
-	_, err = adminSettingsColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = adminSettingsColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys:    bson.D{{Key: "user_id", Value: 1}, {Key: "chat_id", Value: 1}},
 			Options: options.Index().SetUnique(true),
@@ -193,7 +186,7 @@ func createIndexes() {
 
 	// Antiflood collection indexes
 	// Compound index on (user_id, chat_id) for fast flood checks per user per chat
-	_, err = antifloodSettingsColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = antifloodSettingsColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys: bson.D{{Key: "user_id", Value: 1}, {Key: "chat_id", Value: 1}},
 		},
@@ -204,7 +197,7 @@ func createIndexes() {
 
 	// Blacklists collection indexes
 	// Compound unique index on (chat_id, trigger) to prevent duplicate triggers per chat
-	_, err = blacklistsColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = blacklistsColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys:    bson.D{{Key: "chat_id", Value: 1}, {Key: "trigger", Value: 1}},
 			Options: options.Index().SetUnique(true),
@@ -216,7 +209,7 @@ func createIndexes() {
 
 	// Greetings collection indexes
 	// Index on chat_id for fast greeting settings lookup per chat
-	_, err = greetingsColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = greetingsColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys: bson.D{{Key: "chat_id", Value: 1}},
 		},
@@ -227,7 +220,7 @@ func createIndexes() {
 
 	// Locks collection indexes
 	// Index on chat_id for fast lock settings lookup per chat
-	_, err = lockColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = lockColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys: bson.D{{Key: "chat_id", Value: 1}},
 		},
@@ -238,7 +231,7 @@ func createIndexes() {
 
 	// Reports collection indexes
 	// Index on chat_id for fast report settings lookup per chat
-	_, err = reportChatColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = reportChatColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys: bson.D{{Key: "chat_id", Value: 1}},
 		},
@@ -249,7 +242,7 @@ func createIndexes() {
 
 	// Rules collection indexes
 	// Index on chat_id for fast rules lookup per chat
-	_, err = rulesColl.Indexes().CreateMany(bgCtx, []mongo.IndexModel{
+	_, err = rulesColl.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		{
 			Keys: bson.D{{Key: "chat_id", Value: 1}},
 		},
@@ -261,27 +254,46 @@ func createIndexes() {
 	log.Info("Done creating database indexes!")
 }
 
-// init initializes the MongoDB client and opens all required collections.
-//
-// This function is automatically called when the package is imported.
+// InitializeDatabase initializes the MongoDB client and opens all required collections.
+// This function should be called by the lifecycle manager during startup.
 // It sets up global collection variables for use throughout the db package.
-func init() {
+func InitializeDatabase(ctx context.Context) error {
 	var err error
-	ctx, cancel := context.WithTimeout(bgCtx, 10*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
+
 	clientOpts := options.Client().ApplyURI(config.DatabaseURI).
 		SetMaxPoolSize(config.MongoMaxPoolSize).
 		SetMinPoolSize(config.MongoMinPoolSize).
 		SetMaxConnIdleTime(config.MongoMaxConnIdleTime)
+
 	mongoClient, err = mongo.Connect(ctx, clientOpts)
 	if err != nil {
 		log.Errorf("[Database][Connect]: %v", err)
-		return
+		return err
 	}
 
-	// Open Connections to Collections
+	// Test connection
+	if err = mongoClient.Ping(ctx, nil); err != nil {
+		log.Errorf("[Database][Ping]: %v", err)
+		return err
+	}
+
+	// Initialize collections
+	initializeCollections()
+
+	// Create indexes for optimal performance
+	createIndexes(ctx)
+
+	log.Info("Database initialized successfully")
+	return nil
+}
+
+// initializeCollections initializes all database collections
+func initializeCollections() {
 	log.Info("Opening Database Collections...")
 	log.Debugf("[DB] Initializing collections with client status: %t", mongoClient != nil)
+
 	adminSettingsColl = mongoClient.Database(config.MainDbName).Collection("admin")
 	blacklistsColl = mongoClient.Database(config.MainDbName).Collection("blacklists")
 	pinColl = mongoClient.Database(config.MainDbName).Collection("pins")
@@ -305,10 +317,38 @@ func init() {
 	notesSettingsColl = mongoClient.Database(config.MainDbName).Collection("notes_settings")
 	captchasColl = mongoClient.Database(config.MainDbName).Collection("captchas")
 	captchaChallengesColl = mongoClient.Database(config.MainDbName).Collection("captcha_challenges")
-	log.Info("Done opening all database collections!")
 
-	// Create indexes for optimal performance
-	createIndexes()
+	log.Info("Done opening all database collections!")
+}
+
+// CloseDatabase closes the MongoDB client connection
+func CloseDatabase(ctx context.Context) error {
+	if mongoClient != nil {
+		log.Info("Closing database connection...")
+		err := mongoClient.Disconnect(ctx)
+		if err != nil {
+			log.Errorf("[Database][Disconnect]: %v", err)
+			return err
+		}
+		mongoClient = nil
+		log.Info("Database connection closed")
+	}
+	return nil
+}
+
+// HealthCheck verifies the database connection is healthy
+func HealthCheck(ctx context.Context) error {
+	if mongoClient == nil {
+		return fmt.Errorf("database client is not initialized")
+	}
+	return mongoClient.Ping(ctx, nil)
+}
+
+// init function is kept minimal to prevent automatic initialization
+func init() {
+	// Initialize only basic variables, actual database connection
+	// will be handled by InitializeDatabase function
+	log.Debug("Database package initialized (connection deferred)")
 }
 
 // Helper for retrying DB ops
@@ -327,15 +367,24 @@ func retryDB(fn func() error) error {
 }
 
 // updateOne with timing, retry, and slow query log
-func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (err error) {
+func updateOne(collection *mongo.Collection, filter bson.M, data interface{}) (err error) {
+	return updateOneWithContext(context.Background(), collection, filter, data)
+}
+
+// updateOneWithContext with timing, retry, and slow query log
+func updateOneWithContext(ctx context.Context, collection *mongo.Collection, filter bson.M, data interface{}) (err error) {
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
 	start := time.Now()
 	err = retryDB(func() error {
-		_, e := collecion.UpdateOne(tdCtx, filter, bson.M{"$set": data}, options.Update().SetUpsert(true))
+		_, e := collection.UpdateOne(ctx, filter, bson.M{"$set": data}, options.Update().SetUpsert(true))
 		return e
 	})
 	dur := time.Since(start)
 	if dur > 100*time.Millisecond {
-		log.Warnf("[Database][SLOW][updateOne] %v %v took %v", collecion.Name(), filter, dur)
+		log.Warnf("[Database][SLOW][updateOne] %v %v took %v", collection.Name(), filter, dur)
 	}
 	if err != nil {
 		log.Errorf("[Database][updateOne]: %v", err)
@@ -344,31 +393,49 @@ func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (er
 }
 
 // findOne with timing, retry, and slow query log
-func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResult) {
+func findOne(collection *mongo.Collection, filter bson.M) (res *mongo.SingleResult) {
+	return findOneWithContext(context.Background(), collection, filter)
+}
+
+// findOneWithContext with timing, retry, and slow query log
+func findOneWithContext(ctx context.Context, collection *mongo.Collection, filter bson.M) (res *mongo.SingleResult) {
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
 	start := time.Now()
 	var result *mongo.SingleResult
 	retryDB(func() error {
-		result = collecion.FindOne(tdCtx, filter)
+		result = collection.FindOne(ctx, filter)
 		return result.Err()
 	})
 	dur := time.Since(start)
 	if dur > 100*time.Millisecond {
-		log.Warnf("[Database][SLOW][findOne] %v %v took %v", collecion.Name(), filter, dur)
+		log.Warnf("[Database][SLOW][findOne] %v %v took %v", collection.Name(), filter, dur)
 	}
 	return result
 }
 
 // countDocs with timing, retry, and slow query log
-func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err error) {
+func countDocs(collection *mongo.Collection, filter bson.M) (count int64, err error) {
+	return countDocsWithContext(context.Background(), collection, filter)
+}
+
+// countDocsWithContext with timing, retry, and slow query log
+func countDocsWithContext(ctx context.Context, collection *mongo.Collection, filter bson.M) (count int64, err error) {
 	start := time.Now()
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
 	err = retryDB(func() error {
-		c, e := collecion.CountDocuments(tdCtx, filter)
+		c, e := collection.CountDocuments(ctx, filter)
 		count = c
 		return e
 	})
 	dur := time.Since(start)
 	if dur > 100*time.Millisecond {
-		log.Warnf("[Database][SLOW][countDocs] %v %v took %v", collecion.Name(), filter, dur)
+		log.Warnf("[Database][SLOW][countDocs] %v %v took %v", collection.Name(), filter, dur)
 	}
 	if err != nil {
 		log.Errorf("[Database][countDocs]: %v", err)
@@ -377,31 +444,49 @@ func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err err
 }
 
 // findAll with timing, retry, and slow query log
-func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
+func findAll(collection *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
+	return findAllWithContext(context.Background(), collection, filter)
+}
+
+// findAllWithContext with timing, retry, and slow query log
+func findAllWithContext(ctx context.Context, collection *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	start := time.Now()
 	var cursor *mongo.Cursor
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
 	retryDB(func() error {
-		c, e := collecion.Find(tdCtx, filter)
+		c, e := collection.Find(ctx, filter)
 		cursor = c
 		return e
 	})
 	dur := time.Since(start)
 	if dur > 100*time.Millisecond {
-		log.Warnf("[Database][SLOW][findAll] %v %v took %v", collecion.Name(), filter, dur)
+		log.Warnf("[Database][SLOW][findAll] %v %v took %v", collection.Name(), filter, dur)
 	}
 	return cursor
 }
 
 // deleteOne with timing, retry, and slow query log
-func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
+func deleteOne(collection *mongo.Collection, filter bson.M) (err error) {
+	return deleteOneWithContext(context.Background(), collection, filter)
+}
+
+// deleteOneWithContext with timing, retry, and slow query log
+func deleteOneWithContext(ctx context.Context, collection *mongo.Collection, filter bson.M) (err error) {
 	start := time.Now()
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
 	err = retryDB(func() error {
-		_, e := collecion.DeleteOne(tdCtx, filter)
+		_, e := collection.DeleteOne(ctx, filter)
 		return e
 	})
 	dur := time.Since(start)
 	if dur > 100*time.Millisecond {
-		log.Warnf("[Database][SLOW][deleteOne] %v %v took %v", collecion.Name(), filter, dur)
+		log.Warnf("[Database][SLOW][deleteOne] %v %v took %v", collection.Name(), filter, dur)
 	}
 	if err != nil {
 		log.Errorf("[Database][deleteOne]: %v", err)
@@ -410,15 +495,24 @@ func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 }
 
 // deleteMany with timing, retry, and slow query log
-func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
+func deleteMany(collection *mongo.Collection, filter bson.M) (err error) {
+	return deleteManyWithContext(context.Background(), collection, filter)
+}
+
+// deleteManyWithContext with timing, retry, and slow query log
+func deleteManyWithContext(ctx context.Context, collection *mongo.Collection, filter bson.M) (err error) {
 	start := time.Now()
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
 	err = retryDB(func() error {
-		_, e := collecion.DeleteMany(tdCtx, filter)
+		_, e := collection.DeleteMany(ctx, filter)
 		return e
 	})
 	dur := time.Since(start)
 	if dur > 100*time.Millisecond {
-		log.Warnf("[Database][SLOW][deleteMany] %v %v took %v", collecion.Name(), filter, dur)
+		log.Warnf("[Database][SLOW][deleteMany] %v %v took %v", collection.Name(), filter, dur)
 	}
 	if err != nil {
 		log.Errorf("[Database][deleteMany]: %v", err)
@@ -428,13 +522,22 @@ func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 
 // findOneAndUpsert with timing, retry, and slow query log
 func findOneAndUpsert(collection *mongo.Collection, filter bson.M, update bson.M, result interface{}) error {
+	return findOneAndUpsertWithContext(context.Background(), collection, filter, update, result)
+}
+
+// findOneAndUpsertWithContext with timing, retry, and slow query log
+func findOneAndUpsertWithContext(ctx context.Context, collection *mongo.Collection, filter bson.M, update bson.M, result interface{}) error {
 	start := time.Now()
 	var err error
+	// Create a context with timeout for this operation
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
 	err = retryDB(func() error {
 		opts := options.FindOneAndUpdate().
 			SetUpsert(true).
 			SetReturnDocument(options.After)
-		err = collection.FindOneAndUpdate(tdCtx, filter, update, opts).Decode(result)
+		err = collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(result)
 		return err
 	})
 	dur := time.Since(start)

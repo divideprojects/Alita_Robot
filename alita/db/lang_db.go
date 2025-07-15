@@ -21,9 +21,6 @@ func GetLanguage(ctx *ext.Context) string {
 	} else {
 		chat = ctx.Update.Message.Chat
 	}
-	// FIXME: this is a hack
-	// if ctx.Update.Message.Chat.Type == "private" || ctx.CallbackQuery.Message.Chat.Type == "private" {
-	// debug_bot.PrettyPrintStruct(ctx)
 	if chat.Type == "private" {
 		user := ctx.EffectiveSender.User
 		return getUserLanguage(user.Id)
@@ -59,6 +56,38 @@ func getUserLanguage(UserID int64) string {
 	return lang
 }
 
+// InvalidateUserLanguageCache clears the cached language for a user
+func InvalidateUserLanguageCache(UserID int64) error {
+	err := cache.Marshal.Delete(cache.Context, UserID)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"userId": UserID,
+			"error":  err,
+		}).Error("InvalidateUserLanguageCache: Failed to delete user language cache")
+		return err
+	}
+	log.WithFields(log.Fields{
+		"userId": UserID,
+	}).Debug("InvalidateUserLanguageCache: Successfully invalidated user language cache")
+	return nil
+}
+
+// InvalidateGroupLanguageCache clears the cached language for a group
+func InvalidateGroupLanguageCache(GroupID int64) error {
+	err := cache.Marshal.Delete(cache.Context, GroupID)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"groupId": GroupID,
+			"error":   err,
+		}).Error("InvalidateGroupLanguageCache: Failed to delete group language cache")
+		return err
+	}
+	log.WithFields(log.Fields{
+		"groupId": GroupID,
+	}).Debug("InvalidateGroupLanguageCache: Successfully invalidated group language cache")
+	return nil
+}
+
 // ChangeUserLanguage sets the language code for a specific user.
 // No update is performed if the user does not exist or already has the target language.
 func ChangeUserLanguage(UserID int64, lang string) {
@@ -74,7 +103,8 @@ func ChangeUserLanguage(UserID int64, lang string) {
 		log.Errorf("[Database] ChangeUserLanguage: %v - %d", err, UserID)
 		return
 	}
-	// Update cache
+	// Invalidate old cache and update with new value
+	_ = InvalidateUserLanguageCache(UserID)
 	_ = cache.Marshal.Set(cache.Context, UserID, &lang, store.WithExpiration(10*time.Minute))
 	log.Infof("[Database] ChangeUserLanguage: %d", UserID)
 }
@@ -92,7 +122,8 @@ func ChangeGroupLanguage(GroupID int64, lang string) {
 		log.Errorf("[Database] ChangeGroupLanguage: %v - %d", err, GroupID)
 		return
 	}
-	// Update cache
+	// Invalidate old cache and update with new value
+	_ = InvalidateGroupLanguageCache(GroupID)
 	_ = cache.Marshal.Set(cache.Context, GroupID, &lang, store.WithExpiration(10*time.Minute))
 	log.Infof("[Database] ChangeGroupLanguage: %d", GroupID)
 }

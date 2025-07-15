@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -105,17 +106,30 @@ func removeStrfromStr(s []string, r string) []string {
 }
 
 func LoadDisableStats() (disabledCmds, disableEnabledChats int64) {
-	var disbaledStruct []*DisableCommand
+	paginator := NewMongoPagination[*DisableCommand](disableColl)
 
-	cursor := findAll(disableColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &disbaledStruct)
+	var cursor interface{}
+	for {
+		result, err := paginator.GetNextPage(context.Background(), bson.M{}, PaginationOptions{
+			Cursor:        cursor,
+			Limit:         100, // Process 100 docs at a time
+			SortDirection: 1,
+		})
+		if err != nil || len(result.Data) == 0 {
+			break
+		}
 
-	for _, disrc := range disbaledStruct {
-		disLn := int64(len(disrc.Commands))
-		disabledCmds += disLn
-		if disLn > 0 {
-			disableEnabledChats++
+		for _, cmd := range result.Data {
+			disLn := int64(len(cmd.Commands))
+			disabledCmds += disLn
+			if disLn > 0 {
+				disableEnabledChats++
+			}
+		}
+
+		cursor = result.NextCursor
+		if cursor == nil {
+			break
 		}
 	}
 

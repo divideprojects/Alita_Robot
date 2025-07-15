@@ -1,12 +1,16 @@
 package db
 
 import (
+	"context"
 	"strings"
+	"time"
 
+	"github.com/eko/gocache/lib/v4/store"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -48,29 +52,29 @@ func GetAllFiltersPaginated(_ int64, opts PaginationOptions) (PaginatedResult[*C
 
 	if opts.Cursor == nil && opts.Offset == 0 {
 		// Default to cursor-based pagination
-		return paginator.GetNextPage(bgCtx, PaginationOptions{
+		return paginator.GetNextPage(context.Background(), bson.M{}, PaginationOptions{
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		})
 	}
 
 	if opts.Offset > 0 {
-		return paginator.GetPageByOffset(bgCtx, PaginationOptions{
+		return paginator.GetPageByOffset(context.Background(), bson.M{}, PaginationOptions{
 			Offset:        opts.Offset,
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		})
 	}
 
-	return paginator.GetNextPage(bgCtx, opts)
+	return paginator.GetNextPage(context.Background(), bson.M{}, opts)
 }
 
 // GetFiltersList returns a list of all filter keywords for a chat.
 func GetFiltersList(chatID int64) (allFilterWords []string) {
 	var results []*ChatFilters
 	cursor := findAll(getCollection("filters"), bson.M{"chat_id": chatID})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &results)
+	defer cursor.Close(context.Background())
+	cursor.All(context.Background(), &results)
 	for _, j := range results {
 		allFilterWords = append(allFilterWords, j.KeyWord)
 	}
@@ -101,27 +105,47 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 	}
 
 	result := &ChatFilters{}
-	err := findOneAndUpsert(getCollection("filters"), filter, update, result)
+	err := withTransaction(context.Background(), func(_ mongo.SessionContext) error {
+		// Perform the upsert operation within the transaction
+		err := findOneAndUpsert(getCollection("filters"), filter, update, result)
+		if err != nil {
+			return err
+		}
+
+		// Update cache only if this was a new insert
+		if result.ChatId == chatID && result.KeyWord == keyWord {
+			if err := cache.Marshal.Set(cache.Context, chatID, result, store.WithExpiration(10*time.Minute)); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 	if err != nil {
 		log.Errorf("[Database][AddFilter]: %d - %v", chatID, err)
 		return false
 	}
 
-	// Return true if this was a new insert (the document should have our values)
+	// Return true if this was a new insert
 	return result.ChatId == chatID && result.KeyWord == keyWord
 }
 
 // RemoveFilter deletes a filter by keyword from the chat.
-// If the filter does not exist, no action is taken.
 func RemoveFilter(chatID int64, keyWord string) {
-	if !string_handling.FindInStringSlice(GetFiltersList(chatID), keyWord) {
-		return
-	}
+	err := withTransaction(context.Background(), func(_ mongo.SessionContext) error {
+		// Perform the delete operation within the transaction
+		err := deleteOne(getCollection("filters"), bson.M{"chat_id": chatID, "keyword": keyWord})
+		if err != nil && err != mongo.ErrNoDocuments {
+			return err
+		}
 
-	err := deleteOne(getCollection("filters"), bson.M{"chat_id": chatID, "keyword": keyWord})
+		// Invalidate cache after successful deletion
+		if err := cache.Marshal.Delete(cache.Context, chatID); err != nil {
+			return err
+		}
+		return nil
+	})
 	if err != nil {
 		log.Errorf("[Database][RemoveFilter]: %d - %v", chatID, err)
-		return
 	}
 }
 
@@ -162,20 +186,20 @@ func LoadFilterStats() (filtersNum, filtersUsingChats int64) {
 		},
 	}
 
-	cursor, err := getCollection("filters").Aggregate(bgCtx, pipeline)
+	cursor, err := getCollection("filters").Aggregate(context.Background(), pipeline)
 	if err != nil {
 		log.Error("Failed to aggregate filter stats:", err)
 		// Fallback to manual method if aggregation fails
 		return loadFilterStatsManual()
 	}
-	defer cursor.Close(bgCtx)
+	defer cursor.Close(context.Background())
 
 	var result struct {
 		TotalFilters int64 `bson:"totalFilters"`
 		TotalChats   int64 `bson:"totalChats"`
 	}
 
-	if cursor.Next(bgCtx) {
+	if cursor.Next(context.Background()) {
 		if err := cursor.Decode(&result); err != nil {
 			log.Error("Failed to decode filter stats:", err)
 			// Fallback to manual method if decode fails
@@ -198,7 +222,7 @@ func loadFilterStatsManual() (filtersNum, filtersUsingChats int64) {
 
 	// Process in paginated batches
 	for {
-		result, err := paginator.GetNextPage(bgCtx, PaginationOptions{
+		result, err := paginator.GetNextPage(context.Background(), bson.M{}, PaginationOptions{
 			Limit:         1000, // Process 1000 docs at a time
 			SortDirection: 1,
 		})

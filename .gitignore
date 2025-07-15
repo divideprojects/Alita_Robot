@@ -27,3 +27,6 @@ local.docker-compose.yml
 
 # Mac OS DS_Store file
 .DS_Store
+
+# claude code
+.claude

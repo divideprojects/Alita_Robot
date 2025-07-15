@@ -1,6 +1,7 @@
 package config
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"path"
@@ -24,7 +25,7 @@ var (
 	// MainDbName is the name of the main database.
 	MainDbName string
 	// BotVersion is the current version of the bot.
-	BotVersion string = "2.1.3"
+	BotVersion string
 	// ApiServer is the Telegram API server endpoint.
 	ApiServer string
 	// WorkingMode indicates the current working mode (e.g., "worker").
@@ -50,6 +51,9 @@ var (
 	MongoMinPoolSize     uint64
 	MongoMaxConnIdleTime time.Duration
 	MongoMaxIdleTime     time.Duration
+	// Resource monitoring thresholds
+	HighGoroutineThreshold int
+	HighMemoryThresholdMB  int
 )
 
 // defaultAllowedUpdates defines the complete set of Telegram update types the bot can subscribe to.
@@ -139,6 +143,19 @@ func init() {
 	MessageDump = typeConvertor{str: os.Getenv("MESSAGE_DUMP")}.Int64()
 	BotToken = os.Getenv("BOT_TOKEN")
 
+	// Only perform these checks if we are not running tests
+	if flag.Lookup("test.v") == nil {
+		if BotToken == "" {
+			log.Fatal("BOT_TOKEN environment variable is not set.")
+		}
+		if OwnerId == 0 {
+			log.Fatal("OWNER_ID environment variable is not set or invalid.")
+		}
+		if DatabaseURI == "" {
+			log.Fatal("DB_URI environment variable is not set.")
+		}
+	}
+
 	AllowedUpdates = typeConvertor{str: os.Getenv("ALLOWED_UPDATES")}.StringArray()
 	if len(AllowedUpdates) == 0 || (len(AllowedUpdates) == 1 && AllowedUpdates[0] == "") {
 		AllowedUpdates = defaultAllowedUpdates
@@ -163,6 +180,7 @@ func init() {
 	RedisAddress = os.Getenv("REDIS_ADDRESS")
 	if os.Getenv("REDIS_ADDRESS") == "" {
 		RedisAddress = "localhost:6379"
+		log.Warn("REDIS_ADDRESS not set, defaulting to localhost:6379")
 	}
 	RedisPassword = os.Getenv("REDIS_PASSWORD")
 	if os.Getenv("REDIS_PASSWORD") == "" {
@@ -177,4 +195,14 @@ func init() {
 	MongoMinPoolSize = parseUint64Env("MONGO_MIN_POOL_SIZE", 10)
 	MongoMaxConnIdleTime = parseDurationEnv("MONGO_MAX_CONN_IDLE_TIME", 30*time.Second)
 	MongoMaxIdleTime = parseDurationEnv("MONGO_MAX_IDLE_TIME", 30*time.Second)
+
+	// Resource monitoring thresholds
+	HighGoroutineThreshold = typeConvertor{str: os.Getenv("HIGH_GOROUTINE_THRESHOLD")}.Int()
+	if HighGoroutineThreshold == 0 {
+		HighGoroutineThreshold = 1000
+	}
+	HighMemoryThresholdMB = typeConvertor{str: os.Getenv("HIGH_MEMORY_THRESHOLD_MB")}.Int()
+	if HighMemoryThresholdMB == 0 {
+		HighMemoryThresholdMB = 500
+	}
 }

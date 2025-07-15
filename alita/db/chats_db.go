@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -84,15 +85,28 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 
 // GetAllChats returns a map of all chats, keyed by ChatId.
 func GetAllChats() map[int64]Chat {
-	var (
-		chatArray []*Chat
-		chatMap   = make(map[int64]Chat)
-	)
-	cursor := findAll(chatColl, bson.M{})
-	cursor.All(bgCtx, &chatArray)
+	chatMap := make(map[int64]Chat)
+	paginator := NewMongoPagination[*Chat](chatColl)
 
-	for _, i := range chatArray {
-		chatMap[i.ChatId] = *i
+	var cursor interface{}
+	for {
+		result, err := paginator.GetNextPage(context.Background(), bson.M{}, PaginationOptions{
+			Cursor:        cursor,
+			Limit:         100, // Process 100 docs at a time
+			SortDirection: 1,
+		})
+		if err != nil || len(result.Data) == 0 {
+			break
+		}
+
+		for _, chat := range result.Data {
+			chatMap[chat.ChatId] = *chat
+		}
+
+		cursor = result.NextCursor
+		if cursor == nil {
+			break
+		}
 	}
 
 	return chatMap
@@ -128,20 +142,20 @@ func LoadChatStats() (activeChats, inactiveChats int) {
 		},
 	}
 
-	cursor, err := chatColl.Aggregate(bgCtx, pipeline)
+	cursor, err := chatColl.Aggregate(context.Background(), pipeline)
 	if err != nil {
 		log.Error("Failed to aggregate chat stats:", err)
 		// Fallback to manual method if aggregation fails
 		return loadChatStatsManual()
 	}
-	defer cursor.Close(bgCtx)
+	defer cursor.Close(context.Background())
 
 	var result struct {
 		ActiveChats   int `bson:"activeChats"`
 		InactiveChats int `bson:"inactiveChats"`
 	}
 
-	if cursor.Next(bgCtx) {
+	if cursor.Next(context.Background()) {
 		if err := cursor.Decode(&result); err != nil {
 			log.Error("Failed to decode chat stats:", err)
 			// Fallback to manual method if decode fails

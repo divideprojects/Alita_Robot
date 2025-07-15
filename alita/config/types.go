@@ -3,6 +3,8 @@ package config
 import (
 	"strconv"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // typeConvertor provides methods to convert a string to various Go types.
@@ -24,14 +26,20 @@ func (t typeConvertor) StringArray() []string {
 // Int converts the string to an int.
 // Returns 0 if conversion fails.
 func (t typeConvertor) Int() int {
-	val, _ := strconv.Atoi(t.str)
+	val, err := strconv.Atoi(t.str)
+	if err != nil {
+		log.Warnf("Failed to parse '%s' as int: %v. Defaulting to 0.", t.str, err)
+	}
 	return val
 }
 
 // Int64 converts the string to an int64.
 // Returns 0 if conversion fails.
 func (t typeConvertor) Int64() int64 {
-	val, _ := strconv.ParseInt(t.str, 10, 64)
+	val, err := strconv.ParseInt(t.str, 10, 64)
+	if err != nil {
+		log.Warnf("Failed to parse '%s' as int64: %v. Defaulting to 0.", t.str, err)
+	}
 	return val
 }
 

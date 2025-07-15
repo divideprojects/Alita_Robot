@@ -1,6 +1,7 @@
 package db
 
 import (
+	"sync"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -30,6 +31,8 @@ type FloodSettings struct {
 	DeleteAntifloodMessage bool   `bson:"del_msg" json:"del_msg"`
 }
 
+var floodSettingsMutex sync.Mutex
+
 // GetFlood retrieves the flood settings for a given chat ID.
 // If no settings exist, it initializes them with default values.
 func GetFlood(chatID int64) *FloodSettings {
@@ -40,10 +43,14 @@ func GetFlood(chatID int64) *FloodSettings {
 // If no document exists, it creates one with default values.
 // Returns a pointer to the FloodSettings struct.
 func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
+	floodSettingsMutex.Lock()
+	defer floodSettingsMutex.Unlock()
+
 	// Try cache first
 	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(FloodSettings)); err == nil && cached != nil {
 		return cached.(*FloodSettings)
 	}
+
 	defaultFloodSrc := &FloodSettings{ChatId: chatID, Limit: 0, Mode: defaultFloodsettingsMode}
 
 	err := findOne(antifloodSettingsColl, bson.M{"_id": chatID}).Decode(&floodSrc)
@@ -57,6 +64,7 @@ func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
 		floodSrc = defaultFloodSrc
 		log.Errorf("[Database][checkGreetingSettings]: %v ", err)
 	}
+
 	// Cache the result
 	if floodSrc != nil {
 		_ = cache.Marshal.Set(cache.Context, chatID, floodSrc, store.WithExpiration(10*time.Minute))
