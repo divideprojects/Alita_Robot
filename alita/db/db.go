@@ -141,10 +141,6 @@ func createIndexes() {
 			Keys:    bson.D{{Key: "username", Value: 1}},
 			Options: options.Index().SetUnique(true),
 		},
-		{
-			Keys:    bson.D{{Key: "user_id", Value: 1}},
-			Options: options.Index().SetUnique(true),
-		},
 	})
 	if err != nil {
 		log.Warnf("[Database][Index] Failed to create user indexes: %v", err)
