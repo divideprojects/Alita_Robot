@@ -122,26 +122,58 @@ func (cs *CaptchaScheduler) Stop() {
 
 // processExpiredChallenges handles all expired CAPTCHA challenges
 func (cs *CaptchaScheduler) processExpiredChallenges() {
-	expired, err := db.GetExpiredCaptchaChallenges()
+	// Verify database connection before proceeding
+	if err := db.HealthCheck(context.Background()); err != nil {
+		log.Errorf("CAPTCHA Scheduler: Database connection unhealthy: %v", err)
+		return
+	}
+
+	var expired []*db.CaptchaChallenge
+	var err error
+
+	// Retry database operation with backoff
+	for i := 0; i < 3; i++ {
+		expired, err = db.GetExpiredCaptchaChallenges()
+		if err == nil {
+			break
+		}
+		log.Warnf("CAPTCHA Scheduler: Attempt %d/3 failed to get expired challenges: %v", i+1, err)
+		time.Sleep(time.Duration(i+1) * 500 * time.Millisecond)
+	}
+
 	if err != nil {
-		log.Errorf("CAPTCHA Scheduler: Failed to get expired challenges: %v", err)
+		log.Errorf("CAPTCHA Scheduler: Failed to get expired challenges after retries: %v", err)
 		return
 	}
 
 	if len(expired) == 0 {
+		log.Debug("CAPTCHA Scheduler: No expired challenges found")
 		return
 	}
 
 	log.Infof("CAPTCHA Scheduler: Processing %d expired challenges", len(expired))
 
 	for _, challenge := range expired {
+		if challenge == nil {
+			log.Warn("CAPTCHA Scheduler: Skipping nil challenge")
+			continue
+		}
 		cs.processExpiredChallenge(challenge)
 	}
 
-	// Clean up processed challenges
-	err = db.CleanupExpiredChallenges()
-	if err != nil {
-		log.Errorf("CAPTCHA Scheduler: Failed to cleanup expired challenges: %v", err)
+	// Clean up processed challenges with retries
+	var cleanupErr error
+	for i := 0; i < 3; i++ {
+		cleanupErr = db.CleanupExpiredChallenges()
+		if cleanupErr == nil {
+			break
+		}
+		log.Warnf("CAPTCHA Scheduler: Attempt %d/3 failed to cleanup challenges: %v", i+1, cleanupErr)
+		time.Sleep(time.Duration(i+1) * 500 * time.Millisecond)
+	}
+
+	if cleanupErr != nil {
+		log.Errorf("CAPTCHA Scheduler: Failed to cleanup expired challenges after retries: %v", cleanupErr)
 	}
 }
 
@@ -280,18 +312,27 @@ func (*SchedulerLifecycleManager) Priority() int {
 }
 
 // Initialize starts the scheduler
-func (s *SchedulerLifecycleManager) Initialize(_ context.Context) error {
+func (s *SchedulerLifecycleManager) Initialize(ctx context.Context) error {
 	log.Info("Initializing CAPTCHA scheduler...")
 
 	if s.bot == nil {
 		return fmt.Errorf("bot instance is nil")
 	}
 
+	// Ensure database is connected first
+	if err := db.HealthCheck(ctx); err != nil {
+		return fmt.Errorf("database not ready: %v", err)
+	}
+
 	s.scheduler = NewCaptchaScheduler(s.bot, 30*time.Second)
 	go s.scheduler.Start()
 
-	// Wait a moment to ensure scheduler starts
-	time.Sleep(100 * time.Millisecond)
+	// Wait with context-aware timeout
+	select {
+	case <-time.After(500 * time.Millisecond):
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 
 	if !s.scheduler.IsRunning() {
 		return fmt.Errorf("scheduler failed to start")

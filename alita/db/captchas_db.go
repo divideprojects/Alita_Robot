@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -251,6 +252,10 @@ func GetExpiredCaptchaChallenges() ([]*CaptchaChallenge, error) {
 	var challenges []*CaptchaChallenge
 	now := time.Now()
 
+	if captchaChallengesColl == nil {
+		return challenges, fmt.Errorf("captcha challenges collection is not initialized")
+	}
+
 	cursor := findAll(captchaChallengesColl, bson.M{
 		"expires_at": bson.M{"$lt": now},
 		"solved":     false,
@@ -268,6 +273,10 @@ func GetExpiredCaptchaChallenges() ([]*CaptchaChallenge, error) {
 
 // CleanupExpiredChallenges removes all expired challenges from the database.
 func CleanupExpiredChallenges() error {
+	if captchaChallengesColl == nil {
+		return fmt.Errorf("captcha challenges collection is not initialized")
+	}
+	
 	now := time.Now()
 	err := deleteMany(captchaChallengesColl, bson.M{
 		"expires_at": bson.M{"$lt": now},

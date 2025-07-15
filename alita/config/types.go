@@ -26,6 +26,9 @@ func (t typeConvertor) StringArray() []string {
 // Int converts the string to an int.
 // Returns 0 if conversion fails.
 func (t typeConvertor) Int() int {
+	if t.str == "" {
+		return 0
+	}
 	val, err := strconv.Atoi(t.str)
 	if err != nil {
 		log.Warnf("Failed to parse '%s' as int: %v. Defaulting to 0.", t.str, err)
