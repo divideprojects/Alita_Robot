@@ -62,7 +62,11 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) *AdminCache {
 	go func() {
 		maxRetries := 3
 		for i := 0; i < maxRetries; i++ {
-			if err := Marshal.Set(Context, AdminCache{ChatId: chatId}, &adminCache, store.WithExpiration(time.Minute*10)); err != nil {
+			err := SafeCacheOperation(func() error {
+				return Marshal.Set(Context, AdminCache{ChatId: chatId}, &adminCache, store.WithExpiration(time.Minute*10))
+			})
+			
+			if err != nil {
 				log.WithFields(log.Fields{
 					"chatId": chatId,
 					"error":  err,
@@ -92,15 +96,28 @@ Returns a boolean indicating if the cache was found, and the AdminCache object.
 If the cache is not found or an error occurs, returns false and an empty AdminCache.
 */
 func GetAdminCacheList(chatId int64) (bool, *AdminCache) {
-	gotAdminlist, err := Marshal.Get(
-		Context,
-		AdminCache{
-			ChatId: chatId,
-		},
-		new(AdminCache),
-	)
+	if !IsCacheEnabled() {
+		return false, &AdminCache{}
+	}
+	
+	var gotAdminlist interface{}
+	err := SafeCacheOperation(func() error {
+		var err error
+		gotAdminlist, err = Marshal.Get(
+			Context,
+			AdminCache{
+				ChatId: chatId,
+			},
+			new(AdminCache),
+		)
+		return err
+	})
+	
 	if err != nil {
-		log.Error(err)
+		log.WithFields(log.Fields{
+			"chatId": chatId,
+			"error":  err,
+		}).Error("GetAdminCacheList: Failed to get admin cache")
 		return false, &AdminCache{}
 	}
 	if gotAdminlist == nil {
@@ -116,8 +133,18 @@ Returns true and the MergedChatMember if found, otherwise returns false and an e
 Uses optimized map-based lookup for O(1) performance.
 */
 func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
-	adminList, _ := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
-	if adminList == nil {
+	if !IsCacheEnabled() {
+		return false, gotgbot.MergedChatMember{}
+	}
+	
+	var adminList interface{}
+	err := SafeCacheOperation(func() error {
+		var err error
+		adminList, err = Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
+		return err
+	})
+	
+	if err != nil || adminList == nil {
 		return false, gotgbot.MergedChatMember{}
 	}
 
@@ -153,7 +180,10 @@ This function should be called when the admin list is known to have changed,
 ensuring that subsequent calls will fetch fresh data from Telegram.
 */
 func InvalidateAdminCache(chatId int64) error {
-	err := Marshal.Delete(Context, AdminCache{ChatId: chatId})
+	err := SafeCacheOperation(func() error {
+		return Marshal.Delete(Context, AdminCache{ChatId: chatId})
+	})
+	
 	if err != nil {
 		log.WithFields(log.Fields{
 			"chatId": chatId,
@@ -190,8 +220,18 @@ Returns true if the user is an admin, false otherwise.
 Uses map-based lookup for O(1) performance when multiple checks are needed.
 */
 func IsUserAdminCached(_ *gotgbot.Bot, chatId, userId int64) bool {
-	adminList, _ := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
-	if adminList == nil {
+	if !IsCacheEnabled() {
+		return false
+	}
+	
+	var adminList interface{}
+	err := SafeCacheOperation(func() error {
+		var err error
+		adminList, err = Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
+		return err
+	})
+	
+	if err != nil || adminList == nil {
 		return false
 	}
 

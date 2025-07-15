@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"strings"
 	"time"
 
@@ -51,29 +52,29 @@ func GetAllFiltersPaginated(_ int64, opts PaginationOptions) (PaginatedResult[*C
 
 	if opts.Cursor == nil && opts.Offset == 0 {
 		// Default to cursor-based pagination
-		return paginator.GetNextPage(bgCtx, bson.M{}, PaginationOptions{
+		return paginator.GetNextPage(context.Background(), bson.M{}, PaginationOptions{
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		})
 	}
 
 	if opts.Offset > 0 {
-		return paginator.GetPageByOffset(bgCtx, bson.M{}, PaginationOptions{
+		return paginator.GetPageByOffset(context.Background(), bson.M{}, PaginationOptions{
 			Offset:        opts.Offset,
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		})
 	}
 
-	return paginator.GetNextPage(bgCtx, bson.M{}, opts)
+	return paginator.GetNextPage(context.Background(), bson.M{}, opts)
 }
 
 // GetFiltersList returns a list of all filter keywords for a chat.
 func GetFiltersList(chatID int64) (allFilterWords []string) {
 	var results []*ChatFilters
 	cursor := findAll(getCollection("filters"), bson.M{"chat_id": chatID})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &results)
+	defer cursor.Close(context.Background())
+	cursor.All(context.Background(), &results)
 	for _, j := range results {
 		allFilterWords = append(allFilterWords, j.KeyWord)
 	}
@@ -104,7 +105,7 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 	}
 
 	result := &ChatFilters{}
-	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
 		// Perform the upsert operation within the transaction
 		err := findOneAndUpsert(getCollection("filters"), filter, update, result)
 		if err != nil {
@@ -130,7 +131,7 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 
 // RemoveFilter deletes a filter by keyword from the chat.
 func RemoveFilter(chatID int64, keyWord string) {
-	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
 		// Perform the delete operation within the transaction
 		err := deleteOne(getCollection("filters"), bson.M{"chat_id": chatID, "keyword": keyWord})
 		if err != nil && err != mongo.ErrNoDocuments {
@@ -185,20 +186,20 @@ func LoadFilterStats() (filtersNum, filtersUsingChats int64) {
 		},
 	}
 
-	cursor, err := getCollection("filters").Aggregate(bgCtx, pipeline)
+	cursor, err := getCollection("filters").Aggregate(context.Background(), pipeline)
 	if err != nil {
 		log.Error("Failed to aggregate filter stats:", err)
 		// Fallback to manual method if aggregation fails
 		return loadFilterStatsManual()
 	}
-	defer cursor.Close(bgCtx)
+	defer cursor.Close(context.Background())
 
 	var result struct {
 		TotalFilters int64 `bson:"totalFilters"`
 		TotalChats   int64 `bson:"totalChats"`
 	}
 
-	if cursor.Next(bgCtx) {
+	if cursor.Next(context.Background()) {
 		if err := cursor.Decode(&result); err != nil {
 			log.Error("Failed to decode filter stats:", err)
 			// Fallback to manual method if decode fails
@@ -221,7 +222,7 @@ func loadFilterStatsManual() (filtersNum, filtersUsingChats int64) {
 
 	// Process in paginated batches
 	for {
-		result, err := paginator.GetNextPage(bgCtx, bson.M{}, PaginationOptions{
+		result, err := paginator.GetNextPage(context.Background(), bson.M{}, PaginationOptions{
 			Limit:         1000, // Process 1000 docs at a time
 			SortDirection: 1,
 		})

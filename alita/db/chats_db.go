@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -89,7 +90,7 @@ func GetAllChats() map[int64]Chat {
 
 	var cursor interface{}
 	for {
-		result, err := paginator.GetNextPage(bgCtx, bson.M{}, PaginationOptions{
+		result, err := paginator.GetNextPage(context.Background(), bson.M{}, PaginationOptions{
 			Cursor:        cursor,
 			Limit:         100, // Process 100 docs at a time
 			SortDirection: 1,
@@ -141,20 +142,20 @@ func LoadChatStats() (activeChats, inactiveChats int) {
 		},
 	}
 
-	cursor, err := chatColl.Aggregate(bgCtx, pipeline)
+	cursor, err := chatColl.Aggregate(context.Background(), pipeline)
 	if err != nil {
 		log.Error("Failed to aggregate chat stats:", err)
 		// Fallback to manual method if aggregation fails
 		return loadChatStatsManual()
 	}
-	defer cursor.Close(bgCtx)
+	defer cursor.Close(context.Background())
 
 	var result struct {
 		ActiveChats   int `bson:"activeChats"`
 		InactiveChats int `bson:"inactiveChats"`
 	}
 
-	if cursor.Next(bgCtx) {
+	if cursor.Next(context.Background()) {
 		if err := cursor.Decode(&result); err != nil {
 			log.Error("Failed to decode chat stats:", err)
 			// Fallback to manual method if decode fails

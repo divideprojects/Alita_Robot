@@ -1,6 +1,9 @@
 package scheduler
 
 import (
+	"context"
+	"fmt"
+	"sync"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -14,21 +17,38 @@ import (
 type CaptchaScheduler struct {
 	bot      *gotgbot.Bot
 	interval time.Duration
-	stopChan chan bool
+	stopChan chan struct{}
+	running  bool
+	mu       sync.RWMutex
+	ctx      context.Context
+	cancel   context.CancelFunc
 }
 
 // NewCaptchaScheduler creates a new CAPTCHA scheduler
 func NewCaptchaScheduler(bot *gotgbot.Bot, interval time.Duration) *CaptchaScheduler {
+	ctx, cancel := context.WithCancel(context.Background())
 	return &CaptchaScheduler{
 		bot:      bot,
 		interval: interval,
-		stopChan: make(chan bool),
+		stopChan: make(chan struct{}),
+		running:  false,
+		ctx:      ctx,
+		cancel:   cancel,
 	}
 }
 
 // Start begins the scheduler's background processing
 func (cs *CaptchaScheduler) Start() {
+	cs.mu.Lock()
+	defer cs.mu.Unlock()
+
+	if cs.running {
+		log.Warn("CAPTCHA scheduler is already running")
+		return
+	}
+
 	log.Info("Starting CAPTCHA scheduler...")
+	cs.running = true
 
 	ticker := time.NewTicker(cs.interval)
 	defer ticker.Stop()
@@ -42,6 +62,15 @@ func (cs *CaptchaScheduler) Start() {
 			cs.processExpiredChallenges()
 		case <-cs.stopChan:
 			log.Info("CAPTCHA scheduler stopped")
+			cs.mu.Lock()
+			cs.running = false
+			cs.mu.Unlock()
+			return
+		case <-cs.ctx.Done():
+			log.Info("CAPTCHA scheduler stopped due to context cancellation")
+			cs.mu.Lock()
+			cs.running = false
+			cs.mu.Unlock()
 			return
 		}
 	}
@@ -49,7 +78,46 @@ func (cs *CaptchaScheduler) Start() {
 
 // Stop stops the scheduler
 func (cs *CaptchaScheduler) Stop() {
-	cs.stopChan <- true
+	cs.mu.RLock()
+	running := cs.running
+	cs.mu.RUnlock()
+
+	if !running {
+		log.Debug("CAPTCHA scheduler is already stopped")
+		return
+	}
+
+	log.Info("Stopping CAPTCHA scheduler...")
+	
+	// Use select to prevent blocking
+	select {
+	case cs.stopChan <- struct{}{}:
+		// Signal sent successfully
+	default:
+		// Channel is full or closed, use context cancellation
+		cs.cancel()
+	}
+
+	// Wait for scheduler to actually stop with timeout
+	timeout := time.After(5 * time.Second)
+	for {
+		cs.mu.RLock()
+		running := cs.running
+		cs.mu.RUnlock()
+
+		if !running {
+			break
+		}
+
+		select {
+		case <-timeout:
+			log.Warn("CAPTCHA scheduler stop timeout, forcing cancellation")
+			cs.cancel()
+			return
+		default:
+			time.Sleep(100 * time.Millisecond)
+		}
+	}
 }
 
 // processExpiredChallenges handles all expired CAPTCHA challenges
@@ -174,9 +242,114 @@ func (cs *CaptchaScheduler) isUserStillMuted(chatID, userID int64) bool {
 	return false
 }
 
+// IsRunning returns true if the scheduler is currently running
+func (cs *CaptchaScheduler) IsRunning() bool {
+	cs.mu.RLock()
+	defer cs.mu.RUnlock()
+	return cs.running
+}
+
 // StartCaptchaScheduler starts the global CAPTCHA scheduler
 func StartCaptchaScheduler(bot *gotgbot.Bot) *CaptchaScheduler {
 	scheduler := NewCaptchaScheduler(bot, 30*time.Second) // Check every 30 seconds
 	go scheduler.Start()
 	return scheduler
+}
+
+// SchedulerLifecycleManager manages the CAPTCHA scheduler lifecycle
+type SchedulerLifecycleManager struct {
+	scheduler *CaptchaScheduler
+	bot       *gotgbot.Bot
+}
+
+// NewSchedulerLifecycleManager creates a new scheduler lifecycle manager
+func NewSchedulerLifecycleManager(bot *gotgbot.Bot) *SchedulerLifecycleManager {
+	return &SchedulerLifecycleManager{
+		bot: bot,
+	}
+}
+
+// Name returns the component name
+func (s *SchedulerLifecycleManager) Name() string {
+	return "scheduler"
+}
+
+// Priority returns the shutdown priority
+func (s *SchedulerLifecycleManager) Priority() int {
+	return 30 // Lower priority for shutdown
+}
+
+// Initialize starts the scheduler
+func (s *SchedulerLifecycleManager) Initialize(ctx context.Context) error {
+	log.Info("Initializing CAPTCHA scheduler...")
+	
+	if s.bot == nil {
+		return fmt.Errorf("bot instance is nil")
+	}
+
+	s.scheduler = NewCaptchaScheduler(s.bot, 30*time.Second)
+	go s.scheduler.Start()
+
+	// Wait a moment to ensure scheduler starts
+	time.Sleep(100 * time.Millisecond)
+
+	if !s.scheduler.IsRunning() {
+		return fmt.Errorf("scheduler failed to start")
+	}
+
+	log.Info("CAPTCHA scheduler initialized successfully")
+	return nil
+}
+
+// Shutdown stops the scheduler
+func (s *SchedulerLifecycleManager) Shutdown(ctx context.Context) error {
+	log.Info("Shutting down CAPTCHA scheduler...")
+	
+	if s.scheduler == nil {
+		log.Debug("Scheduler is nil, nothing to shutdown")
+		return nil
+	}
+
+	// Create a timeout context for shutdown
+	shutdownCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	// Stop the scheduler in a goroutine
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		s.scheduler.Stop()
+	}()
+
+	// Wait for shutdown to complete or timeout
+	select {
+	case <-done:
+		log.Info("CAPTCHA scheduler shutdown completed")
+		return nil
+	case <-shutdownCtx.Done():
+		log.Error("CAPTCHA scheduler shutdown timed out")
+		return fmt.Errorf("scheduler shutdown timeout")
+	}
+}
+
+// HealthCheck verifies the scheduler is running
+func (s *SchedulerLifecycleManager) HealthCheck(ctx context.Context) error {
+	if s.scheduler == nil {
+		return fmt.Errorf("scheduler is not initialized")
+	}
+
+	if !s.scheduler.IsRunning() {
+		return fmt.Errorf("scheduler is not running")
+	}
+
+	if s.bot == nil {
+		return fmt.Errorf("bot instance is nil")
+	}
+
+	return nil
+}
+
+// GetSchedulerLifecycleManager returns a new scheduler lifecycle manager
+func GetSchedulerLifecycleManager(bot *gotgbot.Bot) *SchedulerLifecycleManager {
+	return NewSchedulerLifecycleManager(bot)
 }

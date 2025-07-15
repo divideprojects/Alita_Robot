@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -109,7 +110,7 @@ func LoadDisableStats() (disabledCmds, disableEnabledChats int64) {
 
 	var cursor interface{}
 	for {
-		result, err := paginator.GetNextPage(bgCtx, bson.M{}, PaginationOptions{
+		result, err := paginator.GetNextPage(context.Background(), bson.M{}, PaginationOptions{
 			Cursor:        cursor,
 			Limit:         100, // Process 100 docs at a time
 			SortDirection: 1,

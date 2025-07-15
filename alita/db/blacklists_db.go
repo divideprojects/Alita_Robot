@@ -70,7 +70,7 @@ func AddBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = append(blSrc.Triggers, strings.ToLower(trigger))
 
-	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
 		// Perform the update operation within the transaction
 		err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
 		if err != nil {
@@ -94,7 +94,7 @@ func RemoveBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = removeStrfromStr(blSrc.Triggers, strings.ToLower(trigger))
 
-	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
 		// Perform the update operation within the transaction
 		err := updateOne(blacklistsColl, bson.M{"_id": chatId}, blSrc)
 		if err != nil {
@@ -166,20 +166,20 @@ func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 		},
 	}
 
-	cursor, err := blacklistsColl.Aggregate(bgCtx, pipeline)
+	cursor, err := blacklistsColl.Aggregate(context.Background(), pipeline)
 	if err != nil {
 		log.Error("Failed to aggregate blacklist stats:", err)
 		// Fallback to manual method if aggregation fails
 		return loadBlacklistsStatsManual()
 	}
-	defer cursor.Close(bgCtx)
+	defer cursor.Close(context.Background())
 
 	var result struct {
 		TotalTriggers     int64 `bson:"totalTriggers"`
 		ChatsWithTriggers int64 `bson:"chatsWithTriggers"`
 	}
 
-	if cursor.Next(bgCtx) {
+	if cursor.Next(context.Background()) {
 		if err := cursor.Decode(&result); err != nil {
 			log.Error("Failed to decode blacklist stats:", err)
 			// Fallback to manual method if decode fails
@@ -206,9 +206,9 @@ func loadBlacklistsStatsManual() (blacklistTriggers, blacklistChats int64) {
 		if err != nil {
 			log.Error(err)
 		}
-	}(cursor, bgCtx)
+	}(cursor, context.Background())
 
-	for cursor.Next(bgCtx) {
+	for cursor.Next(context.Background()) {
 		var blacklistSetting BlacklistSettings
 		if err := cursor.Decode(&blacklistSetting); err != nil {
 			log.Error("Failed to decode blacklist setting:", err)

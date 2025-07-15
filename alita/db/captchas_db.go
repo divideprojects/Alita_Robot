@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"sync"
 	"time"
 
@@ -254,9 +255,9 @@ func GetExpiredCaptchaChallenges() ([]*CaptchaChallenge, error) {
 		"expires_at": bson.M{"$lt": now},
 		"solved":     false,
 	})
-	defer cursor.Close(bgCtx)
+	defer cursor.Close(context.Background())
 
-	err := cursor.All(bgCtx, &challenges)
+	err := cursor.All(context.Background(), &challenges)
 	if err != nil {
 		log.Errorf("[Database] GetExpiredCaptchaChallenges: %v", err)
 		return nil, err

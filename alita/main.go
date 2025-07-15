@@ -16,8 +16,6 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
-	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
-	"github.com/divideprojects/Alita_Robot/alita/utils/scheduler"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -62,19 +60,18 @@ func ListModules() string {
 
 // InitialChecks performs startup checks and background initializations before running the bot.
 // It ensures the bot is present in the database, checks for duplicate command aliases,
-// initializes the cache, and starts resource monitoring.
+// and starts resource monitoring. Cache and database initialization is now handled by lifecycle manager.
 func InitialChecks(b *gotgbot.Bot) {
 	// Create bot in db if not already created
 	go db.EnsureBotInDb(b)
 	checkDuplicateAliases()
-	go cache.InitCache()
 
 	// Start resource monitoring
 	go ResourceMonitor()
 }
 
 // checkDuplicateAliases checks for duplicate command aliases in the help module.
-// If a duplicate is found, the bot logs a fatal error and exits.
+// If a duplicate is found, the bot logs an error and exits gracefully.
 func checkDuplicateAliases() {
 	var althelp []string
 
@@ -86,7 +83,10 @@ func checkDuplicateAliases() {
 
 	duplicateAlias, val := string_handling.IsDuplicateInStringSlice(althelp)
 	if val {
-		log.Fatalf("Found duplicate alias: %s", duplicateAlias)
+		log.Errorf("Found duplicate alias: %s", duplicateAlias)
+		// Exit gracefully instead of using log.Fatalf
+		// This allows for proper cleanup by the lifecycle manager
+		panic(fmt.Sprintf("Found duplicate alias: %s", duplicateAlias))
 	}
 }
 
@@ -126,7 +126,9 @@ func LoadModules(dispatcher *ext.Dispatcher) {
 }
 
 // StartCaptchaScheduler initializes and starts the CAPTCHA scheduler
+// DEPRECATED: This function is deprecated. Scheduler is now managed by lifecycle manager.
 func StartCaptchaScheduler(bot *gotgbot.Bot) {
-	log.Info("Starting CAPTCHA scheduler...")
-	scheduler.StartCaptchaScheduler(bot)
+	log.Warn("StartCaptchaScheduler is deprecated. Scheduler is now managed by lifecycle manager.")
+	// Keep for backwards compatibility but don't start scheduler
+	// scheduler.StartCaptchaScheduler(bot)
 }

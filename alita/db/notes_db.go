@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/eko/gocache/lib/v4/store"
@@ -15,6 +16,10 @@ import (
 
 // withTransaction executes operations within a MongoDB transaction
 func withTransaction(ctx context.Context, fn func(sessCtx mongo.SessionContext) error) error {
+	if mongoClient == nil {
+		return fmt.Errorf("database client is not initialized")
+	}
+	
 	session, err := mongoClient.StartSession()
 	if err != nil {
 		log.Errorf("[Database][withTransaction] Failed to start session: %v", err)
@@ -101,14 +106,14 @@ func GetAllNotesPaginated(chatID int64, opts PaginationOptions) (PaginatedResult
 	}
 
 	if opts.Offset > 0 {
-		return paginator.GetPageByOffset(bgCtx, filter, PaginationOptions{
+		return paginator.GetPageByOffset(context.Background(), filter, PaginationOptions{
 			Offset:        opts.Offset,
 			Limit:         opts.Limit,
 			SortDirection: 1,
 		})
 	}
 
-	return paginator.GetNextPage(bgCtx, filter, PaginationOptions{
+	return paginator.GetNextPage(context.Background(), filter, PaginationOptions{
 		Limit:         opts.Limit,
 		SortDirection: 1,
 	})
@@ -178,7 +183,7 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons []Button,
 	}
 
 	result := &ChatNotes{}
-	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
 		// Perform the upsert operation within the transaction
 		err := findOneAndUpsert(notesColl, filter, update, result)
 		if err != nil {
@@ -204,7 +209,7 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons []Button,
 
 // RemoveNote deletes a note by name from the chat.
 func RemoveNote(chatID int64, noteName string) {
-	err := withTransaction(bgCtx, func(sessCtx mongo.SessionContext) error {
+	err := withTransaction(context.Background(), func(sessCtx mongo.SessionContext) error {
 		// Perform the delete operation within the transaction
 		err := deleteOne(notesColl, bson.M{"chat_id": chatID, "note_name": noteName})
 		if err != nil && err != mongo.ErrNoDocuments {
@@ -247,7 +252,7 @@ func LoadNotesStats() (notesNum, notesUsingChats int64) {
 
 	var cursor interface{}
 	for {
-		result, err := paginator.GetNextPage(bgCtx, bson.M{}, PaginationOptions{
+		result, err := paginator.GetNextPage(context.Background(), bson.M{}, PaginationOptions{
 			Cursor:        cursor,
 			Limit:         100, // Process 100 docs at a time
 			SortDirection: 1,
