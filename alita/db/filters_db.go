@@ -119,7 +119,6 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 		}
 		return nil
 	})
-
 	if err != nil {
 		log.Errorf("[Database][AddFilter]: %d - %v", chatID, err)
 		return false
@@ -144,7 +143,6 @@ func RemoveFilter(chatID int64, keyWord string) {
 		}
 		return nil
 	})
-
 	if err != nil {
 		log.Errorf("[Database][RemoveFilter]: %d - %v", chatID, err)
 	}

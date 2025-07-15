@@ -193,7 +193,6 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons []Button,
 		}
 		return nil
 	})
-
 	if err != nil {
 		log.Errorf("[Database][AddNotes]: %d - %v", chatID, err)
 		return false
@@ -218,7 +217,6 @@ func RemoveNote(chatID int64, noteName string) {
 		}
 		return nil
 	})
-
 	if err != nil {
 		log.Errorf("[Database][RemoveNote]: %d - %v", chatID, err)
 	}

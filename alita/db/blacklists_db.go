@@ -83,7 +83,6 @@ func AddBlacklist(chatId int64, trigger string) {
 		}
 		return nil
 	})
-
 	if err != nil {
 		log.Errorf("[Database] AddBlacklist: %v - %d", err, chatId)
 	}
@@ -108,7 +107,6 @@ func RemoveBlacklist(chatId int64, trigger string) {
 		}
 		return nil
 	})
-
 	if err != nil {
 		log.Errorf("[Database] RemoveBlacklist: %v - %d", err, chatId)
 	}
