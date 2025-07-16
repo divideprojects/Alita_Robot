@@ -86,6 +86,7 @@ func LoadAllStats() string {
 	enabledWelcome, enabledGoodbye, cleanServiceEnabled, cleanWelcomeEnabled, cleanGoodbyeEnabled := LoadGreetingsStats()
 	notesNum, notesChats := LoadNotesStats()
 	numChannels := LoadChannelStats()
+	enabledCaptcha, kickEnabled, rulesEnabled, activeChallenges := LoadCaptchaStats()
 
 	result := "<u>Alita's Stats:</u>" +
 		fmt.Sprintf("\n\nGo Version: %s", runtime.Version()) +
@@ -138,6 +139,11 @@ func LoadAllStats() string {
 			humanize.Comma(notesNum),
 			humanize.Comma(notesChats),
 		) +
+		"\n<b>CAPTCHA:</b>" +
+		fmt.Sprintf("\n    <b>Enabled:</b> %s", humanize.Comma(enabledCaptcha)) +
+		fmt.Sprintf("\n    <b>Kick Enabled:</b> %s", humanize.Comma(kickEnabled)) +
+		fmt.Sprintf("\n    <b>Rules Enabled:</b> %s", humanize.Comma(rulesEnabled)) +
+		fmt.Sprintf("\n    <b>Active Challenges:</b> %s", humanize.Comma(activeChallenges)) +
 		fmt.Sprintf("\n<b>Channels Stored</b>: %s", humanize.Comma(numChannels))
 
 	return result

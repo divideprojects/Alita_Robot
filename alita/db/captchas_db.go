@@ -282,3 +282,44 @@ func CleanupExpiredChallenges() error {
 	}
 	return err
 }
+
+// LoadCaptchaStats returns counts of chats with various CAPTCHA features enabled.
+// Used for bot statistics and monitoring purposes to track feature adoption.
+// Iterates through all CAPTCHA settings to count enabled features.
+//
+// Returns:
+//   - enabledCaptcha: Number of chats with CAPTCHA enabled.
+//   - kickEnabled: Number of chats with CAPTCHA kick enabled.
+//   - rulesEnabled: Number of chats with CAPTCHA rules enabled.
+//   - activeChallenges: Number of active CAPTCHA challenges.
+func LoadCaptchaStats() (enabledCaptcha, kickEnabled, rulesEnabled, activeChallenges int64) {
+	var captchaSettings []*CaptchaSettings
+
+	cursor := findAll(captchasColl, bson.M{})
+	ctx := context.Background()
+	defer cursor.Close(ctx)
+	cursor.All(ctx, &captchaSettings)
+
+	for _, settings := range captchaSettings {
+		// count enabled features
+		if settings.Enabled {
+			enabledCaptcha++
+		}
+		if settings.KickEnabled {
+			kickEnabled++
+		}
+		if settings.RulesEnabled {
+			rulesEnabled++
+		}
+	}
+
+	// count active challenges
+	challengesCursor := findAll(captchaChallengesColl, bson.M{"solved": false})
+	defer challengesCursor.Close(ctx)
+	
+	var challenges []*CaptchaChallenge
+	challengesCursor.All(ctx, &challenges)
+	activeChallenges = int64(len(challenges))
+
+	return
+}
