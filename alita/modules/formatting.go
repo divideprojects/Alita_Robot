@@ -16,18 +16,14 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
 )
 
-/*
-formattingModule provides logic for formatting help and markdown support.
-
-Implements commands and handlers for markdown help and formatting options.
-*/
+// formattingModule provides logic for formatting help and markdown support.
+//
+// Implements commands and handlers for markdown help and formatting options.
 var formattingModule = moduleStruct{moduleName: "Formatting"}
 
-/*
-markdownHelp provides markdown and formatting help to users.
-
-Displays help in private chat or via a button in group chats, with a keyboard for navigation.
-*/
+// markdownHelp provides markdown and formatting help to users.
+//
+// Displays help in private chat or via a button in group chats, with a keyboard for navigation.
 func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
@@ -89,11 +85,9 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-genFormattingKb generates the inline keyboard for formatting help options.
-
-Returns a keyboard with buttons for markdown, fillings, and random content.
-*/
+// genFormattingKb generates the inline keyboard for formatting help options.
+//
+// Returns a keyboard with buttons for markdown, fillings, and random content.
 func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
 	fxt := "formatting.%s"
 
@@ -121,11 +115,9 @@ func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
 	return keyboard
 }
 
-/*
-getMarkdownHelp returns the help text for a given formatting sub-module.
-
-Supports markdown formatting, fillings, and random content.
-*/
+// getMarkdownHelp returns the help text for a given formatting sub-module.
+//
+// Supports markdown formatting, fillings, and random content.
 func (moduleStruct) getMarkdownHelp(module string) string {
 	var helpTxt string
 	tr := i18n.I18n{LangCode: "en"}
@@ -140,11 +132,9 @@ func (moduleStruct) getMarkdownHelp(module string) string {
 	return helpTxt
 }
 
-/*
-formattingHandler handles callback queries for formatting help sub-modules.
-
-Edits the help message to display the selected formatting topic.
-*/
+// formattingHandler handles callback queries for formatting help sub-modules.
+//
+// Edits the help message to display the selected formatting topic.
 func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	msg := query.Message
@@ -180,11 +170,9 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 	return ext.EndGroups
 }
 
-/*
-LoadMkdCmd registers formatting-related command handlers with the dispatcher.
-
-Enables the formatting module and adds handlers for markdown help and formatting options.
-*/
+// LoadMkdCmd registers formatting-related command handlers with the dispatcher.
+//
+// Enables the formatting module and adds handlers for markdown help and formatting options.
 func LoadMkdCmd(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(formattingModule.moduleName, true)
 	HelpModule.helpableKb[formattingModule.moduleName] = formattingModule.genFormattingKb()

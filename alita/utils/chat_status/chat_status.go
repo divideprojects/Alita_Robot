@@ -1,3 +1,8 @@
+// Package chat_status provides utilities for checking user and bot permissions in Telegram chats.
+//
+// This package contains functions for verifying admin status, bot capabilities,
+// user permissions, and enforcing access control for various bot commands and features.
+// All functions include proper error handling and user feedback mechanisms.
 package chat_status
 
 import (
@@ -30,7 +35,9 @@ var (
 	anonChatMapExpirartion = 20 * time.Second
 )
 
-// safeGetChat safely retrieves chat information from context, handling different update types
+// safeGetChat safely retrieves chat information from context, handling different update types.
+// It checks various update types (callback query, message, chat member) and returns the appropriate chat.
+// Falls back to EffectiveChat if other methods fail.
 func safeGetChat(ctx *ext.Context) *gotgbot.Chat {
 	if ctx.CallbackQuery != nil {
 		_chatValue := ctx.CallbackQuery.Message.GetChat()

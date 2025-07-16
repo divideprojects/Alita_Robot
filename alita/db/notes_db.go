@@ -50,6 +50,9 @@ type ChatNotes struct {
 	Buttons     []Button `bson:"note_buttons,omitempty" json:"note_buttons,omitempty"`
 }
 
+// getNotesSettings fetches note settings for a chat from the database.
+// If no document exists, it creates one with default values (private notes disabled).
+// Returns a pointer to the NoteSettings struct with either existing or default values.
 func getNotesSettings(chatID int64) (noteSrc *NoteSettings) {
 	defaultNotesSrc := &NoteSettings{ChatId: chatID, PrivateNotesEnabled: false}
 	err := findOne(notesSettingsColl, bson.M{"_id": chatID}).Decode(&noteSrc)
@@ -65,12 +68,17 @@ func getNotesSettings(chatID int64) (noteSrc *NoteSettings) {
 	return
 }
 
+// getAllChatNotes retrieves all notes for a specific chat without pagination.
+// Uses GetAllNotesPaginated internally with no limit to fetch all notes.
+// Returns a slice of all ChatNotes for the specified chat.
 func getAllChatNotes(chatId int64) (notes []*ChatNotes) {
 	result, _ := GetAllNotesPaginated(chatId, PaginationOptions{Limit: 0})
 	return result.Data
 }
 
-// GetAllNotesPaginated returns paginated notes for a chat.
+// GetAllNotesPaginated returns paginated notes for a chat using cursor or offset-based pagination.
+// Supports both cursor-based and offset-based pagination depending on the options provided.
+// Returns a PaginatedResult containing the notes and pagination metadata.
 func GetAllNotesPaginated(chatID int64, opts PaginationOptions) (PaginatedResult[*ChatNotes], error) {
 	paginator := NewMongoPagination[*ChatNotes](notesColl)
 
@@ -95,13 +103,15 @@ func GetAllNotesPaginated(chatID int64, opts PaginationOptions) (PaginatedResult
 }
 
 // GetNotes retrieves the note settings for a given chat ID.
-// If no settings exist, it initializes them with default values.
+// If no settings exist, it initializes them with default values (private notes disabled).
+// This is the main function for accessing note settings.
 func GetNotes(chatID int64) *NoteSettings {
 	return getNotesSettings(chatID)
 }
 
 // GetNote retrieves a specific note by keyword for a chat.
-// Returns nil if the note does not exist.
+// Returns nil if the note does not exist or if database operation fails.
+// Keyword matching is case-sensitive.
 func GetNote(chatID int64, keyword string) (noteSrc *ChatNotes) {
 	err := findOne(notesColl, bson.M{"chat_id": chatID, "note_name": keyword}).Decode(&noteSrc)
 	if err == mongo.ErrNoDocuments {
@@ -114,6 +124,7 @@ func GetNote(chatID int64, keyword string) (noteSrc *ChatNotes) {
 
 // GetNotesList returns a list of note names for a chat.
 // If admin is true, returns all notes; otherwise, excludes admin-only notes.
+// Used to display available notes to users based on their permissions.
 func GetNotesList(chatID int64, admin bool) (allNotes []string) {
 	noteSrc := getAllChatNotes(chatID)
 	for _, note := range noteSrc {
@@ -131,7 +142,8 @@ func GetNotesList(chatID int64, admin bool) (allNotes []string) {
 }
 
 // DoesNoteExists returns true if a note with the given name exists in the chat.
-// Uses direct database query to avoid race conditions.
+// Uses direct database query to avoid race conditions and ensure accuracy.
+// Returns false if database operation fails or note doesn't exist.
 func DoesNoteExists(chatID int64, noteName string) bool {
 	count, err := countDocs(notesColl, bson.M{"chat_id": chatID, "note_name": noteName})
 	if err != nil {
@@ -142,8 +154,9 @@ func DoesNoteExists(chatID int64, noteName string) bool {
 }
 
 // AddNote adds a new note to the chat with the specified properties.
-// If a note with the same name already exists, no action is taken.
-// Returns true if a new note was added, false if it already existed.
+// If a note with the same name already exists, no action is taken due to upsert behavior.
+// Returns true if a new note was added, false if it already existed or operation failed.
+// Supports various note types including text, media, and buttons.
 func AddNote(chatID int64, noteName, replyText, fileID string, buttons []Button, filtType int, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool) bool {
 	filter := bson.M{"chat_id": chatID, "note_name": noteName}
 	update := bson.M{
@@ -175,7 +188,8 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons []Button,
 }
 
 // RemoveNote deletes a note by name from the chat.
-// If the note does not exist, no action is taken.
+// If the note does not exist, no action is taken. Verifies note existence before deletion.
+// Operation is idempotent - safe to call multiple times.
 func RemoveNote(chatID int64, noteName string) {
 	if !string_handling.FindInStringSlice(GetNotesList(chatID, true), noteName) {
 		return
@@ -189,6 +203,8 @@ func RemoveNote(chatID int64, noteName string) {
 }
 
 // RemoveAllNotes deletes all notes from the specified chat.
+// This operation cannot be undone. All note data including buttons and settings are lost.
+// Use with caution as this affects all notes in the chat.
 func RemoveAllNotes(chatID int64) {
 	err := deleteMany(notesColl, bson.M{"chat_id": chatID})
 	if err != nil {
@@ -197,6 +213,8 @@ func RemoveAllNotes(chatID int64) {
 }
 
 // TooglePrivateNote enables or disables private notes for a chat.
+// When enabled, notes are sent privately to users instead of in the group.
+// Helps reduce chat spam and provides privacy for note content.
 func TooglePrivateNote(chatID int64, pref bool) {
 	noterc := getNotesSettings(chatID)
 	noterc.PrivateNotesEnabled = pref
@@ -207,6 +225,8 @@ func TooglePrivateNote(chatID int64, pref bool) {
 }
 
 // LoadNotesStats returns the total number of notes and the number of chats using notes.
+// Counts all notes across all chats and calculates unique chats that have at least one note.
+// Used for bot statistics and monitoring purposes.
 func LoadNotesStats() (notesNum, notesUsingChats int64) {
 	var notesArray []*ChatNotes
 	notesMap := make(map[int64][]ChatNotes)

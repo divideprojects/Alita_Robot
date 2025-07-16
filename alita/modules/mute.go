@@ -16,9 +16,10 @@ import (
 
 var mutesModule = moduleStruct{moduleName: "Mutes"}
 
-/* Used to temporarily mute a user from group
-
-The Bot, Muter should be admin with restrict permissions in order to use this */
+// tMute temporarily mutes a user from group.
+//
+// Used to temporarily mute a user from group.
+// The Bot, Muter should be admin with restrict permissions in order to use this.
 
 func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -147,9 +148,10 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Used to mute a user from group
-
-The Bot, Muter should be admin with restrict permissions in order to use this */
+// mute mutes a user from group.
+//
+// Used to mute a user from group.
+// The Bot, Muter should be admin with restrict permissions in order to use this.
 
 func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -276,11 +278,11 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Used to silently mute a user from group
-
-The Bot, Muter should be admin with restrict permissions in order to use this
-
-The message of muter will be deleted after sending this command */
+// sMute silently mutes a user from group.
+//
+// Used to silently mute a user from group.
+// The Bot, Muter should be admin with restrict permissions in order to use this.
+// The message of muter will be deleted after sending this command.
 
 func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -376,11 +378,11 @@ func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Used to mute a user from group and delete their message
-
-The Bot, Muter should be admin with restrict permissions in order to use this
-
-Used as a reply to a message and delete the replied message*/
+// dMute mutes a user from group and deletes their message.
+//
+// Used to mute a user from group and delete their message.
+// The Bot, Muter should be admin with restrict permissions in order to use this.
+// Used as a reply to a message and delete the replied message.
 
 func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -517,9 +519,10 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Used to Unmute a user from group
-
-The Bot, Unmuter should be admin with restrict permissions in order to use this */
+// unmute unmutes a user from group.
+//
+// Used to unmute a user from group.
+// The Bot, Unmuter should be admin with restrict permissions in order to use this.
 
 func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat

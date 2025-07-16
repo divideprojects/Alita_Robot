@@ -19,25 +19,18 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
 
-/*
-ConnectionsModule provides logic for managing user-to-chat connections.
-
-Implements commands to connect, disconnect, and manage chat connections for users and admins.
-*/
+// ConnectionsModule provides logic for managing user-to-chat connections.
+//
+// Implements commands to connect, disconnect, and manage chat connections for users and admins.
 var ConnectionsModule = moduleStruct{moduleName: "Connections"}
 
-/*
-	Check the status of connection of a user in their PM
-
-User can check if they are connected to a chat and can also bring up the keyboard for it.
-Normal use will have just one option with 'User Commands' and admin will have "Admin Commands" along the earlier as
-well.
-*/
-/*
-connection checks the status of a user's connection to a chat in their private messages.
-
-Displays connection status and provides a keyboard for user/admin commands.
-*/
+// connection checks the status of a user's connection to a chat in their private messages.
+//
+// Check the status of connection of a user in their PM
+// User can check if they are connected to a chat and can also bring up the keyboard for it.
+// Normal use will have just one option with 'User Commands' and admin will have "Admin Commands" along the earlier as well.
+//
+// Displays connection status and provides a keyboard for user/admin commands.
 func (m moduleStruct) connection(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -76,18 +69,13 @@ func (m moduleStruct) connection(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Allow users to connect to your chat
-
-You can give a word such as on/off/yes/no to toggle options
-
-Also, if no word is given, you will get your current setting.
-*/
-/*
-allowConnect allows admins to enable or disable user connections to the chat.
-
-Admins can toggle the setting or view the current status.
-*/
+// allowConnect allows admins to enable or disable user connections to the chat.
+//
+// Allow users to connect to your chat
+// You can give a word such as on/off/yes/no to toggle options
+// Also, if no word is given, you will get your current setting.
+//
+// Admins can toggle the setting or view the current status.
 func (moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -132,18 +120,13 @@ func (moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Connect to a chat
-
-Use this command to connect to your chat!
-
-Admins and Users both can use this.
-*/
-/*
-connect allows a user or admin to connect to a chat.
-
-Handles both private and group chat contexts, checks permissions, and updates the connection status.
-*/
+// connect allows a user or admin to connect to a chat.
+//
+// Connect to a chat
+// Use this command to connect to your chat!
+// Admins and Users both can use this.
+//
+// Handles both private and group chat contexts, checks permissions, and updates the connection status.
 func (moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -199,11 +182,9 @@ func (moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // Handler for Connection buttons
-/*
-connectionButtons handles callback queries for connection-related buttons.
-
-Displays appropriate command options based on user type and connection status.
-*/
+// connectionButtons handles callback queries for connection-related buttons.
+//
+// Displays appropriate command options based on user type and connection status.
 func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
@@ -273,16 +254,12 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 	return ext.EndGroups
 }
 
-/*
-	Disconnect from a chat
-
-Used to disconnect from currently connected chat
-*/
-/*
-disconnect disconnects a user from their currently connected chat.
-
-Can only be used in private messages. Updates the database and replies with the result.
-*/
+// disconnect disconnects a user from their currently connected chat.
+//
+// Disconnect from a chat
+// Used to disconnect from currently connected chat
+//
+// Can only be used in private messages. Updates the database and replies with the result.
 func (m moduleStruct) disconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
@@ -312,16 +289,12 @@ func (m moduleStruct) disconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Function used to check if user is connected to a chat or not
-
-If user is connected, chatId is returned else 0
-*/
-/*
-isConnected checks if a user is connected to a chat.
-
-Returns the chat ID if connected, otherwise replies with a message and returns 0.
-*/
+// isConnected checks if a user is connected to a chat.
+//
+// Function used to check if user is connected to a chat or not
+// If user is connected, chatId is returned else 0
+//
+// Returns the chat ID if connected, otherwise replies with a message and returns 0.
 func (moduleStruct) isConnected(b *gotgbot.Bot, ctx *ext.Context, userId int64) int64 {
 	conn := db.Connection(userId)
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -338,16 +311,12 @@ func (moduleStruct) isConnected(b *gotgbot.Bot, ctx *ext.Context, userId int64) 
 	return 0
 }
 
-/*
-	Used to reconnect to last chat connected by user
-
-Both user and admin can use this command to connect to the previous chat
-*/
-/*
-reconnect reconnects a user to their last connected chat.
-
-Handles both user and admin contexts, checks permissions, and updates the connection status.
-*/
+// reconnect reconnects a user to their last connected chat.
+//
+// Used to reconnect to last chat connected by user
+// Both user and admin can use this command to connect to the previous chat
+//
+// Handles both user and admin contexts, checks permissions, and updates the connection status.
 func (moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -400,25 +369,19 @@ func (moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-adminCmdConnString returns a formatted string of admin connection commands.
-*/
+// adminCmdConnString returns a formatted string of admin connection commands.
 func (moduleStruct) adminCmdConnString() string {
 	return "\n - /" + strings.Join(misc.AdminCmds, "\n - /")
 }
 
-/*
-userCmdConnString returns a formatted string of user connection commands.
-*/
+// userCmdConnString returns a formatted string of user connection commands.
 func (moduleStruct) userCmdConnString() string {
 	return "\n - /" + strings.Join(misc.UserCmds, "\n - /")
 }
 
-/*
-LoadConnections registers all connection-related command handlers with the dispatcher.
-
-Enables the connections module and adds handlers for connect, disconnect, and related commands.
-*/
+// LoadConnections registers all connection-related command handlers with the dispatcher.
+//
+// Enables the connections module and adds handlers for connect, disconnect, and related commands.
 func LoadConnections(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("connect", ConnectionsModule.connect))
 	dispatcher.AddHandler(handlers.NewCommand("disconnect", ConnectionsModule.disconnect))

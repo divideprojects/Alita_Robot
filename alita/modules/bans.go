@@ -21,24 +21,16 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 )
 
-/*
-bansModule provides ban, kick, restrict, and unrestrict logic for group chats.
-
-Implements all moderation actions related to user removal and restriction.
-*/
+// bansModule provides ban, kick, restrict, and unrestrict logic for group chats.
+//
+// Implements all moderation actions related to user removal and restriction.
 var bansModule = moduleStruct{moduleName: "Bans"}
 
-/* Used to Kick a user from group
-
-The Bot, Kicker should be admin with ban permissions in order to use this */
-
-/*
-dkick deletes a user's message and kicks them from the group.
-
-Performs permission checks, extracts the target user from a reply, deletes their message, and kicks them. Handles edge cases such as anonymous users and admins.
-
-The Bot and the user issuing the command must have appropriate permissions.
-*/
+// dkick deletes a user's message and kicks them from the group.
+//
+// Performs permission checks, extracts the target user from a reply, deletes their message, and kicks them. Handles edge cases such as anonymous users and admins.
+//
+// The Bot and the user issuing the command must have appropriate permissions.
 func (moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -159,11 +151,9 @@ func (moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-kick removes a user from the group.
-
-Checks permissions, extracts the target user, and kicks them. Handles edge cases such as anonymous users, admins, and the bot itself.
-*/
+// kick removes a user from the group.
+//
+// Checks permissions, extracts the target user, and kicks them. Handles edge cases such as anonymous users, admins, and the bot itself.
 func (moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -271,16 +261,9 @@ func (moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Used to kick a user from group
-
-The Bot should be admin with ban permissions in order to use this
-*/
-/*
-kickme allows a user to remove themselves from the group.
-
-Admins are not allowed to use this command. The bot must have restriction permissions.
-*/
+// kickme allows a user to remove themselves from the group.
+//
+// Admins are not allowed to use this command. The bot must have restriction permissions.
 func (moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -321,15 +304,9 @@ func (moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Used to temporarily ban a user from chat
-
-The Bot, Kick should be admin with ban permissions in order to use this */
-
-/*
-tBan temporarily bans a user from the chat.
-
-Performs permission checks, extracts the target user and ban duration, and bans them for the specified time. Handles edge cases such as anonymous users and admins.
-*/
+// tBan temporarily bans a user from the chat.
+//
+// Performs permission checks, extracts the target user and ban duration, and bans them for the specified time. Handles edge cases such as anonymous users and admins.
 func (moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -436,15 +413,9 @@ func (moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Used to indefinitely ban a user from group
-
-The Bot, Banner should be admin with ban permissions in order to use this */
-
-/*
-ban bans a user from the group indefinitely.
-
-Checks permissions, extracts the target user, and bans them. Handles anonymous users, admins, and the bot itself. Provides an inline button for unbanning.
-*/
+// ban bans a user from the group indefinitely.
+//
+// Checks permissions, extracts the target user, and bans them. Handles anonymous users, admins, and the bot itself. Provides an inline button for unbanning.
 func (moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -555,17 +526,14 @@ func (moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Used to Silently Ban a user from group
+// sBan silently bans a user from the group and deletes the command message.
+//
+// Used to silently ban a user from group.
+// This deletes the command of Banner and also does not reply.
+// The Bot, Banner should be admin with ban permissions in order to use this.
 
-This deletes the command of Banner and also does not reply.
-
-The Bot, Banner should be admin with ban permissions in order to use this */
-
-/*
-sBan silently bans a user from the group and deletes the command message.
-
-Performs permission checks, extracts the target user, and bans them without sending a reply. Handles edge cases such as anonymous users and admins.
-*/
+//
+// Performs permission checks, extracts the target user, and bans them without sending a reply. Handles edge cases such as anonymous users and admins.
 func (moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -636,17 +604,14 @@ func (moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Used to Ban a user from group and delete their message
+// dBan bans a user from the group and deletes their message.
+//
+// Used to ban a user from group and delete their message.
+// This deletes the message of replied user.
+// The Bot, Banner should be admin with ban permissions in order to use this.
 
-This deletes the message of replied user
-
-The Bot, Banner should be admin with ban permissions in order to use this */
-
-/*
-dBan bans a user from the group and deletes their message.
-
-Checks permissions, extracts the target user, deletes their message, and bans them. Handles anonymous users, admins, and edge cases.
-*/
+//
+// Checks permissions, extracts the target user, deletes their message, and bans them. Handles anonymous users, admins, and edge cases.
 func (moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -761,15 +726,13 @@ func (moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Used to Unban a user from group
+// unban removes a ban from a user in the group.
+//
+// Used to unban a user from group.
+// The Bot, Unbanner should be admin with ban permissions in order to use this.
 
-The Bot, Unbanner should be admin with ban permissions in order to use this */
-
-/*
-unban removes a ban from a user in the group.
-
-Checks permissions, extracts the target user, and unbans them. Handles anonymous users, admins, and the bot itself.
-*/
+//
+// Checks permissions, extracts the target user, and unbans them. Handles anonymous users, admins, and the bot itself.
 func (moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -857,14 +820,13 @@ func (moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Used to Restrict members from a chat
-Shows an inline keyboard menu which shows options to kick, ban and mute */
+// restrict shows an inline keyboard to restrict a user (ban, kick, mute).
+//
+// Used to restrict members from a chat.
+// Shows an inline keyboard menu which shows options to kick, ban and mute.
 
-/*
-restrict shows an inline keyboard to restrict a user (ban, kick, mute).
-
-Checks permissions and displays options for restricting the target user.
-*/
+//
+// Checks permissions and displays options for restricting the target user.
 func (moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -944,12 +906,10 @@ func (moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-// Handles the queries fore restrict command
-/*
-restrictButtonHandler handles callback queries for the restrict command.
-
-Performs the selected restriction action (ban, kick, mute) on the target user.
-*/
+// restrictButtonHandler handles callback queries for the restrict command.
+//
+// Handles the queries for restrict command.
+// Performs the selected restriction action (ban, kick, mute) on the target user.
 func (moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
@@ -1048,14 +1008,13 @@ func (moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) erro
 	return ext.EndGroups
 }
 
-/* Used to Unrestrict members from a chat
-Shows an inline keyboard menu which shows options to unban and unmute */
+// unrestrict shows an inline keyboard to unrestrict a user (unban, unmute).
+//
+// Used to unrestrict members from a chat.
+// Shows an inline keyboard menu which shows options to unban and unmute.
 
-/*
-unrestrict shows an inline keyboard to unrestrict a user (unban, unmute).
-
-Checks permissions and displays options for unrestricting the target user.
-*/
+//
+// Checks permissions and displays options for unrestricting the target user.
 func (moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -1134,12 +1093,10 @@ func (moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-// Handles queries for unrestrict command
-/*
-unrestrictButtonHandler handles callback queries for the unrestrict command.
-
-Performs the selected unrestriction action (unban, unmute) on the target user and updates the message accordingly.
-*/
+// unrestrictButtonHandler handles callback queries for the unrestrict command.
+//
+// Handles queries for unrestrict command.
+// Performs the selected unrestriction action (unban, unmute) on the target user and updates the message accordingly.
 func (moduleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
@@ -1226,11 +1183,45 @@ func (moduleStruct) unrestrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) er
 	return ext.EndGroups
 }
 
-/*
-LoadBans registers all ban, kick, restrict, and unrestrict command handlers with the dispatcher.
-
-Enables the bans module and adds handlers for all moderation-related commands and callbacks.
-*/
+// LoadBans registers all ban, kick, restrict, and unrestrict command handlers with the dispatcher.
+//
+// This function enables the bans module and adds handlers for all moderation-related
+// commands and callbacks. The module provides comprehensive user management with
+// support for temporary restrictions and detailed enforcement actions.
+//
+// Registered commands:
+//   - /ban: Permanently bans a user from the chat
+//   - /sban: Silent ban (deletes command message)
+//   - /tban: Temporary ban with configurable duration
+//   - /dban: Delete ban (removes user's message and bans)
+//   - /unban: Removes a ban and allows user to rejoin
+//   - /kick: Kicks a user from the chat (they can rejoin)
+//   - /dkick: Delete kick (removes user's message and kicks)
+//   - /kickme: Allows users to kick themselves from the chat
+//   - /restrict: Restricts user permissions without full ban
+//   - /unrestrict: Removes restrictions and restores permissions
+//
+// The module includes comprehensive permission checking to ensure only
+// authorized users can perform moderation actions. It handles various
+// edge cases including anonymous users, bot self-protection, and admin immunity.
+//
+// Features:
+//   - Permanent and temporary bans with duration support
+//   - Silent moderation commands that auto-delete
+//   - Message deletion combined with user actions
+//   - Interactive restriction menus with callback buttons
+//   - Flexible restriction system with granular permissions
+//   - Comprehensive permission and safety checks
+//   - Integration with warning and logging systems
+//
+// Requirements:
+//   - Bot must be admin with ban/restrict permissions
+//   - User must be admin with appropriate permissions
+//   - Module respects admin hierarchy and bot limitations
+//   - Integrates with i18n for multilingual support
+//
+// The bans system provides robust moderation tools while maintaining
+// safety checks and proper permission enforcement.
 func LoadBans(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(bansModule.moduleName, true)
 

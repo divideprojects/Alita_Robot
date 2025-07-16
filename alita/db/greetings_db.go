@@ -71,7 +71,9 @@ type WelcomeSettings struct {
 	Button        []Button `bson:"btns,omitempty" json:"btns,omitempty"`
 }
 
-// check Chat Welcome Settings, used to get data before performing any operation
+// checkGreetingSettings fetches greeting settings for a chat from the database.
+// If no document exists, it creates one with default values (welcome enabled, goodbye disabled).
+// Returns a pointer to the GreetingSettings struct with either existing or default values.
 func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 	defaultGreetSrc := &GreetingSettings{
 		ChatID:             chatID,
@@ -106,24 +108,29 @@ func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 }
 
 // GetGreetingSettings retrieves the greeting settings for a given chat ID.
-// If no settings exist, it initializes them with default values.
+// If no settings exist, it initializes them with default values (welcome enabled, goodbye disabled).
+// This is the main function for accessing greeting settings.
 func GetGreetingSettings(chatID int64) *GreetingSettings {
 	return checkGreetingSettings(chatID)
 }
 
 // GetWelcomeButtons returns the list of buttons configured for welcome messages in a chat.
+// Returns an empty slice if no buttons are configured for the welcome message.
 func GetWelcomeButtons(chatId int64) []Button {
 	btns := checkGreetingSettings(chatId).WelcomeSettings.Button
 	return btns
 }
 
 // GetGoodbyeButtons returns the list of buttons configured for goodbye messages in a chat.
+// Returns an empty slice if no buttons are configured for the goodbye message.
 func GetGoodbyeButtons(chatId int64) []Button {
 	btns := checkGreetingSettings(chatId).GoodbyeSettings.Button
 	return btns
 }
 
 // SetWelcomeText updates the welcome message text, buttons, type, and file ID for a chat.
+// Supports various message types including text, media, and interactive buttons.
+// The welcType parameter defines the message format (text, photo, video, etc.).
 func SetWelcomeText(chatID int64, welcometxt, fileId string, buttons []Button, welcType int) {
 	welcomeSrc := checkGreetingSettings(chatID)
 	welcomeSrc.WelcomeSettings.WelcomeText = welcometxt
@@ -138,6 +145,7 @@ func SetWelcomeText(chatID int64, welcometxt, fileId string, buttons []Button, w
 }
 
 // SetWelcomeToggle enables or disables welcome messages for a chat.
+// When disabled, new members will not receive welcome messages.
 func SetWelcomeToggle(chatID int64, pref bool) {
 	welcomeSrc := checkGreetingSettings(chatID)
 	welcomeSrc.WelcomeSettings.ShouldWelcome = pref
@@ -149,6 +157,8 @@ func SetWelcomeToggle(chatID int64, pref bool) {
 }
 
 // SetGoodbyeText updates the goodbye message text, buttons, type, and file ID for a chat.
+// Supports various message types including text, media, and interactive buttons.
+// The goodbyeType parameter defines the message format (text, photo, video, etc.).
 func SetGoodbyeText(chatID int64, goodbyetext, fileId string, buttons []Button, goodbyeType int) {
 	goodbyeSrc := checkGreetingSettings(chatID)
 	goodbyeSrc.GoodbyeSettings.GoodbyeText = goodbyetext
@@ -163,6 +173,7 @@ func SetGoodbyeText(chatID int64, goodbyetext, fileId string, buttons []Button, 
 }
 
 // SetGoodbyeToggle enables or disables goodbye messages for a chat.
+// When disabled, leaving members will not trigger goodbye messages.
 func SetGoodbyeToggle(chatID int64, pref bool) {
 	goodbyeSrc := checkGreetingSettings(chatID)
 	goodbyeSrc.GoodbyeSettings.ShouldGoodbye = pref
@@ -174,6 +185,8 @@ func SetGoodbyeToggle(chatID int64, pref bool) {
 }
 
 // SetShouldCleanService sets whether service messages should be cleaned for a chat.
+// When enabled, automatically deletes Telegram's default join/leave service messages.
+// Helps keep the chat clean by removing system notifications.
 func SetShouldCleanService(chatID int64, pref bool) {
 	cleanServiceSrc := checkGreetingSettings(chatID)
 	cleanServiceSrc.ShouldCleanService = pref
@@ -185,6 +198,8 @@ func SetShouldCleanService(chatID int64, pref bool) {
 }
 
 // SetShouldAutoApprove sets whether users should be auto-approved on join for a chat.
+// When enabled, new members are automatically approved without admin intervention.
+// Only applicable for groups with join requests enabled.
 func SetShouldAutoApprove(chatID int64, pref bool) {
 	autoApproveSrc := checkGreetingSettings(chatID)
 	autoApproveSrc.ShouldAutoApprove = pref
@@ -196,6 +211,8 @@ func SetShouldAutoApprove(chatID int64, pref bool) {
 }
 
 // SetCleanWelcomeSetting sets whether previous welcome messages should be cleaned for a chat.
+// When enabled, deletes the previous welcome message before sending a new one.
+// Helps prevent welcome message spam in active groups.
 func SetCleanWelcomeSetting(chatID int64, pref bool) {
 	cleanWelcomeSrc := checkGreetingSettings(chatID)
 	cleanWelcomeSrc.WelcomeSettings.CleanWelcome = pref
@@ -207,6 +224,8 @@ func SetCleanWelcomeSetting(chatID int64, pref bool) {
 }
 
 // SetCleanWelcomeMsgId updates the last welcome message ID for cleaning purposes.
+// Stores the message ID of the most recent welcome message to enable deletion
+// when the next welcome message is sent.
 func SetCleanWelcomeMsgId(chatId, msgId int64) {
 	cleanWelcomeSrc := checkGreetingSettings(chatId)
 	cleanWelcomeSrc.WelcomeSettings.LastMsgId = msgId
@@ -218,6 +237,8 @@ func SetCleanWelcomeMsgId(chatId, msgId int64) {
 }
 
 // SetCleanGoodbyeSetting sets whether previous goodbye messages should be cleaned for a chat.
+// When enabled, deletes the previous goodbye message before sending a new one.
+// Helps prevent goodbye message spam in active groups.
 func SetCleanGoodbyeSetting(chatID int64, pref bool) {
 	cleanGoodbyeSrc := checkGreetingSettings(chatID)
 	cleanGoodbyeSrc.GoodbyeSettings.CleanGoodbye = pref
@@ -229,6 +250,8 @@ func SetCleanGoodbyeSetting(chatID int64, pref bool) {
 }
 
 // SetCleanGoodbyeMsgId updates the last goodbye message ID for cleaning purposes.
+// Stores the message ID of the most recent goodbye message to enable deletion
+// when the next goodbye message is sent.
 func SetCleanGoodbyeMsgId(chatId, msgId int64) {
 	cleanWelcomeSrc := checkGreetingSettings(chatId)
 	cleanWelcomeSrc.GoodbyeSettings.LastMsgId = msgId
@@ -240,6 +263,8 @@ func SetCleanGoodbyeMsgId(chatId, msgId int64) {
 }
 
 // LoadGreetingsStats returns counts of chats with various greeting features enabled.
+// Used for bot statistics and monitoring purposes to track feature adoption.
+// Iterates through all greeting settings to count enabled features.
 //
 // Returns:
 //   - enabledWelcome: Number of chats with welcome messages enabled.

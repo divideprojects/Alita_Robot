@@ -71,6 +71,7 @@ type CaptchaChallenge struct {
 
 // checkCaptchaSettings fetches CAPTCHA settings for a chat from the database.
 // If no document exists, it creates one with default values.
+// Returns a pointer to the CaptchaSettings struct with either existing or default values.
 func checkCaptchaSettings(chatID int64) (captchaSrc *CaptchaSettings) {
 	defaultCaptchaSrc := &CaptchaSettings{
 		ChatID:       chatID,
@@ -99,11 +100,13 @@ func checkCaptchaSettings(chatID int64) (captchaSrc *CaptchaSettings) {
 
 // GetCaptchaSettings retrieves the CAPTCHA settings for a given chat ID.
 // If no settings exist, it initializes them with default values.
+// This is the main function for accessing CAPTCHA settings.
 func GetCaptchaSettings(chatID int64) *CaptchaSettings {
 	return checkCaptchaSettings(chatID)
 }
 
-// SetCaptchaEnabled toggles CAPTCHA on/off for a chat.
+// SetCaptchaEnabled toggles CAPTCHA functionality on or off for a specific chat.
+// When enabled, new members will be required to solve a CAPTCHA challenge.
 func SetCaptchaEnabled(chatID int64, enabled bool) {
 	captchaSrc := checkCaptchaSettings(chatID)
 	captchaSrc.Enabled = enabled
@@ -113,7 +116,8 @@ func SetCaptchaEnabled(chatID int64, enabled bool) {
 	}
 }
 
-// SetCaptchaMode sets the CAPTCHA mode for a chat.
+// SetCaptchaMode sets the CAPTCHA challenge type for a specific chat.
+// Valid modes: button, text, math, text2. Defaults to button mode if invalid.
 func SetCaptchaMode(chatID int64, mode string) {
 	captchaSrc := checkCaptchaSettings(chatID)
 	captchaSrc.Mode = mode
@@ -123,7 +127,8 @@ func SetCaptchaMode(chatID int64, mode string) {
 	}
 }
 
-// SetCaptchaButtonText sets custom button text for CAPTCHA.
+// SetCaptchaButtonText sets custom button text for CAPTCHA challenges.
+// Only applies when CAPTCHA mode is set to "button".
 func SetCaptchaButtonText(chatID int64, buttonText string) {
 	captchaSrc := checkCaptchaSettings(chatID)
 	captchaSrc.ButtonText = buttonText
@@ -133,12 +138,14 @@ func SetCaptchaButtonText(chatID int64, buttonText string) {
 	}
 }
 
-// ResetCaptchaButtonText resets button text to default.
+// ResetCaptchaButtonText resets the CAPTCHA button text to the default value.
+// The default button text is "Click here to prove you're human".
 func ResetCaptchaButtonText(chatID int64) {
 	SetCaptchaButtonText(chatID, DefaultCaptchaButtonText)
 }
 
-// SetCaptchaKick toggles CAPTCHA kick functionality.
+// SetCaptchaKick toggles whether users should be kicked for failing CAPTCHA.
+// When enabled, users who don't solve the CAPTCHA within the time limit are kicked.
 func SetCaptchaKick(chatID int64, enabled bool) {
 	captchaSrc := checkCaptchaSettings(chatID)
 	captchaSrc.KickEnabled = enabled
@@ -148,7 +155,8 @@ func SetCaptchaKick(chatID int64, enabled bool) {
 	}
 }
 
-// SetCaptchaKickTime sets the time after which to kick users.
+// SetCaptchaKickTime sets the timeout duration before kicking users who haven't solved CAPTCHA.
+// Users have this amount of time to solve the challenge before being kicked (if kick is enabled).
 func SetCaptchaKickTime(chatID int64, kickTime time.Duration) {
 	captchaSrc := checkCaptchaSettings(chatID)
 	captchaSrc.KickTime = kickTime
@@ -158,7 +166,8 @@ func SetCaptchaKickTime(chatID int64, kickTime time.Duration) {
 	}
 }
 
-// SetCaptchaRules toggles CAPTCHA rules functionality.
+// SetCaptchaRules toggles whether to show chat rules as part of the CAPTCHA process.
+// When enabled, users must acknowledge reading the rules before proceeding with CAPTCHA.
 func SetCaptchaRules(chatID int64, enabled bool) {
 	captchaSrc := checkCaptchaSettings(chatID)
 	captchaSrc.RulesEnabled = enabled
@@ -168,7 +177,8 @@ func SetCaptchaRules(chatID int64, enabled bool) {
 	}
 }
 
-// SetCaptchaMuteTime sets the auto-unmute time (0 to disable).
+// SetCaptchaMuteTime sets the duration after which to automatically unmute users.
+// Set to 0 to disable auto-unmute. Users remain muted until manual intervention or CAPTCHA completion.
 func SetCaptchaMuteTime(chatID int64, muteTime time.Duration) {
 	captchaSrc := checkCaptchaSettings(chatID)
 	captchaSrc.MuteTime = muteTime
@@ -178,7 +188,9 @@ func SetCaptchaMuteTime(chatID int64, muteTime time.Duration) {
 	}
 }
 
-// CreateCaptchaChallenge creates a new CAPTCHA challenge for a user.
+// CreateCaptchaChallenge creates a new CAPTCHA challenge for a user in a specific chat.
+// The challenge expires at the specified time and tracks user attempts.
+// Returns an error if the database operation fails.
 func CreateCaptchaChallenge(userID, chatID int64, challengeData, correctAnswer string, expiresAt time.Time) error {
 	challenge := &CaptchaChallenge{
 		UserID:        userID,
@@ -198,7 +210,8 @@ func CreateCaptchaChallenge(userID, chatID int64, challengeData, correctAnswer s
 	return err
 }
 
-// GetCaptchaChallenge retrieves an active CAPTCHA challenge for a user.
+// GetCaptchaChallenge retrieves an active CAPTCHA challenge for a user in a specific chat.
+// Returns nil and no error if no challenge exists. Returns an error if database operation fails.
 func GetCaptchaChallenge(userID, chatID int64) (*CaptchaChallenge, error) {
 	var challenge CaptchaChallenge
 	err := findOne(captchaChallengesColl, bson.M{"user_id": userID, "chat_id": chatID}).Decode(&challenge)
@@ -211,7 +224,9 @@ func GetCaptchaChallenge(userID, chatID int64) (*CaptchaChallenge, error) {
 	return &challenge, nil
 }
 
-// UpdateCaptchaChallenge updates an existing CAPTCHA challenge.
+// UpdateCaptchaChallenge updates an existing CAPTCHA challenge with new data.
+// Typically used to track failed attempts or update challenge state.
+// Returns an error if the database operation fails.
 func UpdateCaptchaChallenge(userID, chatID int64, challenge *CaptchaChallenge) error {
 	err := updateOne(captchaChallengesColl, bson.M{"user_id": userID, "chat_id": chatID}, challenge)
 	if err != nil {
@@ -220,7 +235,9 @@ func UpdateCaptchaChallenge(userID, chatID int64, challenge *CaptchaChallenge) e
 	return err
 }
 
-// DeleteCaptchaChallenge removes a CAPTCHA challenge (after solving or expiry).
+// DeleteCaptchaChallenge removes a CAPTCHA challenge from the database.
+// Called when a challenge is solved successfully or has expired.
+// Returns an error if the database operation fails.
 func DeleteCaptchaChallenge(userID, chatID int64) error {
 	err := deleteOne(captchaChallengesColl, bson.M{"user_id": userID, "chat_id": chatID})
 	if err != nil {
@@ -229,7 +246,9 @@ func DeleteCaptchaChallenge(userID, chatID int64) error {
 	return err
 }
 
-// GetExpiredCaptchaChallenges returns all challenges that have expired.
+// GetExpiredCaptchaChallenges returns all unsolved CAPTCHA challenges that have expired.
+// Used by cleanup processes to identify challenges that need to be processed or removed.
+// Returns an empty slice if no expired challenges exist.
 func GetExpiredCaptchaChallenges() ([]*CaptchaChallenge, error) {
 	var challenges []*CaptchaChallenge
 	now := time.Now()
@@ -250,7 +269,9 @@ func GetExpiredCaptchaChallenges() ([]*CaptchaChallenge, error) {
 	return challenges, nil
 }
 
-// CleanupExpiredChallenges removes all expired challenges from the database.
+// CleanupExpiredChallenges removes all expired CAPTCHA challenges from the database.
+// This function should be called periodically to prevent accumulation of stale challenges.
+// Returns an error if the database operation fails.
 func CleanupExpiredChallenges() error {
 	now := time.Now()
 	err := deleteMany(captchaChallengesColl, bson.M{

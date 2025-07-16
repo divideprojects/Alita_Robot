@@ -25,12 +25,10 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-/*
-blacklistsModule provides blacklist management logic for group chats.
-
-Implements commands to add, remove, list, and configure blacklists and their actions.
-Includes optimized regex caching for high-performance blacklist matching.
-*/
+// blacklistsModule provides blacklist management logic for group chats.
+//
+// Implements commands to add, remove, list, and configure blacklists and their actions.
+// Includes optimized regex caching for high-performance blacklist matching.
 var blacklistsModule = moduleStruct{
 	moduleName:   "Blacklists",
 	handlerGroup: 7,
@@ -42,10 +40,8 @@ var blacklistsModule = moduleStruct{
 // Mutex to protect blacklist regex cache from concurrent access
 var blacklistCacheMutex sync.RWMutex
 
-/*
-buildBlacklistRegex creates an optimized regex pattern that matches any of the blacklist triggers.
-Returns nil if no triggers or if regex compilation fails.
-*/
+// buildBlacklistRegex creates an optimized regex pattern that matches any of the blacklist triggers.
+// Returns nil if no triggers or if regex compilation fails.
 func buildBlacklistRegex(triggers []string) *regexp.Regexp {
 	if len(triggers) == 0 {
 		return nil
@@ -69,10 +65,8 @@ func buildBlacklistRegex(triggers []string) *regexp.Regexp {
 	return regex
 }
 
-/*
-getOrBuildBlacklistRegex retrieves cached regex or builds new one if cache is invalid.
-Thread-safe with read-write locking for optimal performance.
-*/
+// getOrBuildBlacklistRegex retrieves cached regex or builds new one if cache is invalid.
+// Thread-safe with read-write locking for optimal performance.
 func getOrBuildBlacklistRegex(chatId int64, currentTriggers []string) *regexp.Regexp {
 	blacklistCacheMutex.RLock()
 	cachedRegex, regexExists := blacklistsModule.filterRegexCache[chatId]
@@ -96,10 +90,8 @@ func getOrBuildBlacklistRegex(chatId int64, currentTriggers []string) *regexp.Re
 	return newRegex
 }
 
-/*
-invalidateBlacklistCache removes cached regex for a chat when blacklists are modified.
-Should be called whenever blacklists are added, removed, or modified.
-*/
+// invalidateBlacklistCache removes cached regex for a chat when blacklists are modified.
+// Should be called whenever blacklists are added, removed, or modified.
 func invalidateBlacklistCache(chatId int64) {
 	blacklistCacheMutex.Lock()
 	delete(blacklistsModule.filterRegexCache, chatId)
@@ -107,10 +99,8 @@ func invalidateBlacklistCache(chatId int64) {
 	blacklistCacheMutex.Unlock()
 }
 
-/*
-findMatchingBlacklistTrigger uses the optimized regex to find which trigger matched.
-Returns the matched trigger if found.
-*/
+// findMatchingBlacklistTrigger uses the optimized regex to find which trigger matched.
+// Returns the matched trigger if found.
 func findMatchingBlacklistTrigger(regex *regexp.Regexp, text string, triggers []string) string {
 	lowerText := strings.ToLower(text)
 
@@ -130,18 +120,14 @@ func findMatchingBlacklistTrigger(regex *regexp.Regexp, text string, triggers []
 	return ""
 }
 
-/*
-	Used to add a blacklist to group!
-
-Connection - true, true
-Admin can add a blacklist to the chat
-*/
-/*
-addBlacklist adds one or more blacklist words to the group.
-
-Checks permissions, updates the blacklist in the database, and replies with the result.
-Connection: true, true
-*/
+// addBlacklist adds one or more blacklist words to the group.
+//
+// Used to add a blacklist to group!
+// Connection - true, true
+// Admin can add a blacklist to the chat
+//
+// Checks permissions, updates the blacklist in the database, and replies with the result.
+// Connection: true, true
 func (moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -214,18 +200,14 @@ func (moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Used to remove a blacklist from group!
-
-Connection - true, true
-Admin can add a blacklist to the chat
-*/
-/*
-removeBlacklist removes one or more blacklist words from the group.
-
-Checks permissions, updates the blacklist in the database, and replies with the result.
-Connection: true, true
-*/
+// removeBlacklist removes one or more blacklist words from the group.
+//
+// Used to remove a blacklist from group!
+// Connection - true, true
+// Admin can add a blacklist to the chat
+//
+// Checks permissions, updates the blacklist in the database, and replies with the result.
+// Connection: true, true
 func (moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -294,18 +276,14 @@ func (moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Used to list all blacklists of a group!
-
-Connection - false, true
-Anyone can view blacklists in group
-*/
-/*
-listBlacklists lists all blacklist words in the group.
-
-Anyone can view the blacklist. Replies with the current list or a message if none exist.
-Connection: false, true
-*/
+// listBlacklists lists all blacklist words in the group.
+//
+// Used to list all blacklists of a group!
+// Connection - false, true
+// Anyone can view blacklists in group
+//
+// Anyone can view the blacklist. Replies with the current list or a message if none exist.
+// Connection: false, true
 func (moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	msg := ctx.EffectiveMessage
@@ -362,19 +340,14 @@ func (moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Used to set mode for blacklists in chat
-
-# Connection - true, true
-
-Admin with restriction permission can set blacklist action in group out of - ick, ban, mute
-*/
-/*
-setBlacklistAction sets the action to take when a blacklist word is triggered.
-
-Admins can set the action to "mute", "kick", "warn", "ban", or "none".
-Connection: true, true
-*/
+// setBlacklistAction sets the action to take when a blacklist word is triggered.
+//
+// Used to set mode for blacklists in chat
+// Connection - true, true
+// Admin with restriction permission can set blacklist action in group out of - kick, ban, mute
+//
+// Admins can set the action to "mute", "kick", "warn", "ban", or "none".
+// Connection: true, true
 func (moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -420,16 +393,12 @@ func (moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Used to remove all blacklists from a group
-
-Only chat creator can use this command to remove all blacklists aat once from the current chat
-*/
-/*
-rmAllBlacklists removes all blacklist words from the group.
-
-Only the chat creator can use this command to clear the blacklist.
-*/
+// rmAllBlacklists removes all blacklist words from the group.
+//
+// Used to remove all blacklists from a group
+// Only chat creator can use this command to remove all blacklists at once from the current chat
+//
+// Only the chat creator can use this command to clear the blacklist.
 func (moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -464,12 +433,10 @@ func (moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// buttonHandler handles callback queries for removing all blacklists.
+//
 // Callback Handler for rmallblacklist
-/*
-buttonHandler handles callback queries for removing all blacklists.
-
-Processes the creator's confirmation and removes all blacklist words if confirmed.
-*/
+// Processes the creator's confirmation and removes all blacklist words if confirmed.
 func (moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
@@ -517,17 +484,13 @@ func (moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Blacklist watcher
-
-Watcher for blacklisted words, if any of the sentence contains the word, it will remove and use the appropriate action
-*/
-/*
-blacklistWatcher monitors messages for blacklisted words and enforces the configured action.
-
-Deletes messages containing blacklisted words and applies the configured action (mute, ban, kick, warn) to the user.
-Uses optimized regex caching for high-performance pattern matching.
-*/
+// blacklistWatcher monitors messages for blacklisted words and enforces the configured action.
+//
+// Blacklist watcher
+// Watcher for blacklisted words, if any of the sentence contains the word, it will remove and use the appropriate action
+//
+// Deletes messages containing blacklisted words and applies the configured action (mute, ban, kick, warn) to the user.
+// Uses optimized regex caching for high-performance pattern matching.
 func (moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender
@@ -643,11 +606,39 @@ func (moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-/*
-LoadBlacklists registers all blacklist-related command handlers with the dispatcher.
-
-Enables the blacklists module and adds handlers for blacklist management and enforcement.
-*/
+// LoadBlacklists registers all blacklist-related command handlers with the dispatcher.
+//
+// This function enables the blacklists module and adds handlers for blacklist
+// management and enforcement. The module provides automatic word/phrase filtering
+// with configurable actions and optimized regex matching for performance.
+//
+// Registered commands:
+//   - /blacklists: Lists all blacklisted words and phrases
+//   - /addblacklist, /blacklist: Adds words/phrases to the blacklist
+//   - /rmblacklist: Removes words/phrases from the blacklist
+//   - /blaction, /blacklistaction: Sets action for blacklist violations
+//   - /remallbl, /rmallbl: Removes all blacklisted words from chat
+//
+// The module automatically monitors all text messages in group 7 handler priority
+// and applies blacklist filters based on configured triggers. When blacklisted
+// content is detected, appropriate actions are taken based on chat settings.
+//
+// Features:
+//   - Optimized regex compilation with caching for performance
+//   - Case-insensitive word/phrase matching with word boundaries
+//   - Configurable actions (delete, warn, mute, ban, kick)
+//   - Bulk blacklist management operations
+//   - Thread-safe regex cache management
+//   - Support for complex patterns and phrases
+//
+// Requirements:
+//   - Bot must be admin to delete blacklisted messages
+//   - User must be admin to manage blacklists
+//   - Module supports remote configuration via connections
+//   - Integrates with warning and enforcement systems
+//
+// The blacklists system provides efficient content filtering with minimal
+// performance impact through regex caching and optimized pattern matching.
 func LoadBlacklists(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(blacklistsModule.moduleName, true)
 

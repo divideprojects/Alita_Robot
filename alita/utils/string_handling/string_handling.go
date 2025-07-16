@@ -1,10 +1,12 @@
+// Package string_handling provides utility functions for string and slice operations.
+//
+// This package contains optimized functions for common operations on string slices,
+// int64 slices, and string manipulation tasks used throughout the Alita Robot codebase.
 package string_handling
 
-/*
-FindInStringSlice returns true if the given value exists in the string slice.
-
-Performs a linear search for the value.
-*/
+// FindInStringSlice returns true if the given value exists in the string slice.
+//
+// Performs a linear search for the value.
 func FindInStringSlice(slice []string, val string) bool {
 	for _, item := range slice {
 		if item == val {

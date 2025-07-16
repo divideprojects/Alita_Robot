@@ -1,3 +1,24 @@
+// Package db provides database operations for the Alita Telegram bot.
+//
+// This package handles all MongoDB operations including connection management,
+// collection initialization, and core database operations with built-in retry logic,
+// performance monitoring, and error handling.
+//
+// The package automatically initializes MongoDB collections on import and creates
+// optimized indexes for all collections to ensure efficient queries. All database
+// operations include timing measurements and slow query logging for performance
+// monitoring.
+//
+// Core features:
+//   - Automatic connection pooling with configurable limits
+//   - Retry logic for transient failures with exponential backoff
+//   - Slow query logging for operations exceeding 100ms
+//   - Comprehensive error handling and logging
+//   - Optimized indexes for all collections
+//   - Thread-safe operations with proper context management
+//
+// The package provides wrapper functions around MongoDB operations that add
+// reliability and observability to all database interactions.
 package db
 
 import (
@@ -309,7 +330,14 @@ func init() {
 	createIndexes()
 }
 
-// Helper for retrying DB ops
+// retryDB executes a database operation with automatic retry logic.
+//
+// The function attempts the operation up to 3 times with random jitter
+// between attempts to handle transient failures. Each retry includes
+// a random delay between 50-150ms to prevent thundering herd issues.
+//
+// Returns the error from the final attempt if all retries fail, or nil
+// if any attempt succeeds.
 func retryDB(fn func() error) error {
 	var err error
 	for i := 0; i < 3; i++ {
@@ -324,7 +352,19 @@ func retryDB(fn func() error) error {
 	return err
 }
 
-// updateOne with timing, retry, and slow query log
+// updateOne performs an upsert operation on a single document with automatic retry and monitoring.
+//
+// The function updates an existing document or creates a new one if no match is found.
+// All operations include timing measurements and slow query logging for performance
+// monitoring. Operations exceeding 100ms are logged as slow queries.
+//
+// Parameters:
+//   - collecion: The MongoDB collection to operate on
+//   - filter: BSON filter to match the document
+//   - data: The data to set in the document
+//
+// Returns an error if the collection is nil, the operation fails after retries,
+// or if the context times out after 10 seconds.
 func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (err error) {
 	if collecion == nil {
 		return mongo.ErrNilDocument
@@ -348,7 +388,18 @@ func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (er
 	return
 }
 
-// findOne with timing, retry, and slow query log
+// findOne retrieves a single document from the collection with automatic retry and monitoring.
+//
+// The function searches for a document matching the provided filter and returns
+// a SingleResult that can be decoded into a struct. All operations include timing
+// measurements and slow query logging for performance monitoring.
+//
+// Parameters:
+//   - collecion: The MongoDB collection to search
+//   - filter: BSON filter to match the document
+//
+// Returns a SingleResult containing the matched document, or an empty result
+// if the collection is nil. The caller should check result.Err() for errors.
 func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResult) {
 	if collecion == nil {
 		return &mongo.SingleResult{}
@@ -370,7 +421,18 @@ func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResul
 	return result
 }
 
-// countDocs with timing, retry, and slow query log
+// countDocs counts the number of documents matching the filter with automatic retry and monitoring.
+//
+// The function counts documents in the collection that match the provided filter.
+// All operations include timing measurements and slow query logging for performance
+// monitoring. Operations exceeding 100ms are logged as slow queries.
+//
+// Parameters:
+//   - collecion: The MongoDB collection to count documents in
+//   - filter: BSON filter to match documents
+//
+// Returns the count of matching documents and an error if the collection is nil,
+// the operation fails after retries, or if the context times out after 10 seconds.
 func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err error) {
 	if collecion == nil {
 		return 0, mongo.ErrNilDocument
@@ -395,7 +457,21 @@ func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err err
 	return
 }
 
-// findAll with timing, retry, and slow query log
+// findAll retrieves all documents matching the filter with automatic retry and monitoring.
+//
+// The function searches for all documents matching the provided filter and returns
+// a cursor for iterating through the results. All operations include timing
+// measurements and slow query logging for performance monitoring.
+//
+// The context timeout is set to 30 seconds to accommodate potentially large
+// result sets. The caller is responsible for closing the returned cursor.
+//
+// Parameters:
+//   - collecion: The MongoDB collection to search
+//   - filter: BSON filter to match documents
+//
+// Returns a cursor for iterating through matching documents, or nil if the
+// operation fails. The caller should check cursor.Err() for errors.
 func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -414,7 +490,19 @@ func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	return cursor
 }
 
-// deleteOne with timing, retry, and slow query log
+// deleteOne removes a single document from the collection with automatic retry and monitoring.
+//
+// The function deletes the first document that matches the provided filter.
+// All operations include timing measurements and slow query logging for performance
+// monitoring. Operations exceeding 100ms are logged as slow queries.
+//
+// Parameters:
+//   - collecion: The MongoDB collection to delete from
+//   - filter: BSON filter to match the document to delete
+//
+// Returns an error if the operation fails after retries or if the context
+// times out after 10 seconds. Returns nil if the operation succeeds, even
+// if no document was found to delete.
 func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -434,7 +522,22 @@ func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	return
 }
 
-// deleteMany with timing, retry, and slow query log
+// deleteMany removes multiple documents from the collection with automatic retry and monitoring.
+//
+// The function deletes all documents that match the provided filter. All operations
+// include timing measurements and slow query logging for performance monitoring.
+// Operations exceeding 100ms are logged as slow queries.
+//
+// The context timeout is set to 30 seconds to accommodate potentially large
+// deletion operations.
+//
+// Parameters:
+//   - collecion: The MongoDB collection to delete from
+//   - filter: BSON filter to match documents to delete
+//
+// Returns an error if the operation fails after retries or if the context
+// times out after 30 seconds. Returns nil if the operation succeeds, even
+// if no documents were found to delete.
 func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -454,7 +557,24 @@ func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 	return
 }
 
-// findOneAndUpsert with timing, retry, and slow query log
+// findOneAndUpsert performs an atomic find-and-modify operation with automatic retry and monitoring.
+//
+// The function finds a document matching the filter and updates it, or creates a new
+// document if no match is found. The updated document is returned and decoded into
+// the result parameter. All operations include timing measurements and slow query
+// logging for performance monitoring.
+//
+// The operation is atomic, ensuring that the document cannot be modified by another
+// operation between the find and update steps.
+//
+// Parameters:
+//   - collection: The MongoDB collection to operate on
+//   - filter: BSON filter to match the document
+//   - update: BSON update operations to apply
+//   - result: Pointer to struct where the updated document will be decoded
+//
+// Returns an error if the operation fails after retries, the context times out
+// after 10 seconds, or if decoding the result fails.
 func findOneAndUpsert(collection *mongo.Collection, filter bson.M, update bson.M, result interface{}) error {
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -478,12 +598,29 @@ func findOneAndUpsert(collection *mongo.Collection, filter bson.M, update bson.M
 	return err
 }
 
-// GetTestCollection returns a collection for benchmark testing
+// GetTestCollection returns a collection for benchmark testing.
+//
+// This function provides access to a dedicated test collection for performance
+// benchmarking and testing purposes. The collection is created in the main
+// database with the name "benchmark_test".
+//
+// Returns a MongoDB collection instance, or nil if the database client is
+// not initialized.
 func GetTestCollection() *mongo.Collection {
 	return getCollection("benchmark_test")
 }
 
-// getCollection is a helper to safely access collections
+// getCollection safely retrieves a collection by name.
+//
+// This helper function provides safe access to MongoDB collections by checking
+// if the database client is properly initialized before attempting to access
+// the collection.
+//
+// Parameters:
+//   - name: The name of the collection to retrieve
+//
+// Returns a MongoDB collection instance, or nil if the database client is
+// not initialized.
 func getCollection(name string) *mongo.Collection {
 	if mongoClient == nil {
 		log.Errorf("[Database] getCollection: mongoClient is nil, collection '%s' not accessible", name)
@@ -492,7 +629,14 @@ func getCollection(name string) *mongo.Collection {
 	return mongoClient.Database(config.MainDbName).Collection(name)
 }
 
-// isInitialized checks if the database is properly initialized
+// isInitialized checks if the database is properly initialized.
+//
+// This function verifies that both the MongoDB client and at least one
+// collection (adminSettingsColl) are properly initialized, indicating
+// that the database connection is ready for use.
+//
+// Returns true if the database is initialized and ready for operations,
+// false otherwise.
 func isInitialized() bool {
 	return mongoClient != nil && adminSettingsColl != nil
 }

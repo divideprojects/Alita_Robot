@@ -26,12 +26,10 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-/*
-filtersModule provides logic for managing keyword-based filters in group chats.
-
-Implements commands to add, remove, list, and configure filters and their actions.
-Includes optimized regex caching for high-performance filter matching.
-*/
+// filtersModule provides logic for managing keyword-based filters in group chats.
+//
+// Implements commands to add, remove, list, and configure filters and their actions.
+// Includes optimized regex caching for high-performance filter matching.
 var filtersModule = moduleStruct{
 	moduleName:          "Filters",
 	overwriteFiltersMap: make(map[string]overwriteFilter),
@@ -44,10 +42,8 @@ var filtersModule = moduleStruct{
 // Mutex to protect regex cache from concurrent access
 var filterCacheMutex sync.RWMutex
 
-/*
-buildFilterRegex creates an optimized regex pattern that matches any of the filter keywords.
-Returns nil if no keywords or if regex compilation fails.
-*/
+// buildFilterRegex creates an optimized regex pattern that matches any of the filter keywords.
+// Returns nil if no keywords or if regex compilation fails.
 func buildFilterRegex(keywords []string) *regexp.Regexp {
 	if len(keywords) == 0 {
 		return nil
@@ -71,10 +67,8 @@ func buildFilterRegex(keywords []string) *regexp.Regexp {
 	return regex
 }
 
-/*
-getOrBuildFilterRegex retrieves cached regex or builds new one if cache is invalid.
-Thread-safe with read-write locking for optimal performance.
-*/
+// getOrBuildFilterRegex retrieves cached regex or builds new one if cache is invalid.
+// Thread-safe with read-write locking for optimal performance.
 func getOrBuildFilterRegex(chatId int64, currentKeywords []string) *regexp.Regexp {
 	filterCacheMutex.RLock()
 	cachedRegex, regexExists := filtersModule.filterRegexCache[chatId]
@@ -98,10 +92,8 @@ func getOrBuildFilterRegex(chatId int64, currentKeywords []string) *regexp.Regex
 	return newRegex
 }
 
-/*
-invalidateFilterCache removes cached regex for a chat when filters are modified.
-Should be called whenever filters are added, removed, or modified.
-*/
+// invalidateFilterCache removes cached regex for a chat when filters are modified.
+// Should be called whenever filters are added, removed, or modified.
 func invalidateFilterCache(chatId int64) {
 	filterCacheMutex.Lock()
 	delete(filtersModule.filterRegexCache, chatId)
@@ -109,10 +101,8 @@ func invalidateFilterCache(chatId int64) {
 	filterCacheMutex.Unlock()
 }
 
-/*
-slicesEqual compares two string slices for equality.
-Used to determine if filter keywords have changed.
-*/
+// slicesEqual compares two string slices for equality.
+// Used to determine if filter keywords have changed.
 func slicesEqual(a, b []string) bool {
 	if len(a) != len(b) {
 		return false
@@ -125,10 +115,8 @@ func slicesEqual(a, b []string) bool {
 	return true
 }
 
-/*
-findMatchingKeyword uses the optimized regex to find which keyword matched.
-Returns the matched keyword and whether it was a noformat match.
-*/
+// findMatchingKeyword uses the optimized regex to find which keyword matched.
+// Returns the matched keyword and whether it was a noformat match.
 func findMatchingKeyword(regex *regexp.Regexp, text string, keywords []string) (matchedKeyword string, isNoformat bool) {
 	lowerText := strings.ToLower(text)
 
@@ -151,19 +139,10 @@ func findMatchingKeyword(regex *regexp.Regexp, text string, keywords []string) (
 	return "", false
 }
 
-/*
-	Used to add a filter to a specific keyword in chat!
-
-# Connection - true, true
-
-Only admin can add new filters in the chat
-*/
-/*
-addFilter adds a filter to a specific keyword in the chat.
-
-Only admins can add new filters. Handles filter limits, overwriting, and input validation.
-Connection: true, true
-*/
+// addFilter adds a filter to a specific keyword in the chat.
+//
+// Only admins can add new filters. Handles filter limits, overwriting, and input validation.
+// Connection: true, true
 func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -270,19 +249,10 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Used to remove a filter to a specific keyword in chat!
-
-# Connection - true, true
-
-Only admin can remove filters in the chat
-*/
-/*
-rmFilter removes a filter for a specific keyword in the chat.
-
-Only admins can remove filters. Handles input validation and replies with the result.
-Connection: true, true
-*/
+// rmFilter removes a filter for a specific keyword in the chat.
+//
+// Only admins can remove filters. Handles input validation and replies with the result.
+// Connection: true, true
 func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
@@ -329,19 +299,10 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Used to view all filters in the chat!
-
-# Connection - false, true
-
-Any user can view users in a chat
-*/
-/*
-filtersList lists all filters in the chat.
-
-Anyone can view the filters. Replies with the current list or a message if none exist.
-Connection: false, true
-*/
+// filtersList lists all filters in the chat.
+//
+// Anyone can view the filters. Replies with the current list or a message if none exist.
+// Connection: false, true
 func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -395,16 +356,9 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Used to remove all filters from the current chat
-
-Only owner can remove all filters from the chat
-*/
-/*
-rmAllFilters removes all filters from the current chat.
-
-Only the chat owner can use this command to clear all filters.
-*/
+// rmAllFilters removes all filters from the current chat.
+//
+// Only the chat owner can use this command to clear all filters.
 func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -445,11 +399,9 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // CallbackQuery handler for rmAllFilters
-/*
-filtersButtonHandler handles callback queries for removing all filters.
-
-Processes the owner's confirmation and removes all filters if confirmed.
-*/
+// filtersButtonHandler handles callback queries for removing all filters.
+//
+// Processes the owner's confirmation and removes all filters if confirmed.
 func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
@@ -496,11 +448,9 @@ func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 }
 
 // CallbackQuery handler for filters_overwite. query
-/*
-filterOverWriteHandler handles callback queries for overwriting an existing filter.
-
-Allows admins to confirm and overwrite an existing filter with new data.
-*/
+// filterOverWriteHandler handles callback queries for overwriting an existing filter.
+//
+// Allows admins to confirm and overwrite an existing filter with new data.
 func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
@@ -549,16 +499,9 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 	return ext.EndGroups
 }
 
-/*
-	Watchers for filter
-
-Replies with appropriate data to the filter.
-*/
-/*
-filtersWatcher monitors messages for filtered keywords and replies with the appropriate data.
-
-Handles both formatted and unformatted responses, and enforces admin-only access for noformat requests.
-*/
+// filtersWatcher monitors messages for filtered keywords and replies with the appropriate data.
+//
+// Handles both formatted and unformatted responses, and enforces admin-only access for noformat requests.
 func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -615,11 +558,39 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-/*
-LoadFilters registers all filter-related command handlers with the dispatcher.
-
-Enables the filters module and adds handlers for filter management and enforcement.
-*/
+// LoadFilters registers all filter-related command handlers with the dispatcher.
+//
+// This function enables the message filtering module and adds handlers for
+// filter management and enforcement. The module provides automatic message
+// filtering with custom responses, supporting text, media, and complex triggers.
+//
+// Registered commands:
+//   - /filter, /addfilter: Creates new message filters with custom responses
+//   - /stop, /rmfilter: Removes existing filters
+//   - /filters: Lists all active filters in the chat
+//   - /stopall: Removes all filters from the chat
+//
+// The module automatically monitors all text messages in group 9 handler priority
+// and applies filters based on configured triggers. Filters support various response
+// types including text, media, buttons, and automated actions.
+//
+// Features:
+//   - Pattern-based and keyword filtering with regex optimization
+//   - Custom responses with formatting support
+//   - Media filter support (images, documents, stickers)
+//   - Button attachments in filter responses
+//   - Cached regex compilation for high performance
+//   - Case-insensitive matching with word boundaries
+//   - Filter overwrite confirmation system
+//
+// Requirements:
+//   - Bot must be admin to delete filtered messages
+//   - User must be admin to manage filters
+//   - Module supports remote configuration via connections
+//   - Integrates with formatting module for rich responses
+//
+// The filtering system processes messages efficiently with regex caching to
+// minimize performance impact and includes comprehensive logging for debugging.
 func LoadFilters(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(filtersModule.moduleName, true)
 

@@ -1,3 +1,8 @@
+// Package alita provides core initialization and management functionality for the Alita Robot.
+//
+// This package handles bot initialization, module loading, resource monitoring,
+// and provides the main entry points for starting the bot components.
+// It manages the complete lifecycle of the bot after the initial setup.
 package alita
 
 import (

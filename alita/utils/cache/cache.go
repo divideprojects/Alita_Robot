@@ -1,3 +1,8 @@
+// Package cache provides caching functionality for the Alita Robot.
+//
+// This package implements Redis-based caching with support for both string
+// and marshal (object) caching. It provides optimized storage and retrieval
+// for frequently accessed data to improve bot performance.
 package cache
 
 import (

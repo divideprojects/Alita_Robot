@@ -1,3 +1,8 @@
+// Package config provides configuration management for the Alita Robot.
+//
+// This package handles environment variable loading, default value assignment,
+// and centralized configuration for all bot components including database
+// connections, Redis settings, and runtime behavior.
 package config
 
 import (
@@ -73,6 +78,8 @@ var defaultAllowedUpdates = []string{
 // defaultValidLangCodes holds the language codes enabled when no explicit value is provided.
 var defaultValidLangCodes = []string{"en"}
 
+// parseUint64Env parses an environment variable as uint64 with fallback to default.
+// Returns the parsed value or the default if the environment variable is empty or invalid.
 func parseUint64Env(key string, def uint64) uint64 {
 	val := os.Getenv(key)
 	if val == "" {
@@ -85,6 +92,8 @@ func parseUint64Env(key string, def uint64) uint64 {
 	return u
 }
 
+// parseDurationEnv parses an environment variable as time.Duration with fallback to default.
+// Returns the parsed duration or the default if the environment variable is empty or invalid.
 func parseDurationEnv(key string, def time.Duration) time.Duration {
 	val := os.Getenv(key)
 	if val == "" {

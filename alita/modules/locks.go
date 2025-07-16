@@ -391,6 +391,44 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// LoadLocks registers all lock-related command handlers with the dispatcher.
+//
+// This function enables the locks module and adds handlers for message type
+// restrictions and permissions. The module provides comprehensive content
+// filtering with configurable actions for different message types.
+//
+// Registered commands:
+//   - /lock: Locks a specific message type or content category
+//   - /unlock: Unlocks a previously locked message type
+//   - /locktypes: Lists all available lockable message types
+//   - /locks: Displays current lock settings for the chat
+//
+// The module automatically monitors all messages in two handler groups:
+//   - Group 5: Permission-based locks (sticker, audio, video, etc.)
+//   - Group 6: Restriction-based locks (messages, media, other, etc.)
+//
+// Supported lock types:
+//   - Media: sticker, audio, voice, document, video, videonote, photo, gif
+//   - Communication: contact, location, forward, url, bots
+//   - Content: rtl (right-to-left text), anonchannel, game
+//   - Categories: messages, media, other, previews, all
+//
+// Features:
+//   - Granular message type filtering
+//   - Configurable actions (delete, warn, mute, ban)
+//   - RTL text detection and filtering
+//   - Anonymous channel message handling
+//   - URL preview control
+//   - Comprehensive lock type management
+//
+// Requirements:
+//   - Bot must be admin to delete messages
+//   - User must be admin to configure locks
+//   - Module supports remote configuration via connections
+//   - Integrates with warning and muting systems
+//
+// The locks system provides fine-grained control over chat content
+// with efficient message filtering and enforcement.
 func LoadLocks(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(locksModule.moduleName, true)
 

@@ -19,11 +19,9 @@ import (
 
 // function used to get status of bot when it joined a group and send a message to the group
 // also send a message to MESSAGE_DUMP telling that it joined a group
-/*
-botJoinedGroup handles the event when the bot joins a group.
-
-If the group is not a supergroup, the bot sends instructions and leaves. Otherwise, it sends a welcome message and prompts for admin rights if needed.
-*/
+// botJoinedGroup handles the event when the bot joins a group.
+//
+// If the group is not a supergroup, the bot sends instructions and leaves. Otherwise, it sends a welcome message and prompts for admin rights if needed.
 func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
@@ -86,11 +84,9 @@ func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-/*
-adminCacheAutoUpdate ensures the admin cache is up-to-date when an admin update event occurs.
-
-Invalidates existing cache when admin changes occur, ensuring fresh data on next access.
-*/
+// adminCacheAutoUpdate ensures the admin cache is up-to-date when an admin update event occurs.
+//
+// Invalidates existing cache when admin changes occur, ensuring fresh data on next access.
 func adminCacheAutoUpdate(_ *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
@@ -108,11 +104,9 @@ func adminCacheAutoUpdate(_ *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // function used to verify anonymous admins when they press to verify admin button
-/*
-verifyAnonyamousAdmin verifies anonymous admins via callback query.
-
-Checks if the user is an admin, updates the admin cache, and re-invokes the original command as the verified user.
-*/
+// verifyAnonyamousAdmin verifies anonymous admins via callback query.
+//
+// Checks if the user is an admin, updates the admin cache, and re-invokes the original command as the verified user.
 func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	qmsg := query.Message
@@ -227,20 +221,16 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-setAdminCache retrieves the cached admin message for a given chat and message ID.
-
-Used during anonymous admin verification to restore context.
-*/
+// setAdminCache retrieves the cached admin message for a given chat and message ID.
+//
+// Used during anonymous admin verification to restore context.
 func setAdminCache(chatId, msgId int64) (interface{}, error) {
 	return cache.Marshal.Get(cache.Context, fmt.Sprintf("anonAdmin.%d.%d", chatId, msgId), new(gotgbot.Message))
 }
 
-/*
-LoadBotUpdates registers handlers for bot join events, admin cache updates, and anonymous admin verification.
-
-This function ensures the bot responds appropriately to group membership changes and admin actions.
-*/
+// LoadBotUpdates registers handlers for bot join events, admin cache updates, and anonymous admin verification.
+//
+// This function ensures the bot responds appropriately to group membership changes and admin actions.
 func LoadBotUpdates(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandlerToGroup(
 		handlers.NewMyChatMember(

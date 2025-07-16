@@ -30,15 +30,17 @@ type FloodSettings struct {
 	DeleteAntifloodMessage bool   `bson:"del_msg" json:"del_msg"`
 }
 
-// GetFlood retrieves the flood settings for a given chat ID.
-// If no settings exist, it initializes them with default values.
+// GetFlood retrieves the antiflood settings for a given chat ID.
+// If no settings exist, it initializes them with default values (limit: 0, mode: mute).
+// This is the main function for accessing antiflood settings with caching support.
 func GetFlood(chatID int64) *FloodSettings {
 	return checkFloodSetting(chatID)
 }
 
-// checkFloodSetting fetches flood settings for a chat from the database.
-// If no document exists, it creates one with default values.
-// Returns a pointer to the FloodSettings struct.
+// checkFloodSetting fetches antiflood settings for a chat from the database.
+// If no document exists, it creates one with default values (limit: 0, mode: mute).
+// Uses cache for performance optimization with 10-minute expiration.
+// Returns a pointer to the FloodSettings struct with either existing or default values.
 func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
 	// Try cache first
 	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(FloodSettings)); err == nil && cached != nil {
@@ -64,8 +66,9 @@ func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
 	return floodSrc
 }
 
-// SetFlood updates the flood limit for a specific chat.
-// Uses atomic operations to prevent race conditions.
+// SetFlood updates the antiflood message limit for a specific chat.
+// Set to 0 to disable antiflood. Uses atomic upsert operations to prevent race conditions.
+// Updates both database and cache with the new limit setting.
 func SetFlood(chatID int64, limit int) {
 	// Use atomic upsert to avoid race conditions
 	filter := bson.M{"_id": chatID}
@@ -91,8 +94,9 @@ func SetFlood(chatID int64, limit int) {
 	_ = cache.Marshal.Set(cache.Context, chatID, result, store.WithExpiration(10*time.Minute))
 }
 
-// SetFloodMode updates the flood action mode for a specific chat.
-// Uses atomic operations to prevent race conditions.
+// SetFloodMode updates the antiflood action mode for a specific chat.
+// Valid modes include: mute, ban, kick, warn. Uses atomic upsert operations to prevent race conditions.
+// Updates both database and cache with the new mode setting.
 func SetFloodMode(chatID int64, mode string) {
 	// Use atomic upsert to avoid race conditions
 	filter := bson.M{"_id": chatID}
@@ -118,8 +122,9 @@ func SetFloodMode(chatID int64, mode string) {
 	_ = cache.Marshal.Set(cache.Context, chatID, result, store.WithExpiration(10*time.Minute))
 }
 
-// SetFloodMsgDel sets whether messages that trigger the flood filter should be deleted for a chat.
-// Uses atomic operations to prevent race conditions.
+// SetFloodMsgDel sets whether messages that trigger the antiflood filter should be deleted.
+// When enabled, offending messages are automatically deleted along with the flood action.
+// Uses atomic upsert operations to prevent race conditions and updates cache.
 func SetFloodMsgDel(chatID int64, val bool) {
 	// Use atomic upsert to avoid race conditions
 	filter := bson.M{"_id": chatID}
@@ -145,12 +150,9 @@ func SetFloodMsgDel(chatID int64, val bool) {
 	_ = cache.Marshal.Set(cache.Context, chatID, result, store.WithExpiration(10*time.Minute))
 }
 
-/*
-LoadAntifloodStats returns the number of chats that have anti-flood enabled.
-
-It calculates the total number of chat documents and subtracts those with a flood limit of zero,
-indicating anti-flood is disabled.
-*/
+// LoadAntifloodStats returns the number of chats that have antiflood enabled.
+// Calculates the total by subtracting chats with limit=0 (disabled) from total documents.
+// Used for bot statistics and monitoring purposes.
 func LoadAntifloodStats() (antiCount int64) {
 	totalCount, err := countDocs(antifloodSettingsColl, bson.M{})
 	if err != nil {

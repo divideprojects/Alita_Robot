@@ -12,11 +12,14 @@ import (
 	"github.com/mojocn/base64Captcha"
 )
 
-// Challenge data structures for different CAPTCHA modes
+// ButtonChallenge represents a simple button-click CAPTCHA challenge.
+// This is the simplest form of CAPTCHA where users just need to click a button to verify.
 type ButtonChallenge struct {
 	Type string `json:"type"`
 }
 
+// TextChallenge represents a text selection CAPTCHA challenge.
+// Users must select the correct text option that matches a generated image.
 type TextChallenge struct {
 	Type    string   `json:"type"`
 	Image   string   `json:"image"`
@@ -24,6 +27,8 @@ type TextChallenge struct {
 	Answer  int      `json:"answer"`
 }
 
+// MathChallenge represents a mathematical problem CAPTCHA challenge.
+// Users must solve a basic arithmetic problem and select the correct answer.
 type MathChallenge struct {
 	Type     string `json:"type"`
 	Question string `json:"question"`
@@ -31,6 +36,8 @@ type MathChallenge struct {
 	Options  []int  `json:"options"`
 }
 
+// Text2Challenge represents a character input CAPTCHA challenge.
+// Users must identify and input characters shown in a distorted image.
 type Text2Challenge struct {
 	Type       string   `json:"type"`
 	Image      string   `json:"image"`
@@ -38,22 +45,27 @@ type Text2Challenge struct {
 	Answer     string   `json:"answer"`
 }
 
-// CaptchaResult contains both the challenge data and image bytes (if applicable)
+// CaptchaResult contains the complete challenge data and associated image.
+// It includes the serialized challenge data, the correct answer, and optional image bytes for visual challenges.
 type CaptchaResult struct {
 	ChallengeData string
 	CorrectAnswer string
 	ImageBytes    []byte // nil for non-image modes like button and math
 }
 
-// CaptchaGenerator handles creation of different CAPTCHA challenges
+// CaptchaGenerator handles creation of different CAPTCHA challenges.
+// It provides methods to generate various types of CAPTCHA challenges including button, text, math, and text2 modes.
 type CaptchaGenerator struct{}
 
-// NewCaptchaGenerator creates a new CAPTCHA generator instance
+// NewCaptchaGenerator creates a new CAPTCHA generator instance.
+// Returns a configured generator ready to create different types of CAPTCHA challenges.
 func NewCaptchaGenerator() *CaptchaGenerator {
 	return &CaptchaGenerator{}
 }
 
-// GenerateChallenge creates a CAPTCHA challenge based on the specified mode
+// GenerateChallenge creates a CAPTCHA challenge based on the specified mode.
+// Supported modes: "button", "text", "math", "text2".
+// Returns a CaptchaResult containing the challenge data and any associated image bytes.
 func (cg *CaptchaGenerator) GenerateChallenge(mode string) (*CaptchaResult, error) {
 	switch mode {
 	case "button":
@@ -69,7 +81,8 @@ func (cg *CaptchaGenerator) GenerateChallenge(mode string) (*CaptchaResult, erro
 	}
 }
 
-// generateButtonChallenge creates a simple button click challenge
+// generateButtonChallenge creates a simple button click challenge.
+// This is the most basic CAPTCHA type requiring only a button click for verification.
 func (*CaptchaGenerator) generateButtonChallenge() (*CaptchaResult, error) {
 	challenge := ButtonChallenge{
 		Type: "button",
@@ -87,7 +100,8 @@ func (*CaptchaGenerator) generateButtonChallenge() (*CaptchaResult, error) {
 	}, nil
 }
 
-// generateTextChallenge creates a text selection challenge with an actual generated image
+// generateTextChallenge creates a text selection challenge with an actual generated image.
+// It generates an image with a word and provides multiple choice options for the user to select.
 func (*CaptchaGenerator) generateTextChallenge() (*CaptchaResult, error) {
 	// Text options
 	words := []string{
@@ -161,7 +175,8 @@ func (*CaptchaGenerator) generateTextChallenge() (*CaptchaResult, error) {
 	}, nil
 }
 
-// generateMathChallenge creates a basic math question
+// generateMathChallenge creates a basic math question.
+// It generates simple arithmetic problems (addition, subtraction, multiplication) with multiple choice answers.
 func (*CaptchaGenerator) generateMathChallenge() (*CaptchaResult, error) {
 	operations := []string{"+", "-", "*"}
 	operation := operations[rand.Intn(len(operations))]
@@ -240,7 +255,8 @@ func (*CaptchaGenerator) generateMathChallenge() (*CaptchaResult, error) {
 	}, nil
 }
 
-// generateText2Challenge creates a character input challenge with an actual generated image
+// generateText2Challenge creates a character input challenge with an actual generated image.
+// Users must identify and input the exact characters shown in a distorted image using an on-screen keyboard.
 func (*CaptchaGenerator) generateText2Challenge() (*CaptchaResult, error) {
 	// Character set for the code
 	characters := "ABCDEFGHJKLMNPQRSTUVWXYZ23456789" // Excluding confusing characters like I, O, 0, 1
@@ -296,7 +312,8 @@ func (*CaptchaGenerator) generateText2Challenge() (*CaptchaResult, error) {
 	}, nil
 }
 
-// CreateCaptchaKeyboard generates the appropriate inline keyboard for a CAPTCHA challenge
+// CreateCaptchaKeyboard generates the appropriate inline keyboard for a CAPTCHA challenge.
+// It creates mode-specific keyboards: simple button for "button" mode, multiple choice for "text"/"math", character grid for "text2".
 func CreateCaptchaKeyboard(challengeData, mode string) (*gotgbot.InlineKeyboardMarkup, error) {
 	switch mode {
 	case "button":
@@ -388,7 +405,8 @@ func CreateCaptchaKeyboard(challengeData, mode string) (*gotgbot.InlineKeyboardM
 	}
 }
 
-// GetChallengeDescription returns a human-readable description of the challenge
+// GetChallengeDescription returns a human-readable description of the challenge.
+// It provides instructions to users on how to complete the specific CAPTCHA challenge type.
 func GetChallengeDescription(challengeData, mode string) (string, error) {
 	switch mode {
 	case "button":
@@ -420,7 +438,8 @@ func GetChallengeDescription(challengeData, mode string) (string, error) {
 	}
 }
 
-// ValidateAnswer checks if the provided answer is correct for the challenge
+// ValidateAnswer checks if the provided answer is correct for the challenge.
+// It compares the user's answer against the correct answer stored in the challenge data.
 func ValidateAnswer(challengeData, mode, userAnswer string) (bool, error) {
 	switch mode {
 	case "button":

@@ -1,3 +1,8 @@
+// Package main is the entry point for the Alita Telegram bot.
+//
+// This package initializes the bot configuration, loads internationalization
+// locales, sets up the Telegram bot polling, and starts all bot modules.
+// It handles the complete bot lifecycle from startup to shutdown.
 package main
 
 // Main entry point for the Alita Telegram bot.

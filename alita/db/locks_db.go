@@ -48,6 +48,9 @@ type Restrictions struct {
 	All             bool `bson:"all,omitempty" json:"all,omitempty"`
 }
 
+// checkChatLocks fetches lock settings for a chat from the database.
+// If no document exists, it creates one with default values (all locks disabled).
+// Returns a pointer to the Locks struct with either existing or default values.
 func checkChatLocks(chatID int64) (lockrc *Locks) {
 	defaultLockrc := &Locks{ChatId: chatID, Permissions: &Permissions{}, Restrictions: &Restrictions{}}
 	errS := findOne(lockColl, bson.M{"_id": chatID}).Decode(&lockrc)
@@ -65,12 +68,15 @@ func checkChatLocks(chatID int64) (lockrc *Locks) {
 }
 
 // GetChatLocks retrieves the lock settings for a given chat ID.
-// If no settings exist, it initializes them with default values.
+// If no settings exist, it initializes them with default values (all locks disabled).
+// This is the main function for accessing lock settings.
 func GetChatLocks(chatID int64) *Locks {
 	return checkChatLocks(chatID)
 }
 
 // MapLockType returns a map of lock and restriction types to their enabled/disabled state for a chat.
+// Converts the structured lock settings into a flat map for easier querying.
+// Used by other functions to check specific lock states.
 func MapLockType(locks Locks) map[string]bool {
 	perms := locks.Permissions
 	restr := locks.Restrictions
@@ -102,7 +108,8 @@ func MapLockType(locks Locks) map[string]bool {
 }
 
 // UpdateLock modifies the value of a specific lock or restriction for a chat and updates it in the database.
-// The perm argument specifies which lock/restriction to update.
+// The perm argument specifies which lock/restriction to update (e.g., "sticker", "photo", "url").
+// When enabled (val=true), the specified content type becomes restricted in the chat.
 func UpdateLock(chatID int64, perm string, val bool) {
 	lockrc := checkChatLocks(chatID)
 
@@ -160,6 +167,8 @@ func UpdateLock(chatID int64, perm string, val bool) {
 }
 
 // IsPermLocked returns true if the specified permission or restriction is locked for the chat.
+// Uses MapLockType internally to check the lock state efficiently.
+// Returns false for unknown permission types.
 func IsPermLocked(chatID int64, perm string) bool {
 	lockrc := checkChatLocks(chatID)
 	return MapLockType(*lockrc)[perm]

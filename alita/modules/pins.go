@@ -31,17 +31,13 @@ type pinType struct {
 	DataType int
 }
 
-/*
-	Check new pinned messages
-
-# This function works for AntiChannelPin and CleanLinked
-
-# AntiChannelPin - Unpins message pinned by channel
-
-# CleanLinked - Deletes the message linked by channel
-
-This a watcher for 2 functions described above
-*/
+// checkPinned checks new pinned messages for anti-channel pin and clean linked functionality.
+//
+// This function works for AntiChannelPin and CleanLinked
+// AntiChannelPin - Unpins message pinned by channel
+// CleanLinked - Deletes the message linked by channel
+//
+// This is a watcher for the 2 functions described above.
 func (moduleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -76,9 +72,9 @@ func (moduleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-/* Unpin the latest pinned message or message to which user replied
-
-This function unpins the latest pinned message or message to which user replied */
+// unpin unpins the latest pinned message or message to which user replied.
+//
+// This function unpins the latest pinned message or message to which user replied.
 
 func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
@@ -182,9 +178,9 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Unpin all the pinned messages in the chat
-
-Can only be used by owner to unpin all message in a chat. */
+// unpinAll unpins all the pinned messages in the chat.
+//
+// Can only be used by owner to unpin all message in a chat.
 
 func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
@@ -221,9 +217,10 @@ func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Bot pins the message followed by command
-
-The users message is pinned by bot and includes buttons as well */
+// permaPin pins the message followed by command.
+//
+// Bot pins the message followed by command.
+// The users message is pinned by bot and includes buttons as well.
 
 func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -313,10 +310,10 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Pins the message replied by user
-
-Normally pins message without tagging users but tag can be
-enabled by entering 'notify'/'violent'/'loud' in front of command */
+// pin pins the message replied by user.
+//
+// Normally pins message without tagging users but tag can be
+// enabled by entering 'notify'/'violent'/'loud' in front of command.
 
 func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
@@ -390,13 +387,10 @@ func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Enable or Disable AntiChannelPin
-
-connection - true, true
-
-Sets Preference for checkPinned function to check message for unpinning or not
-*/
+// antiChannelPin enables or disables anti-channel pin functionality.
+//
+// Connection - true, true
+// Sets preference for checkPinned function to check message for unpinning or not.
 func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -463,13 +457,10 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Enable or Disable CleanLinked
-
-connection - true, true
-
-Sets Preference for checkPinned function to check message for cleaning or not
-*/
+// cleanLinked enables or disables clean linked functionality.
+//
+// Connection - true, true
+// Sets preference for checkPinned function to check message for cleaning or not.
 func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -536,13 +527,10 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Gets the pinned message in chat
-
-connection - false, true
-
-User can get the link to latest pinned message of chat using this
-*/
+// pinned gets the pinned message in chat.
+//
+// Connection - false, true
+// User can get the link to latest pinned message of chat using this.
 func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage

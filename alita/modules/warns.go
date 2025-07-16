@@ -697,6 +697,43 @@ func (moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// LoadWarns registers all warning-related command handlers with the dispatcher.
+//
+// This function enables the warning system module and adds handlers for
+// user warning management. The module provides progressive enforcement
+// with configurable actions when warning limits are exceeded.
+//
+// Registered commands:
+//   - /warn: Issues a warning to a user with optional reason
+//   - /swarn: Silent warning (deletes command message)
+//   - /dwarn: Delete warning (removes user's message and warns)
+//   - /resetwarns: Clears all warnings for a user
+//   - /warns: Displays a user's current warnings
+//   - /warnings: Alternative command to display warnings
+//   - /setwarnlimit: Sets maximum warnings before action
+//   - /setwarnmode: Configures action when limit is exceeded
+//   - /resetallwarns: Clears all warnings in the chat
+//
+// The warning system tracks user violations and applies configurable
+// actions (mute, ban, kick) when limits are exceeded. Warnings persist
+// across sessions and include detailed reasoning for each violation.
+//
+// Features:
+//   - Progressive enforcement with configurable limits
+//   - Multiple warning modes (normal, silent, delete)
+//   - Detailed warning history with reasons
+//   - Configurable actions (mute, ban, kick)
+//   - Bulk warning management
+//   - Interactive warning removal buttons
+//
+// Requirements:
+//   - Bot must be admin to take enforcement actions
+//   - User must be admin to issue warnings
+//   - Module supports remote configuration via connections
+//   - Integrates with muting and banning systems
+//
+// The warning system is designed to provide clear escalation paths
+// for moderation with comprehensive logging and user feedback.
 func LoadWarns(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(warnsModule.moduleName, true)
 

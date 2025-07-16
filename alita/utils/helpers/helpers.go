@@ -34,11 +34,9 @@ const (
 	MaxMessageLength int = 4096
 )
 
-/*
-Shtml returns a SendMessageOpts pointer configured for HTML parse mode.
-
-Disables link previews and allows sending without reply by default.
-*/
+// Shtml returns a SendMessageOpts pointer configured for HTML parse mode.
+//
+// Disables link previews and allows sending without reply by default.
 func Shtml() *gotgbot.SendMessageOpts {
 	return &gotgbot.SendMessageOpts{
 		ParseMode: HTML,
@@ -51,11 +49,9 @@ func Shtml() *gotgbot.SendMessageOpts {
 	}
 }
 
-/*
-Smarkdown returns a SendMessageOpts pointer configured for Markdown parse mode.
-
-Disables link previews and allows sending without reply by default.
-*/
+// Smarkdown returns a SendMessageOpts pointer configured for Markdown parse mode.
+//
+// Disables link previews and allows sending without reply by default.
 func Smarkdown() *gotgbot.SendMessageOpts {
 	return &gotgbot.SendMessageOpts{
 		ParseMode: Markdown,
@@ -68,11 +64,9 @@ func Smarkdown() *gotgbot.SendMessageOpts {
 	}
 }
 
-/*
-SplitMessage splits a message into multiple strings if it exceeds MaxMessageLength.
-
-Returns a slice of message parts, each within the allowed length.
-*/
+// SplitMessage splits a message into multiple strings if it exceeds MaxMessageLength.
+//
+// Returns a slice of message parts, each within the allowed length.
 func SplitMessage(msg string) []string {
 	if len(msg) > MaxMessageLength {
 		tmp := make([]string, 1)
@@ -95,20 +89,16 @@ func SplitMessage(msg string) []string {
 	}
 }
 
-/*
-MentionHtml returns an HTML-formatted mention link for a user.
-
-Uses the user's ID and display name.
-*/
+// MentionHtml returns an HTML-formatted mention link for a user.
+//
+// Uses the user's ID and display name.
 func MentionHtml(userId int64, name string) string {
 	return MentionUrl(fmt.Sprintf("tg://user?id=%d", userId), name)
 }
 
-/*
-MentionUrl returns an HTML-formatted link with the given URL and display name.
-
-Escapes the name for HTML safety.
-*/
+// MentionUrl returns an HTML-formatted link with the given URL and display name.
+//
+// Escapes the name for HTML safety.
 func MentionUrl(url, name string) string {
 	return fmt.Sprintf("<a href=\"%s\">%s</a>", url, html.EscapeString(name))
 }
@@ -164,12 +154,10 @@ func InitButtons(b *gotgbot.Bot, chatId, userId int64) gotgbot.InlineKeyboardMar
 	return connKeyboard
 }
 
-// GetMessageLinkFromMessageId Gets the message link via chat Id and message Id
-/*
-GetMessageLinkFromMessageId constructs a t.me message link from chat and message IDs.
-
-Handles both username-based and ID-based chats.
-*/
+// GetMessageLinkFromMessageId constructs a t.me message link from chat and message IDs.
+//
+// Handles both username-based and ID-based chats, properly formatting the link
+// based on whether the chat has a username or uses a numeric ID.
 func GetMessageLinkFromMessageId(chat *gotgbot.Chat, messageId int64) (messageLink string) {
 	messageLink = "https://t.me/"
 	chatIdStr := fmt.Sprint(chat.Id)
@@ -259,11 +247,9 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 
 // NOTE: keyboard helper functions
 
-/*
-BuildKeyboard constructs a 2D slice of InlineKeyboardButton from a list of db.Button.
-
-Handles button placement on the same line or new lines as specified.
-*/
+// BuildKeyboard constructs a 2D slice of InlineKeyboardButton from a list of db.Button.
+//
+// Handles button placement on the same line or new lines as specified.
 func BuildKeyboard(buttons []db.Button) [][]gotgbot.InlineKeyboardButton {
 	keyb := make([][]gotgbot.InlineKeyboardButton, 0)
 	for _, btn := range buttons {
@@ -845,12 +831,9 @@ func SendFilter(b *gotgbot.Bot, ctx *ext.Context, filterData *db.ChatFilters, re
 	return msg, err
 }
 
-/*
-notesParser parses note options from the message text.
-
-Detects flags like {private}, {admin}, {preview}, {noprivate}, {protect}, and {nonotif}.
-Returns corresponding booleans and the cleaned text.
-*/
+// notesParser parses note options from the message text.
+// Detects flags like {private}, {admin}, {preview}, {noprivate}, {protect}, and {nonotif}.
+// Returns corresponding booleans and the cleaned text with flags removed.
 func notesParser(sent string) (pvtOnly, grpOnly, adminOnly, webPrev, protectedContent, noNotif bool, sentBack string) {
 	pvtOnly, err := regexp.MatchString(`({private})`, sent)
 	if err != nil {
@@ -942,9 +925,9 @@ func SendNote(b *gotgbot.Bot, chat *gotgbot.Chat, ctx *ext.Context, noteData *db
 	return msg, nil
 }
 
-// NotesEnumFuncMap TODO: make a new function to merge all EnumFuncMap functions
-// NotesEnumFuncMap
-// A rather very complicated NotesEnumFuncMap Variable made by me to send filters in an appropriate way
+// NotesEnumFuncMap maps data types to their corresponding note sending functions.
+// Each function handles sending a note of a specific media type (text, sticker, document, etc.)
+// with appropriate formatting, web preview settings, and protection options.
 var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, webPreview, isProtected bool, noFormat, noNotif bool) (*gotgbot.Message, error){
 	db.TEXT: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, webPreview, isProtected bool, noFormat, noNotif bool) (*gotgbot.Message, error) {
 		formatMode := HTML
@@ -1106,9 +1089,9 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 	},
 }
 
-// GreetingsEnumFuncMap FIXME: when using /welcome command in private with connection, the string of welcome is sent to connected chat instead of pm
-// GreetingsEnumFuncMap
-// A rather very complicated GreetingsEnumFuncMap Variable made by me to send filters in an appropriate way
+// GreetingsEnumFuncMap maps data types to their corresponding greeting message sending functions.
+// Each function handles sending a welcome/goodbye message of a specific media type.
+// FIXME: when using /welcome command in private with connection, the string is sent to connected chat instead of pm.
 var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error){
 	db.TEXT: func(b *gotgbot.Bot, ctx *ext.Context, msg, _ string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendMessage(
@@ -1205,8 +1188,8 @@ var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, f
 	},
 }
 
-// FiltersEnumFuncMap
-// A rather very complicated FiltersEnumFuncMap Variable made by me to send filters in an appropriate way
+// FiltersEnumFuncMap maps data types to their corresponding filter message sending functions.
+// Each function handles sending a filter response of a specific media type when triggered by matching text.
 var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, noFormat, noNotif bool) (*gotgbot.Message, error){
 	db.TEXT: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, noFormat, noNotif bool) (*gotgbot.Message, error) {
 		formatMode := HTML
@@ -1360,12 +1343,9 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 	},
 }
 
-/*
-preFixes validates and prepares message content and buttons before saving to the database.
-
-Checks message length, assigns default button names, filters invalid buttons, and trims whitespace.
-Sets error messages and invalidates data if constraints are not met.
-*/
+// preFixes validates and prepares message content and buttons before saving to the database.
+// Checks message length constraints, assigns default button names, filters invalid buttons, and trims whitespace.
+// Sets error messages and invalidates data if constraints are not met.
 func preFixes(buttons []tgmd2html.ButtonV2, defaultNameButton string, text *string, dataType *int, fileid string, dbButtons *[]db.Button, errorMsg *string) {
 	if *dataType == db.TEXT && len(*text) > 4096 {
 		*dataType = -1
@@ -1406,11 +1386,9 @@ func preFixes(buttons []tgmd2html.ButtonV2, defaultNameButton string, text *stri
 	}
 }
 
-/*
-setRawText extracts the raw text content from a gotgbot.Message.
-
-Handles both direct messages and replies, considering text and caption fields.
-*/
+// setRawText extracts the raw text content from a gotgbot.Message.
+// Handles both direct messages and replies, considering text and caption fields.
+// Extracts content using the appropriate markdown format preserving original formatting.
 func setRawText(msg *gotgbot.Message, args []string, rawText *string) {
 	replyMsg := msg.ReplyToMessage
 	if replyMsg == nil {

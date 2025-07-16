@@ -24,14 +24,16 @@ type AdminSettings struct {
 }
 
 // GetAdminSettings retrieves the admin settings for a given chat ID.
-// If no settings exist, it initializes them with default values.
+// If no settings exist, it initializes them with default values (anonymous admin disabled).
+// This is the main function for accessing admin settings with caching support.
 func GetAdminSettings(chatID int64) *AdminSettings {
 	return checkAdminSetting(chatID)
 }
 
 // checkAdminSetting fetches admin settings for a chat from the database.
-// If no document exists, it creates one with default values.
-// Returns a pointer to the AdminSettings struct.
+// If no document exists, it creates one with default values (anonymous admin disabled).
+// Uses cache for performance optimization with 10-minute expiration.
+// Returns a pointer to the AdminSettings struct with either existing or default values.
 func checkAdminSetting(chatID int64) (adminSrc *AdminSettings) {
 	// Try cache first
 	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(AdminSettings)); err == nil && cached != nil {
@@ -58,7 +60,8 @@ func checkAdminSetting(chatID int64) (adminSrc *AdminSettings) {
 }
 
 // SetAnonAdminMode updates the anonymous admin mode for a specific chat.
-// It ensures the admin settings exist before updating the AnonAdmin field.
+// When enabled, admin commands can be used by anonymous admins in the chat.
+// Updates both database and cache with the new setting.
 func SetAnonAdminMode(chatID int64, val bool) {
 	adminSrc := checkAdminSetting(chatID)
 	adminSrc.AnonAdmin = val

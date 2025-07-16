@@ -116,19 +116,17 @@ func (rb *ringBuffer) getAll() []int64 {
 	return result
 }
 
-/*
-antifloodStruct implements the antiflood module logic using a token bucket algorithm.
-
-It embeds moduleStruct and manages:
-- Rate limiting state per chat using token buckets
-- Admin status caching to reduce API calls
-- Flood detection and enforcement
-
-Configuration:
-- Flood limit sets the bucket capacity (burst size)
-- Refill rate is automatically calculated as 1 token per (limit) seconds
-- Admin cache TTL is 5 minutes
-*/
+// antifloodStruct implements the antiflood module logic using a token bucket algorithm.
+//
+// It embeds moduleStruct and manages:
+// - Rate limiting state per chat using token buckets
+// - Admin status caching to reduce API calls
+// - Flood detection and enforcement
+//
+// Configuration:
+// - Flood limit sets the bucket capacity (burst size)
+// - Refill rate is automatically calculated as 1 token per (limit) seconds
+// - Admin cache TTL is 5 minutes
 type antifloodStruct struct {
 	moduleStruct  // inheritance
 	syncHelperMap sync.Map
@@ -181,11 +179,9 @@ var antifloodModule = antifloodStruct{
 	}),
 }
 
-/*
-updateFlood updates the flood control state for a user in a chat using token bucket algorithm.
-
-Returns true if the user has exceeded the flood limit, along with the token bucket containing message IDs.
-*/
+// updateFlood updates the flood control state for a user in a chat using token bucket algorithm.
+//
+// Returns true if the user has exceeded the flood limit, along with the token bucket containing message IDs.
 func (*moduleStruct) updateFlood(chatId, _ /* userId */, msgId int64) (returnVar bool, bucket *tokenBucket) {
 	floodSrc := db.GetFlood(chatId)
 
@@ -221,11 +217,9 @@ func (*moduleStruct) updateFlood(chatId, _ /* userId */, msgId int64) (returnVar
 	return
 }
 
-/*
-checkFlood enforces flood control for incoming messages.
-
-Uses a semaphore to limit concurrent admin checks, applies flood logic, and takes action (mute, kick, ban) if limits are exceeded. Handles admin and anonymous user exceptions.
-*/
+// checkFlood enforces flood control for incoming messages.
+//
+// Uses a semaphore to limit concurrent admin checks, applies flood logic, and takes action (mute, kick, ban) if limits are exceeded. Handles admin and anonymous user exceptions.
 func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender
@@ -383,11 +377,9 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-/*
-setFlood sets the flood limit for a chat.
-
-Allows admins to enable, disable, or change the flood limit. Handles argument parsing and updates the database accordingly.
-*/
+// setFlood sets the flood limit for a chat.
+//
+// Allows admins to enable, disable, or change the flood limit. Handles argument parsing and updates the database accordingly.
 func (*moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -432,11 +424,9 @@ func (*moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-flood displays the current flood settings for the chat.
-
-Shows whether flood control is enabled and the current action mode (mute, ban, kick).
-*/
+// flood displays the current flood settings for the chat.
+//
+// Shows whether flood control is enabled and the current action mode (mute, ban, kick).
 func (*moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	var text string
 	msg := ctx.EffectiveMessage
@@ -477,11 +467,9 @@ func (*moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-setFloodMode sets the action mode for flood control.
-
-Admins can choose between "ban", "kick", or "mute" as the action when flood limits are exceeded.
-*/
+// setFloodMode sets the action mode for flood control.
+//
+// Admins can choose between "ban", "kick", or "mute" as the action when flood limits are exceeded.
 func (*moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -518,11 +506,9 @@ func (*moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-setFloodDeleter enables or disables deletion of messages that trigger flood control.
-
-Admins can toggle this setting or view its current status.
-*/
+// setFloodDeleter enables or disables deletion of messages that trigger flood control.
+//
+// Admins can toggle this setting or view its current status.
 func (*moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -564,11 +550,38 @@ func (*moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-LoadAntiflood registers antiflood-related command handlers with the dispatcher.
-
-Enables the antiflood module and adds handlers for flood control commands and message group checks.
-*/
+// LoadAntiflood registers antiflood-related command handlers with the dispatcher.
+//
+// This function enables the antiflood protection module and adds handlers for
+// flood control commands and message monitoring. The module implements a token
+// bucket rate limiting algorithm with ring buffer analysis to detect and prevent
+// message flooding.
+//
+// Registered commands:
+//   - /setflood: Configures the flood limit for the chat
+//   - /setfloodmode: Sets the action taken when flood limit is exceeded
+//   - /delflood: Configures message deletion on flood detection
+//   - /flood: Displays current flood settings
+//
+// The module automatically monitors all messages in group 4 handler priority
+// and applies rate limiting using a token bucket algorithm. When users exceed
+// the configured message rate, appropriate actions are taken based on the
+// chat's flood mode settings.
+//
+// Features:
+//   - Token bucket rate limiting with configurable capacity
+//   - Ring buffer for message ID tracking and deletion
+//   - Admin status caching with TTL for performance
+//   - Automatic cleanup of expired rate limiters
+//   - Support for different flood actions (warn, mute, ban, kick)
+//
+// Requirements:
+//   - Bot must be admin to delete messages and take actions
+//   - User must be admin to configure flood settings
+//   - Module respects admin immunity from flood controls
+//
+// The antiflood system is designed to be lightweight and efficient, with
+// minimal impact on message processing performance.
 func LoadAntiflood(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(antifloodModule.moduleName, true)
 

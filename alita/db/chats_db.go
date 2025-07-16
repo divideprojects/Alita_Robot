@@ -30,7 +30,8 @@ type Chat struct {
 }
 
 // GetChatSettings retrieves the chat settings for a given chat ID.
-// If no settings exist, it returns a new Chat struct with default values.
+// If no settings exist, it returns an empty Chat struct. Uses cache for performance.
+// This is the main function for accessing chat metadata with caching support.
 func GetChatSettings(chatId int64) (chatSrc *Chat) {
 	// Try cache first
 	if cached, err := cache.Marshal.Get(cache.Context, chatId, new(Chat)); err == nil && cached != nil {
@@ -51,6 +52,8 @@ func GetChatSettings(chatId int64) (chatSrc *Chat) {
 }
 
 // ToggleInactiveChat sets the IsInactive flag for a chat to the specified value.
+// Inactive chats are typically those where the bot is no longer active or banned.
+// Updates the database but does not update the cache automatically.
 func ToggleInactiveChat(chatId int64, toggle bool) {
 	chat := GetChatSettings(chatId)
 	chat.IsInactive = toggle
@@ -62,7 +65,8 @@ func ToggleInactiveChat(chatId int64, toggle bool) {
 }
 
 // UpdateChat updates the chat name and adds a user ID to the chat's user list if not already present.
-// Uses atomic operations to prevent race conditions.
+// Also marks the chat as active and sets default language to English for new chats.
+// Uses atomic upsert operations with $addToSet to prevent duplicate users and race conditions.
 func UpdateChat(chatId int64, chatname string, userid int64) {
 	// Use atomic upsert with $addToSet to prevent duplicate users
 	filter := bson.M{"_id": chatId}
@@ -91,7 +95,9 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 	_ = cache.Marshal.Set(cache.Context, chatId, result, store.WithExpiration(10*time.Minute))
 }
 
-// GetAllChats returns a map of all chats, keyed by ChatId.
+// GetAllChats returns a map of all chats in the database, keyed by ChatId.
+// This function loads all chat data into memory and should be used carefully.
+// Primarily used for statistics and bulk operations.
 func GetAllChats() map[int64]Chat {
 	var (
 		chatArray []*Chat
@@ -109,7 +115,8 @@ func GetAllChats() map[int64]Chat {
 }
 
 // LoadChatStats returns the number of active and inactive chats.
-// Uses MongoDB aggregation pipeline for optimal performance.
+// Uses MongoDB aggregation pipeline for optimal performance, with manual fallback.
+// Used for bot statistics and monitoring purposes.
 func LoadChatStats() (activeChats, inactiveChats int) {
 	// Use MongoDB aggregation for optimal performance
 	pipeline := []bson.M{
@@ -165,11 +172,9 @@ func LoadChatStats() (activeChats, inactiveChats int) {
 	return 0, 0
 }
 
-/*
-loadChatStatsManual is the fallback manual implementation.
-
-Used when MongoDB aggregation fails for any reason.
-*/
+// loadChatStatsManual is the fallback manual implementation for loading chat statistics.
+// Used when MongoDB aggregation fails for any reason. Loads all chats into memory
+// and counts them manually. Less efficient but more reliable.
 func loadChatStatsManual() (activeChats, inactiveChats int) {
 	chats := GetAllChats()
 	for _, i := range chats {

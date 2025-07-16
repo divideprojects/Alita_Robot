@@ -701,6 +701,39 @@ func (moduleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, replyMsgI
 	return nil
 }
 
+// LoadNotes registers all note-related command handlers with the dispatcher.
+//
+// This function enables the notes module and adds handlers for note management
+// and retrieval. The module provides a system for storing and retrieving
+// custom messages, media, and formatted responses.
+//
+// Registered commands:
+//   - /get: Retrieves a saved note by name
+//   - /save: Saves a new note with optional media and buttons
+//   - /saved, /notes: Lists all saved notes in the chat
+//   - /clear: Removes a saved note
+//   - /clearall: Removes all notes from the chat
+//   - /privatenotes: Toggles private note delivery mode
+//   - /notemode: Sets note delivery mode (reply/private)
+//
+// The module automatically processes hashtag triggers (#notename) in messages
+// and responds with the corresponding saved note content.
+//
+// Features:
+//   - Rich content support (text, media, buttons)
+//   - Hashtag trigger system for quick note access
+//   - Private and public note delivery modes
+//   - Note statistics and management
+//   - Bulk note operations
+//   - Integration with formatting system
+//
+// Requirements:
+//   - User must be admin to save/delete notes
+//   - Module supports remote configuration via connections
+//   - Integrates with formatting module for rich content
+//
+// The notes system provides an efficient way to store and share
+// frequently used information with automatic trigger recognition.
 func LoadNotes(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(notesModule.moduleName, true)
 

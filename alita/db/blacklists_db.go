@@ -28,7 +28,9 @@ type BlacklistSettings struct {
 	Reason   string   `bson:"reason,omitempty" json:"reason,omitempty"`
 }
 
-// check Chat Blacklists Settings, used to get data before performing any operation
+// checkBlacklistSetting fetches blacklist settings for a chat from the database.
+// If no document exists, it creates one with default values. Uses cache for performance.
+// Returns a pointer to the BlacklistSettings struct with either existing or default values.
 func checkBlacklistSetting(chatID int64) (blSrc *BlacklistSettings) {
 	// Try cache first
 	if cached, err := cache.Marshal.Get(cache.Context, chatID, new(BlacklistSettings)); err == nil && cached != nil {
@@ -59,7 +61,8 @@ func checkBlacklistSetting(chatID int64) (blSrc *BlacklistSettings) {
 }
 
 // AddBlacklist adds a new trigger word to the blacklist for the specified chat.
-// The trigger is converted to lowercase before being stored.
+// The trigger is converted to lowercase before being stored to ensure case-insensitive matching.
+// Updates both database and cache with the new trigger.
 func AddBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = append(blSrc.Triggers, strings.ToLower(trigger))
@@ -72,7 +75,8 @@ func AddBlacklist(chatId int64, trigger string) {
 }
 
 // RemoveBlacklist removes a trigger word from the blacklist for the specified chat.
-// The trigger is matched in lowercase.
+// The trigger is matched in lowercase. If the trigger doesn't exist, no action is taken.
+// Updates both database and cache after removal.
 func RemoveBlacklist(chatId int64, trigger string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = removeStrfromStr(blSrc.Triggers, strings.ToLower(trigger))
@@ -83,6 +87,8 @@ func RemoveBlacklist(chatId int64, trigger string) {
 }
 
 // RemoveAllBlacklist clears all blacklist triggers for the specified chat.
+// This removes all blocked words/phrases, effectively disabling blacklist filtering.
+// The blacklist settings and action remain but the triggers list becomes empty.
 func RemoveAllBlacklist(chatId int64) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Triggers = make([]string, 0)
@@ -92,7 +98,9 @@ func RemoveAllBlacklist(chatId int64) {
 	}
 }
 
-// SetBlacklistAction sets the action to be taken when a blacklist trigger is matched in the specified chat.
+// SetBlacklistAction sets the action to be taken when a blacklist trigger is matched.
+// Valid actions include: ban, mute, kick, warn, none. Action is converted to lowercase.
+// Updates both database and cache with the new action setting.
 func SetBlacklistAction(chatId int64, action string) {
 	blSrc := checkBlacklistSetting(chatId)
 	blSrc.Action = strings.ToLower(action)
@@ -103,16 +111,15 @@ func SetBlacklistAction(chatId int64, action string) {
 }
 
 // GetBlacklistSettings retrieves the blacklist settings for a given chat ID.
-// If no settings exist, it initializes them with default values.
+// If no settings exist, it initializes them with default values (action: none, empty triggers).
+// This is the main function for accessing blacklist settings with caching support.
 func GetBlacklistSettings(chatId int64) *BlacklistSettings {
 	return checkBlacklistSetting(chatId)
 }
 
-/*
-LoadBlacklistsStats returns the total number of blacklist triggers and the number of chats with at least one blacklist trigger.
-
-Uses MongoDB aggregation pipeline for optimal performance instead of manual loops.
-*/
+// LoadBlacklistsStats returns the total number of blacklist triggers and the number of chats with at least one blacklist trigger.
+// Uses MongoDB aggregation pipeline for optimal performance instead of manual loops.
+// Falls back to manual counting if aggregation fails for any reason.
 func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 	// Use MongoDB aggregation for optimal performance
 	pipeline := []bson.M{
@@ -163,11 +170,9 @@ func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 	return 0, 0
 }
 
-/*
-loadBlacklistsStatsManual is the fallback manual implementation.
-
-Used when MongoDB aggregation fails for any reason.
-*/
+// loadBlacklistsStatsManual is the fallback manual implementation for loading blacklist statistics.
+// Used when MongoDB aggregation fails for any reason. Iterates through all blacklist documents
+// and counts triggers and chats manually. Less efficient but more reliable.
 func loadBlacklistsStatsManual() (blacklistTriggers, blacklistChats int64) {
 	var blacklistStruct []*BlacklistSettings
 	ctx := context.Background()

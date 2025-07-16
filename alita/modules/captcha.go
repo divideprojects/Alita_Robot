@@ -22,21 +22,17 @@ import (
 	"github.com/eko/gocache/lib/v4/store"
 )
 
-/*
-captchaModule provides CAPTCHA functionality for new members to prevent spam and bot attacks.
-
-Implements commands to configure CAPTCHA settings and handles member join events with challenge verification.
-*/
+// captchaModule provides CAPTCHA functionality for new members to prevent spam and bot attacks.
+//
+// Implements commands to configure CAPTCHA settings and handles member join events with challenge verification.
 var captchaModule = moduleStruct{moduleName: "Captcha"}
 
 // Global CAPTCHA generator instance
 var captchaGenerator = captcha.NewCaptchaGenerator()
 
-/*
-captcha displays or toggles the CAPTCHA settings for the chat.
-
-Admins can view current settings or toggle CAPTCHA on/off.
-*/
+// captcha displays or toggles the CAPTCHA settings for the chat.
+//
+// Admins can view current settings or toggle CAPTCHA on/off.
 func (moduleStruct) captcha(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -97,11 +93,9 @@ func (moduleStruct) captcha(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-captchaMode sets the CAPTCHA challenge mode.
-
-Available modes: button, text, math, text2
-*/
+// captchaMode sets the CAPTCHA challenge mode.
+//
+// Available modes: button, text, math, text2
 func (moduleStruct) captchaMode(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -165,11 +159,9 @@ func (moduleStruct) captchaMode(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-setCaptchaText sets custom text for the CAPTCHA button.
-
-Admins can customize the button text shown to new members.
-*/
+// setCaptchaText sets custom text for the CAPTCHA button.
+//
+// Admins can customize the button text shown to new members.
 func (moduleStruct) setCaptchaText(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -215,11 +207,9 @@ func (moduleStruct) setCaptchaText(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-resetCaptchaText resets the CAPTCHA button text to default.
-
-Resets to: "Click here to prove you're human"
-*/
+// resetCaptchaText resets the CAPTCHA button text to default.
+//
+// Resets to: "Click here to prove you're human"
 func (moduleStruct) resetCaptchaText(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -245,11 +235,9 @@ func (moduleStruct) resetCaptchaText(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-captchaKick toggles or displays the CAPTCHA kick setting.
-
-When enabled, users who don't solve CAPTCHA within the time limit are kicked.
-*/
+// captchaKick toggles or displays the CAPTCHA kick setting.
+//
+// When enabled, users who don't solve CAPTCHA within the time limit are kicked.
 func (moduleStruct) captchaKick(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -306,11 +294,9 @@ func (moduleStruct) captchaKick(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-captchaKickTime sets the time after which users are kicked for not solving CAPTCHA.
-
-Format: 5m, 1h, 2h30m, etc.
-*/
+// captchaKickTime sets the time after which users are kicked for not solving CAPTCHA.
+//
+// Format: 5m, 1h, 2h30m, etc.
 func (moduleStruct) captchaKickTime(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -362,11 +348,9 @@ func (moduleStruct) captchaKickTime(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-captchaRules toggles or displays the CAPTCHA rules setting.
-
-When enabled, users must accept chat rules as part of the CAPTCHA process.
-*/
+// captchaRules toggles or displays the CAPTCHA rules setting.
+//
+// When enabled, users must accept chat rules as part of the CAPTCHA process.
 func (moduleStruct) captchaRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -419,11 +403,9 @@ func (moduleStruct) captchaRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-captchaMuteTime sets or displays the auto-unmute time for CAPTCHA.
-
-When set, users are automatically unmuted after the specified time even if they don't solve CAPTCHA.
-*/
+// captchaMuteTime sets or displays the auto-unmute time for CAPTCHA.
+//
+// When set, users are automatically unmuted after the specified time even if they don't solve CAPTCHA.
 func (moduleStruct) captchaMuteTime(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -492,11 +474,9 @@ func (moduleStruct) captchaMuteTime(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-newMemberCaptcha handles the event when a new member joins the chat.
-
-If CAPTCHA is enabled, mutes the user and starts the challenge process.
-*/
+// newMemberCaptcha handles the event when a new member joins the chat.
+//
+// If CAPTCHA is enabled, mutes the user and starts the challenge process.
 func (moduleStruct) newMemberCaptcha(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	newMember := ctx.ChatMember.NewChatMember.MergeChatMember().User
@@ -573,11 +553,9 @@ func (moduleStruct) newMemberCaptcha(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-/*
-captchaJoinRequest handles join requests when CAPTCHA is enabled.
-
-Sends CAPTCHA challenge to users requesting to join.
-*/
+// captchaJoinRequest handles join requests when CAPTCHA is enabled.
+//
+// Sends CAPTCHA challenge to users requesting to join.
 func (moduleStruct) captchaJoinRequest(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.ChatJoinRequest.Chat
 	user := ctx.ChatJoinRequest.From
@@ -613,11 +591,9 @@ func (moduleStruct) captchaJoinRequest(bot *gotgbot.Bot, ctx *ext.Context) error
 	return ext.ContinueGroups
 }
 
-/*
-captchaCallback handles CAPTCHA button interactions.
-
-Processes user answers and updates challenge state.
-*/
+// captchaCallback handles CAPTCHA button interactions.
+//
+// Processes user answers and updates challenge state.
 func (moduleStruct) captchaCallback(bot *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	user := query.From
@@ -1185,11 +1161,43 @@ func handleIncorrectAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID in
 	}
 }
 
-/*
-LoadCaptcha registers all CAPTCHA-related command handlers with the dispatcher.
-
-Enables the CAPTCHA module and adds handlers for configuration commands and member join events.
-*/
+// LoadCaptcha registers all CAPTCHA-related command handlers with the dispatcher.
+//
+// This function enables the CAPTCHA verification module and adds handlers for
+// user verification, configuration commands, and member join events. The module
+// provides comprehensive spam protection by challenging new users with various
+// verification methods.
+//
+// Registered commands:
+//   - /captcha: Toggles CAPTCHA on/off and displays current settings
+//   - /captchamode: Sets the verification mode (button, math, text)
+//   - /setcaptchatext: Customizes the CAPTCHA button text
+//   - /resetcaptchatext: Resets CAPTCHA button text to default
+//   - /captchakick: Toggles automatic kicking of failed verifications
+//   - /captchakicktime: Sets the timeout for CAPTCHA completion
+//   - /captcharules: Toggles rules display in CAPTCHA message
+//   - /captchamutetime: Sets mute duration for unverified users
+//
+// Event handlers:
+//   - New member join: Automatically presents CAPTCHA to new users
+//   - Join requests: Handles approval requests with CAPTCHA
+//   - Callback queries: Processes CAPTCHA button responses
+//   - Scheduled tasks: Manages CAPTCHA timeouts and cleanup
+//
+// Features:
+//   - Multiple verification modes (button, math, text)
+//   - Configurable timeout and failure actions
+//   - Automatic cleanup of expired challenges
+//   - Rules integration for new members
+//   - Mute enforcement for unverified users
+//
+// Requirements:
+//   - Bot must be admin to mute/kick users
+//   - User must be admin to configure CAPTCHA settings
+//   - Module supports remote configuration via connections
+//
+// The CAPTCHA system includes automatic scheduling for cleanup and
+// integrates with the bot's warning and muting systems for enforcement.
 func LoadCaptcha(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(captchaModule.moduleName, true)
 

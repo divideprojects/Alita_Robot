@@ -10,14 +10,16 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
-// CaptchaScheduler handles expired CAPTCHA challenges
+// CaptchaScheduler handles expired CAPTCHA challenges.
+// It runs as a background service to process users who failed to complete CAPTCHA verification within the allowed time.
 type CaptchaScheduler struct {
 	bot      *gotgbot.Bot
 	interval time.Duration
 	stopChan chan bool
 }
 
-// NewCaptchaScheduler creates a new CAPTCHA scheduler
+// NewCaptchaScheduler creates a new CAPTCHA scheduler.
+// The scheduler will check for expired challenges at the specified interval.
 func NewCaptchaScheduler(bot *gotgbot.Bot, interval time.Duration) *CaptchaScheduler {
 	return &CaptchaScheduler{
 		bot:      bot,
@@ -26,7 +28,8 @@ func NewCaptchaScheduler(bot *gotgbot.Bot, interval time.Duration) *CaptchaSched
 	}
 }
 
-// Start begins the scheduler's background processing
+// Start begins the scheduler's background processing.
+// It runs in a loop, processing expired challenges at regular intervals until stopped.
 func (cs *CaptchaScheduler) Start() {
 	log.Info("Starting CAPTCHA scheduler...")
 
@@ -47,12 +50,14 @@ func (cs *CaptchaScheduler) Start() {
 	}
 }
 
-// Stop stops the scheduler
+// Stop stops the scheduler.
+// It sends a stop signal to the background goroutine.
 func (cs *CaptchaScheduler) Stop() {
 	cs.stopChan <- true
 }
 
-// processExpiredChallenges handles all expired CAPTCHA challenges
+// processExpiredChallenges handles all expired CAPTCHA challenges.
+// It retrieves expired challenges from the database and processes each one according to chat settings.
 func (cs *CaptchaScheduler) processExpiredChallenges() {
 	expired, err := db.GetExpiredCaptchaChallenges()
 	if err != nil {
@@ -77,7 +82,8 @@ func (cs *CaptchaScheduler) processExpiredChallenges() {
 	}
 }
 
-// processExpiredChallenge handles a single expired challenge
+// processExpiredChallenge handles a single expired challenge.
+// It determines the appropriate action (kick or unmute) based on chat settings.
 func (cs *CaptchaScheduler) processExpiredChallenge(challenge *db.CaptchaChallenge) {
 	chatID := challenge.ChatID
 	userID := challenge.UserID
@@ -98,7 +104,8 @@ func (cs *CaptchaScheduler) processExpiredChallenge(challenge *db.CaptchaChallen
 	log.Infof("CAPTCHA Scheduler: Processed expired challenge for user %d in chat %d", userID, chatID)
 }
 
-// kickUser kicks a user from the chat
+// kickUser kicks a user from the chat.
+// It bans the user temporarily and then immediately unbans them, effectively kicking them.
 func (cs *CaptchaScheduler) kickUser(chatID, userID int64) {
 	// Check if user is still in the chat and hasn't been manually unmuted
 	if !cs.isUserStillMuted(chatID, userID) {
@@ -122,7 +129,8 @@ func (cs *CaptchaScheduler) kickUser(chatID, userID int64) {
 	log.Infof("CAPTCHA Scheduler: Kicked user %d from chat %d for not solving CAPTCHA", userID, chatID)
 }
 
-// unmuteUser unmutes a user (auto-unmute)
+// unmuteUser unmutes a user (auto-unmute).
+// It restores the user's permissions to send messages and media after CAPTCHA timeout.
 func (cs *CaptchaScheduler) unmuteUser(chatID, userID int64) {
 	// Check if user is still in the chat and muted
 	if !cs.isUserStillMuted(chatID, userID) {
@@ -154,7 +162,8 @@ func (cs *CaptchaScheduler) unmuteUser(chatID, userID int64) {
 	log.Infof("CAPTCHA Scheduler: Auto-unmuted user %d in chat %d", userID, chatID)
 }
 
-// isUserStillMuted checks if a user is still muted in the chat
+// isUserStillMuted checks if a user is still muted in the chat.
+// It verifies that the user is present and has restricted status before processing the challenge.
 func (cs *CaptchaScheduler) isUserStillMuted(chatID, userID int64) bool {
 	// Check if user is still in the chat
 	member, err := cs.bot.GetChatMember(chatID, userID, nil)
@@ -174,7 +183,8 @@ func (cs *CaptchaScheduler) isUserStillMuted(chatID, userID int64) bool {
 	return false
 }
 
-// StartCaptchaScheduler starts the global CAPTCHA scheduler
+// StartCaptchaScheduler starts the global CAPTCHA scheduler.
+// It creates a new scheduler with a 30-second check interval and starts it in a goroutine.
 func StartCaptchaScheduler(bot *gotgbot.Bot) *CaptchaScheduler {
 	scheduler := NewCaptchaScheduler(bot, 30*time.Second) // Check every 30 seconds
 	go scheduler.Start()
