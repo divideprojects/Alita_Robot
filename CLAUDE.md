@@ -16,12 +16,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `go test -bench=.` - Run benchmarks
 - `go test -v ./alita/modules/antiflood_test.go` - Run specific test files
 
-### Code Quality & Linting
-- `make lint` - Run golangci-lint with project configuration
-- `golangci-lint run` - Run linter directly (requires golangci-lint installed)
-- Configuration: `.golangci.yml` with comprehensive Go linting rules
-- GitHub Actions: Automated linting on push/PR to main/dev branches
-
 ### Docker Development
 - `docker-compose up` - Run bot with MongoDB and Redis (production mode)
 - `docker-compose -f local.docker-compose.yml up` - Local development setup
