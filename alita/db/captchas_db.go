@@ -316,7 +316,7 @@ func LoadCaptchaStats() (enabledCaptcha, kickEnabled, rulesEnabled, activeChalle
 	// count active challenges
 	challengesCursor := findAll(captchaChallengesColl, bson.M{"solved": false})
 	defer challengesCursor.Close(ctx)
-	
+
 	var challenges []*CaptchaChallenge
 	challengesCursor.All(ctx, &challenges)
 	activeChallenges = int64(len(challenges))

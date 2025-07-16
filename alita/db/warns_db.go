@@ -84,7 +84,7 @@ func WarnUser(userId, chatId int64, reason string) (int, []string) {
 	// Use atomic increment and push to avoid race conditions
 	filter := bson.M{"user_id": userId, "chat_id": chatId}
 	update := bson.M{
-		"$inc": bson.M{"num_warns": 1},
+		"$inc":  bson.M{"num_warns": 1},
 		"$push": bson.M{"warns": reason},
 		"$setOnInsert": bson.M{
 			"user_id": userId,
@@ -110,8 +110,8 @@ func WarnUser(userId, chatId int64, reason string) (int, []string) {
 func RemoveWarn(userId, chatId int64) bool {
 	// Use atomic decrement and pop to avoid race conditions
 	filter := bson.M{
-		"user_id": userId,
-		"chat_id": chatId,
+		"user_id":   userId,
+		"chat_id":   chatId,
 		"num_warns": bson.M{"$gt": 0}, // Only update if warns > 0
 	}
 	update := bson.M{

@@ -532,7 +532,6 @@ func (moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 // This deletes the command of Banner and also does not reply.
 // The Bot, Banner should be admin with ban permissions in order to use this.
 
-//
 // Performs permission checks, extracts the target user, and bans them without sending a reply. Handles edge cases such as anonymous users and admins.
 func (moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -610,7 +609,6 @@ func (moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 // This deletes the message of replied user.
 // The Bot, Banner should be admin with ban permissions in order to use this.
 
-//
 // Checks permissions, extracts the target user, deletes their message, and bans them. Handles anonymous users, admins, and edge cases.
 func (moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -731,7 +729,6 @@ func (moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 // Used to unban a user from group.
 // The Bot, Unbanner should be admin with ban permissions in order to use this.
 
-//
 // Checks permissions, extracts the target user, and unbans them. Handles anonymous users, admins, and the bot itself.
 func (moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -825,7 +822,6 @@ func (moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 // Used to restrict members from a chat.
 // Shows an inline keyboard menu which shows options to kick, ban and mute.
 
-//
 // Checks permissions and displays options for restricting the target user.
 func (moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
@@ -1014,7 +1010,6 @@ func (moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) erro
 // Used to unrestrict members from a chat.
 // Shows an inline keyboard menu which shows options to unban and unmute.
 
-//
 // Checks permissions and displays options for unrestricting the target user.
 func (moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat

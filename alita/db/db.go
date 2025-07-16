@@ -93,7 +93,7 @@ var (
 // createIndexes creates database indexes for optimal performance
 func createIndexes() {
 	log.Info("Creating database indexes...")
-	
+
 	ctx := context.Background()
 
 	// Filter collection indexes
@@ -369,11 +369,11 @@ func updateOne(collecion *mongo.Collection, filter bson.M, data interface{}) (er
 	if collecion == nil {
 		return mongo.ErrNilDocument
 	}
-	
+
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	err = retryDB(func() error {
 		_, e := collecion.UpdateOne(ctx, filter, bson.M{"$set": data}, options.Update().SetUpsert(true))
 		return e
@@ -404,11 +404,11 @@ func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResul
 	if collecion == nil {
 		return &mongo.SingleResult{}
 	}
-	
+
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	var result *mongo.SingleResult
 	retryDB(func() error {
 		result = collecion.FindOne(ctx, filter)
@@ -437,11 +437,11 @@ func countDocs(collecion *mongo.Collection, filter bson.M) (count int64, err err
 	if collecion == nil {
 		return 0, mongo.ErrNilDocument
 	}
-	
+
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	err = retryDB(func() error {
 		c, e := collecion.CountDocuments(ctx, filter)
 		count = c
@@ -476,7 +476,7 @@ func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	
+
 	var cursor *mongo.Cursor
 	retryDB(func() error {
 		c, e := collecion.Find(ctx, filter)
@@ -507,7 +507,7 @@ func deleteOne(collecion *mongo.Collection, filter bson.M) (err error) {
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	err = retryDB(func() error {
 		_, e := collecion.DeleteOne(ctx, filter)
 		return e
@@ -542,7 +542,7 @@ func deleteMany(collecion *mongo.Collection, filter bson.M) (err error) {
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	
+
 	err = retryDB(func() error {
 		_, e := collecion.DeleteMany(ctx, filter)
 		return e
@@ -579,7 +579,7 @@ func findOneAndUpsert(collection *mongo.Collection, filter bson.M, update bson.M
 	start := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	var err error
 	err = retryDB(func() error {
 		opts := options.FindOneAndUpdate().
