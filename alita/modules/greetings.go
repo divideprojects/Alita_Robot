@@ -31,13 +31,13 @@ var greetingsModule = moduleStruct{moduleName: "Greetings"}
 // Admins can view current settings, toggle welcoming on/off, or display the current welcome message.
 func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	// Save original context for replies to PM before connection check
+	originalCtx := *ctx
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
-	// Save original context for replies to PM
-	originalCtx := *ctx
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
