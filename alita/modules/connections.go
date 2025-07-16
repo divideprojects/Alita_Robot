@@ -383,6 +383,7 @@ func (moduleStruct) userCmdConnString() string {
 //
 // Enables the connections module and adds handlers for connect, disconnect, and related commands.
 func LoadConnections(dispatcher *ext.Dispatcher) {
+	HelpModule.AbleMap.Store(ConnectionsModule.moduleName, true)
 	dispatcher.AddHandler(handlers.NewCommand("connect", ConnectionsModule.connect))
 	dispatcher.AddHandler(handlers.NewCommand("disconnect", ConnectionsModule.disconnect))
 	dispatcher.AddHandler(handlers.NewCommand("connection", ConnectionsModule.connection))

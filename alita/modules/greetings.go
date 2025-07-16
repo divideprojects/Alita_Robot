@@ -36,6 +36,8 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
+	// Save original context for replies to PM
+	originalCtx := *ctx
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -63,7 +65,7 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 
 		if noformat {
 			wlcmText += helpers.RevertButtons(buttons)
-			_, err := helpers.GreetingsEnumFuncMap[welcPrefs.WelcomeSettings.WelcomeType](bot, ctx, wlcmText, welcPrefs.WelcomeSettings.FileID, &gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil})
+			_, err := helpers.GreetingsEnumFuncMap[welcPrefs.WelcomeSettings.WelcomeType](bot, &originalCtx, wlcmText, welcPrefs.WelcomeSettings.FileID, &gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil})
 			if err != nil {
 				log.Error(err)
 				return err
@@ -72,7 +74,7 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 			wlcmText, buttons = helpers.FormattingReplacer(bot, chat, user, wlcmText, buttons)
 			keyb := helpers.BuildKeyboard(buttons)
 			keyboard := gotgbot.InlineKeyboardMarkup{InlineKeyboard: keyb}
-			_, err := helpers.GreetingsEnumFuncMap[welcPrefs.WelcomeSettings.WelcomeType](bot, ctx, wlcmText, welcPrefs.WelcomeSettings.FileID, &keyboard)
+			_, err := helpers.GreetingsEnumFuncMap[welcPrefs.WelcomeSettings.WelcomeType](bot, &originalCtx, wlcmText, welcPrefs.WelcomeSettings.FileID, &keyboard)
 			if err != nil {
 				log.Error(err)
 				return err
