@@ -277,8 +277,15 @@ func LoadGreetingsStats() (enabledWelcome, enabledGoodbye, cleanServiceEnabled, 
 
 	cursor := findAll(greetingsColl, bson.M{})
 	ctx := context.Background()
-	defer cursor.Close(ctx)
-	cursor.All(ctx, &greetRcStruct)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close greetings cursor:", err)
+		}
+	}()
+	if err := cursor.All(ctx, &greetRcStruct); err != nil {
+		log.Error("Failed to load greetings stats:", err)
+		return
+	}
 
 	for _, greetRc := range greetRcStruct {
 		// count things

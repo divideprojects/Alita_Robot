@@ -595,7 +595,7 @@ func (moduleStruct) captchaJoinRequest(bot *gotgbot.Bot, ctx *ext.Context) error
 //
 // Processes user answers and updates challenge state.
 func (moduleStruct) captchaCallback(bot *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := query.From
 
 	// Parse callback data
@@ -725,7 +725,7 @@ func sendJoinRequestCaptcha(bot *gotgbot.Bot, user *gotgbot.User, chat *gotgbot.
 }
 
 func handleCaptchaAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID int64, callbackData string) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 
 	log.Infof("CAPTCHA: Processing callback for user %d with data: %s", userID, callbackData)
 
@@ -860,7 +860,7 @@ func handleText2Interaction(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID i
 	_ = chatID
 	_ = challenge
 
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 
 	// Get or initialize user's current input from cache
 	cacheKey := fmt.Sprintf("captcha_text2_input_%d_%d", userID, chatID)
@@ -873,19 +873,25 @@ func handleText2Interaction(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID i
 		// Submit current answer
 		if currentInput == challenge.CorrectAnswer {
 			// Correct answer - clean up cache and handle success
-			cache.Marshal.Delete(cache.Context, cacheKey)
+			if err := cache.Marshal.Delete(cache.Context, cacheKey); err != nil {
+				log.Error("Failed to delete cache after correct answer:", err)
+			}
 			return handleCorrectAnswer(bot, ctx, userID, chatID, challenge)
 		} else {
 			// Wrong answer - increment attempts
 			challenge.Attempts++
 			if challenge.Attempts >= 3 {
 				// Too many attempts - clean up cache and handle failure
-				cache.Marshal.Delete(cache.Context, cacheKey)
+				if err := cache.Marshal.Delete(cache.Context, cacheKey); err != nil {
+					log.Error("Failed to delete cache after max attempts:", err)
+				}
 				return handleIncorrectAnswer(bot, ctx, userID, chatID, challenge)
 			}
 
 			// Update challenge in database
-			db.UpdateCaptchaChallenge(userID, chatID, challenge)
+			if err := db.UpdateCaptchaChallenge(userID, chatID, challenge); err != nil {
+				log.Error("Failed to update captcha challenge:", err)
+			}
 
 			// Show error and update keyboard
 			_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
@@ -904,7 +910,9 @@ func handleText2Interaction(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID i
 			currentInput = currentInput[:len(currentInput)-1]
 
 			// Update cache
-			cache.Marshal.Set(cache.Context, cacheKey, &currentInput, store.WithExpiration(time.Minute*10))
+			if err := cache.Marshal.Set(cache.Context, cacheKey, &currentInput, store.WithExpiration(time.Minute*10)); err != nil {
+				log.Error("Failed to update cache after character deletion:", err)
+			}
 
 			// Update the message
 			err := updateText2Display(bot, ctx, challenge, currentInput, challenge.Attempts)
@@ -931,7 +939,9 @@ func handleText2Interaction(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID i
 			currentInput += char
 
 			// Update cache
-			cache.Marshal.Set(cache.Context, cacheKey, &currentInput, store.WithExpiration(time.Minute*10))
+			if err := cache.Marshal.Set(cache.Context, cacheKey, &currentInput, store.WithExpiration(time.Minute*10)); err != nil {
+				log.Error("Failed to update cache after character deletion:", err)
+			}
 
 			// Update the message
 			err := updateText2Display(bot, ctx, challenge, currentInput, challenge.Attempts)
@@ -956,7 +966,7 @@ func handleText2Interaction(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID i
 
 // updateText2Display updates the CAPTCHA message with current user input
 func updateText2Display(bot *gotgbot.Bot, ctx *ext.Context, challenge *db.CaptchaChallenge, currentInput string, attempts int) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 
 	// Create keyboard with current input state using stored challenge JSON
 	keyboard, err := captcha.CreateCaptchaKeyboard(challenge.ChallengeData, db.CaptchaModeText2)
@@ -991,7 +1001,7 @@ func updateText2Display(bot *gotgbot.Bot, ctx *ext.Context, challenge *db.Captch
 }
 
 func handleCorrectAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID int64, challenge *db.CaptchaChallenge) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	// Silence linter warnings for currently unused parameters that may be needed in future extensions.
 	_ = challenge
 
@@ -1048,7 +1058,7 @@ func handleCorrectAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID int6
 }
 
 func handleWrongAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID int64, challenge *db.CaptchaChallenge) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 
 	// Increment attempts
 	challenge.Attempts++
@@ -1105,7 +1115,7 @@ func handleWrongAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID int64,
 }
 
 func handleIncorrectAnswer(bot *gotgbot.Bot, ctx *ext.Context, userID, chatID int64, challenge *db.CaptchaChallenge) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 
 	// Increment attempts
 	challenge.Attempts++

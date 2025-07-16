@@ -438,7 +438,7 @@ func (moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 // Callback Handler for rmallblacklist
 // Processes the creator's confirmation and removes all blacklist words if confirmed.
 func (moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := query.From
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 

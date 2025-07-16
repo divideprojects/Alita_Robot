@@ -410,10 +410,12 @@ func findOne(collecion *mongo.Collection, filter bson.M) (res *mongo.SingleResul
 	defer cancel()
 
 	var result *mongo.SingleResult
-	retryDB(func() error {
+	if err := retryDB(func() error {
 		result = collecion.FindOne(ctx, filter)
 		return result.Err()
-	})
+	}); err != nil {
+		log.Errorf("[Database] findOne failed after retries: %v", err)
+	}
 	dur := time.Since(start)
 	if dur > 100*time.Millisecond {
 		log.Warnf("[Database][SLOW][findOne] %v %v took %v", collecion.Name(), filter, dur)
@@ -478,11 +480,13 @@ func findAll(collecion *mongo.Collection, filter bson.M) (cur *mongo.Cursor) {
 	defer cancel()
 
 	var cursor *mongo.Cursor
-	retryDB(func() error {
+	if err := retryDB(func() error {
 		c, e := collecion.Find(ctx, filter)
 		cursor = c
 		return e
-	})
+	}); err != nil {
+		log.Errorf("[Database] findAll failed after retries: %v", err)
+	}
 	dur := time.Since(start)
 	if dur > 100*time.Millisecond {
 		log.Warnf("[Database][SLOW][findAll] %v %v took %v", collecion.Name(), filter, dur)
@@ -629,14 +633,3 @@ func getCollection(name string) *mongo.Collection {
 	return mongoClient.Database(config.MainDbName).Collection(name)
 }
 
-// isInitialized checks if the database is properly initialized.
-//
-// This function verifies that both the MongoDB client and at least one
-// collection (adminSettingsColl) are properly initialized, indicating
-// that the database connection is ready for use.
-//
-// Returns true if the database is initialized and ready for operations,
-// false otherwise.
-func isInitialized() bool {
-	return mongoClient != nil && adminSettingsColl != nil
-}

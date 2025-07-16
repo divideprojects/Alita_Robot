@@ -153,7 +153,7 @@ func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 // Callback Query Handler for Unpinall command
 func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	chat := ctx.EffectiveChat
 
 	switch query.Data {

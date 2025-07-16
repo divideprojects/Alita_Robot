@@ -634,7 +634,7 @@ func (m moduleStruct) pendingJoins(bot *gotgbot.Bot, ctx *ext.Context) error {
 //
 // Admins can approve, decline, or ban users requesting to join the chat.
 func (moduleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
 	msg := query.Message

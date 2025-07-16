@@ -258,10 +258,13 @@ func GetExpiredCaptchaChallenges() ([]*CaptchaChallenge, error) {
 		"solved":     false,
 	})
 	ctx := context.Background()
-	defer cursor.Close(ctx)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close expired captcha challenges cursor:", err)
+		}
+	}()
 
-	err := cursor.All(ctx, &challenges)
-	if err != nil {
+	if err := cursor.All(ctx, &challenges); err != nil {
 		log.Errorf("[Database] GetExpiredCaptchaChallenges: %v", err)
 		return nil, err
 	}
@@ -297,8 +300,15 @@ func LoadCaptchaStats() (enabledCaptcha, kickEnabled, rulesEnabled, activeChalle
 
 	cursor := findAll(captchasColl, bson.M{})
 	ctx := context.Background()
-	defer cursor.Close(ctx)
-	cursor.All(ctx, &captchaSettings)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close captcha settings cursor:", err)
+		}
+	}()
+	if err := cursor.All(ctx, &captchaSettings); err != nil {
+		log.Error("Failed to load captcha settings:", err)
+		return
+	}
 
 	for _, settings := range captchaSettings {
 		// count enabled features
@@ -315,10 +325,17 @@ func LoadCaptchaStats() (enabledCaptcha, kickEnabled, rulesEnabled, activeChalle
 
 	// count active challenges
 	challengesCursor := findAll(captchaChallengesColl, bson.M{"solved": false})
-	defer challengesCursor.Close(ctx)
+	defer func() {
+		if err := challengesCursor.Close(ctx); err != nil {
+			log.Error("Failed to close challenges cursor:", err)
+		}
+	}()
 
 	var challenges []*CaptchaChallenge
-	challengesCursor.All(ctx, &challenges)
+	if err := challengesCursor.All(ctx, &challenges); err != nil {
+		log.Error("Failed to load active challenges:", err)
+		return
+	}
 	activeChallenges = int64(len(challenges))
 
 	return

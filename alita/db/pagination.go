@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -81,7 +83,11 @@ func (mp *MongoPagination[T]) GetNextPage(ctx context.Context, opts PaginationOp
 	if err != nil {
 		return PaginatedResult[T]{}, err
 	}
-	defer cur.Close(ctx)
+	defer func() {
+		if err := cur.Close(ctx); err != nil {
+			log.Error("Failed to close pagination cursor:", err)
+		}
+	}()
 
 	var results []T
 	if err := cur.All(ctx, &results); err != nil {
@@ -133,7 +139,11 @@ func (mp *MongoPagination[T]) GetPageByOffset(ctx context.Context, opts Paginati
 	if err != nil {
 		return PaginatedResult[T]{}, err
 	}
-	defer cur.Close(ctx)
+	defer func() {
+		if err := cur.Close(ctx); err != nil {
+			log.Error("Failed to close pagination cursor:", err)
+		}
+	}()
 
 	var results []T
 	if err := cur.All(ctx, &results); err != nil {

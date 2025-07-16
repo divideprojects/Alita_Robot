@@ -251,7 +251,7 @@ func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// if user uses the /note command in private chat
 	// No matter if privRules are set or not
-	if ctx.Update.Message.Chat.Type == "private" {
+	if ctx.Message.Chat.Type == "private" {
 		// check if want admin notes or not
 		admin := chat_status.IsUserAdmin(b, chat.Id, user.Id)
 		noteKeys := db.GetNotesList(chat.Id, admin)
@@ -360,7 +360,7 @@ func (moduleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 
 // CallbackQuery handler for notes_overwite. query
 func (m moduleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := query.From
 
 	// permission checks
@@ -413,7 +413,7 @@ func (m moduleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) err
 }
 
 func (moduleStruct) notesButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := query.From
 
 	// permission checks
@@ -517,7 +517,7 @@ func (m moduleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		// send private note if private notes is enabled or note is private, and it is not group note
 		if privateNoteOnly {
-			if ctx.Update.Message.Chat.Type == "private" {
+			if ctx.Message.Chat.Type == "private" {
 				_, err = helpers.SendNote(b, chat, ctx, noteData, replyMsgId)
 			} else {
 				_, err = msg.Reply(b,

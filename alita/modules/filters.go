@@ -403,7 +403,7 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 //
 // Processes the owner's confirmation and removes all filters if confirmed.
 func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
 
@@ -452,7 +452,7 @@ func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 //
 // Allows admins to confirm and overwrite an existing filter with new data.
 func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
 

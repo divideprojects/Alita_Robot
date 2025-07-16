@@ -115,7 +115,9 @@ func BenchmarkRegexCompilation_Individual(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for _, keyword := range testFilterKeywords {
 			pattern := fmt.Sprintf(`(\b|\s)%s\b`, regexp.QuoteMeta(keyword))
-			regexp.Compile(pattern)
+			if _, err := regexp.Compile(pattern); err != nil {
+				b.Errorf("Failed to compile regex pattern %s: %v", pattern, err)
+			}
 		}
 	}
 }

@@ -233,8 +233,15 @@ func LoadNotesStats() (notesNum, notesUsingChats int64) {
 
 	cursor := findAll(notesColl, bson.M{})
 	ctx := context.Background()
-	defer cursor.Close(ctx)
-	cursor.All(ctx, &notesArray)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close notes cursor:", err)
+		}
+	}()
+	if err := cursor.All(ctx, &notesArray); err != nil {
+		log.Error("Failed to load notes stats:", err)
+		return
+	}
 
 	for _, noteC := range notesArray {
 		notesNum++ // count number of filters

@@ -150,7 +150,11 @@ func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {
 		// Fallback to manual method if aggregation fails
 		return loadBlacklistsStatsManual()
 	}
-	defer cursor.Close(ctx)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close blacklists cursor:", err)
+		}
+	}()
 
 	var result struct {
 		TotalTriggers     int64 `bson:"totalTriggers"`

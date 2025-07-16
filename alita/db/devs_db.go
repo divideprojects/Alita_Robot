@@ -30,7 +30,11 @@ func GetTeamMembers() map[int64]string {
 	array := make(map[int64]string)
 	cursor := findAll(devsColl, bson.M{})
 	ctx := context.Background()
-	defer cursor.Close(ctx)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close devs cursor:", err)
+		}
+	}()
 	err := cursor.All(ctx, &teamArray)
 	if err != nil {
 		log.Error(err)

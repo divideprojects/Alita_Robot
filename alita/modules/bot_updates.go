@@ -93,7 +93,11 @@ func adminCacheAutoUpdate(_ *gotgbot.Bot, ctx *ext.Context) error {
 	// Always invalidate cache when admin changes occur
 	// This ensures that any external admin changes (via other bots or Telegram clients)
 	// are reflected immediately on the next cache access
-	go cache.InvalidateAdminCache(chat.Id)
+	go func() {
+		if err := cache.InvalidateAdminCache(chat.Id); err != nil {
+			log.Error("Failed to invalidate admin cache:", err)
+		}
+	}()
 
 	log.WithFields(log.Fields{
 		"chatId": chat.Id,
@@ -108,7 +112,7 @@ func adminCacheAutoUpdate(_ *gotgbot.Bot, ctx *ext.Context) error {
 //
 // Checks if the user is an admin, updates the admin cache, and re-invokes the original command as the verified user.
 func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	qmsg := query.Message
 
 	data := strings.Split(query.Data, ".")
@@ -151,7 +155,7 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	ctx.EffectiveMessage = msg                     // set the message to the message that was originally used when command was given
 	ctx.EffectiveMessage.SenderChat = nil          // make senderChat nil to avoid chat_status.isAnonAdmin to mistaken user for GroupAnonymousBot
-	ctx.Update.CallbackQuery = nil                 // callback query is not needed anymore
+	ctx.CallbackQuery = nil                 // callback query is not needed anymore
 	command := strings.Split(msg.Text, " ")[0][1:] // get the command, with or without the bot username and without '/'
 	command = strings.Split(command, "@")[0]       // separate the command from the bot username
 

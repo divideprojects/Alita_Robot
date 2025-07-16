@@ -105,7 +105,15 @@ func GetAllChats() map[int64]Chat {
 	)
 	cursor := findAll(chatColl, bson.M{})
 	ctx := context.Background()
-	cursor.All(ctx, &chatArray)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close chats cursor:", err)
+		}
+	}()
+	if err := cursor.All(ctx, &chatArray); err != nil {
+		log.Error("Failed to load all chats:", err)
+		return chatMap
+	}
 
 	for _, i := range chatArray {
 		chatMap[i.ChatId] = *i
@@ -152,7 +160,11 @@ func LoadChatStats() (activeChats, inactiveChats int) {
 		// Fallback to manual method if aggregation fails
 		return loadChatStatsManual()
 	}
-	defer cursor.Close(ctx)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close chat stats cursor:", err)
+		}
+	}()
 
 	var result struct {
 		ActiveChats   int `bson:"activeChats"`

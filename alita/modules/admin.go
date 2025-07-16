@@ -66,7 +66,6 @@ var adminModule = moduleStruct{moduleName: "Admin"}
 func (moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
-	cached := true
 
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "adminlist") {
@@ -218,7 +217,11 @@ func (moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	// Invalidate admin cache since admin list has changed
-	go cache.InvalidateAdminCache(chat.Id)
+	go func() {
+		if err := cache.InvalidateAdminCache(chat.Id); err != nil {
+			log.Error("Failed to invalidate admin cache:", err)
+		}
+	}()
 
 	userMember, err := chat.GetMember(b, userId, nil)
 	if err != nil {
@@ -385,7 +388,11 @@ func (moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 	// Invalidate admin cache since admin list has changed
-	go cache.InvalidateAdminCache(chat.Id)
+	go func() {
+		if err := cache.InvalidateAdminCache(chat.Id); err != nil {
+			log.Error("Failed to invalidate admin cache:", err)
+		}
+	}()
 
 	mem := userMember.MergeChatMember().User
 	_, err = msg.Reply(b,
@@ -641,7 +648,9 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	// Force reload of admin cache
-	cache.InvalidateAdminCache(chat.Id)
+	if err := cache.InvalidateAdminCache(chat.Id); err != nil {
+		log.Error("Failed to invalidate admin cache:", err)
+	}
 	cache.GetAdmins(b, chat.Id)
 
 	k := tr.GetString("strings.commonstrings.admin_cache.cache_reloaded")

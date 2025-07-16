@@ -270,8 +270,12 @@ func BenchmarkUserCollectionIndexes(b *testing.B) {
 		}
 	}
 	userColl := getUserCollection()
-	userColl.DeleteMany(context.TODO(), map[string]interface{}{}) // Clean up before test
-	userColl.InsertMany(context.TODO(), users)
+	if _, err := userColl.DeleteMany(context.TODO(), map[string]interface{}{}); err != nil {
+		b.Errorf("Failed to clean up before test: %v", err)
+	}
+	if _, err := userColl.InsertMany(context.TODO(), users); err != nil {
+		b.Errorf("Failed to insert test users: %v", err)
+	}
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -282,7 +286,9 @@ func BenchmarkUserCollectionIndexes(b *testing.B) {
 	}
 
 	b.StopTimer()
-	userColl.DeleteMany(context.TODO(), map[string]interface{}{}) // Clean up after test
+	if _, err := userColl.DeleteMany(context.TODO(), map[string]interface{}{}); err != nil {
+		b.Errorf("Failed to clean up after test: %v", err)
+	}
 }
 
 // Helper to get user collection

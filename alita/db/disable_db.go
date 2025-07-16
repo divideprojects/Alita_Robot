@@ -110,8 +110,15 @@ func LoadDisableStats() (disabledCmds, disableEnabledChats int64) {
 
 	cursor := findAll(disableColl, bson.M{})
 	ctx := context.Background()
-	defer cursor.Close(ctx)
-	cursor.All(ctx, &disbaledStruct)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close disable commands cursor:", err)
+		}
+	}()
+	if err := cursor.All(ctx, &disbaledStruct); err != nil {
+		log.Error("Failed to load disable stats:", err)
+		return
+	}
 
 	for _, disrc := range disbaledStruct {
 		disLn := int64(len(disrc.Commands))

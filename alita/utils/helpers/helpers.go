@@ -189,7 +189,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	user := ctx.EffectiveUser
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
-	if ctx.Update.Message.Chat.Type == "private" {
+	if ctx.Message.Chat.Type == "private" {
 		conn := db.Connection(user.Id)
 		if conn.Connected && conn.ChatId != 0 {
 			chatFullInfo, err := b.GetChat(conn.ChatId, nil)
@@ -346,10 +346,7 @@ ChunkKeyboardSlices splits a slice of InlineKeyboardButton into chunks of the sp
 Used for organizing buttons into rows for keyboards.
 */
 func ChunkKeyboardSlices(slice []gotgbot.InlineKeyboardButton, chunkSize int) (chunks [][]gotgbot.InlineKeyboardButton) {
-	for {
-		if len(slice) == 0 {
-			break
-		}
+	for len(slice) > 0 {
 		if len(slice) < chunkSize {
 			chunkSize = len(slice)
 		}
@@ -805,7 +802,6 @@ func SendFilter(b *gotgbot.Bot, ctx *ext.Context, filterData *db.ChatFilters, re
 	chat := ctx.EffectiveChat
 
 	var (
-		keyb          = make([][]gotgbot.InlineKeyboardButton, 0)
 		buttons       []db.Button
 		sent          string
 		tmpfilterData db.ChatFilters
@@ -822,7 +818,7 @@ func SendFilter(b *gotgbot.Bot, ctx *ext.Context, filterData *db.ChatFilters, re
 	}
 
 	tmpfilterData.FilterReply, buttons = FormattingReplacer(b, chat, ctx.EffectiveUser, sent, buttons)
-	keyb = BuildKeyboard(buttons)
+	keyb := BuildKeyboard(buttons)
 	keyboard := gotgbot.InlineKeyboardMarkup{InlineKeyboard: keyb}
 
 	// using false as last arg because we don't want to noformat the message
@@ -891,7 +887,6 @@ Returns the sent message and any error encountered.
 */
 func SendNote(b *gotgbot.Bot, chat *gotgbot.Chat, ctx *ext.Context, noteData *db.ChatNotes, replyMsgId int64) (*gotgbot.Message, error) {
 	var (
-		keyb    = make([][]gotgbot.InlineKeyboardButton, 0)
 		buttons []db.Button
 		sent    string
 	)
@@ -910,7 +905,7 @@ func SendNote(b *gotgbot.Bot, chat *gotgbot.Chat, ctx *ext.Context, noteData *db
 	noteData.NoteContent, buttons = FormattingReplacer(b, chat, ctx.EffectiveUser, sent, buttons)
 	// below is an additional step, need to remove it
 	_, _, _, _, _, _, noteData.NoteContent = notesParser(noteData.NoteContent) // replaces the text
-	keyb = BuildKeyboard(buttons)
+	keyb := BuildKeyboard(buttons)
 	keyboard := gotgbot.InlineKeyboardMarkup{InlineKeyboard: keyb}
 	// using false as last arg to format the note
 	msg, err := NotesEnumFuncMap[noteData.MsgType](b, ctx, noteData, &keyboard, replyMsgId, noteData.WebPreview, noteData.IsProtected, false, noteData.NoNotif)
@@ -934,7 +929,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 		if noFormat {
 			formatMode = None
 		}
-		return b.SendMessage(ctx.Update.Message.Chat.Id,
+		return b.SendMessage(ctx.Message.Chat.Id,
 			noteData.NoteContent,
 			&gotgbot.SendMessageOpts{
 				ParseMode: formatMode,
@@ -948,12 +943,12 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 				},
 				ProtectContent:      isProtected,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
 	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, isProtected bool, _, noNotif bool) (*gotgbot.Message, error) {
-		return b.SendSticker(ctx.Update.Message.Chat.Id,
+		return b.SendSticker(ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendStickerOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -963,7 +958,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 				ReplyMarkup:         keyb,
 				ProtectContent:      isProtected,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -972,7 +967,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 		if noFormat {
 			formatMode = None
 		}
-		return b.SendDocument(ctx.Update.Message.Chat.Id,
+		return b.SendDocument(ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendDocumentOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -984,7 +979,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 				Caption:             noteData.NoteContent,
 				ProtectContent:      isProtected,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -993,7 +988,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 		if noFormat {
 			formatMode = None
 		}
-		return b.SendPhoto(ctx.Update.Message.Chat.Id,
+		return b.SendPhoto(ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendPhotoOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1005,7 +1000,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 				Caption:             noteData.NoteContent,
 				ProtectContent:      isProtected,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -1014,7 +1009,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 		if noFormat {
 			formatMode = None
 		}
-		return b.SendAudio(ctx.Update.Message.Chat.Id,
+		return b.SendAudio(ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendAudioOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1026,7 +1021,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 				Caption:             noteData.NoteContent,
 				ProtectContent:      isProtected,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -1035,7 +1030,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 		if noFormat {
 			formatMode = None
 		}
-		return b.SendVoice(ctx.Update.Message.Chat.Id,
+		return b.SendVoice(ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendVoiceOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1047,7 +1042,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 				Caption:             noteData.NoteContent,
 				ProtectContent:      isProtected,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -1056,7 +1051,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 		if noFormat {
 			formatMode = None
 		}
-		return b.SendVideo(ctx.Update.Message.Chat.Id,
+		return b.SendVideo(ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendVideoOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1068,12 +1063,12 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 				Caption:             noteData.NoteContent,
 				ProtectContent:      isProtected,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
 	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, noteData *db.ChatNotes, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, isProtected bool, _, noNotif bool) (*gotgbot.Message, error) {
-		return b.SendVideoNote(ctx.Update.Message.Chat.Id,
+		return b.SendVideoNote(ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(noteData.FileID),
 			&gotgbot.SendVideoNoteOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1083,7 +1078,7 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 				ReplyMarkup:         keyb,
 				ProtectContent:      isProtected,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -1197,7 +1192,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 			formatMode = None
 		}
 		return b.SendMessage(
-			ctx.Update.Message.Chat.Id,
+			ctx.Message.Chat.Id,
 			filterData.FilterReply,
 			&gotgbot.SendMessageOpts{
 				ParseMode: formatMode,
@@ -1209,13 +1204,13 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 				},
 				ReplyMarkup:         keyb,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
 	db.STICKER: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, noNotif bool) (*gotgbot.Message, error) {
 		return b.SendSticker(
-			ctx.Update.Message.Chat.Id,
+			ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendStickerOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1223,7 +1218,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 				},
 				ReplyMarkup:         keyb,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -1233,7 +1228,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 			formatMode = None
 		}
 		return b.SendDocument(
-			ctx.Update.Message.Chat.Id,
+			ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendDocumentOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1243,7 +1238,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 				ReplyMarkup:         keyb,
 				Caption:             filterData.FilterReply,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -1253,7 +1248,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 			formatMode = None
 		}
 		return b.SendPhoto(
-			ctx.Update.Message.Chat.Id,
+			ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendPhotoOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1263,7 +1258,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 				ReplyMarkup:         keyb,
 				Caption:             filterData.FilterReply,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -1273,7 +1268,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 			formatMode = None
 		}
 		return b.SendAudio(
-			ctx.Update.Message.Chat.Id,
+			ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendAudioOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1283,7 +1278,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 				ReplyMarkup:         keyb,
 				Caption:             filterData.FilterReply,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -1293,7 +1288,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 			formatMode = None
 		}
 		return b.SendVoice(
-			ctx.Update.Message.Chat.Id,
+			ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendVoiceOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1303,7 +1298,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 				ReplyMarkup:         keyb,
 				Caption:             filterData.FilterReply,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
@@ -1313,7 +1308,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 			formatMode = None
 		}
 		return b.SendVideo(
-			ctx.Update.Message.Chat.Id,
+			ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendVideoOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1323,13 +1318,13 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 				ReplyMarkup:         keyb,
 				Caption:             filterData.FilterReply,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},
 	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, filterData db.ChatFilters, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64, _, noNotif bool) (*gotgbot.Message, error) {
 		return b.SendVideoNote(
-			ctx.Update.Message.Chat.Id,
+			ctx.Message.Chat.Id,
 			gotgbot.InputFileByID(filterData.FileID),
 			&gotgbot.SendVideoNoteOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -1337,7 +1332,7 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 				},
 				ReplyMarkup:         keyb,
 				DisableNotification: noNotif,
-				MessageThreadId:     ctx.Update.Message.MessageThreadId,
+				MessageThreadId:     ctx.Message.MessageThreadId,
 			},
 		)
 	},

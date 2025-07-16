@@ -139,7 +139,7 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	} else {
 		chat := ctx.EffectiveChat
-		if ctx.Update.Message.Chat.Type == "private" {
+		if ctx.Message.Chat.Type == "private" {
 			replyText = fmt.Sprintf("Your ID is <code>%d</code>", chat.Id)
 		} else {
 			replyText = fmt.Sprintf("Your ID is <code>%d</code>\nThis group's ID is <code>%d</code>",

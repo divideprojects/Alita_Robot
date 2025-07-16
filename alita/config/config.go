@@ -110,7 +110,10 @@ func parseDurationEnv(key string, def time.Duration) time.Duration {
 // It loads .env files, parses environment variables, and applies defaults for unset values.
 func init() {
 	// Load environment variables from .env before we evaluate any settings
-	godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		// Don't fail - .env file is optional and system env vars can be used
+		log.Printf("Warning: .env file not loaded: %v", err)
+	}
 
 	// Determine debug mode early
 	Debug = typeConvertor{str: os.Getenv("DEBUG")}.Bool()

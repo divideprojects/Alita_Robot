@@ -76,8 +76,15 @@ func GetFiltersList(chatID int64) (allFilterWords []string) {
 	var results []*ChatFilters
 	cursor := findAll(getCollection("filters"), bson.M{"chat_id": chatID})
 	ctx := context.Background()
-	defer cursor.Close(ctx)
-	cursor.All(ctx, &results)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close filters cursor:", err)
+		}
+	}()
+	if err := cursor.All(ctx, &results); err != nil {
+		log.Error("Failed to get filters list:", err)
+		return allFilterWords
+	}
 	for _, j := range results {
 		allFilterWords = append(allFilterWords, j.KeyWord)
 	}
@@ -186,7 +193,11 @@ func LoadFilterStats() (filtersNum, filtersUsingChats int64) {
 		// Fallback to manual method if aggregation fails
 		return loadFilterStatsManual()
 	}
-	defer cursor.Close(ctx)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Error("Failed to close filter stats cursor:", err)
+		}
+	}()
 
 	var result struct {
 		TotalFilters int64 `bson:"totalFilters"`

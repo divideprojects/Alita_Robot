@@ -477,7 +477,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
 
@@ -658,7 +658,7 @@ func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := query.From
 
 	if !chat_status.RequireUserOwner(b, ctx, nil, user.Id, false) {

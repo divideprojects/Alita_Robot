@@ -217,7 +217,7 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 	} else {
-		if ctx.Update.Message.Chat.Type == "private" {
+		if ctx.Message.Chat.Type == "private" {
 			currText = aboutText
 			currKb = aboutKb
 		} else {
@@ -257,7 +257,7 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 //
 // Displays help text and navigation for modules and main help options.
 func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	args := strings.Split(query.Data, ".")
 	module := args[1]
 
@@ -320,7 +320,7 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
 
-	if ctx.Update.Message.Chat.Type == "private" {
+	if ctx.Message.Chat.Type == "private" {
 		if len(args) == 1 {
 			_, err := msg.Reply(b,
 				startHelp,
@@ -478,7 +478,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
 
-	if ctx.Update.Message.Chat.Type == "private" {
+	if ctx.Message.Chat.Type == "private" {
 		if len(args) == 1 {
 			_, err := b.SendMessage(chat.Id,
 				fmt.Sprintf(
