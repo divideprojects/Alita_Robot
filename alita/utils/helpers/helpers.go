@@ -201,7 +201,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 			chat = &_chat
 		} else {
 			_, err := msg.Reply(b,
-				tr.GetString("strings.Connections.is_user_connected.need_group"),
+				tr.GetString("strings.connections.is_user_connected.need_group"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                msg.MessageId,
@@ -221,7 +221,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if botAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, b.Id) {
-			_, err := msg.Reply(b, tr.GetString("strings.Connections.is_user_connected.bot_not_admin"), Shtml())
+			_, err := msg.Reply(b, tr.GetString("strings.connections.is_user_connected.bot_not_admin"), Shtml())
 			if err != nil {
 				log.Error(err)
 				return nil
@@ -232,7 +232,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if chatAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			_, err := msg.Reply(b, tr.GetString("strings.Connections.is_user_connected.user_not_admin"), Shtml())
+			_, err := msg.Reply(b, tr.GetString("strings.connections.is_user_connected.user_not_admin"), Shtml())
 			if err != nil {
 				log.Error(err)
 				return nil

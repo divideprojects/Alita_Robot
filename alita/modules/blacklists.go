@@ -418,8 +418,8 @@ func (moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: "Yes", CallbackData: "rmAllBlacklist.yes"},
-						{Text: "No", CallbackData: "rmAllBlacklist.no"},
+						{Text: "Yes", CallbackData: "rmAllBlacklist.true"},
+						{Text: "No", CallbackData: "rmAllBlacklist.false"},
 					},
 				},
 			},
@@ -452,12 +452,12 @@ func (moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	var helpText string
 
 	switch creatorAction {
-	case "yes":
+	case "true":
 		go db.RemoveAllBlacklist(query.Message.GetChat().Id)
 		invalidateBlacklistCache(query.Message.GetChat().Id) // Invalidate cache after removing all blacklists
-		helpText = tr.GetString("strings.blacklists.rm_all_bl.button_handler.yes")
-	case "no":
-		helpText = tr.GetString("strings.blacklists.rm_all_bl.button_handler.yes")
+		helpText = tr.GetString("strings.blacklists.rm_all_bl.button_handler.true")
+	case "false":
+		helpText = tr.GetString("strings.blacklists.rm_all_bl.button_handler.false")
 	}
 
 	_, _, err := query.Message.EditText(b,

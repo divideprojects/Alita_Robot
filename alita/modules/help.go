@@ -184,7 +184,7 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			currText = aboutText
 			currKb = aboutKb
 		case "me":
-			currText = fmt.Sprintf(tr.GetString("strings.Help.About"), b.Username, config.BotVersion)
+			currText = fmt.Sprintf(tr.GetString("strings.help.about"), b.Username, config.BotVersion)
 			currKb = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
@@ -361,7 +361,7 @@ func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	_, err := b.SendMessage(chat.Id,
-		i18n.I18n{LangCode: "en"}.GetString("strings.Help.DonateText"),
+		i18n.I18n{LangCode: "en"}.GetString("strings.help.donatetext"),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
@@ -422,7 +422,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 				},
 			},
 		}
-		text = tr.GetString("strings.Help.Configuration.Step-1")
+		text = tr.GetString("strings.help.configuration.step-1")
 	case "step2":
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
@@ -432,7 +432,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 				},
 			},
 		}
-		text = fmt.Sprintf(tr.GetString("strings.Help.Configuration.Step-2"), b.Username)
+		text = fmt.Sprintf(tr.GetString("strings.help.configuration.step-2"), b.Username)
 	case "step3":
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
@@ -442,7 +442,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 				},
 			},
 		}
-		text = tr.GetString("strings.Help.Configuration.Step-3")
+		text = tr.GetString("strings.help.configuration.step-3")
 	}
 	_, _, err := msg.EditText(
 		b,

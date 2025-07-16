@@ -123,11 +123,11 @@ func (moduleStruct) getMarkdownHelp(module string) string {
 	tr := i18n.I18n{LangCode: "en"}
 	switch module {
 	case "md_formatting":
-		helpTxt = tr.GetString("strings.Formatting.Markdown")
+		helpTxt = tr.GetString("strings.formatting.markdown")
 	case "fillings":
-		helpTxt = tr.GetString("strings.Formatting.Fillings")
+		helpTxt = tr.GetString("strings.formatting.fillings")
 	case "random":
-		helpTxt = tr.GetString("strings.Formatting.Random")
+		helpTxt = tr.GetString("strings.formatting.random")
 	}
 	return helpTxt
 }
