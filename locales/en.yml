@@ -1037,3 +1037,26 @@ strings:
 
 
     *Note:* Admins are exempt from CAPTCHA challenges."
+  common.errors.anon_user_command: This command cannot be used on anonymous user.
+  common.errors.specify_user: I don't know who you're talking about, you're going to need to specify a user...!
+  common.errors.admin_only: You need to be admin to do this!
+  common.errors.invalid_integer: "%s is not a valid integer."
+  common.errors.generic_error: An error occurred while processing your request.
+  common.errors.need_reply: You need to reply to a message to use this command!
+  admin.chat_invite_link: "Here is the invite link of this chat: %s"
+  admin.errors.anon_user_command: This command cannot be used on anonymous user.
+  bans.errors.anon_user_restrict: This command cannot be used on anonymous user, these users can only be banned/unbanned.
+  bans.kick.reply_to_delete_kick: Reply to a user's message to delete and kick them!
+  warns.warn_success: User warned successfully.
+  warns.user_warnings_reasons: "This user has %d/%d warnings, for the following reasons:"
+  warns.reason_item: "\n - %s"
+  warns.no_warnings: This user hasn't got any warnings!
+  warns.reset_success: Warnings have been reset!
+  warns.reset_all_confirm: Are you sure you want to remove all the warns of all the users in this chat?
+  warns.user_warnings_no_reasons: "User has %d/%d warnings, but no reasons for any of them."
+  warns.warn_removed_by: "Warn removed by %s."
+  warns.limit_updated: "Warn limit settings for this chat have been updated to %d."
+  warns.limit_status: "Warn limit for this chat is currently set to %d."
+  warns.no_users_warned: No users are warned in this chat!
+  utils.chat_status.bot.no_permission_invite_link: I don't have access to invite links! Make sure I'm admin and can invite users.
+  utils.chat_status.user.no_permission_invite_link: You don't have access to invite links; You need to be admin to get this!

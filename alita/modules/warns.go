@@ -11,6 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
@@ -412,6 +413,7 @@ func (moduleStruct) warnings(b *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "warns") {
@@ -465,7 +467,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(b, "This user hasn't got any warnings!", nil)
+		_, err := msg.Reply(b, tr.GetString("strings.warns.no_warnings"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -571,6 +573,7 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// Check permissions
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -604,7 +607,7 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.ResetUserWarns(userId, chat.Id)
-	_, err := msg.Reply(b, "Warnings have been reset!", helpers.Shtml())
+	_, err := msg.Reply(b, tr.GetString("strings.warns.reset_success"), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err

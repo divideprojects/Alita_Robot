@@ -60,7 +60,7 @@ func (moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if msg.ReplyToMessage != nil {
-		_, _ = msg.Reply(b, "Reply to a user's message to delete and kick him!", nil)
+		_, _ = msg.Reply(b, tr.GetString("strings.bans.kick.reply_to_delete_kick"), nil)
 		return ext.EndGroups
 	}
 
@@ -69,14 +69,14 @@ func (moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		_, err := msg.Reply(b, tr.GetString("strings.bans.errors.anon_user_restrict"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -181,14 +181,14 @@ func (moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		_, err := msg.Reply(b, tr.GetString("strings.bans.errors.anon_user_restrict"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -334,14 +334,14 @@ func (moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		_, err := msg.Reply(b, tr.GetString("strings.bans.errors.anon_user_restrict"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -446,7 +446,7 @@ func (moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	case -1:
 		return ext.EndGroups
 	case 0:
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -564,14 +564,14 @@ func (moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		_, err := msg.Reply(b, tr.GetString("strings.bans.errors.anon_user_restrict"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -645,14 +645,14 @@ func (moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user, these user can only be banned/unbanned.", nil)
+		_, err := msg.Reply(b, tr.GetString("strings.bans.errors.anon_user_restrict"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -762,7 +762,7 @@ func (moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	case -1:
 		return ext.EndGroups
 	case 0:
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -831,6 +831,7 @@ func (moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, chat, false) {
@@ -848,7 +849,7 @@ func (moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	case -1:
 		return ext.EndGroups
 	case 0:
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -1019,6 +1020,7 @@ func (moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, chat, false) {
@@ -1036,7 +1038,7 @@ func (moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	case -1:
 		return ext.EndGroups
 	case 0:
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)

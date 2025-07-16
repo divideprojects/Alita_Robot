@@ -17,6 +17,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
@@ -197,6 +198,7 @@ func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, use
 
 	msg := ctx.EffectiveMessage
 	sender := ctx.EffectiveSender
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 	var userMember gotgbot.MergedChatMember
 
 	if db.GetAdminSettings(chat.Id).AnonAdmin && sender.IsAnonymousAdmin() {
@@ -233,7 +235,7 @@ func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, use
 			return false
 		}
 		if !justCheck {
-			_, err := b.SendMessage(chat.Id, "You don't have permission to change info in this group!",
+			_, err := b.SendMessage(chat.Id, tr.GetString("strings.utils.chat_status.user.no_permission_change_info_cmd"),
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                ctx.EffectiveMessage.MessageId,

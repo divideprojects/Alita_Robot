@@ -146,14 +146,14 @@ func (moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.anon_user_command"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -272,14 +272,14 @@ func (moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.anon_user_command"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -406,6 +406,7 @@ func (moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
+	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	// permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -418,14 +419,14 @@ func (moduleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if chat.Username != "" {
-		_, _ = msg.Reply(b, fmt.Sprintf("Here is the invite link of this chat: %s", chat.Username), nil)
+		_, _ = msg.Reply(b, fmt.Sprintf(tr.GetString("strings.admin.chat_invite_link"), chat.Username), nil)
 	} else {
 		nchat, err := b.GetChat(chat.Id, nil)
 		if err != nil {
 			_, _ = msg.Reply(b, err.Error(), nil)
 			return ext.EndGroups
 		}
-		_, _ = msg.Reply(b, fmt.Sprintf("Here is the invite link of this chat: %s", nchat.InviteLink), nil)
+		_, _ = msg.Reply(b, fmt.Sprintf(tr.GetString("strings.admin.chat_invite_link"), nchat.InviteLink), nil)
 	}
 	return ext.EndGroups
 }
@@ -460,14 +461,14 @@ func (moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.anon_user_command"), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
+		_, err := msg.Reply(b, tr.GetString("strings.common.errors.specify_user"),
 			helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -626,7 +627,7 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 	userMember, _ := chat.GetMember(b, user.Id, nil)
 	mem := userMember.MergeChatMember()
 	if mem.Status == "member" {
-		_, err = msg.Reply(b, "You need to be admin to do this!", nil)
+		_, err = msg.Reply(b, tr.GetString("strings.common.errors.admin_only"), nil)
 		if err != nil {
 			log.Error(err)
 		}
