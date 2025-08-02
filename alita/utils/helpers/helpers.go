@@ -820,7 +820,7 @@ func SendFilter(b *gotgbot.Bot, ctx *ext.Context, filterData *db.ChatFilters, re
 	chat := ctx.EffectiveChat
 
 	var (
-		keyb          = make([][]gotgbot.InlineKeyboardButton, 0)
+		keyb          [][]gotgbot.InlineKeyboardButton
 		buttons       []db.Button
 		sent          string
 		tmpfilterData db.ChatFilters
@@ -911,7 +911,7 @@ Returns the sent message and any error encountered.
 */
 func SendNote(b *gotgbot.Bot, chat *gotgbot.Chat, ctx *ext.Context, noteData *db.ChatNotes, replyMsgId int64) (*gotgbot.Message, error) {
 	var (
-		keyb    = make([][]gotgbot.InlineKeyboardButton, 0)
+		keyb    [][]gotgbot.InlineKeyboardButton
 		buttons []db.Button
 		sent    string
 	)

@@ -3,21 +3,22 @@ package modules
 import (
 	"fmt"
 	"html"
-	"strconv"
 	"strings"
 
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/conversion"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
-	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
-	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
+
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
 
 var warnsModule = moduleStruct{moduleName: "Warns"}
@@ -488,10 +489,14 @@ func (moduleStruct) rmWarnButton(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	args := strings.Split(query.Data, ".")
 	userMatch := args[1]
-	userId, _ := strconv.Atoi(userMatch)
+	userId, parseErr := conversion.SafeParseInt64(userMatch)
+	if parseErr != nil {
+		log.Errorf("Invalid user ID in callback: %s", userMatch)
+		return ext.EndGroups
+	}
 	var replyText string
 
-	res := db.RemoveWarn(int64(userId), chat.Id)
+	res := db.RemoveWarn(userId, chat.Id)
 	if res {
 		replyText = fmt.Sprintf("Warn removed by %s.", helpers.MentionHtml(user.Id, user.FirstName))
 	} else {
@@ -544,9 +549,9 @@ func (moduleStruct) setWarnLimit(b *gotgbot.Bot, ctx *ext.Context) error {
 	if len(args) == 0 {
 		replyText = "Please specify how many warns a user should be allowed to receive before being acted upon. Eg. `/setwarnlimit 5`"
 	} else {
-		num, err := strconv.Atoi(args[0])
+		num, err := conversion.SafeAtoiWithRange(args[0], 1, 100)
 		if err != nil {
-			replyText = fmt.Sprintf("%s is not a valid integer.", args[0])
+			replyText = fmt.Sprintf("%s is not a valid integer between 1 and 100.", args[0])
 		} else {
 			if num < 1 || num > 100 {
 				replyText = "The warn limit has to be set between 1 and 100."

@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"regexp"
 	"runtime"
+	"strings"
 
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
@@ -43,6 +45,63 @@ var (
 	RedisDB int
 )
 
+// ValidateConfig validates all configuration values
+func ValidateConfig() error {
+	var errors []string
+
+	// Validate required fields
+	if BotToken == "" {
+		errors = append(errors, "BOT_TOKEN is required")
+	}
+	if DatabaseURI == "" {
+		errors = append(errors, "DB_URI is required")
+	}
+	if OwnerId == 0 {
+		errors = append(errors, "OWNER_ID is required")
+	}
+	if MessageDump == 0 {
+		errors = append(errors, "MESSAGE_DUMP is required")
+	}
+
+	// Validate bot token format (basic check)
+	if BotToken != "" && len(BotToken) < 40 {
+		errors = append(errors, "BOT_TOKEN appears to be invalid (too short)")
+	}
+
+	// Validate database URI format
+	if DatabaseURI != "" && !strings.HasPrefix(DatabaseURI, "mongodb://") && !strings.HasPrefix(DatabaseURI, "mongodb+srv://") {
+		errors = append(errors, "DB_URI must be a valid MongoDB connection string")
+	}
+
+	// Validate API server URL
+	if ApiServer != "" && !strings.HasPrefix(ApiServer, "http://") && !strings.HasPrefix(ApiServer, "https://") {
+		errors = append(errors, "API_SERVER must be a valid HTTP/HTTPS URL")
+	}
+
+	// Validate Redis configuration
+	if RedisAddress != "" && !strings.Contains(RedisAddress, ":") {
+		errors = append(errors, "REDIS_ADDRESS must include port (e.g., localhost:6379)")
+	}
+
+	if RedisDB < 0 || RedisDB > 15 {
+		errors = append(errors, "REDIS_DB must be between 0 and 15")
+	}
+
+	// Validate language codes
+	validLangPattern := regexp.MustCompile(`^[a-z]{2}$`)
+	for _, lang := range ValidLangCodes {
+		if !validLangPattern.MatchString(lang) {
+			errors = append(errors, fmt.Sprintf("Invalid language code: %s", lang))
+		}
+	}
+
+	if len(errors) > 0 {
+		return fmt.Errorf("configuration validation failed:\n- %s", strings.Join(errors, "\n- "))
+	}
+
+	return nil
+}
+
 // init initializes the config variables from environment variables and sets up logging.
 // It loads .env files, parses environment variables, and applies defaults for unset values.
 func init() {
@@ -60,7 +119,9 @@ func init() {
 	)
 
 	// load goenv config
-	godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		log.Debug("No .env file found, using environment variables")
+	}
 
 	// set necessary variables
 	Debug = typeConvertor{str: os.Getenv("DEBUG")}.Bool()
@@ -120,5 +181,10 @@ func init() {
 	RedisDB = typeConvertor{str: os.Getenv("REDIS_DB")}.Int()
 	if os.Getenv("REDIS_DB") == "" {
 		RedisDB = 0
+	}
+
+	// Validate configuration
+	if err := ValidateConfig(); err != nil {
+		log.Fatal("Configuration validation failed: ", err)
 	}
 }

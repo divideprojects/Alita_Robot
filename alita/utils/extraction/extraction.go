@@ -3,7 +3,6 @@ package extraction
 import (
 	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 	"unicode"
@@ -16,6 +15,7 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/conversion"
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 )
 
@@ -29,9 +29,8 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 	if len(args) != 0 {
-		if _, err := strconv.Atoi(args[0]); err == nil {
-			chatId, _ := strconv.Atoi(args[0])
-			chat, err := b.GetChat(int64(chatId), nil)
+		if chatId, err := conversion.SafeParseInt64(args[0]); err == nil {
+			chat, err := b.GetChat(chatId, nil)
 			if err != nil {
 				_, err := msg.Reply(b, "failed to connect to chat: failed to get chat: unable to getChat: Bad Request: chat not found", nil)
 				if err != nil {
@@ -143,7 +142,11 @@ func ExtractUserAndText(b *gotgbot.Bot, ctx *ext.Context) (int64, string) {
 			}
 		}
 		if isId {
-			userId, _ = strconv.ParseInt(args[1], 10, 64)
+			var err error
+			userId, err = conversion.SafeParseInt64(args[1])
+			if err != nil {
+				return -1, ""
+			}
 			res := strings.SplitN(msg.Text, " ", 3)
 			if len(res) >= 3 {
 				text = res[2]
@@ -304,9 +307,9 @@ func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int
 
 	if strings.ContainsAny(timeVal, "m & d & h & w") {
 		t := timeVal[:len(timeVal)-1]
-		timeNum, err := strconv.Atoi(t)
+		timeNum, err := conversion.SafeAtoiWithRange(t, 1, 999999)
 		if err != nil {
-			_, err := msg.Reply(b, "Invalid time amount specified.", nil)
+			_, err := msg.Reply(b, "Invalid time amount specified. Must be between 1 and 999999.", nil)
 			error_handling.HandleErr(err)
 			return -1, "", ""
 		}

@@ -75,7 +75,9 @@ func GetAllChats() map[int64]Chat {
 		chatMap   = make(map[int64]Chat)
 	)
 	cursor := findAll(chatColl, bson.M{})
-	cursor.All(bgCtx, &chatArray)
+	if err := cursor.All(bgCtx, &chatArray); err != nil {
+		log.Errorf("[Database][GetAllChats]: %v", err)
+	}
 
 	for _, i := range chatArray {
 		chatMap[i.ChatId] = *i

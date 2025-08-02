@@ -12,9 +12,8 @@ var (
 // addToArray is a func to add to array of strings
 func addToArray(arr []string, val ...string) []string {
 	mu.Lock()
-	arr = append(arr, val...)
-	mu.Unlock()
-	return arr
+	defer mu.Unlock()
+	return append(arr, val...)
 }
 
 /*

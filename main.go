@@ -4,12 +4,18 @@ package main
 // Sets up configuration, loads locales, initializes the bot, and starts polling for updates.
 
 import (
+	"context"
 	"embed"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
@@ -47,7 +53,7 @@ func main() {
 	}
 
 	// some initial checks before running bot
-	alita.InitialChecks(b)
+	resourceManager := alita.InitialChecks(b)
 
 	// Create updater and dispatcher with limited max routines.
 	// Dispatcher handles incoming updates and routes them to handlers.
@@ -121,6 +127,55 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Idle, to keep updates coming in, and avoid bot stopping.
-	updater.Idle()
+	// Set up graceful shutdown
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+
+	log.Info("Bot is running. Press Ctrl+C to stop.")
+
+	// Wait for shutdown signal
+	<-stop
+
+	log.Info("Shutting down bot gracefully...")
+
+	// Create a context with timeout for shutdown
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Stop the updater
+	log.Info("Stopping updater...")
+	if err := updater.Stop(); err != nil {
+		log.WithError(err).Error("Failed to stop updater")
+	}
+
+	// Stop resource manager
+	log.Info("Stopping resource manager...")
+	resourceManager.Stop()
+
+	// Close database connection
+	log.Info("Closing database connection...")
+	if dbInstance := db.GetDatabase(); dbInstance != nil {
+		if err := dbInstance.Close(); err != nil {
+			log.WithError(err).Error("Failed to close database connection")
+		}
+	}
+
+	// Send shutdown message to log group
+	_, err = b.SendMessage(config.MessageDump,
+		"<b>Bot shutting down gracefully...</b>",
+		&gotgbot.SendMessageOpts{
+			ParseMode: helpers.HTML,
+		},
+	)
+	if err != nil {
+		log.WithError(err).Error("Failed to send shutdown message")
+	}
+
+	// Wait for context timeout or immediate shutdown
+	select {
+	case <-ctx.Done():
+		log.Warn("Shutdown timeout reached")
+	case <-time.After(2 * time.Second):
+		log.Info("Bot shutdown completed")
+	}
 }

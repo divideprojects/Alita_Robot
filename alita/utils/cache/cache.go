@@ -2,6 +2,8 @@ package cache
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/dgraph-io/ristretto"
@@ -11,6 +13,7 @@ import (
 	redis_store "github.com/eko/gocache/store/redis/v4"
 	ristretto_store "github.com/eko/gocache/store/ristretto/v4"
 	"github.com/redis/go-redis/v9"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -38,21 +41,30 @@ InitCache initializes the caching system for the application.
 
 It sets up both Redis and Ristretto as cache backends, creates a chain cache manager,
 and initializes the marshaler for serializing and deserializing cached data.
-Panics if Ristretto cache initialization fails.
+Returns an error if initialization fails.
 */
-func InitCache() {
+func InitCache() error {
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     config.RedisAddress,
 		Password: config.RedisPassword, // no password set
 		DB:       config.RedisDB,       // use default DB
 	})
+
+	// Test Redis connection
+	ctx, cancel := context.WithTimeout(Context, 5*time.Second)
+	defer cancel()
+
+	if err := redisClient.Ping(ctx).Err(); err != nil {
+		log.WithError(err).Warn("Redis connection failed, continuing with in-memory cache only")
+	}
+
 	ristrettoCache, err := ristretto.NewCache(&ristretto.Config{
 		NumCounters: 1000,
 		MaxCost:     100,
 		BufferItems: 64,
 	})
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to initialize Ristretto cache: %w", err)
 	}
 
 	// initialize cache manager
@@ -62,4 +74,7 @@ func InitCache() {
 
 	// Initializes marshaler
 	Marshal = marshaler.New(cacheManager)
+
+	log.Info("Cache system initialized successfully")
+	return nil
 }
