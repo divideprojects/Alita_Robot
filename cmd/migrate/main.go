@@ -28,11 +28,13 @@ type MigrationConfig struct {
 }
 
 type Migrator struct {
-	config  *MigrationConfig
-	mongoDB *mongo.Database
-	pgDB    *gorm.DB
-	ctx     context.Context
-	stats   *MigrationStats
+	config       *MigrationConfig
+	mongoDB      *mongo.Database
+	pgDB         *gorm.DB
+	ctx          context.Context
+	stats        *MigrationStats
+	validChatIDs map[int64]bool
+	validUserIDs map[int64]bool
 }
 
 type MigrationStats struct {
@@ -120,6 +122,8 @@ func NewMigrator(config *MigrationConfig) (*Migrator, error) {
 			StartTime: time.Now(),
 			Errors:    []string{},
 		},
+		validChatIDs: make(map[int64]bool),
+		validUserIDs: make(map[int64]bool),
 	}, nil
 }
 
@@ -135,9 +139,25 @@ func (m *Migrator) Close() {
 func (m *Migrator) Run() error {
 	log.Println("Starting migration...")
 
-	collections := []string{
-		"users",
-		"chats",
+	// First migrate users and chats, then load valid IDs
+	primaryCollections := []string{"users", "chats"}
+	for _, collection := range primaryCollections {
+		log.Printf("Migrating collection: %s", collection)
+		if err := m.migrateCollection(collection); err != nil {
+			errMsg := fmt.Sprintf("Failed to migrate %s: %v", collection, err)
+			m.stats.Errors = append(m.stats.Errors, errMsg)
+			log.Printf("ERROR: %s", errMsg)
+			return fmt.Errorf("cannot continue without primary collections: %w", err)
+		}
+	}
+
+	// Load valid IDs for reference validation
+	if err := m.loadValidIDs(); err != nil {
+		log.Printf("Warning: Failed to load valid IDs: %v", err)
+	}
+
+	// Now migrate dependent collections
+	dependentCollections := []string{
 		"admin",
 		"notes_settings",
 		"notes",
@@ -158,9 +178,9 @@ func (m *Migrator) Run() error {
 		"report_chat_settings",
 	}
 
-	m.stats.TotalCollections = len(collections)
+	m.stats.TotalCollections = len(primaryCollections) + len(dependentCollections)
 
-	for _, collection := range collections {
+	for _, collection := range dependentCollections {
 		log.Printf("Migrating collection: %s", collection)
 		if err := m.migrateCollection(collection); err != nil {
 			errMsg := fmt.Sprintf("Failed to migrate %s: %v", collection, err)
@@ -174,6 +194,30 @@ func (m *Migrator) Run() error {
 	}
 
 	m.stats.EndTime = time.Now()
+	return nil
+}
+
+func (m *Migrator) loadValidIDs() error {
+	// Load valid chat IDs
+	var chatIDs []int64
+	if err := m.pgDB.Model(&PgChat{}).Pluck("chat_id", &chatIDs).Error; err != nil {
+		return fmt.Errorf("failed to load chat IDs: %w", err)
+	}
+	for _, id := range chatIDs {
+		m.validChatIDs[id] = true
+	}
+	log.Printf("Loaded %d valid chat IDs", len(m.validChatIDs))
+
+	// Load valid user IDs
+	var userIDs []int64
+	if err := m.pgDB.Model(&PgUser{}).Pluck("user_id", &userIDs).Error; err != nil {
+		return fmt.Errorf("failed to load user IDs: %w", err)
+	}
+	for _, id := range userIDs {
+		m.validUserIDs[id] = true
+	}
+	log.Printf("Loaded %d valid user IDs", len(m.validUserIDs))
+
 	return nil
 }
 

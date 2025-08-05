@@ -138,11 +138,23 @@ func (m *Migrator) migrateAdmin() error {
 		}
 
 		admins := make([]PgAdmin, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping admin for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			admin := PgAdmin{
-				ChatID:    toInt64(doc["_id"]),
+				ChatID:    chatID,
 				AnonAdmin: toBool(doc["anon_admin"]),
 				CreatedAt: &now,
 				UpdatedAt: &now,
@@ -150,15 +162,22 @@ func (m *Migrator) migrateAdmin() error {
 			admins = append(admins, admin)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "chat_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"anon_admin", "updated_at"}),
-		}).CreateInBatches(admins, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert admin settings: %w", err)
+		if len(admins) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"anon_admin", "updated_at"}),
+			}).CreateInBatches(admins, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert admin settings: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d admin records with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(admins))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -175,11 +194,23 @@ func (m *Migrator) migrateNotesSettings() error {
 		}
 
 		settings := make([]PgNotesSettings, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping notes_settings for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			setting := PgNotesSettings{
-				ChatID:    toInt64(doc["_id"]),
+				ChatID:    chatID,
 				Private:   toBool(doc["private_notes"]),
 				CreatedAt: &now,
 				UpdatedAt: &now,
@@ -187,15 +218,22 @@ func (m *Migrator) migrateNotesSettings() error {
 			settings = append(settings, setting)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "chat_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"private", "updated_at"}),
-		}).CreateInBatches(settings, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert notes settings: %w", err)
+		if len(settings) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"private", "updated_at"}),
+			}).CreateInBatches(settings, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert notes settings: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d notes_settings records with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(settings))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -212,11 +250,23 @@ func (m *Migrator) migrateNotes() error {
 		}
 
 		notes := make([]PgNote, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["chat_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping note for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			note := PgNote{
-				ChatID:      toInt64(doc["chat_id"]),
+				ChatID:      chatID,
 				NoteName:    toString(doc["note_name"]),
 				NoteContent: toString(doc["note_content"]),
 				MsgType:     int64(toInt64(doc["msgtype"])),
@@ -226,12 +276,23 @@ func (m *Migrator) migrateNotes() error {
 			notes = append(notes, note)
 		}
 
-		if err := m.pgDB.CreateInBatches(notes, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert notes: %w", err)
+		if len(notes) > 0 {
+			// Use OnConflict to handle duplicates
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}, {Name: "note_name"}},
+				DoUpdates: clause.AssignmentColumns([]string{"note_content", "msg_type", "updated_at"}),
+			}).CreateInBatches(notes, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert notes: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d notes with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(notes))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -247,32 +308,74 @@ func (m *Migrator) migrateFilters() error {
 			return nil
 		}
 
-		filters := make([]PgFilter, 0, len(docs))
+		// Use a map to deduplicate filters within the batch
+		filterMap := make(map[string]PgFilter)
+		skipped := 0
+		duplicates := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["chat_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping filter for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
+			keyword := toString(doc["keyword"])
+			key := fmt.Sprintf("%d:%s", chatID, keyword)
+
+			// Check if we already have this filter in the batch
+			if _, exists := filterMap[key]; exists {
+				duplicates++
+				if m.config.Verbose {
+					log.Printf("  Skipping duplicate filter for chat %d, keyword: %s", chatID, keyword)
+				}
+				continue
+			}
+
 			filter := PgFilter{
-				ChatID:      toInt64(doc["chat_id"]),
-				Keyword:     toString(doc["keyword"]),
+				ChatID:      chatID,
+				Keyword:     keyword,
 				FilterReply: toString(doc["filter_reply"]),
 				Msgtype:     int64(toInt64(doc["msgtype"])),
 				CreatedAt:   &now,
 				UpdatedAt:   &now,
 			}
+			filterMap[key] = filter
+		}
+
+		// Convert map to slice
+		filters := make([]PgFilter, 0, len(filterMap))
+		for _, filter := range filterMap {
 			filters = append(filters, filter)
 		}
 
-		if err := m.pgDB.CreateInBatches(filters, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert filters: %w", err)
+		if len(filters) > 0 {
+			// Use OnConflict to handle duplicate (chat_id, keyword) combinations across batches
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}, {Name: "keyword"}},
+				DoUpdates: clause.AssignmentColumns([]string{"filter_reply", "msgtype", "updated_at"}),
+			}).CreateInBatches(filters, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert filters: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 || duplicates > 0 {
+			log.Printf("  Skipped %d filters with invalid chat references, %d duplicates", skipped, duplicates)
+		}
+
+		m.stats.SuccessRecords += int64(len(filters))
+		m.stats.FailedRecords += int64(skipped + duplicates)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
 }
-
 func (m *Migrator) migrateGreetings() error {
 	collection := m.mongoDB.Collection("greetings")
 
@@ -284,11 +387,23 @@ func (m *Migrator) migrateGreetings() error {
 		}
 
 		greetings := make([]PgGreeting, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping greeting for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			greeting := PgGreeting{
-				ChatID:               toInt64(doc["_id"]),
+				ChatID:               chatID,
 				AutoApprove:          toBool(doc["auto_approve"]),
 				CleanServiceSettings: toBool(doc["clean_service_settings"]),
 				CreatedAt:            &now,
@@ -314,20 +429,27 @@ func (m *Migrator) migrateGreetings() error {
 			greetings = append(greetings, greeting)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns: []clause.Column{{Name: "chat_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{
-				"auto_approve", "clean_service_settings",
-				"welcome_enabled", "welcome_text", "welcome_type", "welcome_clean_old",
-				"goodbye_enabled", "goodbye_text", "goodbye_type", "goodbye_clean_old",
-				"updated_at",
-			}),
-		}).CreateInBatches(greetings, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert greetings: %w", err)
+		if len(greetings) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns: []clause.Column{{Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{
+					"auto_approve", "clean_service_settings",
+					"welcome_enabled", "welcome_text", "welcome_type", "welcome_clean_old",
+					"goodbye_enabled", "goodbye_text", "goodbye_type", "goodbye_clean_old",
+					"updated_at",
+				}),
+			}).CreateInBatches(greetings, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert greetings: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d greetings with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(greetings))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -344,10 +466,20 @@ func (m *Migrator) migrateLocks() error {
 		}
 
 		locks := make([]PgLock, 0)
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
 			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping locks for non-existent chat: %d", chatID)
+				}
+				continue
+			}
 
 			// Process permissions
 			if permissions, ok := doc["permissions"].(map[string]interface{}); ok {
@@ -388,7 +520,12 @@ func (m *Migrator) migrateLocks() error {
 			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d lock records with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(locks))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -405,11 +542,23 @@ func (m *Migrator) migratePins() error {
 		}
 
 		pins := make([]PgPin, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping pins for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			pin := PgPin{
-				ChatID:         toInt64(doc["_id"]),
+				ChatID:         chatID,
 				AntiChannelPin: toBool(doc["antichannelpin"]),
 				CleanLinked:    toBool(doc["cleanlinked"]),
 				CreatedAt:      &now,
@@ -418,15 +567,22 @@ func (m *Migrator) migratePins() error {
 			pins = append(pins, pin)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "chat_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"anti_channel_pin", "clean_linked", "updated_at"}),
-		}).CreateInBatches(pins, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert pins: %w", err)
+		if len(pins) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"anti_channel_pin", "clean_linked", "updated_at"}),
+			}).CreateInBatches(pins, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert pins: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d pins with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(pins))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -443,11 +599,23 @@ func (m *Migrator) migrateRules() error {
 		}
 
 		rules := make([]PgRule, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping rules for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			rule := PgRule{
-				ChatID:    toInt64(doc["_id"]),
+				ChatID:    chatID,
 				Rules:     toString(doc["rules"]),
 				Private:   toBool(doc["privrules"]),
 				CreatedAt: &now,
@@ -456,15 +624,22 @@ func (m *Migrator) migrateRules() error {
 			rules = append(rules, rule)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "chat_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"rules", "private", "updated_at"}),
-		}).CreateInBatches(rules, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert rules: %w", err)
+		if len(rules) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"rules", "private", "updated_at"}),
+			}).CreateInBatches(rules, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert rules: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d rules with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(rules))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -481,11 +656,23 @@ func (m *Migrator) migrateWarnsSettings() error {
 		}
 
 		settings := make([]PgWarnsSetting, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping warns_settings for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			setting := PgWarnsSetting{
-				ChatID:    toInt64(doc["_id"]),
+				ChatID:    chatID,
 				WarnLimit: toInt64(doc["warn_limit"]),
 				WarnMode:  toString(doc["warn_mode"]),
 				CreatedAt: &now,
@@ -499,15 +686,22 @@ func (m *Migrator) migrateWarnsSettings() error {
 			settings = append(settings, setting)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "chat_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"warn_limit", "warn_mode", "updated_at"}),
-		}).CreateInBatches(settings, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert warns settings: %w", err)
+		if len(settings) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"warn_limit", "warn_mode", "updated_at"}),
+			}).CreateInBatches(settings, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert warns settings: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d warns_settings with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(settings))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -523,10 +717,43 @@ func (m *Migrator) migrateWarnsUsers() error {
 			return nil
 		}
 
-		warnsUsers := make([]PgWarnsUser, 0, len(docs))
+		// Use a map to deduplicate within the batch
+		warnsMap := make(map[string]PgWarnsUser)
+		skipped := 0
+		duplicates := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			userID := toInt64(doc["user_id"])
+			chatID := toInt64(doc["chat_id"])
+
+			// Skip if user or chat doesn't exist
+			if !m.validUserIDs[userID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping warns_users for non-existent user: %d", userID)
+				}
+				continue
+			}
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping warns_users for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
+			key := fmt.Sprintf("%d:%d", userID, chatID)
+
+			// Check if we already have this combination in the batch
+			if _, exists := warnsMap[key]; exists {
+				duplicates++
+				if m.config.Verbose {
+					log.Printf("  Skipping duplicate warns_users for user %d, chat %d", userID, chatID)
+				}
+				continue
+			}
+
 			// Convert warns array to JSON
 			var warnsJSON []byte
 			if warns, ok := doc["warns"].([]interface{}); ok {
@@ -536,27 +763,43 @@ func (m *Migrator) migrateWarnsUsers() error {
 			}
 
 			warnsUser := PgWarnsUser{
-				UserID:    toInt64(doc["user_id"]),
-				ChatID:    toInt64(doc["chat_id"]),
+				UserID:    userID,
+				ChatID:    chatID,
 				NumWarns:  toInt64(doc["num_warns"]),
 				Warns:     warnsJSON,
 				CreatedAt: &now,
 				UpdatedAt: &now,
 			}
-			warnsUsers = append(warnsUsers, warnsUser)
+			warnsMap[key] = warnsUser
 		}
 
-		if err := m.pgDB.CreateInBatches(warnsUsers, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert warns users: %w", err)
+		// Convert map to slice
+		warnsUsers := make([]PgWarnsUser, 0, len(warnsMap))
+		for _, wu := range warnsMap {
+			warnsUsers = append(warnsUsers, wu)
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if len(warnsUsers) > 0 {
+			// Use OnConflict to handle duplicates across batches
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "user_id"}, {Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"num_warns", "warns", "updated_at"}),
+			}).CreateInBatches(warnsUsers, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert warns users: %w", err)
+			}
+		}
+
+		if skipped > 0 || duplicates > 0 {
+			log.Printf("  Skipped %d warns_users with invalid references, %d duplicates", skipped, duplicates)
+		}
+
+		m.stats.SuccessRecords += int64(len(warnsUsers))
+		m.stats.FailedRecords += int64(skipped + duplicates)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
 }
-
 func (m *Migrator) migrateAntifloodSettings() error {
 	collection := m.mongoDB.Collection("antiflood_settings")
 
@@ -568,11 +811,23 @@ func (m *Migrator) migrateAntifloodSettings() error {
 		}
 
 		settings := make([]PgAntifloodSetting, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping antiflood_settings for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			setting := PgAntifloodSetting{
-				ChatID:                 toInt64(doc["_id"]),
+				ChatID:                 chatID,
 				Limit:                  toInt64(doc["limit"]),
 				Mode:                   toString(doc["mode"]),
 				DeleteAntifloodMessage: toBool(doc["del_msg"]),
@@ -590,15 +845,22 @@ func (m *Migrator) migrateAntifloodSettings() error {
 			settings = append(settings, setting)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "chat_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"flood_limit", "mode", "delete_antiflood_message", "updated_at"}),
-		}).CreateInBatches(settings, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert antiflood settings: %w", err)
+		if len(settings) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"flood_limit", "mode", "delete_antiflood_message", "updated_at"}),
+			}).CreateInBatches(settings, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert antiflood settings: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d antiflood_settings with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(settings))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -615,10 +877,21 @@ func (m *Migrator) migrateBlacklists() error {
 		}
 
 		blacklists := make([]PgBlacklist, 0)
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
 			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping blacklists for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			action := toString(doc["action"])
 			reason := toString(doc["reason"])
 
@@ -659,7 +932,12 @@ func (m *Migrator) migrateBlacklists() error {
 			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d blacklist records with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(blacklists))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -675,27 +953,53 @@ func (m *Migrator) migrateChannels() error {
 		}
 
 		channels := make([]PgChannel, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["_id"])
+			channelID := toInt64(doc["_id"]) // Using same ID as channel ID
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping channel for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
+			// Also check if channel_id references a valid chat (if it's different)
+			if channelID != 0 && channelID != chatID && !m.validChatIDs[channelID] {
+				// Set to NULL if channel doesn't exist
+				channelID = 0
+			}
+
 			channel := PgChannel{
-				ChatID:    toInt64(doc["_id"]),
-				ChannelID: toInt64(doc["_id"]), // Using same ID as channel ID
+				ChatID:    chatID,
+				ChannelID: channelID,
 				CreatedAt: &now,
 				UpdatedAt: &now,
 			}
 			channels = append(channels, channel)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "chat_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"channel_id", "updated_at"}),
-		}).CreateInBatches(channels, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert channels: %w", err)
+		if len(channels) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"channel_id", "updated_at"}),
+			}).CreateInBatches(channels, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert channels: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d channels with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(channels))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -711,31 +1015,80 @@ func (m *Migrator) migrateConnections() error {
 			return nil
 		}
 
-		connections := make([]PgConnection, 0, len(docs))
+		// Use a map to deduplicate within the batch
+		connMap := make(map[string]PgConnection)
+		skipped := 0
+		duplicates := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			userID := toInt64(doc["_id"])
+			chatID := toInt64(doc["chat_id"])
+
+			// Skip if user or chat doesn't exist
+			if !m.validUserIDs[userID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping connection for non-existent user: %d", userID)
+				}
+				continue
+			}
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping connection for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
+			key := fmt.Sprintf("%d:%d", userID, chatID)
+
+			// Check if we already have this combination in the batch
+			if _, exists := connMap[key]; exists {
+				duplicates++
+				if m.config.Verbose {
+					log.Printf("  Skipping duplicate connection for user %d, chat %d", userID, chatID)
+				}
+				continue
+			}
+
 			connection := PgConnection{
-				UserID:    toInt64(doc["_id"]),
-				ChatID:    toInt64(doc["chat_id"]),
+				UserID:    userID,
+				ChatID:    chatID,
 				Connected: toBool(doc["connected"]),
 				CreatedAt: &now,
 				UpdatedAt: &now,
 			}
-			connections = append(connections, connection)
+			connMap[key] = connection
 		}
 
-		if err := m.pgDB.CreateInBatches(connections, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert connections: %w", err)
+		// Convert map to slice
+		connections := make([]PgConnection, 0, len(connMap))
+		for _, conn := range connMap {
+			connections = append(connections, conn)
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if len(connections) > 0 {
+			// Use OnConflict to handle duplicates across batches
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "user_id"}, {Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"connected", "updated_at"}),
+			}).CreateInBatches(connections, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert connections: %w", err)
+			}
+		}
+
+		if skipped > 0 || duplicates > 0 {
+			log.Printf("  Skipped %d connections with invalid references, %d duplicates", skipped, duplicates)
+		}
+
+		m.stats.SuccessRecords += int64(len(connections))
+		m.stats.FailedRecords += int64(skipped + duplicates)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
 }
-
 func (m *Migrator) migrateConnectionSettings() error {
 	collection := m.mongoDB.Collection("connection_settings")
 
@@ -747,11 +1100,23 @@ func (m *Migrator) migrateConnectionSettings() error {
 		}
 
 		settings := make([]PgConnectionSetting, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping connection_settings for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			setting := PgConnectionSetting{
-				ChatID:       toInt64(doc["_id"]),
+				ChatID:       chatID,
 				AllowConnect: !toBool(doc["can_connect"]), // Note: inverted logic
 				Enabled:      true,
 				CreatedAt:    &now,
@@ -760,15 +1125,22 @@ func (m *Migrator) migrateConnectionSettings() error {
 			settings = append(settings, setting)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "chat_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"allow_connect", "enabled", "updated_at"}),
-		}).CreateInBatches(settings, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert connection settings: %w", err)
+		if len(settings) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"allow_connect", "enabled", "updated_at"}),
+			}).CreateInBatches(settings, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert connection settings: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d connection_settings with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(settings))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -785,10 +1157,20 @@ func (m *Migrator) migrateDisable() error {
 		}
 
 		disables := make([]PgDisable, 0)
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
 			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping disable settings for non-existent chat: %d", chatID)
+				}
+				continue
+			}
 
 			// Process commands array
 			if commands, ok := doc["commands"].([]interface{}); ok {
@@ -815,7 +1197,12 @@ func (m *Migrator) migrateDisable() error {
 			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d disable records with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(disables))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -832,11 +1219,23 @@ func (m *Migrator) migrateReportUserSettings() error {
 		}
 
 		settings := make([]PgReportUserSetting, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			userID := toInt64(doc["_id"])
+
+			// Skip if user doesn't exist
+			if !m.validUserIDs[userID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping report_user_settings for non-existent user: %d", userID)
+				}
+				continue
+			}
+
 			setting := PgReportUserSetting{
-				UserID:    toInt64(doc["_id"]),
+				UserID:    userID,
 				Status:    toBool(doc["status"]),
 				Enabled:   toBool(doc["status"]),
 				CreatedAt: &now,
@@ -845,15 +1244,22 @@ func (m *Migrator) migrateReportUserSettings() error {
 			settings = append(settings, setting)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "user_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"status", "enabled", "updated_at"}),
-		}).CreateInBatches(settings, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert report user settings: %w", err)
+		if len(settings) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "user_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"status", "enabled", "updated_at"}),
+			}).CreateInBatches(settings, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert report user settings: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d report_user_settings with invalid user references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(settings))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
@@ -870,11 +1276,23 @@ func (m *Migrator) migrateReportChatSettings() error {
 		}
 
 		settings := make([]PgReportChatSetting, 0, len(docs))
+		skipped := 0
 		now := time.Now()
 
 		for _, doc := range docs {
+			chatID := toInt64(doc["_id"])
+
+			// Skip if chat doesn't exist
+			if !m.validChatIDs[chatID] {
+				skipped++
+				if m.config.Verbose {
+					log.Printf("  Skipping report_chat_settings for non-existent chat: %d", chatID)
+				}
+				continue
+			}
+
 			setting := PgReportChatSetting{
-				ChatID:    toInt64(doc["_id"]),
+				ChatID:    chatID,
 				Status:    toBool(doc["status"]),
 				Enabled:   toBool(doc["status"]),
 				CreatedAt: &now,
@@ -883,15 +1301,22 @@ func (m *Migrator) migrateReportChatSettings() error {
 			settings = append(settings, setting)
 		}
 
-		if err := m.pgDB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "chat_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"status", "enabled", "updated_at"}),
-		}).CreateInBatches(settings, 100).Error; err != nil {
-			m.stats.FailedRecords += int64(len(docs))
-			return fmt.Errorf("failed to insert report chat settings: %w", err)
+		if len(settings) > 0 {
+			if err := m.pgDB.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "chat_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"status", "enabled", "updated_at"}),
+			}).CreateInBatches(settings, 100).Error; err != nil {
+				m.stats.FailedRecords += int64(len(docs))
+				return fmt.Errorf("failed to insert report chat settings: %w", err)
+			}
 		}
 
-		m.stats.SuccessRecords += int64(len(docs))
+		if skipped > 0 {
+			log.Printf("  Skipped %d report_chat_settings with invalid chat references", skipped)
+		}
+
+		m.stats.SuccessRecords += int64(len(settings))
+		m.stats.FailedRecords += int64(skipped)
 		m.stats.TotalRecords += int64(len(docs))
 		return nil
 	})
