@@ -1117,7 +1117,10 @@ func (m *Migrator) migrateConnectionSettings() error {
 
 			setting := PgConnectionSetting{
 				ChatID:       chatID,
-				AllowConnect: !toBool(doc["can_connect"]), // Note: inverted logic
+				// Inverted logic: MongoDB's "can_connect" means "disallow connect" when false, 
+				// but PostgreSQL's "allow_connect" means "allow connect" when true.
+				// See migration guide section "Connection Settings Boolean Inversion" for details.
+				AllowConnect: !toBool(doc["can_connect"]),
 				Enabled:      true,
 				CreatedAt:    &now,
 				UpdatedAt:    &now,
