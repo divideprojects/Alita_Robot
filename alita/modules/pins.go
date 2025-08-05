@@ -727,6 +727,20 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 			},
 		)
 	},
+	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, pinT pinType, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64) (*gotgbot.Message, error) {
+		return b.SendVideoNote(
+			ctx.EffectiveChat.Id,
+			gotgbot.InputFileByID(pinT.FileID),
+			&gotgbot.SendVideoNoteOpts{
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ReplyMarkup:     keyb,
+				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
+			},
+		)
+	},
 }
 
 func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataType int, buttons []tgmd2html.ButtonV2) {
@@ -776,6 +790,9 @@ func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataT
 		} else if msg.ReplyToMessage.Video != nil {
 			fileid = msg.ReplyToMessage.Video.FileId
 			dataType = db.VIDEO
+		} else if msg.ReplyToMessage.VideoNote != nil {
+			fileid = msg.ReplyToMessage.VideoNote.FileId
+			dataType = db.VideoNote
 		}
 	}
 
