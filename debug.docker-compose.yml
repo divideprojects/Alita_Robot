@@ -1,5 +1,7 @@
 # This is to run the alita-robot in debug mode with alpine image
 # This starts up fast and does not do any optimizations
+version: "3.8"
+
 services:
   alita:
     build:
@@ -9,19 +11,37 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-alita_robot}?sslmode=disable
+      REDIS_ADDRESS: redis:6379
     depends_on:
-      - mongodb
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
-  mongodb:
-    image: mongo:latest
+  postgres:
+    image: postgres:15-alpine
+    container_name: alita-postgres-debug
     restart: always
     env_file:
-      - .db.env
+      - .env
+    environment:
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
     volumes:
-      - ./docker/entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - postgres_debug_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   redis:
     image: redis:latest
     restart: always
-    command: redis-server --requirepass redisPassword
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redisPassword}
+
+volumes:
+  postgres_debug_data:

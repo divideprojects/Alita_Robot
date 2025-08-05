@@ -105,7 +105,7 @@ func (moduleStruct) getLockMapAsArray() (lockTypes []string) {
 func (moduleStruct) buildLockTypesMessage(chatID int64) (res string) {
 	chatLocks := db.GetChatLocks(chatID)
 
-	newMapLocks := db.MapLockType(*chatLocks)
+	newMapLocks := chatLocks
 	res = "These are the locks in this chat:"
 
 	keys := make([]string, 0, len(newMapLocks))

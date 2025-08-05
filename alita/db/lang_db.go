@@ -4,7 +4,6 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	log "github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 func GetLanguage(ctx *ext.Context) string {
@@ -12,7 +11,7 @@ func GetLanguage(ctx *ext.Context) string {
 	if ctx.CallbackQuery != nil {
 		chat = ctx.CallbackQuery.Message.GetChat()
 	} else {
-		chat = ctx.Update.Message.Chat
+		chat = ctx.EffectiveMessage.Chat
 	}
 	// FIXME: this is a hack
 	// if ctx.Update.Message.Chat.Type == "private" || ctx.CallbackQuery.Message.Chat.Type == "private" {
@@ -49,8 +48,8 @@ func ChangeUserLanguage(UserID int64, lang string) {
 	} else if userc.Language == lang {
 		return
 	}
-	userc.Language = lang // change user language
-	err := updateOne(userColl, bson.M{"_id": UserID}, userc)
+
+	err := UpdateRecord(&User{}, User{UserId: UserID}, User{Language: lang})
 	if err != nil {
 		log.Errorf("[Database] ChangeUserLanguage: %v - %d", err, UserID)
 		return
@@ -63,8 +62,8 @@ func ChangeGroupLanguage(GroupID int64, lang string) {
 	if groupc.Language == lang {
 		return
 	}
-	groupc.Language = lang // change group language
-	err := updateOne(chatColl, bson.M{"_id": GroupID}, groupc)
+
+	err := UpdateRecord(&Chat{}, Chat{ChatId: GroupID}, Chat{Language: lang})
 	if err != nil {
 		log.Errorf("[Database] ChangeGroupLanguage: %v - %d", err, GroupID)
 		return

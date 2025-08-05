@@ -38,7 +38,10 @@ func LoadLocaleFiles(fs *embed.FS, path string) {
 func (goloc I18n) GetString(key string) string {
 	vi := viper.New()
 	vi.SetConfigType("yaml")
-	vi.ReadConfig(bytes.NewBuffer(localeMap[goloc.LangCode]))
+	if err := vi.ReadConfig(bytes.NewBuffer(localeMap[goloc.LangCode])); err != nil {
+		// If config reading fails, fallback to default language
+		return I18n{LangCode: defaultLangCode}.GetString(key)
+	}
 	text := vi.GetString(key)
 
 	// if the language code is not available, return the default
@@ -53,7 +56,10 @@ func (goloc I18n) GetString(key string) string {
 func (goloc I18n) GetStringSlice(key string) []string {
 	vi := viper.New()
 	vi.SetConfigType("yaml")
-	vi.ReadConfig(bytes.NewBuffer(localeMap[goloc.LangCode]))
+	if err := vi.ReadConfig(bytes.NewBuffer(localeMap[goloc.LangCode])); err != nil {
+		// If config reading fails, fallback to default language
+		return I18n{LangCode: defaultLangCode}.GetStringSlice(key)
+	}
 	text := vi.GetStringSlice(key)
 
 	// if the language code is not available, return the default

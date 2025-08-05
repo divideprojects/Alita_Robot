@@ -55,12 +55,15 @@ func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 	// permissions check
 	// only dev can access this
 	if user.Id != config.OwnerId && !memStatus.Dev {
-		query.Answer(
+		_, err := query.Answer(
 			b,
 			&gotgbot.AnswerCallbackQueryOpts{
 				Text: "This button can only be used by an admin!",
 			},
 		)
+		if err != nil {
+			log.Error(err)
+		}
 		return ext.ContinueGroups
 	}
 
@@ -82,7 +85,10 @@ func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 			// updates the message when percentage gets above the progress gap we have defined
 			if (string_handling.FindIndexInt64(chatIds, chatId)) > progress {
 				progressString = fmt.Sprintf("%d completed in getting invalid chats.", progress)
-				msg.EditText(b, progressString, nil)
+				_, _, err := msg.EditText(b, progressString, nil)
+				if err != nil {
+					log.Error(err)
+				}
 				progress += 5
 			}
 
@@ -112,7 +118,10 @@ func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 		log.Error(err)
 		return err
 	}
-	query.Answer(b, nil)
+	_, err = query.Answer(b, nil)
+	if err != nil {
+		log.Error(err)
+	}
 
 	return ext.EndGroups
 }
