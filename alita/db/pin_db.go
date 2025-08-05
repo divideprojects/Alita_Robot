@@ -41,8 +41,18 @@ func SetAntiChannelPin(chatID int64, pref bool) {
 }
 
 func LoadPinStats() (acCount, clCount int64) {
-	// Note: The new PinSettings model doesn't support the old pin statistics
-	// Return 0 for both counts as these features are not supported
-	log.Warnf("[Database] LoadPinStats: Pin statistics not supported in new model")
-	return 0, 0
+	// Count chats with AntiChannelPin enabled
+	err := DB.Model(&PinSettings{}).Where("anti_channel_pin = ?", true).Count(&acCount).Error
+	if err != nil {
+		log.Errorf("[Database] LoadPinStats: Error counting AntiChannelPin: %v", err)
+	}
+
+	// Count chats with CleanLinked enabled
+	err = DB.Model(&PinSettings{}).Where("clean_linked = ?", true).Count(&clCount).Error
+	if err != nil {
+		log.Errorf("[Database] LoadPinStats: Error counting CleanLinked: %v", err)
+	}
+
+	log.Infof("[Database] LoadPinStats: AntiChannelPin=%d, CleanLinked=%d", acCount, clCount)
+	return acCount, clCount
 }
