@@ -848,7 +848,7 @@ func (m *Migrator) migrateAntifloodSettings() error {
 		if len(settings) > 0 {
 			if err := m.pgDB.Clauses(clause.OnConflict{
 				Columns:   []clause.Column{{Name: "chat_id"}},
-				DoUpdates: clause.AssignmentColumns([]string{"flood_limit", "mode", "delete_antiflood_message", "updated_at"}),
+				DoUpdates: clause.AssignmentColumns([]string{"flood_limit", "mode", "delete_antiflood_message", "action", "updated_at"}),
 			}).CreateInBatches(settings, 100).Error; err != nil {
 				m.stats.FailedRecords += int64(len(docs))
 				return fmt.Errorf("failed to insert antiflood settings: %w", err)
