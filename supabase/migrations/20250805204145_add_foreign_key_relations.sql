@@ -280,7 +280,7 @@ ALTER TABLE warns_settings
 ADD CONSTRAINT chk_warns_settings_limit CHECK (warn_limit > 0);
 
 ALTER TABLE antiflood_settings 
-ADD CONSTRAINT chk_antiflood_limit CHECK (flood_limit > 0 AND "limit" > 0);
+ADD CONSTRAINT chk_antiflood_limit CHECK (flood_limit > 0);
 
 ALTER TABLE warns_users 
 ADD CONSTRAINT chk_warns_users_num CHECK (num_warns >= 0);
