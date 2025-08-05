@@ -1,48 +1,45 @@
 package db
 
 import (
+	"errors"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
+	"gorm.io/gorm"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-type ChatFilters struct {
-	ChatId      int64    `bson:"chat_id,omitempty" json:"chat_id,omitempty"`
-	KeyWord     string   `bson:"keyword,omitempty" json:"keyword,omitempty"`
-	FilterReply string   `bson:"filter_reply,omitempty" json:"filter_reply,omitempty"`
-	MsgType     int      `bson:"msgtype,omitempty" json:"msgtype,omitempty"`
-	FileID      string   `bson:"fileid,omitempty" json:"fileid,omitempty"`
-	NoNotif     bool     `bson:"nonotif,omitempty" json:"nonotif,omitempty"`
-	Buttons     []Button `bson:"filter_buttons,omitempty" json:"filter_buttons,omitempty"`
-}
-
 func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
-	err := findOne(filterColl, bson.M{"chat_id": chatID, "keyword": keyword}).Decode(&filtSrc)
-	if err == mongo.ErrNoDocuments {
+	filtSrc = &ChatFilters{}
+	err := GetRecord(filtSrc, map[string]interface{}{"chat_id": chatID, "keyword": keyword})
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		filtSrc = &ChatFilters{}
 	} else if err != nil {
 		log.Errorf("[Database] GetFilter: %v - %d", err, chatID)
+		filtSrc = &ChatFilters{}
 	}
 	return
 }
 
 //goland:noinspection GoUnusedExportedFunction
 func GetAllFilters(chatID int64) (allFilters []*ChatFilters) {
-	cursor := findAll(filterColl, bson.M{"chat_id": chatID})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &allFilters)
+	err := GetRecords(&allFilters, map[string]interface{}{"chat_id": chatID})
+	if err != nil {
+		log.Errorf("[Database] GetAllFilters: %v - %d", err, chatID)
+		return []*ChatFilters{}
+	}
 	return
 }
 
 func GetFiltersList(chatID int64) (allFilterWords []string) {
 	var results []*ChatFilters
-	cursor := findAll(filterColl, bson.M{"chat_id": chatID})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &results)
+	err := GetRecords(&results, map[string]interface{}{"chat_id": chatID})
+	if err != nil {
+		log.Errorf("[Database] GetFiltersList: %v - %d", err, chatID)
+		return []string{}
+	}
+
 	for _, j := range results {
 		allFilterWords = append(allFilterWords, j.KeyWord)
 	}
@@ -65,10 +62,10 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 		FilterReply: replyText,
 		MsgType:     filtType,
 		FileID:      fileID,
-		Buttons:     buttons,
+		Buttons:     ButtonArray(buttons),
 	}
 
-	err := updateOne(filterColl, bson.M{"chat_id": chatID, "keyword": keyWord}, newFilter)
+	err := CreateRecord(&newFilter)
 	if err != nil {
 		log.Errorf("[Database][AddFilter]: %d - %v", chatID, err)
 		return
@@ -80,7 +77,7 @@ func RemoveFilter(chatID int64, keyWord string) {
 		return
 	}
 
-	err := deleteOne(filterColl, bson.M{"chat_id": chatID, "keyword": keyWord})
+	err := DB.Where("chat_id = ? AND keyword = ?", chatID, keyWord).Delete(&ChatFilters{}).Error
 	if err != nil {
 		log.Errorf("[Database][RemoveFilter]: %d - %v", chatID, err)
 		return
@@ -88,14 +85,14 @@ func RemoveFilter(chatID int64, keyWord string) {
 }
 
 func RemoveAllFilters(chatID int64) {
-	err := deleteMany(filterColl, bson.M{"chat_id": chatID})
+	err := DB.Where("chat_id = ?", chatID).Delete(&ChatFilters{}).Error
 	if err != nil {
 		log.Errorf("[Database][RemoveAllFilters]: %d - %v", chatID, err)
 	}
 }
 
 func CountFilters(chatID int64) (filtersNum int64) {
-	filtersNum, err := countDocs(filterColl, bson.M{"chat_id": chatID})
+	err := DB.Model(&ChatFilters{}).Where("chat_id = ?", chatID).Count(&filtersNum).Error
 	if err != nil {
 		log.Errorf("[Database][CountFilters]: %d - %v", chatID, err)
 	}
@@ -106,9 +103,11 @@ func LoadFilterStats() (filtersNum, filtersUsingChats int64) {
 	var filterStruct []*ChatFilters
 	filtersMap := make(map[int64][]ChatFilters)
 
-	cursor := findAll(filterColl, bson.M{})
-	defer cursor.Close(bgCtx)
-	cursor.All(bgCtx, &filterStruct)
+	err := GetRecords(&filterStruct, map[string]interface{}{})
+	if err != nil {
+		log.Errorf("[Database][LoadFilterStats]: %v", err)
+		return
+	}
 
 	for _, filterC := range filterStruct {
 		filtersNum++ // count number of filters

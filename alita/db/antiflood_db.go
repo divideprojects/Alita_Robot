@@ -1,42 +1,43 @@
 package db
 
 import (
-	log "github.com/sirupsen/logrus"
+	"errors"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
+	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 // default mode is 'mute'
 const defaultFloodsettingsMode string = "mute"
 
-// FloodSettings Flood Settings struct for chat
-type FloodSettings struct {
-	ChatId                 int64  `bson:"_id,omitempty" json:"_id,omitempty"`
-	Limit                  int    `bson:"limit" json:"limit"`
-	Mode                   string `bson:"mode,omitempty" json:"mode,omitempty"`
-	DeleteAntifloodMessage bool   `bson:"del_msg" json:"del_msg"`
-}
-
 // GetFlood Get flood settings for a chat
-func GetFlood(chatID int64) *FloodSettings {
+func GetFlood(chatID int64) *AntifloodSettings {
 	return checkFloodSetting(chatID)
 }
 
 // check Chat Flood Settings, used to get data before performing any operation
-func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
-	defaultFloodSrc := &FloodSettings{ChatId: chatID, Limit: 0, Mode: defaultFloodsettingsMode}
+func checkFloodSetting(chatID int64) (floodSrc *AntifloodSettings) {
+	floodSrc = &AntifloodSettings{}
 
-	err := findOne(antifloodSettingsColl, bson.M{"_id": chatID}).Decode(&floodSrc)
-	if err == mongo.ErrNoDocuments {
-		floodSrc = defaultFloodSrc
-		err := updateOne(antifloodSettingsColl, bson.M{"_id": chatID}, defaultFloodSrc)
+	err := GetRecord(floodSrc, AntifloodSettings{ChatId: chatID})
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		// Ensure chat exists before creating antiflood settings
+		if !ChatExists(chatID) {
+			// Chat doesn't exist, return default settings without creating record
+			log.Warnf("[Database][checkFloodSetting]: Chat %d doesn't exist, returning default settings", chatID)
+			return &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
+		}
+
+		// Create default settings only if chat exists
+		floodSrc = &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
+		err := CreateRecord(floodSrc)
 		if err != nil {
 			log.Errorf("[Database][checkFloodSetting]: %v ", err)
 		}
 	} else if err != nil {
-		floodSrc = defaultFloodSrc
-		log.Errorf("[Database][checkGreetingSettings]: %v ", err)
+		// Return default on error
+		floodSrc = &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
+		log.Errorf("[Database][checkFloodSetting]: %v ", err)
 	}
 	return floodSrc
 }
@@ -45,14 +46,13 @@ func checkFloodSetting(chatID int64) (floodSrc *FloodSettings) {
 func SetFlood(chatID int64, limit int) {
 	floodSrc := checkFloodSetting(chatID)
 
-	if floodSrc.Mode == "" {
-		floodSrc = &FloodSettings{ChatId: chatID, Limit: limit, Mode: defaultFloodsettingsMode}
-	} else {
-		floodSrc.Limit = limit // update floodSrc.limit
+	if floodSrc.Action == "" {
+		floodSrc.Action = defaultFloodsettingsMode
 	}
+	floodSrc.Limit = limit
 
 	// update the value in db
-	err := updateOne(antifloodSettingsColl, bson.M{"_id": chatID}, floodSrc)
+	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{Limit: limit, Action: floodSrc.Action})
 	if err != nil {
 		log.Errorf("[Database] SetFlood: %v - %d", err, chatID)
 	}
@@ -60,37 +60,42 @@ func SetFlood(chatID int64, limit int) {
 
 // SetFloodMode Set flood mode for a chat
 func SetFloodMode(chatID int64, mode string) {
-	floodSrc := checkFloodSetting(chatID)
-	floodSrc.Mode = mode
-
-	err := updateOne(antifloodSettingsColl, bson.M{"_id": chatID}, floodSrc)
+	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{Action: mode})
 	if err != nil {
 		log.Errorf("[Database] SetFloodMode: %v - %d", err, chatID)
 	}
 }
 
-// SetFloodMsgDel Set flood mode for a chat
+// SetFloodMsgDel Set flood message deletion setting for a chat
 func SetFloodMsgDel(chatID int64, val bool) {
 	floodSrc := checkFloodSetting(chatID)
-	floodSrc.DeleteAntifloodMessage = val
-
-	err := updateOne(antifloodSettingsColl, bson.M{"_id": chatID}, floodSrc)
+	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{DeleteAntifloodMessage: val})
 	if err != nil {
-		log.Errorf("[Database] SetFloodMsgDel: %v - %d", err, chatID)
+		log.Errorf("[Database] SetFloodMsgDel: %v", err)
+		return
 	}
+	floodSrc.DeleteAntifloodMessage = val
 }
 
 func LoadAntifloodStats() (antiCount int64) {
-	totalCount, err := countDocs(antifloodSettingsColl, bson.M{})
+	var totalCount int64
+	var noAntiCount int64
+
+	// Count total antiflood settings
+	err := DB.Model(&AntifloodSettings{}).Count(&totalCount).Error
 	if err != nil {
 		log.Errorf("[Database] LoadAntifloodStats: %v", err)
-	}
-	noAntiCount, err := countDocs(antifloodSettingsColl, bson.M{"limit": 0})
-	if err != nil {
-		log.Errorf("[Database] LoadAntifloodStats: %v", err)
+		return 0
 	}
 
-	antiCount = totalCount - noAntiCount //  gives chats which have enabled anti flood
+	// Count settings with limit 0 (disabled)
+	err = DB.Model(&AntifloodSettings{}).Where("flood_limit = ?", 0).Count(&noAntiCount).Error
+	if err != nil {
+		log.Errorf("[Database] LoadAntifloodStats: %v", err)
+		return 0
+	}
+
+	antiCount = totalCount - noAntiCount // gives chats which have enabled anti flood
 
 	return
 }

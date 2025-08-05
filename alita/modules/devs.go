@@ -368,9 +368,10 @@ func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 
 			userMentioned := helpers.MentionHtml(reqUser.Id, helpers.GetFullName(reqUser.FirstName, reqUser.LastName))
-			if uPerm == "dev" {
+			switch uPerm {
+			case "dev":
 				devUsers = append(devUsers, fmt.Sprintf("• %s", userMentioned))
-			} else if uPerm == "sudo" {
+			case "sudo":
 				sudoUsers = append(sudoUsers, fmt.Sprintf("• %s", userMentioned))
 			}
 		}

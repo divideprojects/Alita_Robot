@@ -75,7 +75,7 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		return ext.EndGroups
 	} else if len(args) >= 1 {
-		allBlWords := db.GetBlacklistSettings(chat.Id).Triggers
+		allBlWords := db.GetBlacklistSettings(chat.Id).Triggers()
 		for _, blWord := range args {
 			if string_handling.FindInStringSlice(allBlWords, blWord) {
 				alreadyBlacklisted = append(alreadyBlacklisted, blWord)
@@ -145,7 +145,7 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		return ext.EndGroups
 	} else {
-		allBlWords := db.GetBlacklistSettings(chat.Id).Triggers
+		allBlWords := db.GetBlacklistSettings(chat.Id).Triggers()
 		for _, blWord := range args {
 			if string_handling.FindInStringSlice(allBlWords, blWord) {
 				removedBlacklists = append(removedBlacklists, blWord)
@@ -206,8 +206,8 @@ func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	blSrc := db.GetBlacklistSettings(chat.Id)
-	sort.Strings(blSrc.Triggers)
-	for _, i := range blSrc.Triggers {
+	sort.Strings(blSrc.Triggers())
+	for _, i := range blSrc.Triggers() {
 		blacklistsText += fmt.Sprintf("\n - <code>%s</code>", i)
 	}
 
@@ -266,7 +266,7 @@ func (m moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error
 	}
 
 	if len(args) == 0 {
-		currAction := db.GetBlacklistSettings(chat.Id).Action
+		currAction := db.GetBlacklistSettings(chat.Id).Action()
 		rMsg = fmt.Sprintf(tr.GetString("strings."+m.moduleName+".set_bl_action.current_mode"), currAction)
 	} else if len(args) == 1 {
 		action := strings.ToLower(args[0])
@@ -394,7 +394,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	blSettings := db.GetBlacklistSettings(chat.Id)
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
-	for _, i := range blSettings.Triggers {
+	for _, i := range blSettings.Triggers() {
 		match, _ := regexp.MatchString(fmt.Sprintf(`(\b|\s)%s\b`, i), strings.ToLower(msg.Text))
 		if match {
 			_, err := msg.Delete(b, nil)
@@ -402,7 +402,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 				log.Error(err)
 				return err
 			}
-			switch blSettings.Action {
+			switch blSettings.Action() {
 			case "mute":
 				// don't work on anonymous channels
 				if user.IsAnonymousChannel() {
@@ -416,7 +416,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 
 				_, err = msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.muted_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
+					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.muted_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i)),
 					helpers.Shtml())
 				if err != nil {
 					log.Error(err)
@@ -435,7 +435,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 
 				_, err = msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.banned_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
+					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.banned_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i)),
 					helpers.Shtml())
 				if err != nil {
 					log.Error(err)
@@ -454,7 +454,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 
 				_, err = msg.Reply(b,
-					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.kicked_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason, i)),
+					fmt.Sprintf(tr.GetString("strings."+m.moduleName+".bl_watcher.kicked_user"), helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i)),
 					helpers.Shtml())
 				if err != nil {
 					log.Error(err)
@@ -474,7 +474,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 					return ext.ContinueGroups
 				}
 
-				err = warnsModule.warnThisUser(b, ctx, user.Id(), fmt.Sprintf(blSettings.Reason, i), "warn")
+				err = warnsModule.warnThisUser(b, ctx, user.Id(), fmt.Sprintf(blSettings.Reason(), i), "warn")
 				if err != nil {
 					log.Error(err)
 					return err

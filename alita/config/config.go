@@ -14,8 +14,7 @@ var (
 	AllowedUpdates     []string
 	ValidLangCodes     []string
 	BotToken           string
-	DatabaseURI        string
-	MainDbName         string
+	DatabaseURL        string // Single PostgreSQL connection string
 	BotVersion         string = "2.1.3"
 	ApiServer          string
 	WorkingMode        = "worker"
@@ -44,65 +43,76 @@ func init() {
 	)
 
 	// load goenv config
-	godotenv.Load()
+	_ = godotenv.Load() // Ignore error as .env file is optional
 
 	// set necessary variables
 	Debug = typeConvertor{str: os.Getenv("DEBUG")}.Bool()
-	DropPendingUpdates = typeConvertor{str: os.Getenv("DROP_PENDING_UPDATES")}.Bool()
-	DatabaseURI = os.Getenv("DB_URI")
-	MainDbName = os.Getenv("DB_NAME")
+	BotToken = os.Getenv("BOT_TOKEN")
+	DatabaseURL = os.Getenv("DATABASE_URL")
+	ApiServer = os.Getenv("API_SERVER")
 	OwnerId = typeConvertor{str: os.Getenv("OWNER_ID")}.Int64()
 	MessageDump = typeConvertor{str: os.Getenv("MESSAGE_DUMP")}.Int64()
-	BotToken = os.Getenv("BOT_TOKEN")
+	DropPendingUpdates = typeConvertor{str: os.Getenv("DROP_PENDING_UPDATES")}.Bool()
+	RedisAddress = os.Getenv("REDIS_ADDRESS")
+	RedisPassword = os.Getenv("REDIS_PASSWORD")
+	RedisDB = typeConvertor{str: os.Getenv("REDIS_DB")}.Int()
 
-	AllowedUpdates = typeConvertor{str: os.Getenv("ALLOWED_UPDATES")}.StringArray()
-	// if allowed updates is not set, set it to receive all updates
-	if (len(AllowedUpdates) == 1 && AllowedUpdates[0] == "") || (len(AllowedUpdates) == 0) {
-		AllowedUpdates = []string{
-			"message",
-			"edited_message",
-			"channel_post",
-			"edited_channel_post",
-			"inline_query",
-			"chosen_inline_result",
-			"callback_query",
-			"shipping_query",
-			"pre_checkout_query",
-			"poll",
-			"poll_answer",
-			"my_chat_member",
-			"chat_member",
-			"chat_join_request",
-		}
+	// set default values
+	if ApiServer == "" {
+		ApiServer = "https://api.telegram.org"
+	}
+	if WorkingMode == "" {
+		WorkingMode = "worker"
+	}
+	if !DropPendingUpdates {
+		DropPendingUpdates = true
+	}
+	if RedisAddress == "" {
+		RedisAddress = "localhost:6379"
+	}
+	if RedisDB == 0 {
+		RedisDB = 1
 	}
 
+	// Default DATABASE_URL if not set
+	if DatabaseURL == "" {
+		DatabaseURL = "postgres://postgres:password@localhost:5432/alita_robot?sslmode=disable"
+		log.Warn("[Config] DATABASE_URL not set, using default: ", DatabaseURL)
+	}
+
+	// check if all necessary variables are set
+	if BotToken == "" {
+		log.Fatal("[Config][BotToken] BOT_TOKEN is not set")
+	}
+	if OwnerId == 0 {
+		log.Fatal("[Config][OwnerId] OWNER_ID is not set")
+	}
+	if MessageDump == 0 {
+		log.Fatal("[Config][MessageDump] MESSAGE_DUMP is not set")
+	}
+
+	// set allowed updates
+	AllowedUpdates = []string{
+		"message",
+		"edited_message",
+		"channel_post",
+		"edited_channel_post",
+		"inline_query",
+		"chosen_inline_result",
+		"callback_query",
+		"shipping_query",
+		"pre_checkout_query",
+		"poll",
+		"poll_answer",
+		"my_chat_member",
+		"chat_member",
+		"chat_join_request",
+	}
+
+	// set valid language codes
 	ValidLangCodes = typeConvertor{str: os.Getenv("ENABLED_LOCALES")}.StringArray()
 	// if valid lang codes is not set, set it to 'en' only
 	if (len(ValidLangCodes) == 1 && ValidLangCodes[0] == "") || (len(ValidLangCodes) == 0) {
 		ValidLangCodes = []string{"en"}
-	}
-
-	ApiServer = os.Getenv("API_SERVER")
-	// set as default api server if not set
-	if ApiServer == "" {
-		ApiServer = "https://api.telegram.org"
-	}
-	// set default db_name
-	if MainDbName == "" {
-		MainDbName = "Alita_Robot"
-	}
-
-	// redis config
-	RedisAddress = os.Getenv("REDIS_ADDRESS")
-	if os.Getenv("REDIS_ADDRESS") == "" {
-		RedisAddress = "localhost:6379"
-	}
-	RedisPassword = os.Getenv("REDIS_PASSWORD")
-	if os.Getenv("REDIS_PASSWORD") == "" {
-		RedisPassword = ""
-	}
-	RedisDB = typeConvertor{str: os.Getenv("REDIS_DB")}.Int()
-	if os.Getenv("REDIS_DB") == "" {
-		RedisDB = 0
 	}
 }

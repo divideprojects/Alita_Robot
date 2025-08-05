@@ -207,7 +207,7 @@ func (moduleStruct) privNote(b *gotgbot.Bot, ctx *ext.Context) error {
 			txt = "I only understand an option from <on/off/yes/no>"
 		}
 	} else {
-		tmp := db.GetNotes(chat.Id).PrivateNotesEnabled
+		tmp := db.GetNotes(chat.Id).PrivateNotesEnabled()
 		if tmp {
 			txt = "Private Notes are currently turned on!"
 		} else {
@@ -268,7 +268,7 @@ func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	privNote := db.GetNotes(chat.Id).PrivateNotesEnabled
+	privNote := db.GetNotes(chat.Id).PrivateNotesEnabled()
 	if privNote {
 		_, err := msg.Reply(b, "Check on the button below to get Notes!",
 			&gotgbot.SendMessageOpts{
@@ -513,7 +513,7 @@ func (m moduleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else {
 
 		// chat has private notes enabled or note is private and not group note
-		privateNoteOnly := (db.GetNotes(chat.Id).PrivateNotesEnabled || noteData.PrivateOnly) && !noteData.GroupOnly
+		privateNoteOnly := (db.GetNotes(chat.Id).PrivateNotesEnabled() || noteData.PrivateOnly) && !noteData.GroupOnly
 
 		// send private note if private notes is enabled or note is private, and it is not group note
 		if privateNoteOnly {
@@ -629,7 +629,7 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 		err = m.sendNoFormatNote(b, ctx, replyMsgId, noteData)
 	} else {
 		// send private note if private notes is enabled or note is private, and it is not group note
-		if (db.GetNotes(chat.Id).PrivateNotesEnabled || noteData.PrivateOnly) && !noteData.GroupOnly {
+		if (db.GetNotes(chat.Id).PrivateNotesEnabled() || noteData.PrivateOnly) && !noteData.GroupOnly {
 			_, err = msg.Reply(b,
 				fmt.Sprintf("Click on the button below to get the note *%s*", noteName),
 				&gotgbot.SendMessageOpts{
@@ -664,7 +664,7 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // returns the note in non-formatted text
-func (moduleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, replyMsgId int64, noteData *db.ChatNotes) error {
+func (moduleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, replyMsgId int64, noteData *db.Notes) error {
 	user := ctx.EffectiveSender.User
 
 	// check if user is admin or not

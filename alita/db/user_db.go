@@ -1,37 +1,31 @@
 package db
 
 import (
+	"errors"
+
 	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
-
-type User struct {
-	UserId   int64  `bson:"_id,omitempty" json:"_id,omitempty"`
-	UserName string `bson:"username" json:"username" default:"nil"`
-	Name     string `bson:"name" json:"name" default:"nil"`
-	Language string `bson:"language" json:"language" default:"en"`
-}
 
 func EnsureBotInDb(b *gotgbot.Bot) {
 	usersUpdate := &User{UserId: b.Id, UserName: b.Username, Name: b.FirstName}
-	err := updateOne(userColl, bson.M{"_id": b.Id}, usersUpdate)
-	if err != nil {
-		log.Errorf("[Database] EnsureBotInDb: %v", err)
+	err := DB.Where("user_id = ?", b.Id).Assign(usersUpdate).FirstOrCreate(&User{})
+	if err.Error != nil {
+		log.Errorf("[Database] EnsureBotInDb: %v", err.Error)
 	}
 	log.Infof("[Database] Bot Updated in Database!")
 }
 
 func checkUserInfo(userId int64) (userc *User) {
-	defaultUser := &User{UserId: userId}
-	errS := findOne(userColl, bson.M{"_id": userId}).Decode(&userc)
-	if errS == mongo.ErrNoDocuments {
+	userc = &User{}
+	err := DB.Where("user_id = ?", userId).First(userc)
+	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
 		userc = nil
-	} else if errS != nil {
-		log.Errorf("[Database] checkUserInfo: %v - %d", errS, userId)
-		userc = defaultUser
+	} else if err.Error != nil {
+		log.Errorf("[Database] checkUserInfo: %v - %d", err.Error, userId)
+		userc = &User{UserId: userId}
 	}
 	return userc
 }
@@ -53,21 +47,21 @@ func UpdateUser(userId int64, username, name string) {
 		}
 	}
 
-	err2 := updateOne(userColl, bson.M{"_id": userId}, userc)
-	if err2 != nil {
-		log.Errorf("[Database] UpdateUser: %v - %d", err2, userId)
+	err := DB.Where("user_id = ?", userId).Assign(userc).FirstOrCreate(&User{})
+	if err.Error != nil {
+		log.Errorf("[Database] UpdateUser: %v - %d", err.Error, userId)
 		return
 	}
 	log.Infof("[Database] UpdateUser: %d", userId)
 }
 
 func GetUserIdByUserName(username string) int64 {
-	var guids *User
-	err := findOne(userColl, bson.M{"username": username}).Decode(&guids)
-	if err == mongo.ErrNoDocuments {
+	var guids User
+	err := DB.Where("username = ?", username).First(&guids)
+	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
 		return 0
-	} else if err != nil {
-		log.Errorf("[Database] GetUserIdByUserName: %v - %d", err, guids.UserId)
+	} else if err.Error != nil {
+		log.Errorf("[Database] GetUserIdByUserName: %v - %d", err.Error, guids.UserId)
 		return 0
 	}
 	log.Infof("[Database] GetUserIdByUserName: %d", guids.UserId)
@@ -86,9 +80,9 @@ func GetUserInfoById(userId int64) (username, name string, found bool) {
 }
 
 func LoadUsersStats() (count int64) {
-	count, err := countDocs(userColl, bson.M{})
-	if err != nil {
-		log.Errorf("[Database] loadStats: %v", err)
+	err := DB.Model(&User{}).Count(&count)
+	if err.Error != nil {
+		log.Errorf("[Database] loadStats: %v", err.Error)
 		return
 	}
 	return

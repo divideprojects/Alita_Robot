@@ -160,7 +160,8 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 
-	if query.Data == "unpinallbtn(yes)" {
+	switch query.Data {
+	case "unpinallbtn(yes)":
 		status, err := b.UnpinAllChatMessages(chat.Id, nil)
 		if !status && err != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
@@ -171,7 +172,7 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
 			return err
 		}
-	} else if query.Data == "unpinallbtn(no)" {
+	case "unpinallbtn(no)":
 		_, _, err := query.Message.EditText(b, "Cancelled operation to unpin messages!", nil)
 		if err != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
@@ -727,6 +728,20 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 			},
 		)
 	},
+	db.VideoNote: func(b *gotgbot.Bot, ctx *ext.Context, pinT pinType, keyb *gotgbot.InlineKeyboardMarkup, replyMsgId int64) (*gotgbot.Message, error) {
+		return b.SendVideoNote(
+			ctx.EffectiveChat.Id,
+			gotgbot.InputFileByID(pinT.FileID),
+			&gotgbot.SendVideoNoteOpts{
+				ReplyParameters: &gotgbot.ReplyParameters{
+					MessageId:                replyMsgId,
+					AllowSendingWithoutReply: true,
+				},
+				ReplyMarkup:     keyb,
+				MessageThreadId: ctx.EffectiveMessage.MessageThreadId,
+			},
+		)
+	},
 }
 
 func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataType int, buttons []tgmd2html.ButtonV2) {
@@ -776,6 +791,9 @@ func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataT
 		} else if msg.ReplyToMessage.Video != nil {
 			fileid = msg.ReplyToMessage.Video.FileId
 			dataType = db.VIDEO
+		} else if msg.ReplyToMessage.VideoNote != nil {
+			fileid = msg.ReplyToMessage.VideoNote.FileId
+			dataType = db.VideoNote
 		}
 	}
 

@@ -1,131 +1,112 @@
 package db
 
 import (
+	"errors"
+
 	log "github.com/sirupsen/logrus"
-
-	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
+	"gorm.io/gorm"
 )
 
-type ChatReportSettings struct {
-	ChatId      int64   `bson:"_id,omitempty" json:"_id,omitempty"`
-	Status      bool    `bson:"status,omitempty" json:"status,omitempty"`
-	BlockedList []int64 `bson:"blocked_list,omitempty" json:"blocked_list,omitempty"`
-}
-
-type UserReportSettings struct {
-	UserId int64 `bson:"_id,omitempty" json:"_id,omitempty"`
-	Status bool  `bson:"status,omitempty" json:"status,omitempty"`
-}
-
-func GetChatReportSettings(chatID int64) (reportsrc *ChatReportSettings) {
-	defReportSettings := &ChatReportSettings{
-		ChatId:      chatID,
-		Status:      true,
-		BlockedList: make([]int64, 0),
-	}
-
-	err := findOne(reportChatColl, bson.M{"_id": chatID}).Decode(&reportsrc)
-	if err == mongo.ErrNoDocuments {
-		reportsrc = defReportSettings
-		err := updateOne(reportChatColl, bson.M{"_id": chatID}, reportsrc)
+func GetChatReportSettings(chatID int64) (reportsrc *ReportChatSettings) {
+	reportsrc = &ReportChatSettings{}
+	err := GetRecord(reportsrc, ReportChatSettings{ChatId: chatID})
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		// Create default settings
+		reportsrc = &ReportChatSettings{ChatId: chatID, Enabled: true}
+		err := CreateRecord(reportsrc)
 		if err != nil {
 			log.Error(err)
 		}
 	} else if err != nil {
-		reportsrc = defReportSettings
+		// Return default on error
+		reportsrc = &ReportChatSettings{ChatId: chatID, Enabled: true}
 		log.Error(err)
 	}
 	return
 }
 
 func SetChatReportStatus(chatID int64, pref bool) {
-	reportsUpdate := GetChatReportSettings(chatID)
-	reportsUpdate.Status = pref
-	err := updateOne(reportChatColl, bson.M{"_id": chatID}, reportsUpdate)
+	err := UpdateRecord(&ReportChatSettings{}, ReportChatSettings{ChatId: chatID}, ReportChatSettings{Enabled: pref})
 	if err != nil {
 		log.Error(err)
 	}
 }
 
 func BlockReportUser(chatId, userId int64) {
-	reportsUpdate := GetChatReportSettings(chatId)
+	settings := GetChatReportSettings(chatId)
 
-	if string_handling.FindInInt64Slice(reportsUpdate.BlockedList, userId) {
-		return
+	// Check if user is already blocked
+	for _, blockedId := range settings.BlockedList {
+		if blockedId == userId {
+			return // User already blocked
+		}
 	}
 
-	reportsUpdate.BlockedList = append(reportsUpdate.BlockedList, userId)
-	err := updateOne(reportChatColl, bson.M{"_id": chatId}, reportsUpdate)
+	// Add user to blocked list
+	settings.BlockedList = append(settings.BlockedList, userId)
+	err := UpdateRecord(&ReportChatSettings{}, ReportChatSettings{ChatId: chatId}, ReportChatSettings{BlockedList: settings.BlockedList})
 	if err != nil {
-		log.Error(err)
+		log.Errorf("[Database] BlockReportUser: %v", err)
 	}
 }
 
 func UnblockReportUser(chatId, userId int64) {
-	reportsUpdate := GetChatReportSettings(chatId)
+	settings := GetChatReportSettings(chatId)
 
-	if !string_handling.FindInInt64Slice(reportsUpdate.BlockedList, userId) {
-		return
+	// Remove user from blocked list
+	var newBlockedList Int64Array
+	for _, blockedId := range settings.BlockedList {
+		if blockedId != userId {
+			newBlockedList = append(newBlockedList, blockedId)
+		}
 	}
 
-	reportsUpdate.BlockedList = string_handling.RemoveFromInt64Slice(reportsUpdate.BlockedList, userId)
-	err := updateOne(reportChatColl, bson.M{"_id": chatId}, reportsUpdate)
+	err := UpdateRecord(&ReportChatSettings{}, ReportChatSettings{ChatId: chatId}, ReportChatSettings{BlockedList: newBlockedList})
 	if err != nil {
-		log.Error(err)
+		log.Errorf("[Database] UnblockReportUser: %v", err)
 	}
 }
 
 /* user settings below */
 
-func GetUserReportSettings(userId int64) (reportsrc *UserReportSettings) {
-	defReportSettings := &UserReportSettings{
-		UserId: userId,
-		Status: true,
-	}
-
-	err := findOne(reportUserColl, bson.M{"_id": userId}).Decode(&reportsrc)
-	if err == mongo.ErrNoDocuments {
-		reportsrc = defReportSettings
-		err := updateOne(reportUserColl, bson.M{"_id": userId}, reportsrc)
+func GetUserReportSettings(userId int64) (reportsrc *ReportUserSettings) {
+	reportsrc = &ReportUserSettings{}
+	err := GetRecord(reportsrc, ReportUserSettings{UserId: userId})
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		// Create default settings
+		reportsrc = &ReportUserSettings{UserId: userId, Enabled: true}
+		err := CreateRecord(reportsrc)
 		if err != nil {
 			log.Error(err)
 		}
 	} else if err != nil {
-		reportsrc = defReportSettings
+		// Return default on error
+		reportsrc = &ReportUserSettings{UserId: userId, Enabled: true}
 		log.Error(err)
 	}
 
 	return
 }
 
-func SetUserReportSettings(chatID int64, pref bool) {
-	reportsUpdate := &ChatReportSettings{
-		ChatId: chatID,
-		Status: pref,
-	}
-	err := updateOne(reportUserColl, bson.M{"_id": chatID}, reportsUpdate)
+func SetUserReportSettings(userID int64, pref bool) {
+	err := UpdateRecord(&ReportUserSettings{}, ReportUserSettings{UserId: userID}, ReportUserSettings{Enabled: pref})
 	if err != nil {
-		log.Error(chatID)
+		log.Error(userID)
 	}
 }
 
 func LoadReportStats() (uRCount, gRCount int64) {
-	uRCount, acErr := countDocs(
-		reportUserColl,
-		bson.M{"status": true},
-	)
-	if acErr != nil {
-		log.Errorf("[Database] loadStats: %v", acErr)
+	// Count users with reports enabled
+	err := DB.Model(&ReportUserSettings{}).Where("enabled = ?", true).Count(&uRCount).Error
+	if err != nil {
+		log.Errorf("[Database] LoadReportStats (users): %v", err)
 	}
-	gRCount, clErr := countDocs(
-		reportChatColl,
-		bson.M{"status": true},
-	)
-	if clErr != nil {
-		log.Errorf("[Database] loadStats: %v", clErr)
+
+	// Count chats with reports enabled
+	err = DB.Model(&ReportChatSettings{}).Where("enabled = ?", true).Count(&gRCount).Error
+	if err != nil {
+		log.Errorf("[Database] LoadReportStats (chats): %v", err)
 	}
+
 	return
 }
