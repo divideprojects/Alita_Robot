@@ -595,14 +595,10 @@ func init() {
 
 	log.Info("Connected to PostgreSQL database successfully!")
 
-	// Auto-migrate all models
-	log.Info("Starting database migration...")
-	err = DB.AutoMigrate(GetAllModels()...)
-	if err != nil {
-		log.Fatalf("[Database][Migration]: %v", err)
-	}
-
-	log.Info("Database migration completed successfully!")
+	// Note: GORM AutoMigrate is disabled because we use SQL migrations in supabase/migrations/
+	// This prevents constraint naming conflicts between GORM's naming convention (uni_*)
+	// and our SQL migrations (uk_*). Database schema is managed via SQL migration files.
+	log.Info("Database schema managed via SQL migrations - skipping GORM AutoMigrate")
 }
 
 // GetAllModels returns all models for migration
