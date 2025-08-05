@@ -1,6 +1,4 @@
 # This is to run the alita-robot in production mode with PostgreSQL
-version: '3.8'
-
 services:
   alita:
     build:
@@ -23,10 +21,10 @@ services:
       resources:
         limits:
           memory: 1G
-          cpus: '1.0'
+          cpus: "1.0"
         reservations:
           memory: 256M
-          cpus: '0.25'
+          cpus: "0.25"
 
   postgres:
     image: postgres:15-alpine
@@ -50,7 +48,7 @@ services:
       resources:
         limits:
           memory: 512M
-          cpus: '0.5'
+          cpus: "0.5"
 
   redis:
     image: redis:latest
@@ -61,7 +59,7 @@ services:
       resources:
         limits:
           memory: 256M
-          cpus: '0.25'
+          cpus: "0.25"
 
 volumes:
   postgres_data:

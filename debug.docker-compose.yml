@@ -1,7 +1,5 @@
 # This is to run the alita-robot in debug mode with alpine image
 # This starts up fast and does not do any optimizations
-version: "3.8"
-
 services:
   alita:
     build:
