@@ -58,9 +58,11 @@ func LoadRulesStats() (setRules, pvtRules int64) {
 		log.Errorf("[Database] LoadRulesStats (set rules): %v", err)
 	}
 
-	// Note: Private rules functionality is not supported in the new model
-	pvtRules = 0
-	log.Warnf("[Database] LoadRulesStats: Private rules count not supported in new model")
+	// Count chats with private rules enabled
+	err = DB.Model(&RulesSettings{}).Where("private = ?", true).Count(&pvtRules).Error
+	if err != nil {
+		log.Errorf("[Database] LoadRulesStats (private rules): %v", err)
+	}
 
 	return
 }
