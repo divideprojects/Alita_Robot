@@ -57,7 +57,7 @@ archives:
       {{- if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}
     format_overrides:
       - goos: windows
-        format: zip
+        formats: [zip]
 
 signs:
   - artifacts: all
@@ -91,7 +91,7 @@ checksum:
   algorithm: sha256
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 
 dockers:
   - goarch: amd64
