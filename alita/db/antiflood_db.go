@@ -59,10 +59,15 @@ func SetFloodMode(chatID int64, mode string) {
 	}
 }
 
-// SetFloodMsgDel Set flood mode for a chat - Note: This functionality is not directly supported in the new model
-// The AntifloodSettings model doesn't have a DeleteAntifloodMessage field
+// SetFloodMsgDel Set flood message deletion setting for a chat
 func SetFloodMsgDel(chatID int64, val bool) {
-	log.Warnf("[Database] SetFloodMsgDel: DeleteAntifloodMessage field not supported in new model for chat %d", chatID)
+	floodSrc := checkFloodSetting(chatID)
+	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{DeleteAntifloodMessage: val})
+	if err != nil {
+		log.Errorf("[Database] SetFloodMsgDel: %v", err)
+		return
+	}
+	floodSrc.DeleteAntifloodMessage = val
 }
 
 func LoadAntifloodStats() (antiCount int64) {

@@ -33,15 +33,38 @@ func SetChatReportStatus(chatID int64, pref bool) {
 }
 
 func BlockReportUser(chatId, userId int64) {
-	// Note: The new model doesn't support blocked user lists per chat
-	// This functionality would need to be implemented differently
-	log.Warnf("[Database] BlockReportUser: Blocked user lists not supported in new model for chat %d, user %d", chatId, userId)
+	settings := GetChatReportSettings(chatId)
+
+	// Check if user is already blocked
+	for _, blockedId := range settings.BlockedList {
+		if blockedId == userId {
+			return // User already blocked
+		}
+	}
+
+	// Add user to blocked list
+	settings.BlockedList = append(settings.BlockedList, userId)
+	err := UpdateRecord(&ReportChatSettings{}, ReportChatSettings{ChatId: chatId}, ReportChatSettings{BlockedList: settings.BlockedList})
+	if err != nil {
+		log.Errorf("[Database] BlockReportUser: %v", err)
+	}
 }
 
 func UnblockReportUser(chatId, userId int64) {
-	// Note: The new model doesn't support blocked user lists per chat
-	// This functionality would need to be implemented differently
-	log.Warnf("[Database] UnblockReportUser: Blocked user lists not supported in new model for chat %d, user %d", chatId, userId)
+	settings := GetChatReportSettings(chatId)
+
+	// Remove user from blocked list
+	var newBlockedList Int64Array
+	for _, blockedId := range settings.BlockedList {
+		if blockedId != userId {
+			newBlockedList = append(newBlockedList, blockedId)
+		}
+	}
+
+	err := UpdateRecord(&ReportChatSettings{}, ReportChatSettings{ChatId: chatId}, ReportChatSettings{BlockedList: newBlockedList})
+	if err != nil {
+		log.Errorf("[Database] UnblockReportUser: %v", err)
+	}
 }
 
 /* user settings below */

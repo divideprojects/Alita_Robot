@@ -38,15 +38,17 @@ func SetChatRules(chatId int64, rules string) {
 }
 
 func SetChatRulesButton(chatId int64, rulesButton string) {
-	// Note: The new RulesSettings model doesn't have a RulesBtn field
-	// This functionality is not directly supported
-	log.Warnf("[Database] SetChatRulesButton: Rules button functionality not supported in new model for chat %d", chatId)
+	err := UpdateRecord(&RulesSettings{}, RulesSettings{ChatId: chatId}, RulesSettings{RulesBtn: rulesButton})
+	if err != nil {
+		log.Errorf("[Database] SetChatRulesButton: %v", err)
+	}
 }
 
 func SetPrivateRules(chatId int64, pref bool) {
-	// Note: The new RulesSettings model doesn't have a Private field
-	// This functionality is not directly supported
-	log.Warnf("[Database] SetPrivateRules: Private rules functionality not supported in new model for chat %d", chatId)
+	err := UpdateRecord(&RulesSettings{}, RulesSettings{ChatId: chatId}, RulesSettings{Private: pref})
+	if err != nil {
+		log.Errorf("[Database] SetPrivateRules: %v", err)
+	}
 }
 
 func LoadRulesStats() (setRules, pvtRules int64) {

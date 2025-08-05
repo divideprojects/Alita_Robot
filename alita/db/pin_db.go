@@ -27,15 +27,17 @@ func GetPinData(chatID int64) (pinrc *PinSettings) {
 }
 
 func SetCleanLinked(chatID int64, pref bool) {
-	// Note: The new PinSettings model doesn't have CleanLinked field
-	// This functionality is not directly supported
-	log.Warnf("[Database] SetCleanLinked: CleanLinked functionality not supported in new model for chat %d", chatID)
+	err := UpdateRecord(&PinSettings{}, PinSettings{ChatId: chatID}, PinSettings{CleanLinked: pref})
+	if err != nil {
+		log.Errorf("[Database] SetCleanLinked: %v", err)
+	}
 }
 
 func SetAntiChannelPin(chatID int64, pref bool) {
-	// Note: The new PinSettings model doesn't have AntiChannelPin field
-	// This functionality is not directly supported
-	log.Warnf("[Database] SetAntiChannelPin: AntiChannelPin functionality not supported in new model for chat %d", chatID)
+	err := UpdateRecord(&PinSettings{}, PinSettings{ChatId: chatID}, PinSettings{AntiChannelPin: pref})
+	if err != nil {
+		log.Errorf("[Database] SetAntiChannelPin: %v", err)
+	}
 }
 
 func LoadPinStats() (acCount, clCount int64) {

@@ -50,15 +50,23 @@ func IsCommandDisabled(chatId int64, cmd string) bool {
 	return string_handling.FindInStringSlice(GetChatDisabledCMDs(chatId), cmd)
 }
 
-// ToggleDel Toggle Command Deleting - Note: This functionality is not directly supported in the new model
+// ToggleDel Toggle Command Deleting
 func ToggleDel(chatId int64, pref bool) {
-	log.Warnf("[Database] ToggleDel: Command deletion toggle not supported in new model for chat %d", chatId)
+	err := UpdateRecord(&DisableChatSettings{}, DisableChatSettings{ChatId: chatId}, DisableChatSettings{DeleteCommands: pref})
+	if err != nil {
+		log.Errorf("[Database] ToggleDel: %v", err)
+	}
 }
 
-// ShouldDel Check if cmd del is enabled or not - Note: This functionality is not directly supported in the new model
+// ShouldDel Check if cmd del is enabled or not
 func ShouldDel(chatId int64) bool {
-	log.Warnf("[Database] ShouldDel: Command deletion check not supported in new model for chat %d", chatId)
-	return false
+	var settings DisableChatSettings
+	err := GetRecord(&settings, DisableChatSettings{ChatId: chatId})
+	if err != nil {
+		log.Errorf("[Database] ShouldDel: %v", err)
+		return false
+	}
+	return settings.DeleteCommands
 }
 
 func LoadDisableStats() (disabledCmds, disableEnabledChats int64) {

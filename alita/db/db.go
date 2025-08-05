@@ -442,17 +442,32 @@ func (ConnectionChatSettings) TableName() string {
 
 // DisableSettings represents disable settings for commands
 type DisableSettings struct {
-	ID        uint      `gorm:"primaryKey;autoIncrement" json:"-"`
-	ChatId    int64     `gorm:"column:chat_id;not null;index:idx_disable_chat_command" json:"chat_id,omitempty"`
-	Command   string    `gorm:"column:command;not null;index:idx_disable_chat_command" json:"command,omitempty"`
-	Disabled  bool      `gorm:"column:disabled;default:true" json:"disabled,omitempty"`
-	CreatedAt time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
-	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
+	ID             uint      `gorm:"primaryKey;autoIncrement" json:"-"`
+	ChatId         int64     `gorm:"column:chat_id;not null;index:idx_disable_chat_command" json:"chat_id,omitempty"`
+	Command        string    `gorm:"column:command;not null;index:idx_disable_chat_command" json:"command,omitempty"`
+	Disabled       bool      `gorm:"column:disabled;default:true" json:"disabled,omitempty"`
+	DeleteCommands bool      `gorm:"column:delete_commands;default:false" json:"delete_commands,omitempty"`
+	CreatedAt      time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
+	UpdatedAt      time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
 // TableName specifies the table name for DisableSettings model
 func (DisableSettings) TableName() string {
 	return "disable"
+}
+
+// DisableChatSettings represents chat-level disable settings
+type DisableChatSettings struct {
+	ID             uint      `gorm:"primaryKey;autoIncrement" json:"-"`
+	ChatId         int64     `gorm:"column:chat_id;uniqueIndex;not null" json:"chat_id,omitempty"`
+	DeleteCommands bool      `gorm:"column:delete_commands;default:false" json:"delete_commands,omitempty"`
+	CreatedAt      time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
+	UpdatedAt      time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
+}
+
+// TableName specifies the table name for DisableChatSettings model
+func (DisableChatSettings) TableName() string {
+	return "disable_chat_settings"
 }
 
 // RulesSettings represents rules settings for a chat
@@ -611,6 +626,7 @@ func GetAllModels() []interface{} {
 		&ConnectionSettings{},
 		&ConnectionChatSettings{},
 		&DisableSettings{},
+		&DisableChatSettings{},
 		&RulesSettings{},
 		&LockSettings{},
 		&NotesSettings{},
