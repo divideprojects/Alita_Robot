@@ -314,6 +314,8 @@ func (m *Migrator) PrintStats() {
 	fmt.Printf("Total Records: %d\n", m.stats.TotalRecords)
 	fmt.Printf("Successful Records: %d\n", m.stats.SuccessRecords)
 	fmt.Printf("Failed Records: %d\n", m.stats.FailedRecords)
+	fmt.Printf("Success Rate: %.2f%%\n",
+		float64(m.stats.SuccessRecords)/float64(m.stats.TotalRecords)*100)
 
 	if len(m.stats.Errors) > 0 {
 		fmt.Println("\nErrors encountered:")
