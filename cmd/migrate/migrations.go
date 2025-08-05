@@ -830,6 +830,7 @@ func (m *Migrator) migrateAntifloodSettings() error {
 				ChatID:                 chatID,
 				Limit:                  toInt64(doc["limit"]),
 				Mode:                   toString(doc["mode"]),
+				Action:                 toString(doc["mode"]),
 				DeleteAntifloodMessage: toBool(doc["del_msg"]),
 				CreatedAt:              &now,
 				UpdatedAt:              &now,
@@ -841,6 +842,9 @@ func (m *Migrator) migrateAntifloodSettings() error {
 			if setting.Mode == "" {
 				setting.Mode = "mute"
 			}
+			if setting.Action == "" {
+				setting.Action = "mute"
+			}
 
 			settings = append(settings, setting)
 		}
@@ -848,7 +852,7 @@ func (m *Migrator) migrateAntifloodSettings() error {
 		if len(settings) > 0 {
 			if err := m.pgDB.Clauses(clause.OnConflict{
 				Columns:   []clause.Column{{Name: "chat_id"}},
-				DoUpdates: clause.AssignmentColumns([]string{"flood_limit", "mode", "delete_antiflood_message", "updated_at"}),
+				DoUpdates: clause.AssignmentColumns([]string{"flood_limit", "mode", "delete_antiflood_message", "flood_action", "updated_at"}),
 			}).CreateInBatches(settings, 100).Error; err != nil {
 				m.stats.FailedRecords += int64(len(docs))
 				return fmt.Errorf("failed to insert antiflood settings: %w", err)
@@ -1116,8 +1120,8 @@ func (m *Migrator) migrateConnectionSettings() error {
 			}
 
 			setting := PgConnectionSetting{
-				ChatID:       chatID,
-				// Inverted logic: MongoDB's "can_connect" means "disallow connect" when false, 
+				ChatID: chatID,
+				// Inverted logic: MongoDB's "can_connect" means "disallow connect" when false,
 				// but PostgreSQL's "allow_connect" means "allow connect" when true.
 				// See migration guide section "Connection Settings Boolean Inversion" for details.
 				AllowConnect: !toBool(doc["can_connect"]),
