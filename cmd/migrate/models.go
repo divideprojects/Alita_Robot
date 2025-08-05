@@ -336,7 +336,7 @@ type PgAntifloodSetting struct {
 	ID                     int64  `gorm:"primaryKey;autoIncrement"`
 	ChatID                 int64  `gorm:"uniqueIndex;not null"`
 	Limit                  int64  `gorm:"default:5;column:flood_limit"`
-	Action                 string `gorm:"default:'mute'"`
+	Action                 string `gorm:"default:'mute';column:flood_action"`
 	Mode                   string `gorm:"default:'mute'"`
 	DeleteAntifloodMessage bool   `gorm:"default:false"`
 	CreatedAt              *time.Time
