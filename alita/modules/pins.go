@@ -160,7 +160,8 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.Update.CallbackQuery
 	chat := ctx.EffectiveChat
 
-	if query.Data == "unpinallbtn(yes)" {
+	switch query.Data {
+	case "unpinallbtn(yes)":
 		status, err := b.UnpinAllChatMessages(chat.Id, nil)
 		if !status && err != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
@@ -171,7 +172,7 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
 			return err
 		}
-	} else if query.Data == "unpinallbtn(no)" {
+	case "unpinallbtn(no)":
 		_, _, err := query.Message.EditText(b, "Cancelled operation to unpin messages!", nil)
 		if err != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)

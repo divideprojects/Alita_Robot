@@ -109,11 +109,12 @@ func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
 func (moduleStruct) getMarkdownHelp(module string) string {
 	var helpTxt string
 	tr := i18n.I18n{LangCode: "en"}
-	if module == "md_formatting" {
+	switch module {
+	case "md_formatting":
 		helpTxt = tr.GetString("strings.Formatting.Markdown")
-	} else if module == "fillings" {
+	case "fillings":
 		helpTxt = tr.GetString("strings.Formatting.Fillings")
-	} else if module == "random" {
+	case "random":
 		helpTxt = tr.GetString("strings.Formatting.Random")
 	}
 	return helpTxt

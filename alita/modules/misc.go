@@ -285,9 +285,10 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	sender := ctx.EffectiveSender
 	userId := extraction.ExtractUser(b, ctx)
-	if userId == -1 {
+	switch userId {
+	case -1:
 		return ext.EndGroups
-	} else if userId == 0 {
+	case 0:
 		// 0 id is for self
 		userId = sender.Id()
 	}

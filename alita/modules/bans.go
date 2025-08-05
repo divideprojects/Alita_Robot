@@ -439,9 +439,10 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
-	if userId == -1 {
+	switch userId {
+	case -1:
 		return ext.EndGroups
-	} else if userId == 0 {
+	case 0:
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
 			helpers.Shtml())
 		if err != nil {
@@ -747,9 +748,10 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	userId := extraction.ExtractUser(b, ctx)
-	if userId == -1 {
+	switch userId {
+	case -1:
 		return ext.EndGroups
-	} else if userId == 0 {
+	case 0:
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
 			helpers.Shtml())
 		if err != nil {
@@ -828,9 +830,10 @@ func (moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	userId := extraction.ExtractUser(b, ctx)
-	if userId == -1 {
+	switch userId {
+	case -1:
 		return ext.EndGroups
-	} else if userId == 0 {
+	case 0:
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
 			helpers.Shtml())
 		if err != nil {
@@ -1008,9 +1011,10 @@ func (moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	userId := extraction.ExtractUser(b, ctx)
-	if userId == -1 {
+	switch userId {
+	case -1:
 		return ext.EndGroups
-	} else if userId == 0 {
+	case 0:
 		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
 			helpers.Shtml())
 		if err != nil {
