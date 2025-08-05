@@ -12,6 +12,14 @@ func checkWarnSettings(chatID int64) (warnrc *WarnSettings) {
 	warnrc = &WarnSettings{}
 	err := DB.Where("chat_id = ?", chatID).First(warnrc)
 	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
+		// Ensure chat exists before creating warn settings
+		if !ChatExists(chatID) {
+			// Chat doesn't exist, return default settings without creating record
+			log.Warnf("[Database][checkWarnSettings]: Chat %d doesn't exist, returning default settings", chatID)
+			return defaultWarnSettings
+		}
+
+		// Create default settings only if chat exists
 		warnrc = defaultWarnSettings
 		err := DB.Create(warnrc)
 		if err.Error != nil {
@@ -29,6 +37,14 @@ func checkWarns(userId, chatId int64) (warnrc *Warns) {
 	warnrc = &Warns{}
 	err := DB.Where("user_id = ? AND chat_id = ?", userId, chatId).First(warnrc)
 	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
+		// Ensure chat exists before creating warn record
+		if !ChatExists(chatId) {
+			// Chat doesn't exist, return default settings without creating record
+			log.Warnf("[Database][checkWarns]: Chat %d doesn't exist, returning default settings", chatId)
+			return defaultWarnSrc
+		}
+
+		// Create default record only if chat exists
 		warnrc = defaultWarnSrc
 		err := DB.Create(warnrc)
 		if err.Error != nil {

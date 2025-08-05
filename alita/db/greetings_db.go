@@ -13,7 +13,33 @@ func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 	err := GetRecord(greetingSrc, map[string]interface{}{"chat_id": chatID})
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		// Create default settings
+		// Ensure chat exists before creating greeting settings
+		if !ChatExists(chatID) {
+			// Chat doesn't exist, return default settings without creating record
+			log.Warnf("[Database][checkGreetingSettings]: Chat %d doesn't exist, returning default settings", chatID)
+			return &GreetingSettings{
+				ChatID:             chatID,
+				ShouldCleanService: false,
+				WelcomeSettings: &WelcomeSettings{
+					LastMsgId:     0,
+					CleanWelcome:  false,
+					ShouldWelcome: true,
+					WelcomeText:   DefaultWelcome,
+					WelcomeType:   TEXT,
+					Button:        ButtonArray{},
+				},
+				GoodbyeSettings: &GoodbyeSettings{
+					LastMsgId:     0,
+					CleanGoodbye:  false,
+					ShouldGoodbye: false,
+					GoodbyeText:   DefaultGoodbye,
+					GoodbyeType:   TEXT,
+					Button:        ButtonArray{},
+				},
+			}
+		}
+
+		// Create default settings only if chat exists
 		greetingSrc = &GreetingSettings{
 			ChatID:             chatID,
 			ShouldCleanService: false,

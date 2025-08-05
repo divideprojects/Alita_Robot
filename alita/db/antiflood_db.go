@@ -21,7 +21,14 @@ func checkFloodSetting(chatID int64) (floodSrc *AntifloodSettings) {
 
 	err := GetRecord(floodSrc, AntifloodSettings{ChatId: chatID})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		// Create default settings
+		// Ensure chat exists before creating antiflood settings
+		if !ChatExists(chatID) {
+			// Chat doesn't exist, return default settings without creating record
+			log.Warnf("[Database][checkFloodSetting]: Chat %d doesn't exist, returning default settings", chatID)
+			return &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
+		}
+
+		// Create default settings only if chat exists
 		floodSrc = &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
 		err := CreateRecord(floodSrc)
 		if err != nil {

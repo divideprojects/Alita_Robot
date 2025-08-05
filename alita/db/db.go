@@ -666,6 +666,13 @@ func GetRecord(model interface{}, where interface{}) error {
 	return nil
 }
 
+// ChatExists checks if a chat exists in the database
+func ChatExists(chatID int64) bool {
+	chatExists := &Chat{}
+	err := GetRecord(chatExists, Chat{ChatId: chatID})
+	return !errors.Is(err, gorm.ErrRecordNotFound)
+}
+
 // GetRecords gets multiple records
 func GetRecords(models interface{}, where interface{}) error {
 	result := DB.Where(where).Find(models)

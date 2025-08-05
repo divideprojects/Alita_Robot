@@ -13,7 +13,14 @@ func getNotesSettings(chatID int64) (noteSrc *NotesSettings) {
 	noteSrc = &NotesSettings{}
 	err := GetRecord(noteSrc, NotesSettings{ChatId: chatID})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		// Create default settings
+		// Ensure chat exists before creating notes settings
+		if !ChatExists(chatID) {
+			// Chat doesn't exist, return default settings without creating record
+			log.Warnf("[Database][getNotesSettings]: Chat %d doesn't exist, returning default settings", chatID)
+			return &NotesSettings{ChatId: chatID, Private: false}
+		}
+
+		// Create default settings only if chat exists
 		noteSrc = &NotesSettings{ChatId: chatID, Private: false}
 		err := CreateRecord(noteSrc)
 		if err != nil {
