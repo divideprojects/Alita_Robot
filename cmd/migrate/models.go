@@ -202,7 +202,6 @@ type PgNote struct {
 	ID          int64  `gorm:"primaryKey;autoIncrement"`
 	ChatID      int64  `gorm:"not null;index:idx_notes_chat_name"`
 	NoteName    string `gorm:"not null;index:idx_notes_chat_name"`
-	NoteText    string
 	NoteContent string
 	FileID      string
 	MsgType     int64

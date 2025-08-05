@@ -40,6 +40,8 @@ services:
     image: redis:latest
     restart: always
     command: redis-server --requirepass ${REDIS_PASSWORD:-redisPassword}
+    ports:
+      - "6379:6379"
 
 volumes:
   postgres_debug_data:

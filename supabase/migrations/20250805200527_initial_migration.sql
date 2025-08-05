@@ -193,7 +193,6 @@ create table "public"."notes" (
     "id" bigint not null default nextval('notes_id_seq'::regclass),
     "chat_id" bigint not null,
     "note_name" text not null,
-    "note_text" text,
     "note_content" text,
     "file_id" text,
     "msg_type" bigint,

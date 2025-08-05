@@ -49,9 +49,9 @@ func GetNote(chatID int64, keyword string) (noteSrc *Notes) {
 		log.Errorf("[Database] GetNote: %v - %d", err, chatID)
 		return nil
 	}
+
 	return
 }
-
 func GetNotesList(chatID int64, admin bool) (allNotes []string) {
 	noteSrc := getAllChatNotes(chatID)
 	for _, note := range noteSrc {
@@ -77,13 +77,18 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons ButtonArr
 	}
 
 	noterc := Notes{
-		ChatId:   chatID,
-		NoteName: noteName,
-		NoteText: replyText,
-		MsgType:  filtType,
-		FileID:   fileID,
-		Buttons:  buttons,
-		// Note: The new Notes model doesn't support all the boolean flags from the old model
+		ChatId:      chatID,
+		NoteName:    noteName,
+		NoteContent: replyText,
+		MsgType:     filtType,
+		FileID:      fileID,
+		Buttons:     buttons,
+		AdminOnly:   adminOnly,
+		PrivateOnly: pvtOnly,
+		GroupOnly:   grpOnly,
+		WebPreview:  webPrev,
+		IsProtected: isProtected,
+		NoNotif:     noNotif,
 	}
 
 	err := CreateRecord(&noterc)

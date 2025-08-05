@@ -525,8 +525,7 @@ type Notes struct {
 	ID          uint        `gorm:"primaryKey;autoIncrement" json:"-"`
 	ChatId      int64       `gorm:"column:chat_id;not null;index:idx_notes_chat_name" json:"chat_id,omitempty"`
 	NoteName    string      `gorm:"column:note_name;not null;index:idx_notes_chat_name" json:"note_name,omitempty"`
-	NoteText    string      `gorm:"column:note_text;type:text" json:"note_text,omitempty"`
-	NoteContent string      `gorm:"column:note_content;type:text" json:"note_content,omitempty"` // Alias for NoteText for compatibility
+	NoteContent string      `gorm:"column:note_content;type:text" json:"note_content,omitempty"`
 	FileID      string      `gorm:"column:file_id" json:"file_id,omitempty"`
 	MsgType     int         `gorm:"column:msg_type" json:"msg_type,omitempty"`
 	Buttons     ButtonArray `gorm:"column:buttons;type:jsonb" json:"buttons,omitempty"`
