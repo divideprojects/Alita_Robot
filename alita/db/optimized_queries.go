@@ -308,6 +308,31 @@ func (o *OptimizedBlacklistQueries) GetBlacklistWords(chatID int64) ([]string, e
 	return words, nil
 }
 
+// OptimizedChannelQueries provides optimized queries for channel operations
+type OptimizedChannelQueries struct {
+	db *gorm.DB
+}
+
+// NewOptimizedChannelQueries creates a new instance of optimized channel queries
+func NewOptimizedChannelQueries() *OptimizedChannelQueries {
+	return &OptimizedChannelQueries{db: DB}
+}
+
+// GetChannelSettings retrieves channel settings with minimal columns
+func (o *OptimizedChannelQueries) GetChannelSettings(chatID int64) (*ChannelSettings, error) {
+	var settings ChannelSettings
+	err := o.db.Model(&ChannelSettings{}).
+		Select("id, chat_id, channel_id").
+		Where("chat_id = ?", chatID).
+		First(&settings).Error
+	
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		log.Errorf("[OptimizedChannelQueries] GetChannelSettings: %v", err)
+	}
+	
+	return &settings, err
+}
+
 // CachedOptimizedQueries provides caching layer for optimized queries
 type CachedOptimizedQueries struct {
 	lockQueries      *OptimizedLockQueries
@@ -316,6 +341,7 @@ type CachedOptimizedQueries struct {
 	antifloodQueries *OptimizedAntifloodQueries
 	filterQueries    *OptimizedFilterQueries
 	blacklistQueries *OptimizedBlacklistQueries
+	channelQueries   *OptimizedChannelQueries
 }
 
 // NewCachedOptimizedQueries creates a new instance with all optimized queries
@@ -327,6 +353,7 @@ func NewCachedOptimizedQueries() *CachedOptimizedQueries {
 		antifloodQueries: NewOptimizedAntifloodQueries(),
 		filterQueries:    NewOptimizedFilterQueries(),
 		blacklistQueries: NewOptimizedBlacklistQueries(),
+		channelQueries:   NewOptimizedChannelQueries(),
 	}
 }
 
@@ -422,6 +449,21 @@ func (c *CachedOptimizedQueries) GetChatBlacklistCached(chatID int64) ([]*Blackl
 	return cached, nil
 }
 
+// GetChannelSettingsCached retrieves channel settings with caching
+func (c *CachedOptimizedQueries) GetChannelSettingsCached(chatID int64) (*ChannelSettings, error) {
+	cacheKey := channelCacheKey(chatID)
+	
+	cached, err := getFromCacheOrLoad(cacheKey, 30*time.Minute, func() (*ChannelSettings, error) {
+		return c.channelQueries.GetChannelSettings(chatID)
+	})
+	
+	if err != nil {
+		return c.channelQueries.GetChannelSettings(chatID)
+	}
+	
+	return cached, nil
+}
+
 // Helper functions for cache keys
 func lockCacheKey(chatID int64, lockType string) string {
 	return fmt.Sprintf("alita:lock:%d:%s", chatID, lockType)
@@ -437,6 +479,10 @@ func chatCacheKey(chatID int64) string {
 
 func optimizedAntifloodCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:antiflood:%d", chatID)
+}
+
+func channelCacheKey(chatID int64) string {
+	return fmt.Sprintf("alita:channel:%d", chatID)
 }
 
 // Global instance for optimized queries

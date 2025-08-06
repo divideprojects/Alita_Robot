@@ -10,24 +10,16 @@ import (
 )
 
 func GetChatSettings(chatId int64) (chatSrc *Chat) {
-	// Try to get from cache first
-	cacheKey := chatSettingsCacheKey(chatId)
-	result, err := getFromCacheOrLoad(cacheKey, CacheTTLChatSettings, func() (*Chat, error) {
-		chat := &Chat{}
-		dbErr := DB.Where("chat_id = ?", chatId).First(chat).Error
-		if errors.Is(dbErr, gorm.ErrRecordNotFound) {
-			return &Chat{}, nil
-		} else if dbErr != nil {
-			log.Errorf("[Database] getChatSettings: %v - %d ", dbErr, chatId)
-			return &Chat{}, dbErr
-		}
-		return chat, nil
-	})
-
+	// Use optimized cached query instead of SELECT *
+	chat, err := OptimizedQueries.GetChatBasicInfoCached(chatId)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return &Chat{}
+		}
+		log.Errorf("[Database] GetChatSettings: %v - %d", err, chatId)
 		return &Chat{}
 	}
-	return result
+	return chat
 }
 
 func ToggleInactiveChat(chatId int64, toggle bool) {
@@ -45,20 +37,49 @@ func ToggleInactiveChat(chatId int64, toggle bool) {
 func UpdateChat(chatId int64, chatname string, userid int64) {
 	chatr := GetChatSettings(chatId)
 	foundUser := string_handling.FindInInt64Slice(chatr.Users, userid)
+	
+	// Check if update is actually needed
 	if chatr.ChatName == chatname && foundUser {
 		return
-	} else {
+	}
+	
+	// Prepare updates only for changed fields
+	updates := make(map[string]interface{})
+	if chatr.ChatName != chatname {
+		updates["chat_name"] = chatname
+	}
+	if !foundUser {
 		newUsers := chatr.Users
 		newUsers = append(newUsers, userid)
-		usersUpdate := &Chat{ChatId: chatId, ChatName: chatname, Users: newUsers, IsInactive: false}
-		err := DB.Where("chat_id = ?", chatId).Assign(usersUpdate).FirstOrCreate(&Chat{}).Error
+		updates["users"] = newUsers
+	}
+	updates["is_inactive"] = false
+	
+	if chatr.ChatId == 0 {
+		// Create new chat
+		newChat := &Chat{
+			ChatId:     chatId,
+			ChatName:   chatname,
+			Users:      Int64Array{userid},
+			IsInactive: false,
+		}
+		err := DB.Create(newChat).Error
 		if err != nil {
 			log.Errorf("[Database] UpdateChat: %v - %d (%d)", err, chatId, userid)
 			return
 		}
-		// Invalidate cache after update
-		deleteCache(chatSettingsCacheKey(chatId))
+	} else if len(updates) > 0 {
+		// Update existing chat only if there are changes
+		err := DB.Model(&Chat{}).Where("chat_id = ?", chatId).Updates(updates).Error
+		if err != nil {
+			log.Errorf("[Database] UpdateChat: %v - %d (%d)", err, chatId, userid)
+			return
+		}
 	}
+	
+	// Invalidate cache after update
+	deleteCache(chatCacheKey(chatId))
+	log.Debugf("[Database] UpdateChat: %d", chatId)
 }
 
 func GetAllChats() map[int64]Chat {

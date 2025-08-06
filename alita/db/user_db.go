@@ -19,13 +19,14 @@ func EnsureBotInDb(b *gotgbot.Bot) {
 }
 
 func checkUserInfo(userId int64) (userc *User) {
-	userc = &User{}
-	err := DB.Where("user_id = ?", userId).First(userc)
-	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
-		userc = nil
-	} else if err.Error != nil {
-		log.Errorf("[Database] checkUserInfo: %v - %d", err.Error, userId)
-		userc = &User{UserId: userId}
+	// Use optimized cached query instead of SELECT *
+	userc, err := OptimizedQueries.GetUserBasicInfoCached(userId)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
+		log.Errorf("[Database] checkUserInfo: %v - %d", err, userId)
+		return &User{UserId: userId}
 	}
 	return userc
 }
@@ -34,38 +35,58 @@ func UpdateUser(userId int64, username, name string) {
 	userc := checkUserInfo(userId)
 
 	if userc != nil {
+		// Check if update is actually needed
 		if userc.Name == name && userc.UserName == username {
 			return
 		}
-		userc.Name = name
-		userc.UserName = username
+		// Only update changed fields
+		updates := make(map[string]interface{})
+		if userc.Name != name {
+			updates["name"] = name
+		}
+		if userc.UserName != username {
+			updates["username"] = username
+		}
+		if len(updates) > 0 {
+			err := DB.Model(&User{}).Where("user_id = ?", userId).Updates(updates).Error
+			if err != nil {
+				log.Errorf("[Database] UpdateUser: %v - %d", err, userId)
+				return
+			}
+			// Invalidate cache after update
+			deleteCache(userCacheKey(userId))
+			log.Debugf("[Database] UpdateUser: %d", userId)
+		}
 	} else {
+		// Create new user
 		userc = &User{
 			UserId:   userId,
 			UserName: username,
 			Name:     name,
 		}
+		err := DB.Create(userc).Error
+		if err != nil {
+			log.Errorf("[Database] UpdateUser: %v - %d", err, userId)
+			return
+		}
+		// Invalidate cache after create
+		deleteCache(userCacheKey(userId))
+		log.Infof("[Database] UpdateUser: created new user %d", userId)
 	}
-
-	err := DB.Where("user_id = ?", userId).Assign(userc).FirstOrCreate(&User{})
-	if err.Error != nil {
-		log.Errorf("[Database] UpdateUser: %v - %d", err.Error, userId)
-		return
-	}
-	log.Infof("[Database] UpdateUser: %d", userId)
 }
 
 func GetUserIdByUserName(username string) int64 {
-	var guids User
-	err := DB.Where("username = ?", username).First(&guids)
-	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
+	var userId int64
+	// Only fetch the user_id column
+	err := DB.Model(&User{}).Select("user_id").Where("username = ?", username).Scan(&userId).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0
-	} else if err.Error != nil {
-		log.Errorf("[Database] GetUserIdByUserName: %v - %d", err.Error, guids.UserId)
+	} else if err != nil {
+		log.Errorf("[Database] GetUserIdByUserName: %v - %s", err, username)
 		return 0
 	}
-	log.Infof("[Database] GetUserIdByUserName: %d", guids.UserId)
-	return guids.UserId
+	log.Debugf("[Database] GetUserIdByUserName: %d", userId)
+	return userId
 }
 
 func GetUserInfoById(userId int64) (username, name string, found bool) {

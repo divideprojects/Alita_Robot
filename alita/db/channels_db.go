@@ -8,12 +8,13 @@ import (
 )
 
 func GetChannelSettings(channelId int64) (channelSrc *ChannelSettings) {
-	channelSrc = &ChannelSettings{}
-	err := GetRecord(channelSrc, ChannelSettings{ChatId: channelId})
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil
-	} else if err != nil {
-		log.Errorf("[Database] getChannelSettings: %v - %d ", err, channelId)
+	// Use optimized cached query instead of SELECT *
+	channelSrc, err := OptimizedQueries.GetChannelSettingsCached(channelId)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
+		log.Errorf("[Database] GetChannelSettings: %v - %d", err, channelId)
 		return nil
 	}
 	return channelSrc
@@ -45,22 +46,21 @@ func EnsureChatExists(chatId int64, chatName string) error {
 }
 
 func UpdateChannel(channelId int64, channelName, username string) {
+	// Check if channel already exists
+	channelSrc := GetChannelSettings(channelId)
+	
+	if channelSrc != nil && channelSrc.ChannelId == channelId {
+		// Channel already exists with same ID, no update needed
+		return
+	}
+	
 	// Ensure the chat exists before creating/updating channel
 	if err := EnsureChatExists(channelId, channelName); err != nil {
 		log.Errorf("[Database] UpdateChannel: Failed to ensure chat exists for %d (%s): %v", channelId, username, err)
 		return
 	}
 
-	channelSrc := GetChannelSettings(channelId)
-
-	if channelSrc != nil {
-		// Update existing channel
-		err := UpdateRecord(&ChannelSettings{}, ChannelSettings{ChatId: channelId}, ChannelSettings{ChannelId: channelSrc.ChannelId})
-		if err != nil {
-			log.Errorf("[Database] UpdateChannel: %v - %d (%s)", err, channelId, username)
-			return
-		}
-	} else {
+	if channelSrc == nil {
 		// Create new channel - Note: The original Channel struct doesn't map well to ChannelSettings
 		// ChannelSettings is for chat->channel mapping, not channel info storage
 		channelSrc = &ChannelSettings{
@@ -72,8 +72,10 @@ func UpdateChannel(channelId int64, channelName, username string) {
 			log.Errorf("[Database] UpdateChannel: %v - %d (%s)", err, channelId, username)
 			return
 		}
+		// Invalidate cache after create
+		deleteCache(channelCacheKey(channelId))
+		log.Debugf("[Database] UpdateChannel: created channel %d", channelId)
 	}
-	log.Infof("[Database] UpdateChannel: channel %d", channelId)
 }
 
 func GetChannelIdByUserName(username string) int64 {

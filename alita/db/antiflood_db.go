@@ -17,29 +17,15 @@ func GetFlood(chatID int64) *AntifloodSettings {
 
 // check Chat Flood Settings, used to get data before performing any operation
 func checkFloodSetting(chatID int64) (floodSrc *AntifloodSettings) {
-	floodSrc = &AntifloodSettings{}
-
-	err := GetRecord(floodSrc, AntifloodSettings{ChatId: chatID})
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		// Ensure chat exists before creating antiflood settings
-		if !ChatExists(chatID) {
-			// Chat doesn't exist, return default settings without creating record
-			log.Warnf("[Database][checkFloodSetting]: Chat %d doesn't exist, returning default settings", chatID)
+	// Use optimized cached query instead of SELECT *
+	floodSrc, err := OptimizedQueries.GetAntifloodSettingsCached(chatID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// Return default settings
 			return &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
 		}
-
-		// Use FirstOrCreate to handle potential race conditions and duplicates
-		floodSrc = &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
-		result := DB.Where(AntifloodSettings{ChatId: chatID}).FirstOrCreate(floodSrc)
-		if result.Error != nil {
-			log.Errorf("[Database][checkFloodSetting]: Failed to create/find antiflood settings for chat %d: %v", chatID, result.Error)
-			// Return default settings on error
-			return &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
-		}
-	} else if err != nil {
-		// Return default on error
-		floodSrc = &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
-		log.Errorf("[Database][checkFloodSetting]: %v ", err)
+		log.Errorf("[Database][checkFloodSetting]: %v", err)
+		return &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
 	}
 	return floodSrc
 }
@@ -48,35 +34,54 @@ func checkFloodSetting(chatID int64) (floodSrc *AntifloodSettings) {
 func SetFlood(chatID int64, limit int) {
 	floodSrc := checkFloodSetting(chatID)
 
-	if floodSrc.Action == "" {
-		floodSrc.Action = defaultFloodsettingsMode
+	// Check if update is actually needed
+	if floodSrc.Limit == limit {
+		return
 	}
-	floodSrc.Limit = limit
+
+	action := floodSrc.Action
+	if action == "" {
+		action = defaultFloodsettingsMode
+	}
 
 	// update the value in db
-	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{Limit: limit, Action: floodSrc.Action})
+	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{Limit: limit, Action: action})
 	if err != nil {
 		log.Errorf("[Database] SetFlood: %v - %d", err, chatID)
 	}
+	// Invalidate cache after update
+	deleteCache(optimizedAntifloodCacheKey(chatID))
 }
 
 // SetFloodMode Set flood mode for a chat
 func SetFloodMode(chatID int64, mode string) {
+	floodSrc := checkFloodSetting(chatID)
+	// Check if update is actually needed
+	if floodSrc.Action == mode {
+		return
+	}
 	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{Action: mode})
 	if err != nil {
 		log.Errorf("[Database] SetFloodMode: %v - %d", err, chatID)
 	}
+	// Invalidate cache after update
+	deleteCache(optimizedAntifloodCacheKey(chatID))
 }
 
 // SetFloodMsgDel Set flood message deletion setting for a chat
 func SetFloodMsgDel(chatID int64, val bool) {
 	floodSrc := checkFloodSetting(chatID)
+	// Check if update is actually needed
+	if floodSrc.DeleteAntifloodMessage == val {
+		return
+	}
 	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{DeleteAntifloodMessage: val})
 	if err != nil {
 		log.Errorf("[Database] SetFloodMsgDel: %v", err)
 		return
 	}
-	floodSrc.DeleteAntifloodMessage = val
+	// Invalidate cache after update
+	deleteCache(optimizedAntifloodCacheKey(chatID))
 }
 
 func LoadAntifloodStats() (antiCount int64) {
