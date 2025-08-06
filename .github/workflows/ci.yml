@@ -48,14 +48,12 @@ jobs:
 
       # Security vulnerability scanning with gosec
       - name: Run Gosec Security Scanner
-        uses: securego/gosec@master
+        uses: securego/gosec@v2.22.1
         with:
           args: ./...
       # Check for known vulnerabilities in Go modules
       - name: Run govulncheck
-        run: |
-          go install golang.org/x/vuln/cmd/govulncheck@latest
-          govulncheck ./...
+        uses: golang/govulncheck-action@v1
 
   lint-and-test:
     name: Code Quality & Testing
