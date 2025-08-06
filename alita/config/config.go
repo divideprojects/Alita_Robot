@@ -30,6 +30,20 @@ var (
 	WebhookDomain string
 	WebhookSecret string
 	WebhookPort   int
+	
+	// Worker pool configuration for concurrent processing
+	ChatValidationWorkers    int
+	DatabaseWorkers          int
+	MessagePipelineWorkers   int
+	BulkOperationWorkers     int
+	CacheWorkers            int
+	StatsCollectionWorkers  int
+	
+	// Safety and performance limits
+	MaxConcurrentOperations  int
+	OperationTimeoutSeconds  int
+	EnablePerformanceMonitoring bool
+	EnableBackgroundStats    bool
 )
 
 // init initializes the config variables.
@@ -66,6 +80,20 @@ func init() {
 	WebhookDomain = os.Getenv("WEBHOOK_DOMAIN")
 	WebhookSecret = os.Getenv("WEBHOOK_SECRET")
 	WebhookPort = typeConvertor{str: os.Getenv("WEBHOOK_PORT")}.Int()
+	
+	// Worker pool configuration
+	ChatValidationWorkers = typeConvertor{str: os.Getenv("CHAT_VALIDATION_WORKERS")}.Int()
+	DatabaseWorkers = typeConvertor{str: os.Getenv("DATABASE_WORKERS")}.Int()
+	MessagePipelineWorkers = typeConvertor{str: os.Getenv("MESSAGE_PIPELINE_WORKERS")}.Int()
+	BulkOperationWorkers = typeConvertor{str: os.Getenv("BULK_OPERATION_WORKERS")}.Int()
+	CacheWorkers = typeConvertor{str: os.Getenv("CACHE_WORKERS")}.Int()
+	StatsCollectionWorkers = typeConvertor{str: os.Getenv("STATS_COLLECTION_WORKERS")}.Int()
+	
+	// Safety and performance limits
+	MaxConcurrentOperations = typeConvertor{str: os.Getenv("MAX_CONCURRENT_OPERATIONS")}.Int()
+	OperationTimeoutSeconds = typeConvertor{str: os.Getenv("OPERATION_TIMEOUT_SECONDS")}.Int()
+	EnablePerformanceMonitoring = typeConvertor{str: os.Getenv("ENABLE_PERFORMANCE_MONITORING")}.Bool()
+	EnableBackgroundStats = typeConvertor{str: os.Getenv("ENABLE_BACKGROUND_STATS")}.Bool()
 
 	// set default values
 	if ApiServer == "" {
@@ -85,6 +113,49 @@ func init() {
 	}
 	if WebhookPort == 0 {
 		WebhookPort = 8080
+	}
+	
+	// Set default values for worker pool configurations
+	cpuCount := runtime.NumCPU()
+	
+	if ChatValidationWorkers == 0 {
+		ChatValidationWorkers = 10 // Default to 10 workers for chat validation
+	}
+	if DatabaseWorkers == 0 {
+		DatabaseWorkers = 5 // Conservative default for database operations
+	}
+	if MessagePipelineWorkers == 0 {
+		MessagePipelineWorkers = cpuCount // Scale with CPU cores
+		if MessagePipelineWorkers > 8 {
+			MessagePipelineWorkers = 8 // Cap at 8 workers
+		}
+	}
+	if BulkOperationWorkers == 0 {
+		BulkOperationWorkers = 4 // Default for bulk operations
+	}
+	if CacheWorkers == 0 {
+		CacheWorkers = 3 // Lightweight cache operations
+	}
+	if StatsCollectionWorkers == 0 {
+		StatsCollectionWorkers = 2 // Background stats collection
+	}
+	
+	// Set default safety limits
+	if MaxConcurrentOperations == 0 {
+		MaxConcurrentOperations = 50 // Conservative limit
+	}
+	if OperationTimeoutSeconds == 0 {
+		OperationTimeoutSeconds = 30 // 30 second default timeout
+	}
+	
+	// Enable monitoring by default in production
+	if !Debug {
+		if !EnablePerformanceMonitoring {
+			EnablePerformanceMonitoring = true
+		}
+		if !EnableBackgroundStats {
+			EnableBackgroundStats = true
+		}
 	}
 
 	// Default DATABASE_URL if not set
