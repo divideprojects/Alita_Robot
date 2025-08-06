@@ -162,17 +162,3 @@ func LoadAllStats() string {
 
 	return result
 }
-
-// AddSudo is deprecated - the new DevSettings model only supports Dev role.
-// This function redirects to AddDev for compatibility.
-func AddSudo(userID int64) {
-	log.Warnf("[Database] AddSudo: Sudo role not supported in new model, adding as Dev instead for user %d", userID)
-	AddDev(userID)
-}
-
-// RemSudo is deprecated - the new DevSettings model only supports Dev role.
-// This function redirects to RemDev for compatibility.
-func RemSudo(userID int64) {
-	log.Warnf("[Database] RemSudo: Sudo role not supported in new model, removing Dev instead for user %d", userID)
-	RemDev(userID)
-}

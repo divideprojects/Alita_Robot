@@ -207,7 +207,7 @@ func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = "User is already Sudo!"
 	} else {
 		txt = fmt.Sprintf("Added %s to Sudo List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
-		go db.AddSudo(userId)
+		go db.AddDev(userId)
 	}
 	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 	if err != nil {
@@ -291,7 +291,7 @@ func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 		txt = "User is not Sudo!"
 	} else {
 		txt = fmt.Sprintf("Removed %s from Sudo List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
-		go db.RemSudo(userId)
+		go db.RemDev(userId)
 	}
 	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 	if err != nil {

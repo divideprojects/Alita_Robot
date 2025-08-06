@@ -10,7 +10,7 @@ import (
 )
 
 // TranslationParams represents parameters for translation interpolation
-type TranslationParams map[string]interface{}
+type TranslationParams map[string]any
 
 // PluralRule defines pluralization rules for different languages
 type PluralRule struct {

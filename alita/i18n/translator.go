@@ -270,12 +270,12 @@ func (t *Translator) selectPluralForm(rule PluralRule, count int) string {
 }
 
 // extractOrderedValues extracts values from params in a predictable order for legacy sprintf.
-func extractOrderedValues(params TranslationParams) []interface{} {
+func extractOrderedValues(params TranslationParams) []any {
 	if params == nil {
 		return nil
 	}
 
-	var values []interface{}
+	var values []any
 
 	// Try common numbered keys first (0, 1, 2, etc.)
 	for i := 0; i < 10; i++ {

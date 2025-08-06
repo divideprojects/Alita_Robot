@@ -479,8 +479,8 @@ func (oq *OptimizedQuery) GetFiltersWithPagination(chatID int64, limit, offset i
 
 // AnalyzePerformanceStats provides performance statistics for monitoring.
 // Returns comprehensive statistics about filters, blacklists, and system performance features.
-func AnalyzePerformanceStats() map[string]interface{} {
-	stats := make(map[string]interface{})
+func AnalyzePerformanceStats() map[string]any {
+	stats := make(map[string]any)
 
 	// Get filter statistics
 	var filterCount int64
@@ -514,7 +514,7 @@ func AnalyzePerformanceStats() map[string]interface{} {
 		stats["blacklists"].(map[string]int64)["avg_per_chat"] = blacklistCount / blacklistChats
 	}
 
-	stats["performance"] = map[string]interface{}{
+	stats["performance"] = map[string]any{
 		"regex_cache_enabled":     true,
 		"database_cache_enabled":  true,
 		"bulk_operations_enabled": true,

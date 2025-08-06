@@ -9,7 +9,7 @@ import (
 
 // PrettyPrintStruct formats and prints a struct as indented JSON to stdout.
 // Returns the formatted JSON string for further use or logging.
-func PrettyPrintStruct(v interface{}) string {
+func PrettyPrintStruct(v any) string {
 	prettyStruct, _ := json.MarshalIndent(v, "", "  ")
 	jsonStruct := string(prettyStruct)
 	fmt.Printf("%s\n\n", jsonStruct)
@@ -18,6 +18,6 @@ func PrettyPrintStruct(v interface{}) string {
 
 // PrintInLog outputs a struct's detailed representation to the debug log.
 // Uses logrus debug level for development debugging and troubleshooting.
-func PrintInLog(v interface{}) {
+func PrintInLog(v any) {
 	log.Debugf("%+v\n\n", v)
 }

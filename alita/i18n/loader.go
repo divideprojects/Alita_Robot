@@ -80,13 +80,13 @@ func (lm *LocaleManager) loadSingleLocaleFile(filePath, langCode string) error {
 
 // validateYAMLStructure validates that the YAML content is well-formed.
 func validateYAMLStructure(content []byte) error {
-	var data interface{}
+	var data any
 	if err := yaml.Unmarshal(content, &data); err != nil {
 		return NewI18nError("validate_yaml", "", "", "YAML parsing failed", err)
 	}
 
 	// Check if it's a map structure (required for translations)
-	if _, ok := data.(map[string]interface{}); !ok {
+	if _, ok := data.(map[string]any); !ok {
 		return NewI18nError("validate_yaml", "", "", "root element must be a map", ErrInvalidYAML)
 	}
 

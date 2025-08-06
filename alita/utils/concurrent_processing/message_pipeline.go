@@ -389,8 +389,8 @@ func (p *MessageProcessingPipeline) Stop() {
 }
 
 // Health returns the health status of the pipeline
-func (p *MessageProcessingPipeline) Health() map[string]interface{} {
-	return map[string]interface{}{
+func (p *MessageProcessingPipeline) Health() map[string]any {
+	return map[string]any{
 		"workers":           p.workers,
 		"max_concurrency":   p.maxConcurrency,
 		"registered_stages": len(p.stages),

@@ -403,11 +403,11 @@ func (collector *BackgroundStatsCollector) Stop() {
 }
 
 // GetHealthStatus returns health information about the stats collector
-func (collector *BackgroundStatsCollector) GetHealthStatus() map[string]interface{} {
+func (collector *BackgroundStatsCollector) GetHealthStatus() map[string]any {
 	collector.metricsLock.RLock()
 	defer collector.metricsLock.RUnlock()
 
-	return map[string]interface{}{
+	return map[string]any{
 		"uptime_hours":         collector.metrics.UptimeSeconds / 3600,
 		"total_messages":       collector.metrics.ProcessedMessages,
 		"total_errors":         collector.metrics.ErrorCount,

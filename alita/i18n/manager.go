@@ -144,11 +144,11 @@ func (lm *LocaleManager) ReloadLocales() error {
 }
 
 // GetStats returns statistics about the locale manager.
-func (lm *LocaleManager) GetStats() map[string]interface{} {
+func (lm *LocaleManager) GetStats() map[string]any {
 	lm.mu.RLock()
 	defer lm.mu.RUnlock()
 
-	stats := map[string]interface{}{
+	stats := map[string]any{
 		"total_languages":  len(lm.localeData),
 		"default_language": lm.defaultLang,
 		"cache_enabled":    lm.cacheClient != nil,
