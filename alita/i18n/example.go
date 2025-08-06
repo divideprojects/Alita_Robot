@@ -1,7 +1,7 @@
 //go:build ignore
 // +build ignore
 
-// This file demonstrates how to use the new i18n system
+// This file demonstrates how to use the modern i18n system
 // It's marked with build ignore so it won't be included in builds
 package main
 
@@ -17,8 +17,8 @@ import (
 //go:embed locales
 var localeFS embed.FS
 
-// main demonstrates how to use the i18n system with various features including
-// basic usage, backward compatibility, parameter interpolation, pluralization and error handling.
+// main demonstrates how to use the modern i18n system with various features including
+// basic usage, parameter interpolation, pluralization and error handling.
 func main() {
 	// Initialize cache (optional but recommended for production)
 	if err := cache.InitCache(); err != nil {
@@ -41,16 +41,13 @@ func main() {
 	// Example 1: Basic usage with new system
 	demoNewSystem()
 
-	// Example 2: Backward compatibility
-	demoBackwardCompatibility()
-
-	// Example 3: Parameter interpolation
+	// Example 2: Parameter interpolation
 	demoParameterInterpolation()
 
-	// Example 4: Pluralization
+	// Example 3: Pluralization
 	demoPluralization()
 
-	// Example 5: Error handling
+	// Example 4: Error handling
 	demoErrorHandling()
 }
 
@@ -76,21 +73,6 @@ func demoNewSystem() {
 	// Get available languages
 	languages := i18n.GetAvailableLanguages()
 	fmt.Printf("Available languages: %v\n", languages)
-}
-
-// demoBackwardCompatibility shows how the old I18n system still works alongside the new system.
-func demoBackwardCompatibility() {
-	fmt.Println("\n=== Backward Compatibility Demo ===")
-
-	// Old way still works
-	oldi18n := i18n.I18n{LangCode: "en"}
-	text := oldi18n.GetString("strings.CommonStrings.greetings.welcome")
-	fmt.Printf("Old system result: %s\n", text)
-
-	// Initialize old system (this also initializes new system)
-	i18n.LoadLocaleFiles(&localeFS, "locales")
-	text2 := oldi18n.GetString("strings.Admin.adminlist")
-	fmt.Printf("Old system with fallback: %s\n", text2)
 }
 
 // demoParameterInterpolation demonstrates how to use parameter interpolation with translation keys.

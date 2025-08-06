@@ -107,8 +107,9 @@ func initHelpButtons() {
 // Returns localized help content and navigation buttons for the requested module.
 func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgbot.InlineKeyboardMarkup) {
 	ModName := cases.Title(language.English).String(module)
-	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) +
-		i18n.I18n{LangCode: lang}.GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
+	tr := i18n.MustNewTranslator(lang)
+	helpMsg, _ := tr.GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
+	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) + helpMsg
 
 	replyMarkup = gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: append(
@@ -154,7 +155,9 @@ func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.M
 // Searches through module aliases to find the actual module name for help lookups.
 func getModuleNameFromAltName(altName string) string {
 	for _, modName := range listModules() {
-		altNames := append(i18n.I18n{LangCode: "config"}.GetStringSlice(fmt.Sprintf("alt_names.%s", modName)), strings.ToLower(modName))
+		tr := i18n.MustNewTranslator("config")
+		altNamesFromConfig, _ := tr.GetStringSlice(fmt.Sprintf("alt_names.%s", modName))
+		altNames := append(altNamesFromConfig, strings.ToLower(modName))
 		for _, altNameInSlice := range altNames {
 			if altNameInSlice == altName {
 				return modName
@@ -307,7 +310,9 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 // getAltNamesOfModule returns all alternative names for a given module.
 // Provides a list of aliases that can be used to reference the module in commands.
 func getAltNamesOfModule(moduleName string) []string {
-	return append(i18n.I18n{LangCode: "config"}.GetStringSlice(fmt.Sprintf("alt_names.%s", moduleName)), strings.ToLower(moduleName))
+	tr := i18n.MustNewTranslator("config")
+	altNamesFromConfig, _ := tr.GetStringSlice(fmt.Sprintf("alt_names.%s", moduleName))
+	return append(altNamesFromConfig, strings.ToLower(moduleName))
 }
 
 // getHelpTextAndMarkup generates help content and keyboard for a module or main help.

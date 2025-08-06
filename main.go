@@ -43,8 +43,12 @@ func main() {
 		log.Info("Running in RELEASE Mode...")
 	}
 
-	// Load Locales
-	i18n.LoadLocaleFiles(&Locales, "locales")
+	// Initialize Locale Manager
+	localeManager := i18n.GetManager()
+	if err := localeManager.Initialize(&Locales, "locales", i18n.DefaultManagerConfig()); err != nil {
+		log.Fatalf("Failed to initialize locale manager: %v", err)
+	}
+	log.Infof("Locale manager initialized with %d languages: %v", len(localeManager.GetAvailableLanguages()), localeManager.GetAvailableLanguages())
 
 	// create a new bot with default HTTP client (BotOpts doesn't support custom client in this version)
 	b, err := gotgbot.NewBot(config.BotToken, nil)

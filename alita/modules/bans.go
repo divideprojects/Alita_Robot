@@ -33,7 +33,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -87,7 +87,8 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.user_not_in_chat"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".kick.user_not_in_chat")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -95,7 +96,8 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.cannot_kick_admin"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".kick.cannot_kick_admin")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -104,7 +106,8 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.is_bot_itself"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".kick.is_bot_itself")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -145,9 +148,10 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	baseStr := tr.GetString("strings." + m.moduleName + ".kick.kicked_user")
+	baseStr, _ := tr.GetString("strings." + m.moduleName + ".kick.kicked_user")
 	if reason != "" {
-		baseStr += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".kick.kicked_reason"), reason)
+		temp, _ := tr.GetString("strings."+m.moduleName+".kick.kicked_reason")
+	baseStr += fmt.Sprintf(temp, reason)
 	}
 
 	_, err = msg.Reply(b,
@@ -168,7 +172,7 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -209,7 +213,8 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.user_not_in_chat"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".kick.user_not_in_chat")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -217,7 +222,8 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.cannot_kick_admin"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".kick.cannot_kick_admin")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -226,7 +232,8 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kick.is_bot_itself"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".kick.is_bot_itself")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -266,9 +273,10 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	baseStr := tr.GetString("strings." + m.moduleName + ".kick.kicked_user")
+	baseStr, _ := tr.GetString("strings." + m.moduleName + ".kick.kicked_user")
 	if reason != "" {
-		baseStr += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".kick.kicked_reason"), reason)
+		temp, _ := tr.GetString("strings."+m.moduleName+".kick.kicked_reason")
+	baseStr += fmt.Sprintf(temp, reason)
 	}
 
 	_, err = msg.Reply(b,
@@ -294,7 +302,7 @@ func (m moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -306,7 +314,8 @@ func (m moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// Don't allow admins to use the command
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".kickme.is_admin"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".kickme.is_admin")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -321,7 +330,8 @@ func (m moduleStruct) kickme(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = msg.Reply(b, tr.GetString("strings."+m.moduleName+".kickme.ok_out"), helpers.Shtml())
+	text, _ := tr.GetString("strings."+m.moduleName+".kickme.ok_out")
+	_, err = msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -340,7 +350,7 @@ func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -380,7 +390,8 @@ func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".ban.is_admin")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -389,7 +400,8 @@ func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_bot_itself"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".ban.is_bot_itself")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -420,13 +432,11 @@ func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	baseStr := fmt.Sprintf(
-		tr.GetString("strings."+m.moduleName+".ban.tban"),
-		helpers.MentionHtml(banUser.Id, banUser.FirstName),
-		timeVal,
-	)
+	temp, _ := tr.GetString("strings."+m.moduleName+".ban.tban")
+	baseStr := fmt.Sprintf(temp, helpers.MentionHtml(banUser.Id, banUser.FirstName), timeVal)
 	if reason != "" {
-		baseStr += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".ban.ban_reason"), reason)
+		temp, _ := tr.GetString("strings."+m.moduleName+".ban.ban_reason")
+	baseStr += fmt.Sprintf(temp, reason)
 	}
 
 	_, err = msg.Reply(
@@ -452,7 +462,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	var text string
 	var sendMsgOptns *gotgbot.SendMessageOpts
 
@@ -488,7 +498,8 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".ban.is_admin")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -497,7 +508,8 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_bot_itself"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".ban.is_bot_itself")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -527,9 +539,10 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		_, name, _ := extraction.GetUserInfo(userId)
 
-		baseStr := tr.GetString("strings." + m.moduleName + ".ban.normal_ban")
+		baseStr, _ := tr.GetString("strings." + m.moduleName + ".ban.normal_ban")
 		if reason != "" {
-			baseStr += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".ban.ban_reason"), reason)
+			temp, _ := tr.GetString("strings."+m.moduleName+".ban.ban_reason")
+	baseStr += fmt.Sprintf(temp, reason)
 		}
 
 		text = fmt.Sprintf(baseStr, helpers.MentionHtml(userId, name))
@@ -570,7 +583,7 @@ func (m moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -613,7 +626,8 @@ func (m moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".ban.is_admin")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -648,7 +662,7 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -694,7 +708,8 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.is_admin"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".ban.is_admin")
+	_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -703,7 +718,8 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".ban.dban.no_reply"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".ban.dban.no_reply")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -729,9 +745,10 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	baseStr := tr.GetString("strings." + m.moduleName + ".ban.normal_ban")
+	baseStr, _ := tr.GetString("strings." + m.moduleName + ".ban.normal_ban")
 	if reason != "" {
-		baseStr += fmt.Sprintf(tr.GetString("strings."+m.moduleName+".ban.ban_reason"), reason)
+		temp, _ := tr.GetString("strings."+m.moduleName+".ban.ban_reason")
+	baseStr += fmt.Sprintf(temp, reason)
 	}
 
 	_, err = msg.Reply(b,
@@ -768,7 +785,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	var text string
 
 	// Permission checks
@@ -803,7 +820,8 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, tr.GetString("strings."+m.moduleName+".unban.is_bot_itself"), helpers.Shtml())
+		text, _ := tr.GetString("strings."+m.moduleName+".unban.is_bot_itself")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -836,10 +854,8 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 
-		text = fmt.Sprintf(
-			tr.GetString("strings."+m.moduleName+".unban.unbanned_user"),
-			helpers.MentionHtml(banUser.Id, banUser.FirstName),
-		)
+		temp, _ := tr.GetString("strings."+m.moduleName+".unban.unbanned_user")
+		text = fmt.Sprintf(temp, helpers.MentionHtml(banUser.Id, banUser.FirstName))
 	}
 
 	_, err := msg.Reply(b, text, helpers.Shtml())

@@ -114,14 +114,14 @@ func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
 // Returns localized help content based on the requested formatting category.
 func (moduleStruct) getMarkdownHelp(module string) string {
 	var helpTxt string
-	tr := i18n.I18n{LangCode: "en"}
+	tr := i18n.MustNewTranslator("en")
 	switch module {
 	case "md_formatting":
-		helpTxt = tr.GetString("strings.Formatting.Markdown")
+		helpTxt, _ = tr.GetString("strings.Formatting.Markdown")
 	case "fillings":
-		helpTxt = tr.GetString("strings.Formatting.Fillings")
+		helpTxt, _ = tr.GetString("strings.Formatting.Fillings")
 	case "random":
-		helpTxt = tr.GetString("strings.Formatting.Random")
+		helpTxt, _ = tr.GetString("strings.Formatting.Random")
 	}
 	return helpTxt
 }

@@ -167,7 +167,7 @@ func GetMessageLinkFromMessageId(chat *gotgbot.Chat, messageId int64) (messageLi
 func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool) (chat *gotgbot.Chat) {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveUser
-	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	if ctx.Message.Chat.Type == "private" {
 		conn := db.Connection(user.Id)
@@ -180,8 +180,9 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 			_chat := chatFullInfo.ToChat() // need to convert to Chat type
 			chat = &_chat
 		} else {
+			text, _ := tr.GetString("strings.Connections.is_user_connected.need_group")
 			_, err := msg.Reply(b,
-				tr.GetString("strings.Connections.is_user_connected.need_group"),
+				text,
 				&gotgbot.SendMessageOpts{
 					ReplyParameters: &gotgbot.ReplyParameters{
 						MessageId:                msg.MessageId,
@@ -201,7 +202,8 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if botAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, b.Id) {
-			_, err := msg.Reply(b, tr.GetString("strings.Connections.is_user_connected.bot_not_admin"), Shtml())
+			text, _ := tr.GetString("strings.Connections.is_user_connected.bot_not_admin")
+			_, err := msg.Reply(b, text, Shtml())
 			if err != nil {
 				log.Error(err)
 				return nil
@@ -212,7 +214,8 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if chatAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			_, err := msg.Reply(b, tr.GetString("strings.Connections.is_user_connected.user_not_admin"), Shtml())
+			text, _ := tr.GetString("strings.Connections.is_user_connected.user_not_admin")
+			_, err := msg.Reply(b, text, Shtml())
 			if err != nil {
 				log.Error(err)
 				return nil
@@ -352,9 +355,10 @@ func MakeLanguageKeyboard() [][]gotgbot.InlineKeyboardButton {
 // GetLangFormat returns a formatted language display string with name and flag emoji.
 // Uses i18n system to get localized language name and flag for the given language code.
 func GetLangFormat(langCode string) string {
-	return i18n.I18n{LangCode: langCode}.GetString("main.language_name") +
-		" " +
-		i18n.I18n{LangCode: langCode}.GetString("main.language_flag")
+	tr := i18n.MustNewTranslator(langCode)
+	langName, _ := tr.GetString("main.language_name")
+	langFlag, _ := tr.GetString("main.language_flag")
+	return langName + " " + langFlag
 }
 
 // NOTE: tgmd2html helper functions
