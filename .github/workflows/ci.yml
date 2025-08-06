@@ -26,7 +26,7 @@ jobs:
     steps:
       # Runtime security hardening for GitHub-hosted runners
       - name: Harden Runner
-        uses: step-security/harden-runner@v2.12.0
+        uses: step-security/harden-runner@v2.13.0
         with:
           egress-policy: audit
           
@@ -78,7 +78,7 @@ jobs:
         go-version: ['1.21', '1.22', 'stable']
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2.12.0
+        uses: step-security/harden-runner@v2.13.0
         with:
           egress-policy: audit
           
@@ -138,7 +138,7 @@ jobs:
       contents: read
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2.12.0
+        uses: step-security/harden-runner@v2.13.0
         with:
           egress-policy: audit
           
