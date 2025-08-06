@@ -9,7 +9,7 @@ import (
 
 func GetChatLocks(chatID int64) map[string]bool {
 	// Use optimized query with caching
-	locks, err := OptimizedQueries.lockQueries.GetChatLocksOptimized(chatID)
+	locks, err := GetOptimizedQueries().lockQueries.GetChatLocksOptimized(chatID)
 	if err != nil {
 		log.Errorf("[Database] GetChatLocks: %v - %d", err, chatID)
 		return make(map[string]bool)
@@ -44,7 +44,7 @@ func UpdateLock(chatID int64, perm string, val bool) {
 
 func IsPermLocked(chatID int64, perm string) bool {
 	// Use optimized cached query
-	locked, err := OptimizedQueries.GetLockStatusCached(chatID, perm)
+	locked, err := GetOptimizedQueries().GetLockStatusCached(chatID, perm)
 	if err != nil {
 		log.Errorf("[Database] IsPermLocked: %v - %d", err, chatID)
 		return false

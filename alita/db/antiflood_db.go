@@ -18,7 +18,7 @@ func GetFlood(chatID int64) *AntifloodSettings {
 // check Chat Flood Settings, used to get data before performing any operation
 func checkFloodSetting(chatID int64) (floodSrc *AntifloodSettings) {
 	// Use optimized cached query instead of SELECT *
-	floodSrc, err := OptimizedQueries.GetAntifloodSettingsCached(chatID)
+	floodSrc, err := GetOptimizedQueries().GetAntifloodSettingsCached(chatID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// Return default settings

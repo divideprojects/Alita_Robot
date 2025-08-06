@@ -20,7 +20,7 @@ func EnsureBotInDb(b *gotgbot.Bot) {
 
 func checkUserInfo(userId int64) (userc *User) {
 	// Use optimized cached query instead of SELECT *
-	userc, err := OptimizedQueries.GetUserBasicInfoCached(userId)
+	userc, err := GetOptimizedQueries().GetUserBasicInfoCached(userId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil

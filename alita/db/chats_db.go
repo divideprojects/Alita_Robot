@@ -11,7 +11,7 @@ import (
 
 func GetChatSettings(chatId int64) (chatSrc *Chat) {
 	// Use optimized cached query instead of SELECT *
-	chat, err := OptimizedQueries.GetChatBasicInfoCached(chatId)
+	chat, err := GetOptimizedQueries().GetChatBasicInfoCached(chatId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &Chat{}

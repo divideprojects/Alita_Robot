@@ -9,7 +9,7 @@ import (
 
 func GetChannelSettings(channelId int64) (channelSrc *ChannelSettings) {
 	// Use optimized cached query instead of SELECT *
-	channelSrc, err := OptimizedQueries.GetChannelSettingsCached(channelId)
+	channelSrc, err := GetOptimizedQueries().GetChannelSettingsCached(channelId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil
