@@ -45,7 +45,7 @@ More langauges have been added to locales folder but need some configuration.
 Help us bring more languages to the bot by contributing to the project on [Crowdin](https://crowdin.com/project/alitarobot)
 
 ## Requirements
-- You need to have a *Mongo Database* (Cluster Preferred)
+- You need to have a *PostgreSQL Database* (Recommended)
 - You also need a *Redis Database* for caching (Required): Get a free redis database from [here](https://redis.com/try-free/)
 - Linux/Windows machine (Ubuntu/Debain-based OS Preferred or Windows 10/Server2016 and later)
 
@@ -92,6 +92,120 @@ We currently publish a `ghcr.io/divideprojects/alita_robot` Docker image based o
 Set the Environmental vars using the `-e` flag in while running the container.
 
 If all works well, bot should send message to the **MESSAGE_DUMP** Group!
+
+### Webhook Mode with Cloudflare Tunnel (Production)
+
+Alita now supports webhook mode for production deployments using Cloudflare Tunnel. This is more efficient than polling and works behind firewalls without opening ports.
+
+#### Prerequisites
+- Cloudflare account with a domain added to Cloudflare
+- Docker and Docker Compose installed
+
+#### Step 1: Create Cloudflare Tunnel
+1. Go to [Cloudflare Zero Trust Dashboard](https://one.dash.cloudflare.com)
+2. Navigate to **Networks > Tunnels**
+3. Click **Create a tunnel** → Choose **Cloudflared**
+4. Name your tunnel (e.g., `alita-telegram-bot`)
+5. **Copy the tunnel token** from the command shown (the long string after `--token`)
+
+#### Step 2: Configure Public Hostname
+1. In your tunnel dashboard, go to **Public Hostnames** tab
+2. Click **Add a public hostname**
+3. Configure:
+   - **Subdomain**: `alita-bot` (or your preference)
+   - **Domain**: Select your domain
+   - **Service**: `http://alita:8080`
+   - **Path**: `/webhook/your-secret` (replace with your actual `WEBHOOK_SECRET`)
+
+#### Step 3: Environment Configuration
+Create your `.env` file with webhook settings:
+
+```bash
+# Bot Configuration
+BOT_TOKEN=your_bot_token_here
+OWNER_ID=your_telegram_user_id
+MESSAGE_DUMP=-100xxxxxxxxx
+
+# Database Configuration  
+DATABASE_URL=postgres://postgres:password@postgres:5432/alita_robot?sslmode=disable
+REDIS_ADDRESS=redis:6379
+REDIS_PASSWORD=your_redis_password
+
+# Webhook Configuration
+USE_WEBHOOKS=true
+WEBHOOK_DOMAIN=https://alita-bot.yourdomain.com
+WEBHOOK_SECRET=your-random-secret-string-here
+WEBHOOK_PORT=8080
+
+# Cloudflare Tunnel
+CLOUDFLARE_TUNNEL_TOKEN=eyJhIjoiNzU1...your-tunnel-token-here
+```
+
+#### Step 4: Enable Cloudflare Tunnel in Docker
+Uncomment the `cloudflared` service in your `docker-compose.yml`:
+
+```yaml
+# Uncomment this section for webhook mode
+cloudflared:
+  image: cloudflare/cloudflared:latest
+  container_name: alita-cloudflared
+  environment:
+    - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+  command: tunnel --no-autoupdate run
+  restart: unless-stopped
+  depends_on:
+    - alita
+  deploy:
+    resources:
+      limits:
+        memory: 128M
+        cpus: "0.1"
+```
+
+#### Step 5: Register Webhook with Telegram
+After your bot is running, register the webhook URL with Telegram:
+
+```bash
+# Replace YOUR_BOT_TOKEN with your actual bot token
+# Replace the URL with your actual webhook URL
+curl -X POST "https://api.telegram.org/botYOUR_BOT_TOKEN/setWebhook" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://alita-bot.yourdomain.com/webhook/your-secret",
+    "secret_token": "your-secret"
+  }'
+```
+
+#### Step 6: Deploy
+```bash
+docker-compose up -d
+```
+
+#### Verify Setup
+Check webhook status:
+```bash
+curl "https://api.telegram.org/botYOUR_BOT_TOKEN/getWebhookInfo"
+```
+
+#### Switch Back to Polling
+To disable webhooks and return to polling mode:
+```bash
+# Clear webhook
+curl -X POST "https://api.telegram.org/botYOUR_BOT_TOKEN/setWebhook" -d "url="
+
+# Update environment
+USE_WEBHOOKS=false
+```
+
+#### Webhook vs Polling Comparison
+
+| Feature | Webhook Mode | Polling Mode |
+|---------|--------------|--------------|
+| **Performance** | ⚡ Real-time updates | 🐌 1-3 second delay |
+| **Resource Usage** | 💚 Lower CPU/bandwidth | 🟡 Higher CPU/bandwidth |
+| **Setup Complexity** | 🔧 Requires domain setup | ✅ Simple, works anywhere |
+| **Production Ready** | ✅ Recommended | ⚠️ Development only |
+| **Firewall Friendly** | ✅ Works behind NAT | ❌ Needs outbound access |
 
 ### Other
 
