@@ -8,16 +8,11 @@ import (
 )
 
 func GetChatLocks(chatID int64) map[string]bool {
-	var lockSettings []*LockSettings
-	err := GetRecords(&lockSettings, LockSettings{ChatId: chatID})
+	// Use optimized query with caching
+	locks, err := OptimizedQueries.lockQueries.GetChatLocksOptimized(chatID)
 	if err != nil {
 		log.Errorf("[Database] GetChatLocks: %v - %d", err, chatID)
 		return make(map[string]bool)
-	}
-
-	locks := make(map[string]bool)
-	for _, setting := range lockSettings {
-		locks[setting.LockType] = setting.Locked
 	}
 
 	return locks
@@ -48,14 +43,12 @@ func UpdateLock(chatID int64, perm string, val bool) {
 }
 
 func IsPermLocked(chatID int64, perm string) bool {
-	var lockSetting LockSettings
-	err := GetRecord(&lockSetting, LockSettings{ChatId: chatID, LockType: perm})
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return false // Default to unlocked if not found
-	} else if err != nil {
+	// Use optimized cached query
+	locked, err := OptimizedQueries.GetLockStatusCached(chatID, perm)
+	if err != nil {
 		log.Errorf("[Database] IsPermLocked: %v - %d", err, chatID)
 		return false
 	}
 
-	return lockSetting.Locked
+	return locked
 }
