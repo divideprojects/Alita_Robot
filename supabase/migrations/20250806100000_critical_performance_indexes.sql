@@ -29,10 +29,10 @@ CREATE INDEX IF NOT EXISTS idx_users_user_id_active
 ON users(user_id) 
 WHERE user_id IS NOT NULL;
 
--- Covering index for common fields
+-- Covering index for common fields (limited to small columns to avoid size limits)
 CREATE INDEX IF NOT EXISTS idx_users_covering 
 ON users(user_id) 
-INCLUDE (username, name, language);
+INCLUDE (language);
 
 -- Note: Removed partial index for recently active users
 -- (Date-based predicates cannot be used in indexes as they are not IMMUTABLE)
@@ -45,10 +45,10 @@ CREATE INDEX IF NOT EXISTS idx_chats_chat_id_active
 ON chats(chat_id) 
 WHERE is_inactive = false;
 
--- Covering index for common fields
+-- Covering index for common fields (limited to small columns to avoid size limits)
 CREATE INDEX IF NOT EXISTS idx_chats_covering 
 ON chats(chat_id) 
-INCLUDE (chat_name, language, users, is_inactive);
+INCLUDE (language, is_inactive);
 
 -- GIN index for users JSONB field if it exists
 DO $$ 
@@ -76,18 +76,17 @@ WHERE "limit" > 0;
 -- =====================================================
 -- 5. FILTERS - Medium Impact (33,898 calls)
 -- =====================================================
--- Optimized index with included columns
+-- Optimized index without large text columns to avoid size limits
 CREATE INDEX IF NOT EXISTS idx_filters_chat_optimized 
-ON filters(chat_id) 
-INCLUDE (keyword, filter_reply);
+ON filters(chat_id);
 
 -- =====================================================
 -- 6. BLACKLISTS - Easy Win (33,474 calls)
 -- =====================================================
--- Optimized index with included columns
+-- Optimized index with only small columns to avoid size limits
 CREATE INDEX IF NOT EXISTS idx_blacklists_chat_word_optimized 
 ON blacklists(chat_id) 
-INCLUDE (word, action);
+INCLUDE (action);
 
 -- =====================================================
 -- 7. CHANNELS - For Frequent Updates (17,907 calls)
@@ -109,10 +108,10 @@ WHERE welcome_enabled = true OR goodbye_enabled = true;
 -- 9. ADDITIONAL PERFORMANCE INDEXES
 -- =====================================================
 
--- Warns users composite index
+-- Warns users composite index (without large JSONB column to avoid size limits)
 CREATE INDEX IF NOT EXISTS idx_warns_users_composite 
 ON warns_users(user_id, chat_id) 
-INCLUDE (num_warns, warns)
+INCLUDE (num_warns)
 WHERE num_warns > 0;
 
 -- Notes lookup index
@@ -121,7 +120,7 @@ ON notes(chat_id, note_name);
 
 -- Admin settings lookup
 CREATE INDEX IF NOT EXISTS idx_admin_settings_chat 
-ON admin_settings(chat_id);
+ON admin(chat_id);
 
 -- Pins lookup index
 CREATE INDEX IF NOT EXISTS idx_pins_chat 
@@ -149,7 +148,7 @@ ANALYZE channels;
 ANALYZE greetings;
 ANALYZE warns_users;
 ANALYZE notes;
-ANALYZE admin_settings;
+ANALYZE admin;
 ANALYZE pins;
 
 -- Set higher statistics targets for frequently queried columns
