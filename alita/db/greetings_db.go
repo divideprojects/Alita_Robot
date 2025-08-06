@@ -89,6 +89,29 @@ func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 			},
 		}
 	}
+	
+	// Ensure WelcomeSettings and GoodbyeSettings are initialized even for existing records
+	if greetingSrc.WelcomeSettings == nil {
+		greetingSrc.WelcomeSettings = &WelcomeSettings{
+			LastMsgId:     0,
+			CleanWelcome:  false,
+			ShouldWelcome: true,
+			WelcomeText:   DefaultWelcome,
+			WelcomeType:   TEXT,
+			Button:        ButtonArray{},
+		}
+	}
+	if greetingSrc.GoodbyeSettings == nil {
+		greetingSrc.GoodbyeSettings = &GoodbyeSettings{
+			LastMsgId:     0,
+			CleanGoodbye:  false,
+			ShouldGoodbye: false,
+			GoodbyeText:   DefaultGoodbye,
+			GoodbyeType:   TEXT,
+			Button:        ButtonArray{},
+		}
+	}
+	
 	return greetingSrc
 }
 

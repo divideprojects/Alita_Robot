@@ -446,7 +446,7 @@ func (moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	if greetPrefs.WelcomeSettings.ShouldWelcome {
+	if greetPrefs.WelcomeSettings != nil && greetPrefs.WelcomeSettings.ShouldWelcome {
 		buttons := db.GetWelcomeButtons(chat.Id)
 		res, buttons := helpers.FormattingReplacer(bot, chat, &newMember,
 			greetPrefs.WelcomeSettings.WelcomeText,
@@ -484,7 +484,7 @@ func (moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	if greetPrefs.GoodbyeSettings.ShouldGoodbye {
+	if greetPrefs.GoodbyeSettings != nil && greetPrefs.GoodbyeSettings.ShouldGoodbye {
 		buttons := db.GetGoodbyeButtons(chat.Id)
 		res, buttons := helpers.FormattingReplacer(bot, chat, &leftMember, greetPrefs.GoodbyeSettings.GoodbyeText, buttons)
 		keyboard := &gotgbot.InlineKeyboardMarkup{InlineKeyboard: helpers.BuildKeyboard(buttons)}
