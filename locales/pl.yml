@@ -549,7 +549,6 @@ strings:
       × /info: Pobierz informacje o użytkowniku, można użyć jako odpowiedź lub podając ID użytkownika lub nazwę użytkownika.
       × /id: Pobierz aktualny ID grupy. Jeśli używane jako odpowiedź na wiadomość, pobierz ID tego użytkownika.
       × /ping: Sprawdź serwer Telegram!
-      × /paste: Wklej teksty na serwerze nekobin!
       × /tr <kod języka> <wiadomość/odpowiedź na wiadomość>: Przetłumacz wiadomość.
       × /removebotkeyboard: Usuwa zablokowaną klawiaturę bota z twojego czatu.
       × /stat: Pobiera liczbę wszystkich wiadomości w czacie.

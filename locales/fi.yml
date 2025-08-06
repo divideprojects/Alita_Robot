@@ -549,7 +549,6 @@ strings:
       × /info: Hae käyttäjätietosi, voidaan käyttää vastauksena tai antamalla käyttäjätunnus tai käyttäjänimi.
       × /id: Hae nykyisen ryhmän tunnus. Jos käytetty vastaamalla viestiin, hae sen käyttäjän tunnus.
       × /ping: Pingaa Telegram-palvelin!
-      × /paste: Liitä tekstit nekobin-palvelimelle!
       × /tr <kielikoodi> <viesti/vastaa viestiin>: Käännä viesti.
       × /webping: Pingaa [Telegram API](https://api.telegram.org)!
       × /google <kysely>: Etsi jotain Googlesta.

@@ -567,7 +567,6 @@ strings:
       × /info: Get your user info, which can be used as a reply or by passing a User Id or Username.
       × /id: Get the current group id. If used by replying to a message, get that user's id.
       × /ping: Ping the Telegram Server!
-      × /paste: Paste texts at the nekobin Server!
       × /tr <lang code> <msg/reply to message>: Translate the message.
       × /removebotkeyboard: Removes the stuck bot keyboard from your chat.
       × /stat: Gets the count of the total number of messages in the chat.

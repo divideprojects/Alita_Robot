@@ -549,7 +549,6 @@ strings:
       × /info: Obtener tu información de usuario, se puede usar como respuesta o pasando un ID de Usuario o Nombre de usuario.
       × /id: Obtener el id del grupo actual. Si se usa respondiendo a un mensaje, obtiene el id de ese usuario.
       × /ping: ¡Hacer ping al Servidor de Telegram!
-      × /paste: ¡Pegar textos en el servidor nekobin!
       × /tr <código de idioma> <mensaje/responder a mensaje>: Traducir el mensaje.
       × /removebotkeyboard: Elimina el teclado del bot atascado de tu chat.
       × /stat: Obtiene el conteo del número total de mensajes en el chat.

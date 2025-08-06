@@ -6,7 +6,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"time"
 
@@ -157,111 +156,6 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	return ext.EndGroups
-}
-
-func (moduleStruct) paste(b *gotgbot.Bot, ctx *ext.Context) error {
-	msg := ctx.EffectiveMessage
-	args := ctx.Args()
-
-	// if command is disabled, return
-	if chat_status.CheckDisabledCmd(b, msg, "paste") {
-		return ext.EndGroups
-	}
-
-	var (
-		err  error
-		text string
-	)
-
-	if len(args) == 1 && msg.ReplyToMessage == nil {
-		_, err = msg.Reply(b, "Please give text to paste or reply to a document!", nil)
-		if err != nil {
-			log.Error(err)
-		}
-		return ext.EndGroups
-	}
-	if msg.ReplyToMessage != nil && msg.ReplyToMessage.Text == "" && msg.ReplyToMessage.Document == nil && msg.ReplyToMessage.Caption == "" {
-		_, err = msg.Reply(b, "Please give text to paste or reply to a document!", nil)
-		if err != nil {
-			log.Error(err)
-		}
-		return ext.EndGroups
-	}
-
-	edited, _ := msg.Reply(b, "Pasting ...", nil)
-	extention := "txt"
-	if len(args) >= 2 {
-		text = strings.Join(args[1:], " ")
-	} else if len(args) != 2 && msg.ReplyToMessage.Text != "" {
-		text = msg.ReplyToMessage.Text
-	} else if len(args) != 2 && msg.ReplyToMessage.Caption != "" && msg.ReplyToMessage.Document == nil {
-		text = msg.ReplyToMessage.Caption
-	} else if msg.ReplyToMessage.Document != nil {
-		if strings.Contains(msg.ReplyToMessage.Document.FileName, ".") {
-			extention = strings.SplitN(msg.ReplyToMessage.Document.FileName, ".", 2)[1]
-		}
-		f, err := b.GetFile(msg.ReplyToMessage.Document.FileId, nil)
-		if err != nil {
-			_, _, _ = edited.EditText(b, "BadRequest on GetFile!", nil)
-			return ext.EndGroups
-		}
-		if f.FileSize > 600000 {
-			_, _, _ = edited.EditText(b, "File too big to paste; Max. file size that can be pasted is 600 kb!", nil)
-			return ext.EndGroups
-		}
-		fileName := fmt.Sprintf("paste_%d_%d.txt", msg.Chat.Id, msg.MessageId)
-		raw, err := http.Get(config.ApiServer + "/file/bot" + config.BotToken + "/" + f.FilePath)
-		if err != nil {
-			log.Error(err)
-		}
-		defer func(Body io.ReadCloser) {
-			_ = Body.Close()
-		}(raw.Body)
-		out, err := os.Create(fileName)
-		if err != nil {
-			log.Error(err)
-		}
-		_, err = io.Copy(out, raw.Body)
-		if err != nil {
-			log.Error(err)
-			err = os.Remove(fileName)
-			if err != nil {
-				log.Error(err)
-			}
-			return ext.EndGroups
-		}
-		data, er := os.ReadFile(fileName)
-		if er != nil {
-			log.Error(er)
-			return ext.EndGroups
-		}
-		text = string(data)
-		err = os.Remove(fileName)
-		if err != nil {
-			log.Error(err)
-		}
-	}
-	pasted, key := helpers.PasteToNekoBin(text)
-
-	if pasted {
-		_, _, err = edited.EditText(b, fmt.Sprintf("<b>Pasted Successfully!</b>\nhttps://www.nekobin.com/%s.%s", key, extention),
-			&gotgbot.EditMessageTextOpts{
-				ParseMode: helpers.HTML,
-				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
-					IsDisabled: true,
-				},
-			},
-		)
-		if err != nil {
-			log.Error(err)
-		}
-	} else {
-		_, _, err = edited.EditText(b, "Can't paste the provided data!", nil)
-		if err != nil {
-			log.Error(err)
-		}
-	}
 	return ext.EndGroups
 }
 
@@ -470,8 +364,6 @@ func LoadMisc(dispatcher *ext.Dispatcher) {
 
 	dispatcher.AddHandler(handlers.NewCommand("stat", miscModule.stat))
 	misc.AddCmdToDisableable("stat")
-	dispatcher.AddHandler(handlers.NewCommand("paste", miscModule.paste))
-	misc.AddCmdToDisableable("paste")
 	dispatcher.AddHandler(handlers.NewCommand("id", miscModule.getId))
 	misc.AddCmdToDisableable("id")
 	dispatcher.AddHandler(handlers.NewCommand("tell", miscModule.echomsg))
