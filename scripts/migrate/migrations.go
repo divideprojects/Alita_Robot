@@ -388,6 +388,7 @@ func (m *Migrator) migrateFilters() error {
 		return nil
 	})
 }
+
 // migrateGreetings migrates greeting settings from MongoDB to PostgreSQL.
 // It handles welcome and goodbye messages with their configuration.
 func (m *Migrator) migrateGreetings() error {
@@ -824,6 +825,7 @@ func (m *Migrator) migrateWarnsUsers() error {
 		return nil
 	})
 }
+
 // migrateAntifloodSettings migrates antiflood settings from MongoDB to PostgreSQL.
 // It handles flood limits, modes, and message deletion settings.
 func (m *Migrator) migrateAntifloodSettings() error {
@@ -974,6 +976,7 @@ func (m *Migrator) migrateBlacklists() error {
 		return nil
 	})
 }
+
 // migrateChannels migrates channel settings from MongoDB to PostgreSQL.
 // It handles channel associations and validates channel references.
 func (m *Migrator) migrateChannels() error {
@@ -1125,6 +1128,7 @@ func (m *Migrator) migrateConnections() error {
 		return nil
 	})
 }
+
 // migrateConnectionSettings migrates connection settings from MongoDB to PostgreSQL.
 // It handles the boolean logic inversion between MongoDB and PostgreSQL schemas.
 func (m *Migrator) migrateConnectionSettings() error {

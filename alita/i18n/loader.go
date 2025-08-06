@@ -119,4 +119,3 @@ func isYAMLFile(fileName string) bool {
 	ext := strings.ToLower(filepath.Ext(fileName))
 	return ext == ".yml" || ext == ".yaml"
 }
-

@@ -38,7 +38,6 @@ type floodControl struct {
 	lastActivity int64 // Unix timestamp for cleanup
 }
 
-
 var _normalAntifloodModule = moduleStruct{
 	moduleName:   "Antiflood",
 	handlerGroup: 4,

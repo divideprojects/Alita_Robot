@@ -145,7 +145,7 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	ctx.EffectiveMessage = msg                     // set the message to the message that was originally used when command was given
 	ctx.EffectiveMessage.SenderChat = nil          // make senderChat nil to avoid chat_status.isAnonAdmin to mistaken user for GroupAnonymousBot
-	ctx.CallbackQuery = nil                 // callback query is not needed anymore
+	ctx.CallbackQuery = nil                        // callback query is not needed anymore
 	command := strings.Split(msg.Text, " ")[0][1:] // get the command, with or without the bot username and without '/'
 	command = strings.Split(command, "@")[0]       // separate the command from the bot username
 

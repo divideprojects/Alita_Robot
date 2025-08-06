@@ -214,7 +214,7 @@ func (m *AutoRemediationManager) Stop() {
 type GCAction struct{}
 
 // Name returns the name of the GC action
-func (a *GCAction) Name() string  { return "garbage_collection" }
+func (a *GCAction) Name() string { return "garbage_collection" }
 
 // Severity returns the severity level of the GC action
 func (a *GCAction) Severity() int { return 1 }
@@ -235,7 +235,7 @@ func (a *GCAction) Execute(ctx context.Context) error {
 type MemoryCleanupAction struct{}
 
 // Name returns the name of the memory cleanup action
-func (a *MemoryCleanupAction) Name() string  { return "memory_cleanup" }
+func (a *MemoryCleanupAction) Name() string { return "memory_cleanup" }
 
 // Severity returns the severity level of the memory cleanup action
 func (a *MemoryCleanupAction) Severity() int { return 2 }
@@ -264,7 +264,7 @@ func (a *MemoryCleanupAction) Execute(ctx context.Context) error {
 type LogWarningAction struct{}
 
 // Name returns the name of the log warning action
-func (a *LogWarningAction) Name() string  { return "log_warning" }
+func (a *LogWarningAction) Name() string { return "log_warning" }
 
 // Severity returns the severity level of the log warning action
 func (a *LogWarningAction) Severity() int { return 0 }
@@ -291,7 +291,7 @@ func (a *LogWarningAction) Execute(ctx context.Context) error {
 type RestartRecommendationAction struct{}
 
 // Name returns the name of the restart recommendation action
-func (a *RestartRecommendationAction) Name() string  { return "restart_recommendation" }
+func (a *RestartRecommendationAction) Name() string { return "restart_recommendation" }
 
 // Severity returns the severity level of the restart recommendation action
 func (a *RestartRecommendationAction) Severity() int { return 10 }

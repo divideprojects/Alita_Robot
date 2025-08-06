@@ -23,6 +23,7 @@ func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
 
 // GetAllFilters retrieves all filters for a specific chat ID from the database.
 // Returns an empty slice if no filters are found or an error occurs.
+//
 //goland:noinspection GoUnusedExportedFunction
 func GetAllFilters(chatID int64) (allFilters []*ChatFilters) {
 	err := GetRecords(&allFilters, map[string]interface{}{"chat_id": chatID})

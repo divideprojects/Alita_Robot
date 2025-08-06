@@ -66,6 +66,7 @@ func GetNote(chatID int64, keyword string) (noteSrc *Notes) {
 
 	return
 }
+
 // GetNotesList retrieves a list of all note names for a specific chat ID.
 // The admin parameter is currently unused as all notes are accessible to all users.
 // Returns an empty slice if no notes are found.

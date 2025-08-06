@@ -262,4 +262,3 @@ func closeDBConnections() error {
 	log.Info("[Shutdown] Database connections closed successfully")
 	return nil
 }
-
