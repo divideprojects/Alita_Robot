@@ -118,7 +118,6 @@ func WarnUserWithContext(ctx context.Context, userId, chatId int64, reason strin
 		reasons = []string(warnrc.Reasons)
 		return nil
 	})
-
 	if err != nil {
 		log.Errorf("[Database] WarnUser: %v", err)
 		return 0, []string{}
@@ -169,7 +168,6 @@ func RemoveWarnWithContext(ctx context.Context, userId, chatId int64) bool {
 
 		return nil
 	})
-
 	if err != nil {
 		log.Errorf("[Database] RemoveWarn: %v", err)
 		return false

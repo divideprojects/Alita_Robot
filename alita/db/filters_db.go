@@ -54,7 +54,6 @@ func GetFiltersList(chatID int64) (allFilterWords []string) {
 		}
 		return filterWords, nil
 	})
-
 	if err != nil {
 		return []string{}
 	}

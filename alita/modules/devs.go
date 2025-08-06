@@ -103,7 +103,7 @@ func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	// If the file doesn't exist, create it or re-write it
-	err = os.WriteFile(fileName, []byte(writeString), 0600)
+	err = os.WriteFile(fileName, []byte(writeString), 0o600)
 	if err != nil {
 		log.Error(err)
 		return err

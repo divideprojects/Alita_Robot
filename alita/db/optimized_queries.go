@@ -68,7 +68,6 @@ func (o *OptimizedLockQueries) GetChatLocksOptimized(chatID int64) (map[string]b
 		Select("lock_type, locked").
 		Where("chat_id = ?", chatID).
 		Find(&locks).Error
-
 	if err != nil {
 		log.Errorf("[OptimizedLockQueries] GetChatLocksOptimized: %v", err)
 		return nil, err
@@ -323,7 +322,6 @@ func (o *OptimizedFilterQueries) GetChatFiltersOptimized(chatID int64) ([]*ChatF
 		Select("id, keyword, filter_reply, msg_type").
 		Where("chat_id = ?", chatID).
 		Find(&filters).Error
-
 	if err != nil {
 		log.Errorf("[OptimizedFilterQueries] GetChatFiltersOptimized: %v", err)
 		return nil, err
@@ -379,7 +377,6 @@ func (o *OptimizedBlacklistQueries) GetChatBlacklistOptimized(chatID int64) ([]*
 		Select("id, word, action").
 		Where("chat_id = ?", chatID).
 		Find(&blacklist).Error
-
 	if err != nil {
 		log.Errorf("[OptimizedBlacklistQueries] GetChatBlacklistOptimized: %v", err)
 		return nil, err
@@ -400,7 +397,6 @@ func (o *OptimizedBlacklistQueries) GetBlacklistWords(chatID int64) ([]string, e
 		Select("word").
 		Where("chat_id = ?", chatID).
 		Pluck("word", &words).Error
-
 	if err != nil {
 		log.Errorf("[OptimizedBlacklistQueries] GetBlacklistWords: %v", err)
 		return nil, err
@@ -482,7 +478,6 @@ func (c *CachedOptimizedQueries) GetLockStatusCached(chatID int64, lockType stri
 	cached, err := getFromCacheOrLoad(cacheKey, 1*time.Hour, func() (bool, error) {
 		return c.lockQueries.GetLockStatus(chatID, lockType)
 	})
-
 	if err != nil {
 		// Fallback to direct query on cache error
 		return c.lockQueries.GetLockStatus(chatID, lockType)
@@ -503,7 +498,6 @@ func (c *CachedOptimizedQueries) GetUserBasicInfoCached(userID int64) (*User, er
 	cached, err := getFromCacheOrLoad(cacheKey, 1*time.Hour, func() (*User, error) {
 		return c.userQueries.GetUserBasicInfo(userID)
 	})
-
 	if err != nil {
 		return c.userQueries.GetUserBasicInfo(userID)
 	}
@@ -523,7 +517,6 @@ func (c *CachedOptimizedQueries) GetChatBasicInfoCached(chatID int64) (*Chat, er
 	cached, err := getFromCacheOrLoad(cacheKey, 30*time.Minute, func() (*Chat, error) {
 		return c.chatQueries.GetChatBasicInfo(chatID)
 	})
-
 	if err != nil {
 		return c.chatQueries.GetChatBasicInfo(chatID)
 	}
@@ -543,7 +536,6 @@ func (c *CachedOptimizedQueries) GetAntifloodSettingsCached(chatID int64) (*Anti
 	cached, err := getFromCacheOrLoad(cacheKey, 1*time.Hour, func() (*AntifloodSettings, error) {
 		return c.antifloodQueries.GetAntifloodSettings(chatID)
 	})
-
 	if err != nil {
 		return c.antifloodQueries.GetAntifloodSettings(chatID)
 	}
@@ -563,7 +555,6 @@ func (c *CachedOptimizedQueries) GetChatFiltersCached(chatID int64) ([]*ChatFilt
 	cached, err := getFromCacheOrLoad(cacheKey, 15*time.Minute, func() ([]*ChatFilters, error) {
 		return c.filterQueries.GetChatFiltersOptimized(chatID)
 	})
-
 	if err != nil {
 		return c.filterQueries.GetChatFiltersOptimized(chatID)
 	}
@@ -583,7 +574,6 @@ func (c *CachedOptimizedQueries) GetChatBlacklistCached(chatID int64) ([]*Blackl
 	cached, err := getFromCacheOrLoad(cacheKey, 15*time.Minute, func() ([]*BlacklistSettings, error) {
 		return c.blacklistQueries.GetChatBlacklistOptimized(chatID)
 	})
-
 	if err != nil {
 		return c.blacklistQueries.GetChatBlacklistOptimized(chatID)
 	}
@@ -603,7 +593,6 @@ func (c *CachedOptimizedQueries) GetChannelSettingsCached(chatID int64) (*Channe
 	cached, err := getFromCacheOrLoad(cacheKey, 30*time.Minute, func() (*ChannelSettings, error) {
 		return c.channelQueries.GetChannelSettings(chatID)
 	})
-
 	if err != nil {
 		return c.channelQueries.GetChannelSettings(chatID)
 	}
@@ -685,7 +674,6 @@ func (b *BatchPrefetchContext) PrefetchUserData(userIDs []int64) (map[int64]*Use
 		Select("id, user_id, username, name, language").
 		Where("user_id IN ?", userIDs).
 		Find(&users).Error
-
 	if err != nil {
 		log.Errorf("[BatchPrefetch] PrefetchUserData: %v", err)
 		return nil, err
@@ -715,7 +703,6 @@ func (b *BatchPrefetchContext) PrefetchChatData(chatIDs []int64) (map[int64]*Cha
 		Select("id, chat_id, chat_name, language, users, is_inactive").
 		Where("chat_id IN ?", chatIDs).
 		Find(&chats).Error
-
 	if err != nil {
 		log.Errorf("[BatchPrefetch] PrefetchChatData: %v", err)
 		return nil, err

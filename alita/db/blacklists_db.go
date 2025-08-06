@@ -76,7 +76,6 @@ func GetBlacklistSettings(chatId int64) BlacklistSettingsSlice {
 		}
 		return BlacklistSettingsSlice(blacklists), nil
 	})
-
 	if err != nil {
 		return BlacklistSettingsSlice{}
 	}

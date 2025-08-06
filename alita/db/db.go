@@ -577,10 +577,8 @@ func (Notes) TableName() string {
 	return "notes"
 }
 
-var (
-	// Database instance
-	DB *gorm.DB
-)
+// Database instance
+var DB *gorm.DB
 
 // Initialize database connection and auto-migrate
 func init() {
@@ -605,7 +603,6 @@ func init() {
 			return time.Now().UTC()
 		},
 	})
-
 	if err != nil {
 		log.Fatalf("[Database][Connection]: %v", err)
 	}
