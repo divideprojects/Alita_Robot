@@ -87,17 +87,12 @@ jobs:
         run: go mod download
 
       # Install golangci-lint
-      - name: Install golangci-lint
+      - name: Run linting
         uses: golangci/golangci-lint-action@v6
         with:
           version: latest
-          args: --version # Just print version, we'll run it via make
           skip-cache: true # We're already caching
           install-mode: binary
-
-      # Run project's linting configuration
-      - name: Run linting
-        run: make lint
 
       # Run tests with coverage (if tests exist)
       - name: Run tests with coverage
