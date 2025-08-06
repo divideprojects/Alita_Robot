@@ -175,7 +175,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
 
       - name: Scan with Trivy
-        uses: aquasecurity/trivy-action@v0.28.0
+        uses: aquasecurity/trivy-action@0.32.0
         with:
           image-ref: 'dep-check:latest'
           format: 'table'
