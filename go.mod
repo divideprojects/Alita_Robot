@@ -19,6 +19,7 @@ require (
 	go.mongodb.org/mongo-driver v1.17.4
 	golang.org/x/sync v0.16.0
 	golang.org/x/text v0.27.0
+	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.30.1
 )
@@ -63,5 +64,4 @@ require (
 	golang.org/x/exp v0.0.0-20250718183923-645b1fa84792 // indirect
 	golang.org/x/sys v0.34.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
