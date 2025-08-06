@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/divideprojects/Alita_Robot/alita/config"
+	log "github.com/sirupsen/logrus"
 )
 
 // RemediationAction represents an action that can be taken to remediate issues
@@ -20,33 +20,33 @@ type RemediationAction interface {
 
 // AutoRemediationManager handles automatic remediation of performance issues
 type AutoRemediationManager struct {
-	ctx                context.Context
-	cancel             context.CancelFunc
-	wg                 sync.WaitGroup
-	actions            []RemediationAction
-	enabled            bool
-	lastActionTime     map[string]time.Time
-	actionCooldown     time.Duration
-	mu                 sync.RWMutex
-	collector          *BackgroundStatsCollector
-	thresholds         RemediationThresholds
+	ctx            context.Context
+	cancel         context.CancelFunc
+	wg             sync.WaitGroup
+	actions        []RemediationAction
+	enabled        bool
+	lastActionTime map[string]time.Time
+	actionCooldown time.Duration
+	mu             sync.RWMutex
+	collector      *BackgroundStatsCollector
+	thresholds     RemediationThresholds
 }
 
 // RemediationThresholds defines when remediation actions should be triggered
 type RemediationThresholds struct {
-	MaxGoroutines       int
-	MaxMemoryMB         float64
-	MaxGCPauseMs        float64
-	MaxResponseTimeMs   int64
-	MaxErrorRate        float64
-	CriticalMemoryMB    float64
-	CriticalGoroutines  int
+	MaxGoroutines      int
+	MaxMemoryMB        float64
+	MaxGCPauseMs       float64
+	MaxResponseTimeMs  int64
+	MaxErrorRate       float64
+	CriticalMemoryMB   float64
+	CriticalGoroutines int
 }
 
 // NewAutoRemediationManager creates a new auto-remediation manager
 func NewAutoRemediationManager(collector *BackgroundStatsCollector) *AutoRemediationManager {
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	manager := &AutoRemediationManager{
 		ctx:            ctx,
 		cancel:         cancel,
@@ -183,10 +183,10 @@ func (m *AutoRemediationManager) executeAction(action RemediationAction, metrics
 	defer cancel()
 
 	log.WithFields(log.Fields{
-		"action":              action.Name(),
-		"goroutines":          metrics.GoroutineCount,
-		"memory_mb":           metrics.MemoryAllocMB,
-		"gc_pause_ms":         metrics.GCPauseMs,
+		"action":               action.Name(),
+		"goroutines":           metrics.GoroutineCount,
+		"memory_mb":            metrics.MemoryAllocMB,
+		"gc_pause_ms":          metrics.GCPauseMs,
 		"avg_response_time_ms": metrics.AverageResponseTime.Milliseconds(),
 	}).Info("[AutoRemediation] Executing remediation action")
 
@@ -213,7 +213,7 @@ func (m *AutoRemediationManager) Stop() {
 // GCAction triggers garbage collection
 type GCAction struct{}
 
-func (a *GCAction) Name() string { return "garbage_collection" }
+func (a *GCAction) Name() string  { return "garbage_collection" }
 func (a *GCAction) Severity() int { return 1 }
 
 func (a *GCAction) CanExecute(metrics SystemMetrics) bool {
@@ -229,7 +229,7 @@ func (a *GCAction) Execute(ctx context.Context) error {
 // MemoryCleanupAction triggers memory cleanup operations
 type MemoryCleanupAction struct{}
 
-func (a *MemoryCleanupAction) Name() string { return "memory_cleanup" }
+func (a *MemoryCleanupAction) Name() string  { return "memory_cleanup" }
 func (a *MemoryCleanupAction) Severity() int { return 2 }
 
 func (a *MemoryCleanupAction) CanExecute(metrics SystemMetrics) bool {
@@ -238,13 +238,13 @@ func (a *MemoryCleanupAction) CanExecute(metrics SystemMetrics) bool {
 
 func (a *MemoryCleanupAction) Execute(ctx context.Context) error {
 	log.Info("[AutoRemediation] Performing memory cleanup operations")
-	
+
 	// Trigger multiple GC cycles for thorough cleanup
 	for i := 0; i < 3; i++ {
 		runtime.GC()
 		time.Sleep(100 * time.Millisecond)
 	}
-	
+
 	// Force release of unused memory back to OS
 	runtime.GC()
 	return nil
@@ -253,7 +253,7 @@ func (a *MemoryCleanupAction) Execute(ctx context.Context) error {
 // LogWarningAction logs warnings for high resource usage
 type LogWarningAction struct{}
 
-func (a *LogWarningAction) Name() string { return "log_warning" }
+func (a *LogWarningAction) Name() string  { return "log_warning" }
 func (a *LogWarningAction) Severity() int { return 0 }
 
 func (a *LogWarningAction) CanExecute(metrics SystemMetrics) bool {
@@ -263,7 +263,7 @@ func (a *LogWarningAction) CanExecute(metrics SystemMetrics) bool {
 func (a *LogWarningAction) Execute(ctx context.Context) error {
 	log.WithFields(log.Fields{
 		"goroutines": runtime.NumGoroutine(),
-		"memory_mb":  func() float64 {
+		"memory_mb": func() float64 {
 			var m runtime.MemStats
 			runtime.ReadMemStats(&m)
 			return float64(m.Alloc) / 1024 / 1024
@@ -275,7 +275,7 @@ func (a *LogWarningAction) Execute(ctx context.Context) error {
 // RestartRecommendationAction logs recommendations for restart when critical thresholds are reached
 type RestartRecommendationAction struct{}
 
-func (a *RestartRecommendationAction) Name() string { return "restart_recommendation" }
+func (a *RestartRecommendationAction) Name() string  { return "restart_recommendation" }
 func (a *RestartRecommendationAction) Severity() int { return 10 }
 
 func (a *RestartRecommendationAction) CanExecute(metrics SystemMetrics) bool {
@@ -285,7 +285,7 @@ func (a *RestartRecommendationAction) CanExecute(metrics SystemMetrics) bool {
 func (a *RestartRecommendationAction) Execute(ctx context.Context) error {
 	log.WithFields(log.Fields{
 		"goroutines": runtime.NumGoroutine(),
-		"memory_mb":  func() float64 {
+		"memory_mb": func() float64 {
 			var m runtime.MemStats
 			runtime.ReadMemStats(&m)
 			return float64(m.Alloc) / 1024 / 1024

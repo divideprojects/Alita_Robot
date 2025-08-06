@@ -1,12 +1,9 @@
 package main
 
 import (
-	"context"
 	"embed"
 	"fmt"
 	"os"
-	"os/signal"
-	"syscall"
 
 	log "github.com/sirupsen/logrus"
 
@@ -60,7 +57,7 @@ func main() {
 	// Initialize monitoring systems
 	var statsCollector *monitoring.BackgroundStatsCollector
 	var autoRemediation *monitoring.AutoRemediationManager
-	
+
 	if config.EnableBackgroundStats {
 		statsCollector = monitoring.NewBackgroundStatsCollector()
 		statsCollector.Start()
@@ -99,12 +96,12 @@ func main() {
 		Error: func(_ *gotgbot.Bot, ctx *ext.Context, err error) ext.DispatcherAction {
 			// Recover from any panics in error handler
 			defer error_handling.RecoverFromPanic("DispatcherErrorHandler", "Main")
-			
+
 			// Record error in monitoring system
 			if statsCollector != nil {
 				statsCollector.RecordError()
 			}
-			
+
 			// Log the error with context information
 			log.WithFields(log.Fields{
 				"update_id": func() int64 {
@@ -115,7 +112,7 @@ func main() {
 				}(),
 				"error_type": fmt.Sprintf("%T", err),
 			}).Errorf("Handler error occurred: %v", err)
-			
+
 			// Continue processing other updates
 			return ext.DispatcherActionNoop
 		},
@@ -262,14 +259,3 @@ func closeDBConnections() error {
 	return nil
 }
 
-// setupSignalHandling sets up signal handling for graceful shutdown
-func setupSignalHandling(cancel context.CancelFunc) {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-
-	go func() {
-		sig := <-c
-		log.Infof("[Signal] Received signal: %v", sig)
-		cancel() // Cancel the main context
-	}()
-}

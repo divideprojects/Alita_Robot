@@ -132,7 +132,7 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 	var text string
 	var replyMarkup gotgbot.ReplyMarkup
 
-	if ctx.Update.Message.Chat.Type == "private" {
+	if ctx.Message.Chat.Type == "private" {
 		chat := extraction.ExtractChat(b, ctx)
 		if chat == nil {
 			return ext.EndGroups
@@ -180,7 +180,7 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 
 // Handler for Connection buttons
 func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := query.From
 	msg := query.Message
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
@@ -260,7 +260,7 @@ func (m moduleStruct) disconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	var text string
 
-	if ctx.Update.Message.Chat.Type == "private" {
+	if ctx.Message.Chat.Type == "private" {
 		chatId := m.isConnected(b, ctx, user.Id)
 		if chatId == 0 {
 			return ext.EndGroups
@@ -316,7 +316,7 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		text         string
 	)
 
-	if ctx.Update.Message.Chat.Type == "private" {
+	if ctx.Message.Chat.Type == "private" {
 		user := ctx.EffectiveSender.User
 		chatId := db.ReconnectId(user.Id)
 

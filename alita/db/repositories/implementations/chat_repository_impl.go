@@ -52,11 +52,11 @@ func (r *chatRepositoryImpl) GetByID(ctx context.Context, chatID int64) (*db.Cha
 
 	var chat db.Chat
 	result := r.db.WithContext(ctx).Where("chat_id = ?", chatID).First(&chat)
-	
+
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil // Chat not found, but not an error
 	}
-	
+
 	if result.Error != nil {
 		log.WithContext(ctx).Errorf("[ChatRepository] GetByID failed for chat %d: %v", chatID, result.Error)
 		return nil, fmt.Errorf("failed to get chat by ID: %w", result.Error)

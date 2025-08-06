@@ -134,7 +134,7 @@ func demoErrorHandling() {
 	translator, err := i18n.NewTranslator("invalid")
 	if err != nil {
 		fmt.Printf("Expected error for invalid language: %v\n", err)
-		
+
 		// Check error type
 		if i18n.IsI18nError(err) {
 			fmt.Println("Error is of type I18nError")
@@ -146,7 +146,7 @@ func demoErrorHandling() {
 	_, err = translator.GetString("nonexistent.key")
 	if err != nil {
 		fmt.Printf("Expected error for missing key: %v\n", err)
-		
+
 		if i18n.IsKeyNotFound(err) {
 			fmt.Println("Error indicates key was not found")
 		}

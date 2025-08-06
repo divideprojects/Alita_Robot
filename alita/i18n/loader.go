@@ -120,23 +120,3 @@ func isYAMLFile(fileName string) bool {
 	return ext == ".yml" || ext == ".yaml"
 }
 
-// getLocaleFilesList returns a list of all locale files in the directory
-func (lm *LocaleManager) getLocaleFilesList() ([]string, error) {
-	if lm.localeFS == nil || lm.localePath == "" {
-		return nil, fmt.Errorf("filesystem or path not set")
-	}
-
-	entries, err := lm.localeFS.ReadDir(lm.localePath)
-	if err != nil {
-		return nil, err
-	}
-
-	var files []string
-	for _, entry := range entries {
-		if !entry.IsDir() && isYAMLFile(entry.Name()) {
-			files = append(files, entry.Name())
-		}
-	}
-
-	return files, nil
-}

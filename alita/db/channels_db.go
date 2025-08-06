@@ -48,12 +48,12 @@ func EnsureChatExists(chatId int64, chatName string) error {
 func UpdateChannel(channelId int64, channelName, username string) {
 	// Check if channel already exists
 	channelSrc := GetChannelSettings(channelId)
-	
+
 	if channelSrc != nil && channelSrc.ChannelId == channelId {
 		// Channel already exists with same ID, no update needed
 		return
 	}
-	
+
 	// Ensure the chat exists before creating/updating channel
 	if err := EnsureChatExists(channelId, channelName); err != nil {
 		log.Errorf("[Database] UpdateChannel: Failed to ensure chat exists for %d (%s): %v", channelId, username, err)

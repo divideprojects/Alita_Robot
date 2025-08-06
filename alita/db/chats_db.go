@@ -37,12 +37,12 @@ func ToggleInactiveChat(chatId int64, toggle bool) {
 func UpdateChat(chatId int64, chatname string, userid int64) {
 	chatr := GetChatSettings(chatId)
 	foundUser := string_handling.FindInInt64Slice(chatr.Users, userid)
-	
+
 	// Check if update is actually needed
 	if chatr.ChatName == chatname && foundUser {
 		return
 	}
-	
+
 	// Prepare updates only for changed fields
 	updates := make(map[string]interface{})
 	if chatr.ChatName != chatname {
@@ -54,7 +54,7 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 		updates["users"] = newUsers
 	}
 	updates["is_inactive"] = false
-	
+
 	if chatr.ChatId == 0 {
 		// Create new chat
 		newChat := &Chat{
@@ -76,7 +76,7 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 			return
 		}
 	}
-	
+
 	// Invalidate cache after update
 	deleteCache(chatCacheKey(chatId))
 	log.Debugf("[Database] UpdateChat: %d", chatId)

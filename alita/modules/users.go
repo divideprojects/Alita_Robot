@@ -21,16 +21,16 @@ var (
 		moduleName:   "Users",
 		handlerGroup: -1,
 	}
-	
+
 	// Rate limiting for database updates
 	// Maps user/chat ID to last update timestamp
-	userUpdateCache = &sync.Map{}
-	chatUpdateCache = &sync.Map{}
+	userUpdateCache    = &sync.Map{}
+	chatUpdateCache    = &sync.Map{}
 	channelUpdateCache = &sync.Map{}
-	
+
 	// Update intervals
-	userUpdateInterval = 5 * time.Minute
-	chatUpdateInterval = 5 * time.Minute
+	userUpdateInterval    = 5 * time.Minute
+	chatUpdateInterval    = 5 * time.Minute
 	channelUpdateInterval = 5 * time.Minute
 )
 

@@ -21,8 +21,8 @@ type Config struct {
 	Debug       bool
 
 	// Bot settings
-	OwnerId            int64    `validate:"required,min=1"`
-	MessageDump        int64    `validate:"required,min=1"`
+	OwnerId            int64 `validate:"required,min=1"`
+	MessageDump        int64 `validate:"required,min=1"`
 	DropPendingUpdates bool
 	AllowedUpdates     []string
 	ValidLangCodes     []string
@@ -78,20 +78,20 @@ var (
 	WebhookDomain string
 	WebhookSecret string
 	WebhookPort   int
-	
+
 	// Worker pool configuration for concurrent processing
-	ChatValidationWorkers    int
-	DatabaseWorkers          int
-	MessagePipelineWorkers   int
-	BulkOperationWorkers     int
-	CacheWorkers            int
-	StatsCollectionWorkers  int
-	
+	ChatValidationWorkers  int
+	DatabaseWorkers        int
+	MessagePipelineWorkers int
+	BulkOperationWorkers   int
+	CacheWorkers           int
+	StatsCollectionWorkers int
+
 	// Safety and performance limits
-	MaxConcurrentOperations  int
-	OperationTimeoutSeconds  int
+	MaxConcurrentOperations     int
+	OperationTimeoutSeconds     int
 	EnablePerformanceMonitoring bool
-	EnableBackgroundStats    bool
+	EnableBackgroundStats       bool
 
 	// Global config instance
 	AppConfig *Config

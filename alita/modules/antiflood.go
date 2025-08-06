@@ -38,51 +38,6 @@ type floodControl struct {
 	lastActivity int64 // Unix timestamp for cleanup
 }
 
-// Ring buffer for efficient message ID storage
-type ringBuffer struct {
-	buffer []int64
-	size   int
-	head   int
-	tail   int
-	count  int
-}
-
-// newRingBuffer creates a new ring buffer with specified capacity
-func newRingBuffer(capacity int) *ringBuffer {
-	return &ringBuffer{
-		buffer: make([]int64, capacity),
-		size:   capacity,
-		head:   0,
-		tail:   0,
-		count:  0,
-	}
-}
-
-// push adds an element to the ring buffer
-func (rb *ringBuffer) push(item int64) {
-	rb.buffer[rb.tail] = item
-	rb.tail = (rb.tail + 1) % rb.size
-	if rb.count < rb.size {
-		rb.count++
-	} else {
-		// Buffer is full, move head
-		rb.head = (rb.head + 1) % rb.size
-	}
-}
-
-// toSlice returns all elements as a slice (most recent first)
-func (rb *ringBuffer) toSlice() []int64 {
-	if rb.count == 0 {
-		return nil
-	}
-
-	result := make([]int64, rb.count)
-	for i := 0; i < rb.count; i++ {
-		index := (rb.head + rb.count - 1 - i) % rb.size
-		result[i] = rb.buffer[index]
-	}
-	return result
-}
 
 var _normalAntifloodModule = moduleStruct{
 	moduleName:   "Antiflood",

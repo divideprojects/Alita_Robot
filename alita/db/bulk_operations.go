@@ -19,7 +19,7 @@ const (
 
 	// Timeout for bulk operations
 	BulkOperationTimeout = 30 * time.Second
-	
+
 	// Worker pool configuration
 	DefaultWorkerCount = 4
 	MaxWorkerCount     = 10
@@ -52,9 +52,9 @@ type BulkProcessingJob[T any] struct {
 
 // BulkProcessingResult represents the result of bulk processing
 type BulkProcessingResult struct {
-	Index         int
+	Index          int
 	ProcessedCount int
-	Error         error
+	Error          error
 }
 
 // ParallelBulkProcessor handles concurrent bulk database operations
@@ -76,15 +76,15 @@ func NewParallelBulkProcessor[T any](workerCount int, processor func([]T) error)
 	if workerCount > MaxWorkerCount {
 		workerCount = MaxWorkerCount
 	}
-	
+
 	// Limit based on available CPU cores
 	maxCores := runtime.NumCPU()
 	if workerCount > maxCores {
 		workerCount = maxCores
 	}
-	
+
 	ctx, cancel := context.WithTimeout(context.Background(), BulkOperationTimeout)
-	
+
 	return &ParallelBulkProcessor[T]{
 		workerCount: workerCount,
 		jobs:        make(chan BulkProcessingJob[T], workerCount*2),
@@ -106,18 +106,18 @@ func (p *ParallelBulkProcessor[T]) Start() {
 // worker processes bulk jobs
 func (p *ParallelBulkProcessor[T]) worker(workerID int) {
 	defer p.wg.Done()
-	
+
 	for {
 		select {
 		case job, ok := <-p.jobs:
 			if !ok {
 				return
 			}
-			
+
 			result := BulkProcessingResult{
 				Index: job.Index,
 			}
-			
+
 			if err := p.processor(job.Data); err != nil {
 				result.Error = err
 				log.WithFields(log.Fields{
@@ -128,9 +128,9 @@ func (p *ParallelBulkProcessor[T]) worker(workerID int) {
 			} else {
 				result.ProcessedCount = len(job.Data)
 			}
-			
+
 			p.results <- result
-			
+
 		case <-p.ctx.Done():
 			log.WithField("worker_id", workerID).Warn("Bulk processor worker context cancelled")
 			return
@@ -160,14 +160,14 @@ func (p *ParallelBulkProcessor[T]) ProcessInParallel(data []T, batchSize int) *B
 	stats := &BulkOperationStats{
 		StartTime: time.Now(),
 	}
-	
+
 	if len(data) == 0 {
 		stats.Duration = time.Since(stats.StartTime)
 		return stats
 	}
-	
+
 	p.Start()
-	
+
 	// Split data into batches and submit jobs
 	jobCount := 0
 	for i := 0; i < len(data); i += batchSize {
@@ -175,15 +175,15 @@ func (p *ParallelBulkProcessor[T]) ProcessInParallel(data []T, batchSize int) *B
 		if end > len(data) {
 			end = len(data)
 		}
-		
+
 		batch := data[i:end]
 		p.AddJob(batch, jobCount)
 		jobCount++
 	}
-	
+
 	// Signal no more jobs
 	close(p.jobs)
-	
+
 	// Collect results
 	for i := 0; i < jobCount; i++ {
 		result := <-p.results
@@ -193,12 +193,12 @@ func (p *ParallelBulkProcessor[T]) ProcessInParallel(data []T, batchSize int) *B
 			stats.ProcessedCount += result.ProcessedCount
 		}
 	}
-	
+
 	// Wait for completion and cleanup
 	p.wg.Wait()
 	close(p.results)
 	p.cancel()
-	
+
 	stats.Duration = time.Since(stats.StartTime)
 	return stats
 }
@@ -511,7 +511,7 @@ func ParallelBulkAddFilters(chatID int64, filters map[string]string) (*BulkOpera
 	if len(filters) == 0 {
 		return &BulkOperationStats{StartTime: time.Now(), Duration: 0}, nil
 	}
-	
+
 	// Convert map to slice for processing
 	filterRecords := make([]ChatFilters, 0, len(filters))
 	for keyword, reply := range filters {
@@ -522,34 +522,34 @@ func ParallelBulkAddFilters(chatID int64, filters map[string]string) (*BulkOpera
 			MsgType:     TEXT,
 		})
 	}
-	
+
 	// Create processor function
 	processor := func(batch []ChatFilters) error {
 		ctx, cancel := context.WithTimeout(context.Background(), BulkOperationTimeout)
 		defer cancel()
-		
+
 		return DB.WithContext(ctx).CreateInBatches(batch, FilterBatchSize).Error
 	}
-	
+
 	// Process in parallel
 	bulkProcessor := NewParallelBulkProcessor(4, processor)
 	stats := bulkProcessor.ProcessInParallel(filterRecords, FilterBatchSize)
-	
+
 	if stats.ProcessedCount > 0 {
 		// Invalidate cache after successful bulk add
 		go func() {
 			deleteCache(filterListCacheKey(chatID))
 		}()
 	}
-	
+
 	LogBulkOperationStats("ParallelBulkAddFilters", stats)
-	
+
 	var err error
 	if stats.FailedCount > 0 {
 		err = fmt.Errorf("failed to process %d out of %d filter records", stats.FailedCount, len(filterRecords))
 		log.Errorf("[Database][ParallelBulkAddFilters]: %d - %v", chatID, err)
 	}
-	
+
 	return stats, err
 }
 
@@ -558,7 +558,7 @@ func ParallelBulkAddBlacklist(chatID int64, words []string, action string) (*Bul
 	if len(words) == 0 {
 		return &BulkOperationStats{StartTime: time.Now(), Duration: 0}, nil
 	}
-	
+
 	// Convert to blacklist records
 	blacklistRecords := make([]BlacklistSettings, 0, len(words))
 	for _, word := range words {
@@ -568,34 +568,34 @@ func ParallelBulkAddBlacklist(chatID int64, words []string, action string) (*Bul
 			Action: action,
 		})
 	}
-	
+
 	// Create processor function
 	processor := func(batch []BlacklistSettings) error {
 		ctx, cancel := context.WithTimeout(context.Background(), BulkOperationTimeout)
 		defer cancel()
-		
+
 		return DB.WithContext(ctx).CreateInBatches(batch, BlacklistBatchSize).Error
 	}
-	
+
 	// Process in parallel
 	bulkProcessor := NewParallelBulkProcessor(4, processor)
 	stats := bulkProcessor.ProcessInParallel(blacklistRecords, BlacklistBatchSize)
-	
+
 	if stats.ProcessedCount > 0 {
 		// Invalidate cache after successful bulk add
 		go func() {
 			deleteCache(blacklistCacheKey(chatID))
 		}()
 	}
-	
+
 	LogBulkOperationStats("ParallelBulkAddBlacklist", stats)
-	
+
 	var err error
 	if stats.FailedCount > 0 {
 		err = fmt.Errorf("failed to process %d out of %d blacklist records", stats.FailedCount, len(blacklistRecords))
 		log.Errorf("[Database][ParallelBulkAddBlacklist]: %d - %v", chatID, err)
 	}
-	
+
 	return stats, err
 }
 
@@ -604,16 +604,16 @@ func ParallelCacheInvalidation(cacheKeys []string) {
 	if len(cacheKeys) == 0 {
 		return
 	}
-	
+
 	// Use worker pool for cache invalidation
 	workerCount := 3
 	if len(cacheKeys) < workerCount {
 		workerCount = len(cacheKeys)
 	}
-	
+
 	jobs := make(chan string, len(cacheKeys))
 	var wg sync.WaitGroup
-	
+
 	// Start workers
 	for i := 0; i < workerCount; i++ {
 		wg.Add(1)
@@ -626,16 +626,16 @@ func ParallelCacheInvalidation(cacheKeys []string) {
 			}
 		}(i)
 	}
-	
+
 	// Submit jobs
 	for _, key := range cacheKeys {
 		jobs <- key
 	}
 	close(jobs)
-	
+
 	// Wait for completion
 	wg.Wait()
-	
+
 	log.WithField("cache_keys_invalidated", len(cacheKeys)).Info("Parallel cache invalidation completed")
 }
 

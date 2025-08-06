@@ -121,7 +121,7 @@ func (moduleStruct) getMarkdownHelp(module string) string {
 }
 
 func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	msg := query.Message
 
 	// Get the sub-module

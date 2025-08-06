@@ -52,11 +52,11 @@ func (r *userRepositoryImpl) GetByID(ctx context.Context, userID int64) (*db.Use
 
 	var user db.User
 	result := r.db.WithContext(ctx).Where("user_id = ?", userID).First(&user)
-	
+
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil // User not found, but not an error
 	}
-	
+
 	if result.Error != nil {
 		log.WithContext(ctx).Errorf("[UserRepository] GetByID failed for user %d: %v", userID, result.Error)
 		return nil, fmt.Errorf("failed to get user by ID: %w", result.Error)
@@ -74,11 +74,11 @@ func (r *userRepositoryImpl) GetByUsername(ctx context.Context, username string)
 
 	var user db.User
 	result := r.db.WithContext(ctx).Where("username = ?", username).First(&user)
-	
+
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil // User not found, but not an error
 	}
-	
+
 	if result.Error != nil {
 		log.WithContext(ctx).Errorf("[UserRepository] GetByUsername failed for username %s: %v", username, result.Error)
 		return nil, fmt.Errorf("failed to get user by username: %w", result.Error)

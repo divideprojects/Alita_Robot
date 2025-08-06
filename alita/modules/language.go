@@ -41,7 +41,7 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	cLang := db.GetLanguage(ctx)
 
-	if ctx.Update.Message.Chat.Type == "private" {
+	if ctx.Message.Chat.Type == "private" {
 		replyString = fmt.Sprintf("Your Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
 	} else {
 
@@ -71,14 +71,14 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	chat := query.Message.GetChat()
 	user := query.From
 
 	var replyString string
 	language := strings.Split(query.Data, ".")[1]
 
-	if ctx.Update.Message.Chat.Type == "private" {
+	if ctx.Message.Chat.Type == "private" {
 		go db.ChangeUserLanguage(user.Id, language)
 		replyString = fmt.Sprintf("Your language has been changed to %s", helpers.GetLangFormat(language))
 	} else {

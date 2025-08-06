@@ -330,7 +330,7 @@ func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 
 // Callback Handler for rmallblacklist
 func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := query.From
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 

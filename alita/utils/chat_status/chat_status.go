@@ -132,7 +132,7 @@ func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -152,7 +152,7 @@ func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, use
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -182,7 +182,7 @@ func CanUserChangeInfo(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, use
 	}
 
 	if !userMember.CanChangeInfo && userMember.Status != "creator" {
-		query := ctx.Update.CallbackQuery
+		query := ctx.CallbackQuery
 		if query != nil {
 			if !justCheck {
 				_, err := query.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: "You don't have permissions to change info!!"})
@@ -215,7 +215,7 @@ func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userI
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -244,7 +244,7 @@ func CanUserRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userI
 		error_handling.HandleErr(err)
 	}
 	if !userMember.CanRestrictMembers && userMember.Status != "creator" {
-		query := ctx.Update.CallbackQuery
+		query := ctx.CallbackQuery
 		if query != nil {
 			if !justCheck {
 				_, err := query.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: "You don't have permissions to restrict members!!"})
@@ -277,14 +277,14 @@ func CanBotRestrict(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
 	botMember, err := chat.GetMember(b, b.Id, nil)
 	error_handling.HandleErr(err)
 	if !botMember.MergeChatMember().CanRestrictMembers {
-		query := ctx.Update.CallbackQuery
+		query := ctx.CallbackQuery
 		if query != nil {
 			if !justCheck {
 				_, err := query.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: "I don't have permissions to restrict members!!"})
@@ -317,7 +317,7 @@ func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -346,7 +346,7 @@ func CanUserPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId
 		error_handling.HandleErr(err)
 	}
 	if !userMember.CanPromoteMembers && userMember.Status != "creator" {
-		query := ctx.Update.CallbackQuery
+		query := ctx.CallbackQuery
 		if query != nil {
 			if !justCheck {
 				_, err := query.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: "You don't have permissions to promote/demote members!!"})
@@ -379,7 +379,7 @@ func CanBotPromote(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChe
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -408,7 +408,7 @@ func CanUserPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId int
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -458,7 +458,7 @@ func CanBotPin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCheck b
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -487,7 +487,7 @@ func Caninvite(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, msg *gotgbo
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 	if chat.Username != "" {
@@ -554,7 +554,7 @@ func CanUserDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId 
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -584,7 +584,7 @@ func CanUserDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, userId 
 	}
 
 	if !userMember.CanDeleteMessages && userMember.Status != "creator" {
-		query := ctx.Update.CallbackQuery
+		query := ctx.CallbackQuery
 		if query != nil {
 			if !justCheck {
 				_, err := query.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: "You don't have permissions to delete messages!!"})
@@ -613,7 +613,7 @@ func CanBotDelete(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -643,7 +643,7 @@ func RequireBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justC
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -675,7 +675,7 @@ func IsUserBanProtected(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, us
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -692,13 +692,13 @@ func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
 	msg := ctx.EffectiveMessage
 	if !IsUserAdmin(b, chat.Id, userId) {
-		query := ctx.Update.CallbackQuery
+		query := ctx.CallbackQuery
 		if query != nil {
 			if !justCheck {
 				_, err := query.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: "You need to be an admin to do this!"})
@@ -724,7 +724,7 @@ func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 
@@ -736,7 +736,7 @@ func RequireUserOwner(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 	}
 
 	if mem.GetStatus() != "creator" {
-		query := ctx.Update.CallbackQuery
+		query := ctx.CallbackQuery
 		if query != nil {
 			if !justCheck {
 				_, err := query.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: "You need to be the group creator to do this!"})
@@ -763,7 +763,7 @@ func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 	msg := ctx.EffectiveMessage
@@ -789,7 +789,7 @@ func RequireGroup(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
 		} else {
-			chat = &ctx.Update.Message.Chat
+			chat = &ctx.Message.Chat
 		}
 	}
 	msg := ctx.EffectiveMessage

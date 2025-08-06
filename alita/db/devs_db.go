@@ -8,8 +8,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
-	"github.com/dustin/go-humanize"
 	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/dustin/go-humanize"
 )
 
 func GetTeamMemInfo(userID int64) (devrc *DevSettings) {

@@ -21,7 +21,7 @@ func (t *Translator) GetString(key string, params ...TranslationParams) (string,
 	if t.manager.cacheClient != nil && len(params) == 0 {
 		// Only cache non-parameterized strings
 		cacheKey = t.cachePrefix + key
-		
+
 		// Try to get from cache first
 		if cached, err := t.manager.cacheClient.Get(context.Background(), cacheKey); err == nil {
 			if cachedStr, ok := cached.(string); ok {
@@ -32,7 +32,7 @@ func (t *Translator) GetString(key string, params ...TranslationParams) (string,
 
 	// Get string from viper
 	result := t.viper.GetString(key)
-	
+
 	// Check if key exists
 	if result == "" || result == "<nil>" {
 		// Try fallback to default language if not already using it
@@ -73,7 +73,7 @@ func (t *Translator) GetStringSlice(key string) ([]string, error) {
 	cacheKey := ""
 	if t.manager.cacheClient != nil {
 		cacheKey = t.cachePrefix + "slice:" + key
-		
+
 		// Try to get from cache first
 		if cached, err := t.manager.cacheClient.Get(context.Background(), cacheKey); err == nil {
 			if cachedSlice, ok := cached.([]string); ok {
@@ -83,7 +83,7 @@ func (t *Translator) GetStringSlice(key string) ([]string, error) {
 	}
 
 	result := t.viper.GetStringSlice(key)
-	
+
 	// Check if key exists
 	if len(result) == 0 {
 		// Try fallback to default language
@@ -203,7 +203,7 @@ func (t *Translator) GetPlural(key string, count int, params ...TranslationParam
 		if _, exists := enhancedParams["count"]; !exists {
 			enhancedParams["count"] = count
 		}
-		
+
 		var err error
 		selectedForm, err = t.interpolateParams(selectedForm, enhancedParams)
 		if err != nil {
@@ -248,7 +248,7 @@ func (t *Translator) interpolateParams(text string, params TranslationParams) (s
 func (t *Translator) selectPluralForm(rule PluralRule, count int) string {
 	// Implement basic English plural rules
 	// For more languages, this would need language-specific logic
-	
+
 	switch {
 	case count == 0 && rule.Zero != "":
 		return rule.Zero
@@ -276,7 +276,7 @@ func extractOrderedValues(params TranslationParams) []interface{} {
 	}
 
 	var values []interface{}
-	
+
 	// Try common numbered keys first (0, 1, 2, etc.)
 	for i := 0; i < 10; i++ {
 		key := strconv.Itoa(i)

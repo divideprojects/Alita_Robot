@@ -273,7 +273,11 @@ func (m *Migrator) processBatch(collection *mongo.Collection, processor func([]b
 	if err != nil {
 		return fmt.Errorf("failed to find documents: %w", err)
 	}
-	defer cursor.Close(m.ctx)
+	defer func() {
+		if err := cursor.Close(m.ctx); err != nil {
+			log.Printf("Failed to close cursor: %v", err)
+		}
+	}()
 
 	batch := make([]bson.M, 0, m.config.BatchSize)
 
@@ -343,7 +347,10 @@ func toInt64(v interface{}) int64 {
 		if longVal, ok := val["$numberLong"]; ok {
 			if strVal, ok := longVal.(string); ok {
 				var result int64
-				fmt.Sscanf(strVal, "%d", &result)
+				if _, err := fmt.Sscanf(strVal, "%d", &result); err != nil {
+					log.Printf("Failed to parse long value: %v", err)
+					return 0
+				}
 				return result
 			}
 		}

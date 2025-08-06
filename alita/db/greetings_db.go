@@ -89,7 +89,7 @@ func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 			},
 		}
 	}
-	
+
 	// Ensure WelcomeSettings and GoodbyeSettings are initialized even for existing records
 	if greetingSrc.WelcomeSettings == nil {
 		greetingSrc.WelcomeSettings = &WelcomeSettings{
@@ -111,7 +111,7 @@ func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 			Button:        ButtonArray{},
 		}
 	}
-	
+
 	return greetingSrc
 }
 

@@ -134,10 +134,11 @@ func (lm *LocaleManager) ReloadLocales() error {
 	lm.localeData = make(map[string][]byte)
 
 	// Clear external cache if available
-	if lm.cacheClient != nil {
-		// Note: This would clear all cache, not just i18n entries
-		// In production, you might want to implement selective clearing
-	}
+	// Note: This would clear all cache, not just i18n entries
+	// In production, you might want to implement selective clearing
+	// if lm.cacheClient != nil {
+	//     // TODO: Implement selective cache clearing
+	// }
 
 	return lm.loadLocaleFiles()
 }

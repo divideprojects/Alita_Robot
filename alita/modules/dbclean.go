@@ -24,35 +24,35 @@ type ChatValidationJob struct {
 
 // ChatValidationResult represents the result of chat validation
 type ChatValidationResult struct {
-	ChatID    int64
-	Index     int
+	ChatID     int64
+	Index      int
 	IsInactive bool
-	Error     error
+	Error      error
 }
 
 // ChatValidationWorkerPool manages concurrent chat validation
 type ChatValidationWorkerPool struct {
-	workerCount   int
-	jobs          chan ChatValidationJob
-	results       chan ChatValidationResult
-	wg            sync.WaitGroup
-	ctx           context.Context
-	cancel        context.CancelFunc
-	bot           *gotgbot.Bot
+	workerCount    int
+	jobs           chan ChatValidationJob
+	results        chan ChatValidationResult
+	wg             sync.WaitGroup
+	ctx            context.Context
+	cancel         context.CancelFunc
+	bot            *gotgbot.Bot
 	rateLimitDelay time.Duration
 }
 
 // NewChatValidationWorkerPool creates a new worker pool for chat validation
 func NewChatValidationWorkerPool(workerCount int, bot *gotgbot.Bot) *ChatValidationWorkerPool {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
-	
+
 	return &ChatValidationWorkerPool{
 		workerCount:    workerCount,
-		jobs:          make(chan ChatValidationJob, workerCount*2),
-		results:       make(chan ChatValidationResult, workerCount*2),
-		ctx:           ctx,
-		cancel:        cancel,
-		bot:           bot,
+		jobs:           make(chan ChatValidationJob, workerCount*2),
+		results:        make(chan ChatValidationResult, workerCount*2),
+		ctx:            ctx,
+		cancel:         cancel,
+		bot:            bot,
 		rateLimitDelay: 250 * time.Millisecond,
 	}
 }
@@ -68,33 +68,33 @@ func (pool *ChatValidationWorkerPool) Start() {
 // worker processes chat validation jobs
 func (pool *ChatValidationWorkerPool) worker(workerID int) {
 	defer pool.wg.Done()
-	
+
 	for {
 		select {
 		case job, ok := <-pool.jobs:
 			if !ok {
 				return
 			}
-			
+
 			result := ChatValidationResult{
 				ChatID: job.ChatID,
 				Index:  job.Index,
 			}
-			
+
 			// Skip chats marked as inactive
 			if !db.GetChatSettings(job.ChatID).IsInactive {
 				// Rate limiting to avoid hitting Telegram API limits
 				time.Sleep(pool.rateLimitDelay)
-				
+
 				_, err := pool.bot.GetChat(job.ChatID, nil)
 				if err != nil {
 					result.IsInactive = true
 					result.Error = err
 				}
 			}
-			
+
 			pool.results <- result
-			
+
 		case <-pool.ctx.Done():
 			log.WithField("worker_id", workerID).Warn("Worker context cancelled")
 			return
@@ -151,7 +151,7 @@ func (moduleStruct) dbClean(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
-	query := ctx.Update.CallbackQuery
+	query := ctx.CallbackQuery
 	user := ctx.EffectiveSender.User
 	msg := query.Message
 	memStatus := db.GetTeamMemInfo(user.Id)
@@ -193,32 +193,32 @@ func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 		if len(chatIds) < workerCount {
 			workerCount = len(chatIds)
 		}
-		
+
 		pool := NewChatValidationWorkerPool(workerCount, b)
 		pool.Start()
-		
+
 		// Submit all jobs
 		for i, chatId := range chatIds {
 			pool.AddJob(chatId, i)
 		}
-		
+
 		// Close job channel to signal no more jobs
 		close(pool.jobs)
-		
+
 		// Collect results with progress tracking
 		var inactiveChats []int64
 		processedCount := 0
 		totalChats := len(chatIds)
-		
+
 		// Process results in background goroutine
 		go func() {
 			for result := range pool.results {
 				processedCount++
-				
+
 				if result.IsInactive {
 					inactiveChats = append(inactiveChats, result.ChatID)
 				}
-				
+
 				// Update progress every 10% or every 100 chats, whichever is smaller
 				progressGap := totalChats / 10
 				if progressGap > 100 {
@@ -227,10 +227,10 @@ func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 				if progressGap == 0 {
 					progressGap = 1
 				}
-				
+
 				if processedCount%progressGap == 0 {
 					percentage := (processedCount * 100) / totalChats
-					progressString = fmt.Sprintf("%d%% completed (%d/%d chats validated)", 
+					progressString = fmt.Sprintf("%d%% completed (%d/%d chats validated)",
 						percentage, processedCount, totalChats)
 					_, _, err := msg.EditText(b, progressString, nil)
 					if err != nil {
@@ -239,28 +239,28 @@ func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 				}
 			}
 		}()
-		
+
 		// Wait for all workers to complete
 		pool.wg.Wait()
 		close(pool.results)
-		
+
 		// Clean up worker pool
 		pool.cancel()
-		
+
 		// Mark inactive chats in database with concurrent processing
 		if len(inactiveChats) > 0 {
 			finalText = fmt.Sprintf("%d chats marked as inactive!", len(inactiveChats))
 			log.Infof("These chats have been marked as inactive: %v", inactiveChats)
-			
+
 			// Process database updates concurrently with limited goroutines
 			dbWorkerCount := 5
 			if len(inactiveChats) < dbWorkerCount {
 				dbWorkerCount = len(inactiveChats)
 			}
-			
+
 			dbJobs := make(chan int64, len(inactiveChats))
 			var dbWg sync.WaitGroup
-			
+
 			// Start database update workers
 			for i := 0; i < dbWorkerCount; i++ {
 				dbWg.Add(1)
@@ -273,16 +273,16 @@ func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 					}
 				}(i)
 			}
-			
+
 			// Submit database update jobs
 			for _, chatID := range inactiveChats {
 				dbJobs <- chatID
 			}
 			close(dbJobs)
-			
+
 			// Wait for all database updates to complete
 			dbWg.Wait()
-			
+
 			log.WithField("count", len(inactiveChats)).Info("Completed marking chats as inactive")
 		}
 	}
