@@ -1,731 +1,611 @@
 ---
-#stringcode: string
 main:
-  lang_sample: |-
-    Dansk
-  language_flag: |-
-    🇩🇰
-  language_name: |-
-    Dansk
+    lang_sample: Dansk
+    language_flag: "\U0001F1E9\U0001F1F0"
+    language_name: Dansk
 strings:
-  CommonStrings:
-    admin_cache:
-      cache_reloaded: |-
-        Admin cache blev genindlæst med succes.
-      not_found: |-
-        Admin cache ikke fundet. Bed en admin om at bruge /admincache for at genindlæse admin cache.
-  Admin:
-    adminlist: |-
-      Administratorer i <b>%s</b>:
-    anon_admin:
-      enabled: |-
-        AnonAdmin tilstand er i øjeblikket <b>aktiveret</b> for %s.
-        Dette tillader alle anonyme administratorer at udføre admin-handlinger uden begrænsninger.
-      disabled: |-
-        AnonAdmin tilstand er i øjeblikket <b>deaktiveret</b> for %s.
-        Dette kræver at anonyme administratorer trykker på en knap for at bekræfte deres tilladelser.
-      enabled_now: |-
-        AnonAdmin tilstand er nu <b>aktiveret</b> for %s.
-        Fra nu af vil jeg bede administratorerne om at verificere tilladelser fra anonyme administratorer.
-      disabled_now: |-
-        AnonAdmin tilstand er nu <b>deaktiveret</b> for %s.
-        Fra nu af vil jeg ikke længere bede administratorerne om at verificere tilladelser fra anonyme administratorer.
-      already_enabled: |-
-        AnonAdmin tilstand er allerede <b>aktiveret</b> for %s
-      already_disabled: |-
-        AnonAdmin tilstand er allerede <b>deaktiveret</b> for %s
-      invalid_arg: |-
-        Ugyldigt argument, jeg forstår kun <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
-    demote:
-      is_owner: |-
-        Denne person oprettede denne chat, hvordan skulle jeg degradere dem?
-      is_admin: |-
-        Denne person er ikke administrator, hvordan skulle jeg degradere dem?
-      is_bot_itself: |-
-        Jeg kan ikke degradere mig selv, gå og find personen der promoverede mig!
-      success_demote: |-
-        %s blev succesfuldt degraderet!
-    promote:
-      admin_title_truncated: |-
-        Admin titel forkortet til 16 tegn fra %d
-      is_bot_itself: |-
-        Hvis bare jeg kunne gøre dette ved mig selv ;_;
-      is_owner: |-
-        Denne person oprettede denne chat, hvordan skulle jeg promovere dem?
-      is_admin: |-
-        Denne person er allerede administrator, hvordan skulle jeg promovere dem?
-      success_promote: |-
-        %s blev succesfuldt promoveret!
-    title:
-      success_set: |-
-        Admin titel for %s blev succesfuldt sat til <b>%s</b>
-      is_bot_itself: |-
-        Hvis bare jeg kunne gøre dette ved mig selv ;_;
-      is_owner: |-
-        Denne person oprettede denne chat, hvordan skulle jeg sætte en brugerdefineret admin titel for dem?
-      is_admin: |-
-        Denne person er ikke administrator, hvordan skulle jeg sætte en brugerdefineret admin titel for dem?
-    errors:
-      err_set_title: |-
-        Kunne ikke sætte brugerdefineret admin titel, titelnavnet er muligvis ikke korrekt eller indeholder emojis.
-      err_cannot_demote: |-
-        Kunne ikke degradere. Jeg er muligvis ikke administrator, eller admin-status blev udnævnt af en anden bruger, så jeg kan ikke handle på dem!
-      err_cannot_promote: |-
-        Kunne ikke promovere. Jeg er muligvis ikke administrator, eller admin-status blev udnævnt af en anden bruger, så jeg kan ikke handle på dem!
-      title_empty: |-
-        Du skal give mig en admin titel, så jeg kan sætte den.
-    help_msg: |-
-      Gør det nemt at promovere og degradere brugere med admin-modulet!
+    Admin:
+        adminlist: 'Administratorer i <b>{admin}</b>:'
+        anon_admin:
+            already_disabled: AnonAdmin tilstand er allerede <b>deaktiveret</b> for {admin}
+            already_enabled: AnonAdmin tilstand er allerede <b>aktiveret</b> for {admin}
+            disabled: |-
+                AnonAdmin tilstand er i øjeblikket <b>deaktiveret</b> for {admin}.
+                Dette kræver at anonyme administratorer trykker på en knap for at bekræfte deres tilladelser.
+            disabled_now: |-
+                AnonAdmin tilstand er nu <b>deaktiveret</b> for {admin}.
+                Fra nu af vil jeg ikke længere bede administratorerne om at verificere tilladelser fra anonyme administratorer.
+            enabled: |-
+                AnonAdmin tilstand er i øjeblikket <b>aktiveret</b> for {admin}.
+                Dette tillader alle anonyme administratorer at udføre admin-handlinger uden begrænsninger.
+            enabled_now: |-
+                AnonAdmin tilstand er nu <b>aktiveret</b> for {admin}.
+                Fra nu af vil jeg bede administratorerne om at verificere tilladelser fra anonyme administratorer.
+            invalid_arg: Ugyldigt argument, jeg forstår kun <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        demote:
+            is_admin: Denne person er ikke administrator, hvordan skulle jeg degradere dem?
+            is_bot_itself: Jeg kan ikke degradere mig selv, gå og find personen der promoverede mig!
+            is_owner: Denne person oprettede denne chat, hvordan skulle jeg degradere dem?
+            success_demote: '{admin} blev succesfuldt degraderet!'
+        errors:
+            err_cannot_demote: Kunne ikke degradere. Jeg er muligvis ikke administrator, eller admin-status blev udnævnt af en anden bruger, så jeg kan ikke handle på dem!
+            err_cannot_promote: Kunne ikke promovere. Jeg er muligvis ikke administrator, eller admin-status blev udnævnt af en anden bruger, så jeg kan ikke handle på dem!
+            err_set_title: Kunne ikke sætte brugerdefineret admin titel, titelnavnet er muligvis ikke korrekt eller indeholder emojis.
+            title_empty: Du skal give mig en admin titel, så jeg kan sætte den.
+        help_msg: |-
+            Gør det nemt at promovere og degradere brugere med admin-modulet!
 
-      *Brugerkommandoer: *
-      × /adminlist: Vis administratorerne i den aktuelle chat.
+            *Brugerkommandoer: *
+            × /adminlist: Vis administratorerne i den aktuelle chat.
 
-      *Admin-kommandoer: *
-      × /promote "<reply/username/mention/userid>": Promovér en bruger.
-      × /demote `<reply/username/mention/userid>`: Degradér en bruger.
-      × /title `<reply/username/mention/userid>` `<custom title>`: Angiv brugerdefineret titel for bruger
-  Antiflood:
-    checkflood:
-      perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
-    setflood:
-      success: |-
-        Forstået! Maksimal flood grænse på <b>%d</b> beskeder.
-      disabled: |-
-        Okay.
-        Jeg vil ikke advare brugere om flooding.
-    flood:
-      disabled: |-
-        Denne chat håndhæver i øjeblikket ikke flood kontrol.
-      show_settings: |-
-        Denne chat håndhæver i øjeblikket flood kontrol efter %d beskeder. Alle brugere, der sender flere beskeder end det, vil blive %s.
-    setfloodmode:
-      success: |-
-        Forstået! Flood tilstand vil være %s.
-      unknown_type: |-
-        Ukendt type '%s'. Brug venligst en af: ban/kick/mute
-      specify_action: |-
-        Du skal specificere en handling at tage ved flooding. Aktuelle tilstande er: `ban`/`kick`/`mute`
-    flood_deleter:
-      enabled: |-
-        Aktiverede Antiflood Besked Sletning. Beskeder der forårsager antiflood vil blive slettet!
-      disabled: |-
-        Deaktiverede Antiflood Besked Sletning. Beskeder der forårsager antiflood vil blive ignoreret!
-      invalid_option: |-
-        Jeg forstår kun en mulighed fra: `yes`/`no`/`on`/`off`
-      already_enabled: |-
-        Antiflood besked sletning er i øjeblikket *aktiveret* i denne chat, beskeder der forårsager antiflood vil blive slettet!
-      already_disabled: |-
-        Antiflood besked sletning er i øjeblikket *deaktiveret* i denne chat, beskeder der forårsager antiflood vil blive ignoreret!
-    errors:
-      expected_args: |-
-        Jeg forventede nogle argumenter! Enten off, eller et heltal. f.eks.: `/setflood 5`, eller `/setflood off`
-      invalid_int: |-
-        Det er ikke et gyldigt heltal. Giv mig venligst et gyldigt heltal, eller `off`.
-      set_in_limit: |-
-        Antiflood grænsen skal sættes mellem 3 og 100.
-    help_msg: |-
-      Du ved, hvordan nogle gange går folk med, sender 100 beskeder og ødelægger din snak? Med antioversvømmelse sker det ikke mere!
+            *Admin-kommandoer: *
+            × /promote "<reply/username/mention/userid>": Promovér en bruger.
+            × /demote `<reply/username/mention/userid>`: Degradér en bruger.
+            × /title `<reply/username/mention/userid>` `<custom title>`: Angiv brugerdefineret titel for bruger
+        promote:
+            admin_title_truncated: Admin titel forkortet til 16 tegn fra {number}
+            is_admin: Denne person er allerede administrator, hvordan skulle jeg promovere dem?
+            is_bot_itself: Hvis bare jeg kunne gøre dette ved mig selv ;_;
+            is_owner: Denne person oprettede denne chat, hvordan skulle jeg promovere dem?
+            success_promote: '{admin} blev succesfuldt promoveret!'
+        title:
+            is_admin: Denne person er ikke administrator, hvordan skulle jeg sætte en brugerdefineret admin titel for dem?
+            is_bot_itself: Hvis bare jeg kunne gøre dette ved mig selv ;_;
+            is_owner: Denne person oprettede denne chat, hvordan skulle jeg sætte en brugerdefineret admin titel for dem?
+            success_set: Admin titel for {first} blev succesfuldt sat til <b>{chat}</b>
+    Antiflood:
+        checkflood:
+            perform_action: Yeah, I don't like your flooding. {first} has been {chat}!
+        errors:
+            expected_args: 'Jeg forventede nogle argumenter! Enten off, eller et heltal. f.eks.: `/setflood 5`, eller `/setflood off`'
+            invalid_int: Det er ikke et gyldigt heltal. Giv mig venligst et gyldigt heltal, eller `off`.
+            set_in_limit: Antiflood grænsen skal sættes mellem 3 og 100.
+        flood:
+            disabled: Denne chat håndhæver i øjeblikket ikke flood kontrol.
+            show_settings: Denne chat håndhæver i øjeblikket flood kontrol efter {number} beskeder. Alle brugere, der sender flere beskeder end det, vil blive {chat}.
+        flood_deleter:
+            already_disabled: Antiflood besked sletning er i øjeblikket *deaktiveret* i denne chat, beskeder der forårsager antiflood vil blive ignoreret!
+            already_enabled: Antiflood besked sletning er i øjeblikket *aktiveret* i denne chat, beskeder der forårsager antiflood vil blive slettet!
+            disabled: Deaktiverede Antiflood Besked Sletning. Beskeder der forårsager antiflood vil blive ignoreret!
+            enabled: Aktiverede Antiflood Besked Sletning. Beskeder der forårsager antiflood vil blive slettet!
+            invalid_option: 'Jeg forstår kun en mulighed fra: `yes`/`no`/`on`/`off`'
+        help_msg: |-
+            Du ved, hvordan nogle gange går folk med, sender 100 beskeder og ødelægger din snak? Med antioversvømmelse sker det ikke mere!
 
-      Antioversvømmelse gør det muligt for dig at handle på brugere, der sender mere end x beskeder i en række. Handlinger er: ban / kick/mute/tban/tmute
+            Antioversvømmelse gør det muligt for dig at handle på brugere, der sender mere end x beskeder i en række. Handlinger er: ban / kick/mute/tban/tmute
 
-      *Admin-kommandoer *:
-      × /flood: Hent de aktuelle antiflood indstillinger.
-      × /setflood "<number/off/no>": Angiv antallet af beskeder, hvorefter der skal udføres handling for en bruger. Angiv til '0', 'off', eller 'no' for at deaktivere.
-      × /setfloodmode `<action type>`: Vælg, hvilken handling der skal udføres for en bruger, der har været flooding. Muligheder: ban/kick/mute/tban/tmute
-      × /delflood "<yes/no/on/off>": Hvis du vil have robotten til at slette beskeder, der er flooded af brugeren.
-  Approvals:
-    approve:
-      is_bot_itself: |-
-        Du har allerede godkendt mig ved at gøre mig til administrator!
-      user_approved: |-
-        Godkendt Bruger: %s
-        De er nu beskyttet mod bans, sortlister, låse og antiflood!
-      user_not_in_chat: |-
-        Denne bruger er ikke i denne chat, og hvordan kan jeg godkende dem?
-    unapprove:
-      is_bot_itself: |-
-        Jeg er administrator, jeg kan ikke blive ikke-godkendt!
-      user_unapproved: |-
-        Ikke-godkendt Bruger: %s
-        De er ikke længere beskyttet mod bans, sortlister, låse og antiflood!
-    approval:
-      is_admin: |-
-        %s er administrator, du behøver ikke godkendelse.
-      is_bot_itself: |-
-        Jeg er administrator, jeg behøver ikke godkendelse.
-      is_approved: |-
-        %s er en godkendt Bruger i <b>%s</b>
-        De er beskyttet mod sortlister, låse og antiflood!
+            *Admin-kommandoer *:
+            × /flood: Hent de aktuelle antiflood indstillinger.
+            × /setflood "<number/off/no>": Angiv antallet af beskeder, hvorefter der skal udføres handling for en bruger. Angiv til '0', 'off', eller 'no' for at deaktivere.
+            × /setfloodmode `<action type>`: Vælg, hvilken handling der skal udføres for en bruger, der har været flooding. Muligheder: ban/kick/mute/tban/tmute
+            × /delflood "<yes/no/on/off>": Hvis du vil have robotten til at slette beskeder, der er flooded af brugeren.
+        setflood:
+            disabled: |-
+                Okay.
+                Jeg vil ikke advare brugere om flooding.
+            success: Forstået! Maksimal flood grænse på <b>{number}</b> beskeder.
+        setfloodmode:
+            specify_action: 'Du skal specificere en handling at tage ved flooding. Aktuelle tilstande er: `ban`/`kick`/`mute`'
+            success: Forstået! Flood tilstand vil være {value}.
+            unknown_type: 'Ukendt type ''{value}''. Brug venligst en af: ban/kick/mute'
+    Approvals:
+        approval:
+            is_admin: '{admin} er administrator, du behøver ikke godkendelse.'
+            is_approved: |-
+                {param1} er en godkendt Bruger i <b>{param2}</b>
+                De er beskyttet mod sortlister, låse og antiflood!
 
-        <b>Godkendt af:</b> %s (<code>%d</code>)"
-        <b>Godkendt tid:</b> %s UTC
-      is_unapproved: |-
-        Du er ikke godkendt i <b>%s</b>
-        Du er ikke beskyttet mod sortlister, låse og antiflood!
-    approved:
-      none_approved: "Ingen brugere er godkendt i <b>%s</b>!"
-      approved_list: |-
-        Disse brugere er godkendt i <b>%s:</b>
-        %s
+                <b>Godkendt af:</b> {param3} (<code>{number}</code>)"
+                <b>Godkendt tid:</b> {param4} UTC
+            is_bot_itself: Jeg er administrator, jeg behøver ikke godkendelse.
+            is_unapproved: |-
+                Du er ikke godkendt i <b>{value}</b>
+                Du er ikke beskyttet mod sortlister, låse og antiflood!
+        approve:
+            is_bot_itself: Du har allerede godkendt mig ved at gøre mig til administrator!
+            user_approved: |-
+                Godkendt Bruger: {user}
+                De er nu beskyttet mod bans, sortlister, låse og antiflood!
+            user_not_in_chat: Denne bruger er ikke i denne chat, og hvordan kan jeg godkende dem?
+        approved:
+            approved_list: |-
+                Disse brugere er godkendt i <b>{first}:</b>
+                {chat}
 
-        For at få mere information om hver bruger som Godkendt af og Godkendt tid, brug /approval (bruger id)."
-    unapprove_all:
-      ask: |-
-        Er du sikker på, at du vil fjerne alle Godkendte Brugere fra denne chat?
-      chat_creator_only: |-
-        Kun Chat Skaberen kan bruge denne kommando til at ikke-godkende alle brugere i denne chat.
-      button_handler:
-        yes: |-
-          Fjernede alle Godkendte Brugere fra denne Chat ✅
-        no: |-
-          Annullerede fjernelse af alle Godkendte Brugere fra denne Chat ❌
-    help_msg: |-
-      Nogle gange kan du stole på, at en bruger ikke sender uønsket indhold.
-      Måske ikke nok til at gøre dem til administrator, men du kan være okay med at låse, sortlister og antiflood ikke gælder for dem.
-      Det er det godkendelser er til - godkend pålidelige brugere for at tillade dem at sende
+                For at få mere information om hver bruger som Godkendt af og Godkendt tid, brug /approval (bruger id)."
+            none_approved: Ingen brugere er godkendt i <b>{value}</b>!
+        help_msg: |-
+            Nogle gange kan du stole på, at en bruger ikke sender uønsket indhold.
+            Måske ikke nok til at gøre dem til administrator, men du kan være okay med at låse, sortlister og antiflood ikke gælder for dem.
+            Det er det godkendelser er til - godkend pålidelige brugere for at tillade dem at sende
 
-      *Brugerkommandoer:*
-      × /approval: Tjek en brugers godkendelsesstatus i denne chat.
+            *Brugerkommandoer:*
+            × /approval: Tjek en brugers godkendelsesstatus i denne chat.
 
-      *Admin Kommandoer:*
-      × /approve: Godkend en bruger. Låse, sortlister og antiflood gælder ikke længere for dem.
-      × /unapprove: Ikke-godkend en bruger. De vil nu være underlagt låse, sortlister og antiflood igen.
-      × /approved: List alle godkendte brugere.
+            *Admin Kommandoer:*
+            × /approve: Godkend en bruger. Låse, sortlister og antiflood gælder ikke længere for dem.
+            × /unapprove: Ikke-godkend en bruger. De vil nu være underlagt låse, sortlister og antiflood igen.
+            × /approved: List alle godkendte brugere.
 
-      *Ejer Kommandoer:*
-      × /unapproveall: Ikke-godkend ALLE brugere i en chat. Dette kan ikke fortrydes.
-  Bans:
-    kick:
-      user_not_in_chat: |-
-        Denne bruger er ikke i denne chat, hvordan kan jeg begrænse dem?
-      cannot_kick_admin: |-
-        Hvorfor skulle jeg sparke en administrator? Det lyder som en ret dum idé.
-      is_bot_itself: |-
-        Hvorfor skulle jeg sparke mig selv?
-      kicked_user: |-
-        En mere bider i støvet...!
-        Sparkede %s.
-      kicked_reason: "\n<b>Grund: </b> %s"
-    kickme:
-      is_admin: |-
-        Du er administrator, du sidder fast her med alle andre!
-      ok_out: |-
-        Okay, kom ud!
-    ban:
-      is_admin: |-
-        Hvorfor skulle jeg banne en administrator? Det lyder som en ret dum idé.
-      is_bot_itself: |-
-        Tror du virkelig, at jeg vil banne mig selv?
-      ban_reason: "\n<b>Grund: </b> %s"
-      tban: |-
-        En mere bider i støvet...!
-        Bannede %s i %s
-      normal_ban: |-
-        En mere bider i støvet...!
-        Bannede %s.
-      dban:
-        no_reply: |-
-          Du skal svare på en besked for at slette den og banne brugeren!
-    unban:
-      is_admin: |-
-        Hvorfor skulle jeg unbanne en administrator? Det lyder som en ret dum idé.
-      is_bot_itself: |-
-        Hvorfor skulle jeg un-begrænse mig selv, når jeg allerede er her?
-      unbanned_user: |-
-        Ok sikkert...!
-        Unbannede %s.
-    help_msg: |-
-      Nogle gange kan brugere være irriterende, og du kan have lyst til at fjerne dem fra din chat, dette modul hjælper dig netop med at håndtere det!
-      Ban/spark brugere fra din chat, og unban dem senere hvis de opfører sig ordentligt.
+            *Ejer Kommandoer:*
+            × /unapproveall: Ikke-godkend ALLE brugere i en chat. Dette kan ikke fortrydes.
+        unapprove:
+            is_bot_itself: Jeg er administrator, jeg kan ikke blive ikke-godkendt!
+            user_unapproved: |-
+                Ikke-godkendt Bruger: {user}
+                De er ikke længere beskyttet mod bans, sortlister, låse og antiflood!
+        unapprove_all:
+            ask: Er du sikker på, at du vil fjerne alle Godkendte Brugere fra denne chat?
+            button_handler:
+                "no": Annullerede fjernelse af alle Godkendte Brugere fra denne Chat ❌
+                "yes": Fjernede alle Godkendte Brugere fra denne Chat ✅
+            chat_creator_only: Kun Chat Skaberen kan bruge denne kommando til at ikke-godkende alle brugere i denne chat.
+    Bans:
+        ban:
+            ban_reason: |4-
+                <b>Grund: </b> {reason}
+            dban:
+                no_reply: Du skal svare på en besked for at slette den og banne brugeren!
+            is_admin: Hvorfor skulle jeg banne en administrator? Det lyder som en ret dum idé.
+            is_bot_itself: Tror du virkelig, at jeg vil banne mig selv?
+            normal_ban: |-
+                En mere bider i støvet...!
+                Bannede {id}.
+            tban: |-
+                En mere bider i støvet...!
+                Bannede {user} i {second}
+        help_msg: |-
+            Nogle gange kan brugere være irriterende, og du kan have lyst til at fjerne dem fra din chat, dette modul hjælper dig netop med at håndtere det!
+            Ban/spark brugere fra din chat, og unban dem senere hvis de opfører sig ordentligt.
 
-      *Brugerkommandoer:*
-      × /kickme: sparker brugeren der udstedte kommandoen.
+            *Brugerkommandoer:*
+            × /kickme: sparker brugeren der udstedte kommandoen.
 
-      *Ban Kommandoer* (kun administrator):
-      × /ban <userhandle>: banner en bruger. (via handle, eller svar)
-      × /sban <userhandle>: banner en bruger stilfærdigt, sender ikke besked til gruppen og sletter også din kommando. (via handle, eller svar)
-      × /dban <userhandle>: banner en bruger og slet den besvarede besked. (via handle, eller svar)
-      × /tban <userhandle> x(m/h/d): banner en bruger i `x` tid. (via handle, eller svar). m = minutter, h = timer, d = dage.
-      × /unban <userhandle>: unbanner en bruger. (via handle, eller svar)
+            *Ban Kommandoer* (kun administrator):
+            × /ban <userhandle>: banner en bruger. (via handle, eller svar)
+            × /sban <userhandle>: banner en bruger stilfærdigt, sender ikke besked til gruppen og sletter også din kommando. (via handle, eller svar)
+            × /dban <userhandle>: banner en bruger og slet den besvarede besked. (via handle, eller svar)
+            × /tban <userhandle> x(m/h/d): banner en bruger i `x` tid. (via handle, eller svar). m = minutter, h = timer, d = dage.
+            × /unban <userhandle>: unbanner en bruger. (via handle, eller svar)
 
-      *Begræns Kommandoer:* (kun administrator)
-      × /restrict: Viser et InlineKeyboard til at vælge muligheder fra kick, ban og mute
-      × /unrestrict: Viser et InlineKeyboard til at vælge muligheder fra unmute og unban.
-  Blacklists:
-    blacklist:
-      give_bl_word: |-
-        Giv mig venligst et ord at tilføje til sortlisten!
-      already_blacklisted: |-
-        Disse ord er allerede på sortlisten:
-      added_bl: |-
-        Tilføjede disse ord som sortlister:
-    unblacklist:
-      give_bl_word: |-
-        Giv mig venligst et ord at fjerne fra sortlisten!
-      no_removed_bl: |-
-        Ingen af de givne ord var på sortlisten som kan fjernes!
-      removed_bl: |-
-        Fjernede '%s' fra de sortlistede ord!
-    ls_bl:
-      no_blacklisted: |-
-        Der er ingen sortlistede ord i denne chat.
-      list_bl: |-
-        Disse ord er sortlistede i denne chat:
-    set_bl_action:
-      current_mode: |-
-        Den aktuelle sortlist tilstand er: %s
-      changed_mode: |-
-        Ændrede sortlist tilstand til: *%s*
-      choose_correct_option: |-
-        Vælg venligst en mulighed fra <mute/kick/ban/warn/none>
-    rm_all_bl:
-      ask: |-
-        Er du sikker på, at du vil fjerne alle sortlistede ord fra denne chat?
-      button_handler:
-        yes: |-
-          Fjernede alle Sortlister fra denne Chat ✅
-        no: |-
-          Annullerede fjernelse af alle Sortlister fra denne Chat ❌
-    bl_watcher:
-      muted_user: |-
-        Mutede %s på grund af %s
-      banned_user: |-
-        Bannede %s på grund af %s
-      kicked_user: |-
-        Sparkede %s på grund af %s
-    help_msg: |-
-      *Bruger-kommandoer: *
-      × /blacklists: Tjek alle sortlister i chatten.
+            *Begræns Kommandoer:* (kun administrator)
+            × /restrict: Viser et InlineKeyboard til at vælge muligheder fra kick, ban og mute
+            × /unrestrict: Viser et InlineKeyboard til at vælge muligheder fra unmute og unban.
+        kick:
+            cannot_kick_admin: Hvorfor skulle jeg sparke en administrator? Det lyder som en ret dum idé.
+            is_bot_itself: Hvorfor skulle jeg sparke mig selv?
+            kicked_reason: |4-
+                <b>Grund: </b> {reason}
+            kicked_user: |-
+                En mere bider i støvet...!
+                Sparkede {user}.
+            user_not_in_chat: Denne bruger er ikke i denne chat, hvordan kan jeg begrænse dem?
+        kickme:
+            is_admin: Du er administrator, du sidder fast her med alle andre!
+            ok_out: Okay, kom ud!
+        unban:
+            is_admin: Hvorfor skulle jeg unbanne en administrator? Det lyder som en ret dum idé.
+            is_bot_itself: Hvorfor skulle jeg un-begrænse mig selv, når jeg allerede er her?
+            unbanned_user: |-
+                Ok sikkert...!
+                Unbannede {user}.
+    Blacklists:
+        bl_watcher:
+            banned_user: Bannede {user} på grund af {second}
+            kicked_user: Sparkede {first} på grund af {second}
+            muted_user: Mutede {user} på grund af {second}
+        blacklist:
+            added_bl: 'Tilføjede disse ord som sortlister:'
+            already_blacklisted: 'Disse ord er allerede på sortlisten:'
+            give_bl_word: Giv mig venligst et ord at tilføje til sortlisten!
+        help_msg: |-
+            *Bruger-kommandoer: *
+            × /blacklists: Tjek alle sortlister i chatten.
 
-      *Admin-kommandoer:*
-      × /blacklist `<trigger>`: Sortlist ordet i den aktuelle chat.
-      × /rmblacklist "<trigger>": Fjerner ordet fra den aktuelle sortlistede ord i Chat.
-      × /blaction "<mute/kick/ban/warn/none>": Angiver den handling, der skal udføres af robotten, når der registreres et sortlistord.
-      × /blacklistaction: Samme som ovenfor
+            *Admin-kommandoer:*
+            × /blacklist `<trigger>`: Sortlist ordet i den aktuelle chat.
+            × /rmblacklist "<trigger>": Fjerner ordet fra den aktuelle sortlistede ord i Chat.
+            × /blaction "<mute/kick/ban/warn/none>": Angiver den handling, der skal udføres af robotten, når der registreres et sortlistord.
+            × /blacklistaction: Samme som ovenfor
 
-      *Ejer:*
-      × /rmallbl: Fjerner alle de sortlistede ord fra chat
+            *Ejer:*
+            × /rmallbl: Fjerner alle de sortlistede ord fra chat
 
-      *Bemærkning:*
-      Standardtilstanden for Sortlist er *none*, som kun sletter meddelelserne fra chatten.
-  Connections:
-    connected: |-
-      Du er i øjeblikket forbundet til <b>%s</b>
-    not_connected: |-
-      Du er ikke forbundet til nogen chats.
-    allow_connect:
-      turned_on: |-
-        Aktiverede <b>on</b> Brugerforbindelser til denne chat!
-        Brugere kan nu forbinde chat til deres PM'er!
-      turned_off: |-
-        Deaktiverede <b>off</b> Brugerforbindelser til denne chat!
-        Brugere kan ikke forbinde chat til deres PM'er!
-      currently_on: |-
-        Brugerforbindelser er i øjeblikket slået <b>til</b>.
-        Brugere kan forbinde denne chat til deres PM'er!
-      currently_off: |-
-        Brugerforbindelser er i øjeblikket slået <b>fra</b>.
-        Brugere kan ikke forbinde denne chat til deres PM'er!
-    connect:
-      connection_disabled: |-
-        Brugerforbindelser er i øjeblikket <b>deaktiveret</b> til denne chat.
-        Bed venligst administratorer om at tillade, hvis du vil forbinde!
-      connected: |-
-        Du er nu forbundet til <b>%s</b>!
-      tap_btn_connect: |-
-        Tryk venligst på knappen nedenfor for at forbinde denne chat til din PM
-    connections_btns:
-      admin_conn_cmds: |-
-        Admin kommandoer tilgængelige:%s
-      user_conn_cmds: |-
-        Brugerkommandoer tilgængelige:%s
-    disconnect:
-      disconnected: |-
-        Afbrudt fra den forbundne chat.
-      need_pm: |-
-        Du skal sende dette i PM til mig for at afbryde forbindelsen fra chatten!
-    is_user_connected:
-      need_group: |-
-        Denne kommando er lavet til at blive brugt i gruppechats, ikke i PM!
-      bot_not_admin: |-
-        Jeg er ikke administrator i denne chat!
-      user_not_admin: |-
-        Du skal være administrator for at gøre dette.
-    reconnect:
-      reconnected: |-
-        Du er nu gentilsluttet til <b>%s</b>!
-      no_last_chat: |-
-        Du har ingen sidste chat at gentilslutte til!
-      need_pm: |-
-        Du skal være i en PM med mig for at gentilslutte til en chat!
-    help_msg: |-
-      Dette tillader dig at forbinde til en chats database, og tilføje ting til den uden at chatten ved det! Af indlysende grunde skal du være administrator for at tilføje ting; men ethvert medlem kan se dine data. (bannede/sparkede brugere kan ikke!)
+            *Bemærkning:*
+            Standardtilstanden for Sortlist er *none*, som kun sletter meddelelserne fra chatten.
+        ls_bl:
+            list_bl: 'Disse ord er sortlistede i denne chat:'
+            no_blacklisted: Der er ingen sortlistede ord i denne chat.
+        rm_all_bl:
+            ask: Er du sikker på, at du vil fjerne alle sortlistede ord fra denne chat?
+            button_handler:
+                "no": Annullerede fjernelse af alle Sortlister fra denne Chat ❌
+                "yes": Fjernede alle Sortlister fra denne Chat ✅
+        set_bl_action:
+            changed_mode: 'Ændrede sortlist tilstand til: *{value}*'
+            choose_correct_option: Vælg venligst en mulighed fra <mute/kick/ban/warn/none>
+            current_mode: 'Den aktuelle sortlist tilstand er: {value}'
+        unblacklist:
+            give_bl_word: Giv mig venligst et ord at fjerne fra sortlisten!
+            no_removed_bl: Ingen af de givne ord var på sortlisten som kan fjernes!
+            removed_bl: Fjernede '{value}' fra de sortlistede ord!
+    CommonStrings:
+        admin_cache:
+            cache_reloaded: Admin cache blev genindlæst med succes.
+            not_found: Admin cache ikke fundet. Bed en admin om at bruge /admincache for at genindlæse admin cache.
+    Connections:
+        allow_connect:
+            currently_off: |-
+                Brugerforbindelser er i øjeblikket slået <b>fra</b>.
+                Brugere kan ikke forbinde denne chat til deres PM'er!
+            currently_on: |-
+                Brugerforbindelser er i øjeblikket slået <b>til</b>.
+                Brugere kan forbinde denne chat til deres PM'er!
+            turned_off: |-
+                Deaktiverede <b>off</b> Brugerforbindelser til denne chat!
+                Brugere kan ikke forbinde chat til deres PM'er!
+            turned_on: |-
+                Aktiverede <b>on</b> Brugerforbindelser til denne chat!
+                Brugere kan nu forbinde chat til deres PM'er!
+        connect:
+            connected: Du er nu forbundet til <b>{value}</b>!
+            connection_disabled: |-
+                Brugerforbindelser er i øjeblikket <b>deaktiveret</b> til denne chat.
+                Bed venligst administratorer om at tillade, hvis du vil forbinde!
+            tap_btn_connect: Tryk venligst på knappen nedenfor for at forbinde denne chat til din PM
+        connected: Du er i øjeblikket forbundet til <b>{value}</b>
+        connections_btns:
+            admin_conn_cmds: Admin kommandoer tilgængelige:{admin}
+            user_conn_cmds: Brugerkommandoer tilgængelige:{user}
+        disconnect:
+            disconnected: Afbrudt fra den forbundne chat.
+            need_pm: Du skal sende dette i PM til mig for at afbryde forbindelsen fra chatten!
+        help_msg: |-
+            Dette tillader dig at forbinde til en chats database, og tilføje ting til den uden at chatten ved det! Af indlysende grunde skal du være administrator for at tilføje ting; men ethvert medlem kan se dine data. (bannede/sparkede brugere kan ikke!)
 
-      *Kommandoer*:
-      × /connect `<chatid>`: Forbind til den specificerede chat, så du kan se/redigere indhold.
-      × /disconnect: Afbryd forbindelsen fra den aktuelle chat.
-      × /reconnect: Gentilslut til den tidligere forbundne chat
-      × /connection: Se information om den i øjeblikket forbundne chat.
+            *Kommandoer*:
+            × /connect `<chatid>`: Forbind til den specificerede chat, så du kan se/redigere indhold.
+            × /disconnect: Afbryd forbindelsen fra den aktuelle chat.
+            × /reconnect: Gentilslut til den tidligere forbundne chat
+            × /connection: Se information om den i øjeblikket forbundne chat.
 
-      *Admin Kommandoer:*
-      × /allowconnect <yes/no>: Tillad brugere at forbinde til chats eller ej.
+            *Admin Kommandoer:*
+            × /allowconnect <yes/no>: Tillad brugere at forbinde til chats eller ej.
 
-      Du kan hente chat id'et ved at bruge /id kommandoen i din chat. Bliv ikke overrasket hvis id'et er negativt; alle supergrupper har negative id'er.
-  Disabling:
-    help_msg: |-
-      Dette tillader dig at deaktivere nogle almindeligt anvendte kommandoer, så ingen kan bruge dem. Det tillader dig også at autoslette dem, hvilket forhindrer folk i at bluetekste.
+            Du kan hente chat id'et ved at bruge /id kommandoen i din chat. Bliv ikke overrasket hvis id'et er negativt; alle supergrupper har negative id'er.
+        is_user_connected:
+            bot_not_admin: Jeg er ikke administrator i denne chat!
+            need_group: Denne kommando er lavet til at blive brugt i gruppechats, ikke i PM!
+            user_not_admin: Du skal være administrator for at gøre dette.
+        not_connected: Du er ikke forbundet til nogen chats.
+        reconnect:
+            need_pm: Du skal være i en PM med mig for at gentilslutte til en chat!
+            no_last_chat: Du har ingen sidste chat at gentilslutte til!
+            reconnected: Du er nu gentilsluttet til <b>{value}</b>!
+    Disabling:
+        help_msg: |-
+            Dette tillader dig at deaktivere nogle almindeligt anvendte kommandoer, så ingen kan bruge dem. Det tillader dig også at autoslette dem, hvilket forhindrer folk i at bluetekste.
 
-      *Admin kommandoer*:
-      × /disable `<commandname>`: Stop brugere fra at bruge commandname i denne gruppe.
-      × /enable `<item name>`: Tillad brugere at bruge commandname i denne gruppe.
-      × /disableable: List alle deaktiverbare kommandoer.
-      × /disabledel `<yes/no/on/off>`: Slet deaktiverede kommandoer når de bruges af ikke-administratorer.
-      × /disabled: List de deaktiverede kommandoer i denne chat.
+            *Admin kommandoer*:
+            × /disable `<commandname>`: Stop brugere fra at bruge commandname i denne gruppe.
+            × /enable `<item name>`: Tillad brugere at bruge commandname i denne gruppe.
+            × /disableable: List alle deaktiverbare kommandoer.
+            × /disabledel `<yes/no/on/off>`: Slet deaktiverede kommandoer når de bruges af ikke-administratorer.
+            × /disabled: List de deaktiverede kommandoer i denne chat.
 
-      Bemærkning:
-      Når du deaktiverer en kommando, bliver kommandoen kun deaktiveret for ikke-administratorer. Alle administratorer kan stadig bruge disse kommandoer.
-      Deaktiverede kommandoer er stadig tilgængelige gennem /connect funktionen. Hvis du er interesseret i at se dette deaktiveret også, så lad mig vide det i support chatten.
-  Filters:
-    help_msg: |-
-      Filtre er ikke store og små bogstavfølsomme; hver gang nogen siger dine trigger ord, vil Alita svare noget andet! kan bruges til at oprette dine egne kommandoer, hvis ønsket.
+            Bemærkning:
+            Når du deaktiverer en kommando, bliver kommandoen kun deaktiveret for ikke-administratorer. Alle administratorer kan stadig bruge disse kommandoer.
+            Deaktiverede kommandoer er stadig tilgængelige gennem /connect funktionen. Hvis du er interesseret i at se dette deaktiveret også, så lad mig vide det i support chatten.
+    Filters:
+        help_msg: |-
+            Filtre er ikke store og små bogstavfølsomme; hver gang nogen siger dine trigger ord, vil Alita svare noget andet! kan bruges til at oprette dine egne kommandoer, hvis ønsket.
 
-      Kommandoer:
-      - /filter <trigger> <reply>: Hver gang nogen siger trigger, vil robotten svare med sætning. For flere ord filtre, citer triggeren.
-      - /filters: List alle chat filtre.
-      - /stop <trigger>: Stop robotten fra at svare på trigger.
-      - /stopall: Stop ALLE filtre i den aktuelle chat. Dette kan ikke fortrydes.
+            Kommandoer:
+            - /filter <trigger> <reply>: Hver gang nogen siger trigger, vil robotten svare med sætning. For flere ord filtre, citer triggeren.
+            - /filters: List alle chat filtre.
+            - /stop <trigger>: Stop robotten fra at svare på trigger.
+            - /stopall: Stop ALLE filtre i den aktuelle chat. Dette kan ikke fortrydes.
 
-      Eksempler:
-      - Sæt et filter:
-      -> /filter hej Hej der! Hvordan har du det?
-      - Sæt et flerords filter:
-      -> /filter hej ven Hej tilbage! Længe siden sidst!
-      - Sæt et filter der kun kan bruges af administratorer:
-      -> /filter eksempel Dette filter sker ikke hvis en normal bruger siger det {admin}
-      - For at gemme en fil, billede, gif, eller enhver anden vedhæftning, svar blot på filen med:
-      -> /filter trigger
-  Formatting:
-    help_msg: |-
-      Alita understøtter et stort antal formateringsvalg for at gøre dine beskeder mere udtryksfulde. Tag et kig ved at klikke på knapperne nedenfor!
-    Markdown: |-
-      <b>Markdown Formatting</b>
+            Eksempler:
+            - Sæt et filter:
+            -> /filter hej Hej der! Hvordan har du det?
+            - Sæt et flerords filter:
+            -> /filter hej ven Hej tilbage! Længe siden sidst!
+            - Sæt et filter der kun kan bruges af administratorer:
+            -> /filter eksempel Dette filter sker ikke hvis en normal bruger siger det {admin}
+            - For at gemme en fil, billede, gif, eller enhver anden vedhæftning, svar blot på filen med:
+            -> /filter trigger
+    Formatting:
+        Fillings: |-
+            <b>Fillings</b>
 
-      You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-      <b>Supported markdown</b>:
-      - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-      - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-      - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-      - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-      - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-      - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-      - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-      - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-      - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+            You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
+            You can use these to mention a user in notes too!
 
-      If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-      <b>Example:</b>
-      <code>[button 1](buttonurl:example.com)</code>
-      <code>[button 2](buttonurl://example.com:same)</code>
-      <code>[button 3](buttonurl://example.com)</code>
-      This will show button 1 and 2 on the same line, with 3 underneath.
-    Fillings: |-
-      <b>Fillings</b>
+            <b>Supported fillings:</b>
+            - <code>{first}</code>: The user's first name.
+            - <code>{last}</code>: The user's last name.
+            - <code>{fullname}</code>: The user's full name.
+            - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
+            - <code>{mention}</code>: Mentions the user with their firstname.
+            - <code>{id}</code>: The user's ID.
+            - <code>{chatname}</code>: The chat's name.
+            - <code>{rules}</code>: Adds Rules Button to Message.
+        Markdown: |-
+            <b>Markdown Formatting</b>
 
-      You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-      You can use these to mention a user in notes too!
+            You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
+            <b>Supported markdown</b>:
+            - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
+            - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
+            - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
+            - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
+            - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
+            - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
+            - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
+            - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
+            - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
 
-      <b>Supported fillings:</b>
-      - <code>{first}</code>: The user's first name.
-      - <code>{last}</code>: The user's last name.
-      - <code>{fullname}</code>: The user's full name.
-      - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-      - <code>{mention}</code>: Mentions the user with their firstname.
-      - <code>{id}</code>: The user's ID.
-      - <code>{chatname}</code>: The chat's name.
-      - <code>{rules}</code>: Adds Rules Button to Message.
-    Random: |-
-      <b>Random Content</b>
+            If you would like to send buttons on the same row, use the <code>:same</code> formatting.
+            <b>Example:</b>
+            <code>[button 1](buttonurl:example.com)</code>
+            <code>[button 2](buttonurl://example.com:same)</code>
+            <code>[button 3](buttonurl://example.com)</code>
+            This will show button 1 and 2 on the same line, with 3 underneath.
+        Random: |-
+            <b>Random Content</b>
 
-      Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-      How to use random contents:
-      - %%%: This separator can be used to add  random replies to the bot.
-      For example:
-      <code>hello
-      %%%
-      how are you</code>
-      This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-      Use this to make Alita feel a bit more customised! (only works in filters/notes)
-      Example welcome message:
-      - Every time a new user joins, they'll be presented with one of the three messages shown here.
-      -> /filter "hey"
-      hello there <code>{first}</code>!
-      %%%
-      Ooooh, <code>{first}</code> how are you?
-      %%%
-      Sup? <code>{first}</code>
-  Greetings:
-    help_msg: |-
-      Velkommen nye medlemmer til dine grupper eller sig Farvel efter de forlader!
+            Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
+            How to use random contents:
+            - %%%: This separator can be used to add  random replies to the bot.
+            For example:
+            <code>hello
+            %%%
+            how are you</code>
+            This will randomly choose between sending the first message, "hello", or the second message, "how are you".
+            Use this to make Alita feel a bit more customised! (only works in filters/notes)
+            Example welcome message:
+            - Every time a new user joins, they'll be presented with one of the three messages shown here.
+            -> /filter "hey"
+            hello there <code>{first}</code>!
+            %%%
+            Ooooh, <code>{first}</code> how are you?
+            %%%
+            Sup? <code>{first}</code>
+        help_msg: Alita understøtter et stort antal formateringsvalg for at gøre dine beskeder mere udtryksfulde. Tag et kig ved at klikke på knapperne nedenfor!
+    Greetings:
+        help_msg: |-
+            Velkommen nye medlemmer til dine grupper eller sig Farvel efter de forlader!
 
-      *Admin Kommandoer:*
-      × /setwelcome `<reply/text>`: Sætter velkomsttekst for gruppen.
-      × /welcome `<yes/no/on/off>`: Aktiverer eller Deaktiverer velkomstindstilling for gruppen.
-      × /resetwelcome: Nulstiller velkomstbeskeden til standard.
-      × /setgoodbye `<reply/text>`: Sætter farvel tekst for gruppen.
-      × /goodbye `<yes/no/on/off>`: Aktiverer eller Deaktiverer farvel indstilling for gruppen.
-      × /resetgoodbye: Nulstiller farvel beskeden til standard.
-      × /cleanservice `<yes/no/on/off>`: Slet alle servicemeddelelser som 'x blev medlem af gruppen' notifikation.
-      × /cleanwelcome `<yes/no/on/off>`: Slet den gamle velkomstbesked, når et nyt medlem tilslutter.
-  Help:
-    About: |-
-      @%s er en af de hurtigste og mest funktionsfyldte gruppebestyrere.
+            *Admin Kommandoer:*
+            × /setwelcome `<reply/text>`: Sætter velkomsttekst for gruppen.
+            × /welcome `<yes/no/on/off>`: Aktiverer eller Deaktiverer velkomstindstilling for gruppen.
+            × /resetwelcome: Nulstiller velkomstbeskeden til standard.
+            × /setgoodbye `<reply/text>`: Sætter farvel tekst for gruppen.
+            × /goodbye `<yes/no/on/off>`: Aktiverer eller Deaktiverer farvel indstilling for gruppen.
+            × /resetgoodbye: Nulstiller farvel beskeden til standard.
+            × /cleanservice `<yes/no/on/off>`: Slet alle servicemeddelelser som 'x blev medlem af gruppen' notifikation.
+            × /cleanwelcome `<yes/no/on/off>`: Slet den gamle velkomstbesked, når et nyt medlem tilslutter.
+    Help:
+        About: |-
+            @{first} er en af de hurtigste og mest funktionsfyldte gruppebestyrere.
 
-      Alita ✨ er udviklet og vedligeholdt aktivt af @DivideProjects!
+            Alita ✨ er udviklet og vedligeholdt aktivt af @DivideProjects!
 
-      Alita har været online siden 2020 og har aftjent tusindvis af grupper med hundredtusindvis af brugere!
+            Alita har været online siden 2020 og har aftjent tusindvis af grupper med hundredtusindvis af brugere!
 
-      <b>Hvorfor Alita:</b>
-      -Simple: Easy forbrug and compaitble with many bot commands.
-      -Interessante: Mange funktioner, som andre gruppeadminiutionsbots ikke har.
-      -Hurtig: gæt hvad? Det er ikke lavet ved hjælp af Python, vi bruger <a href='https://go.dev/'>Go</a> som vores kerneprogrammeringssprog.
+            <b>Hvorfor Alita:</b>
+            -Simple: Easy forbrug and compaitble with many bot commands.
+            -Interessante: Mange funktioner, som andre gruppeadminiutionsbots ikke har.
+            -Hurtig: gæt hvad? Det er ikke lavet ved hjælp af Python, vi bruger <a href='https://go.dev/'>Go</a> som vores kerneprogrammeringssprog.
 
-      <b>Aktuel Version:</b> %s
-    Configuration:
-      Step-1: |-
-        Velkommen til Alita Configuration
+            <b>Aktuel Version:</b> {chat}
+        Configuration:
+            Step-1: |-
+                Velkommen til Alita Configuration
 
-        Det første, der skal gøres, er at tilføje Alita ✨ til din gruppe! Tryk på knappen under knappen, og vælg din gruppe, og tryk derefter på Udført for at fortsætte med at fortsætte.
-      Step-2: |-
-        Ok, godt klaret!
+                Det første, der skal gøres, er at tilføje Alita ✨ til din gruppe! Tryk på knappen under knappen, og vælg din gruppe, og tryk derefter på Udført for at fortsætte med at fortsætte.
+            Step-2: |-
+                Ok, godt klaret!
 
-        Nu for at lade mig arbejde korrekt, skal du gøre mig til Administrator af din Gruppe!
-        For at gøre det, følg disse nemme trin:
-        ▫️ Gå til din gruppe
-        ▫️ Tryk på Gruppens navn
-        ▫️ Tryk på Ændr
-        ▫️ Tryk på Administrator
-        ▫️ Tryk på Tilføj Administrator
-        ▫️ Tryk på Forstørrelsesglasset
-        ▫️ Søg @%s
-        ▫️ Bekræft
-      Step-3: |-
-        Fremragende!
-        Nu Bot er klar til brug!
-        Alle kommandoer kan bruges med / eller!
+                Nu for at lade mig arbejde korrekt, skal du gøre mig til Administrator af din Gruppe!
+                For at gøre det, følg disse nemme trin:
+                ▫️ Gå til din gruppe
+                ▫️ Tryk på Gruppens navn
+                ▫️ Tryk på Ændr
+                ▫️ Tryk på Administrator
+                ▫️ Tryk på Tilføj Administrator
+                ▫️ Tryk på Forstørrelsesglasset
+                ▫️ Søg @{admin}
+                ▫️ Bekræft
+            Step-3: |-
+                Fremragende!
+                Nu Bot er klar til brug!
+                Alle kommandoer kan bruges med / eller!
 
-        Hvis du står over for problemer med at oprette mig i din gruppe, så tøv ikke med at komme i @DivideSupport.
-        Vi vil meget gerne hjælpe dig.
-    DonateText: |-
-      Så du vil donere? Utroligt!
-      , når du donerer, går fonden i retning af min udvikling, som gør hurtigt og lydhør.
-      Din donation vil måske også give mig en ny funktion eller to, som jeg ikke kunne få på grund af serverbegrænsninger.
-      Hele fonden vil blive lagt i mine services, f.eks. database, storage og hosting!
-      Du kan donere ved at kontakte min ejer her: @DivideProjectsBot
-  Locks:
-    help_msg: |-
-      *Kun Administrator*:
-      × /lock `<permission>`: Lås chat-tilladelse.
-      × /unlock `<permission>`: Frigør chat-tilladelse.
-      × /locks: Vis chat-tilladelser.
-      × /locktypes: Kontrollér de tilgængelige låsetyper!
+                Hvis du står over for problemer med at oprette mig i din gruppe, så tøv ikke med at komme i @DivideSupport.
+                Vi vil meget gerne hjælpe dig.
+        DonateText: |-
+            Så du vil donere? Utroligt!
+            , når du donerer, går fonden i retning af min udvikling, som gør hurtigt og lydhør.
+            Din donation vil måske også give mig en ny funktion eller to, som jeg ikke kunne få på grund af serverbegrænsninger.
+            Hele fonden vil blive lagt i mine services, f.eks. database, storage og hosting!
+            Du kan donere ved at kontakte min ejer her: @DivideProjectsBot
+    Languages:
+        help_msg: |-
+            Ikke i stand til at ændre robottes sprog?
+            Ændr nemt ved at bruge dette modul!
 
-      Låse kan bruges til at begrænse en gruppes brugere.
-      Låsning af url'er vil automatisk slette alle beskeder med URL'er, låsning af klistermærker vil slette alle klistermærker osv.
-      Låsning af bots vil stoppe ikke-administratorer fra at tilføje bots til chatten.
+            Bare skriv /lang og brug inline tastatur til at vælge et sprog for dig selv eller din gruppe.
 
-      **Eksempel:**
-      `/lock media`: Dette låser alle mediemeddelelser i chatten.
-  Languages:
-    help_msg: |-
-      Ikke i stand til at ændre robottes sprog?
-      Ændr nemt ved at bruge dette modul!
+            Du kan hjælpe os med at bringe robotten til flere sprog ved at hjælpe med [Crowdin](https://crowdin.com/project/alita_robot)
+    Locks:
+        help_msg: |-
+            *Kun Administrator*:
+            × /lock `<permission>`: Lås chat-tilladelse.
+            × /unlock `<permission>`: Frigør chat-tilladelse.
+            × /locks: Vis chat-tilladelser.
+            × /locktypes: Kontrollér de tilgængelige låsetyper!
 
-      Bare skriv /lang og brug inline tastatur til at vælge et sprog for dig selv eller din gruppe.
+            Låse kan bruges til at begrænse en gruppes brugere.
+            Låsning af url'er vil automatisk slette alle beskeder med URL'er, låsning af klistermærker vil slette alle klistermærker osv.
+            Låsning af bots vil stoppe ikke-administratorer fra at tilføje bots til chatten.
 
-      Du kan hjælpe os med at bringe robotten til flere sprog ved at hjælpe med [Crowdin](https://crowdin.com/project/alita_robot)
-  Misc:
-    help_msg: |-
-      × /info: Få dine brugeroplysninger, kan bruges som svar eller ved at videregive et Bruger Id eller Brugernavn
-      × /id: Få det aktuelle gruppe id. Hvis brugt ved at svare på en besked, få den brugers id.
-      × /ping: Ping Telegram Serveren!
-      × /tr <lang code> <msg/reply to message>: Oversæt beskeden.
-      × /removebotkeyboard: Fjerner det fastklæbede robot tastatur fra din chat.
-  Mutes:
-    help_msg: |-
-      Nogle gange kan brugere være irriterende, og du vil måske begrænse dem fra at sende besked til chat, dette modul er her for at hjælpe, du kan bruge modulerne til at skrue ned for medlemmer i din gruppe.
+            **Eksempel:**
+            `/lock media`: Dette låser alle mediemeddelelser i chatten.
+    Misc:
+        help_msg: |-
+            × /info: Få dine brugeroplysninger, kan bruges som svar eller ved at videregive et Bruger Id eller Brugernavn
+            × /id: Få det aktuelle gruppe id. Hvis brugt ved at svare på en besked, få den brugers id.
+            × /ping: Ping Telegram Serveren!
+            × /tr <lang code> <msg/reply to message>: Oversæt beskeden.
+            × /removebotkeyboard: Fjerner det fastklæbede robot tastatur fra din chat.
+    Mutes:
+        help_msg: |-
+            Nogle gange kan brugere være irriterende, og du vil måske begrænse dem fra at sende besked til chat, dette modul er her for at hjælpe, du kan bruge modulerne til at skrue ned for medlemmer i din gruppe.
 
-      *Mute Commands: * (kun administrator)
-      × /mute <userhandle>: muterer en bruger, (via håndtag eller svar)
-      × /smut <userhandle>: mutes en bruger uovervåget, sender ikke en besked til gruppen og sletter også din kommando. (via håndtag eller svar)
-      × /dmute <userhandle>: Mutes en bruger, og slet den besvarede besked .. (via håndtag eller svar)
-      × /tmute <userhandle> x (m/h/d): mutes en bruger for ` x `-tid. (via håndtag eller svar). m = minutter, h = timer, d = dage.
-      × /unmute <userhandle>: ophæver mute af en bruger. (via håndtag eller svar)
-  Notes:
-    help_msg: |-
-      Gem data til fremtidige brugere med noter!
-      Noter er fantastiske til at gemme tilfældige bidder af information; et telefonnummer, et dejligt gif, et sjovt billede - hvad som helst!
-      *Brugerkommandoer:*
-      - /get <notename>: Få en note.
-      - #notename: Samme som /get.
-      Admin kommandoer:
-      - /save <notename> <note text>: Gem en ny note kaldet "ord". At svare på en besked vil gemme den besked. Virker selv med medier!
-      - /clear <notename>: Slet den tilknyttede note.
-      - /notes: List alle noter i den aktuelle chat.
-      - /saved: Samme som /notes.
-      - /clearall: Slet ALLE noter i en chat. Dette kan ikke fortrydes.
-      - /privatenotes: Om at sende noter i PM eller ej. Vil sende en besked med en knap som brugere kan klikke på for at få noten i PM.
-  Pins:
-    help_msg: |-
-      Alle de relaterede kommandoer kan findes her. Du kan holde chatten opdateret til de seneste nyheder med en enkel meddelelse! *
+            *Mute Commands: * (kun administrator)
+            × /mute <userhandle>: muterer en bruger, (via håndtag eller svar)
+            × /smut <userhandle>: mutes en bruger uovervåget, sender ikke en besked til gruppen og sletter også din kommando. (via håndtag eller svar)
+            × /dmute <userhandle>: Mutes en bruger, og slet den besvarede besked .. (via håndtag eller svar)
+            × /tmute <userhandle> x (m/h/d): mutes en bruger for ` x `-tid. (via håndtag eller svar). m = minutter, h = timer, d = dage.
+            × /unmute <userhandle>: ophæver mute af en bruger. (via håndtag eller svar)
+    Notes:
+        help_msg: |-
+            Gem data til fremtidige brugere med noter!
+            Noter er fantastiske til at gemme tilfældige bidder af information; et telefonnummer, et dejligt gif, et sjovt billede - hvad som helst!
+            *Brugerkommandoer:*
+            - /get <notename>: Få en note.
+            - #notename: Samme som /get.
+            Admin kommandoer:
+            - /save <notename> <note text>: Gem en ny note kaldet "ord". At svare på en besked vil gemme den besked. Virker selv med medier!
+            - /clear <notename>: Slet den tilknyttede note.
+            - /notes: List alle noter i den aktuelle chat.
+            - /saved: Samme som /notes.
+            - /clearall: Slet ALLE noter i en chat. Dette kan ikke fortrydes.
+            - /privatenotes: Om at sende noter i PM eller ej. Vil sende en besked med en knap som brugere kan klikke på for at få noten i PM.
+    Pins:
+        help_msg: |-
+            Alle de relaterede kommandoer kan findes her. Du kan holde chatten opdateret til de seneste nyheder med en enkel meddelelse! *
 
-      *Brugerkommandoer:*
-      × /pinned: Hent den aktuelle fastgjorte meddelelse.
+            *Brugerkommandoer:*
+            × /pinned: Hent den aktuelle fastgjorte meddelelse.
 
-      *Admin-kommandoer:*
-      × /pin: Fastgør den besked du svarede på. Tilføj 'loud' eller 'notify' for at sende en notifikation til gruppemedlemmer.
-      × /pinned: Få den seneste fastgjorte meddelelse i den aktuelle Chat.
-      × /permapin <text>: Fastgør en brugerdefineret besked gennem robotten. Denne meddelelse kan indeholde formatering, knapper og alle de andre seje funktioner.
-      × /unpin: Frigiv den aktuelle fastgjorte meddelelse. Hvis brugt som svar, fjern den besvarede meddelelse.
-      × /unpinall: Frigiv alle fastgjorte meddelelser.
-      × /antichannelpin <yes/no/on/off>: Undlad at lade telegram linkede kanal-pins. Hvis ingen argumenter angives, vises den aktuelle indstilling.
-      × /cleanlinked <yes/no/on/off>: Slet beskeder, der er sendt af den linkede kanal.
-      Bemærk: Hvis du bruger antichannelpin, skal du bruge /unpin kommandoen i stedet for at gøre det manuelt. Ellers bliver den gamle besked genfastgjort, når kanalen sender nye meddelelser.
-  Purges:
-    help_msg: |-
-      Kun *Administrator:*
-      - /purge: sletter alle meddelelser mellem dette og svaret på meddelelsen.
-      - /del: sletter den besked, du har svaret på.
+            *Admin-kommandoer:*
+            × /pin: Fastgør den besked du svarede på. Tilføj 'loud' eller 'notify' for at sende en notifikation til gruppemedlemmer.
+            × /pinned: Få den seneste fastgjorte meddelelse i den aktuelle Chat.
+            × /permapin <text>: Fastgør en brugerdefineret besked gennem robotten. Denne meddelelse kan indeholde formatering, knapper og alle de andre seje funktioner.
+            × /unpin: Frigiv den aktuelle fastgjorte meddelelse. Hvis brugt som svar, fjern den besvarede meddelelse.
+            × /unpinall: Frigiv alle fastgjorte meddelelser.
+            × /antichannelpin <yes/no/on/off>: Undlad at lade telegram linkede kanal-pins. Hvis ingen argumenter angives, vises den aktuelle indstilling.
+            × /cleanlinked <yes/no/on/off>: Slet beskeder, der er sendt af den linkede kanal.
+            Bemærk: Hvis du bruger antichannelpin, skal du bruge /unpin kommandoen i stedet for at gøre det manuelt. Ellers bliver den gamle besked genfastgjort, når kanalen sender nye meddelelser.
+    Purges:
+        help_msg: |-
+            Kun *Administrator:*
+            - /purge: sletter alle meddelelser mellem dette og svaret på meddelelsen.
+            - /del: sletter den besked, du har svaret på.
 
-      *Eksempler*:
-      - Slet alle meddelelser fra svaret på beskeden, indtil nu.
-      -> /purge
-  Reports:
-    help_msg: |-
-      Vi er alle travle mennesker, der ikke har tid til at overvåge vores grupper 24/7. Men hvordan reagerer du, hvis nogen i din gruppe spammer?
+            *Eksempler*:
+            - Slet alle meddelelser fra svaret på beskeden, indtil nu.
+            -> /purge
+    Reports:
+        help_msg: |-
+            Vi er alle travle mennesker, der ikke har tid til at overvåge vores grupper 24/7. Men hvordan reagerer du, hvis nogen i din gruppe spammer?
 
-      × /report `<reason>`: svar på en besked for at rapportere den til administratorer.
-      - @admin: samme som /report men ikke en kommando.
+            × /report `<reason>`: svar på en besked for at rapportere den til administratorer.
+            - @admin: samme som /report men ikke en kommando.
 
-      *Kun Administratorer:*
-      × /reports `<on/off/yes/no>`: ændr rapportindstilling, eller se aktuel status.
-      - Hvis gjort i PM, skifter din status.
-      - Hvis i gruppe, skifter den gruppes status.
-      × /reports `block` (kun via svar): Bloker en bruger fra at bruge /report eller @admin.
-      × /reports `unblock` (kun via svar): Fjern blokering af en bruger fra at bruge /report eller @admin.
-      × /reports `showblocklist`: Tjek alle de blokerede brugere som ikke kan bruge /report eller @admin.
+            *Kun Administratorer:*
+            × /reports `<on/off/yes/no>`: ændr rapportindstilling, eller se aktuel status.
+            - Hvis gjort i PM, skifter din status.
+            - Hvis i gruppe, skifter den gruppes status.
+            × /reports `block` (kun via svar): Bloker en bruger fra at bruge /report eller @admin.
+            × /reports `unblock` (kun via svar): Fjern blokering af en bruger fra at bruge /report eller @admin.
+            × /reports `showblocklist`: Tjek alle de blokerede brugere som ikke kan bruge /report eller @admin.
 
-      For at rapportere en bruger, svar blot på hans besked med @admin eller /report; Alita vil derefter svare med en besked der oplyser, at administratorer er blevet notificeret.
-      Du SKAL svare på en besked for at rapportere en bruger; du kan ikke bare bruge @admin til at tagge administratorer uden grund!
+            For at rapportere en bruger, svar blot på hans besked med @admin eller /report; Alita vil derefter svare med en besked der oplyser, at administratorer er blevet notificeret.
+            Du SKAL svare på en besked for at rapportere en bruger; du kan ikke bare bruge @admin til at tagge administratorer uden grund!
 
-      *BEMÆRK:* Ingen af disse vil blive udløst hvis brugt af administratorer.
-  Rules:
-    help_msg: |-
-      Hver chat fungerer med forskellige regler. Dette modul vil hjælpe med at gøre disse regler klarere!
-      *Brugerkommandoer *:
-      × /rules: Kontrollér de aktuelle chatregler.
-      *Admin-kommandoer *:
-      × /setrules `<text>": Angiv reglerne for denne chat.
-      × /privaterules "<yes/no/on/off>": Aktivér / deaktivér, om reglerne skal sendes i enrum.
-      × /resetrules: Nulstil chatreglerne til standard
-  Tagger:
-    help_msg: |-
-      Tagger er en essentiel funktion til at nævne alle abonnerede medlemmer i gruppen.
-      Alle chat medlemmer kan abonnere på tagger.
+            *BEMÆRK:* Ingen af disse vil blive udløst hvis brugt af administratorer.
+    Rules:
+        help_msg: |-
+            Hver chat fungerer med forskellige regler. Dette modul vil hjælpe med at gøre disse regler klarere!
+            *Brugerkommandoer *:
+            × /rules: Kontrollér de aktuelle chatregler.
+            *Admin-kommandoer *:
+            × /setrules `<text>": Angiv reglerne for denne chat.
+            × /privaterules "<yes/no/on/off>": Aktivér / deaktivér, om reglerne skal sendes i enrum.
+            × /resetrules: Nulstil chatreglerne til standard
+    Tagger:
+        help_msg: |-
+            Tagger er en essentiel funktion til at nævne alle abonnerede medlemmer i gruppen.
+            Alle chat medlemmer kan abonnere på tagger.
 
-      *Brugerkommandoer:*
-      × /tagme: Tillad bruger at blive tagget
-      × /untagme: Forbyd bruger at blive tagget
+            *Brugerkommandoer:*
+            × /tagme: Tillad bruger at blive tagget
+            × /untagme: Forbyd bruger at blive tagget
 
-      *Admin Kommandoer:*
-      × /tagall: tag/nævn alle taggede brugere
-      × /untagall: ryd alle taggede medlemmer
-      × /addtag <user>: Tilføj en bruger manuelt til taglisten
-      × /rmtag <user>: Fjern en bruger manuelt fra taglisten
-  Warns:
-    help_msg: |-
-      Hold dine medlemmer i tøjlerne med advarsler; stop dem i at komme ud af kontrol!
-      Hvis du leder efter automatiserede advarsler, læs om sortlist modulet!
+            *Admin Kommandoer:*
+            × /tagall: tag/nævn alle taggede brugere
+            × /untagall: ryd alle taggede medlemmer
+            × /addtag <user>: Tilføj en bruger manuelt til taglisten
+            × /rmtag <user>: Fjern en bruger manuelt fra taglisten
+    Utils:
+        chat_status:
+            anon_admin_btn: Klik for at vise admin
+            anon_admin_string: Det ser ud, som om du er anonym. Tryk på denne knap for at bekræfte din identitet.
+            bot:
+                no_permission_delete: Jeg har ikke Tilladelser til at slette beskeder!
+                no_permission_pin: Jeg kan ikke fastgøre beskeder her! Sørg for, at jeg er admin, og kan fastgøre meddelelser.
+                no_permission_promote: Jeg kan ikke forfremme og degradere folk her! Sørg for, at jeg er administrator og kan udpege nye admins.
+                no_permission_restrict: Jeg har ikke tilladelse til at begrænse medlemmer!
+                no_permission_restrict_group: Jeg kan ikke begrænse folk her! Sørg for, at jeg er admin, og kan begrænse andre medlemmer.
+                require_admin: Jeg er ikke administrator! Sørg for, at jeg er administrator og har de rette tilladelser.
+            require_group: Denne kommando bruges til at blive brugt i gruppechats, ikke i PM.
+            require_private: Denne kommando er lavet til PM, ikke gruppechat!
+            user:
+                no_permission_change_info_btn: Du har ikke tilladelse til at ændre oplysninger!
+                no_permission_change_info_cmd: Du har ikke tilladelse til at ændre oplysninger i denne gruppe!
+                no_permission_delete: Du har ikke Tilladelser til at slette beskeder!
+                no_permission_pin: Du kan ikke fastgøre beskeder her! Sørg for, at du er admin og kan fastgøre meddelelser.
+                no_permission_promote_btn: Du har ikke tilladelse til at promovere / demote medlemmer!
+                no_permission_promote_cmd: Du kan ikke promovere / degradere folk her! Sørg for, at du har de rette rettigheder!
+                no_permission_restrict_btn: Du har ikke tilladelse til at begrænse medlemmer!
+                no_permission_restrict_cmd: Du har ikke tilladelse til at begrænse medlemmer i denne gruppe!
+                require_admin_btn: Du er nødt til at være administrator for at gøre det her!
+                require_admin_cmd: Kun administratorer kan udføre denne kommando!
+                require_owner_btn: Du skal være gruppator for at gøre dette!
+                require_owner_cmd: Kun gruppeskaber kan gøre dette!
+        extraction:
+            extract_chat:
+                badrequest_failed_getchat: 'Kan ikke oprette forbindelse til chat: Kan ikke hente chat: Kan ikke hente chat: Kan ikke getChat: Ugyldig anmodning: Chat er ikke fundet'
+                fail_need_chat: Jeg skal bruge en chat-id til at oprette forbindelse til!
+                fail_need_chat_id: Jeg forventede en Chat-id, men dette er ikke et gyldigt heltal
+            extract_user:
+                badrequest_failed_getchatmember: 'Kan ikke hente bruger: Kan ikke getChatMember: Ugyldig anmodning: Chat er ikke fundet'
+                no_user_found: Kan ikke finde en bruger med dette navn. Er du sikker på, at jeg har set dem før?
+        string_handling:
+            extract_time:
+                invalid_time_amount: Ugyldigt tidsbeløb angivet.
+                invalid_time_type: 'Ugyldig tidstype angivet. Forventede m, h, eller d.: {time}'
+    Warns:
+        help_msg: |-
+            Hold dine medlemmer i tøjlerne med advarsler; stop dem i at komme ud af kontrol!
+            Hvis du leder efter automatiserede advarsler, læs om sortlist modulet!
 
-      *Admin Kommandoer:*
-      - /warn <reason>: Advar en bruger.
-      - /dwarn <reason>: Advar en bruger via svar, og slet deres besked.
-      - /swarn <reason>: Advar en bruger stille, og slet din besked.
-      - /warns: Se en brugers advarsler.
-      - /rmwarn: Fjern en brugers seneste advarsel.
-      - /resetwarn: Nulstil alle en brugers advarsler til 0.
-      - /resetallwarns: Slet alle advarsler i en chat. Alle brugere vender tilbage til 0 advarsler.
-      - /warnings: Få chattens advarselsindstillinger.
-      - /setwarnmode <ban/kick/mute/tban/tmute>: Sæt chattens advarseltilstand.
-      - /setwarnlimit <number>: Sæt antallet af advarsler før brugere bliver straffet.
+            *Admin Kommandoer:*
+            - /warn <reason>: Advar en bruger.
+            - /dwarn <reason>: Advar en bruger via svar, og slet deres besked.
+            - /swarn <reason>: Advar en bruger stille, og slet din besked.
+            - /warns: Se en brugers advarsler.
+            - /rmwarn: Fjern en brugers seneste advarsel.
+            - /resetwarn: Nulstil alle en brugers advarsler til 0.
+            - /resetallwarns: Slet alle advarsler i en chat. Alle brugere vender tilbage til 0 advarsler.
+            - /warnings: Få chattens advarselsindstillinger.
+            - /setwarnmode <ban/kick/mute/tban/tmute>: Sæt chattens advarseltilstand.
+            - /setwarnlimit <number>: Sæt antallet af advarsler før brugere bliver straffet.
 
-      *Eksempler*
-      - Advar en bruger.
-      -> `/warn @user For at overtrede reglerne`
-  Utils:
-    chat_status:
-      user:
-        no_permission_change_info_btn: |-
-          Du har ikke tilladelse til at ændre oplysninger!
-        no_permission_change_info_cmd: |-
-          Du har ikke tilladelse til at ændre oplysninger i denne gruppe!
-        no_permission_restrict_btn: |-
-          Du har ikke tilladelse til at begrænse medlemmer!
-        no_permission_restrict_cmd: |-
-          Du har ikke tilladelse til at begrænse medlemmer i denne gruppe!
-        no_permission_promote_btn: |-
-          Du har ikke tilladelse til at promovere / demote medlemmer!
-        no_permission_promote_cmd: |-
-          Du kan ikke promovere / degradere folk her! Sørg for, at du har de rette rettigheder!
-        no_permission_pin: |-
-          Du kan ikke fastgøre beskeder her! Sørg for, at du er admin og kan fastgøre meddelelser.
-        no_permission_delete: |-
-          Du har ikke Tilladelser til at slette beskeder!
-        require_admin_btn: |-
-          Du er nødt til at være administrator for at gøre det her!
-        require_admin_cmd: |-
-          Kun administratorer kan udføre denne kommando!
-        require_owner_btn: |-
-          Du skal være gruppator for at gøre dette!
-        require_owner_cmd: |-
-          Kun gruppeskaber kan gøre dette!
-      bot:
-        no_permission_restrict: |-
-          Jeg har ikke tilladelse til at begrænse medlemmer!
-        no_permission_restrict_group: |-
-          Jeg kan ikke begrænse folk her! Sørg for, at jeg er admin, og kan begrænse andre medlemmer.
-        no_permission_promote: |-
-          Jeg kan ikke forfremme og degradere folk her! Sørg for, at jeg er administrator og kan udpege nye admins.
-        no_permission_pin: |-
-          Jeg kan ikke fastgøre beskeder her! Sørg for, at jeg er admin, og kan fastgøre meddelelser.
-        no_permission_delete: |-
-          Jeg har ikke Tilladelser til at slette beskeder!
-        require_admin: |-
-          Jeg er ikke administrator! Sørg for, at jeg er administrator og har de rette tilladelser.
-      require_private: |-
-        Denne kommando er lavet til PM, ikke gruppechat!
-      require_group: |-
-        Denne kommando bruges til at blive brugt i gruppechats, ikke i PM.
-      anon_admin_string: |-
-        Det ser ud, som om du er anonym. Tryk på denne knap for at bekræfte din identitet.
-      anon_admin_btn: |-
-        Klik for at vise admin
-    extraction:
-      extract_chat:
-        badrequest_failed_getchat: |-
-          Kan ikke oprette forbindelse til chat: Kan ikke hente chat: Kan ikke hente chat: Kan ikke getChat: Ugyldig anmodning: Chat er ikke fundet
-        fail_need_chat_id: |-
-          Jeg forventede en Chat-id, men dette er ikke et gyldigt heltal
-        fail_need_chat: |-
-          Jeg skal bruge en chat-id til at oprette forbindelse til!
-      extract_user:
-        no_user_found: |-
-          Kan ikke finde en bruger med dette navn. Er du sikker på, at jeg har set dem før?
-        badrequest_failed_getchatmember: |-
-          Kan ikke hente bruger: Kan ikke getChatMember: Ugyldig anmodning: Chat er ikke fundet
-    string_handling:
-      extract_time:
-        invalid_time_amount: |-
-          Ugyldigt tidsbeløb angivet.
-        invalid_time_type: |-
-          Ugyldig tidstype angivet. Forventede m, h, eller d.: %s
+            *Eksempler*
+            - Advar en bruger.
+            -> `/warn @user For at overtrede reglerne`
