@@ -16,6 +16,9 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+    ports:
+      # Only expose webhook port when USE_WEBHOOKS=true
+      - "${WEBHOOK_PORT:-8080}:${WEBHOOK_PORT:-8080}"
     # Resource limits to prevent crashes
     deploy:
       resources:
@@ -60,6 +63,24 @@ services:
         limits:
           memory: 256M
           cpus: "0.25"
+
+  # Cloudflare Tunnel service (only needed when USE_WEBHOOKS=true)
+  # Uncomment this service and set CLOUDFLARE_TUNNEL_TOKEN in .env when using webhooks
+  # cloudflared:
+  #   image: cloudflare/cloudflared:latest
+  #   container_name: alita-cloudflared
+  #   restart: unless-stopped
+  #   command: tunnel --no-autoupdate run
+  #   environment:
+  #     TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+  #   depends_on:
+  #     - alita
+  #   # Resource limits for cloudflared
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128M
+  #         cpus: "0.1"
 
 volumes:
   postgres_data:

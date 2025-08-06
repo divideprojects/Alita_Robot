@@ -25,6 +25,11 @@ var (
 	RedisAddress       string
 	RedisPassword      string
 	RedisDB            int
+	// Webhook configuration
+	UseWebhooks   bool
+	WebhookDomain string
+	WebhookSecret string
+	WebhookPort   int
 )
 
 // init initializes the config variables.
@@ -56,6 +61,11 @@ func init() {
 	RedisAddress = os.Getenv("REDIS_ADDRESS")
 	RedisPassword = os.Getenv("REDIS_PASSWORD")
 	RedisDB = typeConvertor{str: os.Getenv("REDIS_DB")}.Int()
+	// Webhook configuration
+	UseWebhooks = typeConvertor{str: os.Getenv("USE_WEBHOOKS")}.Bool()
+	WebhookDomain = os.Getenv("WEBHOOK_DOMAIN")
+	WebhookSecret = os.Getenv("WEBHOOK_SECRET")
+	WebhookPort = typeConvertor{str: os.Getenv("WEBHOOK_PORT")}.Int()
 
 	// set default values
 	if ApiServer == "" {
@@ -72,6 +82,9 @@ func init() {
 	}
 	if RedisDB == 0 {
 		RedisDB = 1
+	}
+	if WebhookPort == 0 {
+		WebhookPort = 8080
 	}
 
 	// Default DATABASE_URL if not set

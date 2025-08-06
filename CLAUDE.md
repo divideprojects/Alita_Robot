@@ -36,6 +36,7 @@ make vendor       # Vendor all dependencies locally
   - **error_handling/** - Centralized error handling
   - **extraction/** - Message parsing and entity extraction
   - **string_handling/** - Text manipulation utilities
+  - **webhook/** - Webhook server implementation with security validation
 - **i18n/** - Internationalization with YAML locale files
 
 ### Supporting Components
@@ -59,6 +60,7 @@ The bot uses PostgreSQL with the following key tables:
 
 Required environment variables (see sample.env):
 ```
+# Core Configuration
 BOT_TOKEN          # Telegram bot token from @BotFather
 DATABASE_URL       # PostgreSQL connection string
 REDIS_ADDRESS      # Redis server address
@@ -66,6 +68,13 @@ REDIS_PASSWORD     # Redis password (if required)
 MESSAGE_DUMP       # Chat ID for bot logs (must start with -100)
 OWNER_ID           # Your Telegram user ID
 ENABLED_LOCALES    # Comma-separated locale codes (default: en)
+
+# Webhook Configuration (optional - for webhook mode)
+USE_WEBHOOKS       # Set to 'true' to enable webhook mode (default: false/polling)
+WEBHOOK_DOMAIN     # Your webhook domain (e.g., https://your-bot.example.com)
+WEBHOOK_SECRET     # Random secret string for webhook security
+WEBHOOK_PORT       # Port for webhook server (default: 8080)
+CLOUDFLARE_TUNNEL_TOKEN # Cloudflare tunnel token (if using cloudflared)
 ```
 
 ## Key Technical Details
@@ -76,6 +85,8 @@ ENABLED_LOCALES    # Comma-separated locale codes (default: en)
 4. **Monitoring**: Built-in resource monitor tracks memory and goroutine usage
 5. **Localization**: Multi-language support via i18n package and YAML locale files
 6. **Message Types**: Supports text, sticker, document, photo, audio, voice, video, video note
+7. **Deployment Modes**: Supports both polling and webhook modes with automatic mode detection
+8. **Webhook Security**: Built-in secret token validation and graceful shutdown handling
 
 ## Module Development
 
@@ -91,6 +102,42 @@ When adding new features:
 - Use `make lint` to check code quality before commits
 - The project uses golangci-lint for comprehensive linting
 - No dedicated test files currently exist in the project
+
+## Deployment Modes
+
+The bot supports two deployment modes:
+
+### Polling Mode (Default)
+- Uses long polling to receive updates from Telegram
+- No external network configuration required
+- Suitable for development and simple deployments
+- Set `USE_WEBHOOKS=false` or leave unset
+
+### Webhook Mode
+- Telegram sends updates via HTTP POST to your server
+- Requires public HTTPS endpoint
+- Better for production deployments with high traffic
+- Set `USE_WEBHOOKS=true` and configure webhook variables
+
+**Webhook Setup:**
+1. Set up Cloudflare tunnel: `cloudflared tunnel create alita-bot`
+2. Configure tunnel to point to your webhook port
+3. Set environment variables:
+   ```bash
+   USE_WEBHOOKS=true
+   WEBHOOK_DOMAIN=https://your-tunnel-domain.trycloudflare.com
+   WEBHOOK_SECRET=your-random-secret-string
+   WEBHOOK_PORT=8080
+   CLOUDFLARE_TUNNEL_TOKEN=your-tunnel-token
+   ```
+4. Uncomment cloudflared service in docker-compose.yml
+5. Start the bot - it will automatically configure the webhook
+
+**Security Features:**
+- Webhook secret token validation
+- Request method validation
+- Graceful shutdown with webhook cleanup
+- Health check endpoint at `/health`
 
 ## Migration from MongoDB
 
