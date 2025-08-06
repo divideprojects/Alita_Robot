@@ -42,6 +42,14 @@
 
 ## ✨ Features
 
+### 📊 **Performance & Optimization**
+- **Parallel Bulk Processing**: High-performance batch operations for filters, blacklists, and warnings
+- **Worker Pool Architecture**: Efficient concurrent task processing with rate limiting
+- **Smart Caching**: Two-tier caching with stampede protection and TTL management
+- **Batch Prefetching**: Optimized data loading for reduced database queries
+- **Resource Monitoring**: Automatic detection and alerting for memory/goroutine issues
+- **Performance Analytics**: Built-in statistics collection and performance tracking
+
 ### 🛡️ **Admin & Moderation**
 - **User Management**: Ban, mute, kick, and warn users with customizable actions
 - **Permission System**: Granular permission control for admins
@@ -70,6 +78,9 @@
 - **Middleware System**: Extensible command decorators
 - **Graceful Shutdown**: Proper cleanup and connection handling
 - **Docker Ready**: Multi-architecture images for easy deployment
+- **Worker Pools**: Concurrent processing with configurable worker pools
+- **Batch Operations**: Optimized bulk database operations with parallel processing
+- **Performance Monitoring**: Built-in metrics collection and analysis
 
 ## 🚀 Quick Start
 
@@ -421,6 +432,13 @@ USE_WEBHOOKS=false
 - `/cleanservice` - Auto-delete service messages
 - `/setflood` - Configure antiflood
 - `/blacklist` - Add blacklisted words
+
+## 📖 Documentation
+
+- **Comprehensive Code Documentation**: All 774+ functions across 83 Go files are fully documented
+- **GoDoc Compatible**: Documentation follows Go standards for automatic documentation generation
+- **Developer Guide**: See [CLAUDE.md](CLAUDE.md) for detailed architecture and development guidelines
+- **API Reference**: Run `go doc` or visit [pkg.go.dev](https://pkg.go.dev/github.com/divideprojects/Alita_Robot) for API documentation
 
 ## 🔨 Development
 

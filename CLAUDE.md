@@ -36,18 +36,28 @@ make psql-reset    # Reset database - DANGEROUS: drops and recreates all tables
   - Implementations in `repositories/implementations/`
   - Models for each entity (users, chats, filters, etc.)
   - Individual DB files for each module (admin_db.go, filters_db.go, etc.)
+  - **bulk_operations.go** - Parallel bulk processors for high-performance batch operations
+  - **optimized_queries.go** - Query optimization with batch prefetching and singleton patterns
+  - **cache_helpers.go** - Cache management with TTL and stampede protection
+  - **shared_helpers.go** - Generic database operations with transaction support
 - **modules/** - Bot command handlers
   - Each file handles specific functionality (admin.go, filters.go, greetings.go, etc.)
   - Commands are registered via dispatcher in main.go
+  - **dbclean.go** - Database maintenance with worker pool for chat validation
 - **utils/** - Utility packages
-  - **cache/** - Redis + Ristretto dual-layer caching system
-  - **chat_status/** - User permission checking
+  - **cache/** - Redis + Ristretto dual-layer caching system with fallback support
+  - **chat_status/** - User permission checking with caching
   - **decorators/** - Command decorators for handler middleware
-  - **error_handling/** - Centralized error handling
+  - **error_handling/** - Centralized error handling with panic recovery
   - **extraction/** - Message parsing and entity extraction
   - **string_handling/** - Text manipulation utilities
   - **webhook/** - Webhook server implementation with security validation
-- **i18n/** - Internationalization with YAML locale files
+  - **monitoring/** - Resource monitoring with auto-remediation and background stats
+  - **concurrent_processing/** - Message pipeline for concurrent handling
+  - **safety/** - Worker safety with panic recovery and rate limiting
+  - **shutdown/** - Graceful shutdown manager with handler registration
+  - **context/** - Context utilities for request handling
+- **i18n/** - Internationalization with YAML locale files and parameter interpolation
 
 ### Supporting Components
 - **cmd/migrate/** - MongoDB to PostgreSQL migration tool with batch processing
@@ -108,13 +118,17 @@ STATS_INTERVAL     # Statistics collection interval in seconds (default: 60)
 ## Key Technical Details
 
 1. **Database**: PostgreSQL with GORM ORM, connection pooling, and batch operations
-2. **Caching**: Two-layer cache with Ristretto (L1) and Redis (L2)
+2. **Caching**: Two-layer cache with Ristretto (L1) and Redis (L2) with stampede protection
 3. **Concurrency**: Dispatcher limited to 100 max routines to prevent goroutine explosion
-4. **Monitoring**: Built-in resource monitor tracks memory and goroutine usage
+4. **Monitoring**: Built-in resource monitor tracks memory and goroutine usage with auto-remediation
 5. **Localization**: Multi-language support via i18n package and YAML locale files
 6. **Message Types**: Supports text, sticker, document, photo, audio, voice, video, video note
 7. **Deployment Modes**: Supports both polling and webhook modes with automatic mode detection
 8. **Webhook Security**: Built-in secret token validation and graceful shutdown handling
+9. **Worker Pools**: Configurable worker pools for parallel processing (chat validation, bulk ops)
+10. **Batch Prefetching**: Optimized context loading for reduced database round-trips
+11. **Performance Stats**: Real-time metrics collection with detailed analytics
+12. **Auto-Remediation**: Automatic garbage collection and memory cleanup when thresholds exceeded
 
 ## Module Development
 
@@ -280,6 +294,9 @@ For fresh PostgreSQL deployments or schema updates:
 3. **Caching**: Use the cache package for frequently accessed data
 4. **Database**: Follow repository pattern for database operations
 5. **Commands**: Use decorators for common command middleware
+6. **Concurrent Processing**: Use worker pools for batch operations
+7. **Performance**: Leverage bulk operations and parallel processing
+8. **Monitoring**: Use built-in metrics collection for performance tracking
 
 ## Supabase Integration
 
@@ -287,6 +304,36 @@ The project includes Supabase configuration files, though the bot now uses direc
 - **supabase/migrations/**: Contains database schema migrations
 - **supabase/config.toml**: Supabase project configuration
 - Migration files are used by the native PostgreSQL migration system
+
+## Advanced Features
+
+### Performance Optimization Techniques
+1. **Parallel Bulk Processors**: Generic parallel processing framework for batch operations
+2. **Batch Prefetching**: Reduces N+1 queries by prefetching related data
+3. **Cache Stampede Protection**: Prevents thundering herd problem with distributed locking
+4. **Worker Pool Pattern**: Reusable worker pools with configurable concurrency
+5. **Optimized Query Patterns**: Singleton queries, pagination, and batch operations
+
+### Monitoring & Observability
+1. **Resource Monitor**: Tracks memory usage and goroutine counts every 5 minutes
+2. **Auto-Remediation**: Automatic GC triggering when memory exceeds thresholds
+3. **Performance Statistics**: Built-in metrics collection for database operations
+4. **Background Stats Collector**: Continuous monitoring with configurable intervals
+5. **Health Checks**: Database and cache health monitoring
+
+### Code Quality & Documentation
+1. **Comprehensive Go Documentation**: All 774+ functions documented with godoc-compatible comments
+2. **Repository Pattern**: Clean separation between business logic and data access
+3. **Error Recovery**: Panic recovery at multiple levels (dispatcher, workers, handlers)
+4. **Graceful Shutdown**: Ordered shutdown with cleanup handlers
+5. **Type Safety**: Custom types with proper validation and scanning methods
+
+### Security Features
+1. **Webhook Secret Validation**: HMAC-based webhook authentication
+2. **Rate Limiting**: Built into worker pools and message processing
+3. **Permission System**: Multi-level permission checking with caching
+4. **Anti-Spam Protection**: Configurable flood control with multiple enforcement modes
+5. **Blacklist System**: Pattern matching with regex compilation caching
 
 ## Update Instructions
 
@@ -297,3 +344,5 @@ When discovering new architectural patterns, modules, or significant changes not
 4. Keep the architecture overview current with actual code structure
 5. Update sample.env when adding new configuration options
 6. Ensure CI/CD workflows reflect any build process changes
+7. Update performance optimization patterns if new techniques are added
+8. Document any new monitoring or observability features
