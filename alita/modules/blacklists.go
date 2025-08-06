@@ -29,6 +29,8 @@ var blacklistsModule = moduleStruct{
 	handlerGroup: 7,
 }
 
+// Use the shared global regex cache from filters module
+
 /*
 	Used to add a blacklist to group!
 
@@ -395,7 +397,15 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	tr := i18n.I18n{LangCode: db.GetLanguage(ctx)}
 
 	for _, i := range blSettings.Triggers() {
-		match, _ := regexp.MatchString(fmt.Sprintf(`(\b|\s)%s\b`, i), strings.ToLower(msg.Text))
+		// Use cached compiled regex pattern for better performance
+		pattern := fmt.Sprintf(`(\b|\s)%s\b`, regexp.QuoteMeta(i))
+		compiledRegex, err := globalRegexCache.getCompiledRegex(pattern)
+		if err != nil {
+			log.WithField("pattern", pattern).Error("Failed to compile blacklist regex pattern")
+			continue
+		}
+
+		match := compiledRegex.MatchString(strings.ToLower(msg.Text))
 		if match {
 			_, err := msg.Delete(b, nil)
 			if err != nil {
@@ -461,13 +471,24 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 					return err
 				}
 
-				// unban the member
-				time.Sleep(3 * time.Second)
-				_, err = chat.UnbanMember(b, user.Id(), nil)
-				if err != nil {
-					log.Error(err)
-					return err
-				}
+				// Use non-blocking delayed unban for blacklist kick action
+				go func(userId int64) {
+					defer func() {
+						if r := recover(); r != nil {
+							log.WithField("panic", r).Error("Panic in blacklist delayed unban goroutine")
+						}
+					}()
+					
+					time.Sleep(3 * time.Second)
+					_, unbanErr := chat.UnbanMember(b, userId, nil)
+					if unbanErr != nil {
+						log.WithFields(log.Fields{
+							"chatId": chat.Id,
+							"userId": userId,
+							"error":  unbanErr,
+						}).Error("Failed to unban user after blacklist kick")
+					}
+				}(user.Id())
 			case "warn":
 				// don't work on anonymous channels
 				if user.IsAnonymousChannel() {

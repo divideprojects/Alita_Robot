@@ -5,6 +5,7 @@ import (
 	"html"
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
@@ -29,6 +30,30 @@ var filtersModule = moduleStruct{
 	moduleName:          "Filters",
 	overwriteFiltersMap: make(map[string]overwriteFilter),
 	handlerGroup:        9,
+}
+
+// Shared regex pattern cache for performance optimization
+type sharedRegexCache struct {
+	patterns sync.Map // map[string]*regexp.Regexp
+}
+
+var globalRegexCache = &sharedRegexCache{}
+
+// getCompiledRegex returns a compiled regex pattern from cache or compiles and caches it
+func (rc *sharedRegexCache) getCompiledRegex(pattern string) (*regexp.Regexp, error) {
+	if cached, ok := rc.patterns.Load(pattern); ok {
+		return cached.(*regexp.Regexp), nil
+	}
+
+	// Compile the regex pattern
+	compiled, err := regexp.Compile(pattern)
+	if err != nil {
+		return nil, err
+	}
+
+	// Store in cache for future use
+	rc.patterns.Store(pattern, compiled)
+	return compiled, nil
 }
 
 /*
@@ -400,13 +425,27 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
-	var err error
 
 	filterKeys := db.GetFiltersList(chat.Id)
 
 	for _, i := range filterKeys {
-		match, _ := regexp.MatchString(fmt.Sprintf(`(\b|\s)%s\b`, i), strings.ToLower(msg.Text))
-		noformatMatch, _ := regexp.MatchString(fmt.Sprintf("%s noformat", i), strings.ToLower(msg.Text))
+		// Use cached compiled regex patterns for better performance
+		mainPattern := fmt.Sprintf(`(\b|\s)%s\b`, regexp.QuoteMeta(i))
+		mainRegex, err := globalRegexCache.getCompiledRegex(mainPattern)
+		if err != nil {
+			log.WithField("pattern", mainPattern).Error("Failed to compile main regex pattern")
+			continue
+		}
+
+		noformatPattern := fmt.Sprintf("%s noformat", regexp.QuoteMeta(i))
+		noformatRegex, err := globalRegexCache.getCompiledRegex(noformatPattern)
+		if err != nil {
+			log.WithField("pattern", noformatPattern).Error("Failed to compile noformat regex pattern")
+			continue
+		}
+
+		match := mainRegex.MatchString(strings.ToLower(msg.Text))
+		noformatMatch := noformatRegex.MatchString(strings.ToLower(msg.Text))
 
 		if match {
 			filtData := db.GetFilter(chat.Id, i)
@@ -424,6 +463,7 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 				filtData.FilterReply += helpers.RevertButtons(filtData.Buttons)
 
 				// using true as last argument to prevent the message from being formatted
+				var err error
 				_, err = helpers.FiltersEnumFuncMap[filtData.MsgType](
 					b,
 					ctx,
@@ -433,14 +473,18 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 					true,
 					filtData.NoNotif,
 				)
+				if err != nil {
+					log.Error(err)
+					return err
+				}
 
 			} else {
+				var err error
 				_, err = helpers.SendFilter(b, ctx, filtData, msg.MessageId)
-			}
-
-			if err != nil {
-				log.Error(err)
-				return err
+				if err != nil {
+					log.Error(err)
+					return err
+				}
 			}
 
 			return ext.ContinueGroups

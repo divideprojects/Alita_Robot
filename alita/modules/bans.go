@@ -116,13 +116,26 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	time.Sleep(2 * time.Second)
+	// Use non-blocking approach with goroutine for delayed unban
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				log.WithField("panic", r).Error("Panic in delayed unban goroutine")
+			}
+		}()
+		
+		time.Sleep(2 * time.Second)
+		_, unbanErr := chat.UnbanMember(b, userId, nil)
+		if unbanErr != nil {
+			log.WithFields(log.Fields{
+				"chatId": chat.Id,
+				"userId": userId,
+				"error":  unbanErr,
+			}).Error("Failed to unban user after dkick")
+		}
+	}()
 
-	_, err = chat.UnbanMember(b, userId, nil)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
+	// Continue immediately without blocking
 
 	kickuser, err := b.GetChat(userId, nil)
 	if err != nil {
@@ -223,14 +236,26 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	time.Sleep(2 * time.Second)
+	// Use non-blocking approach with goroutine for delayed unban
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				log.WithField("panic", r).Error("Panic in delayed unban goroutine")
+			}
+		}()
+		
+		time.Sleep(2 * time.Second)
+		_, unbanErr := chat.UnbanMember(b, userId, nil)
+		if unbanErr != nil {
+			log.WithFields(log.Fields{
+				"chatId": chat.Id,
+				"userId": userId,
+				"error":  unbanErr,
+			}).Error("Failed to unban user after kick")
+		}
+	}()
 
-	_, err = chat.UnbanMember(b, userId, nil)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
+	// Continue immediately without blocking
 	kickuser, err := b.GetChat(userId, nil)
 	if err != nil {
 		log.Error(err)
@@ -926,13 +951,24 @@ func (moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) erro
 			helpers.MentionHtml(user.Id, user.FirstName),
 			helpers.MentionHtml(int64(userId), actionUser.FirstName),
 		)
-		// unban the member
-		time.Sleep(3 * time.Second)
-		_, err = chat.UnbanMember(b, int64(userId), nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
+		// Use non-blocking delayed unban for restrict kick action
+		go func() {
+			defer func() {
+				if r := recover(); r != nil {
+					log.WithField("panic", r).Error("Panic in restrict delayed unban goroutine")
+				}
+			}()
+			
+			time.Sleep(3 * time.Second)
+			_, unbanErr := chat.UnbanMember(b, int64(userId), nil)
+			if unbanErr != nil {
+				log.WithFields(log.Fields{
+					"chatId": chat.Id,
+					"userId": userId,
+					"error":  unbanErr,
+				}).Error("Failed to unban user after restrict kick")
+			}
+		}()
 	case "mute":
 		_, err := chat.RestrictMember(b, int64(userId),
 			gotgbot.ChatPermissions{

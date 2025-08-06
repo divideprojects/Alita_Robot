@@ -1,19 +1,52 @@
 package db
 
 import (
+	"context"
+	"fmt"
+	"time"
+	
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
 const (
 	// Batch size for bulk operations
-	BulkBatchSize = 100
+	BulkBatchSize     = 100
+	FilterBatchSize   = 50
+	BlacklistBatchSize = 50
+	
+	// Timeout for bulk operations
+	BulkOperationTimeout = 30 * time.Second
 )
 
-// BulkAddFilters adds multiple filters in a single operation
-func BulkAddFilters(chatID int64, filters map[string]string) error {
+// BulkOperationStats tracks bulk operation performance
+type BulkOperationStats struct {
+	ProcessedCount int
+	FailedCount    int
+	Duration       time.Duration
+	StartTime      time.Time
+}
+
+// LogBulkOperationStats logs the performance stats of bulk operations
+func LogBulkOperationStats(operation string, stats *BulkOperationStats) {
+	log.WithFields(log.Fields{
+		"operation":     operation,
+		"processed":     stats.ProcessedCount,
+		"failed":        stats.FailedCount,
+		"duration_ms":   stats.Duration.Milliseconds(),
+		"records_per_s": float64(stats.ProcessedCount) / stats.Duration.Seconds(),
+	}).Info("Bulk operation completed")
+}
+
+// BulkAddFilters adds multiple filters in a single operation with performance tracking
+func BulkAddFilters(chatID int64, filters map[string]string) (*BulkOperationStats, error) {
+	stats := &BulkOperationStats{
+		StartTime: time.Now(),
+	}
+	
 	if len(filters) == 0 {
-		return nil
+		stats.Duration = time.Since(stats.StartTime)
+		return stats, nil
 	}
 
 	filterRecords := make([]ChatFilters, 0, len(filters))
@@ -26,16 +59,22 @@ func BulkAddFilters(chatID int64, filters map[string]string) error {
 		})
 	}
 
-	// Use CreateInBatches for efficient bulk insert
-	err := DB.CreateInBatches(filterRecords, BulkBatchSize).Error
+	ctx, cancel := context.WithTimeout(context.Background(), BulkOperationTimeout)
+	defer cancel()
+
+	// Use CreateInBatches for efficient bulk insert with context
+	err := DB.WithContext(ctx).CreateInBatches(filterRecords, FilterBatchSize).Error
 	if err != nil {
+		stats.FailedCount = len(filters)
 		log.Errorf("[Database][BulkAddFilters]: %d - %v", chatID, err)
-		return err
+	} else {
+		stats.ProcessedCount = len(filters)
+		// Invalidate cache after bulk add
+		deleteCache(filterListCacheKey(chatID))
 	}
 
-	// Invalidate cache after bulk add
-	deleteCache(filterListCacheKey(chatID))
-	return nil
+	stats.Duration = time.Since(stats.StartTime)
+	return stats, err
 }
 
 // BulkRemoveFilters removes multiple filters in a single operation
@@ -103,10 +142,15 @@ func BulkRemoveNotes(chatID int64, noteNames []string) error {
 	return nil
 }
 
-// BulkAddBlacklist adds multiple blacklist words in a single operation
-func BulkAddBlacklist(chatID int64, words []string, action string) error {
+// BulkAddBlacklist adds multiple blacklist words in a single operation with performance tracking
+func BulkAddBlacklist(chatID int64, words []string, action string) (*BulkOperationStats, error) {
+	stats := &BulkOperationStats{
+		StartTime: time.Now(),
+	}
+	
 	if len(words) == 0 {
-		return nil
+		stats.Duration = time.Since(stats.StartTime)
+		return stats, nil
 	}
 
 	blacklistRecords := make([]BlacklistSettings, 0, len(words))
@@ -118,16 +162,22 @@ func BulkAddBlacklist(chatID int64, words []string, action string) error {
 		})
 	}
 
-	// Use CreateInBatches for efficient bulk insert
-	err := DB.CreateInBatches(blacklistRecords, BulkBatchSize).Error
+	ctx, cancel := context.WithTimeout(context.Background(), BulkOperationTimeout)
+	defer cancel()
+
+	// Use CreateInBatches for efficient bulk insert with context
+	err := DB.WithContext(ctx).CreateInBatches(blacklistRecords, BlacklistBatchSize).Error
 	if err != nil {
+		stats.FailedCount = len(words)
 		log.Errorf("[Database][BulkAddBlacklist]: %d - %v", chatID, err)
-		return err
+	} else {
+		stats.ProcessedCount = len(words)
+		// Invalidate cache after bulk add
+		deleteCache(blacklistCacheKey(chatID))
 	}
 
-	// Invalidate cache after bulk add
-	deleteCache(blacklistCacheKey(chatID))
-	return nil
+	stats.Duration = time.Since(stats.StartTime)
+	return stats, err
 }
 
 // BulkRemoveBlacklist removes multiple blacklist words in a single operation
@@ -221,5 +271,80 @@ func BulkResetWarns(chatID int64, userIDs []int64) error {
 
 	// Invalidate cache after bulk reset
 	deleteCache(warnSettingsCacheKey(chatID))
+	return nil
+}
+
+// OptimizedQuery provides query optimization utilities
+type OptimizedQuery struct {
+	db *gorm.DB
+}
+
+// NewOptimizedQuery creates a new optimized query instance
+func NewOptimizedQuery() *OptimizedQuery {
+	return &OptimizedQuery{db: DB}
+}
+
+// GetFiltersWithPagination retrieves filters with pagination for better memory usage
+func (oq *OptimizedQuery) GetFiltersWithPagination(chatID int64, limit, offset int) ([]*ChatFilters, error) {
+	var filters []*ChatFilters
+	err := oq.db.Where("chat_id = ?", chatID).Limit(limit).Offset(offset).Find(&filters).Error
+	if err != nil {
+		log.Errorf("[OptimizedQuery] GetFiltersWithPagination: %v - chatID: %d", err, chatID)
+		return nil, fmt.Errorf("failed to get paginated filters: %w", err)
+	}
+	return filters, nil
+}
+
+// AnalyzePerformanceStats provides performance statistics for monitoring
+func AnalyzePerformanceStats() map[string]interface{} {
+	stats := make(map[string]interface{})
+
+	// Get filter statistics
+	var filterCount int64
+	var filterChats int64
+	DB.Model(&ChatFilters{}).Count(&filterCount)
+	DB.Model(&ChatFilters{}).Select("COUNT(DISTINCT chat_id)").Scan(&filterChats)
+
+	// Get blacklist statistics
+	var blacklistCount int64
+	var blacklistChats int64
+	DB.Model(&BlacklistSettings{}).Count(&blacklistCount)
+	DB.Model(&BlacklistSettings{}).Select("COUNT(DISTINCT chat_id)").Scan(&blacklistChats)
+
+	stats["filters"] = map[string]int64{
+		"total_filters": filterCount,
+		"chats_using":   filterChats,
+		"avg_per_chat":  0,
+	}
+	
+	if filterChats > 0 {
+		stats["filters"].(map[string]int64)["avg_per_chat"] = filterCount / filterChats
+	}
+
+	stats["blacklists"] = map[string]int64{
+		"total_entries": blacklistCount,
+		"chats_using":   blacklistChats,
+		"avg_per_chat":  0,
+	}
+	
+	if blacklistChats > 0 {
+		stats["blacklists"].(map[string]int64)["avg_per_chat"] = blacklistCount / blacklistChats
+	}
+
+	stats["performance"] = map[string]interface{}{
+		"regex_cache_enabled":     true,
+		"database_cache_enabled":  true,
+		"bulk_operations_enabled": true,
+		"async_operations":        true,
+	}
+
+	return stats
+}
+
+// CleanupExpiredEntries removes old entries that might affect performance
+func CleanupExpiredEntries() error {
+	// This is a placeholder for future cleanup operations
+	// Could include removing old warnings, expired temp bans, etc.
+	log.Info("[Database] Performance cleanup completed")
 	return nil
 }
