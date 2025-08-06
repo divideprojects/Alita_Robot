@@ -71,7 +71,11 @@ func (ws *WebhookServer) webhookHandler(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}
-	defer r.Body.Close()
+	defer func() {
+		if closeErr := r.Body.Close(); closeErr != nil {
+			log.Errorf("[Webhook] Failed to close request body: %v", closeErr)
+		}
+	}()
 
 	// Validate the webhook
 	if !ws.validateWebhook(r, body) {
@@ -96,13 +100,17 @@ func (ws *WebhookServer) webhookHandler(w http.ResponseWriter, r *http.Request) 
 
 	// Send OK response to Telegram
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
+	if _, err := w.Write([]byte("OK")); err != nil {
+		log.Errorf("[Webhook] Failed to write response: %v", err)
+	}
 }
 
 // healthHandler handles health check requests
 func (ws *WebhookServer) healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
+	if _, err := w.Write([]byte("OK")); err != nil {
+		log.Errorf("[Webhook] Failed to write health response: %v", err)
+	}
 }
 
 // Start starts the webhook server

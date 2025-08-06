@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/dustin/go-humanize"
+	"github.com/divideprojects/Alita_Robot/alita/config"
 )
 
 func GetTeamMemInfo(userID int64) (devrc *DevSettings) {
@@ -82,9 +83,24 @@ func LoadAllStats() string {
 	notesNum, notesChats := LoadNotesStats()
 	numChannels := LoadChannelStats()
 
+	// Get webhook status information
+	var deploymentMode, webhookInfo string
+	if config.UseWebhooks {
+		deploymentMode = "🌐 Webhook"
+		if config.WebhookDomain != "" {
+			webhookInfo = fmt.Sprintf("\n    <b>Webhook URL:</b> %s/webhook/***", config.WebhookDomain)
+		} else {
+			webhookInfo = "\n    <b>Webhook URL:</b> Not configured"
+		}
+	} else {
+		deploymentMode = "🔄 Polling"
+		webhookInfo = "\n    <b>Update Method:</b> Long polling"
+	}
+
 	result := "<u>Alita's Stats:</u>" +
-		fmt.Sprintf("\n\nGo Version: %s", runtime.Version()) +
-		fmt.Sprintf("\nGoroutines: %s", humanize.Comma(int64(runtime.NumGoroutine()))) +
+		fmt.Sprintf("\n\n<b>Deployment Mode:</b> %s%s", deploymentMode, webhookInfo) +
+		fmt.Sprintf("\n<b>Go Version:</b> %s", runtime.Version()) +
+		fmt.Sprintf("\n<b>Goroutines:</b> %s", humanize.Comma(int64(runtime.NumGoroutine()))) +
 		fmt.Sprintf("\n<b>Antiflood:</b> enabled in %s chats", humanize.Comma(antiCount)) +
 		fmt.Sprintf(
 			"\n<b>Users:</b> %s users found in %s active Chats (%s Inactive, %s Total)",
