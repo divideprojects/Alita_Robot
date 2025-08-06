@@ -104,6 +104,15 @@ jobs:
       - name: Download dependencies
         run: go mod download
         
+      # Install golangci-lint
+      - name: Install golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          args: --version # Just print version, we'll run it via make
+          skip-cache: true # We're already caching
+          install-mode: binary
+        
       # Run project's linting configuration
       - name: Run linting
         run: make lint
