@@ -1,0 +1,112 @@
+name: Dependabot Auto-Merge
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable-auto-merge:
+    name: Enable Auto-Merge for Dependabot PRs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Only run for Dependabot PRs
+    if: github.actor == 'dependabot[bot]'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Enable auto-merge for patch and minor updates
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: |
+          echo "🤖 Enabling auto-merge for Dependabot PR..."
+          echo "Update type: ${{ steps.metadata.outputs.update-type }}"
+          echo "Package: ${{ steps.metadata.outputs.dependency-names }}"
+          
+          # Enable auto-merge (will merge when all checks pass)
+          gh pr merge --auto --squash "$PR_URL"
+          
+          echo "✅ Auto-merge enabled. PR will merge when all checks pass."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge for GitHub Actions updates
+        if: |
+          steps.metadata.outputs.package-ecosystem == 'github_actions'
+        run: |
+          echo "🤖 Enabling auto-merge for GitHub Actions update..."
+          echo "Package: ${{ steps.metadata.outputs.dependency-names }}"
+          
+          # GitHub Actions updates are generally safe to auto-merge
+          gh pr merge --auto --squash "$PR_URL"
+          
+          echo "✅ Auto-merge enabled for GitHub Actions update."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add label for major updates (manual review required)
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-major'
+        run: |
+          echo "⚠️ Major version update detected - manual review required"
+          echo "Package: ${{ steps.metadata.outputs.dependency-names }}"
+          
+          # Add label to indicate manual review needed
+          gh pr edit "$PR_URL" --add-label "needs-review,major-update"
+          
+          # Add comment explaining why auto-merge is not enabled
+          cat <<EOF | gh pr comment "$PR_URL" --body-file -
+          ⚠️ **Manual Review Required**
+          
+          This is a major version update that may contain breaking changes.
+          
+          **Package:** ${{ steps.metadata.outputs.dependency-names }}
+          **Update type:** ${{ steps.metadata.outputs.update-type }}
+          **Previous version:** ${{ steps.metadata.outputs.previous-version }}
+          **New version:** ${{ steps.metadata.outputs.new-version }}
+          
+          Please review the changelog and test thoroughly before merging.
+          EOF
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on security updates
+        if: |
+          steps.metadata.outputs.ghsa-id != ''
+        run: |
+          echo "🔒 Security update detected"
+          
+          # Enable auto-merge for security updates
+          gh pr merge --auto --squash "$PR_URL"
+          
+          # Add security label and comment
+          gh pr edit "$PR_URL" --add-label "security"
+          
+          cat <<EOF | gh pr comment "$PR_URL" --body-file -
+          🔒 **Security Update**
+          
+          This PR fixes a security vulnerability.
+          
+          **GHSA ID:** ${{ steps.metadata.outputs.ghsa-id }}
+          **CVE ID:** ${{ steps.metadata.outputs.cvss }}
+          
+          Auto-merge has been enabled. This PR will merge automatically once all checks pass.
+          EOF
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

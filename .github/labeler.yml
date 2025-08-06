@@ -1,0 +1,183 @@
+# Configuration for auto-labeling PRs based on file changes
+
+# Language and framework labels
+go:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+
+docker:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'Dockerfile*'
+      - 'docker-compose*.yml'
+      - '.dockerignore'
+
+# Component labels
+database:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'alita/db/**'
+      - 'supabase/migrations/**'
+      - '**/repositories/**'
+
+modules:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'alita/modules/**'
+
+utils:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'alita/utils/**'
+
+cache:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'alita/utils/cache/**'
+
+i18n:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'alita/i18n/**'
+      - 'locales/**'
+
+# Configuration and setup
+config:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'alita/config/**'
+      - '*.env'
+      - '*.toml'
+      - '*.yaml'
+      - '*.yml'
+
+# CI/CD and automation
+ci:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/workflows/**'
+      - '.github/actions/**'
+      - '.goreleaser.yaml'
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'go.mod'
+      - 'go.sum'
+      - '.github/dependabot.yml'
+
+# Documentation
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.md'
+      - 'docs/**'
+      - 'LICENSE'
+
+# Testing
+test:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*_test.go'
+      - '**/testdata/**'
+      - '**/fixtures/**'
+
+# Security
+security:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/auth/**'
+      - '**/security/**'
+      - '**/permissions/**'
+      - '**/chat_status/**'
+
+# Feature areas
+admin:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/admin*.go'
+      - '**/admin_*.go'
+
+filters:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/filter*.go'
+      - '**/filters*.go'
+
+greetings:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/greeting*.go'
+      - '**/welcome*.go'
+
+antiflood:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/antiflood*.go'
+      - '**/flood*.go'
+
+warns:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/warn*.go'
+      - '**/warns*.go'
+
+# Migration related
+migration:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'cmd/migrate/**'
+      - 'supabase/migrations/**'
+      - '**/migration*.go'
+
+# Build and release
+build:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'Makefile'
+      - '.goreleaser.yaml'
+      - 'cmd/**'
+
+# Major changes
+breaking-change:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/interfaces/**'
+      - 'alita/db/models.go'
+
+# Size labels (mutually exclusive based on file count)
+size/XS:
+  - changed-files:
+    - any-glob-to-any-file: '**/*'
+  - base-branch: ['main']
+  - size-below: 10
+
+size/S:
+  - changed-files:
+    - any-glob-to-any-file: '**/*'
+  - base-branch: ['main']
+  - size-below: 100
+  - size-above: 10
+
+size/M:
+  - changed-files:
+    - any-glob-to-any-file: '**/*'
+  - base-branch: ['main']
+  - size-below: 500
+  - size-above: 100
+
+size/L:
+  - changed-files:
+    - any-glob-to-any-file: '**/*'
+  - base-branch: ['main']
+  - size-below: 1000
+  - size-above: 500
+
+size/XL:
+  - changed-files:
+    - any-glob-to-any-file: '**/*'
+  - base-branch: ['main']
+  - size-above: 1000

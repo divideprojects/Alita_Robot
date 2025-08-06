@@ -3,77 +3,329 @@ name: Release
 on:
   push:
     tags:
-      - "*"
+      - "v*"
   workflow_dispatch:
     inputs:
       tag:
-        description: "Tag to release"
+        description: "Tag to release (e.g., v1.0.0)"
         required: true
+        type: string
+
+env:
+  GO_VERSION: "1.24.5"
+  REGISTRY: ghcr.io
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+  attestations: write
 
 jobs:
-  ci:
-    name: Goreleaser CI
+  validate:
+    name: Pre-Release Validation
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    timeout-minutes: 10
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Go
-        uses: actions/setup-go@v5
         with:
-          go-version: "stable"
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          version: latest
-          args: release --snapshot --skip=publish --clean --skip=sign
+          fetch-depth: 0
 
-  goreleaser:
-    name: Run GoReleaser
-    needs: ci
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Get version
+        id: get_version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.tag }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Release version: ${VERSION}"
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "stable"
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Run tests
+        run: |
+          go test -v -race ./...
+
+      - name: Run security scan
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
+
+      - name: Verify build
+        run: |
+          go build -o /tmp/test-build ./cmd/alita
+
+  changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: validate
+    outputs:
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          configurationJson: |
+            {
+              "categories": [
+                {
+                  "title": "## 🚀 Features",
+                  "labels": ["feat", "feature", "enhancement"]
+                },
+                {
+                  "title": "## 🐛 Bug Fixes",
+                  "labels": ["fix", "bug", "bugfix"]
+                },
+                {
+                  "title": "## 🔒 Security",
+                  "labels": ["security"]
+                },
+                {
+                  "title": "## 📚 Documentation",
+                  "labels": ["docs", "documentation"]
+                },
+                {
+                  "title": "## 🧹 Maintenance",
+                  "labels": ["chore", "maintenance", "ci", "dependencies"]
+                },
+                {
+                  "title": "## ⚡ Performance",
+                  "labels": ["perf", "performance"]
+                },
+                {
+                  "title": "## 🔧 Other Changes",
+                  "labels": []
+                }
+              ],
+              "ignore_labels": ["ignore"],
+              "sort": "ASC",
+              "template": "#{{CHANGELOG}}\n\n**Full Changelog**: #{{OWNER}}/#{{REPO}}/compare/#{{PREVIOUS_TAG}}...#{{RELEASE_TAG}}",
+              "pr_template": "- #{{TITLE}} by @#{{AUTHOR}} in ##{{NUMBER}}",
+              "empty_template": "- No changes",
+              "label_extractor": [
+                {
+                  "pattern": "^(feat|fix|docs|chore|perf|refactor|test|build|ci|revert|security|breaking)(?:\\((.*)\\))?:",
+                  "target": "$1"
+                }
+              ]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-binaries:
+    name: Build Release Binaries
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: validate
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
       - name: Install UPX
         uses: crazy-max/ghaction-upx@v3
         with:
           install-only: true
-        # only run this step when the tag is not already created
-      - if: startsWith(github.ref, 'refs/tags/') != 'true' && github.event.inputs.tag != ''
-        name: Create and Push Tag
-        run: |-
-          git config --global user.email "divkix@divkix.me"
-          git config --global user.name "Divanshu Chauhan"
-          tag=${{ github.event.inputs.tag }} # if triggered by workflow_dispatch
-          if [ -z "$tag" ]; then
-            tag=${GITHUB_REF#refs/tags/}
-          fi
-          git tag -f -a -m "$tag" "$tag"
-          git push -f origin "$tag"
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Create tag if needed
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          tag="${{ github.event.inputs.tag }}"
+
+          # Check if tag exists
+          if git rev-parse "$tag" >/dev/null 2>&1; then
+            echo "Tag $tag already exists, skipping creation"
+          else
+            git tag -a -m "Release $tag" "$tag"
+            git push origin "$tag"
+          fi
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
           version: latest
           args: release --clean
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-binaries
+          path: dist/
+          retention-days: 7
+
+  docker:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: validate
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}
+          tags: |
+            type=ref,event=tag
+            type=semver,pattern={{version}},value=${{ needs.validate.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.validate.outputs.version }}
+            type=semver,pattern={{major}},value=${{ needs.validate.outputs.version }}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        id: docker-build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile.alpine
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: true
+          sbom: true
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ github.repository }}
+          subject-digest: ${{ steps.docker-build.outputs.digest }}
+          push-to-registry: true
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.32.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ github.repository }}:${{ needs.validate.outputs.version }}
+          format: "sarif"
+          output: "trivy-results.sarif"
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results.sarif"
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [validate, changelog, build-binaries, docker]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: release-binaries
+          path: dist/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.validate.outputs.version }}
+          name: Release ${{ needs.validate.outputs.version }}
+          body: |
+            ${{ needs.changelog.outputs.changelog }}
+
+            ## 🐳 Docker Images
+
+            ```bash
+            docker pull ${{ env.REGISTRY }}/${{ github.repository }}:${{ needs.validate.outputs.version }}
+            docker pull ${{ env.REGISTRY }}/${{ github.repository }}:latest
+            ```
+
+            ## 📦 Installation
+
+            Download the appropriate binary for your platform from the assets below.
+
+            ### Verify GPG Signature
+
+            ```bash
+            # Import GPG key
+            curl -sSL https://github.com/${{ github.repository_owner }}.gpg | gpg --import
+
+            # Verify signature
+            gpg --verify alita_robot_*.sig alita_robot_*
+            ```
+          files: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/*.txt
+            dist/*.sig
+            dist/*.sbom
+          draft: false
+          prerelease: ${{ contains(needs.validate.outputs.version, '-') }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify:
+    name: Release Notification
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [validate, create-release]
+    if: always()
+    steps:
+      - name: Send notification
+        run: |
+          if [[ "${{ needs.create-release.result }}" == "success" ]]; then
+            echo "✅ Release ${{ needs.validate.outputs.version }} completed successfully!"
+            echo "📦 View release: https://github.com/${{ github.repository }}/releases/tag/${{ needs.validate.outputs.version }}"
+          else
+            echo "❌ Release ${{ needs.validate.outputs.version }} failed!"
+            echo "Check the workflow run for details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          fi

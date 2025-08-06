@@ -4,11 +4,85 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+      day: monday
+      time: "03:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "divideprojects/maintainers"
+    assignees:
+      - "divkix"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "go"
+    groups:
+      golang-org:
+        patterns:
+          - "golang.org/*"
+      aws:
+        patterns:
+          - "github.com/aws/*"
+      testing:
+        patterns:
+          - "*test*"
+          - "*mock*"
+    ignore:
+      # Ignore major version updates for critical dependencies
+      - dependency-name: "github.com/PaulSonOfLars/gotgbot/v2"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "gorm.io/gorm"
+        update-types: ["version-update:semver-major"]
+
   - package-ecosystem: docker
     directory: "/"
     schedule:
       interval: weekly
+      day: monday
+      time: "03:00"
+    reviewers:
+      - "divideprojects/maintainers"
+    assignees:
+      - "divkix"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "docker"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: weekly
+      day: monday
+      time: "03:00"
+    reviewers:
+      - "divideprojects/maintainers"
+    assignees:
+      - "divkix"
+    commit-message:
+      prefix: "ci"
+      prefix-development: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "ci"
+    groups:
+      actions:
+        patterns:
+          - "actions/*"
+
+# Dependabot security updates configuration
+# Security updates are automatically created for vulnerable dependencies
+# regardless of the schedule defined above for all configured ecosystems
+
+# Auto-merge configuration (requires GitHub native auto-merge to be enabled)
+# See .github/auto-merge.yml for setup instructions
+# To enable auto-merge:
+# 1. Enable auto-merge in repository settings
+# 2. Configure branch protection rules with required status checks
+# 3. Dependabot PRs will auto-merge when all checks pass

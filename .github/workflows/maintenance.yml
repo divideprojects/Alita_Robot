@@ -1,0 +1,274 @@
+name: Maintenance
+
+on:
+  schedule:
+    # Run at 2 AM UTC every Monday
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'Run in dry-run mode (no changes will be made)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Manage Stale Issues and PRs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Close stale issues and PRs
+        uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Issue configuration
+          stale-issue-message: |
+            This issue has been automatically marked as stale because it has not had recent activity. 
+            It will be closed in 14 days if no further activity occurs. 
+            Thank you for your contributions.
+            
+            If this issue is still relevant, please leave a comment or remove the `stale` label.
+          close-issue-message: |
+            This issue has been automatically closed due to inactivity. 
+            If you believe this is still relevant, please feel free to reopen it or create a new issue.
+          days-before-issue-stale: 30
+          days-before-issue-close: 14
+          stale-issue-label: 'stale'
+          exempt-issue-labels: 'pinned,security,bug,enhancement'
+          
+          # PR configuration
+          stale-pr-message: |
+            This pull request has been automatically marked as stale because it has not had recent activity.
+            It will be closed in 7 days if no further activity occurs.
+            
+            If this PR is still relevant and ready for review, please:
+            - Leave a comment
+            - Remove the `stale` label
+            - Ensure all CI checks are passing
+          close-pr-message: |
+            This pull request has been automatically closed due to inactivity.
+            If you'd like to continue working on this, please feel free to reopen it.
+          days-before-pr-stale: 21
+          days-before-pr-close: 7
+          stale-pr-label: 'stale'
+          exempt-pr-labels: 'pinned,security,work-in-progress'
+          
+          # General configuration
+          operations-per-run: 100
+          remove-stale-when-updated: true
+          debug-only: ${{ github.event.inputs.dry-run == 'true' }}
+          ascending: true
+          
+          # Exempt all issues/PRs with assignees
+          exempt-all-assignees: true
+          
+          # Exempt draft PRs
+          exempt-draft-pr: true
+
+  label-manager:
+    name: Auto-label Issues and PRs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run labeler
+        uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+
+  cleanup-branches:
+    name: Delete Merged Branches
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Delete merged branches
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: ${{ github.event.inputs.dry-run }}
+        run: |
+          echo "🧹 Starting branch cleanup..."
+          
+          # Configure git
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+          # Fetch all branches
+          git fetch --prune
+          
+          # Get list of merged branches (excluding protected branches)
+          PROTECTED_BRANCHES="main|master|develop|dev|staging|production|release.*|hotfix.*"
+          MERGED_BRANCHES=$(git branch -r --merged origin/main | 
+            grep -v -E "$PROTECTED_BRANCHES" | 
+            sed 's/origin\///' | 
+            grep -v '^\*' || true)
+          
+          # Additional safety: exclude branches modified in last 7 days
+          SAFE_BRANCHES=""
+          for branch in $MERGED_BRANCHES; do
+            LAST_COMMIT=$(git log -1 --format="%ct" origin/$branch 2>/dev/null || echo 0)
+            CURRENT_TIME=$(date +%s)
+            DAYS_OLD=$(( ($CURRENT_TIME - $LAST_COMMIT) / 86400 ))
+            if [ $DAYS_OLD -gt 7 ]; then
+              SAFE_BRANCHES="$SAFE_BRANCHES $branch"
+            else
+              echo "⚠️ Skipping $branch - modified within last 7 days"
+            fi
+          done
+          MERGED_BRANCHES="$SAFE_BRANCHES"
+          
+          if [ -z "$MERGED_BRANCHES" ]; then
+            echo "✅ No merged branches to delete"
+            exit 0
+          fi
+          
+          echo "Found merged branches:"
+          echo "$MERGED_BRANCHES"
+          
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "🔍 DRY RUN MODE - No branches will be deleted"
+          else
+            for branch in $MERGED_BRANCHES; do
+              echo "Deleting branch: $branch"
+              git push origin --delete "$branch" || echo "Failed to delete $branch"
+            done
+            echo "✅ Branch cleanup completed"
+          fi
+
+  dependency-review:
+    name: Review Dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24.5"
+          cache: true
+
+      - name: Check for outdated dependencies
+        run: |
+          echo "📦 Checking for outdated Go dependencies..."
+          go list -u -m all 2>/dev/null | grep '\[' || echo "✅ All dependencies are up to date"
+
+      - name: Check for security vulnerabilities
+        run: |
+          echo "🔒 Checking for security vulnerabilities..."
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./... || true
+
+      - name: License check
+        run: |
+          echo "📝 Checking dependency licenses..."
+          go install github.com/google/go-licenses@v1.6.0
+          go-licenses check ./... --disallowed_types=forbidden,restricted || true
+
+  repository-stats:
+    name: Repository Statistics
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate statistics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "📊 Repository Statistics Report"
+          echo "================================"
+          echo ""
+          
+          # Basic stats
+          echo "## 📈 Code Statistics"
+          echo "- Total commits: $(git rev-list --all --count)"
+          echo "- Total branches: $(git branch -r | wc -l)"
+          echo "- Total tags: $(git tag | wc -l)"
+          echo "- Contributors: $(git shortlog -sn --all | wc -l)"
+          echo ""
+          
+          # Recent activity
+          echo "## 🕐 Recent Activity (last 7 days)"
+          echo "- Commits: $(git rev-list --count --since='7 days ago' HEAD)"
+          echo "- Active contributors: $(git shortlog -sn --since='7 days ago' | wc -l)"
+          echo ""
+          
+          # File statistics
+          echo "## 📁 File Statistics"
+          echo "- Go files: $(find . -name '*.go' -type f | wc -l)"
+          echo "- Total lines of Go code: $(find . -name '*.go' -type f -exec wc -l {} + | tail -1 | awk '{print $1}')"
+          echo "- Docker files: $(find . -name 'Dockerfile*' -type f | wc -l)"
+          echo "- YAML files: $(find . -name '*.yml' -o -name '*.yaml' | wc -l)"
+          echo ""
+          
+          # Issue and PR stats using GitHub API
+          echo "## 🐛 Issues & PRs"
+          REPO="${{ github.repository }}"
+          
+          # Get issue stats
+          OPEN_ISSUES=$(gh api repos/$REPO --jq '.open_issues_count')
+          echo "- Open issues: $OPEN_ISSUES"
+          
+          # Get PR stats
+          OPEN_PRS=$(gh pr list --state open --json number --jq '. | length')
+          echo "- Open PRs: $OPEN_PRS"
+          
+          echo ""
+          echo "Report generated on $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+  cache-cleanup:
+    name: Clean Up Caches
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Cleanup caches
+        uses: MyAlbum/purge-cache@v2
+        with:
+          accessed: true
+          created: false
+          max-age: 7
+
+  notify:
+    name: Send Maintenance Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [stale, cleanup-branches, dependency-review, repository-stats]
+    if: always() && github.event_name == 'schedule'
+    steps:
+      - name: Create summary
+        run: |
+          echo "## 🧹 Weekly Maintenance Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The weekly maintenance tasks have been completed:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Task | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Stale Issues/PRs | ${{ needs.stale.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Branch Cleanup | ${{ needs.cleanup-branches.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Review | ${{ needs.dependency-review.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Statistics Report | ${{ needs.repository-stats.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View the full workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY

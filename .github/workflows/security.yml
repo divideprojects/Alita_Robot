@@ -1,0 +1,262 @@
+name: Security Scan
+
+on:
+  schedule:
+    # Run daily at 6 AM UTC
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "go.mod"
+      - "go.sum"
+      - "**/*.go"
+
+permissions:
+  contents: read
+  security-events: write
+  issues: write
+
+jobs:
+  vulnerability-scan:
+    name: Vulnerability Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24.5"
+          cache: true
+
+      - name: Run govulncheck
+        run: |
+          echo "🔍 Running Go vulnerability check..."
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck -json ./... > vulncheck-results.json || true
+
+          # Parse and display results
+          if [ -s vulncheck-results.json ]; then
+            echo "⚠️ Vulnerabilities found. Check the detailed report."
+          else
+            echo "✅ No vulnerabilities found."
+          fi
+
+      - name: Run gosec security scan
+        uses: securego/gosec@v2.22.1
+        with:
+          args: "-fmt sarif -out gosec-results.sarif -severity medium ./..."
+
+      - name: Upload gosec SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: gosec-results.sarif
+          category: gosec
+
+      - name: Run nancy for dependency vulnerabilities
+        run: |
+          echo "📦 Checking dependencies with nancy..."
+          go list -json -deps ./... | docker run --rm -i sonatypecorp/nancy:latest sleuth || true
+
+  secret-scan:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog OSS
+        uses: trufflesecurity/trufflehog@v3.90.2
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+
+  container-scan:
+    name: Container Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build test image
+        run: |
+          docker build -f Dockerfile.alpine -t security-scan:latest .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.32.0
+        with:
+          image-ref: "security-scan:latest"
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH,MEDIUM"
+          vuln-type: "os,library"
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: "trivy-results.sarif"
+          category: trivy
+
+      - name: Run Grype vulnerability scanner
+        run: |
+          echo "🔍 Running Grype container scan..."
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            anchore/grype:latest \
+            security-scan:latest \
+            -o table \
+            --fail-on medium || true
+
+  license-compliance:
+    name: License Compliance Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24.5"
+          cache: true
+
+      - name: Check licenses
+        run: |
+          echo "📜 Checking license compliance..."
+          go install github.com/google/go-licenses@v1.6.0
+
+          # Check for problematic licenses
+          FORBIDDEN_LICENSES="AGPL-3.0,GPL-2.0,GPL-3.0,LGPL-2.1,LGPL-3.0,OSL-3.0"
+
+          echo "Checking for forbidden licenses: $FORBIDDEN_LICENSES"
+          go-licenses check ./... --disallowed_types=forbidden,restricted,reciprocal || EXIT_CODE=$?
+
+          if [ "${EXIT_CODE:-0}" -ne 0 ]; then
+            echo "⚠️ License compliance issues found!"
+            go-licenses report ./... --template '{{.Name}}: {{.LicenseName}}'
+            exit 1
+          else
+            echo "✅ All dependencies have compatible licenses"
+          fi
+
+  sast:
+    name: Static Application Security Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: go
+          queries: security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:go"
+
+  security-report:
+    name: Generate Security Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs:
+      [
+        vulnerability-scan,
+        secret-scan,
+        container-scan,
+        license-compliance,
+        sast,
+      ]
+    if: always()
+    steps:
+      - name: Create security summary
+        env:
+          VULN_SCAN: ${{ needs.vulnerability-scan.result }}
+          SECRET_SCAN: ${{ needs.secret-scan.result }}
+          CONTAINER_SCAN: ${{ needs.container-scan.result }}
+          LICENSE_CHECK: ${{ needs.license-compliance.result }}
+          SAST_SCAN: ${{ needs.sast.result }}
+        run: |
+          echo "## 🛡️ Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Scan Type | Status | Description |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|-------------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Vulnerability Scan | $([[ "$VULN_SCAN" == "success" ]] && echo "✅ Passed" || echo "❌ Failed") | Go dependencies and code vulnerabilities |" >> $GITHUB_STEP_SUMMARY
+          echo "| Secret Detection | $([[ "$SECRET_SCAN" == "success" ]] && echo "✅ Passed" || echo "❌ Failed") | Scanning for exposed secrets and keys |" >> $GITHUB_STEP_SUMMARY
+          echo "| Container Security | $([[ "$CONTAINER_SCAN" == "success" ]] && echo "✅ Passed" || echo "⚠️ Check Required") | Docker image vulnerability analysis |" >> $GITHUB_STEP_SUMMARY
+          echo "| License Compliance | $([[ "$LICENSE_CHECK" == "success" ]] && echo "✅ Passed" || echo "❌ Failed") | Dependency license compatibility |" >> $GITHUB_STEP_SUMMARY
+          echo "| SAST Analysis | $([[ "$SAST_SCAN" == "success" ]] && echo "✅ Passed" || echo "❌ Failed") | Static code security analysis |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Scan Date:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View detailed results in the [Security tab](${{ github.server_url }}/${{ github.repository }}/security)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create issue on failure
+        if: |
+          needs.vulnerability-scan.result == 'failure' ||
+          needs.secret-scan.result == 'failure' ||
+          needs.license-compliance.result == 'failure' ||
+          needs.sast.result == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Security Scan Failed - ${new Date().toISOString().split('T')[0]}`;
+            const body = `## Security Scan Results
+
+            One or more security scans have failed. Please review the results:
+
+            - **Vulnerability Scan:** ${{ needs.vulnerability-scan.result }}
+            - **Secret Detection:** ${{ needs.secret-scan.result }}
+            - **Container Security:** ${{ needs.container-scan.result }}
+            - **License Compliance:** ${{ needs.license-compliance.result }}
+            - **SAST Analysis:** ${{ needs.sast.result }}
+
+            [View Full Workflow Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            Please address these security issues as soon as possible.`;
+
+            // Check if similar issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'security'
+            });
+
+            const existingIssue = issues.data.find(issue => 
+              issue.title.includes('Security Scan Failed') && 
+              issue.title.includes(new Date().toISOString().split('T')[0])
+            );
+
+            if (!existingIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['security', 'automated']
+              });
+            }

@@ -1,0 +1,294 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    paths:
+      - 'go.mod'
+      - 'go.sum'
+      - 'package*.json'
+      - 'Dockerfile*'
+      - '.github/workflows/*.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          # Fail on critical and high severity vulnerabilities
+          fail-on-severity: high
+          # Allow specific licenses
+          allow-licenses: |
+            MIT
+            Apache-2.0
+            BSD-2-Clause
+            BSD-3-Clause
+            ISC
+            CC0-1.0
+            Unlicense
+            MPL-2.0
+          # Deny specific licenses
+          deny-licenses: |
+            GPL-2.0
+            GPL-3.0
+            AGPL-3.0
+            LGPL-2.1
+            LGPL-3.0
+          # Comment on PR with review summary
+          comment-summary-in-pr: always
+          # Warn on incompatible licenses
+          warn-only: false
+
+  go-dependency-check:
+    name: Go Dependency Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: |
+      contains(github.event.pull_request.files.*.filename, 'go.mod') ||
+      contains(github.event.pull_request.files.*.filename, 'go.sum')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24.5"
+          cache: true
+
+      - name: Check for outdated dependencies
+        id: outdated
+        run: |
+          echo "## 📦 Go Dependency Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Get list of outdated dependencies
+          echo "### Outdated Dependencies" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          go list -u -m all 2>/dev/null | grep '\[' >> $GITHUB_STEP_SUMMARY || echo "All dependencies are up to date!" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+      - name: Analyze dependency changes
+        run: |
+          echo "### Dependency Changes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Compare go.mod changes
+          if git diff origin/${{ github.base_ref }}...HEAD --name-only | grep -q "go.mod"; then
+            echo "#### Modified Dependencies:" >> $GITHUB_STEP_SUMMARY
+            echo '```diff' >> $GITHUB_STEP_SUMMARY
+            git diff origin/${{ github.base_ref }}...HEAD -- go.mod | grep -E "^\+|^\-" | grep -v "^\+\+\+|^\-\-\-" >> $GITHUB_STEP_SUMMARY || true
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No changes to go.mod" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+      - name: Check for security vulnerabilities
+        run: |
+          echo "### Security Scan" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Run govulncheck
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          
+          echo "#### Vulnerability Check Results:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          govulncheck ./... 2>&1 >> $GITHUB_STEP_SUMMARY || echo "⚠️ Some vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+      - name: License compatibility check
+        run: |
+          echo "### License Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Install and run go-licenses
+          go install github.com/google/go-licenses@v1.6.0
+          
+          echo "#### License Report:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          go-licenses report ./... 2>/dev/null | head -20 >> $GITHUB_STEP_SUMMARY || echo "Unable to generate license report" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check for problematic licenses
+          echo "#### Checking for incompatible licenses..." >> $GITHUB_STEP_SUMMARY
+          if go-licenses check ./... --disallowed_types=forbidden,restricted,reciprocal 2>/dev/null; then
+            echo "✅ All licenses are compatible" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Some licenses may need review" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Dependency size analysis
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Dependency Size Impact" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check binary size impact
+          echo "#### Module Download Sizes:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          go mod download -json 2>/dev/null | jq -r '. | "\(.Path)@\(.Version): \(.Zip) bytes"' | sort -t: -k2 -rn | head -10 >> $GITHUB_STEP_SUMMARY || echo "Unable to analyze module sizes" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+  container-dependency-check:
+    name: Container Dependency Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: |
+      contains(github.event.pull_request.files.*.filename, 'Dockerfile')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and analyze Docker image
+        run: |
+          echo "## 🐳 Container Dependency Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Build the image
+          docker build -f Dockerfile.alpine -t dep-check:latest . || exit 1
+          
+          echo "### Base Image Analysis" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          docker images dep-check:latest --format "Size: {{.Size}}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+      - name: Scan with Trivy
+        uses: aquasecurity/trivy-action@v0.28.0
+        with:
+          image-ref: 'dep-check:latest'
+          format: 'table'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          output: trivy-report.txt
+
+      - name: Display Trivy results
+        run: |
+          echo "### Container Vulnerability Scan" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat trivy-report.txt | head -50 >> $GITHUB_STEP_SUMMARY || echo "No vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+  github-actions-dependency-check:
+    name: GitHub Actions Dependency Review
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: |
+      contains(github.event.pull_request.files.*.filename, '.github/workflows/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check Action versions
+        run: |
+          echo "## 🔧 GitHub Actions Dependencies" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Actions Used in Workflows" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Find all action uses
+          echo '```yaml' >> $GITHUB_STEP_SUMMARY
+          grep -h "uses:" .github/workflows/*.yml | sort -u | sed 's/^[ \t]*//' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check for unpinned actions
+          echo "### Security Check" >> $GITHUB_STEP_SUMMARY
+          UNPINNED=$(grep -h "uses:" .github/workflows/*.yml | grep -E "@(main|master|latest)" | wc -l)
+          if [ "$UNPINNED" -gt 0 ]; then
+            echo "⚠️ Found $UNPINNED action(s) using unpinned versions (main/master/latest)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Unpinned actions:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            grep -h "uses:" .github/workflows/*.yml | grep -E "@(main|master|latest)" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ All actions are using pinned versions" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  pr-comment:
+    name: Post Review Comment
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [dependency-review, go-dependency-check, container-dependency-check, github-actions-dependency-check]
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const jobResults = {
+              'Dependency Review': '${{ needs.dependency-review.result }}',
+              'Go Dependencies': '${{ needs.go-dependency-check.result }}',
+              'Container Dependencies': '${{ needs.container-dependency-check.result }}',
+              'GitHub Actions': '${{ needs.github-actions-dependency-check.result }}'
+            };
+            
+            let comment = '## 📋 Dependency Review Summary\n\n';
+            comment += '| Check | Status |\n';
+            comment += '|-------|--------|\n';
+            
+            for (const [check, result] of Object.entries(jobResults)) {
+              if (result === 'success') {
+                comment += `| ${check} | ✅ Passed |\n`;
+              } else if (result === 'failure') {
+                comment += `| ${check} | ❌ Failed |\n`;
+              } else if (result === 'skipped') {
+                comment += `| ${check} | ⏭️ Skipped |\n`;
+              } else {
+                comment += `| ${check} | ⚠️ Unknown |\n`;
+              }
+            }
+            
+            comment += '\n[View detailed results](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n';
+            
+            // Find and update or create comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('Dependency Review Summary')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
