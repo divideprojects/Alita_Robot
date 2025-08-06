@@ -168,7 +168,7 @@ func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 /*
-	To either delete or not to delete the disbaled command in the chat
+	To either delete or not to delete the disabled command in the chat
 
 # Connection - true, true
 
