@@ -1,0 +1,312 @@
+name: Dependabot Auto-merge
+
+# Auto-merge Dependabot PRs for minor and patch updates
+# 
+# Required Repository Secrets:
+#   GH_PAT - GitHub Personal Access Token or GitHub App token with:
+#     - contents: write (for merging PRs)
+#     - pull-requests: write (for commenting and merging)
+#     - metadata: read (for repository access)
+#
+# Security Features:
+#   - Only merges minor and patch updates (never major versions)
+#   - Validates PR is from dependabot[bot]
+#   - Waits for all CI checks to pass
+#   - Performs additional security validation for GitHub Actions updates
+#   - Detects and prevents tampering
+#
+# Trigger only on pull requests from dependabot
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+# Restrict permissions to minimum required for enhanced security
+permissions:
+  contents: read
+  pull-requests: write
+  checks: read
+
+jobs:
+  # Validate that this is a legitimate dependabot PR
+  validate-dependabot-pr:
+    name: Validate Dependabot PR
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      should-auto-merge: ${{ steps.determine-merge-eligibility.outputs.should-auto-merge }}
+      update-type: ${{ steps.determine-merge-eligibility.outputs.update-type }}
+      package-ecosystem: ${{ steps.determine-merge-eligibility.outputs.package-ecosystem }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2.11.1
+        with:
+          egress-policy: audit
+          
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          # Checkout the PR branch for analysis
+          ref: ${{ github.head_ref }}
+          
+      # Validate PR is from dependabot and extract dependency info
+      - name: Extract dependency information
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          
+      # Determine if PR should be auto-merged based on security rules
+      - name: Determine merge eligibility
+        id: determine-merge-eligibility
+        env:
+          UPDATE_TYPE: ${{ steps.dependabot-metadata.outputs.update-type }}
+          PACKAGE_ECOSYSTEM: ${{ steps.dependabot-metadata.outputs.package-ecosystem }}
+          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
+        run: |
+          echo "Update type: $UPDATE_TYPE"
+          echo "Package ecosystem: $PACKAGE_ECOSYSTEM" 
+          echo "Dependencies: $DEPENDENCY_NAMES"
+          
+          # Security rules for auto-merge eligibility
+          should_merge="false"
+          
+          # Rule 1: Only allow minor and patch updates (NO major updates)
+          if [[ "$UPDATE_TYPE" == "version-update:semver-patch" ]] || [[ "$UPDATE_TYPE" == "version-update:semver-minor" ]]; then
+            echo "[OK] Update type '$UPDATE_TYPE' is eligible for auto-merge"
+            
+            # Rule 2: Different ecosystems have different risk profiles
+            case "$PACKAGE_ECOSYSTEM" in
+              "gomod")
+                echo "[OK] Go module updates are eligible for auto-merge"
+                should_merge="true"
+                ;;
+              "docker")
+                echo "[WARN] Docker updates require additional validation but are eligible"
+                should_merge="true"
+                ;;
+              "github-actions")
+                echo "[WARN] GitHub Actions updates require security validation"
+                # Only allow patch updates for GitHub Actions for maximum security
+                if [[ "$UPDATE_TYPE" == "version-update:semver-patch" ]]; then
+                  should_merge="true"
+                else
+                  echo "[ERROR] GitHub Actions minor updates require manual review"
+                  should_merge="false"
+                fi
+                ;;
+              *)
+                echo "[ERROR] Unknown package ecosystem '$PACKAGE_ECOSYSTEM' - manual review required"
+                should_merge="false"
+                ;;
+            esac
+          else
+            echo "[ERROR] Update type '$UPDATE_TYPE' requires manual review (major version or unknown type)"
+          fi
+          
+          echo "should-auto-merge=$should_merge" >> $GITHUB_OUTPUT
+          echo "update-type=$UPDATE_TYPE" >> $GITHUB_OUTPUT
+          echo "package-ecosystem=$PACKAGE_ECOSYSTEM" >> $GITHUB_OUTPUT
+          
+          if [[ "$should_merge" == "true" ]]; then
+            echo "[BOT] This PR is eligible for auto-merge after CI passes"
+          else
+            echo "👤 This PR requires manual review"
+          fi
+
+  # Wait for all required CI checks to pass
+  wait-for-ci:
+    name: Wait for CI Checks
+    runs-on: ubuntu-latest
+    needs: validate-dependabot-pr
+    if: needs.validate-dependabot-pr.outputs.should-auto-merge == 'true'
+    permissions:
+      checks: read
+      contents: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2.11.1
+        with:
+          egress-policy: audit
+          
+      # Wait for all required status checks to pass
+      - name: Wait for status checks
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.head_ref }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30  # Check every 30 seconds
+          running-workflow-name: 'Wait for CI Checks'
+          allowed-conclusions: success
+          # Wait for these specific checks that are required for merge
+          check-regexp: |
+            ^(Security Scanning|Code Quality & Testing|Build Verification|CI Success)$
+
+  # Perform additional security validations before merge
+  security-validation:
+    name: Additional Security Validation
+    runs-on: ubuntu-latest
+    needs: [validate-dependabot-pr, wait-for-ci]
+    if: needs.validate-dependabot-pr.outputs.should-auto-merge == 'true'
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2.11.1
+        with:
+          egress-policy: audit
+          
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          
+      - name: Validate PR has not been tampered with
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          # Ensure PR still only contains dependency updates
+          changed_files=$(gh pr view $PR_NUMBER --json files --jq '.files[].path' | grep -v -E '\.(sum|mod|lock|yaml|yml|json)$' || true)
+          
+          if [[ -n "$changed_files" ]]; then
+            echo "[ERROR] PR contains non-dependency files: $changed_files"
+            echo "This may indicate tampering - aborting auto-merge"
+            exit 1
+          fi
+          
+          echo "[OK] PR only contains expected dependency files"
+          
+      # Additional validation for GitHub Actions updates
+      - name: Validate GitHub Actions security
+        if: needs.validate-dependabot-pr.outputs.package-ecosystem == 'github-actions'
+        run: |
+          echo "[CHECK] Performing additional GitHub Actions security validation"
+          
+          # Check that workflow files haven't been maliciously modified
+          # This is a basic check - in production you might want more sophisticated validation
+          if find .github/workflows -name "*.yml" -o -name "*.yaml" | xargs grep -l "curl.*|.*bash" >/dev/null 2>&1; then
+            echo "[WARN] Found potentially dangerous commands in workflow files"
+            echo "Manual review required for GitHub Actions updates"
+            exit 1
+          fi
+          
+          echo "[OK] GitHub Actions security validation passed"
+
+  # Final auto-merge step
+  auto-merge:
+    name: Auto-merge Dependabot PR
+    runs-on: ubuntu-latest
+    needs: [validate-dependabot-pr, wait-for-ci, security-validation]
+    if: always() && needs.validate-dependabot-pr.outputs.should-auto-merge == 'true' && needs.wait-for-ci.result == 'success' && needs.security-validation.result == 'success'
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2.11.1
+        with:
+          egress-policy: audit
+          
+      # Final validation that all conditions are still met
+      - name: Final merge validation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+          UPDATE_TYPE: ${{ needs.validate-dependabot-pr.outputs.update-type }}
+          PACKAGE_ECOSYSTEM: ${{ needs.validate-dependabot-pr.outputs.package-ecosystem }}
+        run: |
+          echo "[CHECK] Performing final validation before merge"
+          
+          # Check PR is still open and mergeable
+          pr_state=$(gh pr view $PR_NUMBER --json state,mergeable --jq '{state, mergeable}')
+          echo "PR state: $pr_state"
+          
+          if ! echo "$pr_state" | jq -e '.state == "OPEN" and .mergeable == "MERGEABLE"' >/dev/null; then
+            echo "[ERROR] PR is not in a mergeable state"
+            exit 1
+          fi
+          
+          echo "[OK] PR is ready for merge"
+          echo "[PACKAGE] Update type: $UPDATE_TYPE"
+          echo "[INFO] Ecosystem: $PACKAGE_ECOSYSTEM"
+          
+      # Perform the actual merge
+      - name: Enable auto-merge
+        env:
+          # GH_PAT is required here because GITHUB_TOKEN can't trigger other workflows
+          # Required permissions: contents:write, pull-requests:write, metadata:read
+          # This allows the merge to trigger CI workflows on the base branch
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}  # Using GH_PAT for merge permissions
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          echo "[BOT] Enabling auto-merge for PR #$PR_NUMBER"
+          
+          # Enable auto-merge with squash strategy for cleaner history
+          gh pr merge $PR_NUMBER --auto --squash --delete-branch
+          
+          echo "[OK] Auto-merge enabled - PR will be merged when all conditions are met"
+          
+      # Add informative comment about the auto-merge
+      - name: Add merge comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+          UPDATE_TYPE: ${{ needs.validate-dependabot-pr.outputs.update-type }}
+          PACKAGE_ECOSYSTEM: ${{ needs.validate-dependabot-pr.outputs.package-ecosystem }}
+        run: |
+          comment_body="[BOT] **Auto-merge enabled** 
+          
+          This Dependabot PR has been automatically approved for merge based on the following criteria:
+          - [OK] Update type: \`$UPDATE_TYPE\` (safe for auto-merge)
+          - [OK] Package ecosystem: \`$PACKAGE_ECOSYSTEM\`
+          - [OK] All CI checks passed
+          - [OK] Security validations completed
+          - [OK] No manual changes detected
+          
+          The PR will be automatically merged and the branch will be deleted.
+          
+          ---
+          _This action was performed by the Dependabot Auto-merge workflow with security validations._"
+          
+          gh pr comment $PR_NUMBER --body "$comment_body"
+
+  # Handle cases where auto-merge is not appropriate
+  manual-review-required:
+    name: Manual Review Required
+    runs-on: ubuntu-latest
+    needs: validate-dependabot-pr
+    if: always() && (github.actor == 'dependabot[bot]' && needs.validate-dependabot-pr.outputs.should-auto-merge == 'false')
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Add manual review comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+          UPDATE_TYPE: ${{ needs.validate-dependabot-pr.outputs.update-type }}
+          PACKAGE_ECOSYSTEM: ${{ needs.validate-dependabot-pr.outputs.package-ecosystem }}
+        run: |
+          comment_body="👤 **Manual review required**
+          
+          This Dependabot PR requires manual review due to:
+          - Update type: \`$UPDATE_TYPE\`
+          - Package ecosystem: \`$PACKAGE_ECOSYSTEM\`
+          
+          **Why manual review is needed:**
+          - Major version updates require careful consideration for breaking changes
+          - Critical security updates need human verification
+          - GitHub Actions updates (except patches) need security review
+          
+          Please review the changes carefully before merging.
+          
+          ---
+          _This notification was generated by the Dependabot Auto-merge workflow._"
+          
+          gh pr comment $PR_NUMBER --body "$comment_body"
+          
+          # Add label to indicate manual review needed
+          gh pr edit $PR_NUMBER --add-label "needs-manual-review"
