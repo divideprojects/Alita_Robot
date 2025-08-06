@@ -24,21 +24,39 @@ func GetLanguage(ctx *ext.Context) string {
 }
 
 func getGroupLanguage(GroupID int64) string {
-	groupc := GetChatSettings(GroupID)
-	if groupc.Language == "" {
+	// Try to get from cache first
+	cacheKey := chatLanguageCacheKey(GroupID)
+	lang, err := getFromCacheOrLoad(cacheKey, CacheTTLLanguage, func() (string, error) {
+		groupc := GetChatSettings(GroupID)
+		if groupc.Language == "" {
+			return "en", nil
+		}
+		return groupc.Language, nil
+	})
+	
+	if err != nil {
 		return "en"
 	}
-	return groupc.Language
+	return lang
 }
 
 func getUserLanguage(UserID int64) string {
-	userc := checkUserInfo(UserID)
-	if userc == nil {
-		return "en"
-	} else if userc.Language == "" {
+	// Try to get from cache first
+	cacheKey := userLanguageCacheKey(UserID)
+	lang, err := getFromCacheOrLoad(cacheKey, CacheTTLLanguage, func() (string, error) {
+		userc := checkUserInfo(UserID)
+		if userc == nil {
+			return "en", nil
+		} else if userc.Language == "" {
+			return "en", nil
+		}
+		return userc.Language, nil
+	})
+	
+	if err != nil {
 		return "en"
 	}
-	return userc.Language
+	return lang
 }
 
 func ChangeUserLanguage(UserID int64, lang string) {
@@ -54,6 +72,8 @@ func ChangeUserLanguage(UserID int64, lang string) {
 		log.Errorf("[Database] ChangeUserLanguage: %v - %d", err, UserID)
 		return
 	}
+	// Invalidate cache after update
+	deleteCache(userLanguageCacheKey(UserID))
 	log.Infof("[Database] ChangeUserLanguage: %d", UserID)
 }
 
@@ -68,5 +88,8 @@ func ChangeGroupLanguage(GroupID int64, lang string) {
 		log.Errorf("[Database] ChangeGroupLanguage: %v - %d", err, GroupID)
 		return
 	}
+	// Invalidate both caches after update
+	deleteCache(chatLanguageCacheKey(GroupID))
+	deleteCache(chatSettingsCacheKey(GroupID)) // Also invalidate chat settings cache since language is part of it
 	log.Infof("[Database] ChangeGroupLanguage: %d", GroupID)
 }

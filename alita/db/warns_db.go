@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"errors"
 
 	log "github.com/sirupsen/logrus"
@@ -10,8 +11,8 @@ import (
 func checkWarnSettings(chatID int64) (warnrc *WarnSettings) {
 	defaultWarnSettings := &WarnSettings{ChatId: chatID, WarnLimit: 3, WarnMode: "mute"}
 	warnrc = &WarnSettings{}
-	err := DB.Where("chat_id = ?", chatID).First(warnrc)
-	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
+	err := DB.Where("chat_id = ?", chatID).First(warnrc).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		// Ensure chat exists before creating warn settings
 		if !ChatExists(chatID) {
 			// Chat doesn't exist, return default settings without creating record
@@ -21,12 +22,12 @@ func checkWarnSettings(chatID int64) (warnrc *WarnSettings) {
 
 		// Create default settings only if chat exists
 		warnrc = defaultWarnSettings
-		err := DB.Create(warnrc)
-		if err.Error != nil {
-			log.Errorf("[Database] checkWarnSettings: %v", err.Error)
+		err := DB.Create(warnrc).Error
+		if err != nil {
+			log.Errorf("[Database] checkWarnSettings: %v", err)
 		}
-	} else if err.Error != nil {
-		log.Errorf("[Database][checkWarnSettings]: %d - %v", chatID, err.Error)
+	} else if err != nil {
+		log.Errorf("[Database][checkWarnSettings]: %d - %v", chatID, err)
 		warnrc = defaultWarnSettings
 	}
 	return
@@ -35,8 +36,8 @@ func checkWarnSettings(chatID int64) (warnrc *WarnSettings) {
 func checkWarns(userId, chatId int64) (warnrc *Warns) {
 	defaultWarnSrc := &Warns{UserId: userId, ChatId: chatId, NumWarns: 0, Reasons: make(StringArray, 0)}
 	warnrc = &Warns{}
-	err := DB.Where("user_id = ? AND chat_id = ?", userId, chatId).First(warnrc)
-	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
+	err := DB.Where("user_id = ? AND chat_id = ?", userId, chatId).First(warnrc).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		// Ensure chat exists before creating warn record
 		if !ChatExists(chatId) {
 			// Chat doesn't exist, return default settings without creating record
@@ -46,66 +47,133 @@ func checkWarns(userId, chatId int64) (warnrc *Warns) {
 
 		// Create default record only if chat exists
 		warnrc = defaultWarnSrc
-		err := DB.Create(warnrc)
-		if err.Error != nil {
-			log.Errorf("[Database] checkWarns: %v", err.Error)
+		err := DB.Create(warnrc).Error
+		if err != nil {
+			log.Errorf("[Database] checkWarns: %v", err)
 		}
-	} else if err.Error != nil {
-		log.Errorf("[Database][checkUserWarns]: %d - %v", userId, err.Error)
+	} else if err != nil {
+		log.Errorf("[Database][checkUserWarns]: %d - %v", userId, err)
 		warnrc = defaultWarnSrc
 	}
 	return
 }
 
 func WarnUser(userId, chatId int64, reason string) (int, []string) {
-	warnrc := checkWarns(userId, chatId)
+	return WarnUserWithContext(context.Background(), userId, chatId, reason)
+}
 
-	warnrc.NumWarns++ // Increment warns - Add 1 warn
-
-	// Add reason if it exists
-	if reason != "" {
-		if len(reason) >= 3001 {
-			reason = reason[:3000]
+func WarnUserWithContext(ctx context.Context, userId, chatId int64, reason string) (int, []string) {
+	var numWarns int
+	var reasons []string
+	
+	err := DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// Check warn settings within transaction
+		warnSettings := &WarnSettings{}
+		if err := tx.Where("chat_id = ?", chatId).First(warnSettings).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				// Create default settings
+				warnSettings = &WarnSettings{ChatId: chatId, WarnLimit: 3}
+				if err := tx.Create(warnSettings).Error; err != nil {
+					return err
+				}
+			}
 		}
-		warnrc.Reasons = append(warnrc.Reasons, reason)
-	} else {
-		warnrc.Reasons = append(warnrc.Reasons, "No Reason")
+		
+		// Check warns within transaction
+		warnrc := &Warns{}
+		if err := tx.Where("user_id = ? AND chat_id = ?", userId, chatId).First(warnrc).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				// Create new warn record
+				warnrc = &Warns{UserId: userId, ChatId: chatId}
+			}
+		}
+		
+		warnrc.NumWarns++ // Increment warns
+		
+		// Add reason
+		if reason != "" {
+			if len(reason) >= 3001 {
+				reason = reason[:3000]
+			}
+			warnrc.Reasons = append(warnrc.Reasons, reason)
+		} else {
+			warnrc.Reasons = append(warnrc.Reasons, "No Reason")
+		}
+		
+		// Save the warn record
+		if err := tx.Save(warnrc).Error; err != nil {
+			return err
+		}
+		
+		numWarns = warnrc.NumWarns
+		reasons = []string(warnrc.Reasons)
+		return nil
+	})
+	
+	if err != nil {
+		log.Errorf("[Database] WarnUser: %v", err)
+		return 0, []string{}
 	}
-
-	err := DB.Save(warnrc)
-	if err.Error != nil {
-		log.Errorf("[Database] WarnUser: %v", err.Error)
-	}
-
-	return warnrc.NumWarns, []string(warnrc.Reasons)
+	
+	// Invalidate cache after successful transaction
+	deleteCache(warnSettingsCacheKey(chatId))
+	
+	return numWarns, reasons
 }
 
 func RemoveWarn(userId, chatId int64) bool {
-	removed := false
-	warnrc := checkWarns(userId, chatId)
+	return RemoveWarnWithContext(context.Background(), userId, chatId)
+}
 
-	// only remove if user has warns
-	if warnrc.NumWarns > 0 {
-		warnrc.NumWarns--                                       // Remove last warn num
-		warnrc.Reasons = warnrc.Reasons[:len(warnrc.Reasons)-1] // Remove last warn reason
-		removed = true
+func RemoveWarnWithContext(ctx context.Context, userId, chatId int64) bool {
+	var removed bool
+	
+	err := DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		warnrc := &Warns{}
+		if err := tx.Where("user_id = ? AND chat_id = ?", userId, chatId).First(warnrc).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				// No warns to remove
+				removed = false
+				return nil
+			}
+			return err
+		}
+
+		// only remove if user has warns
+		if warnrc.NumWarns > 0 {
+			warnrc.NumWarns--                                       // Remove last warn num
+			if len(warnrc.Reasons) > 0 {
+				warnrc.Reasons = warnrc.Reasons[:len(warnrc.Reasons)-1] // Remove last warn reason
+			}
+			removed = true
+			
+			// update record in db within transaction
+			if err := tx.Save(warnrc).Error; err != nil {
+				return err
+			}
+		}
+		
+		return nil
+	})
+	
+	if err != nil {
+		log.Errorf("[Database] RemoveWarn: %v", err)
+		return false
 	}
-
-	// update record in db
-	err := DB.Save(warnrc)
-	if err.Error != nil {
-		log.Errorf("[Database] RemoveWarn: %v", err.Error)
-		return false // force return false to show error
+	
+	// Invalidate cache after successful transaction
+	if removed {
+		deleteCache(warnSettingsCacheKey(chatId))
 	}
-
+	
 	return removed
 }
 
 func ResetUserWarns(userId, chatId int64) (removed bool) {
 	removed = true
-	err := DB.Where("user_id = ? AND chat_id = ?", userId, chatId).Delete(&Warns{})
-	if err.Error != nil {
-		log.Errorf("[Database] ResetUserWarns: %v", err.Error)
+	err := DB.Where("user_id = ? AND chat_id = ?", userId, chatId).Delete(&Warns{}).Error
+	if err != nil {
+		log.Errorf("[Database] ResetUserWarns: %v", err)
 		removed = false
 	}
 	return removed
@@ -119,18 +187,18 @@ func GetWarns(userId, chatId int64) (int, []string) {
 func SetWarnLimit(chatId int64, warnLimit int) {
 	warnrc := checkWarnSettings(chatId)
 	warnrc.WarnLimit = warnLimit
-	err := DB.Save(warnrc)
-	if err.Error != nil {
-		log.Errorf("[Database] SetWarnLimit: %v", err.Error)
+	err := DB.Save(warnrc).Error
+	if err != nil {
+		log.Errorf("[Database] SetWarnLimit: %v", err)
 	}
 }
 
 func SetWarnMode(chatId int64, warnMode string) {
 	warnrc := checkWarnSettings(chatId)
 	warnrc.WarnMode = warnMode
-	err := DB.Save(warnrc)
-	if err.Error != nil {
-		log.Errorf("[Database] SetWarnMode: %v", err.Error)
+	err := DB.Save(warnrc).Error
+	if err != nil {
+		log.Errorf("[Database] SetWarnMode: %v", err)
 	}
 }
 
@@ -140,18 +208,18 @@ func GetWarnSetting(chatId int64) *WarnSettings {
 
 func GetAllChatWarns(chatId int64) int {
 	var count int64
-	err := DB.Model(&Warns{}).Where("chat_id = ?", chatId).Count(&count)
-	if err.Error != nil {
-		log.Errorf("[Database] GetAllChatWarns: %v", err.Error)
+	err := DB.Model(&Warns{}).Where("chat_id = ?", chatId).Count(&count).Error
+	if err != nil {
+		log.Errorf("[Database] GetAllChatWarns: %v", err)
 		return 0
 	}
 	return int(count)
 }
 
 func ResetAllChatWarns(chatId int64) bool {
-	err := DB.Where("chat_id = ?", chatId).Delete(&Warns{})
-	if err.Error != nil {
-		log.Errorf("[Database] ResetAllChatWarns: %v", err.Error)
+	err := DB.Where("chat_id = ?", chatId).Delete(&Warns{}).Error
+	if err != nil {
+		log.Errorf("[Database] ResetAllChatWarns: %v", err)
 		return false
 	}
 	return true

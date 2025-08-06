@@ -10,25 +10,36 @@ import (
 )
 
 func GetChatSettings(chatId int64) (chatSrc *Chat) {
-	chatSrc = &Chat{}
-	err := DB.Where("chat_id = ?", chatId).First(chatSrc)
-	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
-		chatSrc = &Chat{}
-	} else if err.Error != nil {
-		log.Errorf("[Database] getChatSettings: %v - %d ", err.Error, chatId)
-		return
+	// Try to get from cache first
+	cacheKey := chatSettingsCacheKey(chatId)
+	result, err := getFromCacheOrLoad(cacheKey, CacheTTLChatSettings, func() (*Chat, error) {
+		chat := &Chat{}
+		dbErr := DB.Where("chat_id = ?", chatId).First(chat).Error
+		if errors.Is(dbErr, gorm.ErrRecordNotFound) {
+			return &Chat{}, nil
+		} else if dbErr != nil {
+			log.Errorf("[Database] getChatSettings: %v - %d ", dbErr, chatId)
+			return &Chat{}, dbErr
+		}
+		return chat, nil
+	})
+	
+	if err != nil {
+		return &Chat{}
 	}
-	return
+	return result
 }
 
 func ToggleInactiveChat(chatId int64, toggle bool) {
 	chat := GetChatSettings(chatId)
 	chat.IsInactive = toggle
-	err := DB.Where("chat_id = ?", chatId).Assign(chat).FirstOrCreate(&Chat{})
-	if err.Error != nil {
-		log.Errorf("[Database] ToggleInactiveChat: %d - %v", chatId, err.Error)
+	err := DB.Where("chat_id = ?", chatId).Assign(chat).FirstOrCreate(&Chat{}).Error
+	if err != nil {
+		log.Errorf("[Database] ToggleInactiveChat: %d - %v", chatId, err)
 		return
 	}
+	// Invalidate cache after update
+	deleteCache(chatSettingsCacheKey(chatId))
 }
 
 func UpdateChat(chatId int64, chatname string, userid int64) {
@@ -40,11 +51,13 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 		newUsers := chatr.Users
 		newUsers = append(newUsers, userid)
 		usersUpdate := &Chat{ChatId: chatId, ChatName: chatname, Users: newUsers, IsInactive: false}
-		err := DB.Where("chat_id = ?", chatId).Assign(usersUpdate).FirstOrCreate(&Chat{})
-		if err.Error != nil {
-			log.Errorf("[Database] UpdateChat: %v - %d (%d)", err.Error, chatId, userid)
+		err := DB.Where("chat_id = ?", chatId).Assign(usersUpdate).FirstOrCreate(&Chat{}).Error
+		if err != nil {
+			log.Errorf("[Database] UpdateChat: %v - %d (%d)", err, chatId, userid)
 			return
 		}
+		// Invalidate cache after update
+		deleteCache(chatSettingsCacheKey(chatId))
 	}
 }
 
@@ -53,9 +66,9 @@ func GetAllChats() map[int64]Chat {
 		chatArray []Chat
 		chatMap   = make(map[int64]Chat)
 	)
-	err := DB.Find(&chatArray)
-	if err.Error != nil {
-		log.Errorf("[Database] GetAllChats: %v", err.Error)
+	err := DB.Find(&chatArray).Error
+	if err != nil {
+		log.Errorf("[Database] GetAllChats: %v", err)
 		return chatMap
 	}
 
@@ -67,12 +80,21 @@ func GetAllChats() map[int64]Chat {
 }
 
 func LoadChatStats() (activeChats, inactiveChats int) {
-	chats := GetAllChats()
-	for _, i := range chats {
-		if i.IsInactive {
-			inactiveChats++
-		}
+	var activeCount, inactiveCount int64
+	
+	// Count active chats
+	err := DB.Model(&Chat{}).Where("is_inactive = ?", false).Count(&activeCount).Error
+	if err != nil {
+		log.Errorf("[Database][LoadChatStats] counting active chats: %v", err)
 	}
-	activeChats = len(chats) - inactiveChats
+	
+	// Count inactive chats
+	err = DB.Model(&Chat{}).Where("is_inactive = ?", true).Count(&inactiveCount).Error
+	if err != nil {
+		log.Errorf("[Database][LoadChatStats] counting inactive chats: %v", err)
+	}
+	
+	activeChats = int(activeCount)
+	inactiveChats = int(inactiveCount)
 	return
 }

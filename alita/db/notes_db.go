@@ -5,8 +5,6 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-
-	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 func getNotesSettings(chatID int64) (noteSrc *NotesSettings) {
@@ -75,11 +73,25 @@ func GetNotesList(chatID int64, admin bool) (allNotes []string) {
 }
 
 func DoesNoteExists(chatID int64, noteName string) bool {
-	return string_handling.FindInStringSlice(GetNotesList(chatID, true), noteName)
+	var count int64
+	err := DB.Model(&Notes{}).Where("chat_id = ? AND note_name = ?", chatID, noteName).Count(&count).Error
+	if err != nil {
+		log.Errorf("[Database] DoesNoteExists: %v - %d", err, chatID)
+		return false
+	}
+	return count > 0
 }
 
 func AddNote(chatID int64, noteName, replyText, fileID string, buttons ButtonArray, filtType int, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool) {
-	if string_handling.FindInStringSlice(GetNotesList(chatID, true), noteName) {
+	// Check if note already exists using a direct query
+	var count int64
+	err := DB.Model(&Notes{}).Where("chat_id = ? AND note_name = ?", chatID, noteName).Count(&count).Error
+	if err != nil {
+		log.Errorf("[Database][AddNote] checking existence: %d - %v", chatID, err)
+		return
+	}
+	
+	if count > 0 {
 		return
 	}
 
@@ -98,7 +110,7 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons ButtonArr
 		NoNotif:     noNotif,
 	}
 
-	err := CreateRecord(&noterc)
+	err = CreateRecord(&noterc)
 	if err != nil {
 		log.Errorf("[Database][AddNotes]: %d - %v", chatID, err)
 		return
@@ -106,15 +118,13 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons ButtonArr
 }
 
 func RemoveNote(chatID int64, noteName string) {
-	if !string_handling.FindInStringSlice(GetNotesList(chatID, true), noteName) {
+	// Directly attempt to delete the note without checking existence first
+	result := DB.Where("chat_id = ? AND note_name = ?", chatID, noteName).Delete(&Notes{})
+	if result.Error != nil {
+		log.Errorf("[Database][RemoveNote]: %d - %v", chatID, result.Error)
 		return
 	}
-
-	err := DB.Where("chat_id = ? AND note_name = ?", chatID, noteName).Delete(&Notes{}).Error
-	if err != nil {
-		log.Errorf("[Database][RemoveNote]: %d - %v", chatID, err)
-		return
-	}
+	// result.RowsAffected will be 0 if no note was found, which is fine
 }
 
 func RemoveAllNotes(chatID int64) {

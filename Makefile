@@ -5,13 +5,13 @@ GORELEASER_CMD = goreleaser
 GOLANGCI_LINT_CMD = golangci-lint
 
 run:
-    $(GO_CMD) run main.go
+	$(GO_CMD) run main.go
 
 tidy:
-    $(GO_CMD) mod tidy
+	$(GO_CMD) mod tidy
 
 vendor:
-    $(GO_CMD) mod vendor
+	$(GO_CMD) mod vendor
 
 build:
 	$(GORELEASER_CMD) release --snapshot --skip=publish --clean --skip=sign

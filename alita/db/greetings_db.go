@@ -253,32 +253,31 @@ func SetCleanGoodbyeMsgId(chatId, msgId int64) {
 }
 
 func LoadGreetingsStats() (enabledWelcome, enabledGoodbye, cleanServiceEnabled, cleanWelcomeEnabled, cleanGoodbyeEnabled int64) {
-	var greetRcStruct []*GreetingSettings
-
-	err := GetRecords(&greetRcStruct, map[string]interface{}{})
+	// Use a single query with COUNT and CASE WHEN for better performance
+	type greetingStats struct {
+		EnabledWelcome      int64
+		EnabledGoodbye      int64
+		CleanServiceEnabled int64
+		CleanWelcomeEnabled int64
+		CleanGoodbyeEnabled int64
+	}
+	
+	var stats greetingStats
+	query := `
+		SELECT 
+			COUNT(CASE WHEN welcome_enabled = true THEN 1 END) as enabled_welcome,
+			COUNT(CASE WHEN goodbye_enabled = true THEN 1 END) as enabled_goodbye,
+			COUNT(CASE WHEN clean_service_settings = true THEN 1 END) as clean_service_enabled,
+			COUNT(CASE WHEN welcome_clean_old = true THEN 1 END) as clean_welcome_enabled,
+			COUNT(CASE WHEN goodbye_clean_old = true THEN 1 END) as clean_goodbye_enabled
+		FROM greetings
+	`
+	
+	err := DB.Raw(query).Scan(&stats).Error
 	if err != nil {
-		log.Errorf("[Database][LoadGreetingsStats]: %v", err)
-		return
+		log.Errorf("[Database][LoadGreetingsStats] querying stats: %v", err)
+		return 0, 0, 0, 0, 0
 	}
-
-	for _, greetRc := range greetRcStruct {
-		// count things
-		if greetRc.WelcomeSettings != nil && greetRc.WelcomeSettings.ShouldWelcome {
-			enabledWelcome++
-		}
-		if greetRc.GoodbyeSettings != nil && greetRc.GoodbyeSettings.ShouldGoodbye {
-			enabledGoodbye++
-		}
-		if greetRc.ShouldCleanService {
-			cleanServiceEnabled++
-		}
-		if greetRc.WelcomeSettings != nil && greetRc.WelcomeSettings.CleanWelcome {
-			cleanWelcomeEnabled++
-		}
-		if greetRc.GoodbyeSettings != nil && greetRc.GoodbyeSettings.CleanGoodbye {
-			cleanGoodbyeEnabled++
-		}
-	}
-
-	return
+	
+	return stats.EnabledWelcome, stats.EnabledGoodbye, stats.CleanServiceEnabled, stats.CleanWelcomeEnabled, stats.CleanGoodbyeEnabled
 }

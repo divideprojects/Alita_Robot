@@ -567,6 +567,7 @@ func init() {
 	// Open PostgreSQL connection using DATABASE_URL
 	DB, err = gorm.Open(postgres.Open(config.DatabaseURL), &gorm.Config{
 		Logger: gormLogger,
+		PrepareStmt: true, // Enable prepared statement caching for better performance
 		NowFunc: func() time.Time {
 			return time.Now().UTC()
 		},
