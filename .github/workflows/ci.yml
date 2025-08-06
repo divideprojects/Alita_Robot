@@ -16,6 +16,84 @@ permissions:
   security-events: write
 
 jobs:
+  # Migration sync verification
+  migration-sync-check:
+    name: Migration Sync Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify migration directories exist
+        run: |
+          if [ ! -d "supabase/migrations" ]; then
+            echo "❌ Error: supabase/migrations directory not found"
+            exit 1
+          fi
+          if [ ! -d "psql/migrations" ]; then
+            echo "❌ Error: psql/migrations directory not found"
+            exit 1
+          fi
+          echo "✅ Both migration directories exist"
+
+      - name: Check migration file sync
+        run: |
+          echo "📋 Comparing migration files..."
+          
+          # Get list of files in each directory
+          supabase_files=$(ls -1 supabase/migrations/*.sql 2>/dev/null | xargs -n 1 basename | sort)
+          psql_files=$(ls -1 psql/migrations/*.sql 2>/dev/null | xargs -n 1 basename | sort)
+          
+          # Check if file lists match
+          if [ "$supabase_files" != "$psql_files" ]; then
+            echo "❌ Migration files are out of sync!"
+            echo ""
+            echo "Supabase migrations:"
+            echo "$supabase_files"
+            echo ""
+            echo "PostgreSQL migrations:"
+            echo "$psql_files"
+            echo ""
+            echo "Please run 'make psql-prepare' to synchronize migrations"
+            exit 1
+          fi
+          
+          echo "✅ Migration filenames match"
+
+      - name: Verify migration processing
+        run: |
+          echo "🔧 Running psql-prepare to verify processing..."
+          
+          # Create temporary directory for comparison
+          mkdir -p /tmp/test-psql-migrations
+          
+          # Process migrations to temporary location
+          for file in supabase/migrations/*.sql; do
+            filename=$(basename "$file")
+            sed -E '/(grant|GRANT).*(anon|authenticated|service_role)/d' "$file" | \
+            sed 's/ with schema "extensions"//g' | \
+            sed 's/create extension if not exists/CREATE EXTENSION IF NOT EXISTS/g' | \
+            sed 's/create extension/CREATE EXTENSION IF NOT EXISTS/g' > "/tmp/test-psql-migrations/$filename"
+          done
+          
+          # Compare with existing psql migrations
+          for file in psql/migrations/*.sql; do
+            filename=$(basename "$file")
+            if ! diff -q "$file" "/tmp/test-psql-migrations/$filename" > /dev/null 2>&1; then
+              echo "❌ Migration $filename is not properly synchronized!"
+              echo "Differences found:"
+              diff "$file" "/tmp/test-psql-migrations/$filename" || true
+              echo ""
+              echo "Please run 'make psql-prepare' to update psql migrations"
+              exit 1
+            fi
+          done
+          
+          echo "✅ All migrations are properly processed and synchronized"
+          
+          # Cleanup
+          rm -rf /tmp/test-psql-migrations
+
   # Security and code quality checks that run in parallel
   security-scan:
     name: Security Scanning
@@ -162,12 +240,13 @@ jobs:
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
-    needs: [security-scan, lint-and-test, build-verification]
+    needs: [migration-sync-check, security-scan, lint-and-test, build-verification]
     if: always()
     steps:
       - name: Check all jobs status
         run: |
-          if [ "${{ needs.security-scan.result }}" != "success" ] || \
+          if [ "${{ needs.migration-sync-check.result }}" != "success" ] || \
+             [ "${{ needs.security-scan.result }}" != "success" ] || \
              [ "${{ needs.lint-and-test.result }}" != "success" ] || \
              [ "${{ needs.build-verification.result }}" != "success" ]; then
             echo "One or more CI jobs failed!"
