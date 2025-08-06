@@ -448,6 +448,10 @@ func NewCachedOptimizedQueries() *CachedOptimizedQueries {
 
 // GetLockStatusCached retrieves lock status with caching
 func (c *CachedOptimizedQueries) GetLockStatusCached(chatID int64, lockType string) (bool, error) {
+	if c == nil || c.lockQueries == nil {
+		return false, errors.New("lock queries not initialized")
+	}
+	
 	cacheKey := lockCacheKey(chatID, lockType)
 	
 	// Try to get from cache first
@@ -465,6 +469,10 @@ func (c *CachedOptimizedQueries) GetLockStatusCached(chatID int64, lockType stri
 
 // GetUserBasicInfoCached retrieves user info with caching
 func (c *CachedOptimizedQueries) GetUserBasicInfoCached(userID int64) (*User, error) {
+	if c == nil || c.userQueries == nil {
+		return nil, errors.New("user queries not initialized")
+	}
+	
 	cacheKey := userCacheKey(userID)
 	
 	cached, err := getFromCacheOrLoad(cacheKey, 1*time.Hour, func() (*User, error) {
@@ -480,6 +488,10 @@ func (c *CachedOptimizedQueries) GetUserBasicInfoCached(userID int64) (*User, er
 
 // GetChatBasicInfoCached retrieves chat info with caching
 func (c *CachedOptimizedQueries) GetChatBasicInfoCached(chatID int64) (*Chat, error) {
+	if c == nil || c.chatQueries == nil {
+		return nil, errors.New("chat queries not initialized")
+	}
+	
 	cacheKey := chatCacheKey(chatID)
 	
 	cached, err := getFromCacheOrLoad(cacheKey, 30*time.Minute, func() (*Chat, error) {
@@ -495,6 +507,10 @@ func (c *CachedOptimizedQueries) GetChatBasicInfoCached(chatID int64) (*Chat, er
 
 // GetAntifloodSettingsCached retrieves antiflood settings with caching
 func (c *CachedOptimizedQueries) GetAntifloodSettingsCached(chatID int64) (*AntifloodSettings, error) {
+	if c == nil || c.antifloodQueries == nil {
+		return nil, errors.New("antiflood queries not initialized")
+	}
+	
 	cacheKey := optimizedAntifloodCacheKey(chatID)
 	
 	cached, err := getFromCacheOrLoad(cacheKey, 1*time.Hour, func() (*AntifloodSettings, error) {
@@ -510,6 +526,10 @@ func (c *CachedOptimizedQueries) GetAntifloodSettingsCached(chatID int64) (*Anti
 
 // GetChatFiltersCached retrieves filters with caching
 func (c *CachedOptimizedQueries) GetChatFiltersCached(chatID int64) ([]*ChatFilters, error) {
+	if c == nil || c.filterQueries == nil {
+		return nil, errors.New("filter queries not initialized")
+	}
+	
 	cacheKey := filterListCacheKey(chatID)
 	
 	cached, err := getFromCacheOrLoad(cacheKey, 15*time.Minute, func() ([]*ChatFilters, error) {
@@ -525,6 +545,10 @@ func (c *CachedOptimizedQueries) GetChatFiltersCached(chatID int64) ([]*ChatFilt
 
 // GetChatBlacklistCached retrieves blacklist with caching
 func (c *CachedOptimizedQueries) GetChatBlacklistCached(chatID int64) ([]*BlacklistSettings, error) {
+	if c == nil || c.blacklistQueries == nil {
+		return nil, errors.New("blacklist queries not initialized")
+	}
+	
 	cacheKey := blacklistCacheKey(chatID)
 	
 	cached, err := getFromCacheOrLoad(cacheKey, 15*time.Minute, func() ([]*BlacklistSettings, error) {
@@ -540,6 +564,10 @@ func (c *CachedOptimizedQueries) GetChatBlacklistCached(chatID int64) ([]*Blackl
 
 // GetChannelSettingsCached retrieves channel settings with caching
 func (c *CachedOptimizedQueries) GetChannelSettingsCached(chatID int64) (*ChannelSettings, error) {
+	if c == nil || c.channelQueries == nil {
+		return nil, errors.New("channel queries not initialized")
+	}
+	
 	cacheKey := channelCacheKey(chatID)
 	
 	cached, err := getFromCacheOrLoad(cacheKey, 30*time.Minute, func() (*ChannelSettings, error) {
@@ -577,7 +605,7 @@ func channelCacheKey(chatID int64) string {
 // Global instance for optimized queries (singleton pattern with lazy initialization)
 var (
 	optimizedQueries     *CachedOptimizedQueries
-	optimizedQueriesOnce sync.Once
+	optimizedQueriesMu   sync.RWMutex
 )
 
 // BatchPrefetchContext provides context-aware prefetching
@@ -661,21 +689,51 @@ func (b *BatchPrefetchContext) PrefetchChatData(chatIDs []int64) (map[int64]*Cha
 
 // GetOptimizedQueries returns the singleton instance of optimized queries with thread-safe lazy initialization
 func GetOptimizedQueries() *CachedOptimizedQueries {
-	optimizedQueriesOnce.Do(func() {
-		if DB == nil {
-			log.Error("[GetOptimizedQueries] Database not initialized, creating placeholder instance")
-			// Create a placeholder instance that will return errors
-			optimizedQueries = &CachedOptimizedQueries{}
-			return
+	// Fast path: Check if already initialized with a valid DB
+	optimizedQueriesMu.RLock()
+	if optimizedQueries != nil && DB != nil {
+		// Check if the instance has valid internal queries
+		if optimizedQueries.userQueries != nil && optimizedQueries.userQueries.db != nil {
+			optimizedQueriesMu.RUnlock()
+			return optimizedQueries
 		}
-		log.Debug("[GetOptimizedQueries] Initializing optimized queries")
-		optimizedQueries = NewCachedOptimizedQueries()
-	})
+	}
+	optimizedQueriesMu.RUnlock()
+	
+	// Slow path: Need to initialize or re-initialize
+	optimizedQueriesMu.Lock()
+	defer optimizedQueriesMu.Unlock()
+	
+	// Double-check after acquiring write lock
+	if optimizedQueries != nil && DB != nil && 
+		optimizedQueries.userQueries != nil && optimizedQueries.userQueries.db != nil {
+		return optimizedQueries
+	}
+	
+	// Initialize or re-initialize
+	if DB == nil {
+		log.Warn("[GetOptimizedQueries] Database not initialized yet, queries will fail")
+		// Return a properly initialized empty instance that will return errors
+		return &CachedOptimizedQueries{
+			lockQueries:      &OptimizedLockQueries{db: nil},
+			userQueries:      &OptimizedUserQueries{db: nil},
+			chatQueries:      &OptimizedChatQueries{db: nil},
+			antifloodQueries: &OptimizedAntifloodQueries{db: nil},
+			filterQueries:    &OptimizedFilterQueries{db: nil},
+			blacklistQueries: &OptimizedBlacklistQueries{db: nil},
+			channelQueries:   &OptimizedChannelQueries{db: nil},
+		}
+	}
+	
+	log.Debug("[GetOptimizedQueries] Initializing optimized queries with valid DB")
+	optimizedQueries = NewCachedOptimizedQueries()
 	return optimizedQueries
 }
 
 // InitOptimizedQueries forces reinitialization of optimized queries (useful for testing or reconnection)
 func InitOptimizedQueries() {
-	optimizedQueriesOnce = sync.Once{}
+	optimizedQueriesMu.Lock()
+	defer optimizedQueriesMu.Unlock()
 	optimizedQueries = nil
+	// The next call to GetOptimizedQueries() will reinitialize
 }
