@@ -684,7 +684,7 @@ func SendFilter(b *gotgbot.Bot, ctx *ext.Context, filterData *db.ChatFilters, re
 	if len(rstrings) == 1 {
 		sent = rstrings[0]
 	} else {
-		n := rand.Intn(len(rstrings))
+		n := rand.Intn(len(rstrings)) // #nosec G404 - Non-cryptographic random is sufficient for selecting messages
 		sent = rstrings[n]
 	}
 
@@ -763,7 +763,7 @@ func SendNote(b *gotgbot.Bot, chat *gotgbot.Chat, ctx *ext.Context, noteData *db
 	if len(rstrings) == 1 {
 		sent = rstrings[0]
 	} else {
-		n := rand.Intn(len(rstrings))
+		n := rand.Intn(len(rstrings)) // #nosec G404 - Non-cryptographic random is sufficient for selecting messages
 		sent = rstrings[n]
 	}
 

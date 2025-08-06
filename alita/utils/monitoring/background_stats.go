@@ -61,7 +61,7 @@ type BackgroundStatsCollector struct {
 	// Performance tracking
 	responseTimeSum        int64
 	responseTimeCount      int64
-	peakMemoryUsage        int64
+	peakMemoryUsage        uint64
 	
 	// Channels for concurrent processing
 	systemStatsChan        chan SystemMetrics
@@ -182,11 +182,11 @@ func (collector *BackgroundStatsCollector) collectSystemStats() {
 	}
 	
 	// Track peak memory usage
-	currentMemory := int64(m.Alloc)
-	if currentMemory > atomic.LoadInt64(&collector.peakMemoryUsage) {
-		atomic.StoreInt64(&collector.peakMemoryUsage, currentMemory)
+	currentMemory := m.Alloc
+	if currentMemory > atomic.LoadUint64(&collector.peakMemoryUsage) {
+		atomic.StoreUint64(&collector.peakMemoryUsage, currentMemory)
 	}
-	metrics.PeakMemoryUsageMB = float64(atomic.LoadInt64(&collector.peakMemoryUsage)) / 1024 / 1024
+	metrics.PeakMemoryUsageMB = float64(atomic.LoadUint64(&collector.peakMemoryUsage)) / 1024 / 1024
 	
 	// Send to processing channel
 	select {
