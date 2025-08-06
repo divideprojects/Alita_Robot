@@ -10,6 +10,7 @@ on:
         description: "Tag to release (e.g., v1.2.3)"
         required: true
         type: string
+        default: "v1.0.0" # Default tag for manual dispatch
 
 # Restrict permissions to minimum required for enhanced security
 permissions:
