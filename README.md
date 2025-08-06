@@ -1,8 +1,10 @@
-# Alita_Robot
+# Alita Robot 🤖
 
 <p align='center'>
   <a href="https://github.com/divideprojects/Alita_Robot/actions/workflows/ci.yml"><img src="https://github.com/divideprojects/Alita_Robot/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/divideprojects/Alita_Robot/actions/workflows/release.yml" alt="made-with-go"> <img src="https://github.com/divideprojects/Alita_Robot/actions/workflows/release.yml/badge.svg" alt="Release"/> </a>
+  <a href="https://github.com/divideprojects/Alita_Robot/actions/workflows/release.yml"> <img src="https://github.com/divideprojects/Alita_Robot/actions/workflows/release.yml/badge.svg" alt="Release"/> </a>
+  <a href="https://goreportcard.com/report/github.com/divideprojects/Alita_Robot"><img src="https://goreportcard.com/badge/github.com/divideprojects/Alita_Robot" alt="Go Report Card"></a>
+  <a href="https://pkg.go.dev/github.com/divideprojects/Alita_Robot"><img src="https://pkg.go.dev/badge/github.com/divideprojects/Alita_Robot.svg" alt="Go Reference"></a>
 </p>
 
 <p align='center'>
@@ -12,96 +14,250 @@
   <img src="https://img.shields.io/github/license/DivideProjects/Alita_Robot?style=flat-square" alt="LICENSE">
   <img src="https://img.shields.io/github/contributors/DivideProjects/Alita_Robot?style=flat-square" alt="Contributors">
   <img src="https://img.shields.io/github/repo-size/DivideProjects/Alita_Robot?style=flat-square" alt="Repo Size">
+  <img src="https://img.shields.io/github/v/release/DivideProjects/Alita_Robot?style=flat-square" alt="Release Version">
 </p>
 
 <p align='center'>
-  <a href="https://go.dev/" alt="made-with-go"> <img src="https://img.shields.io/badge/Made%20with-Go-1f425f.svg?style=flat-square&logo=Go&color=blue" /> </a>
-  <a href="https://makeapullrequest.com" alt="PRs Welcome"> <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /> </a>
+  <a href="https://go.dev/"> <img src="https://img.shields.io/badge/Made%20with-Go-1f425f.svg?style=flat-square&logo=Go&color=00ADD8" /> </a>
+  <a href="https://www.postgresql.org/"> <img src="https://img.shields.io/badge/Database-PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white" /> </a>
+  <a href="https://redis.io/"> <img src="https://img.shields.io/badge/Cache-Redis-DC382D?style=flat-square&logo=redis&logoColor=white" /> </a>
+  <a href="https://makeapullrequest.com"> <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /> </a>
 </p>
 
-Alita is a Telegram Group managment bot made using **[Gotgbot](https://github.com/PaulSonOfLars/gotgbot)** and **[Go](https://go.dev)**, which makes it modern and faster than most of the exisitng Telegram Chat Managers.
+> **Alita** is a powerful, modern Telegram group management bot built with Go and the Gotgbot library. Designed for speed, reliability, and extensive customization, Alita provides comprehensive moderation tools for Telegram communities of any size.
 
-**Alita's features over other bots:**
+## 📋 Table of Contents
 
-- Modern
-- Fast
-- Fully asynchronous
-- Fully open-source
-- Frequently updated
-- Multi Language Support
+- [Features](#-features)
+- [Quick Start](#-quick-start)
+- [Installation](#-installation)
+  - [Docker (Recommended)](#docker-recommended)
+  - [Binary Release](#binary-release)
+  - [Build from Source](#build-from-source)
+- [Configuration](#️-configuration)
+- [Bot Commands](#-bot-commands)
+- [Development](#-development)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-Can be found on Telegram as [@Alita_Robot](https://t.me/Alita_Robot)
-</br>
+## ✨ Features
 
-Alita is currently available in 1 Language as of now:
+### 🛡️ **Admin & Moderation**
+- **User Management**: Ban, mute, kick, and warn users with customizable actions
+- **Permission System**: Granular permission control for admins
+- **Anti-Spam**: Configurable flood control and spam detection
+- **Blacklist**: Word and sticker filtering with pattern matching
+- **Approval System**: User approval workflow for restricted groups
 
-- **US English**
+### 💬 **Messaging & Content**
+- **Welcome/Goodbye**: Customizable greeting messages with variables
+- **Filters**: Keyword-triggered auto-responses with regex support
+- **Notes**: Save and retrieve formatted messages
+- **Pins**: Manage pinned messages with anti-spam protection
+- **Locks**: Control message types (links, forwards, media, etc.)
 
-More languages can be managed in the _locales_ folder. Although we have added support for languages in bot, we still need contributors to translate the bot to other languages.
+### 🔧 **Technical Excellence**
+- **Performance**: Built with Go for blazing-fast response times
+- **Dual-Layer Cache**: Redis + Ristretto for optimal performance
+- **Database**: PostgreSQL with connection pooling and batch operations
+- **Deployment Modes**: Support for both polling and webhook modes
+- **Multi-Language**: i18n support with YAML locale files
+- **Monitoring**: Built-in resource monitoring and health checks
 
-More languages have been added to locales folder but need some configuration.
+### 🚀 **Modern Architecture**
+- **Fully Asynchronous**: Non-blocking operations throughout
+- **Repository Pattern**: Clean separation of concerns
+- **Middleware System**: Extensible command decorators
+- **Graceful Shutdown**: Proper cleanup and connection handling
+- **Docker Ready**: Multi-architecture images for easy deployment
 
-Help us bring more languages to the bot by contributing to the project on Opening Pull Requests.
+## 🚀 Quick Start
 
-## Requirements
+Get Alita running in under 5 minutes!
 
-- You need to have a _PostgreSQL Database_ (Recommended) or _Supabase_ (Even Better)
-- You also need a _Redis Database_ for caching (Required): Get a free redis database from [here](https://redis.com/try-free/)
-- Linux/Windows machine (Ubuntu/Debain-based OS Preferred or Windows 10/Server2016 and later)
+### Prerequisites
+- Docker and Docker Compose installed
+- PostgreSQL database (or use the included one)
+- Redis instance (or use the included one)
+- Telegram Bot Token from [@BotFather](https://t.me/BotFather)
 
-or
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/divideprojects/Alita_Robot.git
+cd Alita_Robot
+```
 
-- Docker (Easiest way to setup the bot)
+### Step 2: Configure Environment
+```bash
+cp sample.env .env
+# Edit .env with your configuration
+nano .env
+```
 
-## How to setup
+**Required variables:**
+```env
+BOT_TOKEN=your_bot_token_from_botfather
+OWNER_ID=your_telegram_user_id
+MESSAGE_DUMP=-100xxxxxxxxx  # Your log channel
+DATABASE_URL=postgres://postgres:password@postgres:5432/alita_robot
+REDIS_ADDRESS=redis:6379
+```
 
-First Step!
+### Step 3: Run with Docker
+```bash
+docker-compose up -d
+```
 
-- Star **⭐** the repository!!
-- Fork **🔱** the repository before deploying and make changes in the fork.
+That's it! Your bot should now be running. Check the logs:
+```bash
+docker-compose logs -f alita
+```
 
-It really motivates me to continue this project further.
+### Interact with Your Bot
+Open Telegram and search for your bot username to start using it!
 
-### Deploy to Heroku
+## 💻 Installation
 
-- Get your `API_ID` and `API_HASH` from [here](https://my.telegram.org/)
-- Get your Bot Token from [@BotFather](https://t.me/BotFather)
+### Docker (Recommended)
 
-**Note:** As it is banned with an unknown reason in heroku, follow the below steps carefully!
+We provide official Docker images at `ghcr.io/divideprojects/alita_robot` for easy deployment.
 
-- First Fork this repo `:)`
-- secondly, create an empty app in the Heroku, with a custom app name; and select Europe region for faster speed.
-- Now go to the deploy tab of your app and under deployment method select GitHub and connect it.
-- after that, type the forked repo name and select it now select main branch and enable auto deploy, at last click on deploy now button!
-</h3>
-<p align="center"><a href="https://heroku.com/deploy?template=https://github.com/divideprojects/Alita_Robot"> <img src="https://img.shields.io/badge/Redirect%20To%20Heroku-black?style=for-the-badge&logo=heroku" width="200" height="35.45"/></a></p>
+#### Using Docker Compose (Full Stack)
 
-- Lastly, you must fill up all the vars in heroku (if using heroku) as directed in app.json file and now turn on the worker dyno to run it `:)`
+This includes PostgreSQL, Redis, and the bot:
 
-**Must Add in heroku [config](https://dashboard.heroku.com/apps/yourappname/settings) :**
+```bash
+# Clone the repository
+git clone https://github.com/divideprojects/Alita_Robot.git
+cd Alita_Robot
 
-- `DATABASE_URL` : Get one from [supabase](https://supabase.com/)
-- `OWNER_ID` : your telegram id
-- `MESSAGE_DUMP` : must be start with `-100` or your bot added in as **admin**
+# Configure environment
+cp sample.env .env
+# Edit .env with your settings
 
-### Traditional
+# Start all services
+docker-compose up -d
 
-- Download a binary from [releases](https://github.com/divideprojects/Alita_Robot/releases) page specific to your PC.
-- Set the required env variables and run the binary
+# View logs
+docker-compose logs -f alita
 
-**Note:** Not a lot of people may be able to run using this because the instructions aren't clear but I'll try to make it clear in future.
+# Stop services
+docker-compose down
+```
 
-### Docker
+#### Using Docker Run (Bot Only)
 
-We currently publish a `ghcr.io/divideprojects/alita_robot` Docker image based on alpine.
+If you have existing PostgreSQL and Redis instances:
 
-Set the Environmental vars using the `-e` flag in while running the container.
+```bash
+docker run -d \
+  --name alita-bot \
+  --restart unless-stopped \
+  -e BOT_TOKEN="your_bot_token" \
+  -e DATABASE_URL="your_postgres_url" \
+  -e REDIS_ADDRESS="your_redis_address" \
+  -e OWNER_ID="your_telegram_id" \
+  -e MESSAGE_DUMP="-100xxxxxxxxx" \
+  ghcr.io/divideprojects/alita_robot:latest
+```
 
-If all works well, bot should send message to the **MESSAGE_DUMP** Group!
+### Binary Release
 
-### Webhook Mode with Cloudflare Tunnel (Production)
+Download pre-built binaries for your platform:
 
-Alita now supports webhook mode for production deployments using Cloudflare Tunnel. This is more efficient than polling and works behind firewalls without opening ports.
+1. Visit the [Releases](https://github.com/divideprojects/Alita_Robot/releases) page
+2. Download the appropriate binary for your OS/architecture:
+   - **Linux**: `alita_robot_*_linux_amd64.tar.gz` or `_arm64`
+   - **macOS**: `alita_robot_*_darwin_amd64.tar.gz` or `_arm64`
+   - **Windows**: `alita_robot_*_windows_amd64.zip`
+
+3. Extract and run:
+```bash
+# Linux/macOS
+tar -xzf alita_robot_*.tar.gz
+chmod +x alita_robot
+./alita_robot
+
+# Windows
+# Extract the zip file and run alita_robot.exe
+```
+
+### Build from Source
+
+#### Prerequisites
+- Go 1.21 or higher
+- PostgreSQL 14+
+- Redis 6+
+- Make (optional)
+
+#### Build Steps
+
+```bash
+# Clone the repository
+git clone https://github.com/divideprojects/Alita_Robot.git
+cd Alita_Robot
+
+# Install dependencies
+go mod download
+
+# Build the binary
+go build -o alita_robot ./cmd/alita
+
+# Or use make
+make build
+
+# Run the bot
+./alita_robot
+```
+
+#### Development Build
+
+```bash
+# Run with hot reload (requires air)
+go install github.com/cosmtrek/air@latest
+air
+
+# Or use make
+make run
+```
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+Alita uses environment variables for configuration. Create a `.env` file in the project root:
+
+#### Required Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `BOT_TOKEN` | Telegram Bot Token from [@BotFather](https://t.me/BotFather) | `123456:ABC-DEF...` |
+| `DATABASE_URL` | PostgreSQL connection string | `postgres://user:pass@host/db` |
+| `REDIS_ADDRESS` | Redis server address | `redis:6379` |
+| `OWNER_ID` | Your Telegram user ID | `123456789` |
+| `MESSAGE_DUMP` | Log channel ID (must start with -100) | `-100123456789` |
+
+#### Optional Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `REDIS_PASSWORD` | Redis password | (empty) |
+| `ENABLED_LOCALES` | Comma-separated locale codes | `en` |
+| `USE_WEBHOOKS` | Enable webhook mode | `false` |
+| `WEBHOOK_DOMAIN` | Webhook domain (if enabled) | - |
+| `WEBHOOK_SECRET` | Webhook security token | - |
+| `WEBHOOK_PORT` | Webhook server port | `8080` |
+| `MAX_DB_POOL_SIZE` | Database connection pool size | (calculated) |
+| `CACHE_TTL` | Cache time-to-live (seconds) | `300` |
+| `CACHE_SIZE` | In-memory cache size (MB) | `100` |
+| `WORKER_POOL_SIZE` | Concurrent worker pool size | `10` |
+| `QUERY_TIMEOUT` | Database query timeout (seconds) | `30` |
+
+See `sample.env` for a complete list of configuration options.
+
+### Webhook Mode (Production)
+
+For production deployments, webhook mode provides better performance and lower resource usage than polling. Alita supports webhooks with Cloudflare Tunnel for easy setup behind firewalls.
 
 #### Prerequisites
 
@@ -224,43 +380,233 @@ USE_WEBHOOKS=false
 | **Production Ready**  | ✅ Recommended           | ⚠️ Development only       |
 | **Firewall Friendly** | ✅ Works behind NAT      | ❌ Needs outbound access  |
 
-### Other
+## 🤖 Bot Commands
 
-You can download all binaries and release artifacts from the Releases page. Binaries are built for macOS, Linux, Windows, for amd64 and arm64 architectures.
+### Admin Commands
+- `/promote` - Promote user to admin
+- `/demote` - Demote admin to user
+- `/ban` - Ban a user
+- `/unban` - Unban a user
+- `/mute` - Mute a user
+- `/unmute` - Unmute a user
+- `/kick` - Kick a user
+- `/warn` - Warn a user
+- `/unwarn` - Remove warnings
+- `/setwarnlimit` - Set warning limit
+- `/lock` - Lock message types
+- `/unlock` - Unlock message types
 
-If a binary does not yet exist for the OS/architecture you use, please open a GitHub Issue.
+### User Commands
+- `/start` - Start the bot
+- `/help` - Get help
+- `/info` - User information
+- `/id` - Get IDs
+- `/ping` - Check bot response
 
-## Verify Signature
+### Content Management
+- `/filter` - Add keyword filter
+- `/filters` - List filters
+- `/stop` - Remove filter
+- `/save` - Save a note
+- `/get` - Get a note
+- `/notes` - List notes
+- `/clear` - Delete a note
 
-You can verify the integrity and authenticity of any released artifact using a public GPG key. All release artifacts are signed and have a corresponding signature file. Release artifacts are available on the Releases page.
+### Group Settings
+- `/setwelcome` - Set welcome message
+- `/setgoodbye` - Set goodbye message
+- `/resetwelcome` - Reset welcome
+- `/resetgoodbye` - Reset goodbye
+- `/cleanwelcome` - Auto-delete welcomes
+- `/cleanservice` - Auto-delete service messages
+- `/setflood` - Configure antiflood
+- `/blacklist` - Add blacklisted words
 
-# fetch GPG signing key
+## 🔨 Development
+
+### Project Structure
+
+```
+Alita_Robot/
+├── alita/              # Core bot code
+│   ├── config/         # Configuration management
+│   ├── db/             # Database layer
+│   ├── modules/        # Command handlers
+│   ├── utils/          # Utility packages
+│   └── i18n/           # Internationalization
+├── cmd/                # Executables
+│   ├── alita/          # Main bot
+│   └── migrate/        # Migration tool
+├── locales/            # Language files
+├── supabase/           # Database migrations
+└── docker/             # Docker configurations
+```
+
+### Development Setup
+
+1. **Install Go 1.21+**
+   ```bash
+   # macOS
+   brew install go
+   
+   # Linux
+   wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
+   sudo tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
+   ```
+
+2. **Setup PostgreSQL and Redis**
+   ```bash
+   # Using Docker
+   docker run -d --name postgres -e POSTGRES_PASSWORD=password -p 5432:5432 postgres:14
+   docker run -d --name redis -p 6379:6379 redis:7-alpine
+   ```
+
+3. **Clone and Build**
+   ```bash
+   git clone https://github.com/divideprojects/Alita_Robot.git
+   cd Alita_Robot
+   go mod download
+   make build
+   ```
+
+4. **Run Database Migrations**
+   ```bash
+   make psql-migrate
+   ```
+
+5. **Start Development**
+   ```bash
+   make run
+   ```
+
+### Available Make Commands
 
 ```bash
+make run          # Run bot locally
+make build        # Build release binaries
+make lint         # Run linters
+make tidy         # Clean dependencies
+make vendor       # Vendor dependencies
+make psql-migrate # Run migrations
+make psql-status  # Check migration status
+make psql-reset   # Reset database (DANGEROUS)
+```
+
+### Adding New Features
+
+1. **Database Model** - Add to `alita/db/`
+2. **Repository** - Implement in `alita/db/repositories/`
+3. **Handler** - Create in `alita/modules/`
+4. **Register** - Add to module's init function
+5. **Localize** - Add strings to `locales/`
+
+### Code Quality
+
+```bash
+# Run linters
+make lint
+
+# Format code
+gofmt -w .
+
+# Run tests (when available)
+go test ./...
+```
+
+### Verifying Releases
+
+All releases are signed with GPG for security. To verify:
+
+```bash
+# Import the signing key
 gpg --keyserver keyserver.ubuntu.com --recv 9CAFFF2AC5F94C7C
+
+# Verify a release
+gpg --verify alita_robot_*.tar.gz.sig alita_robot_*.tar.gz
 ```
 
-# example: verify a release package
+## 🤝 Contributing
+
+We welcome contributions! Here's how to get started:
+
+### Guidelines
+
+1. **Fork the repository** and create your branch from `main`
+2. **Write clean code** that follows Go best practices
+3. **Test your changes** thoroughly
+4. **Update documentation** if needed
+5. **Submit a Pull Request** with a clear description
+
+### Development Workflow
 
 ```bash
-gpg --verify alita_robot_2.0.1_darwin_amd64.tar.gz.sig alita_robot_2.0.1_darwin_amd64.tar.gz || echo "Verification failed!"
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/Alita_Robot.git
+cd Alita_Robot
+
+# Create feature branch
+git checkout -b feature/amazing-feature
+
+# Make changes and test
+make run
+make lint
+
+# Commit with conventional commits
+git commit -m "feat: add amazing feature"
+
+# Push and create PR
+git push origin feature/amazing-feature
 ```
 
-## Contributing to the project
+### Commit Convention
 
-- Make sure your PR works and doesn't break anything.
-- You must join the support group [here](https://dividesupport.t.me).
-- Make sure the CI passes.
+We use [Conventional Commits](https://www.conventionalcommits.org/):
+- `feat:` New feature
+- `fix:` Bug fix
+- `docs:` Documentation
+- `refactor:` Code refactoring
+- `test:` Testing
+- `chore:` Maintenance
 
-## Special Thanks to
+### Need Help?
 
-- [Paul Larsen](https://github.com/PaulSonOfLars) for his Original Marie Source Code and the amazing [Gotgbot](https://github.com/PaulSonOfLars/gotgbot) library.
-- [ÁÑÑÍHÌLÅTØR SPÄRK](https://github.com/annihilatorrrr) always motivating me to make this project better.
-- [jayantkageri](https://github.com/jayantkageri) for motivating me as well.
-- [Anony](https://github.com/anonyindian) for helping me with bugs and issues in the project.
-- Everyone else who inspired me to make this project, more names can be seen on commits!
+- Join our [Support Group](https://t.me/DivideSupport)
+- Check [existing issues](https://github.com/divideprojects/Alita_Robot/issues)
+- Read the [CLAUDE.md](CLAUDE.md) for codebase details
 
-### Copyright & License
+## 🌟 Acknowledgments
 
-- Copyright (C) 2020-2025 by [Divkix](https://divkix.me) ❤️️
-- Licensed under the terms of the [MIT](https://github.com/divideprojects/Alita_Robot/blob/master/LICENSE)
+### Special Thanks
+
+- **[Paul Larsen](https://github.com/PaulSonOfLars)** - For the amazing [Gotgbot](https://github.com/PaulSonOfLars/gotgbot) library and inspiration from Marie
+- **[ÁÑÑÍHÌLÅTØR SPÄRK](https://github.com/annihilatorrrr)** - Continuous motivation and contributions
+- **[jayantkageri](https://github.com/jayantkageri)** - Support and encouragement
+- **[Anony](https://github.com/anonyindian)** - Bug fixes and improvements
+- **All Contributors** - Everyone who has helped improve this project!
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+```
+Copyright (C) 2020-2025 Divkix
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+```
+
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://divkix.me">Divkix</a> and contributors
+</p>
+
+<p align="center">
+  <a href="https://t.me/Alita_Robot">Try Alita</a> •
+  <a href="https://t.me/DivideSupport">Support Group</a> •
+  <a href="https://t.me/DivideProjects">Updates Channel</a>
+</p>
