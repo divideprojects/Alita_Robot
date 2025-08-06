@@ -27,7 +27,7 @@ jobs:
       is-prerelease: ${{ steps.validate-tag.outputs.is-prerelease }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2.11.1
+        uses: step-security/harden-runner@v2.12.0
         with:
           egress-policy: audit
           
@@ -73,7 +73,7 @@ jobs:
       security-events: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2.11.1
+        uses: step-security/harden-runner@v2.12.0
         with:
           egress-policy: audit
           
@@ -135,7 +135,7 @@ jobs:
     # Note: GoReleaser doesn't provide direct outputs, artifacts are uploaded separately
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2.11.1
+        uses: step-security/harden-runner@v2.12.0
         with:
           egress-policy: audit
           
@@ -258,7 +258,7 @@ jobs:
       security-events: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2.11.1
+        uses: step-security/harden-runner@v2.12.0
         with:
           egress-policy: audit
           
