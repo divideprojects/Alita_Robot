@@ -204,174 +204,174 @@ strings:
       is_bot_itself: |-
         मैं खुद को क्यों हटाने की कोशिश करूं?
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        एक और धूल चाटता है...!
+        %s को निकाल दिया गया।
+      kicked_reason: "\n<b>कारण: </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        आप एक व्यवस्थापक हैं, आप यहाँ सभी के साथ फंस गए हैं!
       ok_out: |-
-        Alright, get out!
+        ठीक है, निकल जाओ!
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        मैं एक व्यवस्थापक को क्यों प्रतिबंधित करूं? यह एक बहुत बेवकूफ विचार लगता है।
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        क्या आप वास्तव में सोचते हैं कि मैं खुद को प्रतिबंधित करूंगा?
+      ban_reason: "\n<b>कारण: </b> %s"
       tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+        एक और धूल चाटता है...!
+        %s को %s के लिए प्रतिबंधित किया गया
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        एक और धूल चाटता है...!
+        %s को प्रतिबंधित किया गया।
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          संदेश को हटाने और उपयोगकर्ता को प्रतिबंधित करने के लिए आपको उसका उत्तर देना होगा!
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        मैं एक व्यवस्थापक पर प्रतिबंध क्यों हटाऊं? यह एक बहुत बेवकूफ विचार लगता है।
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        जब मैं पहले से ही यहाँ हूँ तो मैं खुद पर प्रतिबंध क्यों हटाऊं?
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        ठीक है निश्चित रूप से...!
+        %s पर प्रतिबंध हटा दिया गया।
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      कभी-कभी उपयोगकर्ता परेशान कर सकते हैं और आप उन्हें अपनी चैट से हटाना चाह सकते हैं, यह मॉड्यूल ठीक उससे निपटने में आपकी मदद करता है!
+      अपनी चैट से उपयोगकर्ताओं को प्रतिबंधित/निकालें, और यदि वे अच्छा व्यवहार कर रहे हैं तो बाद में उन्हें अनप्रतिबंधित करें।
 
-      *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      *उपयोगकर्ता कमांड:*
+      × /kickme: कमांड जारी करने वाले उपयोगकर्ता को निकाल देता है।
 
-      *Ban Commands* (Admin only):
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-      × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-      × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-      × /unban <userhandle>: unbans a user. (via handle, or reply)
+      *प्रतिबंध कमांड* (केवल व्यवस्थापक):
+      × /ban <userhandle>: एक उपयोगकर्ता को प्रतिबंधित करता है। (हैंडल या उत्तर के द्वारा)
+      × /sban <userhandle>: एक उपयोगकर्ता को चुपचाप प्रतिबंधित करता है, समूह को संदेश नहीं भेजता और आपकी कमांड भी हटा देता है। (हैंडल या उत्तर के द्वारा)
+      × /dban <userhandle>: एक उपयोगकर्ता को प्रतिबंधित करता है और उत्तर दिए गए संदेश को हटा देता है। (हैंडल या उत्तर के द्वारा)
+      × /tban <userhandle> x(m/h/d): एक उपयोगकर्ता को `x` समय के लिए प्रतिबंधित करता है। (हैंडल या उत्तर के द्वारा)। m = मिनट, h = घंटे, d = दिन।
+      × /unban <userhandle>: एक उपयोगकर्ता को अनप्रतिबंधित करता है। (हैंडल या उत्तर के द्वारा)
 
-      *Restrict Commands:* (Admin only)
-      × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-      × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+      *प्रतिबंध कमांड:* (केवल व्यवस्थापक)
+      × /restrict: किक, बैन और म्यूट से विकल्प चुनने के लिए एक InlineKeyboard दिखाता है
+      × /unrestrict: अनम्यूट और अनबैन से विकल्प चुनने के लिए एक InlineKeyboard दिखाता है।
   Blacklists:
     blacklist:
       give_bl_word: |-
-        Please give me a word to add to the blacklist!
+        कृपया मुझे ब्लैकलिस्ट में जोड़ने के लिए एक शब्द दें!
       already_blacklisted: |-
-        These words are already blacklisted:
+        ये शब्द पहले से ब्लैकलिस्ट में हैं:
       added_bl: |-
-        Added these words as blacklists:
+        इन शब्दों को ब्लैकलिस्ट के रूप में जोड़ा गया:
     unblacklist:
       give_bl_word: |-
-        Please give me a word to remove from the blacklist!
+        कृपया मुझे ब्लैकलिस्ट से हटाने के लिए एक शब्द दें!
       no_removed_bl: |-
-        None of the given words were in the blacklist which can be removed!
+        दिए गए शब्दों में से कोई भी ब्लैकलिस्ट में नहीं था जिसे हटाया जा सकता हो!
       removed_bl: |-
-        Removed '%s' from the blacklisted words!
+        ब्लैकलिस्ट किए गए शब्दों से '%s' को हटा दिया गया!
     ls_bl:
       no_blacklisted: |-
-        There are no blacklisted words in this chat.
+        इस चैट में कोई ब्लैकलिस्ट किए गए शब्द नहीं हैं।
       list_bl: |-
-        These words are blacklisted in this chat:
+        इस चैट में ये शब्द ब्लैकलिस्ट किए गए हैं:
     set_bl_action:
       current_mode: |-
-        The current blacklist mode is: %s
+        वर्तमान ब्लैकलिस्ट मोड है: %s
       changed_mode: |-
-        Changed blacklist mode to: *%s*
+        ब्लैकलिस्ट मोड बदल दिया गया: *%s*
       choose_correct_option: |-
-        Please choose an option out of <mute/kick/ban/warn/none>
+        कृपया <mute/kick/ban/warn/none> में से एक विकल्प चुनें
     rm_all_bl:
       ask: |-
-        Are you sure you want to remove all blacklisted words from this chat?
+        क्या आप वाकई इस चैट से सभी ब्लैकलिस्ट किए गए शब्दों को हटाना चाहते हैं?
       button_handler:
         yes: |-
-          Removed all Blacklists from this Chat ✅
+          इस चैट से सभी ब्लैकलिस्ट हटा दी गई ✅
         no: |-
-          Cancelled removing all Blacklists from this Chat ❌
+          इस चैट से सभी ब्लैकलिस्ट हटाना रद्द किया गया ❌
     bl_watcher:
       muted_user: |-
-        Muted %s due to %s
+        %s को %s के कारण म्यूट किया गया
       banned_user: |-
-        Banned %s due to %s
+        %s को %s के कारण प्रतिबंधित किया गया
       kicked_user: |-
-        Kicked %s due to %s
+        %s को %s के कारण निकाल दिया गया
     help_msg: |-
-      *User Commands:*
-      × /blacklists: Check all the blacklists in chat.
+      *उपयोगकर्ता कमांड:*
+      × /blacklists: चैट में सभी ब्लैकलिस्ट देखें।
 
-      *Admin Commands:*
-      × /addblacklist `<trigger>`: Blacklists the word in the current chat.
-      × /rmblacklist `<trigger>`: Removes the word from current Blacklisted Words in Chat.
-      × /blaction `<mute/kick/ban/warn/none>`: Sets the action to be performed by bot when a blacklist word is detected.
-      × /blacklistaction: Same as above
+      *व्यवस्थापक कमांड:*
+      × /addblacklist `<trigger>`: वर्तमान चैट में शब्द को ब्लैकलिस्ट करता है।
+      × /rmblacklist `<trigger>`: चैट में वर्तमान ब्लैकलिस्ट किए गए शब्दों से शब्द हटाता है।
+      × /blaction `<mute/kick/ban/warn/none>`: ब्लैकलिस्ट शब्द का पता लगने पर बॉट द्वारा की जाने वाली कार्रवाई सेट करता है।
+      × /blacklistaction: ऊपर के समान
 
-      *Owner Only:*
-      × /remallbl: Removes all the blacklisted words from chat
+      *केवल स्वामी:*
+      × /remallbl: चैट से सभी ब्लैकलिस्ट किए गए शब्दों को हटाता है
 
-      *Note:*
-      The Default mode for Blacklist is *none*, which will just delete the messages from the chat.
+      *नोट:*
+      ब्लैकलिस्ट के लिए डिफ़ॉल्ट मोड *none* है, जो केवल चैट से संदेशों को हटा देगा।
   Connections:
     connected: |-
-      You are currently connected to <b>%s</b>
+      आप वर्तमान में <b>%s</b> से जुड़े हुए हैं
     not_connected: |-
-      You aren't connected to any chats.
+      आप किसी भी चैट से नहीं जुड़े हैं।
     allow_connect:
       turned_on: |-
-        Turned <b>on</b> User connections to this chat!
-        Users can now connect chat to their PM's!
+        इस चैट में उपयोगकर्ता कनेक्शन <b>ऑन</b> कर दिया!
+        उपयोगकर्ता अब अपने PM में चैट कनेक्ट कर सकते हैं!
       turned_off: |-
-        Turned <b>off</b> User connections to this chat!
-        Users can't connect chat to their PM's!
+        इस चैट में उपयोगकर्ता कनेक्शन <b>ऑफ</b> कर दिया!
+        उपयोगकर्ता अब अपने PM में चैट कनेक्ट नहीं कर सकते!
       currently_on: |-
-        User connections are currently turned <b>on</b>.
-        Users can connect this chat to their PM's!
+        उपयोगकर्ता कनेक्शन वर्तमान में <b>ऑन</b> हैं।
+        उपयोगकर्ता इस चैट को अपने PM में कनेक्ट कर सकते हैं!
       currently_off: |-
-        User connections are currently turned <b>off</b>.
-        Users can't connect this chat to their PM's!
+        उपयोगकर्ता कनेक्शन वर्तमान में <b>ऑफ</b> हैं।
+        उपयोगकर्ता इस चैट को अपने PM में कनेक्ट नहीं कर सकते!
     connect:
       connection_disabled: |-
-        User connections are currently <b>disabled</b> to this chat.
-        Please ask admins to allow if you want to connect!
+        इस चैट के लिए उपयोगकर्ता कनेक्शन वर्तमान में <b>अक्षम</b> हैं।
+        यदि आप कनेक्ट करना चाहते हैं तो कृपया व्यवस्थापकों से अनुमति मांगें!
       connected: |-
-        You are now connected to <b>%s</b>!
+        आप अब <b>%s</b> से जुड़ गए हैं!
       tap_btn_connect: |-
-        Please press the button below to connect this chat to your PM
+        इस चैट को अपने PM से कनेक्ट करने के लिए कृपया नीचे दिए गए बटन को दबाएं
     connections_btns:
       admin_conn_cmds: |-
-        Admin commands available:%s
+        उपलब्ध व्यवस्थापक कमांड:%s
       user_conn_cmds: |-
-        User commands available:%s
+        उपलब्ध उपयोगकर्ता कमांड:%s
     disconnect:
       disconnected: |-
-        Disconnected from the connected chat.
+        जुड़े हुए चैट से डिसकनेक्ट हो गए।
       need_pm: |-
-        You need to send this in PM to me to disconnect from the chat!
+        चैट से डिसकनेक्ट करने के लिए आपको मुझे PM में यह भेजना होगा!
     is_user_connected:
       need_group: |-
-        This command is made to be used in group chats, not in PM!
+        यह कमांड ग्रुप चैट में इस्तेमाल के लिए बनाया गया है, PM में नहीं!
       bot_not_admin: |-
-        I'm not an admin in this chat!
+        मैं इस चैट में व्यवस्थापक नहीं हूँ!
       user_not_admin: |-
-        You need to be an admin to do this.
+        यह करने के लिए आपको व्यवस्थापक होना आवश्यक है।
     reconnect:
       reconnected: |-
-        You are now reconnected to <b>%s</b>!
+        आप अब <b>%s</b> से पुनः जुड़ गए हैं!
       no_last_chat: |-
-        You have no last chat to reconnect to!
+        आपके पास पुनः जुड़ने के लिए कोई पिछली चैट नहीं है!
       need_pm: |-
-        You need to be in a PM with me to reconnect to a chat!
+        चैट से पुनः जुड़ने के लिए आपको मेरे साथ PM में होना चाहिए!
     help_msg: |-
-      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+      यह आपको किसी चैट के डेटाबेस से जुड़ने की अनुमति देता है, और चैट को बिना बताए इसमें चीज़ें जोड़ने की अनुमति देता है! स्पष्ट कारणों के लिए, आपको चीज़ें जोड़ने के लिए व्यवस्थापक होना आवश्यक है; लेकिन कोई भी सदस्य आपके डेटा देख सकता है। (प्रतिबंधित/निकाले गए उपयोगकर्ता नहीं देख सकते!)
 
-      *Commands*:
-      × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-      × /disconnect: Disconnect from the current chat.
-      × /reconnect: Reconnect to the previously connect chat
-      × /connection: See information about the currently connected chat.
+      *कमांड*:
+      × /connect `<chatid>`: निर्दिष्ट चैट से जुड़ें, जिससे आप सामग्री देख/संपादित कर सकें।
+      × /disconnect: वर्तमान चैट से डिसकनेक्ट हों।
+      × /reconnect: पहले से जुड़ी चैट से पुनः जुड़ें
+      × /connection: वर्तमान में जुड़ी चैट के बारे में जानकारी देखें।
 
-      *Admin Commands:*
-      × /allowconnect <yes/no>: Allow users to connect to chats or not.
+      *व्यवस्थापक कमांड:*
+      × /allowconnect <yes/no>: उपयोगकर्ताओं को चैट से जुड़ने की अनुमति दें या न दें।
 
-      You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+      आप अपनी चैट में /id कमांड का उपयोग करके चैट id प्राप्त कर सकते हैं। आश्चर्य न करें यदि id नकारात्मक है; सभी सुपर ग्रुप्स में नकारात्मक id होती है।
   Disabling:
     help_msg: |-
       This allows you to disable some commonly used commands, so noone can use them. It'll also allow you to autodelete them, stopping people from bluetexting.

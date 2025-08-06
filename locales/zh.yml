@@ -198,60 +198,60 @@ strings:
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        这个用户不在这个聊天中，我怎么能限制他们？
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        为什么我要踢出一个管理员？这听起来像一个相当愚蠢的想法。
       is_bot_itself: |-
-        Why would I kick myself?
+        为什么我要踢出自己？
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        又一个吃尘土的……！
+        踢出了 %s。
+      kicked_reason: "\n<b>原因： </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        你是一个管理员，你在这里和其他人一起被困住了！
       ok_out: |-
-        Alright, get out!
+        好的，出去！
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        为什么我要禁止一个管理员？这听起来像一个相当愚蠢的想法。
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        你真的认为我会禁止自己吗？
+      ban_reason: "\n<b>原因： </b> %s"
       tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+        又一个吃尘土的……！
+        将 %s 禁止 %s
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        又一个吃尘土的……！
+        禁止了 %s。
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          你需要回复一条消息来删除它并禁止用户！
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        为什么我要解禁一个管理员？这听起来像一个相当愚蠢的想法。
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        当我已经在这里时，为什么我要解除对自己的限制？
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        好的，当然……！
+        解禁了 %s。
     help_msg: |-
-      有时用户可能会烦扰，您可能希望将其从交谈中除去，此模块正好帮助您处理该问题 !
-      Ban/kick usersfrom 您的交谈，然后在以后对其取消禁用。
+      有时用户可能会令人讨厌，您可能希望将他们从您的聊天中移除，这个模块恰好帮助您处理这个问题！
+      从您的聊天中禁止/踢出用户，如果他们表现良好，可以在以后解禁他们。
 
-      *User 命令:*
-      × / kickme: 将发出该命令的用户启动。
+      *用户命令:*
+      × /kickme: 踢出发出该命令的用户。
 
-      *Ban Commands * (仅限管理员 ):
-      × /ban <userhandle>: 禁止用户。 (通过句柄或应答)
-      × /sban <userhandle>: 禁止用户静默，不向组发送消息，还会删除您的命令。 (通过句柄或应答)
-      × /dban <userhandle>: 禁止用户并删除回复的消息。 (通过句柄或应答)
-      × /tban <userhandle> x(m/h/d): 禁止用户 " x" 时间。 ( 通过句柄或应答 ) 。 m = 分钟， h = 小时， d = 天。
-      × /unban <userhandle>: 取消禁止用户。 (通过句柄或应答)
+      *禁止命令* (仅限管理员):
+      × /ban <userhandle>: 禁止用户。 (通过句柄或回复)
+      × /sban <userhandle>: 静默禁止用户，不向群组发送消息并删除您的命令。 (通过句柄或回复)
+      × /dban <userhandle>: 禁止用户并删除被回复的消息。 (通过句柄或回复)
+      × /tban <userhandle> x(m/h/d): 将用户禁止 `x` 时间。 (通过句柄或回复)。 m = 分钟，h = 小时，d = 天。
+      × /unban <userhandle>: 解禁用户。 (通过句柄或回复)
 
-      *Restrict 命令:* (仅管理员 )
-      × / 限制: 显示 InlineKeyboard 以从踢脚，禁止和静音
-      × / 取消限制中选择选项 : 显示 InlineKeyboard 以选择取消静音和取消禁止的选项。
+      *限制命令:* (仅限管理员)
+      × /restrict: 显示内联键盘以从 kick、ban 和 mute 中选择选项
+      × /unrestrict: 显示内联键盘以从 unmute 和 unban 中选择选项。
   Blacklists:
     blacklist:
       give_bl_word: |-

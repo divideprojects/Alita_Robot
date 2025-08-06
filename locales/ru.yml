@@ -137,163 +137,163 @@ strings:
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        Вы уже одобрили меня, сделав меня администратором!
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        Одобренный пользователь: %s
+        Теперь он защищён от банов, чёрных списков, блокировок и антифлуда!
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        Этого пользователя нет в этом чате, как я могу его одобрить?
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        Я администратор, меня нельзя лишить одобрения!
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        Пользователь лишён одобрения: %s
+        Он больше не защищён от банов, чёрных списков, блокировок и антифлуда!
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        %s администратор, одобрение не требуется.
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        Я администратор, мне не нужно одобрение.
       is_approved: |-
-        %s is an approved User in <b>%s</b>
-        They are protected from blacklists, locks and antiflood!
+        %s является одобренным пользователем в <b>%s</b>
+        Он защищён от чёрных списков, блокировок и антифлуда!
 
-        <b>Approved By:</b> %s (<code>%d</code>)"
-        <b>Approved Time:</b> %s UTC
+        <b>Одобрено:</b> %s (<code>%d</code>)
+        <b>Время одобрения:</b> %s UTC
       is_unapproved: |-
-        You are not approved in <b>%s</b>
-        You are not protected from blacklists, locks and antiflood!
+        Вы не одобрены в <b>%s</b>
+        Вы не защищены от чёрных списков, блокировок и антифлуда!
     approved:
-      none_approved: "No users are approved in <b>%s</b>!"
+      none_approved: "Нет одобренных пользователей в <b>%s</b>!"
       approved_list: |-
-        These users are approved in <b>%s:</b>
+        Эти пользователи одобрены в <b>%s:</b>
         %s
 
-        To get more information about each user such as Approved By and Approved Time, use /approval (user id).
+        Для получения дополнительной информации о каждом пользователе, такой как «Одобрено» и «Время одобрения», используйте /approval (user id).
     unapprove_all:
       ask: |-
-        Are you sure you want to remove all Approved Users from this chat?
+        Вы уверены, что хотите удалить всех одобренных пользователей из этого чата?
       chat_creator_only: |-
-        Only Chat Creator can use this command to unapprove all users in this chat.
+        Только создатель чата может использовать эту команду для лишения одобрения всех пользователей в этом чате.
       button_handler:
         yes: |-
-          Removed all Approved Users from this Chat ✅
+          Удалены все одобренные пользователи из этого чата ✅
         no: |-
-          Cancelled removing all Approved Users from this Chat ❌
+          Отменено удаление всех одобренных пользователей из этого чата ❌
     help_msg: |-
-      Иногда можно доверять пользователю не отправлять нежелательное содержимое.
-      Может быть недостаточно для того, чтобы сделать их админом, но у вас могут быть замки, черные списки и противопаводка, не обращающие на них внимание.
-      Вот какие утверждения предназначены для одобрения доверенных пользователей, чтобы они могли отправлять
+      Иногда можно доверять пользователю не отправлять нежелательный контент.
+      Может быть недостаточно для того, чтобы сделать их админом, но вы можете разрешить блокировкам, чёрным спискам и антифлуду не применяться к ним.
+      Вот для чего нужны одобрения — одобряйте надёжных пользователей, чтобы разрешить им отправлять сообщения
 
-      *User commands: *
-      × /approlt: Проверьте состояние утверждения пользователя в этом чате.
+      *Команды пользователей:*
+      × /approval: Проверить статус одобрения пользователя в этом чате.
 
-      *Команды администрирования: *
-      × /approve: Утвердить пользователя. Замки, черные списки и антипотоп больше к ним не обращаются.
-      × /unapproft: Неутверждение пользователя. Теперь они будут подпадать под замки, черные списки и снова противопаводковые.
-      × /утвержден: Показать список всех утвержденных пользователей.
+      *Команды администрирования:*
+      × /approve: Одобрить пользователя. Блокировки, чёрные списки и антифлуд больше не будут применяться к ним.
+      × /unapprove: Лишить одобрения пользователя. Теперь они снова будут подпадать под блокировки, чёрные списки и антифлуд.
+      × /approved: Показать список всех одобренных пользователей.
 
-      *Команды *Owner: *
-      × /unapproveall: Неутверждение всех пользователей в чате. Это невозможно отменить.
+      *Команды владельца:*
+      × /unapproveall: Лишить одобрения ВСЕХ пользователей в чате. Это невозможно отменить.
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        Этого пользователя нет в этом чате, как я могу ограничить его?
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        Зачем мне исключать администратора? Это звучит как очень глупая идея.
       is_bot_itself: |-
-        Why would I kick myself?
+        Зачем мне исключать самого себя?
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        Очередной кусает пыль...!
+        %s исключен.
+      kicked_reason: "\n<b>Причина: </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        Вы администратор, вы застряли здесь со всеми остальными!
       ok_out: |-
-        Alright, get out!
+        Ладно, выходи!
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        Зачем мне банить администратора? Это звучит как очень глупая идея.
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        Вы действительно думаете, что я забаню самого себя?
+      ban_reason: "\n<b>Причина: </b> %s"
       tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+        Очередной кусает пыль...!
+        %s забанен на %s
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        Очередной кусает пыль...!
+        %s забанен.
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          Вам нужно ответить на сообщение, чтобы удалить его и забанить пользователя!
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        Зачем мне разбанивать администратора? Это звучит как очень глупая идея.
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        Зачем мне снимать ограничения с самого себя, если я уже здесь?
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        Ладно, конечно...!
+        %s разбанен.
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      Иногда пользователи могут быть раздражающими и вы можете захотеть удалить их из своего чата, этот модуль как раз помогает справиться с этим!
+      Банить/исключать пользователей из вашего чата и разбанивать их позже, если они ведут себя хорошо.
 
-      *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      *Команды пользователей:*
+      × /kickme: исключает пользователя, который выдал команду.
 
-      *Ban Commands* (Admin only):
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-      × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-      × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-      × /unban <userhandle>: unbans a user. (via handle, or reply)
+      *Команды банов* (только для администратора):
+      × /ban <пользователь>: банит пользователя. (через ответ или имя пользователя)
+      × /sban <пользователь>: банит пользователя тихо, не отправляет сообщение в группу и также удаляет вашу команду. (через ответ или имя пользователя)
+      × /dban <пользователь>: банит пользователя и удаляет сообщение, на которое ответили. (через ответ или имя пользователя)
+      × /tban <пользователь> x(m/h/d): банит пользователя на `x` времени. (через ответ или имя пользователя). m = минуты, h = часы, d = дни.
+      × /unban <пользователь>: разбанивает пользователя. (через ответ или имя пользователя)
 
-      *Restrict Commands:* (Admin only)
-      × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-      × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+      *Команды ограничений:* (только для администратора)
+      × /restrict: Показывает встроенную клавиатуру для выбора опций исключения, бана и мута
+      × /unrestrict: Показывает встроенную клавиатуру для выбора опций размута и разбана.
   Blacklists:
     blacklist:
       give_bl_word: |-
-        Please give me a word to add to the blacklist!
+        Пожалуйста, дайте мне слово для добавления в чёрный список!
       already_blacklisted: |-
-        These words are already blacklisted:
+        Эти слова уже в чёрном списке:
       added_bl: |-
-        Added these words as blacklists:
+        Добавлены эти слова в чёрный список:
     unblacklist:
       give_bl_word: |-
-        Please give me a word to remove from the blacklist!
+        Пожалуйста, дайте мне слово для удаления из чёрного списка!
       no_removed_bl: |-
-        None of the given words were in the blacklist which can be removed!
+        Ни одно из данных слов не было в чёрном списке, которое можно удалить!
       removed_bl: |-
-        Removed '%s' from the blacklisted words!
+        Удалено '%s' из слов чёрного списка!
     ls_bl:
       no_blacklisted: |-
-        There are no blacklisted words in this chat.
+        В этом чате нет слов в чёрном списке.
       list_bl: |-
-        These words are blacklisted in this chat:
+        Эти слова в чёрном списке в этом чате:
     set_bl_action:
       current_mode: |-
-        The current blacklist mode is: %s
+        Текущий режим чёрного списка: %s
       changed_mode: |-
-        Changed blacklist mode to: *%s*
+        Изменён режим чёрного списка на: *%s*
       choose_correct_option: |-
-        Please choose an option out of <mute/kick/ban/warn/none>
+        Пожалуйста, выберите опцию из <mute/kick/ban/warn/none>
     rm_all_bl:
       ask: |-
-        Are you sure you want to remove all blacklisted words from this chat?
+        Вы уверены, что хотите удалить все слова чёрного списка из этого чата?
       button_handler:
         yes: |-
-          Removed all Blacklists from this Chat ✅
+          Удалены все чёрные списки из этого чата ✅
         no: |-
-          Cancelled removing all Blacklists from this Chat ❌
+          Отменено удаление всех чёрных списков из этого чата ❌
     bl_watcher:
       muted_user: |-
-        Muted %s due to %s
+        Заглушен %s из-за %s
       banned_user: |-
-        Banned %s due to %s
+        Забанен %s из-за %s
       kicked_user: |-
-        Kicked %s due to %s
+        Исключён %s из-за %s
     help_msg: |-
       *Команды пользователей: *
       × /черные списки: Проверьте все черные списки в чате.
@@ -311,67 +311,67 @@ strings:
       Режим по умолчанию для Blacklist * none*, который просто удалит сообщения из чата.
   Connections:
     connected: |-
-      You are currently connected to <b>%s</b>
+      Вы в настоящее время подключены к <b>%s</b>
     not_connected: |-
-      You aren't connected to any chats.
+      Вы не подключены ни к каким чатам.
     allow_connect:
       turned_on: |-
-        Turned <b>on</b> User connections to this chat!
-        Users can now connect chat to their PM's!
+        <b>Включены</b> подключения пользователей к этому чату!
+        Пользователи теперь могут подключать чат к своим ЛС!
       turned_off: |-
-        Turned <b>off</b> User connections to this chat!
-        Users can't connect chat to their PM's!
+        <b>Отключены</b> подключения пользователей к этому чату!
+        Пользователи не могут подключать чат к своим ЛС!
       currently_on: |-
-        User connections are currently turned <b>on</b>.
-        Users can connect this chat to their PM's!
+        Подключения пользователей в настоящее время <b>включены</b>.
+        Пользователи могут подключить этот чат к своим ЛС!
       currently_off: |-
-        User connections are currently turned <b>off</b>.
-        Users can't connect this chat to their PM's!
+        Подключения пользователей в настоящее время <b>отключены</b>.
+        Пользователи не могут подключить этот чат к своим ЛС!
     connect:
       connection_disabled: |-
-        User connections are currently <b>disabled</b> to this chat.
-        Please ask admins to allow if you want to connect!
+        Подключения пользователей в настоящее время <b>отключены</b> для этого чата.
+        Пожалуйста, попросите администраторов разрешить, если хотите подключиться!
       connected: |-
-        You are now connected to <b>%s</b>!
+        Вы теперь подключены к <b>%s</b>!
       tap_btn_connect: |-
-        Please press the button below to connect this chat to your PM
+        Пожалуйста, нажмите кнопку ниже, чтобы подключить этот чат к вашим ЛС
     connections_btns:
       admin_conn_cmds: |-
-        Admin commands available:%s
+        Доступные команды администратора:%s
       user_conn_cmds: |-
-        User commands available:%s
+        Доступные команды пользователя:%s
     disconnect:
       disconnected: |-
-        Disconnected from the connected chat.
+        Отключён от подключённого чата.
       need_pm: |-
-        You need to send this in PM to me to disconnect from the chat!
+        Вам нужно отправить это в ЛС мне, чтобы отключиться от чата!
     is_user_connected:
       need_group: |-
-        This command is made to be used in group chats, not in PM!
+        Эта команда предназначена для использования в групповых чатах, а не в ЛС!
       bot_not_admin: |-
-        I'm not an admin in this chat!
+        Я не администратор в этом чате!
       user_not_admin: |-
-        You need to be an admin to do this.
+        Вам нужно быть администратором, чтобы сделать это.
     reconnect:
       reconnected: |-
-        You are now reconnected to <b>%s</b>!
+        Вы теперь переподключены к <b>%s</b>!
       no_last_chat: |-
-        You have no last chat to reconnect to!
+        У вас нет последнего чата для переподключения!
       need_pm: |-
-        You need to be in a PM with me to reconnect to a chat!
+        Вам нужно быть в ЛС со мной, чтобы переподключиться к чату!
     help_msg: |-
-      This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+      Это позволяет вам подключиться к базе данных чата и добавлять в неё вещи, не уведомляя чат! По очевидным причинам вам нужно быть администратором для добавления вещей; но любой участник может просматривать ваши данные. (забаненные/исключённые пользователи не могут!)
 
-      *Commands*:
-      × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-      × /disconnect: Disconnect from the current chat.
-      × /reconnect: Reconnect to the previously connect chat
-      × /connection: See information about the currently connected chat.
+      *Команды*:
+      × /connect `<chatid>`: Подключиться к указанному чату, позволяя просматривать/редактировать содержимое.
+      × /disconnect: Отключиться от текущего чата.
+      × /reconnect: Переподключиться к ранее подключённому чату
+      × /connection: Посмотреть информацию о текущем подключённом чате.
 
-      *Admin Commands:*
-      × /allowconnect <yes/no>: Allow users to connect to chats or not.
+      *Команды администратора:*
+      × /allowconnect <yes/no>: Разрешить пользователям подключаться к чатам или нет.
 
-      You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+      Вы можете получить ID чата, используя команду /id в своём чате. Не удивляйтесь, если ID отрицательный; все супергруппы имеют отрицательные ID.
   Disabling:
     help_msg: |-
       Это позволяет отключить некоторые часто используемые команды, поэтому их можно использовать. Это также позволит вам автоматически удалять их, останавливая пользователей из bluetexting.
@@ -388,23 +388,23 @@ strings:
       Запрещенные команды по-прежнему доступны через функцию /connect. Если вам было бы интересно увидеть это отключено, дайте мне знать в чате поддержки.
   Filters:
     help_msg: |-
-      Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+      Фильтры не чувствительны к регистру; каждый раз, когда кто-то произносит ваши ключевые слова, Алита ответит чем-то ещё! Может использоваться для создания ваших собственных команд, если желаете.
 
-      Commands:
-      - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-      - /filters: List all chat filters.
-      - /stop <trigger>: Stop the bot from replying to trigger.
-      - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+      Команды:
+      - /filter <триггер> <ответ>: Каждый раз, когда кто-то говорит триггер, бот ответит предложением. Для многословных фильтров заключите триггер в кавычки.
+      - /filters: Список всех фильтров чата.
+      - /stop <триггер>: Остановить бота от ответа на триггер.
+      - /stopall: Остановить ВСЕ фильтры в текущем чате. Это нельзя отменить.
 
-      Examples:
-      - Set a filter:
-      -> /filter hello Hello there! How are you?
-      - Set a multiword filter:
-      -> /filter hello friend Hello back! Long time no see!
-      - Set a filter that can only be used by admins:
-      -> /filter example This filter wont happen if a normal user says it {admin}
-      - To save a file, image, gif, or any other attachment, simply reply to file with:
-      -> /filter trigger
+      Примеры:
+      - Установить фильтр:
+      -> /filter привет Привет! Как дела?
+      - Установить многословный фильтр:
+      -> /filter привет друг Привет! Давно не виделись!
+      - Установить фильтр, который может использовать только администратор:
+      -> /filter пример Этот фильтр не сработает, если его скажет обычный пользователь {admin}
+      - Чтобы сохранить файл, изображение, gif или любое другое вложение, просто ответьте на файл с:
+      -> /filter триггер
   Formatting:
     help_msg: |-
       Alita поддерживает большое количество опций форматирования, чтобы сделать ваши сообщения более выразительными. Взгляни на кнопки внизу!

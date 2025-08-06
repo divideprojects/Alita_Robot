@@ -25,55 +25,55 @@ strings:
         Η λειτουργία AnonAdmin είναι αυτή τη στιγμή <b>ανενεργή</b> για %s.
         Αυτό απαιτεί από τους ανώνυμους διαχειριστές να πατήσουν ένα κουμπί για επιβεβαίωση των δικαιωμάτων τους.
       enabled_now: |-
-        AnonAdmin mode is now <b>enabled</b> for %s.
-        From now onwards, I will ask the admins to verify permissions from anonymous admins.
+        Η λειτουργία AnonAdmin είναι τώρα <b>ενεργή</b> για %s.
+        Από εδώ και στο εξής, θα ζητάω από τους διαχειριστές να επαληθεύσουν τα δικαιώματα των ανώνυμων διαχειριστών.
       disabled_now: |-
-        AnonAdmin mode is now <b>disabled</b> for %s.
-        From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
+        Η λειτουργία AnonAdmin είναι τώρα <b>ανενεργή</b> για %s.
+        Από εδώ και στο εξής, δεν θα ζητάω πλέον από τους διαχειριστές να επαληθεύσουν τα δικαιώματα των ανώνυμων διαχειριστών.
       already_enabled: |-
-        AnonAdmin mode is already <b>enabled</b> for %s
+        Η λειτουργία AnonAdmin είναι ήδη <b>ενεργή</b> για %s
       already_disabled: |-
-        AnonAdmin mode is already <b>disabled</b> for %s
+        Η λειτουργία AnonAdmin είναι ήδη <b>ανενεργή</b> για %s
       invalid_arg: |-
-        Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
+        Μη έγκυρο επιχείρημα, καταλαβαίνω μόνο <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
     demote:
       is_owner: |-
-        This person created this chat, how would I demote them?
+        Αυτό το άτομο δημιούργησε αυτή την συνομιλία, πώς θα μπορούσα να τον υποβιβάσω;
       is_admin: |-
-        This person is not an admin, how would I demote them?
+        Αυτό το άτομο δεν είναι διαχειριστής, πώς θα μπορούσα να τον υποβιβάσω;
       is_bot_itself: |-
-        I can't demote myself, go get the person who promoted me!
+        Δεν μπορώ να υποβιβάσω τον εαυτό μου, πήγαινε να βρεις το άτομο που με προάγαγε!
       success_demote: |-
-        Successfully demoted %s!
+        Ο χρήστης %s υποβιβάστηκε επιτυχώς!
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        Ο τίτλος διαχειριστή κεύρτηκε σε 16 χαρακτήρες από %d
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Μακάρι να μπορούσα να κάνω αυτό στον εαυτό μου ;_;
       is_owner: |-
-        This person created this chat, how would I promote them?
+        Αυτό το άτομο δημιούργησε αυτή την συνομιλία, πώς θα μπορούσα να τον προάγω;
       is_admin: |-
-        This person is already an admin, how would I promote them?
+        Αυτό το άτομο είναι ήδη διαχειριστής, πώς θα μπορούσα να τον προάγω;
       success_promote: |-
-        Successfully promoted %s!
+        Ο χρήστης %s προάχθηκε επιτυχώς!
     title:
       success_set: |-
-        Successfully set %s's admin title to <b>%s</b>
+        Ο τίτλος διαχειριστή του %s ορίστηκε επιτυχώς ως <b>%s</b>
       is_bot_itself: |-
-        If only I could do this to myself ;_;
+        Μακάρι να μπορούσα να κάνω αυτό στον εαυτό μου ;_;
       is_owner: |-
-        This person created this chat, how would I set a custom admin title for them?
+        Αυτό το άτομο δημιούργησε αυτή την συνομιλία, πώς θα μπορούσα να ορίσω έναν προσαρμοσμένο τίτλο διαχειριστή;
       is_admin: |-
-        This person is already an admin, how would I set a custom admin title for them?
+        Αυτό το άτομο είναι ήδη διαχειριστής, πώς θα μπορούσα να ορίσω έναν προσαρμοσμένο τίτλο διαχειριστή;
     errors:
       err_set_title: |-
-        Failed to set custom admin title, the title name may not be correct or may contain emojis.
+        Απέτυχε ο ορισμός προσαρμοσμένου τίτλου διαχειριστή, το όνομα του τίτλου μπορεί να μην είναι σωστό ή να περιέχει emojis.
       err_cannot_demote: |-
-        Could not demote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Δεν ήταν δυνατός ο υποβιβασμός. Μπορεί να μην είμαι διαχειριστής, ή η κατάσταση διαχειριστή να ορίστηκε από άλλον χρήστη, οπότε δεν μπορώ να ενεργήσω!
       err_cannot_promote: |-
-        Could not promote. I might not be admin, or the admin status was appointed by another user, so I can't act upon them!
+        Δεν ήταν δυνατή η προαγωγή. Μπορεί να μην είμαι διαχειριστής, ή η κατάσταση διαχειριστή να ορίστηκε από άλλον χρήστη, οπότε δεν μπορώ να ενεργήσω!
       title_empty: |-
-        You need to give me an admin title so I can set it.
+        Πρέπει να μου δώσετε έναν τίτλο διαχειριστή ώστε να μπορέσω να τον ορίσω.
     help_msg: |-
       Κάντε το εύκολο να προωθήσετε και να υποβιβάσετε τους χρήστες με τη μονάδα διαχείρισης!
 
@@ -87,39 +87,39 @@ strings:
   Antiflood:
     checkflood:
       perform_action: |-
-        Yeah, I don't like your flooding. %s has been %s!
+        Ναι, δεν μου αρέσει το spam σου. Ο %s έχει %s!
     setflood:
       success: |-
-        Got it! Max flood limit in <b>%d</b> messages.
+        Καταλάβαμε! Μέγιστο όριο spam σε <b>%d</b> μηνύματα.
       disabled: |-
-        Okay.
-        I won't warn users for flooding.
+        Εντάξει.
+        Δεν θα προειδοποιώ τους χρήστες για spam.
     flood:
       disabled: |-
-        This chat is not currently enforcing flood control.
+        Αυτή η συνομιλία δεν εφαρμόζει παραβάν έλεγχο αντι-spam.
       show_settings: |-
-        This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
+        Αυτή η συνομιλία εφαρμόζει παραβάν έλεγχο αντι-spam μετά από %d μηνύματα. Οποιοιδήποτε χρήστες στέλνουν περισσότερα από αυτόν τον αριθμό μηνυμάτων θα %s.
     setfloodmode:
       success: |-
-        Got it! Flood mode will be %s.
+        Καταλάβαμε! Η λειτουργία αντι-spam θα είναι %s.
       unknown_type: |-
-        Unknown type '%s'. Please use one of: ban/kick/mute
+        Άγνωστος τύπος '%s'. Παρακαλώ χρησιμοποιήστε ένα από: ban/kick/mute
       specify_action: |-
-        You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`
+        Πρέπει να καθορίσετε μια ενέργεια για το spam. Οι τρέχουσες λειτουργίες είναι: `ban`/`kick`/`mute`
     flood_deleter:
       enabled: |-
-        Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
+        Ενεργοποιήθηκε η διαγραφή μηνυμάτων αντι-spam. Τα μηνύματα που προκαλούν spam θα διαγραφούν!
       disabled: |-
-        Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
+        Απενεργοποιήθηκε η διαγραφή μηνυμάτων αντι-spam. Τα μηνύματα που προκαλούν spam θα αγνοούνται!
       invalid_option: |-
-        I only understand an option from: `yes`/`no`/`on`/`off`
+        Καταλαβαίνω μόνο μία επιλογή από: `yes`/`no`/`on`/`off`
       already_enabled: |-
-        Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
+        Η διαγραφή μηνυμάτων αντι-spam είναι παραβάν *ενεργή* σε αυτή τη συνομιλία, τα μηνύματα που προκαλούν spam θα διαγραφούν!
       already_disabled: |-
-        Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
+        Η διαγραφή μηνυμάτων αντι-spam είναι παραβάν *ανενεργή* σε αυτή τη συνομιλία, τα μηνύματα που προκαλούν spam θα αγνοούνται!
     errors:
       expected_args: |-
-        I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`
+        Περίμενα μερικά επιχειρήματα! Είτε 'off', ή έναν ακέραιο. π.χ.: `/setflood 5`, ή `/setflood off`
       invalid_int: |-
         That's not a valid integer. Please give me a valid integer, or `off`.
       set_in_limit: |-
@@ -137,23 +137,23 @@ strings:
   Approvals:
     approve:
       is_bot_itself: |-
-        You have already approved me by making me admin!
+        Με έχετε ήδη εγκρίνει κάνοντάς με διαχειριστή!
       user_approved: |-
-        Approved User: %s
-        They are now protected from bans, blacklists, locks and antiflood!
+        Εγκεκριμένος χρήστης: %s
+        Είναι τώρα προστατευμένος από bans, μαύρες λίστες, κλειδώματα και αντι-spam!
       user_not_in_chat: |-
-        This user is not in this chat, and how can I approve them?
+        Αυτός ο χρήστης δεν είναι σε αυτή τη συνομιλία, πώς μπορώ να τον εγκρίνω;
     unapprove:
       is_bot_itself: |-
-        I'm an admin, I can't be unapproved!
+        Είμαι διαχειριστής, δεν μπορώ να μην εγκριθώ!
       user_unapproved: |-
-        Unapproved User: %s
-        They are no longer protected from bans, blacklists, locks and antiflood!
+        Μη εγκεκριμένος χρήστης: %s
+        Δεν είναι πλέον προστατευμένος από bans, μαύρες λίστες, κλειδώματα και αντι-spam!
     approval:
       is_admin: |-
-        %s is an admin, you don't need approval.
+        Ο %s είναι διαχειριστής, δεν χρειάζεται έγκριση.
       is_bot_itself: |-
-        I'm an admin, I don't need approval.
+        Είμαι διαχειριστής, δεν χρειάζομαι έγκριση.
       is_approved: |-
         %s is an approved User in <b>%s</b>
         They are protected from blacklists, locks and antiflood!

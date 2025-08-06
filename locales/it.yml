@@ -198,60 +198,60 @@ strings:
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        Questo utente non è in questa chat, come posso limitarlo?
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        Perché dovrei espellere un amministratore? Sembra una pessima idea.
       is_bot_itself: |-
-        Why would I kick myself?
+        Perché dovrei espellere me stesso?
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        Un altro morde la polvere...!
+        Espulso %s.
+      kicked_reason: "\n<b>Motivo: </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        Sei un amministratore, sei bloccato qui con tutti gli altri!
       ok_out: |-
-        Alright, get out!
+        Va bene, esci!
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        Perché dovrei bannare un amministratore? Sembra una pessima idea.
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        Pensi davvero che mi bannerò da solo?
+      ban_reason: "\n<b>Motivo: </b> %s"
       tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+        Un altro morde la polvere...!
+        Bannato %s per %s
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        Un altro morde la polvere...!
+        Bannato %s.
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          Devi rispondere a un messaggio per cancellarlo e bannare l'utente!
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        Perché dovrei sbannare un amministratore? Sembra una pessima idea.
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        Perché dovrei togliere le restrizioni a me stesso quando sono già qui?
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        Ok, certo...!
+        Sbannato %s.
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      A volte gli utenti possono essere fastidiosi e potresti volerli rimuovere dalla tua chat, questo modulo ti aiuta esattamente ad affrontare questo problema!
+      Banna/espelli utenti dalla tua chat e sbannali più tardi se si comportano bene.
 
-      *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      *Comandi Utente:*
+      × /kickme: espelle l'utente che ha emesso il comando.
 
-      *Ban Commands* (Admin only):
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-      × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-      × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-      × /unban <userhandle>: unbans a user. (via handle, or reply)
+      *Comandi Ban* (Solo Admin):
+      × /ban <userhandle>: banna un utente. (tramite handle o risposta)
+      × /sban <userhandle>: banna un utente silenziosamente, non invia messaggi al gruppo e cancella anche il tuo comando. (tramite handle o risposta)
+      × /dban <userhandle>: banna un utente e cancella il messaggio a cui hai risposto. (tramite handle o risposta)
+      × /tban <userhandle> x(m/h/d): banna un utente per `x` tempo. (tramite handle o risposta). m = minuti, h = ore, d = giorni.
+      × /unban <userhandle>: sbanna un utente. (tramite handle o risposta)
 
-      *Restrict Commands:* (Admin only)
-      × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-      × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+      *Comandi Restrizioni:* (Solo Admin)
+      × /restrict: Mostra una InlineKeyboard per scegliere opzioni tra kick, ban e mute
+      × /unrestrict: Mostra una InlineKeyboard per scegliere opzioni tra unmute e unban.
   Blacklists:
     blacklist:
       give_bl_word: |-

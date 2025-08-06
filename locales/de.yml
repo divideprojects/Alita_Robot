@@ -47,7 +47,7 @@ strings:
         %s erfolgreich degradiert!
     promote:
       admin_title_truncated: |-
-        Admin title truncated to 16 characters from %d
+        Admin-Titel von %d auf 16 Zeichen gekürzt
       is_bot_itself: |-
         If only I could do this to myself ;_;
       is_owner: |-
@@ -198,60 +198,60 @@ strings:
   Bans:
     kick:
       user_not_in_chat: |-
-        This user is not in this chat, how can I restirct them?
+        Dieser Benutzer ist nicht in diesem Chat, wie kann ich ihn einschränken?
       cannot_kick_admin: |-
-        Why would I kick an admin? That sounds like a pretty dumb idea.
+        Warum sollte ich einen Admin kicken? Das klingt wie eine ziemlich dumme Idee.
       is_bot_itself: |-
-        Why would I kick myself?
+        Warum sollte ich mich selbst kicken?
       kicked_user: |-
-        Another one bites the dust...!
-        Kicked %s.
-      kicked_reason: "\n<b>Reason: </b> %s"
+        Noch einer beißt ins Gras...!
+        %s gekickt.
+      kicked_reason: "\n<b>Grund: </b> %s"
     kickme:
       is_admin: |-
-        You are an admin, you're stuck here with everyone else!
+        Du bist ein Admin, du steckst hier mit allen anderen fest!
       ok_out: |-
-        Alright, get out!
+        In Ordnung, raus mit dir!
     ban:
       is_admin: |-
-        Why would I ban an admin? That sounds like a pretty dumb idea.
+        Warum sollte ich einen Admin bannen? Das klingt wie eine ziemlich dumme Idee.
       is_bot_itself: |-
-        Do you really think I will ban myself?
-      ban_reason: "\n<b>Reason: </b> %s"
+        Denkst du wirklich, ich werde mich selbst bannen?
+      ban_reason: "\n<b>Grund: </b> %s"
       tban: |-
-        Another one bites the dust...!
-        Banned %s for %s
+        Noch einer beißt ins Gras...!
+        %s für %s gebannt
       normal_ban: |-
-        Another one bites the dust...!
-        Banned %s.
+        Noch einer beißt ins Gras...!
+        %s gebannt.
       dban:
         no_reply: |-
-          You need to reply to a message to delete it and ban the user!
+          Du musst auf eine Nachricht antworten, um sie zu löschen und den Benutzer zu bannen!
     unban:
       is_admin: |-
-        Why would I unban an admin? That sounds like a pretty dumb idea.
+        Warum sollte ich einen Admin entbannen? Das klingt wie eine ziemlich dumme Idee.
       is_bot_itself: |-
-        Why would I un-restrict myself when I'm already here?
+        Warum sollte ich mich selbst entsperren, wenn ich bereits hier bin?
       unbanned_user: |-
-        Ok Sure...!
-        Unbanned %s.
+        Ok, sicher...!
+        %s entbannt.
     help_msg: |-
-      Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-      Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+      Manchmal können Benutzer nervig sein und Sie möchten sie aus Ihrem Chat entfernen. Dieses Modul hilft Ihnen genau dabei!
+      Bannen/kicken Sie Benutzer aus Ihrem Chat und entbannen Sie sie später, wenn sie sich anständig verhalten.
 
-      *User Commands:*
-      × /kickme: kicks the user who issued the command.
+      *Benutzer-Befehle:*
+      × /kickme: kickt den Benutzer, der den Befehl ausgegeben hat.
 
-      *Ban Commands* (Admin only):
-      × /ban <userhandle>: bans a user. (via handle, or reply)
-      × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-      × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-      × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-      × /unban <userhandle>: unbans a user. (via handle, or reply)
+      *Bann-Befehle* (nur Admin):
+      × /ban <userhandle>: bannt einen Benutzer. (über Handle oder Antwort)
+      × /sban <userhandle>: bannt einen Benutzer still, sendet keine Nachricht an die Gruppe und löscht auch Ihren Befehl. (über Handle oder Antwort)
+      × /dban <userhandle>: bannt einen Benutzer und löscht die beantwortete Nachricht. (über Handle oder Antwort)
+      × /tban <userhandle> x(m/h/d): bannt einen Benutzer für `x` Zeit. (über Handle oder Antwort). m = Minuten, h = Stunden, d = Tage.
+      × /unban <userhandle>: entbannt einen Benutzer. (über Handle oder Antwort)
 
-      *Restrict Commands:* (Admin only)
-      × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-      × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+      *Einschränkungs-Befehle:* (nur Admin)
+      × /restrict: Zeigt eine InlineKeyboard zum Auswählen von Optionen aus Kick, Bann und Stumm
+      × /unrestrict: Zeigt eine InlineKeyboard zum Auswählen von Optionen aus Entstummen und Entbannen.
   Blacklists:
     blacklist:
       give_bl_word: |-

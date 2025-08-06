@@ -389,23 +389,23 @@ strings:
       Geçersiz kılınan komutlara /connect özelliği aracılığıyla erişilebilmeye devam edilir. Eğer bu engelin de engelini görmek isterseniz, destek sohbetinde bana haber verin.
   Filters:
     help_msg: |-
-      Filters case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+      Filtreler büyük-küçük harf duyarlı değil; birisi tetikleyici kelimelerinizi her söylediğinde, Alita başka bir şey yanıtlar! İstenìrse kendi komutlarınızı oluşturmak için kullanılabilir.
 
-      Commands:
-      - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-      - /filters: List all chat filters.
-      - /stop <trigger>: Stop the bot from replying to trigger.
-      - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+      Komutlar:
+      - /filter <tetikleyici> <yanıt>: Birisi tetikleyiciyi her söylediğinde, bot cümle ile yanıtlar. Çok kelimeli filtreler için tetikleyiciyi tırnak içine alın.
+      - /filters: Tüm sohbet filtrelerini listeler.
+      - /stop <tetikleyici>: Bot'un tetikleyiciye yanıt vermesini durdur.
+      - /stopall: Mevcut sohbetteki TÜM filtreleri durdur. Bu geri alınamaz.
 
-      Examples:
-      - Set a filter:
-      -> /filter hello Hello there! How are you?
-      - Set a multiword filter:
-      -> /filter hello friend Hello back! Long time no see!
-      - Set a filter that can only be used by admins:
-      -> /filter example This filter wont happen if a normal user says it {admin}
-      - To save a file, image, gif, or any other attachment, simply reply to file with:
-      -> /filter trigger
+      Örnekler:
+      - Bir filtre ayarla:
+      -> /filter merhaba Merhaba! Nasılsın?
+      - Çok kelimeli filtre ayarla:
+      -> /filter merhaba arkadaş Merhaba! Uzun zamandir görümny oruz!
+      - Sadece yöneticiler tarafından kullanılabilecek filtre ayarla:
+      -> /filter örnek Bu filtre normal kullanıcı söylerse olmaz {admin}
+      - Dosya, resim, gif veya başka ek kaydetmek için dosyaya şöyle yanıt verin:
+      -> /filter tetikleyici
   Formatting:
     help_msg: |-
       Alita, iletilerinizi daha ifade edilebilir hale getirmek için çok sayıda biçimlendirme seçeneğini destekler. Aşağıdaki düğmelere tıklayarak bir göz atın!

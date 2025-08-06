@@ -266,7 +266,7 @@ strings:
       no_removed_bl: |-
         Inga av de givna orden var på svartlistan som kunde tas bort!
       removed_bl: |-
-        To remove '%s' from the blacklisted words!
+        Tog bort '%s' från de svartlistade orden!
     ls_bl:
       no_blacklisted: |-
         Det finns inga svartlistade ord i denna chatt.
@@ -284,9 +284,9 @@ strings:
         Är du säker på att du vill ta bort alla svartlistade ord från denna chatt?
       button_handler:
         yes: |-
-          To remove all Blacklists from this Chat ✅
+          Tog bort alla svartlistor från denna chatt ✅
         no: |-
-          Avbröt borttagning av alla Blacklists from this Chat ❌
+          Avbröt borttagning av alla svartlistor från denna chatt ❌
     bl_watcher:
       muted_user: |-
         Muted %s due to %s
@@ -429,8 +429,8 @@ strings:
       <code>[button 2](buttonurl://example.com:same)</code>
       <code>[button 3](buttonurl://example.com)</code>
       Detta kommer att visa knapp 1 och 2 på samma rad, med 3 under.
-         Fillings: |-
-       <b>Fillings</b>
+    Fillings: |-
+      <b>Fyllningar</b>
 
        Du kan också anpassa innehållet i ditt meddelande med kontextuell data. Till exempel kan du nämna en användare med namn i välkomstmeddelandet, eller nämna dem i ett filter!
        Du kan använda dessa för att nämna en användare i anteckningar också!
@@ -444,8 +444,8 @@ strings:
        - <code>{id}</code>: Användarens ID.
        - <code>{chatname}</code>: Chats namn.
        - <code>{rules}</code>: Lägger till Regler-knappen till meddelandet.
-          Random: |-
-       <b>Slumpmässigt innehåll</b>
+    Random: |-
+      <b>Slumpmässigt innehåll</b>
 
        Ett annat roligt är att slumpa innehållet i ett meddelande. Gör det lite mer personligt genom att ändra välkomstmeddelanden, eller ändra anteckningar!
        Hur man använder slumpmässigt innehåll:
