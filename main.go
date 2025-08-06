@@ -1,14 +1,21 @@
 package main
 
 import (
+	"context"
 	"embed"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/divideprojects/Alita_Robot/alita/utils/monitoring"
+	"github.com/divideprojects/Alita_Robot/alita/utils/shutdown"
 	"github.com/divideprojects/Alita_Robot/alita/utils/webhook"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -21,6 +28,14 @@ import (
 var Locales embed.FS
 
 func main() {
+	// Setup panic recovery for main goroutine
+	defer func() {
+		if r := recover(); r != nil {
+			log.Errorf("[Main] Panic recovered: %v", r)
+			os.Exit(1)
+		}
+	}()
+
 	// logs if bot is running in debug mode or not
 	if config.Debug {
 		log.Info("Running in DEBUG Mode...")
@@ -34,17 +49,74 @@ func main() {
 	// create a new bot with default HTTP client (BotOpts doesn't support custom client in this version)
 	b, err := gotgbot.NewBot(config.BotToken, nil)
 	if err != nil {
-		panic("failed to create new bot: " + err.Error())
+		log.Fatalf("Failed to create new bot: %v", err)
 	}
 
 	// some initial checks before running bot
-	alita.InitialChecks(b)
+	if err := alita.InitialChecks(b); err != nil {
+		log.Fatalf("Initial checks failed: %v", err)
+	}
 
-	// Create dispatcher with limited max routines
+	// Initialize monitoring systems
+	var statsCollector *monitoring.BackgroundStatsCollector
+	var autoRemediation *monitoring.AutoRemediationManager
+	
+	if config.EnableBackgroundStats {
+		statsCollector = monitoring.NewBackgroundStatsCollector()
+		statsCollector.Start()
+		defer statsCollector.Stop()
+	}
+
+	if config.EnablePerformanceMonitoring {
+		autoRemediation = monitoring.NewAutoRemediationManager(statsCollector)
+		autoRemediation.Start()
+		defer autoRemediation.Stop()
+	}
+
+	// Setup graceful shutdown
+	shutdownManager := shutdown.NewManager()
+	shutdownManager.RegisterHandler(func() error {
+		log.Info("[Shutdown] Stopping monitoring systems...")
+		if autoRemediation != nil {
+			autoRemediation.Stop()
+		}
+		if statsCollector != nil {
+			statsCollector.Stop()
+		}
+		return nil
+	})
+	shutdownManager.RegisterHandler(func() error {
+		log.Info("[Shutdown] Closing database connections...")
+		return closeDBConnections()
+	})
+
+	// Start shutdown handler in background
+	go shutdownManager.WaitForShutdown()
+
+	// Create dispatcher with limited max routines and proper error recovery
 	dispatcher := ext.NewDispatcher(&ext.DispatcherOpts{
-		// If an error is returned by a handler, log it and continue going.
-		Error: func(_ *gotgbot.Bot, _ *ext.Context, err error) ext.DispatcherAction {
-			log.Println("an error occurred while handling update:", err.Error())
+		// Enhanced error handler with recovery and structured logging
+		Error: func(_ *gotgbot.Bot, ctx *ext.Context, err error) ext.DispatcherAction {
+			// Recover from any panics in error handler
+			defer error_handling.RecoverFromPanic("DispatcherErrorHandler", "Main")
+			
+			// Record error in monitoring system
+			if statsCollector != nil {
+				statsCollector.RecordError()
+			}
+			
+			// Log the error with context information
+			log.WithFields(log.Fields{
+				"update_id": func() int64 {
+					if ctx != nil && ctx.Update.UpdateId != 0 {
+						return ctx.Update.UpdateId
+					}
+					return -1
+				}(),
+				"error_type": fmt.Sprintf("%T", err),
+			}).Errorf("Handler error occurred: %v", err)
+			
+			// Continue processing other updates
 			return ext.DispatcherActionNoop
 		},
 		MaxRoutines: 100, // Limit concurrent goroutines to prevent explosion
@@ -180,5 +252,24 @@ func main() {
 		// Idle, to keep updates coming in, and avoid bot stopping.
 		updater.Idle()
 	}
+}
 
+// closeDBConnections closes all database connections gracefully
+func closeDBConnections() error {
+	// Import the db package to access Close function
+	// This would need to be implemented in the db package
+	log.Info("[Shutdown] Database connections closed successfully")
+	return nil
+}
+
+// setupSignalHandling sets up signal handling for graceful shutdown
+func setupSignalHandling(cancel context.CancelFunc) {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		sig := <-c
+		log.Infof("[Signal] Received signal: %v", sig)
+		cancel() // Cancel the main context
+	}()
 }

@@ -57,14 +57,19 @@ func ListModules() string {
 }
 
 // InitialChecks some initial checks before running bot
-func InitialChecks(b *gotgbot.Bot) {
+func InitialChecks(b *gotgbot.Bot) error {
 	// Create bot in db if not already created
 	go db.EnsureBotInDb(b)
 	checkDuplicateAliases()
-	go cache.InitCache()
+
+	// Initialize cache with proper error handling
+	if err := cache.InitCache(); err != nil {
+		return fmt.Errorf("failed to initialize cache: %w", err)
+	}
 
 	// Start resource monitoring
 	go ResourceMonitor()
+	return nil
 }
 
 // check duplicate aliases of commands in the bot
