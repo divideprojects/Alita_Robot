@@ -19,7 +19,38 @@ func GetChannelSettings(channelId int64) (channelSrc *ChannelSettings) {
 	return channelSrc
 }
 
+// EnsureChatExists ensures a chat record exists before creating related records
+func EnsureChatExists(chatId int64, chatName string) error {
+	if ChatExists(chatId) {
+		return nil
+	}
+
+	// Create minimal chat record
+	chat := &Chat{
+		ChatId:     chatId,
+		ChatName:   chatName,
+		Language:   "en", // default language
+		Users:      Int64Array{},
+		IsInactive: false,
+	}
+
+	err := CreateRecord(chat)
+	if err != nil {
+		log.Errorf("[Database] EnsureChatExists: Failed to create chat %d: %v", chatId, err)
+		return err
+	}
+
+	log.Infof("[Database] EnsureChatExists: Created chat record for %d", chatId)
+	return nil
+}
+
 func UpdateChannel(channelId int64, channelName, username string) {
+	// Ensure the chat exists before creating/updating channel
+	if err := EnsureChatExists(channelId, channelName); err != nil {
+		log.Errorf("[Database] UpdateChannel: Failed to ensure chat exists for %d (%s): %v", channelId, username, err)
+		return
+	}
+
 	channelSrc := GetChannelSettings(channelId)
 
 	if channelSrc != nil {

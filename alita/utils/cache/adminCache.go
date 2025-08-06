@@ -75,7 +75,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	return adminCache
 }
 
-// GetAdminCacheList gets the admin cache for the chat.
+// GetAdminCacheList gets the admin cache for the chat with fallback loading.
 func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 	gotAdminlist, err := Marshal.Get(
 		Context,
@@ -85,13 +85,47 @@ func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 		new(AdminCache),
 	)
 	if err != nil {
-		log.Error(err)
+		log.WithFields(log.Fields{
+			"chatId": chatId,
+			"error":  err,
+		}).Debug("GetAdminCacheList: Cache miss, will attempt fallback")
 		return false, AdminCache{}
 	}
 	if gotAdminlist == nil {
+		log.WithFields(log.Fields{
+			"chatId": chatId,
+		}).Debug("GetAdminCacheList: Cache empty, will attempt fallback")
 		return false, AdminCache{}
 	}
 	return true, *gotAdminlist.(*AdminCache)
+}
+
+// GetAdminCacheListWithFallback gets the admin cache for the chat with automatic fallback loading.
+func GetAdminCacheListWithFallback(b *gotgbot.Bot, chatId int64) (bool, AdminCache) {
+	// Try to get from cache first
+	found, adminCache := GetAdminCacheList(chatId)
+	if found {
+		return true, adminCache
+	}
+
+	// Cache miss - load from Telegram API
+	if b == nil {
+		log.WithFields(log.Fields{
+			"chatId": chatId,
+		}).Error("GetAdminCacheListWithFallback: Bot is nil, cannot load admin cache")
+		return false, AdminCache{}
+	}
+
+	log.WithFields(log.Fields{
+		"chatId": chatId,
+	}).Debug("GetAdminCacheListWithFallback: Loading admin cache from Telegram API")
+
+	adminCache = LoadAdminCache(b, chatId)
+	if adminCache.Cached {
+		return true, adminCache
+	}
+
+	return false, AdminCache{}
 }
 
 // GetAdminCacheUser gets the admin cache for the chat.

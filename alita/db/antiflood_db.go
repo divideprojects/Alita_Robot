@@ -28,11 +28,13 @@ func checkFloodSetting(chatID int64) (floodSrc *AntifloodSettings) {
 			return &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
 		}
 
-		// Create default settings only if chat exists
+		// Use FirstOrCreate to handle potential race conditions and duplicates
 		floodSrc = &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
-		err := CreateRecord(floodSrc)
-		if err != nil {
-			log.Errorf("[Database][checkFloodSetting]: %v ", err)
+		result := DB.Where(AntifloodSettings{ChatId: chatID}).FirstOrCreate(floodSrc)
+		if result.Error != nil {
+			log.Errorf("[Database][checkFloodSetting]: Failed to create/find antiflood settings for chat %d: %v", chatID, result.Error)
+			// Return default settings on error
+			return &AntifloodSettings{ChatId: chatID, Limit: 0, Action: defaultFloodsettingsMode}
 		}
 	} else if err != nil {
 		// Return default on error
