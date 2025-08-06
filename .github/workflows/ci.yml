@@ -24,20 +24,14 @@ jobs:
       contents: read
       security-events: write
     steps:
-      # Runtime security hardening for GitHub-hosted runners
-      - name: Harden Runner
-        uses: step-security/harden-runner@v2.13.0
-        with:
-          egress-policy: audit
-          
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
-          
+
       # Cache Go modules for faster builds
       - name: Cache Go modules
         uses: actions/cache@v4
@@ -48,22 +42,15 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-            
+
       - name: Download dependencies
         run: go mod download
-        
+
       # Security vulnerability scanning with gosec
-      - name: Run gosec Security Scanner
-        run: |
-          go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
-          gosec -fmt sarif -out results.sarif ./...
-          
-      - name: Upload SARIF file
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@master
         with:
-          sarif_file: results.sarif
-          
+          args: ./...
       # Check for known vulnerabilities in Go modules
       - name: Run govulncheck
         run: |
@@ -75,21 +62,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: ['1.21', '1.22', 'stable']
+        go-version: ["oldstable", "stable"]
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@v2.13.0
-        with:
-          egress-policy: audit
-          
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Set up Go ${{ matrix.go-version }}
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
-          
+
       - name: Cache Go modules
         uses: actions/cache@v4
         with:
@@ -100,10 +82,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-${{ matrix.go-version }}-
             ${{ runner.os }}-go-
-            
+
       - name: Download dependencies
         run: go mod download
-        
+
       # Install golangci-lint
       - name: Install golangci-lint
         uses: golangci/golangci-lint-action@v6
@@ -112,11 +94,11 @@ jobs:
           args: --version # Just print version, we'll run it via make
           skip-cache: true # We're already caching
           install-mode: binary
-        
+
       # Run project's linting configuration
       - name: Run linting
         run: make lint
-        
+
       # Run tests with coverage (if tests exist)
       - name: Run tests with coverage
         run: |
@@ -126,7 +108,7 @@ jobs:
           else
             echo "No tests found, skipping test execution"
           fi
-          
+
       # Upload coverage to artifacts for analysis
       - name: Upload coverage reports
         if: matrix.go-version == 'stable'
@@ -146,21 +128,16 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@v2.13.0
-        with:
-          egress-policy: audit
-          
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history needed for GoReleaser
-          
+          fetch-depth: 0 # Full history needed for GoReleaser
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
-          
+
       - name: Cache Go modules
         uses: actions/cache@v4
         with:
@@ -171,18 +148,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-stable-
             ${{ runner.os }}-go-
-            
+
       # Verify all target platforms can be built
       - name: Run GoReleaser snapshot
         uses: goreleaser/goreleaser-action@v6
         with:
           version: latest
           args: release --snapshot --skip=publish --clean --skip=sign
-          
+
       # Package build artifacts for analysis
       - name: Package build artifacts
         run: tar -czvf artifacts.tar.gz dist/
-        
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
