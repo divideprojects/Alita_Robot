@@ -18,7 +18,7 @@ func AddBlacklist(chatId int64, trigger string) {
 	if err != nil {
 		log.Errorf("[Database] AddBlacklist: %v - %d", err, chatId)
 	}
-	
+
 	// Invalidate cache after adding blacklist
 	deleteCache(blacklistCacheKey(chatId))
 }
@@ -28,7 +28,7 @@ func RemoveBlacklist(chatId int64, trigger string) {
 	if result.Error != nil {
 		log.Errorf("[Database] RemoveBlacklist: %v - %d", result.Error, chatId)
 	}
-	
+
 	// Invalidate cache if something was deleted
 	if result.RowsAffected > 0 {
 		deleteCache(blacklistCacheKey(chatId))
@@ -40,7 +40,7 @@ func RemoveAllBlacklist(chatId int64) {
 	if err != nil {
 		log.Errorf("[Database] RemoveAllBlacklist: %v - %d", err, chatId)
 	}
-	
+
 	// Invalidate cache after removing all blacklist entries
 	deleteCache(blacklistCacheKey(chatId))
 }
@@ -50,7 +50,7 @@ func SetBlacklistAction(chatId int64, action string) {
 	if err != nil {
 		log.Errorf("[Database] SetBlacklistAction: %v - %d", err, chatId)
 	}
-	
+
 	// Invalidate cache after updating action
 	deleteCache(blacklistCacheKey(chatId))
 }
@@ -67,7 +67,7 @@ func GetBlacklistSettings(chatId int64) BlacklistSettingsSlice {
 		}
 		return BlacklistSettingsSlice(blacklists), nil
 	})
-	
+
 	if err != nil {
 		return BlacklistSettingsSlice{}
 	}

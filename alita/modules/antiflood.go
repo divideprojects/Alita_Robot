@@ -75,7 +75,7 @@ func (rb *ringBuffer) toSlice() []int64 {
 	if rb.count == 0 {
 		return nil
 	}
-	
+
 	result := make([]int64, rb.count)
 	for i := 0; i < rb.count; i++ {
 		index := (rb.head + rb.count - 1 - i) % rb.size
@@ -129,7 +129,7 @@ func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, f
 		tmpInterface, valExists := antifloodModule.syncHelperMap.Load(chatId)
 		if valExists && tmpInterface != nil {
 			floodCrc = tmpInterface.(floodControl)
-			
+
 			// Clean up old entries (older than 1 minute)
 			if currentTime-floodCrc.lastActivity > 60 {
 				floodCrc = floodControl{}
@@ -144,7 +144,7 @@ func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, f
 
 		floodCrc.messageCount++
 		floodCrc.lastActivity = currentTime
-		
+
 		// Use efficient prepend with pre-allocated slice
 		if len(floodCrc.messageIDs) >= cap(floodCrc.messageIDs) {
 			// Resize if needed, keep only recent messages
@@ -212,7 +212,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 		// Check if user is admin with timeout and proper goroutine cleanup
 		isAdmin := make(chan bool, 1)
 		done := make(chan struct{})
-		
+
 		go func() {
 			defer func() {
 				close(done) // Signal completion to prevent goroutine leak
@@ -224,7 +224,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 					}).Error("Panic in admin check goroutine")
 				}
 			}()
-			
+
 			select {
 			case isAdmin <- chat_status.IsUserAdmin(b, chat.Id, userId):
 				// Successfully sent result
@@ -247,7 +247,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 				"userId": userId,
 			}).Warn("Admin check timed out, treating user as non-admin")
 		}
-		
+
 		// Wait for goroutine cleanup with timeout to prevent indefinite blocking
 		select {
 		case <-done:
@@ -358,7 +358,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 					log.WithField("panic", r).Error("Panic in antiflood delayed unban goroutine")
 				}
 			}()
-			
+
 			time.Sleep(3 * time.Second)
 			_, unbanErr := chat.UnbanMember(b, userId, nil)
 			if unbanErr != nil {

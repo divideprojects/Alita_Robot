@@ -4,17 +4,17 @@ import (
 	"context"
 	"fmt"
 	"time"
-	
+
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
 const (
 	// Batch size for bulk operations
-	BulkBatchSize     = 100
-	FilterBatchSize   = 50
+	BulkBatchSize      = 100
+	FilterBatchSize    = 50
 	BlacklistBatchSize = 50
-	
+
 	// Timeout for bulk operations
 	BulkOperationTimeout = 30 * time.Second
 )
@@ -43,7 +43,7 @@ func BulkAddFilters(chatID int64, filters map[string]string) (*BulkOperationStat
 	stats := &BulkOperationStats{
 		StartTime: time.Now(),
 	}
-	
+
 	if len(filters) == 0 {
 		stats.Duration = time.Since(stats.StartTime)
 		return stats, nil
@@ -147,7 +147,7 @@ func BulkAddBlacklist(chatID int64, words []string, action string) (*BulkOperati
 	stats := &BulkOperationStats{
 		StartTime: time.Now(),
 	}
-	
+
 	if len(words) == 0 {
 		stats.Duration = time.Since(stats.StartTime)
 		return stats, nil
@@ -316,7 +316,7 @@ func AnalyzePerformanceStats() map[string]interface{} {
 		"chats_using":   filterChats,
 		"avg_per_chat":  0,
 	}
-	
+
 	if filterChats > 0 {
 		stats["filters"].(map[string]int64)["avg_per_chat"] = filterCount / filterChats
 	}
@@ -326,7 +326,7 @@ func AnalyzePerformanceStats() map[string]interface{} {
 		"chats_using":   blacklistChats,
 		"avg_per_chat":  0,
 	}
-	
+
 	if blacklistChats > 0 {
 		stats["blacklists"].(map[string]int64)["avg_per_chat"] = blacklistCount / blacklistChats
 	}

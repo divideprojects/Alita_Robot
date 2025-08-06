@@ -261,7 +261,7 @@ func LoadGreetingsStats() (enabledWelcome, enabledGoodbye, cleanServiceEnabled, 
 		CleanWelcomeEnabled int64
 		CleanGoodbyeEnabled int64
 	}
-	
+
 	var stats greetingStats
 	query := `
 		SELECT 
@@ -272,12 +272,12 @@ func LoadGreetingsStats() (enabledWelcome, enabledGoodbye, cleanServiceEnabled, 
 			COUNT(CASE WHEN goodbye_clean_old = true THEN 1 END) as clean_goodbye_enabled
 		FROM greetings
 	`
-	
+
 	err := DB.Raw(query).Scan(&stats).Error
 	if err != nil {
 		log.Errorf("[Database][LoadGreetingsStats] querying stats: %v", err)
 		return 0, 0, 0, 0, 0
 	}
-	
+
 	return stats.EnabledWelcome, stats.EnabledGoodbye, stats.CleanServiceEnabled, stats.CleanWelcomeEnabled, stats.CleanGoodbyeEnabled
 }

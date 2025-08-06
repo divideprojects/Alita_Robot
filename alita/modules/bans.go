@@ -123,7 +123,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 				log.WithField("panic", r).Error("Panic in delayed unban goroutine")
 			}
 		}()
-		
+
 		time.Sleep(2 * time.Second)
 		_, unbanErr := chat.UnbanMember(b, userId, nil)
 		if unbanErr != nil {
@@ -243,7 +243,7 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 				log.WithField("panic", r).Error("Panic in delayed unban goroutine")
 			}
 		}()
-		
+
 		time.Sleep(2 * time.Second)
 		_, unbanErr := chat.UnbanMember(b, userId, nil)
 		if unbanErr != nil {
@@ -958,7 +958,7 @@ func (moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) erro
 					log.WithField("panic", r).Error("Panic in restrict delayed unban goroutine")
 				}
 			}()
-			
+
 			time.Sleep(3 * time.Second)
 			_, unbanErr := chat.UnbanMember(b, int64(userId), nil)
 			if unbanErr != nil {

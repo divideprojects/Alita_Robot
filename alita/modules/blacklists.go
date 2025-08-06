@@ -478,7 +478,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 							log.WithField("panic", r).Error("Panic in blacklist delayed unban goroutine")
 						}
 					}()
-					
+
 					time.Sleep(3 * time.Second)
 					_, unbanErr := chat.UnbanMember(b, userId, nil)
 					if unbanErr != nil {

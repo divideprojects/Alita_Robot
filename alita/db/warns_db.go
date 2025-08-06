@@ -65,7 +65,7 @@ func WarnUser(userId, chatId int64, reason string) (int, []string) {
 func WarnUserWithContext(ctx context.Context, userId, chatId int64, reason string) (int, []string) {
 	var numWarns int
 	var reasons []string
-	
+
 	err := DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		// Check warn settings within transaction
 		warnSettings := &WarnSettings{}
@@ -78,7 +78,7 @@ func WarnUserWithContext(ctx context.Context, userId, chatId int64, reason strin
 				}
 			}
 		}
-		
+
 		// Check warns within transaction
 		warnrc := &Warns{}
 		if err := tx.Where("user_id = ? AND chat_id = ?", userId, chatId).First(warnrc).Error; err != nil {
@@ -87,9 +87,9 @@ func WarnUserWithContext(ctx context.Context, userId, chatId int64, reason strin
 				warnrc = &Warns{UserId: userId, ChatId: chatId}
 			}
 		}
-		
+
 		warnrc.NumWarns++ // Increment warns
-		
+
 		// Add reason
 		if reason != "" {
 			if len(reason) >= 3001 {
@@ -99,25 +99,25 @@ func WarnUserWithContext(ctx context.Context, userId, chatId int64, reason strin
 		} else {
 			warnrc.Reasons = append(warnrc.Reasons, "No Reason")
 		}
-		
+
 		// Save the warn record
 		if err := tx.Save(warnrc).Error; err != nil {
 			return err
 		}
-		
+
 		numWarns = warnrc.NumWarns
 		reasons = []string(warnrc.Reasons)
 		return nil
 	})
-	
+
 	if err != nil {
 		log.Errorf("[Database] WarnUser: %v", err)
 		return 0, []string{}
 	}
-	
+
 	// Invalidate cache after successful transaction
 	deleteCache(warnSettingsCacheKey(chatId))
-	
+
 	return numWarns, reasons
 }
 
@@ -127,7 +127,7 @@ func RemoveWarn(userId, chatId int64) bool {
 
 func RemoveWarnWithContext(ctx context.Context, userId, chatId int64) bool {
 	var removed bool
-	
+
 	err := DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		warnrc := &Warns{}
 		if err := tx.Where("user_id = ? AND chat_id = ?", userId, chatId).First(warnrc).Error; err != nil {
@@ -141,31 +141,31 @@ func RemoveWarnWithContext(ctx context.Context, userId, chatId int64) bool {
 
 		// only remove if user has warns
 		if warnrc.NumWarns > 0 {
-			warnrc.NumWarns--                                       // Remove last warn num
+			warnrc.NumWarns-- // Remove last warn num
 			if len(warnrc.Reasons) > 0 {
 				warnrc.Reasons = warnrc.Reasons[:len(warnrc.Reasons)-1] // Remove last warn reason
 			}
 			removed = true
-			
+
 			// update record in db within transaction
 			if err := tx.Save(warnrc).Error; err != nil {
 				return err
 			}
 		}
-		
+
 		return nil
 	})
-	
+
 	if err != nil {
 		log.Errorf("[Database] RemoveWarn: %v", err)
 		return false
 	}
-	
+
 	// Invalidate cache after successful transaction
 	if removed {
 		deleteCache(warnSettingsCacheKey(chatId))
 	}
-	
+
 	return removed
 }
 

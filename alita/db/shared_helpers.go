@@ -13,7 +13,7 @@ import (
 // GetOrCreateSettings is a generic helper to get or create settings for a model
 func GetOrCreateSettings[T any](chatID int64, defaultSettings T, tableName string) (T, error) {
 	var settings T
-	
+
 	err := DB.Where("chat_id = ?", chatID).First(&settings).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -22,7 +22,7 @@ func GetOrCreateSettings[T any](chatID int64, defaultSettings T, tableName strin
 				log.Warnf("[Database][GetOrCreateSettings]: Chat %d doesn't exist for %s", chatID, tableName)
 				return defaultSettings, nil
 			}
-			
+
 			// Create default settings
 			settings = defaultSettings
 			if err := CreateRecord(&settings); err != nil {
@@ -34,7 +34,7 @@ func GetOrCreateSettings[T any](chatID int64, defaultSettings T, tableName strin
 			return defaultSettings, err
 		}
 	}
-	
+
 	return settings, nil
 }
 
@@ -45,12 +45,12 @@ func UpdateSettings[T any](chatID int64, updates interface{}, tableName string, 
 		log.Errorf("[Database][UpdateSettings] updating %s: %d - %v", tableName, chatID, result.Error)
 		return fmt.Errorf("failed to update %s for chat %d: %w", tableName, chatID, result.Error)
 	}
-	
+
 	// Invalidate cache if a key is provided
 	if cacheKey != "" {
 		deleteCache(cacheKey)
 	}
-	
+
 	return nil
 }
 
@@ -81,12 +81,12 @@ func DeleteRecords[T any](condition interface{}, cacheKey string) error {
 		log.Errorf("[Database][DeleteRecords]: %v", result.Error)
 		return fmt.Errorf("failed to delete records: %w", result.Error)
 	}
-	
+
 	// Invalidate cache if affected and key provided
 	if result.RowsAffected > 0 && cacheKey != "" {
 		deleteCache(cacheKey)
 	}
-	
+
 	return nil
 }
 
@@ -107,12 +107,12 @@ func SaveRecord(record interface{}, cacheKey string) error {
 		log.Errorf("[Database][SaveRecord]: %v", err)
 		return fmt.Errorf("failed to save record: %w", err)
 	}
-	
+
 	// Invalidate cache if key provided
 	if cacheKey != "" {
 		deleteCache(cacheKey)
 	}
-	
+
 	return nil
 }
 
@@ -121,17 +121,17 @@ func BatchCreate[T any](records []T, batchSize int) error {
 	if len(records) == 0 {
 		return nil
 	}
-	
+
 	if batchSize <= 0 {
 		batchSize = BulkBatchSize
 	}
-	
+
 	err := DB.CreateInBatches(records, batchSize).Error
 	if err != nil {
 		log.Errorf("[Database][BatchCreate]: %v", err)
 		return fmt.Errorf("failed to batch create %d records: %w", len(records), err)
 	}
-	
+
 	return nil
 }
 
@@ -161,17 +161,17 @@ func InvalidateMultipleCache(keys ...string) {
 func CountDistinct[T any](column string, condition interface{}) (int64, error) {
 	var count int64
 	query := DB.Model(new(T))
-	
+
 	if condition != nil {
 		query = query.Where(condition)
 	}
-	
+
 	err := query.Select(fmt.Sprintf("COUNT(DISTINCT %s)", column)).Scan(&count).Error
 	if err != nil {
 		log.Errorf("[Database][CountDistinct]: %v", err)
 		return 0, fmt.Errorf("failed to count distinct values for column %s: %w", column, err)
 	}
-	
+
 	return count, nil
 }
 
@@ -182,12 +182,12 @@ func BulkUpdate[T any](condition interface{}, updates interface{}, cacheKeys ...
 		log.Errorf("[Database][BulkUpdate]: %v", result.Error)
 		return fmt.Errorf("failed to bulk update records: %w", result.Error)
 	}
-	
+
 	// Invalidate all provided cache keys if records were updated
 	if result.RowsAffected > 0 {
 		InvalidateMultipleCache(cacheKeys...)
 	}
-	
+
 	return nil
 }
 

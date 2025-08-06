@@ -33,7 +33,7 @@ func getGroupLanguage(GroupID int64) string {
 		}
 		return groupc.Language, nil
 	})
-	
+
 	if err != nil {
 		return "en"
 	}
@@ -52,7 +52,7 @@ func getUserLanguage(UserID int64) string {
 		}
 		return userc.Language, nil
 	})
-	
+
 	if err != nil {
 		return "en"
 	}

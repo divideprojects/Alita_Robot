@@ -12,14 +12,14 @@ import (
 
 const (
 	// Cache expiration times
-	CacheTTLChatSettings    = 30 * time.Minute
-	CacheTTLLanguage        = 1 * time.Hour
-	CacheTTLFilterList      = 30 * time.Minute
-	CacheTTLBlacklist       = 30 * time.Minute
-	CacheTTLGreetings       = 30 * time.Minute
-	CacheTTLNotesList       = 30 * time.Minute
-	CacheTTLWarnSettings    = 30 * time.Minute
-	CacheTTLAntiflood       = 30 * time.Minute
+	CacheTTLChatSettings = 30 * time.Minute
+	CacheTTLLanguage     = 1 * time.Hour
+	CacheTTLFilterList   = 30 * time.Minute
+	CacheTTLBlacklist    = 30 * time.Minute
+	CacheTTLGreetings    = 30 * time.Minute
+	CacheTTLNotesList    = 30 * time.Minute
+	CacheTTLWarnSettings = 30 * time.Minute
+	CacheTTLAntiflood    = 30 * time.Minute
 )
 
 // Singleflight group for preventing cache stampede
@@ -105,7 +105,7 @@ func InvalidateUserCache(userID int64) {
 // getFromCacheOrLoad is a generic helper to get from cache or load from database with stampede protection
 func getFromCacheOrLoad[T any](key string, ttl time.Duration, loader func() (T, error)) (T, error) {
 	var result T
-	
+
 	if cache.Marshal == nil {
 		// Cache not initialized, load directly
 		return loader()

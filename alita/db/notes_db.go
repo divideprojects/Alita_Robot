@@ -90,7 +90,7 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons ButtonArr
 		log.Errorf("[Database][AddNote] checking existence: %d - %v", chatID, err)
 		return
 	}
-	
+
 	if count > 0 {
 		return
 	}

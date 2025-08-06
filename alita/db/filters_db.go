@@ -46,7 +46,7 @@ func GetFiltersList(chatID int64) (allFilterWords []string) {
 		}
 		return filterWords, nil
 	})
-	
+
 	if err != nil {
 		return []string{}
 	}
@@ -71,7 +71,7 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 		log.Errorf("[Database][AddFilter] checking existence: %d - %v", chatID, err)
 		return
 	}
-	
+
 	if count > 0 {
 		return
 	}
@@ -91,7 +91,7 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 		log.Errorf("[Database][AddFilter]: %d - %v", chatID, err)
 		return
 	}
-	
+
 	// Invalidate cache after adding filter
 	deleteCache(filterListCacheKey(chatID))
 }
@@ -104,7 +104,7 @@ func RemoveFilter(chatID int64, keyWord string) {
 		return
 	}
 	// result.RowsAffected will be 0 if no filter was found, which is fine
-	
+
 	// Invalidate cache after removing filter
 	if result.RowsAffected > 0 {
 		deleteCache(filterListCacheKey(chatID))
@@ -116,7 +116,7 @@ func RemoveAllFilters(chatID int64) {
 	if err != nil {
 		log.Errorf("[Database][RemoveAllFilters]: %d - %v", chatID, err)
 	}
-	
+
 	// Invalidate cache after removing all filters
 	deleteCache(filterListCacheKey(chatID))
 }

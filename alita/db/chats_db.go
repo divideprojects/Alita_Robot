@@ -23,7 +23,7 @@ func GetChatSettings(chatId int64) (chatSrc *Chat) {
 		}
 		return chat, nil
 	})
-	
+
 	if err != nil {
 		return &Chat{}
 	}
@@ -81,19 +81,19 @@ func GetAllChats() map[int64]Chat {
 
 func LoadChatStats() (activeChats, inactiveChats int) {
 	var activeCount, inactiveCount int64
-	
+
 	// Count active chats
 	err := DB.Model(&Chat{}).Where("is_inactive = ?", false).Count(&activeCount).Error
 	if err != nil {
 		log.Errorf("[Database][LoadChatStats] counting active chats: %v", err)
 	}
-	
+
 	// Count inactive chats
 	err = DB.Model(&Chat{}).Where("is_inactive = ?", true).Count(&inactiveCount).Error
 	if err != nil {
 		log.Errorf("[Database][LoadChatStats] counting inactive chats: %v", err)
 	}
-	
+
 	activeChats = int(activeCount)
 	inactiveChats = int(inactiveCount)
 	return
