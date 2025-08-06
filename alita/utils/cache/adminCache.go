@@ -9,7 +9,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// LoadAdminCache loads the admin cache for the chat.
+// LoadAdminCache retrieves and caches the list of administrators for a given chat.
+// It fetches the current administrators from Telegram API and stores them in cache
+// with a 30-minute expiration. Returns an AdminCache struct containing the admin list.
 func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	if b == nil {
 		log.Error("LoadAdminCache: bot is nil")
@@ -75,7 +77,8 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	return adminCache
 }
 
-// GetAdminCacheList gets the admin cache for the chat with fallback loading.
+// GetAdminCacheList retrieves the cached administrator list for a specific chat.
+// Returns true and the AdminCache if found in cache, false and empty AdminCache if cache miss.
 func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 	gotAdminlist, err := Marshal.Get(
 		Context,
@@ -100,7 +103,9 @@ func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 	return true, *gotAdminlist.(*AdminCache)
 }
 
-// GetAdminCacheListWithFallback gets the admin cache for the chat with automatic fallback loading.
+// GetAdminCacheListWithFallback attempts to retrieve cached administrators for a chat,
+// automatically falling back to loading from Telegram API if cache miss occurs.
+// Returns true and AdminCache if successful, false and empty AdminCache if failed.
 func GetAdminCacheListWithFallback(b *gotgbot.Bot, chatId int64) (bool, AdminCache) {
 	// Try to get from cache first
 	found, adminCache := GetAdminCacheList(chatId)
@@ -128,7 +133,9 @@ func GetAdminCacheListWithFallback(b *gotgbot.Bot, chatId int64) (bool, AdminCac
 	return false, AdminCache{}
 }
 
-// GetAdminCacheUser gets the admin cache for the chat.
+// GetAdminCacheUser searches for a specific user in the cached administrator list of a chat.
+// Returns true and the MergedChatMember if the user is found as an admin,
+// false and empty MergedChatMember if not found or cache miss.
 func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
 	adminList, _ := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
 	for i := range adminList.(*AdminCache).UserInfo {

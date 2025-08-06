@@ -146,6 +146,7 @@ type PgUser struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgUser model.
 func (PgUser) TableName() string {
 	return "users"
 }
@@ -161,6 +162,7 @@ type PgChat struct {
 	UpdatedAt  *time.Time
 }
 
+// TableName returns the table name for the PgChat model.
 func (PgChat) TableName() string {
 	return "chats"
 }
@@ -170,6 +172,7 @@ type PgChatUser struct {
 	UserID int64 `gorm:"primaryKey"`
 }
 
+// TableName returns the table name for the PgChatUser model.
 func (PgChatUser) TableName() string {
 	return "chat_users"
 }
@@ -182,6 +185,7 @@ type PgAdmin struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgAdmin model.
 func (PgAdmin) TableName() string {
 	return "admin"
 }
@@ -194,6 +198,7 @@ type PgNotesSettings struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgNotesSettings model.
 func (PgNotesSettings) TableName() string {
 	return "notes_settings"
 }
@@ -216,6 +221,7 @@ type PgNote struct {
 	UpdatedAt   *time.Time
 }
 
+// TableName returns the table name for the PgNote model.
 func (PgNote) TableName() string {
 	return "notes"
 }
@@ -233,6 +239,7 @@ type PgFilter struct {
 	UpdatedAt     *time.Time
 }
 
+// TableName returns the table name for the PgFilter model.
 func (PgFilter) TableName() string {
 	return "filters"
 }
@@ -260,6 +267,7 @@ type PgGreeting struct {
 	UpdatedAt            *time.Time
 }
 
+// TableName returns the table name for the PgGreeting model.
 func (PgGreeting) TableName() string {
 	return "greetings"
 }
@@ -273,6 +281,7 @@ type PgLock struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgLock model.
 func (PgLock) TableName() string {
 	return "locks"
 }
@@ -287,6 +296,7 @@ type PgPin struct {
 	UpdatedAt      *time.Time
 }
 
+// TableName returns the table name for the PgPin model.
 func (PgPin) TableName() string {
 	return "pins"
 }
@@ -301,6 +311,7 @@ type PgRule struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgRule model.
 func (PgRule) TableName() string {
 	return "rules"
 }
@@ -314,6 +325,7 @@ type PgWarnsSetting struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgWarnsSetting model.
 func (PgWarnsSetting) TableName() string {
 	return "warns_settings"
 }
@@ -328,6 +340,7 @@ type PgWarnsUser struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgWarnsUser model.
 func (PgWarnsUser) TableName() string {
 	return "warns_users"
 }
@@ -343,6 +356,7 @@ type PgAntifloodSetting struct {
 	UpdatedAt              *time.Time
 }
 
+// TableName returns the table name for the PgAntifloodSetting model.
 func (PgAntifloodSetting) TableName() string {
 	return "antiflood_settings"
 }
@@ -357,6 +371,7 @@ type PgBlacklist struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgBlacklist model.
 func (PgBlacklist) TableName() string {
 	return "blacklists"
 }
@@ -369,6 +384,7 @@ type PgChannel struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgChannel model.
 func (PgChannel) TableName() string {
 	return "channels"
 }
@@ -382,6 +398,7 @@ type PgConnection struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgConnection model.
 func (PgConnection) TableName() string {
 	return "connection"
 }
@@ -395,6 +412,7 @@ type PgConnectionSetting struct {
 	UpdatedAt    *time.Time
 }
 
+// TableName returns the table name for the PgConnectionSetting model.
 func (PgConnectionSetting) TableName() string {
 	return "connection_settings"
 }
@@ -408,6 +426,7 @@ type PgDisable struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgDisable model.
 func (PgDisable) TableName() string {
 	return "disable"
 }
@@ -421,6 +440,7 @@ type PgReportUserSetting struct {
 	UpdatedAt *time.Time
 }
 
+// TableName returns the table name for the PgReportUserSetting model.
 func (PgReportUserSetting) TableName() string {
 	return "report_user_settings"
 }
@@ -435,6 +455,7 @@ type PgReportChatSetting struct {
 	UpdatedAt   *time.Time
 }
 
+// TableName returns the table name for the PgReportChatSetting model.
 func (PgReportChatSetting) TableName() string {
 	return "report_chat_settings"
 }

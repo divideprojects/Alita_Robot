@@ -10,7 +10,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// GetOrCreateSettings is a generic helper to get or create settings for a model
+// GetOrCreateSettings is a generic helper function to get or create settings for any model type.
+// Uses Go generics to work with any settings struct and ensures chat exists before creating records.
 func GetOrCreateSettings[T any](chatID int64, defaultSettings T, tableName string) (T, error) {
 	var settings T
 
@@ -38,7 +39,8 @@ func GetOrCreateSettings[T any](chatID int64, defaultSettings T, tableName strin
 	return settings, nil
 }
 
-// UpdateSettings is a generic helper to update settings
+// UpdateSettings is a generic helper function to update settings for any model type.
+// Supports cache invalidation after successful updates.
 func UpdateSettings[T any](chatID int64, updates interface{}, tableName string, cacheKey string) error {
 	result := DB.Model(new(T)).Where("chat_id = ?", chatID).Updates(updates)
 	if result.Error != nil {
@@ -54,7 +56,8 @@ func UpdateSettings[T any](chatID int64, updates interface{}, tableName string, 
 	return nil
 }
 
-// CountRecords is a generic helper to count records with a condition
+// CountRecords is a generic helper function to count records matching a condition.
+// Works with any model type using Go generics.
 func CountRecords[T any](condition interface{}) (int64, error) {
 	var count int64
 	err := DB.Model(new(T)).Where(condition).Count(&count).Error
@@ -65,7 +68,8 @@ func CountRecords[T any](condition interface{}) (int64, error) {
 	return count, nil
 }
 
-// ExistsRecord is a generic helper to check if a record exists
+// ExistsRecord is a generic helper function to check if any record exists matching a condition.
+// Returns true if at least one record matches, false otherwise.
 func ExistsRecord[T any](condition interface{}) bool {
 	count, err := CountRecords[T](condition)
 	if err != nil {
@@ -74,7 +78,8 @@ func ExistsRecord[T any](condition interface{}) bool {
 	return count > 0
 }
 
-// DeleteRecords is a generic helper to delete records
+// DeleteRecords is a generic helper function to delete records matching a condition.
+// Supports cache invalidation if records were successfully deleted.
 func DeleteRecords[T any](condition interface{}, cacheKey string) error {
 	result := DB.Where(condition).Delete(new(T))
 	if result.Error != nil {
@@ -90,7 +95,8 @@ func DeleteRecords[T any](condition interface{}, cacheKey string) error {
 	return nil
 }
 
-// GetFirstRecord is a generic helper to get the first matching record
+// GetFirstRecord is a generic helper function to get the first record matching a condition.
+// Returns gorm.ErrRecordNotFound if no record matches the condition.
 func GetFirstRecord[T any](dest interface{}, condition interface{}) error {
 	err := DB.Where(condition).First(dest).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -100,7 +106,9 @@ func GetFirstRecord[T any](dest interface{}, condition interface{}) error {
 	return err
 }
 
-// SaveRecord is a generic helper to save (create or update) a record
+// SaveRecord is a generic helper function to save (create or update) a record.
+// Uses GORM's Save method which creates if not exists or updates if exists.
+// Supports cache invalidation after successful save.
 func SaveRecord(record interface{}, cacheKey string) error {
 	err := DB.Save(record).Error
 	if err != nil {
@@ -116,7 +124,8 @@ func SaveRecord(record interface{}, cacheKey string) error {
 	return nil
 }
 
-// BatchCreate creates multiple records in batches
+// BatchCreate creates multiple records in batches for improved performance.
+// Uses configurable batch size with fallback to default BulkBatchSize if not specified.
 func BatchCreate[T any](records []T, batchSize int) error {
 	if len(records) == 0 {
 		return nil
@@ -135,29 +144,34 @@ func BatchCreate[T any](records []T, batchSize int) error {
 	return nil
 }
 
-// TransactionWrapper wraps a function in a database transaction
+// TransactionWrapper wraps a function in a database transaction.
+// Automatically commits on success or rolls back on error.
 func TransactionWrapper(fn func(*gorm.DB) error) error {
 	return DB.Transaction(fn)
 }
 
-// TransactionWrapperWithContext wraps a function in a database transaction with context
+// TransactionWrapperWithContext wraps a function in a database transaction with context support.
+// Allows for context cancellation during transaction execution.
 func TransactionWrapperWithContext(ctx context.Context, fn func(*gorm.DB) error) error {
 	return DB.WithContext(ctx).Transaction(fn)
 }
 
-// GetWithCache is a generic cached getter with automatic cache management
+// GetWithCache is a generic cached getter with automatic cache management.
+// Loads data from cache if available, otherwise calls the loader function and caches the result.
 func GetWithCache[T any](key string, ttl time.Duration, loader func() (T, error)) (T, error) {
 	return getFromCacheOrLoad(key, ttl, loader)
 }
 
-// InvalidateMultipleCache invalidates multiple cache keys at once
+// InvalidateMultipleCache invalidates multiple cache keys at once for batch cache cleanup.
+// Useful when multiple related cache entries need to be cleared simultaneously.
 func InvalidateMultipleCache(keys ...string) {
 	for _, key := range keys {
 		deleteCache(key)
 	}
 }
 
-// CountDistinct counts distinct values in a column
+// CountDistinct counts distinct values in a specified column for a model type.
+// Supports optional WHERE conditions and works with any model type using Go generics.
 func CountDistinct[T any](column string, condition interface{}) (int64, error) {
 	var count int64
 	query := DB.Model(new(T))
@@ -175,7 +189,8 @@ func CountDistinct[T any](column string, condition interface{}) (int64, error) {
 	return count, nil
 }
 
-// BulkUpdate performs bulk update on multiple records
+// BulkUpdate performs bulk update on multiple records matching a condition.
+// Supports cache invalidation for multiple keys if records were actually updated.
 func BulkUpdate[T any](condition interface{}, updates interface{}, cacheKeys ...string) error {
 	result := DB.Model(new(T)).Where(condition).Updates(updates)
 	if result.Error != nil {
@@ -191,7 +206,8 @@ func BulkUpdate[T any](condition interface{}, updates interface{}, cacheKeys ...
 	return nil
 }
 
-// GetOrDefault returns a value or a default if not found
+// GetOrDefault returns a value from a getter function or a default if not found or error occurs.
+// Handles gorm.ErrRecordNotFound specifically and falls back to default for other errors.
 func GetOrDefault[T any](getter func() (T, error), defaultValue T) T {
 	value, err := getter()
 	if err != nil {

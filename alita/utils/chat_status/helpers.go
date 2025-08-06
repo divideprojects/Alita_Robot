@@ -6,8 +6,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 )
 
-// sendAnonAdminKeyboard
-// sends a keyboard with button to verify anonymous admin status
+// sendAnonAdminKeyboard sends an inline keyboard to verify anonymous admin identity.
+// Creates a callback button that anonymous admins can click to prove their admin status.
 func sendAnonAdminKeyboard(b *gotgbot.Bot, msg *gotgbot.Message, chat *gotgbot.Chat) (*gotgbot.Message, error) {
 	return msg.Reply(b,
 		"It looks like you're anonymous. Tap this button to confirm your identity.",

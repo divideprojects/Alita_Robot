@@ -25,6 +25,8 @@ var devsModule = moduleStruct{moduleName: "Dev"}
 // for general purposes for strings in functions below
 var txt string
 
+// chatInfo retrieves and displays detailed information about a specific chat.
+// Only accessible by bot owner and dev users. Returns chat name, ID, member count, and invite link.
 func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
@@ -65,6 +67,8 @@ func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// chatList generates and sends a document containing all active chats the bot is in.
+// Only accessible by bot owner and dev users. Creates a temporary file with chat IDs and names.
 func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
@@ -141,6 +145,8 @@ func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// leaveChat makes the bot leave a specified chat.
+// Only accessible by bot owner and dev users. Requires chat ID as argument.
 func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
@@ -174,6 +180,8 @@ func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
+// addSudo adds a user to the sudo users list in the bot's database.
+// Only accessible by bot owner. Grants elevated permissions to the specified user.
 func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
@@ -214,6 +222,8 @@ func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
+// addDev adds a user to the developer users list in the bot's database.
+// Only accessible by bot owner. Grants developer-level permissions to the specified user.
 func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
@@ -254,6 +264,8 @@ func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
+// remSudo removes a user from the sudo users list in the bot's database.
+// Only accessible by bot owner. Revokes elevated permissions from the specified user.
 func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
@@ -294,6 +306,8 @@ func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
+// remDev removes a user from the developer users list in the bot's database.
+// Only accessible by bot owner. Revokes developer-level permissions from the specified user.
 func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	if user.Id != config.OwnerId {
@@ -334,6 +348,8 @@ func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by existing team members
 */
+// listTeam displays all current team members including developers and sudo users.
+// Only accessible by existing team members. Shows user mentions organized by permission level.
 func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
@@ -402,6 +418,8 @@ func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Can only be used by OWNER
 */
+// getStats retrieves and displays bot statistics including user counts, chat counts, and other metrics.
+// Only accessible by bot owner and dev users. Shows comprehensive bot usage statistics.
 func (moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
@@ -439,6 +457,8 @@ func (moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// LoadDev registers all development-related command handlers with the dispatcher.
+// Sets up admin commands for bot management, user management, and statistics.
 func LoadDev(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("stats", devsModule.getStats))
 	dispatcher.AddHandler(handlers.NewCommand("addsudo", devsModule.addSudo))

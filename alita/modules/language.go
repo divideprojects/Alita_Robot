@@ -18,6 +18,8 @@ import (
 
 var languagesModule = moduleStruct{moduleName: "Languages"}
 
+// genFullLanguageKb generates the complete language selection keyboard.
+// Creates inline buttons for all available languages plus a translation contribution link.
 func (moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
 	keyboard := helpers.MakeLanguageKeyboard()
 	keyboard = append(
@@ -32,6 +34,8 @@ func (moduleStruct) genFullLanguageKb() [][]gotgbot.InlineKeyboardButton {
 	return keyboard
 }
 
+// changeLanguage displays the language selection menu for users or groups.
+// Shows current language and allows users/admins to select a different interface language.
 func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
@@ -70,6 +74,8 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// langBtnHandler processes language selection callback queries from the language menu.
+// Updates user or group language preferences based on admin permissions and context.
 func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	chat := query.Message.GetChat()
@@ -104,6 +110,8 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// LoadLanguage registers language-related command and callback handlers.
+// Sets up language selection commands and keyboard navigation for internationalization.
 func LoadLanguage(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(languagesModule.moduleName, true)
 	HelpModule.helpableKb[languagesModule.moduleName] = languagesModule.genFullLanguageKb()

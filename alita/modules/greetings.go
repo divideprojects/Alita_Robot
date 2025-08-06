@@ -23,6 +23,8 @@ import (
 
 var greetingsModule = moduleStruct{moduleName: "Greetings"}
 
+// welcome manages welcome message settings and displays current welcome configuration.
+// Admins can toggle welcome messages on/off or view current settings with 'noformat' option.
 func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -94,6 +96,8 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// setWelcome allows admins to set a custom welcome message for new chat members.
+// Supports text, media, and inline buttons with formatting and placeholder variables.
 func (moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -130,6 +134,8 @@ func (moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// resetWelcome resets the welcome message back to the default bot welcome message.
+// Only admins can use this command to restore the original welcome text.
 func (moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -155,6 +161,8 @@ func (moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// goodbye manages goodbye message settings and displays current goodbye configuration.
+// Admins can toggle goodbye messages on/off or view current settings with 'noformat' option.
 func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -224,6 +232,8 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// setGoodbye allows admins to set a custom goodbye message for members leaving the chat.
+// Supports text, media, and inline buttons with formatting and placeholder variables.
 func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -258,6 +268,8 @@ func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// resetGoodbye resets the goodbye message back to the default bot goodbye message.
+// Only admins can use this command to restore the original goodbye text.
 func (moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -286,6 +298,8 @@ func (moduleStruct) resetGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// cleanWelcome toggles automatic deletion of old welcome messages.
+// Admins can enable/disable cleanup or check current setting. Helps keep chats tidy.
 func (moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -336,6 +350,8 @@ func (moduleStruct) cleanWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// cleanGoodbye toggles automatic deletion of old goodbye messages.
+// Admins can enable/disable cleanup or check current setting. Helps keep chats tidy.
 func (moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
@@ -386,6 +402,8 @@ func (moduleStruct) cleanGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// delJoined toggles automatic deletion of service messages when users join the chat.
+// Admins can enable/disable cleanup of 'user joined' messages or check current setting.
 func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
@@ -435,6 +453,8 @@ func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// newMember handles welcome messages when new members join the chat.
+// Automatically sends welcome message and manages cleanup based on chat settings.
 func (moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	newMember := ctx.ChatMember.NewChatMember.MergeChatMember().User
@@ -474,6 +494,8 @@ func (moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// leftMember handles goodbye messages when members leave the chat.
+// Automatically sends goodbye message and manages cleanup based on chat settings.
 func (moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	leftMember := ctx.ChatMember.OldChatMember.MergeChatMember().User
@@ -510,6 +532,8 @@ func (moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// cleanService automatically deletes service messages about members joining/leaving.
+// Runs when service messages are posted and deletes them if cleanup is enabled.
 func (moduleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -531,6 +555,8 @@ func (moduleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// pendingJoins handles chat join requests and creates approval buttons for admins.
+// Auto-approves if enabled, otherwise presents approve/decline/ban options to admins.
 func (m moduleStruct) pendingJoins(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.ChatJoinRequest.Chat
 	user := ctx.ChatJoinRequest.From
@@ -586,6 +612,8 @@ func (m moduleStruct) pendingJoins(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// joinRequestHandler processes admin responses to join request approval buttons.
+// Handles accept, decline, and ban actions for pending chat join requests.
 func (moduleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	user := query.From
@@ -645,6 +673,8 @@ func (moduleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// autoApprove toggles automatic approval of chat join requests.
+// Admins can enable/disable auto-approval or check current setting for new join requests.
 func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
@@ -696,6 +726,8 @@ func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// loadPendingJoins checks if a join request notification has already been sent for a user.
+// Prevents duplicate join request messages by checking cache for recent requests.
 func (moduleStruct) loadPendingJoins(chatId, userId int64) bool {
 	alreadyAsked, _ := cache.Marshal.Get(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chatId, userId), new(bool))
 	if alreadyAsked == nil || !alreadyAsked.(bool) {
@@ -704,10 +736,14 @@ func (moduleStruct) loadPendingJoins(chatId, userId int64) bool {
 	return true
 }
 
+// setPendingJoins marks a join request as processed in cache with expiration.
+// Stores request info for 5 minutes to prevent duplicate approval notifications.
 func (moduleStruct) setPendingJoins(chatId, userId int64) {
 	_ = cache.Marshal.Set(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chatId, userId), true, store.WithExpiration(5*time.Minute))
 }
 
+// LoadGreetings registers all greeting-related handlers with the dispatcher.
+// Sets up welcome/goodbye messages, join requests, and service message cleanup.
 func LoadGreetings(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(greetingsModule.moduleName, true)
 

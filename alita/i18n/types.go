@@ -63,7 +63,7 @@ type ManagerConfig struct {
 	Loader LoaderConfig
 }
 
-// DefaultManagerConfig returns sensible defaults
+// DefaultManagerConfig returns sensible defaults for ManagerConfig.
 func DefaultManagerConfig() ManagerConfig {
 	return ManagerConfig{
 		Cache: CacheConfig{

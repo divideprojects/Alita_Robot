@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetFilter retrieves a specific filter by chat ID and keyword from the database.
+// Returns an empty ChatFilters struct if no filter is found or an error occurs.
 func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
 	filtSrc = &ChatFilters{}
 	err := GetRecord(filtSrc, map[string]interface{}{"chat_id": chatID, "keyword": keyword})
@@ -19,6 +21,8 @@ func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
 	return
 }
 
+// GetAllFilters retrieves all filters for a specific chat ID from the database.
+// Returns an empty slice if no filters are found or an error occurs.
 //goland:noinspection GoUnusedExportedFunction
 func GetAllFilters(chatID int64) (allFilters []*ChatFilters) {
 	err := GetRecords(&allFilters, map[string]interface{}{"chat_id": chatID})
@@ -29,6 +33,9 @@ func GetAllFilters(chatID int64) (allFilters []*ChatFilters) {
 	return
 }
 
+// GetFiltersList retrieves a list of all filter keywords for a specific chat ID.
+// Uses caching to improve performance for frequently accessed data.
+// Returns an empty slice if no filters are found or an error occurs.
 func GetFiltersList(chatID int64) (allFilterWords []string) {
 	// Try to get from cache first
 	cacheKey := filterListCacheKey(chatID)
@@ -53,6 +60,9 @@ func GetFiltersList(chatID int64) (allFilterWords []string) {
 	return result
 }
 
+// DoesFilterExists checks whether a filter with the given keyword exists in the specified chat.
+// Performs a case-insensitive comparison of the keyword.
+// Returns false if the filter doesn't exist or an error occurs.
 func DoesFilterExists(chatId int64, keyword string) bool {
 	var count int64
 	err := DB.Model(&ChatFilters{}).Where("chat_id = ? AND LOWER(keyword) = LOWER(?)", chatId, keyword).Count(&count).Error
@@ -63,6 +73,9 @@ func DoesFilterExists(chatId int64, keyword string) bool {
 	return count > 0
 }
 
+// AddFilter creates a new filter in the database for the specified chat.
+// Does nothing if a filter with the same keyword already exists.
+// Invalidates the filter list cache after successful addition.
 func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button, filtType int) {
 	// Check if filter already exists using a direct query
 	var count int64
@@ -96,6 +109,8 @@ func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button
 	deleteCache(filterListCacheKey(chatID))
 }
 
+// RemoveFilter deletes a filter with the specified keyword from the chat.
+// Invalidates the filter list cache if a filter was successfully removed.
 func RemoveFilter(chatID int64, keyWord string) {
 	// Directly attempt to delete the filter without checking existence first
 	result := DB.Where("chat_id = ? AND keyword = ?", chatID, keyWord).Delete(&ChatFilters{})
@@ -111,6 +126,8 @@ func RemoveFilter(chatID int64, keyWord string) {
 	}
 }
 
+// RemoveAllFilters deletes all filters for the specified chat ID from the database.
+// Invalidates the filter list cache after removal.
 func RemoveAllFilters(chatID int64) {
 	err := DB.Where("chat_id = ?", chatID).Delete(&ChatFilters{}).Error
 	if err != nil {
@@ -121,6 +138,8 @@ func RemoveAllFilters(chatID int64) {
 	deleteCache(filterListCacheKey(chatID))
 }
 
+// CountFilters returns the total number of filters configured for the specified chat ID.
+// Returns 0 if an error occurs during the count operation.
 func CountFilters(chatID int64) (filtersNum int64) {
 	err := DB.Model(&ChatFilters{}).Where("chat_id = ?", chatID).Count(&filtersNum).Error
 	if err != nil {
@@ -129,6 +148,8 @@ func CountFilters(chatID int64) (filtersNum int64) {
 	return
 }
 
+// LoadFilterStats returns statistics about filters across the entire system.
+// Returns the total number of filters and the number of distinct chats using filters.
 func LoadFilterStats() (filtersNum, filtersUsingChats int64) {
 	// Count total number of filters
 	err := DB.Model(&ChatFilters{}).Count(&filtersNum).Error

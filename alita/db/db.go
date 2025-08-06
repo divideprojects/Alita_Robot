@@ -44,7 +44,8 @@ type Button struct {
 // ButtonArray is a custom type for handling arrays of buttons as JSONB
 type ButtonArray []Button
 
-// Scan implements the Scanner interface for database deserialization
+// Scan implements the Scanner interface for database deserialization of ButtonArray.
+// It converts JSONB data from the database into a ButtonArray slice.
 func (ba *ButtonArray) Scan(value interface{}) error {
 	if value == nil {
 		*ba = ButtonArray{}
@@ -59,7 +60,8 @@ func (ba *ButtonArray) Scan(value interface{}) error {
 	return json.Unmarshal(bytes, ba)
 }
 
-// Value implements the driver Valuer interface for database serialization
+// Value implements the driver Valuer interface for database serialization of ButtonArray.
+// It converts a ButtonArray slice to JSON for storage in the database.
 func (ba ButtonArray) Value() (driver.Value, error) {
 	if len(ba) == 0 {
 		return "[]", nil
@@ -70,7 +72,8 @@ func (ba ButtonArray) Value() (driver.Value, error) {
 // StringArray is a custom type for handling arrays of strings as JSONB
 type StringArray []string
 
-// Scan implements the Scanner interface for database deserialization
+// Scan implements the Scanner interface for database deserialization of StringArray.
+// It converts JSONB data from the database into a StringArray slice.
 func (sa *StringArray) Scan(value interface{}) error {
 	if value == nil {
 		*sa = StringArray{}
@@ -85,7 +88,8 @@ func (sa *StringArray) Scan(value interface{}) error {
 	return json.Unmarshal(bytes, sa)
 }
 
-// Value implements the driver Valuer interface for database serialization
+// Value implements the driver Valuer interface for database serialization of StringArray.
+// It converts a StringArray slice to JSON for storage in the database.
 func (sa StringArray) Value() (driver.Value, error) {
 	if len(sa) == 0 {
 		return "[]", nil
@@ -96,7 +100,8 @@ func (sa StringArray) Value() (driver.Value, error) {
 // Int64Array is a custom type for handling arrays of int64 as JSONB
 type Int64Array []int64
 
-// Scan implements the Scanner interface for database deserialization
+// Scan implements the Scanner interface for database deserialization of Int64Array.
+// It converts JSONB data from the database into an Int64Array slice.
 func (ia *Int64Array) Scan(value interface{}) error {
 	if value == nil {
 		*ia = Int64Array{}
@@ -111,7 +116,8 @@ func (ia *Int64Array) Scan(value interface{}) error {
 	return json.Unmarshal(bytes, ia)
 }
 
-// Value implements the driver Valuer interface for database serialization
+// Value implements the driver Valuer interface for database serialization of Int64Array.
+// It converts an Int64Array slice to JSON for storage in the database.
 func (ia Int64Array) Value() (driver.Value, error) {
 	if len(ia) == 0 {
 		return "[]", nil
@@ -133,7 +139,8 @@ type User struct {
 	Chats []Chat `gorm:"many2many:chat_users;" json:"-"`
 }
 
-// TableName specifies the table name for User model
+// TableName returns the database table name for the User model.
+// This method overrides GORM's default table naming convention.
 func (User) TableName() string {
 	return "users"
 }
@@ -153,7 +160,8 @@ type Chat struct {
 	ChatUsers []User `gorm:"many2many:chat_users;" json:"-"`
 }
 
-// TableName specifies the table name for Chat model
+// TableName returns the database table name for the Chat model.
+// This method overrides GORM's default table naming convention.
 func (Chat) TableName() string {
 	return "chats"
 }
@@ -164,7 +172,8 @@ type ChatUser struct {
 	UserID int64 `gorm:"column:user_id;primaryKey" json:"user_id"`
 }
 
-// TableName specifies the table name for ChatUser model
+// TableName returns the database table name for the ChatUser model.
+// This method overrides GORM's default table naming convention.
 func (ChatUser) TableName() string {
 	return "chat_users"
 }
@@ -179,7 +188,8 @@ type WarnSettings struct {
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for WarnSettings model
+// TableName returns the database table name for the WarnSettings model.
+// This method overrides GORM's default table naming convention.
 func (WarnSettings) TableName() string {
 	return "warns_settings"
 }
@@ -195,7 +205,8 @@ type Warns struct {
 	UpdatedAt time.Time   `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for Warns model
+// TableName returns the database table name for the Warns model.
+// This method overrides GORM's default table naming convention.
 func (Warns) TableName() string {
 	return "warns_users"
 }
@@ -234,7 +245,8 @@ type GreetingSettings struct {
 	UpdatedAt          time.Time        `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for GreetingSettings model
+// TableName returns the database table name for the GreetingSettings model.
+// This method overrides GORM's default table naming convention.
 func (GreetingSettings) TableName() string {
 	return "greetings"
 }
@@ -253,7 +265,8 @@ type ChatFilters struct {
 	UpdatedAt   time.Time   `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for ChatFilters model
+// TableName returns the database table name for the ChatFilters model.
+// This method overrides GORM's default table naming convention.
 func (ChatFilters) TableName() string {
 	return "filters"
 }
@@ -267,7 +280,8 @@ type AdminSettings struct {
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for AdminSettings model
+// TableName returns the database table name for the AdminSettings model.
+// This method overrides GORM's default table naming convention.
 func (AdminSettings) TableName() string {
 	return "admin"
 }
@@ -286,7 +300,8 @@ type BlacklistSettings struct {
 // BlacklistSettingsSlice is a custom type for []*BlacklistSettings with additional methods
 type BlacklistSettingsSlice []*BlacklistSettings
 
-// Triggers returns all blacklisted words as a slice of strings for compatibility
+// Triggers returns all blacklisted words as a slice of strings for compatibility.
+// This method extracts the Word field from each BlacklistSettings in the slice.
 func (bss BlacklistSettingsSlice) Triggers() []string {
 	var triggers []string
 	for _, bs := range bss {
@@ -295,7 +310,8 @@ func (bss BlacklistSettingsSlice) Triggers() []string {
 	return triggers
 }
 
-// Action returns the action for the first blacklist setting (they should all be the same for a chat)
+// Action returns the action for the first blacklist setting in the slice.
+// All blacklist settings for a chat should have the same action, so we return the first one.
 func (bss BlacklistSettingsSlice) Action() string {
 	if len(bss) > 0 {
 		return bss[0].Action
@@ -303,7 +319,8 @@ func (bss BlacklistSettingsSlice) Action() string {
 	return "warn" // default
 }
 
-// Reason returns the reason for the first blacklist setting
+// Reason returns the reason for the first blacklist setting in the slice.
+// If no settings exist, returns an empty string.
 func (bss BlacklistSettingsSlice) Reason() string {
 	if len(bss) > 0 {
 		return bss[0].Reason
@@ -311,7 +328,8 @@ func (bss BlacklistSettingsSlice) Reason() string {
 	return ""
 }
 
-// TableName specifies the table name for BlacklistSettings model
+// TableName returns the database table name for the BlacklistSettings model.
+// This method overrides GORM's default table naming convention.
 func (BlacklistSettings) TableName() string {
 	return "blacklists"
 }
@@ -327,7 +345,8 @@ type PinSettings struct {
 	UpdatedAt      time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for PinSettings model
+// TableName returns the database table name for the PinSettings model.
+// This method overrides GORM's default table naming convention.
 func (PinSettings) TableName() string {
 	return "pins"
 }
@@ -343,7 +362,8 @@ type ReportChatSettings struct {
 	UpdatedAt   time.Time  `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for ReportChatSettings model
+// TableName returns the database table name for the ReportChatSettings model.
+// This method overrides GORM's default table naming convention.
 func (ReportChatSettings) TableName() string {
 	return "report_chat_settings"
 }
@@ -358,7 +378,8 @@ type ReportUserSettings struct {
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for ReportUserSettings model
+// TableName returns the database table name for the ReportUserSettings model.
+// This method overrides GORM's default table naming convention.
 func (ReportUserSettings) TableName() string {
 	return "report_user_settings"
 }
@@ -374,7 +395,8 @@ type DevSettings struct {
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for DevSettings model
+// TableName returns the database table name for the DevSettings model.
+// This method overrides GORM's default table naming convention.
 func (DevSettings) TableName() string {
 	return "devs"
 }
@@ -388,7 +410,8 @@ type ChannelSettings struct {
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for ChannelSettings model
+// TableName returns the database table name for the ChannelSettings model.
+// This method overrides GORM's default table naming convention.
 func (ChannelSettings) TableName() string {
 	return "channels"
 }
@@ -405,7 +428,8 @@ type AntifloodSettings struct {
 	UpdatedAt              time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for AntifloodSettings model
+// TableName returns the database table name for the AntifloodSettings model.
+// This method overrides GORM's default table naming convention.
 func (AntifloodSettings) TableName() string {
 	return "antiflood_settings"
 }
@@ -420,7 +444,8 @@ type ConnectionSettings struct {
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for ConnectionSettings model
+// TableName returns the database table name for the ConnectionSettings model.
+// This method overrides GORM's default table naming convention.
 func (ConnectionSettings) TableName() string {
 	return "connection"
 }
@@ -435,7 +460,8 @@ type ConnectionChatSettings struct {
 	UpdatedAt    time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for ConnectionChatSettings model
+// TableName returns the database table name for the ConnectionChatSettings model.
+// This method overrides GORM's default table naming convention.
 func (ConnectionChatSettings) TableName() string {
 	return "connection_settings"
 }
@@ -451,7 +477,8 @@ type DisableSettings struct {
 	UpdatedAt      time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for DisableSettings model
+// TableName returns the database table name for the DisableSettings model.
+// This method overrides GORM's default table naming convention.
 func (DisableSettings) TableName() string {
 	return "disable"
 }
@@ -465,7 +492,8 @@ type DisableChatSettings struct {
 	UpdatedAt      time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for DisableChatSettings model
+// TableName returns the database table name for the DisableChatSettings model.
+// This method overrides GORM's default table naming convention.
 func (DisableChatSettings) TableName() string {
 	return "disable_chat_settings"
 }
@@ -481,7 +509,8 @@ type RulesSettings struct {
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for RulesSettings model
+// TableName returns the database table name for the RulesSettings model.
+// This method overrides GORM's default table naming convention.
 func (RulesSettings) TableName() string {
 	return "rules"
 }
@@ -496,7 +525,8 @@ type LockSettings struct {
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for LockSettings model
+// TableName returns the database table name for the LockSettings model.
+// This method overrides GORM's default table naming convention.
 func (LockSettings) TableName() string {
 	return "locks"
 }
@@ -510,12 +540,14 @@ type NotesSettings struct {
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// PrivateNotesEnabled returns the Private field for compatibility
+// PrivateNotesEnabled returns whether private notes are enabled for the chat.
+// This method provides compatibility with existing code that expects this method name.
 func (ns *NotesSettings) PrivateNotesEnabled() bool {
 	return ns.Private
 }
 
-// TableName specifies the table name for NotesSettings model
+// TableName returns the database table name for the NotesSettings model.
+// This method overrides GORM's default table naming convention.
 func (NotesSettings) TableName() string {
 	return "notes_settings"
 }
@@ -539,7 +571,8 @@ type Notes struct {
 	UpdatedAt   time.Time   `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
-// TableName specifies the table name for Notes model
+// TableName returns the database table name for the Notes model.
+// This method overrides GORM's default table naming convention.
 func (Notes) TableName() string {
 	return "notes"
 }
@@ -601,7 +634,8 @@ func init() {
 	log.Info("Database schema managed via SQL migrations - skipping GORM AutoMigrate")
 }
 
-// GetAllModels returns all models for migration
+// GetAllModels returns a slice of all database models used in the application.
+// This is primarily used for database migration and schema generation purposes.
 func GetAllModels() []interface{} {
 	return []interface{}{
 		&User{},
@@ -632,7 +666,8 @@ func GetAllModels() []interface{} {
 
 // Helper functions for GORM-specific operations
 
-// CreateRecord creates a new record
+// CreateRecord creates a new database record using the provided model.
+// It logs any errors that occur during the creation process.
 func CreateRecord(model interface{}) error {
 	result := DB.Create(model)
 	if result.Error != nil {
@@ -642,7 +677,8 @@ func CreateRecord(model interface{}) error {
 	return nil
 }
 
-// UpdateRecord updates an existing record
+// UpdateRecord updates an existing database record with the provided updates.
+// It uses the where clause to find the record and applies the updates map.
 func UpdateRecord(model interface{}, where interface{}, updates interface{}) error {
 	result := DB.Model(model).Where(where).Updates(updates)
 	if result.Error != nil {
@@ -652,7 +688,8 @@ func UpdateRecord(model interface{}, where interface{}, updates interface{}) err
 	return nil
 }
 
-// GetRecord gets a single record
+// GetRecord retrieves a single database record matching the where clause.
+// Returns gorm.ErrRecordNotFound if no matching record is found.
 func GetRecord(model interface{}, where interface{}) error {
 	result := DB.Where(where).First(model)
 	if result.Error != nil {
@@ -665,14 +702,16 @@ func GetRecord(model interface{}, where interface{}) error {
 	return nil
 }
 
-// ChatExists checks if a chat exists in the database
+// ChatExists checks if a chat with the given ID exists in the database.
+// Returns true if the chat exists, false otherwise.
 func ChatExists(chatID int64) bool {
 	chatExists := &Chat{}
 	err := GetRecord(chatExists, Chat{ChatId: chatID})
 	return !errors.Is(err, gorm.ErrRecordNotFound)
 }
 
-// GetRecords gets multiple records
+// GetRecords retrieves multiple database records matching the where clause.
+// The results are stored in the provided models slice.
 func GetRecords(models interface{}, where interface{}) error {
 	result := DB.Where(where).Find(models)
 	if result.Error != nil {
@@ -682,17 +721,20 @@ func GetRecords(models interface{}, where interface{}) error {
 	return nil
 }
 
-// Transaction executes a function within a database transaction
+// Transaction executes the provided function within a database transaction.
+// If the function returns an error, the transaction is rolled back.
 func Transaction(fn func(*gorm.DB) error) error {
 	return DB.Transaction(fn)
 }
 
-// GetDB returns the database instance
+// GetDB returns the global GORM database instance.
+// This should be used when you need direct access to the database connection.
 func GetDB() *gorm.DB {
 	return DB
 }
 
-// Close closes the database connection
+// Close closes the database connection and cleans up resources.
+// This should be called when the application is shutting down.
 func Close() error {
 	sqlDB, err := DB.DB()
 	if err != nil {
@@ -701,7 +743,8 @@ func Close() error {
 	return sqlDB.Close()
 }
 
-// Health checks database health
+// Health performs a health check on the database connection.
+// It returns an error if the database is not accessible or responding.
 func Health() error {
 	sqlDB, err := DB.DB()
 	if err != nil {

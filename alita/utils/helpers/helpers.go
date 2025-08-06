@@ -30,7 +30,8 @@ const (
 	MaxMessageLength int = 4096
 )
 
-// Shtml is a shortcut for SendMessageOpts with HTML parse mode.
+// Shtml returns SendMessageOpts configured with HTML parse mode, disabled link preview,
+// and reply parameters that allow sending without reply.
 func Shtml() *gotgbot.SendMessageOpts {
 	return &gotgbot.SendMessageOpts{
 		ParseMode: HTML,
@@ -43,7 +44,8 @@ func Shtml() *gotgbot.SendMessageOpts {
 	}
 }
 
-// Smarkdown is a shortcut for SendMessageOpts with Markdown parse mode.
+// Smarkdown returns SendMessageOpts configured with Markdown parse mode, disabled link preview,
+// and reply parameters that allow sending without reply.
 func Smarkdown() *gotgbot.SendMessageOpts {
 	return &gotgbot.SendMessageOpts{
 		ParseMode: Markdown,
@@ -56,7 +58,8 @@ func Smarkdown() *gotgbot.SendMessageOpts {
 	}
 }
 
-// SplitMessage splits a message into multiple messages if it is too long.
+// SplitMessage splits a message into multiple messages if it exceeds MaxMessageLength.
+// It splits on newlines to preserve message structure when possible.
 func SplitMessage(msg string) []string {
 	if len(msg) > MaxMessageLength {
 		tmp := make([]string, 1)
@@ -79,17 +82,19 @@ func SplitMessage(msg string) []string {
 	}
 }
 
-// MentionHtml returns a mention in html format.
+// MentionHtml creates an HTML mention link for a user using their Telegram user ID.
 func MentionHtml(userId int64, name string) string {
 	return MentionUrl(fmt.Sprintf("tg://user?id=%d", userId), name)
 }
 
-// MentionUrl returns a mention in html format.
+// MentionUrl creates an HTML link with the given URL and display name.
+// The name is HTML-escaped for safety.
 func MentionUrl(url, name string) string {
 	return fmt.Sprintf("<a href=\"%s\">%s</a>", url, html.EscapeString(name))
 }
 
-// GetFullName returns the full name of a user.
+// GetFullName combines first name and last name into a full name.
+// If last name is empty, returns only the first name.
 func GetFullName(FirstName, LastName string) string {
 	var name string
 	if LastName != "" {
@@ -100,7 +105,8 @@ func GetFullName(FirstName, LastName string) string {
 	return name
 }
 
-// InitButtons initializes the buttons for the connection menu.
+// InitButtons creates an inline keyboard markup for the connection menu.
+// Shows admin commands button if the user is an admin, otherwise shows only user commands.
 func InitButtons(b *gotgbot.Bot, chatId, userId int64) gotgbot.InlineKeyboardMarkup {
 	var connButtons [][]gotgbot.InlineKeyboardButton
 	if chat_status.IsUserAdmin(b, chatId, userId) {
@@ -132,8 +138,9 @@ func InitButtons(b *gotgbot.Bot, chatId, userId int64) gotgbot.InlineKeyboardMar
 	return connKeyboard
 }
 
-// GetMessageLinkFromMessageId Gets the message link via chat Id and message Id
-// maybe replace in future by msg.GetLink()
+// GetMessageLinkFromMessageId generates a Telegram message link from chat and message ID.
+// Handles both public groups (with username) and private groups (without username).
+// TODO: maybe replace in future by msg.GetLink()
 func GetMessageLinkFromMessageId(chat *gotgbot.Chat, messageId int64) (messageLink string) {
 	messageLink = "https://t.me/"
 	chatIdStr := fmt.Sprint(chat.Id)
@@ -154,7 +161,9 @@ func GetMessageLinkFromMessageId(chat *gotgbot.Chat, messageId int64) (messageLi
 
 // NOTE: connection helper functions
 
-// IsUserConnected checks if a user is connected to a chat.
+// IsUserConnected checks if a user is connected to a chat and validates permissions.
+// Handles both private messages (with connection system) and group messages.
+// Returns the effective chat if all checks pass, nil otherwise.
 func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool) (chat *gotgbot.Chat) {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveUser
@@ -218,7 +227,8 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 
 // NOTE: keyboard helper functions
 
-// BuildKeyboard is used to build a keyboard from a list of buttons provided by the database.
+// BuildKeyboard constructs an inline keyboard from a slice of database button objects.
+// Handles button grouping based on the SameLine property for proper layout.
 func BuildKeyboard(buttons []db.Button) [][]gotgbot.InlineKeyboardButton {
 	keyb := make([][]gotgbot.InlineKeyboardButton, 0)
 	for _, btn := range buttons {
@@ -233,7 +243,8 @@ func BuildKeyboard(buttons []db.Button) [][]gotgbot.InlineKeyboardButton {
 	return keyb
 }
 
-// ConvertButtonV2ToDbButton is used to convert []tgmd2html.ButtonV2 to []db.Button
+// ConvertButtonV2ToDbButton converts markdown parser button format to database button format.
+// Maps ButtonV2 fields to corresponding db.Button fields.
 func ConvertButtonV2ToDbButton(buttons []tgmd2html.ButtonV2) (btns []db.Button) {
 	btns = make([]db.Button, len(buttons))
 	for i, btn := range buttons {
@@ -246,7 +257,8 @@ func ConvertButtonV2ToDbButton(buttons []tgmd2html.ButtonV2) (btns []db.Button) 
 	return
 }
 
-// RevertButtons is used to convert []db.Button to string
+// RevertButtons converts database button format back to markdown button string format.
+// Generates markdown buttonurl syntax for each button with proper same-line handling.
 func RevertButtons(buttons []db.Button) string {
 	res := ""
 	for _, btn := range buttons {
@@ -259,7 +271,8 @@ func RevertButtons(buttons []db.Button) string {
 	return res
 }
 
-// InlineKeyboardMarkupToTgmd2htmlButtonV2 this func is used to convert gotgbot.InlineKeyboardarkup to []tgmd2html.ButtonV2
+// InlineKeyboardMarkupToTgmd2htmlButtonV2 converts Telegram inline keyboard to markdown button format.
+// Filters out non-URL buttons and handles same-line button positioning.
 func InlineKeyboardMarkupToTgmd2htmlButtonV2(replyMarkup *gotgbot.InlineKeyboardMarkup) (btns []tgmd2html.ButtonV2) {
 	btns = make([]tgmd2html.ButtonV2, 0)
 	for _, inlineKeyboard := range replyMarkup.InlineKeyboard {
@@ -297,7 +310,8 @@ func InlineKeyboardMarkupToTgmd2htmlButtonV2(replyMarkup *gotgbot.InlineKeyboard
 	return
 }
 
-// ChunkKeyboardSlices function used in making the help menu keyboard
+// ChunkKeyboardSlices splits a slice of inline keyboard buttons into chunks of specified size.
+// Used for creating organized help menu keyboards with consistent row layouts.
 func ChunkKeyboardSlices(slice []gotgbot.InlineKeyboardButton, chunkSize int) (chunks [][]gotgbot.InlineKeyboardButton) {
 	for len(slice) > 0 {
 		if len(slice) < chunkSize {
@@ -312,7 +326,8 @@ func ChunkKeyboardSlices(slice []gotgbot.InlineKeyboardButton, chunkSize int) (c
 
 // NOTE: language helper functions
 
-// MakeLanguageKeyboard makes a keyboard with all the languages in it.
+// MakeLanguageKeyboard creates an inline keyboard with all available language options.
+// Uses valid language codes from config and chunks them into 2-column layout.
 func MakeLanguageKeyboard() [][]gotgbot.InlineKeyboardButton {
 	var kb []gotgbot.InlineKeyboardButton
 
@@ -334,7 +349,8 @@ func MakeLanguageKeyboard() [][]gotgbot.InlineKeyboardButton {
 	return ChunkKeyboardSlices(kb, 2)
 }
 
-// GetLangFormat returns the language name and flag.
+// GetLangFormat returns a formatted language display string with name and flag emoji.
+// Uses i18n system to get localized language name and flag for the given language code.
 func GetLangFormat(langCode string) string {
 	return i18n.I18n{LangCode: langCode}.GetString("main.language_name") +
 		" " +
@@ -343,7 +359,8 @@ func GetLangFormat(langCode string) string {
 
 // NOTE: tgmd2html helper functions
 
-// ReverseHTML2MD function to convert html formatted raw string to markdown to get noformat string
+// ReverseHTML2MD converts HTML-formatted text back to markdown format.
+// Handles common HTML tags like bold, italic, underline, strikethrough, code, pre, and links.
 func ReverseHTML2MD(text string) string {
 	Html2MdMap := map[string]string{
 		"i":    "_%s_",
@@ -384,7 +401,9 @@ func ReverseHTML2MD(text string) string {
 
 // NOTE: formatting helper functions
 
-// FormattingReplacer replaces the formatting in a message.
+// FormattingReplacer processes message text and replaces placeholders with actual user/chat data.
+// Handles variables like {first}, {last}, {username}, {mention}, {count}, {chatname}, {id}.
+// Also processes rules button insertion with various positioning options.
 func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, oldMsg string, buttons []db.Button) (res string, btns []db.Button) {
 	var (
 		firstName     string
@@ -469,9 +488,9 @@ func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, 
 
 // NOTE: extract statis helper functions
 
-// ExtractJoinLeftStatusChange Takes a ChatMemberUpdated instance and extracts whether the 'old_chat_member' was a member
-// of the chat and whether the 'new_chat_member' is a member of the chat. Returns false, if
-// the status didn't change.
+// ExtractJoinLeftStatusChange analyzes ChatMemberUpdated events to detect join/leave status changes.
+// Returns (was_member, is_member) booleans indicating membership status transition.
+// Returns (false, false) for channels or if no status change occurred.
 func ExtractJoinLeftStatusChange(u *gotgbot.ChatMemberUpdated) (bool, bool) {
 	// return false for channels
 	if u.Chat.Type == "channel" {
@@ -500,9 +519,9 @@ func ExtractJoinLeftStatusChange(u *gotgbot.ChatMemberUpdated) (bool, bool) {
 	return wasMember, isMember
 }
 
-// ExtractAdminUpdateStatusChange Takes a ChatMemberUpdated instance and extracts whether the 'old_chat_member' was a member or admin
-// of the chat and whether the 'new_chat_member' is a admin of the chat. Returns false, if
-// the status didn't change.
+// ExtractAdminUpdateStatusChange detects admin status changes from ChatMemberUpdated events.
+// Returns true if there was a transition to/from administrator or creator status.
+// Returns false for channels or if no admin status change occurred.
 func ExtractAdminUpdateStatusChange(u *gotgbot.ChatMemberUpdated) bool {
 	// return false for channels
 	if u.Chat.Type == "channel" {
@@ -537,7 +556,9 @@ func ExtractAdminUpdateStatusChange(u *gotgbot.ChatMemberUpdated) bool {
 
 // NOTE: NoteWelcomeFilter helper functions
 
-// GetNoteAndFilterType is a helper function to get the note and filter type from a *gotgbot.Message object.
+// GetNoteAndFilterType extracts and processes note or filter content from a Telegram message.
+// Handles text, media files, and reply messages with button parsing and content validation.
+// Returns parsed content with metadata like data type, buttons, and special options.
 func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool) (keyWord, fileid, text string, dataType int, buttons []db.Button, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool, errorMsg string) {
 	dataType = -1 // not defined datatype; invalid note
 	if isFilter {
@@ -609,7 +630,9 @@ func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool) (keyWord, fileid,
 	return
 }
 
-// GetWelcomeType is a helper function to get the welcome type from a *gotgbot.Message object.
+// GetWelcomeType extracts and processes welcome/greeting content from a Telegram message.
+// Similar to GetNoteAndFilterType but specifically for greeting messages.
+// Returns processed content with data type, file ID, and buttons for the greeting.
 func GetWelcomeType(msg *gotgbot.Message, greetingType string) (text string, dataType int, fileid string, buttons []db.Button, errorMsg string) {
 	dataType = -1
 	errorMsg = fmt.Sprintf("You need to give me some content to %s users!", greetingType)
@@ -666,7 +689,9 @@ func GetWelcomeType(msg *gotgbot.Message, greetingType string) (text string, dat
 	return
 }
 
-// SendFilter Simple function used to send a filter with help from EnumFuncMap, this just organises data for it
+// SendFilter sends a filter message using the appropriate handler from FiltersEnumFuncMap.
+// Handles random message selection, formatting replacement, and keyboard building.
+// Returns the sent message or an error.
 func SendFilter(b *gotgbot.Bot, ctx *ext.Context, filterData *db.ChatFilters, replyMsgId int64) (*gotgbot.Message, error) {
 	chat := ctx.EffectiveChat
 
@@ -697,7 +722,9 @@ func SendFilter(b *gotgbot.Bot, ctx *ext.Context, filterData *db.ChatFilters, re
 	return msg, err
 }
 
-// noteParser is a helper function to parse notes and return the parsed data
+// notesParser parses special note options from message text using regex patterns.
+// Detects {private}, {noprivate}, {admin}, {preview}, {protect}, {nonotif} tags.
+// Returns boolean flags for each option and the text with tags removed.
 func notesParser(sent string) (pvtOnly, grpOnly, adminOnly, webPrev, protectedContent, noNotif bool, sentBack string) {
 	pvtOnly, err := regexp.MatchString(`({private})`, sent)
 	if err != nil {
@@ -747,7 +774,9 @@ func notesParser(sent string) (pvtOnly, grpOnly, adminOnly, webPrev, protectedCo
 	return pvtOnly, grpOnly, adminOnly, webPrev, protectedContent, noNotif, sent
 }
 
-// SendNote Simple function used to send a note with help from EnumFuncMap, this just organises data for it and returns the message
+// SendNote sends a note message using the appropriate handler from NotesEnumFuncMap.
+// Handles random message selection, formatting replacement, option parsing, and keyboard building.
+// Returns the sent message or an error.
 func SendNote(b *gotgbot.Bot, chat *gotgbot.Chat, ctx *ext.Context, noteData *db.Notes, replyMsgId int64) (*gotgbot.Message, error) {
 	var (
 		buttons []db.Button
@@ -1202,7 +1231,9 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 	},
 }
 
-// preFixes is a function that checks the message before saving it to database.
+// preFixes validates and preprocesses message content before database storage.
+// Checks message length limits, validates button URLs, sets default button names,
+// and filters invalid content. Modifies parameters by reference.
 func preFixes(buttons []tgmd2html.ButtonV2, defaultNameButton string, text *string, dataType *int, fileid string, dbButtons *[]db.Button, errorMsg *string) {
 	if *dataType == db.TEXT && len(*text) > 4096 {
 		*dataType = -1
@@ -1243,7 +1274,9 @@ func preFixes(buttons []tgmd2html.ButtonV2, defaultNameButton string, text *stri
 	}
 }
 
-// function used to get rawtext from gotgbot.Message
+// setRawText extracts raw markdown text from a Telegram message.
+// Handles both direct message text/caption and replied message content.
+// Sets rawText parameter by reference with the extracted content.
 func setRawText(msg *gotgbot.Message, args []string, rawText *string) {
 	replyMsg := msg.ReplyToMessage
 	if replyMsg == nil {

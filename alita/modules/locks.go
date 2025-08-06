@@ -83,6 +83,8 @@ var (
 	}
 )
 
+// getLockMapAsArray returns a sorted array of all available lock types
+// by combining restriction types and permission lock types.
 func (moduleStruct) getLockMapAsArray() (lockTypes []string) {
 	tmpMap := map[string]filters.Message{}
 
@@ -102,6 +104,8 @@ func (moduleStruct) getLockMapAsArray() (lockTypes []string) {
 	return
 }
 
+// buildLockTypesMessage constructs a formatted string showing all locks
+// currently enabled in the specified chat.
 func (moduleStruct) buildLockTypesMessage(chatID int64) (res string) {
 	chatLocks := db.GetChatLocks(chatID)
 
@@ -120,6 +124,8 @@ func (moduleStruct) buildLockTypesMessage(chatID int64) (res string) {
 	return
 }
 
+// locktypes handles the /locktypes command by displaying all available
+// lock types that can be used in the chat.
 func (m moduleStruct) locktypes(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -143,6 +149,8 @@ func (m moduleStruct) locktypes(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// locks handles the /locks command by showing all currently enabled
+// locks in the chat with their status.
 func (m moduleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -166,6 +174,8 @@ func (m moduleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// lockPerm handles the /lock command to enable specific lock types
+// in the chat, requiring admin permissions.
 func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -222,6 +232,8 @@ func (m moduleStruct) lockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// unlockPerm handles the /unlock command to disable specific lock types
+// in the chat, requiring admin permissions.
 func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -280,6 +292,8 @@ func (m moduleStruct) unlockPerm(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// restHandler monitors messages and deletes them if they match
+// restricted content types that are locked in the chat.
 func (moduleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -315,6 +329,8 @@ func (moduleStruct) restHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// permHandler monitors messages and deletes them if they match
+// specific permission locks that are enabled in the chat.
 func (moduleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -343,6 +359,8 @@ func (moduleStruct) permHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// botLockHandler handles the bots lock by automatically banning
+// bots that are added to the chat when bots lock is enabled.
 func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -391,6 +409,8 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// LoadLocks registers all locks module handlers with the dispatcher,
+// including commands and message filters for lock enforcement.
 func LoadLocks(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(locksModule.moduleName, true)
 

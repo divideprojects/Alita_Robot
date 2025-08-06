@@ -26,7 +26,8 @@ type AdminCache struct {
 	Cached   bool
 }
 
-// InitCache initializes the cache and returns an error if initialization fails.
+// InitCache initializes the dual-layer cache system with Ristretto (L1) and Redis (L2).
+// It establishes connections to both cache stores and returns an error if initialization fails.
 func InitCache() error {
 	// Test Redis connection first
 	redisClient := redis.NewClient(&redis.Options{

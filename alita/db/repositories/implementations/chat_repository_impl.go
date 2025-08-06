@@ -17,14 +17,16 @@ type chatRepositoryImpl struct {
 	db *gorm.DB
 }
 
-// NewChatRepository creates a new chat repository implementation
+// NewChatRepository creates a new chat repository implementation.
+// It takes a GORM database instance and returns a ChatRepository interface.
 func NewChatRepository(database *gorm.DB) interfaces.ChatRepository {
 	return &chatRepositoryImpl{
 		db: database,
 	}
 }
 
-// CreateOrUpdate creates or updates a chat in the database
+// CreateOrUpdate creates a new chat or updates an existing chat in the database.
+// It uses GORM's FirstOrCreate with Assign to perform an upsert operation based on chat_id.
 func (r *chatRepositoryImpl) CreateOrUpdate(ctx context.Context, chat *db.Chat) error {
 	if chat == nil {
 		return fmt.Errorf("chat cannot be nil")
@@ -44,7 +46,8 @@ func (r *chatRepositoryImpl) CreateOrUpdate(ctx context.Context, chat *db.Chat) 
 	return nil
 }
 
-// GetByID retrieves a chat by its ID
+// GetByID retrieves a chat from the database by its unique chat ID.
+// Returns nil without error if the chat is not found, actual errors are returned as-is.
 func (r *chatRepositoryImpl) GetByID(ctx context.Context, chatID int64) (*db.Chat, error) {
 	if chatID == 0 {
 		return nil, fmt.Errorf("chat ID cannot be zero")
@@ -66,7 +69,8 @@ func (r *chatRepositoryImpl) GetByID(ctx context.Context, chatID int64) (*db.Cha
 	return &chat, nil
 }
 
-// Update updates chat information
+// Update modifies an existing chat with the provided chat data.
+// Returns an error if the chat is not found or if the database operation fails.
 func (r *chatRepositoryImpl) Update(ctx context.Context, chat *db.Chat) error {
 	if chat == nil {
 		return fmt.Errorf("chat cannot be nil")
@@ -90,7 +94,8 @@ func (r *chatRepositoryImpl) Update(ctx context.Context, chat *db.Chat) error {
 	return nil
 }
 
-// Exists checks if a chat exists in the database
+// Exists checks whether a chat with the given chatID exists in the database.
+// Returns true if found, false if not found, and an error if the database query fails.
 func (r *chatRepositoryImpl) Exists(ctx context.Context, chatID int64) (bool, error) {
 	if chatID == 0 {
 		return false, fmt.Errorf("chat ID cannot be zero")
@@ -106,7 +111,8 @@ func (r *chatRepositoryImpl) Exists(ctx context.Context, chatID int64) (bool, er
 	return count > 0, nil
 }
 
-// GetTotalCount returns the total number of chats
+// GetTotalCount returns the total number of chats registered in the system.
+// This count is useful for statistics, monitoring, and administrative purposes.
 func (r *chatRepositoryImpl) GetTotalCount(ctx context.Context) (int64, error) {
 	var count int64
 	result := r.db.WithContext(ctx).Model(&db.Chat{}).Count(&count)
@@ -119,7 +125,8 @@ func (r *chatRepositoryImpl) GetTotalCount(ctx context.Context) (int64, error) {
 	return count, nil
 }
 
-// List returns a paginated list of chats
+// List retrieves a paginated list of chats from the database.
+// It applies sensible defaults and limits to prevent excessive memory usage.
 func (r *chatRepositoryImpl) List(ctx context.Context, limit, offset int) ([]*db.Chat, error) {
 	if limit <= 0 {
 		limit = 10 // Default limit
@@ -142,7 +149,8 @@ func (r *chatRepositoryImpl) List(ctx context.Context, limit, offset int) ([]*db
 	return chats, nil
 }
 
-// Delete removes a chat from the database
+// Delete removes a chat from the database permanently.
+// Returns an error if the chat is not found or if the deletion operation fails.
 func (r *chatRepositoryImpl) Delete(ctx context.Context, chatID int64) error {
 	if chatID == 0 {
 		return fmt.Errorf("chat ID cannot be zero")

@@ -28,6 +28,8 @@ var disablingModule = moduleStruct{moduleName: "Disabling"}
 
 Only Admin can use this command to disable usage of a command in the chat
 */
+// disable disables one or more bot commands in the current chat.
+// Only admins can use this command. Accepts multiple command names as arguments.
 func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -83,6 +85,8 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Anyone can use this command to check the disableable commands
 */
+// disableable shows a list of all commands that can be disabled in the chat.
+// Any user can view this list to see which commands support disabling functionality.
 func (moduleStruct) disableable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
@@ -107,6 +111,8 @@ func (moduleStruct) disableable(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Any user in can use this command to check the disabled commands in the current chat.
 */
+// disabled displays all currently disabled commands in the chat.
+// Any user can view the list of disabled commands for the current chat.
 func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -169,6 +175,8 @@ func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 Only admins can use this command to either choose to delete the disabled command
 or not to. If no argument is given, the current chat setting is returned
 */
+// disabledel toggles whether disabled commands should be automatically deleted.
+// Only admins can use this. With no args, shows current setting; with args, changes it.
 func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -218,6 +226,8 @@ func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Only Admin can use this command to re-enable usage of a disabled command in the chat
 */
+// enable re-enables one or more previously disabled bot commands in the chat.
+// Only admins can use this command. Accepts multiple command names as arguments.
 func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -268,6 +278,8 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// LoadDisabling registers all disabling-related command handlers with the dispatcher.
+// Sets up commands for managing which bot commands are enabled or disabled in chats.
 func LoadDisabling(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(disablingModule.moduleName, true)
 

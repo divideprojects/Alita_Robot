@@ -213,13 +213,18 @@ func (m *AutoRemediationManager) Stop() {
 // GCAction triggers garbage collection
 type GCAction struct{}
 
+// Name returns the name of the GC action
 func (a *GCAction) Name() string  { return "garbage_collection" }
+
+// Severity returns the severity level of the GC action
 func (a *GCAction) Severity() int { return 1 }
 
+// CanExecute determines if the GC action should be executed based on current metrics
 func (a *GCAction) CanExecute(metrics SystemMetrics) bool {
 	return metrics.MemoryAllocMB > 300 || metrics.GCPauseMs > 50
 }
 
+// Execute performs the garbage collection action
 func (a *GCAction) Execute(ctx context.Context) error {
 	log.Info("[AutoRemediation] Triggering garbage collection")
 	runtime.GC()
@@ -229,13 +234,18 @@ func (a *GCAction) Execute(ctx context.Context) error {
 // MemoryCleanupAction triggers memory cleanup operations
 type MemoryCleanupAction struct{}
 
+// Name returns the name of the memory cleanup action
 func (a *MemoryCleanupAction) Name() string  { return "memory_cleanup" }
+
+// Severity returns the severity level of the memory cleanup action
 func (a *MemoryCleanupAction) Severity() int { return 2 }
 
+// CanExecute determines if the memory cleanup action should be executed based on current metrics
 func (a *MemoryCleanupAction) CanExecute(metrics SystemMetrics) bool {
 	return metrics.MemoryAllocMB > 400
 }
 
+// Execute performs the memory cleanup action
 func (a *MemoryCleanupAction) Execute(ctx context.Context) error {
 	log.Info("[AutoRemediation] Performing memory cleanup operations")
 
@@ -253,13 +263,18 @@ func (a *MemoryCleanupAction) Execute(ctx context.Context) error {
 // LogWarningAction logs warnings for high resource usage
 type LogWarningAction struct{}
 
+// Name returns the name of the log warning action
 func (a *LogWarningAction) Name() string  { return "log_warning" }
+
+// Severity returns the severity level of the log warning action
 func (a *LogWarningAction) Severity() int { return 0 }
 
+// CanExecute determines if the log warning action should be executed based on current metrics
 func (a *LogWarningAction) CanExecute(metrics SystemMetrics) bool {
 	return metrics.GoroutineCount > 800 || metrics.MemoryAllocMB > 250
 }
 
+// Execute logs warning messages about high resource usage
 func (a *LogWarningAction) Execute(ctx context.Context) error {
 	log.WithFields(log.Fields{
 		"goroutines": runtime.NumGoroutine(),
@@ -275,13 +290,18 @@ func (a *LogWarningAction) Execute(ctx context.Context) error {
 // RestartRecommendationAction logs recommendations for restart when critical thresholds are reached
 type RestartRecommendationAction struct{}
 
+// Name returns the name of the restart recommendation action
 func (a *RestartRecommendationAction) Name() string  { return "restart_recommendation" }
+
+// Severity returns the severity level of the restart recommendation action
 func (a *RestartRecommendationAction) Severity() int { return 10 }
 
+// CanExecute determines if the restart recommendation action should be executed based on current metrics
 func (a *RestartRecommendationAction) CanExecute(metrics SystemMetrics) bool {
 	return metrics.GoroutineCount > 1500 || metrics.MemoryAllocMB > 800
 }
 
+// Execute logs critical warnings recommending a manual restart
 func (a *RestartRecommendationAction) Execute(ctx context.Context) error {
 	log.WithFields(log.Fields{
 		"goroutines": runtime.NumGoroutine(),

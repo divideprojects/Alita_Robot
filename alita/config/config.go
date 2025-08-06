@@ -97,7 +97,8 @@ var (
 	AppConfig *Config
 )
 
-// ValidateConfig validates the configuration struct
+// ValidateConfig validates the configuration struct and returns an error if any required
+// fields are missing or values are outside acceptable ranges.
 func ValidateConfig(cfg *Config) error {
 	if cfg.BotToken == "" {
 		return fmt.Errorf("BOT_TOKEN is required")
@@ -156,7 +157,8 @@ func ValidateConfig(cfg *Config) error {
 	return nil
 }
 
-// LoadConfig loads and validates configuration
+// LoadConfig loads configuration from environment variables, applies defaults,
+// validates the configuration, and returns a populated Config instance.
 func LoadConfig() (*Config, error) {
 	// load goenv config
 	_ = godotenv.Load() // Ignore error as .env file is optional
@@ -240,7 +242,9 @@ func LoadConfig() (*Config, error) {
 	return cfg, nil
 }
 
-// setDefaults sets default values for configuration
+// setDefaults sets default values for configuration fields that are not provided
+// via environment variables. It calculates appropriate defaults based on system
+// resources and production best practices.
 func (cfg *Config) setDefaults() {
 	if cfg.ApiServer == "" {
 		cfg.ApiServer = "https://api.telegram.org"
@@ -311,7 +315,9 @@ func (cfg *Config) setDefaults() {
 	}
 }
 
-// init initializes the config variables and loads the global configuration.
+// init initializes the logging configuration, loads the global configuration
+// from environment variables, validates it, and sets up global variables for
+// backward compatibility. This function is called automatically at package import.
 func init() {
 	// set logger config
 	log.SetLevel(log.DebugLevel)

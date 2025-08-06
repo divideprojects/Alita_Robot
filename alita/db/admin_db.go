@@ -12,7 +12,8 @@ func GetAdminSettings(chatID int64) *AdminSettings {
 	return checkAdminSetting(chatID)
 }
 
-// check Chat Admin Settings, used to get data before performing any operation
+// checkAdminSetting retrieves or creates default admin settings for a chat.
+// It returns default settings if the record is not found or an error occurs.
 func checkAdminSetting(chatID int64) (adminSrc *AdminSettings) {
 	adminSrc = &AdminSettings{}
 

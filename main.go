@@ -24,6 +24,9 @@ import (
 //go:embed locales
 var Locales embed.FS
 
+// main initializes and starts the Alita Robot Telegram bot.
+// It sets up monitoring, database connections, webhook/polling mode,
+// loads all modules, and handles graceful shutdown.
 func main() {
 	// Setup panic recovery for main goroutine
 	defer func() {
@@ -251,7 +254,8 @@ func main() {
 	}
 }
 
-// closeDBConnections closes all database connections gracefully
+// closeDBConnections closes all database connections gracefully during shutdown.
+// It returns an error if the database connections cannot be closed properly.
 func closeDBConnections() error {
 	// Import the db package to access Close function
 	// This would need to be implemented in the db package

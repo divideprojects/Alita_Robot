@@ -13,6 +13,8 @@ import (
 
 // Migration functions for each collection
 
+// migrateUsers migrates user records from MongoDB to PostgreSQL.
+// It handles user data including username, name, and language preferences.
 func (m *Migrator) migrateUsers() error {
 	collection := m.mongoDB.Collection("users")
 
@@ -57,6 +59,8 @@ func (m *Migrator) migrateUsers() error {
 	})
 }
 
+// migrateChats migrates chat records from MongoDB to PostgreSQL.
+// It handles chat metadata and creates chat_users relationship records.
 func (m *Migrator) migrateChats() error {
 	collection := m.mongoDB.Collection("chats")
 
@@ -127,6 +131,8 @@ func (m *Migrator) migrateChats() error {
 	})
 }
 
+// migrateAdmin migrates admin settings from MongoDB to PostgreSQL.
+// It skips records for non-existent chats to maintain referential integrity.
 func (m *Migrator) migrateAdmin() error {
 	collection := m.mongoDB.Collection("admin")
 
@@ -183,6 +189,8 @@ func (m *Migrator) migrateAdmin() error {
 	})
 }
 
+// migrateNotesSettings migrates notes settings from MongoDB to PostgreSQL.
+// It handles private notes configuration for each chat.
 func (m *Migrator) migrateNotesSettings() error {
 	collection := m.mongoDB.Collection("notes_settings")
 
@@ -239,6 +247,8 @@ func (m *Migrator) migrateNotesSettings() error {
 	})
 }
 
+// migrateNotes migrates note records from MongoDB to PostgreSQL.
+// It handles note content, message types, and ensures referential integrity.
 func (m *Migrator) migrateNotes() error {
 	collection := m.mongoDB.Collection("notes")
 
@@ -298,6 +308,8 @@ func (m *Migrator) migrateNotes() error {
 	})
 }
 
+// migrateFilters migrates filter records from MongoDB to PostgreSQL.
+// It deduplicates filters and handles chat-keyword combinations.
 func (m *Migrator) migrateFilters() error {
 	collection := m.mongoDB.Collection("filters")
 
@@ -376,6 +388,8 @@ func (m *Migrator) migrateFilters() error {
 		return nil
 	})
 }
+// migrateGreetings migrates greeting settings from MongoDB to PostgreSQL.
+// It handles welcome and goodbye messages with their configuration.
 func (m *Migrator) migrateGreetings() error {
 	collection := m.mongoDB.Collection("greetings")
 
@@ -455,6 +469,8 @@ func (m *Migrator) migrateGreetings() error {
 	})
 }
 
+// migrateLocks migrates lock settings from MongoDB to PostgreSQL.
+// It processes both permissions and restrictions into individual lock records.
 func (m *Migrator) migrateLocks() error {
 	collection := m.mongoDB.Collection("locks")
 
@@ -531,6 +547,8 @@ func (m *Migrator) migrateLocks() error {
 	})
 }
 
+// migratePins migrates pin settings from MongoDB to PostgreSQL.
+// It handles anti-channel pin and clean linked message settings.
 func (m *Migrator) migratePins() error {
 	collection := m.mongoDB.Collection("pins")
 
@@ -588,6 +606,8 @@ func (m *Migrator) migratePins() error {
 	})
 }
 
+// migrateRules migrates rule settings from MongoDB to PostgreSQL.
+// It handles chat rules and privacy settings.
 func (m *Migrator) migrateRules() error {
 	collection := m.mongoDB.Collection("rules")
 
@@ -645,6 +665,8 @@ func (m *Migrator) migrateRules() error {
 	})
 }
 
+// migrateWarnsSettings migrates warning settings from MongoDB to PostgreSQL.
+// It handles warn limits and warning modes for each chat.
 func (m *Migrator) migrateWarnsSettings() error {
 	collection := m.mongoDB.Collection("warns_settings")
 
@@ -707,6 +729,8 @@ func (m *Migrator) migrateWarnsSettings() error {
 	})
 }
 
+// migrateWarnsUsers migrates user warning records from MongoDB to PostgreSQL.
+// It deduplicates user-chat combinations and validates foreign key references.
 func (m *Migrator) migrateWarnsUsers() error {
 	collection := m.mongoDB.Collection("warns_users")
 
@@ -800,6 +824,8 @@ func (m *Migrator) migrateWarnsUsers() error {
 		return nil
 	})
 }
+// migrateAntifloodSettings migrates antiflood settings from MongoDB to PostgreSQL.
+// It handles flood limits, modes, and message deletion settings.
 func (m *Migrator) migrateAntifloodSettings() error {
 	collection := m.mongoDB.Collection("antiflood_settings")
 
@@ -870,6 +896,8 @@ func (m *Migrator) migrateAntifloodSettings() error {
 	})
 }
 
+// migrateBlacklists migrates blacklist settings from MongoDB to PostgreSQL.
+// It processes trigger arrays into individual blacklist word records.
 func (m *Migrator) migrateBlacklists() error {
 	collection := m.mongoDB.Collection("blacklists")
 
@@ -946,6 +974,8 @@ func (m *Migrator) migrateBlacklists() error {
 		return nil
 	})
 }
+// migrateChannels migrates channel settings from MongoDB to PostgreSQL.
+// It handles channel associations and validates channel references.
 func (m *Migrator) migrateChannels() error {
 	collection := m.mongoDB.Collection("channels")
 
@@ -1009,6 +1039,8 @@ func (m *Migrator) migrateChannels() error {
 	})
 }
 
+// migrateConnections migrates connection records from MongoDB to PostgreSQL.
+// It deduplicates user-chat combinations and validates foreign key references.
 func (m *Migrator) migrateConnections() error {
 	collection := m.mongoDB.Collection("connection")
 
@@ -1093,6 +1125,8 @@ func (m *Migrator) migrateConnections() error {
 		return nil
 	})
 }
+// migrateConnectionSettings migrates connection settings from MongoDB to PostgreSQL.
+// It handles the boolean logic inversion between MongoDB and PostgreSQL schemas.
 func (m *Migrator) migrateConnectionSettings() error {
 	collection := m.mongoDB.Collection("connection_settings")
 
@@ -1153,6 +1187,8 @@ func (m *Migrator) migrateConnectionSettings() error {
 	})
 }
 
+// migrateDisable migrates disabled command settings from MongoDB to PostgreSQL.
+// It processes command arrays into individual disable records.
 func (m *Migrator) migrateDisable() error {
 	collection := m.mongoDB.Collection("disable")
 
@@ -1215,6 +1251,8 @@ func (m *Migrator) migrateDisable() error {
 	})
 }
 
+// migrateReportUserSettings migrates user report settings from MongoDB to PostgreSQL.
+// It handles user-specific reporting preferences and validates user references.
 func (m *Migrator) migrateReportUserSettings() error {
 	collection := m.mongoDB.Collection("report_user_settings")
 
@@ -1272,6 +1310,8 @@ func (m *Migrator) migrateReportUserSettings() error {
 	})
 }
 
+// migrateReportChatSettings migrates chat report settings from MongoDB to PostgreSQL.
+// It handles chat-specific reporting preferences and validates chat references.
 func (m *Migrator) migrateReportChatSettings() error {
 	collection := m.mongoDB.Collection("report_chat_settings")
 

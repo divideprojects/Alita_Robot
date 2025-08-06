@@ -56,6 +56,8 @@ func init() {
 }
 
 // cleanupLoop periodically cleans up old entries from the flood cache
+// cleanupLoop periodically removes old flood control entries from memory.
+// Runs every 5 minutes to clean entries older than 10 minutes.
 func (a *antifloodStruct) cleanupLoop() {
 	ticker := time.NewTicker(5 * time.Minute)
 	defer ticker.Stop()
@@ -74,6 +76,8 @@ func (a *antifloodStruct) cleanupLoop() {
 	}
 }
 
+// updateFlood tracks message counts per user and determines if flood limit exceeded.
+// Returns true if user has exceeded flood limit and should be restricted.
 func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, floodCrc floodControl) {
 	floodSrc := db.GetFlood(chatId)
 
@@ -135,6 +139,8 @@ func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, f
 	return
 }
 
+// checkFlood monitors incoming messages for flood violations.
+// Applies configured flood actions (mute/kick/ban) when limits are exceeded.
 func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender
@@ -365,6 +371,8 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// setFlood handles the /setflood command to configure flood detection limits.
+// Sets the maximum number of messages allowed before triggering flood protection.
 func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -409,6 +417,8 @@ func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// flood handles the /flood command to display current flood protection settings.
+// Shows the flood limit and action (mute/kick/ban) for the chat.
 func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	var text string
 	msg := ctx.EffectiveMessage
@@ -449,6 +459,8 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// setFloodMode handles the /setfloodmode command to configure flood protection actions.
+// Allows setting the punishment type (ban/kick/mute) for flood violations.
 func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -485,6 +497,8 @@ func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// setFloodDeleter handles the /delflood command to toggle message deletion on flood.
+// Configures whether to delete all flood messages or just the triggering message.
 func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -526,6 +540,8 @@ func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// LoadAntiflood registers all antiflood module handlers with the dispatcher.
+// Sets up flood detection commands and message monitoring handlers.
 func LoadAntiflood(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(antifloodModule.moduleName, true)
 

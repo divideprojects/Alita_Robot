@@ -10,7 +10,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// loadLocaleFiles loads all locale files from the embedded filesystem
+// loadLocaleFiles loads all locale files from the embedded filesystem.
 func (lm *LocaleManager) loadLocaleFiles() error {
 	if lm.localeFS == nil || lm.localePath == "" {
 		return NewI18nError("load_files", "", "", "filesystem or path not set", fmt.Errorf("invalid configuration"))
@@ -51,7 +51,7 @@ func (lm *LocaleManager) loadLocaleFiles() error {
 	return nil
 }
 
-// loadSingleLocaleFile loads and validates a single locale file
+// loadSingleLocaleFile loads and validates a single locale file.
 func (lm *LocaleManager) loadSingleLocaleFile(filePath, langCode string) error {
 	// Read file content
 	content, err := lm.localeFS.ReadFile(filePath)
@@ -78,7 +78,7 @@ func (lm *LocaleManager) loadSingleLocaleFile(filePath, langCode string) error {
 	return nil
 }
 
-// validateYAMLStructure validates that the YAML content is well-formed
+// validateYAMLStructure validates that the YAML content is well-formed.
 func validateYAMLStructure(content []byte) error {
 	var data interface{}
 	if err := yaml.Unmarshal(content, &data); err != nil {
@@ -93,7 +93,7 @@ func validateYAMLStructure(content []byte) error {
 	return nil
 }
 
-// extractLangCode extracts the language code from a filename
+// extractLangCode extracts the language code from a filename.
 func extractLangCode(fileName string) string {
 	langCode := strings.TrimSuffix(fileName, filepath.Ext(fileName))
 	// Handle common YAML extensions
@@ -102,7 +102,7 @@ func extractLangCode(fileName string) string {
 	return langCode
 }
 
-// compileViper creates and configures a viper instance from YAML content
+// compileViper creates and configures a viper instance from YAML content.
 func compileViper(content []byte) (*viper.Viper, error) {
 	vi := viper.New()
 	vi.SetConfigType("yaml")
@@ -114,7 +114,7 @@ func compileViper(content []byte) (*viper.Viper, error) {
 	return vi, nil
 }
 
-// isYAMLFile checks if a filename has a YAML extension
+// isYAMLFile checks if a filename has a YAML extension.
 func isYAMLFile(fileName string) bool {
 	ext := strings.ToLower(filepath.Ext(fileName))
 	return ext == ".yml" || ext == ".yaml"

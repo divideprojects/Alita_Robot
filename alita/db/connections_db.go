@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// ToggleAllowConnect enables or disables connection functionality for a chat.
 func ToggleAllowConnect(chatID int64, pref bool) {
 	err := UpdateRecord(&ConnectionChatSettings{}, ConnectionChatSettings{ChatId: chatID}, ConnectionChatSettings{Enabled: pref})
 	if err != nil {
@@ -14,6 +15,8 @@ func ToggleAllowConnect(chatID int64, pref bool) {
 	}
 }
 
+// GetChatConnectionSetting retrieves connection settings for a chat.
+// Creates default settings (disabled) if not found.
 func GetChatConnectionSetting(chatID int64) (connectionSrc *ConnectionChatSettings) {
 	connectionSrc = &ConnectionChatSettings{}
 	err := GetRecord(connectionSrc, ConnectionChatSettings{ChatId: chatID})
@@ -32,6 +35,8 @@ func GetChatConnectionSetting(chatID int64) (connectionSrc *ConnectionChatSettin
 	return connectionSrc
 }
 
+// getUserConnectionSetting retrieves connection settings for a user.
+// Creates default settings (not connected) if not found.
 func getUserConnectionSetting(userID int64) (connectionSrc *ConnectionSettings) {
 	connectionSrc = &ConnectionSettings{}
 	err := GetRecord(connectionSrc, ConnectionSettings{UserId: userID})
@@ -51,10 +56,14 @@ func getUserConnectionSetting(userID int64) (connectionSrc *ConnectionSettings) 
 	return connectionSrc
 }
 
+// Connection returns the connection settings for a user.
+// This is a wrapper around getUserConnectionSetting.
 func Connection(UserID int64) *ConnectionSettings {
 	return getUserConnectionSetting(UserID)
 }
 
+// ConnectId connects a user to a specific chat.
+// Sets the user's connection status to true and associates them with the chat.
 func ConnectId(UserID, chatID int64) {
 	err := UpdateRecord(&ConnectionSettings{}, ConnectionSettings{UserId: UserID}, ConnectionSettings{Connected: true, ChatId: chatID})
 	if err != nil {
@@ -62,6 +71,8 @@ func ConnectId(UserID, chatID int64) {
 	}
 }
 
+// DisconnectId disconnects a user from their current chat connection.
+// Sets the user's connection status to false.
 func DisconnectId(UserID int64) {
 	err := UpdateRecord(&ConnectionSettings{}, ConnectionSettings{UserId: UserID}, ConnectionSettings{Connected: false})
 	if err != nil {
@@ -69,6 +80,8 @@ func DisconnectId(UserID int64) {
 	}
 }
 
+// ReconnectId reconnects a user to their previously connected chat.
+// Returns the chat ID the user was reconnected to, or 0 if an error occurs.
 func ReconnectId(UserID int64) int64 {
 	connectionUpdate := Connection(UserID)
 	err := UpdateRecord(&ConnectionSettings{}, ConnectionSettings{UserId: UserID}, ConnectionSettings{Connected: true})
@@ -79,6 +92,8 @@ func ReconnectId(UserID int64) int64 {
 	return connectionUpdate.ChatId
 }
 
+// LoadConnectionStats returns statistics about connection usage.
+// Returns the count of connected users and chats that allow connections.
 func LoadConnectionStats() (connectedUsers, connectedChats int64) {
 	// Count chats that allow connections
 	err := DB.Model(&ConnectionChatSettings{}).Where("enabled = ?", true).Count(&connectedChats).Error

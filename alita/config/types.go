@@ -10,7 +10,9 @@ type typeConvertor struct {
 	str string
 }
 
-// StringArray will return a string array from a comma separated string
+// StringArray converts a comma-separated string into a slice of trimmed strings.
+// It splits the input string by commas and removes leading/trailing whitespace
+// from each element.
 func (t typeConvertor) StringArray() []string {
 	allUpdates := strings.Split(t.str, ",")
 	for i, j := range allUpdates {
@@ -19,19 +21,22 @@ func (t typeConvertor) StringArray() []string {
 	return allUpdates
 }
 
-// IntArray will return an int array from a comma separated string
+// Int converts the string value to an integer. If the conversion fails,
+// it returns 0. This method ignores conversion errors for simplicity.
 func (t typeConvertor) Int() int {
 	val, _ := strconv.Atoi(t.str)
 	return val
 }
 
-// Int64Array will return an int64 array from a comma separated string
+// Int64 converts the string value to a 64-bit integer. If the conversion fails,
+// it returns 0. This method ignores conversion errors for simplicity.
 func (t typeConvertor) Int64() int64 {
 	val, _ := strconv.ParseInt(t.str, 10, 64)
 	return val
 }
 
-// Bool will return a bool from a string
+// Bool converts the string value to a boolean. It returns true if the string
+// equals "yes" or "true" (case-sensitive), otherwise returns false.
 func (t typeConvertor) Bool() bool {
 	return t.str == "yes" || t.str == "true"
 }

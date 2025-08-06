@@ -9,6 +9,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 )
 
+// EnsureBotInDb ensures that the bot's information is stored in the database.
+// Creates or updates the bot's user record with current username and name.
 func EnsureBotInDb(b *gotgbot.Bot) {
 	usersUpdate := &User{UserId: b.Id, UserName: b.Username, Name: b.FirstName}
 	err := DB.Where("user_id = ?", b.Id).Assign(usersUpdate).FirstOrCreate(&User{})
@@ -18,6 +20,8 @@ func EnsureBotInDb(b *gotgbot.Bot) {
 	log.Infof("[Database] Bot Updated in Database!")
 }
 
+// checkUserInfo retrieves user information using optimized cached queries.
+// Returns nil if the user doesn't exist, or a default User struct on error.
 func checkUserInfo(userId int64) (userc *User) {
 	// Use optimized cached query instead of SELECT *
 	userc, err := GetOptimizedQueries().GetUserBasicInfoCached(userId)
@@ -31,6 +35,9 @@ func checkUserInfo(userId int64) (userc *User) {
 	return userc
 }
 
+// UpdateUser creates or updates user information in the database.
+// Only updates fields that have actually changed to minimize database operations.
+// Invalidates user cache after successful update.
 func UpdateUser(userId int64, username, name string) {
 	userc := checkUserInfo(userId)
 
@@ -75,6 +82,8 @@ func UpdateUser(userId int64, username, name string) {
 	}
 }
 
+// GetUserIdByUserName retrieves a user ID by their username.
+// Returns 0 if the user is not found or an error occurs.
 func GetUserIdByUserName(username string) int64 {
 	var userId int64
 	// Only fetch the user_id column
@@ -89,6 +98,8 @@ func GetUserIdByUserName(username string) int64 {
 	return userId
 }
 
+// GetUserInfoById retrieves username and name for a given user ID.
+// Returns empty strings and false if the user is not found.
 func GetUserInfoById(userId int64) (username, name string, found bool) {
 	user := checkUserInfo(userId)
 	if user != nil {
@@ -100,6 +111,8 @@ func GetUserInfoById(userId int64) (username, name string, found bool) {
 	return
 }
 
+// LoadUsersStats returns the total count of users in the database.
+// Used for generating system statistics and monitoring.
 func LoadUsersStats() (count int64) {
 	err := DB.Model(&User{}).Count(&count)
 	if err.Error != nil {

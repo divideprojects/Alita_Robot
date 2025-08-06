@@ -43,6 +43,8 @@ type ChatValidationWorkerPool struct {
 }
 
 // NewChatValidationWorkerPool creates a new worker pool for chat validation
+// NewChatValidationWorkerPool creates a new worker pool for concurrent chat validation.
+// Initializes workers for efficiently checking if chats are still active.
 func NewChatValidationWorkerPool(workerCount int, bot *gotgbot.Bot) *ChatValidationWorkerPool {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 
@@ -58,6 +60,8 @@ func NewChatValidationWorkerPool(workerCount int, bot *gotgbot.Bot) *ChatValidat
 }
 
 // Start begins processing jobs with the configured number of workers
+// Start begins processing jobs with the configured number of workers.
+// Launches worker goroutines to handle chat validation requests concurrently.
 func (pool *ChatValidationWorkerPool) Start() {
 	for i := 0; i < pool.workerCount; i++ {
 		pool.wg.Add(1)
@@ -66,6 +70,8 @@ func (pool *ChatValidationWorkerPool) Start() {
 }
 
 // worker processes chat validation jobs
+// worker processes chat validation jobs from the job queue.
+// Validates chat accessibility and reports results with rate limiting.
 func (pool *ChatValidationWorkerPool) worker(workerID int) {
 	defer pool.wg.Done()
 
@@ -103,6 +109,8 @@ func (pool *ChatValidationWorkerPool) worker(workerID int) {
 }
 
 // AddJob adds a job to the worker pool
+// AddJob submits a chat validation job to the worker pool queue.
+// Queues a chat for validation by available workers.
 func (pool *ChatValidationWorkerPool) AddJob(chatID int64, index int) {
 	select {
 	case pool.jobs <- ChatValidationJob{ChatID: chatID, Index: index}:
@@ -112,6 +120,8 @@ func (pool *ChatValidationWorkerPool) AddJob(chatID int64, index int) {
 }
 
 // Close shuts down the worker pool gracefully
+// Close gracefully shuts down the worker pool and cleans up resources.
+// Waits for all workers to complete and closes channels.
 func (pool *ChatValidationWorkerPool) Close() {
 	close(pool.jobs)
 	pool.wg.Wait()
@@ -119,6 +129,8 @@ func (pool *ChatValidationWorkerPool) Close() {
 	pool.cancel()
 }
 
+// dbClean handles the /dbclean command for database maintenance operations.
+// Only accessible to developers and provides options for cleaning database records.
 func (moduleStruct) dbClean(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	memStatus := db.GetTeamMemInfo(user.Id)
@@ -150,6 +162,8 @@ func (moduleStruct) dbClean(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// dbCleanButtonHandler processes callback queries for database cleanup operations.
+// Handles chat validation and marking inactive chats in the database.
 func (moduleStruct) dbCleanButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	user := ctx.EffectiveSender.User

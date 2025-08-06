@@ -80,6 +80,8 @@ type antiSpamLevel struct {
 // i.e. where modules are shown
 var markup gotgbot.InlineKeyboardMarkup
 
+// listModules returns a sorted slice of all currently enabled bot modules.
+// Provides an alphabetically ordered list of active modules for help menu generation.
 func listModules() []string {
 	// sort the modules alphabetically
 	modules := HelpModule.AbleMap.LoadModules()
@@ -88,6 +90,8 @@ func listModules() []string {
 }
 
 // New menu, used for building help menu in bot!
+// initHelpButtons initializes the help menu keyboard with all enabled modules.
+// Creates a chunked inline keyboard layout for easy module navigation in help system.
 func initHelpButtons() {
 	var kb []gotgbot.InlineKeyboardButton
 
@@ -99,6 +103,8 @@ func initHelpButtons() {
 	markup = gotgbot.InlineKeyboardMarkup{InlineKeyboard: zb}
 }
 
+// getModuleHelpAndKb retrieves help text and keyboard for a specific module.
+// Returns localized help content and navigation buttons for the requested module.
 func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgbot.InlineKeyboardMarkup) {
 	ModName := cases.Title(language.English).String(module)
 	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) +
@@ -113,6 +119,8 @@ func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgb
 	return
 }
 
+// sendHelpkb sends help information for a specific module with navigation keyboard.
+// Displays module-specific help content or main help menu based on the requested module.
 func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.Message, err error) {
 	module = strings.ToLower(module)
 	if module == "help" {
@@ -142,6 +150,8 @@ func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.M
 	return
 }
 
+// getModuleNameFromAltName resolves alternative module names to their canonical form.
+// Searches through module aliases to find the actual module name for help lookups.
 func getModuleNameFromAltName(altName string) string {
 	for _, modName := range listModules() {
 		altNames := append(i18n.I18n{LangCode: "config"}.GetStringSlice(fmt.Sprintf("alt_names.%s", modName)), strings.ToLower(modName))
@@ -154,6 +164,8 @@ func getModuleNameFromAltName(altName string) string {
 	return ""
 }
 
+// startHelpPrefixHandler processes /start command arguments for specific help topics.
+// Handles deep links for help, connections, rules, notes, and about pages.
 func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User, arg string) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -292,10 +304,14 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 	return ext.EndGroups
 }
 
+// getAltNamesOfModule returns all alternative names for a given module.
+// Provides a list of aliases that can be used to reference the module in commands.
 func getAltNamesOfModule(moduleName string) []string {
 	return append(i18n.I18n{LangCode: "config"}.GetStringSlice(fmt.Sprintf("alt_names.%s", moduleName)), strings.ToLower(moduleName))
 }
 
+// getHelpTextAndMarkup generates help content and keyboard for a module or main help.
+// Returns appropriate help text, navigation markup, and parse mode based on module request.
 func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbmarkup gotgbot.InlineKeyboardMarkup, _parsemode string) {
 	var moduleName string
 	userOrGroupLanguage := db.GetLanguage(ctx)

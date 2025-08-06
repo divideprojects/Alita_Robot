@@ -9,6 +9,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
+// GetChatSettings retrieves chat settings using optimized cached queries.
+// Returns an empty Chat struct if not found or on error.
 func GetChatSettings(chatId int64) (chatSrc *Chat) {
 	// Use optimized cached query instead of SELECT *
 	chat, err := GetOptimizedQueries().GetChatBasicInfoCached(chatId)
@@ -22,6 +24,8 @@ func GetChatSettings(chatId int64) (chatSrc *Chat) {
 	return chat
 }
 
+// ToggleInactiveChat sets the inactive status of a chat.
+// Creates the chat record if it doesn't exist and invalidates cache after update.
 func ToggleInactiveChat(chatId int64, toggle bool) {
 	chat := GetChatSettings(chatId)
 	chat.IsInactive = toggle
@@ -34,6 +38,8 @@ func ToggleInactiveChat(chatId int64, toggle bool) {
 	deleteCache(chatSettingsCacheKey(chatId))
 }
 
+// UpdateChat updates or creates a chat record with the given information.
+// Adds user to the chat's user list if not already present and marks chat as active.
 func UpdateChat(chatId int64, chatname string, userid int64) {
 	chatr := GetChatSettings(chatId)
 	foundUser := string_handling.FindInInt64Slice(chatr.Users, userid)
@@ -82,6 +88,8 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 	log.Debugf("[Database] UpdateChat: %d", chatId)
 }
 
+// GetAllChats retrieves all chat records and returns them as a map indexed by chat ID.
+// Returns an empty map if an error occurs.
 func GetAllChats() map[int64]Chat {
 	var (
 		chatArray []Chat
@@ -100,6 +108,8 @@ func GetAllChats() map[int64]Chat {
 	return chatMap
 }
 
+// LoadChatStats returns the count of active and inactive chats.
+// Active chats have is_inactive = false, inactive chats have is_inactive = true.
 func LoadChatStats() (activeChats, inactiveChats int) {
 	var activeCount, inactiveCount int64
 

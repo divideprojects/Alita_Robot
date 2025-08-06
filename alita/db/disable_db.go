@@ -6,7 +6,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-// DisableCMD Disable CMD in chat
+// DisableCMD disables a command in a specific chat.
+// Creates a new disable setting record with disabled status set to true.
 func DisableCMD(chatID int64, cmd string) {
 	// Create a new disable setting
 	disableSetting := &DisableSettings{
@@ -21,7 +22,8 @@ func DisableCMD(chatID int64, cmd string) {
 	}
 }
 
-// EnableCMD Enable CMD in chat
+// EnableCMD enables a command in a specific chat.
+// Removes the disable setting record for the command.
 func EnableCMD(chatID int64, cmd string) {
 	err := DB.Where("chat_id = ? AND command = ?", chatID, cmd).Delete(&DisableSettings{}).Error
 	if err != nil {
@@ -29,7 +31,8 @@ func EnableCMD(chatID int64, cmd string) {
 	}
 }
 
-// GetChatDisabledCMDs Get disabled commands of chat
+// GetChatDisabledCMDs retrieves all disabled commands for a chat.
+// Returns an empty slice if no disabled commands are found or on error.
 func GetChatDisabledCMDs(chatId int64) []string {
 	var disableSettings []*DisableSettings
 	err := GetRecords(&disableSettings, DisableSettings{ChatId: chatId, Disabled: true})
@@ -45,12 +48,14 @@ func GetChatDisabledCMDs(chatId int64) []string {
 	return commands
 }
 
-// IsCommandDisabled Check if command is disabled or not
+// IsCommandDisabled checks if a specific command is disabled in a chat.
+// Returns true if the command is in the chat's disabled commands list.
 func IsCommandDisabled(chatId int64, cmd string) bool {
 	return string_handling.FindInStringSlice(GetChatDisabledCMDs(chatId), cmd)
 }
 
-// ToggleDel Toggle Command Deleting
+// ToggleDel toggles the automatic deletion of disabled commands in a chat.
+// Updates the DeleteCommands setting for the chat.
 func ToggleDel(chatId int64, pref bool) {
 	err := UpdateRecord(&DisableChatSettings{}, DisableChatSettings{ChatId: chatId}, DisableChatSettings{DeleteCommands: pref})
 	if err != nil {
@@ -58,7 +63,8 @@ func ToggleDel(chatId int64, pref bool) {
 	}
 }
 
-// ShouldDel Check if cmd del is enabled or not
+// ShouldDel checks if automatic command deletion is enabled for a chat.
+// Returns false if the setting is not found or on error.
 func ShouldDel(chatId int64) bool {
 	var settings DisableChatSettings
 	err := GetRecord(&settings, DisableChatSettings{ChatId: chatId})
@@ -69,6 +75,8 @@ func ShouldDel(chatId int64) bool {
 	return settings.DeleteCommands
 }
 
+// LoadDisableStats returns statistics about disabled commands.
+// Returns the total number of disabled commands and distinct chats using command disabling.
 func LoadDisableStats() (disabledCmds, disableEnabledChats int64) {
 	// Count total disabled commands
 	err := DB.Model(&DisableSettings{}).Where("disabled = ?", true).Count(&disabledCmds).Error

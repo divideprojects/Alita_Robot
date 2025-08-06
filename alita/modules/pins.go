@@ -31,17 +31,8 @@ type pinType struct {
 	DataType int
 }
 
-/*
-	Check new pinned messages
-
-# This function works for AntiChannelPin and CleanLinked
-
-# AntiChannelPin - Unpins message pinned by channel
-
-# CleanLinked - Deletes the message linked by channel
-
-This a watcher for 2 functions described above
-*/
+// checkPinned monitors channel messages and handles them according to
+// AntiChannelPin and CleanLinked settings - either unpinning or deleting.
 func (moduleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -76,10 +67,8 @@ func (moduleStruct) checkPinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
-/* Unpin the latest pinned message or message to which user replied
-
-This function unpins the latest pinned message or message to which user replied */
-
+// unpin handles the /unpin command to unpin messages, either the latest
+// pinned message or a specific replied message, requiring admin permissions.
 func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
@@ -155,7 +144,8 @@ func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-// Callback Query Handler for Unpinall command
+// unpinallCallback processes callback queries for the unpin all confirmation
+// dialog, handling the user's yes/no response.
 func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	chat := ctx.EffectiveChat
@@ -182,10 +172,8 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Unpin all the pinned messages in the chat
-
-Can only be used by owner to unpin all message in a chat. */
-
+// unpinAll handles the /unpinall command to unpin all messages in the chat
+// with a confirmation dialog, requiring admin permissions.
 func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
@@ -221,10 +209,8 @@ func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Bot pins the message followed by command
-
-The users message is pinned by bot and includes buttons as well */
-
+// permaPin handles the /permapin command to create and pin a new message
+// with custom content and buttons, requiring admin permissions.
 func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -313,11 +299,8 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/* Pins the message replied by user
-
-Normally pins message without tagging users but tag can be
-enabled by entering 'notify'/'violent'/'loud' in front of command */
-
+// pin handles the /pin command to pin a replied message with options
+// for silent or loud pinning, requiring admin permissions.
 func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	chat := ctx.EffectiveChat
@@ -390,13 +373,8 @@ func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Enable or Disable AntiChannelPin
-
-connection - true, true
-
-Sets Preference for checkPinned function to check message for unpinning or not
-*/
+// antichannelpin handles the /antichannelpin command to toggle automatic
+// unpinning of channel-pinned messages, requiring admin permissions.
 func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -463,13 +441,8 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Enable or Disable CleanLinked
-
-connection - true, true
-
-Sets Preference for checkPinned function to check message for cleaning or not
-*/
+// cleanlinked handles the /cleanlinked command to toggle automatic
+// deletion of linked channel messages, requiring admin permissions.
 func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -536,13 +509,8 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-/*
-	Gets the pinned message in chat
-
-connection - false, true
-
-User can get the link to latest pinned message of chat using this
-*/
+// pinned handles the /pinned command to display a link to the latest
+// pinned message in the chat with a convenient button.
 func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -744,6 +712,8 @@ var PinsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, pinT pinTyp
 	},
 }
 
+// GetPinType analyzes a message to determine its content type and extract
+// relevant data for pinning, including file IDs, text, and buttons.
 func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataType int, buttons []tgmd2html.ButtonV2) {
 	dataType = -1 // not defined datatype; invalid filter
 	var (
@@ -800,6 +770,8 @@ func (moduleStruct) GetPinType(msg *gotgbot.Message) (fileid, text string, dataT
 	return
 }
 
+// LoadPin registers all pins module handlers with the dispatcher,
+// including pin management commands and channel message monitoring.
 func LoadPin(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(pinsModule.moduleName, true)
 

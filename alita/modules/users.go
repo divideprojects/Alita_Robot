@@ -34,7 +34,8 @@ var (
 	channelUpdateInterval = 5 * time.Minute
 )
 
-// shouldUpdate checks if enough time has passed since last update
+// shouldUpdate checks if enough time has passed since the last update
+// for rate limiting database operations to prevent excessive writes.
 func shouldUpdate(cache *sync.Map, id int64, interval time.Duration) bool {
 	if lastUpdate, ok := cache.Load(id); ok {
 		if time.Since(lastUpdate.(time.Time)) < interval {
@@ -45,6 +46,8 @@ func shouldUpdate(cache *sync.Map, id int64, interval time.Duration) bool {
 	return true
 }
 
+// logUsers handles automatic user and chat tracking by updating
+// database records with rate limiting for all message events.
 func (moduleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -139,6 +142,8 @@ func (moduleStruct) logUsers(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// LoadUsers registers the user logging handler with the dispatcher
+// to automatically track users and chats across all messages.
 func LoadUsers(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandlerToGroup(handlers.NewMessage(message.All, usersModule.logUsers), usersModule.handlerGroup)
 }

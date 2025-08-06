@@ -16,7 +16,8 @@ type OptimizedLockQueries struct {
 	db *gorm.DB
 }
 
-// NewOptimizedLockQueries creates a new instance of optimized lock queries
+// NewOptimizedLockQueries creates a new instance of OptimizedLockQueries.
+// Returns an instance with nil database if DB is not initialized.
 func NewOptimizedLockQueries() *OptimizedLockQueries {
 	if DB == nil {
 		log.Error("[OptimizedLockQueries] Database not initialized")
@@ -25,7 +26,9 @@ func NewOptimizedLockQueries() *OptimizedLockQueries {
 	return &OptimizedLockQueries{db: DB}
 }
 
-// GetLockStatus retrieves only the lock status for a specific lock type (optimized for 319K calls)
+// GetLockStatus retrieves only the lock status for a specific lock type.
+// Optimized for high-frequency calls (319K+ calls) by selecting only the locked column.
+// Returns false by default if no record is found.
 func (o *OptimizedLockQueries) GetLockStatus(chatID int64, lockType string) (bool, error) {
 	if o.db == nil {
 		return false, errors.New("database not initialized")
@@ -48,7 +51,8 @@ func (o *OptimizedLockQueries) GetLockStatus(chatID int64, lockType string) (boo
 	return locked, nil
 }
 
-// GetChatLocksOptimized retrieves all locks for a chat with minimal columns
+// GetChatLocksOptimized retrieves all locks for a chat with minimal column selection.
+// Returns a map of lock types to their boolean status for improved performance.
 func (o *OptimizedLockQueries) GetChatLocksOptimized(chatID int64) (map[string]bool, error) {
 	if o.db == nil {
 		return nil, errors.New("database not initialized")
@@ -83,7 +87,8 @@ type OptimizedUserQueries struct {
 	db *gorm.DB
 }
 
-// NewOptimizedUserQueries creates a new instance of optimized user queries
+// NewOptimizedUserQueries creates a new instance of OptimizedUserQueries.
+// Returns an instance with nil database if DB is not initialized.
 func NewOptimizedUserQueries() *OptimizedUserQueries {
 	if DB == nil {
 		log.Error("[OptimizedUserQueries] Database not initialized")
@@ -92,7 +97,8 @@ func NewOptimizedUserQueries() *OptimizedUserQueries {
 	return &OptimizedUserQueries{db: DB}
 }
 
-// GetUserBasicInfo retrieves only essential user information (optimized for 61K calls)
+// GetUserBasicInfo retrieves only essential user information with minimal column selection.
+// Optimized for high-frequency calls (61K+ calls) by selecting only necessary fields.
 func (o *OptimizedUserQueries) GetUserBasicInfo(userID int64) (*User, error) {
 	if o.db == nil {
 		return nil, errors.New("database not initialized")
@@ -111,7 +117,8 @@ func (o *OptimizedUserQueries) GetUserBasicInfo(userID int64) (*User, error) {
 	return &user, err
 }
 
-// GetUserLanguage retrieves only the user's language preference
+// GetUserLanguage retrieves only the user's language preference from the database.
+// Returns "en" as default if no language preference is found.
 func (o *OptimizedUserQueries) GetUserLanguage(userID int64) (string, error) {
 	if o.db == nil {
 		return "en", errors.New("database not initialized")
@@ -139,7 +146,8 @@ type OptimizedChatQueries struct {
 	db *gorm.DB
 }
 
-// NewOptimizedChatQueries creates a new instance of optimized chat queries
+// NewOptimizedChatQueries creates a new instance of OptimizedChatQueries.
+// Returns an instance with nil database if DB is not initialized.
 func NewOptimizedChatQueries() *OptimizedChatQueries {
 	if DB == nil {
 		log.Error("[OptimizedChatQueries] Database not initialized")
@@ -148,7 +156,8 @@ func NewOptimizedChatQueries() *OptimizedChatQueries {
 	return &OptimizedChatQueries{db: DB}
 }
 
-// GetChatBasicInfo retrieves only essential chat information (optimized for 123K calls)
+// GetChatBasicInfo retrieves only essential chat information with minimal column selection.
+// Optimized for high-frequency calls (123K+ calls) by selecting only necessary fields.
 func (o *OptimizedChatQueries) GetChatBasicInfo(chatID int64) (*Chat, error) {
 	if o.db == nil {
 		return nil, errors.New("database not initialized")
@@ -167,7 +176,8 @@ func (o *OptimizedChatQueries) GetChatBasicInfo(chatID int64) (*Chat, error) {
 	return &chat, err
 }
 
-// GetChatLanguage retrieves only the chat's language preference
+// GetChatLanguage retrieves only the chat's language preference from the database.
+// Returns "en" as default if no language preference is found.
 func (o *OptimizedChatQueries) GetChatLanguage(chatID int64) (string, error) {
 	if o.db == nil {
 		return "en", errors.New("database not initialized")
@@ -190,7 +200,8 @@ func (o *OptimizedChatQueries) GetChatLanguage(chatID int64) (string, error) {
 	return language, nil
 }
 
-// IsChatActive checks if a chat is active
+// IsChatActive checks if a chat is active by examining the is_inactive flag.
+// Returns true if the chat is active (not inactive), false otherwise.
 func (o *OptimizedChatQueries) IsChatActive(chatID int64) (bool, error) {
 	if o.db == nil {
 		return false, errors.New("database not initialized")
@@ -218,7 +229,8 @@ type OptimizedAntifloodQueries struct {
 	db *gorm.DB
 }
 
-// NewOptimizedAntifloodQueries creates a new instance of optimized antiflood queries
+// NewOptimizedAntifloodQueries creates a new instance of OptimizedAntifloodQueries.
+// Returns an instance with nil database if DB is not initialized.
 func NewOptimizedAntifloodQueries() *OptimizedAntifloodQueries {
 	if DB == nil {
 		log.Error("[OptimizedAntifloodQueries] Database not initialized")
@@ -227,7 +239,8 @@ func NewOptimizedAntifloodQueries() *OptimizedAntifloodQueries {
 	return &OptimizedAntifloodQueries{db: DB}
 }
 
-// GetAntifloodSettings retrieves antiflood settings with minimal columns (optimized for 58K calls)
+// GetAntifloodSettings retrieves antiflood settings with minimal column selection.
+// Optimized for high-frequency calls (58K+ calls) and returns default settings if none exist.
 func (o *OptimizedAntifloodQueries) GetAntifloodSettings(chatID int64) (*AntifloodSettings, error) {
 	if o.db == nil {
 		return &AntifloodSettings{
@@ -259,7 +272,8 @@ func (o *OptimizedAntifloodQueries) GetAntifloodSettings(chatID int64) (*Antiflo
 	return &settings, nil
 }
 
-// IsAntifloodEnabled checks if antiflood is enabled for a chat
+// IsAntifloodEnabled checks if antiflood is enabled for a chat by examining the flood limit.
+// Returns true if the flood limit is greater than 0, false otherwise.
 func (o *OptimizedAntifloodQueries) IsAntifloodEnabled(chatID int64) (bool, error) {
 	if o.db == nil {
 		return false, errors.New("database not initialized")
@@ -287,7 +301,8 @@ type OptimizedFilterQueries struct {
 	db *gorm.DB
 }
 
-// NewOptimizedFilterQueries creates a new instance of optimized filter queries
+// NewOptimizedFilterQueries creates a new instance of OptimizedFilterQueries.
+// Returns an instance with nil database if DB is not initialized.
 func NewOptimizedFilterQueries() *OptimizedFilterQueries {
 	if DB == nil {
 		log.Error("[OptimizedFilterQueries] Database not initialized")
@@ -296,7 +311,8 @@ func NewOptimizedFilterQueries() *OptimizedFilterQueries {
 	return &OptimizedFilterQueries{db: DB}
 }
 
-// GetChatFiltersOptimized retrieves filters with minimal columns (optimized for 34K calls)
+// GetChatFiltersOptimized retrieves filters with minimal column selection.
+// Optimized for high-frequency calls (34K+ calls) by selecting only essential filter fields.
 func (o *OptimizedFilterQueries) GetChatFiltersOptimized(chatID int64) ([]*ChatFilters, error) {
 	if o.db == nil {
 		return nil, errors.New("database not initialized")
@@ -316,7 +332,8 @@ func (o *OptimizedFilterQueries) GetChatFiltersOptimized(chatID int64) ([]*ChatF
 	return filters, nil
 }
 
-// GetFilterByKeyword retrieves a specific filter by keyword
+// GetFilterByKeyword retrieves a specific filter by keyword with minimal column selection.
+// Returns nil if the filter is not found.
 func (o *OptimizedFilterQueries) GetFilterByKeyword(chatID int64, keyword string) (*ChatFilters, error) {
 	if o.db == nil {
 		return nil, errors.New("database not initialized")
@@ -340,7 +357,8 @@ type OptimizedBlacklistQueries struct {
 	db *gorm.DB
 }
 
-// NewOptimizedBlacklistQueries creates a new instance of optimized blacklist queries
+// NewOptimizedBlacklistQueries creates a new instance of OptimizedBlacklistQueries.
+// Returns an instance with nil database if DB is not initialized.
 func NewOptimizedBlacklistQueries() *OptimizedBlacklistQueries {
 	if DB == nil {
 		log.Error("[OptimizedBlacklistQueries] Database not initialized")
@@ -349,7 +367,8 @@ func NewOptimizedBlacklistQueries() *OptimizedBlacklistQueries {
 	return &OptimizedBlacklistQueries{db: DB}
 }
 
-// GetChatBlacklistOptimized retrieves blacklist with minimal columns (optimized for 33K calls)
+// GetChatBlacklistOptimized retrieves blacklist settings with minimal column selection.
+// Optimized for high-frequency calls (33K+ calls) by selecting only essential blacklist fields.
 func (o *OptimizedBlacklistQueries) GetChatBlacklistOptimized(chatID int64) ([]*BlacklistSettings, error) {
 	if o.db == nil {
 		return nil, errors.New("database not initialized")
@@ -369,7 +388,8 @@ func (o *OptimizedBlacklistQueries) GetChatBlacklistOptimized(chatID int64) ([]*
 	return blacklist, nil
 }
 
-// GetBlacklistWords retrieves only the blacklisted words for a chat
+// GetBlacklistWords retrieves only the blacklisted words for a chat without other fields.
+// Returns a slice of strings containing all blacklisted words for the specified chat.
 func (o *OptimizedBlacklistQueries) GetBlacklistWords(chatID int64) ([]string, error) {
 	if o.db == nil {
 		return nil, errors.New("database not initialized")
@@ -394,7 +414,8 @@ type OptimizedChannelQueries struct {
 	db *gorm.DB
 }
 
-// NewOptimizedChannelQueries creates a new instance of optimized channel queries
+// NewOptimizedChannelQueries creates a new instance of OptimizedChannelQueries.
+// Returns an instance with nil database if DB is not initialized.
 func NewOptimizedChannelQueries() *OptimizedChannelQueries {
 	if DB == nil {
 		log.Error("[OptimizedChannelQueries] Database not initialized")
@@ -403,7 +424,8 @@ func NewOptimizedChannelQueries() *OptimizedChannelQueries {
 	return &OptimizedChannelQueries{db: DB}
 }
 
-// GetChannelSettings retrieves channel settings with minimal columns
+// GetChannelSettings retrieves channel settings with minimal column selection.
+// Returns channel settings for the specified chat or nil if not found.
 func (o *OptimizedChannelQueries) GetChannelSettings(chatID int64) (*ChannelSettings, error) {
 	if o.db == nil {
 		return nil, errors.New("database not initialized")
@@ -433,7 +455,8 @@ type CachedOptimizedQueries struct {
 	channelQueries   *OptimizedChannelQueries
 }
 
-// NewCachedOptimizedQueries creates a new instance with all optimized queries
+// NewCachedOptimizedQueries creates a new instance with all optimized query types.
+// Initializes all the different query optimizers for various database entities.
 func NewCachedOptimizedQueries() *CachedOptimizedQueries {
 	return &CachedOptimizedQueries{
 		lockQueries:      NewOptimizedLockQueries(),
@@ -446,7 +469,8 @@ func NewCachedOptimizedQueries() *CachedOptimizedQueries {
 	}
 }
 
-// GetLockStatusCached retrieves lock status with caching
+// GetLockStatusCached retrieves lock status with caching layer for improved performance.
+// Uses 1-hour cache TTL and falls back to direct query if cache fails.
 func (c *CachedOptimizedQueries) GetLockStatusCached(chatID int64, lockType string) (bool, error) {
 	if c == nil || c.lockQueries == nil {
 		return false, errors.New("lock queries not initialized")
@@ -467,7 +491,8 @@ func (c *CachedOptimizedQueries) GetLockStatusCached(chatID int64, lockType stri
 	return cached, nil
 }
 
-// GetUserBasicInfoCached retrieves user info with caching
+// GetUserBasicInfoCached retrieves user information with caching layer for improved performance.
+// Uses 1-hour cache TTL and falls back to direct query if cache fails.
 func (c *CachedOptimizedQueries) GetUserBasicInfoCached(userID int64) (*User, error) {
 	if c == nil || c.userQueries == nil {
 		return nil, errors.New("user queries not initialized")
@@ -486,7 +511,8 @@ func (c *CachedOptimizedQueries) GetUserBasicInfoCached(userID int64) (*User, er
 	return cached, nil
 }
 
-// GetChatBasicInfoCached retrieves chat info with caching
+// GetChatBasicInfoCached retrieves chat information with caching layer for improved performance.
+// Uses 30-minute cache TTL and falls back to direct query if cache fails.
 func (c *CachedOptimizedQueries) GetChatBasicInfoCached(chatID int64) (*Chat, error) {
 	if c == nil || c.chatQueries == nil {
 		return nil, errors.New("chat queries not initialized")
@@ -505,7 +531,8 @@ func (c *CachedOptimizedQueries) GetChatBasicInfoCached(chatID int64) (*Chat, er
 	return cached, nil
 }
 
-// GetAntifloodSettingsCached retrieves antiflood settings with caching
+// GetAntifloodSettingsCached retrieves antiflood settings with caching layer for improved performance.
+// Uses 1-hour cache TTL and falls back to direct query if cache fails.
 func (c *CachedOptimizedQueries) GetAntifloodSettingsCached(chatID int64) (*AntifloodSettings, error) {
 	if c == nil || c.antifloodQueries == nil {
 		return nil, errors.New("antiflood queries not initialized")
@@ -524,7 +551,8 @@ func (c *CachedOptimizedQueries) GetAntifloodSettingsCached(chatID int64) (*Anti
 	return cached, nil
 }
 
-// GetChatFiltersCached retrieves filters with caching
+// GetChatFiltersCached retrieves filters with caching layer for improved performance.
+// Uses 15-minute cache TTL and falls back to direct query if cache fails.
 func (c *CachedOptimizedQueries) GetChatFiltersCached(chatID int64) ([]*ChatFilters, error) {
 	if c == nil || c.filterQueries == nil {
 		return nil, errors.New("filter queries not initialized")
@@ -543,7 +571,8 @@ func (c *CachedOptimizedQueries) GetChatFiltersCached(chatID int64) ([]*ChatFilt
 	return cached, nil
 }
 
-// GetChatBlacklistCached retrieves blacklist with caching
+// GetChatBlacklistCached retrieves blacklist settings with caching layer for improved performance.
+// Uses 15-minute cache TTL and falls back to direct query if cache fails.
 func (c *CachedOptimizedQueries) GetChatBlacklistCached(chatID int64) ([]*BlacklistSettings, error) {
 	if c == nil || c.blacklistQueries == nil {
 		return nil, errors.New("blacklist queries not initialized")
@@ -562,7 +591,8 @@ func (c *CachedOptimizedQueries) GetChatBlacklistCached(chatID int64) ([]*Blackl
 	return cached, nil
 }
 
-// GetChannelSettingsCached retrieves channel settings with caching
+// GetChannelSettingsCached retrieves channel settings with caching layer for improved performance.
+// Uses 30-minute cache TTL and falls back to direct query if cache fails.
 func (c *CachedOptimizedQueries) GetChannelSettingsCached(chatID int64) (*ChannelSettings, error) {
 	if c == nil || c.channelQueries == nil {
 		return nil, errors.New("channel queries not initialized")
@@ -581,23 +611,32 @@ func (c *CachedOptimizedQueries) GetChannelSettingsCached(chatID int64) (*Channe
 	return cached, nil
 }
 
-// Helper functions for cache keys
+// lockCacheKey generates a cache key for lock status.
+// Returns a formatted string for use in caching lock status by chat ID and lock type.
 func lockCacheKey(chatID int64, lockType string) string {
 	return fmt.Sprintf("alita:lock:%d:%s", chatID, lockType)
 }
 
+// userCacheKey generates a cache key for user information.
+// Returns a formatted string for use in caching user data by user ID.
 func userCacheKey(userID int64) string {
 	return fmt.Sprintf("alita:user:%d", userID)
 }
 
+// chatCacheKey generates a cache key for chat information.
+// Returns a formatted string for use in caching chat data by chat ID.
 func chatCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:chat:%d", chatID)
 }
 
+// optimizedAntifloodCacheKey generates a cache key for antiflood settings.
+// Returns a formatted string for use in caching antiflood settings by chat ID.
 func optimizedAntifloodCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:antiflood:%d", chatID)
 }
 
+// channelCacheKey generates a cache key for channel settings.
+// Returns a formatted string for use in caching channel settings by chat ID.
 func channelCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:channel:%d", chatID)
 }
@@ -614,7 +653,8 @@ type BatchPrefetchContext struct {
 	db  *gorm.DB
 }
 
-// NewBatchPrefetchContext creates a new batch prefetch context
+// NewBatchPrefetchContext creates a new BatchPrefetchContext with the given context.
+// Used for efficient batch prefetching of database records with context cancellation support.
 func NewBatchPrefetchContext(ctx context.Context) *BatchPrefetchContext {
 	if DB == nil {
 		log.Error("[BatchPrefetchContext] Database not initialized")
@@ -629,7 +669,8 @@ func NewBatchPrefetchContext(ctx context.Context) *BatchPrefetchContext {
 	}
 }
 
-// PrefetchUserData prefetches user data for multiple users efficiently
+// PrefetchUserData efficiently prefetches user data for multiple users in a single query.
+// Returns a map of user IDs to User structs for quick lookup.
 func (b *BatchPrefetchContext) PrefetchUserData(userIDs []int64) (map[int64]*User, error) {
 	if b.db == nil {
 		return nil, errors.New("database not initialized")
@@ -658,7 +699,8 @@ func (b *BatchPrefetchContext) PrefetchUserData(userIDs []int64) (map[int64]*Use
 	return userMap, nil
 }
 
-// PrefetchChatData prefetches chat data for multiple chats efficiently
+// PrefetchChatData efficiently prefetches chat data for multiple chats in a single query.
+// Returns a map of chat IDs to Chat structs for quick lookup.
 func (b *BatchPrefetchContext) PrefetchChatData(chatIDs []int64) (map[int64]*Chat, error) {
 	if b.db == nil {
 		return nil, errors.New("database not initialized")
@@ -687,7 +729,8 @@ func (b *BatchPrefetchContext) PrefetchChatData(chatIDs []int64) (map[int64]*Cha
 	return chatMap, nil
 }
 
-// GetOptimizedQueries returns the singleton instance of optimized queries with thread-safe lazy initialization
+// GetOptimizedQueries returns the singleton instance of CachedOptimizedQueries.
+// Uses thread-safe lazy initialization and handles database reconnection scenarios.
 func GetOptimizedQueries() *CachedOptimizedQueries {
 	// Fast path: Check if already initialized with a valid DB
 	optimizedQueriesMu.RLock()
@@ -730,7 +773,8 @@ func GetOptimizedQueries() *CachedOptimizedQueries {
 	return optimizedQueries
 }
 
-// InitOptimizedQueries forces reinitialization of optimized queries (useful for testing or reconnection)
+// InitOptimizedQueries forces reinitialization of the optimized queries singleton.
+// Useful for testing scenarios or when database reconnection is needed.
 func InitOptimizedQueries() {
 	optimizedQueriesMu.Lock()
 	defer optimizedQueriesMu.Unlock()

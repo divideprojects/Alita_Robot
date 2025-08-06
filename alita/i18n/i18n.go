@@ -22,7 +22,7 @@ type I18n struct {
 	LangCode string
 }
 
-// LoadLocaleFiles Load Locales files which are embedded in the binary
+// LoadLocaleFiles loads locale files which are embedded in the binary.
 // DEPRECATED: Use LocaleManager.Initialize() instead for better error handling
 // and performance. This function is kept for backward compatibility.
 func LoadLocaleFiles(fs *embed.FS, path string) {
@@ -47,7 +47,7 @@ func LoadLocaleFiles(fs *embed.FS, path string) {
 	}
 }
 
-// GetString get the string from the embedded locale
+// GetString gets the string from the embedded locale using the specified key.
 // DEPRECATED: Use Translator.GetString() instead for better performance
 // and parameter interpolation support. This method is kept for backward compatibility.
 func (goloc I18n) GetString(key string) string {
@@ -87,7 +87,7 @@ func (goloc I18n) GetString(key string) string {
 	return text
 }
 
-// GetStringSlice get the string slice from the embedded locale
+// GetStringSlice gets the string slice from the embedded locale using the specified key.
 // DEPRECATED: Use Translator.GetStringSlice() instead for better performance
 // and caching support. This method is kept for backward compatibility.
 func (goloc I18n) GetStringSlice(key string) []string {
@@ -126,14 +126,14 @@ func (goloc I18n) GetStringSlice(key string) []string {
 	return text
 }
 
-// NewTranslator creates a new Translator instance using the modern LocaleManager
+// NewTranslator creates a new Translator instance using the modern LocaleManager.
 // This is the recommended way to handle translations in new code.
 func NewTranslator(langCode string) (*Translator, error) {
 	manager := GetManager()
 	return manager.GetTranslator(langCode)
 }
 
-// MustNewTranslator creates a new Translator instance and panics on error
+// MustNewTranslator creates a new Translator instance and panics on error.
 // Useful for initialization where errors should be fatal.
 func MustNewTranslator(langCode string) *Translator {
 	translator, err := NewTranslator(langCode)
@@ -143,14 +143,14 @@ func MustNewTranslator(langCode string) *Translator {
 	return translator
 }
 
-// GetAvailableLanguages returns all available language codes
+// GetAvailableLanguages returns all available language codes.
 // This is a convenience function that uses the LocaleManager.
 func GetAvailableLanguages() []string {
 	manager := GetManager()
 	return manager.GetAvailableLanguages()
 }
 
-// IsLanguageSupported checks if a language is supported
+// IsLanguageSupported checks if a language is supported.
 // This is a convenience function that uses the LocaleManager.
 func IsLanguageSupported(langCode string) bool {
 	manager := GetManager()

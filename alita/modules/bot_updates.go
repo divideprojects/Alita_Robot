@@ -19,6 +19,8 @@ import (
 
 // function used to get status of bot when it joined a group and send a message to the group
 // also send a message to MESSAGE_DUMP telling that it joined a group
+// botJoinedGroup handles bot addition to new groups.
+// Sends welcome message and ensures the group is a supergroup before staying.
 func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
@@ -81,6 +83,8 @@ func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// adminCacheAutoUpdate automatically refreshes admin cache when admin status changes.
+// Reloads admin permissions cache if it's not already available.
 func adminCacheAutoUpdate(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
@@ -95,6 +99,8 @@ func adminCacheAutoUpdate(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // function used to verify anonymous admins when they press to verify admin button
+// verifyAnonyamousAdmin handles callback verification for anonymous admins.
+// Verifies admin status and executes the original command from cached context.
 func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	qmsg := query.Message
@@ -209,10 +215,14 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// setAdminCache retrieves cached message data for anonymous admin verification.
+// Returns the original message context stored during anonymous admin command execution.
 func setAdminCache(chatId, msgId int64) (interface{}, error) {
 	return cache.Marshal.Get(cache.Context, fmt.Sprintf("anonAdmin.%d.%d", chatId, msgId), new(gotgbot.Message))
 }
 
+// LoadBotUpdates registers bot event handlers for group management.
+// Sets up handlers for bot joins, admin updates, and anonymous admin verification.
 func LoadBotUpdates(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandlerToGroup(
 		handlers.NewMyChatMember(

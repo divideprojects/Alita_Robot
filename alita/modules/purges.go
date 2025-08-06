@@ -23,6 +23,8 @@ var (
 	delMsgs      = map[int64]int64{}
 )
 
+// purgeMsgs performs the actual message deletion operation for purge commands,
+// deleting messages in the specified range with error handling for old messages.
 func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
 	if !pFrom {
 		_, err := bot.DeleteMessage(chat.Id, msgId, nil)
@@ -68,6 +70,8 @@ func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, 
 	return true
 }
 
+// purge handles the /purge command to delete all messages from a replied
+// message up to the command message, requiring admin permissions.
 func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
@@ -137,6 +141,8 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// delCmd handles the /del command to delete a specific replied message
+// along with the command message, requiring admin permissions.
 func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
@@ -197,6 +203,8 @@ func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// deleteButtonHandler processes callback queries from delete buttons
+// to remove specific messages, requiring admin permissions.
 func (moduleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	chat := ctx.EffectiveChat
@@ -236,6 +244,8 @@ func (moduleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 	return ext.EndGroups
 }
 
+// purgeFrom handles the /purgefrom command to mark a starting message
+// for range deletion, requiring admin permissions.
 func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
@@ -303,6 +313,8 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// purgeTo handles the /purgeto command to complete range deletion
+// from a previously marked message, requiring admin permissions.
 func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
@@ -383,6 +395,8 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// LoadPurges registers all purges module handlers with the dispatcher,
+// including message deletion commands and callback handlers.
 func LoadPurges(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(purgesModule.moduleName, true)
 

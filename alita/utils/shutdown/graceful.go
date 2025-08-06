@@ -44,7 +44,7 @@ func (m *Manager) WaitForShutdown() {
 	m.shutdown()
 }
 
-// Shutdown performs graceful shutdown
+// shutdown performs graceful shutdown
 func (m *Manager) shutdown() {
 	m.once.Do(func() {
 		log.Info("[Shutdown] Starting graceful shutdown...")

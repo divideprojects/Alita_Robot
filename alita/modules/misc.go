@@ -28,6 +28,8 @@ import (
 
 var miscModule = moduleStruct{moduleName: "Misc"}
 
+// echomsg handles the /tell command to make the bot echo a message
+// as a reply to another message, requiring admin permissions.
 func (moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
@@ -68,6 +70,8 @@ func (moduleStruct) echomsg(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// getId handles the /id command to display IDs of users, chats,
+// files, and forwarded messages with detailed information.
 func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	userId := extraction.ExtractUser(b, ctx)
@@ -159,6 +163,8 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// ping handles the /ping command to measure and display
+// the bot's response time in milliseconds.
 func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -175,6 +181,8 @@ func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// info handles the /info command to display detailed information
+// about a user or channel including ID, name, and special roles.
 func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	sender := ctx.EffectiveSender
@@ -245,6 +253,8 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// translate handles the /tr command to translate text using
+// Google Translate API with automatic language detection.
 func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
@@ -316,7 +326,8 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-// This function removes the stuck bot keyboard from your chat!
+// removeBotKeyboard handles the /removebotkeyboard command to
+// remove stuck bot keyboards from the chat interface.
 func (moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	rMsg, err := msg.Reply(b,
@@ -342,6 +353,8 @@ func (moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// stat handles the /stat command to display the total number
+// of messages in the current group chat.
 func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -359,6 +372,8 @@ func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// LoadMisc registers all miscellaneous module handlers with the dispatcher,
+// including utility commands for IDs, ping, translation, and stats.
 func LoadMisc(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(miscModule.moduleName, true)
 

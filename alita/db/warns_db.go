@@ -8,6 +8,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// checkWarnSettings retrieves or creates default warn settings for a chat.
+// Returns default settings with warn limit 3 and mute mode if the chat doesn't exist.
 func checkWarnSettings(chatID int64) (warnrc *WarnSettings) {
 	defaultWarnSettings := &WarnSettings{ChatId: chatID, WarnLimit: 3, WarnMode: "mute"}
 	warnrc = &WarnSettings{}
@@ -33,6 +35,8 @@ func checkWarnSettings(chatID int64) (warnrc *WarnSettings) {
 	return
 }
 
+// checkWarns retrieves or creates default warn record for a user in a specific chat.
+// Returns default record with 0 warns if the chat doesn't exist or user has no warns.
 func checkWarns(userId, chatId int64) (warnrc *Warns) {
 	defaultWarnSrc := &Warns{UserId: userId, ChatId: chatId, NumWarns: 0, Reasons: make(StringArray, 0)}
 	warnrc = &Warns{}
@@ -58,10 +62,15 @@ func checkWarns(userId, chatId int64) (warnrc *Warns) {
 	return
 }
 
+// WarnUser adds a warning to a user in a specific chat with an optional reason.
+// Returns the total number of warnings and all warning reasons for the user.
 func WarnUser(userId, chatId int64, reason string) (int, []string) {
 	return WarnUserWithContext(context.Background(), userId, chatId, reason)
 }
 
+// WarnUserWithContext adds a warning to a user with context support for cancellation.
+// Uses database transactions to ensure data consistency and supports context cancellation.
+// Returns the total number of warnings and all warning reasons for the user.
 func WarnUserWithContext(ctx context.Context, userId, chatId int64, reason string) (int, []string) {
 	var numWarns int
 	var reasons []string
@@ -121,10 +130,15 @@ func WarnUserWithContext(ctx context.Context, userId, chatId int64, reason strin
 	return numWarns, reasons
 }
 
+// RemoveWarn removes the most recent warning from a user in a specific chat.
+// Returns true if a warning was successfully removed, false otherwise.
 func RemoveWarn(userId, chatId int64) bool {
 	return RemoveWarnWithContext(context.Background(), userId, chatId)
 }
 
+// RemoveWarnWithContext removes the most recent warning with context support.
+// Uses database transactions to ensure data consistency and supports context cancellation.
+// Returns true if a warning was successfully removed, false otherwise.
 func RemoveWarnWithContext(ctx context.Context, userId, chatId int64) bool {
 	var removed bool
 
@@ -169,6 +183,8 @@ func RemoveWarnWithContext(ctx context.Context, userId, chatId int64) bool {
 	return removed
 }
 
+// ResetUserWarns removes all warnings for a specific user in a chat.
+// Returns true if the operation was successful, false on error.
 func ResetUserWarns(userId, chatId int64) (removed bool) {
 	removed = true
 	err := DB.Where("user_id = ? AND chat_id = ?", userId, chatId).Delete(&Warns{}).Error
@@ -179,11 +195,15 @@ func ResetUserWarns(userId, chatId int64) (removed bool) {
 	return removed
 }
 
+// GetWarns retrieves the current warning count and reasons for a user in a specific chat.
+// Returns 0 warnings and empty reasons if the user has no warnings.
 func GetWarns(userId, chatId int64) (int, []string) {
 	warnrc := checkWarns(userId, chatId)
 	return warnrc.NumWarns, []string(warnrc.Reasons)
 }
 
+// SetWarnLimit updates the warning limit for a specific chat.
+// When users reach this limit, the configured warn mode action is applied.
 func SetWarnLimit(chatId int64, warnLimit int) {
 	warnrc := checkWarnSettings(chatId)
 	warnrc.WarnLimit = warnLimit
@@ -193,6 +213,8 @@ func SetWarnLimit(chatId int64, warnLimit int) {
 	}
 }
 
+// SetWarnMode updates the action to take when users reach the warning limit.
+// Common modes include "mute", "kick", "ban".
 func SetWarnMode(chatId int64, warnMode string) {
 	warnrc := checkWarnSettings(chatId)
 	warnrc.WarnMode = warnMode
@@ -202,10 +224,14 @@ func SetWarnMode(chatId int64, warnMode string) {
 	}
 }
 
+// GetWarnSetting returns the warning settings for the specified chat.
+// This is the public interface to access warning configuration.
 func GetWarnSetting(chatId int64) *WarnSettings {
 	return checkWarnSettings(chatId)
 }
 
+// GetAllChatWarns returns the total count of warned users in a specific chat.
+// Used for administrative statistics and monitoring.
 func GetAllChatWarns(chatId int64) int {
 	var count int64
 	err := DB.Model(&Warns{}).Where("chat_id = ?", chatId).Count(&count).Error
@@ -216,6 +242,8 @@ func GetAllChatWarns(chatId int64) int {
 	return int(count)
 }
 
+// ResetAllChatWarns removes all warning records for all users in a specific chat.
+// Returns true if the operation was successful, false on error.
 func ResetAllChatWarns(chatId int64) bool {
 	err := DB.Where("chat_id = ?", chatId).Delete(&Warns{}).Error
 	if err != nil {

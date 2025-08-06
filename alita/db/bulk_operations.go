@@ -33,7 +33,8 @@ type BulkOperationStats struct {
 	StartTime      time.Time
 }
 
-// LogBulkOperationStats logs the performance stats of bulk operations
+// LogBulkOperationStats logs the performance stats of bulk operations.
+// Includes processed count, failed count, duration, and records per second.
 func LogBulkOperationStats(operation string, stats *BulkOperationStats) {
 	log.WithFields(log.Fields{
 		"operation":     operation,
@@ -68,7 +69,8 @@ type ParallelBulkProcessor[T any] struct {
 	processor   func([]T) error
 }
 
-// NewParallelBulkProcessor creates a new parallel bulk processor
+// NewParallelBulkProcessor creates a new parallel bulk processor with specified worker count.
+// Worker count is limited by CPU cores and maximum configured workers.
 func NewParallelBulkProcessor[T any](workerCount int, processor func([]T) error) *ParallelBulkProcessor[T] {
 	if workerCount <= 0 {
 		workerCount = DefaultWorkerCount
@@ -95,7 +97,8 @@ func NewParallelBulkProcessor[T any](workerCount int, processor func([]T) error)
 	}
 }
 
-// Start begins processing jobs with the configured number of workers
+// Start begins processing jobs with the configured number of workers.
+// Each worker runs in a separate goroutine and processes jobs from the job channel.
 func (p *ParallelBulkProcessor[T]) Start() {
 	for i := 0; i < p.workerCount; i++ {
 		p.wg.Add(1)
@@ -103,7 +106,8 @@ func (p *ParallelBulkProcessor[T]) Start() {
 	}
 }
 
-// worker processes bulk jobs
+// worker processes bulk jobs from the jobs channel.
+// Runs until the jobs channel is closed or context is cancelled.
 func (p *ParallelBulkProcessor[T]) worker(workerID int) {
 	defer p.wg.Done()
 
@@ -138,7 +142,8 @@ func (p *ParallelBulkProcessor[T]) worker(workerID int) {
 	}
 }
 
-// AddJob adds a job to the processor
+// AddJob adds a job to the processor's job queue.
+// Returns immediately if the context is cancelled.
 func (p *ParallelBulkProcessor[T]) AddJob(data []T, index int) {
 	select {
 	case p.jobs <- BulkProcessingJob[T]{Data: data, Index: index}:
@@ -147,7 +152,8 @@ func (p *ParallelBulkProcessor[T]) AddJob(data []T, index int) {
 	}
 }
 
-// Close shuts down the processor gracefully
+// Close shuts down the processor gracefully.
+// Closes channels, waits for workers to finish, and cancels the context.
 func (p *ParallelBulkProcessor[T]) Close() {
 	close(p.jobs)
 	p.wg.Wait()
@@ -155,7 +161,8 @@ func (p *ParallelBulkProcessor[T]) Close() {
 	p.cancel()
 }
 
-// ProcessInParallel processes large datasets in parallel batches
+// ProcessInParallel processes large datasets in parallel batches.
+// Returns performance statistics including processed count, failed count, and duration.
 func (p *ParallelBulkProcessor[T]) ProcessInParallel(data []T, batchSize int) *BulkOperationStats {
 	stats := &BulkOperationStats{
 		StartTime: time.Now(),
@@ -203,7 +210,8 @@ func (p *ParallelBulkProcessor[T]) ProcessInParallel(data []T, batchSize int) *B
 	return stats
 }
 
-// BulkAddFilters adds multiple filters in a single operation with performance tracking
+// BulkAddFilters adds multiple filters in a single operation with performance tracking.
+// Uses batch inserts for efficiency and invalidates cache after successful operations.
 func BulkAddFilters(chatID int64, filters map[string]string) (*BulkOperationStats, error) {
 	stats := &BulkOperationStats{
 		StartTime: time.Now(),
@@ -242,7 +250,8 @@ func BulkAddFilters(chatID int64, filters map[string]string) (*BulkOperationStat
 	return stats, err
 }
 
-// BulkRemoveFilters removes multiple filters in a single operation
+// BulkRemoveFilters removes multiple filters in a single operation.
+// Invalidates cache after successful removal.
 func BulkRemoveFilters(chatID int64, keywords []string) error {
 	if len(keywords) == 0 {
 		return nil
@@ -259,7 +268,8 @@ func BulkRemoveFilters(chatID int64, keywords []string) error {
 	return nil
 }
 
-// BulkAddNotes adds multiple notes in a single operation
+// BulkAddNotes adds multiple notes in a single operation with default text type and web preview enabled.
+// Invalidates related cache entries after successful operations.
 func BulkAddNotes(chatID int64, notes map[string]string) error {
 	if len(notes) == 0 {
 		return nil
@@ -289,7 +299,8 @@ func BulkAddNotes(chatID int64, notes map[string]string) error {
 	return nil
 }
 
-// BulkRemoveNotes removes multiple notes in a single operation
+// BulkRemoveNotes removes multiple notes in a single operation.
+// Invalidates related cache entries after successful removal.
 func BulkRemoveNotes(chatID int64, noteNames []string) error {
 	if len(noteNames) == 0 {
 		return nil
@@ -307,7 +318,8 @@ func BulkRemoveNotes(chatID int64, noteNames []string) error {
 	return nil
 }
 
-// BulkAddBlacklist adds multiple blacklist words in a single operation with performance tracking
+// BulkAddBlacklist adds multiple blacklist words in a single operation with performance tracking.
+// Uses batch inserts for efficiency and invalidates cache after successful operations.
 func BulkAddBlacklist(chatID int64, words []string, action string) (*BulkOperationStats, error) {
 	stats := &BulkOperationStats{
 		StartTime: time.Now(),
@@ -345,7 +357,8 @@ func BulkAddBlacklist(chatID int64, words []string, action string) (*BulkOperati
 	return stats, err
 }
 
-// BulkRemoveBlacklist removes multiple blacklist words in a single operation
+// BulkRemoveBlacklist removes multiple blacklist words in a single operation.
+// Invalidates cache after successful removal.
 func BulkRemoveBlacklist(chatID int64, words []string) error {
 	if len(words) == 0 {
 		return nil
@@ -362,7 +375,8 @@ func BulkRemoveBlacklist(chatID int64, words []string) error {
 	return nil
 }
 
-// BulkWarnUsers warns multiple users in a single transaction
+// BulkWarnUsers warns multiple users in a single transaction.
+// Creates warn settings with default limit if not found, and updates user warn counts.
 func BulkWarnUsers(chatID int64, userIDs []int64, reason string) error {
 	if len(userIDs) == 0 {
 		return nil
@@ -422,7 +436,8 @@ func BulkWarnUsers(chatID int64, userIDs []int64, reason string) error {
 	})
 }
 
-// BulkResetWarns resets warnings for multiple users in a single operation
+// BulkResetWarns resets warnings for multiple users in a single operation.
+// Removes all warn records for the specified users and invalidates cache.
 func BulkResetWarns(chatID int64, userIDs []int64) error {
 	if len(userIDs) == 0 {
 		return nil
@@ -444,12 +459,14 @@ type OptimizedQuery struct {
 	db *gorm.DB
 }
 
-// NewOptimizedQuery creates a new optimized query instance
+// NewOptimizedQuery creates a new optimized query instance.
+// Uses the global database connection for query operations.
 func NewOptimizedQuery() *OptimizedQuery {
 	return &OptimizedQuery{db: DB}
 }
 
-// GetFiltersWithPagination retrieves filters with pagination for better memory usage
+// GetFiltersWithPagination retrieves filters with pagination for better memory usage.
+// Returns a subset of filters based on limit and offset parameters.
 func (oq *OptimizedQuery) GetFiltersWithPagination(chatID int64, limit, offset int) ([]*ChatFilters, error) {
 	var filters []*ChatFilters
 	err := oq.db.Where("chat_id = ?", chatID).Limit(limit).Offset(offset).Find(&filters).Error
@@ -460,7 +477,8 @@ func (oq *OptimizedQuery) GetFiltersWithPagination(chatID int64, limit, offset i
 	return filters, nil
 }
 
-// AnalyzePerformanceStats provides performance statistics for monitoring
+// AnalyzePerformanceStats provides performance statistics for monitoring.
+// Returns comprehensive statistics about filters, blacklists, and system performance features.
 func AnalyzePerformanceStats() map[string]interface{} {
 	stats := make(map[string]interface{})
 
@@ -506,7 +524,8 @@ func AnalyzePerformanceStats() map[string]interface{} {
 	return stats
 }
 
-// ParallelBulkAddFilters adds multiple filters concurrently with improved performance
+// ParallelBulkAddFilters adds multiple filters concurrently with improved performance.
+// Uses parallel processing with worker pools and invalidates cache after successful operations.
 func ParallelBulkAddFilters(chatID int64, filters map[string]string) (*BulkOperationStats, error) {
 	if len(filters) == 0 {
 		return &BulkOperationStats{StartTime: time.Now(), Duration: 0}, nil
@@ -553,7 +572,8 @@ func ParallelBulkAddFilters(chatID int64, filters map[string]string) (*BulkOpera
 	return stats, err
 }
 
-// ParallelBulkAddBlacklist adds multiple blacklist words concurrently
+// ParallelBulkAddBlacklist adds multiple blacklist words concurrently.
+// Uses parallel processing with worker pools and invalidates cache after successful operations.
 func ParallelBulkAddBlacklist(chatID int64, words []string, action string) (*BulkOperationStats, error) {
 	if len(words) == 0 {
 		return &BulkOperationStats{StartTime: time.Now(), Duration: 0}, nil
@@ -599,7 +619,8 @@ func ParallelBulkAddBlacklist(chatID int64, words []string, action string) (*Bul
 	return stats, err
 }
 
-// ParallelCacheInvalidation invalidates multiple cache keys concurrently
+// ParallelCacheInvalidation invalidates multiple cache keys concurrently.
+// Uses a worker pool to invalidate cache keys with small delays to avoid overwhelming the cache system.
 func ParallelCacheInvalidation(cacheKeys []string) {
 	if len(cacheKeys) == 0 {
 		return
@@ -639,7 +660,8 @@ func ParallelCacheInvalidation(cacheKeys []string) {
 	log.WithField("cache_keys_invalidated", len(cacheKeys)).Info("Parallel cache invalidation completed")
 }
 
-// CleanupExpiredEntries removes old entries that might affect performance
+// CleanupExpiredEntries removes old entries that might affect performance.
+// Currently a placeholder for future cleanup operations like expired warnings and temp bans.
 func CleanupExpiredEntries() error {
 	// This is a placeholder for future cleanup operations
 	// Could include removing old warnings, expired temp bans, etc.

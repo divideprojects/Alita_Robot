@@ -17,6 +17,8 @@ import (
 //go:embed locales
 var localeFS embed.FS
 
+// main demonstrates how to use the i18n system with various features including
+// basic usage, backward compatibility, parameter interpolation, pluralization and error handling.
 func main() {
 	// Initialize cache (optional but recommended for production)
 	if err := cache.InitCache(); err != nil {
@@ -52,6 +54,7 @@ func main() {
 	demoErrorHandling()
 }
 
+// demoNewSystem demonstrates basic usage of the new i18n system with translator instances.
 func demoNewSystem() {
 	fmt.Println("=== New System Demo ===")
 
@@ -75,6 +78,7 @@ func demoNewSystem() {
 	fmt.Printf("Available languages: %v\n", languages)
 }
 
+// demoBackwardCompatibility shows how the old I18n system still works alongside the new system.
 func demoBackwardCompatibility() {
 	fmt.Println("\n=== Backward Compatibility Demo ===")
 
@@ -89,6 +93,7 @@ func demoBackwardCompatibility() {
 	fmt.Printf("Old system with fallback: %s\n", text2)
 }
 
+// demoParameterInterpolation demonstrates how to use parameter interpolation with translation keys.
 func demoParameterInterpolation() {
 	fmt.Println("\n=== Parameter Interpolation Demo ===")
 
@@ -109,6 +114,7 @@ func demoParameterInterpolation() {
 	fmt.Printf("Parameterized message: %s\n", result)
 }
 
+// demoPluralization shows how to handle plural forms of translations based on count values.
 func demoPluralization() {
 	fmt.Println("\n=== Pluralization Demo ===")
 
@@ -127,6 +133,7 @@ func demoPluralization() {
 	}
 }
 
+// demoErrorHandling demonstrates error handling scenarios including invalid languages and missing keys.
 func demoErrorHandling() {
 	fmt.Println("\n=== Error Handling Demo ===")
 

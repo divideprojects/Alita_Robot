@@ -47,6 +47,8 @@ type MigrationStats struct {
 	Errors           []string
 }
 
+// main is the entry point for the MongoDB to PostgreSQL migration tool.
+// It parses command line flags, initializes the migrator, and runs the migration process.
 func main() {
 	var config MigrationConfig
 
@@ -87,6 +89,8 @@ func main() {
 	migrator.PrintStats()
 }
 
+// NewMigrator creates a new Migrator instance with the provided configuration.
+// It establishes connections to both MongoDB and PostgreSQL databases.
 func NewMigrator(config *MigrationConfig) (*Migrator, error) {
 	ctx := context.Background()
 
@@ -127,6 +131,7 @@ func NewMigrator(config *MigrationConfig) (*Migrator, error) {
 	}, nil
 }
 
+// Close closes the database connections for both MongoDB and PostgreSQL.
 func (m *Migrator) Close() {
 	if client := m.mongoDB.Client(); client != nil {
 		_ = client.Disconnect(m.ctx)
@@ -136,6 +141,8 @@ func (m *Migrator) Close() {
 	}
 }
 
+// Run executes the migration process by migrating primary collections first,
+// then dependent collections, and loads valid IDs for reference validation.
 func (m *Migrator) Run() error {
 	log.Println("Starting migration...")
 
@@ -197,6 +204,8 @@ func (m *Migrator) Run() error {
 	return nil
 }
 
+// loadValidIDs loads valid user and chat IDs from PostgreSQL for reference validation
+// during dependent collection migration.
 func (m *Migrator) loadValidIDs() error {
 	// Load valid chat IDs
 	var chatIDs []int64
@@ -221,6 +230,8 @@ func (m *Migrator) loadValidIDs() error {
 	return nil
 }
 
+// migrateCollection migrates a specific MongoDB collection to PostgreSQL
+// by dispatching to the appropriate migration function.
 func (m *Migrator) migrateCollection(collectionName string) error {
 	switch collectionName {
 	case "users":
@@ -268,6 +279,8 @@ func (m *Migrator) migrateCollection(collectionName string) error {
 	}
 }
 
+// processBatch processes MongoDB documents in batches using the provided processor function.
+// It handles cursor management and batch size optimization.
 func (m *Migrator) processBatch(collection *mongo.Collection, processor func([]bson.M) error) error {
 	cursor, err := collection.Find(m.ctx, bson.M{})
 	if err != nil {
@@ -309,6 +322,8 @@ func (m *Migrator) processBatch(collection *mongo.Collection, processor func([]b
 	return cursor.Err()
 }
 
+// PrintStats prints detailed migration statistics including duration,
+// record counts, success rates, and any errors encountered.
 func (m *Migrator) PrintStats() {
 	duration := m.stats.EndTime.Sub(m.stats.StartTime)
 
@@ -333,7 +348,8 @@ func (m *Migrator) PrintStats() {
 	}
 }
 
-// Helper function to convert MongoDB Long/Int to int64
+// toInt64 converts various MongoDB numeric types to int64.
+// It handles MongoDB Long types, regular integers, floats, and JSON numbers.
 func toInt64(v interface{}) int64 {
 	switch val := v.(type) {
 	case int64:
@@ -362,7 +378,7 @@ func toInt64(v interface{}) int64 {
 	return 0
 }
 
-// Helper function to convert interface to string
+// toString converts any interface{} value to a string representation.
 func toString(v interface{}) string {
 	if v == nil {
 		return ""
@@ -375,7 +391,7 @@ func toString(v interface{}) string {
 	}
 }
 
-// Helper function to convert interface to bool
+// toBool converts any interface{} value to a boolean, returning false for nil or non-boolean values.
 func toBool(v interface{}) bool {
 	if v == nil {
 		return false

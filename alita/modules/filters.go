@@ -40,6 +40,8 @@ type sharedRegexCache struct {
 var globalRegexCache = &sharedRegexCache{}
 
 // getCompiledRegex returns a compiled regex pattern from cache or compiles and caches it
+// getCompiledRegex returns a compiled regex pattern from cache or compiles and caches it.
+// Uses sync.Map for thread-safe caching to improve performance when matching filter patterns.
 func (rc *sharedRegexCache) getCompiledRegex(pattern string) (*regexp.Regexp, error) {
 	if cached, ok := rc.patterns.Load(pattern); ok {
 		return cached.(*regexp.Regexp), nil
@@ -63,6 +65,8 @@ func (rc *sharedRegexCache) getCompiledRegex(pattern string) (*regexp.Regexp, er
 
 Only admin can add new filters in the chat
 */
+// addFilter creates a new filter with a keyword trigger and response content.
+// Only admins can add filters. Supports text, media, and buttons with a limit of 150 filters per chat.
 func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -175,6 +179,8 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Only admin can remove filters in the chat
 */
+// rmFilter removes an existing filter by its keyword trigger.
+// Only admins can remove filters. Requires the exact filter keyword as argument.
 func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
@@ -227,6 +233,8 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Any user can view users in a chat
 */
+// filtersList displays all active filter keywords in the current chat.
+// Any user can view the list of available filters with their trigger keywords.
 func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -285,6 +293,8 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 
 Only owner can remove all filters from the chat
 */
+// rmAllFilters removes all filters from the current chat with confirmation.
+// Only chat owners can use this command. Shows confirmation buttons before deletion.
 func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -324,6 +334,8 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // CallbackQuery handler for rmAllFilters
+// filtersButtonHandler handles callback queries for filter-related button interactions.
+// Processes confirmation dialogs for removing all filters from a chat.
 func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	user := query.From
@@ -369,6 +381,8 @@ func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 }
 
 // CallbackQuery handler for filters_overwite. query
+// filterOverWriteHandler handles callback queries for filter overwrite confirmations.
+// Processes admin decisions when attempting to overwrite existing filter keywords.
 func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	user := query.From
@@ -421,6 +435,8 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 
 Replies with appropriate data to the filter.
 */
+// filtersWatcher monitors incoming messages for filter keyword matches.
+// Automatically responds with filter content when keywords are detected in messages.
 func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -494,6 +510,8 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.ContinueGroups
 }
 
+// LoadFilters registers all filter-related handlers with the dispatcher.
+// Sets up commands for managing filters and the message watcher for automatic responses.
 func LoadFilters(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(filtersModule.moduleName, true)
 

@@ -28,43 +28,54 @@ var (
 )
 
 // Cache key generators with "alita:" prefix for better organization
+// chatSettingsCacheKey generates a cache key for chat settings.
 func chatSettingsCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:chat_settings:%d", chatID)
 }
 
+// userLanguageCacheKey generates a cache key for user language settings.
 func userLanguageCacheKey(userID int64) string {
 	return fmt.Sprintf("alita:user_lang:%d", userID)
 }
 
+// chatLanguageCacheKey generates a cache key for chat language settings.
 func chatLanguageCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:chat_lang:%d", chatID)
 }
 
+// filterListCacheKey generates a cache key for chat filter lists.
 func filterListCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:filter_list:%d", chatID)
 }
 
+// blacklistCacheKey generates a cache key for chat blacklist settings.
 func blacklistCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:blacklist:%d", chatID)
 }
 
+// greetingsCacheKey generates a cache key for chat greeting settings.
 func greetingsCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:greetings:%d", chatID)
 }
 
+// notesListCacheKey generates a cache key for chat notes lists.
+// The admin parameter distinguishes between admin and regular note lists.
 func notesListCacheKey(chatID int64, admin bool) string {
 	return fmt.Sprintf("alita:notes_list:%d:%v", chatID, admin)
 }
 
+// warnSettingsCacheKey generates a cache key for chat warning settings.
 func warnSettingsCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:warn_settings:%d", chatID)
 }
 
+// antifloodCacheKey generates a cache key for chat antiflood settings.
 func antifloodCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:antiflood:%d", chatID)
 }
 
-// InvalidateChatCache invalidates all cache entries for a chat
+// InvalidateChatCache invalidates all cache entries for a chat.
+// Removes all cached data related to the specified chat ID including settings, filters, and notes.
 func InvalidateChatCache(chatID int64) {
 	if cache.Marshal == nil {
 		return
@@ -90,7 +101,8 @@ func InvalidateChatCache(chatID int64) {
 	}
 }
 
-// InvalidateUserCache invalidates all cache entries for a user
+// InvalidateUserCache invalidates all cache entries for a user.
+// Currently only removes user language cache entries.
 func InvalidateUserCache(userID int64) {
 	if cache.Marshal == nil {
 		return
@@ -102,7 +114,8 @@ func InvalidateUserCache(userID int64) {
 	}
 }
 
-// getFromCacheOrLoad is a generic helper to get from cache or load from database with stampede protection
+// getFromCacheOrLoad is a generic helper to get from cache or load from database with stampede protection.
+// Uses singleflight pattern to prevent cache stampede when multiple goroutines request the same data.
 func getFromCacheOrLoad[T any](key string, ttl time.Duration, loader func() (T, error)) (T, error) {
 	var result T
 
@@ -148,7 +161,8 @@ func getFromCacheOrLoad[T any](key string, ttl time.Duration, loader func() (T, 
 	return result, fmt.Errorf("type assertion failed for cache key %s", key)
 }
 
-// deleteCache is a helper to delete a value from cache
+// deleteCache is a helper to delete a value from cache.
+// Logs debug information if deletion fails but does not return errors.
 func deleteCache(key string) {
 	if cache.Marshal == nil {
 		return

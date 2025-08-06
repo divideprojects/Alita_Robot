@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetChatReportSettings retrieves or creates default report settings for the specified chat.
+// Returns settings with reports enabled by default if no settings exist.
 func GetChatReportSettings(chatID int64) (reportsrc *ReportChatSettings) {
 	reportsrc = &ReportChatSettings{}
 	err := GetRecord(reportsrc, ReportChatSettings{ChatId: chatID})
@@ -25,6 +27,8 @@ func GetChatReportSettings(chatID int64) (reportsrc *ReportChatSettings) {
 	return
 }
 
+// SetChatReportStatus updates the report feature status for the specified chat.
+// When disabled, users cannot report messages in this chat.
 func SetChatReportStatus(chatID int64, pref bool) {
 	err := UpdateRecord(&ReportChatSettings{}, ReportChatSettings{ChatId: chatID}, ReportChatSettings{Enabled: pref})
 	if err != nil {
@@ -32,6 +36,9 @@ func SetChatReportStatus(chatID int64, pref bool) {
 	}
 }
 
+// BlockReportUser adds a user to the chat's report block list.
+// Blocked users cannot send reports in the specified chat.
+// Does nothing if the user is already blocked.
 func BlockReportUser(chatId, userId int64) {
 	settings := GetChatReportSettings(chatId)
 
@@ -50,6 +57,8 @@ func BlockReportUser(chatId, userId int64) {
 	}
 }
 
+// UnblockReportUser removes a user from the chat's report block list.
+// Allows the previously blocked user to send reports again.
 func UnblockReportUser(chatId, userId int64) {
 	settings := GetChatReportSettings(chatId)
 
@@ -67,8 +76,8 @@ func UnblockReportUser(chatId, userId int64) {
 	}
 }
 
-/* user settings below */
-
+// GetUserReportSettings retrieves or creates default report settings for the specified user.
+// Returns settings with reports enabled by default if no settings exist.
 func GetUserReportSettings(userId int64) (reportsrc *ReportUserSettings) {
 	reportsrc = &ReportUserSettings{}
 	err := GetRecord(reportsrc, ReportUserSettings{UserId: userId})
@@ -88,6 +97,8 @@ func GetUserReportSettings(userId int64) (reportsrc *ReportUserSettings) {
 	return
 }
 
+// SetUserReportSettings updates the global report preference for the specified user.
+// When disabled, the user won't receive any report notifications.
 func SetUserReportSettings(userID int64, pref bool) {
 	err := UpdateRecord(&ReportUserSettings{}, ReportUserSettings{UserId: userID}, ReportUserSettings{Enabled: pref})
 	if err != nil {
@@ -95,6 +106,8 @@ func SetUserReportSettings(userID int64, pref bool) {
 	}
 }
 
+// LoadReportStats returns statistics about report features across the system.
+// Returns the count of users and chats with reports enabled.
 func LoadReportStats() (uRCount, gRCount int64) {
 	// Count users with reports enabled
 	err := DB.Model(&ReportUserSettings{}).Where("enabled = ?", true).Count(&uRCount).Error

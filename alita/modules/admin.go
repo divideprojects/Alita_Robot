@@ -28,6 +28,8 @@ var adminModule = moduleStruct{moduleName: "Admin"}
 
 Connection - false, false
 */
+// adminlist handles the /adminlist command to display all admins in a group.
+// It returns a cached or fresh list of group administrators excluding bots and anonymous admins.
 func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -89,6 +91,8 @@ connection = true, true
 
 Bot can only Demote people it promoted! */
 
+// demote handles the /demote command to remove admin privileges from a user.
+// The bot can only demote users it has previously promoted.
 func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -211,6 +215,8 @@ connection = true, true
 
 Bot will give promoted user permissions of bot*/
 
+// promote handles the /promote command to grant admin privileges to a user.
+// The bot grants permissions based on its own capabilities and the promoter's status.
 func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -365,6 +371,8 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// getinvitelink handles the /invitelink command to retrieve the chat's invite link.
+// Returns either the public username or generates an invite link for private groups.
 func (moduleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -396,6 +404,8 @@ func (moduleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
 Sets a custom title for an admin.
 Only works with admins whom bot has promoted.*/
 
+// setTitle handles the /title command to set a custom administrator title.
+// Only works with admins that the bot has promoted and titles are limited to 16 characters.
 func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -510,6 +520,8 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// anonAdmin handles the /anonadmin command to toggle anonymous admin mode in groups.
+// Only chat owners can modify this setting which affects how anonymous admins are handled.
 func (m moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -569,6 +581,8 @@ func (m moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// adminCache handles the /admincache command to refresh the admin cache for a chat.
+// Forces a reload of admin permissions from Telegram's API.
 func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -609,6 +623,8 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// LoadAdmin registers all admin module command handlers with the dispatcher.
+// Sets up commands for promotion, demotion, title setting, and admin management.
 func LoadAdmin(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store("Admin", true)
 

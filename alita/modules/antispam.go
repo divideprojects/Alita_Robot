@@ -14,6 +14,8 @@ var antispamModule = moduleStruct{
 	antiSpam:   map[int64]*antiSpamInfo{},
 }
 
+// checkSpammed evaluates if a chat has exceeded spam detection levels.
+// Returns true if any configured spam threshold has been violated.
 func (moduleStruct) checkSpammed(chatId int64, levels []antiSpamLevel) bool {
 	_asInfo, ok := antispamModule.antiSpam[chatId]
 	if !ok {
@@ -48,6 +50,8 @@ func (moduleStruct) checkSpammed(chatId int64, levels []antiSpamLevel) bool {
 	return spammed
 }
 
+// spamCheck performs spam detection for a specific chat.
+// Checks against a default threshold of 18 messages per second.
 func (moduleStruct) spamCheck(chatId int64) bool {
 	// if sql.IsUserSudo(chatId) {
 	//	return false
@@ -62,6 +66,8 @@ func (moduleStruct) spamCheck(chatId int64) bool {
 	})
 }
 
+// LoadAntispam registers the antispam message handler with the dispatcher.
+// Sets up spam detection monitoring for all incoming messages.
 func LoadAntispam(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandlerToGroup(
 		handlers.NewMessage(

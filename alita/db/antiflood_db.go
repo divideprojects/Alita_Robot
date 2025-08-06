@@ -15,7 +15,8 @@ func GetFlood(chatID int64) *AntifloodSettings {
 	return checkFloodSetting(chatID)
 }
 
-// check Chat Flood Settings, used to get data before performing any operation
+// checkFloodSetting retrieves or returns default antiflood settings for a chat.
+// Uses optimized cached queries and returns default settings if not found.
 func checkFloodSetting(chatID int64) (floodSrc *AntifloodSettings) {
 	// Use optimized cached query instead of SELECT *
 	floodSrc, err := GetOptimizedQueries().GetAntifloodSettingsCached(chatID)
@@ -84,6 +85,7 @@ func SetFloodMsgDel(chatID int64, val bool) {
 	deleteCache(optimizedAntifloodCacheKey(chatID))
 }
 
+// LoadAntifloodStats returns the count of chats with antiflood enabled (limit > 0).
 func LoadAntifloodStats() (antiCount int64) {
 	var totalCount int64
 	var noAntiCount int64

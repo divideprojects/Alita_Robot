@@ -7,7 +7,9 @@ import (
 	"gorm.io/gorm"
 )
 
-// check Chat Welcome Settings, used to get data before performing any operation
+// checkGreetingSettings retrieves or creates default greeting settings for a chat.
+// Used internally before performing any greeting-related operation.
+// Returns default settings if the chat doesn't exist in the database.
 func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 	greetingSrc = &GreetingSettings{}
 	err := GetRecord(greetingSrc, map[string]interface{}{"chat_id": chatID})
@@ -115,10 +117,14 @@ func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 	return greetingSrc
 }
 
+// GetGreetingSettings returns the greeting settings for the specified chat ID.
+// This is the public interface to access greeting settings.
 func GetGreetingSettings(chatID int64) *GreetingSettings {
 	return checkGreetingSettings(chatID)
 }
 
+// GetWelcomeButtons retrieves the welcome message buttons for the specified chat.
+// Returns an empty slice if no buttons are configured or settings are missing.
 func GetWelcomeButtons(chatId int64) []Button {
 	greetingSettings := checkGreetingSettings(chatId)
 	if greetingSettings.WelcomeSettings != nil {
@@ -127,6 +133,8 @@ func GetWelcomeButtons(chatId int64) []Button {
 	return []Button{}
 }
 
+// GetGoodbyeButtons retrieves the goodbye message buttons for the specified chat.
+// Returns an empty slice if no buttons are configured or settings are missing.
 func GetGoodbyeButtons(chatId int64) []Button {
 	greetingSettings := checkGreetingSettings(chatId)
 	if greetingSettings.GoodbyeSettings != nil {
@@ -135,6 +143,8 @@ func GetGoodbyeButtons(chatId int64) []Button {
 	return []Button{}
 }
 
+// SetWelcomeText updates the welcome message text, file ID, buttons, and type for a chat.
+// Creates default greeting settings if they don't exist.
 func SetWelcomeText(chatID int64, welcometxt, fileId string, buttons []Button, welcType int) {
 	welcomeSrc := checkGreetingSettings(chatID)
 	if welcomeSrc.WelcomeSettings == nil {
@@ -152,6 +162,8 @@ func SetWelcomeText(chatID int64, welcometxt, fileId string, buttons []Button, w
 	}
 }
 
+// SetWelcomeToggle enables or disables welcome messages for the specified chat.
+// Creates default greeting settings if they don't exist.
 func SetWelcomeToggle(chatID int64, pref bool) {
 	welcomeSrc := checkGreetingSettings(chatID)
 	if welcomeSrc.WelcomeSettings == nil {
@@ -166,6 +178,8 @@ func SetWelcomeToggle(chatID int64, pref bool) {
 	}
 }
 
+// SetGoodbyeText updates the goodbye message text, file ID, buttons, and type for a chat.
+// Creates default greeting settings if they don't exist.
 func SetGoodbyeText(chatID int64, goodbyetext, fileId string, buttons []Button, goodbyeType int) {
 	goodbyeSrc := checkGreetingSettings(chatID)
 	if goodbyeSrc.GoodbyeSettings == nil {
@@ -183,6 +197,8 @@ func SetGoodbyeText(chatID int64, goodbyetext, fileId string, buttons []Button, 
 	}
 }
 
+// SetGoodbyeToggle enables or disables goodbye messages for the specified chat.
+// Creates default greeting settings if they don't exist.
 func SetGoodbyeToggle(chatID int64, pref bool) {
 	goodbyeSrc := checkGreetingSettings(chatID)
 	if goodbyeSrc.GoodbyeSettings == nil {
@@ -197,6 +213,8 @@ func SetGoodbyeToggle(chatID int64, pref bool) {
 	}
 }
 
+// SetShouldCleanService sets whether service messages should be automatically cleaned in the chat.
+// Creates default greeting settings if they don't exist.
 func SetShouldCleanService(chatID int64, pref bool) {
 	cleanServiceSrc := checkGreetingSettings(chatID)
 	cleanServiceSrc.ShouldCleanService = pref
@@ -208,6 +226,8 @@ func SetShouldCleanService(chatID int64, pref bool) {
 	}
 }
 
+// SetShouldAutoApprove sets whether new members should be automatically approved in the chat.
+// Creates default greeting settings if they don't exist.
 func SetShouldAutoApprove(chatID int64, pref bool) {
 	autoApproveSrc := checkGreetingSettings(chatID)
 	autoApproveSrc.ShouldAutoApprove = pref
@@ -219,6 +239,8 @@ func SetShouldAutoApprove(chatID int64, pref bool) {
 	}
 }
 
+// SetCleanWelcomeSetting sets whether old welcome messages should be automatically cleaned.
+// Creates default greeting settings if they don't exist.
 func SetCleanWelcomeSetting(chatID int64, pref bool) {
 	cleanWelcomeSrc := checkGreetingSettings(chatID)
 	if cleanWelcomeSrc.WelcomeSettings == nil {
@@ -233,6 +255,8 @@ func SetCleanWelcomeSetting(chatID int64, pref bool) {
 	}
 }
 
+// SetCleanWelcomeMsgId updates the message ID of the last welcome message for cleanup purposes.
+// Creates default greeting settings if they don't exist.
 func SetCleanWelcomeMsgId(chatId, msgId int64) {
 	cleanWelcomeSrc := checkGreetingSettings(chatId)
 	if cleanWelcomeSrc.WelcomeSettings == nil {
@@ -247,6 +271,8 @@ func SetCleanWelcomeMsgId(chatId, msgId int64) {
 	}
 }
 
+// SetCleanGoodbyeSetting sets whether old goodbye messages should be automatically cleaned.
+// Creates default greeting settings if they don't exist.
 func SetCleanGoodbyeSetting(chatID int64, pref bool) {
 	cleanGoodbyeSrc := checkGreetingSettings(chatID)
 	if cleanGoodbyeSrc.GoodbyeSettings == nil {
@@ -261,6 +287,8 @@ func SetCleanGoodbyeSetting(chatID int64, pref bool) {
 	}
 }
 
+// SetCleanGoodbyeMsgId updates the message ID of the last goodbye message for cleanup purposes.
+// Creates default greeting settings if they don't exist.
 func SetCleanGoodbyeMsgId(chatId, msgId int64) {
 	cleanGoodbyeSrc := checkGreetingSettings(chatId)
 	if cleanGoodbyeSrc.GoodbyeSettings == nil {
@@ -275,6 +303,8 @@ func SetCleanGoodbyeMsgId(chatId, msgId int64) {
 	}
 }
 
+// LoadGreetingsStats returns statistics about greeting features across all chats.
+// Returns counts for enabled welcome messages, goodbye messages, clean service, clean welcome, and clean goodbye features.
 func LoadGreetingsStats() (enabledWelcome, enabledGoodbye, cleanServiceEnabled, cleanWelcomeEnabled, cleanGoodbyeEnabled int64) {
 	// Use a single query with COUNT and CASE WHEN for better performance
 	type greetingStats struct {

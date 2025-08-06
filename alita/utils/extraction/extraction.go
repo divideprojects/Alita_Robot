@@ -19,7 +19,9 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 )
 
-// ExtractChat extracts the chat from the message.
+// ExtractChat extracts and validates a chat from command arguments.
+// Supports both numeric chat IDs and chat usernames for chat identification.
+// Returns nil if chat is not found or arguments are invalid.
 func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
@@ -58,13 +60,16 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 	return nil
 }
 
-// ExtractUser extracts the user from the message.
+// ExtractUser extracts a user ID from the message context.
+// Uses ExtractUserAndText internally, returning only the user ID.
 func ExtractUser(b *gotgbot.Bot, ctx *ext.Context) int64 {
 	userId, _ := ExtractUserAndText(b, ctx)
 	return userId
 }
 
-// ExtractUserAndText extracts the user and text from the message.
+// ExtractUserAndText extracts both user ID and accompanying text from various message formats.
+// Handles text mentions, usernames, numeric IDs, and reply messages.
+// Returns user ID and associated text, with validation through the user database.
 func ExtractUserAndText(b *gotgbot.Bot, ctx *ext.Context) (int64, string) {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
@@ -159,7 +164,9 @@ func ExtractUserAndText(b *gotgbot.Bot, ctx *ext.Context) (int64, string) {
 	return userId, trimTextNewline(text)
 }
 
-// GetUserId function used to get the user id from a username
+// GetUserId retrieves a user ID from a username string.
+// Searches both user and channel databases for the username.
+// Returns 0 if username is too short or not found.
 func GetUserId(username string) int64 {
 	if len(username) <= 5 {
 		return 0
@@ -181,7 +188,9 @@ func GetUserId(username string) int64 {
 	return 0
 }
 
-// GetUserInfo function used to get the user info from id
+// GetUserInfo retrieves user information (username and name) from a user ID.
+// Searches both user and channel databases for the ID.
+// Returns username, display name, and whether the user was found.
 func GetUserInfo(userId int64) (username, name string, found bool) {
 	username, name, found = db.GetUserInfoById(userId)
 	if found {
@@ -196,7 +205,9 @@ func GetUserInfo(userId int64) (username, name string, found bool) {
 	return "", "", false
 }
 
-// IdFromReply function used to get the user id from a reply
+// IdFromReply extracts user ID and text from a replied-to message.
+// Gets the sender ID from the reply and remaining command text.
+// Returns (0, "") if no reply message exists.
 func IdFromReply(m *gotgbot.Message) (int64, string) {
 	prevMessage := m.ReplyToMessage
 
@@ -216,7 +227,9 @@ func IdFromReply(m *gotgbot.Message) (int64, string) {
 	return userId, res[1]
 }
 
-// ExtractQuotes function used to extract text between quotes
+// ExtractQuotes extracts quoted text or words from a sentence using regex patterns.
+// When matchQuotes is true, extracts text between double quotes.
+// When matchWord is true, extracts the first word/token and remaining text.
 func ExtractQuotes(sentence string, matchQuotes, matchWord bool) (inQuotes, afterWord string) {
 	// if first character starts with '""' and matchQutes is true
 	if sentence[0] == '"' && matchQuotes {
@@ -252,7 +265,9 @@ func ExtractQuotes(sentence string, matchQuotes, matchWord bool) (inQuotes, afte
 	return
 }
 
-// ExtractTime function used to extract time from a string
+// ExtractTime parses time duration strings for temporary actions like bans.
+// Supports formats: Nm (minutes), Nh (hours), Nd (days), Nw (weeks).
+// Returns Unix timestamp, formatted time string, and reason text.
 func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int64, timeStr, reason string) {
 	msg := ctx.EffectiveMessage
 	timeNow := time.Now().Unix()

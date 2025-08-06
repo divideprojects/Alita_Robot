@@ -14,7 +14,7 @@ var (
 	legacyParamRegex = regexp.MustCompile(`%[sdvfbtoxX]`)
 )
 
-// GetString retrieves a translated string with optional parameter interpolation
+// GetString retrieves a translated string with optional parameter interpolation.
 func (t *Translator) GetString(key string, params ...TranslationParams) (string, error) {
 	// Create cache key if caching is enabled
 	cacheKey := ""
@@ -67,7 +67,7 @@ func (t *Translator) GetString(key string, params ...TranslationParams) (string,
 	return result, nil
 }
 
-// GetStringSlice retrieves a translated string slice
+// GetStringSlice retrieves a translated string slice.
 func (t *Translator) GetStringSlice(key string) ([]string, error) {
 	// Create cache key
 	cacheKey := ""
@@ -108,7 +108,7 @@ func (t *Translator) GetStringSlice(key string) ([]string, error) {
 	return result, nil
 }
 
-// GetInt retrieves a translated integer value
+// GetInt retrieves a translated integer value.
 func (t *Translator) GetInt(key string) (int, error) {
 	result := t.viper.GetInt(key)
 	if !t.viper.IsSet(key) {
@@ -124,7 +124,7 @@ func (t *Translator) GetInt(key string) (int, error) {
 	return result, nil
 }
 
-// GetBool retrieves a translated boolean value
+// GetBool retrieves a translated boolean value.
 func (t *Translator) GetBool(key string) (bool, error) {
 	result := t.viper.GetBool(key)
 	if !t.viper.IsSet(key) {
@@ -140,7 +140,7 @@ func (t *Translator) GetBool(key string) (bool, error) {
 	return result, nil
 }
 
-// GetFloat retrieves a translated float value
+// GetFloat retrieves a translated float value.
 func (t *Translator) GetFloat(key string) (float64, error) {
 	result := t.viper.GetFloat64(key)
 	if !t.viper.IsSet(key) {
@@ -156,7 +156,7 @@ func (t *Translator) GetFloat(key string) (float64, error) {
 	return result, nil
 }
 
-// GetPlural retrieves a pluralized string based on count
+// GetPlural retrieves a pluralized string based on count.
 func (t *Translator) GetPlural(key string, count int, params ...TranslationParams) (string, error) {
 	// Try to get plural forms
 	pluralRule := PluralRule{
@@ -214,7 +214,7 @@ func (t *Translator) GetPlural(key string, count int, params ...TranslationParam
 	return selectedForm, nil
 }
 
-// interpolateParams performs parameter interpolation on a string
+// interpolateParams performs parameter interpolation on a string.
 func (t *Translator) interpolateParams(text string, params TranslationParams) (string, error) {
 	if params == nil {
 		return text, nil
@@ -244,7 +244,7 @@ func (t *Translator) interpolateParams(text string, params TranslationParams) (s
 	return result, nil
 }
 
-// selectPluralForm selects the appropriate plural form based on language rules
+// selectPluralForm selects the appropriate plural form based on language rules.
 func (t *Translator) selectPluralForm(rule PluralRule, count int) string {
 	// Implement basic English plural rules
 	// For more languages, this would need language-specific logic
@@ -269,7 +269,7 @@ func (t *Translator) selectPluralForm(rule PluralRule, count int) string {
 	}
 }
 
-// extractOrderedValues extracts values from params in a predictable order for legacy sprintf
+// extractOrderedValues extracts values from params in a predictable order for legacy sprintf.
 func extractOrderedValues(params TranslationParams) []interface{} {
 	if params == nil {
 		return nil
@@ -300,12 +300,12 @@ func extractOrderedValues(params TranslationParams) []interface{} {
 	return values
 }
 
-// GetLanguageCode returns the language code for this translator
+// GetLanguageCode returns the language code for this translator.
 func (t *Translator) GetLanguageCode() string {
 	return t.langCode
 }
 
-// IsDefaultLanguage checks if this translator uses the default language
+// IsDefaultLanguage checks if this translator uses the default language.
 func (t *Translator) IsDefaultLanguage() bool {
 	return t.langCode == t.manager.defaultLang
 }

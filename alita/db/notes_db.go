@@ -7,6 +7,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// getNotesSettings retrieves or creates default notes settings for a chat.
+// Used internally before performing any notes-related operation.
+// Returns default settings if the chat doesn't exist in the database.
 func getNotesSettings(chatID int64) (noteSrc *NotesSettings) {
 	noteSrc = &NotesSettings{}
 	err := GetRecord(noteSrc, NotesSettings{ChatId: chatID})
@@ -32,6 +35,8 @@ func getNotesSettings(chatID int64) (noteSrc *NotesSettings) {
 	return
 }
 
+// getAllChatNotes retrieves all notes for a specific chat ID from the database.
+// Returns an empty slice if no notes are found or an error occurs.
 func getAllChatNotes(chatId int64) (notes []*Notes) {
 	err := GetRecords(&notes, Notes{ChatId: chatId})
 	if err != nil {
@@ -41,10 +46,14 @@ func getAllChatNotes(chatId int64) (notes []*Notes) {
 	return
 }
 
+// GetNotes returns the notes settings for the specified chat ID.
+// This is the public interface to access notes settings.
 func GetNotes(chatID int64) *NotesSettings {
 	return getNotesSettings(chatID)
 }
 
+// GetNote retrieves a specific note by chat ID and note name from the database.
+// Returns nil if the note is not found or an error occurs.
 func GetNote(chatID int64, keyword string) (noteSrc *Notes) {
 	noteSrc = &Notes{}
 	err := GetRecord(noteSrc, Notes{ChatId: chatID, NoteName: keyword})
@@ -57,6 +66,9 @@ func GetNote(chatID int64, keyword string) (noteSrc *Notes) {
 
 	return
 }
+// GetNotesList retrieves a list of all note names for a specific chat ID.
+// The admin parameter is currently unused as all notes are accessible to all users.
+// Returns an empty slice if no notes are found.
 func GetNotesList(chatID int64, admin bool) (allNotes []string) {
 	noteSrc := getAllChatNotes(chatID)
 	for _, note := range noteSrc {
@@ -72,6 +84,8 @@ func GetNotesList(chatID int64, admin bool) (allNotes []string) {
 	return
 }
 
+// DoesNoteExists checks whether a note with the given name exists in the specified chat.
+// Returns false if the note doesn't exist or an error occurs.
 func DoesNoteExists(chatID int64, noteName string) bool {
 	var count int64
 	err := DB.Model(&Notes{}).Where("chat_id = ? AND note_name = ?", chatID, noteName).Count(&count).Error
@@ -82,6 +96,9 @@ func DoesNoteExists(chatID int64, noteName string) bool {
 	return count > 0
 }
 
+// AddNote creates a new note in the database for the specified chat.
+// Does nothing if a note with the same name already exists.
+// Supports various note types including text, media, and custom buttons.
 func AddNote(chatID int64, noteName, replyText, fileID string, buttons ButtonArray, filtType int, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool) {
 	// Check if note already exists using a direct query
 	var count int64
@@ -117,6 +134,8 @@ func AddNote(chatID int64, noteName, replyText, fileID string, buttons ButtonArr
 	}
 }
 
+// RemoveNote deletes a note with the specified name from the chat.
+// Does nothing if the note doesn't exist.
 func RemoveNote(chatID int64, noteName string) {
 	// Directly attempt to delete the note without checking existence first
 	result := DB.Where("chat_id = ? AND note_name = ?", chatID, noteName).Delete(&Notes{})
@@ -127,6 +146,7 @@ func RemoveNote(chatID int64, noteName string) {
 	// result.RowsAffected will be 0 if no note was found, which is fine
 }
 
+// RemoveAllNotes deletes all notes for the specified chat ID from the database.
 func RemoveAllNotes(chatID int64) {
 	err := DB.Where("chat_id = ?", chatID).Delete(&Notes{}).Error
 	if err != nil {
@@ -134,6 +154,8 @@ func RemoveAllNotes(chatID int64) {
 	}
 }
 
+// TooglePrivateNote toggles the private notes setting for the specified chat.
+// When enabled, notes are sent privately to users instead of in the group.
 func TooglePrivateNote(chatID int64, pref bool) {
 	err := UpdateRecord(&NotesSettings{}, NotesSettings{ChatId: chatID}, NotesSettings{Private: pref})
 	if err != nil {
@@ -141,6 +163,8 @@ func TooglePrivateNote(chatID int64, pref bool) {
 	}
 }
 
+// LoadNotesStats returns statistics about notes across the entire system.
+// Returns the total number of notes and the number of distinct chats using notes.
 func LoadNotesStats() (notesNum, notesUsingChats int64) {
 	// Count total notes
 	err := DB.Model(&Notes{}).Count(&notesNum).Error

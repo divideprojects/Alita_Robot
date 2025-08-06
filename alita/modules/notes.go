@@ -29,6 +29,8 @@ var notesModule = moduleStruct{
 	overwriteNotesMap: make(map[string]overwriteNote),
 }
 
+// addNote handles the /save command to create new notes
+// with support for various media types and formatting options.
 func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -138,6 +140,8 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// rmNote handles the /clear command to remove existing notes
+// from the chat, requiring admin permissions.
 func (moduleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -188,6 +192,8 @@ func (moduleStruct) rmNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// privNote handles the /privnote command to toggle private notes
+// setting, controlling whether notes are sent privately or in group.
 func (moduleStruct) privNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -222,6 +228,8 @@ func (moduleStruct) privNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// notesList handles the /notes command to display all available
+// notes in the chat with appropriate access controls.
 func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -304,6 +312,8 @@ func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// rmAllNotes handles the /clearall command to remove all notes
+// from the chat, restricted to chat owners only.
 func (moduleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -358,7 +368,8 @@ func (moduleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-// CallbackQuery handler for notes_overwite. query
+// noteOverWriteHandler processes callback queries for note overwrite
+// confirmations when adding notes that already exist.
 func (m moduleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	user := query.From
@@ -412,6 +423,8 @@ func (m moduleStruct) noteOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) err
 	return ext.EndGroups
 }
 
+// notesButtonHandler processes callback queries for the remove all notes
+// confirmation dialog, restricted to chat owners.
 func (moduleStruct) notesButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	user := query.From
@@ -455,6 +468,8 @@ func (moduleStruct) notesButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// notesWatcher monitors messages starting with '#' and automatically
+// sends the corresponding note if it exists in the chat.
 func (m moduleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -554,6 +569,8 @@ func (m moduleStruct) notesWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// getNotes handles the /get command to retrieve and send
+// specific notes by name with format options.
 func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -663,7 +680,8 @@ func (m moduleStruct) getNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-// returns the note in non-formatted text
+// sendNoFormatNote sends a note in raw format without markdown processing,
+// showing the original formatting codes, restricted to admins.
 func (moduleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, replyMsgId int64, noteData *db.Notes) error {
 	user := ctx.EffectiveSender.User
 
@@ -701,6 +719,8 @@ func (moduleStruct) sendNoFormatNote(b *gotgbot.Bot, ctx *ext.Context, replyMsgI
 	return nil
 }
 
+// LoadNotes registers all notes module handlers with the dispatcher,
+// including note management commands and the notes watcher.
 func LoadNotes(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(notesModule.moduleName, true)
 

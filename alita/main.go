@@ -19,7 +19,9 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-// ResourceMonitor monitors system resources
+// ResourceMonitor monitors system resources including memory usage and goroutine count.
+// It runs every 5 minutes, logging resource statistics and issuing warnings
+// when thresholds are exceeded (>1000 goroutines or >500MB memory usage).
 func ResourceMonitor() {
 	ticker := time.NewTicker(5 * time.Minute)
 	defer ticker.Stop()
@@ -49,14 +51,19 @@ func ResourceMonitor() {
 	}
 }
 
-// ListModules list all modules loaded in the bot
+// ListModules returns a formatted string containing all loaded bot modules.
+// It retrieves the module names from the HelpModule.AbleMap, sorts them alphabetically,
+// and returns them as a comma-separated list wrapped in square brackets.
 func ListModules() string {
 	modSlice := modules.HelpModule.AbleMap.LoadModules()
 	sort.Strings(modSlice)
 	return fmt.Sprintf("[%s]", strings.Join(modSlice, ", "))
 }
 
-// InitialChecks some initial checks before running bot
+// InitialChecks performs essential initialization tasks before starting the bot.
+// It ensures the bot exists in the database, validates command aliases for duplicates,
+// initializes the cache system, and starts resource monitoring.
+// Returns an error if cache initialization fails.
 func InitialChecks(b *gotgbot.Bot) error {
 	// Create bot in db if not already created
 	go db.EnsureBotInDb(b)
@@ -72,7 +79,9 @@ func InitialChecks(b *gotgbot.Bot) error {
 	return nil
 }
 
-// check duplicate aliases of commands in the bot
+// checkDuplicateAliases validates that no command aliases are duplicated across modules.
+// It collects all alternative help options from loaded modules and checks for duplicates.
+// The function terminates the program with a fatal error if duplicates are found.
 func checkDuplicateAliases() {
 	var althelp []string
 
@@ -86,7 +95,9 @@ func checkDuplicateAliases() {
 	}
 }
 
-// LoadModules load the modules one-by-one using dispatcher
+// LoadModules loads all bot modules in the correct order using the provided dispatcher.
+// It initializes the help system, loads core functionality modules (admin, bans, filters, etc.),
+// and ensures the help module is loaded last to register all available commands.
 func LoadModules(dispatcher *ext.Dispatcher) {
 	// Initialize Inner Map
 	modules.HelpModule.AbleMap.Init()

@@ -18,6 +18,8 @@ import (
 
 var formattingModule = moduleStruct{moduleName: "Formatting"}
 
+// markdownHelp provides markdown formatting help and examples to users.
+// Shows formatting options in private messages or sends a button to open help in PM.
 func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
@@ -79,6 +81,8 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// genFormattingKb generates the inline keyboard layout for formatting help options.
+// Creates buttons for different formatting categories like markdown, fillings, and random content.
 func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
 	fxt := "formatting.%s"
 
@@ -106,6 +110,8 @@ func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
 	return keyboard
 }
 
+// getMarkdownHelp retrieves the appropriate help text for a specific formatting module.
+// Returns localized help content based on the requested formatting category.
 func (moduleStruct) getMarkdownHelp(module string) string {
 	var helpTxt string
 	tr := i18n.I18n{LangCode: "en"}
@@ -120,6 +126,8 @@ func (moduleStruct) getMarkdownHelp(module string) string {
 	return helpTxt
 }
 
+// formattingHandler processes callback queries for formatting help navigation.
+// Updates help messages based on user selections from the formatting keyboard.
 func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	msg := query.Message
@@ -155,6 +163,8 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 	return ext.EndGroups
 }
 
+// LoadMkdCmd registers markdown and formatting command handlers with the dispatcher.
+// Sets up help commands and callback handlers for formatting assistance.
 func LoadMkdCmd(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(formattingModule.moduleName, true)
 	HelpModule.helpableKb[formattingModule.moduleName] = formattingModule.genFormattingKb()

@@ -13,6 +13,7 @@ type I18nError struct {
 	Err     error  // Underlying error
 }
 
+// Error returns a formatted string representation of the I18nError.
 func (e *I18nError) Error() string {
 	if e.Err != nil {
 		return fmt.Sprintf("i18n %s failed for lang=%s key=%s: %s: %v", e.Op, e.Lang, e.Key, e.Message, e.Err)
@@ -20,11 +21,12 @@ func (e *I18nError) Error() string {
 	return fmt.Sprintf("i18n %s failed for lang=%s key=%s: %s", e.Op, e.Lang, e.Key, e.Message)
 }
 
+// Unwrap returns the underlying error wrapped by this I18nError.
 func (e *I18nError) Unwrap() error {
 	return e.Err
 }
 
-// NewI18nError creates a new i18n error
+// NewI18nError creates a new i18n error with the specified operation, language, key, message and underlying error.
 func NewI18nError(op, lang, key, message string, err error) *I18nError {
 	return &I18nError{
 		Op:      op,
@@ -46,13 +48,13 @@ var (
 	ErrInvalidParams     = fmt.Errorf("invalid translation parameters")
 )
 
-// IsI18nError checks if an error is an I18nError
+// IsI18nError checks if an error is an I18nError type.
 func IsI18nError(err error) bool {
 	_, ok := err.(*I18nError)
 	return ok
 }
 
-// IsLocaleNotFound checks if error is due to locale not being found
+// IsLocaleNotFound checks if error is due to locale not being found.
 func IsLocaleNotFound(err error) bool {
 	if i18nErr, ok := err.(*I18nError); ok {
 		return i18nErr.Err == ErrLocaleNotFound
@@ -60,7 +62,7 @@ func IsLocaleNotFound(err error) bool {
 	return err == ErrLocaleNotFound
 }
 
-// IsKeyNotFound checks if error is due to key not being found
+// IsKeyNotFound checks if error is due to translation key not being found.
 func IsKeyNotFound(err error) bool {
 	if i18nErr, ok := err.(*I18nError); ok {
 		return i18nErr.Err == ErrKeyNotFound

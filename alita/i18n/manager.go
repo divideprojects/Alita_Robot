@@ -14,7 +14,7 @@ var (
 	managerOnce     sync.Once
 )
 
-// GetManager returns the singleton LocaleManager instance
+// GetManager returns the singleton LocaleManager instance.
 func GetManager() *LocaleManager {
 	managerOnce.Do(func() {
 		managerInstance = &LocaleManager{
@@ -26,7 +26,7 @@ func GetManager() *LocaleManager {
 	return managerInstance
 }
 
-// Initialize initializes the LocaleManager with the provided configuration
+// Initialize initializes the LocaleManager with the provided configuration.
 func (lm *LocaleManager) Initialize(fs *embed.FS, localePath string, config ManagerConfig) error {
 	lm.mu.Lock()
 	defer lm.mu.Unlock()
@@ -62,7 +62,7 @@ func (lm *LocaleManager) Initialize(fs *embed.FS, localePath string, config Mana
 	return nil
 }
 
-// GetTranslator returns a translator for the specified language
+// GetTranslator returns a translator for the specified language.
 func (lm *LocaleManager) GetTranslator(langCode string) (*Translator, error) {
 	lm.mu.RLock()
 	defer lm.mu.RUnlock()
@@ -91,7 +91,7 @@ func (lm *LocaleManager) GetTranslator(langCode string) (*Translator, error) {
 	}, nil
 }
 
-// GetAvailableLanguages returns a slice of all available language codes
+// GetAvailableLanguages returns a slice of all available language codes.
 func (lm *LocaleManager) GetAvailableLanguages() []string {
 	lm.mu.RLock()
 	defer lm.mu.RUnlock()
@@ -103,7 +103,7 @@ func (lm *LocaleManager) GetAvailableLanguages() []string {
 	return languages
 }
 
-// IsLanguageSupported checks if a language is supported
+// IsLanguageSupported checks if a language is supported.
 func (lm *LocaleManager) IsLanguageSupported(langCode string) bool {
 	lm.mu.RLock()
 	defer lm.mu.RUnlock()
@@ -112,7 +112,7 @@ func (lm *LocaleManager) IsLanguageSupported(langCode string) bool {
 	return exists
 }
 
-// GetDefaultLanguage returns the default language code
+// GetDefaultLanguage returns the default language code.
 func (lm *LocaleManager) GetDefaultLanguage() string {
 	lm.mu.RLock()
 	defer lm.mu.RUnlock()
@@ -120,7 +120,7 @@ func (lm *LocaleManager) GetDefaultLanguage() string {
 	return lm.defaultLang
 }
 
-// ReloadLocales reloads all locale files (useful for development)
+// ReloadLocales reloads all locale files (useful for development).
 func (lm *LocaleManager) ReloadLocales() error {
 	lm.mu.Lock()
 	defer lm.mu.Unlock()
@@ -143,7 +143,7 @@ func (lm *LocaleManager) ReloadLocales() error {
 	return lm.loadLocaleFiles()
 }
 
-// GetStats returns statistics about the locale manager
+// GetStats returns statistics about the locale manager.
 func (lm *LocaleManager) GetStats() map[string]interface{} {
 	lm.mu.RLock()
 	defer lm.mu.RUnlock()

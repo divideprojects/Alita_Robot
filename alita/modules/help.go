@@ -126,19 +126,27 @@ type moduleEnabled struct {
 	modules map[string]bool
 }
 
+// Init initializes the module enabled map for tracking enabled bot modules.
+// Sets up the internal map structure for storing module activation states.
 func (m *moduleEnabled) Init() {
 	m.modules = make(map[string]bool)
 }
 
+// Store sets the enabled status for a specific module in the bot.
+// Records whether a module is active and available for use.
 func (m *moduleEnabled) Store(module string, enabled bool) {
 	m.modules[module] = enabled
 }
 
+// Load retrieves the enabled status for a specific module.
+// Returns the module name and whether it's currently enabled and accessible.
 func (m *moduleEnabled) Load(module string) (string, bool) {
 	log.Info(fmt.Sprintf("[Module] Loading %s module", module))
 	return module, m.modules[module]
 }
 
+// LoadModules returns a slice of all currently enabled module names.
+// Provides a list of active modules that users can access and get help for.
 func (m *moduleEnabled) LoadModules() []string {
 	modules := make([]string, 0)
 	for module := range m.modules {
@@ -150,6 +158,8 @@ func (m *moduleEnabled) LoadModules() []string {
 	return modules
 }
 
+// about displays information about the bot including version and features.
+// Shows bot details, links to support channels, and configuration options.
 func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
@@ -238,6 +248,8 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// helpButtonHandler processes callback queries from help menu button interactions.
+// Navigates between help sections and displays appropriate help content for modules.
 func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	args := strings.Split(query.Data, ".")
@@ -294,6 +306,8 @@ func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // start introduces the bot
+// start handles the /start command and displays welcome message with navigation options.
+// Shows different content in private vs group chats and handles start parameters.
 func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
@@ -334,6 +348,8 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// donate displays information about supporting the bot and its development.
+// Shows donation links and ways users can contribute to bot maintenance.
 func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -358,6 +374,8 @@ func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// botConfig provides step-by-step configuration guidance for new users.
+// Walks users through adding the bot to chats and basic setup procedures.
 func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	msg := query.Message
@@ -445,6 +463,8 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// help displays the main help menu or specific module help information.
+// Shows module list in private messages or provides links to PM help in groups.
 func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
@@ -528,6 +548,8 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// LoadHelp registers all help-related command and callback handlers.
+// Sets up the help system including start, about, donate, and configuration commands.
 func LoadHelp(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("start", HelpModule.start))
 	dispatcher.AddHandler(handlers.NewCommand("help", HelpModule.help))

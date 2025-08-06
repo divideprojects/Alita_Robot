@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetChannelSettings retrieves channel settings from cache or database.
+// Returns nil if the channel is not found or an error occurs.
 func GetChannelSettings(channelId int64) (channelSrc *ChannelSettings) {
 	// Use optimized cached query instead of SELECT *
 	channelSrc, err := GetOptimizedQueries().GetChannelSettingsCached(channelId)
@@ -20,7 +22,8 @@ func GetChannelSettings(channelId int64) (channelSrc *ChannelSettings) {
 	return channelSrc
 }
 
-// EnsureChatExists ensures a chat record exists before creating related records
+// EnsureChatExists ensures a chat record exists before creating related records.
+// Creates a minimal chat record with default settings if it doesn't exist.
 func EnsureChatExists(chatId int64, chatName string) error {
 	if ChatExists(chatId) {
 		return nil
@@ -45,6 +48,8 @@ func EnsureChatExists(chatId int64, chatName string) error {
 	return nil
 }
 
+// UpdateChannel updates or creates a channel record.
+// Ensures the chat exists before creating channel settings and invalidates cache after updates.
 func UpdateChannel(channelId int64, channelName, username string) {
 	// Check if channel already exists
 	channelSrc := GetChannelSettings(channelId)
@@ -78,6 +83,8 @@ func UpdateChannel(channelId int64, channelName, username string) {
 	}
 }
 
+// GetChannelIdByUserName attempts to find a channel ID by username.
+// Returns 0 as this function is not supported with the current model structure.
 func GetChannelIdByUserName(username string) int64 {
 	// Note: The new ChannelSettings model doesn't store username
 	// This function cannot be implemented with the current model structure
@@ -85,6 +92,8 @@ func GetChannelIdByUserName(username string) int64 {
 	return 0
 }
 
+// GetChannelInfoById retrieves channel information by user ID.
+// Returns empty strings for username and name as the current model doesn't store this data.
 func GetChannelInfoById(userId int64) (username, name string, found bool) {
 	channel := GetChannelSettings(userId)
 	if channel != nil {
@@ -96,6 +105,7 @@ func GetChannelInfoById(userId int64) (username, name string, found bool) {
 	return
 }
 
+// LoadChannelStats returns the total count of channel settings records.
 func LoadChannelStats() (count int64) {
 	err := DB.Model(&ChannelSettings{}).Count(&count).Error
 	if err != nil {

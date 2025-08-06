@@ -9,7 +9,8 @@ var (
 	mu          = &sync.Mutex{}
 )
 
-// addToArray is a func to add to array of strings
+// addToArray safely appends multiple strings to a string slice using mutex protection.
+// Thread-safe function for concurrent access to shared command arrays.
 func addToArray(arr []string, val ...string) []string {
 	mu.Lock()
 	arr = append(arr, val...)
@@ -17,17 +18,20 @@ func addToArray(arr []string, val ...string) []string {
 	return arr
 }
 
-// AddAdminCmd AddAdminCm: Add Connection Commands for Admin
+// AddAdminCmd adds commands to the admin commands list for connection menu.
+// These commands will be shown in the admin commands section of the connection interface.
 func AddAdminCmd(cmd ...string) {
 	AdminCmds = addToArray(AdminCmds, cmd...)
 }
 
-// AddUserCmd Add Connection Commands for User
+// AddUserCmd adds commands to the user commands list for connection menu.
+// These commands will be shown in the user commands section of the connection interface.
 func AddUserCmd(cmd ...string) {
 	UserCmds = addToArray(UserCmds, cmd...)
 }
 
-// AddCmdToDisableable - func to add cmd to list of disableable
+// AddCmdToDisableable adds a command to the list of commands that can be disabled in chats.
+// Administrators can use this to control which commands are available to regular users.
 func AddCmdToDisableable(cmd string) {
 	DisableCmds = addToArray(DisableCmds, cmd)
 }

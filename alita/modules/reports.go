@@ -27,6 +27,8 @@ var reportsModule = moduleStruct{
 	handlerGroup: 8,
 }
 
+// report handles the /report command and @admin mentions to notify
+// administrators about problematic messages with action buttons.
 func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
@@ -193,6 +195,8 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// reports handles the /reports command to manage reporting settings
+// for both users and chats, including blocking and status changes.
 func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, true)
@@ -309,6 +313,8 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// markResolvedButtonHandler processes callback queries from report action buttons
+// to kick, ban, delete messages, or mark reports as resolved.
 func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	chat := ctx.EffectiveChat
@@ -416,6 +422,8 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 	return ext.EndGroups
 }
 
+// LoadReports registers all reports module handlers with the dispatcher,
+// including report commands and @admin mention monitoring.
 func LoadReports(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(reportsModule.moduleName, true)
 

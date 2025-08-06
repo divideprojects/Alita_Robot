@@ -12,6 +12,8 @@ import (
 	"github.com/dustin/go-humanize"
 )
 
+// GetTeamMemInfo retrieves developer settings for a user.
+// Returns default settings (not a dev) if not found or on error.
 func GetTeamMemInfo(userID int64) (devrc *DevSettings) {
 	devrc = &DevSettings{}
 	err := GetRecord(devrc, DevSettings{UserId: userID})
@@ -25,6 +27,8 @@ func GetTeamMemInfo(userID int64) (devrc *DevSettings) {
 	return
 }
 
+// GetTeamMembers returns a map of all team members with their roles.
+// Currently only supports 'dev' role and returns nil on error.
 func GetTeamMembers() map[int64]string {
 	var teamArray []*DevSettings
 	array := make(map[int64]string)
@@ -44,6 +48,8 @@ func GetTeamMembers() map[int64]string {
 	return array
 }
 
+// AddDev adds a user as a developer or updates existing record to dev status.
+// Creates a new record if the user doesn't exist in DevSettings.
 func AddDev(userID int64) {
 	devSettings := &DevSettings{UserId: userID, IsDev: true}
 
@@ -61,6 +67,7 @@ func AddDev(userID int64) {
 	log.Infof("[Database] AddDev: %d", userID)
 }
 
+// RemDev removes a user from the developers list by deleting their DevSettings record.
 func RemDev(userID int64) {
 	err := DB.Where("user_id = ?", userID).Delete(&DevSettings{}).Error
 	if err != nil {
@@ -68,6 +75,8 @@ func RemDev(userID int64) {
 	}
 }
 
+// LoadAllStats generates a comprehensive statistics report for the bot.
+// Includes user counts, chat statistics, feature usage, and system information.
 func LoadAllStats() string {
 	totalUsers := LoadUsersStats()
 	activeChats, inactiveChats := LoadChatStats()
@@ -154,13 +163,15 @@ func LoadAllStats() string {
 	return result
 }
 
-// AddSudo - Note: The new DevSettings model only supports Dev role, not Sudo
+// AddSudo is deprecated - the new DevSettings model only supports Dev role.
+// This function redirects to AddDev for compatibility.
 func AddSudo(userID int64) {
 	log.Warnf("[Database] AddSudo: Sudo role not supported in new model, adding as Dev instead for user %d", userID)
 	AddDev(userID)
 }
 
-// RemSudo - Note: The new DevSettings model only supports Dev role, not Sudo
+// RemSudo is deprecated - the new DevSettings model only supports Dev role.
+// This function redirects to RemDev for compatibility.
 func RemSudo(userID int64) {
 	log.Warnf("[Database] RemSudo: Sudo role not supported in new model, removing Dev instead for user %d", userID)
 	RemDev(userID)

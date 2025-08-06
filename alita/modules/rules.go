@@ -24,6 +24,8 @@ var rulesModule = moduleStruct{
 	defaultRulesBtn: "Rules",
 }
 
+// clearRules handles commands to completely remove all rules
+// from the chat, requiring admin permissions.
 func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -38,6 +40,8 @@ func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// privaterules handles the /privaterules command to toggle whether
+// rules are sent privately or in the group chat.
 func (moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -79,6 +83,8 @@ func (moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// sendRules handles the /rules command to display chat rules
+// either in the group or privately based on settings.
 func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
@@ -150,6 +156,8 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// setRules handles the /setrules command to create or update
+// chat rules with markdown formatting support.
 func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -183,6 +191,8 @@ func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// rulesBtn handles the /rulesbutton command to set or view
+// the custom button text for private rules links.
 func (m moduleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -227,6 +237,8 @@ func (m moduleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// resetRulesBtn handles commands to reset the custom rules button
+// text back to the default value.
 func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// connection status
@@ -247,6 +259,8 @@ func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// LoadRules registers all rules module handlers with the dispatcher,
+// including rules management and display commands.
 func LoadRules(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(rulesModule.moduleName, true)
 
