@@ -117,8 +117,9 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-security-${{ hashFiles('**/go.sum') }}
           restore-keys: |
+            ${{ runner.os }}-go-security-
             ${{ runner.os }}-go-
 
       - name: Download dependencies
@@ -154,8 +155,10 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-${{ matrix.go-version }}-test-${{ hashFiles('**/go.sum') }}
           restore-keys: |
+            ${{ runner.os }}-go-${{ matrix.go-version }}-test-
+            ${{ runner.os }}-go-${{ matrix.go-version }}-
             ${{ runner.os }}-go-
 
       - name: Download dependencies
@@ -214,8 +217,9 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
           restore-keys: |
+            ${{ runner.os }}-go-build-
             ${{ runner.os }}-go-
 
       # Verify all target platforms can be built
