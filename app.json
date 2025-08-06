@@ -21,12 +21,8 @@
       "description": "Version of your bot.",
       "required": true
     },
-    "DB_URI": {
-      "description": "Your MongoDB connection string.",
-      "required": true
-    },
-    "DB_NAME": {
-      "description": "Your MongoDB database name.",
+    "DATABASE_URL": {
+      "description": "Your PostgreSQL connection string.",
       "required": true
     },
     "OWNER_ID": {

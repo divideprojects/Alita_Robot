@@ -103,7 +103,7 @@ ENABLE_STATS       # Enable background statistics collection (default: false)
 STATS_INTERVAL     # Statistics collection interval in seconds (default: 60)
 ```
 
-**Note:** The app.json file contains outdated MongoDB references (DB_URI, DB_NAME) that should be ignored. Use sample.env as the authoritative source for environment variables.
+**Note:** The app.json file has been updated to use PostgreSQL (DATABASE_URL). Use sample.env as the authoritative source for environment variables.
 
 ## Key Technical Details
 
@@ -216,7 +216,7 @@ The project provides multiple Docker configurations:
 - Persistent volumes for data
 
 #### Local Development (local.docker-compose.yml)
-- Includes MongoDB for legacy compatibility
+- Includes PostgreSQL for database
 - Simplified configuration for local testing
 
 #### Debug Mode (debug.docker-compose.yml)

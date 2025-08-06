@@ -630,9 +630,7 @@ func GetAllModels() []interface{} {
 	}
 }
 
-// Helper functions to maintain compatibility with existing MongoDB code
-
-// Additional helper functions for GORM-specific operations
+// Helper functions for GORM-specific operations
 
 // CreateRecord creates a new record
 func CreateRecord(model interface{}) error {
