@@ -47,7 +47,7 @@ jobs:
           fi
 
       - name: Run gosec security scan
-        uses: securego/gosec@v2.22.1
+        uses: securego/gosec@v2.22.7
         with:
           args: "-fmt sarif -out gosec-results.sarif -severity medium ./..."
 
