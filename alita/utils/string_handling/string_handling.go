@@ -1,25 +1,17 @@
 package string_handling
 
+import "slices"
+
 // FindInStringSlice searches for a string value in a string slice.
 // Returns true if the value is found, false otherwise.
 func FindInStringSlice(slice []string, val string) bool {
-	for _, item := range slice {
-		if item == val {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(slice, val)
 }
 
 // FindInInt64Slice searches for an int64 value in an int64 slice.
 // Returns true if the value is found, false otherwise.
 func FindInInt64Slice(slice []int64, val int64) bool {
-	for _, item := range slice {
-		if item == val {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(slice, val)
 }
 
 // RemoveFromInt64Slice removes the first occurrence of a value from an int64 slice.
@@ -37,7 +29,7 @@ func RemoveFromInt64Slice(s []int64, r int64) []int64 {
 // Returns the first duplicate found and true, or empty string and false if no duplicates.
 func IsDuplicateInStringSlice(arr []string) (string, bool) {
 	visited := make(map[string]bool)
-	for i := 0; i < len(arr); i++ {
+	for i := range arr {
 		if visited[arr[i]] {
 			return arr[i], true
 		} else {
