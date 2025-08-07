@@ -191,13 +191,13 @@ strings:
                 Sbannato {user}.
     Blacklists:
         bl_watcher:
-            banned_user: Banned {user} due to {second}
-            kicked_user: Kicked {first} due to {second}
-            muted_user: Muted {user} due to {second}
+            banned_user: Bannato {user} a causa di {second}
+            kicked_user: Espulso {first} a causa di {second}
+            muted_user: Silenziato {user} a causa di {second}
         blacklist:
-            added_bl: 'Added these words as blacklists:'
-            already_blacklisted: 'These words are already blacklisted:'
-            give_bl_word: Please give me a word to add to the blacklist!
+            added_bl: 'Aggiunte queste parole come blacklist:'
+            already_blacklisted: 'Queste parole sono già in blacklist:'
+            give_bl_word: Per favore, dammi una parola da aggiungere alla blacklist!
         help_msg: |-
             *Comandi utente: *
             × /blacklist: Verificare tutte le blacklist in chat.
@@ -214,21 +214,21 @@ strings:
             *Note: *
             La modalità predefinita per Blacklist è * none*, che eliminerà semplicemente i messaggi dalla chat.
         ls_bl:
-            list_bl: 'These words are blacklisted in this chat:'
-            no_blacklisted: There are no blacklisted words in this chat.
+            list_bl: 'Queste parole sono in blacklist in questa chat:'
+            no_blacklisted: Non ci sono parole in blacklist in questa chat.
         rm_all_bl:
-            ask: Are you sure you want to remove all blacklisted words from this chat?
+            ask: Sei sicuro di voler rimuovere tutte le parole in blacklist da questa chat?
             button_handler:
-                "no": Cancelled removing all Blacklists from this Chat ❌
-                "yes": Removed all Blacklists from this Chat ✅
+                "no": Annullata la rimozione di tutte le Blacklist da questa Chat ❌
+                "yes": Rimosse tutte le Blacklist da questa Chat ✅
         set_bl_action:
-            changed_mode: 'Changed blacklist mode to: *{value}*'
-            choose_correct_option: Please choose an option out of <mute/kick/ban/warn/none>
-            current_mode: 'The current blacklist mode is: {value}'
+            changed_mode: 'Modalità blacklist cambiata con successo a: *{value}*'
+            choose_correct_option: Per favore scegli un'opzione tra <mute/kick/ban/warn/none>
+            current_mode: 'La modalità blacklist corrente per questa chat è: {chat}'
         unblacklist:
-            give_bl_word: Please give me a word to remove from the blacklist!
-            no_removed_bl: None of the given words were in the blacklist which can be removed!
-            removed_bl: Removed '{value}' from the blacklisted words!
+            give_bl_word: Per favore dammi una parola da rimuovere dalla blacklist!
+            no_removed_bl: Nessuna delle parole fornite era nella blacklist che può essere rimossa!
+            removed_bl: Rimossa con successo '{value}' dalle parole in blacklist!
     CommonStrings:
         admin_cache:
             cache_reloaded: Cache admin ricaricata con successo.
@@ -236,52 +236,52 @@ strings:
     Connections:
         allow_connect:
             currently_off: |-
-                User connections are currently turned <b>off</b>.
-                Users can't connect this chat to their PM's!
+                Le connessioni utente sono attualmente <b>disattivate</b>.
+                Gli utenti non possono collegare questa chat ai loro messaggi privati!
             currently_on: |-
-                User connections are currently turned <b>on</b>.
-                Users can connect this chat to their PM's!
+                Le connessioni utente sono attualmente <b>attivate</b>.
+                Gli utenti possono collegare questa chat ai loro messaggi privati!
             turned_off: |-
-                Turned <b>off</b> User connections to this chat!
-                Users can't connect chat to their PM's!
+                <b>Disattivate</b> le connessioni utente per questa chat!
+                Gli utenti non possono collegare la chat ai loro messaggi privati!
             turned_on: |-
-                Turned <b>on</b> User connections to this chat!
-                Users can now connect chat to their PM's!
+                <b>Attivate</b> le connessioni utente per questa chat!
+                Gli utenti ora possono collegare la chat ai loro messaggi privati!
         connect:
-            connected: You are now connected to <b>{value}</b>!
+            connected: Ora sei collegato a <b>{value}</b>!
             connection_disabled: |-
-                User connections are currently <b>disabled</b> to this chat.
-                Please ask admins to allow if you want to connect!
-            tap_btn_connect: Please press the button below to connect this chat to your PM
-        connected: You are currently connected to <b>{value}</b>
+                Le connessioni utente sono attualmente <b>disabilitate</b> per questa chat.
+                Chiedi agli admin di abilitarle se vuoi collegarti!
+            tap_btn_connect: Premi il pulsante qui sotto per collegare questa chat ai tuoi messaggi privati
+        connected: Sei attualmente collegato a <b>{value}</b>!
         connections_btns:
-            admin_conn_cmds: Admin commands available:{admin}
-            user_conn_cmds: User commands available:{user}
+            admin_conn_cmds: Comandi admin disponibili:{admin}
+            user_conn_cmds: Comandi utente disponibili:{user}
         disconnect:
-            disconnected: Disconnected from the connected chat.
-            need_pm: You need to send this in PM to me to disconnect from the chat!
+            disconnected: Disconnesso con successo dalla chat collegata.
+            need_pm: Devi inviare questo in PM per disconnetterti dalla chat!
         help_msg: |-
-            This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+            Questo modulo ti permette di connetterti al database di una chat e aggiungere contenuti senza che la chat ne sappia nulla! Per ovvi motivi, devi essere un admin per aggiungere cose; ma qualsiasi membro può visualizzare i tuoi dati. (utenti bannati/espulsi non possono!)
 
-            *Commands*:
-            × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-            × /disconnect: Disconnect from the current chat.
-            × /reconnect: Reconnect to the previously connect chat
-            × /connection: See information about the currently connected chat.
+            *Comandi*:
+            × /connect `<chatid>`: Connettiti alla chat specificata, permettendoti di visualizzare/modificare i contenuti.
+            × /disconnect: Disconnettiti dalla chat corrente.
+            × /reconnect: Riconnettiti alla chat precedentemente collegata
+            × /connection: Visualizza informazioni sulla chat attualmente collegata.
 
-            *Admin Commands:*
-            × /allowconnect <yes/no>: Allow users to connect to chats or not.
+            *Comandi Admin:*
+            × /allowconnect <yes/no>: Permetti agli utenti di connettersi alle chat o meno.
 
-            You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+            Puoi ottenere l'ID della chat usando il comando /id nella tua chat. Non sorprenderti se l'ID è negativo; tutti i supergruppi hanno ID negativi.
         is_user_connected:
-            bot_not_admin: I'm not an admin in this chat!
-            need_group: This command is made to be used in group chats, not in PM!
-            user_not_admin: You need to be an admin to do this.
-        not_connected: You aren't connected to any chats.
+            bot_not_admin: Non sono un admin in questa chat!
+            need_group: Questo comando è fatto per essere usato nelle chat di gruppo, non nei messaggi privati!
+            user_not_admin: Devi essere un admin per fare questo.
+        not_connected: Non sei collegato a nessuna chat.
         reconnect:
-            need_pm: You need to be in a PM with me to reconnect to a chat!
-            no_last_chat: You have no last chat to reconnect to!
-            reconnected: You are now reconnected to <b>{value}</b>!
+            need_pm: Devi essere in messaggi privati con me per riconnetterti a una chat!
+            no_last_chat: Non hai una chat precedente a cui riconnetterti!
+            reconnected: Ora sei riconnesso a <b>{value}</b>!
     Disabling:
         help_msg: |-
             Questo consente di disabilitare alcuni comandi comunemente utilizzati, quindi noone li può usare. Ti permetterà anche di autoeliminarli, fermando le persone dal bluetexting.
@@ -298,80 +298,83 @@ strings:
             Comandi disabilitati sono ancora accessibili tramite la funzione /connect. Se anche tu saresti interessato a vedere questo disabile, fammi sapere nella chat di supporto.
     Filters:
         help_msg: |-
-            Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+            I filtri non distinguono maiuscole e minuscole; ogni volta che qualcuno dice le tue parole chiave, Alita risponderà qualcos'altro! Può essere usato per creare i tuoi comandi, se desiderato.
 
-            Commands:
-            - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-            - /filters: List all chat filters.
-            - /stop <trigger>: Stop the bot from replying to trigger.
-            - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+            Comandi:
+            - /filter <parola chiave> <risposta>: Ogni volta che qualcuno dice la parola chiave, il bot risponderà con la frase. Per filtri con più parole, metti la parola chiave tra virgolette.
+            - /filters: Elenca tutti i filtri della chat.
+            - /stop <parola chiave>: Ferma il bot dal rispondere alla parola chiave.
+            - /stopall: Ferma TUTTI i filtri nella chat corrente. Questo non può essere annullato.
 
-            Examples:
-            - Set a filter:
-            -> /filter hello Hello there! How are you?
-            - Set a multiword filter:
-            -> /filter hello friend Hello back! Long time no see!
-            - Set a filter that can only be used by admins:
-            -> /filter example This filter wont happen if a normal user says it {admin}
-            - To save a file, image, gif, or any other attachment, simply reply to file with:
-            -> /filter trigger
+            Esempi:
+            - Imposta un filtro:
+            -> /filter ciao Ciao! Come va?
+            - Imposta un filtro con più parole:
+            -> /filter ciao amico Ciao! È da tanto che non ci sentiamo!
+            - Imposta un filtro che può essere usato solo dagli admin:
+            -> /filter esempio Questo filtro non funzionerà se lo dice un utente normale {admin}
+            - Per salvare un file, immagine, gif o qualsiasi altro allegato, rispondi semplicemente al file con:
+            -> /filter parola_chiave
     Formatting:
         Fillings: |-
-            <b>Fillings</b>
+            <b>Riempimenti</b>
 
-            You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-            You can use these to mention a user in notes too!
+            Puoi anche personalizzare il contenuto dei tuoi messaggi con dati contestuali. Ad esempio, potresti menzionare un utente per nome nel messaggio di benvenuto, o menzionarlo in un filtro!
+            Puoi usare questi anche per menzionare un utente nelle note!
 
-            <b>Supported fillings:</b>
-            - <code>{first}</code>: The user's first name.
-            - <code>{last}</code>: The user's last name.
-            - <code>{fullname}</code>: The user's full name.
-            - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-            - <code>{mention}</code>: Mentions the user with their firstname.
-            - <code>{id}</code>: The user's ID.
-            - <code>{chatname}</code>: The chat's name.
-            - <code>{rules}</code>: Adds Rules Button to Message.
+            <b>Riempimenti supportati:</b>
+            - <code>{first}</code>: Il nome dell'utente.
+            - <code>{last}</code>: Il cognome dell'utente.
+            - <code>{fullname}</code>: Il nome completo dell'utente.
+            - <code>{username}</code>: Il nome utente. Se non ce l'ha, menziona l'utente invece.
+            - <code>{mention}</code>: Menziona l'utente con il suo nome.
+            - <code>{id}</code>: L'ID dell'utente.
+            - <code>{chatname}</code>: Il nome della chat.
+            - <code>{rules}</code>: Aggiunge un pulsante Regole al messaggio.
+            - <code>{protect}</code>: Protegge il contenuto dalla condivisione.
+            - <code>{preview}</code>: Abilita le anteprime nei messaggi.
+            - <code>{nonotif}</code>: Disabilita la notifica per quel messaggio.
         Markdown: |-
-            <b>Markdown Formatting</b>
+            <b>Formattazione Markdown</b>
 
-            You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-            <b>Supported markdown</b>:
-            - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-            - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-            - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-            - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-            - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-            - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-            - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-            - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-            - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+            Puoi formattare i tuoi messaggi usando <b>grassetto</b>, <i>corsivo</i>, <u>sottolineato</u> e molto altro. Vai avanti e sperimenta!
+            <b>Markdown supportato</b>:
+            - <code>`parole codice`</code>: I backtick sono usati per i font monospaziati. Mostra come: <code>parole codice</code>.
+            - <code>_parole corsivo_</code>: I trattini bassi sono usati per i font corsivi. Mostra come: <i>parole corsivo</i>.
+            - <code>*parole grassetto*</code>: Gli asterischi sono usati per i font grassetti. Mostra come: <b>parole grassetto</b>.
+            - <code>~barrato~</code>: Le tildi sono usate per il barrato. Mostra come: <strike>barrato</strike>.
+            - <code>||spoiler||</code>: Le doppie barre verticali sono usate per gli spoiler. Mostra come: <tg-spoiler>Spoiler</tg-spoiler>.
+            - <code>```pre```</code>: Per far ignorare al formattatore altri caratteri di formattazione all'interno del testo formattato con '```', sarà come: <code>**grassetto** | *grassetto*</code>.
+            - <code>__sottolineato__</code>: I doppi trattini bassi sono usati per le sottolineature. Mostra come: sottolineato. NOTA: Alcuni client cercano di essere intelligenti e lo interpretano come corsivo. In tal caso, prova a usare la formattazione integrata della tua app.
+            - <code>[collegamento](example.com)</code>: Questa è la formattazione usata per i collegamenti ipertestuali. Mostra come: <a href='https://example.com/'>collegamento</a>.
+            - <code>[Il Mio Pulsante](buttonurl://example.com)</code>: Questa è la formattazione usata per creare pulsanti. Questo esempio creerà un pulsante chiamato "Il Mio Pulsante" che apre <code>example.com</code> quando cliccato.
 
-            If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-            <b>Example:</b>
-            <code>[button 1](buttonurl:example.com)</code>
-            <code>[button 2](buttonurl://example.com:same)</code>
-            <code>[button 3](buttonurl://example.com)</code>
-            This will show button 1 and 2 on the same line, with 3 underneath.
+            Se vuoi inviare pulsanti sulla stessa riga, usa la formattazione <code>:same</code>.
+            <b>Esempio:</b>
+            <code>[pulsante 1](buttonurl:example.com)</code>
+            <code>[pulsante 2](buttonurl://example.com:same)</code>
+            <code>[pulsante 3](buttonurl://example.com)</code>
+            Questo mostrerà i pulsanti 1 e 2 sulla stessa riga, con il 3 sotto.
         Random: |-
-            <b>Random Content</b>
+            <b>Contenuto Casuale</b>
 
-            Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-            How to use random contents:
-            - %%%: This separator can be used to add  random replies to the bot.
-            For example:
-            <code>hello
+            Un'altra cosa che può essere divertente è randomizzare il contenuto di un messaggio. Rendi le cose un po' più personali cambiando i messaggi di benvenuto o cambiando le note!
+            Come usare il contenuto casuale:
+            - %%%: Questo separatore può essere usato per aggiungere risposte casuali al bot.
+            Ad esempio:
+            <code>ciao
             %%%
-            how are you</code>
-            This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-            Use this to make Alita feel a bit more customised! (only works in filters/notes)
-            Example welcome message:
-            - Every time a new user joins, they'll be presented with one of the three messages shown here.
-            -> /filter "hey"
-            hello there <code>{first}</code>!
+            come stai</code>
+            Questo sceglierà casualmente tra l'invio del primo messaggio, "ciao", o del secondo messaggio, "come stai".
+            Usalo per far sentire Alita un po' più personalizzata! (funziona solo nei filtri/note)
+            Esempio messaggio di benvenuto:
+            - Ogni volta che un nuovo utente si unisce, gli verrà presentato uno dei tre messaggi mostrati qui.
+            -> /filter "ehi"
+            ciao <code>{first}</code>!
             %%%
-            Ooooh, <code>{first}</code> how are you?
+            Ooooh, <code>{first}</code> come stai?
             %%%
-            Sup? <code>{first}</code>
+            Che c'è? <code>{first}</code>
         help_msg: Alita supporta un gran numero di opzioni di formattazione per rendere i tuoi messaggi più espressivi. Dai un'occhiata cliccando i pulsanti qui sotto!
     Greetings:
         help_msg: |-
@@ -386,6 +389,7 @@ strings:
             × /resetaddio: Reimposta il messaggio di addio al default.
             × /cleanservice `<yes/no/on/off>`: Elimina tutti i messaggi di servizio come ' x uniti alla notifica del gruppo.
             × /cleanwelcome `<yes/no/on/off>`: Elimina il vecchio messaggio di benvenuto, ogni qualvolta si unisce un nuovo membro.
+            × /autoapprove `<yes/no/on/off>`: Approva automaticamente tutti i nuovi membri.
     Help:
         About: |-
             @{first} è uno dei più veloci e più feature manager di gruppo.
@@ -399,7 +403,7 @@ strings:
             - Featuri: Molte caratteristiche che altri bot di gestione del gruppo non hanno.
             - Fast: Guess cosa? Non è fatto usando Python, usiamo <a href='https://go.dev/'>Go</a> come nostro linguaggio di programmazione core.
 
-            <b>Versione corrente:</b> {chat}
+            <b>Versione Corrente:</b> {admin}
         Configuration:
             Step-1: |-
                 Benvenuti nella Configurazione Alita
@@ -455,12 +459,12 @@ strings:
             media /lock media `: questo blocca tutti i messaggi mediatici in chat.
     Misc:
         help_msg: |-
-            × /info: Get your user info, can be used as reply or by passing a User Id or Username.
-            × /id: Get the current group id. If used by replying to a message, get that user's id.
-            × /ping: Ping the Telegram Server!
-            × /tr <lang code> <msg/reply to message>: Translate the message.
-            × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
-            × /stat: Gets the count of total number of messages in chat.
+            × /info: Ottieni le informazioni del tuo utente, può essere usato come risposta o passando un ID utente o nome utente.
+            × /id: Ottieni l'ID del gruppo corrente. Se utilizzato rispondendo a un messaggio, ottieni l'ID di quell'utente.
+            × /ping: Fai un ping al server Telegram!
+            × /tr <codice lingua> <messaggio/rispondi a messaggio>: Traduci il messaggio.
+            × /removebotkeyboard: Rimuove la tastiera del bot bloccata dalla tua chat.
+            × /stat: Ottieni il conteggio del numero totale di messaggi nella chat.
     Mutes:
         help_msg: |-
             A volte gli utenti possono essere fastidiosi e si potrebbe voler limitarle dal inviare messaggi a chat, questo modulo è qui per aiutare, è possibile utilizzare il modulo di ths per muta i membri nel proprio gruppo.
@@ -538,6 +542,9 @@ strings:
             × /setrules `<text>`: Imposta le regole per questa conversazione.
             × /privaterules `<yes/no/on/off>`: Abilitare / disabilitare se le regole devono essere inviate in privato.
             × /resetrules: impostare le regole di conversazione su default
+            × /rulesbtn `<custom text>`: Imposta il testo del pulsante delle regole.
+            × /resetrulesbutton: Reimposta il testo del pulsante delle regole al default.
+            × /resetrulesbtn: Stesso del comando sopra.
     Tagger:
         help_msg: |-
             Tagger è una caratteristica essenziale per citare tutti i membri sottoscritti nel gruppo.
@@ -592,21 +599,21 @@ strings:
                 invalid_time_type: 'Tipo di tempo non valido specificato. Previsto m, h, o d ricevuto: {time}'
     Warns:
         help_msg: |-
-            Keep your members in check with warnings; stop them getting out of control!
-            If you're looking for automated warnings, read about the blacklist module!
+            Mantieni i tuoi membri sotto controllo con gli avvertimenti; impedisci loro di andare fuori controllo!
+            Se stai cercando avvertimenti automatizzati, leggi informazioni sul modulo blacklist!
 
-            *Admin Commands:*
-            - /warn <reason>: Warn a user.
-            - /dwarn <reason>: Warn a user by reply, and delete their message.
-            - /swarn <reason>: Silently warn a user, and delete your message.
-            - /warns: See a user's warnings.
-            - /rmwarn: Remove a user's latest warning.
-            - /resetwarn: Reset all of a user's warnings to 0.
-            - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-            - /warnings: Get the chat's warning settings.
-            - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-            - /setwarnlimit <number>: Set the number of warnings before users are punished.
+            *Comandi Admin:*
+            - /warn <motivo>: Avverte un utente.
+            - /dwarn <motivo>: Avverte un utente rispondendo e cancella il loro messaggio.
+            - /swarn <motivo>: Avverte silenziosamente un utente e cancella il tuo messaggio.
+            - /warns: Visualizza gli avvertimenti di un utente.
+            - /rmwarn: Rimuove l'ultimo avvertimento di un utente.
+            - /resetwarn: Resetta tutti gli avvertimenti di un utente a 0.
+            - /resetallwarns: Cancella tutti gli avvertimenti in una chat. Tutti gli utenti tornano a 0 avvertimenti.
+            - /warnings: Ottieni le impostazioni degli avvertimenti della chat.
+            - /setwarnmode <ban/kick/mute>: Imposta la modalità di avvertimento della chat.
+            - /setwarnlimit <numero>: Imposta il numero di avvertimenti prima che gli utenti vengano puniti.
 
-            *Examples*
-            - Warn a user.
-            -> `/warn @user For disobeying the rules`
+            *Esempi*
+            - Avverti un utente.
+            -> `/warn @utente Per aver disobbedito alle regole`

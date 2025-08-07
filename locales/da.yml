@@ -55,7 +55,7 @@ strings:
             success_set: Admin titel for {first} blev succesfuldt sat til <b>{chat}</b>
     Antiflood:
         checkflood:
-            perform_action: Yeah, I don't like your flooding. {first} has been {chat}!
+            perform_action: Jeg kan ikke lide din flooding. {first} er blevet {chat}!
         errors:
             expected_args: 'Jeg forventede nogle argumenter! Enten off, eller et heltal. f.eks.: `/setflood 5`, eller `/setflood off`'
             invalid_int: Det er ikke et gyldigt heltal. Giv mig venligst et gyldigt heltal, eller `off`.
@@ -83,7 +83,7 @@ strings:
             disabled: |-
                 Okay.
                 Jeg vil ikke advare brugere om flooding.
-            success: Forstået! Maksimal flood grænse på <b>{number}</b> beskeder.
+            success: Flood grænse er sat til <b>{limit}</b> beskeder.
         setfloodmode:
             specify_action: 'Du skal specificere en handling at tage ved flooding. Aktuelle tilstande er: `ban`/`kick`/`mute`'
             success: Forstået! Flood tilstand vil være {value}.
@@ -113,7 +113,7 @@ strings:
                 {chat}
 
                 For at få mere information om hver bruger som Godkendt af og Godkendt tid, brug /approval (bruger id)."
-            none_approved: Ingen brugere er godkendt i <b>{value}</b>!
+            none_approved: Ingen brugere er godkendt i <b>{user}</b>!
         help_msg: |-
             Nogle gange kan du stole på, at en bruger ikke sender uønsket indhold.
             Måske ikke nok til at gøre dem til administrator, men du kan være okay med at låse, sortlister og antiflood ikke gælder for dem.
@@ -150,7 +150,7 @@ strings:
             is_bot_itself: Tror du virkelig, at jeg vil banne mig selv?
             normal_ban: |-
                 En mere bider i støvet...!
-                Bannede {id}.
+                Bannede {value}.
             tban: |-
                 En mere bider i støvet...!
                 Bannede {user} i {second}
@@ -194,7 +194,7 @@ strings:
             banned_user: Bannede {user} på grund af {second}
             kicked_user: Sparkede {first} på grund af {second}
             muted_user: Mutede {user} på grund af {second}
-        blacklist:
+        addblacklist:
             added_bl: 'Tilføjede disse ord som sortlister:'
             already_blacklisted: 'Disse ord er allerede på sortlisten:'
             give_bl_word: Giv mig venligst et ord at tilføje til sortlisten!
@@ -222,9 +222,9 @@ strings:
                 "no": Annullerede fjernelse af alle Sortlister fra denne Chat ❌
                 "yes": Fjernede alle Sortlister fra denne Chat ✅
         set_bl_action:
-            changed_mode: 'Ændrede sortlist tilstand til: *{value}*'
+            changed_mode: 'Succesfuldt ændrede sortlist tilstand til: *{value}*'
             choose_correct_option: Vælg venligst en mulighed fra <mute/kick/ban/warn/none>
-            current_mode: 'Den aktuelle sortlist tilstand er: {value}'
+            current_mode: 'Den aktuelle sortlist tilstand er: {chat}'
         unblacklist:
             give_bl_word: Giv mig venligst et ord at fjerne fra sortlisten!
             no_removed_bl: Ingen af de givne ord var på sortlisten som kan fjernes!
@@ -317,61 +317,64 @@ strings:
             -> /filter trigger
     Formatting:
         Fillings: |-
-            <b>Fillings</b>
+            <b>Udfyldninger</b>
 
-            You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-            You can use these to mention a user in notes too!
+            Du kan også tilpasse indholdet af dine beskeder med kontekstuelle data. For eksempel kan du nævne en bruger ved navn i velkomstbeskeden eller nævne dem i et filter!
+            Du kan også bruge disse til at nævne en bruger i noter!
 
-            <b>Supported fillings:</b>
-            - <code>{first}</code>: The user's first name.
-            - <code>{last}</code>: The user's last name.
-            - <code>{fullname}</code>: The user's full name.
-            - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-            - <code>{mention}</code>: Mentions the user with their firstname.
-            - <code>{id}</code>: The user's ID.
-            - <code>{chatname}</code>: The chat's name.
-            - <code>{rules}</code>: Adds Rules Button to Message.
+            <b>Understøttede udfyldninger:</b>
+            - <code>{first}</code>: Brugerens fornavn.
+            - <code>{last}</code>: Brugerens efternavn.
+            - <code>{fullname}</code>: Brugerens fulde navn.
+            - <code>{username}</code>: Brugerens brugernavn. Hvis de ikke har et, nævnes brugeren i stedet.
+            - <code>{mention}</code>: Nævner brugeren med deres fornavn.
+            - <code>{id}</code>: Brugerens ID.
+            - <code>{chatname}</code>: Chattens navn.
+            - <code>{rules}</code>: Tilføjer Regler-knap til beskeden.
+            - <code>{protect}</code>: Beskytter indholdet mod at blive delt.
+            - <code>{preview}</code>: Aktiverer forhåndsvisninger i beskederne.
+            - <code>{nonotif}</code>: Deaktiverer notifikation for den besked.
         Markdown: |-
-            <b>Markdown Formatting</b>
+            <b>Markdown Formatering</b>
 
-            You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-            <b>Supported markdown</b>:
-            - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-            - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-            - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-            - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-            - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-            - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-            - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-            - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-            - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+            Du kan formatere dine beskeder med <b>fed</b>, <i>kursiv</i>, <u>understreget</u> og meget mere. Gå bare i gang og eksperimentér!
+            <b>Understøttet markdown</b>:
+            - <code>`kode ord`</code>: Backticks bruges til monospace skrifttyper. Vises som: <code>kode ord</code>.
+            - <code>_kursive ord_</code>: Understreger bruges til kursive skrifttyper. Vises som: <i>kursive ord</i>.
+            - <code>*fede ord*</code>: Asterisker bruges til fede skrifttyper. Vises som: <b>fede ord</b>.
+            - <code>~gennemstreget~</code>: Tilder bruges til gennemstreget tekst. Vises som: <strike>gennemstreget</strike>.
+            - <code>||spoiler||</code>: Dobbelte vertikale streger bruges til spoilers. Vises som: <tg-spoiler>Spoiler</tg-spoiler>.
+            - <code>```pre```</code>: For at få formatteringen til at ignorere andre formateringstegn inde i teksten formateret med '```', vil være som: <code>**fed** | *fed*</code>.
+            - <code>__understreget__</code>: Dobbelte understreger bruges til understregning. Vises som: understreget. BEMÆRK: Nogle klienter prøver at være smarte og fortolker det som kursiv. I så fald, prøv at bruge din apps indbyggede formatering.
+            - <code>[hyperlink](example.com)</code>: Dette er formateringen, der bruges til hyperlinks. Vises som: <a href='https://example.com/'>hyperlink</a>.
+            - <code>[Min Knap](buttonurl://example.com)</code>: Dette er formateringen, der bruges til at oprette knapper. Dette eksempel vil oprette en knap navngivet "Min knap", som åbner <code>example.com</code> når der klikkes på den.
 
-            If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-            <b>Example:</b>
-            <code>[button 1](buttonurl:example.com)</code>
-            <code>[button 2](buttonurl://example.com:same)</code>
-            <code>[button 3](buttonurl://example.com)</code>
-            This will show button 1 and 2 on the same line, with 3 underneath.
+            Hvis du gerne vil sende knapper på samme række, brug <code>:same</code> formateringen.
+            <b>Eksempel:</b>
+            <code>[knap 1](buttonurl:example.com)</code>
+            <code>[knap 2](buttonurl://example.com:same)</code>
+            <code>[knap 3](buttonurl://example.com)</code>
+            Dette vil vise knap 1 og 2 på samme linje, med 3 nedenunder.
         Random: |-
-            <b>Random Content</b>
+            <b>Tilfældigt Indhold</b>
 
-            Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-            How to use random contents:
-            - %%%: This separator can be used to add  random replies to the bot.
-            For example:
-            <code>hello
+            En anden ting, der kan være sjovt, er at gøre indholdet af en besked tilfældig. Gør tingene lidt mere personlige ved at ændre velkomstbeskeder eller ændre noter!
+            Sådan bruges tilfældigt indhold:
+            - %%%: Denne separator kan bruges til at tilføje tilfældige svar til robotten.
+            For eksempel:
+            <code>hej
             %%%
-            how are you</code>
-            This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-            Use this to make Alita feel a bit more customised! (only works in filters/notes)
-            Example welcome message:
-            - Every time a new user joins, they'll be presented with one of the three messages shown here.
+            hvordan har du det</code>
+            Dette vil tilfældigt vælge mellem at sende den første besked, "hej", eller den anden besked, "hvordan har du det".
+            Brug dette til at få Alita til at føles lidt mere tilpasset! (fungerer kun i filtre/noter)
+            Eksempel på velkomstbesked:
+            - Hver gang en ny bruger tilslutter sig, vil de blive præsenteret for en af de tre beskeder vist her.
             -> /filter "hey"
-            hello there <code>{first}</code>!
+            hej der <code>{first}</code>!
             %%%
-            Ooooh, <code>{first}</code> how are you?
+            Åhhh, <code>{first}</code> hvordan har du det?
             %%%
-            Sup? <code>{first}</code>
+            Hvad så? <code>{first}</code>
         help_msg: Alita understøtter et stort antal formateringsvalg for at gøre dine beskeder mere udtryksfulde. Tag et kig ved at klikke på knapperne nedenfor!
     Greetings:
         help_msg: |-
@@ -386,6 +389,7 @@ strings:
             × /resetgoodbye: Nulstiller farvel beskeden til standard.
             × /cleanservice `<yes/no/on/off>`: Slet alle servicemeddelelser som 'x blev medlem af gruppen' notifikation.
             × /cleanwelcome `<yes/no/on/off>`: Slet den gamle velkomstbesked, når et nyt medlem tilslutter.
+            × /autoapprove `<yes/no/on/off>`: Godkend automatisk alle nye medlemmer.
     Help:
         About: |-
             @{first} er en af de hurtigste og mest funktionsfyldte gruppebestyrere.
@@ -395,11 +399,11 @@ strings:
             Alita har været online siden 2020 og har aftjent tusindvis af grupper med hundredtusindvis af brugere!
 
             <b>Hvorfor Alita:</b>
-            -Simple: Easy forbrug and compaitble with many bot commands.
-            -Interessante: Mange funktioner, som andre gruppeadminiutionsbots ikke har.
-            -Hurtig: gæt hvad? Det er ikke lavet ved hjælp af Python, vi bruger <a href='https://go.dev/'>Go</a> som vores kerneprogrammeringssprog.
+            - Enkel: Let at bruge og kompatibel med mange bot kommandoer.
+            - Funktionsrig: Mange funktioner, som andre gruppeadministrationsbots ikke har.
+            - Hurtig: Gæt hvad? Den er ikke lavet med Python, vi bruger <a href='https://go.dev/'>Go</a> som vores kerneprogrammeringssprog.
 
-            <b>Aktuel Version:</b> {chat}
+            <b>Aktuel Version:</b> {admin}
         Configuration:
             Step-1: |-
                 Velkommen til Alita Configuration
@@ -416,7 +420,7 @@ strings:
                 ▫️ Tryk på Administrator
                 ▫️ Tryk på Tilføj Administrator
                 ▫️ Tryk på Forstørrelsesglasset
-                ▫️ Søg @{admin}
+                ▫️ Søg @{chat}
                 ▫️ Bekræft
             Step-3: |-
                 Fremragende!
@@ -455,11 +459,12 @@ strings:
             `/lock media`: Dette låser alle mediemeddelelser i chatten.
     Misc:
         help_msg: |-
-            × /info: Få dine brugeroplysninger, kan bruges som svar eller ved at videregive et Bruger Id eller Brugernavn
+            × /info: Få dine brugeroplysninger, kan bruges som svar eller ved at videregive et Bruger Id eller Brugernavn.
             × /id: Få det aktuelle gruppe id. Hvis brugt ved at svare på en besked, få den brugers id.
             × /ping: Ping Telegram Serveren!
             × /tr <lang code> <msg/reply to message>: Oversæt beskeden.
             × /removebotkeyboard: Fjerner det fastklæbede robot tastatur fra din chat.
+            × /stat: Få antallet af det samlede antal beskeder i chatten.
     Mutes:
         help_msg: |-
             Nogle gange kan brugere være irriterende, og du vil måske begrænse dem fra at sende besked til chat, dette modul er her for at hjælpe, du kan bruge modulerne til at skrue ned for medlemmer i din gruppe.
@@ -534,9 +539,12 @@ strings:
             *Brugerkommandoer *:
             × /rules: Kontrollér de aktuelle chatregler.
             *Admin-kommandoer *:
-            × /setrules `<text>": Angiv reglerne for denne chat.
-            × /privaterules "<yes/no/on/off>": Aktivér / deaktivér, om reglerne skal sendes i enrum.
+            × /setrules `<text>`: Angiv reglerne for denne chat.
+            × /privaterules `<yes/no/on/off>`: Aktivér / deaktivér, om reglerne skal sendes i enrum.
             × /resetrules: Nulstil chatreglerne til standard
+            × /rulesbtn `<brugerdefineret tekst>`: Sætter teksten på regler knappen.
+            × /resetrulesbutton: Nulstil teksten på regler knappen til standard.
+            × /resetrulesbtn: Samme som ovenfor.
     Tagger:
         help_msg: |-
             Tagger er en essentiel funktion til at nævne alle abonnerede medlemmer i gruppen.
@@ -603,7 +611,7 @@ strings:
             - /resetwarn: Nulstil alle en brugers advarsler til 0.
             - /resetallwarns: Slet alle advarsler i en chat. Alle brugere vender tilbage til 0 advarsler.
             - /warnings: Få chattens advarselsindstillinger.
-            - /setwarnmode <ban/kick/mute/tban/tmute>: Sæt chattens advarseltilstand.
+            - /setwarnmode <ban/kick/mute>: Sæt chattens advarseltilstand.
             - /setwarnlimit <number>: Sæt antallet af advarsler før brugere bliver straffet.
 
             *Eksempler*

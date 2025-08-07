@@ -58,8 +58,8 @@ strings:
             perform_action: Ναι, δεν μου αρέσει το spam σου. Ο {first} έχει {second}!
         errors:
             expected_args: 'Περίμενα μερικά επιχειρήματα! Είτε ''off'', ή έναν ακέραιο. π.χ.: `/setflood 5`, ή `/setflood off`'
-            invalid_int: That's not a valid integer. Please give me a valid integer, or `off`.
-            set_in_limit: The antiflood limit has to be set between 3 and 100.
+            invalid_int: Αυτό δεν είναι έγκυρος ακέραιος. Παρακαλώ δώστε μου έναν έγκυρο ακέραιο, ή `off`.
+            set_in_limit: Το όριο αντι-spam πρέπει να οριστεί μεταξύ 3 και 100.
         flood:
             disabled: Αυτή η συνομιλία δεν εφαρμόζει παραβάν έλεγχο αντι-spam.
             show_settings: Αυτή η συνομιλία εφαρμόζει παραβάν έλεγχο αντι-spam μετά από {number} μηνύματα. Οποιοιδήποτε χρήστες στέλνουν περισσότερα από αυτόν τον αριθμό μηνυμάτων θα {value}.
@@ -92,15 +92,15 @@ strings:
         approval:
             is_admin: Ο {admin} είναι διαχειριστής, δεν χρειάζεται έγκριση.
             is_approved: |-
-                {param1} is an approved User in <b>{param2}</b>
-                They are protected from blacklists, locks and antiflood!
+                Ο {param1} είναι εγκεκριμένος χρήστης στο <b>{param2}</b>
+                Είναι προστατευμένος από μαύρες λίστες, κλειδώματα και αντι-spam!
 
-                <b>Approved By:</b> {param3} (<code>{number}</code>)"
-                <b>Approved Time:</b> {param4} UTC
+                <b>Εγκεκριμένος από:</b> {param3} (<code>{number}</code>)"
+                <b>Ώρα έγκρισης:</b> {param4} UTC
             is_bot_itself: Είμαι διαχειριστής, δεν χρειάζομαι έγκριση.
             is_unapproved: |-
-                You are not approved in <b>{value}</b>
-                You are not protected from blacklists, locks and antiflood!
+                Δεν είσαι εγκεκριμένος στο <b>{value}</b>
+                Δεν είσαι προστατευμένος από μαύρες λίστες, κλειδώματα και αντι-spam!
         approve:
             is_bot_itself: Με έχετε ήδη εγκρίνει κάνοντάς με διαχειριστή!
             user_approved: |-
@@ -109,11 +109,11 @@ strings:
             user_not_in_chat: Αυτός ο χρήστης δεν είναι σε αυτή τη συνομιλία, πώς μπορώ να τον εγκρίνω;
         approved:
             approved_list: |-
-                These users are approved in <b>{first}:</b>
+                Αυτοί οι χρήστες είναι εγκεκριμένοι στο <b>{first}:</b>
                 {admin}
 
-                To get more information about each user such as Approved By and Approved Time, use /approval (user id).
-            none_approved: No users are approved in <b>{user}</b>!
+                Για να λάβετε περισσότερες πληροφορίες για κάθε χρήστη όπως Εγκεκριμένος από και Ώρα έγκρισης, χρησιμοποιήστε /approval (user id).
+            none_approved: Κανένας χρήστης δεν είναι εγκεκριμένος στο <b>{user}</b>!
         help_msg: |-
             Μερικές φορές, μπορείτε να εμπιστευθείτε ένα χρήστη να μην στείλει ανεπιθύμητο περιεχόμενο.
             Ίσως όχι αρκετά για να τους κάνει admin, αλλά μπορεί να είναι εντάξει με κλειδαριές, μαύρες λίστες, και αντιπλημμυρών που δεν ισχύουν για αυτούς.
@@ -135,69 +135,69 @@ strings:
                 Μη εγκεκριμένος χρήστης: {user}
                 Δεν είναι πλέον προστατευμένος από bans, μαύρες λίστες, κλειδώματα και αντι-spam!
         unapprove_all:
-            ask: Are you sure you want to remove all Approved Users from this chat?
+            ask: Είστε σίγουροι ότι θέλετε να αφαιρέσετε όλους τους εγκεκριμένους χρήστες από αυτή τη συνομιλία;
             button_handler:
-                "no": Cancelled removing all Approved Users from this Chat ❌
-                "yes": Removed all Approved Users from this Chat ✅
-            chat_creator_only: Only Chat Creator can use this command to unapprove all users in this chat.
+                "no": Ακυρώθηκε η αφαίρεση όλων των εγκεκριμένων χρηστών από αυτή τη συνομιλία ❌
+                "yes": Αφαιρέθηκαν όλοι οι εγκεκριμένοι χρήστες από αυτή τη συνομιλία ✅
+            chat_creator_only: Μόνο ο δημιουργός της συνομιλίας μπορεί να χρησιμοποιήσει αυτή την εντολή για να αποεγκρίνει όλους τους χρήστες σε αυτή τη συνομιλία.
     Bans:
         ban:
             ban_reason: |4-
-                <b>Reason: </b> {reason}
+                <b>Λόγος:</b> {reason}
             dban:
-                no_reply: You need to reply to a message to delete it and ban the user!
-            is_admin: Why would I ban an admin? That sounds like a pretty dumb idea.
-            is_bot_itself: Do you really think I will ban myself?
+                no_reply: Πρέπει να απαντήσετε σε ένα μήνυμα για να το διαγράψετε και να απαγορεύσετε τον χρήστη!
+            is_admin: Γιατί θα απαγόρευα έναν διαχειριστή; Αυτό ακούγεται σαν μια αρκετά ανόητη ιδέα.
+            is_bot_itself: Πραγματικά νομίζεις ότι θα απαγορεύσω τον εαυτό μου;
             normal_ban: |-
-                Another one bites the dust...!
-                Banned {value}.
+                Ένας ακόμη δαγκώνει τη σκόνη...!
+                Απαγορεύτηκε ο {value}.
             tban: |-
-                Another one bites the dust...!
-                Banned {user} for {second}
+                Ένας ακόμη δαγκώνει τη σκόνη...!
+                Απαγορεύτηκε ο {user} για {second}
         help_msg: |-
-            Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
-            Ban/kick usersfrom your chat, and unban them later on if they're behaving themselves.
+            Μερικές φορές οι χρήστες μπορεί να είναι ενοχλητικοί και μπορεί να θέλετε να τους αφαιρέσετε από τη συνομιλία σας, αυτή η ενότητα σας βοηθάει ακριβώς να αντιμετωπίσετε αυτή την κατάσταση!
+            Απαγορεύστε/διώξτε χρήστες από τη συνομιλία σας και αποσυρθείτε την απαγόρευση αργότερα αν συμπεριφέρονται καλά.
 
-            *User Commands:*
-            × /kickme: kicks the user who issued the command.
+            *Εντολές χρήστη:*
+            × /kickme: διώχνει τον χρήστη που έδωσε την εντολή.
 
-            *Ban Commands* (Admin only):
-            × /ban <userhandle>: bans a user. (via handle, or reply)
-            × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-            × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-            × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-            × /unban <userhandle>: unbans a user. (via handle, or reply)
+            *Εντολές απαγόρευσης* (Μόνο διαχειριστές):
+            × /ban <userhandle>: απαγορεύει έναν χρήστη. (μέσω χειρολαβής ή απάντησης)
+            × /sban <userhandle>: απαγορεύει έναν χρήστη σιωπηρά, δεν στέλνει μήνυμα στην ομάδα και διαγράφει επίσης την εντολή σας. (μέσω χειρολαβής ή απάντησης)
+            × /dban <userhandle>: απαγορεύει έναν χρήστη και διαγράφει το μήνυμα στο οποίο απαντήθηκε. (μέσω χειρολαβής ή απάντησης)
+            × /tban <userhandle> x(m/h/d): απαγορεύει έναν χρήστη για `x` χρόνο. (μέσω χειρολαβής ή απάντησης). m = λεπτά, h = ώρες, d = ημέρες.
+            × /unban <userhandle>: άρει την απαγόρευση χρήστη. (μέσω χειρολαβής ή απάντησης)
 
-            *Restrict Commands:* (Admin only)
-            × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-            × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+            *Εντολές περιορισμού:* (Μόνο διαχειριστές)
+            × /restrict: Εμφανίζει InlineKeyboard για επιλογή από kick, ban και mute
+            × /unrestrict: Εμφανίζει InlineKeyboard για επιλογή από unmute και unban.
         kick:
-            cannot_kick_admin: Why would I kick an admin? That sounds like a pretty dumb idea.
-            is_bot_itself: Why would I kick myself?
+            cannot_kick_admin: Γιατί θα έδιωχνα έναν διαχειριστή; Αυτό ακούγεται σαν μια αρκετά ανόητη ιδέα.
+            is_bot_itself: Γιατί θα έδιωχνα τον εαυτό μου;
             kicked_reason: |4-
-                <b>Reason: </b> {reason}
+                <b>Λόγος:</b> {reason}
             kicked_user: |-
-                Another one bites the dust...!
-                Kicked {user}.
-            user_not_in_chat: This user is not in this chat, how can I restirct them?
+                Ένας ακόμη δαγκώνει τη σκόνη...!
+                Εδιώχθη ο {user}.
+            user_not_in_chat: Αυτός ο χρήστης δεν είναι σε αυτή τη συνομιλία, πώς μπορώ να τον περιορίσω;
         kickme:
-            is_admin: You are an admin, you're stuck here with everyone else!
-            ok_out: Alright, get out!
+            is_admin: Είσαι διαχειριστής, είσαι κολλημένος εδώ με όλους τους άλλους!
+            ok_out: Εντάξει, φύγε!
         unban:
-            is_admin: Why would I unban an admin? That sounds like a pretty dumb idea.
-            is_bot_itself: Why would I un-restrict myself when I'm already here?
+            is_admin: Γιατί θα άρω την απαγόρευση ενός διαχειριστή; Αυτό ακούγεται σαν μια αρκετά ανόητη ιδέα.
+            is_bot_itself: Γιατί θα άρω τον περιορισμό στον εαυτό μου όταν είμαι ήδη εδώ;
             unbanned_user: |-
-                Ok Sure...!
-                Unbanned {user}.
+                Εντάξει βέβαια...!
+                Άρθηκε η απαγόρευση του {user}.
     Blacklists:
         bl_watcher:
-            banned_user: Banned {user} due to {second}
-            kicked_user: Kicked {first} due to {second}
-            muted_user: Muted {user} due to {second}
+            banned_user: Απαγορεύτηκε ο {user} λόγω {second}
+            kicked_user: Εδιώχθη ο {first} λόγω {second}
+            muted_user: Σιγάστηκε ο {user} λόγω {second}
         blacklist:
-            added_bl: 'Added these words as blacklists:'
-            already_blacklisted: 'These words are already blacklisted:'
-            give_bl_word: Please give me a word to add to the blacklist!
+            added_bl: 'Προστέθηκαν αυτές οι λέξεις ως μαύρες λίστες:'
+            already_blacklisted: 'Αυτές οι λέξεις είναι ήδη στη μαύρη λίστα:'
+            give_bl_word: Παρακαλώ δώστε μου μια λέξη για να την προσθέσω στη μαύρη λίστα!
         help_msg: |-
             * Εντολές χρήστη: *
             × /μαύρες λίστες: Ελέγξτε όλες τις μαύρες λίστες στη συνομιλία.
@@ -214,21 +214,21 @@ strings:
             *Σημείωση: *
             Η προεπιλεγμένη κατάσταση για τη λίστα Blacklist είναι * none*, η οποία απλά θα διαγράψει τα μηνύματα από τη συνομιλία.
         ls_bl:
-            list_bl: 'These words are blacklisted in this chat:'
-            no_blacklisted: There are no blacklisted words in this chat.
+            list_bl: 'Αυτές οι λέξεις είναι στη μαύρη λίστα σε αυτή τη συνομιλία:'
+            no_blacklisted: Δεν υπάρχουν λέξεις στη μαύρη λίστα σε αυτή τη συνομιλία.
         rm_all_bl:
-            ask: Are you sure you want to remove all blacklisted words from this chat?
+            ask: Είστε σίγουροι ότι θέλετε να αφαιρέσετε όλες τις λέξεις της μαύρης λίστας από αυτή τη συνομιλία;
             button_handler:
-                "no": Cancelled removing all Blacklists from this Chat ❌
-                "yes": Removed all Blacklists from this Chat ✅
+                "no": Ακυρώθηκε η αφαίρεση όλων των μαύρων λιστών από αυτή τη συνομιλία ❌
+                "yes": Αφαιρέθηκαν όλες οι μαύρες λίστες από αυτή τη συνομιλία ✅
         set_bl_action:
-            changed_mode: 'Changed blacklist mode to: *{value}*'
-            choose_correct_option: Please choose an option out of <mute/kick/ban/warn/none>
-            current_mode: 'The current blacklist mode is: {value}'
+            changed_mode: 'Αλλάχθηκε η λειτουργία μαύρης λίστας σε: *{value}*'
+            choose_correct_option: Παρακαλώ επιλέξτε μια επιλογή από <mute/kick/ban/warn/none>
+            current_mode: 'Η τρέχουσα λειτουργία μαύρης λίστας είναι: {value}'
         unblacklist:
-            give_bl_word: Please give me a word to remove from the blacklist!
-            no_removed_bl: None of the given words were in the blacklist which can be removed!
-            removed_bl: Removed '{value}' from the blacklisted words!
+            give_bl_word: Παρακαλώ δώστε μου μια λέξη για να την αφαιρέσω από τη μαύρη λίστα!
+            no_removed_bl: Καμία από τις δοθείσες λέξεις δεν ήταν στη μαύρη λίστα και μπορεί να αφαιρεθεί!
+            removed_bl: Αφαιρέθηκε η '{value}' από τις λέξεις της μαύρης λίστας!
     CommonStrings:
         admin_cache:
             cache_reloaded: Επαναφόρτωση cache διαχειριστή με επιτυχία.
@@ -253,35 +253,35 @@ strings:
                 User connections are currently <b>disabled</b> to this chat.
                 Please ask admins to allow if you want to connect!
             tap_btn_connect: Please press the button below to connect this chat to your PM
-        connected: You are currently connected to <b>{value}</b>
+        connected: Είσαι αυτή τη στιγμή συνδεδεμένος στο <b>{value}</b>
         connections_btns:
-            admin_conn_cmds: Admin commands available:{admin}
-            user_conn_cmds: User commands available:{user}
+            admin_conn_cmds: Διαθέσιμες εντολές διαχειριστή:{admin}
+            user_conn_cmds: Διαθέσιμες εντολές χρήστη:{user}
         disconnect:
-            disconnected: Disconnected from the connected chat.
-            need_pm: You need to send this in PM to me to disconnect from the chat!
+            disconnected: Αποσυνδέθηκες από τη συνδεδεμένη συνομιλία.
+            need_pm: Πρέπει να στείλεις αυτό σε προσωπικό μήνυμα για να αποσυνδεθείς από τη συνομιλία!
         help_msg: |-
-            This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+            Αυτό σου επιτρέπει να συνδεθείς στη βάση δεδομένων μιας συνομιλίας και να προσθέσεις πράγματα σε αυτήν χωρίς η συνομιλία να το ξέρει! Για προφανείς λόγους, πρέπει να είσαι διαχειριστής για να προσθέσεις πράγματα· αλλά οποιοσδήποτε μπορεί να δει τα δεδομένα σου. (απαγορευμένοι/διωγμένοι χρήστες δεν μπορούν!)
 
-            *Commands*:
-            × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-            × /disconnect: Disconnect from the current chat.
-            × /reconnect: Reconnect to the previously connect chat
-            × /connection: See information about the currently connected chat.
+            *Εντολές*:
+            × /connect `<chatid>`: Σύνδεση στην καθορισμένη συνομιλία, επιτρέποντάς σου να δεις/επεξεργαστείς περιεχόμενα.
+            × /disconnect: Αποσύνδεση από την τρέχουσα συνομιλία.
+            × /reconnect: Επανασύνδεση στην προηγουμένως συνδεδεμένη συνομιλία
+            × /connection: Δες πληροφορίες για την τρέχουσα συνδεδεμένη συνομιλία.
 
-            *Admin Commands:*
-            × /allowconnect <yes/no>: Allow users to connect to chats or not.
+            *Εντολές διαχειριστή:*
+            × /allowconnect <yes/no>: Επιτρέπει ή όχι στους χρήστες να συνδέονται σε συνομιλίες.
 
-            You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+            Μπορείς να πάρεις το id της συνομιλίας χρησιμοποιώντας την εντολή /id στη συνομιλία σου. Μην εκπλαγείς αν το id είναι αρνητικό· όλες οι super ομάδες έχουν αρνητικά ids.
         is_user_connected:
-            bot_not_admin: I'm not an admin in this chat!
-            need_group: This command is made to be used in group chats, not in PM!
-            user_not_admin: You need to be an admin to do this.
-        not_connected: You aren't connected to any chats.
+            bot_not_admin: Δεν είμαι διαχειριστής σε αυτή τη συνομιλία!
+            need_group: Αυτή η εντολή είναι φτιαγμένη για χρήση σε ομαδικές συνομιλίες, όχι σε προσωπικά μηνύματα!
+            user_not_admin: Πρέπει να είσαι διαχειριστής για να το κάνεις αυτό.
+        not_connected: Δεν είσαι συνδεδεμένος σε καμία συνομιλία.
         reconnect:
-            need_pm: You need to be in a PM with me to reconnect to a chat!
-            no_last_chat: You have no last chat to reconnect to!
-            reconnected: You are now reconnected to <b>{value}</b>!
+            need_pm: Πρέπει να είσαι σε προσωπικό μήνυμα μαζί μου για να επανασυνδεθείς σε συνομιλία!
+            no_last_chat: Δεν έχεις καμία προηγούμενη συνομιλία για επανασύνδεση!
+            reconnected: Είσαι τώρα επανασυνδεδεμένος στο <b>{value}</b>!
     Disabling:
         help_msg: |-
             Αυτό σας επιτρέπει να απενεργοποιήσετε ορισμένες κοινώς χρησιμοποιούμενες εντολές, έτσι ώστε κανείς δεν μπορεί να τα χρησιμοποιήσει. Θα σας επιτρέψει επίσης να τους autoδιαγράψετε, σταματώντας τους ανθρώπους από bluetexting.
@@ -298,80 +298,80 @@ strings:
             Οι εντολές με ειδικές ανάγκες είναι ακόμα διαθέσιμες μέσω της λειτουργίας /connect. Αν θέλετε να δείτε και αυτά τα άτομα με ειδικές ανάγκες, ενημερώστε με στη συνομιλία υποστήριξης.
     Filters:
         help_msg: |-
-            Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+            Τα φίλτρα δεν κάνουν διάκριση πεζών-κεφαλαίων. Κάθε φορά που κάποιος λέει τις λέξεις σας-κλειδιά, η Alita θα απαντήσει κάτι άλλο! Μπορεί να χρησιμοποιηθεί για να δημιουργήσετε τις δικές σας εντολές, αν το επιθυμείτε.
 
-            Commands:
-            - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-            - /filters: List all chat filters.
-            - /stop <trigger>: Stop the bot from replying to trigger.
-            - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+            Εντολές:
+            - /filter <trigger> <reply>: Κάθε φορά που κάποιος λέει το trigger, το bot θα απαντάει με την πρόταση. Για φίλτρα πολλών λέξεων, βάλτε το trigger σε εισαγωγικά.
+            - /filters: Λίστα όλων των φίλτρων συνομιλίας.
+            - /stop <trigger>: Σταματάει το bot από το να απαντάει στο trigger.
+            - /stopall: Σταματάει ΟΛΑ τα φίλτρα στην τρέχουσα συνομιλία. Αυτό δεν μπορεί να αναιρεθεί.
 
-            Examples:
-            - Set a filter:
-            -> /filter hello Hello there! How are you?
-            - Set a multiword filter:
-            -> /filter hello friend Hello back! Long time no see!
-            - Set a filter that can only be used by admins:
-            -> /filter example This filter wont happen if a normal user says it {admin}
-            - To save a file, image, gif, or any other attachment, simply reply to file with:
+            Παραδείγματα:
+            - Ορισμός φίλτρου:
+            -> /filter hello Γεια σου! Τι κάνεις;
+            - Ορισμός φίλτρου πολλών λέξεων:
+            -> /filter hello friend Γεια σου φίλε! Πολύς καιρός χωρίς να τα πούμε!
+            - Ορισμός φίλτρου που μπορούν να χρησιμοποιήσουν μόνο διαχειριστές:
+            -> /filter example Αυτό το φίλτρο δεν θα λειτουργήσει αν το πει κανονικός χρήστης {admin}
+            - Για να αποθηκεύσετε αρχείο, εικόνα, gif ή οποιαδήποτε άλλη συνημμένη, απλώς απαντήστε στο αρχείο με:
             -> /filter trigger
     Formatting:
         Fillings: |-
-            <b>Fillings</b>
+            <b>Συμπληρώσεις</b>
 
-            You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-            You can use these to mention a user in notes too!
+            Μπορείτε επίσης να προσαρμόσετε το περιεχόμενο του μηνύματός σας με συναφή δεδομένα. Για παράδειγμα, μπορείτε να αναφέρετε έναν χρήστη με το όνομά του στο μήνυμα καλωσορίσματος, ή να τον αναφέρετε σε ένα φίλτρο!
+            Μπορείτε να χρησιμοποιήσετε αυτά για να αναφέρετε έναν χρήστη και σε σημειώσεις!
 
-            <b>Supported fillings:</b>
-            - <code>{first}</code>: The user's first name.
-            - <code>{last}</code>: The user's last name.
-            - <code>{fullname}</code>: The user's full name.
-            - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-            - <code>{mention}</code>: Mentions the user with their firstname.
-            - <code>{id}</code>: The user's ID.
-            - <code>{chatname}</code>: The chat's name.
-            - <code>{rules}</code>: Adds Rules Button to Message.
+            <b>Υποστηριζόμενες συμπληρώσεις:</b>
+            - <code>{first}</code>: Το μικρό όνομα του χρήστη.
+            - <code>{last}</code>: Το επώνυμο του χρήστη.
+            - <code>{fullname}</code>: Το πλήρες όνομα του χρήστη.
+            - <code>{username}</code>: Το όνομα χρήστη. Αν δεν έχει, αναφέρει τον χρήστη αντί αυτού.
+            - <code>{mention}</code>: Αναφέρει τον χρήστη με το μικρό του όνομα.
+            - <code>{id}</code>: Το ID του χρήστη.
+            - <code>{chatname}</code>: Το όνομα της συνομιλίας.
+            - <code>{rules}</code>: Προσθέτει κουμπί Κανόνων στο Μήνυμα.
         Markdown: |-
-            <b>Markdown Formatting</b>
+            <b>Μορφοποίηση Markdown</b>
 
-            You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-            <b>Supported markdown</b>:
-            - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-            - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-            - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-            - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-            - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-            - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-            - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-            - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-            - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+            Μπορείτε να μορφοποιήσετε το μήνυμά σας χρησιμοποιώντας <b>έντονα</b>, <i>πλάγια</i>, <u>υπογραμμισμένα</u> και πολλά άλλα. Προχωρήστε και πειραματιστείτε!
+            <b>Υποστηριζόμενο markdown</b>:
+            - <code>`code words`</code>: Τα backticks χρησιμοποιούνται για γραμματοσειρές monospace. Εμφανίζεται ως: <code>code words</code>.
+            - <code>_italic words_</code>: Οι κάτω παύλες χρησιμοποιούνται για πλάγια γραμματοσειρά. Εμφανίζεται ως: <i>italic words</i>.
+            - <code>*bold words*</code>: Οι αστερίσκοι χρησιμοποιούνται για έντονη γραμματοσειρά. Εμφανίζεται ως: <b>bold words</b>.
+            - <code>~strikethrough~</code>: Οι τίλδες χρησιμοποιούνται για διακριτή διαγραφή. Εμφανίζεται ως: <strike>strikethrough</strike>.
+            - <code>||spoiler||</code>: Οι διπλές κάθετες γραμμές χρησιμοποιούνται για spoilers. Εμφανίζεται ως: <tg-spoiler>Spoiler</tg-spoiler>.
+            - <code>```pre```</code>: Για να αγνοήσει ο formatter άλλους χαρακτήρες μορφοποίησης μέσα στο κείμενο που μορφοποιείται με '```', θα είναι όπως: <code>**bold** | *bold*</code>.
+            - <code>__underline__</code>: Οι διπλές κάτω παύλες χρησιμοποιούνται για υπογραμμίσεις. Εμφανίζεται ως: underline. ΣΗΜΕΙΩΣΗ: Κάποιοι clients προσπαθούν να είναι έξυπνοι και το ερμηνεύουν ως πλάγιο. Σε αυτή την περίπτωση, δοκιμάστε να χρησιμοποιήσετε την ενσωματωμένη μορφοποίηση της εφαρμογής σας.
+            - <code>[hyperlink](example.com)</code>: Αυτή είναι η μορφοποίηση που χρησιμοποιείται για υπερσυνδέσμους. Εμφανίζεται ως: <a href='https://example.com/'>hyperlink</a>.
+            - <code>[My Button](buttonurl://example.com)</code>: Αυτή είναι η μορφοποίηση που χρησιμοποιείται για τη δημιουργία κουμπιών. Αυτό το παράδειγμα θα δημιουργήσει ένα κουμπί με το όνομα "My button" που ανοίγει το <code>example.com</code> όταν κάνετε κλικ.
 
-            If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-            <b>Example:</b>
+            Αν θέλετε να στείλετε κουμπιά στην ίδια γραμμή, χρησιμοποιήστε τη μορφοποίηση <code>:same</code>.
+            <b>Παράδειγμα:</b>
             <code>[button 1](buttonurl:example.com)</code>
             <code>[button 2](buttonurl://example.com:same)</code>
             <code>[button 3](buttonurl://example.com)</code>
-            This will show button 1 and 2 on the same line, with 3 underneath.
+            Αυτό θα εμφανίσει τα κουμπιά 1 και 2 στην ίδια γραμμή, με το 3 από κάτω.
         Random: |-
-            <b>Random Content</b>
+            <b>Τυχαίο Περιεχόμενο</b>
 
-            Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-            How to use random contents:
-            - %%%: This separator can be used to add  random replies to the bot.
-            For example:
-            <code>hello
+            Κάτι άλλο που μπορεί να είναι διασκεδαστικό, είναι να τυχαιοποιήσετε το περιεχόμενο ενός μηνύματος. Κάντε τα πράγματα λίγο πιο προσωπικά αλλάζοντας μηνύματα καλωσορίσματος ή αλλάζοντας σημειώσεις!
+            Πώς να χρησιμοποιήσετε τυχαίο περιεχόμενο:
+            - %%%: Αυτό το διαχωριστικό μπορεί να χρησιμοποιηθεί για να προσθέσετε τυχαίες απαντήσεις στο bot.
+            Για παράδειγμα:
+            <code>γεια
             %%%
-            how are you</code>
-            This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-            Use this to make Alita feel a bit more customised! (only works in filters/notes)
-            Example welcome message:
-            - Every time a new user joins, they'll be presented with one of the three messages shown here.
+            τι κάνεις</code>
+            Αυτό θα επιλέξει τυχαία μεταξύ της αποστολής του πρώτου μηνύματος, "γεια", ή του δεύτερου μηνύματος, "τι κάνεις".
+            Χρησιμοποιήστε αυτό για να κάνετε την Alita να φαίνεται λίγο πιο προσαρμοσμένη! (λειτουργεί μόνο σε φίλτρα/σημειώσεις)
+            Παράδειγμα μηνύματος καλωσορίσματος:
+            - Κάθε φορά που εισέρχεται νέος χρήστης, θα του παρουσιάζεται ένα από τα τρία μηνύματα που φαίνονται εδώ.
             -> /filter "hey"
-            hello there <code>{first}</code>!
+            γεια σου <code>{first}</code>!
             %%%
-            Ooooh, <code>{first}</code> how are you?
+            Ωωωω, <code>{first}</code> τι κάνεις;
             %%%
-            Sup? <code>{first}</code>
+            Τι γίνεται; <code>{first}</code>
         help_msg: Η Alita υποστηρίζει έναν μεγάλο αριθμό επιλογών μορφοποίησης για να κάνει τα μηνύματά σας πιο εκφραστικά. Ρίξτε μια ματιά κάνοντας κλικ στα κουμπιά παρακάτω!
     Greetings:
         help_msg: |-
@@ -425,10 +425,10 @@ strings:
                 Αν αντιμετωπίζετε δυσκολίες στη δημιουργία μου στην ομάδα σας, μην διστάσετε να έρθετε στο @DivideSupport.
                 Θα θέλαμε να σας βοηθήσουμε.
         DonateText: |-
-            -Θέλεις να δωρίσεις; Καταπληκτικό!
-            Όταν κάνετε δωρεά, το σύνολο του ταμείου πηγαίνει προς την ανάπτυξή μου που κάνει γρήγορα και να ανταποκρίνεται.
-            Η δωρεά σας μπορεί επίσης να μου πάρει ένα νέο χαρακτηριστικό ή δύο, το οποίο δεν ήμουν σε θέση να πάρει λόγω των περιορισμών του διακομιστή.
-            Όλα τα κεφάλαια θα τεθούν σε υπηρεσίες μου όπως η βάση δεδομένων, αποθήκευση και φιλοξενία!
+            Θέλεις να δωρίσεις; Καταπληκτικό!
+            Όταν κάνετε δωρεά, όλα τα χρήματα πηγαίνουν προς την ανάπτυξή μου που με κάνει γρήγορη και αξιόπιστη.
+            Η δωρεά σας μπορεί επίσης να μου φέρει ένα ή δύο νέα χαρακτηριστικά, τα οποία δεν μπορούσα να αποκτήσω λόγω περιορισμών διακομιστή.
+            Όλα τα κεφάλαια θα διατεθούν στις υπηρεσίες μου όπως βάση δεδομένων, αποθήκευση και φιλοξενία!
             Μπορείτε να δωρίσετε επικοινωνώντας με τον ιδιοκτήτη μου εδώ: @DivideProjectsBot
     Languages:
         help_msg: |-
@@ -454,12 +454,12 @@ strings:
             + media media `: αυτό κλειδώνει όλα τα μηνύματα των μέσων στη συνομιλία.
     Misc:
         help_msg: |-
-            × /info: Get your user info, can be used as reply or by passing a User Id or Username.
-            × /id: Get the current group id. If used by replying to a message, get that user's id.
-            × /ping: Ping the Telegram Server!
-            × /tr <lang code> <msg/reply to message>: Translate the message.
-            × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
-            × /stat: Gets the count of total number of messages in chat.
+            × /info: Λάβετε τις πληροφορίες χρήστη σας, μπορεί να χρησιμοποιηθεί ως απάντηση ή περνώντας ID χρήστη ή όνομα χρήστη.
+            × /id: Λάβετε το ID της τρέχουσας ομάδας. Αν χρησιμοποιηθεί απαντώντας σε μήνυμα, λάβετε το ID αυτού του χρήστη.
+            × /ping: Ping τον διακομιστή Telegram!
+            × /tr <κωδικός γλώσσας> <msg/απάντηση σε μήνυμα>: Μετάφραση του μηνύματος.
+            × /removebotkeyboard: Αφαιρεί το κολλημένο πληκτρολόγιο bot από τη συνομιλία σας.
+            × /stat: Λαμβάνει τον αριθμό του συνολικού αριθμού μηνυμάτων στη συνομιλία.
     Mutes:
         help_msg: |-
             Μερικές φορές οι χρήστες μπορεί να είναι ενοχλητικοί και μπορεί να θέλετε να τους περιορίσετε από την αποστολή μηνύματος για να συνομιλήσετε, αυτή η ενότητα είναι εδώ για να βοηθήσει, μπορείτε να χρησιμοποιήσετε το module για να μουγκή μέλη στην ομάδα σας.
@@ -537,20 +537,23 @@ strings:
             × /setrules `<text>`: Ορίστε τους κανόνες για αυτή τη συνομιλία.
             × /privaterules `<yes/no/on/off>`: Ενεργοποίηση/απενεργοποίηση αν οι κανόνες θα πρέπει να σταλούνται ιδιωτικά.
             × /resetrules: Επαναφορά προεπιλεγμένων κανόνων συνομιλίας
+            × /rulesbtn `<custom text>`: Ορίζει το κείμενο του κουμπιού κανόνων.
+            × /resetrulesbutton: Επαναφέρει το κείμενο του κουμπιού κανόνων στην προεπιλεγμένη κατάσταση.
+            × /resetrulesbtn: Ϊδιο με το παραπάνω.
     Tagger:
         help_msg: |-
-            Ο Tagger είναι ένα σημαντικό χαρακτηριστικό για να αναφέρετε όλα τα εγγεγραμμένα μέλη της ομάδας.
-            Τα μέλη της συνομιλίας μπορούν να εγγραφούν στο tagger.
+            Ο Tagger είναι ένα ουσιαστικό χαρακτηριστικό για να αναφέρει όλα τα εγγεγραμμένα μέλη της ομάδας.
+            Τα μέλη της συνομιλίας μπορούν να εγγραφούν στον tagger.
 
-            *Εντολές χρήστη: *
-            × /tagme: Επιτρέπεται ο χρήστης με ετικέτα
-            × /untagme: Απορρίψτε το χρήστη με προσδιοριστικό
+            *Εντολές χρήστη:*
+            × /tagme: Επιτρέπει στον χρήστη να τον αναφέρουν
+            × /untagme: Απαγορεύει στον χρήστη να τον αναφέρουν
 
-            *Admin Commands: *
-            × /tagall: tag/μνεία όλων των χρηστών με ετικέτα
-            × /untagall: σαφή όλα τα μέλη με ετικέτα
-            × /addtag <user>: Προσθήκη χρήστη στο διάδρομο
-            × /rmtag <user>: Αφαιρέστε το χρήστη από το taglist
+            *Εντολές διαχειριστή:*
+            × /tagall: αναφέρει/αναφέρει όλους τους χρήστες με ετικέτα
+            × /untagall: καθαρίζει όλα τα μέλη με ετικέτα
+            × /addtag <user>: Προσθέτει χρήστη χειροκίνητα στη λίστα ετικετών
+            × /rmtag <user>: Αφαιρεί χρήστη χειροκίνητα από τη λίστα ετικετών
     Utils:
         chat_status:
             anon_admin_btn: Πατήστε για να αποδειχθεί το admin
@@ -591,21 +594,21 @@ strings:
                 invalid_time_type: 'Καθορίστηκε μη έγκυρο είδος ώρας. Αναμενόταν m, h ή d: {time}'
     Warns:
         help_msg: |-
-            Keep your members in check with warnings; stop them getting out of control!
-            If you're looking for automated warnings, read about the blacklist module!
+            Κρατήστε τα μέλη σας υπό έλεγχο με προειδοποιήσεις· εμποδίστε τες να βγουν εκτός ελέγχου!
+            Αν αναζητάτε αυτόματες προειδοποιήσεις, διαβάστε σχετικά με τη μονάδα μαύρων λιστών!
 
-            *Admin Commands:*
-            - /warn <reason>: Warn a user.
-            - /dwarn <reason>: Warn a user by reply, and delete their message.
-            - /swarn <reason>: Silently warn a user, and delete your message.
-            - /warns: See a user's warnings.
-            - /rmwarn: Remove a user's latest warning.
-            - /resetwarn: Reset all of a user's warnings to 0.
-            - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-            - /warnings: Get the chat's warning settings.
-            - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-            - /setwarnlimit <number>: Set the number of warnings before users are punished.
+            *Εντολές διαχειριστή:*
+            - /warn <reason>: Προειδοποιήστε έναν χρήστη.
+            - /dwarn <reason>: Προειδοποιήστε έναν χρήστη με απάντηση και διαγράψτε το μήνυμά του.
+            - /swarn <reason>: Προειδοποιήστε σιωπηλά έναν χρήστη και διαγράψτε το δικό σας μήνυμα.
+            - /warns: Δείτε τις προειδοποιήσεις ενός χρήστη.
+            - /rmwarn: Αφαιρέστε την τελευταία προειδοποίηση ενός χρήστη.
+            - /resetwarn: Επαναφέρετε όλες τις προειδοποιήσεις ενός χρήστη στο 0.
+            - /resetallwarns: Διαγράψτε όλες τις προειδοποιήσεις σε μια συνομιλία. Όλοι οι χρήστες επιστρέφουν σε 0 προειδοποιήσεις.
+            - /warnings: Πάρτε τις ρυθμίσεις προειδοποιήσεων της συνομιλίας.
+            - /setwarnmode <ban/kick/mute>: Ορίστε τη λειτουργία προειδοποίησης της συνομιλίας.
+            - /setwarnlimit <number>: Ορίστε τον αριθμό προειδοποιήσεων πριν οι χρήστες τιμωρηθούν.
 
-            *Examples*
-            - Warn a user.
-            -> `/warn @user For disobeying the rules`
+            *Παραδείγματα*
+            - Προειδοποιήστε έναν χρήστη.
+            -> `/warn @user Για παραβίαση των κανόνων`

@@ -62,7 +62,7 @@ strings:
             set_in_limit: El límite anti-spam debe establecerse entre 3 y 100.
         flood:
             disabled: Este chat no está aplicando actualmente control anti-spam.
-            show_settings: Este chat está aplicando actualmente control anti-spam después de {number} mensajes. Cualquier usuario que envíe más de esa cantidad de mensajes será {chat}.
+            show_settings: Este chat está aplicando actualmente control anti-spam después de {number} mensajes. Cualquier usuario que envíe más de esa cantidad de mensajes será {user}.
         flood_deleter:
             already_disabled: El borrado de mensajes anti-spam está actualmente *deshabilitado* en este chat, ¡los mensajes que causen spam serán ignorados!
             already_enabled: El borrado de mensajes anti-spam está actualmente *habilitado* en este chat, ¡los mensajes que causen spam serán eliminados!
@@ -83,11 +83,11 @@ strings:
             disabled: |-
                 Está bien.
                 No advertiré a los usuarios por hacer spam.
-            success: ¡Entendido! Límite máximo de spam en <b>{number}</b> mensajes.
+            success: El límite anti-spam ha sido establecido a <b>{limit}</b> mensajes.
         setfloodmode:
             specify_action: 'Necesitas especificar una acción a tomar ante el spam. Los modos actuales son: `ban`/`kick`/`mute`'
-            success: ¡Entendido! El modo anti-spam será {id}.
-            unknown_type: 'Tipo desconocido ''{id}''. Por favor usa uno de: ban/kick/mute'
+            success: El modo anti-spam ha sido establecido a {value}.
+            unknown_type: 'Tipo desconocido ''{value}''. Por favor usa uno de: ban/kick/mute'
     Approvals:
         approval:
             is_admin: '{admin} es un administrador, no necesitas aprobación.'
@@ -99,7 +99,7 @@ strings:
                 <b>Tiempo de Aprobación:</b> {param4} UTC
             is_bot_itself: Soy un administrador, no necesito aprobación.
             is_unapproved: |-
-                No estás aprobado en <b>{id}</b>
+                No estás aprobado en <b>{value}</b>
                 ¡No estás protegido de listas negras, bloqueos y anti-spam!
         approve:
             is_bot_itself: ¡Ya me has aprobado al hacerme administrador!
@@ -153,7 +153,7 @@ strings:
                 Baneado {value}.
             tban: |-
                 ¡Otro que muerde el polvo...!
-                Baneado {first} por {second}
+                Baneado {first} por {second}.
         help_msg: |-
             A veces los usuarios pueden ser molestos y podrías querer removerlos de tu chat, ¡este módulo te ayuda exactamente a lidiar con eso!
             Banea/expulsa usuarios de tu chat, y desbanéalos más tarde si se están comportando bien.
@@ -187,8 +187,8 @@ strings:
             is_admin: ¿Por qué desbanearía a un administrador? Eso suena como una idea bastante tonta.
             is_bot_itself: ¿Por qué me des-restringiría cuando ya estoy aquí?
             unbanned_user: |-
-                Está bien, claro...
-                Desbaneado {user}.
+                Muy bien, démosle otra oportunidad.
+                ¡Desbaneado {user}!
     Blacklists:
         bl_watcher:
             banned_user: Baneado {first} debido a {second}
@@ -222,13 +222,13 @@ strings:
                 "no": Cancelado el remover todas las Listas Negras de este Chat ❌
                 "yes": Removidas todas las Listas Negras de este Chat ✅
         set_bl_action:
-            changed_mode: 'Cambiado el modo de lista negra a: *{value}*'
+            changed_mode: 'Cambiado exitosamente el modo de lista negra a: *{value}*'
             choose_correct_option: Por favor elige una opción de <mute/kick/ban/warn/none>
-            current_mode: 'El modo actual de lista negra es: {value}'
+            current_mode: 'El modo actual de lista negra para este chat es: {chat}'
         unblacklist:
             give_bl_word: ¡Por favor dame una palabra para remover de la lista negra!
             no_removed_bl: ¡Ninguna de las palabras dadas estaba en la lista negra que se pueda remover!
-            removed_bl: ¡Removido '{id}' de las palabras en lista negra!
+            removed_bl: ¡Removido exitosamente '{value}' de las palabras en lista negra!
     CommonStrings:
         admin_cache:
             cache_reloaded: Caché de administrador recargado exitosamente.
@@ -331,6 +331,9 @@ strings:
             - <code>{id}</code>: El ID del usuario.
             - <code>{chatname}</code>: El nombre del chat.
             - <code>{rules}</code>: Agrega Botón de Reglas al Mensaje.
+            - <code>{protect}</code>: Protege el contenido de ser compartido.
+            - <code>{preview}</code>: Habilita vistas previas en los mensajes.
+            - <code>{nonotif}</code>: Deshabilita la notificación para ese mensaje.
         Markdown: |-
             <b>Formato Markdown</b>
 
@@ -375,7 +378,7 @@ strings:
         help_msg: ¡Alita soporta un gran número de opciones de formato para hacer tus mensajes más expresivos! ¡Echa un vistazo haciendo clic en los botones de abajo!
     Greetings:
         help_msg: |-
-            ¡Da la bienvenida a nuevos miembros a tus grupos o di adiós después de que se vayan!
+            ¡Da la bienvenida a nuevos miembros en tus grupos o despidelos cuando se vayan!
 
             *Comandos de Administrador:*
             × /setwelcome `<respuesta/texto>`: Establece el texto de bienvenida para el grupo.
@@ -386,6 +389,7 @@ strings:
             × /resetgoodbye: Reinicia el mensaje de despedida al predeterminado.
             × /cleanservice `<yes/no/on/off>`: Eliminar todos los mensajes de servicio como la notificación 'x se unió al grupo'.
             × /cleanwelcome `<yes/no/on/off>`: Eliminar el mensaje de bienvenida anterior, cada vez que un nuevo miembro se une.
+            × /autoapprove `<yes/no/on/off>`: Aprobar automáticamente a todos los nuevos miembros.
     Help:
         About: |-
             @{first} es uno de los gestores de grupos más rápidos y llenos de funciones.
@@ -395,11 +399,11 @@ strings:
             Alita ha estado en línea desde 2020 y ha servido a miles de grupos con cientos de miles de usuarios!
 
             <b>¿Por qué Alita:</b>
-            -Simple: Fácil uso y compaitble con muchos comandos bot.
-            -Destacado: Muchas características que otros robots de gestión de grupos no tienen.
-            -Rápido: ¿Guess qué? No se hace usando Python, usamos <a href='https://go.dev/'>Go</a> como nuestro lenguaje de programación principal.
+            - Simple: Fácil uso y compatible con muchos comandos bot.
+            - Destacado: Muchas características que otros bots de gestión de grupos no tienen.
+            - Rápido: ¿Adivina qué? No se hace usando Python, usamos <a href='https://go.dev/'>Go</a> como nuestro lenguaje de programación principal.
 
-            <b>Versión actual:</b> {chat}
+            <b>Versión actual:</b> {admin}
         Configuration:
             Step-1: |-
                 Bienvenido a la Configuración de Alita
@@ -416,7 +420,7 @@ strings:
                 ▫️ Presiona en Administrador
                 ▫️ Presiona Agregar Administrador
                 ▫️ Presiona la Lupa
-                ▫️ Busca @{admin}
+                ▫️ Busca @{chat}
                 ▫️ Confirmar
             Step-3: |-
                 ¡Excelente!
@@ -538,6 +542,9 @@ strings:
             × /setrules `<texto>`: Establecer las reglas para este chat.
             × /privaterules `<yes/no/on/off>`: Habilitar/deshabilitar si las reglas deben enviarse en privado.
             × /resetrules: Restablecer las reglas de chat al valor predeterminado
+            × /rulesbtn `<texto personalizado>`: Establece el texto del botón de reglas.
+            × /resetrulesbutton: Restablecer el texto del botón de reglas al predeterminado.
+            × /resetrulesbtn: Igual que arriba.
     Tagger:
         help_msg: |-
             Tagger es una característica esencial para mencionar a todos los miembros suscritos en el grupo.
@@ -554,8 +561,8 @@ strings:
             × /rmtag <usuario>: Eliminar un usuario manualmente de la lista de etiquetas
     Utils:
         chat_status:
-            anon_admin_btn: Presiona para probar administrador
-            anon_admin_string: Pareces ser anónimo. Toca este botón para confirmar tu identidad.
+            anon_admin_btn: Confirmar tu Identidad
+            anon_admin_string: Pareces ser anónimo. Presiona este botón para confirmar tu identidad.
             bot:
                 no_permission_delete: ¡No tengo permisos para eliminar mensajes!
                 no_permission_pin: ¡No puedo fijar mensajes aquí! Asegúrate de que soy admin y puedo fijar mensajes.

@@ -191,9 +191,9 @@ strings:
                 Avbanned {user}.
     Blacklists:
         bl_watcher:
-            banned_user: Banned {user} due to {second}
-            kicked_user: Kicked {first} due to {second}
-            muted_user: Muted {user} due to {second}
+            banned_user: Bannade {user} på grund av {second}
+            kicked_user: Sparkade {first} på grund av {second}
+            muted_user: Mutade {user} på grund av {second}
         blacklist:
             added_bl: 'Lade till dessa ord i svartlistan:'
             already_blacklisted: 'Dessa ord är redan på svartlistan:'
@@ -236,32 +236,32 @@ strings:
     Connections:
         allow_connect:
             currently_off: |-
-                User connections are currently turned <b>off</b>.
-                Users can't connect this chat to their PM's!
+                Användaranslutningar är för närvarande <b>inaktiverade</b>.
+                Användare kan inte ansluta denna chatt till sina PM:s!
             currently_on: |-
-                User connections are currently turned <b>on</b>.
-                Users can connect this chat to their PM's!
+                Användaranslutningar är för närvarande <b>aktiverade</b>.
+                Användare kan ansluta denna chatt till sina PM:s!
             turned_off: |-
-                Turned <b>off</b> User connections to this chat!
-                Users can't connect chat to their PM's!
+                <b>Inaktiverade</b> användaranslutningar till denna chatt!
+                Användare kan inte ansluta chatten till sina PM:s!
             turned_on: |-
-                Turned <b>on</b> User connections to this chat!
-                Users can now connect chat to their PM's!
+                <b>Aktiverade</b> användaranslutningar till denna chatt!
+                Användare kan nu ansluta chatten till sina PM:s!
         connect:
             connected: Du är nu ansluten till <b>{value}</b>!
             connection_disabled: |-
-                User connections are currently <b>disabled</b> to this chat.
-                Please ask admins to allow if you want to connect!
+                Användaranslutningar är för närvarande <b>inaktiverade</b> för denna chatt.
+                Be administratörer att tillåta om du vill ansluta!
             tap_btn_connect: Tryck på knappen nedan för att ansluta denna chatt till din PM
         connected: Du är nu ansluten till <b>{value}</b>
         connections_btns:
-            admin_conn_cmds: Admin commands available:{admin}
-            user_conn_cmds: User commands available:{user}
+            admin_conn_cmds: Tillgängliga administratörskommandon:{admin}
+            user_conn_cmds: Tillgängliga användarkommandon:{user}
         disconnect:
-            disconnected: Disconnected from the connected chat.
+            disconnected: Kopplad från från den anslutna chatten.
             need_pm: Du måste skicka detta i PM till mig för att koppla från chatt!
         help_msg: |-
-            Detta tillåter dig att ansluta till en chatt's databas och lägga till saker i den utan att chatten vet om det! För självklara skäl behöver du vara en administratör för att lägga till saker; men alla medlemmar kan se dina data. (banned/kicked users can't!)
+            Detta tillåter dig att ansluta till en chatt's databas och lägga till saker i den utan att chatten vet om det! För självklara skäl behöver du vara en administratör för att lägga till saker; men alla medlemmar kan se dina data. (bannade/sparkade användare kan inte!)
 
             *Kommandon:*
             × /connect `<chatid>`: Anslut till den angivna chatten, tillåta att du kan se/redigera innehållet.
@@ -308,11 +308,11 @@ strings:
 
             Exempel:
             - Ställ in ett filter:
-            -> /filter hello Hello there! How are you?
+            -> /filter hej Hej där! Hur mår du?
             - Ställ in ett flerordsfilter:
-            -> /filter hello friend Hello back! Long time no see!
+            -> /filter hej vän Hej igen! Länge sedan sist!
             - Ställ in ett filter som kan endast användas av admins:
-            -> /filter example This filter wont happen if a normal user says it {admin}
+            -> /filter exempel Detta filter händer inte om en vanlig användare säger det {admin}
             - För att spara en fil, bild, gif eller annan bilaga, bara svara på filen med:
             -> /filter trigger
     Formatting:
@@ -331,6 +331,9 @@ strings:
              - <code>{id}</code>: Användarens ID.
              - <code>{chatname}</code>: Chats namn.
              - <code>{rules}</code>: Lägger till Regler-knappen till meddelandet.
+             - <code>{protect}</code>: Skyddar innehållet från att delas.
+             - <code>{preview}</code>: Aktiverar förhandsvisningar i meddelandena.
+             - <code>{nonotif}</code>: Inaktiverar notifieringen för det meddelandet.
         Markdown: |-
             <b>Markdown Formatting</b>
 
@@ -342,15 +345,15 @@ strings:
             - <code>~strikethrough~</code>: Tildes är använda för strikethrough. Visas som: <strike>strikethrough</strike>.
             - <code>||spoiler||</code>: Double vertical bars är använda för spoilers. Visas som: <tg-spoiler>Spoiler</tg-spoiler>.
             - <code>```pre```</code>: För att göra formatteren att ignorera andra formateringstecken inuti texten formaterad med '```', kommer det att vara som: <code>**bold** | *bold*</code>.
-            - <code>__underline__</code>: Double underscores är använda för understruken. Visas som: underline. NOTE: Some clients försöker vara smarta och tolka det som kursiv. I det fallet, försök att använda appens inbyggda formatering.
+            - <code>__underline__</code>: Double underscores är använda för understruken. Visas som: underline. OBS: Vissa klienter försöker vara smarta och tolka det som kursiv. I det fallet, försök att använda appens inbyggda formatering.
             - <code>[hyperlink](example.com)</code>: Detta är formateringen som används för hyperlänkar. Visas som: <a href='https://example.com/'>hyperlink</a>.
-            - <code>[My Button](buttonurl://example.com)</code>: Detta är formateringen som används för att skapa knappar. Det här exemplet kommer att skapa en knapp med namnet "My button" som öppnar <code>example.com</code> när den klickas.
+            - <code>[Min knapp](buttonurl://example.com)</code>: Detta är formateringen som används för att skapa knappar. Det här exemplet kommer att skapa en knapp med namnet "Min knapp" som öppnar <code>example.com</code> när den klickas.
 
             Om du vill skicka knappar på samma rad, använd <code>:same</code> formatering.
             <b>Exempel:</b>
-            <code>[button 1](buttonurl:example.com)</code>
-            <code>[button 2](buttonurl://example.com:same)</code>
-            <code>[button 3](buttonurl://example.com)</code>
+            <code>[knapp 1](buttonurl:example.com)</code>
+            <code>[knapp 2](buttonurl://example.com:same)</code>
+            <code>[knapp 3](buttonurl://example.com)</code>
             Detta kommer att visa knapp 1 och 2 på samma rad, med 3 under.
         Random: |-
             <b>Slumpmässigt innehåll</b>
@@ -386,6 +389,7 @@ strings:
             × /resetFarväl: Återställer avfartsmeddelandet till standardvärdet.
             × /cleanservice "<yes/no/on/off>": Ta bort alla servicemeddelanden, t.ex. "x anslöt till gruppen".
             × /cleankommet "<yes/no/on/off>": Ta bort det gamla välkomstmeddelandet, när en ny medlem ansluter.
+            × /autoapprove `<yes/no/on/off>`: Godkänn automatiskt alla nya medlemmar.
     Help:
         About: |-
             @{first} är en av den snabbaste och mest funktionsfyllda grupphanteraren.
@@ -406,18 +410,18 @@ strings:
 
                 Det första du ska göra är att lägga till Alita ✨ i din grupp! För att göra det trycker du på knappen under och väljer din grupp, och sedan klickar du på Klar för att fortsätta handledningen.
             Step-2: |-
-                Ok, well done!
+                Okej, väl gjort!
 
-                Now to let me work correctly, you need to make me Admin of your Group!
-                To do that, follow this easy steps:
-                ▫️ Go to your group
-                ▫️ Press the Group's name
-                ▫️ Press Modify
-                ▫️ Press on Administrator
-                ▫️ Press Add Administrator
-                ▫️ Press the Magnifying Glass
-                ▫️ Search @{chat}
-                ▫️ Confirm
+                Nu för att låta mig fungera korrekt behöver du göra mig till administratör för din grupp!
+                För att göra det, följ dessa enkla steg:
+                ▫️ Gå till din grupp
+                ▫️ Tryck på gruppnamnet
+                ▫️ Tryck på Ändra
+                ▫️ Tryck på Administratör
+                ▫️ Tryck på Lägg till administratör
+                ▫️ Tryck på förstoringsglaset
+                ▫️ Sök efter @{chat}
+                ▫️ Bekräfta
             Step-3: |-
                 Utmärkt!
                 Nu är Bot färdig att använda!
@@ -426,11 +430,11 @@ strings:
                 Om du har problem med att sätta upp mig i din grupp så tveka inte att komma in @DivideSupport.
                 Vi vill gärna hjälpa dig.
         DonateText: |-
-            So you want to donate? Amazing!
-            When you donate, all the fund goes towards my development which makes on fast and responsive.
-            Your donation might also me get me a new feature or two, which I wasn't able to get due to server limitations.
-            All the fund would be put into my services such as database, storage and hosting!
-            You can donate by contacting my owner here: @DivideProjectsBot
+            Så du vill donera? Fantastiskt!
+            När du donerar går alla medel till min utveckling som gör mig snabb och responsiv.
+            Din donation kanske också ger mig en eller två nya funktioner, som jag inte kunde få på grund av serverbegränsningar.
+            Alla medel skulle läggas på mina tjänster som databas, lagring och hosting!
+            Du kan donera genom att kontakta min ägare här: @DivideProjectsBot
     Languages:
         help_msg: |-
             Kan du inte byta språk på roboten?
@@ -441,7 +445,7 @@ strings:
             Du kan hjälpa oss att föra in bot på fler språk genom att hjälpa till på [Crowdin](https: //crowdin.com/project/alita_robot)
     Locks:
         help_msg: |-
-            *Admin only *:
+            *Endast administratörer*:
             × /lock "<permission>": Lås Chat-behörighet.
             × /unlock "<permission>": Låsa upp Chat-behörighet.
             × /lås: Visa chattbehörighet.
@@ -455,12 +459,12 @@ strings:
             /låsmedier ": det här låser alla mediemeddelanden i chatten.
     Misc:
         help_msg: |-
-            × /info: Get your user info, can be used as reply or by passing a User Id or Username.
-            × /id: Get the current group id. If used by replying to a message, get that user's id.
-            × /ping: Ping the Telegram Server!
-            × /tr <lang code> <msg/reply to message>: Translate the message.
-            × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
-            × /stat: Gets the count of total number of messages in chat.
+            × /info: Hämta din användarinfo, kan användas som svar eller genom att ange ett användar-ID eller användarnamn.
+            × /id: Hämta den aktuella grupp-ID:t. Om det används genom att svara på ett meddelande, hämta den användarens ID.
+            × /ping: Pinga Telegram-servern!
+            × /tr <språkkod> <meddelande/svara på meddelande>: Översätt meddelandet.
+            × /removebotkeyboard: Tar bort det fastnade bot-tangentbordet från din chatt.
+            × /stat: Hämtar antalet totala meddelanden i chatten.
     Mutes:
         help_msg: |-
             Ibland kan användare vara irriterande och du kanske vill begränsa dem från att skicka meddelanden till chatt, den här modulen är här för att hjälpa, du kan använda den matte modulen för att muta medlemmar i din grupp.
@@ -517,7 +521,7 @@ strings:
             × /report "<reason>": svar på ett meddelande om att rapportera det till administratörer.
             - @admin: samma som /report men inte ett kommando.
 
-            *Admins Only: *
+            *Endast administratörer:*
             × /reports "<on/off/yes/no>": ändra rapportinställning, eller visa aktuell status.
             -Om det görs i FUn för att avaktivera din status.
             -Om gruppen är i grupp, växlar du till att grupper har status.
@@ -538,23 +542,26 @@ strings:
             × /setrules "<text>": Ange regler för den här chatten.
             × /privaterules "<yes/no/on/off>": Aktivera / avaktivera om reglerna ska skickas i privat.
             × /resetrules: Återställ chattreglerna till standard
+            × /rulesbtn `<anpassad text>`: Sätter texten på regler-knappen.
+            × /resetrulesbutton: Återställ texten på regler-knappen till standard.
+            × /resetrulesbtn: Samma som ovan.
     Tagger:
         help_msg: |-
             Tagger är en viktig funktion för att nämna alla prenumererade medlemmar i gruppen.
             Alla chattmedlemmar kan prenumerera på tagger.
 
-            *User (*User): *
-            × /tagm: Tillåt användare att taggas
-            × /untagme: Uppaktivera användare med taggen
+            *Användarkommandon:*
+            × /tagme: Tillåt användare att taggas
+            × /untagme: Avaktivera användare med taggen
 
-            *Admin: *
-            × /tagall: rensa alla taggade användare
+            *Administratörskommandon:*
+            × /tagall: tagga/nämn alla taggade användare
             × /untagall: rensa alla taggade medlemmar
             × /addtag <user>: Lägg till en användare manuellt till tagglista
             × /rmtag <user>: Ta bort en användare manuellt från en taglist.
     Utils:
         chat_status:
-            anon_admin_btn: Klicka för att bevisa admin
+            anon_admin_btn: Klicka för att bekräfta admin
             anon_admin_string: Det ser ut som om du är anonym. Tryck på den här knappen för att bekräfta din identitet.
             bot:
                 no_permission_delete: Jag har inte behörighet att ta bort meddelanden!
@@ -592,21 +599,21 @@ strings:
                 invalid_time_type: 'Ogiltig tidstyp angiven. Förväntad m, h, eller d fick: {time}'
     Warns:
         help_msg: |-
-            Keep your members in check with warnings; stop them getting out of control!
-            If you're looking for automated warnings, read about the blacklist module!
+            Håll dina medlemmar i schack med varningar; stoppa dem från att bli ohämmade!
+            Om du letar efter automatiska varningar, läs om svartlistemodulen!
 
-            *Admin Commands:*
-            - /warn <reason>: Warn a user.
-            - /dwarn <reason>: Warn a user by reply, and delete their message.
-            - /swarn <reason>: Silently warn a user, and delete your message.
-            - /warns: See a user's warnings.
-            - /rmwarn: Remove a user's latest warning.
-            - /resetwarn: Reset all of a user's warnings to 0.
-            - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-            - /warnings: Get the chat's warning settings.
-            - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-            - /setwarnlimit <number>: Set the number of warnings before users are punished.
+            *Administratörskommandon:*
+            - /warn <anledning>: Varna en användare.
+            - /dwarn <anledning>: Varna en användare genom svar och ta bort deras meddelande.
+            - /swarn <anledning>: Varna en användare tyst och ta bort ditt meddelande.
+            - /warns: Se en användares varningar.
+            - /rmwarn: Ta bort en användares senaste varning.
+            - /resetwarn: Återställ alla en användares varningar till 0.
+            - /resetallwarns: Ta bort alla varningar i en chatt. Alla användare återgår till 0 varningar.
+            - /warnings: Hämta chattens varningsinställningar.
+            - /setwarnmode <ban/kick/mute/tban/tmute>: Sätt chattens varningsläge.
+            - /setwarnlimit <nummer>: Sätt antalet varningar innan användare straffas.
 
-            *Examples*
-            - Warn a user.
-            -> `/warn @user For disobeying the rules`
+            *Exempel*
+            - Varna en användare.
+            -> `/warn @användare För att ha brutit mot reglerna`

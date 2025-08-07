@@ -39,8 +39,8 @@ strings:
             × /adminlist: Показать администраторы в текущем чате.
 
             *Команды администрирования: *
-            × /smote `<reply/username/mention/userid>`: Перевести пользователя.
-            × /demote `<reply/username/mention/userid>`: Demote a user.
+            × /promote `<reply/username/mention/userid>`: Повысить пользователя.
+            × /demote `<reply/username/mention/userid>`: Понизить пользователя.
             × /title `<reply/username/mention/userid>` `<custom title>`: Задать пользовательский заголовок для пользователя
         promote:
             admin_title_truncated: Заголовок администратора обрезан до 16 символов с {number}
@@ -52,10 +52,10 @@ strings:
             is_admin: Этот человек уже администратор, как я могу установить для него пользовательский заголовок администратора?
             is_bot_itself: Если бы только я мог сделать это с собой ;_;
             is_owner: Этот человек создал этот чат, как я могу установить для него пользовательский заголовок администратора?
-            success_set: Успешно установлен заголовок администратора {first} на <b>{second}</b>
+            success_set: Успешно установлен заголовок администратора {first} на <b>{chat}</b>
     Antiflood:
         checkflood:
-            perform_action: Да, мне не нравится ваш флуд. {first} был {second}!
+            perform_action: Да, мне не нравится ваш флуд. {first} был {chat}!
         errors:
             expected_args: 'Я ожидал некоторые аргументы! Либо off, либо целое число. например: `/setflood 5`, или `/setflood off`'
             invalid_int: Это не допустимое целое число. Пожалуйста, дайте мне допустимое целое число, или `off`.
@@ -74,7 +74,7 @@ strings:
 
             Антипотоп позволяет принимать меры к пользователям, которые отправляют более x сообщений подряд. Действия: ban/kick/mute/tban/tmute
 
-            *Admin commands *:
+            *Команды администрирования:*
             × /flood: Получить текущие параметры антипаводка.
             × /setflood `<number/off/no>`: Задайте число сообщений, после которых нужно выполнить действие над пользователем. Задайте значение '0', 'off' или 'no', чтобы отключить.
             × /setfloodmode `<action type>`: Выберите действие, которое нужно выполнить для пользователя, который подтопился. Опции: ban/kick/mute/tban/tmute
@@ -199,20 +199,20 @@ strings:
             already_blacklisted: 'Эти слова уже в чёрном списке:'
             give_bl_word: Пожалуйста, дайте мне слово для добавления в чёрный список!
         help_msg: |-
-            *Команды пользователей: *
-            × /черные списки: Проверьте все черные списки в чате.
+            *Команды пользователей:*
+            × /blacklists: Проверить все чёрные списки в чате.
 
-            *Команды администрирования: *
-            × /addblacklist `<trigger>`: Blacklists слово в текущем чате.
-            × /rmblacklist `<trigger>`: Удаляет слово из текущих Blacklist Words in Chat.
-            × /blaction `<mute/kick/ban/warn/none>`: Задает действие, которое будет выполняться ботом при обнаружении черного списка.
+            *Команды администрирования:*
+            × /addblacklist `<trigger>`: Добавляет слово в чёрный список в текущем чате.
+            × /rmblacklist `<trigger>`: Удаляет слово из чёрного списка в чате.
+            × /blaction `<mute/kick/ban/warn/none>`: Задаёт действие, которое будет выполняться ботом при обнаружении слова из чёрного списка.
             × /blacklistaction: То же, что и выше
 
-            *Owner Only: *
-            × /remallbl: Удаляет все черные слова из чата
+            *Только владелец:*
+            × /remallbl: Удаляет все слова из чёрного списка в чате
 
-            *Note: *
-            Режим по умолчанию для Blacklist * none*, который просто удалит сообщения из чата.
+            *Примечание:*
+            Режим по умолчанию для чёрного списка *none*, который просто удалит сообщения из чата.
         ls_bl:
             list_bl: 'Эти слова в чёрном списке в этом чате:'
             no_blacklisted: В этом чате нет слов в чёрном списке.
@@ -317,75 +317,79 @@ strings:
             -> /filter триггер
     Formatting:
         Fillings: |-
-            <b>Fillings</b>
+            <b>Переменные</b>
 
-            You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-            You can use these to mention a user in notes too!
+            Вы также можете настроить содержимое вашего сообщения с помощью контекстных данных. Например, вы можете упомянуть пользователя по имени в приветственном сообщении или упомянуть его в фильтре!
+            Вы можете использовать их для упоминания пользователя в заметках тоже!
 
-            <b>Supported fillings:</b>
-            - <code>{first}</code>: The user's first name.
-            - <code>{last}</code>: The user's last name.
-            - <code>{fullname}</code>: The user's full name.
-            - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-            - <code>{mention}</code>: Mentions the user with their firstname.
-            - <code>{id}</code>: The user's ID.
-            - <code>{chatname}</code>: The chat's name.
-            - <code>{rules}</code>: Adds Rules Button to Message.
+            <b>Поддерживаемые переменные:</b>
+            - <code>{first}</code>: Имя пользователя.
+            - <code>{last}</code>: Фамилия пользователя.
+            - <code>{fullname}</code>: Полное имя пользователя.
+            - <code>{username}</code>: Имя пользователя в Telegram. Если его нет, упоминает пользователя вместо этого.
+            - <code>{mention}</code>: Упоминает пользователя с его именем.
+            - <code>{id}</code>: ID пользователя.
+            - <code>{chatname}</code>: Название чата.
+            - <code>{rules}</code>: Добавляет кнопку правил к сообщению.
+            - <code>{protect}</code>: Защищает контент от пересылки.
+            - <code>{preview}</code>: Включает предварительный просмотр в сообщениях.
+            - <code>{nonotif}</code>: Отключает уведомление для этого сообщения.
         Markdown: |-
-            <b>Markdown Formatting</b>
+            <b>Форматирование Markdown</b>
 
-            You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-            <b>Supported markdown</b>:
-            - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-            - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-            - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-            - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-            - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-            - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-            - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-            - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-            - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+            Вы можете форматировать ваше сообщение используя <b>жирный</b>, <i>курсив</i>, <u>подчёркивание</u> и многое другое. Экспериментируйте!
+            <b>Поддерживаемая разметка</b>:
+            - <code>`code words`</code>: Обратные кавычки используются для моноширинного шрифта. Показывается как: <code>code words</code>.
+            - <code>_italic words_</code>: Подчёркивания используются для курсива. Показывается как: <i>italic words</i>.
+            - <code>*bold words*</code>: Звёздочки используются для жирного шрифта. Показывается как: <b>bold words</b>.
+            - <code>~strikethrough~</code>: Тильды используются для зачёркивания. Показывается как: <strike>strikethrough</strike>.
+            - <code>||spoiler||</code>: Двойные вертикальные черты используются для спойлеров. Показывается как: <tg-spoiler>Spoiler</tg-spoiler>.
+            - <code>```pre```</code>: Чтобы форматировщик игнорировал другие символы форматирования внутри текста, отформатированного с помощью '```', будет как: <code>**bold** | *bold*</code>.
+            - <code>__underline__</code>: Двойные подчёркивания используются для подчёркивания. Показывается как: underline. ПРИМЕЧАНИЕ: Некоторые клиенты пытаются быть умными и интерпретируют это как курсив. В этом случае попробуйте использовать встроенное форматирование вашего приложения.
+            - <code>[hyperlink](example.com)</code>: Это форматирование используется для гиперссылок. Показывается как: <a href='https://example.com/'>hyperlink</a>.
+            - <code>[My Button](buttonurl://example.com)</code>: Это форматирование используется для создания кнопок. Этот пример создаст кнопку с именем "My button", которая откроет <code>example.com</code> при нажатии.
 
-            If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-            <b>Example:</b>
+            Если вы хотите отправить кнопки в одном ряду, используйте форматирование <code>:same</code>.
+            <b>Пример:</b>
             <code>[button 1](buttonurl:example.com)</code>
             <code>[button 2](buttonurl://example.com:same)</code>
             <code>[button 3](buttonurl://example.com)</code>
-            This will show button 1 and 2 on the same line, with 3 underneath.
+            Это покажет кнопки 1 и 2 на одной линии, а 3 под ними.
         Random: |-
-            <b>Random Content</b>
+            <b>Случайный контент</b>
 
-            Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-            How to use random contents:
-            - %%%: This separator can be used to add  random replies to the bot.
-            For example:
-            <code>hello
+            Ещё одна забавная вещь — это рандомизация содержимого сообщений. Сделайте всё более персонализированным, изменяя приветственные сообщения или заметки!
+            Как использовать случайный контент:
+            - %%%: Этот разделитель может быть использован для добавления случайных ответов боту.
+            Например:
+            <code>привет
             %%%
-            how are you</code>
-            This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-            Use this to make Alita feel a bit more customised! (only works in filters/notes)
-            Example welcome message:
-            - Every time a new user joins, they'll be presented with one of the three messages shown here.
-            -> /filter "hey"
-            hello there <code>{first}</code>!
+            как дела</code>
+            Это случайно выберет между отправкой первого сообщения, "привет", или второго сообщения, "как дела".
+            Используйте это, чтобы сделать Алиту более персонализированной! (работает только в фильтрах/заметках)
+            Пример приветственного сообщения:
+            - Каждый раз, когда присоединяется новый пользователь, ему будет показано одно из трёх сообщений.
+            -> /filter "привет"
+            привет, <code>{first}</code>!
             %%%
-            Ooooh, <code>{first}</code> how are you?
+            Оооо, <code>{first}</code> как дела?
             %%%
-            Sup? <code>{first}</code>
+            Что нового, <code>{first}</code>?
         help_msg: Alita поддерживает большое количество опций форматирования, чтобы сделать ваши сообщения более выразительными. Взгляни на кнопки внизу!
     Greetings:
         help_msg: |-
             Приветствуем новых членов группы или попрощаемся после их выхода!
 
-            *Admin Commands: *
-            × /setweli `<reply/text>`: Задает текст приветствия для группы.
-            × /wele `<yes/no/on/off>`: Включает или выключает параметр приветствия для группы.
-            × /rese12red: Пересете приветственное сообщение по умолчанию.
-            × /setщается `<reply/text>`: Настраивает текст для группы.
-            × /Goodbye `<yes/no/on/off>`: Включает или отключает настройку для группы.
-            × /resetщаться: Пересете сообщение "Прощание" по умолчанию.
-            × /cleanservice `<yes/no/on/off>`: Удалить все сообщения службы, такие как 'x, присоединились к уведомлению группы'.
-            × /cleanweld `<yes/no/on/off>`: Удалить старое приветственное сообщение при добавлении новых членов.
+            *Команды администрирования: *
+            × /setwelcome `<reply/text>`: Задает текст приветствия для группы.
+            × /welcome `<yes/no/on/off>`: Включает или выключает параметр приветствия для группы.
+            × /resetwelcome: Сбросить приветственное сообщение по умолчанию.
+            × /setgoodbye `<reply/text>`: Устанавливает текст прощания для группы.
+            × /goodbye `<yes/no/on/off>`: Включает или отключает настройку прощания для группы.
+            × /resetgoodbye: Сбросить сообщение прощания по умолчанию.
+            × /cleanservice `<yes/no/on/off>`: Удалить все служебные сообщения, такие как уведомления 'x присоединился к группе'.
+            × /cleanwelcome `<yes/no/on/off>`: Удалить старое приветственное сообщение при добавлении новых членов.
+            × /autoapprove `<yes/no/on/off>`: Автоматически одобрять всех новых участников.
     Help:
         About: |-
             @{first} -это один из самых быстрых и наиболее характерных функций администратора групп.
@@ -395,9 +399,9 @@ strings:
             Алита работает в режиме онлайн с 2020 года и обслужила тысячи групп с сотнями тысяч пользователей!
 
             <b>Почему Алита:</b>
-            -Простая: Легкое использование и компактбиты с многочисленными командами ботов.
+            -Простая: Легкое использование и совместимость с многочисленными командами ботов.
             -Избранное: множество функций, которые не имеют у других групп управления группами.
-            -Fast: Guess what? Он не используется Python, мы используем <a href='https://go.dev/'>Go</a> в качестве основного языка программирования.
+            -Быстрая: Угадайте что? Она не использует Python, мы используем <a href='https://go.dev/'>Go</a> в качестве основного языка программирования.
 
             <b>Текущая версия:</b> {second}
         Configuration:
@@ -412,12 +416,12 @@ strings:
                 Для этого выполните следующие простые шаги:
                 ▫️ Перейти к вашей группе
                 ▫️ Нажать имя группы
-                ▫️ Press Modify
-                ▫️ Press on Administrator
-                ▫️ Press Add Administrator
-                ▫️ Press the Magnifiing Glass
-                ▫️ Search @{admin}
-                ▫️ Confirm
+                ▫️ Нажать "Изменить"
+                ▫️ Нажать "Администратор"
+                ▫️ Нажать "Добавить администратора"
+                ▫️ Нажать на увеличительное стекло
+                ▫️ Найти @{admin}
+                ▫️ Подтвердить
             Step-3: |-
                 Отлично!
                 Теперь Бот готов к использованию!
@@ -441,36 +445,36 @@ strings:
             Вы можете помочь нам привести бота на большее количество языков, помогая в [Crowdin](https: //crowdin.com/project/alita_robot)
     Locks:
         help_msg: |-
-            *Только для администрирования *:
-            × /lock `<permission>`: Блокировать разрешение Разговор ..
-            × /unlock `<permission>`: Разблокировать разрешение Разговор.
-            × /locks: Просмотр разрешения на разговор.
-            × /locktypes: Проверьте доступные типы блокировок!
+            *Только для администрирования:*
+            × /lock `<permission>`: Заблокировать разрешение в чате.
+            × /unlock `<permission>`: Разблокировать разрешение в чате.
+            × /locks: Просмотр разрешений чата.
+            × /locktypes: Проверить доступные типы блокировок!
 
             Блокировки можно использовать для ограничения пользователей группы.
-            Блокирующие url будут автоматически удалять все сообщения с url, запирающие наклейки удалит все наклейки и т.д.
-            Запирающие боты остановят неадминов от добавления ботов в чат.
+            Блокировка URL будет автоматически удалять все сообщения с URL, блокировка стикеров удалит все стикеры и т.д.
+            Блокировка ботов остановит не-админов от добавления ботов в чат.
 
-            ** Example:**
-            `/lock Media `: это блокирует все сообщения мультимедиа в чате.
+            **Пример:**
+            `/lock media`: это блокирует все медиа-сообщения в чате.
     Misc:
         help_msg: |-
-            × /info: Get your user info, can be used as reply or by passing a User Id or Username.
-            × /id: Get the current group id. If used by replying to a message, get that user's id.
-            × /ping: Ping the Telegram Server!
-            × /tr <lang code> <msg/reply to message>: Translate the message.
-            × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
-            × /stat: Gets the count of total number of messages in chat.
+            × /info: Получить информацию о пользователе, может использоваться как ответ или путем передачи ID пользователя или имени пользователя.
+            × /id: Получить ID текущей группы. При использовании в ответ на сообщение, получить ID этого пользователя.
+            × /ping: Проверить соединение с сервером Telegram!
+            × /tr <код языка> <сообщение/ответ на сообщение>: Перевести сообщение.
+            × /removebotkeyboard: Удалить застрявшую клавиатуру бота из вашего чата.
+            × /stat: Получить количество общего числа сообщений в чате.
     Mutes:
         help_msg: |-
-            Иногда пользователи могут быть раздражающие, и вам может понадобиться ограничить их отправку сообщения в чат, этот модуль здесь, чтобы помочь, вы можете использовать модуль ths для mute элементов в вашей группе.
+            Иногда пользователи могут раздражать, и вы можете захотеть ограничить им отправку сообщений в чат. Этот модуль поможет вам заглушить участников в вашей группе.
 
-            *Mute Commands: * (только для администрирования)
-            × /mute <userhandle>: mutes a user, (via handle, or reply)
-            × /smute <userhandle>: muts a user smote, не отправляет сообщение группе, а также удаляет вашу команду. (с помощью описателя или ответа)
-            × /dmute <userhandle>: выключить пользователя и удалить ответное сообщение. (с помощью ручки или ответа)
-            × /tmute <userhandle> x (m/h/d): mutes user for ` x ` time. (с помощью описателя или ответа). m = минуты, h = часы, d = дни.
-            × /unmute <userhandle>: отмоет пользователя. (с помощью описателя или ответа)
+            *Команды мута:* (только для администрирования)
+            × /mute <userhandle>: заглушить пользователя (через упоминание или ответ)
+            × /smute <userhandle>: заглушить пользователя тихо, не отправляет сообщение в группу и удаляет вашу команду. (через упоминание или ответ)
+            × /dmute <userhandle>: заглушить пользователя и удалить отвечаемое сообщение. (через упоминание или ответ)
+            × /tmute <userhandle> x(m/h/d): заглушить пользователя на `x` времени. (через упоминание или ответ). m = минуты, h = часы, d = дни.
+            × /unmute <userhandle>: снять заглушение с пользователя. (через упоминание или ответ)
     Notes:
         help_msg: |-
             Сохранить данные для будущих пользователей с примечаниями!
@@ -507,7 +511,7 @@ strings:
             -/purge: удаляет все сообщения между этим и ответным сообщением.
             -/del: удаляет сообщение, на которое вы ответили.
 
-            *Examples*:
+            *Примеры*:
             -Удалите все сообщения из ответа на сообщение, до сих пор.
             -> `/purge `
     Reports:
@@ -532,12 +536,15 @@ strings:
     Rules:
         help_msg: |-
             Каждый чат работает с разными правилами; этот модуль поможет сделать эти правила более ясными!
-            *Пользовательские команды *:
-            × /rules: Проверьте текущие правила чата.
-            *Admin commands *:
-            × /setrules `<text>`: Задайте правила для этого разговора.
-            × /privaterules `<yes/no/on/off>`: включить/выключить, нужно ли отправлять правила при закрытых дверлях.
-            × /resetrules: Сброс правил чата по умолчанию
+            *Команды пользователей:*
+            × /rules: Проверить текущие правила чата.
+            *Команды администрирования:*
+            × /setrules `<text>`: Задать правила для этого чата.
+            × /privaterules `<yes/no/on/off>`: включить/выключить отправку правил в личные сообщения.
+            × /resetrules: Сбросить правила чата на стандартные
+            × /rulesbtn `<custom text>`: Задать текст кнопки правил.
+            × /resetrulesbutton: Сбросить текст кнопки правил на стандартный.
+            × /resetrulesbtn: То же, что и выше.
     Tagger:
         help_msg: |-
             Тайггер-это важный компонент, в котором можно упомянуть всех подписанных членов группы.
@@ -547,7 +554,7 @@ strings:
             × /tagme: Разрешить пользователю теги
             × /untagme: Запретить пользователю теги
 
-            *Admin Commands: *
+            *Команды администрирования:*
             × /tagall: tag/упоминание всех пользователей с тегами
             × /untagall: очистить все помеченные элементы
             × /addtag <user>: Добавить пользователя вручную в список тегов
@@ -592,21 +599,21 @@ strings:
                 invalid_time_type: 'Указан недопустимый тип времени. Ожидаемый m, h или d: {time}'
     Warns:
         help_msg: |-
-            Keep your members in check with warnings; stop them getting out of control!
-            If you're looking for automated warnings, read about the blacklist module!
+            Оставляйте своих участников под контролем с помощью предупреждений; не позволяйте им выйти из-под контроля!
+            Если вы ищете автоматические предупреждения, прочитайте о модуле черного списка!
 
-            *Admin Commands:*
-            - /warn <reason>: Warn a user.
-            - /dwarn <reason>: Warn a user by reply, and delete their message.
-            - /swarn <reason>: Silently warn a user, and delete your message.
-            - /warns: See a user's warnings.
-            - /rmwarn: Remove a user's latest warning.
-            - /resetwarn: Reset all of a user's warnings to 0.
-            - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-            - /warnings: Get the chat's warning settings.
-            - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-            - /setwarnlimit <number>: Set the number of warnings before users are punished.
+            *Команды администрирования:*
+            - /warn <причина>: Предупредить пользователя.
+            - /dwarn <причина>: Предупредить пользователя ответом и удалить его сообщение.
+            - /swarn <причина>: Предупредить пользователя бесшумно и удалить ваше сообщение.
+            - /warns: Посмотреть предупреждения пользователя.
+            - /rmwarn: Удалить последнее предупреждение пользователя.
+            - /resetwarn: Сбросить все предупреждения пользователя до 0.
+            - /resetallwarns: Удалить все предупреждения в чате. Все пользователи возвращаются к 0 предупреждениям.
+            - /warnings: Получить настройки предупреждений чата.
+            - /setwarnmode <ban/kick/mute/tban/tmute>: Установить режим предупреждения чата.
+            - /setwarnlimit <число>: Установить количество предупреждений до наказания пользователей.
 
-            *Examples*
-            - Warn a user.
-            -> `/warn @user For disobeying the rules`
+            *Примеры*
+            - Предупредить пользователя.
+            -> `/warn @user За нарушение правил`

@@ -161,14 +161,14 @@ strings:
             *Polecenia użytkownika:*
             × /kickme: wyrzuca użytkownika, który wydał polecenie.
 
-            *Polecenia Ban* (Admin only):
+            *Polecenia Ban* (Tylko administratorzy):
             × /ban <userhandle>: zbanuj użytkownika. (przez handle lub odpowiedź)
             × /sban <userhandle>: zbanuj użytkownika cicho, nie wysyłając wiadomości do grupy i również usuwając Twoje polecenie. (przez handle lub odpowiedź)
             × /dban <userhandle>: zbanuj użytkownika i usuń odpowiedzianą wiadomość. (przez handle lub odpowiedź)
             × /tban <userhandle> x(m/h/d): zbanuj użytkownika na `x` czas. (przez handle lub odpowiedź). m = minuty, h = godziny, d = dni.
             × /unban <userhandle>: odblokuj użytkownika. (przez handle lub odpowiedź)
 
-            *Polecenia Restrict:* (Admin only)
+            *Polecenia Restrict:* (Tylko administratorzy)
             × /restrict: Pokazuje InlineKeyboard do wyboru opcji z kick, ban i mute
             × /unrestrict: Pokazuje InlineKeyboard do wyboru opcji z unmute i unban.
         kick:
@@ -203,16 +203,16 @@ strings:
             × /blacklists: Sprawdź wszystkie czarne listy w czacie.
 
             *Polecenia administratorów:*
-            × /addblacklist `<trigger>`: Blacklist to słowo w bieżącym czacie.
-            × /rmblacklist `<trigger>`: Usuń słowo z bieżących słów Blackwymienionego w czacie.
+            × /addblacklist `<trigger>`: Dodaj słowo do czarnej listy w bieżącym czacie.
+            × /rmblacklist `<trigger>`: Usuń słowo z bieżącej czarnej listy słów w czacie.
             × /blaction `<mute/kick/ban/warn/none>`: Ustaw akcję, która ma zostać wykonana przez bot, gdy zostanie wykryta czarna lista.
             × /blacklistaction: To samo jak powyżej
 
-            *Właściciel tylko:*
+            *Tylko właściciel:*
             × /remallbl: Usuń wszystkie czarne listy słów z czatu
 
             *Uwaga:*
-            Domyślny tryb dla listy Blacklist to *none*, który usunie tylko wiadomości z czatu.
+            Domyślny tryb dla czarnej listy to *none*, który usunie tylko wiadomości z czatu.
         ls_bl:
             list_bl: 'Te słowa są na czarnej liście w tym czacie:'
             no_blacklisted: Nie ma czarnych słów w tym czacie.
@@ -222,9 +222,9 @@ strings:
                 "no": Anulowano usuwanie wszystkich czarnych list z tego czatu ❌
                 "yes": Usunięto wszystkie czarne listy z tego czatu ✅
         set_bl_action:
-            changed_mode: 'Zmieniono tryb czarnej listy na: *{value}*'
+            changed_mode: 'Pomyślnie zmieniono tryb czarnej listy na: *{value}*'
             choose_correct_option: Proszę wybrać opcję spośród <mute/kick/ban/warn/none>
-            current_mode: 'Bieżący tryb czarnej listy to: {value}'
+            current_mode: 'Bieżący tryb czarnej listy dla tego czatu to: {value}'
         unblacklist:
             give_bl_word: Proszę mi podać słowo do usunięcia z czarnej listy!
             no_removed_bl: Żadna z podanych słów nie była na czarnej liście, która mogła zostać usunięta!
@@ -331,20 +331,23 @@ strings:
             - <code>{id}</code>: ID użytkownika.
             - <code>{chatname}</code>: Nazwa czatu.
             - <code>{rules}</code>: Dodaje przycisk Rules do wiadomości.
+            - <code>{protect}</code>: Chroni treść przed udostępnianiem.
+            - <code>{preview}</code>: Włącza podglądy w wiadomościach.
+            - <code>{nonotif}</code>: Wyłącza powiadomienia dla tej wiadomości.
         Markdown: |-
             <b>Markdown Formatting</b>
 
             Możesz sformatować swoją wiadomość, używając <b>bold</b>, <i>italics</i>, <u>underline</u>, i wiele innych. Idź do przodu i eksperymentuj!
             <b>Obsługiwane markdown</b>:
-            - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-            - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-            - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-            - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-            - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-            - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-            - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-            - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-            - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+            - <code>`słowa kodu`</code>: Backticki są używane do czcionek monospace. Pokazuje jako: <code>słowa kodu</code>.
+            - <code>_słowa kursywą_</code>: Podkreślenia są używane do czcionek kursywą. Pokazuje jako: <i>słowa kursywą</i>.
+            - <code>*słowa pogrubione*</code>: Gwiazdki są używane do czcionek pogrubionych. Pokazuje jako: <b>słowa pogrubione</b>.
+            - <code>~przekreślenie~</code>: Tyldy są używane do przekreślenia. Pokazuje jako: <strike>przekreślenie</strike>.
+            - <code>||spoiler||</code>: Podwójne pionowe kreski są używane do spoilerów. Pokazuje jako: <tg-spoiler>Spoiler</tg-spoiler>.
+            - <code>```pre```</code>: Aby formatter ignorował inne znaki formatowania wewnątrz tekstu sformatowanego z '```', będzie jak: <code>**pogrubione** | *pogrubione*</code>.
+            - <code>__podkreślenie__</code>: Podwójne podkreślenia są używane do podkreśleń. Pokazuje jako: podkreślenie. UWAGA: Niektóre klienty próbują być mądre i interpretują to jako kursywę. W takim przypadku spróbuj użyć wbudowanego formatowania swojej aplikacji.
+            - <code>[hiperłącze](example.com)</code>: To jest formatowanie używane do hiperłączy. Pokazuje jako: <a href='https://example.com/'>hiperłącze</a>.
+            - <code>[Mój Przycisk](buttonurl://example.com)</code>: To jest formatowanie używane do tworzenia przycisków. Ten przykład utworzy przycisk o nazwie "Mój przycisk", który otwiera <code>example.com</code> po kliknięciu.
 
             Jeśli chcesz wysłać przyciski w tym samym wierszu, użyj <code>:same</code> formatowania.
             <b>Przykład:</b>
@@ -381,11 +384,12 @@ strings:
             × /setwelcome `<odpowiedź/tekst>`: Ustaw tekst powitalny dla grupy.
             × /welcome `<yes/no/on/off>`: Włącz lub wyłącz ustawienie powitania dla grupy.
             × /resetwelcome: Resetuj wiadomość powitalną do wartości domyślnej.
-            × /setżegnaj `<odpowiedź/tekst>`: Ustaw tekst do widzenia dla grupy.
-            × /żegna `<yes/no/on/off>`: Włącz lub wyłącz ustawienie do widzenia dla grupy.
-            × /resetpożegnania: Resetuj komunikat żegny do wartości domyślnej.
+            × /setgoodbye `<odpowiedź/tekst>`: Ustaw tekst do widzenia dla grupy.
+            × /goodbye `<yes/no/on/off>`: Włącz lub wyłącz ustawienie do widzenia dla grupy.
+            × /resetgoodbye: Resetuj komunikat żegnania do wartości domyślnej.
             × /cleanservice `<yes/no/on/off>`: Usuń wszystkie komunikaty serwisowe, takie jak 'x dołączył do grupy' powiadomienie.
             × /cleanwelcome `<yes/no/on/off>`: Usuń stary komunikat powitalny, kiedy dołącza się nowy element.
+            × /autoapprove `<yes/no/on/off>`: Automatycznie zatwierdzaj wszystkich nowych członków.
     Help:
         About: |-
             @{first} jest jednym z najszybszych i najbardziej wypełnionych funkcji menedżera grupy.
@@ -399,7 +403,7 @@ strings:
             -Polecane: Wiele funkcji, które inne zarządzanie grupą boty nie mają.
             -Szybko: Zgadnij co? To nie jest używanie Pythona, używamy <a href='https://go.dev/'>Przejdź</a> jako nasz podstawowy język programowania.
 
-            <b>Wersja bieżąca:</b> {chat}
+            <b>Wersja bieżąca:</b> {admin}
         Configuration:
             Step-1: |-
                 Witaj w konfiguracji Alita
@@ -416,7 +420,7 @@ strings:
                 ▫️ Prasa na Administrator
                 ▫️ Prasa Dodaj administratora
                 ▫️ Naciśnij przycisk Magnifikacja Szkło
-                ▫️ Szukaj @{admin}
+                ▫️ Szukaj @{chat}
                 ▫️ Potwierdź
             Step-3: |-
                 Doskonale!
@@ -426,22 +430,22 @@ strings:
                 Jeśli masz problemy z ustawieniem mnie w swojej grupie, więc nie wahaj się przyjść @DivideSupport.
                 Chcielibyśmy, aby Ci pomóc.
         DonateText: |-
-            Więc chcesz oddać? Niesamowita!
-            Kiedy ofiarujesz, cały fundusz idzie w kierunku mojego rozwoju, który sprawia, że na szybko i reaguje.
-            Wasze darowizny mogą również mi dostać nową cechę lub dwie, których nie byłem w stanie uzyskać z powodu ograniczeń serwera.
-            Cały fundusz zostałby wrzuty do moich usług, takich jak baza danych, przechowywanie i hosting!
-            Możesz darować, kontaktując się z moim właścicielem tutaj: @DivideProjectsBot
+            Więc chcesz przekazać darowiznę? Niesamowite!
+            Kiedy przekazujesz darowiznę, całe środki idą na mój rozwój, co sprawia, że jestem szybszy i bardziej responsywny.
+            Twoja darowizna może również zapewnić mi nową funkcję lub dwie, których nie mogłem uzyskać z powodu ograniczeń serwera.
+            Wszystkie środki zostałyby przeznaczone na moje usługi, takie jak baza danych, przechowywanie i hosting!
+            Możesz przekazać darowiznę, kontaktując się z moim właścicielem tutaj: @DivideProjectsBot
     Languages:
         help_msg: |-
-            Nie jest w stanie zmienić języka bota?
-            Łatwo zmienić się za pomocą tego modułu!
+            Nie możesz zmienić języka bota?
+            Łatwo możesz to zmienić za pomocą tego modułu!
 
-            Wystarczy wpisać /lang i użyć klawiatury wstawianej do wyboru języka dla siebie lub swojej grupy.
+            Po prostu wpisz /lang i użyj klawiatury inline do wyboru języka dla siebie lub swojej grupy.
 
-            Możesz nam pomóc przynosić bota do większej liczby języków, pomagając w [Crowdin](https: //crowdin.com/project/alita_robot)
+            Możesz pomóc nam wprowadzić bota do większej liczby języków, pomagając na [Crowdin](https://crowdin.com/project/alita_robot)
     Locks:
         help_msg: |-
-            *Admin tylko *:
+            *Tylko administratorzy*:
             × /lock `<permission>`: Zablokuj zgodę na rozmowę sieciową.
             × /unlock `<permission>`: Odblokuj uprawnienie rozmowy sieciowej.
             × /locks: Wyświetl uprawnienie rozmowy sieciowej.
@@ -465,12 +469,12 @@ strings:
         help_msg: |-
             Czasami użytkownicy mogą być denerwujący i być może chcesz ograniczyć je z wysyłania wiadomości do czatu, ten moduł jest tutaj, aby pomóc, możesz użyć modułu ths do wyciszania członków w swojej grupie.
 
-            *Mute Komendy: * (Admin only)
-            × /mute <userhandle>: mutes a user, (via handle, or reply)
-            × /smute <userhandle>: mutes a user cicho, does not send message to group and also delete your command. (za pomocą uchwytu lub odpowiedzi)
-            × /dmute <userhandle>: mutes a user and delete the odpowiedział wiadomość. (via handle, or reply)
-            × /tmute <userhandle> x (m/h/d): mutes a user for ` x ` time. (za pomocą uchwytu lub odpowiedzi). m = minuty, h = godziny, d = dni.
-            × /unmute <userhandle>: unmutes a user. (za pomocą uchwytu lub odpowiedzi)
+            *Polecenia Mute:* (Tylko administratorzy)
+            × /mute <userhandle>: wycisza użytkownika, (za pomocą uchwytu lub odpowiedzi)
+            × /smute <userhandle>: wycisza użytkownika cicho, nie wysyła wiadomości do grupy i również usuwa Twoje polecenie. (za pomocą uchwytu lub odpowiedzi)
+            × /dmute <userhandle>: wycisza użytkownika i usuwa odpowiedzianą wiadomość. (za pomocą uchwytu lub odpowiedzi)
+            × /tmute <userhandle> x (m/h/d): wycisza użytkownika na `x` czas. (za pomocą uchwytu lub odpowiedzi). m = minuty, h = godziny, d = dni.
+            × /unmute <userhandle>: odcisza użytkownika. (za pomocą uchwytu lub odpowiedzi)
     Notes:
         help_msg: |-
             Zapisz dane dla przyszłych użytkowników z uwagami!
@@ -478,7 +482,7 @@ strings:
             *Polecenia użytkownika: *
             -/get <notename>: Pobierz notatkę.
             - #notename: Tak samo jak /get.
-            Admin commands:
+            *Polecenia administratorów:*
             -/save <notename> <note text>: Save a new note zwanej "word". Udzielenie odpowiedzi na komunikat spowoduje zapisanie tego komunikatu. Nawet działa na nośnikach!
             -/clear <notename>: Usuń powiązaną notatkę.
             -/notes: Wyświetla listę wszystkich uwag w bieżącym czacie.
@@ -503,7 +507,7 @@ strings:
             Uwaga: W przypadku korzystania ze styków antykanałowych, należy użyć polecenia /unpin, zamiast wykonywać ją ręcznie. W przeciwnym razie stary komunikat zostanie ponownie przypięty, gdy kanał wyśle jakiekolwiek komunikaty.
     Purges:
         help_msg: |-
-            Tylko *Admin: *
+            *Tylko administratorzy:*
             -/purge: usuwa wszystkie komunikaty między tym komunikatem a odpowiedzią na komunikat.
             -/del: usuwa wiadomość, na którą odpowiedziałeś.
 
@@ -517,7 +521,7 @@ strings:
             × /report `<reason>`: odpowiedź na wiadomość, aby zgłosić ją do adminów.
             - @admin: taka sama jak /raport, ale nie komenda.
 
-            *Admins Only: *
+            *Tylko administratorzy:*
             × /reports `<on/off/yes/no>`: zmień ustawienie raportu lub wyświetl bieżący status.
             -Jeśli jest wykonywana w KZ, przełącza swój status.
             -Jeśli w grupie, przełącza status grup.
@@ -538,20 +542,23 @@ strings:
             × /setrules `<text>`: ustaw reguły dla tej rozmowy sieciowej.
             × /privaterules `<yes/no/on/off>`: Włączenie/wyłączenie tego, czy reguły powinny być wysyłane w prywatnych.
             × /resetrules: Resetowanie reguł rozmowy sieciowej do wartości domyślnych
+            × /rulesbtn `<niestandardowy tekst>`: Ustawia tekst przycisku zasad.
+            × /resetrulesbutton: Resetuje tekst przycisku zasad do wartości domyślnej.
+            × /resetrulesbtn: To samo co powyżej.
     Tagger:
         help_msg: |-
-            Program Tgger jest niezbędnym elementem, aby wspomnieć o wszystkich subskrybowanych elementach w grupie.
-            Każdy czat może subskrybować tagger.
+            Tagger jest niezbędną funkcją do oznaczania wszystkich subskrybowanych członków w grupie.
+            Każdy członek czatu może subskrybować tagger.
 
-            *Polecenia użytkownika: *
-            × /tagme: Zezwalaj użytkownikowi na oznaczanie
-            × /untagme: Nie zezwalaj użytkownikowi na oznaczenie
+            *Polecenia użytkownika:*
+            × /tagme: Pozwala użytkownikowi być oznaczanym
+            × /untagme: Nie pozwala użytkownikowi być oznaczanym
 
-            *Polecenia administratorów: *
-            × /tagall: tag/wspomnieć wszystkie oznaczone użytkownicy
-            × /untagall: Wyczyść wszystkie oznaczone elementy
-            × /addtag <user>: Dodaj użytkownika ręcznie do taglisty
-            × /rmtag <user>: Usuń użytkownika ręcznie z taglisty
+            *Polecenia administratorów:*
+            × /tagall: oznacz/wspomnieć wszystkich oznaczonych użytkowników
+            × /untagall: Wyczyść wszystkich oznaczonych członków
+            × /addtag <user>: Dodaj użytkownika ręcznie do listy tagów
+            × /rmtag <user>: Usuń użytkownika ręcznie z listy tagów
     Utils:
         chat_status:
             anon_admin_btn: Kliknij, aby udowodnić admin

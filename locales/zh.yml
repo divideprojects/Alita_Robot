@@ -2,7 +2,7 @@
 main:
     lang_sample: 简体中文
     language_flag: "\U0001F1E8\U0001F1F3"
-    language_name: 中国人
+    language_name: 中文
 strings:
     Admin:
         adminlist: <b>{admin}</b> 中的管理员：
@@ -33,15 +33,15 @@ strings:
             err_set_title: 设置自定义管理员标题失败，标题名称可能不正确或包含表情符号。
             title_empty: 你需要给我一个管理员标题，这样我就能设置它。
         help_msg: |-
-            请使用 admin 模块!
+            使用 admin 模块轻松提升和降级用户！
 
-            *User Commands :*
-            × /adminlist: 列出当前交谈中的管理员，从而轻松促进和降级用户。
+            *用户命令：*
+            × /adminlist：列出当前聊天中的管理员。
 
-            *Admin 命令:*
-            × / 提升 "<reply/username/mention/userid>": 提升用户。
-            × / 降级 `<reply/username/mention/userid>`: 降级用户。
-            × / 标题 `<reply/username/mention/userid>` <reply/username/mention/userid> `:<custom title>用户设置定制标题
+            *管理员命令：*
+            × /promote `<reply/username/mention/userid>`：提升用户。
+            × /demote `<reply/username/mention/userid>`：降级用户。
+            × /title `<reply/username/mention/userid>` `<custom title>`：为用户设置自定义标题
         promote:
             admin_title_truncated: 管理员标题从 {number} 字符截断为 16 字符
             is_admin: 这个人已经是管理员了，我怎么能提升他们？
@@ -191,45 +191,44 @@ strings:
                 解禁了 {user}。
     Blacklists:
         bl_watcher:
-            banned_user: Banned {user} due to {second}
-            kicked_user: Kicked {first} due to {second}
-            muted_user: Muted {user} due to {second}
+            banned_user: 由于 {second} 已封禁 {user}
+            kicked_user: 由于 {second} 已踢出 {first}
+            muted_user: 由于 {second} 已禁言 {user}
         blacklist:
-            added_bl: 'Added these words as blacklists:'
-            already_blacklisted: 'These words are already blacklisted:'
-            give_bl_word: Please give me a word to add to the blacklist!
+            added_bl: '已将以下词语添加到黑名单：'
+            already_blacklisted: '以下词语已在黑名单中：'
+            give_bl_word: 请给我一个要添加到黑名单的词语！
         help_msg: |-
-            * 用户命令:*
-            × / 黑名单 : 检查交谈中的所有黑名单。
+            *用户命令：*
+            × /blacklists: 查看聊天中的所有黑名单。
 
-            *Admin 命令:*
-            × /add黑名单 `<trigger>`: 在当前交谈中列入黑名单。
-            × /rmblacklist `<trigger>`: 在交谈中除去当前黑名单中的单词。
-            × /blaction `<mute/kick/ban/warn/none>`: 设置检测到黑名单单词时要由 bot 执行的操作。
-            × /Blacklistaction: 与高于
+            *管理员命令：*
+            × /addblacklist `<触发词>`: 将词语添加到当前聊天的黑名单中。
+            × /rmblacklist `<触发词>`: 从当前聊天的黑名单中移除词语。
+            × /blaction `<mute/kick/ban/warn/none>`: 设置检测到黑名单词语时机器人执行的操作。
+            × /blacklistaction: 与上述相同
 
-            *Owner Only:*
-            × /remallbl: 除去交谈
+            *仅群主：*
+            × /remallbl: 从聊天中移除所有黑名单词语
 
-            *Note:*
-            黑名单中的所有黑字 : *
-            黑名单的缺省方式为 *none *，这将仅删除交谈中的消息。
+            *注意：*
+            黑名单的默认模式是 *none*，这将只删除聊天中的消息。
         ls_bl:
-            list_bl: 'These words are blacklisted in this chat:'
-            no_blacklisted: There are no blacklisted words in this chat.
+            list_bl: '此聊天中的黑名单词语：'
+            no_blacklisted: 此聊天中没有黑名单词语。
         rm_all_bl:
-            ask: Are you sure you want to remove all blacklisted words from this chat?
+            ask: 你确定要从此聊天中移除所有黑名单词语吗？
             button_handler:
-                "no": Cancelled removing all Blacklists from this Chat ❌
-                "yes": Removed all Blacklists from this Chat ✅
+                "no": 已取消从此聊天中移除所有黑名单 ❌
+                "yes": 已从此聊天中移除所有黑名单 ✅
         set_bl_action:
-            changed_mode: 'Changed blacklist mode to: *{value}*'
-            choose_correct_option: Please choose an option out of <mute/kick/ban/warn/none>
-            current_mode: 'The current blacklist mode is: {value}'
+            changed_mode: '黑名单模式已成功更改为：*{value}*'
+            choose_correct_option: 请从 <mute/kick/ban/warn/none> 中选择一个选项
+            current_mode: '此聊天的当前黑名单模式为：{value}'
         unblacklist:
-            give_bl_word: Please give me a word to remove from the blacklist!
-            no_removed_bl: None of the given words were in the blacklist which can be removed!
-            removed_bl: Removed '{value}' from the blacklisted words!
+            give_bl_word: 请给我一个要从黑名单中移除的词语！
+            no_removed_bl: 给定的词语中没有在黑名单中可以移除的！
+            removed_bl: 已成功从黑名单词语中移除 '{value}'！
     CommonStrings:
         admin_cache:
             cache_reloaded: 成功重新加载管理员缓存。
@@ -237,52 +236,52 @@ strings:
     Connections:
         allow_connect:
             currently_off: |-
-                User connections are currently turned <b>off</b>.
-                Users can't connect this chat to their PM's!
+                用户连接当前已<b>关闭</b>。
+                用户无法将此聊天连接到其私信！
             currently_on: |-
-                User connections are currently turned <b>on</b>.
-                Users can connect this chat to their PM's!
+                用户连接当前已<b>开启</b>。
+                用户可以将此聊天连接到其私信！
             turned_off: |-
-                Turned <b>off</b> User connections to this chat!
-                Users can't connect chat to their PM's!
+                已<b>关闭</b>此聊天的用户连接！
+                用户无法将聊天连接到其私信！
             turned_on: |-
-                Turned <b>on</b> User connections to this chat!
-                Users can now connect chat to their PM's!
+                已<b>开启</b>此聊天的用户连接！
+                用户现在可以将聊天连接到其私信！
         connect:
-            connected: You are now connected to <b>{value}</b>!
+            connected: 您现在已连接到 <b>{value}</b>！
             connection_disabled: |-
-                User connections are currently <b>disabled</b> to this chat.
-                Please ask admins to allow if you want to connect!
-            tap_btn_connect: Please press the button below to connect this chat to your PM
-        connected: You are currently connected to <b>{value}</b>
+                此聊天的用户连接当前已<b>禁用</b>。
+                如果您想要连接，请要求管理员允许！
+            tap_btn_connect: 请按下下方按钮将此聊天连接到您的私信
+        connected: 您当前已连接到 <b>{value}</b>
         connections_btns:
-            admin_conn_cmds: Admin commands available:{admin}
-            user_conn_cmds: User commands available:{user}
+            admin_conn_cmds: 可用管理员命令：{admin}
+            user_conn_cmds: 可用用户命令：{user}
         disconnect:
-            disconnected: Disconnected from the connected chat.
-            need_pm: You need to send this in PM to me to disconnect from the chat!
+            disconnected: 已从连接的聊天断开连接。
+            need_pm: 您需要在私信中发送此命令来断开与聊天的连接！
         help_msg: |-
-            This allows you to connect to a chat's database, and add things to it without the chat knowing about it! For obvious reasons, you need to be an admin to add things; but any member can view your data. (banned/kicked users can't!)
+            此功能允许你连接到聊天的数据库，并在聊天不知情的情况下向其中添加内容！出于明显的原因，你需要是管理员才能添加内容；但任何成员都可以查看你的数据。（被封禁/踢出的用户不能！）
 
-            *Commands*:
-            × /connect `<chatid>`: Connect to the specified chat, allowing you to view/edit contents.
-            × /disconnect: Disconnect from the current chat.
-            × /reconnect: Reconnect to the previously connect chat
-            × /connection: See information about the currently connected chat.
+            *命令：*
+            × /connect `<聊天ID>`: 连接到指定聊天，允许你查看/编辑内容。
+            × /disconnect: 断开与当前聊天的连接。
+            × /reconnect: 重新连接到之前连接的聊天
+            × /connection: 查看当前连接聊天的信息。
 
-            *Admin Commands:*
-            × /allowconnect <yes/no>: Allow users to connect to chats or not.
+            *管理员命令：*
+            × /allowconnect <yes/no>: 允许或禁止用户连接到聊天。
 
-            You can retrieve the chat id by using the /id command in your chat. Don't be surprised if the id is negative; all super groups have negative ids.
+            你可以在聊天中使用 /id 命令获取聊天ID。如果ID为负数不要感到惊讶；所有超级群组都有负数ID。
         is_user_connected:
-            bot_not_admin: I'm not an admin in this chat!
-            need_group: This command is made to be used in group chats, not in PM!
-            user_not_admin: You need to be an admin to do this.
-        not_connected: You aren't connected to any chats.
+            bot_not_admin: 我不是此聊天的管理员！
+            need_group: 此命令仅适用于群聊，不适用于私信！
+            user_not_admin: 您需要是管理员才能执行此操作。
+        not_connected: 您未连接到任何聊天。
         reconnect:
-            need_pm: You need to be in a PM with me to reconnect to a chat!
-            no_last_chat: You have no last chat to reconnect to!
-            reconnected: You are now reconnected to <b>{value}</b>!
+            need_pm: 您需要在私信中与我重连到聊天！
+            no_last_chat: 您没有上次连接的聊天可以重连！
+            reconnected: 您现在已重新连接到 <b>{value}</b>！
     Disabling:
         help_msg: |-
             这允许您禁用一些常用命令，因此 noone 可以使用它们。 它还将允许您自动删除这些信息，阻止人员进行 Bluetexting。
@@ -319,61 +318,64 @@ strings:
             -》 /filter 触发器，就会发生此过滤器 wont
     Formatting:
         Fillings: |-
-            <b>Fillings</b>
+            <b>变量填充</b>
 
-            You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-            You can use these to mention a user in notes too!
+            你还可以使用上下文数据自定义消息内容。例如，你可以在欢迎消息中按姓名提及用户，或在过滤器中提及他们！
+            你也可以在笔记中使用这些来提及用户！
 
-            <b>Supported fillings:</b>
-            - <code>{first}</code>: The user's first name.
-            - <code>{last}</code>: The user's last name.
-            - <code>{fullname}</code>: The user's full name.
-            - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-            - <code>{mention}</code>: Mentions the user with their firstname.
-            - <code>{id}</code>: The user's ID.
-            - <code>{chatname}</code>: The chat's name.
-            - <code>{rules}</code>: Adds Rules Button to Message.
+            <b>支持的变量填充：</b>
+            - <code>{first}</code>: 用户的名字。
+            - <code>{last}</code>: 用户的姓氏。
+            - <code>{fullname}</code>: 用户的全名。
+            - <code>{username}</code>: 用户的用户名。如果没有用户名，则提及该用户。
+            - <code>{mention}</code>: 使用用户名字提及用户。
+            - <code>{id}</code>: 用户的ID。
+            - <code>{chatname}</code>: 聊天的名称。
+            - <code>{rules}</code>: 向消息添加规则按钮。
+            - <code>{protect}</code>: 保护内容不被分享。
+            - <code>{preview}</code>: 在消息中启用预览。
+            - <code>{nonotif}</code>: 禁用该消息的通知。
         Markdown: |-
-            <b>Markdown Formatting</b>
+            <b>Markdown 格式</b>
 
-            You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-            <b>Supported markdown</b>:
-            - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-            - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-            - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-            - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-            - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-            - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-            - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-            - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-            - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+            您可以使用 <b>粗体</b>、<i>斜体</i>、<u>下划线</u> 等格式化消息。快去试试吧！
+            <b>支持的 markdown：</b>
+            - <code>`代码文字`</code>：反引号用于等宽字体。显示为：<code>代码文字</code>。
+            - <code>_斜体文字_</code>：下划线用于斜体字体。显示为：<i>斜体文字</i>。
+            - <code>*粗体文字*</code>：星号用于粗体字体。显示为：<b>粗体文字</b>。
+            - <code>~删除线~</code>：波浪号用于删除线。显示为：<strike>删除线</strike>。
+            - <code>||剧透||</code>：双竖线用于剧透。显示为：<tg-spoiler>剧透</tg-spoiler>。
+            - <code>```预格式化```</code>：使格式化器忽略用 '```' 格式化文本内的其他格式字符，将显示为：<code>**粗体** | *粗体*</code>。
+            - <code>__下划线__</code>：双下划线用于下划线。显示为：下划线。注意：某些客户端会智能地将其解释为斜体。在这种情况下，请尝试使用应用程序的内置格式。
+            - <code>[超链接](example.com)</code>：这是用于超链接的格式。显示为：<a href='https://example.com/'>超链接</a>。
+            - <code>[我的按钮](buttonurl://example.com)</code>：这是用于创建按钮的格式。此示例将创建一个名为"我的按钮"的按钮，点击时打开 <code>example.com</code>。
 
-            If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-            <b>Example:</b>
-            <code>[button 1](buttonurl:example.com)</code>
-            <code>[button 2](buttonurl://example.com:same)</code>
-            <code>[button 3](buttonurl://example.com)</code>
-            This will show button 1 and 2 on the same line, with 3 underneath.
+            如果您想要在同一行发送按钮，请使用 <code>:same</code> 格式。
+            <b>示例：</b>
+            <code>[按钮 1](buttonurl:example.com)</code>
+            <code>[按钮 2](buttonurl://example.com:same)</code>
+            <code>[按钮 3](buttonurl://example.com)</code>
+            这将在同一行显示按钮 1 和 2，按钮 3 在下方。
         Random: |-
             <b>随机内容</b>
 
-            另一个可以有趣的事情，就是随机传递一个信息的内容。 通过更改欢迎消息或更改备注!
-            如何使用随机内容:
-            - %%%: 此分隔符可用于向机器人添加随机应答。
-            例如 :
-            <code>hello
-            %%% %
-            您如何</code>
-            这将在发送第一条消息， "hello"或第二个消息之间进行随机选择。
-            使用此方法使 Alita 感到更加个性化! (仅在过滤器/注释中工作 )
-            示例欢迎消息:
-            - 每次新用户加入时，将显示此处显示的三个消息中的一个。
-            -》 /filter "hey"
-            hello <code><code>{first}</code></code> !
+            另一个有趣的功能是随机化消息内容。通过更改欢迎消息或更改备注让事情变得更个性化！
+            如何使用随机内容：
+            - %%%：此分隔符可用于向机器人添加随机回复。
+            例如：
+            <code>你好
             %%%
-            Oooh ， <code>{first}</code> </code> 是怎么样的 ?
-            %%
-            Sup? <code><code>{first}</code>
+            你好吗</code>
+            这将在发送第一条消息"你好"或第二条消息"你好吗"之间进行随机选择。
+            使用此方法让 Alita 感到更加个性化！（仅在过滤器/备注中有效）
+            示例欢迎消息：
+            - 每次新用户加入时，将显示此处显示的三条消息中的一个。
+            -> /filter "hey"
+            你好 <code>{first}</code>！
+            %%%
+            哦，<code>{first}</code> 你好吗？
+            %%%
+            嗨？<code>{first}</code>
         help_msg: Alita 支持大量格式化选项，使您的消息更有表现力。 通过单击下面的按钮来进行查看 !
     Greetings:
         help_msg: |-
@@ -388,6 +390,7 @@ strings:
             × / 重置 : 将告别消息重置为缺省值。
             × /cleanservice `<yes/no/on/off>`: 删除所有服务消息，如 "x 加入组 " 通知。
             × / 清洁欢迎 "<yes/no/on/off>": 每当新成员加入时，删除旧欢迎消息。
+            × /autoapprove `<yes/no/on/off>`: 自动批准所有新成员。
     Help:
         About: |-
             @{first} 是最快和最有功能的填充组管理器之一。
@@ -398,35 +401,35 @@ strings:
 
             <b>为什么 Alita:</b>
             - 简单: 易于使用，并与许多机器人命令兼容。
-            - 特色 : 其他组管理 bots 的许多功能都没有。
-            - Fast: 猜猜是什么 ? 它不是用 Python 做的，我们用 <a href='https://go.dev/'>Go</a> 作为我们的核心编程语言。
+            - 特色：拥有许多其他群管理机器人没有的功能。
+            - 快速：猜猜我们用什么开发的？它不是用 Python 做的，我们使用 <a href='https://go.dev/'>Go</a> 作为核心编程语言。
 
             <b>当前版本:</b> {second}
         Configuration:
             Step-1: |-
-                欢迎使用 Alita Configuration
+                欢迎使用 Alita 配置
 
-                ，首先要做的是将 Alita ✨ 添加到您的组! 为此，按下按钮并选择您的组，然后按 " 完成 " 继续教程。
+                首先要做的是将 Alita ✨ 添加到您的群组！为此，请点击下方按钮并选择您的群组，然后点击“完成”继续教程。
             Step-2: |-
-                好，完成!
+                好，完成！
 
-                现在让我正常工作，您需要让我管理您的组!
+                现在为了让我正常工作，您需要让我成为您群组的管理员！
                 为此，请执行以下简单步骤:
-                ▫️ 转至组
-                ▫️ 按组名
-                ▫️ Press Modify
-                ▫️ Press on Administrator
-                ▫️ Press Add Administrator
-                ▫️ Press 放大镜
-                ▫️ Search @{admin}
-                ▫️ Confirm
+                ▫️ 转至您的群组
+                ▫️ 点击群组名称
+                ▫️ 点击修改
+                ▫️ 点击管理员
+                ▫️ 点击添加管理员
+                ▫️ 点击放大镜
+                ▫️ 搜索 @{admin}
+                ▫️ 确认
             Step-3: |-
-                优秀!
-                现在博特已准备好使用!
-                所有命令都可以与 / 或 !
+                优秀！
+                现在机器人已准备好使用！
+                所有命令都可以使用 / 或 ！
 
-                如果您在组中迂到任何困难，请不要犹豫 @DivideSupport。
-                我们会爱帮助你的。
+                如果您在群组中遇到任何困难，请不要犹豫联系 @DivideSupport。
+                我们很乐意帮助您。
         DonateText: |-
             你想捐款吗 太棒了 !
             当你捐献的时候，所有基金都走向我的发展，发展迅速，反应迅速。
@@ -457,12 +460,12 @@ strings:
             "/lock media" : 这将锁定交谈中的所有媒体消息。
     Misc:
         help_msg: |-
-            × /info: Get your user info, can be used as reply or by passing a User Id or Username.
-            × /id: Get the current group id. If used by replying to a message, get that user's id.
-            × /ping: Ping the Telegram Server!
-            × /tr <lang code> <msg/reply to message>: Translate the message.
-            × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
-            × /stat: Gets the count of total number of messages in chat.
+            × /info: 获取你的用户信息，可以通过回复消息或传入用户ID或用户名使用。
+            × /id: 获取当前群组ID。如果通过回复消息使用，则获取该用户的ID。
+            × /ping: Ping Telegram服务器！
+            × /tr <语言代码> <消息/回复消息>: 翻译消息。
+            × /removebotkeyboard: 移除聊天中卡住的机器人键盘。
+            × /stat: 获取聊天中消息总数的统计。
     Mutes:
         help_msg: |-
             有时，用户可能会烦扰，并且您可能希望限制他们发送消息以进行交谈，此模块在此处提供帮助，您可以使用这些模块来对组中的成员进行静音。
@@ -597,18 +600,18 @@ strings:
             保留您的成员以检查警告; 阻止他们失控 !
             如果您正在查找自动警告，请阅读黑名单模块!
 
-            *Admin 命令:*
-            - / 警告 <reason>: 警告用户。
-            - /dwarn <reason>: 通过应答警告用户，并删除其消息。
-            - /swarn <reason>: 以静默方式警告用户，并删除您的消息。
-            - / 警告 : 请参阅用户的警告。
-            /rmwarn: 除去用户的最新警告。
-            - /resetwarn: 将所有用户的警告重置为 0。
-            - /resetaller警告: 删除交谈中的所有警告。 所有用户返回到 0 警告。
-            / 警告 : 获取交谈的警告设置。
-            - /setwarnmode <ban/kick/mute/tban/tmute>: 设置交谈的警告方式。
-            - /setwarnlimit <number>: 在惩罚用户之前设置警告的数量。
+            *管理员命令：*
+            - /warn <reason>：警告用户。
+            - /dwarn <reason>：通过回复警告用户，并删除其消息。
+            - /swarn <reason>：静默警告用户，并删除您的消息。
+            - /warns：查看用户的警告。
+            - /rmwarn：移除用户的最新警告。
+            - /resetwarn：将所有用户的警告重置为 0。
+            - /resetallwarns：删除聊天中的所有警告。所有用户返回到 0 警告。
+            - /warnings：获取聊天的警告设置。
+            - /setwarnmode <ban/kick/mute>：设置聊天的警告模式。
+            - /setwarnlimit <number>：在惩罚用户之前设置警告数量。
 
-            * 示例*
+            *示例*
             - 警告用户。
-            -》 // 警告 @user 不遵守规则
+            -> /warn @user 不遵守规则

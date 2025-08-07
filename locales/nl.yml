@@ -55,14 +55,14 @@ strings:
             success_set: Admin titel van {first} succesvol ingesteld op <b>{chat}</b>
     Antiflood:
         checkflood:
-            perform_action: Ja, ik hou niet van je spam. {first} is {second} geworden!
+            perform_action: Ja, ik hou niet van je spam. {first} is {chat} geworden!
         errors:
             expected_args: 'Ik verwachtte wat argumenten! Ofwel off, of een geheel getal. bijv: `/setflood 5`, of `/setflood off`'
             invalid_int: Dat is geen geldig geheel getal. Geef mij een geldig geheel getal, of `off`.
             set_in_limit: De anti-spam limiet moet ingesteld worden tussen 3 en 100.
         flood:
             disabled: Deze chat heeft momenteel geen spam controle actief.
-            show_settings: Deze chat heeft momenteel spam controle actief na {number} berichten. Gebruikers die meer dan dat aantal berichten sturen worden {chat}.
+            show_settings: Deze chat heeft momenteel spam controle actief na {number} berichten. Gebruikers die meer dan dat aantal berichten sturen worden {user}.
         flood_deleter:
             already_disabled: Anti-spam berichtverwijdering is momenteel *uitgeschakeld* in deze chat, Berichten die anti-spam veroorzaken worden genegeerd!
             already_enabled: Anti-spam berichtverwijdering is momenteel *ingeschakeld* in deze chat, Berichten die anti-spam veroorzaken worden verwijderd!
@@ -83,7 +83,7 @@ strings:
             disabled: |-
                 Oké.
                 Ik zal gebruikers niet waarschuwen voor spam.
-            success: Begrepen! Maximale spam limiet ingesteld op <b>{number}</b> berichten.
+            success: Begrepen! Maximale spam limiet ingesteld op <b>{limit}</b> berichten.
         setfloodmode:
             specify_action: 'Je moet een actie specificeren om uit te voeren bij spam. Huidige modi zijn: `ban`/`kick`/`mute`'
             success: Begrepen! Spam modus wordt {value}.
@@ -110,10 +110,10 @@ strings:
         approved:
             approved_list: |-
                 Deze gebruikers zijn goedgekeurd in <b>{first}:</b>
-                {chat}
+                {admin}
 
                 Om meer informatie over elke gebruiker te krijgen zoals Goedgekeurd Door en Goedkeuringstijd, gebruik /approval (user id).
-            none_approved: Geen gebruikers zijn goedgekeurd in <b>{value}</b>!
+            none_approved: Geen gebruikers zijn goedgekeurd in <b>{user}</b>!
         help_msg: |-
             Soms kun je een gebruiker vertrouwen om geen ongewenste content te verzenden.
             Misschien niet genoeg om ze admin te maken, maar je bent misschien oké met vergrendelingen, zwarte lijsten en anti-spam die niet op hen van toepassing zijn.
@@ -151,28 +151,24 @@ strings:
             normal_ban: |-
                 Nog een is gevallen...!
                 Gebanned {value}.
-            tban: |-
-                Nog een is gevallen...!
-                Gebanned {user} voor {second}
+            tban: Gebanned {user} voor {second}
         help_msg: |-
             Soms kunnen gebruikers irritant zijn en je wilt ze misschien uit je chat verwijderen, deze module helpt je precies om dat te doen!
             Ban/kick gebruikers uit je chat en ontban ze later als ze zich goed gedragen.
 
-            *User Commands:*
+            *Gebruiker Commando's:*
             × /kickme: kickt de gebruiker die de opdracht heeft uitgevoerd.
 
-            *Ban Commands* (Admin only):
+            *Ban Commando's* (Alleen admin):
             × /ban <userhandle>: een gebruiker bannen. (via handle, of reactie)
             × /sban <userhandle>: een gebruiker stil bannen, stuurt geen bericht naar groep en verwijdert ook uw opdracht. (via handle, of reactie)
-            × /ban <userhandle>: bans a user. (via handle, or reply)
-            × /sban <userhandle>: bans a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-            × /dban <userhandle>: bans a user and delete the replied message. (via handle, or reply)
-            × /tban <userhandle> x(m/h/d): bans a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-            × /unban <userhandle>: unbans a user. (via handle, or reply)
+            × /dban <userhandle>: een gebruiker bannen en het beantwoorde bericht verwijderen. (via handle, of reactie)
+            × /tban <userhandle> x(m/h/d): een gebruiker bannen voor `x` tijd. (via handle, of reactie). m = minuten, h = uren, d = dagen.
+            × /unban <userhandle>: een gebruiker ontbannen. (via handle, of reactie)
 
-            *Restrict Commands:* (Admin only)
-            × /restrict: Shows an InlineKeyboard to choose options from kick, ban and mute
-            × /unrestrict: Shows an InlineKeyboard to choose options from unmute and unban.
+            *Beperk Commando's:* (Alleen admin)
+            × /restrict: Toont een InlineKeyboard om opties te kiezen uit kick, ban en mute
+            × /unrestrict: Toont een InlineKeyboard om opties te kiezen uit unmute en unban.
         kick:
             cannot_kick_admin: Waarom zou ik een admin afzetten? Dat klinkt als een vrij dom idee.
             is_bot_itself: Waarom zou ik mezelf afzetten?
@@ -180,41 +176,41 @@ strings:
                 <b>Reden: </b> {reason}
             kicked_user: |-
                 Nog een is gevallen...!
-                Afgezet {user}.
+                Succesvol afgezet {user}.
             user_not_in_chat: Deze gebruiker is niet in deze chat, hoe kan ik ze wegschoppen?
         kickme:
-            is_admin: Je bent een admin, je zit hier met iedereen!
-            ok_out: Oké, ga weg!
+            is_admin: Je bent een admin, en je zit hier vast met iedereen anders!
+            ok_out: Zoals je wenst, ga weg!
         unban:
             is_admin: Waarom zou ik een admin onbannen? Dat klinkt als een vrij dom idee.
             is_bot_itself: Waarom zou ik mezelf niet ontgrendelen als ik al hier ben?
             unbanned_user: |-
-                Oké, zeker...!
-                Ontbanned {user}.
+                Laten we hem nog een kans geven.
+                {user} ontbanned!
     Blacklists:
         bl_watcher:
-            banned_user: '{first} verbannen vanwege {second}'
+            banned_user: '{user} verbannen vanwege {second}'
             kicked_user: '{first} weggeschopt vanwege {second}'
-            muted_user: '{first} gedempt vanwege {second}'
+            muted_user: '{user} gedempt vanwege {second}'
         blacklist:
             added_bl: 'Deze woorden toegevoegd als zwarte lijsten:'
             already_blacklisted: 'Deze woorden staan al op de zwarte lijst:'
             give_bl_word: Geef me alstublieft een woord om toe te voegen aan de zwarte lijst!
         help_msg: |-
-            *Gebruikersopdrachten: *
+            *Gebruiker Commando's:*
             × /blacklists: Controleer alle zwarte lijsten in de chat.
 
-            *Admin Opdrachten: *
-            × /addblacklist `<trigger>`: Blacklists het woord in de huidige chat.
-            × /rmblacklist `<trigger>`: Verwijdert het woord uit de huidige Blackgenoteerd Woorden in Chat.
+            *Admin Commando's:*
+            × /addblacklist `<trigger>`: Plaats het woord op de zwarte lijst in de huidige chat.
+            × /rmblacklist `<trigger>`: Verwijdert het woord uit de huidige zwarte lijst woorden in de chat.
             × /blaction `<mute/kick/ban/warn/none>`: Stelt de actie in die moet worden uitgevoerd door bot wanneer een zwarte lijst wordt gedetecteerd.
             × /blacklistaction: Zelfde als boven
 
-            *Eigenaar: *
+            *Eigenaar Commando's:*
             × /remallbl: Verwijdert alle zwarte woorden uit chat
 
-            *Note: *
-            De standaardwerkstand voor Blacklist is * geen *, waardoor de berichten van de chat worden verwijderd.
+            *Opmerking:*
+            De standaard modus voor Blacklist is *geen*, waardoor alleen de berichten uit de chat worden verwijderd.
         ls_bl:
             list_bl: 'Deze woorden staan op de zwarte lijst in deze chat:'
             no_blacklisted: Er zijn geen woorden op de zwarte lijst in deze chat.
@@ -224,9 +220,9 @@ strings:
                 "no": Het verwijderen van alle zwarte lijsten uit deze chat geannuleerd ❌
                 "yes": Alle zwarte lijsten uit deze chat verwijderd ✅
         set_bl_action:
-            changed_mode: 'Zwarte lijst modus gewijzigd naar: *{value}*'
+            changed_mode: 'Zwarte lijst modus succesvol gewijzigd naar: *{value}*'
             choose_correct_option: Kies alstublieft een optie uit <mute/kick/ban/warn/none>
-            current_mode: 'De huidige zwarte lijst modus is: {id}'
+            current_mode: 'De huidige zwarte lijst modus voor deze chat is: {chat}'
         unblacklist:
             give_bl_word: Geef me alstublieft een woord om te verwijderen van de zwarte lijst!
             no_removed_bl: Geen van de gegeven woorden stond op de zwarte lijst die verwijderd kon worden!
@@ -286,18 +282,18 @@ strings:
             reconnected: Je bent nu opnieuw verbonden met <b>{value}</b>!
     Disabling:
         help_msg: |-
-            Hiermee kunt u een aantal veelgebruikte opdrachten uitschakelen, zodat niemand ze kan gebruiken. Het zal u ook toestaan om te autodelete, het stoppen van mensen bluetexting.
+            Met deze module kunt u enkele veelgebruikte commando's uitschakelen, zodat niemand ze kan gebruiken. Het stelt u ook in staat om ze automatisch te verwijderen, waarmee mensen worden gestopt met het blauw maken van tekst.
 
-            *Beheeropdrachten *:
-            × /uitschakelen van `<commandname>': Gebruikers stoppen met het gebruik van de opdrachtnaam in deze groep.
-            × /enable `<item name>': Laat gebruikers de naam in deze groep gebruiken.
-            × /disableable: List all disableable commands.
-            × /disabledel `<yes/no/on/off>`: Uitvalbare opdrachten wissen bij gebruik door niet-beheerders.
-            × /uitgeschakeld: Lijst met uitgeschakelde opdrachten in deze chat.
+            *Admin commando's*:
+            × /disable `<commandname>`: Stop gebruikers van het gebruik van commandname in deze groep.
+            × /enable `<item name>`: Sta gebruikers toe om commandname in deze groep te gebruiken.
+            × /disableable: Lijst alle uitschakelbare commando's.
+            × /disabledel `<yes/no/on/off>`: Verwijder uitgeschakelde commando's wanneer gebruikt door niet-admins.
+            × /disabled: Lijst de uitgeschakelde commando's in deze chat.
 
             Opmerking:
-            Bij het uitschakelen van een opdracht wordt de opdracht alleen uitgeschakeld voor niet-beheerders. Alle admins kunnen deze opdrachten nog steeds gebruiken.
-            Uitgeschakelde opdrachten zijn nog steeds toegankelijk via de functie /connect. Als u geïnteresseerd zou zijn om dit ook gehandicapt te zien, laat het me weten in de support chat.
+            Bij het uitschakelen van een commando wordt het commando alleen uitgeschakeld voor niet-admins. Alle admins kunnen deze commando's nog steeds gebruiken.
+            Uitgeschakelde commando's zijn nog steeds toegankelijk via de /connect functie. Als u geïnteresseerd zou zijn om dit ook uitgeschakeld te zien, laat het me weten in de support chat.
     Filters:
         help_msg: |-
             Filters zijn hoofdletter-ongevoelig; elke keer dat iemand je trigger woorden zegt, zal Alita iets anders antwoorden! kan gebruikt worden om je eigen commando's te maken, indien gewenst.
@@ -319,75 +315,79 @@ strings:
             -> /filter trigger
     Formatting:
         Fillings: |-
-            <b>Fillings</b>
+            <b>Opvullingen</b>
 
-            You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-            You can use these to mention a user in notes too!
+            Je kunt ook de inhoud van je bericht aanpassen met contextuele gegevens. Je kunt bijvoorbeeld een gebruiker bij naam noemen in het welkomstbericht, of ze noemen in een filter!
+            Je kunt deze ook gebruiken om een gebruiker te noemen in notities!
 
-            <b>Supported fillings:</b>
-            - <code>{first}</code>: The user's first name.
-            - <code>{last}</code>: The user's last name.
-            - <code>{fullname}</code>: The user's full name.
-            - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-            - <code>{mention}</code>: Mentions the user with their firstname.
-            - <code>{id}</code>: The user's ID.
-            - <code>{chatname}</code>: The chat's name.
-            - <code>{rules}</code>: Adds Rules Button to Message.
+            <b>Ondersteunde opvullingen:</b>
+            - <code>{first}</code>: De voornaam van de gebruiker.
+            - <code>{last}</code>: De achternaam van de gebruiker.
+            - <code>{fullname}</code>: De volledige naam van de gebruiker.
+            - <code>{username}</code>: De gebruikersnaam van de gebruiker. Als ze er geen hebben, vermeldt de gebruiker in plaats daarvan.
+            - <code>{mention}</code>: Vermeldt de gebruiker met hun voornaam.
+            - <code>{id}</code>: Het ID van de gebruiker.
+            - <code>{chatname}</code>: De naam van de chat.
+            - <code>{rules}</code>: Voegt Regels Knop toe aan Bericht.
+            - <code>{protect}</code>: Beschermt de inhoud tegen delen.
+            - <code>{preview}</code>: Schakelt voorbeelden in de berichten in.
+            - <code>{nonotif}</code>: Schakelt de notificatie voor dat bericht uit.
         Markdown: |-
-            <b>Markdown Formatting</b>
+            <b>Markdown Opmaak</b>
 
-            You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-            <b>Supported markdown</b>:
-            - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-            - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-            - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-            - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-            - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-            - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-            - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-            - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-            - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+            Je kunt je bericht opmaken met <b>vet</b>, <i>cursief</i>, <u>onderstreept</u>, en veel meer. Ga je gang en experimenteer!
+            <b>Ondersteunde markdown</b>:
+            - <code>`code woorden`</code>: Backticks worden gebruikt voor monospace lettertypen. Toont als: <code>code woorden</code>.
+            - <code>_cursieve woorden_</code>: Underscores worden gebruikt voor cursieve lettertypen. Toont als: <i>cursieve woorden</i>.
+            - <code>*vette woorden*</code>: Sterretjes worden gebruikt voor vette lettertypen. Toont als: <b>vette woorden</b>.
+            - <code>~doorgestreept~</code>: Tildes worden gebruikt voor doorgestreept. Toont als: <strike>doorgestreept</strike>.
+            - <code>||spoiler||</code>: Dubbele verticale balken worden gebruikt voor spoilers. Toont als: <tg-spoiler>Spoiler</tg-spoiler>.
+            - <code>```pre```</code>: Om de formatter andere opmaaktekens binnen de tekst die geformatteerd is met '```' te laten negeren, wordt zoals: <code>**vet** | *vet*</code>.
+            - <code>__onderstreept__</code>: Dubbele underscores worden gebruikt voor onderstrepingen. Toont als: onderstreept. OPMERKING: Sommige clients proberen slim te zijn en interpreteren het als cursief. Probeer in dat geval de ingebouwde opmaak van je app te gebruiken.
+            - <code>[hyperlink](example.com)</code>: Dit is de opmaak die wordt gebruikt voor hyperlinks. Toont als: <a href='https://example.com/'>hyperlink</a>.
+            - <code>[Mijn Knop](buttonurl://example.com)</code>: Dit is de opmaak die wordt gebruikt voor het maken van knoppen. Dit voorbeeld maakt een knop genaamd "Mijn knop" die <code>example.com</code> opent wanneer erop geklikt wordt.
 
-            If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-            <b>Example:</b>
-            <code>[button 1](buttonurl:example.com)</code>
-            <code>[button 2](buttonurl://example.com:same)</code>
-            <code>[button 3](buttonurl://example.com)</code>
-            This will show button 1 and 2 on the same line, with 3 underneath.
+            Als je knoppen op dezelfde rij wilt verzenden, gebruik dan de <code>:same</code> opmaak.
+            <b>Voorbeeld:</b>
+            <code>[knop 1](buttonurl:example.com)</code>
+            <code>[knop 2](buttonurl://example.com:same)</code>
+            <code>[knop 3](buttonurl://example.com)</code>
+            Dit toont knop 1 en 2 op dezelfde lijn, met 3 eronder.
         Random: |-
-            <b>Random Content</b>
+            <b>Willekeurige Inhoud</b>
 
-            Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-            How to use random contents:
-            - %%%: This separator can be used to add  random replies to the bot.
-            For example:
-            <code>hello
+            Nog iets dat leuk kan zijn, is het willekeurig maken van de inhoud van een bericht. Maak dingen een beetje persoonlijker door welkomstberichten te wijzigen, of notities te wijzigen!
+            Hoe willekeurige inhoud te gebruiken:
+            - %%%: Dit scheidingsteken kan worden gebruikt om willekeurige antwoorden aan de bot toe te voegen.
+            Bijvoorbeeld:
+            <code>hallo
             %%%
-            how are you</code>
-            This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-            Use this to make Alita feel a bit more customised! (only works in filters/notes)
-            Example welcome message:
-            - Every time a new user joins, they'll be presented with one of the three messages shown here.
+            hoe gaat het met je</code>
+            Dit zal willekeurig kiezen tussen het verzenden van het eerste bericht, "hallo", of het tweede bericht, "hoe gaat het met je".
+            Gebruik dit om Alita wat meer aangepast te laten voelen! (werkt alleen in filters/notities)
+            Voorbeeld welkomstbericht:
+            - Elke keer dat een nieuwe gebruiker lid wordt, krijgen ze een van de drie hier getoonde berichten te zien.
             -> /filter "hey"
-            hello there <code>{first}</code>!
+            hallo daar <code>{first}</code>!
             %%%
-            Ooooh, <code>{first}</code> how are you?
+            Ooooh, <code>{first}</code> hoe gaat het met je?
             %%%
-            Sup? <code>{first}</code>
+            Hoi? <code>{first}</code>
         help_msg: Alita ondersteunt een groot aantal opmaakopties om uw berichten meer expressief te maken. Neem een kijkje door te klikken op de knoppen hieronder!
     Greetings:
         help_msg: |-
             Verwelkom nieuwe leden in uw groepen of zeg vaarwel nadat ze vertrekken!
 
-            *Admin Commando's: *
-            × /setwelcome `<reply/text>`: Sets welkomsttekst voor groep.
-            × /welcome `<yes/no/on/off>': Hiermee kunt u de welkomstinstellingen voor de groep in-of uitschakelen.
-            × /resetwelcome: Het welkomstbericht wordt standaard ingesteld.
-            × /setgoodbye `<reply/text>`: vaarwel tekst voor groep.
-            × /afscheid `<yes/no/on/off>': Hiermee kunt u de afscheidsinstelling voor groep in-of uitschakelen.
-            × /resetdatum: Het afscheidsbericht wordt standaard ingesteld.
-            × /cleanservice `<yes/no/on/off>': Verwijder alle serviceberichten zoals' x is toegetreden tot de groep 'notificatie.
-            × /cleanwelcome `<yes/no/on/off>': Verwijder het oude welkomstbericht wanneer een nieuw lid toetreedt.
+            *Admin Commando's:*
+            × /setwelcome `<reply/text>`: Stel welkomsttekst in voor groep.
+            × /welcome `<yes/no/on/off>`: Schakel de welkomstinstelling voor de groep in of uit.
+            × /resetwelcome: Reset het welkomstbericht naar standaard.
+            × /setgoodbye `<reply/text>`: Stel afscheidstekst in voor groep.
+            × /goodbye `<yes/no/on/off>`: Schakel de afscheidsinstelling voor groep in of uit.
+            × /resetgoodbye: Reset het afscheidsbericht naar standaard.
+            × /cleanservice `<yes/no/on/off>`: Verwijder alle serviceberichten zoals 'x is toegetreden tot de groep' notificatie.
+            × /cleanwelcome `<yes/no/on/off>`: Verwijder het oude welkomstbericht wanneer een nieuw lid toetreedt.
+            × /autoapprove `<yes/no/on/off>`: Keur automatisch alle nieuwe leden goed.
     Help:
         About: |-
             @{first} is een van de snelste en meest functie gevulde groep manager.
@@ -401,7 +401,7 @@ strings:
             -Featured: Veel functies die andere groepsbeheer bots hebben niet.
             -Fast: Guess what? Het is niet gemaakt met behulp van Python, gebruiken we <a href='https://go.dev/'>Go</a> als onze core programmeertaal.
 
-            <b>Huidige versie:</b> {chat}
+            <b>Huidige versie:</b> {admin}
         Configuration:
             Step-1: |-
                 Welkom bij de Alita Configuratie
@@ -440,153 +440,156 @@ strings:
 
             Gewoon type /lang en gebruik inline toetsenbord om een taal voor jezelf of uw groep te kiezen.
 
-            U kunt ons helpen bot te brengen naar meer talen door te helpen op [Crowdin](https: //crowdin.com/project/alita_robot)
+            U kunt ons helpen de bot naar meer talen te brengen door te helpen op [Crowdin](https://crowdin.com/project/alita_robot)
     Locks:
         help_msg: |-
-            Alleen *Admin *:
-            × /lock `<permission>`: Chatmachtiging vergrendelen ..
-            × /ontgrendelen `<permission>`: Chatmachtiging ontgrendelen.
-            × /sloten: Chatmachtiging weergeven.
+            *Alleen Admin*:
+            × /lock `<permission>`: Chatmachtiging vergrendelen.
+            × /unlock `<permission>`: Chatmachtiging ontgrendelen.
+            × /locks: Chatmachtiging weergeven.
             × /locktypes: Controleer beschikbare vergrendelingstypen!
 
             Locks kunnen worden gebruikt om de gebruikers van een groep te beperken.
             Vergrendeling urls zal automatisch alle berichten met URL's verwijderen, de stickers vergrendelen zullen alle stickers verwijderen, enz.
             Vergrendeling bots zullen niet-admins stoppen van het toevoegen van bots aan de chat.
 
-            ** Example:**
-            '/vergrendelingsmedium ': hiermee worden alle mediaberichten in de chat vergrendeld.
+            **Voorbeeld:**
+            `/lock media`: hiermee worden alle mediaberichten in de chat vergrendeld.
     Misc:
         help_msg: |-
-            × /info: Get your user info, can be used as reply or by passing a User Id or Username.
-            × /id: Get the current group id. If used by replying to a message, get that user's id.
-            × /ping: Ping the Telegram Server!
-            × /tr <lang code> <msg/reply to message>: Translate the message.
-            × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
-            × /stat: Gets the count of total number of messages in chat.
+            × /info: Krijg je gebruikersinfo, kan gebruikt worden als antwoord of door een Gebruikers ID of Gebruikersnaam door te geven.
+            × /id: Krijg het huidige groep id. Als gebruikt door te antwoorden op een bericht, krijg dat gebruikers id.
+            × /ping: Ping de Telegram Server!
+            × /tr <taal code> <msg/antwoord op bericht>: Vertaal het bericht.
+            × /removebotkeyboard: Verwijdert het vastgezette bot toetsenbord uit je chat.
+            × /stat: Krijgt het aantal van het totale aantal berichten in de chat.
     Mutes:
         help_msg: |-
-            Soms kunnen gebruikers vervelend zijn en u wilt hen misschien beperken van het verzenden van bericht om te chatten, deze module is hier om te helpen, u kunt de ths module gebruiken om leden in uw groep te dempen.
+            Soms kunnen gebruikers vervelend zijn en u wilt hen misschien beperken van het verzenden van berichten naar de chat, deze module is hier om te helpen, u kunt deze module gebruiken om leden in uw groep te dempen.
 
-            *Mute Opdrachten: * (Alleen beheerder)
-            × /mute <userhandle>: een gebruiker mutes, (via handgreep of antwoord)
-            × /smute <userhandle>: een gebruiker automatisch mutes, verzendt geen bericht naar groep en verwijdert ook uw opdracht. (via handgreep, of antwoord)
-            × /dmute <userhandle>: een gebruiker mutes en het beantwoorde bericht verwijderen .. (via handgreep, of antwoord)
-            × /tmute <userhandle> x (m/h/d): mutes een gebruiker voor ` x ` tijd. (via handgreep, of antwoord). m = minuten, h = uren, d = dagen.
-            × /unmute <userhandle>: een gebruiker ongedaan maken. (via handgreep, of antwoord)
+            *Mute Commando's:* (Alleen admin)
+            × /mute <userhandle>: een gebruiker dempen, (via handle of reactie)
+            × /smute <userhandle>: een gebruiker stilletjes dempen, verzendt geen bericht naar groep en verwijdert ook uw commando. (via handle, of reactie)
+            × /dmute <userhandle>: een gebruiker dempen en het beantwoorde bericht verwijderen. (via handle, of reactie)
+            × /tmute <userhandle> x(m/h/d): een gebruiker dempen voor `x` tijd. (via handle, of reactie). m = minuten, h = uren, d = dagen.
+            × /unmute <userhandle>: een gebruiker ontdempen. (via handle, of reactie)
     Notes:
         help_msg: |-
-            Sla gegevens voor toekomstige gebruikers met notities!
-            Notes zijn geweldig om willekeurige tidbits van informatie op te slaan; een telefoonnummer, een leuke gif, een grappige foto-alles!
-            *Gebruikersopdrachten: *
-            -/get <notename>: Get a note.
+            Sla gegevens op voor toekomstige gebruikers met notities!
+            Notities zijn geweldig om willekeurige stukjes informatie op te slaan; een telefoonnummer, een leuke gif, een grappige foto - alles!
+            *Gebruiker Commando's:*
+            - /get <notename>: Krijg een notitie.
             - #notename: Zelfde als /get.
-            Beheeropdrachten:
-            -/save <notename> <note text>: Sla een nieuwe notitie op met de naam "word". Als u een bericht beantwoordt, slaat u dat bericht op. Werkt zelfs op media!
-            -/clear <notename>: Verwijder de bijbehorende opmerking.
-            -/notes: Alle notities in de huidige chatsessie afbeelden.
-            -/opgeslagen: Zelfde als /notes.
-            -/clearall: Verwijder alle noten in een chat. Dit kan niet ongedaan worden gemaakt.
-            -/privatenotes: Al dan niet notities verzenden in PM. Zal een bericht verzenden met een knop waarmee gebruikers kunnen klikken om de noot in PM te krijgen.
+            *Admin Commando's:*
+            - /save <notename> <note text>: Sla een nieuwe notitie op genaamd "word". Als u een bericht beantwoordt, slaat u dat bericht op. Werkt zelfs op media!
+            - /clear <notename>: Verwijder de bijbehorende notitie.
+            - /notes: Lijst alle notities in de huidige chat.
+            - /saved: Zelfde als /notes.
+            - /clearall: Verwijder alle notities in een chat. Dit kan niet ongedaan gemaakt worden.
+            - /privatenotes: Of notities al dan niet in PM verzonden moeten worden. Zal een bericht verzenden met een knop waarmee gebruikers kunnen klikken om de notitie in PM te krijgen.
     Pins:
         help_msg: |-
             Alle pin-gerelateerde commando's zijn hier te vinden; houd uw chat up-to-date op het laatste nieuws met een eenvoudig vastgezette bericht!
 
-            *Gebruikersopdrachten: *
+            *Gebruiker Commando's:*
             × /pinned: Haal het huidige vastgezette bericht.
 
-            *Beheeropdrachten: *
+            *Admin Commando's:*
             × /pin: Vastzetten van het bericht dat u hebt beantwoord. Voeg 'luid' of 'notify' toe om een melding te verzenden aan groepsleden.
-            × /pinned: Gets de laatste pinned bericht in de huidige Chat.
+            × /pinned: Haalt het laatste vastgezette bericht in de huidige chat.
             × /permapin <text>: Een aangepast bericht vastzetten via de bot. Dit bericht kan markdown, knoppen en alle andere coole functies bevatten.
-            × /unpin: Het huidige vastgezette bericht losmaken. Als u deze optie gebruikt als antwoord, kunt u het antwoord op een bericht ongedaan maken.
-            × /unpinall: Ontpennen alle vastgezette berichten.
-            × /antichannelpin <yes/no/on/off>: Laat de telegram niet automatisch koppelen aan kanalen. Als er geen argumenten zijn opgegeven, wordt de huidige instelling afgebeeld.
-            × /reinigingsgekoppelde <yes/no/on/off>: Berichten wissen die door het gekoppelde kanaal zijn verzonden.
+            × /unpin: Het huidige vastgezette bericht losmaken. Als gebruikt als reactie, maakt het beantwoorde bericht los.
+            × /unpinall: Alle vastgezette berichten losmaken.
+            × /antichannelpin <yes/no/on/off>: Laat Telegram niet automatisch berichten van gekoppelde kanalen vastzetten. Als geen argumenten worden gegeven, toon de huidige instelling.
+            × /cleanlinked <yes/no/on/off>: Berichten wissen die door het gekoppelde kanaal zijn verzonden.
             Opmerking: Als u antikanaalpennen gebruikt, moet u ervoor zorgen dat u de opdracht /unpin gebruikt, in plaats van het handmatig te doen. Anders wordt het oude bericht opnieuw vastgezet wanneer het kanaal berichten verzendt.
     Purges:
         help_msg: |-
-            Alleen *Admin: *
-            -/purge: hiermee worden alle berichten tussen dit en het antwoord op bericht gewist.
-            -/del: wist het bericht dat u antwoordde.
+            *Alleen Admin:*
+            - /purge: verwijdert alle berichten tussen dit en het beantwoorde bericht.
+            - /del: verwijdert het bericht waarop u antwoordde.
 
-            *Examples*:
-            -Verwijder alle berichten van het antwoord op bericht, tot nu toe.
-            -> `/zuivering "
+            *Voorbeelden*:
+            - Verwijder alle berichten van het beantwoorde bericht, tot nu toe.
+            -> `/purge`
     Reports:
         help_msg: |-
-            We zijn allemaal bezig met mensen die geen tijd hebben om onze groepen 24/7 te volgen. Maar hoe reageer je als iemand in je groep spamming is?
+            We zijn allemaal drukke mensen die geen tijd hebben om onze groepen 24/7 te monitoren. Maar hoe reageer je als iemand in je groep aan het spammen is?
 
-            × /rapport `<reason>`: antwoord op een bericht om het aan admins te melden.
+            × /report `<reason>`: antwoord op een bericht om het aan admins te melden.
             - @admin: zelfde als /report maar geen opdracht.
 
-            *Admins Alleen: *
-            × /rapporten `<on/off/yes/no>`: rapportinstelling wijzigen of huidige status bekijken.
-            -Als gedaan in PM, schakelt u uw status.
-            -Als deze in groep is, schakelt u de status van die groepen in.
-            × /rapporten ` block ` (alleen via antwoord): Een gebruiker blokkeren met behulp van /rapport of @admin.
-            × /reports ` unblock ` (alleen via antwoord): Een gebruiker uitschakelen voor het gebruik van /rapport of @admin.
-            × /rapporten ` showblocklist `: Alle geblokkeerde gebruikers controleren die/rapport of @adminniet kunnen gebruiken.
+            *Alleen Admins:*
+            × /reports `<on/off/yes/no>`: rapportinstelling wijzigen of huidige status bekijken.
+            - Als gedaan in PM, schakelt u uw status.
+            - Als in groep gedaan, schakelt u de status van die groep in.
+            × /reports `block` (alleen via reactie): Een gebruiker blokkeren van het gebruik van /report of @admin.
+            × /reports `unblock` (alleen via reactie): Een gebruiker deblokkeren van het gebruik van /report of @admin.
+            × /reports `showblocklist`: Alle geblokkeerde gebruikers controleren die /report of @admin niet kunnen gebruiken.
 
-            Om een gebruiker te melden, antwoordt hij zijn bericht eenvoudig met @admin of /report; Natalie antwoordt vervolgens met een bericht waarin wordt aangegeven dat beheerders zijn aangemeld.
-            U moet een bericht beantwoorden om een gebruiker te melden; u kunt @admin niet alleen gebruiken voor tagbeheer zonder reden!
+            Om een gebruiker te melden, antwoord simpelweg op hun bericht met @admin of /report; de bot antwoordt vervolgens met een bericht waarin wordt aangegeven dat admins zijn genotificeerd.
+            U moet een bericht beantwoorden om een gebruiker te melden; u kunt @admin niet alleen gebruiken om admins te taggen zonder reden!
 
-            *OPMERKING: * Geen van beide wordt geactiveerd als deze worden gebruikt door admins.
+            *OPMERKING:* Geen van beide wordt geactiveerd als deze worden gebruikt door admins.
     Rules:
         help_msg: |-
             Elke chat werkt met verschillende regels; deze module zal helpen om deze regels duidelijker te maken!
-            *Gebruikersopdrachten *:
-            × /rules: Controleer de huidige chat-regels.
-            *Beheeropdrachten *:
+            *Gebruiker Commando's:*
+            × /rules: Controleer de huidige chatregels.
+            *Admin Commando's:*
             × /setrules `<text>`: De regels voor deze chat instellen.
-            × /privaterulen "<yes/no/on/off>": Inschakelen/uitschakelen van het verzenden van de regels onder persoonlijk.
-            × /resetregels: De chatregels herstellen als standaard
+            × /privaterules `<yes/no/on/off>`: Inschakelen/uitschakelen van het verzenden van de regels in privé.
+            × /resetrules: De chatregels herstellen naar standaard
+            × /rulesbtn `<custom text>`: Stel de tekst van de regels knop in.
+            × /resetrulesbutton: Reset de tekst van de regels knop naar standaard.
+            × /resetrulesbtn: Zelfde als hierboven.
     Tagger:
         help_msg: |-
             Tagger is een essentieel kenmerk om alle leden van de groep te vermelden.
             Alle chatleden kunnen zich abonneren op tagger.
 
-            *Gebruikersopdrachten: *
-            × /tagme: Gebruiker toestaan om code
-            × /untagme te gebruiken: Gebruiker met de tag
+            *Gebruiker Commando's:*
+            × /tagme: Sta toe dat gebruiker getagd wordt
+            × /untagme: Sta niet toe dat gebruiker getagd wordt
 
-            *Beheeropdrachten: *
-            × /tagall: tag/vermelding alle gelabelde gebruikers
-            × /untagall: alle gelabelde leden wissen
-            × /addtag <user>: Een gebruiker handmatig toevoegen aan taglist
-            × /rmtag <user>: Een gebruiker handmatig verwijderen uit taglist
+            *Admin Commando's:*
+            × /tagall: tag/vermeld alle getagde gebruikers
+            × /untagall: alle getagde leden wissen
+            × /addtag <user>: Een gebruiker handmatig toevoegen aan taglijst
+            × /rmtag <user>: Een gebruiker handmatig verwijderen uit taglijst
     Utils:
         chat_status:
-            anon_admin_btn: Klik om admin te bewijzen
+            anon_admin_btn: Bevestig uw identiteit
             anon_admin_string: Het lijkt erop dat je anoniem bent. Tik op deze knop om uw identiteit te bevestigen.
             bot:
                 no_permission_delete: Ik heb geen toestemming om berichten te verwijderen!
                 no_permission_pin: Ik kan geen berichten vastpinnen. Zorg ervoor dat ik admin ben en kan berichten vastzetten.
                 no_permission_promote: Ik kan mensen hier niet promoten. Zorg ervoor dat ik admin ben en kan nieuwe admins benoemen.
                 no_permission_restrict: Ik heb geen toestemming om leden te beperken!!
-                no_permission_restrict_group: Ik kan de mensen hier niet beperken. Zorg ervoor dat ik admin en kan beperken andere leden.
-                require_admin: Ik ben geen admin! Zorg ervoor dat ik admin en heb de juiste permissies.
-            require_group: Deze opdracht wordt gemaakt voor gebruik in groeps-chats, niet in pm!
-            require_private: Deze opdracht is gemaakt voor pm, geen groeps-chat!
+                no_permission_restrict_group: Ik kan mensen hier niet beperken. Zorg ervoor dat ik admin ben en andere leden kan beperken.
+                require_admin: Ik ben geen admin! Zorg ervoor dat ik admin ben en de juiste permissies heb.
+            require_group: Dit commando is gemaakt voor gebruik in groepschats, niet in PM!
+            require_private: Dit commando is gemaakt voor PM, niet voor groepschat!
             user:
                 no_permission_change_info_btn: U bent niet gemachtigd om informatie te wijzigen!!
                 no_permission_change_info_cmd: U bent niet gemachtigd om informatie in deze groep te wijzigen!
                 no_permission_delete: U bent niet gemachtigd om berichten te wissen!
                 no_permission_pin: Je kunt hier geen berichten vastzetten. Zorg dat je admin bent en kan berichten vastzetten.
                 no_permission_promote_btn: U bent niet gemachtigd om leden te promoten/demoveren!!
-                no_permission_promote_cmd: Je kunt mensen hier niet promoten. Zorg ervoor dat u de juiste rechten!
+                no_permission_promote_cmd: Je kunt mensen hier niet promoten. Zorg ervoor dat u de juiste rechten heeft!
                 no_permission_restrict_btn: U bent niet gemachtigd om leden te beperken!!
                 no_permission_restrict_cmd: U bent niet gemachtigd om leden in deze groep te beperken!
                 require_admin_btn: Je moet een admin zijn om dit te doen!
-                require_admin_cmd: Alleen beheerders kunnen deze opdracht uitvoeren!
+                require_admin_cmd: Alleen admins kunnen dit commando uitvoeren!
                 require_owner_btn: Je moet de maker van de groep zijn om dit te doen!
-                require_owner_cmd: Alleen de maker van de groep om dit te doen!
+                require_owner_cmd: Alleen de maker van de groep kan dit doen!
         extraction:
             extract_chat:
                 badrequest_failed_getchat: 'verbinden met chat is mislukt: fout bij ophalen van chat: getChat is mislukt: Bad Request: chat niet gevonden'
                 fail_need_chat: Ik heb een Chat ID nodig om verbinding te maken!
                 fail_need_chat_id: Ik verwachtte een Chat-ID, maar dit is geen geldig geheel getal
             extract_user:
-                badrequest_failed_getchatmember: 'Ophalen van gebruiker mislukt: kan niet getChatMember: Ongeldige opdracht: chat niet gevonden'
+                badrequest_failed_getchatmember: 'Ophalen van gebruiker mislukt: kan niet getChatMember: Bad Request: chat niet gevonden'
                 no_user_found: Kon geen gebruiker vinden met deze naam; weet u zeker dat ik ze eerder heb gezien?
         string_handling:
             extract_time:
@@ -594,21 +597,21 @@ strings:
                 invalid_time_type: 'Ongeldig tijdtype opgegeven. Verwacht m, h, of d kreeg: {time}'
     Warns:
         help_msg: |-
-            Keep your members in check with warnings; stop them getting out of control!
-            If you're looking for automated warnings, read about the blacklist module!
+            Houd je leden in de gaten met waarschuwingen; stop ze voor ze uit de hand lopen!
+            Als je op zoek bent naar geautomatiseerde waarschuwingen, lees dan over de blacklist module!
 
-            *Admin Commands:*
-            - /warn <reason>: Warn a user.
-            - /dwarn <reason>: Warn a user by reply, and delete their message.
-            - /swarn <reason>: Silently warn a user, and delete your message.
-            - /warns: See a user's warnings.
-            - /rmwarn: Remove a user's latest warning.
-            - /resetwarn: Reset all of a user's warnings to 0.
-            - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-            - /warnings: Get the chat's warning settings.
-            - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-            - /setwarnlimit <number>: Set the number of warnings before users are punished.
+            *Admin Commando's:*
+            - /warn <reden>: Waarschuw een gebruiker.
+            - /dwarn <reden>: Waarschuw een gebruiker door te antwoorden, en verwijder hun bericht.
+            - /swarn <reden>: Waarschuw een gebruiker stilletjes, en verwijder je bericht.
+            - /warns: Zie de waarschuwingen van een gebruiker.
+            - /rmwarn: Verwijder de laatste waarschuwing van een gebruiker.
+            - /resetwarn: Reset alle waarschuwingen van een gebruiker naar 0.
+            - /resetallwarns: Verwijder alle waarschuwingen in een chat. Alle gebruikers keren terug naar 0 waarschuwingen.
+            - /warnings: Krijg de waarschuwingsinstellingen van de chat.
+            - /setwarnmode <ban/kick/mute/tban/tmute>: Stel de waarschuwingsmodus van de chat in.
+            - /setwarnlimit <nummer>: Stel het aantal waarschuwingen in voordat gebruikers gestraft worden.
 
-            *Examples*
-            - Warn a user.
-            -> `/warn @user For disobeying the rules`
+            *Voorbeelden*
+            - Waarschuw een gebruiker.
+            -> `/warn @gebruiker Voor het overtreden van de regels`

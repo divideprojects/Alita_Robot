@@ -284,108 +284,112 @@ strings:
             reconnected: आप अब <b>{value}</b> से पुनः जुड़ गए हैं!
     Disabling:
         help_msg: |-
-            This allows you to disable some commonly used commands, so noone can use them. It'll also allow you to autodelete them, stopping people from bluetexting.
+            यह आपको कुछ आमतौर पर उपयोग किए जाने वाले कमांड को निष्क्रिय करने की अनुमति देता है, ताकि कोई भी उनका उपयोग न कर सके। यह आपको उन्हें ऑटो-डिलीट करने की भी अनुमति देगा, जिससे लोगों को ब्लू टेक्स्टिंग से रोका जा सकेगा।
 
-            *Admin commands*:
-            × /disable `<commandname>`: Stop users from using commandname in this group.
-            × /enable `<item name>`: Allow users from using commandname in this group.
-            × /disableable: List all disableable commands.
-            × /disabledel `<yes/no/on/off>`: Delete disabled commands when used by non-admins.
-            × /disabled: List the disabled commands in this chat.
+            *व्यवस्थापक कमांड*:
+            × /disable `<commandname>`: इस समूह में उपयोगकर्ताओं को commandname उपयोग करने से रोकें।
+            × /enable `<item name>`: इस समूह में उपयोगकर्ताओं को commandname उपयोग करने की अनुमति दें।
+            × /disableable: सभी निष्क्रिय करने योग्य कमांड की सूची।
+            × /disabledel `<yes/no/on/off>`: गैर-व्यवस्थापकों द्वारा उपयोग किए जाने पर निष्क्रिय कमांड को हटाएं।
+            × /disabled: इस चैट में निष्क्रिय कमांड की सूची।
 
-            Note:
-            When disabling a command, the command only gets disabled for non-admins. All admins can still use those commands.
-            Disabled commands are still accessible through the /connect feature. If you would be interested to see this disabled too, let me know in the support chat.
+            नोट:
+            जब किसी कमांड को निष्क्रिय करते हैं, तो कमांड केवल गैर-व्यवस्थापकों के लिए निष्क्रिय हो जाता है। सभी व्यवस्थापक अभी भी उन कमांड का उपयोग कर सकते हैं।
+            निष्क्रिय कमांड अभी भी /connect सुविधा के माध्यम से पहुंच योग्य हैं। यदि आप इसे भी निष्क्रिय देखने में रुचि रखते हैं, तो मुझे सहायता चैट में बताएं।
     Filters:
         help_msg: |-
-            Filters are case insensitive; every time someone says your trigger words, Alita will reply something else! can be used to create your own commands, if desired.
+            फ़िल्टर केस इन्सेंसिटिव होते हैं; जब भी कोई आपके ट्रिगर शब्द कहता है, Alita कुछ और जवाब देगी! यदि चाहते हैं तो इसका उपयोग अपने कमांड बनाने के लिए किया जा सकता है।
 
-            Commands:
-            - /filter <trigger> <reply>: Every time someone says trigger, the bot will reply with sentence. For multiple word filters, quote the trigger.
-            - /filters: List all chat filters.
-            - /stop <trigger>: Stop the bot from replying to trigger.
-            - /stopall: Stop ALL filters in the current chat. This cannot be undone.
+            कमांड:
+            - /filter <trigger> <reply>: जब भी कोई ट्रिगर कहता है, बॉट वाक्य के साथ जवाब देगा। एकाधिक शब्द फ़िल्टर के लिए, ट्रिगर को कोट करें।
+            - /filters: सभी चैट फ़िल्टर की सूची दें।
+            - /stop <trigger>: बॉट को ट्रिगर का जवाब देना बंद करवाएं।
+            - /stopall: वर्तमान चैट में सभी फ़िल्टर बंद करें। इसे पूर्ववत नहीं किया जा सकता।
 
-            Examples:
-            - Set a filter:
-            -> /filter hello Hello there! How are you?
-            - Set a multiword filter:
-            -> /filter hello friend Hello back! Long time no see!
-            - Set a filter that can only be used by admins:
-            -> /filter example This filter wont happen if a normal user says it {admin}
-            - To save a file, image, gif, or any other attachment, simply reply to file with:
+            उदाहरण:
+            - एक फ़िल्टर सेट करें:
+            -> /filter hello नमस्ते! आप कैसे हैं?
+            - एक मल्टीवर्ड फ़िल्टर सेट करें:
+            -> /filter hello friend नमस्ते वापस! बहुत दिन बाद मिले!
+            - एक फ़िल्टर सेट करें जो केवल व्यवस्थापक उपयोग कर सकते हैं:
+            -> /filter example यह फ़िल्टर नहीं होगा यदि कोई सामान्य उपयोगकर्ता इसे कहता है {admin}
+            - एक फ़ाइल, इमेज, gif, या कोई अन्य संलग्नक सेव करने के लिए, बस फ़ाइल को reply करें:
             -> /filter trigger
     Formatting:
         Fillings: |-
-            <b>Fillings</b>
+            <b>फिलिंग्स</b>
 
-            You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-            You can use these to mention a user in notes too!
+            आप अपने संदेश की सामग्री को प्रासंगिक डेटा के साथ अनुकूलित भी कर सकते हैं। उदाहरण के लिए, आप स्वागत संदेश में किसी उपयोगकर्ता का नाम लेकर उल्लेख कर सकते हैं, या उन्हें एक फ़िल्टर में उल्लेख कर सकते हैं!
+            आप इनका उपयोग नोट्स में भी किसी उपयोगकर्ता का उल्लेख करने के लिए कर सकते हैं!
 
-            <b>Supported fillings:</b>
-            - <code>{first}</code>: The user's first name.
-            - <code>{last}</code>: The user's last name.
-            - <code>{fullname}</code>: The user's full name.
-            - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-            - <code>{mention}</code>: Mentions the user with their firstname.
-            - <code>{id}</code>: The user's ID.
-            - <code>{chatname}</code>: The chat's name.
-            - <code>{rules}</code>: Adds Rules Button to Message.
+            <b>समर्थित फिलिंग्स:</b>
+            - <code>{first}</code>: उपयोगकर्ता का पहला नाम।
+            - <code>{last}</code>: उपयोगकर्ता का अंतिम नाम।
+            - <code>{fullname}</code>: उपयोगकर्ता का पूरा नाम।
+            - <code>{username}</code>: उपयोगकर्ता का उपयोगकर्ता नाम। यदि उनके पास एक नहीं है, तो बजाय इसके उपयोगकर्ता का उल्लेख करता है।
+            - <code>{mention}</code>: उनके पहले नाम के साथ उपयोगकर्ता का उल्लेख करता है।
+            - <code>{id}</code>: उपयोगकर्ता की ID।
+            - <code>{chatname}</code>: चैट का नाम।
+            - <code>{rules}</code>: संदेश में नियम बटन जोड़ता है।
+            - <code>{protect}</code>: सामग्री को साझा होने से सुरक्षित करता है।
+            - <code>{preview}</code>: संदेशों में पूर्वावलोकन सक्षम करता है।
+            - <code>{nonotif}</code>: उस संदेश के लिए अधिसूचना अक्षम करता है।
         Markdown: |-
-            <b>Markdown Formatting</b>
+            <b>मार्कडाउन फॉर्मेटिंग</b>
 
-            You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-            <b>Supported markdown</b>:
-            - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-            - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-            - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-            - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-            - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-            - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-            - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-            - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-            - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
+            आप अपने संदेश को <b>बोल्ड</b>, <i>इटैलिक</i>, <u>अंडरलाइन</u>, और बहुत कुछ का उपयोग करके फॉर्मेट कर सकते हैं। आगे बढ़ें और प्रयोग करें!
+            <b>समर्थित मार्कडाउन</b>:
+            - <code>`code words`</code>: बैकटिक्स का उपयोग मोनोस्पेस फॉन्ट के लिए किया जाता है। इस तरह दिखाता है: <code>code words</code>।
+            - <code>_italic words_</code>: अंडरस्कोर का उपयोग इटैलिक फॉन्ट के लिए किया जाता है। इस तरह दिखाता है: <i>italic words</i>।
+            - <code>*bold words*</code>: एस्टेरिस्क का उपयोग बोल्ड फॉन्ट के लिए किया जाता है। इस तरह दिखाता है: <b>bold words</b>।
+            - <code>~strikethrough~</code>: टिल्डे का उपयोग स्ट्राइकथ्रू के लिए किया जाता है। इस तरह दिखाता है: <strike>strikethrough</strike>।
+            - <code>||spoiler||</code>: डबल वर्टिकल बार्स का उपयोग स्पॉइलर के लिए किया जाता है। इस तरह दिखाता है: <tg-spoiler>Spoiler</tg-spoiler>।
+            - <code>```pre```</code>: फॉर्मेटर को '```' के साथ फॉर्मेट किए गए टेक्स्ट के अंदर अन्य फॉर्मेटिंग वर्णों को अनदेखा करने के लिए, इस तरह होगा: <code>**bold** | *bold*</code>।
+            - <code>__underline__</code>: डबल अंडरस्कोर का उपयोग अंडरलाइन के लिए किया जाता है। इस तरह दिखाता है: underline। नोट: कुछ क्लाइंट स्मार्ट बनने की कोशिश करते हैं और इसे इटैलिक के रूप में व्याख्या करते हैं। उस स्थिति में, अपनी ऐप की बिल्ट-इन फॉर्मेटिंग का उपयोग करने की कोशिश करें।
+            - <code>[hyperlink](example.com)</code>: यह हाइपरलिंक के लिए उपयोग की जाने वाली फॉर्मेटिंग है। इस तरह दिखाता है: <a href='https://example.com/'>hyperlink</a>।
+            - <code>[My Button](buttonurl://example.com)</code>: यह बटन बनाने के लिए उपयोग की जाने वाली फॉर्मेटिंग है। यह उदाहरण "My button" नाम का एक बटन बनाएगा जो क्लिक करने पर <code>example.com</code> खोलता है।
 
-            If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-            <b>Example:</b>
+            यदि आप एक ही पंक्ति पर बटन भेजना चाहते हैं, तो <code>:same</code> फॉर्मेटिंग का उपयोग करें।
+            <b>उदाहरण:</b>
             <code>[button 1](buttonurl:example.com)</code>
             <code>[button 2](buttonurl://example.com:same)</code>
             <code>[button 3](buttonurl://example.com)</code>
-            This will show button 1 and 2 on the same line, with 3 underneath.
+            यह बटन 1 और 2 को एक ही लाइन पर दिखाएगा, और 3 नीचे होगा।
         Random: |-
-            <b>Random Content</b>
+            <b>रैंडम कंटेंट</b>
 
-            Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-            How to use random contents:
-            - %%%: This separator can be used to add  random replies to the bot.
-            For example:
+            एक और चीज़ जो मज़ेदार हो सकती है, वह है संदेश की सामग्री को रैंडम करना। स्वागत संदेशों को बदलकर, या नोट्स को बदलकर चीजों को थोड़ा और व्यक्तिगत बनाएं!
+            रैंडम सामग्री का उपयोग कैसे करें:
+            - %%%: इस विभाजक का उपयोग बॉट में रैंडम उत्तर जोड़ने के लिए किया जा सकता है।
+            उदाहरण के लिए:
             <code>hello
             %%%
             how are you</code>
-            This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-            Use this to make Alita feel a bit more customised! (only works in filters/notes)
-            Example welcome message:
-            - Every time a new user joins, they'll be presented with one of the three messages shown here.
+            यह रैंडम रूप से पहला संदेश "hello" भेजने या दूसरा संदेश "how are you" भेजने के बीच चुनेगा।
+            इसका उपयोग अलिता को थोड़ा और अनुकूलित महसूस कराने के लिए करें! (केवल फ़िल्टर/नोट्स में काम करता है)
+            उदाहरण स्वागत संदेश:
+            - हर बार जब कोई नया उपयोगकर्ता जुड़ता है, तो उन्हें यहाँ दिखाए गए तीन संदेशों में से एक प्रस्तुत किया जाएगा।
             -> /filter "hey"
             hello there <code>{first}</code>!
             %%%
             Ooooh, <code>{first}</code> how are you?
             %%%
             Sup? <code>{first}</code>
-        help_msg: अल्टा अपने संदेश को और अधिक अभिव्यंजक बनाने के लिए बड़ी संख्या में फ़ॉर्मेटिंग विकल्प का समर्थन करता है. नीचे के बटन पर क्लिक करके एक नज़र रखना!
+        help_msg: अलिता अपने संदेश को और अधिक अभिव्यंजक बनाने के लिए बड़ी संख्या में फॉर्मेटिंग विकल्प का समर्थन करता है। नीचे के बटन पर क्लिक करके देखें!
     Greetings:
         help_msg: |-
-            Welcome new members to your groups or say Goodbye after they leave!
+            अपने समूहों में नए सदस्यों का स्वागत करें या उनके जाने के बाद अलविदा कहें!
 
-            *Admin Commands:*
-            × /setwelcome `<reply/text>`: Sets welcome text for group.
-            × /welcome `<yes/no/on/off>`: Enables or Disables welcome setting for group.
-            × /resetwelcome: Resets the welcome message to default.
-            × /setgoodbye `<reply/text>`: Sets goodbye text for group.
-            × /goodbye `<yes/no/on/off>`: Enables or Disables goodbye setting for group.
-            × /resetgoodbye: Resets the goodbye message to default.
-            × /cleanservice `<yes/no/on/off>`: Delete all service messages such as 'x joined the group' notification.
-            × /cleanwelcome `<yes/no/on/off>`: Delete the old welcome message, whenever a new member joins.
+            *व्यवस्थापक कमांड:*
+            × /setwelcome `<reply/text>`: समूह के लिए स्वागत पाठ सेट करता है।
+            × /welcome `<yes/no/on/off>`: समूह के लिए स्वागत सेटिंग को सक्षम या अक्षम करता है।
+            × /resetwelcome: स्वागत संदेश को डिफ़ॉल्ट पर रीसेट करता है।
+            × /setgoodbye `<reply/text>`: समूह के लिए अलविदा पाठ सेट करता है।
+            × /goodbye `<yes/no/on/off>`: समूह के लिए अलविदा सेटिंग को सक्षम या अक्षम करता है।
+            × /resetgoodbye: अलविदा संदेश को डिफ़ॉल्ट पर रीसेट करता है।
+            × /cleanservice `<yes/no/on/off>`: सभी सेवा संदेशों को हटाएं जैसे 'x समूह में शामिल हुआ' अधिसूचना।
+            × /cleanwelcome `<yes/no/on/off>`: पुराने स्वागत संदेश को हटाएं, जब भी कोई नया सदस्य शामिल होता है।
+            × /autoapprove `<yes/no/on/off>`: सभी नए सदस्यों को स्वचालित रूप से अनुमोदित करें।
     Help:
         About: |-
             @{first} is one of the fastest and most feature filled group manager.
@@ -433,125 +437,128 @@ strings:
             You can donate by contacting my owner here: @DivideProjectsBot
     Languages:
         help_msg: |-
-            Not able to change language of the bot?
-            Easily change by using this module!
+            बॉट की भाषा बदलने में असमर्थ हैं?
+            इस मॉड्यूल का उपयोग करके आसानी से बदलें!
 
-            Just type /lang and use inline keyboard to choose a language for yourself or your group.
+            बस /lang टाइप करें और अपने लिए या अपने समूह के लिए भाषा चुनने के लिए इनलाइन कीबोर्ड का उपयोग करें।
 
-            You can help us bring bot to more languages by helping on [Crowdin](https://crowdin.com/project/alita_robot)
+            आप [Crowdin](https://crowdin.com/project/alita_robot) पर सहायता करके बॉट को और भाषाओं में लाने में हमारी मदद कर सकते हैं
     Locks:
         help_msg: |-
-            *Admin only*:
-            × /lock `<permission>`: Lock Chat permission..
-            × /unlock `<permission>`: Unlock Chat permission.
-            × /locks: View Chat permission.
-            × /locktypes: Check available lock types!
+            *केवल व्यवस्थापक*:
+            × /lock `<permission>`: चैट अनुमति लॉक करें।
+            × /unlock `<permission>`: चैट अनुमति अनलॉक करें।
+            × /locks: चैट अनुमति देखें।
+            × /locktypes: उपलब्ध लॉक प्रकार जांचें!
 
-            Locks can be used to restrict a group's users.
-            Locking urls will auto-delete all messages with urls, locking stickers will delete all stickers, etc.
-            Locking bots will stop non-admins from adding bots to the chat.
+            लॉक का उपयोग समूह के उपयोगकर्ताओं को प्रतिबंधित करने के लिए किया जा सकता है।
+            URL लॉक करने से URL के साथ सभी संदेश ऑटो-डिलीट हो जाएंगे, स्टिकर लॉक करने से सभी स्टिकर डिलीट हो जाएंगे, आदि।
+            बॉट लॉक करने से गैर-व्यवस्थापकों को चैट में बॉट जोड़ने से रोका जाएगा।
 
-            **Example:**
-            `/lock media`: this locks all the media messages in the chat.
+            **उदाहरण:**
+            `/lock media`: यह चैट में सभी मीडिया संदेशों को लॉक करता है।
     Misc:
         help_msg: |-
-            × /info: Get your user info, can be used as reply or by passing a User Id or Username.
-            × /id: Get the current group id. If used by replying to a message, get that user's id.
-            × /ping: Ping the Telegram Server!
-            × /tr <lang code> <msg/reply to message>: Translate the message.
-            × /removebotkeyboard: Removes the stucked bot keyboard from your chat.
-            × /stat: Gets the count of total number of messages in chat.
+            × /info: अपनी उपयोगकर्ता जानकारी प्राप्त करें, इसका उपयोग reply के रूप में या User Id या Username देकर किया जा सकता है।
+            × /id: वर्तमान ग्रुप id प्राप्त करें। यदि किसी संदेश को reply करके उपयोग किया जाए, तो उस उपयोगकर्ता की id मिलेगी।
+            × /ping: Telegram सर्वर को ping करें!
+            × /tr <lang code> <msg/reply to message>: संदेश का अनुवाद करें।
+            × /removebotkeyboard: आपकी चैट से अटके हुए बॉट कीबोर्ड को हटाएं।
+            × /stat: चैट में कुल संदेशों की संख्या की गिनती प्राप्त करें।
     Mutes:
         help_msg: |-
-            Sometimes users can be annoying and you might want to restrict them from send message to chat, this module is here to help, you can use ths module to mute members in your group.
+            कभी-कभी उपयोगकर्ता परेशान कर सकते हैं और आप उन्हें चैट में संदेश भेजने से प्रतिबंधित करना चाह सकते हैं, यह मॉड्यूल यहाँ मदद करने के लिए है, आप इस मॉड्यूल का उपयोग करके अपने समूह में सदस्यों को म्यूट कर सकते हैं।
 
-            *Mute Commands:* (Admin only)
-            × /mute <userhandle>: mutes a user, (via handle, or reply)
-            × /smute <userhandle>: mutes a user silently, does not send message to group and also deletes your command. (via handle, or reply)
-            × /dmute <userhandle>: mutes a user and delete the replied message.. (via handle, or reply)
-            × /tmute <userhandle> x(m/h/d): mutes a user for `x` time. (via handle, or reply). m = minutes, h = hours, d = days.
-            × /unmute <userhandle>: unmutes a user. (via handle, or reply)
+            *म्यूट कमांड:* (केवल व्यवस्थापक)
+            × /mute <userhandle>: एक उपयोगकर्ता को म्यूट करता है, (हैंडल या उत्तर के द्वारा)
+            × /smute <userhandle>: एक उपयोगकर्ता को चुपचाप म्यूट करता है, समूह को संदेश नहीं भेजता और आपकी कमांड भी हटा देता है। (हैंडल या उत्तर के द्वारा)
+            × /dmute <userhandle>: एक उपयोगकर्ता को म्यूट करता है और उत्तर दिए गए संदेश को हटा देता है। (हैंडल या उत्तर के द्वारा)
+            × /tmute <userhandle> x(m/h/d): एक उपयोगकर्ता को `x` समय के लिए म्यूट करता है। (हैंडल या उत्तर के द्वारा)। m = मिनट, h = घंटे, d = दिन।
+            × /unmute <userhandle>: एक उपयोगकर्ता को अनम्यूट करता है। (हैंडल या उत्तर के द्वारा)
     Notes:
         help_msg: |-
-            Save data for future users with notes!
-            Notes are great to save random tidbits of information; a phone number, a nice gif, a funny picture - anything!
-            *User commands:*
-            - /get <notename>: Get a note.
-            - #notename: Same as /get.
-            Admin commands:
-            - /save <notename> <note text>: Save a new note called "word". Replying to a message will save that message. Even works on media!
-            - /clear <notename>: Delete the associated note.
-            - /notes: List all notes in the current chat.
-            - /saved: Same as /notes.
-            - /clearall: Delete ALL notes in a chat. This cannot be undone.
-            - /privatenotes: Whether or not to send notes in PM. Will send a message with a button which users can click to get the note in PM.
+            भविष्य के उपयोगकर्ताओं के लिए notes के साथ डेटा सेव करें!
+            Notes किसी भी जानकारी को सेव करने के लिए बहुत अच्छे हैं; एक फोन नंबर, एक अच्छी gif, एक मजेदार तस्वीर - कुछ भी!
+            *उपयोगकर्ता कमांड:*
+            - /get <notename>: एक note प्राप्त करें।
+            - #notename: /get के समान।
+            व्यवस्थापक कमांड:
+            - /save <notename> <note text>: "word" नाम का एक नया note सेव करें। किसी संदेश को reply करने से वह संदेश सेव हो जाएगा। मीडिया पर भी काम करता है!
+            - /clear <notename>: संबंधित note को हटाएं।
+            - /notes: वर्तमान चैट में सभी notes की सूची दें।
+            - /saved: /notes के समान।
+            - /clearall: चैट में सभी notes हटाएं। इसे पूर्ववत नहीं किया जा सकता।
+            - /privatenotes: PM में notes भेजना है या नहीं। एक बटन के साथ संदेश भेजेगा जिस पर उपयोगकर्ता PM में note प्राप्त करने के लिए क्लिक कर सकते हैं।
     Pins:
         help_msg: |-
-            All the pin related commands can be found here; keep your chat up to date on the latest news with a simple pinned message!
+            सभी पिन संबंधित कमांड यहाँ मिल सकते हैं; एक सरल पिन किए गए संदेश के साथ अपनी चैट को नवीनतम समाचारों पर अपडेटेड रखें!
 
-            *User commands:*
-            × /pinned: Get the current pinned message.
+            *उपयोगकर्ता कमांड:*
+            × /pinned: वर्तमान पिन किया गया संदेश प्राप्त करें।
 
-            *Admin commands:*
-            × /pin: Pin the message you replied to. Add 'loud' or 'notify' to send a notification to group members.
-            × /pinned: Gets the latest pinned message in the current Chat.
-            × /permapin <text>: Pin a custom message through the bot. This message can contain markdown, buttons, and all the other cool features.
-            × /unpin: Unpin the current pinned message. If used as a reply, unpins the replied to message.
-            × /unpinall: Unpins all pinned messages.
-            × /antichannelpin <yes/no/on/off>: Don't let telegram auto-pin linked channels. If no arguments are given, shows current setting.
-            × /cleanlinked <yes/no/on/off>: Delete messages sent by the linked channel.
-            Note: When using antichannel pins, make sure to use the /unpin command, instead of doing it manually. Otherwise, the old message will get re-pinned when the channel sends any messages.
+            *व्यवस्थापक कमांड:*
+            × /pin: जिस संदेश का आपने उत्तर दिया है उसे पिन करें। समूह सदस्यों को अधिसूचना भेजने के लिए 'loud' या 'notify' जोड़ें।
+            × /pinned: वर्तमान चैट में नवीनतम पिन किया गया संदेश प्राप्त करता है।
+            × /permapin <text>: बॉट के माध्यम से एक कस्टम संदेश पिन करें। इस संदेश में मार्कडाउन, बटन और अन्य सभी कूल सुविधाएं हो सकती हैं।
+            × /unpin: वर्तमान पिन किए गए संदेश को अनपिन करें। यदि उत्तर के रूप में उपयोग किया जाए, तो उत्तर दिए गए संदेश को अनपिन करता है।
+            × /unpinall: सभी पिन किए गए संदेशों को अनपिन करता है।
+            × /antichannelpin <yes/no/on/off>: टेलीग्राम को लिंक किए गए चैनल को ऑटो-पिन नहीं करने दें। यदि कोई तर्क नहीं दिया गया है, तो वर्तमान सेटिंग दिखाता है।
+            × /cleanlinked <yes/no/on/off>: लिंक किए गए चैनल द्वारा भेजे गए संदेशों को हटाएं।
+            नोट: एंटी चैनल पिन का उपयोग करते समय, मैन्युअल रूप से करने के बजाय /unpin कमांड का उपयोग करना सुनिश्चित करें। अन्यथा, जब चैनल कोई संदेश भेजता है तो पुराना संदेश फिर से पिन हो जाएगा।
     Purges:
         help_msg: |-
-            *Admin only:*
-            - /purge: deletes all messages between this and the replied to message.
-            - /del: deletes the message you replied to.
+            *केवल व्यवस्थापक:*
+            - /purge: इस और उत्तर दिए गए संदेश के बीच के सभी संदेश हटाता है।
+            - /del: जिस संदेश का आपने उत्तर दिया है उसे हटाता है।
 
-            *Examples*:
-            - Delete all messages from the replied to message, until now.
+            *उदाहरण*:
+            - उत्तर दिए गए संदेश से अब तक के सभी संदेश हटाएं।
             -> `/purge`
     Reports:
         help_msg: |-
-            We're all busy people who don't have time to monitor our groups 24/7. But how do you react if someone in your group is spamming?
+            हम सभी व्यस्त लोग हैं जिनके पास अपने समूहों की 24/7 निगरानी करने का समय नहीं है। लेकिन यदि आपके समूह में कोई स्पैम कर रहा है तो आप कैसे प्रतिक्रिया देंगे?
 
-            × /report `<reason>`: reply to a message to report it to admins.
-            - @admin: same as /report but not a command.
+            × /report `<reason>`: व्यवस्थापकों को रिपोर्ट करने के लिए किसी संदेश का उत्तर दें।
+            - @admin: /report के समान लेकिन कमांड नहीं।
 
-            *Admins Only:*
-            × /reports `<on/off/yes/no>`: change report setting, or view current status.
-            - If done in PM, toggles your status.
-            - If in group, toggles that groups's status.
-            × /reports `block` (via reply only): Block a user from using /report or @admin.
-            × /reports `unblock` (via reply only): Unblock a user from using /report or @admin.
-            × /reports `showblocklist`: Check all the blocked users who cannot use /report or @admin.
+            *केवल व्यवस्थापक:*
+            × /reports `<on/off/yes/no>`: रिपोर्ट सेटिंग बदलें, या वर्तमान स्थिति देखें।
+            - यदि PM में किया गया है, तो आपकी स्थिति टॉगल करता है।
+            - यदि समूह में है, तो उस समूह की स्थिति टॉगल करता है।
+            × /reports `block` (केवल उत्तर के द्वारा): किसी उपयोगकर्ता को /report या @admin का उपयोग करने से रोकें।
+            × /reports `unblock` (केवल उत्तर के द्वारा): किसी उपयोगकर्ता को /report या @admin का उपयोग करने से अनब्लॉक करें।
+            × /reports `showblocklist`: सभी ब्लॉक किए गए उपयोगकर्ताओं की जांच करें जो /report या @admin का उपयोग नहीं कर सकते।
 
-            To report a user, simply reply to his message with @admin or /report; Natalie will then reply with a message stating that admins have been notified.
-            You MUST reply to a message to report a user; you can't just use @admin to tag admins for no reason!
+            किसी उपयोगकर्ता की रिपोर्ट करने के लिए, बस उसके संदेश का @admin या /report के साथ उत्तर दें; नेटली फिर एक संदेश के साथ उत्तर देगी कि व्यवस्थापकों को सूचित किया गया है।
+            किसी उपयोगकर्ता की रिपोर्ट करने के लिए आपको संदेश का उत्तर देना चाहिए; आप बिना कारण केवल व्यवस्थापकों को टैग करने के लिए @admin का उपयोग नहीं कर सकते!
 
-            *NOTE:* Neither of these will get triggered if used by admins.
+            *नोट:* यदि व्यवस्थापकों द्वारा उपयोग किया जाए तो इनमें से कोई भी ट्रिगर नहीं होगा।
     Rules:
         help_msg: |-
-            Every chat works with different rules; this module will help make those rules clearer!
-            *User commands*:
-            × /rules: Check the current chat rules.
-            *Admin commands*:
-            × /setrules `<text>`: Set the rules for this chat.
-            × /privaterules `<yes/no/on/off>`: Enable/disable whether the rules should be sent in private.
-            × /resetrules: Reset the chat rules to default
+            हर चैट अलग नियमों के साथ काम करता है; यह मॉड्यूल उन नियमों को स्पष्ट बनाने में मदद करेगा!
+            *उपयोगकर्ता कमांड*:
+            × /rules: वर्तमान चैट के नियम जांचें।
+            *व्यवस्थापक कमांड*:
+            × /setrules `<text>`: इस चैट के लिए नियम सेट करें।
+            × /privaterules `<yes/no/on/off>`: नियमों को निजी में भेजा जाना चाहिए या नहीं, इसे enable/disable करें।
+            × /resetrules: चैट नियमों को डिफ़ॉल्ट पर रीसेट करें।
+            × /rulesbtn `<custom text>`: नियम बटन का पाठ सेट करता है।
+            × /resetrulesbutton: नियम बटन के पाठ को डिफ़ॉल्ट पर रीसेट करता है।
+            × /resetrulesbtn: ऊपर के समान।
     Tagger:
         help_msg: |-
-            Tagger is an essential feature to mention all subscribed members in the group.
-            Any chat members can subscribe to tagger.
+            टैगर समूह में सभी सब्स्क्राइब किए गए सदस्यों का उल्लेख करने के लिए एक आवश्यक सुविधा है।
+            कोई भी चैट सदस्य टैगर की सदस्यता ले सकता है।
 
-            *User Commands:*
-            × /tagme: Allow user to be tagged
-            × /untagme: Disallow user to be tagged
+            *उपयोगकर्ता कमांड:*
+            × /tagme: उपयोगकर्ता को टैग किए जाने की अनुमति दें
+            × /untagme: उपयोगकर्ता को टैग किए जाने से रोकें
 
-            *Admin Commands:*
-            × /tagall: tag/mention all tagged users
-            × /untagall: clear all tagged members
-            × /addtag <user>: Add a user manually to taglist
-            × /rmtag <user>: Remove a user manually from taglist
+            *व्यवस्थापक कमांड:*
+            × /tagall: सभी टैग किए गए उपयोगकर्ताओं को टैग/उल्लेख करें
+            × /untagall: सभी टैग किए गए सदस्यों को साफ़ करें
+            × /addtag <user>: टैगलिस्ट में मैन्युअल रूप से एक उपयोगकर्ता जोड़ें
+            × /rmtag <user>: टैगलिस्ट से मैन्युअल रूप से एक उपयोगकर्ता हटाएं
     Utils:
         chat_status:
             anon_admin_btn: व्यवस्थापक साबित करने के लिए क्लिक
@@ -592,21 +599,21 @@ strings:
                 invalid_time_type: 'Invalid time type specified. Expected m, h, or d got: {time}'
     Warns:
         help_msg: |-
-            Keep your members in check with warnings; stop them getting out of control!
-            If you're looking for automated warnings, read about the blacklist module!
+            अपने सदस्यों को चेतावनियों के साथ नियंत्रण में रखें; उन्हें नियंत्रण से बाहर होने से रोकें!
+            यदि आप स्वचालित चेतावनियों की तलाश कर रहे हैं, तो ब्लैकलिस्ट मॉड्यूल के बारे में पढ़ें!
 
-            *Admin Commands:*
-            - /warn <reason>: Warn a user.
-            - /dwarn <reason>: Warn a user by reply, and delete their message.
-            - /swarn <reason>: Silently warn a user, and delete your message.
-            - /warns: See a user's warnings.
-            - /rmwarn: Remove a user's latest warning.
-            - /resetwarn: Reset all of a user's warnings to 0.
-            - /resetallwarns: Delete all the warnings in a chat. All users return to 0 warns.
-            - /warnings: Get the chat's warning settings.
-            - /setwarnmode <ban/kick/mute/tban/tmute>: Set the chat's warn mode.
-            - /setwarnlimit <number>: Set the number of warnings before users are punished.
+            *व्यवस्थापक कमांड:*
+            - /warn <reason>: किसी उपयोगकर्ता को चेतावनी दें।
+            - /dwarn <reason>: उत्तर द्वारा किसी उपयोगकर्ता को चेतावनी दें, और उनका संदेश हटा दें।
+            - /swarn <reason>: चुपचाप किसी उपयोगकर्ता को चेतावनी दें, और अपना संदेश हटा दें।
+            - /warns: किसी उपयोगकर्ता की चेतावनियां देखें।
+            - /rmwarn: किसी उपयोगकर्ता की नवीनतम चेतावनी हटाएं।
+            - /resetwarn: किसी उपयोगकर्ता की सभी चेतावनियों को 0 पर रीसेट करें।
+            - /resetallwarns: चैट में सभी चेतावनियां हटाएं। सभी उपयोगकर्ता 0 चेतावनी पर वापस आ जाते हैं।
+            - /warnings: चैट की चेतावनी सेटिंग्स प्राप्त करें।
+            - /setwarnmode <ban/kick/mute/tban/tmute>: चैट का चेतावनी मोड सेट करें।
+            - /setwarnlimit <number>: उपयोगकर्ताओं को दंडित करने से पहले चेतावनियों की संख्या सेट करें।
 
-            *Examples*
-            - Warn a user.
+            *उदाहरण*
+            - किसी उपयोगकर्ता को चेतावनी दें।
             -> `/warn @user For disobeying the rules`
