@@ -145,8 +145,7 @@ jobs:
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
-    needs:
-      [security, lint-and-test, build-verification]
+    needs: [security, lint-and-test, build-verification]
     if: always()
     steps:
       - name: Check all jobs status
