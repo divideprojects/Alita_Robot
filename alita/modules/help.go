@@ -275,7 +275,7 @@ func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 			replyKb = startMarkup
 		}
 	} else {
-		// For all remainging modules
+		// For all remaining modules
 		// FIXME: error for pins, purges, reports, rules, warns
 		helpText, replyKb, parsemode = getHelpTextAndMarkup(ctx, strings.ToLower(module))
 	}
@@ -356,7 +356,11 @@ func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	_, err := b.SendMessage(chat.Id,
-		func() string { tr := i18n.MustNewTranslator("en"); text, _ := tr.GetString("strings.Help.DonateText"); return text }(),
+		func() string {
+			tr := i18n.MustNewTranslator("en")
+			text, _ := tr.GetString("strings.Help.DonateText")
+			return text
+		}(),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
