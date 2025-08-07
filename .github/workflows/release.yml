@@ -34,16 +34,6 @@ jobs:
         with:
           go-version: "stable"
 
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
       # Run security scanning before release
       - name: Run Gosec Security Scanner
         uses: securego/gosec@v2.22.1
@@ -81,17 +71,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
-
-      # Cache for release performance
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
 
       # Install UPX for binary compression
       - name: Install UPX

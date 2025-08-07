@@ -110,18 +110,6 @@ jobs:
         with:
           go-version: "stable"
 
-      # Cache Go modules for faster builds
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-security-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-security-
-            ${{ runner.os }}-go-
-
       - name: Download dependencies
         run: go mod download
 
@@ -148,18 +136,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
-
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ matrix.go-version }}-test-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.go-version }}-test-
-            ${{ runner.os }}-go-${{ matrix.go-version }}-
-            ${{ runner.os }}-go-
 
       - name: Download dependencies
         run: go mod download
@@ -210,17 +186,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
-
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-build-
-            ${{ runner.os }}-go-
 
       # Verify all target platforms can be built
       - name: Run GoReleaser snapshot
