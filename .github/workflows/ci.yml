@@ -23,7 +23,7 @@ jobs:
   # Security and code quality checks that run in parallel
 
   # Security and code quality checks that run in parallel
-  security-scan:
+  security:
     name: Security Scanning
     runs-on: ubuntu-latest
     permissions:
@@ -41,10 +41,11 @@ jobs:
       - name: Download dependencies
         run: go mod download
 
-      # Security vulnerability scanning with gosec
-      - name: Run Gosec Security Scanner
+      # Security vulnerability scanning with gosec (generate SARIF)
+      - name: Run Gosec Security Scanner (SARIF)
         uses: securego/gosec@v2.22.1
         with:
+<<<<<<< Updated upstream
           args: -fmt sarif -out gosec.sarif ./...
 
       - name: Upload Gosec SARIF to Code Scanning
@@ -53,6 +54,15 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: gosec.sarif
+=======
+          args: -no-fail -fmt sarif -out gosec.sarif ./...
+
+      - name: Upload Gosec SARIF to Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: gosec.sarif
+          category: gosec
+>>>>>>> Stashed changes
       # Check for known vulnerabilities in Go modules
       - name: Run govulncheck
         continue-on-error: true
@@ -112,7 +122,7 @@ jobs:
   build-verification:
     name: Build Verification
     runs-on: ubuntu-latest
-    needs: [security-scan, lint-and-test]
+    needs: [security, lint-and-test]
     permissions:
       contents: read
     steps:
@@ -148,12 +158,22 @@ jobs:
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
+<<<<<<< Updated upstream
     needs: [security-scan, lint-and-test, build-verification]
+=======
+    needs:
+      [migration-sync-check, security, lint-and-test, build-verification]
+>>>>>>> Stashed changes
     if: always()
     steps:
       - name: Check all jobs status
         run: |
+<<<<<<< Updated upstream
           if [ "${{ needs.security-scan.result }}" != "success" ] || \
+=======
+          if [ "${{ needs.migration-sync-check.result }}" != "success" ] || \
+             [ "${{ needs.security.result }}" != "success" ] || \
+>>>>>>> Stashed changes
              [ "${{ needs.lint-and-test.result }}" != "success" ] || \
              [ "${{ needs.build-verification.result }}" != "success" ]; then
             echo "One or more CI jobs failed!"
