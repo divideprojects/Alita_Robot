@@ -16,36 +16,44 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
+	"github.com/eko/gocache/lib/v4/store"
 	"github.com/mojocn/base64Captcha"
 	log "github.com/sirupsen/logrus"
 )
 
 var captchaModule = moduleStruct{moduleName: "Captcha"}
 
+// Refresh controls
+const (
+	captchaMaxRefreshes     = 3
+	captchaRefreshCooldownS = 5 // seconds
+)
+
 // secureIntn returns a cryptographically secure random integer in [0, max).
 // If max <= 0, it returns 0.
 func secureIntn(max int) int {
-    if max <= 0 {
-        return 0
-    }
-    // Use crypto/rand.Int for unbiased secure random selection
-    // Retry on the extremely unlikely error case.
-    for {
-        n, err := crand.Int(crand.Reader, big.NewInt(int64(max)))
-        if err == nil {
-            return int(n.Int64())
-        }
-    }
+	if max <= 0 {
+		return 0
+	}
+	// Use crypto/rand.Int for unbiased secure random selection
+	// Retry on the extremely unlikely error case.
+	for {
+		n, err := crand.Int(crand.Reader, big.NewInt(int64(max)))
+		if err == nil {
+			return int(n.Int64())
+		}
+	}
 }
 
 // secureShuffleStrings shuffles a slice of strings using Fisher-Yates with crypto-grade randomness.
 func secureShuffleStrings(values []string) {
-    for i := len(values) - 1; i > 0; i-- {
-        j := secureIntn(i + 1)
-        values[i], values[j] = values[j], values[i]
-    }
+	for i := len(values) - 1; i > 0; i-- {
+		j := secureIntn(i + 1)
+		values[i], values[j] = values[j], values[i]
+	}
 }
 
 // captchaCommand handles the /captcha command to enable/disable captcha verification.
@@ -240,25 +248,25 @@ func (moduleStruct) captchaActionCommand(bot *gotgbot.Bot, ctx *ext.Context) err
 // generateMathCaptcha generates a random math problem and returns the question and answer.
 func generateMathCaptcha() (string, string, []string) {
 	operations := []string{"+", "-", "*"}
-    operation := operations[secureIntn(len(operations))]
+	operation := operations[secureIntn(len(operations))]
 
 	var a, b, answer int
 	var question string
 
 	switch operation {
 	case "+":
-        a = secureIntn(50) + 1
-        b = secureIntn(50) + 1
+		a = secureIntn(50) + 1
+		b = secureIntn(50) + 1
 		answer = a + b
 		question = fmt.Sprintf("%d + %d", a, b)
 	case "-":
-        a = secureIntn(50) + 20
-        b = secureIntn(a) + 1
+		a = secureIntn(50) + 20
+		b = secureIntn(a) + 1
 		answer = a - b
 		question = fmt.Sprintf("%d - %d", a, b)
 	case "*":
-        a = secureIntn(12) + 1
-        b = secureIntn(12) + 1
+		a = secureIntn(12) + 1
+		b = secureIntn(12) + 1
 		answer = a * b
 		question = fmt.Sprintf("%d × %d", a, b)
 	}
@@ -267,7 +275,7 @@ func generateMathCaptcha() (string, string, []string) {
 	options := []string{strconv.Itoa(answer)}
 	for len(options) < 4 {
 		// Generate a wrong answer within reasonable range
-        wrongAnswer := answer + secureIntn(20) - 10
+		wrongAnswer := answer + secureIntn(20) - 10
 		if wrongAnswer != answer && wrongAnswer > 0 {
 			wrongStr := strconv.Itoa(wrongAnswer)
 			// Check if this option already exists
@@ -278,7 +286,7 @@ func generateMathCaptcha() (string, string, []string) {
 	}
 
 	// Shuffle options
-    secureShuffleStrings(options)
+	secureShuffleStrings(options)
 
 	return question, strconv.Itoa(answer), options
 }
@@ -332,7 +340,7 @@ func generateTextCaptcha() (string, []byte, []string, error) {
 		// Generate a random string of same length as answer
 		decoy := ""
 		for i := 0; i < len(answer); i++ {
-            decoy += string(characters[secureIntn(len(characters))])
+			decoy += string(characters[secureIntn(len(characters))])
 		}
 		// Check if this option already exists
 		if !slices.Contains(options, decoy) {
@@ -341,7 +349,7 @@ func generateTextCaptcha() (string, []byte, []string, error) {
 	}
 
 	// Shuffle options
-    secureShuffleStrings(options)
+	secureShuffleStrings(options)
 
 	return answer, imageBytes, options, nil
 }
@@ -450,7 +458,7 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 		_, _ = bot.DeleteMessage(chat.Id, sent.MessageId, nil)
 		return err
 	}
-	
+
 	if err := db.EnsureChatInDb(chat.Id, chat.Title); err != nil {
 		log.Errorf("Failed to ensure chat in database: %v", err)
 		// Delete the captcha message since we can't track it
@@ -468,16 +476,16 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 	}
 
 	// Schedule cleanup after timeout
-	go func() {
+	go func(originalMessageID int64) {
 		time.Sleep(time.Duration(settings.Timeout) * time.Minute)
 
 		// Check if attempt still exists (not completed)
 		attempt, _ := db.GetCaptchaAttempt(userID, chat.Id)
 		if attempt != nil {
-			// User failed to complete captcha in time
-			handleCaptchaTimeout(bot, chat.Id, userID, sent.MessageId, settings.FailureAction)
+			// Use the latest message ID from the attempt to avoid leaving a stale message after refresh
+			handleCaptchaTimeout(bot, chat.Id, userID, attempt.MessageID, settings.FailureAction)
 		}
-	}()
+	}(sent.MessageId)
 
 	return nil
 }
@@ -660,6 +668,13 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 		return err
 	}
 
+	// Cooldown: block rapid refreshes per user+chat
+	cooldownKey := fmt.Sprintf("captcha.refresh.cooldown.%d.%d", chat.Id, targetUserID)
+	if exists, _ := cache.Marshal.Get(cache.Context, cooldownKey, new(bool)); exists != nil {
+		_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Please wait a few seconds before requesting a new image."})
+		return err
+	}
+
 	// Get the existing attempt
 	attempt, err := db.GetCaptchaAttempt(targetUserID, chat.Id)
 	if err != nil || attempt == nil {
@@ -667,15 +682,69 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 		return err
 	}
 
-	// Delete old message
-	_, _ = bot.DeleteMessage(chat.Id, attempt.MessageID, nil)
-
-	// Generate new captcha and resend
-	err = SendCaptcha(bot, ctx, targetUserID, user.FirstName)
-	if err != nil {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Failed to generate new captcha"})
+	// Enforce per-attempt refresh cap
+	if attempt.RefreshCount >= captchaMaxRefreshes {
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Refresh limit reached for this captcha."})
 		return err
 	}
+
+	// Generate a fresh text captcha only; math mode doesn't use refresh
+	if settings, _ := db.GetCaptchaSettings(chat.Id); settings != nil && settings.CaptchaMode != "text" {
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Refresh is available only for image captcha."})
+		return err
+	}
+
+	// Generate a new image/options
+	newAnswer, imageBytes, options, genErr := generateTextCaptcha()
+	if genErr != nil || imageBytes == nil {
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Failed to generate new image, try again."})
+		return err
+	}
+
+	// Build keyboard with new options and refresh button
+	var buttons [][]gotgbot.InlineKeyboardButton
+	for _, option := range options {
+		button := gotgbot.InlineKeyboardButton{
+			Text:         option,
+			CallbackData: fmt.Sprintf("captcha_verify.%d.%s", targetUserID, option),
+		}
+		buttons = append(buttons, []gotgbot.InlineKeyboardButton{button})
+	}
+	buttons = append(buttons, []gotgbot.InlineKeyboardButton{{
+		Text:         "🔄 New Image",
+		CallbackData: fmt.Sprintf("captcha_refresh.%d", targetUserID),
+	}})
+
+	keyboard := gotgbot.InlineKeyboardMarkup{InlineKeyboard: buttons}
+
+	// Try to edit in place by deleting and resending a new photo to get a new message ID, then update attempt atomically
+	_, _ = bot.DeleteMessage(chat.Id, attempt.MessageID, nil)
+
+	caption := fmt.Sprintf(
+		"👋 Welcome %s!\n\nPlease select the text shown in the image to verify you're human:\n\n⏱ You have <b>%d minutes</b> to answer.",
+		helpers.MentionHtml(targetUserID, user.FirstName), attempt.ExpiresAt.Sub(time.Now()).Minutes(),
+	)
+
+	sent, sendErr := bot.SendPhoto(chat.Id, gotgbot.InputFileByReader("captcha.png", bytes.NewReader(imageBytes)), &gotgbot.SendPhotoOpts{
+		Caption:     caption,
+		ParseMode:   helpers.HTML,
+		ReplyMarkup: keyboard,
+	})
+	if sendErr != nil {
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Failed to send new captcha image."})
+		return err
+	}
+
+	// Update DB attempt (answer, message_id, refresh_count++)
+	if _, err := db.UpdateCaptchaAttemptOnRefresh(targetUserID, chat.Id, newAnswer, sent.MessageId); err != nil {
+		log.Errorf("Failed to update captcha attempt on refresh: %v", err)
+		_, _ = bot.DeleteMessage(chat.Id, sent.MessageId, nil)
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Internal error updating captcha."})
+		return err
+	}
+
+	// Set cooldown
+	_ = cache.Marshal.Set(cache.Context, cooldownKey, true, store.WithExpiration(time.Duration(captchaRefreshCooldownS)*time.Second))
 
 	_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "🔄 New captcha sent!"})
 	return err

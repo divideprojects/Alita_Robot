@@ -604,6 +604,7 @@ type CaptchaAttempts struct {
 	Answer    string    `gorm:"column:answer;not null" json:"answer,omitempty"`
 	Attempts  int       `gorm:"column:attempts;default:0" json:"attempts,omitempty"`
 	MessageID int64     `gorm:"column:message_id" json:"message_id,omitempty"`
+    RefreshCount int    `gorm:"column:refresh_count;default:0" json:"refresh_count,omitempty"`
 	ExpiresAt time.Time `gorm:"column:expires_at;not null" json:"expires_at,omitempty"`
 	CreatedAt time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
