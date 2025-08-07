@@ -59,21 +59,6 @@ archives:
       - goos: windows
         formats: [zip]
 
-signs:
-  - artifacts: all
-    args:
-      - "-u"
-      - "C4223C5D4162629F38AF4DD530695AF88CC00E38"
-      - "--output"
-      - "${signature}"
-      - "--batch"
-      - "--yes"
-      - "--pinentry-mode"
-      - "loopback"
-      - "--passphrase"
-      - "$GPG_PASSPHRASE"
-      - "--detach-sign"
-      - "${artifact}"
 
 changelog:
   sort: asc

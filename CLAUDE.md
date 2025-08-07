@@ -158,7 +158,7 @@ The project uses GitHub Actions for continuous integration and deployment:
 - Triggered on version tags (e.g., v1.0.0)
 - Builds multi-architecture binaries for Darwin, Linux, and Windows
 - Creates and publishes Docker images to GitHub Container Registry (ghcr.io/divideprojects/alita_robot)
-- Signs releases with GPG for security verification
+- Uses GitHub attestation for supply chain security verification
 - Generates release notes and checksums automatically
 
 ## Build and Release Process
@@ -171,7 +171,7 @@ The project uses GoReleaser for building and releasing:
 - **Docker:** Multi-platform images (linux/amd64, linux/arm64)
 - **Features:**
   - Automatic changelog generation
-  - GPG signing for security
+  - Attestation for supply chain security
   - Archive creation with checksums
   - Docker image publishing to GHCR
   - Binary stripping for size optimization

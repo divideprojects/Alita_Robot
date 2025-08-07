@@ -533,15 +533,19 @@ go test ./...
 
 ### Verifying Releases
 
-All releases are signed with GPG for security. To verify:
+All releases are cryptographically attested using GitHub's attestation feature for supply chain security. To verify:
 
 ```bash
-# Import the signing key
-gpg --keyserver keyserver.ubuntu.com --recv 9CAFFF2AC5F94C7C
-
-# Verify a release
-gpg --verify alita_robot_*.tar.gz.sig alita_robot_*.tar.gz
+# Using GitHub CLI (gh)
+gh attestation verify alita_robot_*.tar.gz \
+  --owner divideprojects \
+  --repo Alita_Robot
 ```
+
+This verification ensures:
+- The artifact was built by our official GitHub Actions workflow
+- The binary hasn't been tampered with since build
+- Full build provenance and supply chain integrity
 
 ## 🤝 Contributing
 
