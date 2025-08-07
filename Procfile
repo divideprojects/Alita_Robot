@@ -1,1 +1,1 @@
-worker: ./bin/Alita_Robot
+worker: ./bin/alita_robot

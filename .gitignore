@@ -29,4 +29,4 @@ local.docker-compose.yml
 .DS_Store
 
 # migrate
-cmd/migrate/migrate
+scripts/migrate/migrate
