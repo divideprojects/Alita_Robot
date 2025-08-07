@@ -2,7 +2,7 @@ name: Security
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -36,4 +36,3 @@ jobs:
         with:
           sarif_file: gosec.sarif
           category: gosec
-

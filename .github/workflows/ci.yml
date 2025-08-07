@@ -21,8 +21,6 @@ concurrency:
 
 jobs:
   # Security and code quality checks that run in parallel
-
-  # Security and code quality checks that run in parallel
   security:
     name: Security Scanning
     runs-on: ubuntu-latest
@@ -45,16 +43,6 @@ jobs:
       - name: Run Gosec Security Scanner (SARIF)
         uses: securego/gosec@v2.22.1
         with:
-<<<<<<< Updated upstream
-          args: -fmt sarif -out gosec.sarif ./...
-
-      - name: Upload Gosec SARIF to Code Scanning
-        if: ${{ hashFiles('gosec.sarif') != '' }}
-        continue-on-error: true
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: gosec.sarif
-=======
           args: -no-fail -fmt sarif -out gosec.sarif ./...
 
       - name: Upload Gosec SARIF to Code Scanning
@@ -62,7 +50,6 @@ jobs:
         with:
           sarif_file: gosec.sarif
           category: gosec
->>>>>>> Stashed changes
       # Check for known vulnerabilities in Go modules
       - name: Run govulncheck
         continue-on-error: true
@@ -158,22 +145,13 @@ jobs:
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
-<<<<<<< Updated upstream
-    needs: [security-scan, lint-and-test, build-verification]
-=======
     needs:
-      [migration-sync-check, security, lint-and-test, build-verification]
->>>>>>> Stashed changes
+      [security, lint-and-test, build-verification]
     if: always()
     steps:
       - name: Check all jobs status
         run: |
-<<<<<<< Updated upstream
-          if [ "${{ needs.security-scan.result }}" != "success" ] || \
-=======
-          if [ "${{ needs.migration-sync-check.result }}" != "success" ] || \
-             [ "${{ needs.security.result }}" != "success" ] || \
->>>>>>> Stashed changes
+          if [ "${{ needs.security.result }}" != "success" ] || \
              [ "${{ needs.lint-and-test.result }}" != "success" ] || \
              [ "${{ needs.build-verification.result }}" != "success" ]; then
             echo "One or more CI jobs failed!"
