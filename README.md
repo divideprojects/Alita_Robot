@@ -488,8 +488,31 @@ Alita_Robot/
    ```
 
 4. **Run Database Migrations**
+   
+   Supabase is the source of truth for schema files (`supabase/migrations`). Migrations are applied to any PostgreSQL by auto-cleaning Supabase-specific statements at runtime.
+
+   - Required environment variables for migrations:
+     - `PSQL_DB_HOST`, `PSQL_DB_NAME`, `PSQL_DB_USER`, `PSQL_DB_PASSWORD`
+     - Optional: `PSQL_DB_PORT` (default: 5432), `PSQL_DB_SSLMODE` (default: require)
+
    ```bash
+   # Example: local Postgres
+   export PSQL_DB_HOST="localhost"
+   export PSQL_DB_NAME="alita_robot"
+   export PSQL_DB_USER="postgres"
+   export PSQL_DB_PASSWORD="password"
+   # export PSQL_DB_PORT="5432"       # optional
+   # export PSQL_DB_SSLMODE="require" # optional
+
+   # Apply migrations (auto-cleans Supabase SQL for generic Postgres)
    make psql-migrate
+   ```
+
+   Optional: generate cleaned SQL for inspection (not required to run migrations):
+
+   ```bash
+   make psql-prepare PSQL_MIGRATIONS_DIR=tmp/migrations_cleaned
+   ls -1 tmp/migrations_cleaned
    ```
 
 5. **Start Development**
@@ -506,6 +529,7 @@ make lint         # Run linters
 make tidy         # Clean dependencies
 make vendor       # Vendor dependencies
 make psql-migrate # Run migrations
+make psql-prepare # Generate cleaned SQL into tmp/migrations_cleaned
 make psql-status  # Check migration status
 make psql-reset   # Reset database (DANGEROUS)
 ```
