@@ -464,22 +464,39 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 		}
 	}
 
-	// Create inline keyboard with options
+	// Create the attempt first to embed attempt ID in callbacks
+	// Ensure user and chat exist in database (required for foreign key constraints)
+	if err := db.EnsureUserInDb(userID, userName, userName); err != nil {
+		log.Errorf("Failed to ensure user in database: %v", err)
+		return err
+	}
+	if err := db.EnsureChatInDb(chat.Id, chat.Title); err != nil {
+		log.Errorf("Failed to ensure chat in database: %v", err)
+		return err
+	}
+
+	preAttempt, preErr := db.CreateCaptchaAttemptPreMessage(userID, chat.Id, answer, settings.Timeout)
+	if preErr != nil || preAttempt == nil {
+		log.Errorf("Failed to pre-create captcha attempt: %v", preErr)
+		return preErr
+	}
+
+	// Create inline keyboard with options including attempt ID
 	var buttons [][]gotgbot.InlineKeyboardButton
 	for _, option := range options {
 		button := gotgbot.InlineKeyboardButton{
 			Text:         option,
-			CallbackData: fmt.Sprintf("captcha_verify.%d.%s", userID, option),
+			CallbackData: fmt.Sprintf("captcha_verify.%d.%d.%s", preAttempt.ID, userID, option),
 		}
 		buttons = append(buttons, []gotgbot.InlineKeyboardButton{button})
 	}
 
-	// Add refresh button for image-based captcha (text or math)
+	// Add refresh button for image-based captcha (text or math) with attempt ID
 	if isImage && imageBytes != nil {
 		buttons = append(buttons, []gotgbot.InlineKeyboardButton{
 			{
 				Text:         "🔄 New Image",
-				CallbackData: fmt.Sprintf("captcha_refresh.%d", userID),
+				CallbackData: fmt.Sprintf("captcha_refresh.%d.%d", preAttempt.ID, userID),
 			},
 		})
 	}
@@ -541,25 +558,10 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 		return err
 	}
 
-	// Ensure user and chat exist in database (required for foreign key constraints)
-	if err := db.EnsureUserInDb(userID, userName, userName); err != nil {
-		log.Errorf("Failed to ensure user in database: %v", err)
-		// Delete the captcha message since we can't track it
-		_, _ = bot.DeleteMessage(chat.Id, sent.MessageId, nil)
-		return err
-	}
-
-	if err := db.EnsureChatInDb(chat.Id, chat.Title); err != nil {
-		log.Errorf("Failed to ensure chat in database: %v", err)
-		// Delete the captcha message since we can't track it
-		_, _ = bot.DeleteMessage(chat.Id, sent.MessageId, nil)
-		return err
-	}
-
-	// Store the captcha attempt in database
-	err = db.CreateCaptchaAttempt(userID, chat.Id, answer, sent.MessageId, settings.Timeout)
+	// Update the attempt with the sent message ID
+	err = db.UpdateCaptchaAttemptMessageID(preAttempt.ID, sent.MessageId)
 	if err != nil {
-		log.Errorf("Failed to create captcha attempt: %v", err)
+		log.Errorf("Failed to set captcha attempt message ID: %v", err)
 		// Delete the message if we can't track it
 		_, _ = bot.DeleteMessage(chat.Id, sent.MessageId, nil)
 		return err
@@ -614,14 +616,20 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 	chat := ctx.EffectiveChat
 	user := query.From
 
-	// Parse callback data: captcha_verify.{user_id}.{answer}
+	// Parse callback data: captcha_verify.{attempt_id}.{user_id}.{answer}
 	parts := strings.Split(query.Data, ".")
-	if len(parts) != 3 {
+	if len(parts) != 4 {
 		_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid captcha data"})
 		return err
 	}
 
-	targetUserID, err := strconv.ParseInt(parts[1], 10, 64)
+	attemptID64, err := strconv.ParseUint(parts[1], 10, 64)
+	if err != nil {
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid attempt ID"})
+		return err
+	}
+
+	targetUserID, err := strconv.ParseInt(parts[2], 10, 64)
 	if err != nil {
 		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid user ID"})
 		return err
@@ -633,12 +641,16 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 		return err
 	}
 
-	selectedAnswer := parts[2]
+	selectedAnswer := parts[3]
 
-	// Get the captcha attempt
+	// Get the captcha attempt and ensure IDs match
 	attempt, err := db.GetCaptchaAttempt(targetUserID, chat.Id)
 	if err != nil || attempt == nil {
 		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Captcha expired or not found"})
+		return err
+	}
+	if attempt.ID != uint(attemptID64) {
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "This captcha attempt is no longer valid."})
 		return err
 	}
 
@@ -739,14 +751,20 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	chat := ctx.EffectiveChat
 	user := query.From
 
-	// Parse callback data: captcha_refresh.{user_id}
+	// Parse callback data: captcha_refresh.{attempt_id}.{user_id}
 	parts := strings.Split(query.Data, ".")
-	if len(parts) != 2 {
+	if len(parts) != 3 {
 		_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid refresh data"})
 		return err
 	}
 
-	targetUserID, err := strconv.ParseInt(parts[1], 10, 64)
+	attemptID64, err := strconv.ParseUint(parts[1], 10, 64)
+	if err != nil {
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid attempt ID"})
+		return err
+	}
+
+	targetUserID, err := strconv.ParseInt(parts[2], 10, 64)
 	if err != nil {
 		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid user ID"})
 		return err
@@ -765,10 +783,14 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 		return err
 	}
 
-	// Get the existing attempt
+	// Get the existing attempt and verify attempt ID
 	attempt, err := db.GetCaptchaAttempt(targetUserID, chat.Id)
 	if err != nil || attempt == nil {
 		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Captcha expired or not found"})
+		return err
+	}
+	if attempt.ID != uint(attemptID64) {
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "This captcha attempt is no longer valid."})
 		return err
 	}
 
@@ -801,13 +823,13 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	for _, option := range options {
 		button := gotgbot.InlineKeyboardButton{
 			Text:         option,
-			CallbackData: fmt.Sprintf("captcha_verify.%d.%s", targetUserID, option),
+			CallbackData: fmt.Sprintf("captcha_verify.%d.%d.%s", attempt.ID, targetUserID, option),
 		}
 		buttons = append(buttons, []gotgbot.InlineKeyboardButton{button})
 	}
 	buttons = append(buttons, []gotgbot.InlineKeyboardButton{{
 		Text:         "🔄 New Image",
-		CallbackData: fmt.Sprintf("captcha_refresh.%d", targetUserID),
+		CallbackData: fmt.Sprintf("captcha_refresh.%d.%d", attempt.ID, targetUserID),
 	}})
 
 	keyboard := gotgbot.InlineKeyboardMarkup{InlineKeyboard: buttons}
@@ -842,8 +864,8 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 		return err
 	}
 
-	// Update DB attempt (answer, message_id, refresh_count++)
-	if _, err := db.UpdateCaptchaAttemptOnRefresh(targetUserID, chat.Id, newAnswer, sent.MessageId); err != nil {
+	// Update DB attempt (answer, message_id, refresh_count++) by attempt ID
+	if _, err := db.UpdateCaptchaAttemptOnRefreshByID(attempt.ID, newAnswer, sent.MessageId); err != nil {
 		log.Errorf("Failed to update captcha attempt on refresh: %v", err)
 		_, _ = bot.DeleteMessage(chat.Id, sent.MessageId, nil)
 		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Internal error updating captcha."})
