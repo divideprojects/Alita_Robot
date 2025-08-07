@@ -453,22 +453,22 @@ func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
-// newMember handles welcome messages when new members join the chat.
-// Automatically sends welcome message and manages cleanup based on chat settings.
-func (moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
+// SendWelcomeMessage sends the configured welcome message for a user in a chat.
+// This is extracted as a separate function to be reusable after captcha verification.
+func SendWelcomeMessage(bot *gotgbot.Bot, ctx *ext.Context, userID int64, firstName string) error {
 	chat := ctx.EffectiveChat
-	newMember := ctx.ChatMember.NewChatMember.MergeChatMember().User
 	greetPrefs := db.GetGreetingSettings(chat.Id)
-
-	// when bot joins stop all updates of the groups
-	// we use bot_updates for this
-	if newMember.Id == bot.Id {
-		return ext.EndGroups
-	}
-
+	
 	if greetPrefs.WelcomeSettings != nil && greetPrefs.WelcomeSettings.ShouldWelcome {
+		// Create a user object for formatting
+		user := &gotgbot.User{
+			Id:        userID,
+			FirstName: firstName,
+			IsBot:     false,
+		}
+		
 		buttons := db.GetWelcomeButtons(chat.Id)
-		res, buttons := helpers.FormattingReplacer(bot, chat, &newMember,
+		res, buttons := helpers.FormattingReplacer(bot, chat, user,
 			greetPrefs.WelcomeSettings.WelcomeText,
 			buttons,
 		)
@@ -481,15 +481,80 @@ func (moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 		if greetPrefs.WelcomeSettings.CleanWelcome {
 			_, _ = bot.DeleteMessage(chat.Id, greetPrefs.WelcomeSettings.LastMsgId, nil)
 			db.SetCleanWelcomeMsgId(chat.Id, sent.MessageId)
-			// if err.Error() == "unable to deleteMessage: Bad Request: message to delete not found" {
-			// 	log.WithFields(
-			// 		log.Fields{
-			// 			"chat": chat.Id,
-			// 		},
-			// 	).Error("error deleting message")
-			// 	return ext.EndGroups
-			// }
 		}
+	}
+	return nil
+}
+
+// newMember handles welcome messages when new members join the chat.
+// Automatically sends welcome message and manages cleanup based on chat settings.
+func (moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
+	chat := ctx.EffectiveChat
+	newMember := ctx.ChatMember.NewChatMember.MergeChatMember().User
+
+	// when bot joins stop all updates of the groups
+	// we use bot_updates for this
+	if newMember.Id == bot.Id {
+		return ext.EndGroups
+	}
+
+	// Check if captcha is enabled
+	captchaSettings, _ := db.GetCaptchaSettings(chat.Id)
+	if captchaSettings.Enabled {
+		// Mute the new member immediately
+		_, err := chat.RestrictMember(bot, newMember.Id, gotgbot.ChatPermissions{
+			CanSendMessages:       false,
+			CanSendPhotos:         false,
+			CanSendVideos:         false,
+			CanSendAudios:         false,
+			CanSendDocuments:      false,
+			CanSendVideoNotes:     false,
+			CanSendVoiceNotes:     false,
+			CanAddWebPagePreviews: false,
+			CanChangeInfo:         false,
+			CanInviteUsers:        false,
+			CanPinMessages:        false,
+			CanManageTopics:       false,
+			CanSendPolls:          false,
+			CanSendOtherMessages:  false,
+		}, nil)
+		
+		if err != nil {
+			log.Errorf("Failed to mute user %d for captcha: %v", newMember.Id, err)
+			// Continue with normal welcome if muting fails
+		} else {
+			// Send captcha instead of welcome message
+			err = SendCaptcha(bot, ctx, newMember.Id, newMember.FirstName)
+			if err != nil {
+				log.Errorf("Failed to send captcha to user %d: %v", newMember.Id, err)
+				// Unmute the user if captcha sending fails
+				_, _ = chat.RestrictMember(bot, newMember.Id, gotgbot.ChatPermissions{
+					CanSendMessages:       true,
+					CanSendPhotos:         true,
+					CanSendVideos:         true,
+					CanSendAudios:         true,
+					CanSendDocuments:      true,
+					CanSendVideoNotes:     true,
+					CanSendVoiceNotes:     true,
+					CanAddWebPagePreviews: true,
+					CanChangeInfo:         false,
+					CanInviteUsers:        true,
+					CanPinMessages:        false,
+					CanManageTopics:       false,
+					CanSendPolls:          true,
+					CanSendOtherMessages:  true,
+				}, nil)
+			} else {
+				// Captcha sent successfully, don't send welcome message yet
+				return ext.EndGroups
+			}
+		}
+	}
+
+	// Send welcome message if captcha is disabled or failed
+	if err := SendWelcomeMessage(bot, ctx, newMember.Id, newMember.FirstName); err != nil {
+		log.Error(err)
+		return err
 	}
 	return ext.EndGroups
 }
@@ -534,6 +599,7 @@ func (moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 
 // cleanService automatically deletes service messages about members joining/leaving.
 // Runs when service messages are posted and deletes them if cleanup is enabled.
+// Also handles captcha for users joining via invite links or being added.
 func (moduleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
@@ -541,6 +607,81 @@ func (moduleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
 
 	if user.Id == bot.Id {
 		return ext.EndGroups
+	}
+
+	// Handle new members joining via invite links or being added
+	if msg.NewChatMembers != nil {
+		captchaSettings, _ := db.GetCaptchaSettings(chat.Id)
+		if captchaSettings.Enabled {
+			for _, newMember := range msg.NewChatMembers {
+				if newMember.Id == bot.Id {
+					continue
+				}
+
+				// Mute the new member immediately
+				_, err := chat.RestrictMember(bot, newMember.Id, gotgbot.ChatPermissions{
+					CanSendMessages:       false,
+					CanSendPhotos:         false,
+					CanSendVideos:         false,
+					CanSendAudios:         false,
+					CanSendDocuments:      false,
+					CanSendVideoNotes:     false,
+					CanSendVoiceNotes:     false,
+					CanAddWebPagePreviews: false,
+					CanChangeInfo:         false,
+					CanInviteUsers:        false,
+					CanPinMessages:        false,
+					CanManageTopics:       false,
+					CanSendPolls:          false,
+					CanSendOtherMessages:  false,
+				}, nil)
+
+				if err != nil {
+					log.Errorf("Failed to mute user %d for captcha: %v", newMember.Id, err)
+					// Send welcome if muting fails
+					if err := SendWelcomeMessage(bot, ctx, newMember.Id, newMember.FirstName); err != nil {
+						log.Error(err)
+					}
+				} else {
+					// Send captcha instead of welcome message
+					err = SendCaptcha(bot, ctx, newMember.Id, newMember.FirstName)
+					if err != nil {
+						log.Errorf("Failed to send captcha to user %d: %v", newMember.Id, err)
+						// Unmute the user if captcha sending fails
+						_, _ = chat.RestrictMember(bot, newMember.Id, gotgbot.ChatPermissions{
+							CanSendMessages:       true,
+							CanSendPhotos:         true,
+							CanSendVideos:         true,
+							CanSendAudios:         true,
+							CanSendDocuments:      true,
+							CanSendVideoNotes:     true,
+							CanSendVoiceNotes:     true,
+							CanAddWebPagePreviews: true,
+							CanChangeInfo:         false,
+							CanInviteUsers:        true,
+							CanPinMessages:        false,
+							CanManageTopics:       false,
+							CanSendPolls:          true,
+							CanSendOtherMessages:  true,
+						}, nil)
+						// Send welcome if captcha fails
+						if err := SendWelcomeMessage(bot, ctx, newMember.Id, newMember.FirstName); err != nil {
+							log.Error(err)
+						}
+					}
+				}
+			}
+		} else {
+			// Captcha is disabled, send welcome messages
+			for _, newMember := range msg.NewChatMembers {
+				if newMember.Id == bot.Id {
+					continue
+				}
+				if err := SendWelcomeMessage(bot, ctx, newMember.Id, newMember.FirstName); err != nil {
+					log.Error(err)
+				}
+			}
+		}
 	}
 
 	greetPrefs := db.GetGreetingSettings(chat.Id)

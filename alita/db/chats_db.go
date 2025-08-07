@@ -38,6 +38,22 @@ func ToggleInactiveChat(chatId int64, toggle bool) {
 	deleteCache(chatSettingsCacheKey(chatId))
 }
 
+// EnsureChatInDb ensures that a chat exists in the database.
+// Creates the chat record if it doesn't exist, or updates it if it does.
+// This is essential for foreign key constraints that reference the chats table.
+func EnsureChatInDb(chatId int64, chatName string) error {
+	chatUpdate := &Chat{
+		ChatId:   chatId,
+		ChatName: chatName,
+	}
+	err := DB.Where("chat_id = ?", chatId).Assign(chatUpdate).FirstOrCreate(&Chat{}).Error
+	if err != nil {
+		log.Errorf("[Database] EnsureChatInDb: %v", err)
+		return err
+	}
+	return nil
+}
+
 // UpdateChat updates or creates a chat record with the given information.
 // Adds user to the chat's user list if not already present and marks chat as active.
 func UpdateChat(chatId int64, chatname string, userid int64) {

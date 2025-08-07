@@ -5,7 +5,7 @@ main:
     language_name: English
 strings:
     Admin:
-        adminlist: 'Admins in <b>{admin}</b>:'
+        adminlist: "Admins in <b>{admin}</b>:"
         anon_admin:
             already_disabled: AnonAdmin mode is already <b>disabled</b> for {admin}
             already_enabled: AnonAdmin mode is already <b>enabled</b> for {admin}
@@ -57,7 +57,7 @@ strings:
         checkflood:
             perform_action: Yeah, I don't like your flooding. {first} has been {chat}!
         errors:
-            expected_args: 'I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`'
+            expected_args: "I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`"
             invalid_int: That's not a valid integer. Please give me a valid integer, or `off`.
             set_in_limit: The antiflood limit has to be set between 3 and 100.
         flood:
@@ -68,7 +68,7 @@ strings:
             already_enabled: Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
             disabled: Turned off Antiflood Message Deleting. Messages causing antiflood will be ignored!
             enabled: Turned on Antiflood Message Deleting. Messages causing antiflood will be deleted!
-            invalid_option: 'I only understand an option from: `yes`/`no`/`on`/`off`'
+            invalid_option: "I only understand an option from: `yes`/`no`/`on`/`off`"
         help_msg: |-
             You know how sometimes, people join, send 100 messages, and ruin your chat? With antiflood, that happens no more!
 
@@ -85,12 +85,12 @@ strings:
                 I won't warn users for flooding.
             success: Flood Limit has been set to <b>{limit}</b> messages.
         setfloodmode:
-            specify_action: 'You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`'
+            specify_action: "You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`"
             success: Flood mode has been set to {value}.
-            unknown_type: 'Unknown type ''{value}''. Please use one of: ban/kick/mute'
+            unknown_type: "Unknown type '{value}'. Please use one of: ban/kick/mute"
     Approvals:
         approval:
-            is_admin: '{admin} is an admin, and they don''t need approval.'
+            is_admin: "{admin} is an admin, and they don't need approval."
             is_approved: |-
                 {param1} is an approved User in <b>{param2}</b>
                 They are ignored from auto-bans, blacklists, locks, and antiflood.
@@ -191,8 +191,8 @@ strings:
             kicked_user: Kicked {first} due to {second}
             muted_user: Muted {user} due to {second}
         blacklist:
-            added_bl: 'Added these words as blacklists:'
-            already_blacklisted: 'These words are already blacklisted:'
+            added_bl: "Added these words as blacklists:"
+            already_blacklisted: "These words are already blacklisted:"
             give_bl_word: Please give me a word to add to the blacklist!
         help_msg: |-
             *User Commands:*
@@ -210,7 +210,7 @@ strings:
             *Note:*
             The Default mode for Blacklist is *none*, which will just delete the messages from the chat.
         ls_bl:
-            list_bl: 'These words are blacklisted in this chat:'
+            list_bl: "These words are blacklisted in this chat:"
             no_blacklisted: There are no blacklisted words in this chat.
         rm_all_bl:
             ask: Are you sure you want to remove all blacklisted words from this chat?
@@ -218,13 +218,31 @@ strings:
                 "no": Canceled removing all Blacklists of this Chat ❌
                 "yes": Removed all Blacklists from this Chat ✅
         set_bl_action:
-            changed_mode: 'Successfully Changed blacklist mode to: *{value}*'
+            changed_mode: "Successfully Changed blacklist mode to: *{value}*"
             choose_correct_option: Please choose an option out of <mute/kick/ban/warn/none>
-            current_mode: 'The current blacklist mode for this chat is: {chat}'
+            current_mode: "The current blacklist mode for this chat is: {chat}"
         unblacklist:
             give_bl_word: Please give me a word to remove it from the blacklist!
             no_removed_bl: None of the given words were on the blacklist which can be removed!
             removed_bl: Successfully removed '{value}' from the blacklisted words!
+    Captcha:
+        help_msg: |-
+            Protect your group from bots and spammers with CAPTCHA verification!
+
+            Force new members to prove they're human by solving a simple challenge before they can send messages.
+
+            *Captcha Types:*
+            × Math: Solve simple arithmetic problems
+            × Text: Identify text shown in an image
+
+            *Admin Commands:*
+            × /captcha `<on/off>`: Enable or disable captcha verification
+            × /captchamode `<math/text>`: Set captcha type (math problems or text recognition)
+            × /captchatime `<1-10>`: Set timeout in minutes (default: 2)
+            × /captchaaction `<kick/ban/mute>`: Set action for failed verification (default: kick)
+
+            When enabled, new members are automatically muted until they complete the captcha.
+            If they fail or timeout, the configured action is taken.
     CommonStrings:
         admin_cache:
             cache_reloaded: Successfully reloaded admin cache.
@@ -571,16 +589,16 @@ strings:
                 require_owner_cmd: Only group creator to do this!
         extraction:
             extract_chat:
-                badrequest_failed_getchat: 'failed to connect to chat: failed to get chat: unable to getChat: Bad Request: chat not found'
+                badrequest_failed_getchat: "failed to connect to chat: failed to get chat: unable to getChat: Bad Request: chat not found"
                 fail_need_chat: I need a Chat ID to connect!
                 fail_need_chat_id: I expected a Chat ID, but this isn't a valid integer.
             extract_user:
-                badrequest_failed_getchatmember: 'failed to get user: unable to getChatMember: Bad Request: chat not found'
+                badrequest_failed_getchatmember: "failed to get user: unable to getChatMember: Bad Request: chat not found"
                 no_user_found: Could not find a user by this name; are you sure I've seen them before?
         string_handling:
             extract_time:
                 invalid_time_amount: Invalid time amount specified.
-                invalid_time_type: 'Invalid time type specified. Expected m, h, or d got: {time}'
+                invalid_time_type: "Invalid time type specified. Expected m, h, or d got: {time}"
     Warns:
         help_msg: |-
             Keep your members in check with warnings; stop them getting out of control!
