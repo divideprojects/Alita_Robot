@@ -20,6 +20,23 @@ func EnsureBotInDb(b *gotgbot.Bot) {
 	log.Infof("[Database] Bot Updated in Database!")
 }
 
+// EnsureUserInDb ensures that a user exists in the database.
+// Creates the user record if it doesn't exist, or updates it if it does.
+// This is essential for foreign key constraints that reference the users table.
+func EnsureUserInDb(userId int64, username, firstName string) error {
+	userUpdate := &User{
+		UserId:   userId,
+		UserName: username,
+		Name:     firstName,
+	}
+	err := DB.Where("user_id = ?", userId).Assign(userUpdate).FirstOrCreate(&User{})
+	if err.Error != nil {
+		log.Errorf("[Database] EnsureUserInDb: %v", err.Error)
+		return err.Error
+	}
+	return nil
+}
+
 // checkUserInfo retrieves user information using optimized cached queries.
 // Returns nil if the user doesn't exist, or a default User struct on error.
 func checkUserInfo(userId int64) (userc *User) {

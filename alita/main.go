@@ -126,6 +126,7 @@ func LoadModules(dispatcher *ext.Dispatcher) {
 	modules.LoadRules(dispatcher)
 	modules.LoadWarns(dispatcher)
 	modules.LoadGreetings(dispatcher)
+	modules.LoadCaptcha(dispatcher)
 	modules.LoadBlacklists(dispatcher)
 	modules.LoadMkdCmd(dispatcher)
 }
