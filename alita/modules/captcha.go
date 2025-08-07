@@ -2,9 +2,10 @@ package modules
 
 import (
 	"bytes"
+	crand "crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"slices"
 	"strconv"
 	"strings"
@@ -22,6 +23,30 @@ import (
 )
 
 var captchaModule = moduleStruct{moduleName: "Captcha"}
+
+// secureIntn returns a cryptographically secure random integer in [0, max).
+// If max <= 0, it returns 0.
+func secureIntn(max int) int {
+    if max <= 0 {
+        return 0
+    }
+    // Use crypto/rand.Int for unbiased secure random selection
+    // Retry on the extremely unlikely error case.
+    for {
+        n, err := crand.Int(crand.Reader, big.NewInt(int64(max)))
+        if err == nil {
+            return int(n.Int64())
+        }
+    }
+}
+
+// secureShuffleStrings shuffles a slice of strings using Fisher-Yates with crypto-grade randomness.
+func secureShuffleStrings(values []string) {
+    for i := len(values) - 1; i > 0; i-- {
+        j := secureIntn(i + 1)
+        values[i], values[j] = values[j], values[i]
+    }
+}
 
 // captchaCommand handles the /captcha command to enable/disable captcha verification.
 // Admins can use this to toggle captcha protection for their group.
@@ -215,25 +240,25 @@ func (moduleStruct) captchaActionCommand(bot *gotgbot.Bot, ctx *ext.Context) err
 // generateMathCaptcha generates a random math problem and returns the question and answer.
 func generateMathCaptcha() (string, string, []string) {
 	operations := []string{"+", "-", "*"}
-	operation := operations[rand.Intn(len(operations))]
+    operation := operations[secureIntn(len(operations))]
 
 	var a, b, answer int
 	var question string
 
 	switch operation {
 	case "+":
-		a = rand.Intn(50) + 1
-		b = rand.Intn(50) + 1
+        a = secureIntn(50) + 1
+        b = secureIntn(50) + 1
 		answer = a + b
 		question = fmt.Sprintf("%d + %d", a, b)
 	case "-":
-		a = rand.Intn(50) + 20
-		b = rand.Intn(a) + 1
+        a = secureIntn(50) + 20
+        b = secureIntn(a) + 1
 		answer = a - b
 		question = fmt.Sprintf("%d - %d", a, b)
 	case "*":
-		a = rand.Intn(12) + 1
-		b = rand.Intn(12) + 1
+        a = secureIntn(12) + 1
+        b = secureIntn(12) + 1
 		answer = a * b
 		question = fmt.Sprintf("%d × %d", a, b)
 	}
@@ -242,7 +267,7 @@ func generateMathCaptcha() (string, string, []string) {
 	options := []string{strconv.Itoa(answer)}
 	for len(options) < 4 {
 		// Generate a wrong answer within reasonable range
-		wrongAnswer := answer + rand.Intn(20) - 10
+        wrongAnswer := answer + secureIntn(20) - 10
 		if wrongAnswer != answer && wrongAnswer > 0 {
 			wrongStr := strconv.Itoa(wrongAnswer)
 			// Check if this option already exists
@@ -253,9 +278,7 @@ func generateMathCaptcha() (string, string, []string) {
 	}
 
 	// Shuffle options
-	rand.Shuffle(len(options), func(i, j int) {
-		options[i], options[j] = options[j], options[i]
-	})
+    secureShuffleStrings(options)
 
 	return question, strconv.Itoa(answer), options
 }
@@ -309,7 +332,7 @@ func generateTextCaptcha() (string, []byte, []string, error) {
 		// Generate a random string of same length as answer
 		decoy := ""
 		for i := 0; i < len(answer); i++ {
-			decoy += string(characters[rand.Intn(len(characters))])
+            decoy += string(characters[secureIntn(len(characters))])
 		}
 		// Check if this option already exists
 		if !slices.Contains(options, decoy) {
@@ -318,9 +341,7 @@ func generateTextCaptcha() (string, []byte, []string, error) {
 	}
 
 	// Shuffle options
-	rand.Shuffle(len(options), func(i, j int) {
-		options[i], options[j] = options[j], options[i]
-	})
+    secureShuffleStrings(options)
 
 	return answer, imageBytes, options, nil
 }
