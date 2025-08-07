@@ -354,6 +354,73 @@ func generateTextCaptcha() (string, []byte, []string, error) {
 	return answer, imageBytes, options, nil
 }
 
+// generateMathImageCaptcha generates a math captcha image and returns
+// the answer, PNG bytes, and multiple-choice options.
+func generateMathImageCaptcha() (string, []byte, []string, error) {
+	// Create a math driver for image captcha
+	// Dimensions/noise tuned for readability similar to text captcha
+	mathDriver := base64Captcha.NewDriverMath(
+		80,  // height
+		240, // width
+		0,   // noiseCount
+		2,   // showLineOptions
+		nil, // bgColor
+		nil, // fonts
+		[]string{},
+	)
+
+	captcha := base64Captcha.NewCaptcha(mathDriver, base64Captcha.DefaultMemStore)
+	id, b64s, answer, err := captcha.Generate()
+	if err != nil {
+		return "", nil, nil, err
+	}
+	_ = id
+
+	// Decode base64 image (strip prefix if any)
+	if strings.HasPrefix(b64s, "data:image/") {
+		parts := strings.Split(b64s, ",")
+		if len(parts) > 1 {
+			b64s = parts[1]
+		}
+	}
+	imageBytes, err := base64.StdEncoding.DecodeString(b64s)
+	if err != nil {
+		return "", nil, nil, err
+	}
+
+	// Build numeric options around the correct answer
+	options := []string{answer}
+	if ansInt, convErr := strconv.Atoi(answer); convErr == nil {
+		for len(options) < 4 {
+			wrong := ansInt + secureIntn(20) - 10
+			if wrong == ansInt || wrong < 0 {
+				continue
+			}
+			wrongStr := strconv.Itoa(wrong)
+			if !slices.Contains(options, wrongStr) {
+				options = append(options, wrongStr)
+			}
+		}
+	} else {
+		// Fallback: generate random numeric strings of the same length
+		digits := "0123456789"
+		for len(options) < 4 {
+			decoy := ""
+			for i := 0; i < len(answer); i++ {
+				decoy += string(digits[secureIntn(len(digits))])
+			}
+			if decoy != answer && !slices.Contains(options, decoy) {
+				options = append(options, decoy)
+			}
+		}
+	}
+
+	// Shuffle options
+	secureShuffleStrings(options)
+
+	return answer, imageBytes, options, nil
+}
+
 // SendCaptcha sends a captcha challenge to a new member.
 // Called when a new member joins a group with captcha enabled.
 func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName string) error {
@@ -368,19 +435,32 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 	var answer string
 	var options []string
 	var imageBytes []byte
+	isImage := false
 
 	if settings.CaptchaMode == "math" {
-		// Generate math captcha
-		question, answer, options = generateMathCaptcha()
+		// Prefer image captcha for math mode
+		var err error
+		answer, imageBytes, options, err = generateMathImageCaptcha()
+		if err != nil || imageBytes == nil {
+			log.Errorf("Failed to generate math image captcha: %v", err)
+			// Fallback to text-based math question
+			question, answer, options = generateMathCaptcha()
+			isImage = false
+		} else {
+			isImage = true
+		}
 	} else {
-		// Generate text captcha
+		// Text mode: image captcha with text content
 		var err error
 		answer, imageBytes, options, err = generateTextCaptcha()
 		if err != nil {
 			log.Errorf("Failed to generate text captcha: %v", err)
-			// Fallback to math captcha
+			// Fallback to text-based math question
 			question, answer, options = generateMathCaptcha()
 			settings.CaptchaMode = "math"
+			isImage = false
+		} else {
+			isImage = true
 		}
 	}
 
@@ -394,8 +474,8 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 		buttons = append(buttons, []gotgbot.InlineKeyboardButton{button})
 	}
 
-	// Add refresh button for text captcha
-	if settings.CaptchaMode == "text" && imageBytes != nil {
+	// Add refresh button for image-based captcha (text or math)
+	if isImage && imageBytes != nil {
 		buttons = append(buttons, []gotgbot.InlineKeyboardButton{
 			{
 				Text:         "🔄 New Image",
@@ -408,9 +488,26 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 		InlineKeyboard: buttons,
 	}
 
-	// Prepare message text
+	// Prepare message text/caption
 	var msgText string
-	if settings.CaptchaMode == "math" {
+	if isImage {
+		if settings.CaptchaMode == "math" {
+			msgText = fmt.Sprintf(
+				"👋 Welcome %s!\n\n"+
+					"Please solve the problem shown in the image and select the correct answer:\n\n"+
+					"⏱ You have <b>%d minutes</b> to answer.",
+				helpers.MentionHtml(userID, userName), settings.Timeout,
+			)
+		} else {
+			msgText = fmt.Sprintf(
+				"👋 Welcome %s!\n\n"+
+					"Please select the text shown in the image to verify you're human:\n\n"+
+					"⏱ You have <b>%d minutes</b> to answer.",
+				helpers.MentionHtml(userID, userName), settings.Timeout,
+			)
+		}
+	} else {
+		// Text-based fallback for math
 		msgText = fmt.Sprintf(
 			"👋 Welcome %s!\n\n"+
 				"Please solve this math problem to verify you're human:\n\n"+
@@ -418,20 +515,13 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 				"⏱ You have <b>%d minutes</b> to answer.",
 			helpers.MentionHtml(userID, userName), question, settings.Timeout,
 		)
-	} else {
-		msgText = fmt.Sprintf(
-			"👋 Welcome %s!\n\n"+
-				"Please select the text shown in the image to verify you're human:\n\n"+
-				"⏱ You have <b>%d minutes</b> to answer.",
-			helpers.MentionHtml(userID, userName), settings.Timeout,
-		)
 	}
 
 	// Send the captcha message
 	var sent *gotgbot.Message
 	var err error
 
-	if settings.CaptchaMode == "text" && imageBytes != nil {
+	if isImage && imageBytes != nil {
 		// Send photo with text captcha
 		sent, err = bot.SendPhoto(chat.Id, gotgbot.InputFileByReader("captcha.png", bytes.NewReader(imageBytes)), &gotgbot.SendPhotoOpts{
 			Caption:     msgText,
@@ -688,14 +778,19 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 		return err
 	}
 
-	// Generate a fresh text captcha only; math mode doesn't use refresh
-	if settings, _ := db.GetCaptchaSettings(chat.Id); settings != nil && settings.CaptchaMode != "text" {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Refresh is available only for image captcha."})
-		return err
-	}
+	// Determine current mode and whether image flow applies
+	settings, _ := db.GetCaptchaSettings(chat.Id)
 
-	// Generate a new image/options
-	newAnswer, imageBytes, options, genErr := generateTextCaptcha()
+	// Generate a new image/options based on current mode
+	var newAnswer string
+	var imageBytes []byte
+	var options []string
+	var genErr error
+	if settings != nil && settings.CaptchaMode == "text" {
+		newAnswer, imageBytes, options, genErr = generateTextCaptcha()
+	} else {
+		newAnswer, imageBytes, options, genErr = generateMathImageCaptcha()
+	}
 	if genErr != nil || imageBytes == nil {
 		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Failed to generate new image, try again."})
 		return err
@@ -720,10 +815,22 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	// Try to edit in place by deleting and resending a new photo to get a new message ID, then update attempt atomically
 	_, _ = bot.DeleteMessage(chat.Id, attempt.MessageID, nil)
 
-	caption := fmt.Sprintf(
-		"👋 Welcome %s!\n\nPlease select the text shown in the image to verify you're human:\n\n⏱ You have <b>%d minutes</b> to answer.",
-		helpers.MentionHtml(targetUserID, user.FirstName), attempt.ExpiresAt.Sub(time.Now()).Minutes(),
-	)
+	remainingMinutes := int(time.Until(attempt.ExpiresAt).Minutes())
+	if remainingMinutes < 0 {
+		remainingMinutes = 0
+	}
+	var caption string
+	if settings != nil && settings.CaptchaMode == "text" {
+		caption = fmt.Sprintf(
+			"👋 Welcome %s!\n\nPlease select the text shown in the image to verify you're human:\n\n⏱ You have <b>%d minutes</b> to answer.",
+			helpers.MentionHtml(targetUserID, user.FirstName), remainingMinutes,
+		)
+	} else {
+		caption = fmt.Sprintf(
+			"👋 Welcome %s!\n\nPlease solve the problem shown in the image and select the correct answer:\n\n⏱ You have <b>%d minutes</b> to answer.",
+			helpers.MentionHtml(targetUserID, user.FirstName), remainingMinutes,
+		)
+	}
 
 	sent, sendErr := bot.SendPhoto(chat.Id, gotgbot.InputFileByReader("captcha.png", bytes.NewReader(imageBytes)), &gotgbot.SendPhotoOpts{
 		Caption:     caption,
