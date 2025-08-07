@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - dev/**
     tags-ignore:
       - "**"
   pull_request:
@@ -39,11 +40,11 @@ jobs:
       - name: Check migration file sync
         run: |
           echo "📋 Comparing migration files..."
-          
+
           # Get list of files in each directory
           supabase_files=$(ls -1 supabase/migrations/*.sql 2>/dev/null | xargs -n 1 basename | sort)
           psql_files=$(ls -1 psql/migrations/*.sql 2>/dev/null | xargs -n 1 basename | sort)
-          
+
           # Check if file lists match
           if [ "$supabase_files" != "$psql_files" ]; then
             echo "❌ Migration files are out of sync!"
@@ -57,16 +58,16 @@ jobs:
             echo "Please run 'make psql-prepare' to synchronize migrations"
             exit 1
           fi
-          
+
           echo "✅ Migration filenames match"
 
       - name: Verify migration processing
         run: |
           echo "🔧 Running psql-prepare to verify processing..."
-          
+
           # Create temporary directory for comparison
           mkdir -p /tmp/test-psql-migrations
-          
+
           # Process migrations to temporary location
           for file in supabase/migrations/*.sql; do
             filename=$(basename "$file")
@@ -75,7 +76,7 @@ jobs:
             sed 's/create extension if not exists/CREATE EXTENSION IF NOT EXISTS/g' | \
             sed 's/create extension/CREATE EXTENSION IF NOT EXISTS/g' > "/tmp/test-psql-migrations/$filename"
           done
-          
+
           # Compare with existing psql migrations
           for file in psql/migrations/*.sql; do
             filename=$(basename "$file")
@@ -88,9 +89,9 @@ jobs:
               exit 1
             fi
           done
-          
+
           echo "✅ All migrations are properly processed and synchronized"
-          
+
           # Cleanup
           rm -rf /tmp/test-psql-migrations
 
@@ -209,7 +210,8 @@ jobs:
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
-    needs: [migration-sync-check, security-scan, lint-and-test, build-verification]
+    needs:
+      [migration-sync-check, security-scan, lint-and-test, build-verification]
     if: always()
     steps:
       - name: Check all jobs status
