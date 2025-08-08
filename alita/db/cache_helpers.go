@@ -20,6 +20,7 @@ const (
 	CacheTTLNotesList    = 30 * time.Minute
 	CacheTTLWarnSettings = 30 * time.Minute
 	CacheTTLAntiflood    = 30 * time.Minute
+	CacheTTLDisabledCmds = 30 * time.Minute
 )
 
 // Singleflight group for preventing cache stampede
@@ -74,6 +75,11 @@ func antifloodCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:antiflood:%d", chatID)
 }
 
+// disabledCommandsCacheKey generates a cache key for chat disabled commands.
+func disabledCommandsCacheKey(chatID int64) string {
+	return fmt.Sprintf("alita:disabled_cmds:%d", chatID)
+}
+
 // InvalidateChatCache invalidates all cache entries for a chat.
 // Removes all cached data related to the specified chat ID including settings, filters, and notes.
 func InvalidateChatCache(chatID int64) {
@@ -92,6 +98,7 @@ func InvalidateChatCache(chatID int64) {
 		notesListCacheKey(chatID, false),
 		warnSettingsCacheKey(chatID),
 		antifloodCacheKey(chatID),
+		disabledCommandsCacheKey(chatID),
 	}
 
 	for _, key := range keys {
