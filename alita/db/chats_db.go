@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -55,17 +56,29 @@ func EnsureChatInDb(chatId int64, chatName string) error {
 }
 
 // UpdateChat updates or creates a chat record with the given information.
-// Adds user to the chat's user list if not already present and marks chat as active.
+// Adds user to the chat's user list if not already present, marks chat as active,
+// and updates the last activity timestamp to track when messages are received.
 func UpdateChat(chatId int64, chatname string, userid int64) {
 	chatr := GetChatSettings(chatId)
 	foundUser := string_handling.FindInInt64Slice(chatr.Users, userid)
+	now := time.Now()
 
-	// Check if update is actually needed
+	// Always update last_activity to track message activity
 	if chatr.ChatName == chatname && foundUser {
+		// Only update last_activity and is_inactive
+		err := DB.Model(&Chat{}).Where("chat_id = ?", chatId).Updates(map[string]interface{}{
+			"last_activity": now,
+			"is_inactive":   false,
+		}).Error
+		if err != nil {
+			log.Errorf("[Database] UpdateChat (activity only): %d - %v", chatId, err)
+		}
+		// Invalidate cache after update
+		deleteCache(chatCacheKey(chatId))
 		return
 	}
 
-	// Prepare updates only for changed fields
+	// Prepare updates for all fields
 	updates := make(map[string]interface{})
 	if chatr.ChatName != chatname {
 		updates["chat_name"] = chatname
@@ -76,14 +89,16 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 		updates["users"] = newUsers
 	}
 	updates["is_inactive"] = false
+	updates["last_activity"] = now
 
 	if chatr.ChatId == 0 {
 		// Create new chat
 		newChat := &Chat{
-			ChatId:     chatId,
-			ChatName:   chatname,
-			Users:      Int64Array{userid},
-			IsInactive: false,
+			ChatId:       chatId,
+			ChatName:     chatname,
+			Users:        Int64Array{userid},
+			IsInactive:   false,
+			LastActivity: now,
 		}
 		err := DB.Create(newChat).Error
 		if err != nil {
@@ -91,7 +106,7 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 			return
 		}
 	} else if len(updates) > 0 {
-		// Update existing chat only if there are changes
+		// Update existing chat with all changes
 		err := DB.Model(&Chat{}).Where("chat_id = ?", chatId).Updates(updates).Error
 		if err != nil {
 			log.Errorf("[Database] UpdateChat: %v - %d (%d)", err, chatId, userid)
@@ -144,4 +159,39 @@ func LoadChatStats() (activeChats, inactiveChats int) {
 	activeChats = int(activeCount)
 	inactiveChats = int(inactiveCount)
 	return
+}
+
+// LoadActivityStats returns Daily Active Groups, Weekly Active Groups, and Monthly Active Groups.
+// These metrics are based on last_activity timestamps within the respective time periods.
+func LoadActivityStats() (dag, wag, mag int64) {
+	now := time.Now()
+	dayAgo := now.Add(-24 * time.Hour)
+	weekAgo := now.Add(-7 * 24 * time.Hour)
+	monthAgo := now.Add(-30 * 24 * time.Hour)
+
+	// Count daily active groups
+	err := DB.Model(&Chat{}).
+		Where("is_inactive = ? AND last_activity >= ?", false, dayAgo).
+		Count(&dag).Error
+	if err != nil {
+		log.Errorf("[Database][LoadActivityStats] counting daily active groups: %v", err)
+	}
+
+	// Count weekly active groups
+	err = DB.Model(&Chat{}).
+		Where("is_inactive = ? AND last_activity >= ?", false, weekAgo).
+		Count(&wag).Error
+	if err != nil {
+		log.Errorf("[Database][LoadActivityStats] counting weekly active groups: %v", err)
+	}
+
+	// Count monthly active groups
+	err = DB.Model(&Chat{}).
+		Where("is_inactive = ? AND last_activity >= ?", false, monthAgo).
+		Count(&mag).Error
+	if err != nil {
+		log.Errorf("[Database][LoadActivityStats] counting monthly active groups: %v", err)
+	}
+
+	return dag, wag, mag
 }

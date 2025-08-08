@@ -76,10 +76,11 @@ func RemDev(userID int64) {
 }
 
 // LoadAllStats generates a comprehensive statistics report for the bot.
-// Includes user counts, chat statistics, feature usage, and system information.
+// Includes user counts, chat statistics, feature usage, activity metrics, and system information.
 func LoadAllStats() string {
 	totalUsers := LoadUsersStats()
 	activeChats, inactiveChats := LoadChatStats()
+	dag, wag, mag := LoadActivityStats()
 	AcCount, ClCount := LoadPinStats()
 	uRCount, gRCount := LoadReportStats()
 	antiCount := LoadAntifloodStats()
@@ -118,6 +119,10 @@ func LoadAllStats() string {
 			humanize.Comma(int64(inactiveChats)),
 			humanize.Comma(int64(activeChats+inactiveChats)),
 		) +
+		"\n<b>Activity Metrics:</b>" +
+		fmt.Sprintf("\n    <b>Daily Active Groups (DAG):</b> %s", humanize.Comma(dag)) +
+		fmt.Sprintf("\n    <b>Weekly Active Groups (WAG):</b> %s", humanize.Comma(wag)) +
+		fmt.Sprintf("\n    <b>Monthly Active Groups (MAG):</b> %s", humanize.Comma(mag)) +
 		"\n<b>Pins:</b>" +
 		fmt.Sprintf("\n    <b>CleanLinked Enabled:</b> %s", humanize.Comma(ClCount)) +
 		fmt.Sprintf("\n    <b>AntiChannelPin Enabled:</b> %s", humanize.Comma(AcCount)) +
