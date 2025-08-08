@@ -415,9 +415,24 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
 
-	filterKeys := db.GetFiltersList(chat.Id)
-	if len(filterKeys) == 0 {
+	// Use optimized cached query to fetch all filters at once (no N+1 query)
+	optQueries := db.GetOptimizedQueries()
+	allFilters, err := optQueries.GetChatFiltersCached(chat.Id)
+	if err != nil {
+		log.WithField("chatId", chat.Id).WithError(err).Error("Failed to get chat filters")
 		return ext.ContinueGroups
+	}
+
+	if len(allFilters) == 0 {
+		return ext.ContinueGroups
+	}
+
+	// Build keyword list for Aho-Corasick matching
+	filterKeys := make([]string, len(allFilters))
+	filterMap := make(map[string]*db.ChatFilters, len(allFilters))
+	for i, filter := range allFilters {
+		filterKeys[i] = filter.KeyWord
+		filterMap[filter.KeyWord] = filter
 	}
 
 	// Use Aho-Corasick for efficient multi-pattern matching
@@ -443,8 +458,11 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	noformatPattern := i + " noformat"
 	noformatMatch := strings.Contains(strings.ToLower(msg.Text), strings.ToLower(noformatPattern))
 
-	// Process the matched filter
-	filtData := db.GetFilter(chat.Id, i)
+	// Get filter data from pre-loaded map (no additional DB query)
+	filtData, exists := filterMap[i]
+	if !exists {
+		return ext.ContinueGroups
+	}
 
 			if noformatMatch {
 				// check if user is admin or not
