@@ -252,9 +252,6 @@ func (cfg *Config) setDefaults() {
 	if cfg.WorkingMode == "" {
 		cfg.WorkingMode = "worker"
 	}
-	if !cfg.DropPendingUpdates {
-		cfg.DropPendingUpdates = true
-	}
 	if cfg.RedisAddress == "" {
 		cfg.RedisAddress = "localhost:6379"
 	}
