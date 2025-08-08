@@ -272,15 +272,19 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 				if len(blockedUsers) == 0 {
 					replyText = "No users are currently blocked from using report commands!"
 				} else {
-					replyText = "Users blocked from using report commands: "
+					var builder strings.Builder
+					builder.Grow(256) // Pre-allocate capacity
+					builder.WriteString("Users blocked from using report commands: ")
 					for _, blockUserId := range blockedUsers {
 						bUser, err := b.GetChat(blockUserId, nil)
 						if err != nil {
 							log.Error(err)
 							continue
 						}
-						replyText += "\n - " + helpers.MentionHtml(blockUserId, bUser.FirstName)
+						builder.WriteString("\n - ")
+						builder.WriteString(helpers.MentionHtml(blockUserId, bUser.FirstName))
 					}
+					replyText = builder.String()
 				}
 			}
 		default:

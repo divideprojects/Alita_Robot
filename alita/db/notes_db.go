@@ -87,30 +87,35 @@ func GetNotesList(chatID int64, admin bool) (allNotes []string) {
 
 // DoesNoteExists checks whether a note with the given name exists in the specified chat.
 // Returns false if the note doesn't exist or an error occurs.
+// Uses LIMIT 1 optimization for better performance than COUNT.
 func DoesNoteExists(chatID int64, noteName string) bool {
-	var count int64
-	err := DB.Model(&Notes{}).Where("chat_id = ? AND note_name = ?", chatID, noteName).Count(&count).Error
+	var note Notes
+	err := DB.Where("chat_id = ? AND note_name = ?", chatID, noteName).Take(&note).Error
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false
+		}
 		log.Errorf("[Database] DoesNoteExists: %v - %d", err, chatID)
 		return false
 	}
-	return count > 0
+	return true
 }
 
 // AddNote creates a new note in the database for the specified chat.
 // Does nothing if a note with the same name already exists.
 // Supports various note types including text, media, and custom buttons.
 func AddNote(chatID int64, noteName, replyText, fileID string, buttons ButtonArray, filtType int, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool) {
-	// Check if note already exists using a direct query
-	var count int64
-	err := DB.Model(&Notes{}).Where("chat_id = ? AND note_name = ?", chatID, noteName).Count(&count).Error
+	// Check if note already exists using optimized query
+	var existingNote Notes
+	err := DB.Where("chat_id = ? AND note_name = ?", chatID, noteName).Take(&existingNote).Error
 	if err != nil {
-		log.Errorf("[Database][AddNote] checking existence: %d - %v", chatID, err)
-		return
-	}
-
-	if count > 0 {
-		return
+		if err != gorm.ErrRecordNotFound {
+			log.Errorf("[Database][AddNote] checking existence: %d - %v", chatID, err)
+			return
+		}
+		// Note doesn't exist, continue with creation
+	} else {
+		return // Note already exists
 	}
 
 	noterc := Notes{

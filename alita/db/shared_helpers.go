@@ -70,12 +70,18 @@ func CountRecords[T any](condition interface{}) (int64, error) {
 
 // ExistsRecord is a generic helper function to check if any record exists matching a condition.
 // Returns true if at least one record matches, false otherwise.
+// Uses LIMIT 1 optimization for better performance than COUNT.
 func ExistsRecord[T any](condition interface{}) bool {
-	count, err := CountRecords[T](condition)
+	var record T
+	err := DB.Where(condition).Take(&record).Error
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false
+		}
+		log.Errorf("[Database][ExistsRecord]: %v", err)
 		return false
 	}
-	return count > 0
+	return true
 }
 
 // DeleteRecords is a generic helper function to delete records matching a condition.

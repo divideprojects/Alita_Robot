@@ -58,8 +58,7 @@ func CheckDisabledCmd(bot *gotgbot.Bot, msg *gotgbot.Message, cmd string) bool {
 	}
 
 	// check if user is admin or creator, can bypass disabled commands
-	member, _ := bot.GetChatMember(msg.Chat.Id, msg.From.Id, nil)
-	if member.MergeChatMember().Status == "administrator" && member.MergeChatMember().Status == "creator" {
+	if IsUserAdmin(bot, msg.Chat.Id, msg.From.Id) {
 		return false
 	}
 

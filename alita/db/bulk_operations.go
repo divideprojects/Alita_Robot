@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -334,7 +335,7 @@ func BulkAddBlacklist(chatID int64, words []string, action string) (*BulkOperati
 	for _, word := range words {
 		blacklistRecords = append(blacklistRecords, BlacklistSettings{
 			ChatId: chatID,
-			Word:   word,
+			Word:   strings.ToLower(word),
 			Action: action,
 		})
 	}
@@ -584,7 +585,7 @@ func ParallelBulkAddBlacklist(chatID int64, words []string, action string) (*Bul
 	for _, word := range words {
 		blacklistRecords = append(blacklistRecords, BlacklistSettings{
 			ChatId: chatID,
-			Word:   word,
+			Word:   strings.ToLower(word),
 			Action: action,
 		})
 	}

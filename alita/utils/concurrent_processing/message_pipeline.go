@@ -10,6 +10,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/divideprojects/Alita_Robot/alita/config"
 )
 
 // ProcessingStage represents different stages of message processing
@@ -45,7 +47,8 @@ type ProcessingResult struct {
 }
 
 // ProcessorFunc defines the signature for processing functions
-type ProcessorFunc func(bot *gotgbot.Bot, ctx *ext.Context) (blocked bool, err error)
+// The context parameter allows for cancellation and timeout handling
+type ProcessorFunc func(ctx context.Context, bot *gotgbot.Bot, extCtx *ext.Context) (blocked bool, err error)
 
 // MessageProcessingPipeline handles concurrent message processing
 type MessageProcessingPipeline struct {
@@ -77,10 +80,10 @@ func NewMessageProcessingPipeline(workers int) *MessageProcessingPipeline {
 		workers = runtime.NumCPU()
 	}
 
-	// Limit maximum concurrency to prevent overwhelming the system
+	// Limit maximum concurrency based on configuration
 	maxConcurrency := workers * 2
-	if maxConcurrency > 20 {
-		maxConcurrency = 20
+	if maxConcurrency > config.MaxConcurrentOperations {
+		maxConcurrency = config.MaxConcurrentOperations
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -198,7 +201,7 @@ func (p *MessageProcessingPipeline) processJob(job MessageProcessingJob, workerI
 			close(done)
 		}()
 
-		blocked, err = processor(job.Bot, job.Context)
+		blocked, err = processor(ctx, job.Bot, job.Context)
 	}()
 
 	select {

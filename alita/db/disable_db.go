@@ -3,11 +3,13 @@ package db
 import (
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 // DisableCMD disables a command in a specific chat.
 // Creates a new disable setting record with disabled status set to true.
+// Invalidates cache to ensure consistency.
 func DisableCMD(chatID int64, cmd string) {
 	// Create a new disable setting
 	disableSetting := &DisableSettings{
@@ -19,16 +21,25 @@ func DisableCMD(chatID int64, cmd string) {
 	err := CreateRecord(disableSetting)
 	if err != nil {
 		log.Errorf("[Database][DisableCMD]: %v", err)
+		return
 	}
+
+	// Invalidate cache to ensure fresh data
+	invalidateDisabledCommandsCache(chatID)
 }
 
 // EnableCMD enables a command in a specific chat.
 // Removes the disable setting record for the command.
+// Invalidates cache to ensure consistency.
 func EnableCMD(chatID int64, cmd string) {
 	err := DB.Where("chat_id = ? AND command = ?", chatID, cmd).Delete(&DisableSettings{}).Error
 	if err != nil {
 		log.Errorf("[Database][EnableCMD]: %v", err)
+		return
 	}
+
+	// Invalidate cache to ensure fresh data
+	invalidateDisabledCommandsCache(chatID)
 }
 
 // GetChatDisabledCMDs retrieves all disabled commands for a chat.
@@ -48,10 +59,33 @@ func GetChatDisabledCMDs(chatId int64) []string {
 	return commands
 }
 
+// GetChatDisabledCMDsCached retrieves all disabled commands for a chat with caching.
+// Uses cache with TTL to avoid database queries on every command check.
+func GetChatDisabledCMDsCached(chatId int64) []string {
+	cacheKey := disabledCommandsCacheKey(chatId)
+	result, err := getFromCacheOrLoad(cacheKey, CacheTTLDisabledCmds, func() ([]string, error) {
+		return GetChatDisabledCMDs(chatId), nil
+	})
+	if err != nil {
+		log.Errorf("[Cache] Failed to get disabled commands from cache for chat %d: %v", chatId, err)
+		return GetChatDisabledCMDs(chatId) // Fallback to direct DB query
+	}
+	return result
+}
+
 // IsCommandDisabled checks if a specific command is disabled in a chat.
 // Returns true if the command is in the chat's disabled commands list.
+// Uses cached version for better performance.
 func IsCommandDisabled(chatId int64, cmd string) bool {
-	return string_handling.FindInStringSlice(GetChatDisabledCMDs(chatId), cmd)
+	return string_handling.FindInStringSlice(GetChatDisabledCMDsCached(chatId), cmd)
+}
+
+// invalidateDisabledCommandsCache invalidates the disabled commands cache for a specific chat.
+func invalidateDisabledCommandsCache(chatID int64) {
+	cacheKey := disabledCommandsCacheKey(chatID)
+	if err := cache.Marshal.Delete(cache.Context, cacheKey); err != nil {
+		log.Debugf("[Cache] Failed to invalidate disabled commands cache for chat %d: %v", chatID, err)
+	}
 }
 
 // ToggleDel toggles the automatic deletion of disabled commands in a chat.

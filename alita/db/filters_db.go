@@ -63,30 +63,35 @@ func GetFiltersList(chatID int64) (allFilterWords []string) {
 // DoesFilterExists checks whether a filter with the given keyword exists in the specified chat.
 // Performs a case-insensitive comparison of the keyword.
 // Returns false if the filter doesn't exist or an error occurs.
+// Uses LIMIT 1 optimization for better performance than COUNT.
 func DoesFilterExists(chatId int64, keyword string) bool {
-	var count int64
-	err := DB.Model(&ChatFilters{}).Where("chat_id = ? AND LOWER(keyword) = LOWER(?)", chatId, keyword).Count(&count).Error
+	var filter ChatFilters
+	err := DB.Where("chat_id = ? AND LOWER(keyword) = LOWER(?)", chatId, keyword).Take(&filter).Error
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false
+		}
 		log.Errorf("[Database] DoesFilterExists: %v - %d", err, chatId)
 		return false
 	}
-	return count > 0
+	return true
 }
 
 // AddFilter creates a new filter in the database for the specified chat.
 // Does nothing if a filter with the same keyword already exists.
 // Invalidates the filter list cache after successful addition.
 func AddFilter(chatID int64, keyWord, replyText, fileID string, buttons []Button, filtType int) {
-	// Check if filter already exists using a direct query
-	var count int64
-	err := DB.Model(&ChatFilters{}).Where("chat_id = ? AND keyword = ?", chatID, keyWord).Count(&count).Error
+	// Check if filter already exists using optimized query
+	var existingFilter ChatFilters
+	err := DB.Where("chat_id = ? AND keyword = ?", chatID, keyWord).Take(&existingFilter).Error
 	if err != nil {
-		log.Errorf("[Database][AddFilter] checking existence: %d - %v", chatID, err)
-		return
-	}
-
-	if count > 0 {
-		return
+		if err != gorm.ErrRecordNotFound {
+			log.Errorf("[Database][AddFilter] checking existence: %d - %v", chatID, err)
+			return
+		}
+		// Filter doesn't exist, continue with creation
+	} else {
+		return // Filter already exists
 	}
 
 	// add the filter

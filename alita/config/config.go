@@ -30,6 +30,12 @@ type Config struct {
 	// Database configuration
 	DatabaseURL string `validate:"required"`
 
+	// Database connection pool configuration
+	DBMaxIdleConns        int `validate:"min=1,max=100"`
+	DBMaxOpenConns        int `validate:"min=1,max=1000"`
+	DBConnMaxLifetimeMin  int `validate:"min=1,max=1440"` // Max lifetime in minutes
+	DBConnMaxIdleTimeMin  int `validate:"min=1,max=60"`   // Max idle time in minutes
+
 	// Redis configuration
 	RedisAddress  string `validate:"required"`
 	RedisPassword string
@@ -55,6 +61,10 @@ type Config struct {
 	OperationTimeout            time.Duration // Computed from OperationTimeoutSeconds
 	EnablePerformanceMonitoring bool
 	EnableBackgroundStats       bool
+
+	// Cache configuration
+	CacheNumCounters int64 `validate:"min=1000,max=1000000"`  // Ristretto NumCounters
+	CacheMaxCost     int64 `validate:"min=100,max=100000000"` // Ristretto MaxCost
 }
 
 // Global configuration instance
@@ -63,6 +73,13 @@ var (
 	ValidLangCodes     []string
 	BotToken           string
 	DatabaseURL        string // Single PostgreSQL connection string
+
+	// Database connection pool configuration
+	DBMaxIdleConns        int
+	DBMaxOpenConns        int
+	DBConnMaxLifetimeMin  int
+	DBConnMaxIdleTimeMin  int
+
 	BotVersion         string = "2.1.3"
 	ApiServer          string
 	WorkingMode        = "worker"
@@ -92,6 +109,10 @@ var (
 	OperationTimeoutSeconds     int
 	EnablePerformanceMonitoring bool
 	EnableBackgroundStats       bool
+
+	// Cache configuration
+	CacheNumCounters int64
+	CacheMaxCost     int64
 
 	// Global config instance
 	AppConfig *Config
@@ -146,12 +167,34 @@ func ValidateConfig(cfg *Config) error {
 		return fmt.Errorf("STATS_COLLECTION_WORKERS must be between 1 and 10")
 	}
 
+	// Validate cache configuration
+	if cfg.CacheNumCounters != 0 && (cfg.CacheNumCounters < 1000 || cfg.CacheNumCounters > 1000000) {
+		return fmt.Errorf("CACHE_NUM_COUNTERS must be between 1000 and 1000000")
+	}
+	if cfg.CacheMaxCost != 0 && (cfg.CacheMaxCost < 100 || cfg.CacheMaxCost > 100000000) {
+		return fmt.Errorf("CACHE_MAX_COST must be between 100 and 100000000")
+	}
+
 	// Validate performance limits
 	if cfg.MaxConcurrentOperations <= 0 || cfg.MaxConcurrentOperations > 1000 {
 		return fmt.Errorf("MAX_CONCURRENT_OPERATIONS must be between 1 and 1000")
 	}
 	if cfg.OperationTimeoutSeconds <= 0 || cfg.OperationTimeoutSeconds > 300 {
 		return fmt.Errorf("OPERATION_TIMEOUT_SECONDS must be between 1 and 300")
+	}
+
+	// Validate database connection pool configuration
+	if cfg.DBMaxIdleConns != 0 && (cfg.DBMaxIdleConns < 1 || cfg.DBMaxIdleConns > 100) {
+		return fmt.Errorf("DB_MAX_IDLE_CONNS must be between 1 and 100")
+	}
+	if cfg.DBMaxOpenConns != 0 && (cfg.DBMaxOpenConns < 1 || cfg.DBMaxOpenConns > 1000) {
+		return fmt.Errorf("DB_MAX_OPEN_CONNS must be between 1 and 1000")
+	}
+	if cfg.DBConnMaxLifetimeMin != 0 && (cfg.DBConnMaxLifetimeMin < 1 || cfg.DBConnMaxLifetimeMin > 1440) {
+		return fmt.Errorf("DB_CONN_MAX_LIFETIME_MIN must be between 1 and 1440 minutes")
+	}
+	if cfg.DBConnMaxIdleTimeMin != 0 && (cfg.DBConnMaxIdleTimeMin < 1 || cfg.DBConnMaxIdleTimeMin > 60) {
+		return fmt.Errorf("DB_CONN_MAX_IDLE_TIME_MIN must be between 1 and 60 minutes")
 	}
 
 	return nil
@@ -179,6 +222,12 @@ func LoadConfig() (*Config, error) {
 		// Database configuration
 		DatabaseURL: os.Getenv("DATABASE_URL"),
 
+		// Database connection pool configuration
+		DBMaxIdleConns:       typeConvertor{str: os.Getenv("DB_MAX_IDLE_CONNS")}.Int(),
+		DBMaxOpenConns:       typeConvertor{str: os.Getenv("DB_MAX_OPEN_CONNS")}.Int(),
+		DBConnMaxLifetimeMin: typeConvertor{str: os.Getenv("DB_CONN_MAX_LIFETIME_MIN")}.Int(),
+		DBConnMaxIdleTimeMin: typeConvertor{str: os.Getenv("DB_CONN_MAX_IDLE_TIME_MIN")}.Int(),
+
 		// Redis configuration
 		RedisAddress:  os.Getenv("REDIS_ADDRESS"),
 		RedisPassword: os.Getenv("REDIS_PASSWORD"),
@@ -203,6 +252,10 @@ func LoadConfig() (*Config, error) {
 		OperationTimeoutSeconds:     typeConvertor{str: os.Getenv("OPERATION_TIMEOUT_SECONDS")}.Int(),
 		EnablePerformanceMonitoring: typeConvertor{str: os.Getenv("ENABLE_PERFORMANCE_MONITORING")}.Bool(),
 		EnableBackgroundStats:       typeConvertor{str: os.Getenv("ENABLE_BACKGROUND_STATS")}.Bool(),
+
+		// Cache configuration
+		CacheNumCounters: typeConvertor{str: os.Getenv("CACHE_NUM_COUNTERS")}.Int64(),
+		CacheMaxCost:     typeConvertor{str: os.Getenv("CACHE_MAX_COST")}.Int64(),
 	}
 
 	// Set defaults
@@ -252,9 +305,6 @@ func (cfg *Config) setDefaults() {
 	if cfg.WorkingMode == "" {
 		cfg.WorkingMode = "worker"
 	}
-	if !cfg.DropPendingUpdates {
-		cfg.DropPendingUpdates = true
-	}
 	if cfg.RedisAddress == "" {
 		cfg.RedisAddress = "localhost:6379"
 	}
@@ -290,6 +340,28 @@ func (cfg *Config) setDefaults() {
 		cfg.StatsCollectionWorkers = 2
 	}
 
+	// Set cache defaults (more reasonable values than hardcoded 1000/100)
+	if cfg.CacheNumCounters == 0 {
+		cfg.CacheNumCounters = 10000 // 10x more counters for better performance
+	}
+	if cfg.CacheMaxCost == 0 {
+		cfg.CacheMaxCost = 10000 // 100x larger cache for better hit rates
+	}
+
+	// Set database connection pool defaults
+	if cfg.DBMaxIdleConns == 0 {
+		cfg.DBMaxIdleConns = 10
+	}
+	if cfg.DBMaxOpenConns == 0 {
+		cfg.DBMaxOpenConns = 100
+	}
+	if cfg.DBConnMaxLifetimeMin == 0 {
+		cfg.DBConnMaxLifetimeMin = 60 // 1 hour
+	}
+	if cfg.DBConnMaxIdleTimeMin == 0 {
+		cfg.DBConnMaxIdleTimeMin = 10 // 10 minutes
+	}
+
 	// Set default safety limits
 	if cfg.MaxConcurrentOperations == 0 {
 		cfg.MaxConcurrentOperations = 50
@@ -321,7 +393,7 @@ func (cfg *Config) setDefaults() {
 func init() {
 	// set logger config
 	log.SetLevel(log.DebugLevel)
-	log.SetReportCaller(true)
+	// SetReportCaller will be configured after debug mode is determined
 	log.SetFormatter(
 		&log.JSONFormatter{
 			DisableHTMLEscape: true,
@@ -344,6 +416,10 @@ func init() {
 	// Set global variables for backward compatibility
 	BotToken = cfg.BotToken
 	DatabaseURL = cfg.DatabaseURL
+	DBMaxIdleConns = cfg.DBMaxIdleConns
+	DBMaxOpenConns = cfg.DBMaxOpenConns
+	DBConnMaxLifetimeMin = cfg.DBConnMaxLifetimeMin
+	DBConnMaxIdleTimeMin = cfg.DBConnMaxIdleTimeMin
 	BotVersion = cfg.BotVersion
 	ApiServer = cfg.ApiServer
 	WorkingMode = cfg.WorkingMode
@@ -368,8 +444,13 @@ func init() {
 	OperationTimeoutSeconds = cfg.OperationTimeoutSeconds
 	EnablePerformanceMonitoring = cfg.EnablePerformanceMonitoring
 	EnableBackgroundStats = cfg.EnableBackgroundStats
+	CacheNumCounters = cfg.CacheNumCounters
+	CacheMaxCost = cfg.CacheMaxCost
 	AllowedUpdates = cfg.AllowedUpdates
 	ValidLangCodes = cfg.ValidLangCodes
+
+	// Configure logger based on debug mode
+	log.SetReportCaller(cfg.Debug) // Only enable stack traces in debug mode
 
 	log.Info("[Config] Configuration loaded and validated successfully")
 }

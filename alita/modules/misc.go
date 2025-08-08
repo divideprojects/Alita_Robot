@@ -26,7 +26,18 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
 
-var miscModule = moduleStruct{moduleName: "Misc"}
+var (
+	miscModule = moduleStruct{moduleName: "Misc"}
+	// HTTP client with timeout and connection pooling for external requests
+	httpClient = &http.Client{
+		Timeout: 10 * time.Second,
+		Transport: &http.Transport{
+			MaxIdleConns:        10,
+			IdleConnTimeout:     90 * time.Second,
+			DisableCompression:  true,
+		},
+	}
+)
 
 // echomsg handles the /tell command to make the bot echo a message
 // as a reply to another message, requiring admin permissions.
@@ -78,7 +89,8 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	}
-	var replyText string
+	var builder strings.Builder
+	builder.Grow(512) // Pre-allocate capacity for better performance
 
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "id") {
@@ -87,21 +99,21 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if userId != 0 {
 		if msg.ReplyToMessage != nil {
-			replyText = fmt.Sprintf(
+			builder.WriteString(fmt.Sprintf(
 				"<b>Chat ID:</b> <code>%d</code>\n",
 				msg.Chat.Id,
-			)
+			))
 			if msg.IsTopicMessage {
-				replyText += fmt.Sprintf("Thread Id: <code>%d</code>\n", msg.MessageThreadId)
+				builder.WriteString(fmt.Sprintf("Thread Id: <code>%d</code>\n", msg.MessageThreadId))
 			}
 			if msg.ReplyToMessage.From != nil {
 				originalId := msg.ReplyToMessage.From.Id
 				_, user1Name, _ := extraction.GetUserInfo(originalId)
-				replyText += fmt.Sprintf(
+				builder.WriteString(fmt.Sprintf(
 					"<b>%s's ID:</b> <code>%d</code>\n",
 					user1Name,
 					originalId,
-				)
+				))
 			}
 
 			if rpm := msg.ReplyToMessage; rpm != nil {
@@ -112,47 +124,47 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 						if fwdc := fwdd.SenderUser; fwdc != nil {
 							user1Id := fwdc.Id
 							_, user1Name, _ := extraction.GetUserInfo(user1Id)
-							replyText += fmt.Sprintf(
+							builder.WriteString(fmt.Sprintf(
 								"<b>Forwarded from %s's ID:</b> <code>%d</code>\n",
 								user1Name, user1Id,
-							)
+							))
 						}
 
 						if fwdc := fwdd.Chat; fwdc != nil {
-							replyText += fmt.Sprintf("<b>Forwarded from chat %s's ID:</b> <code>%d</code>\n",
+							builder.WriteString(fmt.Sprintf("<b>Forwarded from chat %s's ID:</b> <code>%d</code>\n",
 								fwdc.Title, fwdc.Id,
-							)
+							))
 						}
 					}
 				}
 			}
 			if msg.ReplyToMessage.Animation != nil {
-				replyText += fmt.Sprintf("<b>GIF ID:</b> <code>%s</code>\n",
+				builder.WriteString(fmt.Sprintf("<b>GIF ID:</b> <code>%s</code>\n",
 					msg.ReplyToMessage.Animation.FileId,
-				)
+				))
 			}
 			if msg.ReplyToMessage.Sticker != nil {
-				replyText += fmt.Sprintf("<b>Sticker ID:</b> <code>%s</code>\n",
+				builder.WriteString(fmt.Sprintf("<b>Sticker ID:</b> <code>%s</code>\n",
 					msg.ReplyToMessage.Sticker.FileId,
-				)
+				))
 			}
 		} else {
 			_, name, _ := extraction.GetUserInfo(userId)
-			replyText = fmt.Sprintf("%s's ID is <code>%d</code>", name, userId)
+			builder.WriteString(fmt.Sprintf("%s's ID is <code>%d</code>", name, userId))
 		}
 	} else {
 		chat := ctx.EffectiveChat
 		if ctx.Message.Chat.Type == "private" {
-			replyText = fmt.Sprintf("Your ID is <code>%d</code>", chat.Id)
+			builder.WriteString(fmt.Sprintf("Your ID is <code>%d</code>", chat.Id))
 		} else {
-			replyText = fmt.Sprintf("Your ID is <code>%d</code>\nThis group's ID is <code>%d</code>",
+			builder.WriteString(fmt.Sprintf("Your ID is <code>%d</code>\nThis group's ID is <code>%d</code>",
 				msg.From.Id, chat.Id,
-			)
+			))
 		}
 	}
 
 	_, err := msg.Reply(b,
-		replyText,
+		builder.String(),
 		helpers.Shtml(),
 	)
 	if err != nil {
@@ -302,7 +314,7 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 		toLang = args[0]
 		origText = strings.Join(args[1:], " ")
 	}
-	req, err := http.Get(fmt.Sprintf("https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=auto&tl=%s&q=%s", toLang, url.QueryEscape(strings.TrimSpace(origText))))
+	req, err := httpClient.Get(fmt.Sprintf("https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=auto&tl=%s&q=%s", toLang, url.QueryEscape(strings.TrimSpace(origText))))
 	if err != nil {
 		_, _ = msg.Reply(b, "Error making a translation request!", nil)
 		return ext.EndGroups

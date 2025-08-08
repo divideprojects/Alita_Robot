@@ -319,7 +319,7 @@ func (o *OptimizedFilterQueries) GetChatFiltersOptimized(chatID int64) ([]*ChatF
 
 	var filters []*ChatFilters
 	err := o.db.Model(&ChatFilters{}).
-		Select("id, keyword, filter_reply, msg_type").
+		Select("id, keyword, filter_reply, msgtype").
 		Where("chat_id = ?", chatID).
 		Find(&filters).Error
 	if err != nil {
@@ -339,7 +339,7 @@ func (o *OptimizedFilterQueries) GetFilterByKeyword(chatID int64, keyword string
 
 	var filter ChatFilters
 	err := o.db.Model(&ChatFilters{}).
-		Select("id, keyword, filter_reply, msg_type").
+		Select("id, keyword, filter_reply, msgtype").
 		Where("chat_id = ? AND keyword = ?", chatID, keyword).
 		First(&filter).Error
 

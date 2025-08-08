@@ -83,8 +83,9 @@ func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, f
 	if floodSrc.Limit != 0 {
 		currentTime := time.Now().Unix()
 
-		// Read from map
-		tmpInterface, valExists := antifloodModule.syncHelperMap.Load(chatId)
+		// Key by composite (chatId, userId)
+		key := fmt.Sprintf("%d:%d", chatId, userId)
+		tmpInterface, valExists := antifloodModule.syncHelperMap.Load(key)
 		if valExists && tmpInterface != nil {
 			floodCrc = tmpInterface.(floodControl)
 
@@ -94,7 +95,8 @@ func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, f
 			}
 		}
 
-		if floodCrc.userId != userId || floodCrc.userId == 0 {
+		// No need to check userId mismatch since key includes userId
+		if floodCrc.userId == 0 {
 			floodCrc.userId = userId
 			floodCrc.messageCount = 0
 			floodCrc.messageIDs = make([]int64, 0, floodSrc.Limit+5) // Pre-allocate with capacity
@@ -121,7 +123,7 @@ func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, f
 		}
 
 		if floodCrc.messageCount > floodSrc.Limit {
-			antifloodModule.syncHelperMap.Store(chatId,
+			antifloodModule.syncHelperMap.Store(key,
 				floodControl{
 					userId:       0,
 					messageCount: 0,
@@ -131,7 +133,7 @@ func (*moduleStruct) updateFlood(chatId, userId, msgId int64) (returnVar bool, f
 			)
 			returnVar = true
 		} else {
-			antifloodModule.syncHelperMap.Store(chatId, floodCrc)
+			antifloodModule.syncHelperMap.Store(key, floodCrc)
 		}
 	}
 
@@ -424,7 +426,7 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	// if command is disabled, return
-	if chat_status.CheckDisabledCmd(b, msg, "adminlist") {
+	if chat_status.CheckDisabledCmd(b, msg, "flood") {
 		return ext.EndGroups
 	}
 	// connection status
@@ -523,7 +525,7 @@ func (m *moduleStruct) setFloodDeleter(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.SetFloodMsgDel(chat.Id, true)
 			text, _ = tr.GetString("strings." + m.moduleName + ".flood_deleter.enabled")
 		case "off", "no":
-			go db.SetFloodMsgDel(chat.Id, true)
+			go db.SetFloodMsgDel(chat.Id, false)
 			text, _ = tr.GetString("strings." + m.moduleName + ".flood_deleter.disabled")
 		default:
 			text, _ = tr.GetString("strings." + m.moduleName + ".flood_deleter.invalid_option")
