@@ -27,28 +27,28 @@ lint:
 
 # PostgreSQL Migration Targets
 psql-prepare:
-    @echo "🔧 Preparing PostgreSQL migrations (cleaning Supabase SQL)..."
-    @mkdir -p $(PSQL_MIGRATIONS_DIR)
-    @for file in $(SUPABASE_MIGRATIONS_DIR)/*.sql; do \
-        filename=$$(basename "$$file"); \
-        echo "  Processing $$filename..."; \
-        sed -E '/(grant|GRANT).*(anon|authenticated|service_role)/d' "$$file" | \
-        sed 's/ with schema "extensions"//g' | \
-        sed 's/create extension if not exists/CREATE EXTENSION IF NOT EXISTS/g' | \
-        sed 's/create extension/CREATE EXTENSION IF NOT EXISTS/g' > "$(PSQL_MIGRATIONS_DIR)/$$filename"; \
-    done
-    @echo "✅ PostgreSQL migrations prepared in $(PSQL_MIGRATIONS_DIR)"
-    @echo "📋 Found $$(ls -1 $(PSQL_MIGRATIONS_DIR)/*.sql 2>/dev/null | wc -l) migration files"
+	@echo "🔧 Preparing PostgreSQL migrations (cleaning Supabase SQL)..."
+	@mkdir -p $(PSQL_MIGRATIONS_DIR)
+	@for file in $(SUPABASE_MIGRATIONS_DIR)/*.sql; do \
+		filename=$$(basename "$$file"); \
+		echo "  Processing $$filename..."; \
+		sed -E '/(grant|GRANT).*(anon|authenticated|service_role)/d' "$$file" | \
+		sed 's/ with schema "extensions"//g' | \
+		sed 's/create extension if not exists/CREATE EXTENSION IF NOT EXISTS/g' | \
+		sed 's/create extension/CREATE EXTENSION IF NOT EXISTS/g' > "$(PSQL_MIGRATIONS_DIR)/$$filename"; \
+	done
+	@echo "✅ PostgreSQL migrations prepared in $(PSQL_MIGRATIONS_DIR)"
+	@echo "📋 Found $$(ls -1 $(PSQL_MIGRATIONS_DIR)/*.sql 2>/dev/null | wc -l) migration files"
 
 psql-migrate:
-    @echo "🚀 Applying PostgreSQL migrations..."
-    @if [ -z "$(PSQL_DB_HOST)" ] || [ -z "$(PSQL_DB_NAME)" ] || [ -z "$(PSQL_DB_USER)" ]; then \
-        echo "❌ Error: Required environment variables not set"; \
-        echo "   Please set: PSQL_DB_HOST, PSQL_DB_NAME, PSQL_DB_USER, PSQL_DB_PASSWORD"; \
-        exit 1; \
-    fi
-    @chmod +x $(PSQL_SCRIPT) 2>/dev/null || true
-    @bash $(PSQL_SCRIPT)
+	@echo "🚀 Applying PostgreSQL migrations..."
+	@if [ -z "$(PSQL_DB_HOST)" ] || [ -z "$(PSQL_DB_NAME)" ] || [ -z "$(PSQL_DB_USER)" ]; then \
+		echo "❌ Error: Required environment variables not set"; \
+		echo "   Please set: PSQL_DB_HOST, PSQL_DB_NAME, PSQL_DB_USER, PSQL_DB_PASSWORD"; \
+		exit 1; \
+	fi
+	@chmod +x $(PSQL_SCRIPT) 2>/dev/null || true
+	@bash $(PSQL_SCRIPT)
 
 psql-status:
 	@echo "📊 PostgreSQL Migration Status"
@@ -83,8 +83,8 @@ psql-reset:
 	@echo "✅ Database reset complete"
 
 psql-verify:
-    @echo "🔎 Verifying cleaned migrations are in sync"
-    @TMP=$$(mktemp -d); \
-    echo "Using temp dir: $$TMP"; \
-    $(MAKE) --no-print-directory psql-prepare PSQL_MIGRATIONS_DIR="$$TMP"; \
-    git diff --no-index --exit-code $(PSQL_MIGRATIONS_DIR) "$$TMP" || (echo "❌ Drift detected between supabase/migrations and $(PSQL_MIGRATIONS_DIR)" && exit 1)
+	@echo "🔎 Verifying cleaned migrations are in sync"
+	@TMP=$$(mktemp -d); \
+	echo "Using temp dir: $$TMP"; \
+	$(MAKE) --no-print-directory psql-prepare PSQL_MIGRATIONS_DIR="$$TMP"; \
+	git diff --no-index --exit-code $(PSQL_MIGRATIONS_DIR) "$$TMP" || (echo "❌ Drift detected between supabase/migrations and $(PSQL_MIGRATIONS_DIR)" && exit 1)
