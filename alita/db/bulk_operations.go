@@ -111,6 +111,16 @@ func (p *ParallelBulkProcessor[T]) Start() {
 // Runs until the jobs channel is closed or context is cancelled.
 func (p *ParallelBulkProcessor[T]) worker(workerID int) {
 	defer p.wg.Done()
+	
+	// Add panic recovery to prevent worker death
+	defer func() {
+		if r := recover(); r != nil {
+			log.WithFields(log.Fields{
+				"worker_id": workerID,
+				"panic":     r,
+			}).Error("Bulk processor worker panicked")
+		}
+	}()
 
 	for {
 		select {
@@ -122,17 +132,31 @@ func (p *ParallelBulkProcessor[T]) worker(workerID int) {
 			result := BulkProcessingResult{
 				Index: job.Index,
 			}
-
-			if err := p.processor(job.Data); err != nil {
-				result.Error = err
-				log.WithFields(log.Fields{
-					"worker_id": workerID,
-					"job_index": job.Index,
-					"error":     err,
-				}).Error("Bulk processing job failed")
-			} else {
-				result.ProcessedCount = len(job.Data)
-			}
+			
+			// Wrap processor call in function with its own panic recovery
+			func() {
+				defer func() {
+					if r := recover(); r != nil {
+						result.Error = fmt.Errorf("processor panic: %v", r)
+						log.WithFields(log.Fields{
+							"worker_id": workerID,
+							"job_index": job.Index,
+							"panic":     r,
+						}).Error("Bulk processor job panicked")
+					}
+				}()
+				
+				if err := p.processor(job.Data); err != nil {
+					result.Error = err
+					log.WithFields(log.Fields{
+						"worker_id": workerID,
+						"job_index": job.Index,
+						"error":     err,
+					}).Error("Bulk processing job failed")
+				} else {
+					result.ProcessedCount = len(job.Data)
+				}
+			}()
 
 			p.results <- result
 

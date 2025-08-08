@@ -106,56 +106,55 @@ type matchInfo struct {
 }
 
 // findMatchesWithPositions finds all matches with their positions in the text
-// This implementation scans the text once and finds all pattern occurrences
+// This implementation uses the Aho-Corasick matcher for efficient multi-pattern matching
 func (km *KeywordMatcher) findMatchesWithPositions(text []byte) []matchInfo {
-	if len(text) == 0 || len(km.patterns) == 0 {
+	if len(text) == 0 || len(km.patterns) == 0 || km.matcher == nil {
 		return nil
 	}
 
+	// Use the Aho-Corasick matcher to find all matches
+	hits := km.matcher.Match(text)
+	if len(hits) == 0 {
+		return nil
+	}
+	
 	var allMatches []matchInfo
 	seen := make(map[string]bool)
 	
-	// Pre-compute pattern lengths
-	patternLengths := make([]int, len(km.patterns))
-	lowerPatterns := make([]string, len(km.patterns))
-	for i, pattern := range km.patterns {
-		lowerPatterns[i] = strings.ToLower(pattern)
-		patternLengths[i] = len(lowerPatterns[i])
-	}
-
-	// Find all occurrences by scanning through possible positions
-	// We check each position to see if any pattern starts there
-	for pos := 0; pos < len(text); pos++ {
-		// Check each pattern to see if it matches at this position
-		for patternIdx, pattern := range lowerPatterns {
-			patternLen := patternLengths[patternIdx]
-			
-			// Skip if pattern can't fit at this position
-			if pos+patternLen > len(text) {
-				continue
+	// Convert hits to matchInfo
+	for _, hit := range hits {
+		// hit contains the pattern index and end position
+		patternIdx := hit
+		if patternIdx >= len(km.patterns) {
+			continue
+		}
+		
+		pattern := strings.ToLower(km.patterns[patternIdx])
+		patternLen := len(pattern)
+		
+		// Find all occurrences of this pattern in the text
+		textStr := string(text)
+		lowerTextStr := strings.ToLower(textStr)
+		searchStart := 0
+		
+		for {
+			pos := strings.Index(lowerTextStr[searchStart:], pattern)
+			if pos == -1 {
+				break
 			}
 			
-			// Check if pattern matches at this position
-			match := true
-			for i := 0; i < patternLen; i++ {
-				if text[pos+i] != pattern[i] {
-					match = false
-					break
-				}
+			actualPos := searchStart + pos
+			key := fmt.Sprintf("%d:%d", patternIdx, actualPos)
+			if !seen[key] {
+				seen[key] = true
+				allMatches = append(allMatches, matchInfo{
+					PatternIndex: patternIdx,
+					Start:        actualPos,
+					End:          actualPos + patternLen,
+				})
 			}
 			
-			if match {
-				// Create unique key to avoid duplicates
-				key := fmt.Sprintf("%d:%d", patternIdx, pos)
-				if !seen[key] {
-					seen[key] = true
-					allMatches = append(allMatches, matchInfo{
-						PatternIndex: patternIdx,
-						Start:        pos,
-						End:          pos + patternLen,
-					})
-				}
-			}
+			searchStart = actualPos + 1
 		}
 	}
 

@@ -161,8 +161,10 @@ func getFromCacheOrLoad[T any](key string, ttl time.Duration, loader func() (T, 
 		return typedResult, nil
 	}
 
-	// Fallback if type assertion fails
-	return result, fmt.Errorf("type assertion failed for cache key %s", key)
+	// Type assertion failed - return error immediately
+	// Don't return the wrong type which could cause data corruption
+	var zero T
+	return zero, fmt.Errorf("type assertion failed for cache key %s", key)
 }
 
 // deleteCache is a helper to delete a value from cache.

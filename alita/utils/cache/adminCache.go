@@ -137,9 +137,19 @@ func GetAdminCacheListWithFallback(b *gotgbot.Bot, chatId int64) (bool, AdminCac
 // Returns true and the MergedChatMember if the user is found as an admin,
 // false and empty MergedChatMember if not found or cache miss.
 func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
-	adminList, _ := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
-	for i := range adminList.(*AdminCache).UserInfo {
-		admin := &adminList.(*AdminCache).UserInfo[i]
+	adminList, err := Marshal.Get(Context, AdminCache{ChatId: chatId}, new(AdminCache))
+	if err != nil || adminList == nil {
+		return false, gotgbot.MergedChatMember{}
+	}
+	
+	// Type assert with check to prevent panic
+	adminCache, ok := adminList.(*AdminCache)
+	if !ok || adminCache == nil {
+		return false, gotgbot.MergedChatMember{}
+	}
+	
+	for i := range adminCache.UserInfo {
+		admin := &adminCache.UserInfo[i]
 		if admin.User.Id == userId {
 			return true, *admin
 		}
