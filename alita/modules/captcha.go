@@ -592,9 +592,16 @@ func handleCaptchaTimeout(bot *gotgbot.Bot, chatID, userID int64, messageID int6
 	// Execute the failure action
 	switch action {
 	case "kick":
-		_, err := bot.UnbanChatMember(chatID, userID, &gotgbot.UnbanChatMemberOpts{OnlyIfBanned: false})
+		// First ban the user
+		_, err := bot.BanChatMember(chatID, userID, nil)
 		if err != nil {
-			log.Errorf("Failed to kick user %d: %v", userID, err)
+			log.Errorf("Failed to ban user %d for kick: %v", userID, err)
+			return
+		}
+		// Then immediately unban to achieve "kick" effect
+		_, err = bot.UnbanChatMember(chatID, userID, &gotgbot.UnbanChatMemberOpts{OnlyIfBanned: false})
+		if err != nil {
+			log.Errorf("Failed to unban user %d after kick: %v", userID, err)
 		}
 	case "ban":
 		_, err := bot.BanChatMember(chatID, userID, nil)
