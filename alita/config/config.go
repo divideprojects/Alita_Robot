@@ -61,6 +61,7 @@ type Config struct {
 	OperationTimeout            time.Duration // Computed from OperationTimeoutSeconds
 	EnablePerformanceMonitoring bool
 	EnableBackgroundStats       bool
+	DispatcherMaxRoutines       int `validate:"min=1,max=1000"` // Max concurrent goroutines for dispatcher
 
 	// Cache configuration
 	CacheNumCounters int64 `validate:"min=1000,max=1000000"`  // Ristretto NumCounters
@@ -114,6 +115,7 @@ var (
 	OperationTimeoutSeconds     int
 	EnablePerformanceMonitoring bool
 	EnableBackgroundStats       bool
+	DispatcherMaxRoutines       int
 
 	// Cache configuration
 	CacheNumCounters int64
@@ -192,6 +194,9 @@ func ValidateConfig(cfg *Config) error {
 	if cfg.OperationTimeoutSeconds <= 0 || cfg.OperationTimeoutSeconds > 300 {
 		return fmt.Errorf("OPERATION_TIMEOUT_SECONDS must be between 1 and 300")
 	}
+	if cfg.DispatcherMaxRoutines != 0 && (cfg.DispatcherMaxRoutines < 1 || cfg.DispatcherMaxRoutines > 1000) {
+		return fmt.Errorf("DISPATCHER_MAX_ROUTINES must be between 1 and 1000")
+	}
 
 	// Validate database connection pool configuration
 	if cfg.DBMaxIdleConns != 0 && (cfg.DBMaxIdleConns < 1 || cfg.DBMaxIdleConns > 100) {
@@ -262,6 +267,7 @@ func LoadConfig() (*Config, error) {
 		OperationTimeoutSeconds:     typeConvertor{str: os.Getenv("OPERATION_TIMEOUT_SECONDS")}.Int(),
 		EnablePerformanceMonitoring: typeConvertor{str: os.Getenv("ENABLE_PERFORMANCE_MONITORING")}.Bool(),
 		EnableBackgroundStats:       typeConvertor{str: os.Getenv("ENABLE_BACKGROUND_STATS")}.Bool(),
+		DispatcherMaxRoutines:       typeConvertor{str: os.Getenv("DISPATCHER_MAX_ROUTINES")}.Int(),
 
 		// Cache configuration
 		CacheNumCounters: typeConvertor{str: os.Getenv("CACHE_NUM_COUNTERS")}.Int64(),
@@ -393,6 +399,9 @@ func (cfg *Config) setDefaults() {
 	if cfg.OperationTimeoutSeconds == 0 {
 		cfg.OperationTimeoutSeconds = 30
 	}
+	if cfg.DispatcherMaxRoutines == 0 {
+		cfg.DispatcherMaxRoutines = 100 // Default to 100 as per original code
+	}
 
 	// Enable monitoring by default in production
 	if !cfg.Debug {
@@ -468,6 +477,7 @@ func init() {
 	OperationTimeoutSeconds = cfg.OperationTimeoutSeconds
 	EnablePerformanceMonitoring = cfg.EnablePerformanceMonitoring
 	EnableBackgroundStats = cfg.EnableBackgroundStats
+	DispatcherMaxRoutines = cfg.DispatcherMaxRoutines
 	CacheNumCounters = cfg.CacheNumCounters
 	CacheMaxCost = cfg.CacheMaxCost
 	InactivityThresholdDays = cfg.InactivityThresholdDays
