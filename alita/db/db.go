@@ -584,8 +584,8 @@ type CaptchaSettings struct {
 	ID            uint      `gorm:"primaryKey;autoIncrement" json:"-"`
 	ChatID        int64     `gorm:"column:chat_id;uniqueIndex;not null" json:"chat_id,omitempty"`
 	Enabled       bool      `gorm:"column:enabled;default:false" json:"enabled,omitempty"`
-	CaptchaMode   string    `gorm:"column:captcha_mode;default:'math'" json:"captcha_mode,omitempty"` // math or text
-	Timeout       int       `gorm:"column:timeout;default:2" json:"timeout,omitempty"`                 // minutes
+	CaptchaMode   string    `gorm:"column:captcha_mode;default:'math'" json:"captcha_mode,omitempty"`     // math or text
+	Timeout       int       `gorm:"column:timeout;default:2" json:"timeout,omitempty"`                    // minutes
 	FailureAction string    `gorm:"column:failure_action;default:'kick'" json:"failure_action,omitempty"` // kick, ban, or mute
 	MaxAttempts   int       `gorm:"column:max_attempts;default:3" json:"max_attempts,omitempty"`
 	CreatedAt     time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
@@ -600,16 +600,16 @@ func (CaptchaSettings) TableName() string {
 
 // CaptchaAttempts represents active captcha attempts for users
 type CaptchaAttempts struct {
-	ID        uint      `gorm:"primaryKey;autoIncrement" json:"-"`
-	UserID    int64     `gorm:"column:user_id;not null;index:idx_captcha_user_chat" json:"user_id,omitempty"`
-	ChatID    int64     `gorm:"column:chat_id;not null;index:idx_captcha_user_chat" json:"chat_id,omitempty"`
-	Answer    string    `gorm:"column:answer;not null" json:"answer,omitempty"`
-	Attempts  int       `gorm:"column:attempts;default:0" json:"attempts,omitempty"`
-	MessageID int64     `gorm:"column:message_id" json:"message_id,omitempty"`
-    RefreshCount int    `gorm:"column:refresh_count;default:0" json:"refresh_count,omitempty"`
-	ExpiresAt time.Time `gorm:"column:expires_at;not null" json:"expires_at,omitempty"`
-	CreatedAt time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
-	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
+	ID           uint      `gorm:"primaryKey;autoIncrement" json:"-"`
+	UserID       int64     `gorm:"column:user_id;not null;index:idx_captcha_user_chat" json:"user_id,omitempty"`
+	ChatID       int64     `gorm:"column:chat_id;not null;index:idx_captcha_user_chat" json:"chat_id,omitempty"`
+	Answer       string    `gorm:"column:answer;not null" json:"answer,omitempty"`
+	Attempts     int       `gorm:"column:attempts;default:0" json:"attempts,omitempty"`
+	MessageID    int64     `gorm:"column:message_id" json:"message_id,omitempty"`
+	RefreshCount int       `gorm:"column:refresh_count;default:0" json:"refresh_count,omitempty"`
+	ExpiresAt    time.Time `gorm:"column:expires_at;not null" json:"expires_at,omitempty"`
+	CreatedAt    time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
+	UpdatedAt    time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 }
 
 // TableName returns the database table name for the CaptchaAttempts model.
@@ -777,6 +777,10 @@ func GetDB() *gorm.DB {
 // Close closes the database connection and cleans up resources.
 // This should be called when the application is shutting down.
 func Close() error {
+	if DB == nil {
+		return nil
+	}
+
 	sqlDB, err := DB.DB()
 	if err != nil {
 		return err
