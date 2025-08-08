@@ -10,6 +10,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/divideprojects/Alita_Robot/alita/config"
 )
 
 // ProcessingStage represents different stages of message processing
@@ -78,10 +80,10 @@ func NewMessageProcessingPipeline(workers int) *MessageProcessingPipeline {
 		workers = runtime.NumCPU()
 	}
 
-	// Limit maximum concurrency to prevent overwhelming the system
+	// Limit maximum concurrency based on configuration
 	maxConcurrency := workers * 2
-	if maxConcurrency > 20 {
-		maxConcurrency = 20
+	if maxConcurrency > config.MaxConcurrentOperations {
+		maxConcurrency = config.MaxConcurrentOperations
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
