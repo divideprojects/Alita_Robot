@@ -442,7 +442,6 @@ func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, 
 	} else {
 		fullName = firstName
 	}
-	count, _ := chat.GetMemberCount(b, nil)
 	mention := MentionHtml(user.Id, firstName)
 
 	if user.Username != "" {
@@ -450,13 +449,22 @@ func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, 
 	} else {
 		username = mention
 	}
+
+	// Only fetch member count if {count} placeholder is present
+	countStr := "0" // Default value to avoid empty replacement
+	if strings.Contains(oldMsg, "{count}") {
+		if count, err := chat.GetMemberCount(b, nil); err == nil {
+			countStr = strconv.Itoa(int(count))
+		}
+	}
+
 	r := strings.NewReplacer(
 		"{first}", html.EscapeString(firstName),
 		"{last}", html.EscapeString(user.LastName),
 		"{fullname}", html.EscapeString(fullName),
 		"{username}", username,
 		"{mention}", mention,
-		"{count}", strconv.Itoa(int(count)),
+		"{count}", countStr,
 		"{chatname}", html.EscapeString(chat.Title),
 		"{id}", strconv.Itoa(int(user.Id)),
 	)
