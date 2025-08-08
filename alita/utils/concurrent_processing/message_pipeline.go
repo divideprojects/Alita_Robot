@@ -45,7 +45,8 @@ type ProcessingResult struct {
 }
 
 // ProcessorFunc defines the signature for processing functions
-type ProcessorFunc func(bot *gotgbot.Bot, ctx *ext.Context) (blocked bool, err error)
+// The context parameter allows for cancellation and timeout handling
+type ProcessorFunc func(ctx context.Context, bot *gotgbot.Bot, extCtx *ext.Context) (blocked bool, err error)
 
 // MessageProcessingPipeline handles concurrent message processing
 type MessageProcessingPipeline struct {
@@ -198,7 +199,7 @@ func (p *MessageProcessingPipeline) processJob(job MessageProcessingJob, workerI
 			close(done)
 		}()
 
-		blocked, err = processor(job.Bot, job.Context)
+		blocked, err = processor(ctx, job.Bot, job.Context)
 	}()
 
 	select {
