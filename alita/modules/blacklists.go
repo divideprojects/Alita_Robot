@@ -2,7 +2,6 @@ package modules
 
 import (
 	"fmt"
-	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -22,6 +21,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
+	"github.com/divideprojects/Alita_Robot/alita/utils/keyword_matcher"
 )
 
 var blacklistsModule = moduleStruct{
@@ -416,112 +416,122 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	blSettings := db.GetBlacklistSettings(chat.Id)
 	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
-	for _, i := range blSettings.Triggers() {
-		// Use cached compiled regex pattern for better performance
-		pattern := fmt.Sprintf(`(\b|\s)%s\b`, regexp.QuoteMeta(i))
-		compiledRegex, err := globalRegexCache.getCompiledRegex(pattern)
-		if err != nil {
-			log.WithField("pattern", pattern).Error("Failed to compile blacklist regex pattern")
-			continue
+	triggers := blSettings.Triggers()
+	if len(triggers) == 0 {
+		return ext.ContinueGroups
+	}
+
+	// Use Aho-Corasick for efficient multi-pattern matching
+	cache := keyword_matcher.GetGlobalCache()
+	matcher := cache.GetOrCreateMatcher(chat.Id, triggers)
+
+	// Check for any blacklist match first
+	if !matcher.HasMatch(msg.Text) {
+		return ext.ContinueGroups
+	}
+
+	// Get first match to process
+	matches := matcher.FindMatches(msg.Text)
+	if len(matches) == 0 {
+		return ext.ContinueGroups
+	}
+
+	// Process first matched trigger
+	i := matches[0].Pattern
+
+	_, err := msg.Delete(b, nil)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	switch blSettings.Action() {
+	case "mute":
+		// don't work on anonymous channels
+		if user.IsAnonymousChannel() {
+			return ext.ContinueGroups
 		}
 
-		match := compiledRegex.MatchString(strings.ToLower(msg.Text))
-		if match {
-			_, err := msg.Delete(b, nil)
-			if err != nil {
-				log.Error(err)
-				return err
+		_, err = b.RestrictChatMember(chat.Id, user.Id(), gotgbot.ChatPermissions{CanSendMessages: false}, nil)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+
+		_, err = msg.Reply(b,
+			func() string { temp, _ := tr.GetString("strings."+m.moduleName+".bl_watcher.muted_user"); return fmt.Sprintf(temp, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i)) }(),
+			helpers.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	case "ban":
+		// ban anonymous channels as well
+		if user.IsAnonymousChannel() {
+			_, err = b.BanChatSenderChat(chat.Id, user.Id(), nil)
+		} else {
+			_, err = b.BanChatMember(chat.Id, user.Id(), nil)
+		}
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+
+		_, err = msg.Reply(b,
+			func() string { temp, _ := tr.GetString("strings."+m.moduleName+".bl_watcher.banned_user"); return fmt.Sprintf(temp, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i)) }(),
+			helpers.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	case "kick":
+		// don't work on anonymous channels
+		if user.IsAnonymousChannel() {
+			return ext.ContinueGroups
+		}
+
+		_, err = b.BanChatMember(chat.Id, user.Id(), nil)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+
+		_, err = msg.Reply(b,
+			func() string { temp, _ := tr.GetString("strings."+m.moduleName+".bl_watcher.kicked_user"); return fmt.Sprintf(temp, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i)) }(),
+			helpers.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+
+
+		// Use non-blocking delayed unban for blacklist kick action
+		go func(userId int64) {
+			defer func() {
+				if r := recover(); r != nil {
+					log.WithField("panic", r).Error("Panic in blacklist delayed unban goroutine")
+				}
+			}()
+
+			time.Sleep(3 * time.Second)
+			_, unbanErr := chat.UnbanMember(b, userId, nil)
+			if unbanErr != nil {
+				log.WithFields(log.Fields{
+					"chatId": chat.Id,
+					"userId": userId,
+					"error":  unbanErr,
+				}).Error("Failed to unban user after blacklist kick")
 			}
-			switch blSettings.Action() {
-			case "mute":
-				// don't work on anonymous channels
-				if user.IsAnonymousChannel() {
-					return ext.ContinueGroups
-				}
+		}(user.Id())
+	case "warn":
+		// don't work on anonymous channels
+		if user.IsAnonymousChannel() {
+			return ext.ContinueGroups
+		}
 
-				_, err = b.RestrictChatMember(chat.Id, user.Id(), gotgbot.ChatPermissions{CanSendMessages: false}, nil)
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-
-				_, err = msg.Reply(b,
-					func() string { temp, _ := tr.GetString("strings."+m.moduleName+".bl_watcher.muted_user"); return fmt.Sprintf(temp, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i)) }(),
-					helpers.Shtml())
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-			case "ban":
-				// ban anonymous channels as well
-				if user.IsAnonymousChannel() {
-					_, err = b.BanChatSenderChat(chat.Id, user.Id(), nil)
-				} else {
-					_, err = b.BanChatMember(chat.Id, user.Id(), nil)
-				}
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-
-				_, err = msg.Reply(b,
-					func() string { temp, _ := tr.GetString("strings."+m.moduleName+".bl_watcher.banned_user"); return fmt.Sprintf(temp, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i)) }(),
-					helpers.Shtml())
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-			case "kick":
-				// don't work on anonymous channels
-				if user.IsAnonymousChannel() {
-					return ext.ContinueGroups
-				}
-
-				_, err = b.BanChatMember(chat.Id, user.Id(), nil)
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-
-				_, err = msg.Reply(b,
-					func() string { temp, _ := tr.GetString("strings."+m.moduleName+".bl_watcher.kicked_user"); return fmt.Sprintf(temp, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i)) }(),
-					helpers.Shtml())
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-
-				// Use non-blocking delayed unban for blacklist kick action
-				go func(userId int64) {
-					defer func() {
-						if r := recover(); r != nil {
-							log.WithField("panic", r).Error("Panic in blacklist delayed unban goroutine")
-						}
-					}()
-
-					time.Sleep(3 * time.Second)
-					_, unbanErr := chat.UnbanMember(b, userId, nil)
-					if unbanErr != nil {
-						log.WithFields(log.Fields{
-							"chatId": chat.Id,
-							"userId": userId,
-							"error":  unbanErr,
-						}).Error("Failed to unban user after blacklist kick")
-					}
-				}(user.Id())
-			case "warn":
-				// don't work on anonymous channels
-				if user.IsAnonymousChannel() {
-					return ext.ContinueGroups
-				}
-
-				err = warnsModule.warnThisUser(b, ctx, user.Id(), fmt.Sprintf(blSettings.Reason(), i), "warn")
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-			}
-			break
+		err = warnsModule.warnThisUser(b, ctx, user.Id(), fmt.Sprintf(blSettings.Reason(), i), "warn")
+		if err != nil {
+			log.Error(err)
+			return err
 		}
 	}
 

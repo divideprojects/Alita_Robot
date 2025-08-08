@@ -3,9 +3,7 @@ package modules
 import (
 	"fmt"
 	"html"
-	"regexp"
 	"strings"
-	"sync"
 
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
@@ -24,38 +22,13 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
+	"github.com/divideprojects/Alita_Robot/alita/utils/keyword_matcher"
 )
 
 var filtersModule = moduleStruct{
 	moduleName:          "Filters",
 	overwriteFiltersMap: make(map[string]overwriteFilter),
 	handlerGroup:        9,
-}
-
-// Shared regex pattern cache for performance optimization
-type sharedRegexCache struct {
-	patterns sync.Map // map[string]*regexp.Regexp
-}
-
-var globalRegexCache = &sharedRegexCache{}
-
-// getCompiledRegex returns a compiled regex pattern from cache or compiles and caches it
-// getCompiledRegex returns a compiled regex pattern from cache or compiles and caches it.
-// Uses sync.Map for thread-safe caching to improve performance when matching filter patterns.
-func (rc *sharedRegexCache) getCompiledRegex(pattern string) (*regexp.Regexp, error) {
-	if cached, ok := rc.patterns.Load(pattern); ok {
-		return cached.(*regexp.Regexp), nil
-	}
-
-	// Compile the regex pattern
-	compiled, err := regexp.Compile(pattern)
-	if err != nil {
-		return nil, err
-	}
-
-	// Store in cache for future use
-	rc.patterns.Store(pattern, compiled)
-	return compiled, nil
 }
 
 /*
@@ -443,28 +416,35 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
 	filterKeys := db.GetFiltersList(chat.Id)
+	if len(filterKeys) == 0 {
+		return ext.ContinueGroups
+	}
 
-	for _, i := range filterKeys {
-		// Use cached compiled regex patterns for better performance
-		mainPattern := fmt.Sprintf(`(\b|\s)%s\b`, regexp.QuoteMeta(i))
-		mainRegex, err := globalRegexCache.getCompiledRegex(mainPattern)
-		if err != nil {
-			log.WithField("pattern", mainPattern).Error("Failed to compile main regex pattern")
-			continue
-		}
+	// Use Aho-Corasick for efficient multi-pattern matching
+	cache := keyword_matcher.GetGlobalCache()
+	matcher := cache.GetOrCreateMatcher(chat.Id, filterKeys)
 
-		noformatPattern := fmt.Sprintf("%s noformat", regexp.QuoteMeta(i))
-		noformatRegex, err := globalRegexCache.getCompiledRegex(noformatPattern)
-		if err != nil {
-			log.WithField("pattern", noformatPattern).Error("Failed to compile noformat regex pattern")
-			continue
-		}
+	// Check for any filter match first
+	if !matcher.HasMatch(msg.Text) {
+		return ext.ContinueGroups
+	}
 
-		match := mainRegex.MatchString(strings.ToLower(msg.Text))
-		noformatMatch := noformatRegex.MatchString(strings.ToLower(msg.Text))
+	// Get all matches to handle them individually
+	matches := matcher.FindMatches(msg.Text)
+	if len(matches) == 0 {
+		return ext.ContinueGroups
+	}
 
-		if match {
-			filtData := db.GetFilter(chat.Id, i)
+	// Process first match (same behavior as before)
+	firstMatch := matches[0]
+	i := firstMatch.Pattern
+
+	// Check for noformat pattern using simpler string matching
+	noformatPattern := i + " noformat"
+	noformatMatch := strings.Contains(strings.ToLower(msg.Text), strings.ToLower(noformatPattern))
+
+	// Process the matched filter
+	filtData := db.GetFilter(chat.Id, i)
 
 			if noformatMatch {
 				// check if user is admin or not
@@ -502,10 +482,6 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 					return err
 				}
 			}
-
-			return ext.ContinueGroups
-		}
-	}
 
 	return ext.ContinueGroups
 }
