@@ -32,3 +32,4 @@ local.docker-compose.yml
 # migrate
 scripts/migrate/migrate
 .mcp.json
+alita_test

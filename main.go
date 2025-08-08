@@ -52,24 +52,29 @@ func main() {
 	}
 	log.Infof("Locale manager initialized with %d languages: %v", len(localeManager.GetAvailableLanguages()), localeManager.GetAvailableLanguages())
 
-	// Create optimized HTTP client with connection pooling for better performance
-	httpClient := http.Client{
-		Timeout: 30 * time.Second,
-		Transport: &http.Transport{
-			MaxIdleConns:        100,              // Maximum idle connections across all hosts
-			MaxIdleConnsPerHost: 10,               // Maximum idle connections per host
-			MaxConnsPerHost:     10,               // Maximum total connections per host
-			IdleConnTimeout:     90 * time.Second, // How long idle connections are kept alive
-			DisableCompression:  false,            // Enable compression for smaller payloads
-			ForceAttemptHTTP2:   true,             // Enable HTTP/2 for multiplexing
-		},
+	// Create optimized HTTP transport with connection pooling for better performance
+	// IMPORTANT: We create a transport pointer that will be shared across all requests
+	// This ensures connection pooling works correctly (the http.Client struct is copied by value in BaseBotClient)
+	httpTransport := &http.Transport{
+		MaxIdleConns:        100,              // Maximum idle connections across all hosts
+		MaxIdleConnsPerHost: 30,               // Increased from 10 since all requests go to api.telegram.org
+		MaxConnsPerHost:     30,               // Maximum total connections per host
+		IdleConnTimeout:     90 * time.Second, // How long idle connections are kept alive
+		DisableCompression:  false,            // Enable compression for smaller payloads
+		ForceAttemptHTTP2:   true,             // Enable HTTP/2 for multiplexing
+		DisableKeepAlives:   false,            // Explicitly enable keep-alive for connection reuse
+		TLSHandshakeTimeout: 10 * time.Second, // Timeout for TLS handshake
+		ResponseHeaderTimeout: 10 * time.Second, // Timeout waiting for response headers
 	}
 
 	// Create bot with optimized HTTP client using BaseBotClient
 	log.Info("[Main] Initializing bot with optimized HTTP client (connection pooling enabled)")
 	b, err := gotgbot.NewBot(config.BotToken, &gotgbot.BotOpts{
 		BotClient: &gotgbot.BaseBotClient{
-			Client:             httpClient,
+			Client: http.Client{
+				Transport: httpTransport, // Use the shared transport pointer
+				Timeout:   30 * time.Second,
+			},
 			UseTestEnvironment: false,
 			DefaultRequestOpts: &gotgbot.RequestOpts{
 				Timeout: time.Duration(30) * time.Second,
@@ -79,18 +84,30 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create new bot: %v", err)
 	}
-	log.Info("[Main] Bot initialized with connection pooling (MaxIdleConns: 100, MaxIdleConnsPerHost: 10, HTTP/2 enabled)")
+	log.Infof("[Main] Bot initialized with connection pooling (MaxIdleConns: 100, MaxIdleConnsPerHost: 30, HTTP/2 enabled)")
 
 	// Pre-warm connections to Telegram API for faster initial responses
 	go func() {
 		log.Info("[Main] Pre-warming connections to Telegram API...")
-		startTime := time.Now()
-		_, err := b.GetMe(nil)
-		if err != nil {
-			log.Warnf("[Main] Failed to pre-warm connections: %v", err)
-		} else {
-			log.Infof("[Main] Connection pre-warming completed in %v", time.Since(startTime))
+		
+		// Make multiple requests to establish connection pool
+		for i := 0; i < 3; i++ {
+			startTime := time.Now()
+			_, err := b.GetMe(nil)
+			if err != nil {
+				log.Warnf("[Main] Pre-warm request %d failed: %v", i+1, err)
+			} else {
+				elapsed := time.Since(startTime)
+				log.Infof("[Main] Pre-warm request %d completed in %v", i+1, elapsed)
+				// First request establishes connection, subsequent ones should be faster
+				if i > 0 && elapsed < 100*time.Millisecond {
+					log.Info("[Main] Connection pooling confirmed working - reused existing connection")
+				}
+			}
+			time.Sleep(100 * time.Millisecond) // Small delay between requests
 		}
+		
+		log.Info("[Main] Connection pre-warming completed")
 	}()
 
 	// some initial checks before running bot
