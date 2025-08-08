@@ -75,7 +75,7 @@ func Smarkdown() *gotgbot.SendMessageOpts {
 // SplitMessage splits a message into multiple messages if it exceeds MaxMessageLength.
 // It splits on newlines to preserve message structure when possible.
 func SplitMessage(msg string) []string {
-	if len(msg) > MaxMessageLength {
+	if len(msg) <= MaxMessageLength {
 		tmp := make([]string, 1)
 		tmp[0] = msg
 		return tmp
