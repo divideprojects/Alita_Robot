@@ -1,6 +1,7 @@
 package keyword_matcher
 
 import (
+	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -76,29 +77,89 @@ func (km *KeywordMatcher) FindMatches(text string) []MatchResult {
 	}
 
 	lowerText := strings.ToLower(text)
-	hits := km.matcher.Match([]byte(lowerText))
+	matches := km.findMatchesWithPositions([]byte(lowerText))
 
-	if len(hits) == 0 {
+	if len(matches) == 0 {
 		return nil
 	}
 
-	results := make([]MatchResult, 0, len(hits))
-	for _, patternIndex := range hits {
-		if patternIndex < len(km.patterns) {
-			pattern := km.patterns[patternIndex]
-			// Find the actual position in the text
-			pos := strings.Index(lowerText, strings.ToLower(pattern))
-			if pos != -1 {
-				results = append(results, MatchResult{
-					Pattern: pattern,
-					Start:   pos,
-					End:     pos + len(pattern),
-				})
-			}
+	results := make([]MatchResult, 0, len(matches))
+	for _, match := range matches {
+		if match.PatternIndex < len(km.patterns) {
+			pattern := km.patterns[match.PatternIndex]
+			results = append(results, MatchResult{
+				Pattern: pattern,
+				Start:   match.Start,
+				End:     match.End,
+			})
 		}
 	}
 
 	return results
+}
+
+// matchInfo holds information about a match including position
+type matchInfo struct {
+	PatternIndex int
+	Start        int
+	End          int
+}
+
+// findMatchesWithPositions finds all matches with their positions in the text
+// This implementation scans the text once and finds all pattern occurrences
+func (km *KeywordMatcher) findMatchesWithPositions(text []byte) []matchInfo {
+	if len(text) == 0 || len(km.patterns) == 0 {
+		return nil
+	}
+
+	var allMatches []matchInfo
+	seen := make(map[string]bool)
+	
+	// Pre-compute pattern lengths
+	patternLengths := make([]int, len(km.patterns))
+	lowerPatterns := make([]string, len(km.patterns))
+	for i, pattern := range km.patterns {
+		lowerPatterns[i] = strings.ToLower(pattern)
+		patternLengths[i] = len(lowerPatterns[i])
+	}
+
+	// Find all occurrences by scanning through possible positions
+	// We check each position to see if any pattern starts there
+	for pos := 0; pos < len(text); pos++ {
+		// Check each pattern to see if it matches at this position
+		for patternIdx, pattern := range lowerPatterns {
+			patternLen := patternLengths[patternIdx]
+			
+			// Skip if pattern can't fit at this position
+			if pos+patternLen > len(text) {
+				continue
+			}
+			
+			// Check if pattern matches at this position
+			match := true
+			for i := 0; i < patternLen; i++ {
+				if text[pos+i] != pattern[i] {
+					match = false
+					break
+				}
+			}
+			
+			if match {
+				// Create unique key to avoid duplicates
+				key := fmt.Sprintf("%d:%d", patternIdx, pos)
+				if !seen[key] {
+					seen[key] = true
+					allMatches = append(allMatches, matchInfo{
+						PatternIndex: patternIdx,
+						Start:        pos,
+						End:          pos + patternLen,
+					})
+				}
+			}
+		}
+	}
+
+	return allMatches
 }
 
 // HasMatch returns true if any pattern matches the text
