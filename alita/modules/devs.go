@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
-	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -469,6 +468,4 @@ func LoadDev(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("chatinfo", devsModule.chatInfo))
 	dispatcher.AddHandler(handlers.NewCommand("chatlist", devsModule.chatList))
 	dispatcher.AddHandler(handlers.NewCommand("leavechat", devsModule.leaveChat))
-	dispatcher.AddHandler(handlers.NewCommand("dbclean", devsModule.dbClean))
-	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("dbclean."), devsModule.dbCleanButtonHandler))
 }

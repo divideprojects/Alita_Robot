@@ -65,6 +65,11 @@ type Config struct {
 	// Cache configuration
 	CacheNumCounters int64 `validate:"min=1000,max=1000000"`  // Ristretto NumCounters
 	CacheMaxCost     int64 `validate:"min=100,max=100000000"` // Ristretto MaxCost
+
+	// Activity monitoring configuration
+	InactivityThresholdDays int  `validate:"min=1,max=365"`  // Days before marking a chat as inactive
+	ActivityCheckInterval   int  `validate:"min=1,max=24"`   // Hours between activity checks
+	EnableAutoCleanup       bool // Whether to automatically mark inactive chats
 }
 
 // Global configuration instance
@@ -113,6 +118,11 @@ var (
 	// Cache configuration
 	CacheNumCounters int64
 	CacheMaxCost     int64
+
+	// Activity monitoring configuration
+	InactivityThresholdDays int
+	ActivityCheckInterval   int
+	EnableAutoCleanup       *bool
 
 	// Global config instance
 	AppConfig *Config
@@ -256,6 +266,11 @@ func LoadConfig() (*Config, error) {
 		// Cache configuration
 		CacheNumCounters: typeConvertor{str: os.Getenv("CACHE_NUM_COUNTERS")}.Int64(),
 		CacheMaxCost:     typeConvertor{str: os.Getenv("CACHE_MAX_COST")}.Int64(),
+
+		// Activity monitoring configuration
+		InactivityThresholdDays: typeConvertor{str: os.Getenv("INACTIVITY_THRESHOLD_DAYS")}.Int(),
+		ActivityCheckInterval:   typeConvertor{str: os.Getenv("ACTIVITY_CHECK_INTERVAL")}.Int(),
+		EnableAutoCleanup:       typeConvertor{str: os.Getenv("ENABLE_AUTO_CLEANUP")}.Bool(),
 	}
 
 	// Set defaults
@@ -347,6 +362,15 @@ func (cfg *Config) setDefaults() {
 	if cfg.CacheMaxCost == 0 {
 		cfg.CacheMaxCost = 10000 // 100x larger cache for better hit rates
 	}
+
+	// Set activity monitoring defaults
+	if cfg.InactivityThresholdDays == 0 {
+		cfg.InactivityThresholdDays = 30 // 30 days before marking as inactive
+	}
+	if cfg.ActivityCheckInterval == 0 {
+		cfg.ActivityCheckInterval = 1 // Check every hour
+	}
+	// EnableAutoCleanup defaults to true unless explicitly set to false
 
 	// Set database connection pool defaults
 	if cfg.DBMaxIdleConns == 0 {
@@ -446,6 +470,9 @@ func init() {
 	EnableBackgroundStats = cfg.EnableBackgroundStats
 	CacheNumCounters = cfg.CacheNumCounters
 	CacheMaxCost = cfg.CacheMaxCost
+	InactivityThresholdDays = cfg.InactivityThresholdDays
+	ActivityCheckInterval = cfg.ActivityCheckInterval
+	EnableAutoCleanup = &cfg.EnableAutoCleanup
 	AllowedUpdates = cfg.AllowedUpdates
 	ValidLangCodes = cfg.ValidLangCodes
 

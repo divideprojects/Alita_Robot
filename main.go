@@ -64,6 +64,7 @@ func main() {
 	// Initialize monitoring systems
 	var statsCollector *monitoring.BackgroundStatsCollector
 	var autoRemediation *monitoring.AutoRemediationManager
+	var activityMonitor *monitoring.ActivityMonitor
 
 	if config.EnableBackgroundStats {
 		statsCollector = monitoring.NewBackgroundStatsCollector()
@@ -77,10 +78,18 @@ func main() {
 		defer autoRemediation.Stop()
 	}
 
+	// Initialize activity monitoring for automatic group activity tracking
+	activityMonitor = monitoring.NewActivityMonitor()
+	activityMonitor.Start()
+	defer activityMonitor.Stop()
+
 	// Setup graceful shutdown
 	shutdownManager := shutdown.NewManager()
 	shutdownManager.RegisterHandler(func() error {
 		log.Info("[Shutdown] Stopping monitoring systems...")
+		if activityMonitor != nil {
+			activityMonitor.Stop()
+		}
 		if autoRemediation != nil {
 			autoRemediation.Stop()
 		}

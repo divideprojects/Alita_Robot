@@ -41,7 +41,7 @@ make psql-reset    # Reset database - DANGEROUS: drops and recreates all tables
 The bot uses multiple worker pool patterns for performance:
 - **Message Pipeline** (`concurrent_processing/message_pipeline.go`): Concurrent validation stages
 - **Bulk Operations** (`db/bulk_operations.go`): Parallel batch processors with generic framework
-- **DB Cleanup** (`modules/dbclean.go`): Worker pool for chat validation
+- **Activity Monitor** (`monitoring/activity_monitor.go`): Automatic group activity tracking with configurable thresholds
 - **Dispatcher**: Limited to 100 max goroutines to prevent explosion
 - **Worker Safety** (`safety/worker_safety.go`): Panic recovery and rate limiting
 
@@ -66,6 +66,14 @@ When adding new features:
 4. Use decorators for common middleware (permission checks, error handling)
 5. Follow repository pattern for data access
 6. Add translations to `locales/` for user-facing strings
+
+### Activity Monitoring System
+The bot includes automatic group activity tracking that replaces the manual dbclean command:
+- **Automatic Activity Tracking**: Updates `last_activity` timestamp on every message
+- **Configurable Thresholds**: Set inactivity period before marking groups as inactive
+- **Activity Metrics**: Tracks Daily Active Groups (DAG), Weekly Active Groups (WAG), and Monthly Active Groups (MAG)
+- **Background Processing**: Hourly checks for inactive groups with automatic cleanup
+- **Smart Reactivation**: Automatically reactivates groups when they become active again
 
 ### Current Feature Branch: Captcha Module
 The `dev/captcha-module` branch adds CAPTCHA verification for new members:
@@ -95,6 +103,11 @@ CLOUDFLARE_TUNNEL_TOKEN # For Cloudflare tunnel integration
 # Performance Tuning (optional)
 WORKER_POOL_SIZE   # Concurrent worker pool size (default: 10)
 CACHE_TTL          # Cache time-to-live in seconds (default: 300)
+
+# Activity Monitoring (optional)
+INACTIVITY_THRESHOLD_DAYS  # Days before marking chat inactive (default: 30)
+ACTIVITY_CHECK_INTERVAL    # Hours between activity checks (default: 1)
+ENABLE_AUTO_CLEANUP        # Auto-mark inactive chats (default: true)
 ```
 
 ## Critical Patterns to Understand
