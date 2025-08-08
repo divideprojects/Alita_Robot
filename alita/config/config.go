@@ -346,7 +346,7 @@ func (cfg *Config) setDefaults() {
 func init() {
 	// set logger config
 	log.SetLevel(log.DebugLevel)
-	log.SetReportCaller(true)
+	// SetReportCaller will be configured after debug mode is determined
 	log.SetFormatter(
 		&log.JSONFormatter{
 			DisableHTMLEscape: true,
@@ -397,6 +397,9 @@ func init() {
 	CacheMaxCost = cfg.CacheMaxCost
 	AllowedUpdates = cfg.AllowedUpdates
 	ValidLangCodes = cfg.ValidLangCodes
+
+	// Configure logger based on debug mode
+	log.SetReportCaller(cfg.Debug) // Only enable stack traces in debug mode
 
 	log.Info("[Config] Configuration loaded and validated successfully")
 }
