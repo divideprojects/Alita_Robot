@@ -652,10 +652,11 @@ func init() {
 		log.Fatalf("[Database][SQL DB]: %v", err)
 	}
 
-	// Configure connection pool
-	sqlDB.SetMaxIdleConns(10)
-	sqlDB.SetMaxOpenConns(100)
-	sqlDB.SetConnMaxLifetime(time.Hour)
+	// Configure connection pool with configurable values
+	sqlDB.SetMaxIdleConns(config.DBMaxIdleConns)
+	sqlDB.SetMaxOpenConns(config.DBMaxOpenConns)
+	sqlDB.SetConnMaxLifetime(time.Duration(config.DBConnMaxLifetimeMin) * time.Minute)
+	sqlDB.SetConnMaxIdleTime(time.Duration(config.DBConnMaxIdleTimeMin) * time.Minute)
 
 	// Test connection
 	if err := sqlDB.Ping(); err != nil {
