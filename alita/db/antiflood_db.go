@@ -45,8 +45,15 @@ func SetFlood(chatID int64, limit int) {
 		action = defaultFloodsettingsMode
 	}
 
-	// update the value in db
-	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{Limit: limit, Action: action})
+	// create or update the value in db
+	settings := AntifloodSettings{
+		ChatId: chatID,
+		Limit:  limit,
+		Action: action,
+	}
+	err := DB.Where(AntifloodSettings{ChatId: chatID}).
+		Assign(settings).
+		FirstOrCreate(&settings).Error
 	if err != nil {
 		log.Errorf("[Database] SetFlood: %v - %d", err, chatID)
 	}
@@ -61,7 +68,11 @@ func SetFloodMode(chatID int64, mode string) {
 	if floodSrc.Action == mode {
 		return
 	}
-	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{Action: mode})
+	// create or update the mode in db
+	settings := AntifloodSettings{ChatId: chatID}
+	err := DB.Where(AntifloodSettings{ChatId: chatID}).
+		Assign(AntifloodSettings{Action: mode}).
+		FirstOrCreate(&settings).Error
 	if err != nil {
 		log.Errorf("[Database] SetFloodMode: %v - %d", err, chatID)
 	}
@@ -76,7 +87,11 @@ func SetFloodMsgDel(chatID int64, val bool) {
 	if floodSrc.DeleteAntifloodMessage == val {
 		return
 	}
-	err := UpdateRecord(&AntifloodSettings{}, AntifloodSettings{ChatId: chatID}, AntifloodSettings{DeleteAntifloodMessage: val})
+	// create or update the message deletion setting in db
+	settings := AntifloodSettings{ChatId: chatID}
+	err := DB.Where(AntifloodSettings{ChatId: chatID}).
+		Assign(AntifloodSettings{DeleteAntifloodMessage: val}).
+		FirstOrCreate(&settings).Error
 	if err != nil {
 		log.Errorf("[Database] SetFloodMsgDel: %v", err)
 		return
