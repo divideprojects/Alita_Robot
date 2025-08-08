@@ -78,6 +78,24 @@ Two-layer cache system with fallback:
 - **Bulk Operations**: Generic parallel processing framework
 - **Transaction Support** (`db/shared_helpers.go`): Automatic rollback on errors
 
+### Database Schema Design
+
+The database uses a **surrogate key pattern** for all tables:
+
+- **Primary Keys**: Each table has an auto-incremented `id` field as the primary
+  key (internal identifier)
+- **Business Keys**: External identifiers like `user_id` (Telegram user ID) and
+  `chat_id` (Telegram chat ID) are stored with unique constraints
+- **Benefits of This Pattern**:
+  - Decouples internal schema from external systems (Telegram IDs)
+  - Provides stability if external IDs change or new platforms are added
+  - Simplifies GORM operations with consistent integer primary keys
+  - Better performance for joins and indexing
+- **Duplicate Prevention**: Unique constraints on `user_id` and `chat_id` prevent
+  duplicates even though they're not primary keys
+- **Exception**: The `chat_users` join table uses a composite primary key
+  `(chat_id, user_id)` since each pair must be unique
+
 ### Module Development Pattern
 
 When adding new features:
