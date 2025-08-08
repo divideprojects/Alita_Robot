@@ -26,7 +26,18 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
 
-var miscModule = moduleStruct{moduleName: "Misc"}
+var (
+	miscModule = moduleStruct{moduleName: "Misc"}
+	// HTTP client with timeout and connection pooling for external requests
+	httpClient = &http.Client{
+		Timeout: 10 * time.Second,
+		Transport: &http.Transport{
+			MaxIdleConns:        10,
+			IdleConnTimeout:     90 * time.Second,
+			DisableCompression:  true,
+		},
+	}
+)
 
 // echomsg handles the /tell command to make the bot echo a message
 // as a reply to another message, requiring admin permissions.
@@ -302,7 +313,7 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 		toLang = args[0]
 		origText = strings.Join(args[1:], " ")
 	}
-	req, err := http.Get(fmt.Sprintf("https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=auto&tl=%s&q=%s", toLang, url.QueryEscape(strings.TrimSpace(origText))))
+	req, err := httpClient.Get(fmt.Sprintf("https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=auto&tl=%s&q=%s", toLang, url.QueryEscape(strings.TrimSpace(origText))))
 	if err != nil {
 		_, _ = msg.Reply(b, "Error making a translation request!", nil)
 		return ext.EndGroups
