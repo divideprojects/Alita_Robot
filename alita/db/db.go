@@ -127,13 +127,14 @@ func (ia Int64Array) Value() (driver.Value, error) {
 
 // User represents a user in the system
 type User struct {
-	ID        uint      `gorm:"primaryKey;autoIncrement" json:"-"`
-	UserId    int64     `gorm:"column:user_id;uniqueIndex;not null" json:"_id,omitempty"`
-	UserName  string    `gorm:"column:username;index" json:"username" default:"nil"`
-	Name      string    `gorm:"column:name" json:"name" default:"nil"`
-	Language  string    `gorm:"column:language;default:'en'" json:"language" default:"en"`
-	CreatedAt time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
-	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
+	ID           uint      `gorm:"primaryKey;autoIncrement" json:"-"`
+	UserId       int64     `gorm:"column:user_id;uniqueIndex;not null" json:"_id,omitempty"`
+	UserName     string    `gorm:"column:username;index" json:"username" default:"nil"`
+	Name         string    `gorm:"column:name" json:"name" default:"nil"`
+	Language     string    `gorm:"column:language;default:'en'" json:"language" default:"en"`
+	LastActivity time.Time `gorm:"column:last_activity" json:"last_activity,omitempty"`
+	CreatedAt    time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
+	UpdatedAt    time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 
 	// Relationships
 	Chats []Chat `gorm:"many2many:chat_users;" json:"-"`

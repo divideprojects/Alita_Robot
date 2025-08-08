@@ -30,6 +30,10 @@ type ActivityMetrics struct {
 	MonthlyActiveGroups int64
 	TotalGroups         int64
 	InactiveGroups      int64
+	DailyActiveUsers    int64
+	WeeklyActiveUsers   int64
+	MonthlyActiveUsers  int64
+	TotalUsers          int64
 	CalculatedAt        time.Time
 }
 
@@ -196,6 +200,37 @@ func (am *ActivityMonitor) calculateMetrics() {
 		log.Errorf("[ActivityMonitor] Error counting inactive groups: %v", err)
 	}
 	
+	// Count user activity metrics
+	// Count daily active users
+	err = db.DB.Model(&db.User{}).
+		Where("last_activity >= ?", dayAgo).
+		Count(&metrics.DailyActiveUsers).Error
+	if err != nil {
+		log.Errorf("[ActivityMonitor] Error counting daily active users: %v", err)
+	}
+	
+	// Count weekly active users
+	err = db.DB.Model(&db.User{}).
+		Where("last_activity >= ?", weekAgo).
+		Count(&metrics.WeeklyActiveUsers).Error
+	if err != nil {
+		log.Errorf("[ActivityMonitor] Error counting weekly active users: %v", err)
+	}
+	
+	// Count monthly active users
+	err = db.DB.Model(&db.User{}).
+		Where("last_activity >= ?", monthAgo).
+		Count(&metrics.MonthlyActiveUsers).Error
+	if err != nil {
+		log.Errorf("[ActivityMonitor] Error counting monthly active users: %v", err)
+	}
+	
+	// Count total users
+	err = db.DB.Model(&db.User{}).Count(&metrics.TotalUsers).Error
+	if err != nil {
+		log.Errorf("[ActivityMonitor] Error counting total users: %v", err)
+	}
+	
 	// Store metrics
 	am.metricsLock.Lock()
 	am.lastMetrics = metrics
@@ -203,11 +238,15 @@ func (am *ActivityMonitor) calculateMetrics() {
 	am.metricsLock.Unlock()
 	
 	log.WithFields(log.Fields{
-		"daily_active":   metrics.DailyActiveGroups,
-		"weekly_active":  metrics.WeeklyActiveGroups,
-		"monthly_active": metrics.MonthlyActiveGroups,
-		"total_groups":   metrics.TotalGroups,
-		"inactive":       metrics.InactiveGroups,
+		"daily_active_groups":   metrics.DailyActiveGroups,
+		"weekly_active_groups":  metrics.WeeklyActiveGroups,
+		"monthly_active_groups": metrics.MonthlyActiveGroups,
+		"total_groups":          metrics.TotalGroups,
+		"inactive_groups":       metrics.InactiveGroups,
+		"daily_active_users":    metrics.DailyActiveUsers,
+		"weekly_active_users":   metrics.WeeklyActiveUsers,
+		"monthly_active_users":  metrics.MonthlyActiveUsers,
+		"total_users":           metrics.TotalUsers,
 	}).Info("[ActivityMonitor] Metrics calculated")
 }
 
@@ -249,6 +288,33 @@ func (am *ActivityMonitor) GetMetricsForStats() (dag, wag, mag int64) {
 	db.DB.Model(&db.Chat{}).Where("is_inactive = ? AND last_activity >= ?", false, monthAgo).Count(&mag)
 	
 	return dag, wag, mag
+}
+
+// GetUserMetricsForStats returns user activity metrics for the stats display
+// Returns DAU (Daily Active Users), WAU (Weekly Active Users), and MAU (Monthly Active Users)
+func (am *ActivityMonitor) GetUserMetricsForStats() (dau, wau, mau int64) {
+	metrics := am.GetMetrics()
+	if metrics == nil {
+		// Recalculate if metrics are stale
+		am.calculateMetrics()
+		metrics = am.GetMetrics()
+	}
+	
+	if metrics != nil {
+		return metrics.DailyActiveUsers, metrics.WeeklyActiveUsers, metrics.MonthlyActiveUsers
+	}
+	
+	// Fallback: calculate directly if monitor is not available
+	now := time.Now()
+	dayAgo := now.Add(-24 * time.Hour)
+	weekAgo := now.Add(-7 * 24 * time.Hour)
+	monthAgo := now.Add(-30 * 24 * time.Hour)
+	
+	db.DB.Model(&db.User{}).Where("last_activity >= ?", dayAgo).Count(&dau)
+	db.DB.Model(&db.User{}).Where("last_activity >= ?", weekAgo).Count(&wau)
+	db.DB.Model(&db.User{}).Where("last_activity >= ?", monthAgo).Count(&mau)
+	
+	return dau, wau, mau
 }
 
 // Global activity monitor instance
