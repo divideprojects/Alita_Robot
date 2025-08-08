@@ -424,7 +424,7 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
 	// if command is disabled, return
-	if chat_status.CheckDisabledCmd(b, msg, "adminlist") {
+	if chat_status.CheckDisabledCmd(b, msg, "flood") {
 		return ext.EndGroups
 	}
 	// connection status
