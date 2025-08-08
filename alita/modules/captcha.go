@@ -457,7 +457,6 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 			log.Errorf("Failed to generate text captcha: %v", err)
 			// Fallback to text-based math question
 			question, answer, options = generateMathCaptcha()
-			settings.CaptchaMode = "math"
 			isImage = false
 		} else {
 			isImage = true
