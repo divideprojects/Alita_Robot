@@ -280,9 +280,9 @@ func RevertButtons(buttons []db.Button) string {
 	res := ""
 	for _, btn := range buttons {
 		if btn.SameLine {
-			res += fmt.Sprintf("\n[%s](buttonurl://%s)", btn.Name, btn.Url)
-		} else {
 			res += fmt.Sprintf("\n[%s](buttonurl://%s:same)", btn.Name, btn.Url)
+		} else {
+			res += fmt.Sprintf("\n[%s](buttonurl://%s)", btn.Name, btn.Url)
 		}
 	}
 	return res
