@@ -132,7 +132,7 @@ func main() {
 			// Continue processing other updates
 			return ext.DispatcherActionNoop
 		},
-		MaxRoutines: 100, // Limit concurrent goroutines to prevent explosion
+		MaxRoutines: config.DispatcherMaxRoutines, // Configurable max concurrent goroutines
 	})
 
 	// Check if we should use webhooks or polling
