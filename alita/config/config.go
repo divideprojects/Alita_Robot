@@ -55,6 +55,10 @@ type Config struct {
 	OperationTimeout            time.Duration // Computed from OperationTimeoutSeconds
 	EnablePerformanceMonitoring bool
 	EnableBackgroundStats       bool
+
+	// Cache configuration
+	CacheNumCounters int64 `validate:"min=1000,max=1000000"`  // Ristretto NumCounters
+	CacheMaxCost     int64 `validate:"min=100,max=100000000"` // Ristretto MaxCost
 }
 
 // Global configuration instance
@@ -92,6 +96,10 @@ var (
 	OperationTimeoutSeconds     int
 	EnablePerformanceMonitoring bool
 	EnableBackgroundStats       bool
+
+	// Cache configuration
+	CacheNumCounters int64
+	CacheMaxCost     int64
 
 	// Global config instance
 	AppConfig *Config
@@ -144,6 +152,14 @@ func ValidateConfig(cfg *Config) error {
 	}
 	if cfg.StatsCollectionWorkers <= 0 || cfg.StatsCollectionWorkers > 10 {
 		return fmt.Errorf("STATS_COLLECTION_WORKERS must be between 1 and 10")
+	}
+
+	// Validate cache configuration
+	if cfg.CacheNumCounters != 0 && (cfg.CacheNumCounters < 1000 || cfg.CacheNumCounters > 1000000) {
+		return fmt.Errorf("CACHE_NUM_COUNTERS must be between 1000 and 1000000")
+	}
+	if cfg.CacheMaxCost != 0 && (cfg.CacheMaxCost < 100 || cfg.CacheMaxCost > 100000000) {
+		return fmt.Errorf("CACHE_MAX_COST must be between 100 and 100000000")
 	}
 
 	// Validate performance limits
@@ -203,6 +219,10 @@ func LoadConfig() (*Config, error) {
 		OperationTimeoutSeconds:     typeConvertor{str: os.Getenv("OPERATION_TIMEOUT_SECONDS")}.Int(),
 		EnablePerformanceMonitoring: typeConvertor{str: os.Getenv("ENABLE_PERFORMANCE_MONITORING")}.Bool(),
 		EnableBackgroundStats:       typeConvertor{str: os.Getenv("ENABLE_BACKGROUND_STATS")}.Bool(),
+
+		// Cache configuration
+		CacheNumCounters: typeConvertor{str: os.Getenv("CACHE_NUM_COUNTERS")}.Int64(),
+		CacheMaxCost:     typeConvertor{str: os.Getenv("CACHE_MAX_COST")}.Int64(),
 	}
 
 	// Set defaults
@@ -287,6 +307,14 @@ func (cfg *Config) setDefaults() {
 		cfg.StatsCollectionWorkers = 2
 	}
 
+	// Set cache defaults (more reasonable values than hardcoded 1000/100)
+	if cfg.CacheNumCounters == 0 {
+		cfg.CacheNumCounters = 10000 // 10x more counters for better performance
+	}
+	if cfg.CacheMaxCost == 0 {
+		cfg.CacheMaxCost = 10000 // 100x larger cache for better hit rates
+	}
+
 	// Set default safety limits
 	if cfg.MaxConcurrentOperations == 0 {
 		cfg.MaxConcurrentOperations = 50
@@ -365,6 +393,8 @@ func init() {
 	OperationTimeoutSeconds = cfg.OperationTimeoutSeconds
 	EnablePerformanceMonitoring = cfg.EnablePerformanceMonitoring
 	EnableBackgroundStats = cfg.EnableBackgroundStats
+	CacheNumCounters = cfg.CacheNumCounters
+	CacheMaxCost = cfg.CacheMaxCost
 	AllowedUpdates = cfg.AllowedUpdates
 	ValidLangCodes = cfg.ValidLangCodes
 

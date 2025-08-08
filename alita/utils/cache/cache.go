@@ -41,11 +41,11 @@ func InitCache() error {
 		return fmt.Errorf("failed to connect to Redis: %w", err)
 	}
 
-	// Initialize Ristretto cache with proper error handling
+	// Initialize Ristretto cache with configurable values
 	ristrettoCache, err := ristretto.NewCache(&ristretto.Config{
-		NumCounters: 1000,
-		MaxCost:     100,
-		BufferItems: 64,
+		NumCounters: config.CacheNumCounters,
+		MaxCost:     config.CacheMaxCost,
+		BufferItems: 64, // Keep buffer items fixed for stability
 	})
 	if err != nil {
 		return fmt.Errorf("failed to initialize Ristretto cache: %w", err)
