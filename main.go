@@ -262,6 +262,18 @@ func main() {
 		// Log the message that bot started
 		log.Infof("[Bot] %s has been started in polling mode...", b.Username)
 
+		// Register handler to stop the updater on shutdown
+		shutdownManager.RegisterHandler(func() error {
+			log.Info("[Polling] Stopping updater...")
+			err := updater.Stop()
+			if err != nil {
+				log.Errorf("[Polling] Error stopping updater: %v", err)
+				return err
+			}
+			log.Info("[Polling] Updater stopped successfully")
+			return nil
+		})
+
 		// Idle, to keep updates coming in, and avoid bot stopping.
 		updater.Idle()
 	}
