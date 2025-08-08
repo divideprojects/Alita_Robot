@@ -231,6 +231,11 @@ func IdFromReply(m *gotgbot.Message) (int64, string) {
 // When matchQuotes is true, extracts text between double quotes.
 // When matchWord is true, extracts the first word/token and remaining text.
 func ExtractQuotes(sentence string, matchQuotes, matchWord bool) (inQuotes, afterWord string) {
+	// Check for empty string to prevent panic
+	if len(sentence) == 0 {
+		return
+	}
+	
 	// if first character starts with '""' and matchQutes is true
 	if sentence[0] == '"' && matchQuotes {
 		// regex pattern to match text between strings
@@ -279,8 +284,11 @@ func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int
 		reason = strings.Join(args[1:], " ")
 	}
 
-	if strings.ContainsAny(timeVal, "m & d & h & w") {
-		t := timeVal[:len(timeVal)-1]
+	// Check if timeVal ends with a valid time unit (m, h, d, w)
+	if len(timeVal) > 0 {
+		lastChar := timeVal[len(timeVal)-1]
+		if lastChar == 'm' || lastChar == 'h' || lastChar == 'd' || lastChar == 'w' {
+			t := timeVal[:len(timeVal)-1]
 		timeNum, err := strconv.Atoi(t)
 		if err != nil {
 			_, err := msg.Reply(b, "Invalid time amount specified.", nil)
@@ -312,8 +320,13 @@ func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int
 		}
 
 		return banTime, timeStr, reason
+		} else {
+			_, err := msg.Reply(b, fmt.Sprintf("Invalid time type specified. Expected m, h, d or w got: %s", timeVal), nil)
+			error_handling.HandleErr(err)
+			return -1, "", ""
+		}
 	} else {
-		_, err := msg.Reply(b, fmt.Sprintf("Invalid time type specified. Expected m, h, d or w got: %s", timeVal), nil)
+		_, err := msg.Reply(b, "Invalid time format specified.", nil)
 		error_handling.HandleErr(err)
 		return -1, "", ""
 	}

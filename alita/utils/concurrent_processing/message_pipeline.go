@@ -53,6 +53,7 @@ type ProcessorFunc func(ctx context.Context, bot *gotgbot.Bot, extCtx *ext.Conte
 // MessageProcessingPipeline handles concurrent message processing
 type MessageProcessingPipeline struct {
 	stages         map[ProcessingStage]ProcessorFunc
+	stagesLock     sync.RWMutex  // Protects stages map
 	workers        int
 	jobs           chan MessageProcessingJob
 	results        chan ProcessingResult
@@ -103,7 +104,10 @@ func NewMessageProcessingPipeline(workers int) *MessageProcessingPipeline {
 
 // RegisterStage registers a processing stage with its processor function
 func (p *MessageProcessingPipeline) RegisterStage(stage ProcessingStage, processor ProcessorFunc) {
+	p.stagesLock.Lock()
 	p.stages[stage] = processor
+	p.stagesLock.Unlock()
+	
 	p.statsLock.Lock()
 	p.stats[stage] = &StageStats{}
 	p.statsLock.Unlock()
@@ -171,15 +175,28 @@ func (p *MessageProcessingPipeline) processJob(job MessageProcessingJob, workerI
 	}
 
 	// Find and execute the processor
+	p.stagesLock.RLock()
 	processor, exists := p.stages[job.Stage]
+	p.stagesLock.RUnlock()
+	
 	if !exists {
 		result.Error = fmt.Errorf("no processor registered for stage: %s", job.Stage)
 		result.Duration = time.Since(startTime)
 		return result
 	}
 
+	// Check if pipeline is shutting down before launching goroutine
+	select {
+	case <-p.ctx.Done():
+		result.Error = fmt.Errorf("pipeline shutting down, skipping stage: %s", job.Stage)
+		result.Duration = time.Since(startTime)
+		return result
+	default:
+		// Continue with processing
+	}
+	
 	// Execute with timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(p.ctx, 5*time.Second)
 	defer cancel()
 
 	done := make(chan struct{})
