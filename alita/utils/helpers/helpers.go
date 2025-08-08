@@ -30,6 +30,20 @@ const (
 	MaxMessageLength int = 4096
 )
 
+// Precompiled regexes for ReverseHTML2MD function
+var (
+	linkRegex = regexp.MustCompile(`<a href="(.*?)">(.*?)</a>`)
+	// Map of HTML tags to their compiled regexes
+	htmlTagRegexes = map[string]*regexp.Regexp{
+		"i":    regexp.MustCompile(`<i>(.*)</i>`),
+		"u":    regexp.MustCompile(`<u>(.*)</u>`),
+		"b":    regexp.MustCompile(`<b>(.*)</b>`),
+		"s":    regexp.MustCompile(`<s>(.*)</s>`),
+		"code": regexp.MustCompile(`<code>(.*)</code>`),
+		"pre":  regexp.MustCompile(`<pre>(.*)</pre>`),
+	}
+)
+
 // Shtml returns SendMessageOpts configured with HTML parse mode, disabled link preview,
 // and reply parameters that allow sending without reply.
 func Shtml() *gotgbot.SendMessageOpts {
@@ -381,22 +395,24 @@ func ReverseHTML2MD(text string) string {
 			k := ""
 			// using this because <a> uses <href> tag
 			if htmlTag == "a" {
-				re := regexp.MustCompile(`<a href="(.*?)">(.*?)</a>`)
-				if re.MatchString(i) {
-					k = fmt.Sprintf(keyValue, re.FindStringSubmatch(i)[2], re.FindStringSubmatch(i)[1])
+				if linkRegex.MatchString(i) {
+					matches := linkRegex.FindStringSubmatch(i)
+					if len(matches) >= 3 {
+						k = fmt.Sprintf(keyValue, matches[2], matches[1])
+					}
 				} else {
 					continue
 				}
-			} else {
-				regexPattern := fmt.Sprintf(`<%s>(.*)<\/%s>`, htmlTag, htmlTag)
-				pattern := regexp.MustCompile(regexPattern)
-				if pattern.MatchString(i) {
-					k = fmt.Sprintf(keyValue, pattern.ReplaceAllString(i, "$1"))
+			} else if regex, exists := htmlTagRegexes[htmlTag]; exists {
+				if regex.MatchString(i) {
+					k = fmt.Sprintf(keyValue, regex.ReplaceAllString(i, "$1"))
 				} else {
 					continue
 				}
 			}
-			text = strings.ReplaceAll(text, i, k)
+			if k != "" {
+				text = strings.ReplaceAll(text, i, k)
+			}
 		}
 	}
 
