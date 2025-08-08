@@ -89,7 +89,8 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	}
-	var replyText string
+	var builder strings.Builder
+	builder.Grow(512) // Pre-allocate capacity for better performance
 
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "id") {
@@ -98,21 +99,21 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if userId != 0 {
 		if msg.ReplyToMessage != nil {
-			replyText = fmt.Sprintf(
+			builder.WriteString(fmt.Sprintf(
 				"<b>Chat ID:</b> <code>%d</code>\n",
 				msg.Chat.Id,
-			)
+			))
 			if msg.IsTopicMessage {
-				replyText += fmt.Sprintf("Thread Id: <code>%d</code>\n", msg.MessageThreadId)
+				builder.WriteString(fmt.Sprintf("Thread Id: <code>%d</code>\n", msg.MessageThreadId))
 			}
 			if msg.ReplyToMessage.From != nil {
 				originalId := msg.ReplyToMessage.From.Id
 				_, user1Name, _ := extraction.GetUserInfo(originalId)
-				replyText += fmt.Sprintf(
+				builder.WriteString(fmt.Sprintf(
 					"<b>%s's ID:</b> <code>%d</code>\n",
 					user1Name,
 					originalId,
-				)
+				))
 			}
 
 			if rpm := msg.ReplyToMessage; rpm != nil {
@@ -123,47 +124,47 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 						if fwdc := fwdd.SenderUser; fwdc != nil {
 							user1Id := fwdc.Id
 							_, user1Name, _ := extraction.GetUserInfo(user1Id)
-							replyText += fmt.Sprintf(
+							builder.WriteString(fmt.Sprintf(
 								"<b>Forwarded from %s's ID:</b> <code>%d</code>\n",
 								user1Name, user1Id,
-							)
+							))
 						}
 
 						if fwdc := fwdd.Chat; fwdc != nil {
-							replyText += fmt.Sprintf("<b>Forwarded from chat %s's ID:</b> <code>%d</code>\n",
+							builder.WriteString(fmt.Sprintf("<b>Forwarded from chat %s's ID:</b> <code>%d</code>\n",
 								fwdc.Title, fwdc.Id,
-							)
+							))
 						}
 					}
 				}
 			}
 			if msg.ReplyToMessage.Animation != nil {
-				replyText += fmt.Sprintf("<b>GIF ID:</b> <code>%s</code>\n",
+				builder.WriteString(fmt.Sprintf("<b>GIF ID:</b> <code>%s</code>\n",
 					msg.ReplyToMessage.Animation.FileId,
-				)
+				))
 			}
 			if msg.ReplyToMessage.Sticker != nil {
-				replyText += fmt.Sprintf("<b>Sticker ID:</b> <code>%s</code>\n",
+				builder.WriteString(fmt.Sprintf("<b>Sticker ID:</b> <code>%s</code>\n",
 					msg.ReplyToMessage.Sticker.FileId,
-				)
+				))
 			}
 		} else {
 			_, name, _ := extraction.GetUserInfo(userId)
-			replyText = fmt.Sprintf("%s's ID is <code>%d</code>", name, userId)
+			builder.WriteString(fmt.Sprintf("%s's ID is <code>%d</code>", name, userId))
 		}
 	} else {
 		chat := ctx.EffectiveChat
 		if ctx.Message.Chat.Type == "private" {
-			replyText = fmt.Sprintf("Your ID is <code>%d</code>", chat.Id)
+			builder.WriteString(fmt.Sprintf("Your ID is <code>%d</code>", chat.Id))
 		} else {
-			replyText = fmt.Sprintf("Your ID is <code>%d</code>\nThis group's ID is <code>%d</code>",
+			builder.WriteString(fmt.Sprintf("Your ID is <code>%d</code>\nThis group's ID is <code>%d</code>",
 				msg.From.Id, chat.Id,
-			)
+			))
 		}
 	}
 
 	_, err := msg.Reply(b,
-		replyText,
+		builder.String(),
 		helpers.Shtml(),
 	)
 	if err != nil {
