@@ -82,6 +82,7 @@ func InvalidateChatCache(chatID int64) {
 	}
 
 	keys := []string{
+		chatCacheKey(chatID),
 		chatSettingsCacheKey(chatID),
 		chatLanguageCacheKey(chatID),
 		filterListCacheKey(chatID),
