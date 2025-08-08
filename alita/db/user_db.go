@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -54,39 +55,41 @@ func checkUserInfo(userId int64) (userc *User) {
 
 // UpdateUser creates or updates user information in the database.
 // Only updates fields that have actually changed to minimize database operations.
+// Always updates last_activity to track user interactions.
 // Invalidates user cache after successful update.
 func UpdateUser(userId int64, username, name string) {
 	userc := checkUserInfo(userId)
+	now := time.Now()
 
 	if userc != nil {
-		// Check if update is actually needed
-		if userc.Name == name && userc.UserName == username {
-			return
+		// Always update last_activity, but only update other fields if changed
+		updates := map[string]interface{}{
+			"last_activity": now,
 		}
-		// Only update changed fields
-		updates := make(map[string]interface{})
+		
+		// Check if profile updates are needed
 		if userc.Name != name {
 			updates["name"] = name
 		}
 		if userc.UserName != username {
 			updates["username"] = username
 		}
-		if len(updates) > 0 {
-			err := DB.Model(&User{}).Where("user_id = ?", userId).Updates(updates).Error
-			if err != nil {
-				log.Errorf("[Database] UpdateUser: %v - %d", err, userId)
-				return
-			}
-			// Invalidate cache after update
-			deleteCache(userCacheKey(userId))
-			log.Debugf("[Database] UpdateUser: %d", userId)
+		
+		err := DB.Model(&User{}).Where("user_id = ?", userId).Updates(updates).Error
+		if err != nil {
+			log.Errorf("[Database] UpdateUser: %v - %d", err, userId)
+			return
 		}
+		// Invalidate cache after update
+		deleteCache(userCacheKey(userId))
+		log.Debugf("[Database] UpdateUser: %d", userId)
 	} else {
 		// Create new user
 		userc = &User{
-			UserId:   userId,
-			UserName: username,
-			Name:     name,
+			UserId:       userId,
+			UserName:     username,
+			Name:         name,
+			LastActivity: now,
 		}
 		err := DB.Create(userc).Error
 		if err != nil {
@@ -137,4 +140,39 @@ func LoadUsersStats() (count int64) {
 		return
 	}
 	return
+}
+
+// LoadUserActivityStats returns Daily Active Users, Weekly Active Users, and Monthly Active Users.
+// These metrics are based on last_activity timestamps within the respective time periods.
+func LoadUserActivityStats() (dau, wau, mau int64) {
+	now := time.Now()
+	dayAgo := now.Add(-24 * time.Hour)
+	weekAgo := now.Add(-7 * 24 * time.Hour)
+	monthAgo := now.Add(-30 * 24 * time.Hour)
+
+	// Count daily active users
+	err := DB.Model(&User{}).
+		Where("last_activity >= ?", dayAgo).
+		Count(&dau).Error
+	if err != nil {
+		log.Errorf("[Database][LoadUserActivityStats] counting daily active users: %v", err)
+	}
+
+	// Count weekly active users
+	err = DB.Model(&User{}).
+		Where("last_activity >= ?", weekAgo).
+		Count(&wau).Error
+	if err != nil {
+		log.Errorf("[Database][LoadUserActivityStats] counting weekly active users: %v", err)
+	}
+
+	// Count monthly active users
+	err = DB.Model(&User{}).
+		Where("last_activity >= ?", monthAgo).
+		Count(&mau).Error
+	if err != nil {
+		log.Errorf("[Database][LoadUserActivityStats] counting monthly active users: %v", err)
+	}
+
+	return dau, wau, mau
 }

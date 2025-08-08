@@ -81,6 +81,7 @@ func LoadAllStats() string {
 	totalUsers := LoadUsersStats()
 	activeChats, inactiveChats := LoadChatStats()
 	dag, wag, mag := LoadActivityStats()
+	dau, wau, mau := LoadUserActivityStats()
 	AcCount, ClCount := LoadPinStats()
 	uRCount, gRCount := LoadReportStats()
 	antiCount := LoadAntifloodStats()
@@ -119,10 +120,14 @@ func LoadAllStats() string {
 			humanize.Comma(int64(inactiveChats)),
 			humanize.Comma(int64(activeChats+inactiveChats)),
 		) +
-		"\n<b>Activity Metrics:</b>" +
+		"\n<b>Group Activity Metrics:</b>" +
 		fmt.Sprintf("\n    <b>Daily Active Groups (DAG):</b> %s", humanize.Comma(dag)) +
 		fmt.Sprintf("\n    <b>Weekly Active Groups (WAG):</b> %s", humanize.Comma(wag)) +
 		fmt.Sprintf("\n    <b>Monthly Active Groups (MAG):</b> %s", humanize.Comma(mag)) +
+		"\n<b>User Activity Metrics:</b>" +
+		fmt.Sprintf("\n    <b>Daily Active Users (DAU):</b> %s", humanize.Comma(dau)) +
+		fmt.Sprintf("\n    <b>Weekly Active Users (WAU):</b> %s", humanize.Comma(wau)) +
+		fmt.Sprintf("\n    <b>Monthly Active Users (MAU):</b> %s", humanize.Comma(mau)) +
 		"\n<b>Pins:</b>" +
 		fmt.Sprintf("\n    <b>CleanLinked Enabled:</b> %s", humanize.Comma(ClCount)) +
 		fmt.Sprintf("\n    <b>AntiChannelPin Enabled:</b> %s", humanize.Comma(AcCount)) +
