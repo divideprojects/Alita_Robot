@@ -188,8 +188,8 @@ func main() {
 			},
 		)
 		if err != nil {
-			log.Errorf("[Bot] Failed to send message to log group: %v", err)
-			log.Fatal(err)
+			log.Errorf("[Bot] Failed to send startup message to log group: %v", err)
+			log.Warn("[Bot] Continuing without log channel notifications")
 		}
 
 		// Log the message that bot started
@@ -255,8 +255,8 @@ func main() {
 			},
 		)
 		if err != nil {
-			log.Errorf("[Bot] Failed to send message to log group: %v", err)
-			log.Fatal(err)
+			log.Errorf("[Bot] Failed to send startup message to log group: %v", err)
+			log.Warn("[Bot] Continuing without log channel notifications")
 		}
 
 		// Log the message that bot started
