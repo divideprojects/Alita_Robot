@@ -185,11 +185,14 @@ func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	stime := time.Now()
 	rmsg, _ := msg.Reply(b, "<code>Pinging</code>", &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
-	_, _, err := rmsg.EditText(b, fmt.Sprintf("Pinged in %d ms", int64(time.Since(stime)/time.Millisecond)), nil)
+	elapsed := time.Since(stime)
+	_, _, err := rmsg.EditText(b, fmt.Sprintf("Pinged in %d ms", int64(elapsed/time.Millisecond)), nil)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
+	// Log ping performance for monitoring
+	log.Debugf("[Ping] Response time: %v", elapsed)
 	return ext.EndGroups
 }
 

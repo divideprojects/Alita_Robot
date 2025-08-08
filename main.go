@@ -3,7 +3,9 @@ package main
 import (
 	"embed"
 	"fmt"
+	"net/http"
 	"os"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 
@@ -50,11 +52,46 @@ func main() {
 	}
 	log.Infof("Locale manager initialized with %d languages: %v", len(localeManager.GetAvailableLanguages()), localeManager.GetAvailableLanguages())
 
-	// create a new bot with default HTTP client (BotOpts doesn't support custom client in this version)
-	b, err := gotgbot.NewBot(config.BotToken, nil)
+	// Create optimized HTTP client with connection pooling for better performance
+	httpClient := http.Client{
+		Timeout: 30 * time.Second,
+		Transport: &http.Transport{
+			MaxIdleConns:        100,              // Maximum idle connections across all hosts
+			MaxIdleConnsPerHost: 10,               // Maximum idle connections per host
+			MaxConnsPerHost:     10,               // Maximum total connections per host
+			IdleConnTimeout:     90 * time.Second, // How long idle connections are kept alive
+			DisableCompression:  false,            // Enable compression for smaller payloads
+			ForceAttemptHTTP2:   true,             // Enable HTTP/2 for multiplexing
+		},
+	}
+
+	// Create bot with optimized HTTP client using BaseBotClient
+	log.Info("[Main] Initializing bot with optimized HTTP client (connection pooling enabled)")
+	b, err := gotgbot.NewBot(config.BotToken, &gotgbot.BotOpts{
+		BotClient: &gotgbot.BaseBotClient{
+			Client:             httpClient,
+			UseTestEnvironment: false,
+			DefaultRequestOpts: &gotgbot.RequestOpts{
+				Timeout: time.Duration(30) * time.Second,
+			},
+		},
+	})
 	if err != nil {
 		log.Fatalf("Failed to create new bot: %v", err)
 	}
+	log.Info("[Main] Bot initialized with connection pooling (MaxIdleConns: 100, MaxIdleConnsPerHost: 10, HTTP/2 enabled)")
+
+	// Pre-warm connections to Telegram API for faster initial responses
+	go func() {
+		log.Info("[Main] Pre-warming connections to Telegram API...")
+		startTime := time.Now()
+		_, err := b.GetMe(nil)
+		if err != nil {
+			log.Warnf("[Main] Failed to pre-warm connections: %v", err)
+		} else {
+			log.Infof("[Main] Connection pre-warming completed in %v", time.Since(startTime))
+		}
+	}()
 
 	// some initial checks before running bot
 	if err := alita.InitialChecks(b); err != nil {
