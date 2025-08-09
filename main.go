@@ -11,6 +11,7 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/utils/bot_manager"
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/monitoring"
@@ -21,6 +22,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"github.com/divideprojects/Alita_Robot/alita"
+	"github.com/divideprojects/Alita_Robot/alita/modules"
 )
 
 //go:embed locales
@@ -115,6 +117,16 @@ func main() {
 		log.Fatalf("Initial checks failed: %v", err)
 	}
 
+	// Initialize bot manager for clone functionality
+	log.Info("[Main] Initializing bot manager for clone support...")
+	globalBotManager := bot_manager.NewBotManager(b.Id)
+	log.Infof("[Main] Bot manager initialized with main bot ID: %d", b.Id)
+
+	// Make bot manager available to clone module
+	if err := setBotManagerForModules(globalBotManager); err != nil {
+		log.Warnf("[Main] Failed to set bot manager for modules: %v", err)
+	}
+
 	// Initialize monitoring systems
 	var statsCollector *monitoring.BackgroundStatsCollector
 	var autoRemediation *monitoring.AutoRemediationManager
@@ -151,6 +163,10 @@ func main() {
 			statsCollector.Stop()
 		}
 		return nil
+	})
+	shutdownManager.RegisterHandler(func() error {
+		log.Info("[Shutdown] Shutting down bot manager...")
+		return globalBotManager.Shutdown()
 	})
 	shutdownManager.RegisterHandler(func() error {
 		log.Info("[Shutdown] Closing database connections...")
@@ -331,6 +347,13 @@ func main() {
 		// Idle, to keep updates coming in, and avoid bot stopping.
 		updater.Idle()
 	}
+}
+
+// setBotManagerForModules sets the global bot manager for the modules package
+// This allows the clone module to access the bot manager instance
+func setBotManagerForModules(manager *bot_manager.BotManager) error {
+	modules.GlobalBotManager = manager
+	return nil
 }
 
 // closeDBConnections closes all database connections gracefully during shutdown.

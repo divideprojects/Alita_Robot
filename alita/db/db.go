@@ -618,6 +618,27 @@ func (CaptchaAttempts) TableName() string {
 	return "captcha_attempts"
 }
 
+// BotInstance represents a cloned bot instance in the system
+type BotInstance struct {
+	ID           uint       `gorm:"primaryKey;autoIncrement" json:"-"`
+	BotID        int64      `gorm:"column:bot_id;uniqueIndex;not null" json:"bot_id,omitempty"`
+	OwnerID      int64      `gorm:"column:owner_id;not null;index" json:"owner_id,omitempty"`
+	TokenHash    string     `gorm:"column:token_hash;not null" json:"token_hash,omitempty"`
+	BotUsername  string     `gorm:"column:bot_username" json:"bot_username,omitempty"`
+	BotName      string     `gorm:"column:bot_name" json:"bot_name,omitempty"`
+	IsActive     bool       `gorm:"column:is_active;default:true" json:"is_active" default:"true"`
+	WebhookURL   string     `gorm:"column:webhook_url" json:"webhook_url,omitempty"`
+	LastActivity *time.Time `gorm:"column:last_activity" json:"last_activity,omitempty"`
+	CreatedAt    time.Time  `gorm:"column:created_at" json:"created_at,omitempty"`
+	UpdatedAt    time.Time  `gorm:"column:updated_at" json:"updated_at,omitempty"`
+}
+
+// TableName returns the database table name for the BotInstance model.
+// This method overrides GORM's default table naming convention.
+func (BotInstance) TableName() string {
+	return "bot_instances"
+}
+
 // Database instance
 var DB *gorm.DB
 
