@@ -17,6 +17,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      telegram-bot-api:
+        condition: service_healthy
     ports:
       # Only expose webhook port when USE_WEBHOOKS=true
       - "${WEBHOOK_PORT:-8080}:${WEBHOOK_PORT:-8080}"
@@ -89,9 +91,31 @@ services:
     environment:
       TELEGRAM_API_ID: ${TELEGRAM_API_ID}
       TELEGRAM_API_HASH: ${TELEGRAM_API_HASH}
+      TELEGRAM_STAT: "" # Disable stats endpoint for performance
     volumes:
       - telegram-bot-api-data:/var/lib/telegram-bot-api
-    # no ports published; internal use
+    expose:
+      - "8081" # Expose port for container-to-container communication
+    command: 
+      - "--api-id=${TELEGRAM_API_ID}"
+      - "--api-hash=${TELEGRAM_API_HASH}"
+      - "--local" # Enable local mode for faster file operations
+      - "--verbosity=1" # Reduce logging overhead
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/bot${BOT_TOKEN}/getMe"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Resource allocation for telegram-bot-api
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
 
 volumes:
   postgres_data:
