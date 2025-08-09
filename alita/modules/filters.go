@@ -21,8 +21,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
-	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 	"github.com/divideprojects/Alita_Robot/alita/utils/keyword_matcher"
+	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
 var filtersModule = moduleStruct{
@@ -464,42 +464,42 @@ func (moduleStruct) filtersWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.ContinueGroups
 	}
 
-			if noformatMatch {
-				// check if user is admin or not
-				if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
-					return ext.EndGroups
-				}
+	if noformatMatch {
+		// check if user is admin or not
+		if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
+			return ext.EndGroups
+		}
 
-				// Reverse notedata
-				filtData.FilterReply = helpers.ReverseHTML2MD(filtData.FilterReply)
+		// Reverse notedata
+		filtData.FilterReply = helpers.ReverseHTML2MD(filtData.FilterReply)
 
-				// show the buttons back as text
-				filtData.FilterReply += helpers.RevertButtons(filtData.Buttons)
+		// show the buttons back as text
+		filtData.FilterReply += helpers.RevertButtons(filtData.Buttons)
 
-				// using true as last argument to prevent the message from being formatted
-				var err error
-				_, err = helpers.FiltersEnumFuncMap[filtData.MsgType](
-					b,
-					ctx,
-					*filtData,
-					&gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil},
-					msg.MessageId,
-					true,
-					filtData.NoNotif,
-				)
-				if err != nil {
-					log.Error(err)
-					return err
-				}
+		// using true as last argument to prevent the message from being formatted
+		var err error
+		_, err = helpers.FiltersEnumFuncMap[filtData.MsgType](
+			b,
+			ctx,
+			*filtData,
+			&gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil},
+			msg.MessageId,
+			true,
+			filtData.NoNotif,
+		)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
 
-			} else {
-				var err error
-				_, err = helpers.SendFilter(b, ctx, filtData, msg.MessageId)
-				if err != nil {
-					log.Error(err)
-					return err
-				}
-			}
+	} else {
+		var err error
+		_, err = helpers.SendFilter(b, ctx, filtData, msg.MessageId)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	}
 
 	return ext.ContinueGroups
 }

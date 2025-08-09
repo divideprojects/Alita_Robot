@@ -141,13 +141,13 @@ func GetAdminCacheUser(chatId, userId int64) (bool, gotgbot.MergedChatMember) {
 	if err != nil || adminList == nil {
 		return false, gotgbot.MergedChatMember{}
 	}
-	
+
 	// Type assert with check to prevent panic
 	adminCache, ok := adminList.(*AdminCache)
 	if !ok || adminCache == nil {
 		return false, gotgbot.MergedChatMember{}
 	}
-	
+
 	for i := range adminCache.UserInfo {
 		admin := &adminCache.UserInfo[i]
 		if admin.User.Id == userId {

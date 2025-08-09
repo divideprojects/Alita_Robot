@@ -111,7 +111,7 @@ func (p *ParallelBulkProcessor[T]) Start() {
 // Runs until the jobs channel is closed or context is cancelled.
 func (p *ParallelBulkProcessor[T]) worker(workerID int) {
 	defer p.wg.Done()
-	
+
 	// Add panic recovery to prevent worker death
 	defer func() {
 		if r := recover(); r != nil {
@@ -132,7 +132,7 @@ func (p *ParallelBulkProcessor[T]) worker(workerID int) {
 			result := BulkProcessingResult{
 				Index: job.Index,
 			}
-			
+
 			// Wrap processor call in function with its own panic recovery
 			func() {
 				defer func() {
@@ -145,7 +145,7 @@ func (p *ParallelBulkProcessor[T]) worker(workerID int) {
 						}).Error("Bulk processor job panicked")
 					}
 				}()
-				
+
 				if err := p.processor(job.Data); err != nil {
 					result.Error = err
 					log.WithFields(log.Fields{

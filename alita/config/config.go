@@ -31,10 +31,10 @@ type Config struct {
 	DatabaseURL string `validate:"required"`
 
 	// Database connection pool configuration
-	DBMaxIdleConns        int `validate:"min=1,max=100"`
-	DBMaxOpenConns        int `validate:"min=1,max=1000"`
-	DBConnMaxLifetimeMin  int `validate:"min=1,max=1440"` // Max lifetime in minutes
-	DBConnMaxIdleTimeMin  int `validate:"min=1,max=60"`   // Max idle time in minutes
+	DBMaxIdleConns       int `validate:"min=1,max=100"`
+	DBMaxOpenConns       int `validate:"min=1,max=1000"`
+	DBConnMaxLifetimeMin int `validate:"min=1,max=1440"` // Max lifetime in minutes
+	DBConnMaxIdleTimeMin int `validate:"min=1,max=60"`   // Max idle time in minutes
 
 	// Redis configuration
 	RedisAddress  string `validate:"required"`
@@ -68,23 +68,23 @@ type Config struct {
 	CacheMaxCost     int64 `validate:"min=100,max=100000000"` // Ristretto MaxCost
 
 	// Activity monitoring configuration
-	InactivityThresholdDays int  `validate:"min=1,max=365"`  // Days before marking a chat as inactive
-	ActivityCheckInterval   int  `validate:"min=1,max=24"`   // Hours between activity checks
+	InactivityThresholdDays int  `validate:"min=1,max=365"` // Days before marking a chat as inactive
+	ActivityCheckInterval   int  `validate:"min=1,max=24"`  // Hours between activity checks
 	EnableAutoCleanup       bool // Whether to automatically mark inactive chats
 }
 
 // Global configuration instance
 var (
-	AllowedUpdates     []string
-	ValidLangCodes     []string
-	BotToken           string
-	DatabaseURL        string // Single PostgreSQL connection string
+	AllowedUpdates []string
+	ValidLangCodes []string
+	BotToken       string
+	DatabaseURL    string // Single PostgreSQL connection string
 
 	// Database connection pool configuration
-	DBMaxIdleConns        int
-	DBMaxOpenConns        int
-	DBConnMaxLifetimeMin  int
-	DBConnMaxIdleTimeMin  int
+	DBMaxIdleConns       int
+	DBMaxOpenConns       int
+	DBConnMaxLifetimeMin int
+	DBConnMaxIdleTimeMin int
 
 	BotVersion         string = "2.1.3"
 	ApiServer          string

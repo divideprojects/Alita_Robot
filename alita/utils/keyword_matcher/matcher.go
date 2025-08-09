@@ -12,9 +12,9 @@ import (
 
 // KeywordMatcher provides efficient multi-pattern matching using Aho-Corasick algorithm
 type KeywordMatcher struct {
-	matcher  *ahocorasick.Matcher
-	patterns []string
-	mu       sync.RWMutex
+	matcher   *ahocorasick.Matcher
+	patterns  []string
+	mu        sync.RWMutex
 	lastBuild time.Time
 }
 
@@ -53,7 +53,7 @@ func (km *KeywordMatcher) build() {
 
 	log.WithFields(log.Fields{
 		"patterns_count": len(km.patterns),
-		"build_time": time.Since(km.lastBuild),
+		"build_time":     time.Since(km.lastBuild),
 	}).Debug("Built Aho-Corasick matcher")
 }
 
@@ -117,10 +117,10 @@ func (km *KeywordMatcher) findMatchesWithPositions(text []byte) []matchInfo {
 	if len(hits) == 0 {
 		return nil
 	}
-	
+
 	var allMatches []matchInfo
 	seen := make(map[string]bool)
-	
+
 	// Convert hits to matchInfo
 	for _, hit := range hits {
 		// hit contains the pattern index and end position
@@ -128,21 +128,21 @@ func (km *KeywordMatcher) findMatchesWithPositions(text []byte) []matchInfo {
 		if patternIdx >= len(km.patterns) {
 			continue
 		}
-		
+
 		pattern := strings.ToLower(km.patterns[patternIdx])
 		patternLen := len(pattern)
-		
+
 		// Find all occurrences of this pattern in the text
 		textStr := string(text)
 		lowerTextStr := strings.ToLower(textStr)
 		searchStart := 0
-		
+
 		for {
 			pos := strings.Index(lowerTextStr[searchStart:], pattern)
 			if pos == -1 {
 				break
 			}
-			
+
 			actualPos := searchStart + pos
 			key := fmt.Sprintf("%d:%d", patternIdx, actualPos)
 			if !seen[key] {
@@ -153,7 +153,7 @@ func (km *KeywordMatcher) findMatchesWithPositions(text []byte) []matchInfo {
 					End:          actualPos + patternLen,
 				})
 			}
-			
+
 			searchStart = actualPos + 1
 		}
 	}

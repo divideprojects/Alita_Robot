@@ -235,7 +235,7 @@ func ExtractQuotes(sentence string, matchQuotes, matchWord bool) (inQuotes, afte
 	if len(sentence) == 0 {
 		return
 	}
-	
+
 	// if first character starts with '""' and matchQutes is true
 	if sentence[0] == '"' && matchQuotes {
 		// regex pattern to match text between strings
@@ -289,37 +289,37 @@ func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int
 		lastChar := timeVal[len(timeVal)-1]
 		if lastChar == 'm' || lastChar == 'h' || lastChar == 'd' || lastChar == 'w' {
 			t := timeVal[:len(timeVal)-1]
-		timeNum, err := strconv.Atoi(t)
-		if err != nil {
-			_, err := msg.Reply(b, "Invalid time amount specified.", nil)
-			error_handling.HandleErr(err)
-			return -1, "", ""
-		}
+			timeNum, err := strconv.Atoi(t)
+			if err != nil {
+				_, err := msg.Reply(b, "Invalid time amount specified.", nil)
+				error_handling.HandleErr(err)
+				return -1, "", ""
+			}
 
-		switch string(timeVal[len(timeVal)-1]) {
-		case "m":
-			banTime = timeNow + int64(timeNum*60)
-			timeStr = fmt.Sprintf("%d minutes", timeNum)
-		case "h":
-			banTime = timeNow + int64(timeNum*60*60)
-			timeStr = fmt.Sprintf("%d hours", timeNum)
-		case "d":
-			banTime = timeNow + int64(timeNum*24*60*60)
-			timeStr = fmt.Sprintf("%d days", timeNum)
-		case "w":
-			banTime = timeNow + int64(timeNum*7*24*60*60)
-			timeStr = fmt.Sprintf("%d weeks", timeNum)
-		default:
-			return -1, "", ""
-		}
+			switch string(timeVal[len(timeVal)-1]) {
+			case "m":
+				banTime = timeNow + int64(timeNum*60)
+				timeStr = fmt.Sprintf("%d minutes", timeNum)
+			case "h":
+				banTime = timeNow + int64(timeNum*60*60)
+				timeStr = fmt.Sprintf("%d hours", timeNum)
+			case "d":
+				banTime = timeNow + int64(timeNum*24*60*60)
+				timeStr = fmt.Sprintf("%d days", timeNum)
+			case "w":
+				banTime = timeNow + int64(timeNum*7*24*60*60)
+				timeStr = fmt.Sprintf("%d weeks", timeNum)
+			default:
+				return -1, "", ""
+			}
 
-		if banTime >= yearTime {
-			_, err := msg.Reply(b, "Cannot set time to more than 1 year!", nil)
-			error_handling.HandleErr(err)
-			return -1, "", ""
-		}
+			if banTime >= yearTime {
+				_, err := msg.Reply(b, "Cannot set time to more than 1 year!", nil)
+				error_handling.HandleErr(err)
+				return -1, "", ""
+			}
 
-		return banTime, timeStr, reason
+			return banTime, timeStr, reason
 		} else {
 			_, err := msg.Reply(b, fmt.Sprintf("Invalid time type specified. Expected m, h, d or w got: %s", timeVal), nil)
 			error_handling.HandleErr(err)

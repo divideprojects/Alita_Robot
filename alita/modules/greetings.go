@@ -458,7 +458,7 @@ func (moduleStruct) delJoined(bot *gotgbot.Bot, ctx *ext.Context) error {
 func SendWelcomeMessage(bot *gotgbot.Bot, ctx *ext.Context, userID int64, firstName string) error {
 	chat := ctx.EffectiveChat
 	greetPrefs := db.GetGreetingSettings(chat.Id)
-	
+
 	if greetPrefs.WelcomeSettings != nil && greetPrefs.WelcomeSettings.ShouldWelcome {
 		// Create a user object for formatting
 		user := &gotgbot.User{
@@ -466,7 +466,7 @@ func SendWelcomeMessage(bot *gotgbot.Bot, ctx *ext.Context, userID int64, firstN
 			FirstName: firstName,
 			IsBot:     false,
 		}
-		
+
 		buttons := db.GetWelcomeButtons(chat.Id)
 		res, buttons := helpers.FormattingReplacer(bot, chat, user,
 			greetPrefs.WelcomeSettings.WelcomeText,
@@ -518,7 +518,7 @@ func (moduleStruct) newMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 			CanSendPolls:          false,
 			CanSendOtherMessages:  false,
 		}, nil)
-		
+
 		if err != nil {
 			log.Errorf("Failed to mute user %d for captcha: %v", newMember.Id, err)
 			// Continue with normal welcome if muting fails
@@ -569,6 +569,24 @@ func (moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	// when bot leaves stop all updates of the groups
 	if leftMember.Id == bot.Id {
 		return ext.EndGroups
+	}
+
+	// Clean up any pending captcha for the leaving user
+	captchaAttempt, err := db.GetCaptchaAttempt(leftMember.Id, chat.Id)
+	if err != nil {
+		log.Errorf("Failed to get captcha attempt for leaving user %d: %v", leftMember.Id, err)
+	} else if captchaAttempt != nil {
+		// Delete the captcha message if it exists
+		if captchaAttempt.MessageID > 0 {
+			_, delErr := bot.DeleteMessage(chat.Id, captchaAttempt.MessageID, nil)
+			if delErr != nil {
+				log.Debugf("Failed to delete captcha message for leaving user %d: %v", leftMember.Id, delErr)
+			}
+		}
+		// Delete the captcha attempt from database
+		if delErr := db.DeleteCaptchaAttempt(leftMember.Id, chat.Id); delErr != nil {
+			log.Errorf("Failed to delete captcha attempt for leaving user %d: %v", leftMember.Id, delErr)
+		}
 	}
 
 	if greetPrefs.GoodbyeSettings != nil && greetPrefs.GoodbyeSettings.ShouldGoodbye {

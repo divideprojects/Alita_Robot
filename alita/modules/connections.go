@@ -51,7 +51,7 @@ func (m moduleStruct) connection(b *gotgbot.Bot, ctx *ext.Context) error {
 		log.Error(err)
 		return err
 	}
-	temp, _ := tr.GetString("strings."+m.moduleName+".connected")
+	temp, _ := tr.GetString("strings." + m.moduleName + ".connected")
 	_text := fmt.Sprintf(temp, chat.Title)
 	connKeyboard := helpers.InitButtons(b, chat.Id, user.Id)
 	_, err = msg.Reply(b,
@@ -149,7 +149,7 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 			text, _ = tr.GetString("strings." + m.moduleName + ".connect.connection_disabled")
 		} else {
 			go db.ConnectId(user.Id, chat.Id)
-			temp, _ := tr.GetString("strings."+m.moduleName+".connect.connected")
+			temp, _ := tr.GetString("strings." + m.moduleName + ".connect.connected")
 			text = fmt.Sprintf(temp, chat.Title)
 			replyMarkup = helpers.InitButtons(b, chat.Id, user.Id)
 		}
@@ -219,10 +219,10 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 
 	switch userType {
 	case "Admin":
-		temp, _ := tr.GetString("strings."+m.moduleName+".connections_btns.admin_conn_cmds")
+		temp, _ := tr.GetString("strings." + m.moduleName + ".connections_btns.admin_conn_cmds")
 		replyText = fmt.Sprintf(temp, m.adminCmdConnString())
 	case "User":
-		temp, _ := tr.GetString("strings."+m.moduleName+".connections_btns.user_conn_cmds")
+		temp, _ := tr.GetString("strings." + m.moduleName + ".connections_btns.user_conn_cmds")
 		replyText = fmt.Sprintf(temp, m.userCmdConnString())
 	case "Main":
 		chatId := m.isConnected(b, ctx, user.Id)
@@ -235,7 +235,7 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 			return err
 		}
 
-		temp, _ := tr.GetString("strings."+m.moduleName+".connected")
+		temp, _ := tr.GetString("strings." + m.moduleName + ".connected")
 		replyText = fmt.Sprintf(temp, pchat.Title)
 		replyKb = helpers.InitButtons(b, pchat.Id, user.Id)
 	}
@@ -312,7 +312,7 @@ func (m moduleStruct) isConnected(b *gotgbot.Bot, ctx *ext.Context, userId int64
 		return conn.ChatId
 	}
 
-	text, _ := tr.GetString("strings."+m.moduleName+".not_connected")
+	text, _ := tr.GetString("strings." + m.moduleName + ".not_connected")
 	_, err := ctx.EffectiveMessage.Reply(b, text, nil)
 	if err != nil {
 		log.Error(err)
@@ -354,8 +354,8 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 				return ext.EndGroups
 			}
 
-			temp, _ := tr.GetString("strings."+m.moduleName+".reconnect.reconnected")
-		text = fmt.Sprintf(temp, gchat.Title)
+			temp, _ := tr.GetString("strings." + m.moduleName + ".reconnect.reconnected")
+			text = fmt.Sprintf(temp, gchat.Title)
 			connKeyboard = helpers.InitButtons(b, gchat.Id, user.Id)
 		} else {
 			text, _ = tr.GetString("strings." + m.moduleName + ".reconnect.no_last_chat")
@@ -372,7 +372,7 @@ func (m moduleStruct) reconnect(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		text, _ := tr.GetString("strings."+m.moduleName+".reconnect.need_pm")
+		text, _ := tr.GetString("strings." + m.moduleName + ".reconnect.need_pm")
 		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)

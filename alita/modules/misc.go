@@ -32,9 +32,9 @@ var (
 	httpClient = &http.Client{
 		Timeout: 10 * time.Second,
 		Transport: &http.Transport{
-			MaxIdleConns:        10,
-			IdleConnTimeout:     90 * time.Second,
-			DisableCompression:  true,
+			MaxIdleConns:       10,
+			IdleConnTimeout:    90 * time.Second,
+			DisableCompression: true,
 		},
 	}
 )

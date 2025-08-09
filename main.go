@@ -56,14 +56,14 @@ func main() {
 	// IMPORTANT: We create a transport pointer that will be shared across all requests
 	// This ensures connection pooling works correctly (the http.Client struct is copied by value in BaseBotClient)
 	httpTransport := &http.Transport{
-		MaxIdleConns:        100,              // Maximum idle connections across all hosts
-		MaxIdleConnsPerHost: 30,               // Increased from 10 since all requests go to api.telegram.org
-		MaxConnsPerHost:     30,               // Maximum total connections per host
-		IdleConnTimeout:     90 * time.Second, // How long idle connections are kept alive
-		DisableCompression:  false,            // Enable compression for smaller payloads
-		ForceAttemptHTTP2:   true,             // Enable HTTP/2 for multiplexing
-		DisableKeepAlives:   false,            // Explicitly enable keep-alive for connection reuse
-		TLSHandshakeTimeout: 10 * time.Second, // Timeout for TLS handshake
+		MaxIdleConns:          100,              // Maximum idle connections across all hosts
+		MaxIdleConnsPerHost:   30,               // Increased from 10 since all requests go to api.telegram.org
+		MaxConnsPerHost:       30,               // Maximum total connections per host
+		IdleConnTimeout:       90 * time.Second, // How long idle connections are kept alive
+		DisableCompression:    false,            // Enable compression for smaller payloads
+		ForceAttemptHTTP2:     true,             // Enable HTTP/2 for multiplexing
+		DisableKeepAlives:     false,            // Explicitly enable keep-alive for connection reuse
+		TLSHandshakeTimeout:   10 * time.Second, // Timeout for TLS handshake
 		ResponseHeaderTimeout: 10 * time.Second, // Timeout waiting for response headers
 	}
 
@@ -89,7 +89,7 @@ func main() {
 	// Pre-warm connections to Telegram API for faster initial responses
 	go func() {
 		log.Info("[Main] Pre-warming connections to Telegram API...")
-		
+
 		// Make multiple requests to establish connection pool
 		for i := 0; i < 3; i++ {
 			startTime := time.Now()
@@ -106,7 +106,7 @@ func main() {
 			}
 			time.Sleep(100 * time.Millisecond) // Small delay between requests
 		}
-		
+
 		log.Info("[Main] Connection pre-warming completed")
 	}()
 

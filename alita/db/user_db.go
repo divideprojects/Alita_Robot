@@ -66,7 +66,7 @@ func UpdateUser(userId int64, username, name string) {
 		updates := map[string]interface{}{
 			"last_activity": now,
 		}
-		
+
 		// Check if profile updates are needed
 		if userc.Name != name {
 			updates["name"] = name
@@ -74,7 +74,7 @@ func UpdateUser(userId int64, username, name string) {
 		if userc.UserName != username {
 			updates["username"] = username
 		}
-		
+
 		err := DB.Model(&User{}).Where("user_id = ?", userId).Updates(updates).Error
 		if err != nil {
 			log.Errorf("[Database] UpdateUser: %v - %d", err, userId)

@@ -53,7 +53,7 @@ type ProcessorFunc func(ctx context.Context, bot *gotgbot.Bot, extCtx *ext.Conte
 // MessageProcessingPipeline handles concurrent message processing
 type MessageProcessingPipeline struct {
 	stages         map[ProcessingStage]ProcessorFunc
-	stagesLock     sync.RWMutex  // Protects stages map
+	stagesLock     sync.RWMutex // Protects stages map
 	workers        int
 	jobs           chan MessageProcessingJob
 	results        chan ProcessingResult
@@ -107,7 +107,7 @@ func (p *MessageProcessingPipeline) RegisterStage(stage ProcessingStage, process
 	p.stagesLock.Lock()
 	p.stages[stage] = processor
 	p.stagesLock.Unlock()
-	
+
 	p.statsLock.Lock()
 	p.stats[stage] = &StageStats{}
 	p.statsLock.Unlock()
@@ -178,7 +178,7 @@ func (p *MessageProcessingPipeline) processJob(job MessageProcessingJob, workerI
 	p.stagesLock.RLock()
 	processor, exists := p.stages[job.Stage]
 	p.stagesLock.RUnlock()
-	
+
 	if !exists {
 		result.Error = fmt.Errorf("no processor registered for stage: %s", job.Stage)
 		result.Duration = time.Since(startTime)
@@ -194,7 +194,7 @@ func (p *MessageProcessingPipeline) processJob(job MessageProcessingJob, workerI
 	default:
 		// Continue with processing
 	}
-	
+
 	// Execute with timeout
 	ctx, cancel := context.WithTimeout(p.ctx, 5*time.Second)
 	defer cancel()

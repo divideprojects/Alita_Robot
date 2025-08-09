@@ -356,7 +356,10 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 	if _, err := b.SendMessage(chat.Id,
-		func() string { temp, _ := tr.GetString("strings."+m.moduleName+".checkflood.perform_action"); return fmt.Sprintf(temp, helpers.MentionHtml(userId, user.Name()), fmode) }(),
+		func() string {
+			temp, _ := tr.GetString("strings." + m.moduleName + ".checkflood.perform_action")
+			return fmt.Sprintf(temp, helpers.MentionHtml(userId, user.Name()), fmode)
+		}(),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -403,7 +406,7 @@ func (m *moduleStruct) setFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 					replyText, _ = tr.GetString("strings." + m.moduleName + ".errors.set_in_limit")
 				} else {
 					go db.SetFlood(chat.Id, num)
-					temp, _ := tr.GetString("strings."+m.moduleName+".setflood.success")
+					temp, _ := tr.GetString("strings." + m.moduleName + ".setflood.success")
 					replyText = fmt.Sprintf(temp, num)
 				}
 			}
@@ -452,7 +455,7 @@ func (m *moduleStruct) flood(b *gotgbot.Bot, ctx *ext.Context) error {
 		case "kick":
 			mode = "kicked"
 		}
-		temp, _ := tr.GetString("strings."+m.moduleName+".flood.show_settings")
+		temp, _ := tr.GetString("strings." + m.moduleName + ".flood.show_settings")
 		text = fmt.Sprintf(temp, flood.Limit, mode)
 	}
 	_, err := msg.Reply(b, text, helpers.Shtml())
@@ -479,7 +482,7 @@ func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 	if len(args) > 0 {
 		selectedMode := strings.ToLower(args[0])
 		if string_handling.FindInStringSlice([]string{"ban", "kick", "mute"}, selectedMode) {
-			temp, _ := tr.GetString("strings."+m.moduleName+".setfloodmode.success")
+			temp, _ := tr.GetString("strings." + m.moduleName + ".setfloodmode.success")
 			_, err := msg.Reply(b, fmt.Sprintf(temp, selectedMode), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
@@ -487,14 +490,14 @@ func (m *moduleStruct) setFloodMode(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.SetFloodMode(chat.Id, selectedMode)
 			return ext.EndGroups
 		} else {
-			temp, _ := tr.GetString("strings."+m.moduleName+".setfloodmode.unknown_type")
+			temp, _ := tr.GetString("strings." + m.moduleName + ".setfloodmode.unknown_type")
 			_, err := msg.Reply(b, fmt.Sprintf(temp, args[0]), helpers.Shtml())
 			if err != nil {
 				return err
 			}
 		}
 	} else {
-		text, _ := tr.GetString("strings."+m.moduleName+".setfloodmode.specify_action")
+		text, _ := tr.GetString("strings." + m.moduleName + ".setfloodmode.specify_action")
 		_, err := msg.Reply(b, text, helpers.Smarkdown())
 		if err != nil {
 			return err
