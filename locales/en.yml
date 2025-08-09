@@ -7,8 +7,8 @@ strings:
     Admin:
         adminlist: "Admins in <b>%s</b>:"
         anon_admin:
-            already_disabled: AnonAdmin mode is already <b>disabled</b> for {admin}
-            already_enabled: AnonAdmin mode is already <b>enabled</b> for {admin}
+            already_disabled: AnonAdmin mode is already <b>disabled</b> for %s
+            already_enabled: AnonAdmin mode is already <b>enabled</b> for %s
             disabled: |-
                 AnonAdmin mode is currently <b>disabled</b> for %s.
                 This requires anonymous admins to press a button to confirm their permissions.

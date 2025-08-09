@@ -576,7 +576,8 @@ func (m moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 		switch args[1] {
 		case "on", "true", "yes":
 			if adminSettings.AnonAdmin {
-				text, _ = tr.GetString("strings." + m.moduleName + ".anon_admin.already_enabled")
+				temp, _ := tr.GetString("strings." + m.moduleName + ".anon_admin.already_enabled")
+				text = fmt.Sprintf(temp, chat.Title)
 			} else {
 				go db.SetAnonAdminMode(chat.Id, true)
 				temp, _ := tr.GetString("strings." + m.moduleName + ".anon_admin.enabled_now")
@@ -584,7 +585,8 @@ func (m moduleStruct) anonAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		case "off", "no", "false":
 			if !adminSettings.AnonAdmin {
-				text, _ = tr.GetString("strings." + m.moduleName + ".anon_admin.already_disabled")
+				temp, _ := tr.GetString("strings." + m.moduleName + ".anon_admin.already_disabled")
+				text = fmt.Sprintf(temp, chat.Title)
 			} else {
 				go db.SetAnonAdminMode(chat.Id, false)
 				temp, _ := tr.GetString("strings." + m.moduleName + ".anon_admin.disabled_now")
