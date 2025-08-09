@@ -18,6 +18,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
@@ -58,7 +59,9 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		return ext.EndGroups
 	} else if len(args) <= 2 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Invalid Note!", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("notes_invalid")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

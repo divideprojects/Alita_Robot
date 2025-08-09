@@ -12,6 +12,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
@@ -171,7 +172,8 @@ func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	var text string
 
 	if len(args) == 1 && msg.ReplyToMessage == nil {
-		text = "You need to give me rules to set!\nEither reply to a message to provide them with command."
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ = tr.GetString("rules_need_text")
 	} else {
 		if msg.ReplyToMessage != nil {
 			text = msg.ReplyToMessage.OriginalMDV2()

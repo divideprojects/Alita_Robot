@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
@@ -319,7 +320,9 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	req, err := httpClient.Get(fmt.Sprintf("https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=auto&tl=%s&q=%s", toLang, url.QueryEscape(strings.TrimSpace(origText))))
 	if err != nil {
-		_, _ = msg.Reply(b, "Error making a translation request!", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("misc_translation_error")
+		_, _ = msg.Reply(b, text, nil)
 		return ext.EndGroups
 	}
 	defer func(Body io.ReadCloser) {

@@ -11,6 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
@@ -61,7 +62,8 @@ func (moduleStruct) setWarnMode(b *gotgbot.Bot, ctx *ext.Context) error {
 			replyText = fmt.Sprintf("Unknown type '%s'. Please use one of: ban/kick/mute", args[0])
 		}
 	} else {
-		replyText = "You need to specify an action to take upon too many warns. Current modes are: ban/kick/mute"
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		replyText, _ = tr.GetString("warns_specify_action")
 	}
 
 	_, err := msg.Reply(b, replyText, helpers.Shtml())

@@ -13,6 +13,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
@@ -41,7 +42,8 @@ func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	args := ctx.Args()
 
 	if len(args) == 0 {
-		replyText = "You must specify a user to get info on"
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		replyText, _ = tr.GetString("devs_specify_user")
 	} else {
 		_chatId := args[1]
 		chatId, _ := strconv.Atoi(_chatId)

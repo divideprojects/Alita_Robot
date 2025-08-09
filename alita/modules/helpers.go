@@ -203,7 +203,9 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		rulesrc := db.GetChatRulesInfo(int64(chatID))
 
 		if rulesrc.Rules == "" {
-			_, err := msg.Reply(b, "This chat does not have any rules!", helpers.Shtml())
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("rules_not_set")
+			_, err := msg.Reply(b, text, helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -211,8 +213,12 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			return ext.EndGroups
 		}
 
-		Text := fmt.Sprintf("Rules for <b>%s</b>:\n\n%s", chatinfo.Title, rulesrc.Rules)
-		_, err := msg.Reply(b, Text, helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("rules_for_chat", i18n.TranslationParams{
+			"first":  chatinfo.Title,
+			"second": rulesrc.Rules,
+		})
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

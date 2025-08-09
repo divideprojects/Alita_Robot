@@ -919,3 +919,87 @@ warns_help_msg: 'Keep your members in check with warnings; stop them getting out
   - Warn a user.
 
   -> `/warn @user For disobeying the rules`'
+
+# Captcha module strings
+captcha_enable_failed: Failed to enable captcha. Please try again.
+captcha_disable_failed: Failed to disable captcha. Please try again.
+captcha_usage: Please use <code>/captcha on</code> or <code>/captcha off</code>
+captcha_mode_specify: 'Please specify a mode: <code>math</code> or <code>text</code>'
+captcha_mode_invalid: Invalid mode. Use <code>math</code> or <code>text</code>
+captcha_mode_failed: Failed to set captcha mode. Please try again.
+captcha_timeout_specify: Please specify timeout in minutes (1-10)
+captcha_timeout_invalid: Invalid timeout. Please use a number between 1 and 10.
+captcha_timeout_failed: Failed to set timeout. Please try again.
+captcha_action_specify: 'Please specify an action: <code>kick</code>, <code>ban</code>, or <code>mute</code>'
+captcha_action_invalid: Invalid action. Use <code>kick</code>, <code>ban</code>, or <code>mute</code>
+captcha_action_failed: Failed to set failure action. Please try again.
+captcha_welcome_math_image: |
+  👋 Welcome %s!
+
+  Please solve the problem shown in the image and select the correct answer:
+
+  ⏱ You have <b>%d minutes</b> to answer.
+captcha_welcome_text_image: |
+  👋 Welcome %s!
+
+  Please select the text shown in the image to verify you're human:
+
+  ⏱ You have <b>%d minutes</b> to answer.
+captcha_welcome_math_text: |
+  👋 Welcome %s!
+
+  Please solve this math problem to verify you're human:
+
+  <b>%s = ?</b>
+
+  ⏱ You have <b>%d minutes</b> to answer.
+captcha_failed_verify: Failed to verify. Please contact an admin.
+captcha_wait_refresh: Please wait a few seconds before requesting a new image.
+captcha_failed_generate: Failed to generate new image, try again.
+captcha_failed_send: Failed to send new captcha image.
+captcha_invalid_data: Invalid captcha data
+captcha_invalid_attempt: Invalid attempt ID
+captcha_invalid_user: Invalid user ID
+captcha_error_processing: Error processing answer
+captcha_invalid_refresh: Invalid refresh data
+
+# Help module strings
+help_pm_questions: 'Hey :) PM me if you have any questions on how to use me!'
+help_config_private_only: Configuration only works in private
+
+# Rules/helpers module strings
+rules_not_set: This chat does not have any rules!
+rules_for_chat: 'Rules for <b>%s</b>:\n\n%s'
+
+# Filters module strings  
+filters_invalid: Invalid Filter!
+
+# Warnings module strings
+warns_specify_action: 'You need to specify an action to take upon too many warns. Current modes are: ban/kick/mute'
+
+# Admin module strings
+admin_need_admin: You need to be admin to do this!
+
+# Reports module strings
+reports_reply_to_report: You need to reply to a message to report it.
+reports_expose_yourself: You need to expose yourself first!
+reports_reply_to_block: You must reply to a user to block them.
+reports_reply_to_unblock: You must reply to a user to unblock them.
+
+# Mute module strings
+mute_reply_to_dmute: You need to reply to a message to delete it and mute the user!
+
+# Bot updates module strings
+bot_updates_need_admin: You need to be an admin to do this!
+
+# Rules module strings
+rules_need_text: 'You need to give me rules to set!\nEither reply to a message to provide them with command.'
+
+# Notes module strings
+notes_invalid: Invalid Note!
+
+# Misc module strings
+misc_translation_error: Error making a translation request!
+
+# Devs module strings
+devs_specify_user: You must specify a user to get info on

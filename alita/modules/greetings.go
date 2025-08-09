@@ -497,14 +497,14 @@ func SendWelcomeMessage(bot *gotgbot.Bot, ctx *ext.Context, userID int64, firstN
 			buttons,
 		)
 		keyboard := &gotgbot.InlineKeyboardMarkup{InlineKeyboard: helpers.BuildKeyboard(buttons)}
-		
+
 		// Validate greeting function exists before calling
 		greetFunc, exists := helpers.GreetingsEnumFuncMap[greetPrefs.WelcomeSettings.WelcomeType]
 		if !exists || greetFunc == nil {
 			log.Errorf("Invalid or missing greeting type: %d", greetPrefs.WelcomeSettings.WelcomeType)
 			return fmt.Errorf("invalid greeting type: %d", greetPrefs.WelcomeSettings.WelcomeType)
 		}
-		
+
 		sent, err := greetFunc(bot, ctx, res, greetPrefs.WelcomeSettings.FileID, keyboard)
 		if err != nil {
 			log.Error(err)

@@ -340,7 +340,9 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Info("sed")
 		}
 	} else {
-		_, err := msg.Reply(b, "Hey :) PM me if you have any questions on how to use me!", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("help_pm_questions")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -387,7 +389,9 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// just in case
 	if msg.GetChat().Type != "private" {
-		_, _, err := msg.EditText(b, "Configuration only works in private", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("help_config_private_only")
+		_, _, err := msg.EditText(b, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err

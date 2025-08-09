@@ -12,6 +12,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -112,9 +114,11 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	// if non-admins try to press it
 	// using this func because it's the only one that can be called by taking chatId from callback query
 	if !chat_status.IsUserAdmin(b, chatId, query.From.Id) {
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("bot_updates_need_admin")
 		_, err := query.Answer(b,
 			&gotgbot.AnswerCallbackQueryOpts{
-				Text: "You need to be an admin to do this!",
+				Text: text,
 			},
 		)
 		if err != nil {

@@ -14,6 +14,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
@@ -40,10 +41,9 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage == nil {
-		_, _ = msg.Reply(b,
-			"You need to reply to a message to report it.",
-			nil,
-		)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("reports_reply_to_report")
+		_, _ = msg.Reply(b, text, nil)
 		return ext.EndGroups
 	}
 
@@ -78,7 +78,9 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if user.Id == 1087968824|777000|136817688 {
-		_, _ = msg.Reply(b, "You need to expose yourself first!", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("reports_expose_yourself")
+		_, _ = msg.Reply(b, text, nil)
 		return ext.EndGroups
 	}
 	if msg.ReplyToMessage.From.Id == 1087968824|777000|136817688 {
@@ -249,7 +251,8 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 					go db.BlockReportUser(chat.Id, bUser.Id)
 					replyText = fmt.Sprintf("Blocked user %s from reporting.", helpers.MentionHtml(bUser.Id, bUser.FirstName))
 				} else {
-					replyText = "You must reply to a user to block them."
+					tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+					replyText, _ = tr.GetString("reports_reply_to_block")
 				}
 			}
 		case "unblock":
@@ -261,7 +264,8 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 					go db.UnblockReportUser(chat.Id, bUser.Id)
 					replyText = fmt.Sprintf("Unblocked user %s from reporting.", helpers.MentionHtml(bUser.Id, bUser.FirstName))
 				} else {
-					replyText = "You must reply to a user to unblock them."
+					tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+					replyText, _ = tr.GetString("reports_reply_to_unblock")
 				}
 			}
 		case "showblocklist":

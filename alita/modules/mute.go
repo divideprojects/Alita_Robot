@@ -9,6 +9,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -435,7 +437,9 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "You need to reply to a message to delete it and mute the user!", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("mute_reply_to_dmute")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
