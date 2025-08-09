@@ -174,6 +174,8 @@ func registerAllMessages() {
 	// Generic success messages
 	MustRegister("success_operation_completed", "Operation completed successfully.")
 	MustRegister("success_settings_saved", "Settings saved successfully.")
+	MustRegister("generic_button_yes", "Yes")
+	MustRegister("generic_button_no", "No")
 	
 	// Misc messages
 	MustRegister("misc_loading", "Loading...")
@@ -218,6 +220,10 @@ func registerAllMessages() {
 	MustRegister("disabling_del_invalid_option", "Please use <code>yes</code>, <code>no</code>, <code>on</code>, or <code>off</code>.")
 
 	// Language module messages
+	MustRegister("language_current_user", "Your Current Language is %s\nChoose a language from keyboard below.", "language")
+	MustRegister("language_current_group", "This Group's Current Language is %s\nChoose a language from keyboard below.", "language")
+	MustRegister("language_changed_user", "Your language has been changed to %s", "language")
+	MustRegister("language_changed_group", "This group's language has been changed to %s", "language")
 	MustRegister("language_current", "Your current language is set to <b>%s</b>.", "language")
 	MustRegister("language_changed", "Language changed to <b>%s</b>!", "language")
 	MustRegister("language_change_failed", "Failed to change language. Please try again.")
@@ -227,6 +233,12 @@ func registerAllMessages() {
 	MustRegister("language_user_changed", "Your language changed to <b>%s</b>!", "language")
 
 	// Bot updates module messages
+	MustRegister("bot_updates_supergroup_required", "Sorry, but to use my all my features, you need to convert this group to supergroup.After converting this group to supergroup, you can add me again to use me.\nTo convert this group to a supergroup, please follow the instructions here:\nhttps://telegra.ph/Convert-group-to-Supergroup-07-29")
+	MustRegister("bot_updates_join_thanks", "Thanks for adding me in your group!")
+	MustRegister("bot_updates_creator_promotion", "\nCheckout @DivideProjects for more such useful bots from my creators.")
+	MustRegister("bot_updates_make_admin", "\n\nMake me admin to use me with my full abilities!")
+	MustRegister("bot_updates_admin_required", "You need to be an admin to do this!")
+	MustRegister("bot_updates_button_expired", "This button has expired, Please use the command again.")
 	MustRegister("updates_enabled", "Update notifications are now <b>enabled</b> for this chat.")
 	MustRegister("updates_disabled", "Update notifications are now <b>disabled</b> for this chat.")
 	MustRegister("updates_status_enabled", "Update notifications are currently <b>enabled</b> for this chat.")
@@ -496,6 +508,56 @@ func registerAllMessages() {
 	MustRegister("rules_button_not_set", "You haven't set a custom rules button yet. The default text \"%s\" will be used.", "default_text")
 	MustRegister("rules_button_current", "The rules button is currently set to the following text:\n %s", "button_text")
 	MustRegister("rules_button_reset_success", "Successfully cleared custom rules button text!")
+
+	// Group D Modules - Additional missing keys
+	
+	// Antiflood module - Button labels
+	MustRegister("antiflood_button_unmute_admin_only", "Unmute (Admins Only)")
+	MustRegister("antiflood_button_unban_admin_only", "Unban (Admins Only)")
+	
+	// Bans module - Anonymous user messages
+	MustRegister("bans_unban_anonymous_reply_required", "You can only unban an anonymous user by replying to their message.")
+	
+	// Bans module - Restrict/unrestrict messages
+	MustRegister("bans_restrict_user_not_in_chat", "This user is not in this chat, how can I restrict them?")
+	MustRegister("bans_restrict_cannot_restrict_admin", "Why would I restrict an admin? That sounds like a pretty dumb idea.")
+	MustRegister("bans_restrict_is_bot_itself", "Why would I restrict myself?")
+	MustRegister("bans_restrict_how_restrict", "How do you want to restrict this user?")
+	MustRegister("bans_restrict_admin_kicked", "%s kicked %s.", "admin", "user")
+	MustRegister("bans_restrict_admin_muted", "%s muted %s.", "admin", "user")
+	MustRegister("bans_restrict_admin_banned", "%s banned %s.", "admin", "user")
+	MustRegister("bans_unrestrict_cannot_restrict_admin", "Why would I unrestrict an admin? That sounds like a pretty dumb idea.")
+	MustRegister("bans_unrestrict_is_bot_itself", "Why would I unrestrict myself when I'm already here?")
+	MustRegister("bans_unrestrict_how_unrestrict", "How do you want to unrestrict this user?")
+	MustRegister("bans_unrestrict_unmuted_by", "Unmuted by %s.", "admin")
+	MustRegister("bans_unrestrict_unbanned_by", "Unbanned by %s.", "admin")
+	
+	// Purges module - User messages
+	MustRegister("purges_old_message_limit", "You cannot delete messages over two days old. Please choose a more recent message.")
+	MustRegister("purges_reply_to_start", "Reply to a message to select where to start purging from.")
+	MustRegister("purges_reply_to_delete", "Reply to a message to delete it!")
+	MustRegister("purges_already_marked", "This message is already marked for purging!")
+	MustRegister("purges_marked_for_deletion", "Message marked for deletion. Reply to another message with /purgeto to delete all messages in between; within 30s!")
+	MustRegister("purges_need_purgefrom_first", "You can only use this command after having used the /purgefrom command!")
+	MustRegister("purges_use_del_for_single", "Use /del command to delete one message!")
+	MustRegister("purges_reply_to_end", "Reply to a message to show me till where to purge.")
+	
+	// Reports module - Action callback messages
+	MustRegister("reports_action_kicked", "✅ Successfully Kicked")
+	MustRegister("reports_user_kicked_by", "User kicked!Action taken by %s", "admin")
+	MustRegister("reports_action_banned", "✅ Successfully Banned")
+	MustRegister("reports_user_banned_by", "User banned!Action taken by %s", "admin")
+	MustRegister("reports_action_deleted", "✅ Successfully Deleted")
+	MustRegister("reports_message_deleted_by", "Message Deleted!Action taken by %s", "admin")
+	MustRegister("reports_action_resolved", "✅ Resolved Report Successfully!")
+	MustRegister("reports_resolved_by", "Resolved by %s", "admin")
+	
+	// Reports module - Button text
+	MustRegister("reports_button_message", "➡ Message")
+	MustRegister("reports_button_kick", "⚠ Kick")
+	MustRegister("reports_button_ban", "⛔️ Ban")
+	MustRegister("reports_button_delete_message", "❎ Delete Message")
+	MustRegister("reports_button_mark_resolved", "✔️ Mark Resolved")
 
 	// Users module messages
 	MustRegister("users_info_user", "<b>User Info:</b>\n• <b>ID:</b> <code>%d</code>\n• <b>First Name:</b> %s", "id", "first_name")

@@ -161,29 +161,29 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: "➡ Message",
+							Text: translator.Message("reports_button_message", nil),
 							Url:  helpers.GetMessageLinkFromMessageId(chat, reportedMsgId),
 						},
 					},
 					{
 						{
-							Text:         "⚠ Kick",
+							Text:         translator.Message("reports_button_kick", nil),
 							CallbackData: fmt.Sprintf(callbackData, "kick"),
 						},
 						{
-							Text:         "⛔️ Ban",
+							Text:         translator.Message("reports_button_ban", nil),
 							CallbackData: fmt.Sprintf(callbackData, "ban"),
 						},
 					},
 					{
 						{
-							Text:         "❎ Delete Message",
+							Text:         translator.Message("reports_button_delete_message", nil),
 							CallbackData: fmt.Sprintf(callbackData, "delete"),
 						},
 					},
 					{
 						{
-							Text:         "✔️ Mark Resolved",
+							Text:         translator.Message("reports_button_mark_resolved", nil),
 							CallbackData: fmt.Sprintf(callbackData, "resolved"),
 						},
 					},

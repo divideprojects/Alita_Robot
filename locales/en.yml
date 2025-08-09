@@ -1,6 +1,5 @@
 # Flattened YAML structure - Generated: 2025-08-09 03:40:09
 # Original file backed up as: en.yml.backup.20250809-034009
-
 admin_admin_list: 'Admins in <b>%s</b>:'
 admin_anon_admin_already_disabled: AnonAdmin mode is already <b>disabled</b> for %s
 admin_anon_admin_already_enabled: AnonAdmin mode is already <b>enabled</b> for %s
@@ -597,6 +596,32 @@ utils_chat_status_bot_no_permission_restrict_group: I can't restrict people here
 utils_chat_status_bot_require_admin: I'm not an admin! Make sure I'm an admin and have appropriate permissions.
 utils_chat_status_require_group: This command is made to be used in group chats, not in pm!
 utils_chat_status_require_private: This command is made for PM, not group chat!
+
+# Bot updates module translations
+bot_updates_supergroup_required: |
+  Sorry, but to use my all my features, you need to convert this group to supergroup.
+  After converting this group to supergroup, you can add me again to use me.
+  To convert this group to a supergroup, please follow the instructions here:
+  https://telegra.ph/Convert-group-to-Supergroup-07-29
+bot_updates_join_thanks: Thanks for adding me in your group!
+bot_updates_creator_promotion: "\nCheckout @DivideProjects for more such useful bots from my creators."
+bot_updates_make_admin: "\n\nMake me admin to use me with my full abilities!"
+bot_updates_admin_required: You need to be an admin to do this!
+bot_updates_button_expired: This button has expired, Please use the command again.
+
+# Language module translations
+language_current_user: |
+  Your Current Language is %s
+  Choose a language from keyboard below.
+language_current_group: |
+  This Group's Current Language is %s
+  Choose a language from keyboard below.
+language_changed_user: 'Your language has been changed to %s'
+language_changed_group: "This group's language has been changed to %s"
+
+# Generic buttons
+generic_button_yes: 'Yes'
+generic_button_no: 'No'
 utils_chat_status_user_no_permission_change_info_btn: You don't have permission to change info!!
 utils_chat_status_user_no_permission_change_info_cmd: You don't have permission to change info in this group!
 utils_chat_status_user_no_permission_delete: You don't have Permission to Delete Messages!
@@ -805,7 +830,7 @@ devs_team_no_users_section: '\nNo Users'
 devs_stats_fetching: '<code>Fetching bot stats...</code>'
 
 # Group B Modules - Disabling module keys
-disabling_available_commands: The following commands can be disabled:
+disabling_available_commands: "The following commands can be disabled:"
 disabling_no_disabled_commands: There are no disabled commands in this chat.
 disabling_disabled_list: 'The following commands are disabled in this chat:'
 disabling_del_enabled: Disabled messages will now be deleted.
@@ -853,3 +878,55 @@ notes_cleared_all: Removed all Notes from this Chat ✅
 notes_clear_all_cancelled: Cancelled removing all notes from this Chat ❌
 notes_overwrite_success: Note has been overwritten successfully ✅
 notes_overwrite_cancelled: Cancelled overwriting of note ❌
+
+# Group D Modules - Additional missing keys
+
+# Antiflood module - Button labels
+antiflood_button_unmute_admin_only: 'Unmute (Admins Only)'
+antiflood_button_unban_admin_only: 'Unban (Admins Only)'
+
+# Bans module - Anonymous user messages
+bans_unban_anonymous_reply_required: You can only unban an anonymous user by replying to their message.
+
+# Bans module - Restrict/unrestrict messages
+bans_restrict_user_not_in_chat: 'This user is not in this chat, how can I restrict them?'
+bans_restrict_cannot_restrict_admin: Why would I restrict an admin? That sounds like a pretty dumb idea.
+bans_restrict_is_bot_itself: Why would I restrict myself?
+bans_restrict_how_restrict: How do you want to restrict this user?
+bans_restrict_admin_kicked: '%s kicked %s.'
+bans_restrict_admin_muted: '%s muted %s.'
+bans_restrict_admin_banned: '%s banned %s.'
+bans_unrestrict_cannot_restrict_admin: Why would I unrestrict an admin? That sounds like a pretty dumb idea.
+bans_unrestrict_is_bot_itself: Why would I unrestrict myself when I'm already here?
+bans_unrestrict_how_unrestrict: How do you want to unrestrict this user?
+bans_unrestrict_unmuted_by: 'Unmuted by %s.'
+bans_unrestrict_unbanned_by: 'Unbanned by %s.'
+
+# Purges module - User messages
+purges_old_message_limit: You cannot delete messages over two days old. Please choose a more recent message.
+purges_reply_to_start: Reply to a message to select where to start purging from.
+purges_reply_to_delete: Reply to a message to delete it!
+purges_already_marked: This message is already marked for purging!
+purges_marked_for_deletion: 'Message marked for deletion. Reply to another message with /purgeto to delete all messages in between; within 30s!'
+purges_need_purgefrom_first: You can only use this command after having used the /purgefrom command!
+purges_use_del_for_single: Use /del command to delete one message!
+purges_reply_to_end: Reply to a message to show me till where to purge.
+purges_purged_messages: 'Purged %d messages.'
+purges_purged_messages_reason: 'Purged %d messages.\n*Reason*:\n%s'
+
+# Reports module - Action callback messages
+reports_action_kicked: '✅ Successfully Kicked'
+reports_user_kicked_by: 'User kicked!Action taken by %s'
+reports_action_banned: '✅ Successfully Banned'
+reports_user_banned_by: 'User banned!Action taken by %s'
+reports_action_deleted: '✅ Successfully Deleted'
+reports_message_deleted_by: 'Message Deleted!Action taken by %s'
+reports_action_resolved: '✅ Resolved Report Successfully!'
+reports_resolved_by: 'Resolved by %s'
+
+# Reports module - Button text
+reports_button_message: '➡ Message'
+reports_button_kick: '⚠ Kick'
+reports_button_ban: '⛔️ Ban'
+reports_button_delete_message: '❎ Delete Message'
+reports_button_mark_resolved: '✔️ Mark Resolved'

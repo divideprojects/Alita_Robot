@@ -121,11 +121,14 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		if purge {
-			Text := fmt.Sprintf("Purged %d messages.", totalMsgs)
+			text := translator.Message("purges_purged_messages", i18n.Params{"count": totalMsgs})
 			if len(args) >= 1 {
-				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
+				text = translator.Message("purges_purged_messages_reason", i18n.Params{
+					"count": totalMsgs,
+					"reason": fmt.Sprintf("%s", args[0:]),
+				})
 			}
-			pMsg, err := bot.SendMessage(chat.Id, Text, helpers.Smarkdown())
+			pMsg, err := bot.SendMessage(chat.Id, text, helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 			}
@@ -386,11 +389,14 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			log.Error(err)
 		}
 		if purge {
-			Text := fmt.Sprintf("Purged %d messages.", totalMsgs)
+			text := translator.Message("purges_purged_messages", i18n.Params{"count": totalMsgs})
 			if len(args) >= 1 {
-				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
+				text = translator.Message("purges_purged_messages_reason", i18n.Params{
+					"count": totalMsgs,
+					"reason": fmt.Sprintf("%s", args[0:]),
+				})
 			}
-			pMsg, err := bot.SendMessage(chat.Id, Text, helpers.Smarkdown())
+			pMsg, err := bot.SendMessage(chat.Id, text, helpers.Smarkdown())
 			if err != nil {
 				log.Error(err)
 			}

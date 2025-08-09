@@ -272,7 +272,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 		keyboard = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "Unmute (Admins Only)",
+					Text:         tr.Message("antiflood_button_unmute_admin_only", nil),
 					CallbackData: fmt.Sprintf("unrestrict.unmute.%d", user.Id()),
 				},
 			},
@@ -343,7 +343,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 			keyboard = [][]gotgbot.InlineKeyboardButton{
 				{
 					{
-						Text:         "Unban (Admins Only)",
+						Text:         tr.Message("antiflood_button_unban_admin_only", nil),
 						CallbackData: fmt.Sprintf("unrestrict.unban.%d", user.Id()),
 					},
 				},

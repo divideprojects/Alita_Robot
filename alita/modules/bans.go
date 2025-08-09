@@ -864,7 +864,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 				"user": helpers.MentionHtml(userId, msg.ReplyToMessage.GetSender().Name()),
 			})
 		} else {
-			text = "You can only unban an anonymous user by replying to their message."
+			text = tr.Message("bans_unban_anonymous_reply_required", nil)
 		}
 	} else {
 		_, err := chat.UnbanMember(b, userId, nil)
