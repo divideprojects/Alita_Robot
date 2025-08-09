@@ -1,25 +1,82 @@
----
-#stringcode: string
-alt_names:
-  Admin: [admins, promote, demote, title]
-  Antiflood: [flood]
-  Approvals: [approval, approve]
-  Bans:
-    [ban, kick, dkick, restrict, kickme, unrestrict, sban, dban, tban, unban]
-  Blacklists: [blacklist, unblacklist]
-  Connections: [connection, connect]
-  Disabling: [disable, enable]
-  Filters: [filter]
-  Formatting: [markdownhelp, mdhelp]
-  Greetings: [welcome, goodbye, greeting]
-  Locks: [lock, unlock]
-  Languages: [language, lang]
-  Misc: [extra, extras]
-  Mutes: [mute, unmute, tmute, smute, dmute]
-  Notes: [note, notes]
-  Pins: [antichannelpin, cleanlinked, pins]
-  Purges: [purge, del]
-  Reports: [report, reporting]
-  Rules: [rule]
-  Tagger: [tagme, tagall, tagging, untagme, addtag]
-  Warns: [warn, warning, warnings]
+# Flattened YAML structure - Generated: 2025-08-09 03:40:09
+# Original file backed up as: config.yml.backup.20250809-034009
+
+alt_names_admin:
+    - admins
+    - promote
+    - demote
+    - title
+alt_names_antiflood:
+    - flood
+alt_names_approvals:
+    - approval
+    - approve
+alt_names_bans:
+    - ban
+    - kick
+    - dkick
+    - restrict
+    - kickme
+    - unrestrict
+    - sban
+    - dban
+    - tban
+    - unban
+alt_names_blacklists:
+    - blacklist
+    - unblacklist
+alt_names_connections:
+    - connection
+    - connect
+alt_names_disabling:
+    - disable
+    - enable
+alt_names_filters:
+    - filter
+alt_names_formatting:
+    - markdownhelp
+    - mdhelp
+alt_names_greetings:
+    - welcome
+    - goodbye
+    - greeting
+alt_names_languages:
+    - language
+    - lang
+alt_names_locks:
+    - lock
+    - unlock
+alt_names_misc:
+    - extra
+    - extras
+alt_names_mutes:
+    - mute
+    - unmute
+    - tmute
+    - smute
+    - dmute
+alt_names_notes:
+    - note
+    - notes
+alt_names_pins:
+    - antichannelpin
+    - cleanlinked
+    - pins
+alt_names_purges:
+    - purge
+    - del
+alt_names_reports:
+    - report
+    - reporting
+alt_names_rules:
+    - rule
+alt_names_tagger:
+    - tagme
+    - tagall
+    - tagging
+    - untagme
+    - addtag
+alt_names_warns:
+    - warn
+    - warning
+    - warnings
