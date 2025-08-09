@@ -1,0 +1,55 @@
+name: I18n Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'alita/modules/**'
+      - 'locales/**'
+      - 'cmd/i18n*/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'alita/modules/**'
+      - 'locales/**'
+      - 'cmd/i18n*/**'
+
+jobs:
+  i18n-validation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+        cache: true
+    
+    - name: Install dependencies
+      run: go mod download
+    
+    - name: Run i18n linter
+      run: make i18n-lint
+      
+    - name: Check for hardcoded strings
+      run: |
+        output=$(go run cmd/i18nlint/main.go -json 2>/dev/null | jq '.issues | map(select(.type == "hardcoded_string")) | length')
+        if [ "$output" -gt "0" ]; then
+          echo "❌ Found $output hardcoded strings that should use i18n"
+          go run cmd/i18nlint/main.go -json | jq '.issues | map(select(.type == "hardcoded_string"))'
+          exit 1
+        fi
+        echo "✅ No hardcoded strings found"
+    
+    - name: Check translation coverage
+      run: |
+        go run cmd/i18nlint/main.go -json | jq '.coverage'
+        
+    - name: Upload i18n report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: i18n-report
+        path: generated/i18n/lint_report.md

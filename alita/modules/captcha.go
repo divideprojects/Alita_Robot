@@ -16,6 +16,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -63,6 +64,7 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Check permissions
 	if !chat_status.RequireGroup(bot, ctx, nil, false) {
@@ -83,16 +85,13 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 			status = "enabled"
 		}
 
-		text := fmt.Sprintf(
-			"<b>Captcha Settings:</b>\n"+
-				"Status: <code>%s</code>\n"+
-				"Mode: <code>%s</code>\n"+
-				"Timeout: <code>%d minutes</code>\n"+
-				"Failure Action: <code>%s</code>\n"+
-				"Max Attempts: <code>%d</code>\n\n"+
-				"Use <code>/captcha on</code> or <code>/captcha off</code> to change status.",
-			status, settings.CaptchaMode, settings.Timeout, settings.FailureAction, settings.MaxAttempts,
-		)
+		text := tr.Message("captcha_settings_status", i18n.Params{
+			"status":   status,
+			"mode":     settings.CaptchaMode,
+			"timeout":  settings.Timeout,
+			"action":   settings.FailureAction,
+			"attempts": settings.MaxAttempts,
+		})
 
 		_, err := msg.Reply(bot, text, helpers.Shtml())
 		return err
@@ -102,16 +101,16 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 	case "on", "enable", "yes":
 		err := db.SetCaptchaEnabled(chat.Id, true)
 		if err != nil {
-			_, _ = msg.Reply(bot, "Failed to enable captcha. Please try again.", nil)
+			_, _ = msg.Reply(bot, tr.Message("captcha_enable_failed", nil), nil)
 			return err
 		}
-		_, err = msg.Reply(bot, "✅ Captcha verification has been <b>enabled</b>. New members will need to complete a captcha to join.", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.Message("captcha_enabled_success", nil), helpers.Shtml())
 		return err
 
 	case "off", "disable", "no":
 		err := db.SetCaptchaEnabled(chat.Id, false)
 		if err != nil {
-			_, _ = msg.Reply(bot, "Failed to disable captcha. Please try again.", nil)
+			_, _ = msg.Reply(bot, tr.Message("captcha_disable_failed", nil), nil)
 			return err
 		}
 		// Clean up any pending captcha attempts
@@ -120,11 +119,11 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 				log.Errorf("Failed to delete captcha attempts: %v", err)
 			}
 		}()
-		_, err = msg.Reply(bot, "❌ Captcha verification has been <b>disabled</b>.", helpers.Shtml())
+		_, err = msg.Reply(bot, tr.Message("captcha_disabled_success", nil), helpers.Shtml())
 		return err
 
 	default:
-		_, err := msg.Reply(bot, "Please use <code>/captcha on</code> or <code>/captcha off</code>", helpers.Shtml())
+		_, err := msg.Reply(bot, tr.Message("captcha_invalid_option", nil), helpers.Shtml())
 		return err
 	}
 }
@@ -136,6 +135,7 @@ func (moduleStruct) captchaModeCommand(bot *gotgbot.Bot, ctx *ext.Context) error
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Check permissions
 	if !chat_status.RequireGroup(bot, ctx, nil, false) {
@@ -146,28 +146,23 @@ func (moduleStruct) captchaModeCommand(bot *gotgbot.Bot, ctx *ext.Context) error
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(bot, "Please specify a mode: <code>math</code> or <code>text</code>", helpers.Shtml())
+		_, err := msg.Reply(bot, tr.Message("captcha_mode_specify", nil), helpers.Shtml())
 		return err
 	}
 
 	mode := strings.ToLower(args[0])
 	if mode != "math" && mode != "text" {
-		_, err := msg.Reply(bot, "Invalid mode. Use <code>math</code> or <code>text</code>", helpers.Shtml())
+		_, err := msg.Reply(bot, tr.Message("captcha_mode_invalid", nil), helpers.Shtml())
 		return err
 	}
 
 	err := db.SetCaptchaMode(chat.Id, mode)
 	if err != nil {
-		_, _ = msg.Reply(bot, "Failed to set captcha mode. Please try again.", nil)
+		_, _ = msg.Reply(bot, tr.Message("captcha_mode_set_failed", nil), nil)
 		return err
 	}
 
-	modeDesc := "mathematical problems"
-	if mode == "text" {
-		modeDesc = "text recognition from images"
-	}
-
-	_, err = msg.Reply(bot, fmt.Sprintf("✅ Captcha mode set to <b>%s</b> (%s)", mode, modeDesc), helpers.Shtml())
+	_, err = msg.Reply(bot, tr.Message("captcha_mode_set_success", i18n.Params{"mode": mode}), helpers.Shtml())
 	return err
 }
 
@@ -178,6 +173,7 @@ func (moduleStruct) captchaTimeCommand(bot *gotgbot.Bot, ctx *ext.Context) error
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Check permissions
 	if !chat_status.RequireGroup(bot, ctx, nil, false) {
@@ -188,23 +184,23 @@ func (moduleStruct) captchaTimeCommand(bot *gotgbot.Bot, ctx *ext.Context) error
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(bot, "Please specify timeout in minutes (1-10)", nil)
+		_, err := msg.Reply(bot, tr.Message("captcha_timeout_specify", nil), nil)
 		return err
 	}
 
 	timeout, err := strconv.Atoi(args[0])
 	if err != nil || timeout < 1 || timeout > 10 {
-		_, err = msg.Reply(bot, "Invalid timeout. Please use a number between 1 and 10.", nil)
+		_, err = msg.Reply(bot, tr.Message("captcha_timeout_invalid", nil), nil)
 		return err
 	}
 
 	err = db.SetCaptchaTimeout(chat.Id, timeout)
 	if err != nil {
-		_, _ = msg.Reply(bot, "Failed to set timeout. Please try again.", nil)
+		_, _ = msg.Reply(bot, tr.Message("captcha_timeout_set_failed", nil), nil)
 		return err
 	}
 
-	_, err = msg.Reply(bot, fmt.Sprintf("✅ Captcha timeout set to <b>%d minutes</b>", timeout), helpers.Shtml())
+	_, err = msg.Reply(bot, tr.Message("captcha_timeout_set_success", i18n.Params{"timeout": timeout}), helpers.Shtml())
 	return err
 }
 
@@ -215,6 +211,7 @@ func (moduleStruct) captchaActionCommand(bot *gotgbot.Bot, ctx *ext.Context) err
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Check permissions
 	if !chat_status.RequireGroup(bot, ctx, nil, false) {
@@ -225,23 +222,23 @@ func (moduleStruct) captchaActionCommand(bot *gotgbot.Bot, ctx *ext.Context) err
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(bot, "Please specify an action: <code>kick</code>, <code>ban</code>, or <code>mute</code>", helpers.Shtml())
+		_, err := msg.Reply(bot, tr.Message("captcha_action_specify", nil), helpers.Shtml())
 		return err
 	}
 
 	action := strings.ToLower(args[0])
 	if action != "kick" && action != "ban" && action != "mute" {
-		_, err := msg.Reply(bot, "Invalid action. Use <code>kick</code>, <code>ban</code>, or <code>mute</code>", helpers.Shtml())
+		_, err := msg.Reply(bot, tr.Message("captcha_action_invalid", nil), helpers.Shtml())
 		return err
 	}
 
 	err := db.SetCaptchaFailureAction(chat.Id, action)
 	if err != nil {
-		_, _ = msg.Reply(bot, "Failed to set failure action. Please try again.", nil)
+		_, _ = msg.Reply(bot, tr.Message("captcha_action_set_failed", nil), nil)
 		return err
 	}
 
-	_, err = msg.Reply(bot, fmt.Sprintf("✅ Captcha failure action set to <b>%s</b>", action), helpers.Shtml())
+	_, err = msg.Reply(bot, tr.Message("captcha_action_set_success", i18n.Params{"action": action}), helpers.Shtml())
 	return err
 }
 
@@ -426,6 +423,7 @@ func generateMathImageCaptcha() (string, []byte, []string, error) {
 func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName string) error {
 	chat := ctx.EffectiveChat
 	settings, _ := db.GetCaptchaSettings(chat.Id)
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	if !settings.Enabled {
 		return nil
@@ -508,29 +506,23 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 	var msgText string
 	if isImage {
 		if settings.CaptchaMode == "math" {
-			msgText = fmt.Sprintf(
-				"👋 Welcome %s!\n\n"+
-					"Please solve the problem shown in the image and select the correct answer:\n\n"+
-					"⏱ You have <b>%d minutes</b> to answer.",
-				helpers.MentionHtml(userID, userName), settings.Timeout,
-			)
+			msgText = tr.Message("captcha_welcome_math_image", i18n.Params{
+				"user":    helpers.MentionHtml(userID, userName),
+				"timeout": settings.Timeout,
+			})
 		} else {
-			msgText = fmt.Sprintf(
-				"👋 Welcome %s!\n\n"+
-					"Please select the text shown in the image to verify you're human:\n\n"+
-					"⏱ You have <b>%d minutes</b> to answer.",
-				helpers.MentionHtml(userID, userName), settings.Timeout,
-			)
+			msgText = tr.Message("captcha_welcome_text_image", i18n.Params{
+				"user":    helpers.MentionHtml(userID, userName),
+				"timeout": settings.Timeout,
+			})
 		}
 	} else {
 		// Text-based fallback for math
-		msgText = fmt.Sprintf(
-			"👋 Welcome %s!\n\n"+
-				"Please solve this math problem to verify you're human:\n\n"+
-				"<b>%s = ?</b>\n\n"+
-				"⏱ You have <b>%d minutes</b> to answer.",
-			helpers.MentionHtml(userID, userName), question, settings.Timeout,
-		)
+		msgText = tr.Message("captcha_welcome_math_text", i18n.Params{
+			"user":     helpers.MentionHtml(userID, userName),
+			"question": question,
+			"timeout":  settings.Timeout,
+		})
 	}
 
 	// Send the captcha message
@@ -621,6 +613,7 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 	query := ctx.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := query.From
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Parse callback data: captcha_verify.{attempt_id}.{user_id}.{answer}
 	parts := strings.Split(query.Data, ".")
@@ -695,7 +688,7 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 		_ = db.DeleteCaptchaAttempt(targetUserID, chat.Id)
 
 		// Send success message
-		successMsg := fmt.Sprintf("✅ %s has been verified and can now chat!", helpers.MentionHtml(targetUserID, user.FirstName))
+		successMsg := tr.Message("captcha_verification_success", i18n.Params{"user": helpers.MentionHtml(targetUserID, user.FirstName)})
 		sent, _ := bot.SendMessage(chat.Id, successMsg, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 
 		// Delete success message after 5 seconds
@@ -735,7 +728,7 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 			}
 
 			_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
-				Text:      fmt.Sprintf("❌ Wrong answer! You have been %s.", actionText),
+				Text:      tr.Message("captcha_wrong_answer_action", i18n.Params{"action": actionText}),
 				ShowAlert: true,
 			})
 			return err
@@ -743,7 +736,7 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 
 		remainingAttempts := settings.MaxAttempts - attempt.Attempts
 		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
-			Text:      fmt.Sprintf("❌ Wrong answer! %d attempts remaining.", remainingAttempts),
+			Text:      tr.Message("captcha_wrong_answer_attempts", i18n.Params{"attempts": remainingAttempts}),
 			ShowAlert: true,
 		})
 		return err
@@ -756,6 +749,7 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	query := ctx.CallbackQuery
 	chat := ctx.EffectiveChat
 	user := query.From
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Parse callback data: captcha_refresh.{attempt_id}.{user_id}
 	parts := strings.Split(query.Data, ".")
@@ -849,15 +843,15 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	}
 	var caption string
 	if settings != nil && settings.CaptchaMode == "text" {
-		caption = fmt.Sprintf(
-			"👋 Welcome %s!\n\nPlease select the text shown in the image to verify you're human:\n\n⏱ You have <b>%d minutes</b> to answer.",
-			helpers.MentionHtml(targetUserID, user.FirstName), remainingMinutes,
-		)
+		caption = tr.Message("captcha_welcome_text_image", i18n.Params{
+			"user":    helpers.MentionHtml(targetUserID, user.FirstName),
+			"timeout": remainingMinutes,
+		})
 	} else {
-		caption = fmt.Sprintf(
-			"👋 Welcome %s!\n\nPlease solve the problem shown in the image and select the correct answer:\n\n⏱ You have <b>%d minutes</b> to answer.",
-			helpers.MentionHtml(targetUserID, user.FirstName), remainingMinutes,
-		)
+		caption = tr.Message("captcha_welcome_math_image", i18n.Params{
+			"user":    helpers.MentionHtml(targetUserID, user.FirstName),
+			"timeout": remainingMinutes,
+		})
 	}
 
 	sent, sendErr := bot.SendPhoto(chat.Id, gotgbot.InputFileByReader("captcha.png", bytes.NewReader(imageBytes)), &gotgbot.SendPhotoOpts{

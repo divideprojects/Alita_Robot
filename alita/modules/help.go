@@ -179,8 +179,7 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			currText = aboutText
 			currKb = aboutKb
 		case "me":
-			temp, _ := tr.GetString("strings.Help.About")
-			currText = fmt.Sprintf(temp, b.Username, config.BotVersion)
+			currText = tr.Message("help_about", i18n.Params{"username": b.Username, "version": config.BotVersion})
 			currKb = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
@@ -217,7 +216,7 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			currText = aboutText
 			currKb = aboutKb
 		} else {
-			currText = "Click on the button below to get info about me!"
+			currText = tr.Message("help_click_button_info", nil)
 			currKb = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
@@ -313,6 +312,7 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	if ctx.Message.Chat.Type == "private" {
 		if len(args) == 1 {
@@ -340,7 +340,7 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Info("sed")
 		}
 	} else {
-		_, err := msg.Reply(b, "Hey :) PM me if you have any questions on how to use me!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.Message("help_pm_me_questions", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -358,7 +358,7 @@ func (moduleStruct) donate(b *gotgbot.Bot, ctx *ext.Context) error {
 	_, err := b.SendMessage(chat.Id,
 		func() string {
 			tr := i18n.MustNewTranslator("en")
-			text, _ := tr.GetString("strings.Help.DonateText")
+			text := tr.Message("help_donate_text", nil)
 			return text
 		}(),
 		&gotgbot.SendMessageOpts{
@@ -420,7 +420,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 				},
 			},
 		}
-		text, _ = tr.GetString("strings.Help.Configuration.Step-1")
+		text = tr.Message("help_configuration_step_1", nil)
 	case "step2":
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
@@ -430,8 +430,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 				},
 			},
 		}
-		temp, _ := tr.GetString("strings.Help.Configuration.Step-2")
-		text = fmt.Sprintf(temp, b.Username)
+		text = tr.Message("help_configuration_step_2", i18n.Params{"username": b.Username})
 	case "step3":
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
@@ -441,7 +440,7 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 				},
 			},
 		}
-		text, _ = tr.GetString("strings.Help.Configuration.Step-3")
+		text = tr.Message("help_configuration_step_3", nil)
 	}
 	_, _, err := msg.EditText(
 		b,
@@ -509,9 +508,10 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		pmMeKbText := "Click here for help!"
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		pmMeKbText := tr.Message("help_click_here_help", nil)
 		pmMeKbUri := fmt.Sprintf("https://t.me/%s?start=help_help", b.Username)
-		moduleHelpString := "Contact me in PM for help!"
+		moduleHelpString := tr.Message("help_contact_pm", nil)
 		replyMsgId := msg.MessageId
 		var lowerModName string
 

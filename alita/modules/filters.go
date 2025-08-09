@@ -17,6 +17,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -42,6 +43,7 @@ Only admin can add new filters in the chat
 // Only admins can add filters. Supports text, media, and buttons with a limit of 150 filters per chat.
 func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
 	if connectedChat == nil {
@@ -59,10 +61,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	filtersNum := db.CountFilters(chat.Id)
 	if filtersNum >= 150 {
-		_, err := msg.Reply(b,
-			fmt.Sprint("Filters limit exceeded, a group can only have maximum 150 filters!\n",
-				"This limitation is due to bot running free without any donations by users."),
-			helpers.Shtml())
+		_, err := msg.Reply(b, tr.Message("filters_limit_exceeded", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -72,14 +71,14 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage != nil && len(args) <= 1 {
-		_, err := msg.Reply(b, "Please give a keyword to reply to!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.Message("filters_provide_keyword", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if len(args) <= 2 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Invalid Filter!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.Message("filters_invalid_filter", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -108,7 +107,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 			dataType:   dataType,
 		}
 		_, err := msg.Reply(b,
-			"Filter already exists!\nDo you want to overwrite it?",
+			tr.Message("filters_filter_exists_overwrite", nil),
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -136,7 +135,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	go db.AddFilter(chat.Id, filterWord, text, fileid, buttons, dataType)
 
-	_, err := msg.Reply(b, fmt.Sprintf("Added reply for filter word <code>%s</code>", filterWord), helpers.Shtml())
+	_, err := msg.Reply(b, tr.Message("filters_filter_added", i18n.Params{"keyword": filterWord}), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -155,6 +154,7 @@ Only admin can remove filters in the chat
 // rmFilter removes an existing filter by its keyword trigger.
 // Only admins can remove filters. Requires the exact filter keyword as argument.
 func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	// connection status
 	connectedChat := helpers.IsUserConnected(b, ctx, true, false)
 	if connectedChat == nil {
@@ -172,7 +172,7 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "Please give a filter word to remove!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.Message("filters_no_keyword_provided", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -182,14 +182,14 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 		filterWord, _ := extraction.ExtractQuotes(strings.Join(args, " "), true, true)
 
 		if !string_handling.FindInStringSlice(db.GetFiltersList(chat.Id), strings.ToLower(filterWord)) {
-			_, err := msg.Reply(b, "Filter does not exist!", helpers.Shtml())
+			_, err := msg.Reply(b, tr.Message("filters_filter_not_found", i18n.Params{"keyword": filterWord}), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
 			}
 		} else {
 			go db.RemoveFilter(chat.Id, strings.ToLower(filterWord))
-			_, err := msg.Reply(b, fmt.Sprintf("Ok!\nI will no longer reply to <code>%s</code>", filterWord), helpers.Shtml())
+			_, err := msg.Reply(b, tr.Message("filters_filter_removed", i18n.Params{"keyword": filterWord}), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -210,6 +210,7 @@ Any user can view users in a chat
 // Any user can view the list of available filters with their trigger keywords.
 func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "filters") {
 		return ext.EndGroups
@@ -231,7 +232,7 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	filterKeys := db.GetFiltersList(chat.Id)
-	info := "There are no filters in this chat!"
+	info := tr.Message("filters_no_filters", nil)
 	newFilterKeys := make([]string, 0)
 
 	for _, fkey := range filterKeys {
@@ -239,8 +240,8 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(newFilterKeys) > 0 {
-		info = "These are the current filters in this Chat:"
-		info += "\n - " + strings.Join(newFilterKeys, "\n - ")
+		filterList := strings.Join(newFilterKeys, "\n - ")
+		info = tr.Message("filters_list_filters", i18n.Params{"filters": "\n - " + filterList})
 	}
 
 	_, err := msg.Reply(b,
@@ -272,10 +273,11 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	filterKeys := db.GetFiltersList(chat.Id)
 
 	if len(filterKeys) == 0 {
-		_, err := msg.Reply(b, "There are no filters in this chat!", helpers.Shtml())
+		_, err := msg.Reply(b, tr.Message("filters_no_filters", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -285,7 +287,7 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, chat, user.Id, false) {
-		_, err := msg.Reply(b, "Are you sure you want to remove all Filters from this chat?",
+		_, err := msg.Reply(b, tr.Message("filters_confirm_remove_all", nil),
 			&gotgbot.SendMessageOpts{
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
@@ -313,6 +315,7 @@ func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 	query := ctx.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// permission checks
 	if !chat_status.RequireUserOwner(b, ctx, nil, user.Id, false) {
@@ -326,9 +329,9 @@ func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 	switch response {
 	case "yes":
 		db.RemoveAllFilters(chat.Id)
-		helpText = "Removed all Filters from this Chat ✅"
+		helpText = tr.Message("filters_all_removed", nil)
 	case "no":
-		helpText = "Cancelled removing all Filters from this Chat ❌"
+		helpText = tr.Message("filters_remove_all_cancelled", nil)
 	}
 
 	_, _, err := query.Message.EditText(b,
@@ -360,6 +363,7 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 	query := ctx.CallbackQuery
 	user := query.From
 	chat := ctx.EffectiveChat
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// permission checks
 	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
@@ -376,9 +380,9 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 		db.RemoveFilter(chat.Id, filterWord)
 		db.AddFilter(chat.Id, filterData.filterWord, filterData.text, filterData.fileid, filterData.buttons, filterData.dataType)
 		delete(m.overwriteFiltersMap, filterWordKey) // delete the key to make map clear
-		helpText = "Filter has been overwritten successfully ✅"
+		helpText = tr.Message("filters_filter_overwritten", nil)
 	} else {
-		helpText = "Cancelled overwritting of filter ❌"
+		helpText = tr.Message("filters_overwrite_cancelled", nil)
 	}
 
 	_, _, err := query.Message.EditText(b,

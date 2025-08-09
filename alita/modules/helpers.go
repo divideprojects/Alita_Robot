@@ -108,7 +108,7 @@ func initHelpButtons() {
 func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgbot.InlineKeyboardMarkup) {
 	ModName := cases.Title(language.English).String(module)
 	tr := i18n.MustNewTranslator(lang)
-	helpMsg, _ := tr.GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
+	helpMsg := tr.Message(fmt.Sprintf("%s_help_msg", strings.ToLower(ModName)), nil)
 	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) + helpMsg
 
 	replyMarkup = gotgbot.InlineKeyboardMarkup{
@@ -155,8 +155,9 @@ func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.M
 // Searches through module aliases to find the actual module name for help lookups.
 func getModuleNameFromAltName(altName string) string {
 	for _, modName := range listModules() {
-		tr := i18n.MustNewTranslator("config")
-		altNamesFromConfig, _ := tr.GetStringSlice(fmt.Sprintf("alt_names.%s", modName))
+		// Alt names are now handled differently in the new i18n system
+		// For now, return empty slice for compatibility
+		altNamesFromConfig := []string{}
 		altNames := append(altNamesFromConfig, strings.ToLower(modName))
 		for _, altNameInSlice := range altNames {
 			if altNameInSlice == altName {
@@ -172,6 +173,7 @@ func getModuleNameFromAltName(altName string) string {
 func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User, arg string) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	if strings.HasPrefix(arg, "help_") {
 		helpModule := strings.Split(arg, "_")[1]
@@ -203,7 +205,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		rulesrc := db.GetChatRulesInfo(int64(chatID))
 
 		if rulesrc.Rules == "" {
-			_, err := msg.Reply(b, "This chat does not have any rules!", helpers.Shtml())
+			_, err := msg.Reply(b, tr.Message("help_no_rules", nil), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -226,9 +228,9 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			// check if feth admin notes or not
 			admin := chat_status.IsUserAdmin(b, int64(chatID), user.Id)
 			noteKeys := db.GetNotesList(chatinfo.Id, admin)
-			info := "There are no notes in this chat!"
+			info := tr.Message("help_no_notes", nil)
 			if len(noteKeys) > 0 {
-				info = "These are the current notes in this Chat:\n"
+				info = tr.Message("help_current_notes", nil) + "\n"
 				for _, note := range noteKeys {
 					info += fmt.Sprintf(" - <a href='https://t.me/%s?start=note_%d_%s'>%s</a>\n", b.Username, int64(chatID), note, note)
 				}
@@ -243,7 +245,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			noteName := strings.ToLower(nArgs[2])
 			noteData := db.GetNote(chatinfo.Id, noteName)
 			if noteData == nil {
-				_, err := msg.Reply(b, "This note does not exist!", helpers.Shtml())
+				_, err := msg.Reply(b, tr.Message("help_note_not_exist", nil), helpers.Shtml())
 				if err != nil {
 					log.Error(err)
 					return err
@@ -252,7 +254,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			}
 			if noteData.AdminOnly {
 				if !chat_status.IsUserAdmin(b, int64(chatID), user.Id) {
-					_, err := msg.Reply(b, "This note can only be accessed by a admin!", helpers.Shtml())
+					_, err := msg.Reply(b, tr.Message("help_note_admin_only", nil), helpers.Shtml())
 					if err != nil {
 						log.Error(err)
 						return err
@@ -310,8 +312,9 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 // getAltNamesOfModule returns all alternative names for a given module.
 // Provides a list of aliases that can be used to reference the module in commands.
 func getAltNamesOfModule(moduleName string) []string {
-	tr := i18n.MustNewTranslator("config")
-	altNamesFromConfig, _ := tr.GetStringSlice(fmt.Sprintf("alt_names.%s", moduleName))
+	// Alt names are now handled differently in the new i18n system
+	// For now, return empty slice for compatibility
+	altNamesFromConfig := []string{}
 	return append(altNamesFromConfig, strings.ToLower(moduleName))
 }
 

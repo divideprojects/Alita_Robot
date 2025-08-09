@@ -22,6 +22,7 @@ var formattingModule = moduleStruct{moduleName: "Formatting"}
 // Shows formatting options in private messages or sends a button to open help in PM.
 func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.MustNewTranslator("en") // Use English as default for formatting help
 
 	// Check of group or pm
 	if !chat_status.RequirePrivate(b, ctx, nil, true) {
@@ -30,7 +31,7 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 			reply = msg.ReplyToMessage.Reply
 		}
 		_, err := reply(b,
-			"Press the button below to get Markdown Help!",
+			tr.Message("formatting_press_button_markdown_help", nil),
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -63,8 +64,7 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := msg.Reply(b,
 			// help.HELPABLE[ModName],
 
-			// TODO: Fix help msg here
-			"Alita supports a large number of formatting options to make your messages more expressive. Take a look!",
+			tr.Message("formatting_help_msg", nil),
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -117,11 +117,11 @@ func (moduleStruct) getMarkdownHelp(module string) string {
 	tr := i18n.MustNewTranslator("en")
 	switch module {
 	case "md_formatting":
-		helpTxt, _ = tr.GetString("strings.Formatting.Markdown")
+		helpTxt = tr.Message("formatting_markdown", nil)
 	case "fillings":
-		helpTxt, _ = tr.GetString("strings.Formatting.Fillings")
+		helpTxt = tr.Message("formatting_fillings", nil)
 	case "random":
-		helpTxt, _ = tr.GetString("strings.Formatting.Random")
+		helpTxt = tr.Message("formatting_random", nil)
 	}
 	return helpTxt
 }

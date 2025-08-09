@@ -13,6 +13,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
@@ -39,9 +40,12 @@ func (moduleStruct) chatInfo(b *gotgbot.Bot, ctx *ext.Context) error {
 	var replyText string
 
 	args := ctx.Args()
+	
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator("en") // Using English for dev commands
 
 	if len(args) == 0 {
-		replyText = "You must specify a user to get info on"
+		replyText = translator.Message("devs_chatinfo_specify_chat", nil)
 	} else {
 		_chatId := args[1]
 		chatId, _ := strconv.Atoi(_chatId)
@@ -79,10 +83,13 @@ func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
+	
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator("en") // Using English for dev commands
 
 	rMsg, err := msg.Reply(
 		b,
-		"Getting list of chats I'm in...",
+		translator.Message("devs_chatlist_getting_list", nil),
 		nil,
 	)
 	if err != nil {
@@ -120,7 +127,7 @@ func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 		chat.Id,
 		gotgbot.InputFileByReader(fileName, openedFile),
 		&gotgbot.SendDocumentOpts{
-			Caption: "Here is the list of chats in my Database!",
+			Caption: translator.Message("devs_chatlist_database_list", nil),
 			ReplyParameters: &gotgbot.ReplyParameters{
 				MessageId:                msg.MessageId,
 				AllowSendingWithoutReply: true,
@@ -158,6 +165,9 @@ func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()
 	chatId, _ := strconv.ParseInt(args[1], 10, 64)
+	
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator("en") // Using English for dev commands
 
 	_, err := b.LeaveChat(chatId, nil)
 	if err != nil {
@@ -165,7 +175,7 @@ func (moduleStruct) leaveChat(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	_, err = msg.Reply(b, "Okay, I left the chat!", helpers.Shtml())
+	_, err = msg.Reply(b, translator.Message("devs_leave_success", nil), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -194,6 +204,9 @@ func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
 		return ext.ContinueGroups
 	}
+	
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator("en") // Using English for dev commands
 
 	reqUser, err := b.GetChat(userId, nil)
 	if err != nil {
@@ -203,9 +216,9 @@ func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if memStatus.Sudo {
-		txt = "User is already Sudo!"
+		txt = translator.Message("devs_user_already_sudo", nil)
 	} else {
-		txt = fmt.Sprintf("Added %s to Sudo List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = translator.Message("devs_user_added_sudo", i18n.Params{"user": helpers.MentionHtml(reqUser.Id, reqUser.FirstName)})
 		go db.AddDev(userId)
 	}
 	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
@@ -236,6 +249,9 @@ func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
 		return ext.ContinueGroups
 	}
+	
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator("en") // Using English for dev commands
 
 	reqUser, err := b.GetChat(userId, nil)
 	if err != nil {
@@ -245,9 +261,9 @@ func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if memStatus.Dev {
-		txt = "User is already Dev!"
+		txt = translator.Message("devs_user_already_dev", nil)
 	} else {
-		txt = fmt.Sprintf("Added %s to Dev List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = translator.Message("devs_user_added_dev", i18n.Params{"user": helpers.MentionHtml(reqUser.Id, reqUser.FirstName)})
 		go db.AddDev(userId)
 	}
 	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
@@ -278,6 +294,9 @@ func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
 		return ext.ContinueGroups
 	}
+	
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator("en") // Using English for dev commands
 
 	reqUser, err := b.GetChat(userId, nil)
 	if err != nil {
@@ -287,9 +306,9 @@ func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if !memStatus.Sudo {
-		txt = "User is not Sudo!"
+		txt = translator.Message("devs_user_not_sudo", nil)
 	} else {
-		txt = fmt.Sprintf("Removed %s from Sudo List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = translator.Message("devs_user_removed_sudo", i18n.Params{"user": helpers.MentionHtml(reqUser.Id, reqUser.FirstName)})
 		go db.RemDev(userId)
 	}
 	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
@@ -320,6 +339,9 @@ func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
 		return ext.ContinueGroups
 	}
+	
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator("en") // Using English for dev commands
 
 	reqUser, err := b.GetChat(userId, nil)
 	if err != nil {
@@ -329,9 +351,9 @@ func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	memStatus := db.GetTeamMemInfo(userId)
 
 	if !memStatus.Dev {
-		txt = "User is not Dev!"
+		txt = translator.Message("devs_user_not_dev", nil)
 	} else {
-		txt = fmt.Sprintf("Removed %s from Dev List!", helpers.MentionHtml(reqUser.Id, reqUser.FirstName))
+		txt = translator.Message("devs_user_removed_dev", i18n.Params{"user": helpers.MentionHtml(reqUser.Id, reqUser.FirstName)})
 		go db.RemDev(userId)
 	}
 	_, err = msg.Reply(b, txt, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
@@ -351,6 +373,9 @@ Can only be used by existing team members
 // Only accessible by existing team members. Shows user mentions organized by permission level.
 func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+	
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator("en") // Using English for dev commands
 
 	teamUsers := db.GetTeamMembers()
 	var teamint64Slice []int64
@@ -365,15 +390,15 @@ func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	var (
 		txt       string
-		dev       = "<b>Dev Users:</b>\n"
-		sudo      = "<b>Sudo Users:</b>\n"
+		dev       = translator.Message("devs_team_dev_users", nil)
+		sudo      = translator.Message("devs_team_sudo_users", nil)
 		sudoUsers = make([]string, 0)
 		devUsers  = make([]string, 0)
 	)
 	msg := ctx.EffectiveMessage
 
 	if len(teamUsers) == 0 {
-		txt = "No users are added Added in Team!"
+		txt = translator.Message("devs_team_no_users", nil)
 	} else {
 		for userId, uPerm := range teamUsers {
 			reqUser, err := b.GetChat(userId, nil)
@@ -391,12 +416,12 @@ func (moduleStruct) listTeam(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 		if len(sudoUsers) == 0 {
-			sudo += "\nNo Users"
+			sudo += translator.Message("devs_team_no_users_section", nil)
 		} else {
 			sudo += strings.Join(sudoUsers, "\n")
 		}
 		if len(devUsers) == 0 {
-			dev += "\nNo Users"
+			dev += translator.Message("devs_team_no_users_section", nil)
 		} else {
 			dev += strings.Join(devUsers, "\n")
 		}
@@ -429,9 +454,13 @@ func (moduleStruct) getStats(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	msg := ctx.EffectiveMessage
+	
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator("en") // Using English for dev commands
+	
 	edits, err := msg.Reply(
 		b,
-		"<code>Fetching bot stats...</code>",
+		translator.Message("devs_stats_fetching", nil),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 		},
