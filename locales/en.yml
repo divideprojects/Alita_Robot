@@ -245,28 +245,28 @@ strings:
             If they fail or timeout, the configured action is taken.
     Clone:
         help_msg: |-
-            Create and manage cloned bot instances on this server! 🤖
+            Create and manage cloned bot instances on this server!
             
             This powerful feature allows you to run your own bot instance using your bot token.
             Your cloned bot shares the main bot's features and database while maintaining its separate identity.
             
-            **Available Commands:**
-            × /clone `<bot_token>`: Create a new cloned bot instance
-            × /clones: List your active cloned bot instances  
-            × /clone_stop `<bot_id>`: Stop a specific cloned bot
+            Available Commands:
+            - `/clone <bot_token>`: Create a new cloned bot instance
+            - `/clones`: List your active cloned bot instances  
+            - `/clone_stop <bot_id>`: Stop a specific cloned bot
             
-            🔒 **Security Features:**
-            • Token validation with Telegram API  
-            • Resource limits (1 bot per user)
-            • Data isolation between bot instances
-            • Comprehensive audit logging
+            Security Features:
+            - Token validation with Telegram API  
+            - Resource limits (1 bot per user)
+            - Data isolation between bot instances
+            - Comprehensive audit logging
             
-            📝 **Example Usage:**
-            • `/clone 123456789:AaBbCc_YourBotToken` - Clone your bot
-            • `/clones` - See your active clone
-            • `/clone_stop 123456789` - Stop your clone
+            Example Usage:
+            - `/clone 123456789:AaBbCc_YourBotToken` - Clone your bot
+            - `/clones` - See your active clone
+            - `/clone_stop 123456789` - Stop your clone
             
-            💡 **How it works:**
+            How it works:
             Your cloned bot gets its own webhook endpoint and processes updates independently
             while sharing the main bot's database and feature set for instant functionality.
     CommonStrings:
