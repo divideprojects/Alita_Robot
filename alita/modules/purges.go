@@ -15,6 +15,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 )
 
@@ -30,8 +32,10 @@ func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, 
 		_, err := bot.DeleteMessage(chat.Id, msgId, nil)
 		if err != nil {
 			if err.Error() == "unable to deleteMessage: Bad Request: message can't be deleted" {
+				// Get translator for error messages
+				translator := i18n.MustNewTranslator("en") // fallback for error handling
 				_, err = bot.SendMessage(chat.Id,
-					"You cannot delete messages over two days old. Please choose a more recent message.",
+					translator.Message("purges_old_message_limit", nil),
 					&gotgbot.SendMessageOpts{
 						ReplyParameters: &gotgbot.ReplyParameters{
 							MessageId:                deleteTo + 1,
@@ -74,6 +78,9 @@ func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, 
 // message up to the command message, requiring admin permissions.
 func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(bot, ctx, nil, false) {
@@ -131,7 +138,7 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to select where to start purging from.", nil)
+		_, err := msg.Reply(bot, translator.Message("purges_reply_to_start", nil), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -145,6 +152,9 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 // along with the command message, requiring admin permissions.
 func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(bot, ctx, nil, false) {
@@ -167,7 +177,7 @@ func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(bot, "Reply to a message to delete it!", nil)
+		_, err := msg.Reply(bot, translator.Message("purges_reply_to_delete", nil), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -249,6 +259,9 @@ func (moduleStruct) deleteButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	// Permission checks
 	if !chat_status.RequireGroup(bot, ctx, nil, false) {
 		return ext.EndGroups
@@ -272,7 +285,7 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if msg.ReplyToMessage != nil {
 		TodelId := msg.ReplyToMessage.MessageId
 		if delMsgs[chat.Id] == TodelId {
-			_, _ = msg.Reply(bot, "This message is already marked for purging!", nil)
+			_, _ = msg.Reply(bot, translator.Message("purges_already_marked", nil), nil)
 			return ext.EndGroups
 		}
 		_, err := bot.DeleteMessage(chat.Id, msg.MessageId, nil)
@@ -281,7 +294,7 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.EndGroups
 		}
 		pMsg, err := bot.SendMessage(chat.Id,
-			"Message marked for deletion. Reply to another message with /purgeto to delete all messages in between; within 30s!",
+			translator.Message("purges_marked_for_deletion", nil),
 			&gotgbot.SendMessageOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
 					MessageId:                TodelId,
@@ -304,7 +317,7 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to select where to start purging from.", nil)
+		_, err := msg.Reply(bot, translator.Message("purges_reply_to_start", nil), nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -317,6 +330,9 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 // from a previously marked message, requiring admin permissions.
 func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(bot, ctx, nil, false) {
@@ -342,7 +358,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if msg.ReplyToMessage != nil {
 		msgId := delMsgs[chat.Id]
 		if msgId == 0 {
-			_, err := msg.Reply(bot, "You can only use this command after having used the /purgefrom command!", nil)
+			_, err := msg.Reply(bot, translator.Message("purges_need_purgefrom_first", nil), nil)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -351,7 +367,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		deleteTo := msg.ReplyToMessage.MessageId
 		if msgId == deleteTo {
-			_, err := msg.Reply(bot, "Use /del command to delete one message!", nil)
+			_, err := msg.Reply(bot, translator.Message("purges_use_del_for_single", nil), nil)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -386,7 +402,7 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to show me till where to purge.", nil)
+		_, err := msg.Reply(bot, translator.Message("purges_reply_to_end", nil), nil)
 		if err != nil {
 			log.Error(err)
 			return err

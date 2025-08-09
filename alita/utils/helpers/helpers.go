@@ -194,7 +194,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 			_chat := chatFullInfo.ToChat() // need to convert to Chat type
 			chat = &_chat
 		} else {
-			text, _ := tr.GetString("strings.Connections.is_user_connected.need_group")
+			text := tr.Message("connections_need_group", nil)
 			_, err := msg.Reply(b,
 				text,
 				&gotgbot.SendMessageOpts{
@@ -216,7 +216,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if botAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, b.Id) {
-			text, _ := tr.GetString("strings.Connections.is_user_connected.bot_not_admin")
+			text := tr.Message("connections_bot_not_admin", nil)
 			_, err := msg.Reply(b, text, Shtml())
 			if err != nil {
 				log.Error(err)
@@ -228,7 +228,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if chatAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			text, _ := tr.GetString("strings.Connections.is_user_connected.user_not_admin")
+			text := tr.Message("connections_user_not_admin", nil)
 			_, err := msg.Reply(b, text, Shtml())
 			if err != nil {
 				log.Error(err)
@@ -370,8 +370,8 @@ func MakeLanguageKeyboard() [][]gotgbot.InlineKeyboardButton {
 // Uses i18n system to get localized language name and flag for the given language code.
 func GetLangFormat(langCode string) string {
 	tr := i18n.MustNewTranslator(langCode)
-	langName, _ := tr.GetString("main.language_name")
-	langFlag, _ := tr.GetString("main.language_flag")
+	langName := tr.Message("main_language_name", nil)
+	langFlag := tr.Message("main_language_flag", nil)
 	return langName + " " + langFlag
 }
 

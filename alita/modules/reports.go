@@ -14,6 +14,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
@@ -34,6 +35,9 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	// if command is disabled, return
 	if chat_status.CheckDisabledCmd(b, msg, "report") {
 		return ext.EndGroups
@@ -41,7 +45,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if msg.ReplyToMessage == nil {
 		_, _ = msg.Reply(b,
-			"You need to reply to a message to report it.",
+			translator.Message("reports_need_reply", nil),
 			nil,
 		)
 		return ext.EndGroups
@@ -54,7 +58,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	)
 
 	if msg.ReplyToMessage.From.Id == user.Id {
-		_, _ = msg.Reply(b, "You can't report your own message!", nil)
+		_, _ = msg.Reply(b, translator.Message("reports_cant_report_own", nil), nil)
 		return ext.EndGroups
 	}
 
@@ -78,16 +82,16 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if user.Id == 1087968824|777000|136817688 {
-		_, _ = msg.Reply(b, "You need to expose yourself first!", nil)
+		_, _ = msg.Reply(b, translator.Message("reports_expose_yourself", nil), nil)
 		return ext.EndGroups
 	}
 	if msg.ReplyToMessage.From.Id == 1087968824|777000|136817688 {
-		_, _ = msg.Reply(b, "It's a special account of telegram!", nil)
+		_, _ = msg.Reply(b, translator.Message("reports_special_account", nil), nil)
 		return ext.EndGroups
 	}
 
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-		_, err := msg.Reply(b, "You're an admin, whom will I report your issues to?", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("reports_admin_cant_report", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -113,7 +117,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	reportedMsgId := msg.ReplyToMessage.MessageId
 
 	if reportedUser.Id == b.Id {
-		_, err := msg.Reply(b, "Why would I report myself?", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("reports_cant_report_bot", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -121,7 +125,7 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if string_handling.FindInInt64Slice(adminArray, reportedUser.Id) {
-		_, err := msg.Reply(b, "Why would I report an admin?", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("reports_cant_report_admin", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -209,6 +213,9 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	args := ctx.Args()[1:]
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	var (
 		err       error
 		replyText string
@@ -226,55 +233,59 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 		switch action {
 		case "on", "yes", "true":
 			if msg.Chat.Type == "private" {
-				replyText = "Turned on reporting! You'll be notified whenever anyone reports something in groups you are admin."
+				replyText = translator.Message("reports_user_enabled", nil)
 				go db.SetUserReportSettings(user.Id, true)
 			} else {
-				replyText = "Users will now be able to report messages."
+				replyText = translator.Message("reports_chat_enabled", nil)
 				go db.SetChatReportStatus(chat.Id, true)
 			}
 		case "off", "no", "false":
 			if msg.Chat.Type == "private" {
-				replyText = "Turned off reporting! You'll no longer be notified whenever anyone reports something in groups you are admin."
+				replyText = translator.Message("reports_user_disabled", nil)
 				go db.SetUserReportSettings(user.Id, false)
 			} else {
-				replyText = "Users will no longer be able to report via @admin or /report."
+				replyText = translator.Message("reports_chat_disabled", nil)
 				go db.SetChatReportStatus(chat.Id, false)
 			}
 		case "block":
 			if msg.Chat.Type == "private" {
-				replyText = "This command can only be used in a group!"
+				replyText = translator.Message("reports_group_only", nil)
 			} else {
 				if reply := msg.ReplyToMessage; reply != nil {
 					bUser := reply.From
 					go db.BlockReportUser(chat.Id, bUser.Id)
-					replyText = fmt.Sprintf("Blocked user %s from reporting.", helpers.MentionHtml(bUser.Id, bUser.FirstName))
+					replyText = translator.Message("reports_blocked_user", i18n.Params{
+						"mention": helpers.MentionHtml(bUser.Id, bUser.FirstName),
+					})
 				} else {
-					replyText = "You must reply to a user to block them."
+					replyText = translator.Message("reports_reply_to_block", nil)
 				}
 			}
 		case "unblock":
 			if msg.Chat.Type == "private" {
-				replyText = "This command can only be used in a group!"
+				replyText = translator.Message("reports_group_only", nil)
 			} else {
 				if reply := msg.ReplyToMessage; reply != nil {
 					bUser := reply.From
 					go db.UnblockReportUser(chat.Id, bUser.Id)
-					replyText = fmt.Sprintf("Unblocked user %s from reporting.", helpers.MentionHtml(bUser.Id, bUser.FirstName))
+					replyText = translator.Message("reports_unblocked_user", i18n.Params{
+						"mention": helpers.MentionHtml(bUser.Id, bUser.FirstName),
+					})
 				} else {
-					replyText = "You must reply to a user to unblock them."
+					replyText = translator.Message("reports_reply_to_unblock", nil)
 				}
 			}
 		case "showblocklist":
 			if msg.Chat.Type == "private" {
-				replyText = "This command can only be used in a group!"
+				replyText = translator.Message("reports_group_only", nil)
 			} else {
 				blockedUsers := db.GetChatReportSettings(chat.Id).BlockedList
 				if len(blockedUsers) == 0 {
-					replyText = "No users are currently blocked from using report commands!"
+					replyText = translator.Message("reports_no_blocked_users", nil)
 				} else {
 					var builder strings.Builder
 					builder.Grow(256) // Pre-allocate capacity
-					builder.WriteString("Users blocked from using report commands: ")
+					builder.WriteString(translator.Message("reports_blocked_users_list", nil))
 					for _, blockUserId := range blockedUsers {
 						bUser, err := b.GetChat(blockUserId, nil)
 						if err != nil {
@@ -288,25 +299,25 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			}
 		default:
-			replyText = "Your input was not recognised as one of: <code><yes/on/no/off> or <block/unblock/showblocklist></code>"
+			replyText = translator.Message("reports_invalid_option", nil)
 		}
 	} else {
 		if msg.Chat.Type == "private" {
 			rStatus := db.GetUserReportSettings(chat.Id).Status
 			if rStatus {
-				replyText = "Your current preference is true, You'll be notified whenever anyone reports something in groups you are admin."
+				replyText = translator.Message("reports_user_status_enabled", nil)
 			} else {
-				replyText = "You'll have nt enabled reports, You won't be notified."
+				replyText = translator.Message("reports_user_status_disabled", nil)
 			}
 		} else {
 			rStatus := db.GetChatReportSettings(chat.Id).Status
 			if rStatus {
-				replyText = "Reports are currently enabled in this chat.\nUsers can use the /report command, or mention @admin, to tag all admins."
+				replyText = translator.Message("reports_chat_status_enabled", nil)
 			} else {
-				replyText = "Reports are currently disabled in this chat."
+				replyText = translator.Message("reports_chat_status_disabled", nil)
 			}
 		}
-		replyText += "\n\nTo change this setting, try this command again, with one of the following args: yes/no/on/off"
+		replyText += "\n\n" + translator.Message("reports_change_setting_help", nil)
 	}
 
 	_, err = msg.Reply(b, replyText, helpers.Shtml())
@@ -326,6 +337,9 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 	msg := query.Message
 	var replyQuery, replyText string
 
+	// Get translator for callback queries
+	translator := i18n.MustNewTranslator("en") // fallback for callback queries
+
 	// permissions check
 	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
 		return ext.EndGroups
@@ -341,12 +355,10 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 
 	switch action {
 	case "kick":
-		replyQuery = "✅ Successfully Kicked"
-		replyText = fmt.Sprintf(
-			"User kicked!"+
-				"Action taken by %s",
-			helpers.MentionHtml(user.Id, user.FirstName),
-		)
+		replyQuery = translator.Message("reports_action_kicked", nil)
+		replyText = translator.Message("reports_user_kicked_by", i18n.Params{
+			"admin": helpers.MentionHtml(user.Id, user.FirstName),
+		})
 		_, err := chat.BanMember(b, userId, nil)
 		if err != nil {
 			log.Error(err)
@@ -361,12 +373,10 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 			return err
 		}
 	case "ban":
-		replyQuery = "✅ Successfully Banned"
-		replyText = fmt.Sprintf(
-			"User banned!"+
-				"Action taken by %s",
-			helpers.MentionHtml(user.Id, user.FirstName),
-		)
+		replyQuery = translator.Message("reports_action_banned", nil)
+		replyText = translator.Message("reports_user_banned_by", i18n.Params{
+			"admin": helpers.MentionHtml(user.Id, user.FirstName),
+		})
 		_, err := chat.BanMember(b, userId, nil)
 		if err != nil {
 			log.Error(err)
@@ -374,12 +384,10 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 		}
 
 	case "delete":
-		replyQuery = "✅ Successfully Deleted"
-		replyText = fmt.Sprintf(
-			"Message Deleted!"+
-				"Action taken by %s",
-			helpers.MentionHtml(user.Id, user.FirstName),
-		)
+		replyQuery = translator.Message("reports_action_deleted", nil)
+		replyText = translator.Message("reports_message_deleted_by", i18n.Params{
+			"admin": helpers.MentionHtml(user.Id, user.FirstName),
+		})
 		_, err := b.DeleteMessage(chat.Id, msgId, nil)
 		if err.Error() == "unable to deleteMessage: Bad Request: message to delete not found" {
 			log.WithFields(
@@ -393,11 +401,10 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 			return err
 		}
 	default:
-		replyQuery = "✅ Resolved Report Successfully!"
-		replyText = fmt.Sprintf(
-			"<b>Resolved by:</b> %s",
-			helpers.MentionHtml(user.Id, user.FirstName),
-		)
+		replyQuery = translator.Message("reports_action_resolved", nil)
+		replyText = translator.Message("reports_resolved_by", i18n.Params{
+			"admin": helpers.MentionHtml(user.Id, user.FirstName),
+		})
 
 	}
 	_, _, err := msg.EditText(

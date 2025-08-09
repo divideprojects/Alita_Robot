@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"sync"
 
 	"gopkg.in/yaml.v3"
@@ -91,26 +90,6 @@ func (t *Translator) LoadFromDirectory(dir string) error {
 	}
 	
 	return t.LoadFromYAML(yamlPath)
-}
-
-// GetString provides backward compatibility with the old i18n system.
-// This method maps old dot-separated keys to new flat keys.
-func (t *Translator) GetString(key string) (string, error) {
-	// Map old format to new format
-	// Remove "strings." prefix and convert module.action.name to module_action_name
-	cleanKey := strings.TrimPrefix(key, "strings.")
-	cleanKey = strings.ReplaceAll(cleanKey, ".", "_")
-	
-	return t.GetMessage(cleanKey, nil)
-}
-
-// GetStringSlice provides backward compatibility with the old i18n system.
-// For now, returns an empty slice as it's mainly used for alt_names which
-// can be handled differently in the new system.
-func (t *Translator) GetStringSlice(key string) ([]string, error) {
-	// This was used for alternative module names
-	// For compatibility, return empty slice and let the caller handle defaults
-	return []string{}, nil
 }
 
 // Message retrieves a translated message with parameter interpolation.

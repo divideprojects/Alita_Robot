@@ -1,7 +1,6 @@
 package modules
 
 import (
-	"fmt"
 	"strings"
 
 	tgmd2html "github.com/PaulSonOfLars/gotg_md2html"
@@ -17,6 +16,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 )
 
@@ -74,6 +74,9 @@ func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	// Check permissions
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
 		return ext.EndGroups
@@ -104,18 +107,18 @@ func (moduleStruct) unpin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if rMsg := msg.ReplyToMessage; rMsg != nil {
 		if rMsg.PinnedMessage == nil {
-			replyText = "Replied message is not a pinned message."
+			replyText = translator.Message("pins_replied_not_pinned", nil)
 		} else {
 			_, err := b.UnpinChatMessage(chat.Id, &gotgbot.UnpinChatMessageOpts{MessageId: &rMsg.MessageId})
 			if err != nil {
 				log.Error(err)
 				return err
 			}
-			replyText = "Unpinned this message."
+			replyText = translator.Message("pins_unpinned_this", nil)
 			replyMsgId = rMsg.MessageId
 		}
 	} else {
-		replyText = "Unpinned the last pinned message."
+		replyText = translator.Message("pins_unpinned_last", nil)
 		_, err := b.UnpinChatMessage(chat.Id, nil)
 		if err != nil {
 			// if err.Error() == "unable to unpinChatMessage: Bad Request: message to unpin not found" {
@@ -150,6 +153,9 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	chat := ctx.EffectiveChat
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator("en") // fallback for callback queries
+
 	switch query.Data {
 	case "unpinallbtn(yes)":
 		status, err := b.UnpinAllChatMessages(chat.Id, nil)
@@ -157,13 +163,13 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
 			return err
 		}
-		_, _, erredit := query.Message.EditText(b, "Unpinned all pinned messages in this chat!", nil)
+		_, _, erredit := query.Message.EditText(b, translator.Message("pins_unpinned_all_success", nil), nil)
 		if erredit != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
 			return err
 		}
 	case "unpinallbtn(no)":
-		_, _, err := query.Message.EditText(b, "Cancelled operation to unpin messages!", nil)
+		_, _, err := query.Message.EditText(b, translator.Message("pins_unpin_cancelled", nil), nil)
 		if err != nil {
 			log.Errorf("[Pin] UnpinAllChatMessages: %d", chat.Id)
 			return err
@@ -176,6 +182,9 @@ func (moduleStruct) unpinallCallback(b *gotgbot.Bot, ctx *ext.Context) error {
 // with a confirmation dialog, requiring admin permissions.
 func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
+
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
 		return ext.EndGroups
@@ -190,7 +199,7 @@ func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	_, err := b.SendMessage(ctx.EffectiveChat.Id, "Are you sure you want to unpin all pinned messages?",
+	_, err := b.SendMessage(ctx.EffectiveChat.Id, translator.Message("pins_confirm_unpin_all", nil),
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
@@ -217,6 +226,9 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	// permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
 		return ext.EndGroups
@@ -236,7 +248,7 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// if command is empty (i.e. Without Arguments) not replied to a message, return and end group
 	if len(args) == 1 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Please reply to a message or give some text to pin.", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("pins_reply_or_text_needed", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -251,7 +263,7 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	pinT.FileID, pinT.MsgText, pinT.DataType, buttons = m.GetPinType(msg)
 	if pinT.DataType == -1 {
-		_, err := msg.Reply(b, "Permapin not supported for data type!", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("pins_permapin_not_supported", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -278,7 +290,9 @@ func (m moduleStruct) permaPin(b *gotgbot.Bot, ctx *ext.Context) error {
 	if pin {
 		pinLink := helpers.GetMessageLinkFromMessageId(chat, msgToPin)
 		_, err = msg.Reply(b,
-			fmt.Sprintf("I have pinned <a href='%s'>this message</a>", pinLink),
+			translator.Message("pins_pinned_message", i18n.Params{
+				"link": pinLink,
+			}),
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				ReplyParameters: &gotgbot.ReplyParameters{
@@ -308,6 +322,9 @@ func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	isSilent := true
 	args := ctx.Args
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	// permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
 		return ext.EndGroups
@@ -326,7 +343,7 @@ func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Reply to a message to pin it", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("pins_reply_to_pin", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -335,13 +352,17 @@ func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	prevMessage := msg.ReplyToMessage
-	pinMsg := "I have pinned <a href='%s'>this message</a>."
+	var pinMsg string
 
 	if len(args()) > 0 {
 		isSilent = !string_handling.FindInStringSlice([]string{"notify", "violent", "loud"}, args()[0])
 		if !isSilent {
-			pinMsg = "I have pinned <a href='%s'>this message</a> loudly!"
+			pinMsg = "pins_pinned_message_loudly"
+		} else {
+			pinMsg = "pins_pinned_message"
 		}
+	} else {
+		pinMsg = "pins_pinned_message"
 	}
 
 	pin, err := b.PinChatMessage(chat.Id,
@@ -358,10 +379,9 @@ func (moduleStruct) pin(b *gotgbot.Bot, ctx *ext.Context) error {
 	if pin {
 		pinLink := helpers.GetMessageLinkFromMessageId(chat, prevMessage.MessageId)
 		_, err = prevMessage.Reply(b,
-			fmt.Sprintf(
-				pinMsg,
-				pinLink,
-			),
+			translator.Message(pinMsg, i18n.Params{
+				"link": pinLink,
+			}),
 			helpers.Shtml(),
 		)
 		if err != nil {
@@ -386,12 +406,15 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	args := ctx.Args()
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	if len(args) >= 2 {
 		switch strings.ToLower(args[1]) {
 		case "on", "yes", "true":
 			go db.SetAntiChannelPin(chat.Id, true)
 			_, err := msg.Reply(b,
-				"<b>Enabled</b> anti channel pins. Automatic pins from a channel will now be replaced with the previous pin.",
+				translator.Message("pins_antichannelpin_enabled", nil),
 				helpers.Shtml(),
 			)
 			if err != nil {
@@ -401,7 +424,7 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 		case "off", "no", "false":
 			go db.SetAntiChannelPin(chat.Id, false)
 			_, err := msg.Reply(b,
-				"<b>Disabled</b> anti channel pins. Automatic pins from a channel will not be removed.",
+				translator.Message("pins_antichannelpin_disabled", nil),
 				helpers.Shtml(),
 			)
 			if err != nil {
@@ -409,7 +432,7 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 		default:
-			_, err := msg.Reply(b, "Your input was not recognised as one of: yes/no/on/off", helpers.Shtml())
+			_, err := msg.Reply(b, translator.Message("pins_invalid_option", nil), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -419,7 +442,9 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 		pinprefs := db.GetPinData(chat.Id)
 		if pinprefs.AntiChannelPin {
 			_, err := msg.Reply(b,
-				fmt.Sprintf("Anti-Channel pins are currently <b>enabled</b> in %s. All channel posts that get auto-pinned by telegram will be replaced with the previous pin.", chat.Title),
+				translator.Message("pins_antichannelpin_status_enabled", i18n.Params{
+					"chat_title": chat.Title,
+				}),
 				helpers.Shtml(),
 			)
 			if err != nil {
@@ -428,7 +453,9 @@ func (moduleStruct) antichannelpin(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		} else {
 			_, err := msg.Reply(b,
-				fmt.Sprintf("Anti-Channel pins are currently <b>disabled</b> in %s.", chat.Title),
+				translator.Message("pins_antichannelpin_status_disabled", i18n.Params{
+					"chat_title": chat.Title,
+				}),
 				helpers.Shtml(),
 			)
 			if err != nil {
@@ -454,12 +481,15 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	args := ctx.Args()
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	if len(args) >= 2 {
 		switch strings.ToLower(args[1]) {
 		case "on", "yes", "true":
 			go db.SetCleanLinked(chat.Id, true)
 			_, err := msg.Reply(b,
-				"<b>Enabled</b> linked channel post deletion in Logs. Messages sent from the linked channel will be deleted.",
+				translator.Message("pins_cleanlinked_enabled", nil),
 				helpers.Shtml(),
 			)
 			if err != nil {
@@ -469,7 +499,7 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 		case "off", "no", "false":
 			go db.SetCleanLinked(chat.Id, false)
 			_, err := msg.Reply(b,
-				"<b>Disabled</b> linked channel post deletion in Logs.",
+				translator.Message("pins_cleanlinked_disabled", nil),
 				helpers.Shtml(),
 			)
 			if err != nil {
@@ -477,7 +507,7 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 		default:
-			_, err := msg.Reply(b, "Your input was not recognised as one of: yes/no/on/off", helpers.Shtml())
+			_, err := msg.Reply(b, translator.Message("pins_invalid_option", nil), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -487,7 +517,9 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 		pinprefs := db.GetPinData(chat.Id)
 		if pinprefs.CleanLinked {
 			_, err := msg.Reply(b,
-				fmt.Sprintf("Linked channel post deletion is currently <b>enabled</b> in %s. Messages sent from the linked channel will be deleted", chat.Title),
+				translator.Message("pins_cleanlinked_status_enabled", i18n.Params{
+					"chat_title": chat.Title,
+				}),
 				helpers.Shtml(),
 			)
 			if err != nil {
@@ -496,7 +528,9 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		} else {
 			_, err := msg.Reply(b,
-				fmt.Sprintf("Linked channel post deletion is currently <b>disabled</b> in %s.", chat.Title),
+				translator.Message("pins_cleanlinked_status_disabled", i18n.Params{
+					"chat_title": chat.Title,
+				}),
 				helpers.Shtml(),
 			)
 			if err != nil {
@@ -514,6 +548,9 @@ func (moduleStruct) cleanlinked(b *gotgbot.Bot, ctx *ext.Context) error {
 func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	msg := ctx.EffectiveMessage
+
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -543,7 +580,7 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	pinnedMsg := chatInfo.PinnedMessage
 
 	if pinnedMsg == nil {
-		_, err = msg.Reply(b, "No message has been pinned in the current chat!", helpers.Shtml())
+		_, err = msg.Reply(b, translator.Message("pins_no_pinned_message", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -554,7 +591,9 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 	pinLink = helpers.GetMessageLinkFromMessageId(chat, pinnedMsg.MessageId)
 
 	_, err = msg.Reply(b,
-		fmt.Sprintf("<a href='%s'>Here</a> is the pinned message.", pinLink),
+		translator.Message("pins_here_pinned_message", i18n.Params{
+			"link": pinLink,
+		}),
 		&gotgbot.SendMessageOpts{
 			ParseMode: helpers.HTML,
 			LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
@@ -567,7 +606,7 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: "Pinned Message", Url: pinLink},
+						{Text: translator.Message("pins_button_pinned_message", nil), Url: pinLink},
 					},
 				},
 			},

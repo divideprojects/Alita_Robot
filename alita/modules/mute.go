@@ -182,13 +182,6 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	// Initialize translator
-	translator, err := i18n.NewTranslator(db.GetLanguage(ctx))
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
@@ -236,7 +229,7 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	_, err = chat.RestrictMember(b, userId, gotgbot.ChatPermissions{
+	_, err := chat.RestrictMember(b, userId, gotgbot.ChatPermissions{
 		CanSendMessages:       false,
 		CanSendPhotos:         false,
 		CanSendVideos:         false,
@@ -358,7 +351,7 @@ func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	_, err = chat.RestrictMember(b, userId, gotgbot.ChatPermissions{
+	_, err := chat.RestrictMember(b, userId, gotgbot.ChatPermissions{
 		CanSendMessages:       false,
 		CanSendPhotos:         false,
 		CanSendVideos:         false,

@@ -228,6 +228,60 @@ The project uses GoReleaser for multi-platform builds:
 - GitHub Actions automates releases on version tags
 - Supply chain security via attestation
 
+## Internationalization (i18n) System
+
+The bot uses a modern catalog-based i18n system for multi-language support:
+
+### Core Concepts
+
+- **Message Catalog**: Central registry of all translatable strings with default English text
+- **Translators**: Language-specific instances that provide translations
+- **Key-Based Access**: Use semantic keys instead of hardcoded strings
+- **Parameter Interpolation**: Support for placeholders like `{user}`, `{count}` etc.
+- **Validation**: Build-time checks ensure all keys are registered and used correctly
+
+### i18n Development Workflow
+
+1. **Register Messages**: Add new messages to `alita/i18n/i18n.go` using `MustRegister()`
+```go
+MustRegister("admin_promote_success", "Successfully promoted {user}!", "user")
+```
+
+2. **Use in Handlers**: Access messages through translator instances
+```go
+tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+text := tr.Message("admin_promote_success", i18n.Params{"user": userMention})
+```
+
+3. **Add Translations**: Create/update YAML files in `locales/` directory
+```yaml
+admin_promote_success: Successfully promoted {user}!
+admin_demote_success: Successfully demoted {user}!
+```
+
+### i18n Tools
+
+- `make i18n-gen`: Generate code from message catalog
+- `make i18n-lint`: Validate translations and find hardcoded strings
+- `make i18n-flatten`: Convert nested YAML to flat structure
+- `make i18n-check`: Run all i18n validation tools
+
+### Best Practices
+
+- **Never use hardcoded user-facing strings** - always use the i18n system
+- **Use semantic key names** like `admin_promote_success` not `promote_msg`
+- **Register parameters** in MustRegister calls for validation
+- **Quote YAML values** containing colons to avoid parsing errors
+- **Test with multiple languages** to ensure proper parameter handling
+
+### Parameter Guidelines
+
+- Use `{user}` for user mentions/names
+- Use `{chat}` for chat names
+- Use `{count}` for numeric values
+- Use `{reason}` for action reasons
+- Document required parameters in MustRegister calls
+
 ## Important Notes
 
 - The bot maintains backward compatibility with MongoDB (migration tool in
@@ -236,3 +290,4 @@ The project uses GoReleaser for multi-platform builds:
 - Worker pools should implement panic recovery and rate limiting
 - Cache invalidation must be handled explicitly when data changes
 - Performance monitoring is automatic in production (DEBUG=false)
+- **All user-facing strings must use the i18n system** - no hardcoded text

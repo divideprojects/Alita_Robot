@@ -12,6 +12,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 
@@ -30,8 +31,11 @@ func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	chat := ctx.EffectiveChat
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	go db.SetChatRules(chat.Id, "")
-	_, err := msg.Reply(bot, "Successfully cleared rules!", nil)
+	_, err := msg.Reply(bot, translator.Message("rules_cleared_success", nil), nil)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -54,23 +58,30 @@ func (moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	args := ctx.Args()
 	var text string
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	if len(args) >= 2 {
 		switch strings.ToLower(args[1]) {
 		case "on", "yes", "true":
 			go db.SetPrivateRules(chat.Id, true)
-			text = "Use of /rules will send the rules to the user's PM."
+			text = translator.Message("rules_private_enabled", nil)
 		case "off", "no", "false":
 			go db.SetPrivateRules(chat.Id, false)
-			text = fmt.Sprintf("All /rules commands will send the rules to %s.", chat.Title)
+			text = translator.Message("rules_private_disabled", i18n.Params{
+				"chat_title": chat.Title,
+			})
 		default:
-			text = "Your input was not recognised as one of: yes/no/on/off"
+			text = translator.Message("rules_invalid_option", nil)
 		}
 	} else {
 		rulesprefs := db.GetChatRulesInfo(chat.Id)
 		if rulesprefs.Private {
-			text = "Use of /rules will send the rules to the user's PM."
+			text = translator.Message("rules_private_enabled", nil)
 		} else {
-			text = fmt.Sprintf("All /rules commands will send the rules to %s.", chat.Title)
+			text = translator.Message("rules_private_disabled", i18n.Params{
+				"chat_title": chat.Title,
+			})
 		}
 	}
 
@@ -106,6 +117,9 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 		rulesBtn   string
 	)
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	if reply := msg.ReplyToMessage; reply != nil {
 		replyMsgId = reply.MessageId
 	} else {
@@ -118,14 +132,16 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 		rulesBtn = m.defaultRulesBtn
 	}
 	if rules.Rules != "" {
-		Text += fmt.Sprintf("The rules for <b>%s</b> are:\n\n", chat.Title)
+		Text += translator.Message("rules_for_chat", i18n.Params{
+			"chat_title": chat.Title,
+		}) + "\n\n"
 		Text += rules.Rules
 	} else {
-		Text += "This chat doesn't seem to have had any rules set yet... I wouldn't take that as an invitation though."
+		Text += translator.Message("rules_no_rules_set", nil)
 	}
 
 	if chat_status.RequireGroup(bot, ctx, nil, true) && rules.Private {
-		Text = "Click on the button to see the chat rules!"
+		Text = translator.Message("rules_click_for_rules", nil)
 		rulesKb = gotgbot.InlineKeyboardMarkup{
 			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 				{
@@ -170,8 +186,11 @@ func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	args := ctx.Args()
 	var text string
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	if len(args) == 1 && msg.ReplyToMessage == nil {
-		text = "You need to give me rules to set!\nEither reply to a message to provide them with command."
+		text = translator.Message("rules_need_rules_to_set", nil)
 	} else {
 		if msg.ReplyToMessage != nil {
 			text = msg.ReplyToMessage.OriginalMDV2()
@@ -179,7 +198,7 @@ func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 			text = strings.SplitN(msg.OriginalMDV2(), " ", 2)[1]
 		}
 		go db.SetChatRules(chat.Id, tgmd2html.MD2HTMLV2(text))
-		text = "Successfully set rules for this group!"
+		text = translator.Message("rules_set_success", nil)
 	}
 
 	_, err := msg.Reply(bot, text, helpers.Shtml())

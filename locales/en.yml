@@ -704,14 +704,15 @@ captcha_welcome_text_image: |-
   Please select the text shown in the image to verify you're human:
 
   ⏱ You have <b>%d minutes</b> to answer.
-captcha_wrong_answer: ❌ Wrong answer. Try again. Attempts left: %d
+
+captcha_wrong_answer: "❌ Wrong answer. Try again. Attempts left: %d"
 captcha_wrong_answer_action: ❌ Wrong answer! You have been %s.
 captcha_wrong_answer_attempts: ❌ Wrong answer! %d attempts remaining.
 captcha_failed_attempts: ❌ You have failed the captcha verification. You have been %s.
 captcha_timeout_message: ⏰ Captcha verification timed out. You have been %s.
 captcha_refresh_button: 🔄 New Problem
-captcha_refreshed: Here's a new problem for you:
-captcha_refresh_limit: You've reached the maximum number of refreshes (%d). Please solve the current problem.
+captcha_refreshed: "Here's a new problem for you:"
+captcha_refresh_limit: "You've reached the maximum number of refreshes (%d). Please solve the current problem."
 captcha_refresh_cooldown: Please wait %d seconds before requesting a new problem.
 captcha_already_verified: You have already been verified!
 captcha_not_for_you: This captcha is not for you.
