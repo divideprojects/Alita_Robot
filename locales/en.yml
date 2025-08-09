@@ -5,28 +5,28 @@ main:
     language_name: English
 strings:
     Admin:
-        adminlist: "Admins in <b>{admin}</b>:"
+        adminlist: "Admins in <b>%s</b>:"
         anon_admin:
             already_disabled: AnonAdmin mode is already <b>disabled</b> for {admin}
             already_enabled: AnonAdmin mode is already <b>enabled</b> for {admin}
             disabled: |-
-                AnonAdmin mode is currently <b>disabled</b> for {admin}.
+                AnonAdmin mode is currently <b>disabled</b> for %s.
                 This requires anonymous admins to press a button to confirm their permissions.
             disabled_now: |-
-                AnonAdmin mode is now <b>disabled</b> for {admin}.
+                AnonAdmin mode is now <b>disabled</b> for %s.
                 From now onwards, I won't ask the admins to verify for permissions anymore from anonymous admins.
             enabled: |-
-                AnonAdmin mode is currently <b>enabled</b> for {admin}.
+                AnonAdmin mode is currently <b>enabled</b> for %s.
                 This allows all anonymous admin to perform admin actions without restriction.
             enabled_now: |-
-                AnonAdmin mode is now <b>enabled</b> for {admin}.
+                AnonAdmin mode is now <b>enabled</b> for %s.
                 From now onwards, I will ask the admins to verify permissions from anonymous admins.
             invalid_arg: Invalid argument, I only understand <code>on</code>, <code>off</code>, <code>yes</code>, <code>no</code>
         demote:
             is_admin: This person is not an admin, and how I am supposed to demote them?
             is_bot_itself: I am not going to demote myself.
             is_owner: This person created this chat, and how would I demote them?
-            success_demote: Successfully demoted {admin}!
+            success_demote: Successfully demoted %s!
         errors:
             err_cannot_demote: Failed to demote; I might not be the admin, or they may be promoted by another admin.
             err_cannot_promote: Failed to promote; I might not be the admin, or they may be promoted by another admin.
@@ -43,26 +43,26 @@ strings:
             × /demote `<reply/username/mention/userid>`: Demote a user.
             × /title `<reply/username/mention/userid>` `<custom title>`: Set custom title for user
         promote:
-            admin_title_truncated: Admin title truncated to 16 characters from {number}
+            admin_title_truncated: Admin title truncated to 16 characters from %d
             is_admin: This person is already an admin, and how would am I supposed to promote them?
             is_bot_itself: If only I could do this to myself ;_;
             is_owner: This person created this chat, and how would am I supposed to promote them?
-            success_promote: Successfully promoted {admin}!
+            success_promote: Successfully promoted %s!
         title:
             is_admin: This person is already an admin, how would I set a custom admin title for them?
             is_bot_itself: If only I could do this to myself ;_;
             is_owner: This person created this chat, and how would am I supposed to set a admin title to them?
-            success_set: Successfully set {first}'s admin title to <b>{chat}</b>
+            success_set: Successfully set %s's admin title to <b>%s</b>
     Antiflood:
         checkflood:
-            perform_action: Yeah, I don't like your flooding. {first} has been {chat}!
+            perform_action: Yeah, I don't like your flooding. %s has been %s!
         errors:
             expected_args: "I expected some arguments! Either off, or an integer. eg: `/setflood 5`, or `/setflood off`"
             invalid_int: That's not a valid integer. Please give me a valid integer, or `off`.
             set_in_limit: The antiflood limit has to be set between 3 and 100.
         flood:
             disabled: This chat is not currently enforcing flood control.
-            show_settings: This chat is currently enforcing flood control after {number} messages. Any users sending more than that amount of messages will be {user}.
+            show_settings: This chat is currently enforcing flood control after %d messages. Any users sending more than that amount of messages will be %s.
         flood_deleter:
             already_disabled: Antiflood Message deleting is currently *disabled* in this chat, Messages causing antiflood will be ignored!
             already_enabled: Antiflood Message deleting is currently *enabled* in this chat, Messages causing antiflood will be deleted!
@@ -83,11 +83,11 @@ strings:
             disabled: |-
                 Okay.
                 I won't warn users for flooding.
-            success: Flood Limit has been set to <b>{limit}</b> messages.
+            success: Flood Limit has been set to <b>%d</b> messages.
         setfloodmode:
             specify_action: "You need to specify an action to take upon flooding. Current modes are: `ban`/`kick`/`mute`"
-            success: Flood mode has been set to {value}.
-            unknown_type: "Unknown type '{value}'. Please use one of: ban/kick/mute"
+            success: Flood mode has been set to %s.
+            unknown_type: "Unknown type '%s'. Please use one of: ban/kick/mute"
     Approvals:
         approval:
             is_admin: "{admin} is an admin, and they don't need approval."
@@ -143,15 +143,15 @@ strings:
     Bans:
         ban:
             ban_reason: |4-
-                <b>Reason:</b> {reason}
+                <b>Reason:</b> %s
             dban:
                 no_reply: You need to reply to a message to delete it and ban the user!
             is_admin: Why would I ban an admin? That sounds like a pretty dumb idea.
             is_bot_itself: Do you really think I will ban myself?
             normal_ban: |-
                 Another one bites the dust...!
-                Banned {value}.
-            tban: Banned {user} for {second}
+                Banned %s.
+            tban: Banned %s for %s
         help_msg: |-
             Sometimes users can be annoying and you might want to remove them from your chat, this module exactly helps you to deal with that!.
             Ban/kick users from your chat, and unban them later on if they're behaving themselves.
@@ -173,8 +173,8 @@ strings:
             cannot_kick_admin: Why would I kick an admin? That sounds like a pretty dumb idea.
             is_bot_itself: Why would I kick myself?
             kicked_reason: |4-
-                <b>Reason:</b> {reason}
-            kicked_user: Successfully Kicked {user}.
+                <b>Reason:</b> %s
+            kicked_user: Successfully Kicked %s.
             user_not_in_chat: This user is not in this chat, and how am I supposed to restrict them?
         kickme:
             is_admin: You are an admin, and you are stuck here with everyone else!
@@ -184,12 +184,12 @@ strings:
             is_bot_itself: Why would I un-restrict myself when I'm already here?
             unbanned_user: |-
                 Let's give him another chance.
-                Unbanned {user}!
+                Unbanned %s!
     Blacklists:
         bl_watcher:
-            banned_user: Banned {user} due to {second}
-            kicked_user: Kicked {first} due to {second}
-            muted_user: Muted {user} due to {second}
+            banned_user: Banned %s due to %s
+            kicked_user: Kicked %s due to %s
+            muted_user: Muted %s due to %s
         blacklist:
             added_bl: "Added these words as blacklists:"
             already_blacklisted: "These words are already blacklisted:"
@@ -218,13 +218,13 @@ strings:
                 "no": Canceled removing all Blacklists of this Chat ❌
                 "yes": Removed all Blacklists from this Chat ✅
         set_bl_action:
-            changed_mode: "Successfully Changed blacklist mode to: *{value}*"
+            changed_mode: "Successfully Changed blacklist mode to: *%s*"
             choose_correct_option: Please choose an option out of <mute/kick/ban/warn/none>
-            current_mode: "The current blacklist mode for this chat is: {chat}"
+            current_mode: "The current blacklist mode for this chat is: %s"
         unblacklist:
             give_bl_word: Please give me a word to remove it from the blacklist!
             no_removed_bl: None of the given words were on the blacklist which can be removed!
-            removed_bl: Successfully removed '{value}' from the blacklisted words!
+            removed_bl: Successfully removed '%s' from the blacklisted words!
     Captcha:
         help_msg: |-
             Protect your group from bots and spammers with CAPTCHA verification!
@@ -262,15 +262,15 @@ strings:
                 Turned <b>on</b> User connections to this chat!
                 Users can now connect chat to their PMs!
         connect:
-            connected: You are now connected to <b>{value}</b>!
+            connected: You are now connected to <b>%s</b>!
             connection_disabled: |-
                 User connections are currently <b>disabled</b> to this chat.
                 Please ask admins to allow if you want to connect!
             tap_btn_connect: Please press the button below to connect this chat to your PM.
-        connected: You are currently connected to <b>{value}</b>!
+        connected: You are currently connected to <b>%s</b>!
         connections_btns:
-            admin_conn_cmds: Available Admin commands:{admin}
-            user_conn_cmds: Available User commands:{user}
+            admin_conn_cmds: Available Admin commands:%s
+            user_conn_cmds: Available User commands:%s
         disconnect:
             disconnected: Successfully disconnected from the connected chat.
             need_pm: You need to send this in PM to me to disconnect from the chat!
@@ -295,7 +295,7 @@ strings:
         reconnect:
             need_pm: You need to be in a PM with me to reconnect to a chat!
             no_last_chat: You have no last chat to reconnect!
-            reconnected: You are now reconnected to <b>{value}</b>!!
+            reconnected: You are now reconnected to <b>%s</b>!!
     Disabling:
         help_msg: |-
             This module allows you to disable some commonly used commands, So, no one can use them. It'll also allow you to autodelete them, stopping people from blue texting.
@@ -406,7 +406,7 @@ strings:
             × /autoapprove `<yes/no/on/off>`: Automatically approve all new members.
     Help:
         About: |-
-            @{first}  is one of the fastest and most feature-filled group managers.
+            @%s  is one of the fastest and most feature-filled group managers.
 
             Alita ✨ is developed and actively maintained by @DivideProjects!
 
@@ -417,7 +417,7 @@ strings:
             - Featured: Many features which other group management bots don't have.
             - Fast: Guess what? It's not made using Python, we use <a href='https://go.dev/'>Go</a> as our core programming language.
 
-            <b>Current Version:</b> {admin}
+            <b>Current Version:</b> %s
         Configuration:
             Step-1: |-
                 Welcome to the Alita Configuration
@@ -434,7 +434,7 @@ strings:
                 ▫️ Press on Administrator
                 ▫️ Press Add Administrator
                 ▫️ Press the Magnifying Glass
-                ▫️ Search @{chat}
+                ▫️ Search @%s
                 ▫️ Confirm
             Step-3: |-
                 Excellent!
@@ -598,7 +598,7 @@ strings:
         string_handling:
             extract_time:
                 invalid_time_amount: Invalid time amount specified.
-                invalid_time_type: "Invalid time type specified. Expected m, h, or d got: {time}"
+                invalid_time_type: "Invalid time type specified. Expected m, h, or d got: %s"
     Warns:
         help_msg: |-
             Keep your members in check with warnings; stop them getting out of control!
