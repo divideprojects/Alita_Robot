@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"sync"
 
+	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
 )
 
@@ -48,7 +49,16 @@ func (t *Translator) LoadFromYAML(yamlPath string) error {
 		return fmt.Errorf("failed to read YAML file '%s': %w", yamlPath, err)
 	}
 	
-	return t.LoadFromYAMLBytes(data)
+	if err := t.LoadFromYAMLBytes(data); err != nil {
+		return fmt.Errorf("failed to load translations from %s: %w", yamlPath, err)
+	}
+	
+	// Log successful loading
+	if t.TranslationCount() > 0 {
+		log.Debugf("Loaded %d translations for language '%s' from %s", t.TranslationCount(), t.lang, yamlPath)
+	}
+	
+	return nil
 }
 
 // LoadFromYAMLBytes loads translations from YAML bytes.
@@ -87,6 +97,18 @@ func (t *Translator) LoadFromDirectory(dir string) error {
 	if _, err := os.Stat(yamlPath); os.IsNotExist(err) {
 		filename = fmt.Sprintf("%s.yml", t.lang)
 		yamlPath = filepath.Join(dir, filename)
+	}
+	
+	// Check if the path is absolute, if not make it relative to working directory
+	if !filepath.IsAbs(yamlPath) {
+		if wd, err := os.Getwd(); err == nil {
+			yamlPath = filepath.Join(wd, yamlPath)
+		}
+	}
+	
+	// Log the path we're trying to load
+	if _, err := os.Stat(yamlPath); err != nil {
+		return fmt.Errorf("translation file not found at %s: %w", yamlPath, err)
 	}
 	
 	return t.LoadFromYAML(yamlPath)

@@ -254,6 +254,8 @@ func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	args := strings.Split(query.Data, ".")
 	module := args[1]
+	
+	log.Infof("[HelpButton] Callback data: %s, Module: %s", query.Data, module)
 
 	var (
 		parsemode, helpText string

@@ -108,7 +108,18 @@ func initHelpButtons() {
 func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgbot.InlineKeyboardMarkup) {
 	ModName := cases.Title(language.English).String(module)
 	tr := i18n.MustNewTranslator(lang)
-	helpMsg := tr.Message(fmt.Sprintf("%s_help_msg", strings.ToLower(ModName)), nil)
+	key := fmt.Sprintf("%s_help_msg", strings.ToLower(ModName))
+	log.Infof("[Help] Module: '%s' -> Key: '%s' (lang: %s)", module, key, lang)
+	
+	// Check if translator has the key
+	if tr.HasTranslation(key) {
+		log.Infof("[Help] Translation found for key: %s", key)
+	} else {
+		log.Warnf("[Help] No translation found for key: %s", key)
+	}
+	
+	helpMsg := tr.Message(key, nil)
+	log.Infof("[Help] Retrieved message: '%s'", helpMsg)
 	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) + helpMsg
 
 	replyMarkup = gotgbot.InlineKeyboardMarkup{
@@ -324,12 +335,15 @@ func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbm
 	var moduleName string
 	userOrGroupLanguage := db.GetLanguage(ctx)
 
+	log.Debugf("[Help] getHelpTextAndMarkup called with module: %s, language: %s", module, userOrGroupLanguage)
+
 	for _, ModName := range listModules() {
 		// add key as well to this array
 		altnames := getAltNamesOfModule(ModName)
 
 		if string_handling.FindInStringSlice(altnames, module) {
 			moduleName = ModName
+			log.Debugf("[Help] Found module name: %s for input: %s", moduleName, module)
 			break
 		}
 	}
@@ -339,6 +353,7 @@ func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbm
 		_parsemode = helpers.Markdown
 		helpText, kbmarkup = getModuleHelpAndKb(moduleName, userOrGroupLanguage)
 	} else {
+		log.Debugf("[Help] No module found for: %s, showing main help", module)
 		_parsemode = helpers.HTML
 		helpText = fmt.Sprintf(mainhlp, html.EscapeString(ctx.EffectiveUser.FirstName))
 		kbmarkup = markup
