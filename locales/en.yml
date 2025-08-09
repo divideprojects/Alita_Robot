@@ -674,11 +674,8 @@ captcha_enable_failed: Failed to enable captcha. Please try again.
 captcha_disable_failed: Failed to disable captcha. Please try again.
 captcha_invalid_option: Please use <code>/captcha on</code> or <code>/captcha off</code>
 captcha_mode_updated: ⚙️ Captcha mode updated to <b>%s</b>.
-captcha_mode_invalid: Invalid captcha mode. Use <code>math</code> or <code>text</code>.
 captcha_timeout_updated: ⏰ Captcha timeout updated to <b>%d minutes</b>.
-captcha_timeout_invalid: Invalid timeout. Must be between 1 and 10 minutes.
 captcha_action_updated: ⚙️ Failure action updated to <b>%s</b>.
-captcha_action_invalid: Invalid action. Use <code>kick</code>, <code>ban</code>, or <code>mute</code>.
 captcha_welcome_message: Welcome to %s! Please complete the captcha below to verify you're human.
 captcha_solve_prompt: 'Solve this problem: <b>%s</b>\n\nYou have %d minutes to complete this captcha.'
 captcha_text_prompt: 'Enter the text shown in the image below:\n\nYou have %d minutes to complete this captcha.'
@@ -718,141 +715,10 @@ captcha_already_verified: You have already been verified!
 captcha_not_for_you: This captcha is not for you.
 
 # Connection module keys
-connections_connected: You are currently connected to <b>%s</b>!
-connections_allow_connect_turned_on: |-
-    Turned <b>on</b> User connections to this chat!
-    Users can now connect chat to their PMs!
-connections_allow_connect_turned_off: |-
-    Turned <b>off</b> User connections to this chat!
-    Users can't connect chat to their PM's!
-connections_allow_connect_currently_on: |-
-    User connections are currently turned <b>on</b>.
-    Users can connect this chat to their PMs!
-connections_allow_connect_currently_off: |-
-    User connections are currently turned <b>off</b>.
-    Users can't connect this chat to their PMs!
 connections_allow_connect_invalid_option: Please give me a valid option from <yes/on/no/off>
-connections_connect_connection_disabled: |-
-    User connections are currently <b>disabled</b> to this chat.
-    Please ask admins to allow if you want to connect!
-connections_connect_connected: You are now connected to <b>%s</b>!
-connections_connect_tap_btn_connect: Please press the button below to connect this chat to your PM.
-connections_connections_btns_admin_conn_cmds: 'Available Admin commands:%s'
-connections_connections_btns_user_conn_cmds: 'Available User commands:%s'
-connections_disconnect_disconnected: Successfully disconnected from the connected chat.
-connections_disconnect_need_pm: You need to send this in PM to me to disconnect from the chat!
-connections_not_connected: You aren't connected to any chats.
-connections_reconnect_reconnected: You are now reconnected to <b>%s</b>!!
-connections_reconnect_no_last_chat: You have no last chat to reconnect!
-connections_reconnect_need_pm: You need to be in a PM with me to reconnect to a chat!
-
 # Formatting module keys
-formatting_help_msg: Alita supports a large number of formatting options to make your messages more expressive. Take a look by clicking the buttons below!
 formatting_press_button_markdown_help: Press the button below to get Markdown Help!
-formatting_markdown: |-
-    <b>Markdown Formatting</b>
-    
-    You can format your message using <b>bold</b>, <i>italics</i>, <u>underline</u>, and much more. Go ahead and experiment!
-    <b>Supported markdown</b>:
-    - <code>`code words`</code>: Backticks are used for monospace fonts. Shows as: <code>code words</code>.
-    - <code>_italic words_</code>: Underscores are used for italic fonts. Shows as: <i>italic words</i>.
-    - <code>*bold words*</code>: Asterisks are used for bold fonts. Shows as: <b>bold words</b>.
-    - <code>~strikethrough~</code>: Tildes are used for strikethrough. Shows as: <strike>strikethrough</strike>.
-    - <code>||spoiler||</code>: Double vertical bars are used for spoilers. Shows as: <tg-spoiler>Spoiler</tg-spoiler>.
-    - <code>```pre```</code>: To make the formatter ignore other formatting characters inside the text formatted with '```', will be like: <code>**bold** | *bold*</code>.
-    - <code>__underline__</code>: Double underscores are used for underlines. Shows as: underline. NOTE: Some clients try to be smart and interpret it as italic. In that case, try to use your app's built-in formatting.
-    - <code>[hyperlink](example.com)</code>: This is the formatting used for hyperlinks. Shows as: <a href='https://example.com/'>hyperlink</a>.
-    - <code>[My Button](buttonurl://example.com)</code>: This is the formatting used for creating buttons. This example will create a button named "My button" which opens <code>example.com</code> when clicked.
-    
-    If you would like to send buttons on the same row, use the <code>:same</code> formatting.
-    <b>Example:</b>
-    <code>[button 1](buttonurl:example.com)</code>
-    <code>[button 2](buttonurl://example.com:same)</code>
-    <code>[button 3](buttonurl://example.com)</code>
-    This will show button 1 and 2 on the same line, with 3 underneath.
-formatting_fillings: |-
-    <b>Fillings</b>
-    
-    You can also customise the contents of your message with contextual data. For example, you could mention a user by name in the welcome message, or mention them in a filter!
-    You can use these to mention a user in notes too!
-    
-    <b>Supported fillings:</b>
-    - <code>{first}</code>: The user's first name.
-    - <code>{last}</code>: The user's last name.
-    - <code>{fullname}</code>: The user's full name.
-    - <code>{username}</code>: The user's username. If they don't have one, mentions the user instead.
-    - <code>{mention}</code>: Mentions the user with their firstname.
-    - <code>{id}</code>: The user's ID.
-    - <code>{chatname}</code>: The chat's name.
-    - <code>{rules}</code>: Adds Rules Button to Message.
-    - <code>{protect}</code>: Protects the content from being shared.
-    - <code>{preview}</code>: Enables previews in the messages.
-    - <code>{nonotif}</code>: Disables the notification for that message.
-formatting_random: |-
-    <b>Random Content</b>
-    
-    Another thing that can be fun, is to randomise the contents of a message. Make things a little more personal by changing welcome messages, or changing notes!
-    How to use random contents:
-    - %%%: This separator can be used to add  random replies to the bot.
-    For example:
-    <code>hello
-    %%%
-    how are you</code>
-    This will randomly choose between sending the first message, "hello", or the second message, "how are you".
-    Use this to make Alita feel a bit more customised! (only works in filters/notes)
-    Example welcome message:
-    - Every time a new user joins, they'll be presented with one of the three messages shown here.
-    -> /filter "hey"
-    hello there <code>{first}</code>!
-    %%%
-    Ooooh, <code>{first}</code> how are you?
-    %%%
-    Sup? <code>{first}</code>
-
 # Help module keys
-help_about: |-
-    @%s  is one of the fastest and most feature-filled group managers.
-    
-    Alita ✨ is developed and actively maintained by @DivideProjects!
-    
-    Alita has been online since 2020 and has served thousands of groups with hundreds of thousands of users!
-    
-    <b>Why Alita:</b>
-    - Simple: Easy usage and compatible with many bot commands.
-    - Featured: Many features which other group management bots don't have.
-    - Fast: Guess what? It's not made using Python, we use <a href='https://go.dev/'>Go</a> as our core programming language.
-    
-    <b>Current Version:</b> %s
-help_donate_text: |-
-    So you want to donate? Amazing!
-    When you donate, all the fund goes towards my development which makes on fast and responsive.
-    Your donation might also get me a new feature or two, which I wasn't able to get due to server limitations.
-    All the funds would be put into my services such as database, storage, and hosting!
-    You can donate by contacting my owner here: @DivideProjectsBot
-help_configuration_step_1: |-
-    Welcome to the Alita Configuration
-    
-    The first thing to do is to add Alita ✨ to your group! For doing that, press the under button and select your group, then press Done to continue the tutorial.
-help_configuration_step_2: |-
-    Ok, well done!
-    
-    Now to let me work correctly, you need to make me Admin of your Group!
-    To do that, follow these easy steps:
-    ▫️ Go to your group
-    ▫️ Press the Group's name
-    ▫️ Press Modify
-    ▫️ Press on Administrator
-    ▫️ Press Add Administrator
-    ▫️ Press the Magnifying Glass
-    ▫️ Search @%s
-    ▫️ Confirm
-help_configuration_step_3: |-
-    Excellent!
-    Now the Bot is ready to use!
-    All commands can be used with / or !
-    
-    If you're facing any difficulties in setting up me in your group, so don't hesitate to come in @DivideSupport.
-    We would love to help you.
 help_click_button_info: Click on the button below to get info about me!
 help_pm_me_questions: 'Hey :) PM me if you have any questions on how to use me!'
 help_click_here_help: Click here for help!
@@ -866,27 +732,15 @@ help_current_notes: 'These are the current notes in this Chat:'
 
 # Warns module keys
 warns_warn_mode_updated: 'Updated warn mode to: %s'
-warns_warn_mode_unknown: 'Unknown type \'%s\'. Please use one of: ban/kick/mute'
+warns_warn_mode_unknown: "Unknown type '%s'. Please use one of: ban/kick/mute"
 warns_warn_mode_specify: 'You need to specify an action to take upon too many warns. Current modes are: ban/kick/mute'
 warns_cannot_warn_admin: I'm not going to warn an admin!
-warns_user_warned: 'Warned %s (%d/%d)'
-warns_user_warned_reason: |-
-    Warned %s (%d/%d)
-    <b>Reason:</b> %s
 warns_limit_exceeded: '%s has exceeded the warning limit (%d/%d) and has been %s!'
-warns_no_warnings: '%s has no warnings.'
 warns_user_warnings: '%s has %d/%d warnings:\n%s'
 warns_warning_removed: 'Removed latest warning for %s. They now have %d/%d warnings.'
-warns_no_warnings_to_remove: '%s has no warnings to remove.'
 warns_all_reset: 'Reset all warnings for %s.'
 warns_all_warnings_reset: Reset all warnings in this chat. All users now have 0 warnings.
-warns_limit_updated: 'Warning limit updated to %d.'
 warns_limit_invalid: Invalid warning limit. Must be between 1 and 50.
-warns_current_settings: |-
-    <b>Warning Settings:</b>
-    Limit: %d warnings
-    Action: %s
-
 # Locks module keys
 locks_lock_success: 'Locked the following in this group:\n - %s'
 locks_unlock_success: 'Un-Locked the following in this group:\n - %s'
@@ -904,7 +758,7 @@ mutes_mute_success: 'Shh...\nMuted %s.'
 mutes_mute_success_reason: 'Shh...\nMuted %s.\n<b>Reason: </b>%s'
 mutes_tmute_success: 'Shh...\nMuted %s for %s'
 mutes_tmute_success_reason: 'Shh...\nMuted %s for %s\n<b>Reason: </b>%s'
-mutes_unmute_success: 'Alright!\nI\'ll allow %s to speak again.'
+mutes_unmute_success: "Alright!\nI'll allow %s to speak again."
 mutes_user_not_in_chat: This user is not in this chat, how can I restrict them?
 mutes_cannot_mute_admin: Why would I mute an admin? That sounds like a pretty dumb idea.
 mutes_cannot_mute_admin_alt: I don't think you'd want me to mute an admin.
@@ -912,6 +766,90 @@ mutes_cannot_mute_self: Why would I restrict myself?
 mutes_button_unmute_admin: Unmute (Admin Only)
 
 # Missing error keys for anonymous users
-error_anonymous_user_not_supported: This command cannot be used on anonymous user, these user can only be banned/unbanned.
-error_reply_to_message: Reply to a user's message to delete and act on them!
-error_specify_user: I don't know who you're talking about, you're going to need to specify a user...!
+
+# Additional admin module keys
+admin_cache_note_fresh: 'Note: These are up-to-date values'
+admin_cache_note_cached: 'Note: These values are cached and may not be up-to-date'
+admin_cache_admin_required: You need to be admin to do this!
+admin_invite_link_username: 'Here is the invite link of this chat: %s'
+admin_invite_link_private: 'Here is the invite link of this chat: %s'
+
+# Additional mutes module keys
+mutes_dmute_reply_required: You need to reply to a message to delete it and mute the user!
+
+# Additional misc module keys
+misc_ping_pinging: Pinging
+misc_ping_result: Pinged in %d ms
+misc_translate_request_error: Error making a translation request!
+misc_translate_reading_error: 'Reading Error: %s'
+misc_keyboard_removing: Removing the stuck bot keyboard...
+misc_stats_total_messages: 'Total Messages in %s are: %d'
+
+# Group B Modules - Devs module keys
+devs_chatinfo_specify_chat: You must specify a user to get info on
+devs_chatlist_getting_list: Getting list of chats I'm in...
+devs_chatlist_database_list: Here is the list of chats in my Database!
+devs_leave_success: Okay, I left the chat!
+devs_user_already_sudo: User is already Sudo!
+devs_user_added_sudo: Added %s to Sudo List!
+devs_user_already_dev: User is already Dev!
+devs_user_added_dev: Added %s to Dev List!
+devs_user_not_sudo: User is not Sudo!
+devs_user_removed_sudo: Removed %s from Sudo List!
+devs_user_not_dev: User is not Dev!
+devs_user_removed_dev: Removed %s from Dev List!
+devs_team_no_users: No users are added Added in Team!
+devs_team_dev_users: '<b>Dev Users:</b>\n'
+devs_team_sudo_users: '<b>Sudo Users:</b>\n'
+devs_team_no_users_section: '\nNo Users'
+devs_stats_fetching: '<code>Fetching bot stats...</code>'
+
+# Group B Modules - Disabling module keys
+disabling_available_commands: The following commands can be disabled:
+disabling_no_disabled_commands: There are no disabled commands in this chat.
+disabling_disabled_list: 'The following commands are disabled in this chat:'
+disabling_del_enabled: Disabled messages will now be deleted.
+disabling_del_disabled: Disabled messages will no longer be deleted.
+disabling_del_invalid_option: 'Your input was not recognised as one of: yes/no/on/off'
+disabling_del_status_enabled: 'Disabled Command deleting is *enabled*, disabled commands from users will be deleted!'
+disabling_del_status_disabled: 'Disabled Command deleting is *disabled*, disabled commands from users will *not* be deleted!'
+disabling_enabled_commands: 'Re-Enabled the use of the following in this chat:%s'
+disabling_unknown_command_enable: 'Unknown command to Re-Enable:\n-%s\nCheck /disableable!'
+disabling_no_command_specified_enable: You haven't specified a command to disable.
+
+# Group B Modules - Notes module keys (additional ones not in main list)
+notes_need_keyword: Please give a keyword to reply to!
+notes_invalid_note: Invalid Note!
+notes_overwrite_ask: |-
+  Note already exists!
+  Do you want to overwrite it?
+notes_overwrite_conflicting_flags: '\n\n<b>Note:</b> This note will be sent to default setting of group notes, because it has both <code>{private}</code> and <code>{noprivate}</code>.'
+notes_need_keyword_remove: Please give a keyword to remove!
+notes_not_found: Note does not exist!
+notes_removed_success: Removed note <b>%s</b>.
+notes_private_on: |-
+  Turned on Private Notes.
+  Now users will get the notes as a private message.
+notes_private_off: |-
+  Turned off Private Notes.
+  Now all the notes will be sent to Group Chat.
+notes_private_status_on: Private Notes are currently turned on!
+notes_private_status_off: Private Notes are currently turned off!
+notes_private_invalid_option: I only understand an option from <on/off/yes/no>
+notes_no_notes: There are no notes in this chat!
+notes_list_private_button: Check on the button below to get Notes!
+notes_list_private_click: Click Me!
+notes_current_notes: 'These are the current notes in this Chat:'
+notes_current_notes_chat: 'These are the current notes in <b>%s</b>:'
+notes_get_instructions: You can get a note by <code>#notename</code> or <code>/get notename</code>
+notes_not_enough_args: Not enough arguments.
+notes_not_exists: Note doesn't exists!
+notes_error_parsing: There's some error parsing the note, please report this in support chat.
+notes_admin_only: This note can only be accessed by a admin!
+notes_click_get_private: Click on the button below to get the note *%s*
+notes_only_creator_can_clear_all: Only Chat Creator can use this command.
+notes_confirm_clear_all: Are you sure you want to remove all Notes from this chat?
+notes_cleared_all: Removed all Notes from this Chat ✅
+notes_clear_all_cancelled: Cancelled removing all notes from this Chat ❌
+notes_overwrite_success: Note has been overwritten successfully ✅
+notes_overwrite_cancelled: Cancelled overwriting of note ❌

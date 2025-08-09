@@ -187,10 +187,14 @@ func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	if chat_status.CheckDisabledCmd(b, msg, "ping") {
 		return ext.EndGroups
 	}
+
+	// Initialize translator
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	stime := time.Now()
-	rmsg, _ := msg.Reply(b, "<code>Pinging</code>", &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
+	rmsg, _ := msg.Reply(b, "<code>" + tr.Message("misc_ping_pinging", nil) + "</code>", &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 	elapsed := time.Since(stime)
-	_, _, err := rmsg.EditText(b, fmt.Sprintf("Pinged in %d ms", int64(elapsed/time.Millisecond)), nil)
+	_, _, err := rmsg.EditText(b, tr.Message("misc_ping_result", i18n.Params{"milliseconds": int64(elapsed/time.Millisecond)}), nil)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -226,7 +230,7 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	if !found {
-		text = "Could not find the any information about this user."
+		text = translator.Message("misc_no_user_info", nil)
 	} else {
 
 		user := &gotgbot.User{
@@ -329,7 +333,7 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	req, err := httpClient.Get(fmt.Sprintf("https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=auto&tl=%s&q=%s", toLang, url.QueryEscape(strings.TrimSpace(origText))))
 	if err != nil {
-		_, _ = msg.Reply(b, "Error making a translation request!", nil)
+		_, _ = msg.Reply(b, translator.Message("misc_translate_request_error", nil), nil)
 		return ext.EndGroups
 	}
 	defer func(Body io.ReadCloser) {
@@ -340,7 +344,7 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 	}(req.Body)
 	all, err := io.ReadAll(req.Body)
 	if err != nil {
-		_, _ = msg.Reply(b, "Reading Error: "+err.Error(), nil)
+		_, _ = msg.Reply(b, translator.Message("misc_translate_reading_error", i18n.Params{"error": err.Error()}), nil)
 		return ext.EndGroups
 	}
 	data := strings.Split(strings.Trim(string(all), `"][`), `","`)
@@ -355,8 +359,12 @@ func (moduleStruct) translate(b *gotgbot.Bot, ctx *ext.Context) error {
 // remove stuck bot keyboards from the chat interface.
 func (moduleStruct) removeBotKeyboard(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+
+	// Initialize translator
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	rMsg, err := msg.Reply(b,
-		"Removing the stuck bot keyboard...",
+		tr.Message("misc_keyboard_removing", nil),
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: &gotgbot.ReplyKeyboardRemove{
 				RemoveKeyboard: true,
@@ -390,7 +398,14 @@ func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 	if chat_status.CheckDisabledCmd(b, msg, "stat") {
 		return ext.EndGroups
 	}
-	_, err := msg.Reply(b, fmt.Sprintf("Total Messages in %s are: %d", msg.Chat.Title, msg.MessageId+1), nil)
+
+	// Initialize translator
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
+	_, err := msg.Reply(b, tr.Message("misc_stats_total_messages", i18n.Params{
+		"chat_title":    msg.Chat.Title,
+		"message_count": msg.MessageId + 1,
+	}), nil)
 	if err != nil {
 		log.Error(err)
 	}

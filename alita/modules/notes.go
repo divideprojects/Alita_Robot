@@ -51,15 +51,18 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	noteString := "Saved Note <b>%s</b>!\nGet it with <code>#%s</code> or <code>/get %s</code>."
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	if msg.ReplyToMessage != nil && len(args) <= 1 {
-		_, err := msg.Reply(b, "Please give a keyword to reply to!", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("notes_need_keyword", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if len(args) <= 2 && msg.ReplyToMessage == nil {
-		_, err := msg.Reply(b, "Invalid Note!", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("notes_invalid_note", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -81,8 +84,7 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 	// If privatenotes is enabled, the private else group
 	if grpOnly && pvtOnly {
 		grpOnly, pvtOnly = false, false
-		noteString += "\n\n<b>Note:</b> This note will be sent to default setting of group notes, " +
-			"because it has both <code>{private}</code> and <code>{noprivate}</code>."
+		noteString += translator.Message("notes_overwrite_conflicting_flags", nil)
 	}
 
 	noteWord = strings.ToLower(noteWord)
@@ -104,7 +106,7 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 			noNotif:     noNotif,
 		}
 		_, err := msg.Reply(b,
-			"Note already exists!\nDo you want to overwrite it?",
+			translator.Message("notes_overwrite_ask", nil),
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{

@@ -72,9 +72,9 @@ func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 	if !cached {
-		text += "\n\nNote: These are up-to-date values"
+		text += "\n\n" + tr.Message("admin_cache_note_fresh", nil)
 	} else {
-		text += "\n\nNote: These values are cached and may not be up-to-date"
+		text += "\n\n" + tr.Message("admin_cache_note_cached", nil)
 	}
 	_, err := msg.Reply(b, text, helpers.Shtml())
 	if err != nil {
@@ -390,15 +390,19 @@ func (moduleStruct) getinvitelink(b *gotgbot.Bot, ctx *ext.Context) error {
 	if !chat_status.Caninvite(b, ctx, nil, msg, false) {
 		return ext.EndGroups
 	}
+
+	// Initialize translator
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
 	if chat.Username != "" {
-		_, _ = msg.Reply(b, fmt.Sprintf("Here is the invite link of this chat: %s", chat.Username), nil)
+		_, _ = msg.Reply(b, tr.Message("admin_invite_link_username", i18n.Params{"link": chat.Username}), nil)
 	} else {
 		nchat, err := b.GetChat(chat.Id, nil)
 		if err != nil {
 			_, _ = msg.Reply(b, err.Error(), nil)
 			return ext.EndGroups
 		}
-		_, _ = msg.Reply(b, fmt.Sprintf("Here is the invite link of this chat: %s", nchat.InviteLink), nil)
+		_, _ = msg.Reply(b, tr.Message("admin_invite_link_private", i18n.Params{"link": nchat.InviteLink}), nil)
 	}
 	return ext.EndGroups
 }
@@ -605,7 +609,7 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 	userMember, _ := chat.GetMember(b, user.Id, nil)
 	mem := userMember.MergeChatMember()
 	if mem.Status == "member" {
-		_, err = msg.Reply(b, "You need to be admin to do this!", nil)
+		_, err = msg.Reply(b, tr.Message("admin_cache_admin_required", nil), nil)
 		if err != nil {
 			log.Error(err)
 		}
