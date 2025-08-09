@@ -374,6 +374,9 @@ func cloneStats(b *gotgbot.Bot, ctx *ext.Context) error {
 // Sets up commands for bot cloning, management, and statistics.
 func LoadClone(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(cloneModule.moduleName, true)
+	
+	// Add alternative help names for better discoverability
+	HelpModule.AltHelpOptions[cloneModule.moduleName] = []string{"clone", "clones", "bot_cloning", "instances"}
 
 	// Register clone commands - these check for owner permission inside the handler
 	dispatcher.AddHandler(handlers.NewCommand("clone", cloneBot))

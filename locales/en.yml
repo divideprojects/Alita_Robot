@@ -243,6 +243,33 @@ strings:
 
             When enabled, new members are automatically muted until they complete the captcha.
             If they fail or timeout, the configured action is taken.
+    Clone:
+        help_msg: |-
+            Create and manage cloned bot instances on this server! 🤖
+            
+            This powerful feature allows you to run multiple bot instances using your own bot tokens.
+            All cloned bots share the main bot's features and database while maintaining separate identities.
+            
+            ⚠️ **Owner Only Commands:**
+            × /clone `<bot_token>`: Create a new cloned bot instance
+            × /clones: List your active cloned bot instances  
+            × /clone_stop `<bot_id>`: Stop a specific cloned bot
+            × /clone_stats: View bot network statistics and usage
+            
+            🔒 **Security Features:**
+            • Token validation with Telegram API
+            • Resource limits (5 bots per user, 100 total)
+            • Data isolation between bot instances
+            • Comprehensive audit logging
+            
+            📝 **Example Usage:**
+            • `/clone 123456789:AaBbCc_YourBotToken` - Clone your bot
+            • `/clones` - See all your active clones
+            • `/clone_stop 123456789` - Stop specific clone
+            
+            💡 **How it works:**
+            Each cloned bot gets its own webhook endpoint and processes updates independently
+            while sharing the main bot's database and feature set for instant functionality.
     CommonStrings:
         admin_cache:
             cache_reloaded: Successfully reloaded admin cache.
