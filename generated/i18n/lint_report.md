@@ -1,48 +1,20 @@
 # i18n Lint Report
 
-Generated: 2025-08-09 06:01:45  
-Duration: 31.171125ms
+Generated: 2025-08-09 06:49:54  
+Duration: 23.898708ms
 
 ## Summary
 
 - Files processed: 26
 - Translation files: 1
-- Total issues: 254
+- Total issues: 199
 
 ## Issues by Type
 
-### Unused key (138 issues)
+### Unused key (87 issues)
 
 - **info** Translation key is not used in code
-  - Key: `approvals_unapprove_is_bot_itself`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_ban_is_bot_itself`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `warns_limit_invalid`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_require_owner_btn`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `warns_all_reset`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `disabling_unknown_command_enable`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `disabling_del_status_enabled`
+  - Key: `disabling_enabled_commands`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
@@ -50,435 +22,7 @@ Duration: 31.171125ms
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `utils_chat_status_anon_admin_btn`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_no_permission_pin`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_ban_is_admin`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_ban_banned_anonymous`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `reports_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `warns_user_warnings`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `captcha_mode_updated`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_bot_no_permission_pin`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_require_admin_btn`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_kick_user_not_in_chat`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_button_kick`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_button_mute`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `filters_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `mutes_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_rm_all_bl_button_handler_no`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `language_name`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_kick_is_bot_itself`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `warns_all_warnings_reset`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_approved_none_approved`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `locks_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_unban_is_bot_itself`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `tagger_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `rules_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_ban_anonymous_reply_required`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_set_bl_action_changed_mode`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `error_reply_to_message`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_ban_normal_ban_reason`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_string_handling_extract_time_invalid_time_type`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_blacklist_already_blacklisted`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_ban_tban`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_no_permission_restrict_cmd`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_approval_is_approved`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_kick_kicked_user`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_unapprove_all_ask`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `disabling_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `antiflood_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_ls_bl_no_blacklisted`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `captcha_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_no_permission_promote_cmd`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_unban_unbanned_user`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_ban_dban_no_reply`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `help_configuration_step-1`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_extraction_extract_user_badrequest_failed_getchatmember`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_require_owner_cmd`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `antiflood_set_flood_mode_success`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_unban_is_admin`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_approval_is_unapproved`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_anon_admin_string`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_unapprove_all_button_handler_yes`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `languages_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_kickme_ok_out`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `help_configuration_step-3`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_blacklist_watcher_muted_user`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_button_unban_admin_only`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_no_permission_promote_btn`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `notes_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `purges_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `captcha_action_updated`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `warns_warning_removed`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_button_ban`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_string_handling_extract_time_invalid_time_amount`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_unapprove_all_button_handler_no`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_approve_user_not_in_chat`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_unapprove_all_chat_creator_only`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `common_admin_cache_cache_reloaded`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_approval_is_admin`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_unapprove_user_unapproved`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_ban_tban_reason`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_no_permission_change_info_btn`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_extraction_extract_chat_fail_need_chat_id`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_rm_all_bl_ask`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `disabling_del_status_disabled`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_bot_require_admin`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_unblacklist_no_removed_bl`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_rm_all_bl_button_handler_yes`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_blacklist_added_bl`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_kick_cannot_kick_admin`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `common_admin_cache_not_found`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_kick_kicked_reason`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_require_group`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_button_unmute`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
   - Key: `blacklists_unblacklist_removed_bl`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_set_bl_action_current_mode`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_require_admin_cmd`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `warns_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `warns_limit_exceeded`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_blacklist_give_bl_word`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `connections_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_bot_no_permission_restrict_group`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `greetings_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_extraction_extract_user_no_user_found`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `disabling_disabled_list`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `misc_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_ban_normal_ban`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_ls_bl_list_bl`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_bot_no_permission_promote`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_help_msg`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `bans_kickme_is_admin`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_set_bl_action_choose_correct_option`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `blacklists_unblacklist_give_bl_word`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `approvals_approval_is_bot_itself`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `antiflood_set_flood_disabled`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `lang_sample`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `disabling_enabled_commands`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `help_configuration_step-2`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_bot_no_permission_restrict`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `utils_chat_status_require_private`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `antiflood_set_flood_mode_specify_action`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
@@ -486,67 +30,63 @@ Duration: 31.171125ms
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `antiflood_set_flood_success`
+  - Key: `bans_kick_kicked_reason`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `bans_button_unban`
+  - Key: `bans_button_unmute`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `approvals_approve_user_approved`
+  - Key: `mutes_help_msg`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `blacklists_blacklist_watcher_banned_user`
+  - Key: `approvals_unapprove_all_button_handler_yes`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `disabling_no_command_specified_enable`
+  - Key: `bans_unban_unbanned_user`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_no_permission_delete`
+  - Key: `approvals_unapprove_all_chat_creator_only`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `utils_extraction_extract_chat_badrequest_failed_getchat`
+  - Key: `bans_button_unban_admin_only`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `bans_ban_ban_reason`
+  - Key: `bans_button_ban`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `approvals_approve_is_bot_itself`
+  - Key: `bans_button_mute`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `language_flag`
+  - Key: `bans_kick_user_not_in_chat`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_no_permission_restrict_btn`
+  - Key: `warns_help_msg`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `blacklists_blacklist_watcher_kicked_user`
+  - Key: `bans_kick_kicked_user`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `admin_promote_success_promote`
+  - Key: `antiflood_help_msg`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `antiflood_set_flood_mode_unknown_type`
+  - Key: `bans_ban_normal_ban`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `utils_extraction_extract_chat_fail_need_chat`
-  - Suggestion: Remove unused key or add usage in code
-
-- **info** Translation key is not used in code
-  - Key: `admin_demote_success_demote`
+  - Key: `bans_kickme_is_admin`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
@@ -554,94 +94,322 @@ Duration: 31.171125ms
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
+  - Key: `bans_ban_tban_reason`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `disabling_del_status_disabled`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_ban_anonymous_reply_required`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_blacklist_watcher_muted_user`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `locks_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_set_bl_action_changed_mode`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_ban_tban`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_rm_all_bl_ask`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `connections_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_ban_normal_ban_reason`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_ban_banned_anonymous`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_blacklist_give_bl_word`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `rules_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `disabling_unknown_command_enable`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_ls_bl_no_blacklisted`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `warns_limit_exceeded`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `captcha_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `antiflood_set_flood_mode_unknown_type`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_ban_ban_reason`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_kick_cannot_kick_admin`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_kickme_ok_out`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `captcha_mode_updated`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_unblacklist_no_removed_bl`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `languages_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `antiflood_set_flood_success`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `language_name`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_unban_is_admin`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_ban_is_admin`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `greetings_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `admin_demote_success_demote`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `captcha_action_updated`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `notes_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `approvals_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_button_unban`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `disabling_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_blacklist_already_blacklisted`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `disabling_disabled_list`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `admin_promote_success_promote`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_set_bl_action_current_mode`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `approvals_unapprove_all_ask`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_blacklist_added_bl`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_ban_is_bot_itself`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `purges_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `antiflood_set_flood_mode_specify_action`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_blacklist_watcher_kicked_user`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_ls_bl_list_bl`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_rm_all_bl_button_handler_no`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_kick_is_bot_itself`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `antiflood_set_flood_disabled`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `blacklists_set_bl_action_choose_correct_option`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_button_kick`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `filters_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `misc_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
   - Key: `blacklists_help_msg`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `utils_chat_status_bot_no_permission_delete`
+  - Key: `blacklists_blacklist_watcher_banned_user`
   - Suggestion: Remove unused key or add usage in code
 
 - **info** Translation key is not used in code
-  - Key: `utils_chat_status_user_no_permission_change_info_cmd`
+  - Key: `antiflood_set_flood_mode_success`
   - Suggestion: Remove unused key or add usage in code
 
-### Duplicate value (10 issues)
+- **info** Translation key is not used in code
+  - Key: `disabling_del_status_enabled`
+  - Suggestion: Remove unused key or add usage in code
 
-- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [bans_kick_kicked_reason bans_ban_ban_reason]
-  - Suggestion: Review if these should have different translations
-  - Context: `<b>Reason:</b> %s`
+- **info** Translation key is not used in code
+  - Key: `approvals_approved_none_approved`
+  - Suggestion: Remove unused key or add usage in code
 
-- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [bans_restrict_user_not_in_chat mutes_user_not_in_chat]
-  - Suggestion: Review if these should have different translations
-  - Context: `This user is not in this chat, how can I restrict them?`
+- **info** Translation key is not used in code
+  - Key: `disabling_no_command_specified_enable`
+  - Suggestion: Remove unused key or add usage in code
 
-- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [admin_promote_is_bot_itself admin_title_is_bot_itself]
-  - Suggestion: Review if these should have different translations
-  - Context: `If only I could do this to myself ;_;`
+- **info** Translation key is not used in code
+  - Key: `blacklists_rm_all_bl_button_handler_yes`
+  - Suggestion: Remove unused key or add usage in code
 
-- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [notes_no_notes help_no_notes]
-  - Suggestion: Review if these should have different translations
-  - Context: `There are no notes in this chat!`
+- **info** Translation key is not used in code
+  - Key: `blacklists_unblacklist_give_bl_word`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `tagger_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `reports_help_msg`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_unban_is_bot_itself`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `approvals_unapprove_all_button_handler_no`
+  - Suggestion: Remove unused key or add usage in code
+
+- **info** Translation key is not used in code
+  - Key: `bans_ban_dban_no_reply`
+  - Suggestion: Remove unused key or add usage in code
+
+### Duplicate value (9 issues)
 
 - **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [mutes_cannot_mute_self bans_restrict_is_bot_itself]
   - Suggestion: Review if these should have different translations
   - Context: `Why would I restrict myself?`
 
-- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [utils_chat_status_user_require_admin_btn bot_updates_admin_required]
+- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [help_no_notes notes_no_notes]
   - Suggestion: Review if these should have different translations
-  - Context: `You need to be an admin to do this!`
+  - Context: `There are no notes in this chat!`
 
 - **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [admin_invite_link_username admin_invite_link_private]
   - Suggestion: Review if these should have different translations
   - Context: `Here is the invite link of this chat: %s`
 
-- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [help_current_notes notes_current_notes]
+- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [bans_kick_kicked_reason bans_ban_ban_reason]
   - Suggestion: Review if these should have different translations
-  - Context: `These are the current notes in this Chat:`
+  - Context: `<b>Reason:</b> %s`
+
+- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [admin_title_is_bot_itself admin_promote_is_bot_itself]
+  - Suggestion: Review if these should have different translations
+  - Context: `If only I could do this to myself ;_;`
+
+- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [bans_restrict_user_not_in_chat mutes_user_not_in_chat]
+  - Suggestion: Review if these should have different translations
+  - Context: `This user is not in this chat, how can I restrict them?`
+
+- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [help_note_admin_only notes_admin_only]
+  - Suggestion: Review if these should have different translations
+  - Context: `This note can only be accessed by a admin!`
 
 - **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [antiflood_set_flood_mode_unknown_type warns_warn_mode_unknown]
   - Suggestion: Review if these should have different translations
   - Context: `Unknown type '%s'. Please use one of: ban/kick/mute`
 
-- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [notes_admin_only help_note_admin_only]
+- **warning** `locales/en.yml:0` - Duplicate translation value in 2 keys: [help_current_notes notes_current_notes]
   - Suggestion: Review if these should have different translations
-  - Context: `This note can only be accessed by a admin!`
+  - Context: `These are the current notes in this Chat:`
 
-### Naming convention (8 issues)
+### Naming convention (2 issues)
 
-- **info** `locales/en.yml:0` - Key is very long (>50 chars), consider shortening
-  - Key: `utils_extraction_extract_chat_badrequest_failed_getchat`
-  - Suggestion: Follow key naming conventions
-
-- **info** `locales/en.yml:0` - Key is very long (>50 chars), consider shortening
-  - Key: `utils_chat_status_user_no_permission_change_info_cmd`
+- **info** `locales/en.yml:0` - Key contains non-descriptive term 'temp'
+  - Key: `captcha_wrong_answer_attempts`
   - Suggestion: Follow key naming conventions
 
 - **info** `locales/en.yml:0` - Key contains non-descriptive term 'temp'
   - Key: `captcha_failed_attempts`
   - Suggestion: Follow key naming conventions
 
-- **info** `locales/en.yml:0` - Key is very long (>50 chars), consider shortening
-  - Key: `utils_string_handling_extract_time_invalid_time_type`
-  - Suggestion: Follow key naming conventions
-
-- **info** `locales/en.yml:0` - Key is very long (>50 chars), consider shortening
-  - Key: `utils_extraction_extract_user_badrequest_failed_getchatmember`
-  - Suggestion: Follow key naming conventions
-
-- **info** `locales/en.yml:0` - Key is very long (>50 chars), consider shortening
-  - Key: `utils_string_handling_extract_time_invalid_time_amount`
-  - Suggestion: Follow key naming conventions
-
-- **info** `locales/en.yml:0` - Key is very long (>50 chars), consider shortening
-  - Key: `utils_chat_status_user_no_permission_change_info_btn`
-  - Suggestion: Follow key naming conventions
-
-- **info** `locales/en.yml:0` - Key contains non-descriptive term 'temp'
-  - Key: `captcha_wrong_answer_attempts`
-  - Suggestion: Follow key naming conventions
-
-### Hardcoded string (98 issues)
+### Hardcoded string (101 issues)
 
 - **warning** `alita/modules/admin.go:20` - Hardcoded string that should be internationalized
   - Suggestion: Consider moving to i18n: "github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
@@ -791,19 +559,31 @@ Duration: 31.171125ms
   - Suggestion: Consider moving to i18n: "github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
   - Context: `github.com/divideprojects/Alita_Robot/alita/utils/chat_status`
 
-- **warning** `alita/modules/greetings.go:741` - Hardcoded string that should be internationalized
+- **warning** `alita/modules/greetings.go:65` - Hardcoded string that should be internationalized
+  - Suggestion: Consider moving to i18n: "Invalid or missing greeting type for welcome preview: %d"
+  - Context: `Invalid or missing greeting type for welcome preview: %d`
+
+- **warning** `alita/modules/greetings.go:80` - Hardcoded string that should be internationalized
+  - Suggestion: Consider moving to i18n: "Invalid or missing greeting type for welcome preview: %d"
+  - Context: `Invalid or missing greeting type for welcome preview: %d`
+
+- **warning** `alita/modules/greetings.go:637` - Hardcoded string that should be internationalized
+  - Suggestion: Consider moving to i18n: "Invalid or missing greeting type for goodbye message: %d"
+  - Context: `Invalid or missing greeting type for goodbye message: %d`
+
+- **warning** `alita/modules/greetings.go:779` - Hardcoded string that should be internationalized
   - Suggestion: Consider moving to i18n: "A new user has requested to join chat!"
   - Context: `A new user has requested to join chat!`
 
-- **warning** `alita/modules/greetings.go:806` - Hardcoded string that should be internationalized
+- **warning** `alita/modules/greetings.go:844` - Hardcoded string that should be internationalized
   - Suggestion: Consider moving to i18n: "Accepted %s in Chat ✅"
   - Context: `Accepted %s in Chat ✅`
 
-- **warning** `alita/modules/greetings.go:810` - Hardcoded string that should be internationalized
+- **warning** `alita/modules/greetings.go:848` - Hardcoded string that should be internationalized
   - Suggestion: Consider moving to i18n: "Declined %s to join chat ❌"
   - Context: `Declined %s to join chat ❌`
 
-- **warning** `alita/modules/greetings.go:814` - Hardcoded string that should be internationalized
+- **warning** `alita/modules/greetings.go:852` - Hardcoded string that should be internationalized
   - Suggestion: Consider moving to i18n: "✅ Successfully Banned! %s"
   - Context: `✅ Successfully Banned! %s`
 
@@ -1037,141 +817,90 @@ Duration: 31.171125ms
 
 ## Unused Translation Keys
 
-- `approvals_unapprove_is_bot_itself`
-- `bans_ban_is_bot_itself`
-- `warns_limit_invalid`
-- `approvals_help_msg`
-- `utils_chat_status_user_require_owner_btn`
-- `warns_all_reset`
-- `disabling_unknown_command_enable`
-- `disabling_del_status_enabled`
-- `captcha_timeout_updated`
-- `utils_chat_status_anon_admin_btn`
-- `utils_chat_status_user_no_permission_pin`
-- `bans_ban_is_admin`
-- `bans_ban_banned_anonymous`
-- `reports_help_msg`
-- `warns_user_warnings`
-- `captcha_mode_updated`
-- `utils_chat_status_bot_no_permission_pin`
-- `utils_chat_status_user_require_admin_btn`
-- `bans_kick_user_not_in_chat`
-- `bans_button_kick`
-- `bans_button_mute`
-- `filters_help_msg`
-- `mutes_help_msg`
-- `blacklists_rm_all_bl_button_handler_no`
-- `language_name`
-- `bans_kick_is_bot_itself`
-- `warns_all_warnings_reset`
-- `approvals_approved_none_approved`
-- `locks_help_msg`
-- `bans_unban_is_bot_itself`
-- `tagger_help_msg`
-- `rules_help_msg`
-- `bans_ban_anonymous_reply_required`
-- `blacklists_set_bl_action_changed_mode`
-- `error_reply_to_message`
-- `bans_ban_normal_ban_reason`
-- `utils_string_handling_extract_time_invalid_time_type`
-- `blacklists_blacklist_already_blacklisted`
-- `bans_ban_tban`
-- `utils_chat_status_user_no_permission_restrict_cmd`
-- `approvals_approval_is_approved`
-- `bans_kick_kicked_user`
-- `approvals_unapprove_all_ask`
-- `disabling_help_msg`
-- `antiflood_help_msg`
-- `blacklists_ls_bl_no_blacklisted`
-- `captcha_help_msg`
-- `utils_chat_status_user_no_permission_promote_cmd`
-- `bans_unban_unbanned_user`
-- `bans_ban_dban_no_reply`
-- `help_configuration_step-1`
-- `utils_extraction_extract_user_badrequest_failed_getchatmember`
-- `utils_chat_status_user_require_owner_cmd`
-- `antiflood_set_flood_mode_success`
-- `bans_unban_is_admin`
-- `approvals_approval_is_unapproved`
-- `utils_chat_status_anon_admin_string`
-- `approvals_unapprove_all_button_handler_yes`
-- `languages_help_msg`
-- `bans_kickme_ok_out`
-- `help_configuration_step-3`
-- `blacklists_blacklist_watcher_muted_user`
-- `bans_button_unban_admin_only`
-- `utils_chat_status_user_no_permission_promote_btn`
-- `notes_help_msg`
-- `purges_help_msg`
-- `captcha_action_updated`
-- `warns_warning_removed`
-- `bans_button_ban`
-- `utils_string_handling_extract_time_invalid_time_amount`
-- `approvals_unapprove_all_button_handler_no`
-- `approvals_approve_user_not_in_chat`
-- `approvals_unapprove_all_chat_creator_only`
-- `common_admin_cache_cache_reloaded`
-- `approvals_approval_is_admin`
-- `approvals_unapprove_user_unapproved`
-- `bans_ban_tban_reason`
-- `utils_chat_status_user_no_permission_change_info_btn`
-- `utils_extraction_extract_chat_fail_need_chat_id`
-- `blacklists_rm_all_bl_ask`
-- `disabling_del_status_disabled`
-- `utils_chat_status_bot_require_admin`
-- `blacklists_unblacklist_no_removed_bl`
-- `blacklists_rm_all_bl_button_handler_yes`
-- `blacklists_blacklist_added_bl`
-- `bans_kick_cannot_kick_admin`
-- `common_admin_cache_not_found`
-- `bans_kick_kicked_reason`
-- `utils_chat_status_require_group`
-- `bans_button_unmute`
-- `blacklists_unblacklist_removed_bl`
-- `blacklists_set_bl_action_current_mode`
-- `utils_chat_status_user_require_admin_cmd`
-- `warns_help_msg`
-- `warns_limit_exceeded`
-- `blacklists_blacklist_give_bl_word`
-- `connections_help_msg`
-- `utils_chat_status_bot_no_permission_restrict_group`
-- `greetings_help_msg`
-- `utils_extraction_extract_user_no_user_found`
-- `disabling_disabled_list`
-- `misc_help_msg`
-- `bans_ban_normal_ban`
-- `blacklists_ls_bl_list_bl`
-- `utils_chat_status_bot_no_permission_promote`
-- `bans_help_msg`
-- `bans_kickme_is_admin`
-- `blacklists_set_bl_action_choose_correct_option`
-- `blacklists_unblacklist_give_bl_word`
-- `approvals_approval_is_bot_itself`
-- `antiflood_set_flood_disabled`
-- `lang_sample`
 - `disabling_enabled_commands`
-- `help_configuration_step-2`
-- `utils_chat_status_bot_no_permission_restrict`
-- `utils_chat_status_require_private`
-- `antiflood_set_flood_mode_specify_action`
+- `captcha_timeout_updated`
+- `blacklists_unblacklist_removed_bl`
 - `pins_help_msg`
-- `antiflood_set_flood_success`
-- `bans_button_unban`
-- `approvals_approve_user_approved`
-- `blacklists_blacklist_watcher_banned_user`
-- `disabling_no_command_specified_enable`
-- `utils_chat_status_user_no_permission_delete`
-- `utils_extraction_extract_chat_badrequest_failed_getchat`
-- `bans_ban_ban_reason`
-- `approvals_approve_is_bot_itself`
-- `language_flag`
-- `utils_chat_status_user_no_permission_restrict_btn`
-- `blacklists_blacklist_watcher_kicked_user`
-- `admin_promote_success_promote`
-- `antiflood_set_flood_mode_unknown_type`
-- `utils_extraction_extract_chat_fail_need_chat`
-- `admin_demote_success_demote`
+- `bans_kick_kicked_reason`
+- `bans_button_unmute`
+- `mutes_help_msg`
+- `approvals_unapprove_all_button_handler_yes`
+- `bans_unban_unbanned_user`
+- `approvals_unapprove_all_chat_creator_only`
+- `bans_button_unban_admin_only`
+- `bans_button_ban`
+- `bans_button_mute`
+- `bans_kick_user_not_in_chat`
+- `warns_help_msg`
+- `bans_kick_kicked_user`
+- `antiflood_help_msg`
+- `bans_ban_normal_ban`
+- `bans_kickme_is_admin`
 - `approvals_approved_approved_list`
+- `bans_ban_tban_reason`
+- `disabling_del_status_disabled`
+- `bans_ban_anonymous_reply_required`
+- `blacklists_blacklist_watcher_muted_user`
+- `locks_help_msg`
+- `blacklists_set_bl_action_changed_mode`
+- `bans_ban_tban`
+- `bans_help_msg`
+- `blacklists_rm_all_bl_ask`
+- `connections_help_msg`
+- `bans_ban_normal_ban_reason`
+- `bans_ban_banned_anonymous`
+- `blacklists_blacklist_give_bl_word`
+- `rules_help_msg`
+- `disabling_unknown_command_enable`
+- `blacklists_ls_bl_no_blacklisted`
+- `warns_limit_exceeded`
+- `captcha_help_msg`
+- `antiflood_set_flood_mode_unknown_type`
+- `bans_ban_ban_reason`
+- `bans_kick_cannot_kick_admin`
+- `bans_kickme_ok_out`
+- `captcha_mode_updated`
+- `blacklists_unblacklist_no_removed_bl`
+- `languages_help_msg`
+- `antiflood_set_flood_success`
+- `language_name`
+- `bans_unban_is_admin`
+- `bans_ban_is_admin`
+- `greetings_help_msg`
+- `admin_demote_success_demote`
+- `captcha_action_updated`
+- `notes_help_msg`
+- `approvals_help_msg`
+- `bans_button_unban`
+- `disabling_help_msg`
+- `blacklists_blacklist_already_blacklisted`
+- `disabling_disabled_list`
+- `admin_promote_success_promote`
+- `blacklists_set_bl_action_current_mode`
+- `approvals_unapprove_all_ask`
+- `blacklists_blacklist_added_bl`
+- `bans_ban_is_bot_itself`
+- `purges_help_msg`
+- `antiflood_set_flood_mode_specify_action`
+- `blacklists_blacklist_watcher_kicked_user`
+- `blacklists_ls_bl_list_bl`
+- `blacklists_rm_all_bl_button_handler_no`
+- `bans_kick_is_bot_itself`
+- `antiflood_set_flood_disabled`
+- `blacklists_set_bl_action_choose_correct_option`
+- `bans_button_kick`
+- `filters_help_msg`
+- `misc_help_msg`
 - `blacklists_help_msg`
-- `utils_chat_status_bot_no_permission_delete`
-- `utils_chat_status_user_no_permission_change_info_cmd`
+- `blacklists_blacklist_watcher_banned_user`
+- `antiflood_set_flood_mode_success`
+- `disabling_del_status_enabled`
+- `approvals_approved_none_approved`
+- `disabling_no_command_specified_enable`
+- `blacklists_rm_all_bl_button_handler_yes`
+- `blacklists_unblacklist_give_bl_word`
+- `tagger_help_msg`
+- `reports_help_msg`
+- `bans_unban_is_bot_itself`
+- `approvals_unapprove_all_button_handler_no`
+- `bans_ban_dban_no_reply`
