@@ -16,6 +16,8 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/token"
 )
 
+var cloneModule = moduleStruct{moduleName: "Clone"}
+
 // Global bot manager instance - this would be initialized in main.go
 var GlobalBotManager *bot_manager.BotManager
 
@@ -371,6 +373,8 @@ func cloneStats(b *gotgbot.Bot, ctx *ext.Context) error {
 // LoadClone registers all clone module command handlers with the dispatcher.
 // Sets up commands for bot cloning, management, and statistics.
 func LoadClone(dispatcher *ext.Dispatcher) {
+	HelpModule.AbleMap.Store(cloneModule.moduleName, true)
+
 	// Register clone commands - these check for owner permission inside the handler
 	dispatcher.AddHandler(handlers.NewCommand("clone", cloneBot))
 	dispatcher.AddHandler(handlers.NewCommand("clones", listClones))
