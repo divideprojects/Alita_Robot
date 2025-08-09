@@ -11,6 +11,7 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-alita_robot}?sslmode=disable
       REDIS_ADDRESS: redis:6379
+      API_SERVER: http://telegram-bot-api:8081
     depends_on:
       postgres:
         condition: service_healthy

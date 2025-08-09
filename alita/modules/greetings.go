@@ -59,7 +59,13 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 
 		if noformat {
 			wlcmText += helpers.RevertButtons(buttons)
-			_, err := helpers.GreetingsEnumFuncMap[welcPrefs.WelcomeSettings.WelcomeType](bot, ctx, wlcmText, welcPrefs.WelcomeSettings.FileID, &gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil})
+			// Validate greeting function exists before calling
+			greetFunc, exists := helpers.GreetingsEnumFuncMap[welcPrefs.WelcomeSettings.WelcomeType]
+			if !exists || greetFunc == nil {
+				log.Errorf("Invalid or missing greeting type for welcome preview: %d", welcPrefs.WelcomeSettings.WelcomeType)
+				return fmt.Errorf("invalid greeting type: %d", welcPrefs.WelcomeSettings.WelcomeType)
+			}
+			_, err := greetFunc(bot, ctx, wlcmText, welcPrefs.WelcomeSettings.FileID, &gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil})
 			if err != nil {
 				log.Error(err)
 				return err
@@ -68,7 +74,13 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 			wlcmText, buttons = helpers.FormattingReplacer(bot, chat, user, wlcmText, buttons)
 			keyb := helpers.BuildKeyboard(buttons)
 			keyboard := gotgbot.InlineKeyboardMarkup{InlineKeyboard: keyb}
-			_, err := helpers.GreetingsEnumFuncMap[welcPrefs.WelcomeSettings.WelcomeType](bot, ctx, wlcmText, welcPrefs.WelcomeSettings.FileID, &keyboard)
+			// Validate greeting function exists before calling
+			greetFunc, exists := helpers.GreetingsEnumFuncMap[welcPrefs.WelcomeSettings.WelcomeType]
+			if !exists || greetFunc == nil {
+				log.Errorf("Invalid or missing greeting type for welcome preview: %d", welcPrefs.WelcomeSettings.WelcomeType)
+				return fmt.Errorf("invalid greeting type: %d", welcPrefs.WelcomeSettings.WelcomeType)
+			}
+			_, err := greetFunc(bot, ctx, wlcmText, welcPrefs.WelcomeSettings.FileID, &keyboard)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -197,7 +209,13 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 
 		if noformat {
 			gdbyeText += helpers.RevertButtons(buttons)
-			_, err := helpers.GreetingsEnumFuncMap[gdbyePrefs.GoodbyeSettings.GoodbyeType](bot, ctx, gdbyeText, gdbyePrefs.GoodbyeSettings.FileID, &gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil})
+			// Validate greeting function exists before calling
+			greetFunc, exists := helpers.GreetingsEnumFuncMap[gdbyePrefs.GoodbyeSettings.GoodbyeType]
+			if !exists || greetFunc == nil {
+				log.Errorf("Invalid or missing greeting type for goodbye preview: %d", gdbyePrefs.GoodbyeSettings.GoodbyeType)
+				return fmt.Errorf("invalid greeting type: %d", gdbyePrefs.GoodbyeSettings.GoodbyeType)
+			}
+			_, err := greetFunc(bot, ctx, gdbyeText, gdbyePrefs.GoodbyeSettings.FileID, &gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil})
 			if err != nil {
 				log.Error(err)
 				return err
@@ -206,7 +224,13 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 			gdbyeText, buttons = helpers.FormattingReplacer(bot, chat, user, gdbyeText, buttons)
 			keyb := helpers.BuildKeyboard(buttons)
 			keyboard := gotgbot.InlineKeyboardMarkup{InlineKeyboard: keyb}
-			_, err := helpers.GreetingsEnumFuncMap[gdbyePrefs.GoodbyeSettings.GoodbyeType](bot, ctx, gdbyeText, gdbyePrefs.GoodbyeSettings.FileID, &keyboard)
+			// Validate greeting function exists before calling
+			greetFunc, exists := helpers.GreetingsEnumFuncMap[gdbyePrefs.GoodbyeSettings.GoodbyeType]
+			if !exists || greetFunc == nil {
+				log.Errorf("Invalid or missing greeting type for goodbye preview: %d", gdbyePrefs.GoodbyeSettings.GoodbyeType)
+				return fmt.Errorf("invalid greeting type: %d", gdbyePrefs.GoodbyeSettings.GoodbyeType)
+			}
+			_, err := greetFunc(bot, ctx, gdbyeText, gdbyePrefs.GoodbyeSettings.FileID, &keyboard)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -473,7 +497,15 @@ func SendWelcomeMessage(bot *gotgbot.Bot, ctx *ext.Context, userID int64, firstN
 			buttons,
 		)
 		keyboard := &gotgbot.InlineKeyboardMarkup{InlineKeyboard: helpers.BuildKeyboard(buttons)}
-		sent, err := helpers.GreetingsEnumFuncMap[greetPrefs.WelcomeSettings.WelcomeType](bot, ctx, res, greetPrefs.WelcomeSettings.FileID, keyboard)
+		
+		// Validate greeting function exists before calling
+		greetFunc, exists := helpers.GreetingsEnumFuncMap[greetPrefs.WelcomeSettings.WelcomeType]
+		if !exists || greetFunc == nil {
+			log.Errorf("Invalid or missing greeting type: %d", greetPrefs.WelcomeSettings.WelcomeType)
+			return fmt.Errorf("invalid greeting type: %d", greetPrefs.WelcomeSettings.WelcomeType)
+		}
+		
+		sent, err := greetFunc(bot, ctx, res, greetPrefs.WelcomeSettings.FileID, keyboard)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -593,7 +625,13 @@ func (moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 		buttons := db.GetGoodbyeButtons(chat.Id)
 		res, buttons := helpers.FormattingReplacer(bot, chat, &leftMember, greetPrefs.GoodbyeSettings.GoodbyeText, buttons)
 		keyboard := &gotgbot.InlineKeyboardMarkup{InlineKeyboard: helpers.BuildKeyboard(buttons)}
-		sent, err := helpers.GreetingsEnumFuncMap[greetPrefs.GoodbyeSettings.GoodbyeType](bot, ctx, res, greetPrefs.GoodbyeSettings.FileID, keyboard)
+		// Validate greeting function exists before calling
+		greetFunc, exists := helpers.GreetingsEnumFuncMap[greetPrefs.GoodbyeSettings.GoodbyeType]
+		if !exists || greetFunc == nil {
+			log.Errorf("Invalid or missing greeting type for goodbye message: %d", greetPrefs.GoodbyeSettings.GoodbyeType)
+			return fmt.Errorf("invalid greeting type: %d", greetPrefs.GoodbyeSettings.GoodbyeType)
+		}
+		sent, err := greetFunc(bot, ctx, res, greetPrefs.GoodbyeSettings.FileID, keyboard)
 		if err != nil {
 			log.Error(err)
 			return err
