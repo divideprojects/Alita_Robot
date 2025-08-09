@@ -12,6 +12,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -48,17 +49,19 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toDisable = append(toDisable, i)
-				_, err := msg.Reply(b, fmt.Sprintf("Disabled the use of the following in this chat:"+
-					"%s",
-					strings.Join(toDisable, "\n - ")),
-					helpers.Smarkdown())
+				tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+				temp, _ := tr.GetString("disabling_disabled_successfully")
+				text := fmt.Sprintf(temp, strings.Join(toDisable, "\n - "))
+				_, err := msg.Reply(b, text, helpers.Smarkdown())
 				if err != nil {
 					log.Error(err)
 					return err
 				}
 			} else {
-				_, err := msg.Reply(b,
-					fmt.Sprintf("Unknown command to disable:\n-%s\nCheck /disableable!", i), nil)
+				tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+				temp, _ := tr.GetString("disabling_unknown_command")
+				text := fmt.Sprintf(temp, i)
+				_, err := msg.Reply(b, text, nil)
 				if err != nil {
 					log.Error(err)
 					return err
@@ -71,7 +74,9 @@ func (moduleStruct) disable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, "You haven't specified a command to disable.", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("disabling_no_command_specified")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -90,7 +95,8 @@ Anyone can use this command to check the disableable commands
 func (moduleStruct) disableable(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 
-	text := "The following commands can be disabled:"
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	text, _ := tr.GetString("disabling_disableable_commands")
 	for _, cmds := range misc.DisableCmds {
 		text += fmt.Sprintf("\n - `%s`", cmds)
 	}
@@ -138,8 +144,9 @@ func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 	disabled := db.GetChatDisabledCMDs(chat.Id)
 
 	if len(disabled) == 0 {
-		_, err := msg.Reply(b,
-			"There are no disabled commands in this chat.",
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("disabling_no_disabled_commands")
+		_, err := msg.Reply(b, text,
 			&gotgbot.SendMessageOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
 					MessageId:                replyMsgId,
@@ -152,7 +159,8 @@ func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 	} else {
-		text := "The following commands are disabled in this chat:"
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("disabling_disabled_commands")
 		sort.Strings(disabled)
 		for _, cmds := range disabled {
 			text += fmt.Sprintf("\n - `%s`", cmds)
@@ -192,22 +200,24 @@ func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if len(args) >= 1 {
 		param := strings.ToLower(args[0])
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		switch param {
 		case "on", "true", "yes":
 			go db.ToggleDel(chat.Id, true)
-			text = "Disabled messages will now be deleted."
+			text, _ = tr.GetString("disabling_delete_enabled")
 		case "off", "false", "no":
 			go db.ToggleDel(chat.Id, false)
-			text = "Disabled messages will no longer be deleted."
+			text, _ = tr.GetString("disabling_delete_disabled")
 		default:
-			text = "Your input was not recognised as one of: yes/no/on/off"
+			text, _ = tr.GetString("pins_input_not_recognized")
 		}
 	} else {
 		currStatus := db.ShouldDel(chat.Id)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		if currStatus {
-			text = "Disabled Command deleting is *enabled*, disabled commands from users will be deleted!"
+			text, _ = tr.GetString("disabling_delete_current_enabled")
 		} else {
-			text = "Disabled Command deleting is *disabled*, disabled commands from users will *not* be deleted!"
+			text, _ = tr.GetString("disabling_delete_current_disabled")
 		}
 	}
 	_, err := msg.Reply(b, text, helpers.Smarkdown())
@@ -246,17 +256,19 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 			i = strings.ToLower(i)
 			if string_handling.FindInStringSlice(misc.DisableCmds, i) {
 				toEnable = append(toEnable, i)
-				_, err := msg.Reply(b, fmt.Sprintf("Re-Enabled the use of the following in this chat:"+
-					"%s",
-					strings.Join(toEnable, "\n - ")),
-					helpers.Smarkdown())
+				tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+				temp, _ := tr.GetString("disabling_enabled_successfully")
+				text := fmt.Sprintf(temp, strings.Join(toEnable, "\n - "))
+				_, err := msg.Reply(b, text, helpers.Smarkdown())
 				if err != nil {
 					log.Error(err)
 					return err
 				}
 			} else {
-				_, err := msg.Reply(b,
-					fmt.Sprintf("Unknown command to Re-Enable:\n-%s\nCheck /disableable!", i), nil)
+				tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+				temp, _ := tr.GetString("disabling_unknown_reenable")
+				text := fmt.Sprintf(temp, i)
+				_, err := msg.Reply(b, text, nil)
 				if err != nil {
 					log.Error(err)
 					return err
@@ -269,7 +281,9 @@ func (moduleStruct) enable(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 	} else {
-		_, err := msg.Reply(b, "You haven't specified a command to disable.", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("disabling_no_command_reenable")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

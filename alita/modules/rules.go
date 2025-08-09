@@ -32,7 +32,9 @@ func (moduleStruct) clearRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	go db.SetChatRules(chat.Id, "")
-	_, err := msg.Reply(bot, "Successfully cleared rules!", nil)
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	text, _ := tr.GetString("rules_cleared_successfully")
+	_, err := msg.Reply(bot, text, nil)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -59,19 +61,25 @@ func (moduleStruct) privaterules(bot *gotgbot.Bot, ctx *ext.Context) error {
 		switch strings.ToLower(args[1]) {
 		case "on", "yes", "true":
 			go db.SetPrivateRules(chat.Id, true)
-			text = "Use of /rules will send the rules to the user's PM."
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ = tr.GetString("rules_private_pm_usage")
 		case "off", "no", "false":
 			go db.SetPrivateRules(chat.Id, false)
-			text = fmt.Sprintf("All /rules commands will send the rules to %s.", chat.Title)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			temp, _ := tr.GetString("rules_private_group_usage")
+			text = fmt.Sprintf(temp, chat.Title)
 		default:
-			text = "Your input was not recognised as one of: yes/no/on/off"
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ = tr.GetString("pins_input_not_recognized")
 		}
 	} else {
 		rulesprefs := db.GetChatRulesInfo(chat.Id)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		if rulesprefs.Private {
-			text = "Use of /rules will send the rules to the user's PM."
+			text, _ = tr.GetString("rules_private_current_pm")
 		} else {
-			text = fmt.Sprintf("All /rules commands will send the rules to %s.", chat.Title)
+			temp2, _ := tr.GetString("rules_private_current_group")
+			text = fmt.Sprintf(temp2, chat.Title)
 		}
 	}
 
@@ -118,15 +126,18 @@ func (m moduleStruct) sendRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if rulesBtn == "" {
 		rulesBtn = m.defaultRulesBtn
 	}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	if rules.Rules != "" {
-		Text += fmt.Sprintf("The rules for <b>%s</b> are:\n\n", chat.Title)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		temp, _ := tr.GetString("rules_for_chat_header")
+		Text += fmt.Sprintf(temp, chat.Title) + "\n\n"
 		Text += rules.Rules
 	} else {
-		Text += "This chat doesn't seem to have had any rules set yet... I wouldn't take that as an invitation though."
+		Text, _ = tr.GetString("rules_no_rules_set")
 	}
 
 	if chat_status.RequireGroup(bot, ctx, nil, true) && rules.Private {
-		Text = "Click on the button to see the chat rules!"
+		Text, _ = tr.GetString("rules_click_for_rules")
 		rulesKb = gotgbot.InlineKeyboardMarkup{
 			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 				{
@@ -181,7 +192,8 @@ func (moduleStruct) setRules(bot *gotgbot.Bot, ctx *ext.Context) error {
 			text = strings.SplitN(msg.OriginalMDV2(), " ", 2)[1]
 		}
 		go db.SetChatRules(chat.Id, tgmd2html.MD2HTMLV2(text))
-		text = "Successfully set rules for this group!"
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ = tr.GetString("rules_set_successfully")
 	}
 
 	_, err := msg.Reply(bot, text, helpers.Shtml())
@@ -213,20 +225,24 @@ func (m moduleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	if len(args) >= 2 {
 		rulesBtnCustomText := strings.Join(args[1:], " ")
 		if len(rulesBtnCustomText) > 30 {
-			text = "The custom button name you entered is too long. Please enter a text with less than 30 characters."
+			text, _ = tr.GetString("rules_button_too_long")
 		} else {
-			text = fmt.Sprintf("Successfully set the rules button to: <b>%s</b>", rulesBtnCustomText)
+			temp3, _ := tr.GetString("rules_button_set_successfully")
+			text = fmt.Sprintf(temp3, rulesBtnCustomText)
 			go db.SetChatRulesButton(chat.Id, rulesBtnCustomText)
 		}
 	} else {
 		customRulesBtn := db.GetChatRulesInfo(chat.Id).RulesBtn
 		if customRulesBtn == "" {
-			text = fmt.Sprintf("You haven't set a custom rules button yet. The default text \"%s\" will be used.", m.defaultRulesBtn)
+			temp4, _ := tr.GetString("rules_button_not_set")
+			text = fmt.Sprintf(temp4, m.defaultRulesBtn)
 		} else {
-			text = fmt.Sprintf("The rules button is currently set to the following text:\n %s", customRulesBtn)
+			temp5, _ := tr.GetString("rules_button_current")
+			text = fmt.Sprintf(temp5, customRulesBtn)
 		}
 	}
 
@@ -252,7 +268,9 @@ func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	go db.SetChatRulesButton(chat.Id, "")
-	_, err := msg.Reply(bot, "Successfully cleared custom rules button text!", nil)
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	text, _ := tr.GetString("rules_button_cleared")
+	_, err := msg.Reply(bot, text, nil)
 	if err != nil {
 		log.Error(err)
 		return err

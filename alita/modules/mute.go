@@ -24,6 +24,7 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -46,15 +47,16 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		text, _ := tr.GetString("mutes_anonymous_user_error")
+		_, err := msg.Reply(b, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		text, _ := tr.GetString("mutes_no_user_specified")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -64,7 +66,8 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
+		text, _ := tr.GetString("mutes_user_not_in_chat")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -72,7 +75,8 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "Why would I mute an admin? That sounds like a pretty dumb idea.", helpers.Shtml())
+		text, _ := tr.GetString("mutes_mute_admin_error")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -81,7 +85,8 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, "Why would I restrict myself?", helpers.Shtml())
+		text, _ := tr.GetString("mutes_restrict_self_error")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -126,13 +131,11 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	baseStr := fmt.Sprintf(
-		"Shh...\nMuted %s for %s",
-		helpers.MentionHtml(muteUser.Id, muteUser.FirstName),
-		timeVal,
-	)
+	temp, _ := tr.GetString("mutes_tmute_success")
+	baseStr := fmt.Sprintf(temp, helpers.MentionHtml(muteUser.Id, muteUser.FirstName), timeVal)
 	if reason != "" {
-		baseStr += "\n<b>Reason: </b>" + reason
+		temp, _ := tr.GetString("mutes_tmute_reason")
+		baseStr += fmt.Sprintf(temp, reason)
 	}
 
 	_, err = msg.Reply(b,
@@ -153,6 +156,7 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -175,15 +179,16 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		text, _ := tr.GetString("mutes_anonymous_user_error")
+		_, err := msg.Reply(b, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		text, _ := tr.GetString("mutes_no_user_specified")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -193,7 +198,8 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
+		text, _ := tr.GetString("mutes_user_not_in_chat")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -201,7 +207,8 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "I don't think you'd want me to mute an admin.", helpers.Shtml())
+		text, _ := tr.GetString("mutes_mute_admin_polite_error")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -210,7 +217,8 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, "Why would I restrict myself?", helpers.Shtml())
+		text, _ := tr.GetString("mutes_restrict_self_error")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -245,9 +253,11 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	baseStr := "Shh...\nMuted %s."
+	temp, _ := tr.GetString("mutes_mute_success")
+	baseStr := temp
 	if reason != "" {
-		baseStr += "\n<b>Reason: </b>" + reason
+		temp, _ := tr.GetString("mutes_tmute_reason")
+		baseStr += fmt.Sprintf(temp, reason)
 	}
 
 	_, err = msg.Reply(b,
@@ -280,6 +290,7 @@ func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -305,15 +316,16 @@ func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		text, _ := tr.GetString("mutes_anonymous_user_error")
+		_, err := msg.Reply(b, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		text, _ := tr.GetString("mutes_no_user_specified")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -323,7 +335,8 @@ func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
+		text, _ := tr.GetString("mutes_user_not_in_chat")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -332,7 +345,8 @@ func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "Why would I mute an admin? That sounds like a pretty dumb idea.", helpers.Shtml())
+		text, _ := tr.GetString("mutes_mute_admin_error")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -376,6 +390,7 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -401,15 +416,16 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		text, _ := tr.GetString("mutes_anonymous_user_error")
+		_, err := msg.Reply(b, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		text, _ := tr.GetString("mutes_no_user_specified")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -419,7 +435,8 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
+		text, _ := tr.GetString("mutes_user_not_in_chat")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -428,7 +445,8 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "I don't think you'd want me to mute an admin.", helpers.Shtml())
+		text, _ := tr.GetString("mutes_mute_admin_polite_error")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -437,7 +455,6 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage == nil {
-		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		text, _ := tr.GetString("mute_reply_to_dmute")
 		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
@@ -480,9 +497,11 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	baseStr := "Shh...\nMuted %s."
+	temp, _ := tr.GetString("mutes_mute_success")
+	baseStr := temp
 	if reason != "" {
-		baseStr += "\n<b>Reason: </b>" + reason
+		temp, _ := tr.GetString("mutes_tmute_reason")
+		baseStr += fmt.Sprintf(temp, reason)
 	}
 
 	_, err = msg.Reply(b,
@@ -515,6 +534,7 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	user := ctx.EffectiveSender.User
 	msg := ctx.EffectiveMessage
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Permission checks
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
@@ -537,15 +557,16 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		text, _ := tr.GetString("mutes_anonymous_user_error")
+		_, err := msg.Reply(b, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		text, _ := tr.GetString("mutes_no_user_specified")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -555,7 +576,8 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
+		text, _ := tr.GetString("mutes_user_not_in_chat")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -564,7 +586,8 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, "Why would I restrict myself?", helpers.Shtml())
+		text, _ := tr.GetString("mutes_restrict_self_error")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -596,11 +619,9 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
+	temp, _ := tr.GetString("mutes_unmute_success")
 	_, err = msg.Reply(b,
-		fmt.Sprintf(
-			"Alright!\nI'll allow %s to speak again.",
-			helpers.MentionHtml(muteUser.Id, muteUser.FirstName),
-		),
+		fmt.Sprintf(temp, helpers.MentionHtml(muteUser.Id, muteUser.FirstName)),
 		helpers.Shtml(),
 	)
 	if err != nil {

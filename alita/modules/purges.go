@@ -15,6 +15,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 )
 
@@ -30,8 +32,9 @@ func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, 
 		_, err := bot.DeleteMessage(chat.Id, msgId, nil)
 		if err != nil {
 			if err.Error() == "unable to deleteMessage: Bad Request: message can't be deleted" {
-				_, err = bot.SendMessage(chat.Id,
-					"You cannot delete messages over two days old. Please choose a more recent message.",
+				tr := i18n.MustNewTranslator(db.GetLanguage(&ext.Context{EffectiveChat: chat}))
+				text, _ := tr.GetString("purges_cannot_delete_old")
+				_, err = bot.SendMessage(chat.Id, text,
 					&gotgbot.SendMessageOpts{
 						ReplyParameters: &gotgbot.ReplyParameters{
 							MessageId:                deleteTo + 1,
@@ -114,9 +117,14 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		if purge {
-			Text := fmt.Sprintf("Purged %d messages.", totalMsgs)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			var Text string
 			if len(args) >= 1 {
-				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
+				temp, _ := tr.GetString("purges_purged_with_reason")
+				Text = fmt.Sprintf(temp, totalMsgs, strings.Join(args, " "))
+			} else {
+				temp, _ := tr.GetString("purges_purged_messages")
+				Text = fmt.Sprintf(temp, totalMsgs)
 			}
 			pMsg, err := bot.SendMessage(chat.Id, Text, helpers.Smarkdown())
 			if err != nil {
@@ -131,7 +139,9 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to select where to start purging from.", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("purges_reply_to_purge")
+		_, err := msg.Reply(bot, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -167,7 +177,9 @@ func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(bot, "Reply to a message to delete it!", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("purges_reply_to_delete")
+		_, err := msg.Reply(bot, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -272,7 +284,9 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if msg.ReplyToMessage != nil {
 		TodelId := msg.ReplyToMessage.MessageId
 		if delMsgs[chat.Id] == TodelId {
-			_, _ = msg.Reply(bot, "This message is already marked for purging!", nil)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("purges_message_marked")
+			_, _ = msg.Reply(bot, text, nil)
 			return ext.EndGroups
 		}
 		_, err := bot.DeleteMessage(chat.Id, msg.MessageId, nil)
@@ -280,8 +294,9 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			_, _ = msg.Reply(bot, err.Error(), nil)
 			return ext.EndGroups
 		}
-		pMsg, err := bot.SendMessage(chat.Id,
-			"Message marked for deletion. Reply to another message with /purgeto to delete all messages in between; within 30s!",
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("purges_marked_for_deletion")
+		pMsg, err := bot.SendMessage(chat.Id, text,
 			&gotgbot.SendMessageOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
 					MessageId:                TodelId,
@@ -304,7 +319,9 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to select where to start purging from.", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("purges_reply_to_purgefrom")
+		_, err := msg.Reply(bot, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -342,7 +359,9 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if msg.ReplyToMessage != nil {
 		msgId := delMsgs[chat.Id]
 		if msgId == 0 {
-			_, err := msg.Reply(bot, "You can only use this command after having used the /purgefrom command!", nil)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("purges_need_purgefrom")
+			_, err := msg.Reply(bot, text, nil)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -351,7 +370,9 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		deleteTo := msg.ReplyToMessage.MessageId
 		if msgId == deleteTo {
-			_, err := msg.Reply(bot, "Use /del command to delete one message!", nil)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("purges_use_del_single")
+			_, err := msg.Reply(bot, text, nil)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -370,9 +391,14 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			log.Error(err)
 		}
 		if purge {
-			Text := fmt.Sprintf("Purged %d messages.", totalMsgs)
+			var Text string
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			if len(args) >= 1 {
-				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
+				temp, _ := tr.GetString("purges_purged_with_reason")
+				Text = fmt.Sprintf(temp, totalMsgs, strings.Join(args, " "))
+			} else {
+				temp, _ := tr.GetString("purges_purged_messages")
+				Text = fmt.Sprintf(temp, totalMsgs)
 			}
 			pMsg, err := bot.SendMessage(chat.Id, Text, helpers.Smarkdown())
 			if err != nil {
@@ -386,7 +412,9 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to show me till where to purge.", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("purges_reply_to_purgeto")
+		_, err := msg.Reply(bot, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err

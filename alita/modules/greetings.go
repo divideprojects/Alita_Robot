@@ -16,6 +16,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/chatjoinrequest"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -43,10 +44,9 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 		noformat := len(args) > 0 && strings.ToLower(args[0]) == "noformat"
 		welcPrefs := db.GetGreetingSettings(chat.Id)
 		wlcmText = welcPrefs.WelcomeSettings.WelcomeText
-		_, err := msg.Reply(bot, fmt.Sprintf("I am currently welcoming users: <code>%t</code>"+
-			"\nI am currently deleting old welcomes: <code>%t</code>"+
-			"\nI am currently deleting service messages: <code>%t</code>"+
-			"\nThe welcome message not filling the {} is:",
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("greetings_welcome_status")
+		_, err := msg.Reply(bot, fmt.Sprintf(text,
 			welcPrefs.WelcomeSettings.ShouldWelcome,
 			welcPrefs.WelcomeSettings.CleanWelcome,
 			welcPrefs.ShouldCleanService), helpers.Shtml())
@@ -92,12 +92,18 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 		switch strings.ToLower(args[0]) {
 		case "on", "yes":
 			db.SetWelcomeToggle(chat.Id, true)
-			_, err = msg.Reply(bot, "I'll welcome users from now on.", helpers.Shtml())
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("greetings_welcome_enabled")
+			_, err = msg.Reply(bot, text, helpers.Shtml())
 		case "off", "no":
 			db.SetWelcomeToggle(chat.Id, false)
-			_, err = msg.Reply(bot, "I'll not welcome users from now on.", helpers.Shtml())
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("greetings_welcome_disabled")
+			_, err = msg.Reply(bot, text, helpers.Shtml())
 		default:
-			_, err = msg.Reply(bot, "I understand 'on/yes' or 'off/no' only!", helpers.Shtml())
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("greetings_welcome_invalid_option")
+			_, err = msg.Reply(bot, text, helpers.Shtml())
 		}
 
 		if err != nil {
@@ -137,7 +143,9 @@ func (moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.SetWelcomeText(chat.Id, text, content, buttons, dataType)
-	_, err := msg.Reply(bot, "Successfully set custom welcome message!", helpers.Shtml())
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	successText, _ := tr.GetString("greetings_welcome_set_success")
+	_, err := msg.Reply(bot, successText, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -164,7 +172,9 @@ func (moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	go db.SetWelcomeText(chat.Id, db.DefaultWelcome, "", nil, db.TEXT)
-	_, err := msg.Reply(bot, "Successfully reset custom welcome message to default!", helpers.Shtml())
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	successText, _ := tr.GetString("greetings_welcome_reset_success")
+	_, err := msg.Reply(bot, successText, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -284,7 +294,9 @@ func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	db.SetGoodbyeText(chat.Id, text, content, buttons, dataType)
-	_, err := msg.Reply(bot, "Successfully set custom goodbye message!", helpers.Shtml())
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	successText, _ := tr.GetString("greetings_goodbye_set_success")
+	_, err := msg.Reply(bot, successText, helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err

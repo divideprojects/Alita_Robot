@@ -60,10 +60,9 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	filtersNum := db.CountFilters(chat.Id)
 	if filtersNum >= 150 {
-		_, err := msg.Reply(b,
-			fmt.Sprint("Filters limit exceeded, a group can only have maximum 150 filters!\n",
-				"This limitation is due to bot running free without any donations by users."),
-			helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("filters_limit_exceeded")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err

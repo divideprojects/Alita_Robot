@@ -108,7 +108,9 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 			_, _ = msg.Reply(bot, text, nil)
 			return err
 		}
-		_, err = msg.Reply(bot, "✅ Captcha verification has been <b>enabled</b>. New members will need to complete a captcha to join.", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_enabled_success")
+		_, err = msg.Reply(bot, text, helpers.Shtml())
 		return err
 
 	case "off", "disable", "no":
@@ -125,7 +127,9 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 				log.Errorf("Failed to delete captcha attempts: %v", err)
 			}
 		}()
-		_, err = msg.Reply(bot, "❌ Captcha verification has been <b>disabled</b>.", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_disabled_success")
+		_, err = msg.Reply(bot, text, helpers.Shtml())
 		return err
 
 	default:
@@ -517,9 +521,11 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 
 	// Add refresh button for image-based captcha (text or math) with attempt ID
 	if isImage && imageBytes != nil {
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		buttonText, _ := tr.GetString("captcha_refresh_button")
 		buttons = append(buttons, []gotgbot.InlineKeyboardButton{
 			{
-				Text:         "🔄 New Image",
+				Text:         buttonText,
 				CallbackData: fmt.Sprintf("captcha_refresh.%d.%d", preAttempt.ID, userID),
 			},
 		})
@@ -718,7 +724,9 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 		_ = db.DeleteCaptchaAttempt(targetUserID, chat.Id)
 
 		// Send success message
-		successMsg := fmt.Sprintf("✅ %s has been verified and can now chat!", helpers.MentionHtml(targetUserID, user.FirstName))
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		msgTemplate, _ := tr.GetString("greetings_captcha_verified_success")
+		successMsg := fmt.Sprintf(msgTemplate, helpers.MentionHtml(targetUserID, user.FirstName))
 		sent, _ := bot.SendMessage(chat.Id, successMsg, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 
 		// Delete success message after 5 seconds
@@ -858,8 +866,10 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 		}
 		buttons = append(buttons, []gotgbot.InlineKeyboardButton{button})
 	}
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	refreshBtnText, _ := tr.GetString("captcha_refresh_button")
 	buttons = append(buttons, []gotgbot.InlineKeyboardButton{{
-		Text:         "🔄 New Image",
+		Text:         refreshBtnText,
 		CallbackData: fmt.Sprintf("captcha_refresh.%d.%d", attempt.ID, targetUserID),
 	}})
 

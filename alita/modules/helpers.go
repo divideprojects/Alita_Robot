@@ -99,7 +99,9 @@ func initHelpButtons() {
 		kb = append(kb, gotgbot.InlineKeyboardButton{Text: i, CallbackData: fmt.Sprintf("helpq.%s", i)})
 	}
 	zb := helpers.ChunkKeyboardSlices(kb, 3)
-	zb = append(zb, []gotgbot.InlineKeyboardButton{{Text: "« Back", CallbackData: "helpq.BackStart"}})
+	tr := i18n.MustNewTranslator("en") // Default to English for help system
+	backText, _ := tr.GetString("helpers_back_button")
+	zb = append(zb, []gotgbot.InlineKeyboardButton{{Text: backText, CallbackData: "helpq.BackStart"}})
 	markup = gotgbot.InlineKeyboardMarkup{InlineKeyboard: zb}
 }
 
