@@ -4,7 +4,9 @@ import (
 	"embed"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -66,12 +68,24 @@ func main() {
 		ResponseHeaderTimeout: 10 * time.Second, // Timeout waiting for response headers
 	}
 
+	// If a custom API server is configured (e.g., local Bot API server),
+	// wrap the transport to rewrite requests from api.telegram.org to the configured server.
+	var transport http.RoundTripper = httpTransport
+	if config.ApiServer != "" && config.ApiServer != "https://api.telegram.org" {
+		if parsed, err := url.Parse(config.ApiServer); err == nil && parsed.Host != "" {
+			transport = &apiServerRewriteTransport{base: httpTransport, target: parsed}
+			log.Infof("[Main] Using custom Bot API server: %s", parsed.String())
+		} else {
+			log.Warnf("[Main] Invalid API_SERVER '%s'; falling back to default Telegram API.", config.ApiServer)
+		}
+	}
+
 	// Create bot with optimized HTTP client using BaseBotClient
 	log.Info("[Main] Initializing bot with optimized HTTP client (connection pooling enabled)")
 	b, err := gotgbot.NewBot(config.BotToken, &gotgbot.BotOpts{
 		BotClient: &gotgbot.BaseBotClient{
 			Client: http.Client{
-				Transport: httpTransport, // Use the shared transport pointer
+				Transport: transport, // Use the shared (possibly rewritten) transport
 				Timeout:   30 * time.Second,
 			},
 			UseTestEnvironment: false,
@@ -330,6 +344,39 @@ func main() {
 		// Idle, to keep updates coming in, and avoid bot stopping.
 		updater.Idle()
 	}
+}
+
+// apiServerRewriteTransport rewrites outgoing requests that target api.telegram.org
+// to a custom Bot API server specified via configuration. This allows using a
+// locally hosted Bot API server without changing the gotgbot library internals.
+type apiServerRewriteTransport struct {
+	base   http.RoundTripper
+	target *url.URL
+}
+
+func (t *apiServerRewriteTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	// Only rewrite Telegram Bot API host
+	if req.URL != nil && strings.EqualFold(req.URL.Host, "api.telegram.org") && t.target != nil {
+		// Clone the request to avoid mutating the caller's request
+		newReq := *req
+		// Rewrite scheme and host
+		newURL := *req.URL
+		newURL.Scheme = t.target.Scheme
+		newURL.Host = t.target.Host
+		// If target has a path prefix, prepend it once
+		if t.target.Path != "" && t.target.Path != "/" {
+			// Ensure single slash join
+			if strings.HasSuffix(t.target.Path, "/") {
+				newURL.Path = t.target.Path + strings.TrimPrefix(newURL.Path, "/")
+			} else {
+				newURL.Path = t.target.Path + newURL.Path
+			}
+		}
+		newReq.URL = &newURL
+		newReq.Host = t.target.Host
+		return t.base.RoundTrip(&newReq)
+	}
+	return t.base.RoundTrip(req)
 }
 
 // closeDBConnections closes all database connections gracefully during shutdown.
