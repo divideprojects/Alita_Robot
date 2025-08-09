@@ -421,16 +421,16 @@ func (moduleStruct) botLockHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.ContinueGroups
 	}
 
-	_, err := chat.BanMember(b, mem.Id, nil)
+	_, err = chat.BanMember(b, mem.Id, nil)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
-	_, err2 := b.SendMessage(chat.Id, translator.Message("locks_bots_locked", nil), nil)
-	if err2 != nil {
-		log.Error(err2)
-		return err2
+	_, err = b.SendMessage(chat.Id, translator.Message("locks_bots_locked", nil), nil)
+	if err != nil {
+		log.Error(err)
+		return err
 	}
 	if err != nil {
 		log.Error(err)
