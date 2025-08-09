@@ -43,7 +43,6 @@ type BotManager struct {
 	
 	// Configuration
 	maxInstances int  // Maximum number of cloned bots per user
-	maxTotal     int  // Maximum total cloned bots across all users
 }
 
 // NewBotManager creates a new bot manager instance
@@ -51,8 +50,7 @@ func NewBotManager(mainBotID int64) *BotManager {
 	return &BotManager{
 		instances:    make(map[int64]*BotInstance),
 		mainBotID:    mainBotID,
-		maxInstances: 5,   // Max 5 cloned bots per user
-		maxTotal:     100, // Max 100 total cloned bots
+		maxInstances: 1, // Max 1 cloned bot per user
 	}
 }
 
@@ -83,11 +81,7 @@ func (bm *BotManager) CreateBotInstance(ownerID int64, botToken string) (*BotIns
 		return nil, fmt.Errorf("user has reached maximum bot limit (%d)", bm.maxInstances)
 	}
 
-	// Check total limits
-	if len(bm.instances) >= bm.maxTotal {
-		bm.mu.RUnlock()
-		return nil, fmt.Errorf("system has reached maximum total bot limit (%d)", bm.maxTotal)
-	}
+	// No total system limit needed
 	bm.mu.RUnlock()
 
 	// Validate token with Telegram API
@@ -358,7 +352,6 @@ func (bm *BotManager) GetStats() map[string]interface{} {
 		"active_bots":     activeBots,
 		"running_bots":    runningBots,
 		"max_per_user":    bm.maxInstances,
-		"max_total":       bm.maxTotal,
 		"users_with_bots": len(userCounts),
 		"main_bot_id":     bm.mainBotID,
 	}

@@ -93,6 +93,29 @@ func LoadAllStats() string {
 	enabledWelcome, enabledGoodbye, cleanServiceEnabled, cleanWelcomeEnabled, cleanGoodbyeEnabled := LoadGreetingsStats()
 	notesNum, notesChats := LoadNotesStats()
 	numChannels := LoadChannelStats()
+	
+	// Get clone bot statistics
+	var cloneStatsText string
+	if cloneStats, err := GetBotInstanceStats(); err == nil {
+		totalClones := cloneStats["total"].(int64)
+		activeClones := cloneStats["active"].(int64)
+		usersWithBots := cloneStats["users_with_bots"].(int64)
+		recentlyActive := cloneStats["recently_active_24h"].(int64)
+		
+		cloneStatsText = fmt.Sprintf(
+			"\n<b>Clone Bots:</b> %s total (%s active)",
+			humanize.Comma(totalClones),
+			humanize.Comma(activeClones),
+		) + fmt.Sprintf(
+			"\n    <b>Users with Clones:</b> %s",
+			humanize.Comma(usersWithBots),
+		) + fmt.Sprintf(
+			"\n    <b>Recently Active (24h):</b> %s",
+			humanize.Comma(recentlyActive),
+		)
+	} else {
+		cloneStatsText = "\n<b>Clone Bots:</b> Stats unavailable"
+	}
 
 	// Get webhook status information
 	var deploymentMode, webhookInfo string
@@ -168,7 +191,8 @@ func LoadAllStats() string {
 			humanize.Comma(notesNum),
 			humanize.Comma(notesChats),
 		) +
-		fmt.Sprintf("\n<b>Channels Stored</b>: %s", humanize.Comma(numChannels))
+		fmt.Sprintf("\n<b>Channels Stored</b>: %s", humanize.Comma(numChannels)) +
+		cloneStatsText
 
 	return result
 }

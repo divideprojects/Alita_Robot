@@ -26,12 +26,7 @@ func cloneBot(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
 
-	// Restrict to owner only for security
-	if user.Id != config.OwnerId {
-		_, err := msg.Reply(b, "🚫 <b>Access Denied!</b>\n\nThis command is restricted to the bot owner only.", 
-			&gotgbot.SendMessageOpts{ParseMode: "HTML"})
-		return err
-	}
+	// Allow all users to clone bots
 	
 	// Check if user provided a token
 	args := strings.Fields(msg.Text)
@@ -81,10 +76,10 @@ func cloneBot(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	maxBotsPerUser := int64(5) // This could be configurable
+	maxBotsPerUser := int64(1) // 1 bot per user limit
 	if userBotCount >= maxBotsPerUser {
 		_, err := msg.Reply(b, 
-			fmt.Sprintf("❌ <b>Bot limit reached!</b>\n\nYou can only have up to %d bot instances. Use <code>/clones</code> to see your current bots.", maxBotsPerUser),
+			fmt.Sprintf("❌ <b>Bot limit reached!</b>\n\nYou can only have up to %d bot instance. Use <code>/clones</code> to see your current bot and stop it if you want to clone a different one.", maxBotsPerUser),
 			&gotgbot.SendMessageOpts{ParseMode: "HTML"})
 		return err
 	}
@@ -163,12 +158,7 @@ func listClones(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
 
-	// Restrict to owner only for security
-	if user.Id != config.OwnerId {
-		_, err := msg.Reply(b, "🚫 <b>Access Denied!</b>\n\nThis command is restricted to the bot owner only.", 
-			&gotgbot.SendMessageOpts{ParseMode: "HTML"})
-		return err
-	}
+	// Allow all users to clone bots
 
 	// Get user's bot instances
 	instances, err := db.GetUserBotInstances(user.Id)
@@ -214,10 +204,9 @@ func listClones(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	}
 
-	responseText.WriteString(fmt.Sprintf("\n\n📋 <b>Total:</b> %d/%d bot instances", len(instances), 5))
+	responseText.WriteString(fmt.Sprintf("\n\n📋 <b>Total:</b> %d/%d bot instance", len(instances), 1))
 	responseText.WriteString("\n\n🛠️ <b>Commands:</b>")
 	responseText.WriteString("\n• <code>/clone_stop &lt;bot_id&gt;</code> - Stop a bot")
-	responseText.WriteString("\n• <code>/clone_stats</code> - View network stats")
 
 	_, err = msg.Reply(b, responseText.String(), 
 		&gotgbot.SendMessageOpts{ParseMode: "HTML"})
@@ -229,12 +218,7 @@ func stopClone(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	user := ctx.EffectiveSender.User
 
-	// Restrict to owner only for security
-	if user.Id != config.OwnerId {
-		_, err := msg.Reply(b, "🚫 <b>Access Denied!</b>\n\nThis command is restricted to the bot owner only.", 
-			&gotgbot.SendMessageOpts{ParseMode: "HTML"})
-		return err
-	}
+	// Allow all users to clone bots
 
 	// Check if user provided a bot ID
 	args := strings.Fields(msg.Text)
@@ -312,64 +296,6 @@ func stopClone(b *gotgbot.Bot, ctx *ext.Context) error {
 	return err
 }
 
-// cloneStats handles the /clone_stats command to show network statistics
-func cloneStats(b *gotgbot.Bot, ctx *ext.Context) error {
-	msg := ctx.EffectiveMessage
-	user := ctx.EffectiveSender.User
-
-	// Restrict to owner only for security
-	if user.Id != config.OwnerId {
-		_, err := msg.Reply(b, "🚫 <b>Access Denied!</b>\n\nThis command is restricted to the bot owner only.", 
-			&gotgbot.SendMessageOpts{ParseMode: "HTML"})
-		return err
-	}
-
-	// Get database statistics
-	dbStats, err := db.GetBotInstanceStats()
-	if err != nil {
-		log.Errorf("[Clone] Failed to get bot instance stats: %v", err)
-		_, err := msg.Reply(b, "❌ <b>Failed to retrieve statistics. Please try again later.</b>", 
-			&gotgbot.SendMessageOpts{ParseMode: "HTML"})
-		return err
-	}
-
-	// Get bot manager statistics
-	var managerStats map[string]interface{}
-	if GlobalBotManager != nil {
-		managerStats = GlobalBotManager.GetStats()
-	} else {
-		managerStats = map[string]interface{}{
-			"running_bots": "N/A (Manager not initialized)",
-		}
-	}
-
-	// Build response
-	responseText := fmt.Sprintf(
-		"📊 <b>Bot Network Statistics</b>\n\n"+
-		"🤖 <b>Total Instances:</b> %v\n"+
-		"🟢 <b>Active:</b> %v\n"+
-		"🔴 <b>Inactive:</b> %v\n"+
-		"🏃‍♂️ <b>Currently Running:</b> %v\n"+
-		"👥 <b>Users with Bots:</b> %v\n"+
-		"⚡ <b>Recently Active (24h):</b> %v\n\n"+
-		"⚙️ <b>System Limits:</b>\n"+
-		"• Max per user: %v\n"+
-		"• Max total: %v\n\n"+
-		"🏠 <b>Main Bot ID:</b> %v",
-		dbStats["total"],
-		dbStats["active"],
-		dbStats["inactive"],
-		managerStats["running_bots"],
-		dbStats["users_with_bots"],
-		dbStats["recently_active_24h"],
-		managerStats["max_per_user"],
-		managerStats["max_total"],
-		managerStats["main_bot_id"])
-
-	_, err = msg.Reply(b, responseText, &gotgbot.SendMessageOpts{ParseMode: "HTML"})
-	return err
-}
-
 // LoadClone registers all clone module command handlers with the dispatcher.
 // Sets up commands for bot cloning, management, and statistics.
 func LoadClone(dispatcher *ext.Dispatcher) {
@@ -382,7 +308,6 @@ func LoadClone(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("clone", cloneBot))
 	dispatcher.AddHandler(handlers.NewCommand("clones", listClones))
 	dispatcher.AddHandler(handlers.NewCommand("clone_stop", stopClone))
-	dispatcher.AddHandler(handlers.NewCommand("clone_stats", cloneStats))
 
 	log.Info("[Modules] Clone commands loaded")
 }
