@@ -1,7 +1,6 @@
 package modules
 
 import (
-	"fmt"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
@@ -12,6 +11,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
@@ -44,9 +44,14 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 	var replyString string
 
 	cLang := db.GetLanguage(ctx)
+	
+	// Get translator for the current language
+	translator := i18n.MustNewTranslator(cLang)
 
 	if ctx.Message.Chat.Type == "private" {
-		replyString = fmt.Sprintf("Your Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
+		replyString = translator.Message("language_current_user", i18n.Params{
+			"language": helpers.GetLangFormat(cLang),
+		})
 	} else {
 
 		// language won't be changed if user is not admin
@@ -54,7 +59,9 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 			return ext.EndGroups
 		}
 
-		replyString = fmt.Sprintf("This Group's Current Language is %s\nChoose a language from keyboard below.", helpers.GetLangFormat(cLang))
+		replyString = translator.Message("language_current_group", i18n.Params{
+			"language": helpers.GetLangFormat(cLang),
+		})
 	}
 
 	_, err := msg.Reply(
@@ -83,13 +90,20 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	var replyString string
 	language := strings.Split(query.Data, ".")[1]
+	
+	// Get translator for the new language
+	translator := i18n.MustNewTranslator(language)
 
 	if ctx.Message.Chat.Type == "private" {
 		go db.ChangeUserLanguage(user.Id, language)
-		replyString = fmt.Sprintf("Your language has been changed to %s", helpers.GetLangFormat(language))
+		replyString = translator.Message("language_changed_user", i18n.Params{
+			"language": helpers.GetLangFormat(language),
+		})
 	} else {
 		go db.ChangeGroupLanguage(chat.Id, language)
-		replyString = fmt.Sprintf("This group's language has been changed to %s", helpers.GetLangFormat(language))
+		replyString = translator.Message("language_changed_group", i18n.Params{
+			"language": helpers.GetLangFormat(language),
+		})
 	}
 
 	_, _, err := query.Message.EditText(

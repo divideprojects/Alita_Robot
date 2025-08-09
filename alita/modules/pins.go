@@ -204,8 +204,8 @@ func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: "Yes", CallbackData: "unpinallbtn(yes)"},
-						{Text: "No", CallbackData: "unpinallbtn(no)"},
+						{Text: translator.Message("generic_button_yes", nil), CallbackData: "unpinallbtn(yes)"},
+						{Text: translator.Message("generic_button_no", nil), CallbackData: "unpinallbtn(no)"},
 					},
 				},
 			},

@@ -230,20 +230,29 @@ func (m moduleStruct) rulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	
 	if len(args) >= 2 {
 		rulesBtnCustomText := strings.Join(args[1:], " ")
 		if len(rulesBtnCustomText) > 30 {
-			text = "The custom button name you entered is too long. Please enter a text with less than 30 characters."
+			text = translator.Message("rules_button_too_long", nil)
 		} else {
-			text = fmt.Sprintf("Successfully set the rules button to: <b>%s</b>", rulesBtnCustomText)
+			text = translator.Message("rules_button_set_success", i18n.Params{
+				"button_text": rulesBtnCustomText,
+			})
 			go db.SetChatRulesButton(chat.Id, rulesBtnCustomText)
 		}
 	} else {
 		customRulesBtn := db.GetChatRulesInfo(chat.Id).RulesBtn
 		if customRulesBtn == "" {
-			text = fmt.Sprintf("You haven't set a custom rules button yet. The default text \"%s\" will be used.", m.defaultRulesBtn)
+			text = translator.Message("rules_button_not_set", i18n.Params{
+				"default_text": m.defaultRulesBtn,
+			})
 		} else {
-			text = fmt.Sprintf("The rules button is currently set to the following text:\n %s", customRulesBtn)
+			text = translator.Message("rules_button_current", i18n.Params{
+				"button_text": customRulesBtn,
+			})
 		}
 	}
 
@@ -268,8 +277,11 @@ func (moduleStruct) resetRulesBtn(bot *gotgbot.Bot, ctx *ext.Context) error {
 	ctx.EffectiveChat = connectedChat
 	chat := ctx.EffectiveChat
 
+	// Get translator for the chat
+	translator := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	
 	go db.SetChatRulesButton(chat.Id, "")
-	_, err := msg.Reply(bot, "Successfully cleared custom rules button text!", nil)
+	_, err := msg.Reply(bot, translator.Message("rules_button_reset_success", nil), nil)
 	if err != nil {
 		log.Error(err)
 		return err

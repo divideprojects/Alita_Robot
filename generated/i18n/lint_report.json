@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-08-09T05:21:03-07:00",
-  "duration_ms": 26,
+  "timestamp": "2025-08-09T06:01:45-07:00",
+  "duration_ms": 31,
   "files_processed": 26,
-  "total_issues": 322,
+  "total_issues": 254,
   "error_count": 0,
-  "warning_count": 182,
-  "unused_keys": 132,
+  "warning_count": 108,
+  "unused_keys": 138,
   "missing_keys": 0
 }
