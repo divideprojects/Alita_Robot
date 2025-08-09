@@ -4,12 +4,12 @@
 package i18n
 
 import (
-	"github.com/divideprojects/Alita_Robot/alita/i18n/catalog"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 )
 
 // RegisterAdminMessages registers all i18n messages for the admin module
 func RegisterAdminMessages() {
-	catalog.MustRegister("strings.CommonStrings.admin_cache.cache_reloaded", "Cache reloaded")
+	i18n.MustRegister("strings.CommonStrings.admin_cache.cache_reloaded", "Cache reloaded")
 }
 
 func init() {

@@ -4,14 +4,14 @@
 package i18n
 
 import (
-	"github.com/divideprojects/Alita_Robot/alita/i18n/catalog"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 )
 
 // RegisterFormattingMessages registers all i18n messages for the formatting module
 func RegisterFormattingMessages() {
-	catalog.MustRegister("strings.Formatting.Fillings", "Fillings")
-	catalog.MustRegister("strings.Formatting.Markdown", "Markdown")
-	catalog.MustRegister("strings.Formatting.Random", "Random")
+	i18n.MustRegister("strings.Formatting.Fillings", "Fillings")
+	i18n.MustRegister("strings.Formatting.Markdown", "Markdown")
+	i18n.MustRegister("strings.Formatting.Random", "Random")
 }
 
 func init() {

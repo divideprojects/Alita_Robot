@@ -246,7 +246,7 @@ func extractParameters(text string) []string {
 
 func loadCatalogKeys(report *LintReport) error {
 	// Look for catalog registration patterns in Go files
-	catalogDir := "alita/i18n/catalog"
+	catalogDir := "alita/i18n"
 	
 	return filepath.Walk(catalogDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {

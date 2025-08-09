@@ -1,0 +1,25 @@
+---
+#stringcode: string
+alt_names:
+  Admin: [admins, promote, demote, title]
+  Antiflood: [flood]
+  Approvals: [approval, approve]
+  Bans:
+    [ban, kick, dkick, restrict, kickme, unrestrict, sban, dban, tban, unban]
+  Blacklists: [blacklist, unblacklist]
+  Connections: [connection, connect]
+  Disabling: [disable, enable]
+  Filters: [filter]
+  Formatting: [markdownhelp, mdhelp]
+  Greetings: [welcome, goodbye, greeting]
+  Locks: [lock, unlock]
+  Languages: [language, lang]
+  Misc: [extra, extras]
+  Mutes: [mute, unmute, tmute, smute, dmute]
+  Notes: [note, notes]
+  Pins: [antichannelpin, cleanlinked, pins]
+  Purges: [purge, del]
+  Reports: [report, reporting]
+  Rules: [rule]
+  Tagger: [tagme, tagall, tagging, untagme, addtag]
+  Warns: [warn, warning, warnings]

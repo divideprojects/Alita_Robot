@@ -1,4 +1,4 @@
-package catalog
+package i18n
 
 import (
 	"fmt"

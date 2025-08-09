@@ -4,16 +4,16 @@
 package i18n
 
 import (
-	"github.com/divideprojects/Alita_Robot/alita/i18n/catalog"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 )
 
 // RegisterHelpMessages registers all i18n messages for the help module
 func RegisterHelpMessages() {
-	catalog.MustRegister("strings.Help.About", "About")
-	catalog.MustRegister("strings.Help.Configuration.Step-1", "Step 1")
-	catalog.MustRegister("strings.Help.Configuration.Step-2", "Step 2")
-	catalog.MustRegister("strings.Help.Configuration.Step-3", "Step 3")
-	catalog.MustRegister("strings.Help.DonateText", "Donate Text")
+	i18n.MustRegister("strings.Help.About", "About")
+	i18n.MustRegister("strings.Help.Configuration.Step-1", "Step 1")
+	i18n.MustRegister("strings.Help.Configuration.Step-2", "Step 2")
+	i18n.MustRegister("strings.Help.Configuration.Step-3", "Step 3")
+	i18n.MustRegister("strings.Help.DonateText", "Donate Text")
 }
 
 func init() {

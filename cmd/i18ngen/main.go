@@ -457,7 +457,7 @@ func generateModuleRegistration(outputDir, moduleName string, usages []I18nUsage
 	
 	content.WriteString("package i18n\n\n")
 	content.WriteString("import (\n")
-	content.WriteString("\t\"github.com/divideprojects/Alita_Robot/alita/i18n/catalog\"\n")
+	content.WriteString("\t\"github.com/divideprojects/Alita_Robot/alita/i18n\"\n")
 	content.WriteString(")\n\n")
 	
 	moduleTitle := strings.ToUpper(moduleName[:1]) + moduleName[1:]

@@ -45,12 +45,11 @@ func main() {
 		log.Info("Running in RELEASE Mode...")
 	}
 
-	// Initialize Locale Manager
-	localeManager := i18n.GetManager()
-	if err := localeManager.Initialize(&Locales, "locales", i18n.DefaultManagerConfig()); err != nil {
-		log.Fatalf("Failed to initialize locale manager: %v", err)
+	// Initialize new catalog-based i18n system
+	if err := i18n.InitializeI18n(&Locales, "locales"); err != nil {
+		log.Fatalf("Failed to initialize i18n system: %v", err)
 	}
-	log.Infof("Locale manager initialized with %d languages: %v", len(localeManager.GetAvailableLanguages()), localeManager.GetAvailableLanguages())
+	log.Info("New catalog-based i18n system initialized successfully")
 
 	// Create optimized HTTP transport with connection pooling for better performance
 	// IMPORTANT: We create a transport pointer that will be shared across all requests
