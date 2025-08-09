@@ -9,6 +9,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -40,19 +42,25 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
+	// Initialize translator
+	translator, err := i18n.NewTranslator(db.GetLanguage(ctx))
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
 	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
-		_, err := msg.Reply(b, "This command cannot be used on anonymous user.", nil)
+		_, err := msg.Reply(b, translator.Message("error_anonymous_user_not_supported", nil), nil)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
 		return ext.EndGroups
 	} else if userId == 0 {
-		_, err := msg.Reply(b, "I don't know who you're talking about, you're going to need to specify a user...!",
-			helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("error_specify_user", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -62,7 +70,7 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// User should be in chat for getting restricted
 	if !chat_status.IsUserInChat(b, chat, userId) {
-		_, err := msg.Reply(b, "This user is not in this chat, how can I restrict them?", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("mutes_user_not_in_chat", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -70,7 +78,7 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if chat_status.IsUserBanProtected(b, ctx, nil, userId) {
-		_, err := msg.Reply(b, "Why would I mute an admin? That sounds like a pretty dumb idea.", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("mutes_cannot_mute_admin", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -79,7 +87,7 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if userId == b.Id {
-		_, err := msg.Reply(b, "Why would I restrict myself?", helpers.Shtml())
+		_, err := msg.Reply(b, translator.Message("mutes_cannot_mute_self", nil), helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -124,13 +132,18 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	baseStr := fmt.Sprintf(
-		"Shh...\nMuted %s for %s",
-		helpers.MentionHtml(muteUser.Id, muteUser.FirstName),
-		timeVal,
-	)
+	var baseStr string
 	if reason != "" {
-		baseStr += "\n<b>Reason: </b>" + reason
+		baseStr = translator.Message("mutes_tmute_success_reason", i18n.Params{
+			"user": helpers.MentionHtml(muteUser.Id, muteUser.FirstName),
+			"time": timeVal,
+			"reason": reason,
+		})
+	} else {
+		baseStr = translator.Message("mutes_tmute_success", i18n.Params{
+			"user": helpers.MentionHtml(muteUser.Id, muteUser.FirstName),
+			"time": timeVal,
+		})
 	}
 
 	_, err = msg.Reply(b,
