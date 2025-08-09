@@ -478,6 +478,30 @@ disabling_no_disabled_commands: There are no disabled commands in this chat.
 disabling_unknown_command_enable: Unknown command to Re-Enable:\n-{commands}\nCheck /disableable!
 error_anonymous_user_not_supported: This command cannot be used on anonymous user, these user can only be banned/unbanned.
 error_specify_user: I don't know who you're talking about, you're going to need to specify a user...!
+error_no_permission_change_info: You don't have permission to change info in this group!
+error_no_permission_restrict: You don't have permission to restrict users in this group!
+error_bot_cannot_restrict: I can't restrict people here! Make sure I'm admin and can restrict other members.
+error_no_permission_promote: You can't promote/demote people here! Make sure you have appropriate rights!
+error_bot_cannot_promote: I can't promote/demote people here! Make sure I'm admin and can appoint new admins.
+error_no_permission_pin: You can't pin messages here! Make sure you're admin and can pin messages.
+error_bot_cannot_pin: I can't pin messages here! Make sure I'm admin and can pin messages.
+error_bot_no_invite_links: I don't have access to invite links! Make sure I'm admin and can invite users.
+error_no_permission_invite_links: You don't have access to invite links; You need to be admin to get this!
+error_no_permission_delete: You don't have Permissions to Delete Messages!
+error_bot_cannot_delete: I don't have Permissions to Delete Messages!
+error_bot_not_admin: I'm not admin!
+error_only_admins: Only admins can execute this command!
+error_only_owner: Only group creator to do this!
+error_pm_only: This command is made for pm, not group chat!
+error_group_chat_only: This command is made to be used in group chats, not in pm!
+error_chat_not_found: "failed to connect to chat: failed to get chat: unable to getChat: Bad Request: chat not found"
+error_need_chat_id: "I need a chat id to connect to!"
+error_user_not_seen: "Could not find a user by this name; are you sure I've seen them before?"
+error_failed_get_user: "Failed to get user: unable to getChatMember: Bad Request: chat not found"
+error_invalid_time_amount: Invalid time amount specified.
+error_time_max_one_year: Cannot set time to more than 1 year!
+error_invalid_time_format: Invalid time format specified.
+error_config_private_only: Configuration only works in private
 filters_all_removed: Removed all Filters from this Chat ✅
 filters_confirm_remove_all: Are you sure you want to remove all Filters from this chat?
 filters_filter_added: Added reply for filter word <code>{keyword}</code>

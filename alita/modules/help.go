@@ -389,7 +389,8 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	// just in case
 	if msg.GetChat().Type != "private" {
-		_, _, err := msg.EditText(b, "Configuration only works in private", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		_, _, err := msg.EditText(b, tr.Message("error_config_private_only", nil), nil)
 		if err != nil {
 			log.Error(err)
 			return err
