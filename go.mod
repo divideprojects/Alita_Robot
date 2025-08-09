@@ -12,6 +12,7 @@ require (
 	github.com/eko/gocache/lib/v4 v4.2.0
 	github.com/eko/gocache/store/redis/v4 v4.2.2
 	github.com/eko/gocache/store/ristretto/v4 v4.2.2
+	github.com/fatih/color v1.18.0
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/mojocn/base64Captcha v1.3.8
@@ -42,6 +43,8 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect

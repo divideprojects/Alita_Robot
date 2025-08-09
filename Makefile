@@ -1,4 +1,4 @@
-.PHONY: run tidy vendor build lint psql-prepare psql-migrate psql-status psql-rollback psql-reset psql-verify
+.PHONY: run tidy vendor build lint psql-prepare psql-migrate psql-status psql-rollback psql-reset psql-verify i18n-gen i18n-flatten i18n-lint i18n-check i18n-clean
 
 GO_CMD = go
 GORELEASER_CMD = goreleaser
@@ -88,3 +88,31 @@ psql-verify:
 	echo "Using temp dir: $$TMP"; \
 	$(MAKE) --no-print-directory psql-prepare PSQL_MIGRATIONS_DIR="$$TMP"; \
 	git diff --no-index --exit-code $(PSQL_MIGRATIONS_DIR) "$$TMP" || (echo "❌ Drift detected between supabase/migrations and $(PSQL_MIGRATIONS_DIR)" && exit 1)
+
+# i18n Tooling Targets
+i18n-gen:
+	@echo "🔧 Running i18n code generator..."
+	@mkdir -p generated/i18n
+	$(GO_CMD) run cmd/i18ngen/main.go
+	@echo "✅ i18n code generation complete"
+
+i18n-flatten:
+	@echo "🔧 Flattening YAML translation files..."
+	@echo "⚠️  This will modify files in locales/ directory"
+	@echo "Original files will be backed up with timestamp suffix"
+	$(GO_CMD) run cmd/i18nflatten/main.go
+	@echo "✅ YAML flattening complete"
+
+i18n-lint:
+	@echo "🔍 Running i18n linter and validation..."
+	@mkdir -p generated/i18n
+	$(GO_CMD) run cmd/i18nlint/main.go
+
+i18n-check: i18n-gen i18n-lint
+	@echo "🎯 Running all i18n tools..."
+	@echo "✅ All i18n checks complete"
+
+i18n-clean:
+	@echo "🧹 Cleaning i18n generated files and backups..."
+	@chmod +x scripts/clean_i18n.sh
+	@./scripts/clean_i18n.sh
