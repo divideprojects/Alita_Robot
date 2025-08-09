@@ -24,6 +24,8 @@ build:
 lint:
 	@which $(GOLANGCI_LINT_CMD) > /dev/null || (echo "golangci-lint not found, install it from https://golangci-lint.run/usage/install/" && exit 1)
 	$(GOLANGCI_LINT_CMD) run
+	@echo "🔍 Checking for i18n issues..."
+	@$(GO_CMD) run cmd/i18nlint/main.go -quiet 2>/dev/null || echo "⚠️  Some i18n issues found (non-blocking)"
 
 # PostgreSQL Migration Targets
 psql-prepare:
