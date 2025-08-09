@@ -72,7 +72,7 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		text, _ := tr.GetString("strings." + m.moduleName + ".blacklist.give_bl_word")
+		text, _ := tr.GetString(strings.ToLower(m.moduleName) + "_blacklist_give_bl_word")
 		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -91,11 +91,11 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		if len(alreadyBlacklisted) >= 1 {
-			temp, _ := tr.GetString("strings." + m.moduleName + ".blacklist.already_blacklisted")
+			temp, _ := tr.GetString(strings.ToLower(m.moduleName) + "_blacklist_already_blacklisted")
 			text += temp + fmt.Sprintf("\n - %s\n\n", strings.Join(alreadyBlacklisted, "\n - "))
 		}
 		if len(newBlacklist) >= 1 {
-			temp, _ := tr.GetString("strings." + m.moduleName + ".blacklist.added_bl")
+			temp, _ := tr.GetString(strings.ToLower(m.moduleName) + "_blacklist_added_bl")
 			text += temp + fmt.Sprintf("\n - %s\n\n", strings.Join(newBlacklist, "\n - "))
 		}
 
@@ -147,7 +147,7 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		text, _ := tr.GetString("strings." + m.moduleName + ".unblacklist.give_bl_word")
+		text, _ := tr.GetString(strings.ToLower(m.moduleName) + "_unblacklist_give_bl_word")
 		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -170,7 +170,7 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 				return err
 			}
 		} else {
-			temp, _ := tr.GetString("strings." + m.moduleName + ".unblacklist.removed_bl")
+			temp, _ := tr.GetString(strings.ToLower(m.moduleName) + "_unblacklist_removed_bl")
 			_, err := msg.Reply(b, fmt.Sprintf(temp, strings.Join(removedBlacklists, ", ")), nil)
 			if err != nil {
 				log.Error(err)
@@ -222,10 +222,10 @@ func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if blacklistsText != "" {
-		temp, _ := tr.GetString("strings." + m.moduleName + ".ls_bl.list_bl")
+		temp, _ := tr.GetString(strings.ToLower(m.moduleName) + "_ls_bl_list_bl")
 		blacklistsText = temp + blacklistsText
 	} else {
-		blacklistsText, _ = tr.GetString("strings." + m.moduleName + ".ls_bl.no_blacklisted")
+		blacklistsText, _ = tr.GetString(strings.ToLower(m.moduleName) + "_ls_bl_no_blacklisted")
 	}
 
 	_, err := msg.Reply(b,
@@ -280,19 +280,19 @@ func (m moduleStruct) setBlacklistAction(b *gotgbot.Bot, ctx *ext.Context) error
 
 	if len(args) == 0 {
 		currAction := db.GetBlacklistSettings(chat.Id).Action()
-		temp, _ := tr.GetString("strings." + m.moduleName + ".set_bl_action.current_mode")
+		temp, _ := tr.GetString(strings.ToLower(m.moduleName) + "_set_bl_action_current_mode")
 		rMsg = fmt.Sprintf(temp, currAction)
 	} else if len(args) == 1 {
 		action := strings.ToLower(args[0])
 		if string_handling.FindInStringSlice([]string{"mute", "kick", "warn", "ban", "none"}, action) {
-			temp, _ := tr.GetString("strings." + m.moduleName + ".set_bl_action.changed_mode")
+			temp, _ := tr.GetString(strings.ToLower(m.moduleName) + "_set_bl_action_changed_mode")
 			rMsg = fmt.Sprintf(temp, action)
 			go db.SetBlacklistAction(chat.Id, action)
 		} else {
-			rMsg, _ = tr.GetString("strings." + m.moduleName + ".set_bl_action.choose_correct_option")
+			rMsg, _ = tr.GetString(strings.ToLower(m.moduleName) + "_set_bl_action_choose_correct_option")
 		}
 	} else {
-		rMsg, _ = tr.GetString("strings." + m.moduleName + ".set_bl_action.choose_correct_option")
+		rMsg, _ = tr.GetString(strings.ToLower(m.moduleName) + "_set_bl_action_choose_correct_option")
 	}
 	_, err := msg.Reply(b, rMsg, helpers.Smarkdown())
 	if err != nil {
@@ -323,7 +323,7 @@ func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	text, _ := tr.GetString("strings." + m.moduleName + ".rm_all_bl.ask")
+	text, _ := tr.GetString(strings.ToLower(m.moduleName) + "_rm_all_bl_ask")
 	_, err := msg.Reply(b, text,
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -364,9 +364,9 @@ func (m moduleStruct) buttonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	switch creatorAction {
 	case "yes":
 		go db.RemoveAllBlacklist(query.Message.GetChat().Id)
-		helpText, _ = tr.GetString("strings." + m.moduleName + ".rm_all_bl.button_handler.yes")
+		helpText, _ = tr.GetString(strings.ToLower(m.moduleName) + "_rm_all_bl_button_handler_yes")
 	case "no":
-		helpText, _ = tr.GetString("strings." + m.moduleName + ".rm_all_bl.button_handler.yes")
+		helpText, _ = tr.GetString(strings.ToLower(m.moduleName) + "_rm_all_bl_button_handler_yes")
 	}
 
 	_, _, err := query.Message.EditText(b,
@@ -459,7 +459,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		_, err = msg.Reply(b,
 			func() string {
-				temp, _ := tr.GetString("strings." + m.moduleName + ".bl_watcher.muted_user")
+				temp, _ := tr.GetString(strings.ToLower(m.moduleName) + "_bl_watcher_muted_user")
 				return fmt.Sprintf(temp, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i))
 			}(),
 			helpers.Shtml())
@@ -481,7 +481,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		_, err = msg.Reply(b,
 			func() string {
-				temp, _ := tr.GetString("strings." + m.moduleName + ".bl_watcher.banned_user")
+				temp, _ := tr.GetString(strings.ToLower(m.moduleName) + "_bl_watcher_banned_user")
 				return fmt.Sprintf(temp, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i))
 			}(),
 			helpers.Shtml())
@@ -503,7 +503,7 @@ func (m moduleStruct) blacklistWatcher(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		_, err = msg.Reply(b,
 			func() string {
-				temp, _ := tr.GetString("strings." + m.moduleName + ".bl_watcher.kicked_user")
+				temp, _ := tr.GetString(strings.ToLower(m.moduleName) + "_bl_watcher_kicked_user")
 				return fmt.Sprintf(temp, helpers.MentionHtml(user.Id(), user.Name()), fmt.Sprintf(blSettings.Reason(), i))
 			}(),
 			helpers.Shtml())

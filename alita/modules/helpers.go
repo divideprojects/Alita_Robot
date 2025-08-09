@@ -108,7 +108,7 @@ func initHelpButtons() {
 func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgbot.InlineKeyboardMarkup) {
 	ModName := cases.Title(language.English).String(module)
 	tr := i18n.MustNewTranslator(lang)
-	helpMsg, _ := tr.GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
+	helpMsg, _ := tr.GetString(fmt.Sprintf("%s_help_msg", strings.ToLower(ModName)))
 	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) + helpMsg
 
 	replyMarkup = gotgbot.InlineKeyboardMarkup{

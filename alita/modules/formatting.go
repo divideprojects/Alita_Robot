@@ -117,11 +117,11 @@ func (moduleStruct) getMarkdownHelp(module string) string {
 	tr := i18n.MustNewTranslator("en")
 	switch module {
 	case "md_formatting":
-		helpTxt, _ = tr.GetString("strings.Formatting.Markdown")
+		helpTxt, _ = tr.GetString("formatting_markdown")
 	case "fillings":
-		helpTxt, _ = tr.GetString("strings.Formatting.Fillings")
+		helpTxt, _ = tr.GetString("formatting_fillings")
 	case "random":
-		helpTxt, _ = tr.GetString("strings.Formatting.Random")
+		helpTxt, _ = tr.GetString("formatting_random")
 	}
 	return helpTxt
 }
