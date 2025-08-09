@@ -14,6 +14,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
+	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
 var formattingModule = moduleStruct{moduleName: "Formatting"}
@@ -22,6 +23,7 @@ var formattingModule = moduleStruct{moduleName: "Formatting"}
 // Shows formatting options in private messages or sends a button to open help in PM.
 func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Check of group or pm
 	if !chat_status.RequirePrivate(b, ctx, nil, true) {
@@ -29,6 +31,9 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 		if msg.ReplyToMessage != nil {
 			reply = msg.ReplyToMessage.Reply
 		}
+		
+		markdownHelpText, _ := tr.GetString("help_markdown_help_button")
+		
 		_, err := reply(b,
 			"Press the button below to get Markdown Help!",
 			&gotgbot.SendMessageOpts{
@@ -37,7 +42,7 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
 							{
-								Text: "Markdown Help",
+								Text: markdownHelpText,
 								Url:  fmt.Sprintf("https://t.me/%s?start=help_formatting", b.Username),
 							},
 						},
@@ -50,12 +55,13 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 	} else {
+		backText, _ := tr.GetString("common_back")
 
 		// Keyboard for markdown help menu
-		Mkdkb := append(m.genFormattingKb(),
+		Mkdkb := append(m.genFormattingKb(ctx),
 			[]gotgbot.InlineKeyboardButton{
 				{
-					Text: "Back", CallbackData: "helpq.Help",
+					Text: backText, CallbackData: "helpq.Help",
 				},
 			},
 		)
@@ -83,27 +89,66 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 
 // genFormattingKb generates the inline keyboard layout for formatting help options.
 // Creates buttons for different formatting categories like markdown, fillings, and random content.
-func (moduleStruct) genFormattingKb() [][]gotgbot.InlineKeyboardButton {
+func (moduleStruct) genFormattingKb(ctx *ext.Context) [][]gotgbot.InlineKeyboardButton {
 	fxt := "formatting.%s"
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	keyboard := [][]gotgbot.InlineKeyboardButton{
 		make([]gotgbot.InlineKeyboardButton, 2),
 		make([]gotgbot.InlineKeyboardButton, 1),
 	}
 
+	markdownFormattingText, _ := tr.GetString("help_markdown_formatting_button")
+	fillingsText, _ := tr.GetString("help_fillings_button")
+	randomContentText, _ := tr.GetString("help_random_content_button")
+
 	// First row
 	keyboard[0][0] = gotgbot.InlineKeyboardButton{
-		Text:         "Markdown Formatting",
+		Text:         markdownFormattingText,
 		CallbackData: fmt.Sprintf(fxt, "md_formatting"),
 	}
 	keyboard[0][1] = gotgbot.InlineKeyboardButton{
-		Text:         "Fillings",
+		Text:         fillingsText,
 		CallbackData: fmt.Sprintf(fxt, "fillings"),
 	}
 
 	// Second Row
 	keyboard[1][0] = gotgbot.InlineKeyboardButton{
-		Text:         "Random Content",
+		Text:         randomContentText,
+		CallbackData: fmt.Sprintf(fxt, "random"),
+	}
+
+	return keyboard
+}
+
+// genFormattingKbDefault generates the inline keyboard layout for help system with default English.
+// Used by help system where context is not available.
+func (moduleStruct) genFormattingKbDefault() [][]gotgbot.InlineKeyboardButton {
+	fxt := "formatting.%s"
+	tr := i18n.MustNewTranslator("en")
+
+	keyboard := [][]gotgbot.InlineKeyboardButton{
+		make([]gotgbot.InlineKeyboardButton, 2),
+		make([]gotgbot.InlineKeyboardButton, 1),
+	}
+
+	markdownFormattingText, _ := tr.GetString("help_markdown_formatting_button")
+	fillingsText, _ := tr.GetString("help_fillings_button")
+	randomContentText, _ := tr.GetString("help_random_content_button")
+
+	// First row
+	keyboard[0][0] = gotgbot.InlineKeyboardButton{
+		Text:         markdownFormattingText,
+		CallbackData: fmt.Sprintf(fxt, "md_formatting"),
+	}
+	keyboard[0][1] = gotgbot.InlineKeyboardButton{
+		Text:         fillingsText,
+		CallbackData: fmt.Sprintf(fxt, "fillings"),
+	}
+
+	// Second Row
+	keyboard[1][0] = gotgbot.InlineKeyboardButton{
+		Text:         randomContentText,
 		CallbackData: fmt.Sprintf(fxt, "random"),
 	}
 
@@ -131,9 +176,12 @@ func (moduleStruct) getMarkdownHelp(module string) string {
 func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
 	msg := query.Message
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
 	// Get the sub-module
 	module := strings.Split(query.Data, ".")[1]
+
+	backText, _ := tr.GetString("common_back")
 
 	// Edit the help as per sub-module selected in markdownhelp
 	_, _, err := msg.EditText(b,
@@ -143,7 +191,7 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: "Back", CallbackData: "helpq.Formatting"},
+						{Text: backText, CallbackData: "helpq.Formatting"},
 					},
 				},
 			},
@@ -167,7 +215,7 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 // Sets up help commands and callback handlers for formatting assistance.
 func LoadMkdCmd(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(formattingModule.moduleName, true)
-	HelpModule.helpableKb[formattingModule.moduleName] = formattingModule.genFormattingKb()
+	HelpModule.helpableKb[formattingModule.moduleName] = formattingModule.genFormattingKbDefault()
 	cmdDecorator.MultiCommand(dispatcher, []string{"markdownhelp", "formatting"}, formattingModule.markdownHelp)
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("formatting."), formattingModule.formattingHandler))
 }

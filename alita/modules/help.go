@@ -19,20 +19,22 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
-var HelpModule = moduleStruct{
-	moduleName:     "Help",
-	AbleMap:        moduleEnabled{},
-	AltHelpOptions: make(map[string][]string),
-	helpableKb:     make(map[string][][]gotgbot.InlineKeyboardButton),
+// Dynamic strings that will be loaded using i18n
+func getAboutText(tr *i18n.Translator) string {
+	text, _ := tr.GetString("help_info_about_header")
+	return text
 }
 
-const (
-	aboutText = "Info & About\n\nHere are some of the FAQs about Alita."
-	startHelp = "Hey there! My name is Alita ✨.\n" +
+func getStartHelp(tr *i18n.Translator) string {
+	text1 := "Hey there! My name is Alita ✨.\n" +
 		"I'm here to help you manage your groups!\n" +
-		"Hit /help to find out more about how to use me to my full potential.\n" +
-		"Join my <a href='https://t.me/AlitaRobotUpdates'>News Channel</a> to get information on all the latest updates."
-	mainhlp = "Hey %s!\n" +
+		"Hit /help to find out more about how to use me to my full potential.\n"
+	text2, _ := tr.GetString("help_news_channel_text")
+	return text1 + text2
+}
+
+func getMainHelp(tr *i18n.Translator, firstName string) string {
+	text1 := fmt.Sprintf("Hey %s!\n" +
 		"My name is Alita ✨.\n\n" +
 		"I am a group management bot, here to help you get around and keep the order in your groups!\n" +
 		"I have lots of handy features, such as flood control, a warning system, a note keeping system, " +
@@ -40,87 +42,102 @@ const (
 		"<b>Helpful commands</b>:\n" +
 		" - /start: Starts me! You've probably already used this!\n" +
 		" - /help: Sends this message; I'll tell you more about myself!\n" +
-		" - /donate: Gives you info on how to support me and my creator.\n\n" +
-		"All commands can be used with the following: / or !"
-)
+		" - /donate: Gives you info on how to support me and my creator.\n\n", firstName)
+	text2, _ := tr.GetString("help_all_commands_usage")
+	return text1 + text2
+}
 
-var (
-	backBtnSuffix = []gotgbot.InlineKeyboardButton{
-		{
-			Text:         "« Back",
-			CallbackData: "helpq.Help",
-		},
-		{
-			Text:         "Home",
-			CallbackData: "helpq.BackStart",
-		},
-	}
-	aboutKb = gotgbot.InlineKeyboardMarkup{
+// Dynamic keyboard generation functions
+func getAboutKb(tr *i18n.Translator) gotgbot.InlineKeyboardMarkup {
+	aboutMeText, _ := tr.GetString("help_button_about_me")
+	newsChannelText, _ := tr.GetString("help_button_news_channel")
+	supportGroupText, _ := tr.GetString("help_button_support_group")
+	configurationText, _ := tr.GetString("help_button_configuration")
+	backText, _ := tr.GetString("common_back_arrow_alt")
+
+	return gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "About me 👨\u200d💻",
+					Text:         aboutMeText,
 					CallbackData: "about.me",
 				},
 			},
 			{
 				{
-					Text: "News Channel 📢",
+					Text: newsChannelText,
 					Url:  "https://t.me/AlitaRobotUpdates",
 				},
 				{
-					Text: "Support Group 👥",
+					Text: supportGroupText,
 					Url:  "https://t.me/DivideSupport",
 				},
 			},
 			{
 				{
-					Text:         "Configuration ⚙️",
+					Text:         configurationText,
 					CallbackData: "configuration.step1",
 				},
 			},
 			{
-				// custom back button
 				{
-					Text:         "⬅ Back",
+					Text:         backText,
 					CallbackData: "helpq.BackStart",
 				},
 			},
 		},
 	}
-	startMarkup = gotgbot.InlineKeyboardMarkup{
+}
+
+func getStartMarkup(tr *i18n.Translator) gotgbot.InlineKeyboardMarkup {
+	aboutText, _ := tr.GetString("help_button_about")
+	addToChatText, _ := tr.GetString("help_button_add_to_chat")
+	supportGroupText, _ := tr.GetString("help_button_support_group")
+	commandsHelpText, _ := tr.GetString("help_button_commands_help")
+	languageText, _ := tr.GetString("help_button_language")
+
+	return gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "About ✨",
+					Text:         aboutText,
 					CallbackData: "about.main",
 				},
 			},
 			{
 				{
-					Text: "➕ Add me to chat!",
+					Text: addToChatText,
 					Url:  "https://t.me/Alita_Robot?startgroup=botstart",
 				},
 				{
-					Text: "Support Group 👥",
+					Text: supportGroupText,
 					Url:  "https://t.me/DivideSupport",
 				},
 			},
 			{
 				{
-					Text:         "📚 Commands & Help",
+					Text:         commandsHelpText,
 					CallbackData: "helpq.Help",
 				},
 			},
 			{
 				{
-					Text:         "Language 🌏",
+					Text:         languageText,
 					CallbackData: "helpq.Languages",
 				},
 			},
 		},
 	}
-)
+}
+
+var HelpModule = moduleStruct{
+	moduleName:     "Help",
+	AbleMap:        moduleEnabled{},
+	AltHelpOptions: make(map[string][]string),
+	helpableKb:     make(map[string][][]gotgbot.InlineKeyboardButton),
+}
+
+
 
 type moduleEnabled struct {
 	modules map[string]bool
@@ -176,16 +193,17 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		switch response {
 		case "main":
-			currText = aboutText
-			currKb = aboutKb
+			currText = getAboutText(tr)
+			currKb = getAboutKb(tr)
 		case "me":
 			temp, _ := tr.GetString("help_about")
 			currText = fmt.Sprintf(temp, b.Username, config.BotVersion)
+			backText, _ := tr.GetString("common_back")
 			currKb = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "Back",
+							Text:         backText,
 							CallbackData: "about.main",
 						},
 					},
@@ -214,15 +232,17 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 	} else {
 		if ctx.Message.Chat.Type == "private" {
-			currText = aboutText
-			currKb = aboutKb
+			currText = getAboutText(tr)
+			currKb = getAboutKb(tr)
 		} else {
-			currText = "Click on the button below to get info about me!"
+			clickButtonText, _ := tr.GetString("help_click_button_info")
+			aboutButtonText, _ := tr.GetString("help_button_about")
+			currText = clickButtonText
 			currKb = gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: "About",
+							Text: aboutButtonText,
 							Url:  fmt.Sprintf("https://t.me/%s?start=about", b.Username),
 						},
 					},
@@ -264,15 +284,16 @@ func (moduleStruct) helpButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	// Sort the module names
 	if string_handling.FindInStringSlice([]string{"BackStart", "Help"}, module) {
 		parsemode = helpers.HTML
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		switch module {
 		case "Help":
 			// This shows the main start menu
-			helpText = fmt.Sprintf(mainhlp, html.EscapeString(query.From.FirstName))
+			helpText = getMainHelp(tr, html.EscapeString(query.From.FirstName))
 			replyKb = markup
 		case "BackStart":
 			// This shows the modules menu
-			helpText = startHelp
-			replyKb = startMarkup
+			helpText = getStartHelp(tr)
+			replyKb = getStartMarkup(tr)
 		}
 	} else {
 		// For all remaining modules
@@ -316,14 +337,17 @@ func (moduleStruct) start(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if ctx.Message.Chat.Type == "private" {
 		if len(args) == 1 {
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			startHelpText := getStartHelp(tr)
+			startMarkupKb := getStartMarkup(tr)
 			_, err := msg.Reply(b,
-				startHelp,
+				startHelpText,
 				&gotgbot.SendMessageOpts{
 					ParseMode: helpers.HTML,
 					LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 						IsDisabled: true,
 					},
-					ReplyMarkup: &startMarkup,
+					ReplyMarkup: &startMarkupKb,
 				},
 			)
 			if err != nil {
@@ -410,26 +434,29 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	switch response {
 	case "step1":
+		addAlitaText, _ := tr.GetString("help_button_add_alita")
+		doneText, _ := tr.GetString("common_done")
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text: "➕ Add Alita to chat!",
+					Text: addAlitaText,
 					Url:  fmt.Sprintf("https://t.me/%s?startgroup=botstart", b.Username),
 				},
 			},
 			{
 				{
-					Text:         "Done ✅",
+					Text:         doneText,
 					CallbackData: "configuration.step2",
 				},
 			},
 		}
 		text, _ = tr.GetString("help_configuration_step-1")
 	case "step2":
+		doneText, _ := tr.GetString("common_done")
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "Done ✅",
+					Text:         doneText,
 					CallbackData: "configuration.step3",
 				},
 			},
@@ -437,10 +464,11 @@ func (moduleStruct) botConfig(b *gotgbot.Bot, ctx *ext.Context) error {
 		temp, _ := tr.GetString("help_configuration_step-2")
 		text = fmt.Sprintf(temp, b.Username)
 	case "step3":
+		continueText, _ := tr.GetString("common_continue")
 		iKeyboard = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "✅ Continue ✅",
+					Text:         continueText,
 					CallbackData: "helpq.Help",
 				},
 			},
@@ -482,11 +510,10 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	if ctx.Message.Chat.Type == "private" {
 		if len(args) == 1 {
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			mainHelpText := getMainHelp(tr, html.EscapeString(msg.From.FirstName))
 			_, err := b.SendMessage(chat.Id,
-				fmt.Sprintf(
-					mainhlp,
-					html.EscapeString(msg.From.FirstName),
-				),
+				mainHelpText,
 				&gotgbot.SendMessageOpts{
 					ParseMode:   helpers.HTML,
 					ReplyMarkup: &markup,
@@ -513,9 +540,10 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		pmMeKbText := "Click here for help!"
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		pmMeKbText, _ := tr.GetString("help_click_here")
 		pmMeKbUri := fmt.Sprintf("https://t.me/%s?start=help_help", b.Username)
-		moduleHelpString := "Contact me in PM for help!"
+		moduleHelpString, _ := tr.GetString("help_contact_pm")
 		replyMsgId := msg.MessageId
 		var lowerModName string
 
@@ -524,7 +552,8 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 			lowerModName = strings.ToLower(helpModName)
 			originalModuleName := getModuleNameFromAltName(lowerModName)
 			if originalModuleName != "" && string_handling.FindInStringSlice(getAltNamesOfModule(originalModuleName), lowerModName) {
-				moduleHelpString = fmt.Sprintf("Contact me in PM for help regarding <code>%s</code>!", originalModuleName)
+				contactPmText, _ := tr.GetString("help_contact_pm")
+			moduleHelpString = strings.Replace(contactPmText, "for help!", fmt.Sprintf("for help regarding <code>%s</code>!", originalModuleName), 1)
 				pmMeKbUri = fmt.Sprintf("https://t.me/%s?start=help_%s", b.Username, lowerModName)
 			}
 		}

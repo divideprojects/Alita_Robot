@@ -84,6 +84,8 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 			status = "enabled"
 		}
 
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		statusUsage, _ := tr.GetString("captcha_status_usage")
 		text := fmt.Sprintf(
 			"<b>Captcha Settings:</b>\n"+
 				"Status: <code>%s</code>\n"+
@@ -91,8 +93,8 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 				"Timeout: <code>%d minutes</code>\n"+
 				"Failure Action: <code>%s</code>\n"+
 				"Max Attempts: <code>%d</code>\n\n"+
-				"Use <code>/captcha on</code> or <code>/captcha off</code> to change status.",
-			status, settings.CaptchaMode, settings.Timeout, settings.FailureAction, settings.MaxAttempts,
+				"%s",
+			status, settings.CaptchaMode, settings.Timeout, settings.FailureAction, settings.MaxAttempts, statusUsage,
 		)
 
 		_, err := msg.Reply(bot, text, helpers.Shtml())
@@ -654,25 +656,33 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 	// Parse callback data: captcha_verify.{attempt_id}.{user_id}.{answer}
 	parts := strings.Split(query.Data, ".")
 	if len(parts) != 4 {
-		_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid captcha data"})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_invalid_data")
+		_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
 	attemptID64, err := strconv.ParseUint(parts[1], 10, 64)
 	if err != nil {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid attempt ID"})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_invalid_attempt")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
 	targetUserID, err := strconv.ParseInt(parts[2], 10, 64)
 	if err != nil {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid user ID"})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_invalid_user")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
 	// Check if this is the correct user
 	if user.Id != targetUserID {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "This captcha is not for you!"})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_not_for_you")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
@@ -681,11 +691,15 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 	// Get the captcha attempt and ensure IDs match
 	attempt, err := db.GetCaptchaAttempt(targetUserID, chat.Id)
 	if err != nil || attempt == nil {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Captcha expired or not found"})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_expired_or_not_found")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 	if attempt.ID != uint(attemptID64) {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "This captcha attempt is no longer valid."})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_attempt_not_valid")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
@@ -713,7 +727,9 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 
 		if err != nil {
 			log.Errorf("Failed to unmute user %d: %v", targetUserID, err)
-			_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Failed to verify. Please contact an admin."})
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("captcha_failed_verify")
+			_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 			return err
 		}
 
@@ -742,14 +758,17 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 			log.Errorf("Failed to send welcome message after captcha verification: %v", err)
 		}
 
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "✅ Verified successfully!"})
+		text, _ := tr.GetString("captcha_verified_success_msg")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 
 	} else {
 		// Wrong answer - increment attempts
 		attempt, err = db.IncrementCaptchaAttempts(targetUserID, chat.Id)
 		if err != nil {
-			_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Error processing answer"})
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("captcha_error_processing")
+			_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 			return err
 		}
 
@@ -791,25 +810,33 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	// Parse callback data: captcha_refresh.{attempt_id}.{user_id}
 	parts := strings.Split(query.Data, ".")
 	if len(parts) != 3 {
-		_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid refresh data"})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_invalid_refresh")
+		_, err := query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
 	attemptID64, err := strconv.ParseUint(parts[1], 10, 64)
 	if err != nil {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid attempt ID"})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_invalid_attempt")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
 	targetUserID, err := strconv.ParseInt(parts[2], 10, 64)
 	if err != nil {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Invalid user ID"})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_invalid_user")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
 	// Check if this is the correct user
 	if user.Id != targetUserID {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "This captcha is not for you!"})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_not_for_you")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
@@ -825,17 +852,23 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	// Get the existing attempt and verify attempt ID
 	attempt, err := db.GetCaptchaAttempt(targetUserID, chat.Id)
 	if err != nil || attempt == nil {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Captcha expired or not found"})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_expired_or_not_found")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 	if attempt.ID != uint(attemptID64) {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "This captcha attempt is no longer valid."})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_attempt_not_valid")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
 	// Enforce per-attempt refresh cap
 	if attempt.RefreshCount >= captchaMaxRefreshes {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Refresh limit reached for this captcha."})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_refresh_limit_reached")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
@@ -853,7 +886,9 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 		newAnswer, imageBytes, options, genErr = generateMathImageCaptcha()
 	}
 	if genErr != nil || imageBytes == nil {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Failed to generate new image, try again."})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_failed_generate")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
@@ -901,7 +936,9 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 		ReplyMarkup: keyboard,
 	})
 	if sendErr != nil {
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Failed to send new captcha image."})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_failed_send")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
@@ -909,14 +946,18 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	if _, err := db.UpdateCaptchaAttemptOnRefreshByID(attempt.ID, newAnswer, sent.MessageId); err != nil {
 		log.Errorf("Failed to update captcha attempt on refresh: %v", err)
 		_, _ = bot.DeleteMessage(chat.Id, sent.MessageId, nil)
-		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "Internal error updating captcha."})
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_internal_update_error")
+		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 		return err
 	}
 
 	// Set cooldown
 	_ = cache.Marshal.Set(cache.Context, cooldownKey, true, store.WithExpiration(time.Duration(captchaRefreshCooldownS)*time.Second))
 
-	_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: "🔄 New captcha sent!"})
+	tr = i18n.MustNewTranslator(db.GetLanguage(ctx))
+	text, _ := tr.GetString("captcha_refresh_success")
+	_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 	return err
 }
 

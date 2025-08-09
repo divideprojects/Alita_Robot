@@ -113,6 +113,20 @@ func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgb
 	helpMsg, _ := tr.GetString(fmt.Sprintf("%s_help_msg", strings.ToLower(ModName)))
 	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) + helpMsg
 
+	// Create back button suffix dynamically
+	backText, _ := tr.GetString("common_back_arrow")
+	homeText, _ := tr.GetString("common_home")
+	backBtnSuffix := []gotgbot.InlineKeyboardButton{
+		{
+			Text:         backText,
+			CallbackData: "helpq.Help",
+		},
+		{
+			Text:         homeText,
+			CallbackData: "helpq.BackStart",
+		},
+	}
+
 	replyMarkup = gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: append(
 			HelpModule.helpableKb[ModName],
@@ -127,12 +141,11 @@ func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgb
 func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.Message, err error) {
 	module = strings.ToLower(module)
 	if module == "help" {
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		helpText := getMainHelp(tr, html.EscapeString(ctx.EffectiveMessage.From.FirstName))
 		_, err = b.SendMessage(
 			ctx.EffectiveMessage.Chat.Id,
-			fmt.Sprintf(
-				mainhlp,
-				html.EscapeString(ctx.EffectiveMessage.From.FirstName),
-			),
+			helpText,
 			&gotgbot.SendMessageOpts{
 				ParseMode:   helpers.HTML,
 				ReplyMarkup: &markup,
@@ -276,6 +289,9 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			}
 		}
 	} else if arg == "about" {
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		aboutText := getAboutText(tr)
+		aboutKb := getAboutKb(tr)
 		_, err := b.SendMessage(chat.Id,
 			aboutText,
 			&gotgbot.SendMessageOpts{
@@ -296,14 +312,17 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		}
 	} else {
 		// This sends the normal help block
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		startHelpText := getStartHelp(tr)
+		startMarkupKb := getStartMarkup(tr)
 		_, err := b.SendMessage(chat.Id,
-			startHelp,
+			startHelpText,
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 					IsDisabled: true,
 				},
-				ReplyMarkup: &startMarkup,
+				ReplyMarkup: &startMarkupKb,
 			},
 		)
 		if err != nil {
@@ -345,7 +364,8 @@ func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbm
 		helpText, kbmarkup = getModuleHelpAndKb(moduleName, userOrGroupLanguage)
 	} else {
 		_parsemode = helpers.HTML
-		helpText = fmt.Sprintf(mainhlp, html.EscapeString(ctx.EffectiveUser.FirstName))
+		tr := i18n.MustNewTranslator(userOrGroupLanguage)
+		helpText = getMainHelp(tr, html.EscapeString(ctx.EffectiveUser.FirstName))
 		kbmarkup = markup
 	}
 

@@ -72,7 +72,9 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if msg.ReplyToMessage != nil && len(args) <= 1 {
-		_, err := msg.Reply(b, "Please give a keyword to reply to!", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("filters_keyword_required")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -109,19 +111,23 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 			buttons:    buttons,
 			dataType:   dataType,
 		}
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		confirmText, _ := tr.GetString("filters_overwrite_confirm")
+		yesText, _ := tr.GetString("common_yes")
+		noText, _ := tr.GetString("common_no")
 		_, err := msg.Reply(b,
-			"Filter already exists!\nDo you want to overwrite it?",
+			confirmText,
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
 							{
-								Text:         "Yes",
+								Text:         yesText,
 								CallbackData: "filters_overwrite." + filterWord,
 							},
 							{
-								Text:         "No",
+								Text:         noText,
 								CallbackData: "filters_overwrite.cancel",
 							},
 						},
@@ -138,7 +144,9 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	go db.AddFilter(chat.Id, filterWord, text, fileid, buttons, dataType)
 
-	_, err := msg.Reply(b, fmt.Sprintf("Added reply for filter word <code>%s</code>", filterWord), helpers.Shtml())
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	successText, _ := tr.GetString("filters_added_success")
+	_, err := msg.Reply(b, fmt.Sprintf(successText, filterWord), helpers.Shtml())
 	if err != nil {
 		log.Error(err)
 		return err
@@ -174,7 +182,9 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(args) == 0 {
-		_, err := msg.Reply(b, "Please give a filter word to remove!", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("filters_remove_keyword_required")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -183,15 +193,18 @@ func (moduleStruct) rmFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 
 		filterWord, _ := extraction.ExtractQuotes(strings.Join(args, " "), true, true)
 
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		if !string_handling.FindInStringSlice(db.GetFiltersList(chat.Id), strings.ToLower(filterWord)) {
-			_, err := msg.Reply(b, "Filter does not exist!", helpers.Shtml())
+			text, _ := tr.GetString("filters_not_exists")
+			_, err := msg.Reply(b, text, helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
 			}
 		} else {
 			go db.RemoveFilter(chat.Id, strings.ToLower(filterWord))
-			_, err := msg.Reply(b, fmt.Sprintf("Ok!\nI will no longer reply to <code>%s</code>", filterWord), helpers.Shtml())
+			successText, _ := tr.GetString("filters_removed_success")
+			_, err := msg.Reply(b, fmt.Sprintf(successText, filterWord), helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -232,8 +245,9 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 		replyMsgId = msg.MessageId
 	}
 
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	filterKeys := db.GetFiltersList(chat.Id)
-	info := "There are no filters in this chat!"
+	info, _ := tr.GetString("filters_none_in_chat")
 	newFilterKeys := make([]string, 0)
 
 	for _, fkey := range filterKeys {
@@ -241,7 +255,7 @@ func (moduleStruct) filtersList(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if len(newFilterKeys) > 0 {
-		info = "These are the current filters in this Chat:"
+		info, _ = tr.GetString("filters_current_in_chat")
 		info += "\n - " + strings.Join(newFilterKeys, "\n - ")
 	}
 
@@ -277,7 +291,9 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	filterKeys := db.GetFiltersList(chat.Id)
 
 	if len(filterKeys) == 0 {
-		_, err := msg.Reply(b, "There are no filters in this chat!", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("filters_none_in_chat")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -287,13 +303,17 @@ func (moduleStruct) rmAllFilters(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if chat_status.RequireUserOwner(b, ctx, chat, user.Id, false) {
-		_, err := msg.Reply(b, "Are you sure you want to remove all Filters from this chat?",
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		confirmText, _ := tr.GetString("filters_clear_all_confirm")
+		yesText, _ := tr.GetString("common_yes")
+		noText, _ := tr.GetString("common_no")
+		_, err := msg.Reply(b, confirmText,
 			&gotgbot.SendMessageOpts{
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
-							{Text: "Yes", CallbackData: "rmAllFilters.yes"},
-							{Text: "No", CallbackData: "rmAllFilters.no"},
+							{Text: yesText, CallbackData: "rmAllFilters.yes"},
+							{Text: noText, CallbackData: "rmAllFilters.no"},
 						},
 					},
 				},
@@ -321,6 +341,7 @@ func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 		return ext.EndGroups
 	}
 
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	args := strings.Split(query.Data, ".")
 	response := args[1]
 	var helpText string
@@ -328,9 +349,9 @@ func (moduleStruct) filtersButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error
 	switch response {
 	case "yes":
 		db.RemoveAllFilters(chat.Id)
-		helpText = "Removed all Filters from this Chat ✅"
+		helpText, _ = tr.GetString("filters_clear_all_success")
 	case "no":
-		helpText = "Cancelled removing all Filters from this Chat ❌"
+		helpText, _ = tr.GetString("filters_clear_all_cancelled")
 	}
 
 	_, _, err := query.Message.EditText(b,
@@ -368,6 +389,7 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 		return ext.EndGroups
 	}
 
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	args := strings.Split(query.Data, ".")
 	filterWord := args[1]
 	filterWordKey := fmt.Sprint(filterWord, "_", chat.Id)
@@ -378,9 +400,9 @@ func (m moduleStruct) filterOverWriteHandler(b *gotgbot.Bot, ctx *ext.Context) e
 		db.RemoveFilter(chat.Id, filterWord)
 		db.AddFilter(chat.Id, filterData.filterWord, filterData.text, filterData.fileid, filterData.buttons, filterData.dataType)
 		delete(m.overwriteFiltersMap, filterWordKey) // delete the key to make map clear
-		helpText = "Filter has been overwritten successfully ✅"
+		helpText, _ = tr.GetString("filters_overwrite_success")
 	} else {
-		helpText = "Cancelled overwritting of filter ❌"
+		helpText, _ = tr.GetString("filters_overwrite_cancelled")
 	}
 
 	_, _, err := query.Message.EditText(b,
@@ -514,7 +536,7 @@ func LoadFilters(dispatcher *ext.Dispatcher) {
 	HelpModule.helpableKb[filtersModule.moduleName] = [][]gotgbot.InlineKeyboardButton{
 		{
 			{
-				Text:         "Formatting",
+				Text:         "Formatting", // This will be dynamically translated in the help system
 				CallbackData: fmt.Sprintf("helpq.%s", "Formatting"),
 			},
 		},

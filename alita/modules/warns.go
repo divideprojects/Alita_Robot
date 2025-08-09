@@ -88,6 +88,10 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 	msg := ctx.EffectiveMessage
 	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
+	// Get translated button texts
+	removeWarnText, _ := tr.GetString("warns_remove_button")
+	rulesButtonText, _ := tr.GetString("common_rules_button_emoji")
+
 	// permissions check
 	if chat_status.IsUserAdmin(b, chat.Id, userId) {
 		text, _ := tr.GetString("warns_admin_warning_error")
@@ -176,11 +180,11 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "❌ Remove warn",
+							Text:         removeWarnText,
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 						{
-							Text: "Rules 📝",
+							Text: rulesButtonText,
 							Url:  fmt.Sprintf("t.me/%s?start=rules_%d", b.Username, chat.Id),
 						},
 					},
@@ -191,7 +195,7 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "❌ Remove warn",
+							Text:         removeWarnText,
 							CallbackData: fmt.Sprintf("rmWarn.%d", u.Id),
 						},
 					},
@@ -667,6 +671,10 @@ func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 
+	// Get translated button texts
+	yesText, _ := tr.GetString("common_yes")
+	noText, _ := tr.GetString("common_no")
+
 	// Check if group or not
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
 		return ext.EndGroups
@@ -689,8 +697,8 @@ func (moduleStruct) resetAllWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
-							{Text: "Yes", CallbackData: "rmAllChatWarns.yes"},
-							{Text: "No", CallbackData: "rmAllChatWarns.no"},
+							{Text: yesText, CallbackData: "rmAllChatWarns.yes"},
+							{Text: noText, CallbackData: "rmAllChatWarns.no"},
 						},
 					},
 				},

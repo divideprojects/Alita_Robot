@@ -234,10 +234,14 @@ func main() {
 
 		// Set Commands of Bot
 		log.Info("Setting Custom Commands for PM...!")
+		// Get translator for bot commands (use English for bot commands)
+		tr := i18n.MustNewTranslator("en")
+		startDesc, _ := tr.GetString("main_bot_command_start")
+		helpDesc, _ := tr.GetString("main_bot_command_help")
 		_, err = b.SetMyCommands(
 			[]gotgbot.BotCommand{
-				{Command: "start", Description: "Starts the Bot"},
-				{Command: "help", Description: "Check Help section of bot"},
+				{Command: "start", Description: startDesc},
+				{Command: "help", Description: helpDesc},
 			},
 			&gotgbot.SetMyCommandsOpts{
 				Scope:        gotgbot.BotCommandScopeAllPrivateChats{},
@@ -301,10 +305,14 @@ func main() {
 
 		// Set Commands of Bot
 		log.Info("Setting Custom Commands for PM...!")
+		// Get translator for bot commands (use English for bot commands)
+		tr := i18n.MustNewTranslator("en")
+		startDesc, _ := tr.GetString("main_bot_command_start")
+		helpDesc, _ := tr.GetString("main_bot_command_help")
 		_, err = b.SetMyCommands(
 			[]gotgbot.BotCommand{
-				{Command: "start", Description: "Starts the Bot"},
-				{Command: "help", Description: "Check Help section of bot"},
+				{Command: "start", Description: startDesc},
+				{Command: "help", Description: helpDesc},
 			},
 			&gotgbot.SetMyCommandsOpts{
 				Scope:        gotgbot.BotCommandScopeAllPrivateChats{},
