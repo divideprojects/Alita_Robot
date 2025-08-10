@@ -189,6 +189,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      pull-requests: write
     steps:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -240,6 +241,7 @@ jobs:
     if: github.event.action == 'closed'
     permissions:
       packages: write
+      pull-requests: write
     steps:
       - name: Delete PR Docker images
         uses: actions/github-script@v7
