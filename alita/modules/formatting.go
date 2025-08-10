@@ -11,10 +11,10 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
-	"github.com/divideprojects/Alita_Robot/alita/db"
 )
 
 var formattingModule = moduleStruct{moduleName: "Formatting"}
@@ -31,10 +31,10 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 		if msg.ReplyToMessage != nil {
 			reply = msg.ReplyToMessage.Reply
 		}
-		
+
 		markdownHelpText, _ := tr.GetString("help_markdown_help_button")
 		pressButtonText, _ := tr.GetString("formatting_press_button")
-		
+
 		_, err := reply(b,
 			pressButtonText,
 			&gotgbot.SendMessageOpts{

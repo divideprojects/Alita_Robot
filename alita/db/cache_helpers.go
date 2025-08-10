@@ -54,17 +54,6 @@ func blacklistCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:blacklist:%d", chatID)
 }
 
-// greetingsCacheKey generates a cache key for chat greeting settings.
-func greetingsCacheKey(chatID int64) string {
-	return fmt.Sprintf("alita:greetings:%d", chatID)
-}
-
-// notesListCacheKey generates a cache key for chat notes lists.
-// The admin parameter distinguishes between admin and regular note lists.
-func notesListCacheKey(chatID int64, admin bool) string {
-	return fmt.Sprintf("alita:notes_list:%d:%v", chatID, admin)
-}
-
 // warnSettingsCacheKey generates a cache key for chat warning settings.
 func warnSettingsCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:warn_settings:%d", chatID)
@@ -93,16 +82,19 @@ func InvalidateChatCache(chatID int64) {
 		chatLanguageCacheKey(chatID),
 		filterListCacheKey(chatID),
 		blacklistCacheKey(chatID),
-		greetingsCacheKey(chatID),
-		notesListCacheKey(chatID, true),
-		notesListCacheKey(chatID, false),
 		warnSettingsCacheKey(chatID),
 		antifloodCacheKey(chatID),
 		disabledCommandsCacheKey(chatID),
 	}
 
-	// Use parallel cache invalidation for better performance
-	ParallelCacheInvalidation(keys)
+	// Invalidate cache keys sequentially
+	if cache.Marshal != nil {
+		for _, key := range keys {
+			if err := cache.Marshal.Delete(cache.Context, key); err != nil {
+				log.Debugf("[Cache] Failed to invalidate key %s: %v", key, err)
+			}
+		}
+	}
 }
 
 // InvalidateUserCache invalidates all cache entries for a user.

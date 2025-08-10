@@ -169,29 +169,49 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("reports_button_message"); return t }(),
-							Url:  helpers.GetMessageLinkFromMessageId(chat, reportedMsgId),
+							Text: func() string {
+								tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+								t, _ := tr.GetString("reports_button_message")
+								return t
+							}(),
+							Url: helpers.GetMessageLinkFromMessageId(chat, reportedMsgId),
 						},
 					},
 					{
 						{
-							Text:         func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("reports_button_kick"); return t }(),
+							Text: func() string {
+								tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+								t, _ := tr.GetString("reports_button_kick")
+								return t
+							}(),
 							CallbackData: fmt.Sprintf(callbackData, "kick"),
 						},
 						{
-							Text:         func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("reports_button_ban"); return t }(),
+							Text: func() string {
+								tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+								t, _ := tr.GetString("reports_button_ban")
+								return t
+							}(),
 							CallbackData: fmt.Sprintf(callbackData, "ban"),
 						},
 					},
 					{
 						{
-							Text:         func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("reports_button_delete"); return t }(),
+							Text: func() string {
+								tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+								t, _ := tr.GetString("reports_button_delete")
+								return t
+							}(),
 							CallbackData: fmt.Sprintf(callbackData, "delete"),
 						},
 					},
 					{
 						{
-							Text:         func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("reports_button_resolved"); return t }(),
+							Text: func() string {
+								tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+								t, _ := tr.GetString("reports_button_resolved")
+								return t
+							}(),
 							CallbackData: fmt.Sprintf(callbackData, "resolved"),
 						},
 					},
@@ -310,7 +330,7 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			}
 		default:
-				tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			replyText, _ = tr.GetString("reports_invalid_input")
 		}
 	} else {

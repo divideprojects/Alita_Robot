@@ -205,8 +205,16 @@ func (moduleStruct) unpinAll(b *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); text, _ := tr.GetString("pins_yes_button"); return text }(), CallbackData: "unpinallbtn(yes)"},
-						{Text: func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); text, _ := tr.GetString("pins_no_button"); return text }(), CallbackData: "unpinallbtn(no)"},
+						{Text: func() string {
+							tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+							text, _ := tr.GetString("pins_yes_button")
+							return text
+						}(), CallbackData: "unpinallbtn(yes)"},
+						{Text: func() string {
+							tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+							text, _ := tr.GetString("pins_no_button")
+							return text
+						}(), CallbackData: "unpinallbtn(no)"},
 					},
 				},
 			},
@@ -585,7 +593,11 @@ func (moduleStruct) pinned(b *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); text, _ := tr.GetString("pins_pinned_message_button"); return text }(), Url: pinLink},
+						{Text: func() string {
+							tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+							text, _ := tr.GetString("pins_pinned_message_button")
+							return text
+						}(), Url: pinLink},
 					},
 				},
 			},

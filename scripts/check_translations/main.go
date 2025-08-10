@@ -28,10 +28,10 @@ type MissingTranslation struct {
 }
 
 var (
-	simpleKeyRegex   = regexp.MustCompile(`tr\.GetString\s*\(\s*"([^"]+)"`)
-	simpleKeyRegex2  = regexp.MustCompile(`tr\.GetStringSlice\s*\(\s*"([^"]+)"`)
-	dynamicKeyRegex  = regexp.MustCompile(`fmt\.Sprintf\s*\(\s*"([^"]+)"`)
-	altNamesPattern  = regexp.MustCompile(`alt_names\.%s`)
+	simpleKeyRegex  = regexp.MustCompile(`tr\.GetString\s*\(\s*"([^"]+)"`)
+	simpleKeyRegex2 = regexp.MustCompile(`tr\.GetStringSlice\s*\(\s*"([^"]+)"`)
+	dynamicKeyRegex = regexp.MustCompile(`fmt\.Sprintf\s*\(\s*"([^"]+)"`)
+	altNamesPattern = regexp.MustCompile(`alt_names\.%s`)
 )
 
 func main() {
@@ -59,7 +59,7 @@ func main() {
 	for localeName, localeData := range locales {
 		fmt.Printf("\n📁 Checking locale: %s\n", localeName)
 		missing := checkMissingKeys(keys, localeData, localeName)
-		
+
 		if len(missing) > 0 {
 			fmt.Printf("  ⚠️  Missing %d translations:\n", len(missing))
 			for _, m := range missing {
@@ -180,7 +180,7 @@ func extractKeysFromFile(filePath string) ([]TranslationKey, error) {
 						if lit, ok := call.Args[0].(*ast.BasicLit); ok && lit.Kind == token.STRING {
 							key := strings.Trim(lit.Value, `"`)
 							pos := fset.Position(lit.Pos())
-							
+
 							// Check if this key is already in our list
 							found := false
 							for _, existingKey := range keys {
@@ -189,7 +189,7 @@ func extractKeysFromFile(filePath string) ([]TranslationKey, error) {
 									break
 								}
 							}
-							
+
 							if !found {
 								keys = append(keys, TranslationKey{
 									Key:  key,
@@ -226,7 +226,7 @@ func loadLocaleFiles(localesDir string) (map[string]map[string]interface{}, erro
 		if !strings.HasSuffix(filename, ".yml") && !strings.HasSuffix(filename, ".yaml") {
 			continue
 		}
-		
+
 		// Skip config.yml as it's not a translation file
 		if filename == "config.yml" {
 			continue
@@ -259,7 +259,7 @@ func checkMissingKeys(keys []TranslationKey, localeData map[string]interface{}, 
 		if strings.HasPrefix(key.Key, "alt_names.") {
 			continue
 		}
-		
+
 		if !keyExists(key.Key, localeData) {
 			usage := fmt.Sprintf("%s:%d", filepath.Base(key.File), key.Line)
 			missing[key.Key] = append(missing[key.Key], usage)

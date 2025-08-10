@@ -127,8 +127,6 @@ var HelpModule = moduleStruct{
 	helpableKb:     make(map[string][][]gotgbot.InlineKeyboardButton),
 }
 
-
-
 type moduleEnabled struct {
 	modules map[string]bool
 }
@@ -543,7 +541,7 @@ func (moduleStruct) help(b *gotgbot.Bot, ctx *ext.Context) error {
 			originalModuleName := getModuleNameFromAltName(lowerModName)
 			if originalModuleName != "" && string_handling.FindInStringSlice(getAltNamesOfModule(originalModuleName), lowerModName) {
 				contactPmText, _ := tr.GetString("help_contact_pm")
-			moduleHelpString = strings.Replace(contactPmText, "for help!", fmt.Sprintf("for help regarding <code>%s</code>!", originalModuleName), 1)
+				moduleHelpString = strings.Replace(contactPmText, "for help!", fmt.Sprintf("for help regarding <code>%s</code>!", originalModuleName), 1)
 				pmMeKbUri = fmt.Sprintf("https://t.me/%s?start=help_%s", b.Username, lowerModName)
 			}
 		}
