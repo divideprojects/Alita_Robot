@@ -101,8 +101,14 @@ func InvalidateChatCache(chatID int64) {
 		disabledCommandsCacheKey(chatID),
 	}
 
-	// Use parallel cache invalidation for better performance
-	ParallelCacheInvalidation(keys)
+	// Invalidate cache keys sequentially
+	if cache.Marshal != nil {
+		for _, key := range keys {
+			if err := cache.Marshal.Delete(cache.Context, key); err != nil {
+				log.Debugf("[Cache] Failed to invalidate key %s: %v", key, err)
+			}
+		}
+	}
 }
 
 // InvalidateUserCache invalidates all cache entries for a user.

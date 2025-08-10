@@ -73,8 +73,8 @@ type Config struct {
 	EnableAutoCleanup       bool // Whether to automatically mark inactive chats
 
 	// Performance optimization settings
-	EnableQueryPrefetching      bool // Enable query batching and prefetching
-	EnableWriteThroughCache     bool // Enable write-through caching
+	EnableQueryPrefetching bool // Enable query batching and prefetching
+
 	EnableCachePrewarming       bool // Enable cache prewarming on startup
 	EnableAsyncProcessing       bool // Enable async processing for non-critical operations
 	EnableResponseCaching       bool // Enable response caching
@@ -141,7 +141,6 @@ var (
 
 	// Performance optimization settings
 	EnableQueryPrefetching      bool
-	EnableWriteThroughCache     bool
 	EnableCachePrewarming       bool
 	EnableAsyncProcessing       bool
 	EnableResponseCaching       bool
@@ -306,7 +305,6 @@ func LoadConfig() (*Config, error) {
 
 		// Performance optimization settings
 		EnableQueryPrefetching:      typeConvertor{str: os.Getenv("ENABLE_QUERY_PREFETCHING")}.Bool(),
-		EnableWriteThroughCache:     typeConvertor{str: os.Getenv("ENABLE_WRITE_THROUGH_CACHE")}.Bool(),
 		EnableCachePrewarming:       typeConvertor{str: os.Getenv("ENABLE_CACHE_PREWARMING")}.Bool(),
 		EnableAsyncProcessing:       typeConvertor{str: os.Getenv("ENABLE_ASYNC_PROCESSING")}.Bool(),
 		EnableResponseCaching:       typeConvertor{str: os.Getenv("ENABLE_RESPONSE_CACHING")}.Bool(),
@@ -462,9 +460,6 @@ func (cfg *Config) setDefaults() {
 	if !cfg.EnableQueryPrefetching {
 		cfg.EnableQueryPrefetching = true
 	}
-	if !cfg.EnableWriteThroughCache {
-		cfg.EnableWriteThroughCache = true
-	}
 	if !cfg.EnableCachePrewarming {
 		cfg.EnableCachePrewarming = true
 	}
@@ -558,7 +553,6 @@ func init() {
 	ActivityCheckInterval = cfg.ActivityCheckInterval
 	EnableAutoCleanup = &cfg.EnableAutoCleanup
 	EnableQueryPrefetching = cfg.EnableQueryPrefetching
-	EnableWriteThroughCache = cfg.EnableWriteThroughCache
 	EnableCachePrewarming = cfg.EnableCachePrewarming
 	EnableAsyncProcessing = cfg.EnableAsyncProcessing
 	EnableResponseCaching = cfg.EnableResponseCaching

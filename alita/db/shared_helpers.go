@@ -138,7 +138,7 @@ func BatchCreate[T any](records []T, batchSize int) error {
 	}
 
 	if batchSize <= 0 {
-		batchSize = BulkBatchSize
+		batchSize = 100 // Default batch size
 	}
 
 	err := DB.CreateInBatches(records, batchSize).Error
