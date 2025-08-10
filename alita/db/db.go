@@ -173,12 +173,6 @@ type ChatUser struct {
 	UserID int64 `gorm:"column:user_id;primaryKey" json:"user_id"`
 }
 
-// TableName returns the database table name for the ChatUser model.
-// This method overrides GORM's default table naming convention.
-func (ChatUser) TableName() string {
-	return "chat_users"
-}
-
 // WarnSettings represents warning settings for a chat
 type WarnSettings struct {
 	ID        uint      `gorm:"primaryKey;autoIncrement" json:"-"`

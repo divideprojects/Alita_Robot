@@ -18,18 +18,6 @@ func addToArray(arr []string, val ...string) []string {
 	return arr
 }
 
-// AddAdminCmd adds commands to the admin commands list for connection menu.
-// These commands will be shown in the admin commands section of the connection interface.
-func AddAdminCmd(cmd ...string) {
-	AdminCmds = addToArray(AdminCmds, cmd...)
-}
-
-// AddUserCmd adds commands to the user commands list for connection menu.
-// These commands will be shown in the user commands section of the connection interface.
-func AddUserCmd(cmd ...string) {
-	UserCmds = addToArray(UserCmds, cmd...)
-}
-
 // AddCmdToDisableable adds a command to the list of commands that can be disabled in chats.
 // Administrators can use this to control which commands are available to regular users.
 func AddCmdToDisableable(cmd string) {

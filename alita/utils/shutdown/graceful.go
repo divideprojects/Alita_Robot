@@ -76,8 +76,3 @@ func (m *Manager) shutdown() {
 		os.Exit(0)
 	})
 }
-
-// Shutdown triggers graceful shutdown manually
-func (m *Manager) Shutdown() {
-	m.shutdown()
-}

@@ -46,19 +46,3 @@ var (
 	ErrRecursiveFallback = fmt.Errorf("recursive fallback detected")
 	ErrInvalidParams     = fmt.Errorf("invalid translation parameters")
 )
-
-// IsLocaleNotFound checks if error is due to locale not being found.
-func IsLocaleNotFound(err error) bool {
-	if i18nErr, ok := err.(*I18nError); ok {
-		return i18nErr.Err == ErrLocaleNotFound
-	}
-	return err == ErrLocaleNotFound
-}
-
-// IsKeyNotFound checks if error is due to translation key not being found.
-func IsKeyNotFound(err error) bool {
-	if i18nErr, ok := err.(*I18nError); ok {
-		return i18nErr.Err == ErrKeyNotFound
-	}
-	return err == ErrKeyNotFound
-}

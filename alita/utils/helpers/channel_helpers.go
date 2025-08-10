@@ -12,9 +12,3 @@ func IsChannelID(chatID int64) bool {
 	chatIDStr := fmt.Sprintf("%d", chatID)
 	return strings.HasPrefix(chatIDStr, "-100")
 }
-
-// IsChannelIDString checks if a given chat ID string represents a channel.
-// This is useful when working with string representations of chat IDs.
-func IsChannelIDString(chatIDStr string) bool {
-	return strings.HasPrefix(chatIDStr, "-100")
-}

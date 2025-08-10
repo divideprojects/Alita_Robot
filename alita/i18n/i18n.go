@@ -20,17 +20,3 @@ func MustNewTranslator(langCode string) *Translator {
 	}
 	return translator
 }
-
-// GetAvailableLanguages returns all available language codes.
-// This is a convenience function that uses the LocaleManager.
-func GetAvailableLanguages() []string {
-	manager := GetManager()
-	return manager.GetAvailableLanguages()
-}
-
-// IsLanguageSupported checks if a language is supported.
-// This is a convenience function that uses the LocaleManager.
-func IsLanguageSupported(langCode string) bool {
-	manager := GetManager()
-	return manager.IsLanguageSupported(langCode)
-}

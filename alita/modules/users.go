@@ -13,6 +13,7 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
+	"github.com/divideprojects/Alita_Robot/alita/utils/constants"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
 
@@ -29,9 +30,9 @@ var (
 	channelUpdateCache = &sync.Map{}
 
 	// Update intervals
-	userUpdateInterval    = 5 * time.Minute
-	chatUpdateInterval    = 5 * time.Minute
-	channelUpdateInterval = 5 * time.Minute
+	userUpdateInterval    = constants.UserUpdateInterval
+	chatUpdateInterval    = constants.ChatUpdateInterval
+	channelUpdateInterval = constants.ChannelUpdateInterval
 )
 
 // shouldUpdate checks if enough time has passed since the last update

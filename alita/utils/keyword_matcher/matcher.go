@@ -57,16 +57,6 @@ func (km *KeywordMatcher) build() {
 	}).Debug("Built Aho-Corasick matcher")
 }
 
-// UpdatePatterns updates the matcher with new patterns
-func (km *KeywordMatcher) UpdatePatterns(patterns []string) {
-	km.mu.Lock()
-	defer km.mu.Unlock()
-
-	km.patterns = make([]string, len(patterns))
-	copy(km.patterns, patterns)
-	km.build()
-}
-
 // FindMatches returns all matches in the given text
 func (km *KeywordMatcher) FindMatches(text string) []MatchResult {
 	km.mu.RLock()
@@ -175,15 +165,6 @@ func (km *KeywordMatcher) HasMatch(text string) bool {
 	return len(hits) > 0
 }
 
-// FindFirstMatch returns the first match found in the text, or nil if no match
-func (km *KeywordMatcher) FindFirstMatch(text string) *MatchResult {
-	matches := km.FindMatches(text)
-	if len(matches) == 0 {
-		return nil
-	}
-	return &matches[0]
-}
-
 // GetPatterns returns a copy of the current patterns
 func (km *KeywordMatcher) GetPatterns() []string {
 	km.mu.RLock()
@@ -192,11 +173,4 @@ func (km *KeywordMatcher) GetPatterns() []string {
 	patterns := make([]string, len(km.patterns))
 	copy(patterns, km.patterns)
 	return patterns
-}
-
-// IsEmpty returns true if no patterns are configured
-func (km *KeywordMatcher) IsEmpty() bool {
-	km.mu.RLock()
-	defer km.mu.RUnlock()
-	return len(km.patterns) == 0
 }

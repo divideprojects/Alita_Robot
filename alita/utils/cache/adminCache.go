@@ -4,9 +4,12 @@ import (
 	"context"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/eko/gocache/lib/v4/store"
-	log "github.com/sirupsen/logrus"
+
+	"github.com/divideprojects/Alita_Robot/alita/utils/constants"
 )
 
 // LoadAdminCache retrieves and caches the list of administrators for a given chat.
@@ -19,7 +22,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	}
 
 	// Create context with timeout to prevent indefinite blocking
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), constants.DefaultTimeout)
 	defer cancel()
 
 	adminList, err := b.GetChatAdministratorsWithContext(ctx, chatId, nil)
@@ -54,7 +57,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	go func() {
 		maxRetries := 3
 		for i := 0; i < maxRetries; i++ {
-			if err := Marshal.Set(Context, AdminCache{ChatId: chatId}, adminCache, store.WithExpiration(time.Minute*30)); err != nil {
+			if err := Marshal.Set(Context, AdminCache{ChatId: chatId}, adminCache, store.WithExpiration(constants.AdminCacheTTL)); err != nil {
 				log.WithFields(log.Fields{
 					"chatId": chatId,
 					"error":  err,
@@ -101,36 +104,6 @@ func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 		return false, AdminCache{}
 	}
 	return true, *gotAdminlist.(*AdminCache)
-}
-
-// GetAdminCacheListWithFallback attempts to retrieve cached administrators for a chat,
-// automatically falling back to loading from Telegram API if cache miss occurs.
-// Returns true and AdminCache if successful, false and empty AdminCache if failed.
-func GetAdminCacheListWithFallback(b *gotgbot.Bot, chatId int64) (bool, AdminCache) {
-	// Try to get from cache first
-	found, adminCache := GetAdminCacheList(chatId)
-	if found {
-		return true, adminCache
-	}
-
-	// Cache miss - load from Telegram API
-	if b == nil {
-		log.WithFields(log.Fields{
-			"chatId": chatId,
-		}).Error("GetAdminCacheListWithFallback: Bot is nil, cannot load admin cache")
-		return false, AdminCache{}
-	}
-
-	log.WithFields(log.Fields{
-		"chatId": chatId,
-	}).Debug("GetAdminCacheListWithFallback: Loading admin cache from Telegram API")
-
-	adminCache = LoadAdminCache(b, chatId)
-	if adminCache.Cached {
-		return true, adminCache
-	}
-
-	return false, AdminCache{}
 }
 
 // GetAdminCacheUser searches for a specific user in the cached administrator list of a chat.

@@ -123,25 +123,6 @@ func SetCaptchaFailureAction(chatID int64, action string) error {
 	return nil
 }
 
-// CreateCaptchaAttempt creates a new captcha attempt record for a user.
-// This is called when a new member joins and needs to complete captcha.
-func CreateCaptchaAttempt(userID, chatID int64, answer string, messageID int64, timeout int) error {
-	attempt := &CaptchaAttempts{
-		UserID:       userID,
-		ChatID:       chatID,
-		Answer:       answer,
-		Attempts:     0,
-		MessageID:    messageID,
-		RefreshCount: 0,
-		ExpiresAt:    time.Now().Add(time.Duration(timeout) * time.Minute),
-	}
-
-	// Delete any existing attempt for this user in this chat
-	_ = DeleteCaptchaAttempt(userID, chatID)
-
-	return CreateRecord(attempt)
-}
-
 // CreateCaptchaAttemptPreMessage creates a captcha attempt before sending a message,
 // setting message_id to 0 temporarily and returning the created attempt with ID.
 func CreateCaptchaAttemptPreMessage(userID, chatID int64, answer string, timeout int) (*CaptchaAttempts, error) {
@@ -174,38 +155,6 @@ func UpdateCaptchaAttemptMessageID(attemptID uint, messageID int64) error {
 		return err
 	}
 	return nil
-}
-
-// UpdateCaptchaAttemptOnRefresh updates answer, messageID and increments refresh_count for an existing attempt.
-// It preserves Attempts and ExpiresAt and returns the updated record.
-func UpdateCaptchaAttemptOnRefresh(userID, chatID int64, newAnswer string, newMessageID int64) (*CaptchaAttempts, error) {
-	attempt := &CaptchaAttempts{}
-	err := DB.Where("user_id = ? AND chat_id = ? AND expires_at > ?", userID, chatID, time.Now()).First(attempt).Error
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-		log.Errorf("[Database][UpdateCaptchaAttemptOnRefresh:Find]: %v", err)
-		return nil, err
-	}
-
-	updates := map[string]interface{}{
-		"answer":        newAnswer,
-		"message_id":    newMessageID,
-		"refresh_count": gorm.Expr("COALESCE(refresh_count, 0) + 1"),
-	}
-
-	if err := UpdateRecord(&CaptchaAttempts{}, map[string]interface{}{"id": attempt.ID}, updates); err != nil {
-		return nil, err
-	}
-
-	// Reload updated attempt
-	err = DB.First(attempt, attempt.ID).Error
-	if err != nil {
-		log.Errorf("[Database][UpdateCaptchaAttemptOnRefresh:Reload]: %v", err)
-		return nil, err
-	}
-	return attempt, nil
 }
 
 // GetCaptchaAttempt retrieves an active captcha attempt for a user in a chat.
@@ -274,20 +223,6 @@ func CleanupExpiredCaptchaAttempts() (int64, error) {
 	}
 
 	return result.RowsAffected, nil
-}
-
-// GetAllActiveCaptchaAttempts retrieves all active captcha attempts for a chat.
-// Useful for admin overview and bulk operations.
-func GetAllActiveCaptchaAttempts(chatID int64) ([]*CaptchaAttempts, error) {
-	var attempts []*CaptchaAttempts
-	err := DB.Where("chat_id = ? AND expires_at > ?", chatID, time.Now()).Find(&attempts).Error
-
-	if err != nil {
-		log.Errorf("[Database][GetAllActiveCaptchaAttempts]: %v", err)
-		return nil, err
-	}
-
-	return attempts, nil
 }
 
 // DeleteAllCaptchaAttempts removes all captcha attempts for a chat.
