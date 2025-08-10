@@ -162,8 +162,12 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("connections_button_connect"); return t }(),
-							Url:  fmt.Sprintf("https://t.me/%s?start=connect_%d", b.Username, chat.Id),
+							Text: func() string {
+								tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+								t, _ := tr.GetString("connections_button_connect")
+								return t
+							}(),
+							Url: fmt.Sprintf("https://t.me/%s?start=connect_%d", b.Username, chat.Id),
 						},
 					},
 				},

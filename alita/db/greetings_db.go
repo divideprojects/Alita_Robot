@@ -106,7 +106,7 @@ func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 		// Set default welcome text if it's empty (for existing records with empty text)
 		greetingSrc.WelcomeSettings.WelcomeText = DefaultWelcome
 	}
-	
+
 	if greetingSrc.GoodbyeSettings == nil {
 		greetingSrc.GoodbyeSettings = &GoodbyeSettings{
 			LastMsgId:     0,

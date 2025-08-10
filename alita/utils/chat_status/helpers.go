@@ -17,11 +17,11 @@ func sendAnonAdminKeyboard(b *gotgbot.Bot, msg *gotgbot.Message, chat *gotgbot.C
 	ctx := &ext.Context{
 		EffectiveMessage: msg,
 	}
-	
+
 	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	mainText, _ := tr.GetString("chat_status_anon_confirm")
 	buttonText, _ := tr.GetString("chat_status_anon_prove_admin")
-	
+
 	return msg.Reply(b,
 		mainText,
 		&gotgbot.SendMessageOpts{
