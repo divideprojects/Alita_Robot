@@ -1,0 +1,304 @@
+name: PR Docker Build
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+      - ".gitignore"
+      - "locales/**"
+
+# Restrict permissions to minimum required
+permissions:
+  contents: read
+  packages: write
+  pull-requests: write
+
+# Cancel in-progress runs for the same PR
+concurrency:
+  group: pr-docker-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # Run basic CI checks first (reuse existing logic)
+  pre-build-checks:
+    name: Pre-build Checks
+    runs-on: ubuntu-latest
+    if: github.event.action != 'closed'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Quick lint check
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          args: --fast
+          skip-cache: true
+
+      - name: Verify build
+        run: |
+          CGO_ENABLED=0 go build -o /tmp/alita_robot ./main.go
+          echo "Build verification passed"
+
+  # Build and push Docker images
+  docker-build:
+    name: Build & Push PR Images
+    runs-on: ubuntu-latest
+    needs: pre-build-checks
+    if: github.event.action != 'closed'
+    outputs:
+      image-tags: ${{ steps.meta.outputs.tags }}
+      image-digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract short commit SHA
+        id: short-sha
+        run: echo "short_sha=${GITHUB_SHA:0:7}" >> $GITHUB_OUTPUT
+
+      # Generate metadata and tags
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/divideprojects/alita_robot
+          tags: |
+            type=raw,value=${{ github.event.pull_request.number }}-${{ steps.short-sha.outputs.short_sha }}
+            type=raw,value=${{ github.event.pull_request.number }}
+          labels: |
+            org.opencontainers.image.title=Alita Robot PR #${{ github.event.pull_request.number }}
+            org.opencontainers.image.description=PR #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}
+            org.opencontainers.image.url=${{ github.event.pull_request.html_url }}
+            org.opencontainers.image.source=${{ github.event.repository.html_url }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            pr.number=${{ github.event.pull_request.number }}
+            pr.head.ref=${{ github.event.pull_request.head.ref }}
+
+      # Build and push multi-arch Docker image
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/pr-build
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=pr-${{ github.event.pull_request.number }}
+          cache-to: type=gha,mode=max,scope=pr-${{ github.event.pull_request.number }}
+          provenance: true
+          sbom: true
+          build-args: |
+            PR_NUMBER=${{ github.event.pull_request.number }}
+            COMMIT_SHA=${{ github.sha }}
+
+      # Comment on PR with build information
+      - name: Update PR comment with build info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('🐳 Docker images built successfully')
+            );
+
+            const prNumber = context.payload.pull_request.number;
+            const shortSha = '${{ steps.short-sha.outputs.short_sha }}';
+            const digest = '${{ steps.build.outputs.digest }}';
+            const imageBase = 'ghcr.io/divideprojects/alita_robot';
+
+            const body = `🐳 **Docker images built successfully for PR #${prNumber}**
+
+            **Available image tags:**
+            - \`docker pull ${imageBase}:${prNumber}-${shortSha}\` (specific commit)
+            - \`docker pull ${imageBase}:${prNumber}\` (latest for this PR)
+
+            **Image digest:** \`${digest}\`
+
+            **Quick test:**
+            \`\`\`bash
+            # Test the latest PR build
+            docker run --rm ${imageBase}:${prNumber} --version
+
+            # Test specific commit
+            docker run --rm ${imageBase}:${prNumber}-${shortSha} --version
+            \`\`\`
+
+            **Multi-architecture support:** \`linux/amd64\`, \`linux/arm64\`
+
+            _Images are automatically cleaned up when the PR is closed._`;
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
+
+  # Security scan for PR images
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.event.action != 'closed'
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ghcr.io/divideprojects/alita_robot:${{ github.event.pull_request.number }}
+          format: "sarif"
+          output: "trivy-results.sarif"
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: "trivy-results.sarif"
+          category: "trivy-pr-${{ github.event.pull_request.number }}"
+
+      - name: Comment security scan results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let scanStatus = '✅ No high/critical vulnerabilities found';
+
+            try {
+              const sarif = JSON.parse(fs.readFileSync('trivy-results.sarif', 'utf8'));
+              const results = sarif.runs?.[0]?.results || [];
+              const highCritical = results.filter(r =>
+                r.level === 'error' || r.ruleId?.includes('HIGH') || r.ruleId?.includes('CRITICAL')
+              );
+
+              if (highCritical.length > 0) {
+                scanStatus = `⚠️ Found ${highCritical.length} high/critical vulnerabilities`;
+              }
+            } catch (e) {
+              scanStatus = '❓ Security scan results unavailable';
+            }
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🔒 **Security Scan Results for PR #${{ github.event.pull_request.number }}**\n\n${scanStatus}\n\nView detailed results in the Security tab.`
+            });
+
+  # Cleanup job when PR is closed
+  cleanup-pr-images:
+    name: Cleanup PR Images
+    runs-on: ubuntu-latest
+    if: github.event.action == 'closed'
+    permissions:
+      packages: write
+    steps:
+      - name: Delete PR Docker images
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const packageName = 'alita_robot';
+            const prNumber = context.payload.pull_request.number;
+
+            try {
+              const { data: versions } = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
+                package_type: 'container',
+                package_name: packageName,
+                org: context.repo.owner,
+                per_page: 100
+              });
+
+              const prVersions = versions.filter(version =>
+                version.metadata?.container?.tags?.some(tag =>
+                  tag.startsWith(`${prNumber}-`) || tag === `${prNumber}`
+                )
+              );
+
+              let deletedCount = 0;
+              for (const version of prVersions) {
+                try {
+                  await github.rest.packages.deletePackageVersionForOrg({
+                    package_type: 'container',
+                    package_name: packageName,
+                    org: context.repo.owner,
+                    package_version_id: version.id
+                  });
+                  deletedCount++;
+                  console.log(`Deleted image version: ${version.id} with tags: ${version.metadata.container.tags.join(', ')}`);
+                } catch (deleteError) {
+                  console.log(`Failed to delete version ${version.id}: ${deleteError.message}`);
+                }
+              }
+
+              console.log(`Cleaned up ${deletedCount} Docker image versions for PR #${prNumber}`);
+
+              // Comment on the closed PR
+              await github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🧹 **Cleanup completed** - Removed ${deletedCount} Docker image(s) for this PR.`
+              });
+
+            } catch (error) {
+              console.log(`Error during cleanup: ${error.message}`);
+              // Create comment about cleanup failure
+              try {
+                await github.rest.issues.createComment({
+                  issue_number: prNumber,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: `⚠️ **Cleanup partially failed** - Some Docker images for this PR may need manual removal.`
+                });
+              } catch (commentError) {
+                console.log(`Failed to create cleanup comment: ${commentError.message}`);
+              }
+            }

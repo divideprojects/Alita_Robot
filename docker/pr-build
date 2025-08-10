@@ -1,0 +1,67 @@
+# Multi-stage build for PR Docker images
+FROM golang:1.21-alpine AS builder
+
+# Build arguments
+ARG PR_NUMBER=unknown
+ARG COMMIT_SHA=unknown
+
+# Install build dependencies
+RUN apk add --no-cache git ca-certificates tzdata
+
+# Set working directory
+WORKDIR /app
+
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build the binary with PR-specific version info
+RUN CGO_ENABLED=0 GOOS=linux go build \
+    -trimpath \
+    -ldflags="-s -w -X main.version=pr-${PR_NUMBER} -X main.commit=${COMMIT_SHA} -X main.date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    -o alita_robot \
+    ./main.go
+
+# Final stage
+FROM alpine:latest
+
+# Install runtime dependencies
+RUN apk --no-cache add ca-certificates tzdata
+
+# Create non-root user
+RUN adduser -D -s /bin/sh alita
+
+# Set working directory
+WORKDIR /app
+
+# Copy binary from builder stage
+COPY --from=builder /app/alita_robot .
+
+# Change ownership
+RUN chown alita:alita /app/alita_robot
+
+# Switch to non-root user
+USER alita
+
+# Expose port (if needed)
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD pgrep alita_robot || exit 1
+
+# Run the binary
+ENTRYPOINT ["./alita_robot"]
+
+# Metadata
+LABEL org.opencontainers.image.authors="Divanshu Chauhan <divkix@divkix.me>"
+LABEL org.opencontainers.image.url="https://divkix.me"
+LABEL org.opencontainers.image.source="https://github.com/divideprojects/Alita_Robot"
+LABEL org.opencontainers.image.title="Alita Go Robot - PR Build"
+LABEL org.opencontainers.image.description="Pull Request build of Alita Go Robot"
+LABEL org.opencontainers.image.vendor="Divkix"
