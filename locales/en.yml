@@ -1760,12 +1760,6 @@ antiflood_button_unban_admins: "Unban (Admins Only)"
 # Helpers module strings
 helpers_notes_current_header: "These are the current notes in this Chat:\n"
 
-# Database defaults
-db_default_welcome: "Hey {first}, how are you?"
-db_default_goodbye: "Sad to see you leaving {first}"
-db_warn_no_reason: "No Reason"
-db_not_initialized: "database not initialized"
-
 # Validation errors
 validation_filter_no_content: "You need to give the filter some content!"
 validation_note_no_content: "You need to give the note some content!"
@@ -1786,56 +1780,6 @@ config_workers_invalid: "%s must be between %d and %d"
 # System messages
 system_db_connected: "Connected to PostgreSQL database successfully!"
 system_config_loaded: "Configuration loaded and validated successfully"
-system_safety_shutdown: "safety manager is shutting down"
-system_timeout_worker: "timeout acquiring worker slot for %s"
-system_shutdown_acquisition: "safety manager shutdown during slot acquisition"
-
-# Pipeline errors
-pipeline_no_processor: "no processor registered for stage: %s"
-pipeline_shutting_down: "pipeline shutting down, skipping stage: %s"
-pipeline_processor_timeout: "processor timeout for stage: %s"
-pipeline_results_timeout: "timeout waiting for processing results"
-
-# Repository validation errors
-repo_user_nil_error: "user cannot be nil"
-repo_user_id_zero_error: "user ID cannot be zero"
-repo_username_empty_error: "username cannot be empty"
-repo_user_not_found: "user %d not found"
-repo_user_at_index_nil: "user at index %d cannot be nil"
-repo_user_at_index_zero_id: "user at index %d has zero ID"
-repo_chat_nil_error: "chat cannot be nil"
-repo_chat_id_zero_error: "chat ID cannot be zero"
-repo_chat_not_found: "chat %d not found"
-
-# Captcha validation errors
-captcha_invalid_mode_error: "invalid captcha mode: must be 'math' or 'text'"
-captcha_timeout_range_error: "timeout must be between 1 and 10 minutes"
-captcha_invalid_action_error: "invalid failure action: must be 'kick', 'ban', or 'mute'"
-captcha_attempts_range_error: "max attempts must be between 1 and 10"
-captcha_no_active_attempt: "no active captcha attempt found"
-
-# Helper strings
-helpers_person_no_name: "PersonWithNoName"
-helpers_admin_commands: "Admin commands"
-helpers_user_commands: "User commands"
-helpers_need_filter_content: "You need to give the filter some content!"
-helpers_need_note_content: "You need to give the note some content!"
-helpers_need_content: "You need to give me some content to %s users!"
-helpers_text_too_long: "Your message text is %d characters long. The maximum length for text is 4096; please trim it to a smaller size. Note that markdown characters may take more space than expected."
-helpers_caption_too_long: "Your message caption is %d characters long. The maximum caption length is 1024; please trim it to a smaller size. Note that markdown characters may take more space than expected."
-helpers_module_help_header: "Here is the help for the *%s* module:\n\n"
-
-# Formatting strings
-format_user_info: "User: %s"
-format_user_id: "User ID: %d"
-format_list_item: " - %s"
-format_bullet_item: "• %s"
-format_list_item_code: " - <code>%s</code>"
-
-# Math operators (for captcha)
-math_operator_plus: "+"
-math_operator_minus: "-"
-math_operator_multiply: "×"
 
 # Database query errors
 db_lock_queries_not_initialized: "lock queries not initialized"
