@@ -128,61 +128,27 @@ jobs:
             COMMIT_SHA=${{ github.sha }}
             BUILDKIT_INLINE_CACHE=1
 
-      # Create commit status instead of PR comment
-      - name: Create commit status
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prNumber = context.payload.pull_request.number;
-            const shortSha = '${{ steps.short-sha.outputs.short_sha }}';
-            const digest = '${{ steps.build.outputs.digest }}';
-            const imageBase = 'ghcr.io/divideprojects/alita_robot';
-
-            // Create commit status
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: context.sha,
-              state: 'success',
-              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
-              description: `Docker images built for PR #${prNumber}`,
-              context: 'docker/pr-build'
-            });
-
-      # Only comment on PR open/reopen, not on every push
-      - name: Comment on PR (first time only)
-        if: github.event.action == 'opened' || github.event.action == 'reopened'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prNumber = context.payload.pull_request.number;
-            const shortSha = '${{ steps.short-sha.outputs.short_sha }}';
-            const digest = '${{ steps.build.outputs.digest }}';
-            const imageBase = 'ghcr.io/divideprojects/alita_robot';
-
-            const body = `🐳 **Docker images will be built for this PR**
-
-            **Available image tags:**
-            - \`${imageBase}:pr-${prNumber}-<commit>\` (specific commits)
-            - \`${imageBase}:pr-${prNumber}\` (latest for this PR)
-
-            **Quick test template:**
-            \`\`\`bash
-            # Test the latest PR build
-            docker run --rm ${imageBase}:pr-${prNumber} --version
-            \`\`\`
-
-            **Multi-architecture support:** \`linux/amd64\`, \`linux/arm64\`
-
-            _Check commit statuses for build details. Images are automatically cleaned up when the PR is closed._`;
-
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: body
-            });
-
+      # Add build info to job summary (no PR comments)
+      - name: Add build info to job summary
+        run: |
+          echo "## 🐳 Docker Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**PR #${{ github.event.pull_request.number }}**" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image:** \`ghcr.io/divideprojects/alita_robot:pr-${{ github.event.pull_request.number }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** \`${{ steps.short-sha.outputs.short_sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Digest:** \`${{ steps.build.outputs.digest }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Platforms:** \`linux/amd64\`, \`linux/arm64\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Quick Test" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "# Test the latest PR build" >> $GITHUB_STEP_SUMMARY
+          echo "docker run --rm ghcr.io/divideprojects/alita_robot:pr-${{ github.event.pull_request.number }} --version" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Test specific commit" >> $GITHUB_STEP_SUMMARY
+          echo "docker run --rm ghcr.io/divideprojects/alita_robot:pr-${{ github.event.pull_request.number }}-${{ steps.short-sha.outputs.short_sha }} --version" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "_Images are automatically cleaned up when the PR is closed._" >> $GITHUB_STEP_SUMMARY
   # Cleanup job when PR is closed
   cleanup-pr-images:
     name: Cleanup PR Images
