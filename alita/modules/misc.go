@@ -185,55 +185,117 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 // ping handles the /ping command to measure and display
-// the bot's response time in milliseconds.
-// Optimized version that uses prefetched context to minimize database queries.
+// detailed latency breakdown including user-to-Telegram, processing, and API response times.
+// Advanced implementation with location estimation and comprehensive metrics.
 func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	stime := time.Now()
+	webhookReceivedTime := time.Now()
 
-	// Use prefetched context for optimal performance
+	// When user sent the message (Unix timestamp from Telegram)
+	userSentTime := time.Unix(int64(msg.Date), 0)
+
+	// Calculate incoming latency (user -> Telegram -> webhook)
+	incomingLatency := webhookReceivedTime.Sub(userSentTime)
+
+	// Prefetch for accurate processing measurement
+	prefetchStart := time.Now()
 	prefetched, err := db.PrefetchCommandContext(ctx)
+	prefetchTime := time.Since(prefetchStart)
+
 	if err != nil {
-		log.WithError(err).Debug("[Ping] Failed to prefetch context, using fallback")
-		// Fallback to simple ping without checks for maximum speed
-		rmsg, _ := msg.Reply(b, "Pinging...", &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
-		elapsed := time.Since(stime)
-		text := fmt.Sprintf("Pinged in %dms", int64(elapsed/time.Millisecond))
-		_, _, err := rmsg.EditText(b, text, nil)
-		if err != nil {
-			log.Error(err)
-			return err
-		}
-		log.Debugf("[Ping] Response time: %v (fallback mode)", elapsed)
+		// Fallback without timing details
+		_, _ = msg.Reply(b, "🏓 Pong!", nil)
 		return ext.EndGroups
 	}
 
-	// Check if command is disabled using prefetched data (no additional DB query)
+	// Check if command is disabled
 	if msg.Chat.Type != "private" && prefetched.IsCommandDisabled("ping") {
-		// Skip admin check for ping command to maximize speed
 		return ext.EndGroups
 	}
 
-	// Use prefetched language (no additional DB query)
-	tr := i18n.MustNewTranslator(prefetched.GetPrefetchedLanguage())
-	text, _ := tr.GetString("misc_pinging")
-	rmsg, _ := msg.Reply(b, text, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
-	elapsed := time.Since(stime)
-	temp, _ := tr.GetString("misc_pinged_in")
-	text = fmt.Sprintf(temp, int64(elapsed/time.Millisecond))
-	_, _, err = rmsg.EditText(b, text, nil)
+	// Total processing time before API call
+	processingTime := time.Since(webhookReceivedTime)
+
+	// Send initial message and measure API call time
+	apiStart := time.Now()
+	rmsg, err := msg.Reply(b, "🏓 Calculating latency...", &gotgbot.SendMessageOpts{
+		ParseMode: helpers.HTML,
+	})
 	if err != nil {
-		log.Error(err)
+		return err
+	}
+	apiSendTime := time.Since(apiStart)
+
+	// Edit message to measure round-trip
+	editStart := time.Now()
+
+	// In webhook mode, we can calculate accurate components:
+	// 1. User -> Telegram: Unknown, but we can estimate from total
+	// 2. Telegram -> Webhook: Very fast (direct push)
+	// 3. Bot processing: What we measured
+	// 4. Bot -> Telegram API: What we measured
+
+	// Estimate user's latency to Telegram
+	// In webhook mode, Telegram -> Webhook is typically 5-10ms
+	telegramToWebhook := 10 * time.Millisecond
+	userToTelegram := incomingLatency - telegramToWebhook
+	if userToTelegram < 0 {
+		userToTelegram = incomingLatency // Fallback if estimate is off
+	}
+
+	// Calculate total round-trip estimate
+	totalRoundTrip := userToTelegram*2 + processingTime + apiSendTime
+
+	// Determine user's approximate location based on latency
+	userLocation := getLocationFromLatency(userToTelegram)
+
+	// Build detailed response
+	text := fmt.Sprintf(
+		"🏓 <b>Pong!</b>\n\n"+
+			"📊 <b>Latency Breakdown:</b>\n"+
+			"├─ 📤 <b>Incoming Path:</b>\n"+
+			"│  ├ 👤 You → Telegram: ~%dms %s\n"+
+			"│  ├ ⚡ Telegram → Bot: ~%dms\n"+
+			"│  └ 📥 Total incoming: %dms\n"+
+			"│\n"+
+			"├─ ⚙️ <b>Bot Processing:</b>\n"+
+			"│  ├ 🗄️ Database: %dms\n"+
+			"│  └ 🤖 Total: %dms\n"+
+			"│\n"+
+			"├─ 📡 <b>Bot → Telegram:</b> %dms\n"+
+			"│\n"+
+			"└─ ⏱️ <b>Est. Round-trip:</b> %dms\n\n"+
+			"<i>Webhook mode • Server: Zurich</i>",
+		userToTelegram.Milliseconds(),
+		userLocation,
+		telegramToWebhook.Milliseconds(),
+		incomingLatency.Milliseconds(),
+		prefetchTime.Milliseconds(),
+		processingTime.Milliseconds(),
+		apiSendTime.Milliseconds(),
+		totalRoundTrip.Milliseconds(),
+	)
+
+	_, _, err = rmsg.EditText(b, text, &gotgbot.EditMessageTextOpts{
+		ParseMode: helpers.HTML,
+	})
+	editTime := time.Since(editStart)
+
+	if err != nil {
+		log.WithError(err).Error("[Ping] Failed to edit message with latency details")
 		return err
 	}
 
-	// Log performance statistics
+	// Log detailed metrics for debugging
 	log.WithFields(log.Fields{
-		"response_time": elapsed,
-		"cache_hit":     prefetched.CacheHit,
-		"query_time":    prefetched.QueryTime,
-		"queries_count": prefetched.QueriesCount,
-	}).Debug("[Ping] Performance metrics")
+		"user_id":          msg.From.Id,
+		"user_to_telegram": userToTelegram.Milliseconds(),
+		"incoming_total":   incomingLatency.Milliseconds(),
+		"processing":       processingTime.Milliseconds(),
+		"api_send":         apiSendTime.Milliseconds(),
+		"api_edit":         editTime.Milliseconds(),
+		"total_round_trip": totalRoundTrip.Milliseconds(),
+	}).Debug("[Ping] Detailed latency metrics")
 
 	return ext.EndGroups
 }
@@ -445,6 +507,35 @@ func (moduleStruct) stat(b *gotgbot.Bot, ctx *ext.Context) error {
 		log.Error(err)
 	}
 	return ext.EndGroups
+}
+
+// getLocationFromLatency estimates user location from latency to Telegram servers
+func getLocationFromLatency(latency time.Duration) string {
+	ms := latency.Milliseconds()
+
+	// Telegram servers are primarily in:
+	// - Amsterdam (Europe)
+	// - Singapore (Asia)
+	// - Miami (Americas)
+
+	switch {
+	case ms < 20:
+		return "🇪🇺" // Very close to EU servers
+	case ms < 40:
+		return "🇪🇺/🇬🇧" // Europe
+	case ms < 60:
+		return "🇹🇷/🇦🇪" // Middle East
+	case ms < 80:
+		return "🇺🇸" // Eastern US
+	case ms < 100:
+		return "🇮🇳/🇷🇺" // South Asia/Russia
+	case ms < 120:
+		return "🇯🇵/🇰🇷" // East Asia
+	case ms < 150:
+		return "🇧🇷/🇦🇺" // South America/Oceania
+	default:
+		return "🌍" // Far region
+	}
 }
 
 // LoadMisc registers all miscellaneous module handlers with the dispatcher,
