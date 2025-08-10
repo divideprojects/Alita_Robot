@@ -128,63 +128,60 @@ jobs:
             COMMIT_SHA=${{ github.sha }}
             BUILDKIT_INLINE_CACHE=1
 
-      # Comment on PR with build information
-      - name: Update PR comment with build info
+      # Create commit status instead of PR comment
+      - name: Create commit status
         uses: actions/github-script@v7
         with:
           script: |
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const botComment = comments.find(comment =>
-              comment.user.type === 'Bot' &&
-              comment.body.includes('🐳 Docker images built successfully')
-            );
-
             const prNumber = context.payload.pull_request.number;
             const shortSha = '${{ steps.short-sha.outputs.short_sha }}';
             const digest = '${{ steps.build.outputs.digest }}';
             const imageBase = 'ghcr.io/divideprojects/alita_robot';
 
-            const body = `🐳 **Docker images built successfully for PR #${prNumber}**
+            // Create commit status
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: 'success',
+              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              description: `Docker images built for PR #${prNumber}`,
+              context: 'docker/pr-build'
+            });
+
+      # Only comment on PR open/reopen, not on every push
+      - name: Comment on PR (first time only)
+        if: github.event.action == 'opened' || github.event.action == 'reopened'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const shortSha = '${{ steps.short-sha.outputs.short_sha }}';
+            const digest = '${{ steps.build.outputs.digest }}';
+            const imageBase = 'ghcr.io/divideprojects/alita_robot';
+
+            const body = `🐳 **Docker images will be built for this PR**
 
             **Available image tags:**
-            - \`docker pull ${imageBase}:pr-${prNumber}-${shortSha}\` (specific commit)
-            - \`docker pull ${imageBase}:pr-${prNumber}\` (latest for this PR)
+            - \`${imageBase}:pr-${prNumber}-<commit>\` (specific commits)
+            - \`${imageBase}:pr-${prNumber}\` (latest for this PR)
 
-            **Image digest:** \`${digest}\`
-
-            **Quick test:**
+            **Quick test template:**
             \`\`\`bash
             # Test the latest PR build
             docker run --rm ${imageBase}:pr-${prNumber} --version
-
-            # Test specific commit
-            docker run --rm ${imageBase}:pr-${prNumber}-${shortSha} --version
             \`\`\`
 
             **Multi-architecture support:** \`linux/amd64\`, \`linux/arm64\`
 
-            _Images are automatically cleaned up when the PR is closed._`;
+            _Check commit statuses for build details. Images are automatically cleaned up when the PR is closed._`;
 
-            if (botComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: body
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: body
-              });
-            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
 
   # Cleanup job when PR is closed
   cleanup-pr-images:
