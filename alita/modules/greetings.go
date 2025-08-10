@@ -132,7 +132,7 @@ func (moduleStruct) setWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	text, dataType, content, buttons, errorMsg := helpers.GetWelcomeType(msg, "welcome")
+	text, dataType, content, buttons, errorMsg := helpers.GetWelcomeType(msg, "welcome", db.GetLanguage(ctx))
 	if dataType == -1 {
 		_, err := msg.Reply(bot, errorMsg, helpers.Shtml())
 		if err != nil {
@@ -203,7 +203,7 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 		noformat := len(args) > 0 && strings.ToLower(args[0]) == "noformat"
 		gdbyePrefs := db.GetGreetingSettings(chat.Id)
 		gdbyeText = gdbyePrefs.GoodbyeSettings.GoodbyeText
-			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		text, _ := tr.GetString("greetings_goodbye_status")
 		_, err := msg.Reply(bot, fmt.Sprintf(text,
 			gdbyePrefs.GoodbyeSettings.ShouldGoodbye,
@@ -288,7 +288,7 @@ func (moduleStruct) setGoodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	text, dataType, content, buttons, errorMsg := helpers.GetWelcomeType(msg, "goodbye")
+	text, dataType, content, buttons, errorMsg := helpers.GetWelcomeType(msg, "goodbye", db.GetLanguage(ctx))
 	if dataType == -1 {
 		_, err := msg.Reply(bot, errorMsg, helpers.Shtml())
 		if err != nil {
@@ -818,12 +818,15 @@ func (m moduleStruct) pendingJoins(bot *gotgbot.Bot, ctx *ext.Context) error {
 		approveText, _ := tr.GetString("greetings_join_request_approve_btn")
 		declineText, _ := tr.GetString("greetings_join_request_decline_btn")
 		banText, _ := tr.GetString("greetings_join_request_ban_btn")
+		userInfoTemplate, _ := tr.GetString("format_user_info")
+		userIdTemplate, _ := tr.GetString("format_user_id")
+
 		_, err := bot.SendMessage(
 			chat.Id,
 			fmt.Sprint(
 				newUserText,
-				fmt.Sprintf("\nUser: %s", helpers.MentionHtml(user.Id, user.FirstName)),
-				fmt.Sprintf("\nUser ID: %d", user.Id),
+				"\n"+fmt.Sprintf(userInfoTemplate, helpers.MentionHtml(user.Id, user.FirstName)),
+				"\n"+fmt.Sprintf(userIdTemplate, user.Id),
 			),
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,

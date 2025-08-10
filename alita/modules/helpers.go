@@ -111,7 +111,8 @@ func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgb
 	ModName := cases.Title(language.English).String(module)
 	tr := i18n.MustNewTranslator(lang)
 	helpMsg, _ := tr.GetString(fmt.Sprintf("%s_help_msg", strings.ToLower(ModName)))
-	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) + helpMsg
+	headerTemplate, _ := tr.GetString("helpers_module_help_header")
+	helpText = fmt.Sprintf(headerTemplate, ModName) + helpMsg
 
 	// Create back button suffix dynamically
 	backText, _ := tr.GetString("common_back_arrow")

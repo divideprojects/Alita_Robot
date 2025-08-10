@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/divideprojects/Alita_Robot/alita/utils"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -108,7 +109,7 @@ func (sm *WorkerSafetyManager) AcquireWorkerSlot(workerType string, operationID 
 	// Check if we're shutting down
 	select {
 	case <-sm.shutdownCtx.Done():
-		return nil, fmt.Errorf("safety manager is shutting down")
+		return nil, utils.ErrSafetyManagerShutdown
 	default:
 	}
 
@@ -120,9 +121,9 @@ func (sm *WorkerSafetyManager) AcquireWorkerSlot(workerType string, operationID 
 	case sm.concurrencyLimiter <- struct{}{}:
 		// Successfully acquired slot
 	case <-ctx.Done():
-		return nil, fmt.Errorf("timeout acquiring worker slot for %s", workerType)
+		return nil, fmt.Errorf("%w: %s", utils.ErrWorkerSlotTimeout, workerType)
 	case <-sm.shutdownCtx.Done():
-		return nil, fmt.Errorf("safety manager shutdown during slot acquisition")
+		return nil, utils.ErrShutdownDuringAcquisition
 	}
 
 	// Create operation tracker

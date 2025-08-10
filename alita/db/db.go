@@ -13,6 +13,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 )
 
 // Message type constants - maintain compatibility with existing code
@@ -28,11 +29,31 @@ const (
 	VideoNote int = 8
 )
 
-// Default greeting messages
+// Default greeting messages - deprecated constants, use GetDefaultWelcome/GetDefaultGoodbye instead
 const (
 	DefaultWelcome = "Hey {first}, how are you?"
 	DefaultGoodbye = "Sad to see you leaving {first}"
 )
+
+// GetDefaultWelcome returns the localized default welcome message
+func GetDefaultWelcome(language string) string {
+	tr := i18n.MustNewTranslator(language)
+	msg, _ := tr.GetString("db_default_welcome")
+	if msg == "" {
+		return DefaultWelcome // fallback to hardcoded constant
+	}
+	return msg
+}
+
+// GetDefaultGoodbye returns the localized default goodbye message
+func GetDefaultGoodbye(language string) string {
+	tr := i18n.MustNewTranslator(language)
+	msg, _ := tr.GetString("db_default_goodbye")
+	if msg == "" {
+		return DefaultGoodbye // fallback to hardcoded constant
+	}
+	return msg
+}
 
 // Button represents a button structure used in filters, greetings, etc.
 type Button struct {

@@ -8,6 +8,15 @@ import (
 	"gorm.io/gorm"
 )
 
+// Captcha validation errors
+var (
+	ErrInvalidCaptchaMode   = errors.New("INVALID_CAPTCHA_MODE")
+	ErrInvalidTimeout       = errors.New("INVALID_TIMEOUT_RANGE")
+	ErrInvalidFailureAction = errors.New("INVALID_FAILURE_ACTION")
+	ErrInvalidMaxAttempts   = errors.New("INVALID_MAX_ATTEMPTS")
+	ErrNoActiveCaptcha      = errors.New("NO_ACTIVE_CAPTCHA")
+)
+
 // GetCaptchaSettings retrieves captcha settings for a chat.
 // Returns default settings if the chat doesn't have custom settings.
 func GetCaptchaSettings(chatID int64) (*CaptchaSettings, error) {
@@ -55,7 +64,7 @@ func SetCaptchaEnabled(chatID int64, enabled bool) error {
 // Creates settings record if it doesn't exist.
 func SetCaptchaMode(chatID int64, mode string) error {
 	if mode != "math" && mode != "text" {
-		return errors.New("invalid captcha mode: must be 'math' or 'text'")
+		return ErrInvalidCaptchaMode
 	}
 
 	settings := &CaptchaSettings{
@@ -76,7 +85,7 @@ func SetCaptchaMode(chatID int64, mode string) error {
 // Creates settings record if it doesn't exist.
 func SetCaptchaTimeout(chatID int64, timeout int) error {
 	if timeout < 1 || timeout > 10 {
-		return errors.New("timeout must be between 1 and 10 minutes")
+		return ErrInvalidTimeout
 	}
 
 	settings := &CaptchaSettings{
@@ -97,7 +106,7 @@ func SetCaptchaTimeout(chatID int64, timeout int) error {
 // Valid actions are: kick, ban, mute
 func SetCaptchaFailureAction(chatID int64, action string) error {
 	if action != "kick" && action != "ban" && action != "mute" {
-		return errors.New("invalid failure action: must be 'kick', 'ban', or 'mute'")
+		return ErrInvalidFailureAction
 	}
 
 	settings := &CaptchaSettings{
@@ -117,7 +126,7 @@ func SetCaptchaFailureAction(chatID int64, action string) error {
 // SetCaptchaMaxAttempts sets the maximum number of attempts allowed for captcha verification.
 func SetCaptchaMaxAttempts(chatID int64, maxAttempts int) error {
 	if maxAttempts < 1 || maxAttempts > 10 {
-		return errors.New("max attempts must be between 1 and 10")
+		return ErrInvalidMaxAttempts
 	}
 
 	settings := &CaptchaSettings{
@@ -247,7 +256,7 @@ func IncrementCaptchaAttempts(userID, chatID int64) (*CaptchaAttempts, error) {
 	}
 
 	if attempt == nil {
-		return nil, errors.New("no active captcha attempt found")
+		return nil, ErrNoActiveCaptcha
 	}
 
 	attempt.Attempts++

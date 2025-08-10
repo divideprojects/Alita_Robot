@@ -91,7 +91,7 @@ func (m moduleStruct) addFilter(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	filterWord, fileid, text, dataType, buttons, _, _, _, _, _, _, errorMsg := helpers.GetNoteAndFilterType(msg, true)
+	filterWord, fileid, text, dataType, buttons, _, _, _, _, _, _, errorMsg := helpers.GetNoteAndFilterType(msg, true, db.GetLanguage(ctx))
 	if dataType == -1 {
 		_, err := msg.Reply(b, errorMsg, helpers.Shtml())
 		if err != nil {

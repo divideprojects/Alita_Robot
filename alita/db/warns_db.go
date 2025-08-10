@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -106,7 +107,13 @@ func WarnUserWithContext(ctx context.Context, userId, chatId int64, reason strin
 			}
 			warnrc.Reasons = append(warnrc.Reasons, reason)
 		} else {
-			warnrc.Reasons = append(warnrc.Reasons, "No Reason")
+			// Use default language for "No Reason" - this could be improved to use chat language
+			tr := i18n.MustNewTranslator("en")
+			noReason, _ := tr.GetString("db_warn_no_reason")
+			if noReason == "" {
+				noReason = "No Reason" // fallback
+			}
+			warnrc.Reasons = append(warnrc.Reasons, noReason)
 		}
 
 		// Save the warn record

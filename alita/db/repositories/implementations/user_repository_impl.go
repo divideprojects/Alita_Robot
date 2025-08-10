@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/db/repositories"
 	"github.com/divideprojects/Alita_Robot/alita/db/repositories/interfaces"
 )
 
@@ -29,11 +30,11 @@ func NewUserRepository(database *gorm.DB) interfaces.UserRepository {
 // It uses GORM's FirstOrCreate with Assign to perform an upsert operation based on user_id.
 func (r *userRepositoryImpl) CreateOrUpdate(ctx context.Context, user *db.User) error {
 	if user == nil {
-		return fmt.Errorf("user cannot be nil")
+		return repositories.ErrUserNil
 	}
 
 	if user.UserId == 0 {
-		return fmt.Errorf("user ID cannot be zero")
+		return repositories.ErrUserIDZero
 	}
 
 	result := r.db.WithContext(ctx).Where("user_id = ?", user.UserId).Assign(user).FirstOrCreate(&db.User{})
@@ -50,7 +51,7 @@ func (r *userRepositoryImpl) CreateOrUpdate(ctx context.Context, user *db.User) 
 // Returns nil without error if the user is not found, actual errors are returned as-is.
 func (r *userRepositoryImpl) GetByID(ctx context.Context, userID int64) (*db.User, error) {
 	if userID == 0 {
-		return nil, fmt.Errorf("user ID cannot be zero")
+		return nil, repositories.ErrUserIDZero
 	}
 
 	var user db.User
@@ -73,7 +74,7 @@ func (r *userRepositoryImpl) GetByID(ctx context.Context, userID int64) (*db.Use
 // Returns nil without error if the user is not found, actual errors are returned as-is.
 func (r *userRepositoryImpl) GetByUsername(ctx context.Context, username string) (*db.User, error) {
 	if username == "" {
-		return nil, fmt.Errorf("username cannot be empty")
+		return nil, repositories.ErrUsernameEmpty
 	}
 
 	var user db.User
@@ -96,7 +97,7 @@ func (r *userRepositoryImpl) GetByUsername(ctx context.Context, username string)
 // Returns an error if the user is not found or if the database operation fails.
 func (r *userRepositoryImpl) Update(ctx context.Context, userID int64, username, name string) error {
 	if userID == 0 {
-		return fmt.Errorf("user ID cannot be zero")
+		return repositories.ErrUserIDZero
 	}
 
 	updates := map[string]interface{}{
@@ -111,7 +112,7 @@ func (r *userRepositoryImpl) Update(ctx context.Context, userID int64, username,
 	}
 
 	if result.RowsAffected == 0 {
-		return fmt.Errorf("user %d not found", userID)
+		return repositories.ErrUserNotFound
 	}
 
 	log.WithContext(ctx).Debugf("[UserRepository] User %d updated successfully", userID)
@@ -122,7 +123,7 @@ func (r *userRepositoryImpl) Update(ctx context.Context, userID int64, username,
 // Returns true if found, false if not found, and an error if the database query fails.
 func (r *userRepositoryImpl) Exists(ctx context.Context, userID int64) (bool, error) {
 	if userID == 0 {
-		return false, fmt.Errorf("user ID cannot be zero")
+		return false, repositories.ErrUserIDZero
 	}
 
 	var count int64
@@ -159,10 +160,10 @@ func (r *userRepositoryImpl) CreateOrUpdateBatch(ctx context.Context, users []*d
 	// Validate all users first
 	for i, user := range users {
 		if user == nil {
-			return fmt.Errorf("user at index %d cannot be nil", i)
+			return fmt.Errorf("%w: index %d", repositories.ErrUserAtIndexNil, i)
 		}
 		if user.UserId == 0 {
-			return fmt.Errorf("user at index %d has zero ID", i)
+			return fmt.Errorf("%w: index %d", repositories.ErrUserAtIndexZeroID, i)
 		}
 	}
 
@@ -183,7 +184,7 @@ func (r *userRepositoryImpl) CreateOrUpdateBatch(ctx context.Context, users []*d
 // This operation is primarily used for GDPR compliance when users request data deletion.
 func (r *userRepositoryImpl) Delete(ctx context.Context, userID int64) error {
 	if userID == 0 {
-		return fmt.Errorf("user ID cannot be zero")
+		return repositories.ErrUserIDZero
 	}
 
 	result := r.db.WithContext(ctx).Where("user_id = ?", userID).Delete(&db.User{})
@@ -193,7 +194,7 @@ func (r *userRepositoryImpl) Delete(ctx context.Context, userID int64) error {
 	}
 
 	if result.RowsAffected == 0 {
-		return fmt.Errorf("user %d not found", userID)
+		return repositories.ErrUserNotFound
 	}
 
 	log.WithContext(ctx).Infof("[UserRepository] User %d deleted successfully", userID)

@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/db/repositories"
 	"github.com/divideprojects/Alita_Robot/alita/db/repositories/interfaces"
 )
 
@@ -29,11 +30,11 @@ func NewChatRepository(database *gorm.DB) interfaces.ChatRepository {
 // It uses GORM's FirstOrCreate with Assign to perform an upsert operation based on chat_id.
 func (r *chatRepositoryImpl) CreateOrUpdate(ctx context.Context, chat *db.Chat) error {
 	if chat == nil {
-		return fmt.Errorf("chat cannot be nil")
+		return repositories.ErrChatNil
 	}
 
 	if chat.ChatId == 0 {
-		return fmt.Errorf("chat ID cannot be zero")
+		return repositories.ErrChatIDZero
 	}
 
 	result := r.db.WithContext(ctx).Where("chat_id = ?", chat.ChatId).Assign(chat).FirstOrCreate(&db.Chat{})
@@ -50,7 +51,7 @@ func (r *chatRepositoryImpl) CreateOrUpdate(ctx context.Context, chat *db.Chat) 
 // Returns nil without error if the chat is not found, actual errors are returned as-is.
 func (r *chatRepositoryImpl) GetByID(ctx context.Context, chatID int64) (*db.Chat, error) {
 	if chatID == 0 {
-		return nil, fmt.Errorf("chat ID cannot be zero")
+		return nil, repositories.ErrChatIDZero
 	}
 
 	var chat db.Chat
@@ -73,11 +74,11 @@ func (r *chatRepositoryImpl) GetByID(ctx context.Context, chatID int64) (*db.Cha
 // Returns an error if the chat is not found or if the database operation fails.
 func (r *chatRepositoryImpl) Update(ctx context.Context, chat *db.Chat) error {
 	if chat == nil {
-		return fmt.Errorf("chat cannot be nil")
+		return repositories.ErrChatNil
 	}
 
 	if chat.ChatId == 0 {
-		return fmt.Errorf("chat ID cannot be zero")
+		return repositories.ErrChatIDZero
 	}
 
 	result := r.db.WithContext(ctx).Model(&db.Chat{}).Where("chat_id = ?", chat.ChatId).Updates(chat)
@@ -87,7 +88,7 @@ func (r *chatRepositoryImpl) Update(ctx context.Context, chat *db.Chat) error {
 	}
 
 	if result.RowsAffected == 0 {
-		return fmt.Errorf("chat %d not found", chat.ChatId)
+		return repositories.ErrChatNotFound
 	}
 
 	log.WithContext(ctx).Debugf("[ChatRepository] Chat %d updated successfully", chat.ChatId)
@@ -98,7 +99,7 @@ func (r *chatRepositoryImpl) Update(ctx context.Context, chat *db.Chat) error {
 // Returns true if found, false if not found, and an error if the database query fails.
 func (r *chatRepositoryImpl) Exists(ctx context.Context, chatID int64) (bool, error) {
 	if chatID == 0 {
-		return false, fmt.Errorf("chat ID cannot be zero")
+		return false, repositories.ErrChatIDZero
 	}
 
 	var count int64
@@ -153,7 +154,7 @@ func (r *chatRepositoryImpl) List(ctx context.Context, limit, offset int) ([]*db
 // Returns an error if the chat is not found or if the deletion operation fails.
 func (r *chatRepositoryImpl) Delete(ctx context.Context, chatID int64) error {
 	if chatID == 0 {
-		return fmt.Errorf("chat ID cannot be zero")
+		return repositories.ErrChatIDZero
 	}
 
 	result := r.db.WithContext(ctx).Where("chat_id = ?", chatID).Delete(&db.Chat{})
@@ -163,7 +164,7 @@ func (r *chatRepositoryImpl) Delete(ctx context.Context, chatID int64) error {
 	}
 
 	if result.RowsAffected == 0 {
-		return fmt.Errorf("chat %d not found", chatID)
+		return repositories.ErrChatNotFound
 	}
 
 	log.WithContext(ctx).Infof("[ChatRepository] Chat %d deleted successfully", chatID)

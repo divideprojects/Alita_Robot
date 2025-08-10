@@ -12,6 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/divideprojects/Alita_Robot/alita/utils"
 )
 
 // ProcessingStage represents different stages of message processing
@@ -180,7 +181,7 @@ func (p *MessageProcessingPipeline) processJob(job MessageProcessingJob, workerI
 	p.stagesLock.RUnlock()
 
 	if !exists {
-		result.Error = fmt.Errorf("no processor registered for stage: %s", job.Stage)
+		result.Error = fmt.Errorf("%w: %s", utils.ErrNoProcessorRegistered, job.Stage)
 		result.Duration = time.Since(startTime)
 		return result
 	}
@@ -188,7 +189,7 @@ func (p *MessageProcessingPipeline) processJob(job MessageProcessingJob, workerI
 	// Check if pipeline is shutting down before launching goroutine
 	select {
 	case <-p.ctx.Done():
-		result.Error = fmt.Errorf("pipeline shutting down, skipping stage: %s", job.Stage)
+		result.Error = fmt.Errorf("%w: %s", utils.ErrPipelineShuttingDown, job.Stage)
 		result.Duration = time.Since(startTime)
 		return result
 	default:
@@ -227,7 +228,7 @@ func (p *MessageProcessingPipeline) processJob(job MessageProcessingJob, workerI
 		result.Blocked = blocked
 		result.Error = err
 	case <-ctx.Done():
-		result.Error = fmt.Errorf("processor timeout for stage: %s", job.Stage)
+		result.Error = fmt.Errorf("%w: %s", utils.ErrProcessorTimeout, job.Stage)
 		log.WithFields(log.Fields{
 			"worker_id": workerID,
 			"stage":     job.Stage,
@@ -307,7 +308,7 @@ func (p *MessageProcessingPipeline) ProcessConcurrently(bot *gotgbot.Bot, ctx *e
 				blocked = true
 			}
 		case <-timeout:
-			return blocked, fmt.Errorf("timeout waiting for processing results")
+			return blocked, utils.ErrResultsTimeout
 		}
 	}
 

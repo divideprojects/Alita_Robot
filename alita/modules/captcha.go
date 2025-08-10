@@ -4,6 +4,7 @@ import (
 	"bytes"
 	crand "crypto/rand"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"math/big"
 	"slices"
@@ -92,7 +93,7 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 		timeoutLine, _ := tr.GetString("captcha_settings_timeout", i18n.TranslationParams{"d": settings.Timeout})
 		actionLine, _ := tr.GetString("captcha_settings_failure_action", i18n.TranslationParams{"s": settings.FailureAction})
 		attemptsLine, _ := tr.GetString("captcha_settings_max_attempts", i18n.TranslationParams{"d": settings.MaxAttempts})
-		
+
 		text := fmt.Sprintf(
 			"%s\n%s\n%s\n%s\n%s\n%s\n\n%s",
 			header, statusLine, modeLine, timeoutLine, actionLine, attemptsLine, statusUsage,
@@ -177,8 +178,13 @@ func (moduleStruct) captchaModeCommand(bot *gotgbot.Bot, ctx *ext.Context) error
 	err := db.SetCaptchaMode(chat.Id, mode)
 	if err != nil {
 		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
-		text, _ := tr.GetString("captcha_mode_failed")
-		_, _ = msg.Reply(bot, text, nil)
+		var text string
+		if errors.Is(err, db.ErrInvalidCaptchaMode) {
+			text, _ = tr.GetString("captcha_invalid_mode_error")
+		} else {
+			text, _ = tr.GetString("captcha_mode_failed")
+		}
+		_, _ = msg.Reply(bot, text, helpers.Shtml())
 		return err
 	}
 
@@ -228,8 +234,13 @@ func (moduleStruct) captchaTimeCommand(bot *gotgbot.Bot, ctx *ext.Context) error
 	err = db.SetCaptchaTimeout(chat.Id, timeout)
 	if err != nil {
 		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
-		text, _ := tr.GetString("captcha_timeout_failed")
-		_, _ = msg.Reply(bot, text, nil)
+		var text string
+		if errors.Is(err, db.ErrInvalidTimeout) {
+			text, _ = tr.GetString("captcha_timeout_range_error")
+		} else {
+			text, _ = tr.GetString("captcha_timeout_failed")
+		}
+		_, _ = msg.Reply(bot, text, helpers.Shtml())
 		return err
 	}
 
@@ -273,8 +284,13 @@ func (moduleStruct) captchaActionCommand(bot *gotgbot.Bot, ctx *ext.Context) err
 	err := db.SetCaptchaFailureAction(chat.Id, action)
 	if err != nil {
 		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
-		text, _ := tr.GetString("captcha_action_failed")
-		_, _ = msg.Reply(bot, text, nil)
+		var text string
+		if errors.Is(err, db.ErrInvalidFailureAction) {
+			text, _ = tr.GetString("captcha_invalid_action_error")
+		} else {
+			text, _ = tr.GetString("captcha_action_failed")
+		}
+		_, _ = msg.Reply(bot, text, helpers.Shtml())
 		return err
 	}
 
