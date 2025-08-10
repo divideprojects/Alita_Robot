@@ -1052,6 +1052,20 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 // GreetingsEnumFuncMap
 // A rather very complicated GreetingsEnumFuncMap Variable made by me to send filters in an appropriate way
 var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error){
+	// Fallback for type 0 (uninitialized/legacy records) - defaults to TEXT
+	0: func(b *gotgbot.Bot, ctx *ext.Context, msg, _ string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
+		return b.SendMessage(
+			ctx.EffectiveChat.Id,
+			msg,
+			&gotgbot.SendMessageOpts{
+				ParseMode: HTML,
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
+				ReplyMarkup: keyb,
+			},
+		)
+	},
 	db.TEXT: func(b *gotgbot.Bot, ctx *ext.Context, msg, _ string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendMessage(
 			ctx.EffectiveChat.Id,

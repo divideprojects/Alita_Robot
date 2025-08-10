@@ -241,7 +241,7 @@ type WelcomeSettings struct {
 	ShouldWelcome bool        `gorm:"column:enabled;default:true" json:"welcome_enabled" default:"true"`
 	WelcomeText   string      `gorm:"column:text" json:"welcome_text,omitempty"`
 	FileID        string      `gorm:"column:file_id" json:"file_id,omitempty"`
-	WelcomeType   int         `gorm:"column:type" json:"welcome_type,omitempty"`
+	WelcomeType   int         `gorm:"column:type;default:1" json:"welcome_type,omitempty"`
 	Button        ButtonArray `gorm:"column:btns;type:jsonb" json:"btns,omitempty"`
 }
 
@@ -252,7 +252,7 @@ type GoodbyeSettings struct {
 	ShouldGoodbye bool        `gorm:"column:enabled;default:true" json:"enabled" default:"true"`
 	GoodbyeText   string      `gorm:"column:text" json:"text,omitempty"`
 	FileID        string      `gorm:"column:file_id" json:"file_id,omitempty"`
-	GoodbyeType   int         `gorm:"column:type" json:"type,omitempty"`
+	GoodbyeType   int         `gorm:"column:type;default:1" json:"type,omitempty"`
 	Button        ButtonArray `gorm:"column:btns;type:jsonb" json:"btns,omitempty"`
 }
 
