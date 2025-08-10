@@ -112,25 +112,9 @@ func extractTranslationKeys(rootDir string) ([]TranslationKey, error) {
 		return nil
 	})
 
-	// Add known dynamic keys for alt_names
-	modules := []string{
-		"Admin", "Antiflood", "Approvals", "Bans", "Blacklists",
-		"Connections", "Disabling", "Filters", "Formatting", "Greetings",
-		"Locks", "Languages", "Misc", "Mutes", "Notes", "Pins", "Purges",
-		"Reports", "Rules", "Tagger", "Warns",
-	}
-	
-	for _, mod := range modules {
-		dynamicKey := fmt.Sprintf("alt_names.%s", mod)
-		if !keyMap[dynamicKey] {
-			keys = append(keys, TranslationKey{
-				Key:       dynamicKey,
-				File:      "modules/helpers.go",
-				Line:      0,
-				IsDynamic: true,
-			})
-		}
-	}
+	// Note: alt_names are configuration keys, not translation keys
+	// They are loaded from config.yml, not from translation files
+	// So we don't need to check for them
 
 	return keys, err
 }
@@ -242,6 +226,11 @@ func loadLocaleFiles(localesDir string) (map[string]map[string]interface{}, erro
 		if !strings.HasSuffix(filename, ".yml") && !strings.HasSuffix(filename, ".yaml") {
 			continue
 		}
+		
+		// Skip config.yml as it's not a translation file
+		if filename == "config.yml" {
+			continue
+		}
 
 		filePath := filepath.Join(localesDir, filename)
 		data, err := os.ReadFile(filePath)
@@ -266,20 +255,12 @@ func checkMissingKeys(keys []TranslationKey, localeData map[string]interface{}, 
 	missing := make(map[string][]string)
 
 	for _, key := range keys {
-		if key.IsDynamic && strings.HasPrefix(key.Key, "alt_names.") {
-			// Special handling for alt_names
-			if altNames, ok := localeData["alt_names"].(map[string]interface{}); ok {
-				modName := strings.TrimPrefix(key.Key, "alt_names.")
-				if _, exists := altNames[modName]; !exists {
-					usage := fmt.Sprintf("%s:%d", filepath.Base(key.File), key.Line)
-					missing[key.Key] = append(missing[key.Key], usage)
-				}
-			} else {
-				// alt_names section doesn't exist at all
-				usage := fmt.Sprintf("%s:%d", filepath.Base(key.File), key.Line)
-				missing[key.Key] = append(missing[key.Key], usage)
-			}
-		} else if !keyExists(key.Key, localeData) {
+		// Skip alt_names keys as they're configuration, not translations
+		if strings.HasPrefix(key.Key, "alt_names.") {
+			continue
+		}
+		
+		if !keyExists(key.Key, localeData) {
 			usage := fmt.Sprintf("%s:%d", filepath.Base(key.File), key.Line)
 			missing[key.Key] = append(missing[key.Key], usage)
 		}

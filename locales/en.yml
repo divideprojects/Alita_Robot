@@ -1297,6 +1297,10 @@ devs_dev_users_header: "<b>Dev Users:</b>"
 devs_sudo_users_header: "<b>Sudo Users:</b>"
 devs_no_users_in_category: "No Users"
 devs_fetching_stats: "<code>Fetching bot stats...</code>"
+devs_getting_chat_list: Getting list of chats I'm in...
+devs_chat_list_caption: Here is the list of chats in my Database!
+devs_no_team_users: No users are added in Team!
+devs_no_users: "No Users"
 
 # Additional hardcoded strings from modules
 admin_anonymous_user_error: This command cannot be used on anonymous user.
@@ -1487,6 +1491,7 @@ helpers_back_button: "« Back"
 helpers_connection_success: "You have been connected to %s!"
 helpers_note_not_exist: "This note does not exist!"
 helpers_note_admin_only: "This note can only be accessed by a admin!"
+helpers_connected_to_chat: "You have been connected to %s!"
 
 # Common/Shared strings
 common_yes: "Yes"
