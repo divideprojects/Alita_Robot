@@ -1,5 +1,5 @@
 # Multi-stage build for PR Docker images
-FROM golang:1.21-alpine AS builder
+FROM golang:alpine AS builder
 
 # Build arguments
 ARG PR_NUMBER=unknown
