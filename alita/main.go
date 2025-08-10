@@ -130,8 +130,3 @@ func LoadModules(dispatcher *ext.Dispatcher) {
 	modules.LoadBlacklists(dispatcher)
 	modules.LoadMkdCmd(dispatcher)
 }
-
-// PrewarmCachesOnStartup initializes cache prewarming during bot startup
-func PrewarmCachesOnStartup() error {
-	return db.PrewarmCachesOnStartup()
-}

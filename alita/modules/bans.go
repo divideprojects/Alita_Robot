@@ -1,6 +1,7 @@
 package modules
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"strings"
@@ -67,7 +68,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := msg.ReplyToMessage.From.Id
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("bans_anonymous_ban_only_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -123,7 +124,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	// Use non-blocking approach with goroutine for delayed unban
+	// Use non-blocking approach with goroutine for delayed unban with timeout
 	go func() {
 		defer func() {
 			if r := recover(); r != nil {
@@ -131,14 +132,28 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}()
 
-		time.Sleep(2 * time.Second)
-		_, unbanErr := chat.UnbanMember(b, userId, nil)
-		if unbanErr != nil {
+		// Create context with timeout
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		timer := time.NewTimer(2 * time.Second)
+		defer timer.Stop()
+
+		select {
+		case <-timer.C:
+			_, unbanErr := chat.UnbanMember(b, userId, nil)
+			if unbanErr != nil {
+				log.WithFields(log.Fields{
+					"chatId": chat.Id,
+					"userId": userId,
+					"error":  unbanErr,
+				}).Error("Failed to unban user after dkick")
+			}
+		case <-ctx.Done():
 			log.WithFields(log.Fields{
 				"chatId": chat.Id,
 				"userId": userId,
-				"error":  unbanErr,
-			}).Error("Failed to unban user after dkick")
+			}).Warn("Dkick unban operation timed out")
 		}
 	}()
 
@@ -196,7 +211,7 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("bans_anonymous_ban_only_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -250,7 +265,7 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 
-	// Use non-blocking approach with goroutine for delayed unban
+	// Use non-blocking approach with goroutine for delayed unban with timeout
 	go func() {
 		defer func() {
 			if r := recover(); r != nil {
@@ -258,14 +273,28 @@ func (m moduleStruct) kick(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}()
 
-		time.Sleep(2 * time.Second)
-		_, unbanErr := chat.UnbanMember(b, userId, nil)
-		if unbanErr != nil {
+		// Create context with timeout
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		timer := time.NewTimer(2 * time.Second)
+		defer timer.Stop()
+
+		select {
+		case <-timer.C:
+			_, unbanErr := chat.UnbanMember(b, userId, nil)
+			if unbanErr != nil {
+				log.WithFields(log.Fields{
+					"chatId": chat.Id,
+					"userId": userId,
+					"error":  unbanErr,
+				}).Error("Failed to unban user after kick")
+			}
+		case <-ctx.Done():
 			log.WithFields(log.Fields{
 				"chatId": chat.Id,
 				"userId": userId,
-				"error":  unbanErr,
-			}).Error("Failed to unban user after kick")
+			}).Warn("Kick unban operation timed out")
 		}
 	}()
 
@@ -375,7 +404,7 @@ func (m moduleStruct) tBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("bans_anonymous_ban_only_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -521,7 +550,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	if helpers.IsChannelID(userId) {
 		if msg.ReplyToMessage != nil {
 			userId := msg.ReplyToMessage.GetSender().Id()
 			_, err := b.BanChatSenderChat(chat.Id, userId, nil)
@@ -613,7 +642,7 @@ func (m moduleStruct) sBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("bans_anonymous_ban_only_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -696,7 +725,7 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("bans_anonymous_ban_only_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -836,7 +865,7 @@ func (m moduleStruct) unban(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	if helpers.IsChannelID(userId) {
 		if msg.ReplyToMessage != nil {
 			userId := msg.ReplyToMessage.GetSender().Id()
 			_, err := b.UnbanChatSenderChat(chat.Id, userId, nil)
@@ -1002,7 +1031,7 @@ func (moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) erro
 			helpers.MentionHtml(user.Id, user.FirstName),
 			helpers.MentionHtml(int64(userId), actionUser.FirstName),
 		)
-		// Use non-blocking delayed unban for restrict kick action
+		// Use non-blocking delayed unban for restrict kick action with timeout
 		go func() {
 			defer func() {
 				if r := recover(); r != nil {
@@ -1010,14 +1039,28 @@ func (moduleStruct) restrictButtonHandler(b *gotgbot.Bot, ctx *ext.Context) erro
 				}
 			}()
 
-			time.Sleep(3 * time.Second)
-			_, unbanErr := chat.UnbanMember(b, int64(userId), nil)
-			if unbanErr != nil {
+			// Create context with timeout
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
+
+			timer := time.NewTimer(3 * time.Second)
+			defer timer.Stop()
+
+			select {
+			case <-timer.C:
+				_, unbanErr := chat.UnbanMember(b, int64(userId), nil)
+				if unbanErr != nil {
+					log.WithFields(log.Fields{
+						"chatId": chat.Id,
+						"userId": userId,
+						"error":  unbanErr,
+					}).Error("Failed to unban user after restrict kick")
+				}
+			case <-ctx.Done():
 				log.WithFields(log.Fields{
 					"chatId": chat.Id,
 					"userId": userId,
-					"error":  unbanErr,
-				}).Error("Failed to unban user after restrict kick")
+				}).Warn("Restrict kick unban operation timed out")
 			}
 		}()
 	case "mute":

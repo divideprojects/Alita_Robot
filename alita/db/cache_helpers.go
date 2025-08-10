@@ -59,55 +59,9 @@ func warnSettingsCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:warn_settings:%d", chatID)
 }
 
-// antifloodCacheKey generates a cache key for chat antiflood settings.
-func antifloodCacheKey(chatID int64) string {
-	return fmt.Sprintf("alita:antiflood:%d", chatID)
-}
-
 // disabledCommandsCacheKey generates a cache key for chat disabled commands.
 func disabledCommandsCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:disabled_cmds:%d", chatID)
-}
-
-// InvalidateChatCache invalidates all cache entries for a chat.
-// Removes all cached data related to the specified chat ID including settings, filters, and notes.
-func InvalidateChatCache(chatID int64) {
-	if cache.Marshal == nil {
-		return
-	}
-
-	keys := []string{
-		chatCacheKey(chatID),
-		chatSettingsCacheKey(chatID),
-		chatLanguageCacheKey(chatID),
-		filterListCacheKey(chatID),
-		blacklistCacheKey(chatID),
-		warnSettingsCacheKey(chatID),
-		antifloodCacheKey(chatID),
-		disabledCommandsCacheKey(chatID),
-	}
-
-	// Invalidate cache keys sequentially
-	if cache.Marshal != nil {
-		for _, key := range keys {
-			if err := cache.Marshal.Delete(cache.Context, key); err != nil {
-				log.Debugf("[Cache] Failed to invalidate key %s: %v", key, err)
-			}
-		}
-	}
-}
-
-// InvalidateUserCache invalidates all cache entries for a user.
-// Currently only removes user language cache entries.
-func InvalidateUserCache(userID int64) {
-	if cache.Marshal == nil {
-		return
-	}
-
-	err := cache.Marshal.Delete(cache.Context, userLanguageCacheKey(userID))
-	if err != nil {
-		log.Debugf("[Cache] Failed to invalidate user cache %d: %v", userID, err)
-	}
 }
 
 // getFromCacheOrLoad is a generic helper to get from cache or load from database with stampede protection.

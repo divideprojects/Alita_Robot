@@ -385,26 +385,6 @@ func (o *OptimizedBlacklistQueries) GetChatBlacklistOptimized(chatID int64) ([]*
 	return blacklist, nil
 }
 
-// GetBlacklistWords retrieves only the blacklisted words for a chat without other fields.
-// Returns a slice of strings containing all blacklisted words for the specified chat.
-func (o *OptimizedBlacklistQueries) GetBlacklistWords(chatID int64) ([]string, error) {
-	if o.db == nil {
-		return nil, errors.New("database not initialized")
-	}
-
-	var words []string
-	err := o.db.Model(&BlacklistSettings{}).
-		Select("word").
-		Where("chat_id = ?", chatID).
-		Pluck("word", &words).Error
-	if err != nil {
-		log.Errorf("[OptimizedBlacklistQueries] GetBlacklistWords: %v", err)
-		return nil, err
-	}
-
-	return words, nil
-}
-
 // OptimizedChannelQueries provides optimized queries for channel operations
 type OptimizedChannelQueries struct {
 	db *gorm.DB

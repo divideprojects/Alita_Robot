@@ -123,26 +123,6 @@ func SetCaptchaFailureAction(chatID int64, action string) error {
 	return nil
 }
 
-// SetCaptchaMaxAttempts sets the maximum number of attempts allowed for captcha verification.
-func SetCaptchaMaxAttempts(chatID int64, maxAttempts int) error {
-	if maxAttempts < 1 || maxAttempts > 10 {
-		return ErrInvalidMaxAttempts
-	}
-
-	settings := &CaptchaSettings{
-		ChatID:      chatID,
-		MaxAttempts: maxAttempts,
-	}
-
-	err := DB.Where("chat_id = ?", chatID).Assign(settings).FirstOrCreate(&CaptchaSettings{}).Error
-	if err != nil {
-		log.Errorf("[Database][SetCaptchaMaxAttempts]: %v", err)
-		return err
-	}
-
-	return nil
-}
-
 // CreateCaptchaAttempt creates a new captcha attempt record for a user.
 // This is called when a new member joins and needs to complete captcha.
 func CreateCaptchaAttempt(userID, chatID int64, answer string, messageID int64, timeout int) error {
@@ -324,16 +304,6 @@ func DeleteAllCaptchaAttempts(chatID int64) error {
 	}
 
 	return nil
-}
-
-// IsCaptchaEnabled checks if captcha is enabled for a chat.
-// This is a convenience function for quick checks.
-func IsCaptchaEnabled(chatID int64) bool {
-	settings, err := GetCaptchaSettings(chatID)
-	if err != nil {
-		return false
-	}
-	return settings.Enabled
 }
 
 // UpdateCaptchaAttemptOnRefreshByID updates answer, message ID and increments refresh_count by attempt ID.

@@ -253,9 +253,11 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			info, _ := tr.GetString("notes_none_in_chat")
 			if len(noteKeys) > 0 {
 				info, _ = tr.GetString("helpers_notes_current_header")
+				var sb strings.Builder
 				for _, note := range noteKeys {
-					info += fmt.Sprintf(" - <a href='https://t.me/%s?start=note_%d_%s'>%s</a>\n", b.Username, int64(chatID), note, note)
+					sb.WriteString(fmt.Sprintf(" - <a href='https://t.me/%s?start=note_%d_%s'>%s</a>\n", b.Username, int64(chatID), note, note))
 				}
+				info += sb.String()
 			}
 
 			_, err := msg.Reply(b, info, helpers.Shtml())

@@ -286,10 +286,12 @@ func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 		noteKeys := db.GetNotesList(chat.Id, admin)
 		listText, _ := tr.GetString("notes_list_for_chat")
 		info = fmt.Sprintf(listText, chat.Title)
+		var sb strings.Builder
 		for _, note := range noteKeys {
-			info += fmt.Sprintf("\n - <a href='https://t.me/%s?start=note_%d_%s'>%s</a>",
-				b.Username, chat.Id, note, note)
+			sb.WriteString(fmt.Sprintf("\n - <a href='https://t.me/%s?start=note_%d_%s'>%s</a>",
+				b.Username, chat.Id, note, note))
 		}
+		info += sb.String()
 		_, err := msg.Reply(b, info, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
@@ -326,9 +328,11 @@ func (moduleStruct) notesList(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else {
 		currentNotesText, _ := tr.GetString("notes_current_in_chat")
 		info = currentNotesText
+		var sb strings.Builder
 		for _, note := range noteKeys {
-			info += fmt.Sprintf(" - <code>#%s</code>\n", note)
+			sb.WriteString(fmt.Sprintf(" - <code>#%s</code>\n", note))
 		}
+		info += sb.String()
 		instructionText, _ := tr.GetString("notes_get_instruction")
 		info += instructionText
 		_, err := msg.Reply(b, info, helpers.Shtml())

@@ -1,38 +1,9 @@
 package db
 
 import (
-	"errors"
-
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
-
-// GetFilter retrieves a specific filter by chat ID and keyword from the database.
-// Returns an empty ChatFilters struct if no filter is found or an error occurs.
-func GetFilter(chatID int64, keyword string) (filtSrc *ChatFilters) {
-	filtSrc = &ChatFilters{}
-	err := GetRecord(filtSrc, map[string]interface{}{"chat_id": chatID, "keyword": keyword})
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		filtSrc = &ChatFilters{}
-	} else if err != nil {
-		log.Errorf("[Database] GetFilter: %v - %d", err, chatID)
-		filtSrc = &ChatFilters{}
-	}
-	return
-}
-
-// GetAllFilters retrieves all filters for a specific chat ID from the database.
-// Returns an empty slice if no filters are found or an error occurs.
-//
-//goland:noinspection GoUnusedExportedFunction
-func GetAllFilters(chatID int64) (allFilters []*ChatFilters) {
-	err := GetRecords(&allFilters, map[string]interface{}{"chat_id": chatID})
-	if err != nil {
-		log.Errorf("[Database] GetAllFilters: %v - %d", err, chatID)
-		return []*ChatFilters{}
-	}
-	return
-}
 
 // GetFiltersList retrieves a list of all filter keywords for a specific chat ID.
 // Uses caching to improve performance for frequently accessed data.

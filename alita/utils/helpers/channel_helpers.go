@@ -1,0 +1,20 @@
+package helpers
+
+import (
+	"fmt"
+	"strings"
+)
+
+// IsChannelID checks if a given chat ID represents a channel.
+// In Telegram, channel IDs are negative numbers starting with -100.
+func IsChannelID(chatID int64) bool {
+	// Convert to string to check the prefix
+	chatIDStr := fmt.Sprintf("%d", chatID)
+	return strings.HasPrefix(chatIDStr, "-100")
+}
+
+// IsChannelIDString checks if a given chat ID string represents a channel.
+// This is useful when working with string representations of chat IDs.
+func IsChannelIDString(chatIDStr string) bool {
+	return strings.HasPrefix(chatIDStr, "-100")
+}

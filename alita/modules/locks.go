@@ -119,9 +119,11 @@ func (moduleStruct) buildLockTypesMessage(chatID int64) (res string) {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
+	var sb strings.Builder
 	for _, k := range keys {
-		res += fmt.Sprintf("\n - %s = %v", k, newMapLocks[k])
+		sb.WriteString(fmt.Sprintf("\n - %s = %v", k, newMapLocks[k]))
 	}
+	res += sb.String()
 
 	return
 }

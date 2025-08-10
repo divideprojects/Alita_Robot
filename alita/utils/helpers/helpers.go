@@ -17,7 +17,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
-	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
+	// "github.com/divideprojects/Alita_Robot/alita/utils/extraction" // TODO: Fix circular dependency
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -175,9 +175,9 @@ func GetMessageLinkFromMessageId(chat *gotgbot.Chat, messageId int64) (messageLi
 	chatIdStr := fmt.Sprint(chat.Id)
 	if chat.Username == "" {
 		var linkId string
-		if strings.HasPrefix(chatIdStr, "-100") {
+		if IsChannelID(chat.Id) {
 			linkId = strings.ReplaceAll(chatIdStr, "-100", "")
-		} else if strings.HasPrefix(chatIdStr, "-") && !strings.HasPrefix(chatIdStr, "-100") {
+		} else if strings.HasPrefix(chatIdStr, "-") && !IsChannelID(chat.Id) {
 			// this is for non-supergroups
 			linkId = strings.ReplaceAll(chatIdStr, "-", "")
 		}
@@ -645,11 +645,19 @@ func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool, language string) 
 
 	// extract the noteword
 	if len(args) >= 2 && replyMsg == nil {
-		keyWord, text = extraction.ExtractQuotes(rawText, isFilter, true)
+		// TODO: Fix circular dependency with extraction package
+		// For now, use a simple extraction
+		if len(args) > 0 {
+			keyWord = args[0]
+			if len(args) > 1 {
+				text = strings.Join(args[1:], " ")
+			}
+		}
 		text, _buttons = tgmd2html.MD2HTMLButtonsV2(text)
 		dataType = db.TEXT
 	} else if replyMsg != nil && len(args) >= 1 {
-		keyWord, _ = extraction.ExtractQuotes(strings.Join(args, " "), isFilter, true)
+		// TODO: Fix circular dependency with extraction package
+		keyWord = strings.Join(args, " ")
 
 		if replyMsg.ReplyMarkup == nil {
 			text, _buttons = tgmd2html.MD2HTMLButtonsV2(rawText)

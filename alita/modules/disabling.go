@@ -97,9 +97,11 @@ func (moduleStruct) disableable(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	text, _ := tr.GetString("disabling_disableable_commands")
+	var sb strings.Builder
 	for _, cmds := range misc.DisableCmds {
-		text += fmt.Sprintf("\n - `%s`", cmds)
+		sb.WriteString(fmt.Sprintf("\n - `%s`", cmds))
 	}
+	text += sb.String()
 
 	_, err := msg.Reply(b, text, helpers.Smarkdown())
 	if err != nil {
@@ -162,9 +164,11 @@ func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		text, _ := tr.GetString("disabling_disabled_commands")
 		sort.Strings(disabled)
+		var sb strings.Builder
 		for _, cmds := range disabled {
-			text += fmt.Sprintf("\n - `%s`", cmds)
+			sb.WriteString(fmt.Sprintf("\n - `%s`", cmds))
 		}
+		text += sb.String()
 		_, err := msg.Reply(b, text, helpers.Smarkdown())
 		if err != nil {
 			log.Error(err)

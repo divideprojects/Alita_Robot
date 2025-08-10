@@ -2,7 +2,6 @@ package modules
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -46,7 +45,7 @@ func (moduleStruct) tMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("mutes_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -178,7 +177,7 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("mutes_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -315,7 +314,7 @@ func (moduleStruct) sMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("mutes_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -415,7 +414,7 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("mutes_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -556,7 +555,7 @@ func (moduleStruct) unmute(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("mutes_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {

@@ -258,9 +258,11 @@ func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	blSrc := db.GetBlacklistSettings(chat.Id)
 	sort.Strings(blSrc.Triggers())
+	var sb strings.Builder
 	for _, i := range blSrc.Triggers() {
-		blacklistsText += fmt.Sprintf("\n - <code>%s</code>", i)
+		sb.WriteString(fmt.Sprintf("\n - <code>%s</code>", i))
 	}
+	blacklistsText += sb.String()
 
 	if blacklistsText != "" {
 		temp, _ := tr.GetString(strings.ToLower(m.moduleName) + "_ls_bl_list_bl")

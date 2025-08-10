@@ -2,6 +2,7 @@ package modules
 
 import (
 	"bytes"
+	"context"
 	crand "crypto/rand"
 	"encoding/base64"
 	"errors"
@@ -127,8 +128,24 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		// Clean up any pending captcha attempts
 		go func() {
-			if err := db.DeleteAllCaptchaAttempts(chat.Id); err != nil {
-				log.Errorf("Failed to delete captcha attempts: %v", err)
+			// Add timeout context for cleanup operation
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
+
+			// Use a channel to signal completion
+			done := make(chan struct{})
+			go func() {
+				defer close(done)
+				if err := db.DeleteAllCaptchaAttempts(chat.Id); err != nil {
+					log.Errorf("Failed to delete captcha attempts: %v", err)
+				}
+			}()
+
+			select {
+			case <-done:
+				// Operation completed successfully
+			case <-ctx.Done():
+				log.Warnf("Captcha cleanup timed out for chat %d", chat.Id)
 			}
 		}()
 		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
@@ -621,15 +638,26 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 		return err
 	}
 
-	// Schedule cleanup after timeout
+	// Schedule cleanup after timeout with context
 	go func(originalMessageID int64) {
-		time.Sleep(time.Duration(settings.Timeout) * time.Minute)
+		// Create a context with the timeout duration plus a small buffer
+		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(settings.Timeout)*time.Minute+30*time.Second)
+		defer cancel()
 
-		// Check if attempt still exists (not completed)
-		attempt, _ := db.GetCaptchaAttempt(userID, chat.Id)
-		if attempt != nil {
-			// Use the latest message ID from the attempt to avoid leaving a stale message after refresh
-			handleCaptchaTimeout(bot, chat.Id, userID, attempt.MessageID, settings.FailureAction)
+		// Use a timer instead of Sleep for better control
+		timer := time.NewTimer(time.Duration(settings.Timeout) * time.Minute)
+		defer timer.Stop()
+
+		select {
+		case <-timer.C:
+			// Check if attempt still exists (not completed)
+			attempt, _ := db.GetCaptchaAttempt(userID, chat.Id)
+			if attempt != nil {
+				// Use the latest message ID from the attempt to avoid leaving a stale message after refresh
+				handleCaptchaTimeout(bot, chat.Id, userID, attempt.MessageID, settings.FailureAction)
+			}
+		case <-ctx.Done():
+			log.Warnf("Captcha timeout handler cancelled for user %d in chat %d", userID, chat.Id)
 		}
 	}(sent.MessageId)
 
@@ -769,11 +797,22 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 		successMsg := fmt.Sprintf(msgTemplate, helpers.MentionHtml(targetUserID, user.FirstName))
 		sent, _ := bot.SendMessage(chat.Id, successMsg, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 
-		// Delete success message after 5 seconds
+		// Delete success message after 5 seconds with timeout
 		if sent != nil {
 			go func() {
-				time.Sleep(5 * time.Second)
-				_, _ = bot.DeleteMessage(chat.Id, sent.MessageId, nil)
+				// Create context with timeout
+				ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+				defer cancel()
+
+				timer := time.NewTimer(5 * time.Second)
+				defer timer.Stop()
+
+				select {
+				case <-timer.C:
+					_, _ = bot.DeleteMessage(chat.Id, sent.MessageId, nil)
+				case <-ctx.Done():
+					log.Debugf("Success message deletion cancelled for message %d", sent.MessageId)
+				}
 			}()
 		}
 
@@ -1005,18 +1044,34 @@ func LoadCaptcha(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("captcha_verify."), captchaModule.captchaVerifyCallback))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("captcha_refresh."), captchaModule.captchaRefreshCallback))
 
-	// Start periodic cleanup of expired attempts
+	// Start periodic cleanup of expired attempts with context
 	go func() {
 		ticker := time.NewTicker(5 * time.Minute)
 		defer ticker.Stop()
 
 		for range ticker.C {
-			count, err := db.CleanupExpiredCaptchaAttempts()
-			if err != nil {
-				log.Errorf("Failed to cleanup expired captcha attempts: %v", err)
-			} else if count > 0 {
-				log.Infof("Cleaned up %d expired captcha attempts", count)
+			// Create a context with timeout for each cleanup operation
+			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+
+			// Run cleanup in a separate goroutine with timeout
+			done := make(chan struct{})
+			go func() {
+				defer close(done)
+				count, err := db.CleanupExpiredCaptchaAttempts()
+				if err != nil {
+					log.Errorf("Failed to cleanup expired captcha attempts: %v", err)
+				} else if count > 0 {
+					log.Infof("Cleaned up %d expired captcha attempts", count)
+				}
+			}()
+
+			select {
+			case <-done:
+				// Cleanup completed successfully
+			case <-ctx.Done():
+				log.Warn("Captcha cleanup operation timed out")
 			}
+			cancel()
 		}
 	}()
 }

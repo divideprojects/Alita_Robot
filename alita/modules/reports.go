@@ -149,12 +149,14 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		helpers.MentionHtml(user.Id, user.FirstName),
 		helpers.MentionHtml(reportedUser.Id, reportedUser.FirstName),
 	)
+	var sb strings.Builder
 	for _, adminUserId := range adminArray {
 		if !db.GetUserReportSettings(adminUserId).Status {
 			continue
 		}
-		reported += helpers.MentionHtml(adminUserId, "\u2063")
+		sb.WriteString(helpers.MentionHtml(adminUserId, "\u2063"))
 	}
+	reported += sb.String()
 
 	callbackData := "report." + "%s=" + fmt.Sprint(user.Id) + "=" + fmt.Sprint(reportedMsgId)
 	_, err = msg.Reply(b,

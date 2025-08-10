@@ -4,7 +4,6 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -13,7 +12,6 @@ import (
 	"gorm.io/gorm/logger"
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
-	"github.com/divideprojects/Alita_Robot/alita/i18n"
 )
 
 // Message type constants - maintain compatibility with existing code
@@ -34,26 +32,6 @@ const (
 	DefaultWelcome = "Hey {first}, how are you?"
 	DefaultGoodbye = "Sad to see you leaving {first}"
 )
-
-// GetDefaultWelcome returns the localized default welcome message
-func GetDefaultWelcome(language string) string {
-	tr := i18n.MustNewTranslator(language)
-	msg, _ := tr.GetString("db_default_welcome")
-	if msg == "" {
-		return DefaultWelcome // fallback to hardcoded constant
-	}
-	return msg
-}
-
-// GetDefaultGoodbye returns the localized default goodbye message
-func GetDefaultGoodbye(language string) string {
-	tr := i18n.MustNewTranslator(language)
-	msg, _ := tr.GetString("db_default_goodbye")
-	if msg == "" {
-		return DefaultGoodbye // fallback to hardcoded constant
-	}
-	return msg
-}
 
 // Button represents a button structure used in filters, greetings, etc.
 type Button struct {
@@ -694,38 +672,6 @@ func init() {
 	log.Info("Database schema managed via SQL migrations - skipping GORM AutoMigrate")
 }
 
-// GetAllModels returns a slice of all database models used in the application.
-// This is primarily used for database migration and schema generation purposes.
-func GetAllModels() []interface{} {
-	return []interface{}{
-		&User{},
-		&Chat{},
-		&ChatUser{},
-		&WarnSettings{},
-		&Warns{},
-		&GreetingSettings{},
-		&ChatFilters{},
-		&AdminSettings{},
-		&BlacklistSettings{},
-		&PinSettings{},
-		&ReportChatSettings{},
-		&ReportUserSettings{},
-		&DevSettings{},
-		&ChannelSettings{},
-		&AntifloodSettings{},
-		&ConnectionSettings{},
-		&ConnectionChatSettings{},
-		&DisableSettings{},
-		&DisableChatSettings{},
-		&RulesSettings{},
-		&LockSettings{},
-		&NotesSettings{},
-		&Notes{},
-		&CaptchaSettings{},
-		&CaptchaAttempts{},
-	}
-}
-
 // Helper functions for GORM-specific operations
 
 // CreateRecord creates a new database record using the provided model.
@@ -780,42 +726,5 @@ func GetRecords(models interface{}, where interface{}) error {
 		log.Errorf("[Database][GetRecords]: %v", result.Error)
 		return result.Error
 	}
-	return nil
-}
-
-// Transaction executes the provided function within a database transaction.
-// If the function returns an error, the transaction is rolled back.
-func Transaction(fn func(*gorm.DB) error) error {
-	return DB.Transaction(fn)
-}
-
-// GetDB returns the global GORM database instance.
-// This should be used when you need direct access to the database connection.
-func GetDB() *gorm.DB {
-	return DB
-}
-
-// Close closes the database connection and cleans up resources.
-// This should be called when the application is shutting down.
-func Close() error {
-	sqlDB, err := DB.DB()
-	if err != nil {
-		return err
-	}
-	return sqlDB.Close()
-}
-
-// Health performs a health check on the database connection.
-// It returns an error if the database is not accessible or responding.
-func Health() error {
-	sqlDB, err := DB.DB()
-	if err != nil {
-		return fmt.Errorf("failed to get underlying sql.DB: %w", err)
-	}
-
-	if err := sqlDB.Ping(); err != nil {
-		return fmt.Errorf("database ping failed: %w", err)
-	}
-
 	return nil
 }

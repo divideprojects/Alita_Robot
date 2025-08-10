@@ -339,7 +339,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 			log.Errorf(" checkFlood: %d (%d) - %v", chat.Id, user.Id(), err)
 			return err
 		}
-		// Use non-blocking delayed unban for kick action
+		// Use non-blocking delayed unban for kick action with timeout
 		go func() {
 			defer func() {
 				if r := recover(); r != nil {
@@ -347,14 +347,28 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			}()
 
-			time.Sleep(3 * time.Second)
-			_, unbanErr := chat.UnbanMember(b, userId, nil)
-			if unbanErr != nil {
+			// Create context with timeout
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
+
+			timer := time.NewTimer(3 * time.Second)
+			defer timer.Stop()
+
+			select {
+			case <-timer.C:
+				_, unbanErr := chat.UnbanMember(b, userId, nil)
+				if unbanErr != nil {
+					log.WithFields(log.Fields{
+						"chatId": chat.Id,
+						"userId": userId,
+						"error":  unbanErr,
+					}).Error("Failed to unban user after antiflood kick")
+				}
+			case <-ctx.Done():
 				log.WithFields(log.Fields{
 					"chatId": chat.Id,
 					"userId": userId,
-					"error":  unbanErr,
-				}).Error("Failed to unban user after antiflood kick")
+				}).Warn("Antiflood unban operation timed out")
 			}
 		}()
 	case "ban":

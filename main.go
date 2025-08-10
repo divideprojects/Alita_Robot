@@ -17,7 +17,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/monitoring"
-	"github.com/divideprojects/Alita_Robot/alita/utils/response_cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/shutdown"
 	"github.com/divideprojects/Alita_Robot/alita/utils/webhook"
 
@@ -138,25 +137,10 @@ func main() {
 		log.Fatalf("Initial checks failed: %v", err)
 	}
 
-	// Prewarm caches for better performance
-	if config.EnableCachePrewarming {
-		log.Info("[Main] Starting cache prewarming...")
-		go func() {
-			if err := alita.PrewarmCachesOnStartup(); err != nil {
-				log.WithError(err).Warn("[Main] Cache prewarming failed, continuing without prewarming")
-			}
-		}()
-	}
-
 	// Initialize async processing system
 	if config.EnableAsyncProcessing {
 		async.InitializeAsyncProcessor()
 		defer async.StopAsyncProcessor()
-	}
-
-	// Initialize response caching system
-	if config.EnableResponseCaching {
-		response_cache.InitializeResponseCache()
 	}
 
 	// Initialize monitoring systems

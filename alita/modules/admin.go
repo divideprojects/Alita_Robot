@@ -59,6 +59,7 @@ func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 		cached = false
 	}
 
+	var sb strings.Builder
 	for i := range admins.UserInfo {
 		admin := &admins.UserInfo[i]
 		user := admin.User
@@ -67,11 +68,12 @@ func (m moduleStruct) adminlist(b *gotgbot.Bot, ctx *ext.Context) error {
 			continue
 		}
 		if user.Username != "" {
-			text += fmt.Sprintf("\n- @%s", user.Username)
+			sb.WriteString(fmt.Sprintf("\n- @%s", user.Username))
 		} else {
-			text += fmt.Sprintf("\n- %s", helpers.MentionHtml(user.Id, user.FirstName))
+			sb.WriteString(fmt.Sprintf("\n- %s", helpers.MentionHtml(user.Id, user.FirstName)))
 		}
 	}
+	text += sb.String()
 	if !cached {
 		noteText, _ := tr.GetString("admin_adminlist_note_fresh")
 		text += noteText
@@ -122,7 +124,7 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("admin_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -253,7 +255,7 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, customTitle := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("admin_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -450,7 +452,7 @@ func (m moduleStruct) setTitle(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, customTitle := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("admin_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {

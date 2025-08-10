@@ -82,23 +82,6 @@ func GetBlacklistSettings(chatId int64) BlacklistSettingsSlice {
 	return result
 }
 
-// GetBlacklistWords returns a slice of blacklisted words for a specific chat.
-// Returns an empty slice if no blacklists are found or on error.
-func GetBlacklistWords(chatId int64) []string {
-	var blacklists []*BlacklistSettings
-	err := GetRecords(&blacklists, BlacklistSettings{ChatId: chatId})
-	if err != nil {
-		log.Errorf("[Database] GetBlacklistWords: %v - %d", err, chatId)
-		return []string{}
-	}
-
-	words := make([]string, len(blacklists))
-	for i, bl := range blacklists {
-		words[i] = bl.Word
-	}
-	return words
-}
-
 // LoadBlacklistsStats returns statistics about blacklist usage.
 // Returns the total number of blacklist entries and distinct chats using blacklists.
 func LoadBlacklistsStats() (blacklistTriggers, blacklistChats int64) {

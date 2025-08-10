@@ -170,9 +170,11 @@ func (moduleStruct) warnThisUser(b *gotgbot.Bot, ctx *ext.Context, userId int64,
 				return err
 			}
 		}
+		var sb strings.Builder
 		for _, warnReason := range reasons {
-			reply += fmt.Sprintf("\n - %s", html.EscapeString(warnReason))
+			sb.WriteString(fmt.Sprintf("\n - %s", html.EscapeString(warnReason)))
 		}
+		reply += sb.String()
 	} else {
 		rules := db.GetChatRulesInfo(chat.Id)
 		if len(rules.Rules) >= 1 {
@@ -260,7 +262,7 @@ func (m moduleStruct) warnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("warns_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -319,7 +321,7 @@ func (m moduleStruct) sWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("warns_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -378,7 +380,7 @@ func (m moduleStruct) dWarnUser(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId, reason := extraction.ExtractUserAndText(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("warns_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -454,7 +456,7 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
 		userId = ctx.EffectiveUser.Id
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("warns_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {
@@ -480,9 +482,11 @@ func (moduleStruct) warns(b *gotgbot.Bot, ctx *ext.Context) error {
 		if len(reasons) > 0 {
 			temp, _ := tr.GetString("warns_user_has_warnings")
 			text = fmt.Sprintf(temp, numWarns, warnrc.WarnLimit)
+			var sb strings.Builder
 			for _, reason := range reasons {
-				text += fmt.Sprintf("\n - %s", reason)
+				sb.WriteString(fmt.Sprintf("\n - %s", reason))
 			}
+			text += sb.String()
 			msgs := helpers.SplitMessage(text)
 			for _, msgText := range msgs {
 				_, err := msg.Reply(b, msgText, nil)
@@ -634,7 +638,7 @@ func (moduleStruct) resetWarns(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
 		return ext.EndGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		text, _ := tr.GetString("warns_anonymous_user_error")
 		_, err := msg.Reply(b, text, nil)
 		if err != nil {

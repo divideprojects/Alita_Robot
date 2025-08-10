@@ -334,7 +334,7 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		// If channel then this info
-		if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+		if helpers.IsChannelID(userId) {
 			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			textTemplate, _ := tr.GetString("misc_channel_info_header")
 			text = fmt.Sprintf(textTemplate, userId, html.EscapeString(user.FirstName))

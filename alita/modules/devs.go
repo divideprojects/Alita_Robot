@@ -101,11 +101,13 @@ func (moduleStruct) chatList(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	allChats := db.GetAllChats()
 
+	var sb strings.Builder
 	for chatId, v := range allChats {
 		if !v.IsInactive {
-			writeString += fmt.Sprintf("%d: %s\n", chatId, v.ChatName)
+			sb.WriteString(fmt.Sprintf("%d: %s\n", chatId, v.ChatName))
 		}
 	}
+	writeString += sb.String()
 
 	// If the file doesn't exist, create it or re-write it
 	err = os.WriteFile(fileName, []byte(writeString), 0o600)
@@ -199,7 +201,7 @@ func (moduleStruct) addSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
 		return ext.ContinueGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		return ext.ContinueGroups
 	}
 
@@ -243,7 +245,7 @@ func (moduleStruct) addDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
 		return ext.ContinueGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		return ext.ContinueGroups
 	}
 
@@ -287,7 +289,7 @@ func (moduleStruct) remSudo(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
 		return ext.ContinueGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		return ext.ContinueGroups
 	}
 
@@ -331,7 +333,7 @@ func (moduleStruct) remDev(b *gotgbot.Bot, ctx *ext.Context) error {
 	userId := extraction.ExtractUser(b, ctx)
 	if userId == -1 {
 		return ext.ContinueGroups
-	} else if strings.HasPrefix(fmt.Sprint(userId), "-100") {
+	} else if helpers.IsChannelID(userId) {
 		return ext.ContinueGroups
 	}
 
