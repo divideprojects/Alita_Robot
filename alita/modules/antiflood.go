@@ -238,20 +238,46 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 	flood := db.GetFlood(chat.Id)
 
 	if flood.DeleteAntifloodMessage {
-		for _, i := range floodCrc.messageIDs {
-			_, err := b.DeleteMessage(chat.Id, i, nil)
-			// if err.Error() == "unable to deleteMessage: Bad Request: message to delete not found" {
-			// 	log.WithFields(
-			// 		log.Fields{
-			// 			"chat":    chat.Id,
-			// 			"message": i,
-			// 		},
-			// 	).Error("error deleting message")
-			// 	return ext.EndGroups
-			// } else
-			if err != nil {
-				log.Error(err)
-				return err
+		// For small numbers of messages, delete sequentially
+		if len(floodCrc.messageIDs) <= 3 {
+			for _, i := range floodCrc.messageIDs {
+				_, err := b.DeleteMessage(chat.Id, i, nil)
+				if err != nil && !strings.Contains(err.Error(), "message to delete not found") {
+					log.Error(err)
+					return err
+				}
+			}
+		} else {
+			// For larger numbers, delete concurrently with rate limiting
+			sem := make(chan struct{}, 5) // Max 5 concurrent deletions
+			var wg sync.WaitGroup
+			var deleteError error
+			var errorMu sync.Mutex
+
+			for _, msgId := range floodCrc.messageIDs {
+				wg.Add(1)
+				sem <- struct{}{} // Acquire semaphore
+
+				go func(messageId int64) {
+					defer wg.Done()
+					defer func() { <-sem }() // Release semaphore
+
+					_, err := b.DeleteMessage(chat.Id, messageId, nil)
+					if err != nil && !strings.Contains(err.Error(), "message to delete not found") {
+						errorMu.Lock()
+						if deleteError == nil {
+							deleteError = err
+						}
+						errorMu.Unlock()
+						log.Errorf("Failed to delete flood message %d: %v", messageId, err)
+					}
+				}(msgId)
+			}
+
+			wg.Wait()
+
+			if deleteError != nil {
+				return deleteError
 			}
 		}
 	} else {

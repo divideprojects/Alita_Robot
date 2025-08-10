@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -19,7 +20,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/cmdDecorator"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-
 	"github.com/divideprojects/Alita_Robot/alita/utils/keyword_matcher"
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
@@ -81,12 +81,53 @@ func (m moduleStruct) addBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	} else if len(args) >= 1 {
 		allBlWords := db.GetBlacklistSettings(chat.Id).Triggers()
-		for _, blWord := range args {
-			if string_handling.FindInStringSlice(allBlWords, blWord) {
-				alreadyBlacklisted = append(alreadyBlacklisted, blWord)
-			} else {
-				go db.AddBlacklist(chat.Id, blWord)
-				newBlacklist = append(newBlacklist, fmt.Sprintf("<code>%s</code>", blWord))
+
+		// For small lists, process sequentially
+		if len(args) <= 3 {
+			for _, blWord := range args {
+				if string_handling.FindInStringSlice(allBlWords, blWord) {
+					alreadyBlacklisted = append(alreadyBlacklisted, blWord)
+				} else {
+					go db.AddBlacklist(chat.Id, blWord)
+					newBlacklist = append(newBlacklist, fmt.Sprintf("<code>%s</code>", blWord))
+				}
+			}
+		} else {
+			// For larger lists, process concurrently
+			type result struct {
+				word            string
+				isAlreadyListed bool
+			}
+
+			resultChan := make(chan result, len(args))
+			var wg sync.WaitGroup
+
+			for _, blWord := range args {
+				wg.Add(1)
+				go func(word string) {
+					defer wg.Done()
+					isListed := string_handling.FindInStringSlice(allBlWords, word)
+					resultChan <- result{word: word, isAlreadyListed: isListed}
+
+					if !isListed {
+						db.AddBlacklist(chat.Id, word)
+					}
+				}(blWord)
+			}
+
+			// Close channel after all goroutines complete
+			go func() {
+				wg.Wait()
+				close(resultChan)
+			}()
+
+			// Collect results
+			for res := range resultChan {
+				if res.isAlreadyListed {
+					alreadyBlacklisted = append(alreadyBlacklisted, res.word)
+				} else {
+					newBlacklist = append(newBlacklist, fmt.Sprintf("<code>%s</code>", res.word))
+				}
 			}
 		}
 

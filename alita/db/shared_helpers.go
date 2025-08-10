@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -141,10 +142,114 @@ func BatchCreate[T any](records []T, batchSize int) error {
 		batchSize = 100 // Default batch size
 	}
 
+	// For small batches, use the simple approach
+	if len(records) <= batchSize {
+		err := DB.Create(&records).Error
+		if err != nil {
+			log.Errorf("[Database][BatchCreate]: %v", err)
+			return fmt.Errorf("failed to batch create %d records: %w", len(records), err)
+		}
+		return nil
+	}
+
+	// For large batches, use GORM's built-in batching
+	// (parallel processing would require separate DB connections which could cause issues)
 	err := DB.CreateInBatches(records, batchSize).Error
 	if err != nil {
 		log.Errorf("[Database][BatchCreate]: %v", err)
 		return fmt.Errorf("failed to batch create %d records: %w", len(records), err)
+	}
+
+	return nil
+}
+
+// BatchCreateParallel creates multiple records in parallel batches for improved performance.
+// Uses goroutines to process multiple batches concurrently with controlled parallelism.
+// Note: Use this only when you have a large dataset and separate DB connections are safe.
+func BatchCreateParallel[T any](records []T, batchSize int) error {
+	if len(records) == 0 {
+		return nil
+	}
+
+	if batchSize <= 0 {
+		batchSize = 100 // Default batch size
+	}
+
+	// For small datasets, use simple approach
+	if len(records) <= batchSize*2 {
+		return BatchCreate(records, batchSize)
+	}
+
+	// Split records into chunks
+	var chunks [][]T
+	for i := 0; i < len(records); i += batchSize {
+		end := i + batchSize
+		if end > len(records) {
+			end = len(records)
+		}
+		chunks = append(chunks, records[i:end])
+	}
+
+	// Process chunks in parallel with limited concurrency
+	numWorkers := 3 // Limit to 3 parallel DB operations
+	if len(chunks) < numWorkers {
+		numWorkers = len(chunks)
+	}
+
+	type result struct {
+		err error
+		idx int
+	}
+
+	resultChan := make(chan result, len(chunks))
+	chunkChan := make(chan struct {
+		chunk []T
+		idx   int
+	}, len(chunks))
+
+	// Start workers
+	var wg sync.WaitGroup
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for work := range chunkChan {
+				err := DB.Create(&work.chunk).Error
+				resultChan <- result{err: err, idx: work.idx}
+			}
+		}()
+	}
+
+	// Send work to workers
+	for idx, chunk := range chunks {
+		chunkChan <- struct {
+			chunk []T
+			idx   int
+		}{chunk: chunk, idx: idx}
+	}
+	close(chunkChan)
+
+	// Wait for workers to complete
+	wg.Wait()
+	close(resultChan)
+
+	// Check for errors
+	var firstError error
+	errorCount := 0
+	for res := range resultChan {
+		if res.err != nil {
+			errorCount++
+			if firstError == nil {
+				firstError = res.err
+			}
+		}
+	}
+
+	if firstError != nil {
+		log.Errorf("[Database][BatchCreateParallel]: %d/%d batches failed, first error: %v",
+			errorCount, len(chunks), firstError)
+		return fmt.Errorf("failed to batch create records: %d/%d batches failed: %w",
+			errorCount, len(chunks), firstError)
 	}
 
 	return nil

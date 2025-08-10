@@ -1,6 +1,7 @@
 package db
 
 import (
+	"sync"
 	"time"
 
 	"github.com/eko/gocache/lib/v4/store"
@@ -54,7 +55,40 @@ func (cp *CachePrewarmer) PrewarmCaches() error {
 	return nil
 }
 
-// prewarmActiveChats loads recently active chats into cache
+// prewarmSingleChat prewarns a single chat's data into cache
+func (cp *CachePrewarmer) prewarmSingleChat(chat Chat) {
+	// Cache chat data
+	chatKey := chatCacheKey(chat.ChatId)
+	if err := cache.Marshal.Set(cache.Context, chatKey, &chat, store.WithExpiration(CacheTTLChatSettings)); err != nil {
+		log.WithFields(log.Fields{
+			"chat_id": chat.ChatId,
+			"error":   err,
+		}).Debug("[CachePrewarming] Failed to cache chat")
+		return
+	}
+
+	// Cache chat settings
+	settingsKey := chatSettingsCacheKey(chat.ChatId)
+	if err := cache.Marshal.Set(cache.Context, settingsKey, &chat, store.WithExpiration(CacheTTLChatSettings)); err != nil {
+		log.WithFields(log.Fields{
+			"chat_id": chat.ChatId,
+			"error":   err,
+		}).Debug("[CachePrewarming] Failed to cache chat settings")
+	}
+
+	// Cache language if set
+	if chat.Language != "" {
+		langKey := chatLanguageCacheKey(chat.ChatId)
+		if err := cache.Marshal.Set(cache.Context, langKey, chat.Language, store.WithExpiration(CacheTTLLanguage)); err != nil {
+			log.WithFields(log.Fields{
+				"chat_id": chat.ChatId,
+				"error":   err,
+			}).Debug("[CachePrewarming] Failed to cache chat language")
+		}
+	}
+}
+
+// prewarmActiveChats loads recently active chats into cache using concurrent processing
 func (cp *CachePrewarmer) prewarmActiveChats() error {
 	var activeChats []Chat
 
@@ -70,42 +104,71 @@ func (cp *CachePrewarmer) prewarmActiveChats() error {
 
 	log.WithField("count", len(activeChats)).Info("[CachePrewarming] Prewarming active chats")
 
-	for _, chat := range activeChats {
-		// Cache chat data
-		chatKey := chatCacheKey(chat.ChatId)
-		if err := cache.Marshal.Set(cache.Context, chatKey, &chat, store.WithExpiration(CacheTTLChatSettings)); err != nil {
-			log.WithFields(log.Fields{
-				"chat_id": chat.ChatId,
-				"error":   err,
-			}).Debug("[CachePrewarming] Failed to cache chat")
-			continue
+	// For small numbers, process sequentially
+	if len(activeChats) <= 10 {
+		for _, chat := range activeChats {
+			cp.prewarmSingleChat(chat)
 		}
-
-		// Cache chat settings
-		settingsKey := chatSettingsCacheKey(chat.ChatId)
-		if err := cache.Marshal.Set(cache.Context, settingsKey, &chat, store.WithExpiration(CacheTTLChatSettings)); err != nil {
-			log.WithFields(log.Fields{
-				"chat_id": chat.ChatId,
-				"error":   err,
-			}).Debug("[CachePrewarming] Failed to cache chat settings")
-		}
-
-		// Cache language if set
-		if chat.Language != "" {
-			langKey := chatLanguageCacheKey(chat.ChatId)
-			if err := cache.Marshal.Set(cache.Context, langKey, chat.Language, store.WithExpiration(CacheTTLLanguage)); err != nil {
-				log.WithFields(log.Fields{
-					"chat_id": chat.ChatId,
-					"error":   err,
-				}).Debug("[CachePrewarming] Failed to cache chat language")
-			}
-		}
+		return nil
 	}
+
+	// Use worker pool for concurrent processing
+	numWorkers := 20
+	if len(activeChats) < numWorkers {
+		numWorkers = len(activeChats)
+	}
+
+	chatChan := make(chan Chat, len(activeChats))
+	var wg sync.WaitGroup
+
+	// Start workers
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for chat := range chatChan {
+				cp.prewarmSingleChat(chat)
+			}
+		}()
+	}
+
+	// Send chats to workers
+	for _, chat := range activeChats {
+		chatChan <- chat
+	}
+	close(chatChan)
+
+	// Wait for all workers to complete
+	wg.Wait()
 
 	return nil
 }
 
-// prewarmActiveUsers loads recently active users into cache
+// prewarmSingleUser prewarns a single user's data into cache
+func (cp *CachePrewarmer) prewarmSingleUser(user User) {
+	// Cache user data
+	userKey := userCacheKey(user.UserId)
+	if err := cache.Marshal.Set(cache.Context, userKey, &user, store.WithExpiration(CacheTTLLanguage)); err != nil {
+		log.WithFields(log.Fields{
+			"user_id": user.UserId,
+			"error":   err,
+		}).Debug("[CachePrewarming] Failed to cache user")
+		return
+	}
+
+	// Cache language if set
+	if user.Language != "" {
+		langKey := userLanguageCacheKey(user.UserId)
+		if err := cache.Marshal.Set(cache.Context, langKey, user.Language, store.WithExpiration(CacheTTLLanguage)); err != nil {
+			log.WithFields(log.Fields{
+				"user_id": user.UserId,
+				"error":   err,
+			}).Debug("[CachePrewarming] Failed to cache user language")
+		}
+	}
+}
+
+// prewarmActiveUsers loads recently active users into cache using concurrent processing
 func (cp *CachePrewarmer) prewarmActiveUsers() error {
 	var activeUsers []User
 
@@ -121,28 +184,45 @@ func (cp *CachePrewarmer) prewarmActiveUsers() error {
 
 	log.WithField("count", len(activeUsers)).Info("[CachePrewarming] Prewarming active users")
 
-	for _, user := range activeUsers {
-		// Cache user data
-		userKey := userCacheKey(user.UserId)
-		if err := cache.Marshal.Set(cache.Context, userKey, &user, store.WithExpiration(CacheTTLLanguage)); err != nil {
-			log.WithFields(log.Fields{
-				"user_id": user.UserId,
-				"error":   err,
-			}).Debug("[CachePrewarming] Failed to cache user")
-			continue
+	// For small numbers, process sequentially
+	if len(activeUsers) <= 20 {
+		for _, user := range activeUsers {
+			cp.prewarmSingleUser(user)
 		}
-
-		// Cache language if set
-		if user.Language != "" {
-			langKey := userLanguageCacheKey(user.UserId)
-			if err := cache.Marshal.Set(cache.Context, langKey, user.Language, store.WithExpiration(CacheTTLLanguage)); err != nil {
-				log.WithFields(log.Fields{
-					"user_id": user.UserId,
-					"error":   err,
-				}).Debug("[CachePrewarming] Failed to cache user language")
-			}
-		}
+		return nil
 	}
+
+	// Use worker pool for concurrent processing
+	numWorkers := 30
+	if len(activeUsers) < numWorkers*2 {
+		numWorkers = len(activeUsers) / 2
+	}
+	if numWorkers < 1 {
+		numWorkers = 1
+	}
+
+	userChan := make(chan User, len(activeUsers))
+	var wg sync.WaitGroup
+
+	// Start workers
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for user := range userChan {
+				cp.prewarmSingleUser(user)
+			}
+		}()
+	}
+
+	// Send users to workers
+	for _, user := range activeUsers {
+		userChan <- user
+	}
+	close(userChan)
+
+	// Wait for all workers to complete
+	wg.Wait()
 
 	return nil
 }

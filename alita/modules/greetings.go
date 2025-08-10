@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
-
-	"github.com/eko/gocache/lib/v4/store"
-	log "github.com/sirupsen/logrus"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/chatjoinrequest"
+	"github.com/eko/gocache/lib/v4/store"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
@@ -699,6 +699,76 @@ func (moduleStruct) leftMember(bot *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// processSingleNewMember handles a single new member joining (mute, captcha, welcome).
+// This is extracted to enable concurrent processing of multiple members.
+func processSingleNewMember(bot *gotgbot.Bot, ctx *ext.Context, newMember gotgbot.User, captchaEnabled bool) {
+	chat := ctx.EffectiveChat
+
+	if newMember.Id == bot.Id {
+		return
+	}
+
+	if captchaEnabled {
+		// Mute the new member immediately
+		_, err := chat.RestrictMember(bot, newMember.Id, gotgbot.ChatPermissions{
+			CanSendMessages:       false,
+			CanSendPhotos:         false,
+			CanSendVideos:         false,
+			CanSendAudios:         false,
+			CanSendDocuments:      false,
+			CanSendVideoNotes:     false,
+			CanSendVoiceNotes:     false,
+			CanAddWebPagePreviews: false,
+			CanChangeInfo:         false,
+			CanInviteUsers:        false,
+			CanPinMessages:        false,
+			CanManageTopics:       false,
+			CanSendPolls:          false,
+			CanSendOtherMessages:  false,
+		}, nil)
+
+		if err != nil {
+			log.Errorf("Failed to mute user %d for captcha: %v", newMember.Id, err)
+			// Send welcome if muting fails
+			if err := SendWelcomeMessage(bot, ctx, newMember.Id, newMember.FirstName); err != nil {
+				log.Error(err)
+			}
+		} else {
+			// Send captcha instead of welcome message
+			err = SendCaptcha(bot, ctx, newMember.Id, newMember.FirstName)
+			if err != nil {
+				log.Errorf("Failed to send captcha to user %d: %v", newMember.Id, err)
+				// Unmute the user if captcha sending fails
+				_, _ = chat.RestrictMember(bot, newMember.Id, gotgbot.ChatPermissions{
+					CanSendMessages:       true,
+					CanSendPhotos:         true,
+					CanSendVideos:         true,
+					CanSendAudios:         true,
+					CanSendDocuments:      true,
+					CanSendVideoNotes:     true,
+					CanSendVoiceNotes:     true,
+					CanAddWebPagePreviews: true,
+					CanChangeInfo:         false,
+					CanInviteUsers:        true,
+					CanPinMessages:        false,
+					CanManageTopics:       false,
+					CanSendPolls:          true,
+					CanSendOtherMessages:  true,
+				}, nil)
+				// Send welcome if captcha fails
+				if err := SendWelcomeMessage(bot, ctx, newMember.Id, newMember.FirstName); err != nil {
+					log.Error(err)
+				}
+			}
+		}
+	} else {
+		// Captcha is disabled, send welcome message
+		if err := SendWelcomeMessage(bot, ctx, newMember.Id, newMember.FirstName); err != nil {
+			log.Error(err)
+		}
+	}
+}
+
 // cleanService automatically deletes service messages about members joining/leaving.
 // Runs when service messages are posted and deletes them if cleanup is enabled.
 // Also handles captcha for users joining via invite links or being added.
@@ -714,75 +784,35 @@ func (moduleStruct) cleanService(bot *gotgbot.Bot, ctx *ext.Context) error {
 	// Handle new members joining via invite links or being added
 	if msg.NewChatMembers != nil {
 		captchaSettings, _ := db.GetCaptchaSettings(chat.Id)
-		if captchaSettings.Enabled {
+
+		// Process multiple members concurrently for better performance
+		numMembers := len(msg.NewChatMembers)
+		if numMembers > 1 {
+			// Use goroutines for multiple members
+			var wg sync.WaitGroup
+			// Limit concurrent processing to prevent overwhelming the API
+			sem := make(chan struct{}, 5)
+
 			for _, newMember := range msg.NewChatMembers {
 				if newMember.Id == bot.Id {
 					continue
 				}
 
-				// Mute the new member immediately
-				_, err := chat.RestrictMember(bot, newMember.Id, gotgbot.ChatPermissions{
-					CanSendMessages:       false,
-					CanSendPhotos:         false,
-					CanSendVideos:         false,
-					CanSendAudios:         false,
-					CanSendDocuments:      false,
-					CanSendVideoNotes:     false,
-					CanSendVoiceNotes:     false,
-					CanAddWebPagePreviews: false,
-					CanChangeInfo:         false,
-					CanInviteUsers:        false,
-					CanPinMessages:        false,
-					CanManageTopics:       false,
-					CanSendPolls:          false,
-					CanSendOtherMessages:  false,
-				}, nil)
+				wg.Add(1)
+				sem <- struct{}{} // Acquire semaphore
 
-				if err != nil {
-					log.Errorf("Failed to mute user %d for captcha: %v", newMember.Id, err)
-					// Send welcome if muting fails
-					if err := SendWelcomeMessage(bot, ctx, newMember.Id, newMember.FirstName); err != nil {
-						log.Error(err)
-					}
-				} else {
-					// Send captcha instead of welcome message
-					err = SendCaptcha(bot, ctx, newMember.Id, newMember.FirstName)
-					if err != nil {
-						log.Errorf("Failed to send captcha to user %d: %v", newMember.Id, err)
-						// Unmute the user if captcha sending fails
-						_, _ = chat.RestrictMember(bot, newMember.Id, gotgbot.ChatPermissions{
-							CanSendMessages:       true,
-							CanSendPhotos:         true,
-							CanSendVideos:         true,
-							CanSendAudios:         true,
-							CanSendDocuments:      true,
-							CanSendVideoNotes:     true,
-							CanSendVoiceNotes:     true,
-							CanAddWebPagePreviews: true,
-							CanChangeInfo:         false,
-							CanInviteUsers:        true,
-							CanPinMessages:        false,
-							CanManageTopics:       false,
-							CanSendPolls:          true,
-							CanSendOtherMessages:  true,
-						}, nil)
-						// Send welcome if captcha fails
-						if err := SendWelcomeMessage(bot, ctx, newMember.Id, newMember.FirstName); err != nil {
-							log.Error(err)
-						}
-					}
-				}
+				go func(member gotgbot.User) {
+					defer wg.Done()
+					defer func() { <-sem }() // Release semaphore
+
+					processSingleNewMember(bot, ctx, member, captchaSettings.Enabled)
+				}(newMember)
 			}
-		} else {
-			// Captcha is disabled, send welcome messages
-			for _, newMember := range msg.NewChatMembers {
-				if newMember.Id == bot.Id {
-					continue
-				}
-				if err := SendWelcomeMessage(bot, ctx, newMember.Id, newMember.FirstName); err != nil {
-					log.Error(err)
-				}
-			}
+
+			wg.Wait()
+		} else if numMembers == 1 {
+			// For single member, process directly without goroutine
+			processSingleNewMember(bot, ctx, msg.NewChatMembers[0], captchaSettings.Enabled)
 		}
 	}
 
