@@ -200,7 +200,8 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		cochat, _ := b.GetChat(int64(chatID), nil)
 		go db.ConnectId(user.Id, cochat.Id)
 
-		Text := fmt.Sprintf("You have been connected to %s!", cochat.Title)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		Text, _ := tr.GetString("helpers_connected_to_chat", i18n.TranslationParams{"s": cochat.Title})
 		connKeyboard := helpers.InitButtons(b, cochat.Id, user.Id)
 
 		_, err := ctx.EffectiveMessage.Reply(b, Text,
@@ -247,7 +248,8 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			// check if feth admin notes or not
 			admin := chat_status.IsUserAdmin(b, int64(chatID), user.Id)
 			noteKeys := db.GetNotesList(chatinfo.Id, admin)
-			info := "There are no notes in this chat!"
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			info, _ := tr.GetString("notes_none_in_chat")
 			if len(noteKeys) > 0 {
 				info = "These are the current notes in this Chat:\n"
 				for _, note := range noteKeys {
@@ -263,8 +265,10 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		} else if strings.HasPrefix(arg, "note_") {
 			noteName := strings.ToLower(nArgs[2])
 			noteData := db.GetNote(chatinfo.Id, noteName)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			if noteData == nil {
-				_, err := msg.Reply(b, "This note does not exist!", helpers.Shtml())
+				text, _ := tr.GetString("helpers_note_not_exist")
+				_, err := msg.Reply(b, text, helpers.Shtml())
 				if err != nil {
 					log.Error(err)
 					return err
@@ -273,7 +277,8 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			}
 			if noteData.AdminOnly {
 				if !chat_status.IsUserAdmin(b, int64(chatID), user.Id) {
-					_, err := msg.Reply(b, "This note can only be accessed by a admin!", helpers.Shtml())
+					text, _ := tr.GetString("helpers_note_admin_only")
+					_, err := msg.Reply(b, text, helpers.Shtml())
 					if err != nil {
 						log.Error(err)
 						return err

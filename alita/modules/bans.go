@@ -1148,13 +1148,15 @@ func (moduleStruct) unrestrict(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	text, _ := tr.GetString("bans_unrestrict_question")
+	unbanText, _ := tr.GetString("button_unban")
+	unmuteText, _ := tr.GetString("button_unmute")
 	_, err := msg.Reply(b, text,
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: "Unban", CallbackData: fmt.Sprintf("unrestrict.unban.%d", userId)},
-						{Text: "Unmute", CallbackData: fmt.Sprintf("unrestrict.unmute.%d", userId)},
+						{Text: unbanText, CallbackData: fmt.Sprintf("unrestrict.unban.%d", userId)},
+						{Text: unmuteText, CallbackData: fmt.Sprintf("unrestrict.unmute.%d", userId)},
 					},
 				},
 			},

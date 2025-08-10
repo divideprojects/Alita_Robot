@@ -86,15 +86,16 @@ func (moduleStruct) captchaCommand(bot *gotgbot.Bot, ctx *ext.Context) error {
 
 		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		statusUsage, _ := tr.GetString("captcha_status_usage")
+		header, _ := tr.GetString("captcha_settings_header")
+		statusLine, _ := tr.GetString("captcha_settings_status", i18n.TranslationParams{"s": status})
+		modeLine, _ := tr.GetString("captcha_settings_mode", i18n.TranslationParams{"s": settings.CaptchaMode})
+		timeoutLine, _ := tr.GetString("captcha_settings_timeout", i18n.TranslationParams{"d": settings.Timeout})
+		actionLine, _ := tr.GetString("captcha_settings_failure_action", i18n.TranslationParams{"s": settings.FailureAction})
+		attemptsLine, _ := tr.GetString("captcha_settings_max_attempts", i18n.TranslationParams{"d": settings.MaxAttempts})
+		
 		text := fmt.Sprintf(
-			"<b>Captcha Settings:</b>\n"+
-				"Status: <code>%s</code>\n"+
-				"Mode: <code>%s</code>\n"+
-				"Timeout: <code>%d minutes</code>\n"+
-				"Failure Action: <code>%s</code>\n"+
-				"Max Attempts: <code>%d</code>\n\n"+
-				"%s",
-			status, settings.CaptchaMode, settings.Timeout, settings.FailureAction, settings.MaxAttempts, statusUsage,
+			"%s\n%s\n%s\n%s\n%s\n%s\n\n%s",
+			header, statusLine, modeLine, timeoutLine, actionLine, attemptsLine, statusUsage,
 		)
 
 		_, err := msg.Reply(bot, text, helpers.Shtml())
@@ -186,7 +187,8 @@ func (moduleStruct) captchaModeCommand(bot *gotgbot.Bot, ctx *ext.Context) error
 		modeDesc = "text recognition from images"
 	}
 
-	_, err = msg.Reply(bot, fmt.Sprintf("✅ Captcha mode set to <b>%s</b> (%s)", mode, modeDesc), helpers.Shtml())
+	text := fmt.Sprintf("✅ Captcha mode set to <b>%s</b> (%s)", mode, modeDesc)
+	_, err = msg.Reply(bot, text, helpers.Shtml())
 	return err
 }
 
@@ -229,7 +231,9 @@ func (moduleStruct) captchaTimeCommand(bot *gotgbot.Bot, ctx *ext.Context) error
 		return err
 	}
 
-	_, err = msg.Reply(bot, fmt.Sprintf("✅ Captcha timeout set to <b>%d minutes</b>", timeout), helpers.Shtml())
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	text, _ := tr.GetString("captcha_timeout_set_success", i18n.TranslationParams{"d": timeout})
+	_, err = msg.Reply(bot, text, helpers.Shtml())
 	return err
 }
 
@@ -272,7 +276,9 @@ func (moduleStruct) captchaActionCommand(bot *gotgbot.Bot, ctx *ext.Context) err
 		return err
 	}
 
-	_, err = msg.Reply(bot, fmt.Sprintf("✅ Captcha failure action set to <b>%s</b>", action), helpers.Shtml())
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	text, _ := tr.GetString("captcha_action_set_success", i18n.TranslationParams{"s": action})
+	_, err = msg.Reply(bot, text, helpers.Shtml())
 	return err
 }
 
@@ -776,24 +782,28 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 			// Max attempts reached - execute failure action
 			handleCaptchaTimeout(bot, chat.Id, targetUserID, attempt.MessageID, settings.FailureAction)
 
-			actionText := "kicked"
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			actionText, _ := tr.GetString("captcha_action_kicked")
 			switch settings.FailureAction {
 			case "ban":
-				actionText = "banned"
+				actionText, _ = tr.GetString("captcha_action_banned")
 			case "mute":
-				actionText = "muted permanently"
+				actionText, _ = tr.GetString("captcha_action_muted")
 			}
 
+			text, _ := tr.GetString("captcha_wrong_answer_final", i18n.TranslationParams{"s": actionText})
 			_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
-				Text:      fmt.Sprintf("❌ Wrong answer! You have been %s.", actionText),
+				Text:      text,
 				ShowAlert: true,
 			})
 			return err
 		}
 
 		remainingAttempts := settings.MaxAttempts - attempt.Attempts
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("captcha_wrong_answer_remaining", i18n.TranslationParams{"d": remainingAttempts})
 		_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{
-			Text:      fmt.Sprintf("❌ Wrong answer! %d attempts remaining.", remainingAttempts),
+			Text:      text,
 			ShowAlert: true,
 		})
 		return err

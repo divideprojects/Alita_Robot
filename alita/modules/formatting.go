@@ -33,9 +33,10 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		
 		markdownHelpText, _ := tr.GetString("help_markdown_help_button")
+		pressButtonText, _ := tr.GetString("formatting_press_button")
 		
 		_, err := reply(b,
-			"Press the button below to get Markdown Help!",
+			pressButtonText,
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -66,11 +67,12 @@ func (m moduleStruct) markdownHelp(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 		)
 
+		largeOptionsText, _ := tr.GetString("formatting_large_options")
 		_, err := msg.Reply(b,
 			// help.HELPABLE[ModName],
 
 			// TODO: Fix help msg here
-			"Alita supports a large number of formatting options to make your messages more expressive. Take a look!",
+			largeOptionsText,
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{

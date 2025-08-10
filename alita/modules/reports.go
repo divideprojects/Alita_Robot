@@ -54,7 +54,9 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	)
 
 	if msg.ReplyToMessage.From.Id == user.Id {
-		_, _ = msg.Reply(b, "You can't report your own message!", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("reports_cannot_report_self")
+		_, _ = msg.Reply(b, text, nil)
 		return ext.EndGroups
 	}
 
@@ -84,12 +86,16 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if msg.ReplyToMessage.From.Id == 1087968824|777000|136817688 {
-		_, _ = msg.Reply(b, "It's a special account of telegram!", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("reports_special_account")
+		_, _ = msg.Reply(b, text, nil)
 		return ext.EndGroups
 	}
 
 	if chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-		_, err := msg.Reply(b, "You're an admin, whom will I report your issues to?", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("reports_admin_report")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -115,7 +121,9 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 	reportedMsgId := msg.ReplyToMessage.MessageId
 
 	if reportedUser.Id == b.Id {
-		_, err := msg.Reply(b, "Why would I report myself?", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("reports_why_report_myself")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -123,7 +131,9 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 	if string_handling.FindInInt64Slice(adminArray, reportedUser.Id) {
-		_, err := msg.Reply(b, "Why would I report an admin?", helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("reports_why_report_admin")
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -227,50 +237,57 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 		action := strings.ToLower(args[0])
 		switch action {
 		case "on", "yes", "true":
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			if msg.Chat.Type == "private" {
-				replyText = "Turned on reporting! You'll be notified whenever anyone reports something in groups you are admin."
+				replyText, _ = tr.GetString("reports_turned_on_personal")
 				go db.SetUserReportSettings(user.Id, true)
 			} else {
-				replyText = "Users will now be able to report messages."
+				replyText, _ = tr.GetString("reports_turned_on_group")
 				go db.SetChatReportStatus(chat.Id, true)
 			}
 		case "off", "no", "false":
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			if msg.Chat.Type == "private" {
-				replyText = "Turned off reporting! You'll no longer be notified whenever anyone reports something in groups you are admin."
+				replyText, _ = tr.GetString("reports_turned_off_personal")
 				go db.SetUserReportSettings(user.Id, false)
 			} else {
-				replyText = "Users will no longer be able to report via @admin or /report."
+				replyText, _ = tr.GetString("reports_turned_off_group")
 				go db.SetChatReportStatus(chat.Id, false)
 			}
 		case "block":
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			if msg.Chat.Type == "private" {
-				replyText = "This command can only be used in a group!"
+				replyText, _ = tr.GetString("reports_group_only")
 			} else {
 				if reply := msg.ReplyToMessage; reply != nil {
 					bUser := reply.From
 					go db.BlockReportUser(chat.Id, bUser.Id)
-					replyText = fmt.Sprintf("Blocked user %s from reporting.", helpers.MentionHtml(bUser.Id, bUser.FirstName))
+					replyText, _ = tr.GetString("reports_user_blocked", i18n.TranslationParams{
+						"s": helpers.MentionHtml(bUser.Id, bUser.FirstName),
+					})
 				} else {
-					tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 					replyText, _ = tr.GetString("reports_reply_to_block")
 				}
 			}
 		case "unblock":
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			if msg.Chat.Type == "private" {
-				replyText = "This command can only be used in a group!"
+				replyText, _ = tr.GetString("reports_group_only")
 			} else {
 				if reply := msg.ReplyToMessage; reply != nil {
 					bUser := reply.From
 					go db.UnblockReportUser(chat.Id, bUser.Id)
-					replyText = fmt.Sprintf("Unblocked user %s from reporting.", helpers.MentionHtml(bUser.Id, bUser.FirstName))
+					replyText, _ = tr.GetString("reports_user_unblocked", i18n.TranslationParams{
+						"s": helpers.MentionHtml(bUser.Id, bUser.FirstName),
+					})
 				} else {
-					tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 					replyText, _ = tr.GetString("reports_reply_to_unblock")
 				}
 			}
 		case "showblocklist":
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			if msg.Chat.Type == "private" {
-				replyText = "This command can only be used in a group!"
+				replyText, _ = tr.GetString("reports_group_only")
 			} else {
 				blockedUsers := db.GetChatReportSettings(chat.Id).BlockedList
 				if len(blockedUsers) == 0 {
@@ -343,11 +360,13 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 	userId := int64(_userId)
 	msgId := int64(_msgId)
 
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	switch action {
 	case "kick":
 		replyQuery = "✅ Successfully Kicked"
+		kickedText, _ := tr.GetString("reports_user_kicked")
 		replyText = fmt.Sprintf(
-			"User kicked!"+
+			kickedText+
 				"Action taken by %s",
 			helpers.MentionHtml(user.Id, user.FirstName),
 		)
@@ -366,8 +385,9 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 		}
 	case "ban":
 		replyQuery = "✅ Successfully Banned"
+		bannedText, _ := tr.GetString("reports_user_banned")
 		replyText = fmt.Sprintf(
-			"User banned!"+
+			bannedText+
 				"Action taken by %s",
 			helpers.MentionHtml(user.Id, user.FirstName),
 		)
@@ -379,8 +399,9 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 
 	case "delete":
 		replyQuery = "✅ Successfully Deleted"
+		deletedText, _ := tr.GetString("reports_message_deleted")
 		replyText = fmt.Sprintf(
-			"Message Deleted!"+
+			deletedText+
 				"Action taken by %s",
 			helpers.MentionHtml(user.Id, user.FirstName),
 		)

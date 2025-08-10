@@ -198,13 +198,14 @@ func (m moduleStruct) connectionButtons(b *gotgbot.Bot, ctx *ext.Context) error 
 	args := strings.Split(query.Data, ".")
 	userType := args[1]
 
+	backText, _ := tr.GetString("button_back")
 	var (
 		replyText string
 		replyKb   = gotgbot.InlineKeyboardMarkup{
 			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 				{
 					{
-						Text:         "Back",
+						Text:         backText,
 						CallbackData: "connbtns.Main",
 					},
 				},

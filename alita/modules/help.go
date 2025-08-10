@@ -26,23 +26,13 @@ func getAboutText(tr *i18n.Translator) string {
 }
 
 func getStartHelp(tr *i18n.Translator) string {
-	text1 := "Hey there! My name is Alita ✨.\n" +
-		"I'm here to help you manage your groups!\n" +
-		"Hit /help to find out more about how to use me to my full potential.\n"
+	text1, _ := tr.GetString("help_bot_intro")
 	text2, _ := tr.GetString("help_news_channel_text")
 	return text1 + text2
 }
 
 func getMainHelp(tr *i18n.Translator, firstName string) string {
-	text1 := fmt.Sprintf("Hey %s!\n" +
-		"My name is Alita ✨.\n\n" +
-		"I am a group management bot, here to help you get around and keep the order in your groups!\n" +
-		"I have lots of handy features, such as flood control, a warning system, a note keeping system, " +
-		"and even predetermined replies on certain keywords.\n\n" +
-		"<b>Helpful commands</b>:\n" +
-		" - /start: Starts me! You've probably already used this!\n" +
-		" - /help: Sends this message; I'll tell you more about myself!\n" +
-		" - /donate: Gives you info on how to support me and my creator.\n\n", firstName)
+	text1, _ := tr.GetString("help_pm_intro", i18n.TranslationParams{"s": firstName})
 	text2, _ := tr.GetString("help_all_commands_usage")
 	return text1 + text2
 }

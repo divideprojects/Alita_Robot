@@ -108,19 +108,23 @@ func (m moduleStruct) addNote(b *gotgbot.Bot, ctx *ext.Context) error {
 			isProtected: isProtected,
 			noNotif:     noNotif,
 		}
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		overwriteText, _ := tr.GetString("notes_overwrite_confirm")
+		yesText, _ := tr.GetString("button_yes")
+		noText, _ := tr.GetString("button_no")
 		_, err := msg.Reply(b,
-			"Note already exists!\nDo you want to overwrite it?",
+			overwriteText,
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
 							{
-								Text:         "Yes",
+								Text:         yesText,
 								CallbackData: fmt.Sprintf("notes.overwrite.%s", noteWordMapKey),
 							},
 							{
-								Text:         "No",
+								Text:         noText,
 								CallbackData: "notes.overwrite.cancel",
 							},
 						},
@@ -347,13 +351,17 @@ func (moduleStruct) rmAllNotes(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	if mem.MergeChatMember().Status == "creator" {
-		_, err := msg.Reply(b, "Are you sure you want to remove all Notes from this chat?",
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		clearAllText, _ := tr.GetString("notes_clear_all_confirm")
+		yesText, _ := tr.GetString("button_yes")
+		noText, _ := tr.GetString("button_no")
+		_, err := msg.Reply(b, clearAllText,
 			&gotgbot.SendMessageOpts{
 				ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
-							{Text: "Yes", CallbackData: "rmAllNotes.yes"},
-							{Text: "No", CallbackData: "rmAllNotes.no"},
+							{Text: yesText, CallbackData: "rmAllNotes.yes"},
+							{Text: noText, CallbackData: "rmAllNotes.no"},
 						},
 					},
 				},

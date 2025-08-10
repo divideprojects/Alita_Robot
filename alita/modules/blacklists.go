@@ -324,13 +324,15 @@ func (m moduleStruct) rmAllBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	text, _ := tr.GetString(strings.ToLower(m.moduleName) + "_rm_all_bl_ask")
+	yesText, _ := tr.GetString("button_yes")
+	noText, _ := tr.GetString("button_no")
 	_, err := msg.Reply(b, text,
 		&gotgbot.SendMessageOpts{
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: "Yes", CallbackData: "rmAllBlacklist.yes"},
-						{Text: "No", CallbackData: "rmAllBlacklist.no"},
+						{Text: yesText, CallbackData: "rmAllBlacklist.yes"},
+						{Text: noText, CallbackData: "rmAllBlacklist.no"},
 					},
 				},
 			},

@@ -1406,6 +1406,9 @@ captcha_refresh_button: "🔄 New Image"
 captcha_verified_success_msg: "✅ Verified successfully!"
 captcha_wrong_answer_final: "❌ Wrong answer! You have been %s."
 captcha_wrong_answer_remaining: "❌ Wrong answer! %d attempts remaining."
+captcha_action_kicked: "kicked"
+captcha_action_banned: "banned"
+captcha_action_muted: "muted permanently"
 captcha_refresh_success: "🔄 New captcha sent!"
 captcha_refresh_time_remaining: |
   👋 Welcome %s!
@@ -1602,3 +1605,85 @@ helpers_need_note_content: "You need to give the note some content!"
 helpers_need_content: "You need to give me some content to %s users!"
 helpers_text_too_long: "Your message text is %d characters long. The maximum length for text is 4096; please trim it to a smaller size. Note that markdown characters may take more space than expected."
 helpers_caption_too_long: "Your message caption is %d characters long. The maximum caption length is 1024; please trim it to a smaller size. Note that markdown characters may take more space than expected."
+
+# Reports module additional strings
+reports_cannot_report_self: "You can't report your own message!"
+reports_special_account: "It's a special account of telegram!"
+reports_admin_report: "You're an admin, whom will I report your issues to?"
+reports_why_report_myself: "Why would I report myself?"
+reports_why_report_admin: "Why would I report an admin?"
+reports_turned_on_personal: "Turned on reporting! You'll be notified whenever anyone reports something in groups you are admin."
+reports_turned_on_group: "Users will now be able to report messages."
+reports_turned_off_personal: "Turned off reporting! You'll no longer be notified whenever anyone reports something in groups you are admin."
+reports_turned_off_group: "Users will no longer be able to report via @admin or /report."
+reports_group_only: "This command can only be used in a group!"
+reports_user_blocked: "Blocked user %s from reporting."
+reports_user_unblocked: "Unblocked user %s from reporting."
+reports_no_blocked_users: "No users are currently blocked from using report commands!"
+reports_preference_enabled: "Your current preference is true, You'll be notified whenever anyone reports something in groups you are admin."
+reports_preference_disabled: "You'll have nt enabled reports, You won't be notified."
+reports_status_enabled: "Reports are currently enabled in this chat.\nUsers can use the /report command, or mention @admin, to tag all admins."
+reports_status_disabled: "Reports are currently disabled in this chat."
+reports_user_kicked: "User kicked!"
+reports_user_banned: "User banned!"
+reports_message_deleted: "Message Deleted!"
+
+# Language module additional strings
+language_current_user: "Your Current Language is %s\nChoose a language from keyboard below."
+language_current_group: "This Group's Current Language is %s\nChoose a language from keyboard below."
+language_changed_user: "Your language has been changed to %s"
+language_changed_group: "This group's language has been changed to %s"
+language_help_translate: "Help Us Translate 🌎"
+
+# Bot updates module additional strings
+bot_updates_need_supergroup: "Sorry, but to use my all my features, you need to convert this group to supergroup."
+bot_updates_thanks_for_adding: "Thanks for adding me in your group!"
+bot_updates_button_expired: "This button has expired, Please use the command again."
+
+# Formatting module additional strings
+formatting_press_button: "Press the button below to get Markdown Help!"
+formatting_large_options: "Alita supports a large number of formatting options to make your messages more expressive. Take a look!"
+
+# Help module additional strings
+help_bot_intro: "Hey there! My name is Alita ✨.\nI'm here to help you manage your groups!\nHit /help to find out more about how to use me to my full potential.\n"
+help_pm_intro: |
+  Hey %s!
+  My name is Alita ✨.
+  
+  I am a group management bot, here to help you get around and keep the order in your groups!
+  I have lots of handy features, such as flood control, a warning system, a note keeping system, and even predetermined replies on certain keywords.
+  
+  Helpful commands:
+  - /start: Starts me! You've probably already used this.
+  - /help: Sends this message; I'll tell you more about myself!
+  - /donate: Gives you info on how to support me and my creator.
+  
+  If you have any bugs or questions on how to use me, have a look at my website, or head to @DivideSupport.
+  All commands can be used with / or !.
+
+# Captcha module additional strings  
+captcha_settings_header: "<b>Captcha Settings:</b>"
+captcha_settings_status: "Status: <code>%s</code>"
+captcha_settings_mode: "Mode: <code>%s</code>"
+captcha_settings_timeout: "Timeout: <code>%d minutes</code>"
+captcha_settings_failure_action: "Failure Action: <code>%s</code>"
+captcha_settings_max_attempts: "Max Attempts: <code>%d</code>"
+captcha_status_enabled: "enabled"
+captcha_status_disabled: "disabled"
+
+# Common button texts
+button_yes: "Yes"
+button_no: "No"
+button_back: "Back"
+button_unmute_admin: "Unmute (Admin Only)"
+button_unban_admin: "Unban (Admin Only)"
+button_unmute_admins: "Unmute (Admins Only)"
+button_unban_admins: "Unban (Admins Only)"
+button_connect_to_chat: "Connect to chat"
+button_formatting: "Formatting"
+button_click_me: "Click Me!"
+button_ban: "Ban"
+button_kick: "Kick"
+button_mute: "Mute"
+button_unban: "Unban"
+button_unmute: "Unmute"
