@@ -102,7 +102,11 @@ func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 			WelcomeType:   TEXT,
 			Button:        ButtonArray{},
 		}
+	} else if greetingSrc.WelcomeSettings.WelcomeText == "" {
+		// Set default welcome text if it's empty (for existing records with empty text)
+		greetingSrc.WelcomeSettings.WelcomeText = DefaultWelcome
 	}
+	
 	if greetingSrc.GoodbyeSettings == nil {
 		greetingSrc.GoodbyeSettings = &GoodbyeSettings{
 			LastMsgId:     0,
@@ -112,6 +116,9 @@ func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 			GoodbyeType:   TEXT,
 			Button:        ButtonArray{},
 		}
+	} else if greetingSrc.GoodbyeSettings.GoodbyeText == "" {
+		// Set default goodbye text if it's empty (for existing records with empty text)
+		greetingSrc.GoodbyeSettings.GoodbyeText = DefaultGoodbye
 	}
 
 	return greetingSrc
