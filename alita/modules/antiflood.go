@@ -343,7 +343,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 			keyboard = [][]gotgbot.InlineKeyboardButton{
 				{
 					{
-						Text:         "Unban (Admins Only)",
+						Text:         func() string { t, _ := tr.GetString("antiflood_button_unban_admins"); return t }(),
 						CallbackData: fmt.Sprintf("unrestrict.unban.%d", user.Id()),
 					},
 				},

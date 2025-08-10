@@ -169,29 +169,29 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: "➡ Message",
+							Text: func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("reports_button_message"); return t }(),
 							Url:  helpers.GetMessageLinkFromMessageId(chat, reportedMsgId),
 						},
 					},
 					{
 						{
-							Text:         "⚠ Kick",
+							Text:         func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("reports_button_kick"); return t }(),
 							CallbackData: fmt.Sprintf(callbackData, "kick"),
 						},
 						{
-							Text:         "⛔️ Ban",
+							Text:         func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("reports_button_ban"); return t }(),
 							CallbackData: fmt.Sprintf(callbackData, "ban"),
 						},
 					},
 					{
 						{
-							Text:         "❎ Delete Message",
+							Text:         func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("reports_button_delete"); return t }(),
 							CallbackData: fmt.Sprintf(callbackData, "delete"),
 						},
 					},
 					{
 						{
-							Text:         "✔️ Mark Resolved",
+							Text:         func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("reports_button_resolved"); return t }(),
 							CallbackData: fmt.Sprintf(callbackData, "resolved"),
 						},
 					},
@@ -291,11 +291,12 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 			} else {
 				blockedUsers := db.GetChatReportSettings(chat.Id).BlockedList
 				if len(blockedUsers) == 0 {
-					replyText = "No users are currently blocked from using report commands!"
+					replyText, _ = tr.GetString("reports_no_blocked_users")
 				} else {
 					var builder strings.Builder
 					builder.Grow(256) // Pre-allocate capacity
-					builder.WriteString("Users blocked from using report commands: ")
+					headerText, _ := tr.GetString("reports_blocked_users_header")
+					builder.WriteString(headerText)
 					for _, blockUserId := range blockedUsers {
 						bUser, err := b.GetChat(blockUserId, nil)
 						if err != nil {
@@ -309,25 +310,28 @@ func (moduleStruct) reports(b *gotgbot.Bot, ctx *ext.Context) error {
 				}
 			}
 		default:
-			replyText = "Your input was not recognised as one of: <code><yes/on/no/off> or <block/unblock/showblocklist></code>"
+				tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			replyText, _ = tr.GetString("reports_invalid_input")
 		}
 	} else {
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		if msg.Chat.Type == "private" {
 			rStatus := db.GetUserReportSettings(chat.Id).Status
 			if rStatus {
-				replyText = "Your current preference is true, You'll be notified whenever anyone reports something in groups you are admin."
+				replyText, _ = tr.GetString("reports_preference_enabled_private")
 			} else {
-				replyText = "You'll have nt enabled reports, You won't be notified."
+				replyText, _ = tr.GetString("reports_preference_disabled_private")
 			}
 		} else {
 			rStatus := db.GetChatReportSettings(chat.Id).Status
 			if rStatus {
-				replyText = "Reports are currently enabled in this chat.\nUsers can use the /report command, or mention @admin, to tag all admins."
+				replyText, _ = tr.GetString("reports_status_enabled_group")
 			} else {
-				replyText = "Reports are currently disabled in this chat."
+				replyText, _ = tr.GetString("reports_status_disabled_group")
 			}
 		}
-		replyText += "\n\nTo change this setting, try this command again, with one of the following args: yes/no/on/off"
+		hintText, _ := tr.GetString("reports_change_settings_hint")
+		replyText += hintText
 	}
 
 	_, err = msg.Reply(b, replyText, helpers.Shtml())

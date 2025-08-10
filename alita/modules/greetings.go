@@ -1009,7 +1009,7 @@ func LoadGreetings(dispatcher *ext.Dispatcher) {
 	HelpModule.helpableKb[greetingsModule.moduleName] = [][]gotgbot.InlineKeyboardButton{
 		{
 			{
-				Text:         "Formatting",
+				Text:         func() string { tr := i18n.MustNewTranslator("en"); t, _ := tr.GetString("button_formatting"); return t }(),
 				CallbackData: fmt.Sprintf("helpq.%s", "Formatting"),
 			},
 		},

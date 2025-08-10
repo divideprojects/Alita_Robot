@@ -102,7 +102,7 @@ func (m moduleStruct) allowConnect(b *gotgbot.Bot, ctx *ext.Context) error {
 			text, _ = tr.GetString(strings.ToLower(m.moduleName) + "_allow_connect_turned_off")
 			go db.ToggleAllowConnect(chat.Id, false)
 		default:
-			text = "Please give me a vaid option from <yes/on/no/off>"
+			text, _ = tr.GetString("connections_invalid_option")
 		}
 	} else {
 		currSetting := db.GetChatConnectionSetting(chat.Id).AllowConnect
@@ -162,7 +162,7 @@ func (m moduleStruct) connect(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text: "Connect to chat",
+							Text: func() string { tr := i18n.MustNewTranslator(db.GetLanguage(ctx)); t, _ := tr.GetString("connections_button_connect"); return t }(),
 							Url:  fmt.Sprintf("https://t.me/%s?start=connect_%d", b.Username, chat.Id),
 						},
 					},

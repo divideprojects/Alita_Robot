@@ -251,7 +251,7 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			info, _ := tr.GetString("notes_none_in_chat")
 			if len(noteKeys) > 0 {
-				info = "These are the current notes in this Chat:\n"
+				info, _ = tr.GetString("helpers_notes_current_header")
 				for _, note := range noteKeys {
 					info += fmt.Sprintf(" - <a href='https://t.me/%s?start=note_%d_%s'>%s</a>\n", b.Username, int64(chatID), note, note)
 				}

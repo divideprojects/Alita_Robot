@@ -182,12 +182,14 @@ func (moduleStruct) captchaModeCommand(bot *gotgbot.Bot, ctx *ext.Context) error
 		return err
 	}
 
-	modeDesc := "mathematical problems"
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	modeDesc, _ := tr.GetString("captcha_mode_math_desc")
 	if mode == "text" {
-		modeDesc = "text recognition from images"
+		modeDesc, _ = tr.GetString("captcha_mode_text_desc")
 	}
 
-	text := fmt.Sprintf("✅ Captcha mode set to <b>%s</b> (%s)", mode, modeDesc)
+	textTemplate, _ := tr.GetString("captcha_mode_set_formatted")
+	text := fmt.Sprintf(textTemplate, mode, modeDesc)
 	_, err = msg.Reply(bot, text, helpers.Shtml())
 	return err
 }
@@ -929,13 +931,15 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	}
 	var caption string
 	if settings != nil && settings.CaptchaMode == "text" {
+		template, _ := tr.GetString("captcha_welcome_text_detailed")
 		caption = fmt.Sprintf(
-			"👋 Welcome %s!\n\nPlease select the text shown in the image to verify you're human:\n\n⏱ You have <b>%d minutes</b> to answer.",
+			template,
 			helpers.MentionHtml(targetUserID, user.FirstName), remainingMinutes,
 		)
 	} else {
+		template, _ := tr.GetString("captcha_welcome_math_detailed")
 		caption = fmt.Sprintf(
-			"👋 Welcome %s!\n\nPlease solve the problem shown in the image and select the correct answer:\n\n⏱ You have <b>%d minutes</b> to answer.",
+			template,
 			helpers.MentionHtml(targetUserID, user.FirstName), remainingMinutes,
 		)
 	}

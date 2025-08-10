@@ -1650,19 +1650,19 @@ help_bot_intro: "Hey there! My name is Alita ✨.\nI'm here to help you manage y
 help_pm_intro: |
   Hey %s!
   My name is Alita ✨.
-  
+
   I am a group management bot, here to help you get around and keep the order in your groups!
   I have lots of handy features, such as flood control, a warning system, a note keeping system, and even predetermined replies on certain keywords.
-  
+
   Helpful commands:
   - /start: Starts me! You've probably already used this.
   - /help: Sends this message; I'll tell you more about myself!
   - /donate: Gives you info on how to support me and my creator.
-  
+
   If you have any bugs or questions on how to use me, have a look at my website, or head to @DivideSupport.
   All commands can be used with / or !.
 
-# Captcha module additional strings  
+# Captcha module additional strings
 captcha_settings_header: "<b>Captcha Settings:</b>"
 captcha_settings_status: "Status: <code>%s</code>"
 captcha_settings_mode: "Mode: <code>%s</code>"
@@ -1688,3 +1688,38 @@ button_kick: "Kick"
 button_mute: "Mute"
 button_unban: "Unban"
 button_unmute: "Unmute"
+
+# Reports module strings
+reports_button_message: "➡ Message"
+reports_button_kick: "⚠ Kick"
+reports_button_ban: "⛔️ Ban"
+reports_button_delete: "❎ Delete Message"
+reports_button_resolved: "✔️ Mark Resolved"
+reports_blocked_users_header: "Users blocked from using report commands:"
+reports_invalid_input: "Your input was not recognised as one of: <code><yes/on/no/off> or <block/unblock/showblocklist></code>"
+reports_preference_enabled_private: "Your current preference is true. You'll be notified whenever anyone reports something in groups you are admin."
+reports_preference_disabled_private: "You have not enabled reports. You won't be notified."
+reports_status_enabled_group: "Reports are currently enabled in this chat.\nUsers can use the /report command, or mention @admin, to tag all admins."
+reports_status_disabled_group: "Reports are currently disabled in this chat."
+reports_change_settings_hint: "\n\nTo change this setting, try this command again, with one of the following args: yes/no/on/off"
+
+# Captcha module strings
+captcha_mode_math_desc: "mathematical problems"
+captcha_mode_text_desc: "text recognition from images"
+captcha_mode_set_formatted: "✅ Captcha mode set to <b>%s</b> (%s)"
+captcha_welcome_text_detailed: "👋 Welcome %s!\n\nPlease select the text shown in the image to verify you're human:\n\n⏱ You have <b>%d minutes</b> to answer."
+captcha_welcome_math_detailed: "👋 Welcome %s!\n\nPlease solve the problem shown in the image and select the correct answer:\n\n⏱ You have <b>%d minutes</b> to answer."
+
+# Connections module strings
+connections_invalid_option: "Please give me a valid option from <yes/on/no/off>"
+connections_button_connect: "Connect to chat"
+
+# Bot updates module strings
+bot_updates_convert_instruction: "After converting this group to supergroup, you can add me again to use me.\n"
+bot_updates_convert_howto: "To convert this group to a supergroup, please follow the instructions here:\n"
+
+# Antiflood module strings
+antiflood_button_unban_admins: "Unban (Admins Only)"
+
+# Helpers module strings
+helpers_notes_current_header: "These are the current notes in this Chat:\n"

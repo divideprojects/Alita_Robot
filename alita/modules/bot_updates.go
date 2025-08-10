@@ -37,12 +37,14 @@ func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 		if chat.Type == "group" {
 			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			text, _ := tr.GetString("bot_updates_need_supergroup")
+			convertInstr, _ := tr.GetString("bot_updates_convert_instruction")
+			convertHowto, _ := tr.GetString("bot_updates_convert_howto")
 			_, err := b.SendMessage(
 				chat.Id,
 				fmt.Sprint(
 					text,
-					"After converting this group to supergroup, you can add me again to use me.\n",
-					"To convert this group to a supergroup, please follow the instructions here:\n",
+					convertInstr,
+					convertHowto,
 					"https://telegra.ph/Convert-group-to-Supergroup-07-29",
 				),
 				helpers.Shtml(),
