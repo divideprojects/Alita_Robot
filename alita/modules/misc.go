@@ -186,26 +186,55 @@ func (moduleStruct) getId(b *gotgbot.Bot, ctx *ext.Context) error {
 
 // ping handles the /ping command to measure and display
 // the bot's response time in milliseconds.
+// Optimized version that uses prefetched context to minimize database queries.
 func (moduleStruct) ping(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
-	// if command is disabled, return
-	if chat_status.CheckDisabledCmd(b, msg, "ping") {
+	stime := time.Now()
+
+	// Use prefetched context for optimal performance
+	prefetched, err := db.PrefetchCommandContext(ctx)
+	if err != nil {
+		log.WithError(err).Debug("[Ping] Failed to prefetch context, using fallback")
+		// Fallback to simple ping without checks for maximum speed
+		rmsg, _ := msg.Reply(b, "Pinging...", &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
+		elapsed := time.Since(stime)
+		text := fmt.Sprintf("Pinged in %dms", int64(elapsed/time.Millisecond))
+		_, _, err := rmsg.EditText(b, text, nil)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		log.Debugf("[Ping] Response time: %v (fallback mode)", elapsed)
 		return ext.EndGroups
 	}
-	stime := time.Now()
-	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
+	// Check if command is disabled using prefetched data (no additional DB query)
+	if msg.Chat.Type != "private" && prefetched.IsCommandDisabled("ping") {
+		// Skip admin check for ping command to maximize speed
+		return ext.EndGroups
+	}
+
+	// Use prefetched language (no additional DB query)
+	tr := i18n.MustNewTranslator(prefetched.GetPrefetchedLanguage())
 	text, _ := tr.GetString("misc_pinging")
 	rmsg, _ := msg.Reply(b, text, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
 	elapsed := time.Since(stime)
 	temp, _ := tr.GetString("misc_pinged_in")
 	text = fmt.Sprintf(temp, int64(elapsed/time.Millisecond))
-	_, _, err := rmsg.EditText(b, text, nil)
+	_, _, err = rmsg.EditText(b, text, nil)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	// Log ping performance for monitoring
-	log.Debugf("[Ping] Response time: %v", elapsed)
+
+	// Log performance statistics
+	log.WithFields(log.Fields{
+		"response_time": elapsed,
+		"cache_hit":     prefetched.CacheHit,
+		"query_time":    prefetched.QueryTime,
+		"queries_count": prefetched.QueriesCount,
+	}).Debug("[Ping] Performance metrics")
+
 	return ext.EndGroups
 }
 
@@ -250,9 +279,9 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 
 			if user.Username != "" {
 				usernameTemplate, _ := tr.GetString("misc_username")
-				text += fmt.Sprintf("\n" + usernameTemplate, user.Username)
+				text += fmt.Sprintf("\n"+usernameTemplate, user.Username)
 				linkTemplate, _ := tr.GetString("misc_channel_link")
-				text += fmt.Sprintf("\n" + linkTemplate, user.Username)
+				text += fmt.Sprintf("\n"+linkTemplate, user.Username)
 			}
 		} else {
 			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
@@ -260,10 +289,10 @@ func (moduleStruct) info(b *gotgbot.Bot, ctx *ext.Context) error {
 			text = fmt.Sprintf(textTemplate, userId, html.EscapeString(user.FirstName))
 			if user.Username != "" {
 				usernameTemplate, _ := tr.GetString("misc_username")
-				text += fmt.Sprintf("\n" + usernameTemplate, user.Username)
+				text += fmt.Sprintf("\n"+usernameTemplate, user.Username)
 			}
 			linkTemplate, _ := tr.GetString("misc_user_link")
-			text += fmt.Sprintf("\n" + linkTemplate, helpers.MentionHtml(user.Id, "link"))
+			text += fmt.Sprintf("\n"+linkTemplate, helpers.MentionHtml(user.Id, "link"))
 			if user.Id == config.OwnerId {
 				ownerText, _ := tr.GetString("misc_owner_info")
 				text += "\n" + ownerText
