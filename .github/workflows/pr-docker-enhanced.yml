@@ -92,8 +92,8 @@ jobs:
         with:
           images: ghcr.io/divideprojects/alita_robot
           tags: |
-            type=raw,value=${{ github.event.pull_request.number }}-${{ steps.short-sha.outputs.short_sha }}
-            type=raw,value=${{ github.event.pull_request.number }}
+            type=raw,value=pr-${{ github.event.pull_request.number }}-${{ steps.short-sha.outputs.short_sha }}
+            type=raw,value=pr-${{ github.event.pull_request.number }}
           labels: |
             org.opencontainers.image.title=Alita Robot PR #${{ github.event.pull_request.number }}
             org.opencontainers.image.description=PR #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}
@@ -146,18 +146,18 @@ jobs:
             const body = `🐳 **Docker images built successfully for PR #${prNumber}**
 
             **Available image tags:**
-            - \`docker pull ${imageBase}:${prNumber}-${shortSha}\` (specific commit)
-            - \`docker pull ${imageBase}:${prNumber}\` (latest for this PR)
+            - \`docker pull ${imageBase}:pr-${prNumber}-${shortSha}\` (specific commit)
+            - \`docker pull ${imageBase}:pr-${prNumber}\` (latest for this PR)
 
             **Image digest:** \`${digest}\`
 
             **Quick test:**
             \`\`\`bash
             # Test the latest PR build
-            docker run --rm ${imageBase}:${prNumber} --version
+            docker run --rm ${imageBase}:pr-${prNumber} --version
 
             # Test specific commit
-            docker run --rm ${imageBase}:${prNumber}-${shortSha} --version
+            docker run --rm ${imageBase}:pr-${prNumber}-${shortSha} --version
             \`\`\`
 
             **Multi-architecture support:** \`linux/amd64\`, \`linux/arm64\`
@@ -194,7 +194,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ghcr.io/divideprojects/alita_robot:${{ github.event.pull_request.number }}
+          image-ref: ghcr.io/divideprojects/alita_robot:pr-${{ github.event.pull_request.number }}
           format: "sarif"
           output: "trivy-results.sarif"
 
@@ -260,7 +260,7 @@ jobs:
 
               const prVersions = versions.filter(version =>
                 version.metadata?.container?.tags?.some(tag =>
-                  tag.startsWith(`${prNumber}-`) || tag === `${prNumber}`
+                  tag.startsWith(`pr-${prNumber}-`) || tag === `pr-${prNumber}`
                 )
               );
 
