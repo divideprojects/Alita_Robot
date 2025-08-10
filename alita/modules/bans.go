@@ -558,7 +558,7 @@ func (m moduleStruct) ban(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "Unban (Admin Only)",
+							Text:         func() string { t, _ := tr.GetString("bans_unban_button"); return t }(),
 							CallbackData: fmt.Sprintf("unrestrict.unban.%d", userId),
 						},
 					},
@@ -766,7 +766,7 @@ func (m moduleStruct) dBan(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "Unban (Admin Only)",
+							Text:         func() string { t, _ := tr.GetString("bans_unban_button"); return t }(),
 							CallbackData: fmt.Sprintf("unrestrict.unban.%d", userId),
 						},
 					},
@@ -948,10 +948,10 @@ func (moduleStruct) restrict(b *gotgbot.Bot, ctx *ext.Context) error {
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
-						{Text: "Ban", CallbackData: fmt.Sprintf("restrict.ban.%d", userId)},
-						{Text: "Kick", CallbackData: fmt.Sprintf("restrict.kick.%d", userId)},
+						{Text: func() string { t, _ := tr.GetString("button_ban"); return t }(), CallbackData: fmt.Sprintf("restrict.ban.%d", userId)},
+						{Text: func() string { t, _ := tr.GetString("button_kick"); return t }(), CallbackData: fmt.Sprintf("restrict.kick.%d", userId)},
 					},
-					{{Text: "Mute", CallbackData: fmt.Sprintf("restrict.mute.%d", userId)}},
+					{{Text: func() string { t, _ := tr.GetString("button_mute"); return t }(), CallbackData: fmt.Sprintf("restrict.mute.%d", userId)}},
 				},
 			},
 		},

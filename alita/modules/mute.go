@@ -268,7 +268,7 @@ func (moduleStruct) mute(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "Unmute (Admin Only)",
+							Text:         func() string { t, _ := tr.GetString("mutes_unmute_button"); return t }(),
 							CallbackData: fmt.Sprintf("unrestrict.unmute.%d", userId),
 						},
 					},
@@ -512,7 +512,7 @@ func (moduleStruct) dMute(b *gotgbot.Bot, ctx *ext.Context) error {
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{
 						{
-							Text:         "Unmute (Admin Only)",
+							Text:         func() string { t, _ := tr.GetString("mutes_unmute_button"); return t }(),
 							CallbackData: fmt.Sprintf("unrestrict.unmute.%d", userId),
 						},
 					},

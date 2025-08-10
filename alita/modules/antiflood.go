@@ -272,7 +272,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 		keyboard = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "Unmute (Admins Only)",
+					Text:         func() string { t, _ := tr.GetString("button_unmute_admins"); return t }(),
 					CallbackData: fmt.Sprintf("unrestrict.unmute.%d", user.Id()),
 				},
 			},

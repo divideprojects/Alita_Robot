@@ -1458,6 +1458,7 @@ notes_get_insufficient_args: "Not enough arguments."
 notes_does_not_exist: "Note doesn't exists!"
 notes_parsing_error_support: "There's some error parsing the note, please report this to support chat."
 notes_admin_only_access: "This note can only be accessed by a admin!"
+notes_private_conflict_warning: "\n\n<b>Note:</b> This note will be sent to default setting of group notes, because it has both <code>{private}</code> and <code>{noprivate}</code>."
 
 # Filters module strings
 filters_limit_exceeded: |

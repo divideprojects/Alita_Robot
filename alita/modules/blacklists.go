@@ -163,8 +163,8 @@ func (m moduleStruct) removeBlacklist(b *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 		if len(removedBlacklists) <= 0 {
-			_, err := msg.Reply(b, fmt.Sprint("strings."+m.moduleName+".unblacklist.no_removed_bl"),
-				nil)
+			text, _ := tr.GetString(strings.ToLower(m.moduleName) + "_unblacklist_no_removed_bl")
+			_, err := msg.Reply(b, text, nil)
 			if err != nil {
 				log.Error(err)
 				return err
