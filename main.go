@@ -13,9 +13,11 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/utils/async"
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/monitoring"
+	"github.com/divideprojects/Alita_Robot/alita/utils/response_cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/shutdown"
 	"github.com/divideprojects/Alita_Robot/alita/utils/webhook"
 
@@ -57,17 +59,24 @@ func main() {
 	// Create optimized HTTP transport with connection pooling for better performance
 	// IMPORTANT: We create a transport pointer that will be shared across all requests
 	// This ensures connection pooling works correctly (the http.Client struct is copied by value in BaseBotClient)
+	// Use configurable values for optimal performance
+	maxIdleConns := config.HTTPMaxIdleConns
+	maxIdleConnsPerHost := config.HTTPMaxIdleConnsPerHost
+
 	httpTransport := &http.Transport{
-		MaxIdleConns:          100,              // Maximum idle connections across all hosts
-		MaxIdleConnsPerHost:   30,               // Increased from 10 since all requests go to api.telegram.org
-		MaxConnsPerHost:       30,               // Maximum total connections per host
-		IdleConnTimeout:       90 * time.Second, // How long idle connections are kept alive
-		DisableCompression:    false,            // Enable compression for smaller payloads
-		ForceAttemptHTTP2:     true,             // Enable HTTP/2 for multiplexing
-		DisableKeepAlives:     false,            // Explicitly enable keep-alive for connection reuse
-		TLSHandshakeTimeout:   10 * time.Second, // Timeout for TLS handshake
-		ResponseHeaderTimeout: 10 * time.Second, // Timeout waiting for response headers
+		MaxIdleConns:          maxIdleConns,             // Configurable maximum idle connections across all hosts
+		MaxIdleConnsPerHost:   maxIdleConnsPerHost,      // Configurable connections per host (api.telegram.org)
+		MaxConnsPerHost:       maxIdleConnsPerHost + 20, // Allow some extra connections for burst traffic
+		IdleConnTimeout:       120 * time.Second,        // Keep connections alive longer for better reuse
+		DisableCompression:    false,                    // Enable compression for smaller payloads
+		ForceAttemptHTTP2:     true,                     // Enable HTTP/2 for multiplexing
+		DisableKeepAlives:     false,                    // Explicitly enable keep-alive for connection reuse
+		TLSHandshakeTimeout:   10 * time.Second,         // Timeout for TLS handshake
+		ResponseHeaderTimeout: 10 * time.Second,         // Timeout waiting for response headers
+		ExpectContinueTimeout: 1 * time.Second,          // Timeout for Expect: 100-continue
 	}
+
+	log.Infof("[Main] HTTP transport configured with MaxIdleConns: %d, MaxIdleConnsPerHost: %d", maxIdleConns, maxIdleConnsPerHost)
 
 	// If a custom API server is configured (e.g., local Bot API server),
 	// wrap the transport to rewrite requests from api.telegram.org to the configured server.
@@ -98,7 +107,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create new bot: %v", err)
 	}
-	log.Infof("[Main] Bot initialized with connection pooling (MaxIdleConns: 100, MaxIdleConnsPerHost: 30, HTTP/2 enabled)")
+	log.Infof("[Main] Bot initialized with optimized connection pooling (MaxIdleConns: %d, MaxIdleConnsPerHost: %d, HTTP/2 enabled)", maxIdleConns, maxIdleConnsPerHost)
 
 	// Pre-warm connections to Telegram API for faster initial responses
 	go func() {
@@ -127,6 +136,27 @@ func main() {
 	// some initial checks before running bot
 	if err := alita.InitialChecks(b); err != nil {
 		log.Fatalf("Initial checks failed: %v", err)
+	}
+
+	// Prewarm caches for better performance
+	if config.EnableCachePrewarming {
+		log.Info("[Main] Starting cache prewarming...")
+		go func() {
+			if err := alita.PrewarmCachesOnStartup(); err != nil {
+				log.WithError(err).Warn("[Main] Cache prewarming failed, continuing without prewarming")
+			}
+		}()
+	}
+
+	// Initialize async processing system
+	if config.EnableAsyncProcessing {
+		async.InitializeAsyncProcessor()
+		defer async.StopAsyncProcessor()
+	}
+
+	// Initialize response caching system
+	if config.EnableResponseCaching {
+		response_cache.InitializeResponseCache()
 	}
 
 	// Initialize monitoring systems
