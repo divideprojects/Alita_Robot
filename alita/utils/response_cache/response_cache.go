@@ -1,7 +1,7 @@
 package response_cache
 
 import (
-	"crypto/md5"
+	"crypto/sha256"
 	"fmt"
 	"time"
 
@@ -42,10 +42,10 @@ func NewResponseCache() *ResponseCache {
 
 // generateCacheKey creates a cache key for a response
 func (rc *ResponseCache) generateCacheKey(chatID int64, text string, parseMode string) string {
-	// Create a hash of the content to keep keys manageable
+	// Create a secure hash of the content to keep keys manageable
 	content := fmt.Sprintf("%d:%s:%s", chatID, text, parseMode)
-	hash := md5.Sum([]byte(content))
-	return fmt.Sprintf("alita:response:%x", hash)
+	hash := sha256.Sum256([]byte(content))
+	return fmt.Sprintf("alita:response:%x", hash[:16]) // Use first 16 bytes for shorter keys
 }
 
 // GetCachedResponse retrieves a cached response if available
