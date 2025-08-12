@@ -137,6 +137,154 @@ func (m *MigrationRunner) isMigrationApplied(version string) bool {
 	return count > 0
 }
 
+// splitSQLStatements splits a SQL string into individual statements
+// It handles various edge cases including:
+// - Quoted strings (single quotes, double quotes)
+// - Dollar-quoted strings (PostgreSQL specific)
+// - Comments (single-line and multi-line)
+// - Semicolons inside strings
+func (m *MigrationRunner) splitSQLStatements(sql string) []string {
+	var statements []string
+	var currentStmt strings.Builder
+
+	runes := []rune(sql)
+	length := len(runes)
+
+	inSingleQuote := false
+	inDoubleQuote := false
+	inDollarQuote := false
+	inLineComment := false
+	inBlockComment := false
+	dollarQuoteTag := ""
+
+	for i := 0; i < length; i++ {
+		char := runes[i]
+		nextChar := rune(0)
+		if i+1 < length {
+			nextChar = runes[i+1]
+		}
+
+		// Handle line comments
+		if !inSingleQuote && !inDoubleQuote && !inDollarQuote && !inBlockComment {
+			if char == '-' && nextChar == '-' {
+				inLineComment = true
+				currentStmt.WriteRune(char)
+				continue
+			}
+		}
+
+		if inLineComment {
+			currentStmt.WriteRune(char)
+			if char == '\n' {
+				inLineComment = false
+			}
+			continue
+		}
+
+		// Handle block comments
+		if !inSingleQuote && !inDoubleQuote && !inDollarQuote && !inLineComment {
+			if char == '/' && nextChar == '*' {
+				inBlockComment = true
+				currentStmt.WriteRune(char)
+				continue
+			}
+		}
+
+		if inBlockComment {
+			currentStmt.WriteRune(char)
+			if char == '*' && nextChar == '/' {
+				currentStmt.WriteRune(nextChar)
+				i++
+				inBlockComment = false
+			}
+			continue
+		}
+
+		// Handle dollar quotes (PostgreSQL)
+		if !inSingleQuote && !inDoubleQuote && !inLineComment && !inBlockComment {
+			if char == '$' {
+				// Check if this is the start or end of a dollar quote
+				tagEnd := i + 1
+				for tagEnd < length && (runes[tagEnd] != '$' && runes[tagEnd] != ' ' && runes[tagEnd] != '\n' && runes[tagEnd] != ';') {
+					tagEnd++
+				}
+
+				if tagEnd < length && runes[tagEnd] == '$' {
+					tag := string(runes[i : tagEnd+1])
+					if inDollarQuote {
+						// Check if this closes the current dollar quote
+						if tag == dollarQuoteTag {
+							inDollarQuote = false
+							dollarQuoteTag = ""
+						}
+					} else {
+						// Start a new dollar quote
+						inDollarQuote = true
+						dollarQuoteTag = tag
+					}
+
+					// Add the entire tag to the current statement
+					for j := i; j <= tagEnd; j++ {
+						currentStmt.WriteRune(runes[j])
+					}
+					i = tagEnd
+					continue
+				}
+			}
+		}
+
+		// Handle single quotes
+		if !inDoubleQuote && !inDollarQuote && !inLineComment && !inBlockComment {
+			if char == '\'' {
+				// Check for escaped single quote
+				if i+1 < length && runes[i+1] == '\'' {
+					currentStmt.WriteRune(char)
+					currentStmt.WriteRune(runes[i+1])
+					i++
+					continue
+				}
+				inSingleQuote = !inSingleQuote
+			}
+		}
+
+		// Handle double quotes
+		if !inSingleQuote && !inDollarQuote && !inLineComment && !inBlockComment {
+			if char == '"' {
+				// Check for escaped double quote
+				if i+1 < length && runes[i+1] == '"' {
+					currentStmt.WriteRune(char)
+					currentStmt.WriteRune(runes[i+1])
+					i++
+					continue
+				}
+				inDoubleQuote = !inDoubleQuote
+			}
+		}
+
+		// Handle semicolons (statement separator)
+		if char == ';' && !inSingleQuote && !inDoubleQuote && !inDollarQuote && !inLineComment && !inBlockComment {
+			// End of statement
+			stmt := strings.TrimSpace(currentStmt.String())
+			if stmt != "" {
+				statements = append(statements, stmt)
+			}
+			currentStmt.Reset()
+		} else {
+			currentStmt.WriteRune(char)
+		}
+	}
+
+	// Add any remaining statement
+	if currentStmt.Len() > 0 {
+		stmt := strings.TrimSpace(currentStmt.String())
+		if stmt != "" {
+			statements = append(statements, stmt)
+		}
+	}
+
+	return statements
+}
+
 // applyMigration reads, cleans, and applies a single migration file
 func (m *MigrationRunner) applyMigration(filepath, version string) error {
 	// Read migration file
@@ -151,17 +299,47 @@ func (m *MigrationRunner) applyMigration(filepath, version string) error {
 		sql = m.cleanSupabaseSQL(sql)
 	}
 
+	// Split SQL into individual statements
+	statements := m.splitSQLStatements(sql)
+	if len(statements) == 0 {
+		log.Warnf("[Migrations] No statements found in migration %s", version)
+		return nil
+	}
+
+	log.Debugf("[Migrations] Migration %s contains %d statements", version, len(statements))
+
 	// Begin transaction for atomicity
 	tx := m.db.Begin()
 	if tx.Error != nil {
 		return fmt.Errorf("failed to begin transaction: %w", tx.Error)
 	}
 
-	// Apply migration SQL
-	if err := tx.Exec(sql).Error; err != nil {
-		tx.Rollback()
-		return fmt.Errorf("failed to execute migration SQL: %w", err)
+	// Apply each statement individually
+	for i, stmt := range statements {
+		// Skip empty statements
+		if strings.TrimSpace(stmt) == "" {
+			continue
+		}
+
+		// Log progress for large migrations
+		if len(statements) > 50 && i%50 == 0 {
+			log.Debugf("[Migrations] Progress: %d/%d statements executed", i, len(statements))
+		}
+
+		// Execute the statement
+		if err := tx.Exec(stmt).Error; err != nil {
+			tx.Rollback()
+			// Include statement preview in error for debugging
+			preview := stmt
+			if len(preview) > 100 {
+				preview = preview[:100] + "..."
+			}
+			return fmt.Errorf("failed to execute statement %d/%d: %w\nStatement preview: %s",
+				i+1, len(statements), err, preview)
+		}
 	}
+
+	log.Debugf("[Migrations] All %d statements executed successfully", len(statements))
 
 	// Record migration
 	migration := SchemaMigration{
@@ -283,4 +461,14 @@ func (m *MigrationRunner) RollbackMigration(version string) error {
 
 	log.Warnf("[Migrations] Removed migration record for %s - manual schema rollback may be required", version)
 	return nil
+}
+
+// SplitSQLStatementsForTesting exposes the SQL splitter for testing purposes
+func (m *MigrationRunner) SplitSQLStatementsForTesting(sql string) []string {
+	return m.splitSQLStatements(sql)
+}
+
+// CleanSupabaseSQLForTesting exposes the SQL cleaner for testing purposes
+func (m *MigrationRunner) CleanSupabaseSQLForTesting(sql string) string {
+	return m.cleanSupabaseSQL(sql)
 }
