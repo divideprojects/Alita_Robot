@@ -387,10 +387,25 @@ func (m *MigrationRunner) cleanSupabaseSQL(sql string) string {
 	cleaned = strings.ReplaceAll(cleaned, ` WITH SCHEMA "extensions"`, "")
 
 	// Make CREATE EXTENSION idempotent
-	cleaned = regexp.MustCompile(`(?i)create extension\s+`).ReplaceAllString(cleaned, "CREATE EXTENSION IF NOT EXISTS ")
+	// First check if it already has IF NOT EXISTS (case insensitive)
+	hasIfNotExistsPattern := regexp.MustCompile(`(?i)create\s+extension\s+if\s+not\s+exists\s+`)
+	noIfNotExistsPattern := regexp.MustCompile(`(?i)create\s+extension\s+`)
+
+	// Process line by line to handle CREATE EXTENSION statements properly
+	lines := strings.Split(cleaned, "\n")
+	for i, line := range lines {
+		if hasIfNotExistsPattern.MatchString(line) {
+			// Already has IF NOT EXISTS, just normalize to uppercase
+			lines[i] = hasIfNotExistsPattern.ReplaceAllString(line, "CREATE EXTENSION IF NOT EXISTS ")
+		} else if noIfNotExistsPattern.MatchString(line) {
+			// Doesn't have IF NOT EXISTS, add it
+			lines[i] = noIfNotExistsPattern.ReplaceAllString(line, "CREATE EXTENSION IF NOT EXISTS ")
+		}
+	}
+	cleaned = strings.Join(lines, "\n")
 
 	// Remove empty lines created by cleaning
-	lines := strings.Split(cleaned, "\n")
+	lines = strings.Split(cleaned, "\n")
 	var nonEmptyLines []string
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
