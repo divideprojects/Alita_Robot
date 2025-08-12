@@ -5,6 +5,7 @@ RUN apk add --no-cache curl wget gnupg git upx
 WORKDIR /app
 COPY . .
 RUN go build -o out/alita_robot
+# Note: supabase directory is already copied with COPY . . above
 ENTRYPOINT ["/app/out/alita_robot"]
 
 # Metadata

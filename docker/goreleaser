@@ -1,7 +1,8 @@
 FROM gcr.io/distroless/static-debian12
-COPY alita_robot /
-COPY supabase /supabase
-ENTRYPOINT ["/alita_robot"]
+WORKDIR /app
+COPY alita_robot /app/
+COPY supabase /app/supabase
+ENTRYPOINT ["/app/alita_robot"]
 
 # Metadata
 LABEL org.opencontainers.image.authors="Divanshu Chauhan <divkix@divkix.me>"
