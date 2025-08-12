@@ -1,5 +1,6 @@
 FROM gcr.io/distroless/static-debian12
 COPY alita_robot /
+COPY supabase /supabase
 ENTRYPOINT ["/alita_robot"]
 
 # Metadata

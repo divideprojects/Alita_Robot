@@ -43,6 +43,9 @@ WORKDIR /app
 # Copy binary from builder stage
 COPY --from=builder /app/alita_robot .
 
+# Copy supabase directory for migrations to work
+COPY supabase /app/supabase
+
 # User is already nonroot in distroless
 USER nonroot
 
