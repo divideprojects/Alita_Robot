@@ -660,10 +660,25 @@ func init() {
 
 	log.Info("Connected to PostgreSQL database successfully!")
 
-	// Note: GORM AutoMigrate is disabled because we use SQL migrations in supabase/migrations/
-	// This prevents constraint naming conflicts between GORM's naming convention (uni_*)
-	// and our SQL migrations (uk_*). Database schema is managed via SQL migration files.
-	log.Info("Database schema managed via SQL migrations - skipping GORM AutoMigrate")
+	// Check if auto-migration is enabled
+	if config.AutoMigrate {
+		log.Info("[Database] AUTO_MIGRATE is enabled, running database migrations...")
+		runner := NewMigrationRunner(DB)
+		if err := runner.RunMigrations(); err != nil {
+			if config.AutoMigrateSilentFail {
+				log.Errorf("[Database][AutoMigrate] Migration failed but continuing (AUTO_MIGRATE_SILENT_FAIL=true): %v", err)
+			} else {
+				log.Fatalf("[Database][AutoMigrate] Migration failed: %v", err)
+			}
+		} else {
+			log.Info("[Database][AutoMigrate] All migrations applied successfully")
+		}
+	} else {
+		// Note: GORM AutoMigrate is disabled because we use SQL migrations in supabase/migrations/
+		// This prevents constraint naming conflicts between GORM's naming convention (uni_*)
+		// and our SQL migrations (uk_*). Database schema is managed via SQL migration files.
+		log.Info("Database schema managed via SQL migrations - skipping auto-migration (set AUTO_MIGRATE=true to enable)")
+	}
 }
 
 // Helper functions for GORM-specific operations

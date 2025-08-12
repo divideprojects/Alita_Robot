@@ -29,6 +29,53 @@ make psql-status   # Check current migration status
 make psql-reset    # Reset database - DANGEROUS: drops and recreates all tables
 ```
 
+### Automatic Database Migrations
+
+The bot now supports automatic database migrations on startup. This feature
+eliminates the need to manually run `make psql-migrate` or `supabase up`.
+
+#### How It Works
+
+1. **Migration Files**: SQL migrations are stored in `supabase/migrations/`
+2. **Auto-Cleaning**: Supabase-specific SQL (GRANT statements, RLS policies) is
+   automatically removed
+3. **Version Tracking**: Applied migrations are tracked in `schema_migrations`
+   table
+4. **Idempotent**: Migrations are only applied once, safe to run multiple times
+5. **Transactional**: Each migration runs in a transaction for atomicity
+
+#### Configuration
+
+Enable auto-migration by setting environment variables:
+
+```bash
+# Enable automatic migrations on startup
+AUTO_MIGRATE=true
+
+# Optional: Continue running even if migrations fail (not recommended for production)
+AUTO_MIGRATE_SILENT_FAIL=false
+
+# Optional: Custom migration directory (defaults to supabase/migrations)
+MIGRATIONS_PATH=supabase/migrations
+```
+
+#### Migration Process
+
+When `AUTO_MIGRATE=true`, the bot will:
+
+1. Check for pending migrations in `supabase/migrations/`
+2. Clean Supabase-specific SQL commands automatically
+3. Apply migrations in alphabetical order
+4. Track applied migrations in `schema_migrations` table
+5. Log migration status and any errors
+
+#### Manual Migration (Previous Method)
+
+If you prefer manual control, keep `AUTO_MIGRATE=false` (default) and use:
+
+- `make psql-migrate` - For any PostgreSQL instance
+- `supabase up` - For Supabase instances
+
 ## High-Level Architecture
 
 ### Core Request Flow
@@ -91,8 +138,8 @@ The database uses a **surrogate key pattern** for all tables:
   - Provides stability if external IDs change or new platforms are added
   - Simplifies GORM operations with consistent integer primary keys
   - Better performance for joins and indexing
-- **Duplicate Prevention**: Unique constraints on `user_id` and `chat_id` prevent
-  duplicates even though they're not primary keys
+- **Duplicate Prevention**: Unique constraints on `user_id` and `chat_id`
+  prevent duplicates even though they're not primary keys
 - **Exception**: The `chat_users` join table uses a composite primary key
   `(chat_id, user_id)` since each pair must be unique
 

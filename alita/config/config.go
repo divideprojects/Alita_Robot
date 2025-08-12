@@ -84,6 +84,11 @@ type Config struct {
 	EnableHTTPConnectionPooling bool // Enable HTTP connection pooling
 	HTTPMaxIdleConns            int  `validate:"min=10,max=1000"` // HTTP connection pool size
 	HTTPMaxIdleConnsPerHost     int  `validate:"min=5,max=500"`   // HTTP connections per host
+
+	// Database migration settings
+	AutoMigrate           bool   // Enable automatic database migrations on startup
+	AutoMigrateSilentFail bool   // Continue running even if migrations fail
+	MigrationsPath        string // Path to migration files (defaults to supabase/migrations)
 }
 
 // Global configuration instance
@@ -150,6 +155,11 @@ var (
 	EnableHTTPConnectionPooling bool
 	HTTPMaxIdleConns            int
 	HTTPMaxIdleConnsPerHost     int
+
+	// Database migration settings
+	AutoMigrate           bool
+	AutoMigrateSilentFail bool
+	MigrationsPath        string
 
 	// Global config instance
 	AppConfig *Config
@@ -314,6 +324,11 @@ func LoadConfig() (*Config, error) {
 		EnableHTTPConnectionPooling: typeConvertor{str: os.Getenv("ENABLE_HTTP_CONNECTION_POOLING")}.Bool(),
 		HTTPMaxIdleConns:            typeConvertor{str: os.Getenv("HTTP_MAX_IDLE_CONNS")}.Int(),
 		HTTPMaxIdleConnsPerHost:     typeConvertor{str: os.Getenv("HTTP_MAX_IDLE_CONNS_PER_HOST")}.Int(),
+
+		// Database migration settings
+		AutoMigrate:           typeConvertor{str: os.Getenv("AUTO_MIGRATE")}.Bool(),
+		AutoMigrateSilentFail: typeConvertor{str: os.Getenv("AUTO_MIGRATE_SILENT_FAIL")}.Bool(),
+		MigrationsPath:        os.Getenv("MIGRATIONS_PATH"),
 	}
 
 	// Set defaults
@@ -487,6 +502,13 @@ func (cfg *Config) setDefaults() {
 	if cfg.HTTPMaxIdleConnsPerHost == 0 {
 		cfg.HTTPMaxIdleConnsPerHost = 50
 	}
+
+	// Set database migration defaults
+	if cfg.MigrationsPath == "" {
+		cfg.MigrationsPath = "supabase/migrations"
+	}
+	// AutoMigrate defaults to false for backward compatibility
+	// AutoMigrateSilentFail defaults to false
 }
 
 // init initializes the logging configuration, loads the global configuration
@@ -562,6 +584,9 @@ func init() {
 	EnableHTTPConnectionPooling = cfg.EnableHTTPConnectionPooling
 	HTTPMaxIdleConns = cfg.HTTPMaxIdleConns
 	HTTPMaxIdleConnsPerHost = cfg.HTTPMaxIdleConnsPerHost
+	AutoMigrate = cfg.AutoMigrate
+	AutoMigrateSilentFail = cfg.AutoMigrateSilentFail
+	MigrationsPath = cfg.MigrationsPath
 	AllowedUpdates = cfg.AllowedUpdates
 	ValidLangCodes = cfg.ValidLangCodes
 
