@@ -361,11 +361,22 @@ func (m *MigrationRunner) applyMigration(filepath, version string) error {
 
 // cleanSupabaseSQL removes Supabase-specific SQL commands
 func (m *MigrationRunner) cleanSupabaseSQL(sql string) string {
+	// List of Supabase-specific extensions that are not available in standard PostgreSQL
+	// These extensions are pre-installed in Supabase but will fail on regular PostgreSQL
+	supabaseOnlyExtensions := []string{
+		"hypopg",          // Hypothetical indexes extension
+		"index_advisor",   // Index advisor that depends on hypopg
+		"pg_graphql",      // GraphQL extension
+		"pg_stat_monitor", // Enhanced monitoring (Supabase specific build)
+		"pgaudit",         // Audit logging (may not be available)
+		"plv8",            // JavaScript language (rarely available)
+		"pgsodium",        // Encryption extension (Supabase specific)
+		"vault",           // Secrets management (Supabase specific)
+		"wrappers",        // Foreign data wrappers (Supabase specific)
+	}
+
 	// Pattern to match GRANT statements for Supabase roles (now handles quotes properly)
 	grantPattern := regexp.MustCompile(`(?i)grant\s+[^;]+\s+to\s+["']?(anon|authenticated|service_role)["']?\s*;`)
-
-	// Pattern to match RLS (Row Level Security) commands - commented out for now as we may want to keep these
-	// rlsPattern := regexp.MustCompile(`(?i)(alter table|ALTER TABLE)\s+.*\s+(enable|ENABLE)\s+(row level security|ROW LEVEL SECURITY).*?;`)
 
 	// Pattern to match policy creation for Supabase roles
 	policyPattern := regexp.MustCompile(`(?i)create\s+policy\s+[^;]+\s+to\s+["']?(anon|authenticated|service_role)["']?\s*;`)
@@ -376,9 +387,6 @@ func (m *MigrationRunner) cleanSupabaseSQL(sql string) string {
 	// Remove GRANT statements (handles both quoted and unquoted role names)
 	cleaned = grantPattern.ReplaceAllString(cleaned, "")
 
-	// Remove RLS statements (optional - you may want to keep these)
-	// cleaned = rlsPattern.ReplaceAllString(cleaned, "")
-
 	// Remove policy statements
 	cleaned = policyPattern.ReplaceAllString(cleaned, "")
 
@@ -386,30 +394,63 @@ func (m *MigrationRunner) cleanSupabaseSQL(sql string) string {
 	cleaned = strings.ReplaceAll(cleaned, ` with schema "extensions"`, "")
 	cleaned = strings.ReplaceAll(cleaned, ` WITH SCHEMA "extensions"`, "")
 
-	// Make CREATE EXTENSION idempotent
-	// First check if it already has IF NOT EXISTS (case insensitive)
-	hasIfNotExistsPattern := regexp.MustCompile(`(?i)create\s+extension\s+if\s+not\s+exists\s+`)
-	noIfNotExistsPattern := regexp.MustCompile(`(?i)create\s+extension\s+`)
-
-	// Process line by line to handle CREATE EXTENSION statements properly
+	// Process line by line to handle CREATE EXTENSION statements
 	lines := strings.Split(cleaned, "\n")
-	for i, line := range lines {
-		if hasIfNotExistsPattern.MatchString(line) {
-			// Already has IF NOT EXISTS, just normalize to uppercase
-			lines[i] = hasIfNotExistsPattern.ReplaceAllString(line, "CREATE EXTENSION IF NOT EXISTS ")
-		} else if noIfNotExistsPattern.MatchString(line) {
-			// Doesn't have IF NOT EXISTS, add it
-			lines[i] = noIfNotExistsPattern.ReplaceAllString(line, "CREATE EXTENSION IF NOT EXISTS ")
+	var processedLines []string
+	removedExtensions := []string{}
+
+	for _, line := range lines {
+		trimmedLine := strings.TrimSpace(line)
+
+		// Check if this line creates a Supabase-specific extension
+		isSupabaseExtension := false
+		extensionPattern := regexp.MustCompile(`(?i)create\s+extension\s+(?:if\s+not\s+exists\s+)?["']?(\w+)["']?`)
+		if matches := extensionPattern.FindStringSubmatch(trimmedLine); len(matches) > 1 {
+			extensionName := strings.ToLower(matches[1])
+			for _, supabaseExt := range supabaseOnlyExtensions {
+				if extensionName == supabaseExt {
+					isSupabaseExtension = true
+					removedExtensions = append(removedExtensions, extensionName)
+					// Add a comment explaining why this was removed
+					processedLines = append(processedLines,
+						fmt.Sprintf("-- Skipped Supabase-specific extension: %s (not available in standard PostgreSQL)", extensionName))
+					break
+				}
+			}
+		}
+
+		// If it's not a Supabase-specific extension, process normally
+		if !isSupabaseExtension {
+			// Make other CREATE EXTENSION statements idempotent
+			hasIfNotExistsPattern := regexp.MustCompile(`(?i)create\s+extension\s+if\s+not\s+exists\s+`)
+			noIfNotExistsPattern := regexp.MustCompile(`(?i)create\s+extension\s+`)
+
+			if hasIfNotExistsPattern.MatchString(line) {
+				// Already has IF NOT EXISTS, just normalize to uppercase
+				line = hasIfNotExistsPattern.ReplaceAllString(line, "CREATE EXTENSION IF NOT EXISTS ")
+			} else if noIfNotExistsPattern.MatchString(line) {
+				// Doesn't have IF NOT EXISTS, add it
+				line = noIfNotExistsPattern.ReplaceAllString(line, "CREATE EXTENSION IF NOT EXISTS ")
+			}
+
+			processedLines = append(processedLines, line)
 		}
 	}
-	cleaned = strings.Join(lines, "\n")
 
-	// Remove empty lines created by cleaning
+	// Log removed extensions if any
+	if len(removedExtensions) > 0 {
+		log.Debugf("[Migrations] Removed %d Supabase-specific extensions: %v",
+			len(removedExtensions), removedExtensions)
+	}
+
+	cleaned = strings.Join(processedLines, "\n")
+
+	// Remove empty lines created by cleaning (but keep comments)
 	lines = strings.Split(cleaned, "\n")
 	var nonEmptyLines []string
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		if trimmed != "" || strings.Contains(line, "--") { // Keep comments
+		if trimmed != "" || strings.Contains(line, "--") { // Keep comments and non-empty lines
 			nonEmptyLines = append(nonEmptyLines, line)
 		}
 	}
