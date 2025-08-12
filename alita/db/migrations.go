@@ -361,19 +361,19 @@ func (m *MigrationRunner) applyMigration(filepath, version string) error {
 
 // cleanSupabaseSQL removes Supabase-specific SQL commands
 func (m *MigrationRunner) cleanSupabaseSQL(sql string) string {
-	// Pattern to match GRANT statements for Supabase roles
-	grantPattern := regexp.MustCompile(`(?i)(grant|GRANT)\s+.*\s+(to|TO)\s+(anon|authenticated|service_role).*?;`)
+	// Pattern to match GRANT statements for Supabase roles (now handles quotes properly)
+	grantPattern := regexp.MustCompile(`(?i)grant\s+[^;]+\s+to\s+["']?(anon|authenticated|service_role)["']?\s*;`)
 
 	// Pattern to match RLS (Row Level Security) commands - commented out for now as we may want to keep these
 	// rlsPattern := regexp.MustCompile(`(?i)(alter table|ALTER TABLE)\s+.*\s+(enable|ENABLE)\s+(row level security|ROW LEVEL SECURITY).*?;`)
 
 	// Pattern to match policy creation for Supabase roles
-	policyPattern := regexp.MustCompile(`(?i)(create policy|CREATE POLICY)\s+.*\s+(for|FOR)\s+.*\s+(to|TO)\s+(anon|authenticated|service_role).*?;`)
+	policyPattern := regexp.MustCompile(`(?i)create\s+policy\s+[^;]+\s+to\s+["']?(anon|authenticated|service_role)["']?\s*;`)
 
 	// Clean the SQL
 	cleaned := sql
 
-	// Remove GRANT statements
+	// Remove GRANT statements (handles both quoted and unquoted role names)
 	cleaned = grantPattern.ReplaceAllString(cleaned, "")
 
 	// Remove RLS statements (optional - you may want to keep these)
