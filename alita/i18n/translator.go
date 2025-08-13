@@ -287,9 +287,25 @@ func extractOrderedValues(params TranslationParams) []any {
 		}
 	}
 
-	// If no numbered keys, try common names in order
+	// If no numbered keys found, try a predefined order of common keys
 	if len(values) == 0 {
-		commonKeys := []string{"name", "count", "value", "arg1", "arg2", "arg3"}
+		// Extended list of common keys in a predictable order
+		// This covers the current usage patterns in the codebase
+		commonKeys := []string{
+			// Most common patterns from the codebase
+			"first", "second", "third", "fourth", "fifth",
+			// Question/answer patterns (before number to match captcha_welcome_math_text order)
+			"question", "answer",
+			// Common numeric-related keys
+			"number", "count", "value",
+			// User/name patterns
+			"name", "user", "username",
+			// Generic argument patterns
+			"arg1", "arg2", "arg3",
+			// Single letter keys
+			"s", "d", "v", "f",
+		}
+		
 		for _, key := range commonKeys {
 			if value, exists := params[key]; exists {
 				values = append(values, value)
