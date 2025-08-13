@@ -34,6 +34,11 @@ func (lm *LocaleManager) loadLocaleFiles() error {
 			continue
 		}
 
+		// Skip config files - they contain module configuration, not translations
+		if fileName == "config.yml" || fileName == "config.yaml" {
+			continue
+		}
+
 		filePath := filepath.Join(lm.localePath, fileName)
 		langCode := extractLangCode(fileName)
 
