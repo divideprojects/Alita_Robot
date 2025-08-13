@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -65,7 +66,7 @@ func disabledCommandsCacheKey(chatID int64) string {
 }
 
 // getFromCacheOrLoad is a generic helper to get from cache or load from database with stampede protection.
-// Uses singleflight pattern to prevent cache stampede when multiple goroutines request the same data.
+// Uses singleflight pattern with timeout to prevent cache stampede and goroutine accumulation.
 func getFromCacheOrLoad[T any](key string, ttl time.Duration, loader func() (T, error)) (T, error) {
 	var result T
 
@@ -81,36 +82,70 @@ func getFromCacheOrLoad[T any](key string, ttl time.Duration, loader func() (T, 
 		return result, nil
 	}
 
-	// Cache miss, use singleflight to prevent stampede
-	v, err, _ := cacheGroup.Do(key, func() (any, error) {
-		// Load from database
-		data, loadErr := loader()
-		if loadErr != nil {
-			return data, loadErr
+	// Cache miss, use singleflight with timeout to prevent stampede and goroutine accumulation
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Create a channel to handle timeout and singleflight result
+	type sfResult struct {
+		value any
+		err   error
+	}
+	resultChan := make(chan sfResult, 1)
+
+	go func() {
+		v, err, _ := cacheGroup.Do(key, func() (any, error) {
+			// Load from database
+			data, loadErr := loader()
+			if loadErr != nil {
+				return data, loadErr
+			}
+
+			// Store in cache
+			cacheErr := cache.Marshal.Set(cache.Context, key, data, store.WithExpiration(ttl))
+			if cacheErr != nil {
+				log.Debugf("[Cache] Failed to set cache for key %s: %v", key, cacheErr)
+			}
+
+			return data, nil
+		})
+		resultChan <- sfResult{value: v, err: err}
+	}()
+
+	select {
+	case res := <-resultChan:
+		if res.err != nil {
+			return result, res.err
 		}
 
-		// Store in cache
-		cacheErr := cache.Marshal.Set(cache.Context, key, data, store.WithExpiration(ttl))
-		if cacheErr != nil {
-			log.Debugf("[Cache] Failed to set cache for key %s: %v", key, cacheErr)
-		}
+		// Type assert the result with panic recovery
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					log.Errorf("[Cache] Panic during type assertion for key %s: %v", key, r)
+					// Set result to zero value on panic
+					var zero T
+					result = zero
+				}
+			}()
 
-		return data, nil
-	})
+			if typedResult, ok := res.value.(T); ok {
+				result = typedResult
+			} else {
+				// Type assertion failed
+				log.Errorf("[Cache] Type assertion failed for key %s: expected %T, got %T", key, result, res.value)
+				var zero T
+				result = zero
+			}
+		}()
 
-	if err != nil {
-		return result, err
+		return result, nil
+
+	case <-ctx.Done():
+		// Timeout occurred, cleanup singleflight and return timeout error
+		cacheGroup.Forget(key)
+		return result, fmt.Errorf("cache load timeout for key %s: %w", key, ctx.Err())
 	}
-
-	// Type assert the result
-	if typedResult, ok := v.(T); ok {
-		return typedResult, nil
-	}
-
-	// Type assertion failed - return error immediately
-	// Don't return the wrong type which could cause data corruption
-	var zero T
-	return zero, fmt.Errorf("type assertion failed for cache key %s", key)
 }
 
 // deleteCache is a helper to delete a value from cache.

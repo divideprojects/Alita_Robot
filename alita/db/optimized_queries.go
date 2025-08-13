@@ -454,52 +454,45 @@ func channelCacheKey(chatID int64) string {
 	return fmt.Sprintf("alita:channel:%d", chatID)
 }
 
-// Global instance for optimized queries (singleton pattern with lazy initialization)
+// Global instance for optimized queries (singleton pattern with sync.Once)
 var (
-	optimizedQueries   *CachedOptimizedQueries
-	optimizedQueriesMu sync.RWMutex
+	optimizedQueries     *CachedOptimizedQueries
+	optimizedQueriesOnce sync.Once
 )
 
 // GetOptimizedQueries returns the singleton instance of CachedOptimizedQueries.
-// Uses thread-safe lazy initialization and handles database reconnection scenarios.
+// Uses sync.Once for thread-safe lazy initialization.
 func GetOptimizedQueries() *CachedOptimizedQueries {
-	// Fast path: Check if already initialized with a valid DB
-	optimizedQueriesMu.RLock()
+	optimizedQueriesOnce.Do(func() {
+		if DB == nil {
+			log.Warn("[GetOptimizedQueries] Database not initialized yet, queries will fail")
+			// Return a properly initialized empty instance that will return errors
+			optimizedQueries = &CachedOptimizedQueries{
+				lockQueries:      &OptimizedLockQueries{db: nil},
+				userQueries:      &OptimizedUserQueries{db: nil},
+				chatQueries:      &OptimizedChatQueries{db: nil},
+				antifloodQueries: &OptimizedAntifloodQueries{db: nil},
+				filterQueries:    &OptimizedFilterQueries{db: nil},
+				blacklistQueries: &OptimizedBlacklistQueries{db: nil},
+				channelQueries:   &OptimizedChannelQueries{db: nil},
+			}
+			return
+		}
+
+		log.Debug("[GetOptimizedQueries] Initializing optimized queries with valid DB")
+		optimizedQueries = NewCachedOptimizedQueries()
+	})
+
+	// Handle database reconnection scenarios
 	if optimizedQueries != nil && DB != nil {
-		// Check if the instance has valid internal queries
-		if optimizedQueries.userQueries != nil && optimizedQueries.userQueries.db != nil {
-			optimizedQueriesMu.RUnlock()
-			return optimizedQueries
-		}
-	}
-	optimizedQueriesMu.RUnlock()
-
-	// Slow path: Need to initialize or re-initialize
-	optimizedQueriesMu.Lock()
-	defer optimizedQueriesMu.Unlock()
-
-	// Double-check after acquiring write lock
-	if optimizedQueries != nil && DB != nil &&
-		optimizedQueries.userQueries != nil && optimizedQueries.userQueries.db != nil {
-		return optimizedQueries
-	}
-
-	// Initialize or re-initialize
-	if DB == nil {
-		log.Warn("[GetOptimizedQueries] Database not initialized yet, queries will fail")
-		// Return a properly initialized empty instance that will return errors
-		return &CachedOptimizedQueries{
-			lockQueries:      &OptimizedLockQueries{db: nil},
-			userQueries:      &OptimizedUserQueries{db: nil},
-			chatQueries:      &OptimizedChatQueries{db: nil},
-			antifloodQueries: &OptimizedAntifloodQueries{db: nil},
-			filterQueries:    &OptimizedFilterQueries{db: nil},
-			blacklistQueries: &OptimizedBlacklistQueries{db: nil},
-			channelQueries:   &OptimizedChannelQueries{db: nil},
+		// Check if we need to reinitialize due to database reconnection
+		if optimizedQueries.userQueries == nil || optimizedQueries.userQueries.db == nil || optimizedQueries.userQueries.db != DB {
+			log.Debug("[GetOptimizedQueries] Database reconnected, reinitializing queries")
+			// Reset the sync.Once and reinitialize
+			optimizedQueriesOnce = sync.Once{}
+			return GetOptimizedQueries()
 		}
 	}
 
-	log.Debug("[GetOptimizedQueries] Initializing optimized queries with valid DB")
-	optimizedQueries = NewCachedOptimizedQueries()
 	return optimizedQueries
 }

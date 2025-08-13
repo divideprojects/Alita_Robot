@@ -97,6 +97,14 @@ func (m *MigrationRunner) RunMigrations() error {
 	// Log current migration status
 	m.logMigrationStatus()
 
+	// Verify indexes after successful migrations
+	if applied > 0 {
+		if err := m.verifyIndexes(); err != nil {
+			log.Warnf("[Migrations] Index verification failed: %v", err)
+			// Don't fail the migration, just warn
+		}
+	}
+
 	return nil
 }
 
@@ -328,7 +336,9 @@ func (m *MigrationRunner) applyMigration(filepath, version string) error {
 
 		// Execute the statement
 		if err := tx.Exec(stmt).Error; err != nil {
-			tx.Rollback()
+			if rollbackErr := tx.Rollback().Error; rollbackErr != nil {
+				log.Errorf("[Migrations] Failed to rollback transaction: %v", rollbackErr)
+			}
 			// Include statement preview in error for debugging
 			preview := stmt
 			if len(preview) > 100 {
@@ -347,7 +357,9 @@ func (m *MigrationRunner) applyMigration(filepath, version string) error {
 		ExecutedAt: time.Now().UTC(),
 	}
 	if err := tx.Create(&migration).Error; err != nil {
-		tx.Rollback()
+		if rollbackErr := tx.Rollback().Error; rollbackErr != nil {
+			log.Errorf("[Migrations] Failed to rollback transaction: %v", rollbackErr)
+		}
 		return fmt.Errorf("failed to record migration: %w", err)
 	}
 
@@ -527,4 +539,143 @@ func (m *MigrationRunner) SplitSQLStatementsForTesting(sql string) []string {
 // CleanSupabaseSQLForTesting exposes the SQL cleaner for testing purposes
 func (m *MigrationRunner) CleanSupabaseSQLForTesting(sql string) string {
 	return m.cleanSupabaseSQL(sql)
+}
+
+// verifyIndexes checks that expected composite indexes are created
+func (m *MigrationRunner) verifyIndexes() error {
+	log.Info("[Migrations] Verifying database indexes...")
+
+	// Define expected indexes (table -> index_name -> columns)
+	expectedIndexes := map[string]map[string][]string{
+		"chat_users": {
+			"idx_chat_users_chat_user": {"chat_id", "user_id"},
+		},
+		"users": {
+			"idx_users_user_id": {"user_id"},
+			"idx_users_username": {"username"},
+			"idx_users_last_activity": {"last_activity"},
+		},
+		"chats": {
+			"idx_chats_chat_id": {"chat_id"},
+			"idx_chats_last_activity": {"last_activity"},
+		},
+		"chat_filters": {
+			"idx_chat_filters_chat_id": {"chat_id"},
+			"idx_chat_filters_keyword": {"chat_id", "keyword"},
+		},
+		"antiflood_settings": {
+			"idx_antiflood_chat_id": {"chat_id"},
+		},
+		"lock_settings": {
+			"idx_lock_settings_chat_lock": {"chat_id", "lock_type"},
+		},
+		"captcha_attempts": {
+			"idx_captcha_user_chat": {"user_id", "chat_id"},
+			"idx_captcha_expires_at": {"expires_at"},
+		},
+	}
+
+	verified := 0
+	missing := 0
+
+	for tableName, tableIndexes := range expectedIndexes {
+		// Check if table exists first
+		var tableExists bool
+		err := m.db.Raw(`
+			SELECT EXISTS (
+				SELECT FROM information_schema.tables 
+				WHERE table_schema = 'public' 
+				AND table_name = ?
+			)
+		`, tableName).Scan(&tableExists).Error
+		if err != nil {
+			log.Warnf("[Migrations] Failed to check if table %s exists: %v", tableName, err)
+			continue
+		}
+
+		if !tableExists {
+			log.Debugf("[Migrations] Table %s does not exist, skipping index verification", tableName)
+			continue
+		}
+
+		for indexName, expectedColumns := range tableIndexes {
+			// Check if index exists and has correct columns
+			type IndexInfo struct {
+				IndexName string
+				ColumnName string
+				OrdinalPosition int
+			}
+
+			var indexColumns []IndexInfo
+			err := m.db.Raw(`
+				SELECT 
+					i.relname as index_name,
+					a.attname as column_name,
+					array_position(ix.indkey, a.attnum) as ordinal_position
+				FROM 
+					pg_class t,
+					pg_class i,
+					pg_index ix,
+					pg_attribute a
+				WHERE 
+					t.oid = ix.indrelid
+					and i.oid = ix.indexrelid
+					and a.attrelid = t.oid
+					and a.attnum = ANY(ix.indkey)
+					and t.relkind = 'r'
+					and t.relname = ?
+					and i.relname = ?
+				ORDER BY array_position(ix.indkey, a.attnum)
+			`, tableName, indexName).Find(&indexColumns).Error
+
+			if err != nil {
+				log.Warnf("[Migrations] Failed to check index %s on table %s: %v", indexName, tableName, err)
+				continue
+			}
+
+			if len(indexColumns) == 0 {
+				log.Warnf("[Migrations] Missing index: %s on table %s (expected columns: %v)", indexName, tableName, expectedColumns)
+				missing++
+				continue
+			}
+
+			// Verify columns match
+			actualColumns := make([]string, len(indexColumns))
+			for i, col := range indexColumns {
+				actualColumns[i] = col.ColumnName
+			}
+
+			// Compare expected vs actual columns
+			if len(expectedColumns) != len(actualColumns) {
+				log.Warnf("[Migrations] Index %s on table %s has wrong number of columns: expected %v, got %v", 
+					indexName, tableName, expectedColumns, actualColumns)
+				missing++
+				continue
+			}
+
+			mismatch := false
+			for i, expected := range expectedColumns {
+				if actualColumns[i] != expected {
+					log.Warnf("[Migrations] Index %s on table %s has wrong column at position %d: expected %s, got %s", 
+						indexName, tableName, i+1, expected, actualColumns[i])
+					mismatch = true
+				}
+			}
+
+			if mismatch {
+				missing++
+			} else {
+				log.Debugf("[Migrations] Verified index: %s on table %s", indexName, tableName)
+				verified++
+			}
+		}
+	}
+
+	log.Infof("[Migrations] Index verification complete - Verified: %d, Missing/Incorrect: %d", verified, missing)
+
+	if missing > 0 {
+		return fmt.Errorf("%d indexes are missing or incorrect", missing)
+	}
+
+	return nil
 }

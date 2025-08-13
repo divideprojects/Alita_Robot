@@ -12,13 +12,16 @@ import (
 
 // EnsureBotInDb ensures that the bot's information is stored in the database.
 // Creates or updates the bot's user record with current username and name.
-func EnsureBotInDb(b *gotgbot.Bot) {
+// Returns error if database operation fails.
+func EnsureBotInDb(b *gotgbot.Bot) error {
 	usersUpdate := &User{UserId: b.Id, UserName: b.Username, Name: b.FirstName}
 	err := DB.Where("user_id = ?", b.Id).Assign(usersUpdate).FirstOrCreate(&User{})
 	if err.Error != nil {
 		log.Errorf("[Database] EnsureBotInDb: %v", err.Error)
+		return err.Error
 	}
 	log.Infof("[Database] Bot Updated in Database!")
+	return nil
 }
 
 // EnsureUserInDb ensures that a user exists in the database.

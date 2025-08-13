@@ -66,7 +66,11 @@ func ListModules() string {
 // Returns an error if cache initialization fails.
 func InitialChecks(b *gotgbot.Bot) error {
 	// Create bot in db if not already created
-	go db.EnsureBotInDb(b)
+	go func() {
+		if err := db.EnsureBotInDb(b); err != nil {
+			log.Errorf("[InitialChecks] Failed to ensure bot in database: %v", err)
+		}
+	}()
 	checkDuplicateAliases()
 
 	// Initialize cache with proper error handling
