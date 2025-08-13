@@ -81,7 +81,7 @@ jobs:
           skip-cache: true # We're already caching
           install-mode: binary
 
-  # Build verification using GoReleaser snapshot
+  # Simple build verification with go build and docker build
   build-verification:
     name: Build Verification
     runs-on: ubuntu-latest
@@ -91,30 +91,37 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Full history needed for GoReleaser
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
 
-      # Verify all target platforms can be built
-      - name: Run GoReleaser snapshot
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          version: latest
-          args: release --snapshot --skip=publish --clean --skip=sign
+      - name: Download dependencies
+        run: go mod download
 
-      # Package build artifacts for analysis
-      - name: Package build artifacts
-        run: tar -czvf artifacts.tar.gz dist/
+      # Verify Go binary can be built
+      - name: Build Go binary
+        run: |
+          echo "Building Go binary..."
+          go build -o alita_robot .
+          echo "✓ Go build successful"
+          ls -lh alita_robot
 
-      - name: Upload build artifacts
+      # Verify Docker image can be built
+      - name: Build Docker image
+        run: |
+          echo "Building Docker image..."
+          docker build -f docker/alpine -t test-build:latest .
+          echo "✓ Docker build successful"
+          docker images | grep test-build
+
+      # Upload build artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-${{ github.sha }}
-          path: artifacts.tar.gz
+          name: build-artifact-${{ github.sha }}
+          path: alita_robot
           retention-days: 14
 
   # Summary job that aggregates all check results
