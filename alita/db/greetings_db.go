@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -178,7 +179,13 @@ func SetWelcomeToggle(chatID int64, pref bool) {
 	}
 	welcomeSrc.WelcomeSettings.ShouldWelcome = pref
 
-	err := UpdateRecord(&GreetingSettings{}, map[string]interface{}{"chat_id": chatID}, welcomeSrc)
+	// Use map to ensure zero values (false) are properly updated
+	updates := map[string]interface{}{
+		"welcome_enabled": pref,
+		"updated_at":      time.Now(),
+	}
+
+	err := DB.Model(&GreetingSettings{}).Where("chat_id = ?", chatID).Updates(updates).Error
 	if err != nil {
 		log.Errorf("[Database][SetWelcomeToggle]: %v", err)
 		return
@@ -213,7 +220,13 @@ func SetGoodbyeToggle(chatID int64, pref bool) {
 	}
 	goodbyeSrc.GoodbyeSettings.ShouldGoodbye = pref
 
-	err := UpdateRecord(&GreetingSettings{}, map[string]interface{}{"chat_id": chatID}, goodbyeSrc)
+	// Use map to ensure zero values (false) are properly updated
+	updates := map[string]interface{}{
+		"goodbye_enabled": pref,
+		"updated_at":      time.Now(),
+	}
+
+	err := DB.Model(&GreetingSettings{}).Where("chat_id = ?", chatID).Updates(updates).Error
 	if err != nil {
 		log.Errorf("[Database][SetGoodbyeToggle]: %v", err)
 		return
@@ -226,7 +239,13 @@ func SetShouldCleanService(chatID int64, pref bool) {
 	cleanServiceSrc := checkGreetingSettings(chatID)
 	cleanServiceSrc.ShouldCleanService = pref
 
-	err := UpdateRecord(&GreetingSettings{}, map[string]interface{}{"chat_id": chatID}, cleanServiceSrc)
+	// Use map to ensure zero values (false) are properly updated
+	updates := map[string]interface{}{
+		"clean_service_settings": pref,
+		"updated_at":             time.Now(),
+	}
+
+	err := DB.Model(&GreetingSettings{}).Where("chat_id = ?", chatID).Updates(updates).Error
 	if err != nil {
 		log.Errorf("[Database][SetShouldCleanService]: %v", err)
 		return
@@ -239,7 +258,13 @@ func SetShouldAutoApprove(chatID int64, pref bool) {
 	autoApproveSrc := checkGreetingSettings(chatID)
 	autoApproveSrc.ShouldAutoApprove = pref
 
-	err := UpdateRecord(&GreetingSettings{}, map[string]interface{}{"chat_id": chatID}, autoApproveSrc)
+	// Use map to ensure zero values (false) are properly updated
+	updates := map[string]interface{}{
+		"auto_approve": pref,
+		"updated_at":   time.Now(),
+	}
+
+	err := DB.Model(&GreetingSettings{}).Where("chat_id = ?", chatID).Updates(updates).Error
 	if err != nil {
 		log.Errorf("[Database][SetShouldAutoApprove]: %v", err)
 		return
@@ -255,7 +280,13 @@ func SetCleanWelcomeSetting(chatID int64, pref bool) {
 	}
 	cleanWelcomeSrc.WelcomeSettings.CleanWelcome = pref
 
-	err := UpdateRecord(&GreetingSettings{}, map[string]interface{}{"chat_id": chatID}, cleanWelcomeSrc)
+	// Use map to ensure zero values (false) are properly updated
+	updates := map[string]interface{}{
+		"welcome_clean_old": pref,
+		"updated_at":        time.Now(),
+	}
+
+	err := DB.Model(&GreetingSettings{}).Where("chat_id = ?", chatID).Updates(updates).Error
 	if err != nil {
 		log.Errorf("[Database][SetCleanWelcomeSetting]: %v", err)
 		return
@@ -287,7 +318,13 @@ func SetCleanGoodbyeSetting(chatID int64, pref bool) {
 	}
 	cleanGoodbyeSrc.GoodbyeSettings.CleanGoodbye = pref
 
-	err := UpdateRecord(&GreetingSettings{}, map[string]interface{}{"chat_id": chatID}, cleanGoodbyeSrc)
+	// Use map to ensure zero values (false) are properly updated
+	updates := map[string]interface{}{
+		"goodbye_clean_old": pref,
+		"updated_at":        time.Now(),
+	}
+
+	err := DB.Model(&GreetingSettings{}).Where("chat_id = ?", chatID).Updates(updates).Error
 	if err != nil {
 		log.Errorf("[Database][SetCleanGoodbyeSetting]: %v", err)
 		return
