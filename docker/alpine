@@ -2,7 +2,17 @@
 FROM golang:alpine AS builder
 RUN apk add --no-cache curl wget gnupg git
 WORKDIR /app
+
+# Copy go mod files first for better layer caching
+COPY go.mod go.sum ./
+
+# Download dependencies - this layer is cached unless go.mod/go.sum change
+RUN go mod download && go mod verify
+
+# Copy source code
 COPY . .
+
+# Build the binary
 RUN CGO_ENABLED=0 GOOS=`go env GOHOSTOS` GOARCH=`go env GOHOSTARCH` go build -o out/alita_robot -ldflags="-w -s" .
 
 # Run Stage: Run bot using the bot binary copied from build stage
