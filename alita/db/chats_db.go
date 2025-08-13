@@ -25,20 +25,6 @@ func GetChatSettings(chatId int64) (chatSrc *Chat) {
 	return chat
 }
 
-// ToggleInactiveChat sets the inactive status of a chat.
-// Creates the chat record if it doesn't exist and invalidates cache after update.
-func ToggleInactiveChat(chatId int64, toggle bool) {
-	chat := GetChatSettings(chatId)
-	chat.IsInactive = toggle
-	err := DB.Where("chat_id = ?", chatId).Assign(chat).FirstOrCreate(&Chat{}).Error
-	if err != nil {
-		log.Errorf("[Database] ToggleInactiveChat: %d - %v", chatId, err)
-		return
-	}
-	// Invalidate cache after update
-	deleteCache(chatSettingsCacheKey(chatId))
-}
-
 // EnsureChatInDb ensures that a chat exists in the database.
 // Creates the chat record if it doesn't exist, or updates it if it does.
 // This is essential for foreign key constraints that reference the chats table.
@@ -66,7 +52,7 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 	// Always update last_activity to track message activity
 	if chatr.ChatName == chatname && foundUser {
 		// Only update last_activity and is_inactive
-		err := DB.Model(&Chat{}).Where("chat_id = ?", chatId).Updates(map[string]interface{}{
+		err := DB.Model(&Chat{}).Where("chat_id = ?", chatId).Updates(map[string]any{
 			"last_activity": now,
 			"is_inactive":   false,
 		}).Error
@@ -79,7 +65,7 @@ func UpdateChat(chatId int64, chatname string, userid int64) {
 	}
 
 	// Prepare updates for all fields
-	updates := make(map[string]interface{})
+	updates := make(map[string]any)
 	if chatr.ChatName != chatname {
 		updates["chat_name"] = chatname
 	}

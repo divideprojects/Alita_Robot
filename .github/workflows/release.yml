@@ -80,12 +80,6 @@ jobs:
         with:
           go-version: "stable"
 
-      # Install UPX for binary compression
-      - name: Install UPX
-        uses: crazy-max/ghaction-upx@v3
-        with:
-          install-only: true
-
       # Handle tag creation for workflow_dispatch
       - name: Create and push tag
         if: github.event_name == 'workflow_dispatch'

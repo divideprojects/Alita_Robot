@@ -1,10 +1,22 @@
 # Build Stage: Build bot using the alpine image
 # This is an debug image, it will not compress the binary
 FROM golang:alpine AS builder
-RUN apk add --no-cache curl wget gnupg git upx
+RUN apk add --no-cache curl wget gnupg git
 WORKDIR /app
+
+# Copy go mod files first for better layer caching
+COPY go.mod go.sum ./
+
+# Download dependencies - this layer is cached unless go.mod/go.sum change
+RUN go mod download && go mod verify
+
+# Copy source code
 COPY . .
+
+# Build the binary (debug mode - no optimization flags)
 RUN go build -o out/alita_robot
+
+# Note: supabase directory is already copied with COPY . . above
 ENTRYPOINT ["/app/out/alita_robot"]
 
 # Metadata

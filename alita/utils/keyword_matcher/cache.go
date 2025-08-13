@@ -53,15 +53,6 @@ func (c *Cache) GetOrCreateMatcher(chatID int64, patterns []string) *KeywordMatc
 	return matcher
 }
 
-// InvalidateChat removes the matcher for a specific chat
-func (c *Cache) InvalidateChat(chatID int64) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	delete(c.matchers, chatID)
-	delete(c.lastUsed, chatID)
-}
-
 // CleanupExpired removes expired matchers based on TTL
 func (c *Cache) CleanupExpired() {
 	c.mu.Lock()
@@ -84,13 +75,6 @@ func (c *Cache) CleanupExpired() {
 	if len(expiredChats) > 0 {
 		log.WithField("expired_count", len(expiredChats)).Debug("Cleaned up expired keyword matchers")
 	}
-}
-
-// Size returns the number of cached matchers
-func (c *Cache) Size() int {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-	return len(c.matchers)
 }
 
 // patternsEqual checks if two pattern slices are equal

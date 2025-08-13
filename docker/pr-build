@@ -1,0 +1,66 @@
+# Multi-stage build for PR Docker images
+FROM golang:alpine AS builder
+
+# Build arguments
+ARG PR_NUMBER=unknown
+ARG COMMIT_SHA=unknown
+ARG BUILDKIT_INLINE_CACHE=1
+ARG TARGETOS
+ARG TARGETARCH
+
+# Install build dependencies
+RUN apk add --no-cache git ca-certificates tzdata
+
+# Set working directory
+WORKDIR /app
+
+# Copy go mod and sum files first for better caching
+COPY go.mod go.sum ./
+
+# Download dependencies - this layer is cached unless go.mod/go.sum change
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    go mod download && go mod verify
+
+# Copy source code
+COPY . .
+
+# Build the binary with PR-specific version info
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build \
+    -trimpath \
+    -ldflags="-s -w -X main.version=pr-${PR_NUMBER} -X main.commit=${COMMIT_SHA} -X main.date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    -o alita_robot \
+    ./main.go
+
+# Final stage - use distroless for smaller image
+FROM gcr.io/distroless/static-debian12:nonroot
+
+# Set working directory
+WORKDIR /app
+
+# Copy binary from builder stage
+COPY --from=builder /app/alita_robot .
+
+# Copy supabase directory for migrations to work
+COPY supabase /app/supabase
+
+# User is already nonroot in distroless
+USER nonroot
+
+# Expose port (if needed)
+EXPOSE 8080
+
+# Health check - removed as distroless doesn't have pgrep
+
+# Run the binary
+ENTRYPOINT ["./alita_robot"]
+
+# Metadata
+LABEL org.opencontainers.image.authors="Divanshu Chauhan <divkix@divkix.me>"
+LABEL org.opencontainers.image.url="https://divkix.me"
+LABEL org.opencontainers.image.source="https://github.com/divideprojects/Alita_Robot"
+LABEL org.opencontainers.image.title="Alita Go Robot - PR Build"
+LABEL org.opencontainers.image.description="Pull Request build of Alita Go Robot"
+LABEL org.opencontainers.image.vendor="Divkix"

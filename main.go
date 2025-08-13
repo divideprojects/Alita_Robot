@@ -13,7 +13,9 @@ import (
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/utils/async"
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
+	"github.com/divideprojects/Alita_Robot/alita/utils/errors"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/monitoring"
 	"github.com/divideprojects/Alita_Robot/alita/utils/shutdown"
@@ -57,17 +59,24 @@ func main() {
 	// Create optimized HTTP transport with connection pooling for better performance
 	// IMPORTANT: We create a transport pointer that will be shared across all requests
 	// This ensures connection pooling works correctly (the http.Client struct is copied by value in BaseBotClient)
+	// Use configurable values for optimal performance
+	maxIdleConns := config.HTTPMaxIdleConns
+	maxIdleConnsPerHost := config.HTTPMaxIdleConnsPerHost
+
 	httpTransport := &http.Transport{
-		MaxIdleConns:          100,              // Maximum idle connections across all hosts
-		MaxIdleConnsPerHost:   30,               // Increased from 10 since all requests go to api.telegram.org
-		MaxConnsPerHost:       30,               // Maximum total connections per host
-		IdleConnTimeout:       90 * time.Second, // How long idle connections are kept alive
-		DisableCompression:    false,            // Enable compression for smaller payloads
-		ForceAttemptHTTP2:     true,             // Enable HTTP/2 for multiplexing
-		DisableKeepAlives:     false,            // Explicitly enable keep-alive for connection reuse
-		TLSHandshakeTimeout:   10 * time.Second, // Timeout for TLS handshake
-		ResponseHeaderTimeout: 10 * time.Second, // Timeout waiting for response headers
+		MaxIdleConns:          maxIdleConns,             // Configurable maximum idle connections across all hosts
+		MaxIdleConnsPerHost:   maxIdleConnsPerHost,      // Configurable connections per host (api.telegram.org)
+		MaxConnsPerHost:       maxIdleConnsPerHost + 20, // Allow some extra connections for burst traffic
+		IdleConnTimeout:       120 * time.Second,        // Keep connections alive longer for better reuse
+		DisableCompression:    false,                    // Enable compression for smaller payloads
+		ForceAttemptHTTP2:     true,                     // Enable HTTP/2 for multiplexing
+		DisableKeepAlives:     false,                    // Explicitly enable keep-alive for connection reuse
+		TLSHandshakeTimeout:   10 * time.Second,         // Timeout for TLS handshake
+		ResponseHeaderTimeout: 10 * time.Second,         // Timeout waiting for response headers
+		ExpectContinueTimeout: 1 * time.Second,          // Timeout for Expect: 100-continue
 	}
+
+	log.Infof("[Main] HTTP transport configured with MaxIdleConns: %d, MaxIdleConnsPerHost: %d", maxIdleConns, maxIdleConnsPerHost)
 
 	// If a custom API server is configured (e.g., local Bot API server),
 	// wrap the transport to rewrite requests from api.telegram.org to the configured server.
@@ -98,14 +107,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create new bot: %v", err)
 	}
-	log.Infof("[Main] Bot initialized with connection pooling (MaxIdleConns: 100, MaxIdleConnsPerHost: 30, HTTP/2 enabled)")
+	log.Infof("[Main] Bot initialized with optimized connection pooling (MaxIdleConns: %d, MaxIdleConnsPerHost: %d, HTTP/2 enabled)", maxIdleConns, maxIdleConnsPerHost)
 
 	// Pre-warm connections to Telegram API for faster initial responses
 	go func() {
 		log.Info("[Main] Pre-warming connections to Telegram API...")
 
 		// Make multiple requests to establish connection pool
-		for i := 0; i < 3; i++ {
+		for i := range 3 {
 			startTime := time.Now()
 			_, err := b.GetMe(nil)
 			if err != nil {
@@ -127,6 +136,12 @@ func main() {
 	// some initial checks before running bot
 	if err := alita.InitialChecks(b); err != nil {
 		log.Fatalf("Initial checks failed: %v", err)
+	}
+
+	// Initialize async processing system
+	if config.EnableAsyncProcessing {
+		async.InitializeAsyncProcessor()
+		defer async.StopAsyncProcessor()
 	}
 
 	// Initialize monitoring systems
@@ -186,16 +201,26 @@ func main() {
 				statsCollector.RecordError()
 			}
 
-			// Log the error with context information
-			log.WithFields(log.Fields{
+			// Extract stack trace if it's a wrapped error
+			logFields := log.Fields{
 				"update_id": func() int64 {
-					if ctx != nil && ctx.Update.UpdateId != 0 {
-						return ctx.Update.UpdateId
+					if ctx != nil && ctx.UpdateId != 0 {
+						return ctx.UpdateId
 					}
 					return -1
 				}(),
 				"error_type": fmt.Sprintf("%T", err),
-			}).Errorf("Handler error occurred: %v", err)
+			}
+
+			// Check if it's our wrapped error with stack info
+			if wrappedErr, ok := err.(*errors.WrappedError); ok {
+				logFields["file"] = wrappedErr.File
+				logFields["line"] = wrappedErr.Line
+				logFields["function"] = wrappedErr.Function
+			}
+
+			// Log the error with context information
+			log.WithFields(logFields).Errorf("Handler error occurred: %v", err)
 
 			// Continue processing other updates
 			return ext.DispatcherActionNoop
@@ -234,10 +259,14 @@ func main() {
 
 		// Set Commands of Bot
 		log.Info("Setting Custom Commands for PM...!")
+		// Get translator for bot commands (use English for bot commands)
+		tr := i18n.MustNewTranslator("en")
+		startDesc, _ := tr.GetString("main_bot_command_start")
+		helpDesc, _ := tr.GetString("main_bot_command_help")
 		_, err = b.SetMyCommands(
 			[]gotgbot.BotCommand{
-				{Command: "start", Description: "Starts the Bot"},
-				{Command: "help", Description: "Check Help section of bot"},
+				{Command: "start", Description: startDesc},
+				{Command: "help", Description: helpDesc},
 			},
 			&gotgbot.SetMyCommandsOpts{
 				Scope:        gotgbot.BotCommandScopeAllPrivateChats{},
@@ -301,10 +330,14 @@ func main() {
 
 		// Set Commands of Bot
 		log.Info("Setting Custom Commands for PM...!")
+		// Get translator for bot commands (use English for bot commands)
+		tr := i18n.MustNewTranslator("en")
+		startDesc, _ := tr.GetString("main_bot_command_start")
+		helpDesc, _ := tr.GetString("main_bot_command_help")
 		_, err = b.SetMyCommands(
 			[]gotgbot.BotCommand{
-				{Command: "start", Description: "Starts the Bot"},
-				{Command: "help", Description: "Check Help section of bot"},
+				{Command: "start", Description: startDesc},
+				{Command: "help", Description: helpDesc},
 			},
 			&gotgbot.SetMyCommandsOpts{
 				Scope:        gotgbot.BotCommandScopeAllPrivateChats{},

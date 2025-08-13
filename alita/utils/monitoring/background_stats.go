@@ -103,7 +103,7 @@ func (collector *BackgroundStatsCollector) Start() {
 	log.Info("Starting background statistics collection")
 
 	// Start worker goroutines
-	for i := 0; i < collector.statWorkers; i++ {
+	for i := range collector.statWorkers {
 		collector.wg.Add(1)
 		go collector.statsWorker(i)
 	}
@@ -359,20 +359,9 @@ func (collector *BackgroundStatsCollector) checkPerformanceThresholds() {
 	}
 }
 
-// RecordMessage increments the message counter
-func (collector *BackgroundStatsCollector) RecordMessage() {
-	atomic.AddInt64(&collector.messageCounter, 1)
-}
-
 // RecordError increments the error counter
 func (collector *BackgroundStatsCollector) RecordError() {
 	atomic.AddInt64(&collector.errorCounter, 1)
-}
-
-// RecordResponseTime records a response time measurement
-func (collector *BackgroundStatsCollector) RecordResponseTime(duration time.Duration) {
-	atomic.AddInt64(&collector.responseTimeSum, int64(duration))
-	atomic.AddInt64(&collector.responseTimeCount, 1)
 }
 
 // GetCurrentMetrics returns the current metrics (thread-safe)
@@ -400,20 +389,4 @@ func (collector *BackgroundStatsCollector) Stop() {
 	collector.reportStats()
 
 	log.Info("Background statistics collection stopped")
-}
-
-// GetHealthStatus returns health information about the stats collector
-func (collector *BackgroundStatsCollector) GetHealthStatus() map[string]any {
-	collector.metricsLock.RLock()
-	defer collector.metricsLock.RUnlock()
-
-	return map[string]any{
-		"uptime_hours":         collector.metrics.UptimeSeconds / 3600,
-		"total_messages":       collector.metrics.ProcessedMessages,
-		"total_errors":         collector.metrics.ErrorCount,
-		"current_goroutines":   collector.metrics.GoroutineCount,
-		"memory_usage_mb":      collector.metrics.MemoryAllocMB,
-		"system_stats_workers": collector.statWorkers,
-		"last_collection":      collector.metrics.Timestamp.Format(time.RFC3339),
-	}
 }

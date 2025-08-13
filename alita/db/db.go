@@ -4,7 +4,6 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -28,7 +27,7 @@ const (
 	VideoNote int = 8
 )
 
-// Default greeting messages
+// Default greeting messages - deprecated constants, use GetDefaultWelcome/GetDefaultGoodbye instead
 const (
 	DefaultWelcome = "Hey {first}, how are you?"
 	DefaultGoodbye = "Sad to see you leaving {first}"
@@ -46,7 +45,7 @@ type ButtonArray []Button
 
 // Scan implements the Scanner interface for database deserialization of ButtonArray.
 // It converts JSONB data from the database into a ButtonArray slice.
-func (ba *ButtonArray) Scan(value interface{}) error {
+func (ba *ButtonArray) Scan(value any) error {
 	if value == nil {
 		*ba = ButtonArray{}
 		return nil
@@ -74,7 +73,7 @@ type StringArray []string
 
 // Scan implements the Scanner interface for database deserialization of StringArray.
 // It converts JSONB data from the database into a StringArray slice.
-func (sa *StringArray) Scan(value interface{}) error {
+func (sa *StringArray) Scan(value any) error {
 	if value == nil {
 		*sa = StringArray{}
 		return nil
@@ -102,7 +101,7 @@ type Int64Array []int64
 
 // Scan implements the Scanner interface for database deserialization of Int64Array.
 // It converts JSONB data from the database into an Int64Array slice.
-func (ia *Int64Array) Scan(value interface{}) error {
+func (ia *Int64Array) Scan(value any) error {
 	if value == nil {
 		*ia = Int64Array{}
 		return nil
@@ -174,12 +173,6 @@ type ChatUser struct {
 	UserID int64 `gorm:"column:user_id;primaryKey" json:"user_id"`
 }
 
-// TableName returns the database table name for the ChatUser model.
-// This method overrides GORM's default table naming convention.
-func (ChatUser) TableName() string {
-	return "chat_users"
-}
-
 // WarnSettings represents warning settings for a chat
 type WarnSettings struct {
 	ID        uint      `gorm:"primaryKey;autoIncrement" json:"-"`
@@ -220,7 +213,7 @@ type WelcomeSettings struct {
 	ShouldWelcome bool        `gorm:"column:enabled;default:true" json:"welcome_enabled" default:"true"`
 	WelcomeText   string      `gorm:"column:text" json:"welcome_text,omitempty"`
 	FileID        string      `gorm:"column:file_id" json:"file_id,omitempty"`
-	WelcomeType   int         `gorm:"column:type" json:"welcome_type,omitempty"`
+	WelcomeType   int         `gorm:"column:type;default:1" json:"welcome_type,omitempty"`
 	Button        ButtonArray `gorm:"column:btns;type:jsonb" json:"btns,omitempty"`
 }
 
@@ -231,7 +224,7 @@ type GoodbyeSettings struct {
 	ShouldGoodbye bool        `gorm:"column:enabled;default:true" json:"enabled" default:"true"`
 	GoodbyeText   string      `gorm:"column:text" json:"text,omitempty"`
 	FileID        string      `gorm:"column:file_id" json:"file_id,omitempty"`
-	GoodbyeType   int         `gorm:"column:type" json:"type,omitempty"`
+	GoodbyeType   int         `gorm:"column:type;default:1" json:"type,omitempty"`
 	Button        ButtonArray `gorm:"column:btns;type:jsonb" json:"btns,omitempty"`
 }
 
@@ -667,41 +660,24 @@ func init() {
 
 	log.Info("Connected to PostgreSQL database successfully!")
 
-	// Note: GORM AutoMigrate is disabled because we use SQL migrations in supabase/migrations/
-	// This prevents constraint naming conflicts between GORM's naming convention (uni_*)
-	// and our SQL migrations (uk_*). Database schema is managed via SQL migration files.
-	log.Info("Database schema managed via SQL migrations - skipping GORM AutoMigrate")
-}
-
-// GetAllModels returns a slice of all database models used in the application.
-// This is primarily used for database migration and schema generation purposes.
-func GetAllModels() []interface{} {
-	return []interface{}{
-		&User{},
-		&Chat{},
-		&ChatUser{},
-		&WarnSettings{},
-		&Warns{},
-		&GreetingSettings{},
-		&ChatFilters{},
-		&AdminSettings{},
-		&BlacklistSettings{},
-		&PinSettings{},
-		&ReportChatSettings{},
-		&ReportUserSettings{},
-		&DevSettings{},
-		&ChannelSettings{},
-		&AntifloodSettings{},
-		&ConnectionSettings{},
-		&ConnectionChatSettings{},
-		&DisableSettings{},
-		&DisableChatSettings{},
-		&RulesSettings{},
-		&LockSettings{},
-		&NotesSettings{},
-		&Notes{},
-		&CaptchaSettings{},
-		&CaptchaAttempts{},
+	// Check if auto-migration is enabled
+	if config.AutoMigrate {
+		log.Info("[Database] AUTO_MIGRATE is enabled, running database migrations...")
+		runner := NewMigrationRunner(DB)
+		if err := runner.RunMigrations(); err != nil {
+			if config.AutoMigrateSilentFail {
+				log.Errorf("[Database][AutoMigrate] Migration failed but continuing (AUTO_MIGRATE_SILENT_FAIL=true): %v", err)
+			} else {
+				log.Fatalf("[Database][AutoMigrate] Migration failed: %v", err)
+			}
+		} else {
+			log.Info("[Database][AutoMigrate] All migrations applied successfully")
+		}
+	} else {
+		// Note: GORM AutoMigrate is disabled because we use SQL migrations in supabase/migrations/
+		// This prevents constraint naming conflicts between GORM's naming convention (uni_*)
+		// and our SQL migrations (uk_*). Database schema is managed via SQL migration files.
+		log.Info("Database schema managed via SQL migrations - skipping auto-migration (set AUTO_MIGRATE=true to enable)")
 	}
 }
 
@@ -709,7 +685,7 @@ func GetAllModels() []interface{} {
 
 // CreateRecord creates a new database record using the provided model.
 // It logs any errors that occur during the creation process.
-func CreateRecord(model interface{}) error {
+func CreateRecord(model any) error {
 	result := DB.Create(model)
 	if result.Error != nil {
 		log.Errorf("[Database][CreateRecord]: %v", result.Error)
@@ -720,7 +696,9 @@ func CreateRecord(model interface{}) error {
 
 // UpdateRecord updates an existing database record with the provided updates.
 // It uses the where clause to find the record and applies the updates map.
-func UpdateRecord(model interface{}, where interface{}, updates interface{}) error {
+// NOTE: This function skips zero values when updating with structs. Use UpdateRecordWithZeroValues
+// if you need to update boolean fields to false or other zero values.
+func UpdateRecord(model any, where any, updates any) error {
 	result := DB.Model(model).Where(where).Updates(updates)
 	if result.Error != nil {
 		log.Errorf("[Database][UpdateRecord]: %v", result.Error)
@@ -729,9 +707,22 @@ func UpdateRecord(model interface{}, where interface{}, updates interface{}) err
 	return nil
 }
 
+// UpdateRecordWithZeroValues updates a database record including zero values (false, 0, "").
+// This function should be used when you need to set boolean fields to false or other zero values.
+// Returns error if update fails.
+func UpdateRecordWithZeroValues(model any, where any, updates any) error {
+	// Select("*") forces GORM to update all fields including zero values
+	result := DB.Model(model).Where(where).Select("*").Updates(updates)
+	if result.Error != nil {
+		log.Errorf("[Database][UpdateRecordWithZeroValues]: %v", result.Error)
+		return result.Error
+	}
+	return nil
+}
+
 // GetRecord retrieves a single database record matching the where clause.
 // Returns gorm.ErrRecordNotFound if no matching record is found.
-func GetRecord(model interface{}, where interface{}) error {
+func GetRecord(model any, where any) error {
 	result := DB.Where(where).First(model)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -753,48 +744,11 @@ func ChatExists(chatID int64) bool {
 
 // GetRecords retrieves multiple database records matching the where clause.
 // The results are stored in the provided models slice.
-func GetRecords(models interface{}, where interface{}) error {
+func GetRecords(models any, where any) error {
 	result := DB.Where(where).Find(models)
 	if result.Error != nil {
 		log.Errorf("[Database][GetRecords]: %v", result.Error)
 		return result.Error
 	}
-	return nil
-}
-
-// Transaction executes the provided function within a database transaction.
-// If the function returns an error, the transaction is rolled back.
-func Transaction(fn func(*gorm.DB) error) error {
-	return DB.Transaction(fn)
-}
-
-// GetDB returns the global GORM database instance.
-// This should be used when you need direct access to the database connection.
-func GetDB() *gorm.DB {
-	return DB
-}
-
-// Close closes the database connection and cleans up resources.
-// This should be called when the application is shutting down.
-func Close() error {
-	sqlDB, err := DB.DB()
-	if err != nil {
-		return err
-	}
-	return sqlDB.Close()
-}
-
-// Health performs a health check on the database connection.
-// It returns an error if the database is not accessible or responding.
-func Health() error {
-	sqlDB, err := DB.DB()
-	if err != nil {
-		return fmt.Errorf("failed to get underlying sql.DB: %w", err)
-	}
-
-	if err := sqlDB.Ping(); err != nil {
-		return fmt.Errorf("database ping failed: %w", err)
-	}
-
 	return nil
 }

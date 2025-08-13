@@ -71,6 +71,24 @@ type Config struct {
 	InactivityThresholdDays int  `validate:"min=1,max=365"` // Days before marking a chat as inactive
 	ActivityCheckInterval   int  `validate:"min=1,max=24"`  // Hours between activity checks
 	EnableAutoCleanup       bool // Whether to automatically mark inactive chats
+
+	// Performance optimization settings
+	EnableQueryPrefetching bool // Enable query batching and prefetching
+
+	EnableCachePrewarming       bool // Enable cache prewarming on startup
+	EnableAsyncProcessing       bool // Enable async processing for non-critical operations
+	EnableResponseCaching       bool // Enable response caching
+	ResponseCacheTTL            int  `validate:"min=1,max=3600"` // Response cache TTL in seconds
+	EnableBatchRequests         bool // Enable batch API requests
+	BatchRequestTimeoutMS       int  `validate:"min=10,max=5000"` // Batch request timeout in milliseconds
+	EnableHTTPConnectionPooling bool // Enable HTTP connection pooling
+	HTTPMaxIdleConns            int  `validate:"min=10,max=1000"` // HTTP connection pool size
+	HTTPMaxIdleConnsPerHost     int  `validate:"min=5,max=500"`   // HTTP connections per host
+
+	// Database migration settings
+	AutoMigrate           bool   // Enable automatic database migrations on startup
+	AutoMigrateSilentFail bool   // Continue running even if migrations fail
+	MigrationsPath        string // Path to migration files (defaults to supabase/migrations)
 }
 
 // Global configuration instance
@@ -125,6 +143,23 @@ var (
 	InactivityThresholdDays int
 	ActivityCheckInterval   int
 	EnableAutoCleanup       *bool
+
+	// Performance optimization settings
+	EnableQueryPrefetching      bool
+	EnableCachePrewarming       bool
+	EnableAsyncProcessing       bool
+	EnableResponseCaching       bool
+	ResponseCacheTTL            int
+	EnableBatchRequests         bool
+	BatchRequestTimeoutMS       int
+	EnableHTTPConnectionPooling bool
+	HTTPMaxIdleConns            int
+	HTTPMaxIdleConnsPerHost     int
+
+	// Database migration settings
+	AutoMigrate           bool
+	AutoMigrateSilentFail bool
+	MigrationsPath        string
 
 	// Global config instance
 	AppConfig *Config
@@ -277,6 +312,23 @@ func LoadConfig() (*Config, error) {
 		InactivityThresholdDays: typeConvertor{str: os.Getenv("INACTIVITY_THRESHOLD_DAYS")}.Int(),
 		ActivityCheckInterval:   typeConvertor{str: os.Getenv("ACTIVITY_CHECK_INTERVAL")}.Int(),
 		EnableAutoCleanup:       typeConvertor{str: os.Getenv("ENABLE_AUTO_CLEANUP")}.Bool(),
+
+		// Performance optimization settings
+		EnableQueryPrefetching:      typeConvertor{str: os.Getenv("ENABLE_QUERY_PREFETCHING")}.Bool(),
+		EnableCachePrewarming:       typeConvertor{str: os.Getenv("ENABLE_CACHE_PREWARMING")}.Bool(),
+		EnableAsyncProcessing:       typeConvertor{str: os.Getenv("ENABLE_ASYNC_PROCESSING")}.Bool(),
+		EnableResponseCaching:       typeConvertor{str: os.Getenv("ENABLE_RESPONSE_CACHING")}.Bool(),
+		ResponseCacheTTL:            typeConvertor{str: os.Getenv("RESPONSE_CACHE_TTL")}.Int(),
+		EnableBatchRequests:         typeConvertor{str: os.Getenv("ENABLE_BATCH_REQUESTS")}.Bool(),
+		BatchRequestTimeoutMS:       typeConvertor{str: os.Getenv("BATCH_REQUEST_TIMEOUT_MS")}.Int(),
+		EnableHTTPConnectionPooling: typeConvertor{str: os.Getenv("ENABLE_HTTP_CONNECTION_POOLING")}.Bool(),
+		HTTPMaxIdleConns:            typeConvertor{str: os.Getenv("HTTP_MAX_IDLE_CONNS")}.Int(),
+		HTTPMaxIdleConnsPerHost:     typeConvertor{str: os.Getenv("HTTP_MAX_IDLE_CONNS_PER_HOST")}.Int(),
+
+		// Database migration settings
+		AutoMigrate:           typeConvertor{str: os.Getenv("AUTO_MIGRATE")}.Bool(),
+		AutoMigrateSilentFail: typeConvertor{str: os.Getenv("AUTO_MIGRATE_SILENT_FAIL")}.Bool(),
+		MigrationsPath:        os.Getenv("MIGRATIONS_PATH"),
 	}
 
 	// Set defaults
@@ -361,12 +413,12 @@ func (cfg *Config) setDefaults() {
 		cfg.StatsCollectionWorkers = 2
 	}
 
-	// Set cache defaults (more reasonable values than hardcoded 1000/100)
+	// Set cache defaults (optimized values for better performance)
 	if cfg.CacheNumCounters == 0 {
-		cfg.CacheNumCounters = 10000 // 10x more counters for better performance
+		cfg.CacheNumCounters = 100000 // 100x more counters for maximum performance
 	}
 	if cfg.CacheMaxCost == 0 {
-		cfg.CacheMaxCost = 10000 // 100x larger cache for better hit rates
+		cfg.CacheMaxCost = 1000000 // 1000x larger cache for maximum hit rates
 	}
 
 	// Set activity monitoring defaults
@@ -378,18 +430,18 @@ func (cfg *Config) setDefaults() {
 	}
 	// EnableAutoCleanup defaults to true unless explicitly set to false
 
-	// Set database connection pool defaults
+	// Set database connection pool defaults (optimized for performance)
 	if cfg.DBMaxIdleConns == 0 {
-		cfg.DBMaxIdleConns = 10
+		cfg.DBMaxIdleConns = 50 // Keep more connections warm
 	}
 	if cfg.DBMaxOpenConns == 0 {
-		cfg.DBMaxOpenConns = 100
+		cfg.DBMaxOpenConns = 200 // Handle burst traffic better
 	}
 	if cfg.DBConnMaxLifetimeMin == 0 {
-		cfg.DBConnMaxLifetimeMin = 60 // 1 hour
+		cfg.DBConnMaxLifetimeMin = 240 // 4 hours - reuse connections longer
 	}
 	if cfg.DBConnMaxIdleTimeMin == 0 {
-		cfg.DBConnMaxIdleTimeMin = 10 // 10 minutes
+		cfg.DBConnMaxIdleTimeMin = 60 // 1 hour - keep idle connections longer
 	}
 
 	// Set default safety limits
@@ -400,7 +452,7 @@ func (cfg *Config) setDefaults() {
 		cfg.OperationTimeoutSeconds = 30
 	}
 	if cfg.DispatcherMaxRoutines == 0 {
-		cfg.DispatcherMaxRoutines = 100 // Default to 100 as per original code
+		cfg.DispatcherMaxRoutines = 200 // Optimized for better throughput
 	}
 
 	// Enable monitoring by default in production
@@ -418,6 +470,45 @@ func (cfg *Config) setDefaults() {
 		cfg.DatabaseURL = "postgres://postgres:password@localhost:5432/alita_robot?sslmode=disable"
 		log.Warn("[Config] DATABASE_URL not set, using default: ", cfg.DatabaseURL)
 	}
+
+	// Set performance optimization defaults (enabled by default for better performance)
+	if !cfg.EnableQueryPrefetching {
+		cfg.EnableQueryPrefetching = true
+	}
+	if !cfg.EnableCachePrewarming {
+		cfg.EnableCachePrewarming = true
+	}
+	if !cfg.EnableAsyncProcessing {
+		cfg.EnableAsyncProcessing = true
+	}
+	if !cfg.EnableResponseCaching {
+		cfg.EnableResponseCaching = true
+	}
+	if cfg.ResponseCacheTTL == 0 {
+		cfg.ResponseCacheTTL = 30 // 30 seconds
+	}
+	if !cfg.EnableBatchRequests {
+		cfg.EnableBatchRequests = true
+	}
+	if cfg.BatchRequestTimeoutMS == 0 {
+		cfg.BatchRequestTimeoutMS = 100 // 100ms
+	}
+	if !cfg.EnableHTTPConnectionPooling {
+		cfg.EnableHTTPConnectionPooling = true
+	}
+	if cfg.HTTPMaxIdleConns == 0 {
+		cfg.HTTPMaxIdleConns = 100
+	}
+	if cfg.HTTPMaxIdleConnsPerHost == 0 {
+		cfg.HTTPMaxIdleConnsPerHost = 50
+	}
+
+	// Set database migration defaults
+	if cfg.MigrationsPath == "" {
+		cfg.MigrationsPath = "supabase/migrations"
+	}
+	// AutoMigrate defaults to false for backward compatibility
+	// AutoMigrateSilentFail defaults to false
 }
 
 // init initializes the logging configuration, loads the global configuration
@@ -430,7 +521,7 @@ func init() {
 	log.SetFormatter(
 		&log.JSONFormatter{
 			DisableHTMLEscape: true,
-			PrettyPrint:       true,
+			PrettyPrint:       false,
 			CallerPrettyfier: func(f *runtime.Frame) (string, string) {
 				return f.Function, fmt.Sprintf("%s:%d", path.Base(f.File), f.Line)
 			},
@@ -483,10 +574,28 @@ func init() {
 	InactivityThresholdDays = cfg.InactivityThresholdDays
 	ActivityCheckInterval = cfg.ActivityCheckInterval
 	EnableAutoCleanup = &cfg.EnableAutoCleanup
+	EnableQueryPrefetching = cfg.EnableQueryPrefetching
+	EnableCachePrewarming = cfg.EnableCachePrewarming
+	EnableAsyncProcessing = cfg.EnableAsyncProcessing
+	EnableResponseCaching = cfg.EnableResponseCaching
+	ResponseCacheTTL = cfg.ResponseCacheTTL
+	EnableBatchRequests = cfg.EnableBatchRequests
+	BatchRequestTimeoutMS = cfg.BatchRequestTimeoutMS
+	EnableHTTPConnectionPooling = cfg.EnableHTTPConnectionPooling
+	HTTPMaxIdleConns = cfg.HTTPMaxIdleConns
+	HTTPMaxIdleConnsPerHost = cfg.HTTPMaxIdleConnsPerHost
+	AutoMigrate = cfg.AutoMigrate
+	AutoMigrateSilentFail = cfg.AutoMigrateSilentFail
+	MigrationsPath = cfg.MigrationsPath
 	AllowedUpdates = cfg.AllowedUpdates
 	ValidLangCodes = cfg.ValidLangCodes
 
 	// Configure logger based on debug mode
+	if cfg.Debug {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
+	}
 	log.SetReportCaller(cfg.Debug) // Only enable stack traces in debug mode
 
 	log.Info("[Config] Configuration loaded and validated successfully")

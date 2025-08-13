@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -15,6 +16,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 )
 
@@ -23,15 +26,25 @@ var (
 	delMsgs      = map[int64]int64{}
 )
 
-// purgeMsgs performs the actual message deletion operation for purge commands,
-// deleting messages in the specified range with error handling for old messages.
-func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
+// PurgeWorker manages concurrent message deletion with rate limiting
+type PurgeWorker struct {
+	sem        chan struct{} // Semaphore for rate limiting
+	errors     []error       // Collect errors
+	errorCount int           // Count of errors
+	mu         sync.Mutex    // Protect error slice
+}
+
+// purgeMsgsConcurrent performs concurrent message deletion with rate limiting.
+// Uses goroutines to delete messages in parallel for better performance.
+func (moduleStruct) purgeMsgsConcurrent(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
+	// Handle the starting message if not pFrom
 	if !pFrom {
 		_, err := bot.DeleteMessage(chat.Id, msgId, nil)
 		if err != nil {
-			if err.Error() == "unable to deleteMessage: Bad Request: message can't be deleted" {
-				_, err = bot.SendMessage(chat.Id,
-					"You cannot delete messages over two days old. Please choose a more recent message.",
+			if strings.Contains(err.Error(), "message can't be deleted") {
+				tr := i18n.MustNewTranslator(db.GetLanguage(&ext.Context{EffectiveChat: chat}))
+				text, _ := tr.GetString("purges_cannot_delete_old")
+				_, err = bot.SendMessage(chat.Id, text,
 					&gotgbot.SendMessageOpts{
 						ReplyParameters: &gotgbot.ReplyParameters{
 							MessageId:                deleteTo + 1,
@@ -43,31 +56,76 @@ func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, 
 					log.Error(err)
 					return false
 				}
-			} else {
+			} else if !strings.Contains(err.Error(), "message to delete not found") {
 				log.Error(err)
 				return false
 			}
-			// else if err.Error() == "unable to deleteMessage: Bad Request: message to delete not found" {
-			// 	log.WithFields(
-			// 		log.Fields{
-			// 			"chat": chat.Id,
-			// 		},
-			// 	).Error("error deleting message")
-			// 	return false
 		}
 	}
-	for mId := deleteTo + 1; mId > msgId-1; mId-- {
-		_, _ = bot.DeleteMessage(chat.Id, mId, nil)
-		// if err != nil {
-		// if err.Error() != "unable to deleteMessage: Bad Request: message to delete not found" {
-		// 	log.Error(err)
-		// }
-		// if err != nil {
-		// 	log.Error(err)
-		// }
-		//	log.Error(err)
+
+	// Calculate total messages to delete
+	totalMessages := deleteTo - msgId + 1
+	if totalMessages <= 0 {
+		return true
 	}
+
+	// For small ranges, use sequential deletion
+	if totalMessages <= 10 {
+		for mId := deleteTo + 1; mId > msgId-1; mId-- {
+			_, _ = bot.DeleteMessage(chat.Id, mId, nil)
+		}
+		return true
+	}
+
+	// For larger ranges, use concurrent deletion
+	worker := &PurgeWorker{
+		sem:    make(chan struct{}, 10), // Max 10 concurrent deletions
+		errors: make([]error, 0),
+	}
+
+	var wg sync.WaitGroup
+
+	// Delete messages concurrently
+	for mId := deleteTo + 1; mId > msgId-1; mId-- {
+		wg.Add(1)
+		worker.sem <- struct{}{} // Acquire semaphore
+
+		go func(messageId int64) {
+			defer wg.Done()
+			defer func() { <-worker.sem }() // Release semaphore
+
+			_, err := bot.DeleteMessage(chat.Id, messageId, nil)
+			if err != nil && !strings.Contains(err.Error(), "message to delete not found") {
+				worker.mu.Lock()
+				worker.errorCount++
+				// Only log first 5 errors to avoid spam
+				if worker.errorCount <= 5 {
+					worker.errors = append(worker.errors, err)
+				}
+				worker.mu.Unlock()
+			}
+		}(mId)
+	}
+
+	wg.Wait()
+
+	// Log errors if any (excluding "not found" errors)
+	if len(worker.errors) > 0 {
+		log.WithFields(log.Fields{
+			"chat_id":       chat.Id,
+			"error_count":   worker.errorCount,
+			"sample_errors": worker.errors,
+		}).Warn("Some messages could not be deleted during purge")
+	}
+
 	return true
+}
+
+// purgeMsgs performs the actual message deletion operation for purge commands,
+// deleting messages in the specified range with error handling for old messages.
+// This is a wrapper that calls the concurrent version for better performance.
+func (moduleStruct) purgeMsgs(bot *gotgbot.Bot, chat *gotgbot.Chat, pFrom bool, msgId, deleteTo int64) bool {
+	return purgesModule.purgeMsgsConcurrent(bot, chat, pFrom, msgId, deleteTo)
 }
 
 // purge handles the /purge command to delete all messages from a replied
@@ -114,9 +172,14 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 
 		if purge {
-			Text := fmt.Sprintf("Purged %d messages.", totalMsgs)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			var Text string
 			if len(args) >= 1 {
-				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
+				temp, _ := tr.GetString("purges_purged_with_reason")
+				Text = fmt.Sprintf(temp, totalMsgs, strings.Join(args, " "))
+			} else {
+				temp, _ := tr.GetString("purges_purged_messages")
+				Text = fmt.Sprintf(temp, totalMsgs)
 			}
 			pMsg, err := bot.SendMessage(chat.Id, Text, helpers.Smarkdown())
 			if err != nil {
@@ -131,7 +194,9 @@ func (m moduleStruct) purge(bot *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to select where to start purging from.", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("purges_reply_to_purge")
+		_, err := msg.Reply(bot, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -167,7 +232,9 @@ func (moduleStruct) delCmd(bot *gotgbot.Bot, ctx *ext.Context) error {
 	chat := ctx.EffectiveChat
 
 	if msg.ReplyToMessage == nil {
-		_, err := msg.Reply(bot, "Reply to a message to delete it!", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("purges_reply_to_delete")
+		_, err := msg.Reply(bot, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -272,7 +339,9 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if msg.ReplyToMessage != nil {
 		TodelId := msg.ReplyToMessage.MessageId
 		if delMsgs[chat.Id] == TodelId {
-			_, _ = msg.Reply(bot, "This message is already marked for purging!", nil)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("purges_message_marked")
+			_, _ = msg.Reply(bot, text, nil)
 			return ext.EndGroups
 		}
 		_, err := bot.DeleteMessage(chat.Id, msg.MessageId, nil)
@@ -280,8 +349,9 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			_, _ = msg.Reply(bot, err.Error(), nil)
 			return ext.EndGroups
 		}
-		pMsg, err := bot.SendMessage(chat.Id,
-			"Message marked for deletion. Reply to another message with /purgeto to delete all messages in between; within 30s!",
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("purges_marked_for_deletion")
+		pMsg, err := bot.SendMessage(chat.Id, text,
 			&gotgbot.SendMessageOpts{
 				ReplyParameters: &gotgbot.ReplyParameters{
 					MessageId:                TodelId,
@@ -304,7 +374,9 @@ func (moduleStruct) purgeFrom(bot *gotgbot.Bot, ctx *ext.Context) error {
 			return err
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to select where to start purging from.", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("purges_reply_to_purgefrom")
+		_, err := msg.Reply(bot, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -342,7 +414,9 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 	if msg.ReplyToMessage != nil {
 		msgId := delMsgs[chat.Id]
 		if msgId == 0 {
-			_, err := msg.Reply(bot, "You can only use this command after having used the /purgefrom command!", nil)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("purges_need_purgefrom")
+			_, err := msg.Reply(bot, text, nil)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -351,7 +425,9 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 		}
 		deleteTo := msg.ReplyToMessage.MessageId
 		if msgId == deleteTo {
-			_, err := msg.Reply(bot, "Use /del command to delete one message!", nil)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("purges_use_del_single")
+			_, err := msg.Reply(bot, text, nil)
 			if err != nil {
 				log.Error(err)
 				return err
@@ -370,9 +446,14 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			log.Error(err)
 		}
 		if purge {
-			Text := fmt.Sprintf("Purged %d messages.", totalMsgs)
+			var Text string
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			if len(args) >= 1 {
-				Text += fmt.Sprintf("\n*Reason*:\n%s", args[0:])
+				temp, _ := tr.GetString("purges_purged_with_reason")
+				Text = fmt.Sprintf(temp, totalMsgs, strings.Join(args, " "))
+			} else {
+				temp, _ := tr.GetString("purges_purged_messages")
+				Text = fmt.Sprintf(temp, totalMsgs)
 			}
 			pMsg, err := bot.SendMessage(chat.Id, Text, helpers.Smarkdown())
 			if err != nil {
@@ -386,7 +467,9 @@ func (m moduleStruct) purgeTo(bot *gotgbot.Bot, ctx *ext.Context) error {
 			}
 		}
 	} else {
-		_, err := msg.Reply(bot, "Reply to a message to show me till where to purge.", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("purges_reply_to_purgeto")
+		_, err := msg.Reply(bot, text, nil)
 		if err != nil {
 			log.Error(err)
 			return err

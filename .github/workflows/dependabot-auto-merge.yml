@@ -132,7 +132,7 @@ jobs:
           allowed-conclusions: success
           # Wait for these specific checks that are required for merge
           check-regexp: |
-            ^(Security Scanning|Code Quality & Testing|Build Verification|CI Success)$
+            ^(Security Scanning|Code Quality|Build Verification|CI Success)$
 
   # Perform additional security validations before merge
   security-validation:

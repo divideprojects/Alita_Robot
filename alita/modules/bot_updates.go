@@ -12,6 +12,8 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/cache"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
@@ -33,12 +35,16 @@ func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 	// if not a supergroup, send a message and leave it
 	if chat.Type == "group" || chat.Type == "channel" {
 		if chat.Type == "group" {
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("bot_updates_need_supergroup")
+			convertInstr, _ := tr.GetString("bot_updates_convert_instruction")
+			convertHowto, _ := tr.GetString("bot_updates_convert_howto")
 			_, err := b.SendMessage(
 				chat.Id,
 				fmt.Sprint(
-					"Sorry, but to use my all my features, you need to convert this group to supergroup.",
-					"After converting this group to supergroup, you can add me again to use me.\n",
-					"To convert this group to a supergroup, please follow the instructions here:\n",
+					text,
+					convertInstr,
+					convertHowto,
 					"https://telegra.ph/Convert-group-to-Supergroup-07-29",
 				),
 				helpers.Shtml(),
@@ -66,10 +72,12 @@ func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	// send a message to group itself
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	thanksText, _ := tr.GetString("bot_updates_thanks_for_adding")
 	_, err := b.SendMessage(
 		chat.Id,
 		fmt.Sprint(
-			"Thanks for adding me in your group!",
+			thanksText,
 			"\nCheckout @DivideProjects for more such useful bots from my creators.",
 			msgAdmin,
 		),
@@ -112,9 +120,11 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	// if non-admins try to press it
 	// using this func because it's the only one that can be called by taking chatId from callback query
 	if !chat_status.IsUserAdmin(b, chatId, query.From.Id) {
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("bot_updates_need_admin")
 		_, err := query.Answer(b,
 			&gotgbot.AnswerCallbackQueryOpts{
-				Text: "You need to be an admin to do this!",
+				Text: text,
 			},
 		)
 		if err != nil {
@@ -127,7 +137,9 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 	chatIdData, errCache := setAdminCache(chatId, msgId)
 
 	if errCache != nil {
-		_, _, err := qmsg.EditText(b, "This button has expired, Please use the command again.", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		expiredText, _ := tr.GetString("bot_updates_button_expired")
+		_, _, err := qmsg.EditText(b, expiredText, nil)
 		if err != nil {
 			log.Error(err)
 			return err

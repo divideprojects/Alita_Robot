@@ -1,5 +1,8 @@
 ---
 #stringcode: string
+db_default_welcome: "Hey {first}, how are you?"
+db_default_goodbye: "Sad to see you leaving {first}"
+db_warn_no_reason: "No Reason"
 alt_names:
   Admin: [admins, promote, demote, title]
   Antiflood: [flood]

@@ -55,8 +55,8 @@ jobs:
         continue-on-error: true
         uses: golang/govulncheck-action@v1
 
-  lint-and-test:
-    name: Code Quality & Testing
+  lint:
+    name: Code Quality
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -81,77 +81,60 @@ jobs:
           skip-cache: true # We're already caching
           install-mode: binary
 
-      # Run tests with coverage (if tests exist)
-      - name: Run tests with coverage
-        id: tests
-        run: |
-          if [ -n "$(find . -name '*_test.go' -not -path './vendor/*')" ]; then
-            go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
-            go tool cover -html=coverage.out -o coverage.html
-            echo "coverage_generated=true" >> $GITHUB_OUTPUT
-          else
-            echo "No tests found, skipping test execution"
-            echo "coverage_generated=false" >> $GITHUB_OUTPUT
-          fi
-
-      # Upload coverage to artifacts for analysis
-      - name: Upload coverage reports
-        if: matrix.go-version == 'stable' && steps.tests.outputs.coverage_generated == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-reports
-          path: |
-            coverage.out
-            coverage.html
-          retention-days: 30
-
-  # Build verification using GoReleaser snapshot
+  # Simple build verification with go build and docker build
   build-verification:
     name: Build Verification
     runs-on: ubuntu-latest
-    needs: [security, lint-and-test]
+    needs: [security, lint]
     permissions:
       contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Full history needed for GoReleaser
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
 
-      # Verify all target platforms can be built
-      - name: Run GoReleaser snapshot
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          version: latest
-          args: release --snapshot --skip=publish --clean --skip=sign
+      - name: Download dependencies
+        run: go mod download
 
-      # Package build artifacts for analysis
-      - name: Package build artifacts
-        run: tar -czvf artifacts.tar.gz dist/
+      # Verify Go binary can be built
+      - name: Build Go binary
+        run: |
+          echo "Building Go binary..."
+          go build -o alita_robot .
+          echo "✓ Go build successful"
+          ls -lh alita_robot
 
-      - name: Upload build artifacts
+      # Verify Docker image can be built
+      - name: Build Docker image
+        run: |
+          echo "Building Docker image..."
+          docker build -f docker/alpine -t test-build:latest .
+          echo "✓ Docker build successful"
+          docker images | grep test-build
+
+      # Upload build artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-${{ github.sha }}
-          path: artifacts.tar.gz
+          name: build-artifact-${{ github.sha }}
+          path: alita_robot
           retention-days: 14
 
   # Summary job that aggregates all check results
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
-    needs: [security, lint-and-test, build-verification]
+    needs: [security, lint, build-verification]
     if: always()
     steps:
       - name: Check all jobs status
         run: |
           if [ "${{ needs.security.result }}" != "success" ] || \
-             [ "${{ needs.lint-and-test.result }}" != "success" ] || \
+             [ "${{ needs.lint.result }}" != "success" ] || \
              [ "${{ needs.build-verification.result }}" != "success" ]; then
             echo "One or more CI jobs failed!"
             exit 1

@@ -3,7 +3,7 @@ package modules
 import (
 	"fmt"
 	"html"
-	"sort"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -85,7 +85,7 @@ var markup gotgbot.InlineKeyboardMarkup
 func listModules() []string {
 	// sort the modules alphabetically
 	modules := HelpModule.AbleMap.LoadModules()
-	sort.Strings(modules) // Sort the modules
+	slices.Sort(modules) // Sort the modules
 	return modules
 }
 
@@ -99,7 +99,9 @@ func initHelpButtons() {
 		kb = append(kb, gotgbot.InlineKeyboardButton{Text: i, CallbackData: fmt.Sprintf("helpq.%s", i)})
 	}
 	zb := helpers.ChunkKeyboardSlices(kb, 3)
-	zb = append(zb, []gotgbot.InlineKeyboardButton{{Text: "« Back", CallbackData: "helpq.BackStart"}})
+	tr := i18n.MustNewTranslator("en") // Default to English for help system
+	backText, _ := tr.GetString("helpers_back_button")
+	zb = append(zb, []gotgbot.InlineKeyboardButton{{Text: backText, CallbackData: "helpq.BackStart"}})
 	markup = gotgbot.InlineKeyboardMarkup{InlineKeyboard: zb}
 }
 
@@ -108,8 +110,23 @@ func initHelpButtons() {
 func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgbot.InlineKeyboardMarkup) {
 	ModName := cases.Title(language.English).String(module)
 	tr := i18n.MustNewTranslator(lang)
-	helpMsg, _ := tr.GetString(fmt.Sprintf("strings.%s.help_msg", ModName))
-	helpText = fmt.Sprintf("Here is the help for the *%s* module:\n\n", ModName) + helpMsg
+	helpMsg, _ := tr.GetString(fmt.Sprintf("%s_help_msg", strings.ToLower(ModName)))
+	headerTemplate, _ := tr.GetString("helpers_module_help_header")
+	helpText = fmt.Sprintf(headerTemplate, ModName) + helpMsg
+
+	// Create back button suffix dynamically
+	backText, _ := tr.GetString("common_back_arrow")
+	homeText, _ := tr.GetString("common_home")
+	backBtnSuffix := []gotgbot.InlineKeyboardButton{
+		{
+			Text:         backText,
+			CallbackData: "helpq.Help",
+		},
+		{
+			Text:         homeText,
+			CallbackData: "helpq.BackStart",
+		},
+	}
 
 	replyMarkup = gotgbot.InlineKeyboardMarkup{
 		InlineKeyboard: append(
@@ -125,12 +142,11 @@ func getModuleHelpAndKb(module, lang string) (helpText string, replyMarkup gotgb
 func sendHelpkb(b *gotgbot.Bot, ctx *ext.Context, module string) (msg *gotgbot.Message, err error) {
 	module = strings.ToLower(module)
 	if module == "help" {
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		helpText := getMainHelp(tr, html.EscapeString(ctx.EffectiveMessage.From.FirstName))
 		_, err = b.SendMessage(
 			ctx.EffectiveMessage.Chat.Id,
-			fmt.Sprintf(
-				mainhlp,
-				html.EscapeString(ctx.EffectiveMessage.From.FirstName),
-			),
+			helpText,
 			&gotgbot.SendMessageOpts{
 				ParseMode:   helpers.HTML,
 				ReplyMarkup: &markup,
@@ -185,7 +201,8 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		cochat, _ := b.GetChat(int64(chatID), nil)
 		go db.ConnectId(user.Id, cochat.Id)
 
-		Text := fmt.Sprintf("You have been connected to %s!", cochat.Title)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		Text, _ := tr.GetString("helpers_connected_to_chat", i18n.TranslationParams{"s": cochat.Title})
 		connKeyboard := helpers.InitButtons(b, cochat.Id, user.Id)
 
 		_, err := ctx.EffectiveMessage.Reply(b, Text,
@@ -203,7 +220,9 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		rulesrc := db.GetChatRulesInfo(int64(chatID))
 
 		if rulesrc.Rules == "" {
-			_, err := msg.Reply(b, "This chat does not have any rules!", helpers.Shtml())
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("rules_not_set")
+			_, err := msg.Reply(b, text, helpers.Shtml())
 			if err != nil {
 				log.Error(err)
 				return err
@@ -211,8 +230,12 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			return ext.EndGroups
 		}
 
-		Text := fmt.Sprintf("Rules for <b>%s</b>:\n\n%s", chatinfo.Title, rulesrc.Rules)
-		_, err := msg.Reply(b, Text, helpers.Shtml())
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("rules_for_chat", i18n.TranslationParams{
+			"first":  chatinfo.Title,
+			"second": rulesrc.Rules,
+		})
+		_, err := msg.Reply(b, text, helpers.Shtml())
 		if err != nil {
 			log.Error(err)
 			return err
@@ -226,12 +249,15 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			// check if feth admin notes or not
 			admin := chat_status.IsUserAdmin(b, int64(chatID), user.Id)
 			noteKeys := db.GetNotesList(chatinfo.Id, admin)
-			info := "There are no notes in this chat!"
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			info, _ := tr.GetString("notes_none_in_chat")
 			if len(noteKeys) > 0 {
-				info = "These are the current notes in this Chat:\n"
+				info, _ = tr.GetString("helpers_notes_current_header")
+				var sb strings.Builder
 				for _, note := range noteKeys {
-					info += fmt.Sprintf(" - <a href='https://t.me/%s?start=note_%d_%s'>%s</a>\n", b.Username, int64(chatID), note, note)
+					sb.WriteString(fmt.Sprintf(" - <a href='https://t.me/%s?start=note_%d_%s'>%s</a>\n", b.Username, int64(chatID), note, note))
 				}
+				info += sb.String()
 			}
 
 			_, err := msg.Reply(b, info, helpers.Shtml())
@@ -242,8 +268,10 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		} else if strings.HasPrefix(arg, "note_") {
 			noteName := strings.ToLower(nArgs[2])
 			noteData := db.GetNote(chatinfo.Id, noteName)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			if noteData == nil {
-				_, err := msg.Reply(b, "This note does not exist!", helpers.Shtml())
+				text, _ := tr.GetString("helpers_note_not_exist")
+				_, err := msg.Reply(b, text, helpers.Shtml())
 				if err != nil {
 					log.Error(err)
 					return err
@@ -252,7 +280,8 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			}
 			if noteData.AdminOnly {
 				if !chat_status.IsUserAdmin(b, int64(chatID), user.Id) {
-					_, err := msg.Reply(b, "This note can only be accessed by a admin!", helpers.Shtml())
+					text, _ := tr.GetString("helpers_note_admin_only")
+					_, err := msg.Reply(b, text, helpers.Shtml())
 					if err != nil {
 						log.Error(err)
 						return err
@@ -268,6 +297,9 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 			}
 		}
 	} else if arg == "about" {
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		aboutText := getAboutText(tr)
+		aboutKb := getAboutKb(tr)
 		_, err := b.SendMessage(chat.Id,
 			aboutText,
 			&gotgbot.SendMessageOpts{
@@ -288,14 +320,17 @@ func startHelpPrefixHandler(b *gotgbot.Bot, ctx *ext.Context, user *gotgbot.User
 		}
 	} else {
 		// This sends the normal help block
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		startHelpText := getStartHelp(tr)
+		startMarkupKb := getStartMarkup(tr)
 		_, err := b.SendMessage(chat.Id,
-			startHelp,
+			startHelpText,
 			&gotgbot.SendMessageOpts{
 				ParseMode: helpers.HTML,
 				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
 					IsDisabled: true,
 				},
-				ReplyMarkup: &startMarkup,
+				ReplyMarkup: &startMarkupKb,
 			},
 		)
 		if err != nil {
@@ -337,7 +372,8 @@ func getHelpTextAndMarkup(ctx *ext.Context, module string) (helpText string, kbm
 		helpText, kbmarkup = getModuleHelpAndKb(moduleName, userOrGroupLanguage)
 	} else {
 		_parsemode = helpers.HTML
-		helpText = fmt.Sprintf(mainhlp, html.EscapeString(ctx.EffectiveUser.FirstName))
+		tr := i18n.MustNewTranslator(userOrGroupLanguage)
+		helpText = getMainHelp(tr, html.EscapeString(ctx.EffectiveUser.FirstName))
 		kbmarkup = markup
 	}
 

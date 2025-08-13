@@ -3,7 +3,7 @@ package alita
 import (
 	"fmt"
 	"runtime"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 
@@ -56,7 +56,7 @@ func ResourceMonitor() {
 // and returns them as a comma-separated list wrapped in square brackets.
 func ListModules() string {
 	modSlice := modules.HelpModule.AbleMap.LoadModules()
-	sort.Strings(modSlice)
+	slices.Sort(modSlice)
 	return fmt.Sprintf("[%s]", strings.Join(modSlice, ", "))
 }
 
@@ -66,7 +66,11 @@ func ListModules() string {
 // Returns an error if cache initialization fails.
 func InitialChecks(b *gotgbot.Bot) error {
 	// Create bot in db if not already created
-	go db.EnsureBotInDb(b)
+	go func() {
+		if err := db.EnsureBotInDb(b); err != nil {
+			log.Errorf("[InitialChecks] Failed to ensure bot in database: %v", err)
+		}
+	}()
 	checkDuplicateAliases()
 
 	// Initialize cache with proper error handling

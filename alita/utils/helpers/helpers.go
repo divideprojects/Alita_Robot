@@ -17,7 +17,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/db"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
-	"github.com/divideprojects/Alita_Robot/alita/utils/extraction"
+	// "github.com/divideprojects/Alita_Robot/alita/utils/extraction" // TODO: Fix circular dependency
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -122,18 +122,33 @@ func GetFullName(FirstName, LastName string) string {
 // InitButtons creates an inline keyboard markup for the connection menu.
 // Shows admin commands button if the user is an admin, otherwise shows only user commands.
 func InitButtons(b *gotgbot.Bot, chatId, userId int64) gotgbot.InlineKeyboardMarkup {
+	return InitButtonsWithLanguage(b, chatId, userId, "en")
+}
+
+// InitButtonsWithLanguage creates an inline keyboard markup with localized button text.
+func InitButtonsWithLanguage(b *gotgbot.Bot, chatId, userId int64, language string) gotgbot.InlineKeyboardMarkup {
+	tr := i18n.MustNewTranslator(language)
+	adminText, _ := tr.GetString("helpers_admin_commands")
+	if adminText == "" {
+		adminText = "Admin commands" // fallback
+	}
+	userText, _ := tr.GetString("helpers_user_commands")
+	if userText == "" {
+		userText = "User commands" // fallback
+	}
+
 	var connButtons [][]gotgbot.InlineKeyboardButton
 	if chat_status.IsUserAdmin(b, chatId, userId) {
 		connButtons = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "Admin commands",
+					Text:         adminText,
 					CallbackData: "connbtns.Admin",
 				},
 			},
 			{
 				{
-					Text:         "User commands",
+					Text:         userText,
 					CallbackData: "connbtns.User",
 				},
 			},
@@ -142,7 +157,7 @@ func InitButtons(b *gotgbot.Bot, chatId, userId int64) gotgbot.InlineKeyboardMar
 		connButtons = [][]gotgbot.InlineKeyboardButton{
 			{
 				{
-					Text:         "User commands",
+					Text:         userText,
 					CallbackData: "connbtns.User",
 				},
 			},
@@ -160,9 +175,9 @@ func GetMessageLinkFromMessageId(chat *gotgbot.Chat, messageId int64) (messageLi
 	chatIdStr := fmt.Sprint(chat.Id)
 	if chat.Username == "" {
 		var linkId string
-		if strings.HasPrefix(chatIdStr, "-100") {
+		if IsChannelID(chat.Id) {
 			linkId = strings.ReplaceAll(chatIdStr, "-100", "")
-		} else if strings.HasPrefix(chatIdStr, "-") && !strings.HasPrefix(chatIdStr, "-100") {
+		} else if strings.HasPrefix(chatIdStr, "-") && !IsChannelID(chat.Id) {
 			// this is for non-supergroups
 			linkId = strings.ReplaceAll(chatIdStr, "-", "")
 		}
@@ -194,7 +209,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 			_chat := chatFullInfo.ToChat() // need to convert to Chat type
 			chat = &_chat
 		} else {
-			text, _ := tr.GetString("strings.Connections.is_user_connected.need_group")
+			text, _ := tr.GetString("connections_is_user_connected_need_group")
 			_, err := msg.Reply(b,
 				text,
 				&gotgbot.SendMessageOpts{
@@ -216,7 +231,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if botAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, b.Id) {
-			text, _ := tr.GetString("strings.Connections.is_user_connected.bot_not_admin")
+			text, _ := tr.GetString("connections_is_user_connected_bot_not_admin")
 			_, err := msg.Reply(b, text, Shtml())
 			if err != nil {
 				log.Error(err)
@@ -228,7 +243,7 @@ func IsUserConnected(b *gotgbot.Bot, ctx *ext.Context, chatAdmin, botAdmin bool)
 	}
 	if chatAdmin {
 		if !chat_status.IsUserAdmin(b, chat.Id, user.Id) {
-			text, _ := tr.GetString("strings.Connections.is_user_connected.user_not_admin")
+			text, _ := tr.GetString("connections_is_user_connected_user_not_admin")
 			_, err := msg.Reply(b, text, Shtml())
 			if err != nil {
 				log.Error(err)
@@ -370,8 +385,8 @@ func MakeLanguageKeyboard() [][]gotgbot.InlineKeyboardButton {
 // Uses i18n system to get localized language name and flag for the given language code.
 func GetLangFormat(langCode string) string {
 	tr := i18n.MustNewTranslator(langCode)
-	langName, _ := tr.GetString("main.language_name")
-	langFlag, _ := tr.GetString("main.language_flag")
+	langName, _ := tr.GetString("language_name")
+	langFlag, _ := tr.GetString("language_flag")
 	return langName + " " + langFlag
 }
 
@@ -425,6 +440,11 @@ func ReverseHTML2MD(text string) string {
 // Handles variables like {first}, {last}, {username}, {mention}, {count}, {chatname}, {id}.
 // Also processes rules button insertion with various positioning options.
 func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, oldMsg string, buttons []db.Button) (res string, btns []db.Button) {
+	return FormattingReplacerWithLanguage(b, chat, user, oldMsg, buttons, "en")
+}
+
+// FormattingReplacerWithLanguage is like FormattingReplacer but accepts a language parameter for localization.
+func FormattingReplacerWithLanguage(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, oldMsg string, buttons []db.Button, language string) (res string, btns []db.Button) {
 	var (
 		firstName     string
 		fullName      string
@@ -434,7 +454,12 @@ func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, 
 
 	firstName = user.FirstName
 	if len(user.FirstName) <= 0 {
-		firstName = "PersonWithNoName"
+		tr := i18n.MustNewTranslator(language)
+		personNoName, _ := tr.GetString("helpers_person_no_name")
+		if personNoName == "" {
+			personNoName = "PersonWithNoName" // fallback
+		}
+		firstName = personNoName
 	}
 
 	if user.LastName != "" {
@@ -474,7 +499,12 @@ func FormattingReplacer(b *gotgbot.Bot, chat *gotgbot.Chat, user *gotgbot.User, 
 	rulesDb := db.GetChatRulesInfo(chat.Id)
 	rulesBtnText := rulesDb.RulesBtn
 	if rulesBtnText == "" {
-		rulesBtnText = "Rules"
+		tr := i18n.MustNewTranslator(language)
+		defaultRulesText, _ := tr.GetString("button_rules_default")
+		if defaultRulesText == "" {
+			defaultRulesText = "Rules" // fallback
+		}
+		rulesBtnText = defaultRulesText
 	}
 
 	// only add rules btn when rules are added in chat
@@ -587,12 +617,20 @@ func ExtractAdminUpdateStatusChange(u *gotgbot.ChatMemberUpdated) bool {
 // GetNoteAndFilterType extracts and processes note or filter content from a Telegram message.
 // Handles text, media files, and reply messages with button parsing and content validation.
 // Returns parsed content with metadata like data type, buttons, and special options.
-func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool) (keyWord, fileid, text string, dataType int, buttons []db.Button, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool, errorMsg string) {
+func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool, language string) (keyWord, fileid, text string, dataType int, buttons []db.Button, pvtOnly, grpOnly, adminOnly, webPrev, isProtected, noNotif bool, errorMsg string) {
 	dataType = -1 // not defined datatype; invalid note
+	tr := i18n.MustNewTranslator(language)
+
 	if isFilter {
-		errorMsg = "You need to give the filter some content!"
+		errorMsg, _ = tr.GetString("helpers_need_filter_content")
+		if errorMsg == "" {
+			errorMsg = "You need to give the filter some content!" // fallback
+		}
 	} else {
-		errorMsg = "You need to give the note some content!"
+		errorMsg, _ = tr.GetString("helpers_need_note_content")
+		if errorMsg == "" {
+			errorMsg = "You need to give the note some content!" // fallback
+		}
 	}
 
 	var (
@@ -607,11 +645,19 @@ func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool) (keyWord, fileid,
 
 	// extract the noteword
 	if len(args) >= 2 && replyMsg == nil {
-		keyWord, text = extraction.ExtractQuotes(rawText, isFilter, true)
+		// TODO: Fix circular dependency with extraction package
+		// For now, use a simple extraction
+		if len(args) > 0 {
+			keyWord = args[0]
+			if len(args) > 1 {
+				text = strings.Join(args[1:], " ")
+			}
+		}
 		text, _buttons = tgmd2html.MD2HTMLButtonsV2(text)
 		dataType = db.TEXT
 	} else if replyMsg != nil && len(args) >= 1 {
-		keyWord, _ = extraction.ExtractQuotes(strings.Join(args, " "), isFilter, true)
+		// TODO: Fix circular dependency with extraction package
+		keyWord = strings.Join(args, " ")
 
 		if replyMsg.ReplyMarkup == nil {
 			text, _buttons = tgmd2html.MD2HTMLButtonsV2(rawText)
@@ -647,7 +693,7 @@ func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool) (keyWord, fileid,
 	}
 
 	// pre-fix the data before sending it back
-	preFixes(_buttons, keyWord, &text, &dataType, fileid, &buttons, &errorMsg)
+	preFixes(_buttons, keyWord, &text, &dataType, fileid, &buttons, &errorMsg, language)
 
 	// return if datatype is invalid
 	if dataType != -1 && !isFilter {
@@ -661,9 +707,14 @@ func GetNoteAndFilterType(msg *gotgbot.Message, isFilter bool) (keyWord, fileid,
 // GetWelcomeType extracts and processes welcome/greeting content from a Telegram message.
 // Similar to GetNoteAndFilterType but specifically for greeting messages.
 // Returns processed content with data type, file ID, and buttons for the greeting.
-func GetWelcomeType(msg *gotgbot.Message, greetingType string) (text string, dataType int, fileid string, buttons []db.Button, errorMsg string) {
+func GetWelcomeType(msg *gotgbot.Message, greetingType string, language string) (text string, dataType int, fileid string, buttons []db.Button, errorMsg string) {
 	dataType = -1
-	errorMsg = fmt.Sprintf("You need to give me some content to %s users!", greetingType)
+	tr := i18n.MustNewTranslator(language)
+	template, _ := tr.GetString("helpers_need_content")
+	if template == "" {
+		template = "You need to give me some content to %s users!" // fallback
+	}
+	errorMsg = fmt.Sprintf(template, greetingType)
 	var (
 		rawText string
 		args    = strings.Fields(msg.Text)[1:]
@@ -712,7 +763,7 @@ func GetWelcomeType(msg *gotgbot.Message, greetingType string) (text string, dat
 	}
 
 	// pre-fix the data before sending it back
-	preFixes(_buttons, "Greeting", &text, &dataType, fileid, &buttons, &errorMsg)
+	preFixes(_buttons, "Greeting", &text, &dataType, fileid, &buttons, &errorMsg, language)
 
 	return
 }
@@ -1009,6 +1060,20 @@ var NotesEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, noteData *
 // GreetingsEnumFuncMap
 // A rather very complicated GreetingsEnumFuncMap Variable made by me to send filters in an appropriate way
 var GreetingsEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, msg, fileID string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error){
+	// Fallback for type 0 (uninitialized/legacy records) - defaults to TEXT
+	0: func(b *gotgbot.Bot, ctx *ext.Context, msg, _ string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
+		return b.SendMessage(
+			ctx.EffectiveChat.Id,
+			msg,
+			&gotgbot.SendMessageOpts{
+				ParseMode: HTML,
+				LinkPreviewOptions: &gotgbot.LinkPreviewOptions{
+					IsDisabled: true,
+				},
+				ReplyMarkup: keyb,
+			},
+		)
+	},
 	db.TEXT: func(b *gotgbot.Bot, ctx *ext.Context, msg, _ string, keyb *gotgbot.InlineKeyboardMarkup) (*gotgbot.Message, error) {
 		return b.SendMessage(
 			ctx.EffectiveChat.Id,
@@ -1262,13 +1327,23 @@ var FiltersEnumFuncMap = map[int]func(b *gotgbot.Bot, ctx *ext.Context, filterDa
 // preFixes validates and preprocesses message content before database storage.
 // Checks message length limits, validates button URLs, sets default button names,
 // and filters invalid content. Modifies parameters by reference.
-func preFixes(buttons []tgmd2html.ButtonV2, defaultNameButton string, text *string, dataType *int, fileid string, dbButtons *[]db.Button, errorMsg *string) {
+func preFixes(buttons []tgmd2html.ButtonV2, defaultNameButton string, text *string, dataType *int, fileid string, dbButtons *[]db.Button, errorMsg *string, language string) {
+	tr := i18n.MustNewTranslator(language)
+
 	if *dataType == db.TEXT && len(*text) > 4096 {
 		*dataType = -1
-		*errorMsg = fmt.Sprintf("Your message text is %d characters long. The maximum length for text is 4096; please trim it to a smaller size. Note that markdown characters may take more space than expected.", len(*text))
+		template, _ := tr.GetString("helpers_text_too_long")
+		if template == "" {
+			template = "Your message text is %d characters long. The maximum length for text is 4096; please trim it to a smaller size. Note that markdown characters may take more space than expected." // fallback
+		}
+		*errorMsg = fmt.Sprintf(template, len(*text))
 	} else if *dataType != db.TEXT && len(*text) > 1024 {
 		*dataType = -1
-		*errorMsg = fmt.Sprintf("Your message caption is %d characters long. The maximum caption length is 1024; please trim it to a smaller size. Note that markdown characters may take more space than expected.", len(*text))
+		template, _ := tr.GetString("helpers_caption_too_long")
+		if template == "" {
+			template = "Your message caption is %d characters long. The maximum caption length is 1024; please trim it to a smaller size. Note that markdown characters may take more space than expected." // fallback
+		}
+		*errorMsg = fmt.Sprintf(template, len(*text))
 	} else {
 		for i, button := range buttons {
 			if button.Name == "" {

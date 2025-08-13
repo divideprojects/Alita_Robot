@@ -30,7 +30,7 @@ func GetChatReportSettings(chatID int64) (reportsrc *ReportChatSettings) {
 // SetChatReportStatus updates the report feature status for the specified chat.
 // When disabled, users cannot report messages in this chat.
 func SetChatReportStatus(chatID int64, pref bool) {
-	err := UpdateRecord(&ReportChatSettings{}, ReportChatSettings{ChatId: chatID}, ReportChatSettings{Enabled: pref})
+	err := UpdateRecordWithZeroValues(&ReportChatSettings{}, ReportChatSettings{ChatId: chatID}, ReportChatSettings{Enabled: pref})
 	if err != nil {
 		log.Error(err)
 	}
@@ -100,7 +100,7 @@ func GetUserReportSettings(userId int64) (reportsrc *ReportUserSettings) {
 // SetUserReportSettings updates the global report preference for the specified user.
 // When disabled, the user won't receive any report notifications.
 func SetUserReportSettings(userID int64, pref bool) {
-	err := UpdateRecord(&ReportUserSettings{}, ReportUserSettings{UserId: userID}, ReportUserSettings{Enabled: pref})
+	err := UpdateRecordWithZeroValues(&ReportUserSettings{}, ReportUserSettings{UserId: userID}, ReportUserSettings{Enabled: pref})
 	if err != nil {
 		log.Error(userID)
 	}

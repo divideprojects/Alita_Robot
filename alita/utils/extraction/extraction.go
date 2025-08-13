@@ -15,8 +15,10 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
+	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 )
 
 // ExtractChat extracts and validates a chat from command arguments.
@@ -30,7 +32,9 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 			chatId, _ := strconv.Atoi(args[0])
 			chat, err := b.GetChat(int64(chatId), nil)
 			if err != nil {
-				_, err := msg.Reply(b, "failed to connect to chat: failed to get chat: unable to getChat: Bad Request: chat not found", nil)
+				tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+				text, _ := tr.GetString("extraction_chat_not_found")
+				_, err := msg.Reply(b, text, nil)
 				if err != nil {
 					log.Error(err)
 					return nil
@@ -42,7 +46,9 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 		} else {
 			chat, err := chat_status.GetChat(b, args[0])
 			if err != nil {
-				_, err := msg.Reply(b, "failed to connect to chat: failed to get chat: unable to getChat: Bad Request: chat not found", nil)
+				tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+				text, _ := tr.GetString("extraction_chat_not_found")
+				_, err := msg.Reply(b, text, nil)
 				if err != nil {
 					log.Error(err)
 					return nil
@@ -52,7 +58,9 @@ func ExtractChat(b *gotgbot.Bot, ctx *ext.Context) *gotgbot.Chat {
 			return chat
 		}
 	}
-	_, err := msg.Reply(b, "I need a chat id to connect to!", nil)
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+	text, _ := tr.GetString("extraction_need_chat_id")
+	_, err := msg.Reply(b, text, nil)
 	if err != nil {
 		log.Error(err)
 		return nil
@@ -113,7 +121,9 @@ func ExtractUserAndText(b *gotgbot.Bot, ctx *ext.Context) (int64, string) {
 		user := args[1]
 		userId = GetUserId(user)
 		if userId == 0 {
-			_, err := msg.Reply(b, "Could not find a user by this name; are you sure I've seen them before?", nil)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("extraction_user_not_found")
+			_, err := msg.Reply(b, text, nil)
 			error_handling.HandleErr(err)
 			return -1, ""
 		} else {
@@ -124,7 +134,7 @@ func ExtractUserAndText(b *gotgbot.Bot, ctx *ext.Context) (int64, string) {
 		}
 	} else if len(args) >= 1 {
 		isId = true
-		if !strings.HasPrefix(args[1], "-100") {
+		if chatId, err := strconv.ParseInt(args[1], 10, 64); err != nil || !helpers.IsChannelID(chatId) {
 			for _, arg := range args[1] {
 				if unicode.IsDigit(arg) {
 					continue
@@ -156,7 +166,9 @@ func ExtractUserAndText(b *gotgbot.Bot, ctx *ext.Context) (int64, string) {
 
 	_, _, found := GetUserInfo(userId)
 	if !found {
-		_, err := msg.Reply(b, "Failed to get user: unable to getChatMember: Bad Request: chat not found", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("extraction_get_chat_member_failed")
+		_, err := msg.Reply(b, text, nil)
 		error_handling.HandleErr(err)
 		return -1, ""
 	}
@@ -291,7 +303,9 @@ func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int
 			t := timeVal[:len(timeVal)-1]
 			timeNum, err := strconv.Atoi(t)
 			if err != nil {
-				_, err := msg.Reply(b, "Invalid time amount specified.", nil)
+				tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+				text, _ := tr.GetString("extraction_invalid_time_amount")
+				_, err := msg.Reply(b, text, nil)
 				error_handling.HandleErr(err)
 				return -1, "", ""
 			}
@@ -314,19 +328,25 @@ func ExtractTime(b *gotgbot.Bot, ctx *ext.Context, inputVal string) (banTime int
 			}
 
 			if banTime >= yearTime {
-				_, err := msg.Reply(b, "Cannot set time to more than 1 year!", nil)
+				tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+				text, _ := tr.GetString("extraction_time_limit_exceeded")
+				_, err := msg.Reply(b, text, nil)
 				error_handling.HandleErr(err)
 				return -1, "", ""
 			}
 
 			return banTime, timeStr, reason
 		} else {
-			_, err := msg.Reply(b, fmt.Sprintf("Invalid time type specified. Expected m, h, d or w got: %s", timeVal), nil)
+			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+			text, _ := tr.GetString("extraction_invalid_time_type", i18n.TranslationParams{"0": timeVal})
+			_, err := msg.Reply(b, text, nil)
 			error_handling.HandleErr(err)
 			return -1, "", ""
 		}
 	} else {
-		_, err := msg.Reply(b, "Invalid time format specified.", nil)
+		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+		text, _ := tr.GetString("extraction_invalid_time_format")
+		_, err := msg.Reply(b, text, nil)
 		error_handling.HandleErr(err)
 		return -1, "", ""
 	}

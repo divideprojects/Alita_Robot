@@ -1,6 +1,5 @@
 module github.com/divideprojects/Alita_Robot
 
-// +heroku goVersion go1.19
 go 1.23.0
 
 require (

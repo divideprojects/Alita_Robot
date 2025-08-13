@@ -36,7 +36,8 @@ func (t typeConvertor) Int64() int64 {
 }
 
 // Bool converts the string value to a boolean. It returns true if the string
-// equals "yes" or "true" (case-sensitive), otherwise returns false.
+// equals "yes", "true", or "1" (case-insensitive), otherwise returns false.
 func (t typeConvertor) Bool() bool {
-	return t.str == "yes" || t.str == "true"
+	lower := strings.ToLower(strings.TrimSpace(t.str))
+	return lower == "yes" || lower == "true" || lower == "1"
 }

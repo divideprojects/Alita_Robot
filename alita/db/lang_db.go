@@ -13,14 +13,22 @@ func GetLanguage(ctx *ext.Context) string {
 	var chat gotgbot.Chat
 	if ctx.CallbackQuery != nil {
 		chat = ctx.CallbackQuery.Message.GetChat()
-	} else {
+	} else if ctx.ChatJoinRequest != nil {
+		// Handle ChatJoinRequest - these don't have messages
+		chat = ctx.ChatJoinRequest.Chat
+	} else if ctx.EffectiveMessage != nil {
 		chat = ctx.EffectiveMessage.Chat
+	} else {
+		// Fallback to default language if we can't determine chat context
+		log.Warn("[GetLanguage] Unable to determine chat context, using default language")
+		return "en"
 	}
-	// FIXME: this is a hack
-	// if ctx.Update.Message.Chat.Type == "private" || ctx.CallbackQuery.Message.Chat.Type == "private" {
-	// debug_bot.PrettyPrintStruct(ctx)
+	
 	if chat.Type == "private" {
 		user := ctx.EffectiveSender.User
+		if user == nil {
+			return "en"
+		}
 		return getUserLanguage(user.Id)
 	}
 	return getGroupLanguage(chat.Id)
