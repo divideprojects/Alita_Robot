@@ -31,7 +31,7 @@ func UpdateLock(chatID int64, perm string, val bool) {
 	}
 
 	// Try to update existing record first
-	err := UpdateRecord(&LockSettings{}, LockSettings{ChatId: chatID, LockType: perm}, LockSettings{Locked: val})
+	err := UpdateRecordWithZeroValues(&LockSettings{}, LockSettings{ChatId: chatID, LockType: perm}, LockSettings{Locked: val})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		// Create new record if not exists
 		err = CreateRecord(lockSetting)

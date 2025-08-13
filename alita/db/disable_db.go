@@ -91,7 +91,7 @@ func invalidateDisabledCommandsCache(chatID int64) {
 // ToggleDel toggles the automatic deletion of disabled commands in a chat.
 // Updates the DeleteCommands setting for the chat.
 func ToggleDel(chatId int64, pref bool) {
-	err := UpdateRecord(&DisableChatSettings{}, DisableChatSettings{ChatId: chatId}, DisableChatSettings{DeleteCommands: pref})
+	err := UpdateRecordWithZeroValues(&DisableChatSettings{}, DisableChatSettings{ChatId: chatId}, DisableChatSettings{DeleteCommands: pref})
 	if err != nil {
 		log.Errorf("[Database] ToggleDel: %v", err)
 	}

@@ -696,10 +696,25 @@ func CreateRecord(model interface{}) error {
 
 // UpdateRecord updates an existing database record with the provided updates.
 // It uses the where clause to find the record and applies the updates map.
+// NOTE: This function skips zero values when updating with structs. Use UpdateRecordWithZeroValues
+// if you need to update boolean fields to false or other zero values.
 func UpdateRecord(model interface{}, where interface{}, updates interface{}) error {
 	result := DB.Model(model).Where(where).Updates(updates)
 	if result.Error != nil {
 		log.Errorf("[Database][UpdateRecord]: %v", result.Error)
+		return result.Error
+	}
+	return nil
+}
+
+// UpdateRecordWithZeroValues updates a database record including zero values (false, 0, "").
+// This function should be used when you need to set boolean fields to false or other zero values.
+// Returns error if update fails.
+func UpdateRecordWithZeroValues(model interface{}, where interface{}, updates interface{}) error {
+	// Select("*") forces GORM to update all fields including zero values
+	result := DB.Model(model).Where(where).Select("*").Updates(updates)
+	if result.Error != nil {
+		log.Errorf("[Database][UpdateRecordWithZeroValues]: %v", result.Error)
 		return result.Error
 	}
 	return nil

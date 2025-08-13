@@ -9,7 +9,7 @@ import (
 
 // ToggleAllowConnect enables or disables connection functionality for a chat.
 func ToggleAllowConnect(chatID int64, pref bool) {
-	err := UpdateRecord(&ConnectionChatSettings{}, ConnectionChatSettings{ChatId: chatID}, ConnectionChatSettings{Enabled: pref})
+	err := UpdateRecordWithZeroValues(&ConnectionChatSettings{}, ConnectionChatSettings{ChatId: chatID}, ConnectionChatSettings{Enabled: pref})
 	if err != nil {
 		log.Errorf("[Database] ToggleAllowConnect: %d - %v", chatID, err)
 	}
@@ -74,7 +74,7 @@ func ConnectId(UserID, chatID int64) {
 // DisconnectId disconnects a user from their current chat connection.
 // Sets the user's connection status to false.
 func DisconnectId(UserID int64) {
-	err := UpdateRecord(&ConnectionSettings{}, ConnectionSettings{UserId: UserID}, ConnectionSettings{Connected: false})
+	err := UpdateRecordWithZeroValues(&ConnectionSettings{}, ConnectionSettings{UserId: UserID}, ConnectionSettings{Connected: false})
 	if err != nil {
 		log.Errorf("[Database] DisconnectId: %v - %d", err, UserID)
 	}

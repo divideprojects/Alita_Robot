@@ -38,7 +38,7 @@ func SetAnonAdminMode(chatID int64, val bool) {
 	adminSrc := checkAdminSetting(chatID)
 	adminSrc.AnonAdmin = val
 
-	err := UpdateRecord(&AdminSettings{}, AdminSettings{ChatId: chatID}, AdminSettings{AnonAdmin: val})
+	err := UpdateRecordWithZeroValues(&AdminSettings{}, AdminSettings{ChatId: chatID}, AdminSettings{AnonAdmin: val})
 	if err != nil {
 		log.Errorf("[Database] SetAnonAdminMode: %v - %d", err, chatID)
 	}
