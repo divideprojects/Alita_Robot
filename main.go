@@ -114,7 +114,7 @@ func main() {
 		log.Info("[Main] Pre-warming connections to Telegram API...")
 
 		// Make multiple requests to establish connection pool
-		for i := 0; i < 3; i++ {
+		for i := range 3 {
 			startTime := time.Now()
 			_, err := b.GetMe(nil)
 			if err != nil {

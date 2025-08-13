@@ -56,7 +56,7 @@ func Wrap(err error, message string) error {
 	}
 }
 
-func Wrapf(err error, format string, args ...interface{}) error {
+func Wrapf(err error, format string, args ...any) error {
 	return Wrap(err, fmt.Sprintf(format, args...))
 }
 
@@ -90,6 +90,6 @@ func New(message string) error {
 	}
 }
 
-func Newf(format string, args ...interface{}) error {
+func Newf(format string, args ...any) error {
 	return New(fmt.Sprintf(format, args...))
 }
