@@ -15,6 +15,7 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
 	"github.com/divideprojects/Alita_Robot/alita/utils/async"
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
+	"github.com/divideprojects/Alita_Robot/alita/utils/errors"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
 	"github.com/divideprojects/Alita_Robot/alita/utils/monitoring"
 	"github.com/divideprojects/Alita_Robot/alita/utils/shutdown"
@@ -200,16 +201,26 @@ func main() {
 				statsCollector.RecordError()
 			}
 
-			// Log the error with context information
-			log.WithFields(log.Fields{
+			// Extract stack trace if it's a wrapped error
+			logFields := log.Fields{
 				"update_id": func() int64 {
-					if ctx != nil && ctx.Update.UpdateId != 0 {
-						return ctx.Update.UpdateId
+					if ctx != nil && ctx.UpdateId != 0 {
+						return ctx.UpdateId
 					}
 					return -1
 				}(),
 				"error_type": fmt.Sprintf("%T", err),
-			}).Errorf("Handler error occurred: %v", err)
+			}
+
+			// Check if it's our wrapped error with stack info
+			if wrappedErr, ok := err.(*errors.WrappedError); ok {
+				logFields["file"] = wrappedErr.File
+				logFields["line"] = wrappedErr.Line
+				logFields["function"] = wrappedErr.Function
+			}
+
+			// Log the error with context information
+			log.WithFields(logFields).Errorf("Handler error occurred: %v", err)
 
 			// Continue processing other updates
 			return ext.DispatcherActionNoop

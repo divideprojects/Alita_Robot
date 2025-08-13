@@ -19,7 +19,6 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/chat_status"
 	"github.com/divideprojects/Alita_Robot/alita/utils/decorators/misc"
 	"github.com/divideprojects/Alita_Robot/alita/utils/helpers"
-
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
@@ -431,16 +430,8 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 				"Action taken by %s",
 			helpers.MentionHtml(user.Id, user.FirstName),
 		)
-		_, err := b.DeleteMessage(chat.Id, msgId, nil)
-		if err.Error() == "unable to deleteMessage: Bad Request: message to delete not found" {
-			log.WithFields(
-				log.Fields{
-					"chat": chat.Id,
-				},
-			).Error("error deleting message")
-			return ext.EndGroups
-		} else if err != nil {
-			log.Error(err)
+		err := helpers.DeleteMessageWithErrorHandling(b, chat.Id, msgId)
+		if err != nil {
 			return err
 		}
 	default:
