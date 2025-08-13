@@ -2,7 +2,7 @@ package modules
 
 import (
 	"fmt"
-	"sort"
+	"slices"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
@@ -163,7 +163,7 @@ func (moduleStruct) disabled(b *gotgbot.Bot, ctx *ext.Context) error {
 	} else {
 		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		text, _ := tr.GetString("disabling_disabled_commands")
-		sort.Strings(disabled)
+		slices.Sort(disabled)
 		var sb strings.Builder
 		for _, cmds := range disabled {
 			sb.WriteString(fmt.Sprintf("\n - `%s`", cmds))

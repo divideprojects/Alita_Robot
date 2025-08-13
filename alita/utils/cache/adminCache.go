@@ -56,7 +56,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	// Cache the admin list with retry on failure in background
 	go func() {
 		maxRetries := 3
-		for i := 0; i < maxRetries; i++ {
+		for i := range maxRetries {
 			if err := Marshal.Set(Context, AdminCache{ChatId: chatId}, adminCache, store.WithExpiration(constants.AdminCacheTTL)); err != nil {
 				log.WithFields(log.Fields{
 					"chatId": chatId,

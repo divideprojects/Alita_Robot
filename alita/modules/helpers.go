@@ -3,7 +3,7 @@ package modules
 import (
 	"fmt"
 	"html"
-	"sort"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -85,7 +85,7 @@ var markup gotgbot.InlineKeyboardMarkup
 func listModules() []string {
 	// sort the modules alphabetically
 	modules := HelpModule.AbleMap.LoadModules()
-	sort.Strings(modules) // Sort the modules
+	slices.Sort(modules) // Sort the modules
 	return modules
 }
 

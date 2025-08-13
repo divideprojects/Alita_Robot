@@ -278,7 +278,7 @@ func extractOrderedValues(params TranslationParams) []any {
 	var values []any
 
 	// Try common numbered keys first (0, 1, 2, etc.)
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		key := strconv.Itoa(i)
 		if value, exists := params[key]; exists {
 			values = append(values, value)

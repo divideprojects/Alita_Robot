@@ -82,7 +82,7 @@ func getFromCacheOrLoad[T any](key string, ttl time.Duration, loader func() (T, 
 	}
 
 	// Cache miss, use singleflight to prevent stampede
-	v, err, _ := cacheGroup.Do(key, func() (interface{}, error) {
+	v, err, _ := cacheGroup.Do(key, func() (any, error) {
 		// Load from database
 		data, loadErr := loader()
 		if loadErr != nil {

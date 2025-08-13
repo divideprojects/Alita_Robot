@@ -63,7 +63,7 @@ func UpdateUser(userId int64, username, name string) {
 
 	if userc != nil {
 		// Always update last_activity, but only update other fields if changed
-		updates := map[string]interface{}{
+		updates := map[string]any{
 			"last_activity": now,
 		}
 

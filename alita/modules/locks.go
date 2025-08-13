@@ -3,7 +3,7 @@ package modules
 import (
 	"fmt"
 	"regexp"
-	"sort"
+	"slices"
 	"strings"
 
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
@@ -101,7 +101,7 @@ func (moduleStruct) getLockMapAsArray() (lockTypes []string) {
 	for k := range tmpMap {
 		lockTypes = append(lockTypes, k)
 	}
-	sort.Strings(lockTypes)
+	slices.Sort(lockTypes)
 	return
 }
 
@@ -118,7 +118,7 @@ func (moduleStruct) buildLockTypesMessage(chatID int64) (res string) {
 	for k := range newMapLocks {
 		keys = append(keys, k)
 	}
-	sort.Strings(keys)
+	slices.Sort(keys)
 	var sb strings.Builder
 	for _, k := range keys {
 		sb.WriteString(fmt.Sprintf("\n - %s = %v", k, newMapLocks[k]))

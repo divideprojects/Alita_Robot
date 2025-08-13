@@ -45,7 +45,7 @@ type ButtonArray []Button
 
 // Scan implements the Scanner interface for database deserialization of ButtonArray.
 // It converts JSONB data from the database into a ButtonArray slice.
-func (ba *ButtonArray) Scan(value interface{}) error {
+func (ba *ButtonArray) Scan(value any) error {
 	if value == nil {
 		*ba = ButtonArray{}
 		return nil
@@ -73,7 +73,7 @@ type StringArray []string
 
 // Scan implements the Scanner interface for database deserialization of StringArray.
 // It converts JSONB data from the database into a StringArray slice.
-func (sa *StringArray) Scan(value interface{}) error {
+func (sa *StringArray) Scan(value any) error {
 	if value == nil {
 		*sa = StringArray{}
 		return nil
@@ -101,7 +101,7 @@ type Int64Array []int64
 
 // Scan implements the Scanner interface for database deserialization of Int64Array.
 // It converts JSONB data from the database into an Int64Array slice.
-func (ia *Int64Array) Scan(value interface{}) error {
+func (ia *Int64Array) Scan(value any) error {
 	if value == nil {
 		*ia = Int64Array{}
 		return nil
@@ -685,7 +685,7 @@ func init() {
 
 // CreateRecord creates a new database record using the provided model.
 // It logs any errors that occur during the creation process.
-func CreateRecord(model interface{}) error {
+func CreateRecord(model any) error {
 	result := DB.Create(model)
 	if result.Error != nil {
 		log.Errorf("[Database][CreateRecord]: %v", result.Error)
@@ -698,7 +698,7 @@ func CreateRecord(model interface{}) error {
 // It uses the where clause to find the record and applies the updates map.
 // NOTE: This function skips zero values when updating with structs. Use UpdateRecordWithZeroValues
 // if you need to update boolean fields to false or other zero values.
-func UpdateRecord(model interface{}, where interface{}, updates interface{}) error {
+func UpdateRecord(model any, where any, updates any) error {
 	result := DB.Model(model).Where(where).Updates(updates)
 	if result.Error != nil {
 		log.Errorf("[Database][UpdateRecord]: %v", result.Error)
@@ -710,7 +710,7 @@ func UpdateRecord(model interface{}, where interface{}, updates interface{}) err
 // UpdateRecordWithZeroValues updates a database record including zero values (false, 0, "").
 // This function should be used when you need to set boolean fields to false or other zero values.
 // Returns error if update fails.
-func UpdateRecordWithZeroValues(model interface{}, where interface{}, updates interface{}) error {
+func UpdateRecordWithZeroValues(model any, where any, updates any) error {
 	// Select("*") forces GORM to update all fields including zero values
 	result := DB.Model(model).Where(where).Select("*").Updates(updates)
 	if result.Error != nil {
@@ -722,7 +722,7 @@ func UpdateRecordWithZeroValues(model interface{}, where interface{}, updates in
 
 // GetRecord retrieves a single database record matching the where clause.
 // Returns gorm.ErrRecordNotFound if no matching record is found.
-func GetRecord(model interface{}, where interface{}) error {
+func GetRecord(model any, where any) error {
 	result := DB.Where(where).First(model)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -744,7 +744,7 @@ func ChatExists(chatID int64) bool {
 
 // GetRecords retrieves multiple database records matching the where clause.
 // The results are stored in the provided models slice.
-func GetRecords(models interface{}, where interface{}) error {
+func GetRecords(models any, where any) error {
 	result := DB.Where(where).Find(models)
 	if result.Error != nil {
 		log.Errorf("[Database][GetRecords]: %v", result.Error)

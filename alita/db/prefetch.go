@@ -20,7 +20,7 @@ type PrefetchedContext struct {
 	IsAdmin      bool
 	IsBotAdmin   bool
 	DisabledCmds []string
-	Settings     interface{}
+	Settings     any
 
 	// Cache metadata
 	CacheHit     bool

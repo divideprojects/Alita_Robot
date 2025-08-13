@@ -21,7 +21,7 @@ var (
 // Returns default settings if the chat doesn't have custom settings.
 func GetCaptchaSettings(chatID int64) (*CaptchaSettings, error) {
 	settings := &CaptchaSettings{}
-	err := GetRecord(settings, map[string]interface{}{"chat_id": chatID})
+	err := GetRecord(settings, map[string]any{"chat_id": chatID})
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		// Return default settings if not found
@@ -253,12 +253,12 @@ func UpdateCaptchaAttemptOnRefreshByID(attemptID uint, newAnswer string, newMess
 		return nil, err
 	}
 
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"answer":        newAnswer,
 		"message_id":    newMessageID,
 		"refresh_count": gorm.Expr("COALESCE(refresh_count, 0) + 1"),
 	}
-	if err := UpdateRecord(&CaptchaAttempts{}, map[string]interface{}{"id": attemptID}, updates); err != nil {
+	if err := UpdateRecord(&CaptchaAttempts{}, map[string]any{"id": attemptID}, updates); err != nil {
 		return nil, err
 	}
 	// Reload

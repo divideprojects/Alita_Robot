@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 
@@ -126,7 +126,7 @@ func (m *MigrationRunner) getMigrationFiles() ([]string, error) {
 	}
 
 	// Sort files to ensure consistent order
-	sort.Strings(files)
+	slices.Sort(files)
 	return files, nil
 }
 

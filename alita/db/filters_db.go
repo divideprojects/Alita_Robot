@@ -14,7 +14,7 @@ func GetFiltersList(chatID int64) (allFilterWords []string) {
 	result, err := getFromCacheOrLoad(cacheKey, CacheTTLFilterList, func() ([]string, error) {
 		var results []*ChatFilters
 		var filterWords []string
-		err := GetRecords(&results, map[string]interface{}{"chat_id": chatID})
+		err := GetRecords(&results, map[string]any{"chat_id": chatID})
 		if err != nil {
 			log.Errorf("[Database] GetFiltersList: %v - %d", err, chatID)
 			return []string{}, err

@@ -63,7 +63,7 @@ func (a *antifloodStruct) cleanupLoop() {
 
 	for range ticker.C {
 		currentTime := time.Now().Unix()
-		a.syncHelperMap.Range(func(key, value interface{}) bool {
+		a.syncHelperMap.Range(func(key, value any) bool {
 			if floodData, ok := value.(floodControl); ok {
 				// Remove entries older than 10 minutes
 				if currentTime-floodData.lastActivity > 600 {

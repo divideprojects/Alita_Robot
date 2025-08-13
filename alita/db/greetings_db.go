@@ -13,7 +13,7 @@ import (
 // Returns default settings if the chat doesn't exist in the database.
 func checkGreetingSettings(chatID int64) (greetingSrc *GreetingSettings) {
 	greetingSrc = &GreetingSettings{}
-	err := GetRecord(greetingSrc, map[string]interface{}{"chat_id": chatID})
+	err := GetRecord(greetingSrc, map[string]any{"chat_id": chatID})
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		// Ensure chat exists before creating greeting settings
@@ -163,7 +163,7 @@ func SetWelcomeText(chatID int64, welcometxt, fileId string, buttons []Button, w
 	welcomeSrc.WelcomeSettings.WelcomeType = welcType
 	welcomeSrc.WelcomeSettings.FileID = fileId
 
-	err := UpdateRecord(&GreetingSettings{}, map[string]interface{}{"chat_id": chatID}, welcomeSrc)
+	err := UpdateRecord(&GreetingSettings{}, map[string]any{"chat_id": chatID}, welcomeSrc)
 	if err != nil {
 		log.Errorf("[Database][SetWelcomeText]: %v", err)
 		return
@@ -180,7 +180,7 @@ func SetWelcomeToggle(chatID int64, pref bool) {
 	welcomeSrc.WelcomeSettings.ShouldWelcome = pref
 
 	// Use map to ensure zero values (false) are properly updated
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"welcome_enabled": pref,
 		"updated_at":      time.Now(),
 	}
@@ -204,7 +204,7 @@ func SetGoodbyeText(chatID int64, goodbyetext, fileId string, buttons []Button, 
 	goodbyeSrc.GoodbyeSettings.GoodbyeType = goodbyeType
 	goodbyeSrc.GoodbyeSettings.FileID = fileId
 
-	err := UpdateRecord(&GreetingSettings{}, map[string]interface{}{"chat_id": chatID}, goodbyeSrc)
+	err := UpdateRecord(&GreetingSettings{}, map[string]any{"chat_id": chatID}, goodbyeSrc)
 	if err != nil {
 		log.Errorf("[Database][SetGoodbyeText]: %v", err)
 		return
@@ -221,7 +221,7 @@ func SetGoodbyeToggle(chatID int64, pref bool) {
 	goodbyeSrc.GoodbyeSettings.ShouldGoodbye = pref
 
 	// Use map to ensure zero values (false) are properly updated
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"goodbye_enabled": pref,
 		"updated_at":      time.Now(),
 	}
@@ -240,7 +240,7 @@ func SetShouldCleanService(chatID int64, pref bool) {
 	cleanServiceSrc.ShouldCleanService = pref
 
 	// Use map to ensure zero values (false) are properly updated
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"clean_service_settings": pref,
 		"updated_at":             time.Now(),
 	}
@@ -259,7 +259,7 @@ func SetShouldAutoApprove(chatID int64, pref bool) {
 	autoApproveSrc.ShouldAutoApprove = pref
 
 	// Use map to ensure zero values (false) are properly updated
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"auto_approve": pref,
 		"updated_at":   time.Now(),
 	}
@@ -281,7 +281,7 @@ func SetCleanWelcomeSetting(chatID int64, pref bool) {
 	cleanWelcomeSrc.WelcomeSettings.CleanWelcome = pref
 
 	// Use map to ensure zero values (false) are properly updated
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"welcome_clean_old": pref,
 		"updated_at":        time.Now(),
 	}
@@ -302,7 +302,7 @@ func SetCleanWelcomeMsgId(chatId, msgId int64) {
 	}
 	cleanWelcomeSrc.WelcomeSettings.LastMsgId = msgId
 
-	err := UpdateRecord(&GreetingSettings{}, map[string]interface{}{"chat_id": chatId}, cleanWelcomeSrc)
+	err := UpdateRecord(&GreetingSettings{}, map[string]any{"chat_id": chatId}, cleanWelcomeSrc)
 	if err != nil {
 		log.Errorf("[Database][SetCleanWelcomeMsgId]: %v", err)
 		return
@@ -319,7 +319,7 @@ func SetCleanGoodbyeSetting(chatID int64, pref bool) {
 	cleanGoodbyeSrc.GoodbyeSettings.CleanGoodbye = pref
 
 	// Use map to ensure zero values (false) are properly updated
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"goodbye_clean_old": pref,
 		"updated_at":        time.Now(),
 	}
@@ -340,7 +340,7 @@ func SetCleanGoodbyeMsgId(chatId, msgId int64) {
 	}
 	cleanGoodbyeSrc.GoodbyeSettings.LastMsgId = msgId
 
-	err := UpdateRecord(&GreetingSettings{}, map[string]interface{}{"chat_id": chatId}, cleanGoodbyeSrc)
+	err := UpdateRecord(&GreetingSettings{}, map[string]any{"chat_id": chatId}, cleanGoodbyeSrc)
 	if err != nil {
 		log.Errorf("[Database][SetCleanGoodbyeMsgId]: %v", err)
 		return

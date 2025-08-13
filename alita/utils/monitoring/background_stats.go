@@ -103,7 +103,7 @@ func (collector *BackgroundStatsCollector) Start() {
 	log.Info("Starting background statistics collection")
 
 	// Start worker goroutines
-	for i := 0; i < collector.statWorkers; i++ {
+	for i := range collector.statWorkers {
 		collector.wg.Add(1)
 		go collector.statsWorker(i)
 	}

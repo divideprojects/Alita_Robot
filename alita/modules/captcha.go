@@ -411,7 +411,7 @@ func generateTextCaptcha() (string, []byte, []string, error) {
 	for len(options) < 4 {
 		// Generate a random string of same length as answer
 		decoy := ""
-		for i := 0; i < len(answer); i++ {
+		for range len(answer) {
 			decoy += string(characters[secureIntn(len(characters))])
 		}
 		// Check if this option already exists
@@ -478,7 +478,7 @@ func generateMathImageCaptcha() (string, []byte, []string, error) {
 		digits := "0123456789"
 		for len(options) < 4 {
 			decoy := ""
-			for i := 0; i < len(answer); i++ {
+			for range len(answer) {
 				decoy += string(digits[secureIntn(len(digits))])
 			}
 			if decoy != answer && !slices.Contains(options, decoy) {

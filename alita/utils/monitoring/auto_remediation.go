@@ -153,7 +153,7 @@ func (m *AutoRemediationManager) getApplicableActions(metrics SystemMetrics) []R
 	}
 
 	// Sort by severity (ascending - least severe first)
-	for i := 0; i < len(applicable)-1; i++ {
+	for i := range len(applicable)-1 {
 		for j := i + 1; j < len(applicable); j++ {
 			if applicable[i].Severity() > applicable[j].Severity() {
 				applicable[i], applicable[j] = applicable[j], applicable[i]
@@ -250,7 +250,7 @@ func (a *MemoryCleanupAction) Execute(ctx context.Context) error {
 	log.Info("[AutoRemediation] Performing memory cleanup operations")
 
 	// Trigger multiple GC cycles for thorough cleanup
-	for i := 0; i < 3; i++ {
+	for range 3 {
 		runtime.GC()
 		time.Sleep(100 * time.Millisecond)
 	}

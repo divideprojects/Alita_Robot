@@ -3,7 +3,7 @@ package alita
 import (
 	"fmt"
 	"runtime"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 
@@ -56,7 +56,7 @@ func ResourceMonitor() {
 // and returns them as a comma-separated list wrapped in square brackets.
 func ListModules() string {
 	modSlice := modules.HelpModule.AbleMap.LoadModules()
-	sort.Strings(modSlice)
+	slices.Sort(modSlice)
 	return fmt.Sprintf("[%s]", strings.Join(modSlice, ", "))
 }
 

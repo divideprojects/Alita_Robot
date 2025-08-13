@@ -2,7 +2,7 @@ package modules
 
 import (
 	"fmt"
-	"sort"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -257,7 +257,7 @@ func (m moduleStruct) listBlacklists(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	blSrc := db.GetBlacklistSettings(chat.Id)
-	sort.Strings(blSrc.Triggers())
+	slices.Sort(blSrc.Triggers())
 	var sb strings.Builder
 	for _, i := range blSrc.Triggers() {
 		sb.WriteString(fmt.Sprintf("\n - <code>%s</code>", i))
