@@ -591,6 +591,11 @@ func init() {
 	ValidLangCodes = cfg.ValidLangCodes
 
 	// Configure logger based on debug mode
+	if cfg.Debug {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
+	}
 	log.SetReportCaller(cfg.Debug) // Only enable stack traces in debug mode
 
 	log.Info("[Config] Configuration loaded and validated successfully")
