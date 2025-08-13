@@ -22,10 +22,6 @@ before:
     - go mod tidy
     - go mod download
 
-# upx:
-#   - enabled: true
-#     brute: true
-
 builds:
   - binary: alita_robot
     env:

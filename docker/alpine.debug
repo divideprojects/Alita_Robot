@@ -1,7 +1,7 @@
 # Build Stage: Build bot using the alpine image
 # This is an debug image, it will not compress the binary
 FROM golang:alpine AS builder
-RUN apk add --no-cache curl wget gnupg git upx
+RUN apk add --no-cache curl wget gnupg git
 WORKDIR /app
 COPY . .
 RUN go build -o out/alita_robot

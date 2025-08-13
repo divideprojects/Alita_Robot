@@ -1,10 +1,9 @@
 # Build Stage: Build bot using the alpine image
 FROM golang:alpine AS builder
-RUN apk add --no-cache curl wget gnupg git upx
+RUN apk add --no-cache curl wget gnupg git
 WORKDIR /app
 COPY . .
 RUN CGO_ENABLED=0 GOOS=`go env GOHOSTOS` GOARCH=`go env GOHOSTARCH` go build -o out/alita_robot -ldflags="-w -s" .
-RUN upx --brute out/alita_robot
 
 # Run Stage: Run bot using the bot binary copied from build stage
 FROM gcr.io/distroless/static-debian12
