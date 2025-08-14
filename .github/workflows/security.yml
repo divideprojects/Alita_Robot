@@ -27,7 +27,7 @@ jobs:
         run: go mod download
 
       - name: Run Gosec (SARIF)
-        uses: securego/gosec@v2.22.7
+        uses: securego/gosec@v2.22.8
         with:
           args: -no-fail -fmt sarif -out gosec.sarif ./...
 
