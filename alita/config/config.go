@@ -89,6 +89,11 @@ type Config struct {
 	AutoMigrate           bool   // Enable automatic database migrations on startup
 	AutoMigrateSilentFail bool   // Continue running even if migrations fail
 	MigrationsPath        string // Path to migration files (defaults to supabase/migrations)
+
+	// Resource monitoring limits
+	ResourceMaxGoroutines int `validate:"min=100,max=10000"` // Maximum goroutines before triggering cleanup
+	ResourceMaxMemoryMB   int `validate:"min=100,max=10000"` // Maximum memory usage in MB
+	ResourceGCThresholdMB int `validate:"min=100,max=5000"`  // Memory threshold for triggering GC
 }
 
 // Global configuration instance
@@ -160,6 +165,11 @@ var (
 	AutoMigrate           bool
 	AutoMigrateSilentFail bool
 	MigrationsPath        string
+
+	// Resource monitoring limits
+	ResourceMaxGoroutines int
+	ResourceMaxMemoryMB   int
+	ResourceGCThresholdMB int
 
 	// Global config instance
 	AppConfig *Config
@@ -329,6 +339,11 @@ func LoadConfig() (*Config, error) {
 		AutoMigrate:           typeConvertor{str: os.Getenv("AUTO_MIGRATE")}.Bool(),
 		AutoMigrateSilentFail: typeConvertor{str: os.Getenv("AUTO_MIGRATE_SILENT_FAIL")}.Bool(),
 		MigrationsPath:        os.Getenv("MIGRATIONS_PATH"),
+
+		// Resource monitoring limits
+		ResourceMaxGoroutines: typeConvertor{str: os.Getenv("RESOURCE_MAX_GOROUTINES")}.Int(),
+		ResourceMaxMemoryMB:   typeConvertor{str: os.Getenv("RESOURCE_MAX_MEMORY_MB")}.Int(),
+		ResourceGCThresholdMB: typeConvertor{str: os.Getenv("RESOURCE_GC_THRESHOLD_MB")}.Int(),
 	}
 
 	// Set defaults
@@ -465,11 +480,8 @@ func (cfg *Config) setDefaults() {
 		}
 	}
 
-	// Default DATABASE_URL if not set
-	if cfg.DatabaseURL == "" {
-		cfg.DatabaseURL = "postgres://postgres:password@localhost:5432/alita_robot?sslmode=disable"
-		log.Warn("[Config] DATABASE_URL not set, using default: ", cfg.DatabaseURL)
-	}
+	// DATABASE_URL is required - no default for security
+	// This ensures production systems explicitly configure their database connection
 
 	// Set performance optimization defaults (enabled by default for better performance)
 	if !cfg.EnableQueryPrefetching {
@@ -509,6 +521,17 @@ func (cfg *Config) setDefaults() {
 	}
 	// AutoMigrate defaults to false for backward compatibility
 	// AutoMigrateSilentFail defaults to false
+
+	// Set resource monitoring defaults
+	if cfg.ResourceMaxGoroutines == 0 {
+		cfg.ResourceMaxGoroutines = 1000
+	}
+	if cfg.ResourceMaxMemoryMB == 0 {
+		cfg.ResourceMaxMemoryMB = 500
+	}
+	if cfg.ResourceGCThresholdMB == 0 {
+		cfg.ResourceGCThresholdMB = 400
+	}
 }
 
 // init initializes the logging configuration, loads the global configuration
@@ -587,6 +610,9 @@ func init() {
 	AutoMigrate = cfg.AutoMigrate
 	AutoMigrateSilentFail = cfg.AutoMigrateSilentFail
 	MigrationsPath = cfg.MigrationsPath
+	ResourceMaxGoroutines = cfg.ResourceMaxGoroutines
+	ResourceMaxMemoryMB = cfg.ResourceMaxMemoryMB
+	ResourceGCThresholdMB = cfg.ResourceGCThresholdMB
 	AllowedUpdates = cfg.AllowedUpdates
 	ValidLangCodes = cfg.ValidLangCodes
 

@@ -4,6 +4,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -716,6 +717,19 @@ func UpdateRecordWithZeroValues(model any, where any, updates any) error {
 	if result.Error != nil {
 		log.Errorf("[Database][UpdateRecordWithZeroValues]: %v", result.Error)
 		return result.Error
+	}
+	return nil
+}
+
+// Close closes the database connection gracefully.
+// This should be called during application shutdown to properly close all database connections.
+func Close() error {
+	if DB != nil {
+		sqlDB, err := DB.DB()
+		if err != nil {
+			return fmt.Errorf("failed to get underlying SQL DB: %w", err)
+		}
+		return sqlDB.Close()
 	}
 	return nil
 }

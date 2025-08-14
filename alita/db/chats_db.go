@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -36,7 +37,7 @@ func EnsureChatInDb(chatId int64, chatName string) error {
 	err := DB.Where("chat_id = ?", chatId).Assign(chatUpdate).FirstOrCreate(&Chat{}).Error
 	if err != nil {
 		log.Errorf("[Database] EnsureChatInDb: %v", err)
-		return err
+		return fmt.Errorf("failed to ensure chat %d in database: %w", chatId, err)
 	}
 	return nil
 }

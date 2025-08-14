@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -18,7 +19,7 @@ func EnsureBotInDb(b *gotgbot.Bot) error {
 	err := DB.Where("user_id = ?", b.Id).Assign(usersUpdate).FirstOrCreate(&User{})
 	if err.Error != nil {
 		log.Errorf("[Database] EnsureBotInDb: %v", err.Error)
-		return err.Error
+		return fmt.Errorf("failed to ensure bot %d in database: %w", b.Id, err.Error)
 	}
 	log.Infof("[Database] Bot Updated in Database!")
 	return nil
@@ -36,7 +37,7 @@ func EnsureUserInDb(userId int64, username, firstName string) error {
 	err := DB.Where("user_id = ?", userId).Assign(userUpdate).FirstOrCreate(&User{})
 	if err.Error != nil {
 		log.Errorf("[Database] EnsureUserInDb: %v", err.Error)
-		return err.Error
+		return fmt.Errorf("failed to ensure user %d in database: %w", userId, err.Error)
 	}
 	return nil
 }

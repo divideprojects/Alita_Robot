@@ -1,0 +1,55 @@
+# golangci-lint v2 configuration
+# https://golangci-lint.run/docs/product/migration-guide
+
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - gosec
+    - ineffassign
+    - gocritic
+    - revive
+    - unconvert
+    - unparam
+    - misspell
+    - bodyclose
+    - contextcheck
+    - nilerr
+  settings:
+    govet:
+      enable:
+        - shadow
+    gosec:
+      severity: medium
+      excludes:
+        - G104
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - opinionated
+        - performance
+        - style
+    revive:
+      severity: warning
+    errcheck:
+      check-type-assertions: true
+  exclusions:
+    rules:
+      - path: '_test\.go'
+        linters:
+          - gosec
+          - errcheck
+      - path: 'main\.go'
+        text: 'G104'
+        linters:
+          - gosec
+      - text: 'weak cryptographic primitive'
+        linters:
+          - gosec
