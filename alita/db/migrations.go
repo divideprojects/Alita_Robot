@@ -420,15 +420,12 @@ func (m *MigrationRunner) cleanSupabaseSQL(sql string) string {
 		extensionPattern := regexp.MustCompile(`(?i)create\s+extension\s+(?:if\s+not\s+exists\s+)?["']?(\w+)["']?`)
 		if matches := extensionPattern.FindStringSubmatch(trimmedLine); len(matches) > 1 {
 			extensionName := strings.ToLower(matches[1])
-			for _, supabaseExt := range supabaseOnlyExtensions {
-				if extensionName == supabaseExt {
-					isSupabaseExtension = true
-					removedExtensions = append(removedExtensions, extensionName)
-					// Add a comment explaining why this was removed
-					processedLines = append(processedLines,
-						fmt.Sprintf("-- Skipped Supabase-specific extension: %s (not available in standard PostgreSQL)", extensionName))
-					break
-				}
+			if slices.Contains(supabaseOnlyExtensions, extensionName) {
+				isSupabaseExtension = true
+				removedExtensions = append(removedExtensions, extensionName)
+				// Add a comment explaining why this was removed
+				processedLines = append(processedLines,
+					fmt.Sprintf("-- Skipped Supabase-specific extension: %s (not available in standard PostgreSQL)", extensionName))
 			}
 		}
 
