@@ -123,7 +123,8 @@ func extractKeysFromFile(filePath string) ([]TranslationKey, error) {
 	var keys []TranslationKey
 
 	// Read file content
-	content, err := os.ReadFile(filePath)
+	filePath = filepath.Clean(filePath)
+	content, err := os.ReadFile(filePath) //nolint:gosec // Path is cleaned and from filepath.WalkDir
 	if err != nil {
 		return nil, err
 	}
@@ -233,7 +234,8 @@ func loadLocaleFiles(localesDir string) (map[string]map[string]interface{}, erro
 		}
 
 		filePath := filepath.Join(localesDir, filename)
-		data, err := os.ReadFile(filePath)
+		filePath = filepath.Clean(filePath)
+		data, err := os.ReadFile(filePath) //nolint:gosec // Path is cleaned and from trusted source
 		if err != nil {
 			fmt.Printf("  ⚠️  Warning: Could not read %s: %v\n", filename, err)
 			continue

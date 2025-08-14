@@ -294,9 +294,10 @@ func (m *MigrationRunner) splitSQLStatements(sql string) []string {
 }
 
 // applyMigration reads, cleans, and applies a single migration file
-func (m *MigrationRunner) applyMigration(filepath, version string) error {
+func (m *MigrationRunner) applyMigration(filePath, version string) error {
 	// Read migration file
-	content, err := os.ReadFile(filepath)
+	filePath = filepath.Clean(filePath)
+	content, err := os.ReadFile(filePath) //nolint:gosec // Path is cleaned and from trusted glob pattern
 	if err != nil {
 		return fmt.Errorf("failed to read migration file: %w", err)
 	}
