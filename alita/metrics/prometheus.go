@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -103,9 +104,17 @@ func StartMetricsServer(port string) {
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
 	
+	server := &http.Server{
+		Addr:         ":" + port,
+		Handler:      mux,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+	
 	go func() {
 		log.Infof("[Metrics] Starting Prometheus metrics server on port %s", port)
-		if err := http.ListenAndServe(":"+port, mux); err != nil {
+		if err := server.ListenAndServe(); err != nil {
 			log.Warnf("[Metrics] Metrics server failed to start: %v", err)
 		}
 	}()

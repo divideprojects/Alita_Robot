@@ -82,7 +82,9 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 
 // RegisterHealthEndpoint registers the health check endpoint
 func RegisterHealthEndpoint() {
-	http.HandleFunc("/health", HealthHandler)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/health", HealthHandler)
+	
 	go func() {
 		port := "8080"
 		if config.WebhookPort != 0 && config.UseWebhooks {
@@ -90,8 +92,16 @@ func RegisterHealthEndpoint() {
 			port = "8081"
 		}
 		
+		server := &http.Server{
+			Addr:         ":" + port,
+			Handler:      mux,
+			ReadTimeout:  10 * time.Second,
+			WriteTimeout: 10 * time.Second,
+			IdleTimeout:  60 * time.Second,
+		}
+		
 		log.Infof("[Health] Starting health check endpoint on port %s", port)
-		if err := http.ListenAndServe(":"+port, nil); err != nil {
+		if err := server.ListenAndServe(); err != nil {
 			// Log but don't fail - health endpoint is optional
 			log.Warnf("[Health] Health endpoint failed to start: %v", err)
 		}
