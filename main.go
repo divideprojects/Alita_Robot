@@ -12,7 +12,10 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/divideprojects/Alita_Robot/alita/config"
+	"github.com/divideprojects/Alita_Robot/alita/db"
+	"github.com/divideprojects/Alita_Robot/alita/health"
 	"github.com/divideprojects/Alita_Robot/alita/i18n"
+	"github.com/divideprojects/Alita_Robot/alita/metrics"
 	"github.com/divideprojects/Alita_Robot/alita/utils/async"
 	"github.com/divideprojects/Alita_Robot/alita/utils/error_handling"
 	"github.com/divideprojects/Alita_Robot/alita/utils/errors"
@@ -114,7 +117,7 @@ func main() {
 		log.Info("[Main] Pre-warming connections to Telegram API...")
 
 		// Make multiple requests to establish connection pool
-		for i := range 3 {
+		for i := 0; i < 3; i++ {
 			startTime := time.Now()
 			_, err := b.GetMe(nil)
 			if err != nil {
@@ -143,6 +146,14 @@ func main() {
 		async.InitializeAsyncProcessor()
 		defer async.StopAsyncProcessor()
 	}
+
+	// Start health check endpoint
+	health.RegisterHealthEndpoint()
+	log.Info("[Health] Health check endpoint available at :8080/health (or :8081 if webhook enabled)")
+
+	// Start metrics server
+	metrics.StartMetricsServer("9090")
+	log.Info("[Metrics] Prometheus metrics available at :9090/metrics")
 
 	// Initialize monitoring systems
 	var statsCollector *monitoring.BackgroundStatsCollector
@@ -416,8 +427,11 @@ func (t *apiServerRewriteTransport) RoundTrip(req *http.Request) (*http.Response
 // closeDBConnections closes all database connections gracefully during shutdown.
 // It returns an error if the database connections cannot be closed properly.
 func closeDBConnections() error {
-	// Import the db package to access Close function
-	// This would need to be implemented in the db package
+	err := db.Close()
+	if err != nil {
+		log.Errorf("[Shutdown] Failed to close database connections: %v", err)
+		return fmt.Errorf("failed to close database: %w", err)
+	}
 	log.Info("[Shutdown] Database connections closed successfully")
 	return nil
 }

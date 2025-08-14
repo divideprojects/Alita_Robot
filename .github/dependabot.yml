@@ -1,110 +1,55 @@
 version: 2
 updates:
-  # Go modules - primary application dependencies
+  # Go modules
   - package-ecosystem: gomod
     directory: "/"
     schedule:
       interval: weekly
       day: "monday"
-      time: "06:00"
-      timezone: "UTC"
-    # Commit message customization for conventional commits
     commit-message:
       prefix: "deps(go)"
-      prefix-development: "deps(go-dev)"
-      include: "scope"
-    # Labels for automated workflows
     labels:
       - "dependencies"
       - "go"
-      - "auto-merge-candidate"
-    # Security-focused settings
     open-pull-requests-limit: 5
-    pull-request-branch-name:
-      separator: "/"
-    # Allow both direct and indirect dependency updates
-    allow:
-      - dependency-type: "direct"
-      - dependency-type: "indirect"
-    # Group minor and patch updates to reduce PR volume
     groups:
-      go-minor-patch:
-        patterns:
-          - "*"
+      minor-and-patch:
         update-types:
           - "minor"
           - "patch"
 
-  # Docker dependencies - base images and multi-stage builds  
-  - package-ecosystem: docker
-    directory: "/"
-    schedule:
-      interval: weekly
-      day: "tuesday"
-      time: "06:00"
-      timezone: "UTC"
-    commit-message:
-      prefix: "deps(docker)"
-      include: "scope"
-    labels:
-      - "dependencies"
-      - "docker"
-      - "auto-merge-candidate"
-    open-pull-requests-limit: 3
-    pull-request-branch-name:
-      separator: "/"
-    # Group Docker updates since they're typically safe
-    groups:
-      docker-all:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-
-  # Additional Docker contexts if they exist
+  # Docker images in /docker directory
   - package-ecosystem: docker
     directory: "/docker"
     schedule:
       interval: weekly
-      day: "tuesday"
-      time: "06:30"
-      timezone: "UTC"
+      day: "monday"
     commit-message:
       prefix: "deps(docker)"
-      include: "scope"
     labels:
       - "dependencies"
       - "docker"
-      - "auto-merge-candidate"
-    open-pull-requests-limit: 2
+    open-pull-requests-limit: 3
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
 
-  # GitHub Actions - workflow dependencies (most security-sensitive)
-  - package-ecosystem: "github-actions"
+  # GitHub Actions
+  - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: weekly
-      day: "wednesday"
-      time: "06:00"
-      timezone: "UTC"
+      day: "monday"
     commit-message:
       prefix: "deps(actions)"
-      include: "scope"
     labels:
       - "dependencies"
       - "github-actions"
       - "security-review"
-    # Lower limit due to security implications
     open-pull-requests-limit: 2
-    pull-request-branch-name:
-      separator: "/"
-    # Only allow patch updates to auto-merge (configured in auto-merge workflow)
-    allow:
-      - dependency-type: "direct"
-    # Group patch updates only - minor updates need individual review
     groups:
-      actions-patches:
-        patterns:
-          - "*"
+      patch-only:
         update-types:
           - "patch"

@@ -212,7 +212,7 @@ cd Alita_Robot
 go mod download
 
 # Build the binary
-go build -o alita_robot ./cmd/alita
+go build -o alita_robot .
 
 # Or use make
 make build
@@ -487,7 +487,19 @@ Alita_Robot/
    make build
    ```
 
-4. **Run Database Migrations**
+4. **Install Pre-commit Hooks** (Optional but recommended)
+   ```bash
+   pip install pre-commit
+   pre-commit install
+   ```
+
+   This will run automatic checks before each commit:
+   - Code formatting (gofmt)
+   - Linting (golangci-lint)
+   - Security checks
+   - File cleanup (trailing whitespace, EOF)
+
+5. **Run Database Migrations**
    
    Supabase is the source of truth for schema files (`supabase/migrations`). Migrations are applied to any PostgreSQL by auto-cleaning Supabase-specific statements at runtime.
 
