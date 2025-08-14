@@ -7,7 +7,7 @@ updates:
       interval: weekly
       day: "monday"
       time: "06:00"
-      timezone: "UTC"
+      timezone: "America/Phoenix"
     # Commit message customization for conventional commits
     commit-message:
       prefix: "deps(go)"
@@ -35,14 +35,14 @@ updates:
           - "minor"
           - "patch"
 
-  # Docker dependencies - base images and multi-stage builds  
+  # Docker dependencies - base images and multi-stage builds
   - package-ecosystem: docker
     directory: "/"
     schedule:
       interval: weekly
       day: "tuesday"
       time: "06:00"
-      timezone: "UTC"
+      timezone: "America/Phoenix"
     commit-message:
       prefix: "deps(docker)"
       include: "scope"
@@ -69,7 +69,7 @@ updates:
       interval: weekly
       day: "tuesday"
       time: "06:30"
-      timezone: "UTC"
+      timezone: "America/Phoenix"
     commit-message:
       prefix: "deps(docker)"
       include: "scope"
@@ -86,7 +86,7 @@ updates:
       interval: weekly
       day: "wednesday"
       time: "06:00"
-      timezone: "UTC"
+      timezone: "America/Phoenix"
     commit-message:
       prefix: "deps(actions)"
       include: "scope"
