@@ -1,1 +1,10 @@
 providers = ["go"]
+
+[phases.setup]
+aptPkgs = ["postgresql-client", "ca-certificates"]
+
+[phases.build]
+cmds = ["go mod download", "go build -o alita_robot"]
+
+[start]
+cmd = "./alita_robot"
