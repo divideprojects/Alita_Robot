@@ -28,13 +28,15 @@ var greetingsModule = moduleStruct{moduleName: "Greetings"}
 // Admins can toggle welcome messages on/off or view current settings with 'noformat' option.
 func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	// Save the original chat for sending responses
+	originalChat := ctx.EffectiveChat
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
-	ctx.EffectiveChat = connectedChat
-	chat := ctx.EffectiveChat
+	// Use connected chat for fetching settings
+	chat := connectedChat
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
 
@@ -65,7 +67,10 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 				log.Errorf("Invalid or missing greeting type for welcome preview: %d", welcPrefs.WelcomeSettings.WelcomeType)
 				return fmt.Errorf("invalid greeting type: %d", welcPrefs.WelcomeSettings.WelcomeType)
 			}
+			// Temporarily restore original chat for sending the preview
+			ctx.EffectiveChat = originalChat
 			_, err := greetFunc(bot, ctx, wlcmText, welcPrefs.WelcomeSettings.FileID, &gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil})
+			ctx.EffectiveChat = chat // Restore the connected chat context
 			if err != nil {
 				log.Error(err)
 				return err
@@ -80,7 +85,10 @@ func (moduleStruct) welcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 				log.Errorf("Invalid or missing greeting type for welcome preview: %d", welcPrefs.WelcomeSettings.WelcomeType)
 				return fmt.Errorf("invalid greeting type: %d", welcPrefs.WelcomeSettings.WelcomeType)
 			}
+			// Temporarily restore original chat for sending the preview
+			ctx.EffectiveChat = originalChat
 			_, err := greetFunc(bot, ctx, wlcmText, welcPrefs.WelcomeSettings.FileID, &keyboard)
+			ctx.EffectiveChat = chat // Restore the connected chat context
 			if err != nil {
 				log.Error(err)
 				return err
@@ -187,13 +195,15 @@ func (moduleStruct) resetWelcome(bot *gotgbot.Bot, ctx *ext.Context) error {
 // Admins can toggle goodbye messages on/off or view current settings with 'noformat' option.
 func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
+	// Save the original chat for sending responses
+	originalChat := ctx.EffectiveChat
 	// connection status
 	connectedChat := helpers.IsUserConnected(bot, ctx, true, false)
 	if connectedChat == nil {
 		return ext.EndGroups
 	}
-	ctx.EffectiveChat = connectedChat
-	chat := ctx.EffectiveChat
+	// Use connected chat for fetching settings
+	chat := connectedChat
 	user := ctx.EffectiveSender.User
 	args := ctx.Args()[1:]
 
@@ -224,7 +234,10 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 				log.Errorf("Invalid or missing greeting type for goodbye preview: %d", gdbyePrefs.GoodbyeSettings.GoodbyeType)
 				return fmt.Errorf("invalid greeting type: %d", gdbyePrefs.GoodbyeSettings.GoodbyeType)
 			}
+			// Temporarily restore original chat for sending the preview
+			ctx.EffectiveChat = originalChat
 			_, err := greetFunc(bot, ctx, gdbyeText, gdbyePrefs.GoodbyeSettings.FileID, &gotgbot.InlineKeyboardMarkup{InlineKeyboard: nil})
+			ctx.EffectiveChat = chat // Restore the connected chat context
 			if err != nil {
 				log.Error(err)
 				return err
@@ -239,7 +252,10 @@ func (moduleStruct) goodbye(bot *gotgbot.Bot, ctx *ext.Context) error {
 				log.Errorf("Invalid or missing greeting type for goodbye preview: %d", gdbyePrefs.GoodbyeSettings.GoodbyeType)
 				return fmt.Errorf("invalid greeting type: %d", gdbyePrefs.GoodbyeSettings.GoodbyeType)
 			}
+			// Temporarily restore original chat for sending the preview
+			ctx.EffectiveChat = originalChat
 			_, err := greetFunc(bot, ctx, gdbyeText, gdbyePrefs.GoodbyeSettings.FileID, &keyboard)
+			ctx.EffectiveChat = chat // Restore the connected chat context
 			if err != nil {
 				log.Error(err)
 				return err
