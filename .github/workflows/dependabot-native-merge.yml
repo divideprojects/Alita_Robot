@@ -1,0 +1,48 @@
+name: Dependabot Native Auto-merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependabot-auto-merge:
+    name: Auto-merge Dependabot PR
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Get dependency metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Auto-approve and enable auto-merge for minor/patch updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          echo "Auto-approving ${{ steps.metadata.outputs.update-type }} update"
+          gh pr review $PR_NUMBER --approve --repo ${{ github.repository }}
+          gh pr merge $PR_NUMBER --auto --squash --repo ${{ github.repository }}
+
+      - name: Comment on major updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          comment_body="🔄 **Major version update detected!**
+          
+          **Update type:** \`${{ steps.metadata.outputs.update-type }}\`
+          **Dependency:** \`${{ steps.metadata.outputs.dependency-names }}\`
+          
+          This PR requires manual review for potential breaking changes.
+          
+          @divkix please review this update carefully."
+          
+          gh pr comment $PR_NUMBER --body "$comment_body" --repo ${{ github.repository }}
