@@ -14,10 +14,10 @@ import (
 
 // HealthStatus represents the health status of the application
 type HealthStatus struct {
-	Status   string            `json:"status"`
-	Checks   map[string]bool   `json:"checks"`
-	Version  string            `json:"version"`
-	Uptime   string            `json:"uptime"`
+	Status  string          `json:"status"`
+	Checks  map[string]bool `json:"checks"`
+	Version string          `json:"version"`
+	Uptime  string          `json:"uptime"`
 }
 
 var startTime = time.Now()
@@ -50,7 +50,7 @@ func checkRedis() bool {
 	_, err = cache.Manager.Get(ctx, testKey)
 	// Delete the test key
 	_ = cache.Manager.Delete(ctx, testKey)
-	
+
 	return err == nil
 }
 
@@ -84,14 +84,14 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 func RegisterHealthEndpoint() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", HealthHandler)
-	
+
 	go func() {
 		port := "8080"
 		if config.WebhookPort != 0 && config.UseWebhooks {
 			// If webhook is enabled, use a different port for health
 			port = "8081"
 		}
-		
+
 		server := &http.Server{
 			Addr:         ":" + port,
 			Handler:      mux,
@@ -99,7 +99,7 @@ func RegisterHealthEndpoint() {
 			WriteTimeout: 10 * time.Second,
 			IdleTimeout:  60 * time.Second,
 		}
-		
+
 		log.Infof("[Health] Starting health check endpoint on port %s", port)
 		if err := server.ListenAndServe(); err != nil {
 			// Log but don't fail - health endpoint is optional
