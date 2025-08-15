@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"slices"
@@ -295,8 +296,19 @@ func (m *MigrationRunner) splitSQLStatements(sql string) []string {
 
 // applyMigration reads, cleans, and applies a single migration file
 func (m *MigrationRunner) applyMigration(filepath, version string) error {
+	// Validate that the file path is within the migrations directory to prevent path traversal
+	if !strings.HasPrefix(filepath, m.migrationsPath) {
+		return fmt.Errorf("invalid migration file path: %s", filepath)
+	}
+
+	// Additional validation: ensure the path doesn't contain suspicious patterns
+	cleanPath := path.Clean(filepath)
+	if cleanPath != filepath || strings.Contains(filepath, "..") {
+		return fmt.Errorf("potentially unsafe migration file path: %s", filepath)
+	}
+
 	// Read migration file
-	content, err := os.ReadFile(filepath)
+	content, err := os.ReadFile(filepath) // #nosec G304 - path validation performed above
 	if err != nil {
 		return fmt.Errorf("failed to read migration file: %w", err)
 	}
@@ -489,57 +501,6 @@ func (m *MigrationRunner) logMigrationStatus() {
 }
 
 // GetAppliedMigrations returns a list of all applied migrations
-func (m *MigrationRunner) GetAppliedMigrations() ([]SchemaMigration, error) {
-	var migrations []SchemaMigration
-	err := m.db.Order("executed_at ASC").Find(&migrations).Error
-	return migrations, err
-}
-
-// GetPendingMigrations returns a list of migration files that haven't been applied yet
-func (m *MigrationRunner) GetPendingMigrations() ([]string, error) {
-	files, err := m.getMigrationFiles()
-	if err != nil {
-		return nil, err
-	}
-
-	var pending []string
-	for _, file := range files {
-		version := filepath.Base(file)
-		if !m.isMigrationApplied(version) {
-			pending = append(pending, version)
-		}
-	}
-
-	return pending, nil
-}
-
-// RollbackMigration attempts to rollback a specific migration (requires down migrations)
-// Note: This is a placeholder as the current SQL migrations don't include rollback scripts
-func (m *MigrationRunner) RollbackMigration(version string) error {
-	// Check if migration exists
-	if !m.isMigrationApplied(version) {
-		return fmt.Errorf("migration %s has not been applied", version)
-	}
-
-	// Note: Actual rollback would require down migration scripts
-	// For now, just remove the migration record (manual intervention needed for schema changes)
-	if err := m.db.Delete(&SchemaMigration{Version: version}).Error; err != nil {
-		return fmt.Errorf("failed to remove migration record: %w", err)
-	}
-
-	log.Warnf("[Migrations] Removed migration record for %s - manual schema rollback may be required", version)
-	return nil
-}
-
-// SplitSQLStatementsForTesting exposes the SQL splitter for testing purposes
-func (m *MigrationRunner) SplitSQLStatementsForTesting(sql string) []string {
-	return m.splitSQLStatements(sql)
-}
-
-// CleanSupabaseSQLForTesting exposes the SQL cleaner for testing purposes
-func (m *MigrationRunner) CleanSupabaseSQLForTesting(sql string) string {
-	return m.cleanSupabaseSQL(sql)
-}
 
 // verifyIndexes checks that expected composite indexes are created
 func (m *MigrationRunner) verifyIndexes() error {
