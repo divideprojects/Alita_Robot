@@ -103,7 +103,7 @@ var (
 func StartMetricsServer(port string) {
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
-	
+
 	server := &http.Server{
 		Addr:         ":" + port,
 		Handler:      mux,
@@ -111,45 +111,11 @@ func StartMetricsServer(port string) {
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  60 * time.Second,
 	}
-	
+
 	go func() {
 		log.Infof("[Metrics] Starting Prometheus metrics server on port %s", port)
 		if err := server.ListenAndServe(); err != nil {
 			log.Warnf("[Metrics] Metrics server failed to start: %v", err)
 		}
 	}()
-}
-
-// RecordCommand records a command execution with status
-func RecordCommand(command string, success bool) {
-	status := "success"
-	if !success {
-		status = "failure"
-	}
-	CommandsProcessed.WithLabelValues(command, status).Inc()
-}
-
-// RecordDatabaseQuery records a database query with timing
-func RecordDatabaseQuery(operation, table string, duration float64) {
-	DatabaseQueries.WithLabelValues(operation, table).Observe(duration)
-}
-
-// RecordCacheOperation records cache hit/miss
-func RecordCacheOperation(cacheType string, hit bool) {
-	result := "miss"
-	if hit {
-		result = "hit"
-	}
-	CacheHits.WithLabelValues(cacheType, result).Inc()
-}
-
-// RecordError records an error occurrence
-func RecordError(errorType string) {
-	ErrorRate.WithLabelValues(errorType).Inc()
-}
-
-// UpdateSystemMetrics updates system-level metrics
-func UpdateSystemMetrics(goroutines int, memoryMB float64) {
-	GoroutineCount.Set(float64(goroutines))
-	MemoryUsage.Set(memoryMB)
 }
