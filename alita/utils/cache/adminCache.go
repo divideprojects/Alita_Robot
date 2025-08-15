@@ -34,13 +34,34 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 			"botId":  b.Id,
 			"error":  botErr,
 		}).Warning("LoadAdminCache: Could not verify bot admin status")
-	} else {
+		// If we can't even check bot status, likely not admin - return empty cache
+		return AdminCache{
+			ChatId:   chatId,
+			UserInfo: []gotgbot.MergedChatMember{},
+			Cached:   true,
+		}
+	}
+
+	botStatus := botMember.GetStatus()
+	if botStatus != "administrator" && botStatus != "creator" {
 		log.WithFields(log.Fields{
 			"chatId":    chatId,
 			"botId":     b.Id,
-			"botStatus": botMember.GetStatus(),
-		}).Debug("LoadAdminCache: Bot status check")
+			"botStatus": botStatus,
+		}).Warning("LoadAdminCache: Bot is not admin, cannot fetch admin list")
+		// Return empty cache when bot lacks admin privileges
+		return AdminCache{
+			ChatId:   chatId,
+			UserInfo: []gotgbot.MergedChatMember{},
+			Cached:   true,
+		}
 	}
+
+	log.WithFields(log.Fields{
+		"chatId":    chatId,
+		"botId":     b.Id,
+		"botStatus": botStatus,
+	}).Debug("LoadAdminCache: Bot has admin privileges")
 
 	// Retry logic for API call
 	maxRetries := 3

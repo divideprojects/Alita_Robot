@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -27,7 +28,7 @@ const (
 )
 
 var (
-	tgAdminList            = []int64{groupAnonymousBot}
+	tgAdminList            = []int64{groupAnonymousBot, tgUserId}
 	anonChatMapExpirartion = 20 * time.Second
 )
 
@@ -81,6 +82,16 @@ func CheckDisabledCmd(bot *gotgbot.Bot, msg *gotgbot.Message, cmd string) bool {
 // Uses caching system to avoid repeated API calls and handles special Telegram admin accounts.
 // Returns true if the user is an admin, creator, or special Telegram account.
 func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
+	// Validate user ID - channel IDs and other invalid IDs should not be checked
+	// User IDs in Telegram are always positive, negative IDs are chat/channel IDs
+	if userId <= 0 {
+		log.WithFields(log.Fields{
+			"chatID": chatID,
+			"userID": userId,
+		}).Warning("IsUserAdmin: Invalid user ID (negative/zero) - likely a channel/chat ID, not a user ID")
+		return false
+	}
+
 	// Placing this first would not make additional queries if check is success!
 	if string_handling.FindInInt64Slice(tgAdminList, userId) {
 		return true
@@ -140,12 +151,26 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 
 		member, err := b.GetChatMember(chatID, userId, nil)
 		if err != nil {
-			log.WithFields(log.Fields{
-				"chatID":    chatID,
-				"userID":    userId,
-				"error":     err,
-				"errorType": fmt.Sprintf("%T", err),
-			}).Warning("IsUserAdmin: Direct GetChatMember also failed")
+			// Check for specific permission errors to avoid spam
+			errStr := err.Error()
+			if strings.Contains(errStr, "CHAT_ADMIN_REQUIRED") {
+				log.WithFields(log.Fields{
+					"chatID": chatID,
+					"userID": userId,
+				}).Debug("IsUserAdmin: Bot lacks admin rights for GetChatMember fallback")
+			} else if strings.Contains(errStr, "invalid user_id specified") {
+				log.WithFields(log.Fields{
+					"chatID": chatID,
+					"userID": userId,
+				}).Warning("IsUserAdmin: Invalid user ID provided to GetChatMember")
+			} else {
+				log.WithFields(log.Fields{
+					"chatID":    chatID,
+					"userID":    userId,
+					"error":     err,
+					"errorType": fmt.Sprintf("%T", err),
+				}).Warning("IsUserAdmin: Direct GetChatMember failed with unexpected error")
+			}
 			return false
 		}
 
