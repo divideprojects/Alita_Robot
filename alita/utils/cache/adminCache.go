@@ -25,20 +25,45 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.DefaultTimeout)
 	defer cancel()
 
-	adminList, err := b.GetChatAdministratorsWithContext(ctx, chatId, nil)
-	if err != nil {
-		log.WithFields(log.Fields{
-			"chatId": chatId,
-			"error":  err,
-		}).Error("LoadAdminCache: Failed to get chat administrators")
-		return AdminCache{}
+	// Retry logic for API call
+	maxRetries := 3
+	var adminList []gotgbot.ChatMember
+	var err error
+
+	for attempt := 0; attempt < maxRetries; attempt++ {
+		adminList, err = b.GetChatAdministratorsWithContext(ctx, chatId, nil)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"chatId":  chatId,
+				"error":   err,
+				"attempt": attempt + 1,
+			}).Warning("LoadAdminCache: Failed to get chat administrators, retrying...")
+
+			if attempt < maxRetries-1 {
+				time.Sleep(time.Duration(attempt+1) * time.Second) // Exponential backoff
+				continue
+			}
+
+			log.WithFields(log.Fields{
+				"chatId": chatId,
+				"error":  err,
+			}).Error("LoadAdminCache: Failed to get chat administrators after all retries")
+			return AdminCache{}
+		}
+		break // Success
 	}
 
 	if len(adminList) == 0 {
 		log.WithFields(log.Fields{
 			"chatId": chatId,
-		}).Warning("LoadAdminCache: No administrators found")
-		return AdminCache{}
+		}).Warning("LoadAdminCache: No administrators found - this is unusual for a valid group")
+		// Empty admin list is unusual but not necessarily an error
+		// Return empty cache but mark it as cached to avoid infinite retries
+		return AdminCache{
+			ChatId:   chatId,
+			UserInfo: []gotgbot.MergedChatMember{},
+			Cached:   true,
+		}
 	}
 
 	// Convert ChatMember to MergedChatMember

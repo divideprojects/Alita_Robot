@@ -108,10 +108,30 @@ func (m moduleStruct) demote(b *gotgbot.Bot, ctx *ext.Context) error {
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
 		return ext.EndGroups
 	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
+	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
 		return ext.EndGroups
 	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
+
+	// Validate admin cache before proceeding
+	adminsAvail, admins := cache.GetAdminCacheList(chat.Id)
+	if !adminsAvail {
+		admins = cache.LoadAdminCache(b, chat.Id)
+	}
+
+	// If we still can't get admin list, inform user and abort
+	if len(admins.UserInfo) == 0 {
+		text, _ := tr.GetString(strings.ToLower(m.moduleName) + "_errors_admin_cache_failed")
+		if text == "" {
+			text = "I'm having trouble accessing the admin list. Please try again later."
+		}
+		_, err := msg.Reply(b, text, nil)
+		if err != nil {
+			log.Error(err)
+		}
+		return ext.EndGroups
+	}
+
+	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
 		return ext.EndGroups
 	}
 	if !chat_status.CanUserPromote(b, ctx, nil, user.Id, false) {
@@ -239,10 +259,30 @@ func (m moduleStruct) promote(b *gotgbot.Bot, ctx *ext.Context) error {
 	if !chat_status.RequireGroup(b, ctx, nil, false) {
 		return ext.EndGroups
 	}
-	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
+	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
 		return ext.EndGroups
 	}
-	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
+
+	// Validate admin cache before proceeding
+	adminsAvail, admins := cache.GetAdminCacheList(chat.Id)
+	if !adminsAvail {
+		admins = cache.LoadAdminCache(b, chat.Id)
+	}
+
+	// If we still can't get admin list, inform user and abort
+	if len(admins.UserInfo) == 0 {
+		text, _ := tr.GetString(strings.ToLower(m.moduleName) + "_errors_admin_cache_failed")
+		if text == "" {
+			text = "I'm having trouble accessing the admin list. Please try again later."
+		}
+		_, err := msg.Reply(b, text, nil)
+		if err != nil {
+			log.Error(err)
+		}
+		return ext.EndGroups
+	}
+
+	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
 		return ext.EndGroups
 	}
 	if !chat_status.CanUserPromote(b, ctx, nil, user.Id, false) {

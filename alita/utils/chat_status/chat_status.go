@@ -130,6 +130,37 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 		}
 	}
 
+	// Fallback: If admin cache is empty but we know this is a group/supergroup,
+	// try a direct GetChatMember call as backup
+	if len(adminList.UserInfo) == 0 {
+		log.WithFields(log.Fields{
+			"chatID": chatID,
+			"userID": userId,
+		}).Debug("IsUserAdmin: Admin cache empty, trying direct GetChatMember fallback")
+
+		member, err := b.GetChatMember(chatID, userId, nil)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"chatID": chatID,
+				"userID": userId,
+				"error":  err,
+			}).Warning("IsUserAdmin: Direct GetChatMember also failed")
+			return false
+		}
+
+		status := member.GetStatus()
+		isAdmin := status == "administrator" || status == "creator"
+
+		log.WithFields(log.Fields{
+			"chatID":  chatID,
+			"userID":  userId,
+			"status":  status,
+			"isAdmin": isAdmin,
+		}).Debug("IsUserAdmin: Used fallback GetChatMember")
+
+		return isAdmin
+	}
+
 	return false
 }
 
@@ -799,8 +830,32 @@ func RequireUserAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, user
 		if !justCheck {
 			tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 			text, _ := tr.GetString("chat_status_user_admin_cmd_error")
+
+			// Try to send error message with retry and fallback
 			_, err := msg.Reply(b, text, nil)
-			error_handling.HandleErr(err)
+			if err != nil {
+				log.WithFields(log.Fields{
+					"chatId": chat.Id,
+					"userId": userId,
+					"error":  err,
+				}).Warning("RequireUserAdmin: Reply failed, trying SendMessage fallback")
+
+				// Fallback to SendMessage if Reply fails
+				_, fallbackErr := b.SendMessage(chat.Id, text, &gotgbot.SendMessageOpts{
+					ReplyParameters: &gotgbot.ReplyParameters{
+						MessageId:                msg.MessageId,
+						AllowSendingWithoutReply: true,
+					},
+				})
+				if fallbackErr != nil {
+					log.WithFields(log.Fields{
+						"chatId":        chat.Id,
+						"userId":        userId,
+						"replyError":    err,
+						"fallbackError": fallbackErr,
+					}).Error("RequireUserAdmin: Both Reply and SendMessage failed")
+				}
+			}
 		}
 		return false
 	}
