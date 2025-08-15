@@ -153,7 +153,7 @@ func (m *AutoRemediationManager) getApplicableActions(metrics SystemMetrics) []R
 	}
 
 	// Sort by severity (ascending - least severe first)
-	for i := range len(applicable)-1 {
+	for i := range len(applicable) - 1 {
 		for j := i + 1; j < len(applicable); j++ {
 			if applicable[i].Severity() > applicable[j].Severity() {
 				applicable[i], applicable[j] = applicable[j], applicable[i]
