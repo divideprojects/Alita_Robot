@@ -173,8 +173,13 @@ func IsBotAdmin(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat) bool {
 		if ctx.CallbackQuery != nil {
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
-		} else {
+		} else if ctx.Message != nil {
 			chat = &ctx.Message.Chat
+		} else if ctx.MyChatMember != nil {
+			chat = &ctx.MyChatMember.Chat
+		} else {
+			log.Error("IsBotAdmin: No chat information available in context")
+			return false
 		}
 	}
 
@@ -917,8 +922,13 @@ func RequirePrivate(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justCh
 		if ctx.CallbackQuery != nil {
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
-		} else {
+		} else if ctx.Message != nil {
 			chat = &ctx.Message.Chat
+		} else if ctx.MyChatMember != nil {
+			chat = &ctx.MyChatMember.Chat
+		} else {
+			log.Error("RequirePrivate: No chat information available in context")
+			return false
 		}
 	}
 	msg := ctx.EffectiveMessage
@@ -948,8 +958,13 @@ func RequireGroup(b *gotgbot.Bot, ctx *ext.Context, chat *gotgbot.Chat, justChec
 		if ctx.CallbackQuery != nil {
 			_chatValue := ctx.CallbackQuery.Message.GetChat()
 			chat = &_chatValue
-		} else {
+		} else if ctx.Message != nil {
 			chat = &ctx.Message.Chat
+		} else if ctx.MyChatMember != nil {
+			chat = &ctx.MyChatMember.Chat
+		} else {
+			log.Error("RequireGroup: No chat information available in context")
+			return false
 		}
 	}
 	msg := ctx.EffectiveMessage

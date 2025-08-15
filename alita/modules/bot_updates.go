@@ -67,7 +67,7 @@ func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 	msgAdmin := "\n\nMake me admin to use me with my full abilities!"
 
 	// used to check if bot was added as admin or not
-	if chat_status.IsBotAdmin(b, ctx, nil) {
+	if chat_status.IsBotAdmin(b, ctx, chat) {
 		msgAdmin = ""
 	}
 
