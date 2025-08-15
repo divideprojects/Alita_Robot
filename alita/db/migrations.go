@@ -547,16 +547,13 @@ func (m *MigrationRunner) verifyIndexes() error {
 
 	// Define expected indexes (table -> index_name -> columns)
 	expectedIndexes := map[string]map[string][]string{
-		"chat_users": {
-			"idx_chat_users_chat_user": {"chat_id", "user_id"},
-		},
 		"users": {
-			"idx_users_user_id": {"user_id"},
-			"idx_users_username": {"username"},
+			"idx_users_user_id":       {"user_id"},
+			"idx_users_username":      {"username"},
 			"idx_users_last_activity": {"last_activity"},
 		},
 		"chats": {
-			"idx_chats_chat_id": {"chat_id"},
+			"idx_chats_chat_id":       {"chat_id"},
 			"idx_chats_last_activity": {"last_activity"},
 		},
 		"chat_filters": {
@@ -570,7 +567,7 @@ func (m *MigrationRunner) verifyIndexes() error {
 			"idx_lock_settings_chat_lock": {"chat_id", "lock_type"},
 		},
 		"captcha_attempts": {
-			"idx_captcha_user_chat": {"user_id", "chat_id"},
+			"idx_captcha_user_chat":  {"user_id", "chat_id"},
 			"idx_captcha_expires_at": {"expires_at"},
 		},
 	}
@@ -583,8 +580,8 @@ func (m *MigrationRunner) verifyIndexes() error {
 		var tableExists bool
 		err := m.db.Raw(`
 			SELECT EXISTS (
-				SELECT FROM information_schema.tables 
-				WHERE table_schema = 'public' 
+				SELECT FROM information_schema.tables
+				WHERE table_schema = 'public'
 				AND table_name = ?
 			)
 		`, tableName).Scan(&tableExists).Error
@@ -601,23 +598,23 @@ func (m *MigrationRunner) verifyIndexes() error {
 		for indexName, expectedColumns := range tableIndexes {
 			// Check if index exists and has correct columns
 			type IndexInfo struct {
-				IndexName string
-				ColumnName string
+				IndexName       string
+				ColumnName      string
 				OrdinalPosition int
 			}
 
 			var indexColumns []IndexInfo
 			err := m.db.Raw(`
-				SELECT 
+				SELECT
 					i.relname as index_name,
 					a.attname as column_name,
 					array_position(ix.indkey, a.attnum) as ordinal_position
-				FROM 
+				FROM
 					pg_class t,
 					pg_class i,
 					pg_index ix,
 					pg_attribute a
-				WHERE 
+				WHERE
 					t.oid = ix.indrelid
 					and i.oid = ix.indexrelid
 					and a.attrelid = t.oid
@@ -647,7 +644,7 @@ func (m *MigrationRunner) verifyIndexes() error {
 
 			// Compare expected vs actual columns
 			if len(expectedColumns) != len(actualColumns) {
-				log.Warnf("[Migrations] Index %s on table %s has wrong number of columns: expected %v, got %v", 
+				log.Warnf("[Migrations] Index %s on table %s has wrong number of columns: expected %v, got %v",
 					indexName, tableName, expectedColumns, actualColumns)
 				missing++
 				continue
@@ -656,7 +653,7 @@ func (m *MigrationRunner) verifyIndexes() error {
 			mismatch := false
 			for i, expected := range expectedColumns {
 				if actualColumns[i] != expected {
-					log.Warnf("[Migrations] Index %s on table %s has wrong column at position %d: expected %s, got %s", 
+					log.Warnf("[Migrations] Index %s on table %s has wrong column at position %d: expected %s, got %s",
 						indexName, tableName, i+1, expected, actualColumns[i])
 					mismatch = true
 				}

@@ -136,8 +136,7 @@ type User struct {
 	CreatedAt    time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
 	UpdatedAt    time.Time `gorm:"column:updated_at" json:"updated_at,omitempty"`
 
-	// Relationships
-	Chats []Chat `gorm:"many2many:chat_users;" json:"-"`
+	// Note: Chat membership is managed via JSONB users field in chats table
 }
 
 // TableName returns the database table name for the User model.
@@ -158,8 +157,7 @@ type Chat struct {
 	CreatedAt    time.Time  `gorm:"column:created_at" json:"created_at,omitempty"`
 	UpdatedAt    time.Time  `gorm:"column:updated_at" json:"updated_at,omitempty"`
 
-	// Relationships
-	ChatUsers []User `gorm:"many2many:chat_users;" json:"-"`
+	// Note: User membership is managed via JSONB users field
 }
 
 // TableName returns the database table name for the Chat model.

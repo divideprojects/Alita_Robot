@@ -119,7 +119,7 @@ func executePrefetchQuery(userID, chatID int64, chatType string) (*PrefetchedCon
 
 	// Single complex query that gets user, chat, and admin status
 	query := `
-		SELECT 
+		SELECT
 			u.user_id,
 			u.username,
 			u.name,
@@ -127,20 +127,16 @@ func executePrefetchQuery(userID, chatID int64, chatType string) (*PrefetchedCon
 			c.chat_id,
 			c.chat_name,
 			c.language as chat_language,
-			CASE 
-				WHEN EXISTS(
-					SELECT 1 FROM chat_users cu 
-					WHERE cu.user_id = u.user_id 
-					AND cu.chat_id = c.chat_id
-				) THEN true 
-				ELSE false 
+			CASE
+				WHEN c.users IS NOT NULL AND c.users @> ?::jsonb THEN true
+				ELSE false
 			END as is_admin
 		FROM users u
 		CROSS JOIN chats c
 		WHERE u.user_id = ? AND c.chat_id = ?
 	`
 
-	err := DB.Raw(query, userID, chatID).Scan(&prefetchResult).Error
+	err := DB.Raw(query, fmt.Sprintf("[%d]", userID), userID, chatID).Scan(&prefetchResult).Error
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute prefetch query: %w", err)
 	}
