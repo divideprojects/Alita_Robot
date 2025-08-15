@@ -693,21 +693,37 @@ func handleCaptchaTimeout(bot *gotgbot.Bot, chatID, userID int64, messageID int6
 	}
 
 	// Send failure message with action taken and stored message info
-	actionText := "kicked"
-	switch action {
-	case "ban":
-		actionText = "banned"
-	case "mute":
-		actionText = "muted"
-	}
+	tr := i18n.MustNewTranslator(db.GetLanguage(&ext.Context{EffectiveChat: &gotgbot.Chat{Id: chatID}}))
 
 	var failureMsg string
 	if storedMsgCount > 0 {
-		failureMsg = fmt.Sprintf("❌ %s failed to complete captcha verification and has been %s.\n\n📝 %d message(s) were attempted but deleted due to incomplete verification.",
-			helpers.MentionHtml(userID, userName), actionText, storedMsgCount)
+		// Get the action-specific translation key
+		var actionKey string
+		switch action {
+		case "ban":
+			actionKey, _ = tr.GetString("captcha_action_banned")
+		case "mute":
+			actionKey, _ = tr.GetString("captcha_action_muted")
+		default:
+			actionKey, _ = tr.GetString("captcha_action_kicked")
+		}
+
+		template, _ := tr.GetString("captcha_timeout_with_messages")
+		failureMsg = fmt.Sprintf(template, helpers.MentionHtml(userID, userName), actionKey, storedMsgCount)
 	} else {
-		failureMsg = fmt.Sprintf("❌ %s failed to complete captcha verification and has been %s.",
-			helpers.MentionHtml(userID, userName), actionText)
+		// Use action-specific failure message
+		var msgKey string
+		switch action {
+		case "ban":
+			msgKey = "captcha_timeout_failure_banned"
+		case "mute":
+			msgKey = "captcha_timeout_failure_muted"
+		default:
+			msgKey = "captcha_timeout_failure_kicked"
+		}
+
+		template, _ := tr.GetString(msgKey)
+		failureMsg = fmt.Sprintf(template, helpers.MentionHtml(userID, userName))
 	}
 
 	// Send the failure message

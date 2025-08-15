@@ -1409,6 +1409,10 @@ captcha_action_kicked: "kicked"
 captcha_action_banned: "banned"
 captcha_action_muted: "muted permanently"
 captcha_refresh_success: "🔄 New captcha sent!"
+captcha_timeout_failure_kicked: "❌ %s failed to complete captcha verification and has been kicked."
+captcha_timeout_failure_banned: "❌ %s failed to complete captcha verification and has been banned."
+captcha_timeout_failure_muted: "❌ %s failed to complete captcha verification and has been muted."
+captcha_timeout_with_messages: "❌ %s failed to complete captcha verification and has been %s.\n\n📝 %d message(s) were attempted but deleted due to incomplete verification."
 captcha_refresh_time_remaining: |
   👋 Welcome %s!
 
