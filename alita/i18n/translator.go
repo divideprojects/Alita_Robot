@@ -305,7 +305,7 @@ func extractOrderedValues(params TranslationParams) []any {
 			// Single letter keys
 			"s", "d", "v", "f",
 		}
-		
+
 		for _, key := range commonKeys {
 			if value, exists := params[key]; exists {
 				values = append(values, value)
