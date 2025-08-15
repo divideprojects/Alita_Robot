@@ -20,7 +20,7 @@ repos:
     hooks:
       - id: go-fmt
         name: go fmt
-        entry: go fmt
+        entry: gofmt -l -w
         language: system
         types: [go]
         pass_filenames: true
