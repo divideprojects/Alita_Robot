@@ -23,7 +23,7 @@ func GetLanguage(ctx *ext.Context) string {
 		log.Warn("[GetLanguage] Unable to determine chat context, using default language")
 		return "en"
 	}
-	
+
 	if chat.Type == "private" {
 		user := ctx.EffectiveSender.User
 		if user == nil {
