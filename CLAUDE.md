@@ -292,6 +292,14 @@ The project uses GoReleaser for multi-platform builds:
 - **Pattern**: Use `settings.Timeout` instead of `strconv.Itoa(settings.Timeout)` for %d
 - **Testing**: Always test with different languages to catch formatting errors
 
+### YAML Escape Sequences in Translation Files
+- **Issue**: Single-quoted strings in YAML preserve escape sequences literally (`\n` appears as text)
+- **Fix**: Use double quotes for strings containing escape sequences like `\n`, `\t`, `\"`
+- **Pattern**: Change `'Rules for <b>%s</b>:\n\n%s'` to `"Rules for <b>%s</b>:\n\n%s"`
+- **Root Cause**: YAML spec treats single quotes as literal strings, double quotes interpret escapes
+- **Testing**: Validate YAML parsing and verify escape sequences render correctly in bot messages
+- **Hybrid Parameter System**: The translation system supports both named parameters in code (`{"first": value}`) and positional formatters in YAML (`%s`) through intelligent mapping
+
 ### Complete Feature Implementation
 - **Issue**: Features mentioned in documentation may be partially implemented
 - **Solution**: Check for gaps between documented features and actual code
