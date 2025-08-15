@@ -25,10 +25,3 @@ func DeleteMessageWithErrorHandling(bot *gotgbot.Bot, chatId, messageId int64) e
 	}
 	return nil
 }
-
-func DeleteMessageQuietly(bot *gotgbot.Bot, chatId, messageId int64) {
-	err := DeleteMessageWithErrorHandling(bot, chatId, messageId)
-	if err != nil {
-		log.WithError(err).Debug("Non-critical delete failure")
-	}
-}
