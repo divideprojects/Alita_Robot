@@ -141,9 +141,10 @@ func IsUserAdmin(b *gotgbot.Bot, chatID, userId int64) bool {
 		member, err := b.GetChatMember(chatID, userId, nil)
 		if err != nil {
 			log.WithFields(log.Fields{
-				"chatID": chatID,
-				"userID": userId,
-				"error":  err,
+				"chatID":    chatID,
+				"userID":    userId,
+				"error":     err,
+				"errorType": fmt.Sprintf("%T", err),
 			}).Warning("IsUserAdmin: Direct GetChatMember also failed")
 			return false
 		}

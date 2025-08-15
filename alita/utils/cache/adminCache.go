@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -25,6 +26,22 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.DefaultTimeout)
 	defer cancel()
 
+	// First, check if bot itself is admin to diagnose permission issues
+	botMember, botErr := b.GetChatMemberWithContext(ctx, chatId, b.Id, nil)
+	if botErr != nil {
+		log.WithFields(log.Fields{
+			"chatId": chatId,
+			"botId":  b.Id,
+			"error":  botErr,
+		}).Warning("LoadAdminCache: Could not verify bot admin status")
+	} else {
+		log.WithFields(log.Fields{
+			"chatId":    chatId,
+			"botId":     b.Id,
+			"botStatus": botMember.GetStatus(),
+		}).Debug("LoadAdminCache: Bot status check")
+	}
+
 	// Retry logic for API call
 	maxRetries := 3
 	var adminList []gotgbot.ChatMember
@@ -34,9 +51,10 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 		adminList, err = b.GetChatAdministratorsWithContext(ctx, chatId, nil)
 		if err != nil {
 			log.WithFields(log.Fields{
-				"chatId":  chatId,
-				"error":   err,
-				"attempt": attempt + 1,
+				"chatId":    chatId,
+				"error":     err,
+				"attempt":   attempt + 1,
+				"errorType": fmt.Sprintf("%T", err),
 			}).Warning("LoadAdminCache: Failed to get chat administrators, retrying...")
 
 			if attempt < maxRetries-1 {
