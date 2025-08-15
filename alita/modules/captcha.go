@@ -585,13 +585,13 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 		if settings.CaptchaMode == "math" {
 			text, _ := tr.GetString("captcha_welcome_math_image", i18n.TranslationParams{
 				"first":  helpers.MentionHtml(userID, userName),
-				"number": strconv.Itoa(settings.Timeout),
+				"number": settings.Timeout,
 			})
 			msgText = text
 		} else {
 			text, _ := tr.GetString("captcha_welcome_text_image", i18n.TranslationParams{
 				"first":  helpers.MentionHtml(userID, userName),
-				"number": strconv.Itoa(settings.Timeout),
+				"number": settings.Timeout,
 			})
 			msgText = text
 		}
@@ -600,7 +600,7 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 		text, _ := tr.GetString("captcha_welcome_math_text", i18n.TranslationParams{
 			"first":    helpers.MentionHtml(userID, userName),
 			"question": question,
-			"number":   strconv.Itoa(settings.Timeout),
+			"number":   settings.Timeout,
 		})
 		msgText = text
 	}
@@ -666,8 +666,65 @@ func SendCaptcha(bot *gotgbot.Bot, ctx *ext.Context, userID int64, userName stri
 
 // handleCaptchaTimeout handles when a user fails to complete captcha in time.
 func handleCaptchaTimeout(bot *gotgbot.Bot, chatID, userID int64, messageID int64, action string) {
+	// Get the attempt first to check for stored messages before deletion
+	attempt, _ := db.GetCaptchaAttempt(userID, chatID)
+	var storedMsgCount int64
+	if attempt != nil {
+		storedMsgCount, _ = db.CountStoredMessagesForAttempt(attempt.ID)
+		// Clean up stored messages
+		_ = db.DeleteStoredMessagesForAttempt(attempt.ID)
+	}
+
 	// Delete the captcha message
 	_, _ = bot.DeleteMessage(chatID, messageID, nil)
+
+	// Get user info for the failure message
+	member, err := bot.GetChatMember(chatID, userID, nil)
+	var userName string
+	if err == nil {
+		user := member.GetUser()
+		if user.FirstName != "" {
+			userName = user.FirstName
+		} else {
+			userName = "User"
+		}
+	} else {
+		userName = "User"
+	}
+
+	// Send failure message with action taken and stored message info
+	actionText := "kicked"
+	switch action {
+	case "ban":
+		actionText = "banned"
+	case "mute":
+		actionText = "muted"
+	}
+
+	var failureMsg string
+	if storedMsgCount > 0 {
+		failureMsg = fmt.Sprintf("❌ %s failed to complete captcha verification and has been %s.\n\n📝 %d message(s) were attempted but deleted due to incomplete verification.",
+			helpers.MentionHtml(userID, userName), actionText, storedMsgCount)
+	} else {
+		failureMsg = fmt.Sprintf("❌ %s failed to complete captcha verification and has been %s.",
+			helpers.MentionHtml(userID, userName), actionText)
+	}
+
+	// Send the failure message
+	sent, err := bot.SendMessage(chatID, failureMsg, &gotgbot.SendMessageOpts{ParseMode: helpers.HTML})
+	if err != nil {
+		log.Errorf("Failed to send captcha failure message: %v", err)
+	}
+
+	// Delete the failure message after 10 seconds
+	if sent != nil {
+		go func() {
+			timer := time.NewTimer(10 * time.Second)
+			defer timer.Stop()
+			<-timer.C
+			_, _ = bot.DeleteMessage(chatID, sent.MessageId, nil)
+		}()
+	}
 
 	// Delete the attempt from database
 	_ = db.DeleteCaptchaAttempt(userID, chatID)
@@ -784,6 +841,9 @@ func (moduleStruct) captchaVerifyCallback(bot *gotgbot.Bot, ctx *ext.Context) er
 			_, err = query.Answer(bot, &gotgbot.AnswerCallbackQueryOpts{Text: text})
 			return err
 		}
+
+		// Clean up stored messages
+		_ = db.DeleteStoredMessagesForAttempt(attempt.ID)
 
 		// Delete the captcha message
 		_, _ = bot.DeleteMessage(chat.Id, attempt.MessageID, nil)
@@ -1030,9 +1090,96 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	return err
 }
 
+// handlePendingCaptchaMessage intercepts messages from users with pending captcha verification.
+// Stores their messages and deletes them to prevent spam while they complete verification.
+func (moduleStruct) handlePendingCaptchaMessage(bot *gotgbot.Bot, ctx *ext.Context) error {
+	msg := ctx.EffectiveMessage
+	chat := ctx.EffectiveChat
+	user := ctx.EffectiveSender.User
+
+	// Skip if this is not a group chat
+	if chat.Type != "group" && chat.Type != "supergroup" {
+		return ext.ContinueGroups
+	}
+
+	// Skip if user is an admin
+	if chat_status.IsUserAdmin(bot, chat.Id, user.Id) {
+		return ext.ContinueGroups
+	}
+
+	// Check if user has a pending captcha attempt
+	attempt, err := db.GetCaptchaAttempt(user.Id, chat.Id)
+	if err != nil {
+		log.Errorf("Failed to check captcha attempt for user %d: %v", user.Id, err)
+		return ext.ContinueGroups
+	}
+
+	// If no pending captcha, continue normal processing
+	if attempt == nil {
+		return ext.ContinueGroups
+	}
+
+	// Store the message content based on type
+	var messageType int
+	var content, fileID, caption string
+
+	switch {
+	case msg.Text != "":
+		messageType = db.TEXT
+		content = msg.Text
+	case msg.Sticker != nil:
+		messageType = db.STICKER
+		fileID = msg.Sticker.FileId
+	case msg.Document != nil:
+		messageType = db.DOCUMENT
+		fileID = msg.Document.FileId
+		caption = msg.Caption
+	case msg.Photo != nil:
+		messageType = db.PHOTO
+		if len(msg.Photo) > 0 {
+			fileID = msg.Photo[len(msg.Photo)-1].FileId // Get highest resolution
+		}
+		caption = msg.Caption
+	case msg.Audio != nil:
+		messageType = db.AUDIO
+		fileID = msg.Audio.FileId
+		caption = msg.Caption
+	case msg.Voice != nil:
+		messageType = db.VOICE
+		fileID = msg.Voice.FileId
+		caption = msg.Caption
+	case msg.Video != nil:
+		messageType = db.VIDEO
+		fileID = msg.Video.FileId
+		caption = msg.Caption
+	case msg.VideoNote != nil:
+		messageType = db.VideoNote
+		fileID = msg.VideoNote.FileId
+	default:
+		// Unknown message type, skip storing but still delete
+		messageType = db.TEXT
+		content = "[Unsupported message type]"
+	}
+
+	// Store the message
+	err = db.StoreMessageForCaptcha(user.Id, chat.Id, attempt.ID, messageType, content, fileID, caption)
+	if err != nil {
+		log.Errorf("Failed to store message for user %d with pending captcha: %v", user.Id, err)
+	}
+
+	// Delete the message to prevent spam
+	_, _ = bot.DeleteMessage(chat.Id, msg.MessageId, nil)
+
+	// End processing - don't let this message continue through other handlers
+	return ext.EndGroups
+}
+
 // LoadCaptcha registers all captcha module handlers with the dispatcher.
 func LoadCaptcha(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store(captchaModule.moduleName, true)
+
+	// Message handler for users with pending captcha (high priority to intercept early)
+	dispatcher.AddHandlerToGroup(handlers.NewMessage(nil, captchaModule.handlePendingCaptchaMessage), -10)
 
 	// Commands
 	dispatcher.AddHandler(handlers.NewCommand("captcha", captchaModule.captchaCommand))

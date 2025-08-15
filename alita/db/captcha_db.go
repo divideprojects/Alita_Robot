@@ -296,3 +296,93 @@ func UpdateCaptchaAttemptOnRefreshByID(attemptID uint, newAnswer string, newMess
 	}
 	return attempt, nil
 }
+
+// StoreMessageForCaptcha stores a message sent by a user before captcha completion.
+// This allows the bot to track what users were trying to send before verification.
+func StoreMessageForCaptcha(userID, chatID int64, attemptID uint, messageType int, content, fileID, caption string) error {
+	storedMsg := &StoredMessages{
+		UserID:      userID,
+		ChatID:      chatID,
+		AttemptID:   attemptID,
+		MessageType: messageType,
+		Content:     content,
+		FileID:      fileID,
+		Caption:     caption,
+	}
+
+	err := DB.Create(storedMsg).Error
+	if err != nil {
+		log.Errorf("[Database][StoreMessageForCaptcha]: %v", err)
+		return err
+	}
+
+	return nil
+}
+
+// GetStoredMessagesForAttempt retrieves all stored messages for a specific captcha attempt.
+// Used to show what the user tried to send before verification.
+func GetStoredMessagesForAttempt(attemptID uint) ([]*StoredMessages, error) {
+	var messages []*StoredMessages
+	err := DB.Where("attempt_id = ?", attemptID).Order("created_at ASC").Find(&messages).Error
+	if err != nil {
+		log.Errorf("[Database][GetStoredMessagesForAttempt]: %v", err)
+		return nil, err
+	}
+	return messages, nil
+}
+
+// GetStoredMessagesForUser retrieves all stored messages for a user in a chat.
+// Used to get all pending messages when the user completes captcha.
+func GetStoredMessagesForUser(userID, chatID int64) ([]*StoredMessages, error) {
+	var messages []*StoredMessages
+	err := DB.Where("user_id = ? AND chat_id = ?", userID, chatID).Order("created_at ASC").Find(&messages).Error
+	if err != nil {
+		log.Errorf("[Database][GetStoredMessagesForUser]: %v", err)
+		return nil, err
+	}
+	return messages, nil
+}
+
+// DeleteStoredMessagesForAttempt removes all stored messages for a specific captcha attempt.
+// Called when captcha is completed successfully or when user is kicked/banned.
+func DeleteStoredMessagesForAttempt(attemptID uint) error {
+	result := DB.Where("attempt_id = ?", attemptID).Delete(&StoredMessages{})
+	if result.Error != nil {
+		log.Errorf("[Database][DeleteStoredMessagesForAttempt]: %v", result.Error)
+		return result.Error
+	}
+
+	if result.RowsAffected > 0 {
+		log.Debugf("[Database][DeleteStoredMessagesForAttempt]: Deleted %d stored messages for attempt %d", result.RowsAffected, attemptID)
+	}
+
+	return nil
+}
+
+// DeleteStoredMessagesForUser removes all stored messages for a user in a chat.
+// Alternative cleanup method when cleaning up by user instead of attempt.
+func DeleteStoredMessagesForUser(userID, chatID int64) error {
+	result := DB.Where("user_id = ? AND chat_id = ?", userID, chatID).Delete(&StoredMessages{})
+	if result.Error != nil {
+		log.Errorf("[Database][DeleteStoredMessagesForUser]: %v", result.Error)
+		return result.Error
+	}
+
+	if result.RowsAffected > 0 {
+		log.Debugf("[Database][DeleteStoredMessagesForUser]: Deleted %d stored messages for user %d in chat %d", result.RowsAffected, userID, chatID)
+	}
+
+	return nil
+}
+
+// CountStoredMessagesForAttempt returns the number of stored messages for a captcha attempt.
+// Used to show summary information in timeout/failure messages.
+func CountStoredMessagesForAttempt(attemptID uint) (int64, error) {
+	var count int64
+	err := DB.Model(&StoredMessages{}).Where("attempt_id = ?", attemptID).Count(&count).Error
+	if err != nil {
+		log.Errorf("[Database][CountStoredMessagesForAttempt]: %v", err)
+		return 0, err
+	}
+	return count, nil
+}

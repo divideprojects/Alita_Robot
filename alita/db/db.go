@@ -610,6 +610,25 @@ func (CaptchaAttempts) TableName() string {
 	return "captcha_attempts"
 }
 
+// StoredMessages represents messages sent by users before completing captcha verification
+type StoredMessages struct {
+	ID          uint      `gorm:"primaryKey;autoIncrement" json:"-"`
+	UserID      int64     `gorm:"column:user_id;not null;index:idx_stored_user_chat" json:"user_id,omitempty"`
+	ChatID      int64     `gorm:"column:chat_id;not null;index:idx_stored_user_chat" json:"chat_id,omitempty"`
+	MessageType int       `gorm:"column:message_type;not null;default:1" json:"message_type,omitempty"` // TEXT, STICKER, etc.
+	Content     string    `gorm:"column:content;type:text" json:"content,omitempty"`
+	FileID      string    `gorm:"column:file_id" json:"file_id,omitempty"`                // For media messages
+	Caption     string    `gorm:"column:caption;type:text" json:"caption,omitempty"`      // For media captions
+	AttemptID   uint      `gorm:"column:attempt_id;not null" json:"attempt_id,omitempty"` // Foreign key to CaptchaAttempts
+	CreatedAt   time.Time `gorm:"column:created_at" json:"created_at,omitempty"`
+}
+
+// TableName returns the database table name for the StoredMessages model.
+// This method overrides GORM's default table naming convention.
+func (StoredMessages) TableName() string {
+	return "stored_messages"
+}
+
 // Database instance
 var DB *gorm.DB
 
