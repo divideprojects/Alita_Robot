@@ -1032,7 +1032,7 @@ help_config_private_only: La configuración solo funciona en privado
 
 # Rules/helpers module strings
 rules_not_set: ¡Este chat no tiene reglas!
-rules_for_chat: 'Reglas para <b>%s</b>:\n\n%s'
+rules_for_chat: "Reglas para <b>%s</b>:\n\n%s"
 
 # Filters module strings
 filters_invalid: ¡Filtro Inválido!
@@ -1056,7 +1056,7 @@ mute_reply_to_dmute: ¡Necesitas responder a un mensaje para eliminarlo y silenc
 bot_updates_need_admin: ¡Necesitas ser administrador para hacer esto!
 
 # Rules module strings
-rules_need_text: '¡Necesitas darme reglas para establecer!\nYa sea respondiendo a un mensaje para proporcionarlas con el comando.'
+rules_need_text: "¡Necesitas darme reglas para establecer!\nYa sea respondiendo a un mensaje para proporcionarlas con el comando."
 
 # Notes module strings
 notes_invalid: ¡Nota Inválida!
@@ -1255,17 +1255,17 @@ misc_detected_translation: "<b>Idioma Detectado:</b> <code>%s</code>\n<b>Traducc
 misc_removing_keyboard: Eliminando el teclado del bot atascado...
 misc_total_messages: "Total de Mensajes en %s son: %d"
 misc_user_not_found: No pude encontrar información sobre este usuario.
-misc_channel_info_header: '<b>Información del Canal:</b>\n\nID: <code>%d</code>\n\nNombre del Canal: %s'
+misc_channel_info_header: "<b>Información del Canal:</b>\n\nID: <code>%d</code>\n\nNombre del Canal: %s"
 misc_username: "Nombre de usuario: @%s"
 misc_channel_link: "Enlace del canal: @%s"
-misc_user_info_header: '<b>Información del Usuario:</b>\n\nID: <code>%d</code>\n\nNombre: %s'
+misc_user_info_header: "<b>Información del Usuario:</b>\n\nID: <code>%d</code>\n\nNombre: %s"
 misc_owner_info: ¡Él es mi dueño!
 misc_dev_info: ¡Él es uno de mis usuarios desarrolladores!
 misc_translate_need_text: Necesito algo de texto y un código de idioma para traducir.
 misc_translate_no_text: El mensaje respondido no contiene texto para traducir.
 misc_translate_provide_text: Por favor proporciona algo de texto para traducir.
 misc_translate_read_error: Error de Lectura
-misc_translate_result: '<b>Idioma Detectado:</b> <code>%s</code>\n\n<b>Traducción:</b> <code>%s</code>'
+misc_translate_result: "<b>Idioma Detectado:</b> <code>%s</code>\n\n<b>Traducción:</b> <code>%s</code>"
 
 # Devs module strings
 devs_chat_info: "<b>Nombre:</b> %s\n<b>ID del Chat</b>: %d\n<b>Conteo de Usuarios:</b> %d\n<b>Enlace:</b> %s"
