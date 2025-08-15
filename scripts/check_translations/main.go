@@ -7,6 +7,7 @@ import (
 	"go/token"
 	"io/fs"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -122,8 +123,14 @@ func extractTranslationKeys(rootDir string) ([]TranslationKey, error) {
 func extractKeysFromFile(filePath string) ([]TranslationKey, error) {
 	var keys []TranslationKey
 
+	// Validate file path to prevent path traversal attacks
+	cleanPath := path.Clean(filePath)
+	if cleanPath != filePath || strings.Contains(filePath, "..") {
+		return nil, fmt.Errorf("potentially unsafe file path: %s", filePath)
+	}
+
 	// Read file content
-	content, err := os.ReadFile(filePath)
+	content, err := os.ReadFile(filePath) // #nosec G304 - path validation performed above
 	if err != nil {
 		return nil, err
 	}
@@ -233,7 +240,21 @@ func loadLocaleFiles(localesDir string) (map[string]map[string]interface{}, erro
 		}
 
 		filePath := filepath.Join(localesDir, filename)
-		data, err := os.ReadFile(filePath)
+
+		// Validate file path to prevent path traversal attacks
+		cleanPath := path.Clean(filePath)
+		if cleanPath != filePath || strings.Contains(filePath, "..") {
+			fmt.Printf("  ⚠️  Warning: Potentially unsafe file path %s, skipping\n", filename)
+			continue
+		}
+
+		// Additional check: ensure the file is still within the locales directory
+		if !strings.HasPrefix(filePath, localesDir) {
+			fmt.Printf("  ⚠️  Warning: File path %s is outside locales directory, skipping\n", filename)
+			continue
+		}
+
+		data, err := os.ReadFile(filePath) // #nosec G304 - path validation performed above
 		if err != nil {
 			fmt.Printf("  ⚠️  Warning: Could not read %s: %v\n", filename, err)
 			continue
