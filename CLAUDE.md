@@ -189,7 +189,7 @@ Required environment variables (see sample.env):
 # Core
 BOT_TOKEN          # Telegram bot token from @BotFather
 DATABASE_URL       # PostgreSQL connection string
-REDIS_ADDRESS      # Redis server address  
+REDIS_ADDRESS      # Redis server address
 MESSAGE_DUMP       # Log channel ID (must start with -100)
 OWNER_ID           # Your Telegram user ID
 
@@ -283,3 +283,43 @@ The project uses GoReleaser for multi-platform builds:
 - Worker pools should implement panic recovery and rate limiting
 - Cache invalidation must be handled explicitly when data changes
 - Performance monitoring is automatic in production (DEBUG=false)
+
+## Development Lessons Learned
+
+### Type Safety in Internationalization (i18n)
+- **Issue**: Printf-style formatters (%d, %s) must receive correct data types
+- **Fix**: Pass integers directly to %d formatters, not string conversions
+- **Pattern**: Use `settings.Timeout` instead of `strconv.Itoa(settings.Timeout)` for %d
+- **Testing**: Always test with different languages to catch formatting errors
+
+### Complete Feature Implementation
+- **Issue**: Features mentioned in documentation may be partially implemented
+- **Solution**: Check for gaps between documented features and actual code
+- **Pattern**: When adding user-facing features, implement the full UX flow:
+  1. Core functionality
+  2. Error handling and user feedback
+  3. Cleanup and resource management
+  4. Internationalization support
+
+### Database Design for Message Storage
+- **Pattern**: Use surrogate keys (auto-increment ID) as primary keys
+- **Foreign Keys**: Always include proper foreign key relationships with CASCADE DELETE
+- **Indexing**: Add composite indexes for frequent query patterns (user_id, chat_id)
+- **Migration Strategy**: Use descriptive timestamps and meaningful migration names
+
+### Message Handler Priority and Interception
+- **Critical**: Use negative group numbers (-10) for handlers that need to intercept early
+- **Pattern**: Handlers that prevent further processing should return `ext.EndGroups`
+- **Safety**: Always check user permissions and attempt existence before processing
+
+### Internationalization Best Practices
+- **Consistency**: Use the same parameter passing style across all translations
+- **Coverage**: Add translations for ALL user-facing strings, not just core features
+- **Languages**: Maintain feature parity across all supported locales
+- **Testing**: Verify translation keys exist before using them in production
+
+### Error Handling and User Feedback
+- **Transparency**: Always inform users about actions taken by the bot
+- **Context**: Include relevant details (attempt counts, time remaining, etc.)
+- **Cleanup**: Properly clean up resources and temporary data on both success and failure
+- **Timeouts**: Use temporary messages that auto-delete to keep chats clean
