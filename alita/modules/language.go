@@ -79,14 +79,14 @@ func (m moduleStruct) changeLanguage(b *gotgbot.Bot, ctx *ext.Context) error {
 // Updates user or group language preferences based on admin permissions and context.
 func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.CallbackQuery
-	chat := query.Message.GetChat()
+	chat := ctx.EffectiveChat
 	user := query.From
 
 	var replyString string
 	language := strings.Split(query.Data, ".")[1]
 
 	tr := i18n.MustNewTranslator(language)
-	if ctx.Message.Chat.Type == "private" {
+	if chat.Type == "private" {
 		go db.ChangeUserLanguage(user.Id, language)
 		replyString, _ = tr.GetString("language_changed_user", i18n.TranslationParams{"s": helpers.GetLangFormat(language)})
 	} else {
