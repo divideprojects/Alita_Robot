@@ -63,9 +63,7 @@ type Config struct {
 	EnableBackgroundStats       bool
 	DispatcherMaxRoutines       int `validate:"min=1,max=1000"` // Max concurrent goroutines for dispatcher
 
-	// Cache configuration
-	CacheNumCounters int64 `validate:"min=1000,max=1000000"`  // Ristretto NumCounters
-	CacheMaxCost     int64 `validate:"min=100,max=100000000"` // Ristretto MaxCost
+	// Cache configuration - Redis only (no local cache configuration needed)
 
 	// Activity monitoring configuration
 	InactivityThresholdDays int  `validate:"min=1,max=365"` // Days before marking a chat as inactive
@@ -140,9 +138,7 @@ var (
 	EnableBackgroundStats       bool
 	DispatcherMaxRoutines       int
 
-	// Cache configuration
-	CacheNumCounters int64
-	CacheMaxCost     int64
+	// Cache configuration - Redis only (no local cache configuration needed)
 
 	// Activity monitoring configuration
 	InactivityThresholdDays int
@@ -224,13 +220,7 @@ func ValidateConfig(cfg *Config) error {
 		return fmt.Errorf("STATS_COLLECTION_WORKERS must be between 1 and 10")
 	}
 
-	// Validate cache configuration
-	if cfg.CacheNumCounters != 0 && (cfg.CacheNumCounters < 1000 || cfg.CacheNumCounters > 1000000) {
-		return fmt.Errorf("CACHE_NUM_COUNTERS must be between 1000 and 1000000")
-	}
-	if cfg.CacheMaxCost != 0 && (cfg.CacheMaxCost < 100 || cfg.CacheMaxCost > 100000000) {
-		return fmt.Errorf("CACHE_MAX_COST must be between 100 and 100000000")
-	}
+	// Cache validation removed - using Redis only
 
 	// Validate performance limits
 	if cfg.MaxConcurrentOperations <= 0 || cfg.MaxConcurrentOperations > 1000 {
@@ -314,9 +304,7 @@ func LoadConfig() (*Config, error) {
 		EnableBackgroundStats:       typeConvertor{str: os.Getenv("ENABLE_BACKGROUND_STATS")}.Bool(),
 		DispatcherMaxRoutines:       typeConvertor{str: os.Getenv("DISPATCHER_MAX_ROUTINES")}.Int(),
 
-		// Cache configuration
-		CacheNumCounters: typeConvertor{str: os.Getenv("CACHE_NUM_COUNTERS")}.Int64(),
-		CacheMaxCost:     typeConvertor{str: os.Getenv("CACHE_MAX_COST")}.Int64(),
+		// Cache configuration - Redis only (no environment variables needed)
 
 		// Activity monitoring configuration
 		InactivityThresholdDays: typeConvertor{str: os.Getenv("INACTIVITY_THRESHOLD_DAYS")}.Int(),
@@ -429,12 +417,7 @@ func (cfg *Config) setDefaults() {
 	}
 
 	// Set cache defaults (optimized values for better performance)
-	if cfg.CacheNumCounters == 0 {
-		cfg.CacheNumCounters = 100000 // 100x more counters for maximum performance
-	}
-	if cfg.CacheMaxCost == 0 {
-		cfg.CacheMaxCost = 1000000 // 1000x larger cache for maximum hit rates
-	}
+	// Cache defaults removed - using Redis only
 
 	// Set activity monitoring defaults
 	if cfg.InactivityThresholdDays == 0 {
@@ -592,8 +575,7 @@ func init() {
 	EnablePerformanceMonitoring = cfg.EnablePerformanceMonitoring
 	EnableBackgroundStats = cfg.EnableBackgroundStats
 	DispatcherMaxRoutines = cfg.DispatcherMaxRoutines
-	CacheNumCounters = cfg.CacheNumCounters
-	CacheMaxCost = cfg.CacheMaxCost
+	// Cache config removed - using Redis only
 	InactivityThresholdDays = cfg.InactivityThresholdDays
 	ActivityCheckInterval = cfg.ActivityCheckInterval
 	EnableAutoCleanup = &cfg.EnableAutoCleanup

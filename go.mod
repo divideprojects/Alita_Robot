@@ -6,11 +6,9 @@ require (
 	github.com/PaulSonOfLars/gotg_md2html v0.0.0-20240605215313-a6fdd2445f54
 	github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.33
 	github.com/cloudflare/ahocorasick v0.0.0-20240916140611-054963ec9396
-	github.com/dgraph-io/ristretto v0.2.0
 	github.com/dustin/go-humanize v1.0.1
 	github.com/eko/gocache/lib/v4 v4.2.0
 	github.com/eko/gocache/store/redis/v4 v4.2.2
-	github.com/eko/gocache/store/ristretto/v4 v4.2.2
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/mojocn/base64Captcha v1.3.8
@@ -45,7 +43,6 @@ require (
 	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.65.0 // indirect
 	github.com/prometheus/procfs v0.17.0 // indirect

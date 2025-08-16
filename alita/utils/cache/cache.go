@@ -5,19 +5,17 @@ import (
 	"fmt"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
-	"github.com/dgraph-io/ristretto"
 	"github.com/divideprojects/Alita_Robot/alita/config"
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/marshaler"
 	redis_store "github.com/eko/gocache/store/redis/v4"
-	ristretto_store "github.com/eko/gocache/store/ristretto/v4"
 	"github.com/redis/go-redis/v9"
 )
 
 var (
 	Context = context.Background()
 	Marshal *marshaler.Marshaler
-	Manager *cache.ChainCache[any]
+	Manager *cache.Cache[any]
 )
 
 type AdminCache struct {
@@ -26,8 +24,8 @@ type AdminCache struct {
 	Cached   bool
 }
 
-// InitCache initializes the dual-layer cache system with Ristretto (L1) and Redis (L2).
-// It establishes connections to both cache stores and returns an error if initialization fails.
+// InitCache initializes the Redis-only cache system.
+// It establishes connection to Redis and returns an error if initialization fails.
 func InitCache() error {
 	// Test Redis connection first
 	redisClient := redis.NewClient(&redis.Options{
@@ -41,20 +39,9 @@ func InitCache() error {
 		return fmt.Errorf("failed to connect to Redis: %w", err)
 	}
 
-	// Initialize Ristretto cache with configurable values
-	ristrettoCache, err := ristretto.NewCache(&ristretto.Config{
-		NumCounters: config.CacheNumCounters,
-		MaxCost:     config.CacheMaxCost,
-		BufferItems: 64, // Keep buffer items fixed for stability
-	})
-	if err != nil {
-		return fmt.Errorf("failed to initialize Ristretto cache: %w", err)
-	}
-
-	// initialize cache manager
+	// Initialize cache manager with Redis only
 	redisStore := redis_store.NewRedis(redisClient)
-	ristrettoStore := ristretto_store.NewRistretto(ristrettoCache)
-	cacheManager := cache.NewChain(cache.New[any](ristrettoStore), cache.New[any](redisStore))
+	cacheManager := cache.New[any](redisStore)
 
 	// Initializes marshaler
 	Marshal = marshaler.New(cacheManager)

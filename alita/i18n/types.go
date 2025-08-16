@@ -27,7 +27,7 @@ type LocaleManager struct {
 	mu          sync.RWMutex
 	viperCache  map[string]*viper.Viper // Pre-compiled viper instances
 	localeData  map[string][]byte       // Raw YAML data
-	cacheClient *cache.ChainCache[any]  // External cache for translations
+	cacheClient *cache.Cache[any]       // External cache for translations
 	defaultLang string
 	localeFS    *embed.FS
 	localePath  string
