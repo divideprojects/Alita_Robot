@@ -81,8 +81,9 @@ func ChangeUserLanguage(UserID int64, lang string) {
 			log.Errorf("[Database] ChangeUserLanguage (create): %v - %d", err, UserID)
 			return
 		}
-		// Invalidate cache after create
+		// Invalidate both language cache and optimized query cache after create
 		deleteCache(userLanguageCacheKey(UserID))
+		deleteCache(userCacheKey(UserID))
 		log.Infof("[Database] ChangeUserLanguage: created new user %d with language %s", UserID, lang)
 		return
 	} else if userc.Language == lang {
@@ -94,8 +95,9 @@ func ChangeUserLanguage(UserID int64, lang string) {
 		log.Errorf("[Database] ChangeUserLanguage: %v - %d", err, UserID)
 		return
 	}
-	// Invalidate cache after update
+	// Invalidate both language cache and optimized query cache after update
 	deleteCache(userLanguageCacheKey(UserID))
+	deleteCache(userCacheKey(UserID))
 	log.Infof("[Database] ChangeUserLanguage: %d", UserID)
 }
 
@@ -118,9 +120,10 @@ func ChangeGroupLanguage(GroupID int64, lang string) {
 			log.Errorf("[Database] ChangeGroupLanguage (create): %v - %d", err, GroupID)
 			return
 		}
-		// Invalidate caches after create
+		// Invalidate all cache layers after create
 		deleteCache(chatLanguageCacheKey(GroupID))
 		deleteCache(chatSettingsCacheKey(GroupID))
+		deleteCache(chatCacheKey(GroupID))
 		log.Infof("[Database] ChangeGroupLanguage: created new chat %d with language %s", GroupID, lang)
 		return
 	} else if groupc.Language == lang {
@@ -132,8 +135,9 @@ func ChangeGroupLanguage(GroupID int64, lang string) {
 		log.Errorf("[Database] ChangeGroupLanguage: %v - %d", err, GroupID)
 		return
 	}
-	// Invalidate both caches after update
+	// Invalidate all cache layers after update
 	deleteCache(chatLanguageCacheKey(GroupID))
 	deleteCache(chatSettingsCacheKey(GroupID)) // Also invalidate chat settings cache since language is part of it
+	deleteCache(chatCacheKey(GroupID))
 	log.Infof("[Database] ChangeGroupLanguage: %d", GroupID)
 }
