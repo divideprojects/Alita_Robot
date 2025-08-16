@@ -55,7 +55,7 @@
 - **Permission System**: Granular permission control for admins
 - **Anti-Spam**: Configurable flood control and spam detection
 - **Blacklist**: Word and sticker filtering with pattern matching
-- **Approval System**: User approval workflow for restricted groups
+
 
 ### 💬 **Messaging & Content**
 - **Welcome/Goodbye**: Customizable greeting messages with variables
@@ -466,7 +466,7 @@ Alita_Robot/
    ```bash
    # macOS
    brew install go
-   
+
    # Linux
    wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
    sudo tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
@@ -500,7 +500,7 @@ Alita_Robot/
    - File cleanup (trailing whitespace, EOF)
 
 5. **Run Database Migrations**
-   
+
    Supabase is the source of truth for schema files (`supabase/migrations`). Migrations are applied to any PostgreSQL by auto-cleaning Supabase-specific statements at runtime.
 
    - Required environment variables for migrations:

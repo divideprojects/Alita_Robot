@@ -122,77 +122,6 @@ antiflood_setfloodmode_specify_action:
   el flood. Los modos actuales son: `ban`/`kick`/`mute`"
 antiflood_setfloodmode_success: El modo de flood se ha establecido en %s.
 antiflood_setfloodmode_unknown_type: "Tipo desconocido '%s'. Por favor usa uno de: ban/kick/mute"
-approvals_approval_is_admin: "{admin} es administrador, y no necesita aprobación."
-approvals_approval_is_approved: "{user} es un Usuario aprobado en <b>{chat}</b>
-
-  Es ignorado de auto-bans, listas negras, bloqueos y antiflood.
-
-
-  <b>Aprobado por:</b> {approvedBy} (<code>{approvedById}</code>)
-
-  <b>Hora de aprobación:</b> {approvedTime} UTC"
-approvals_approval_is_bot_itself: Soy administrador y no necesito aprobación.
-approvals_approval_is_unapproved: "No estás aprobado en <b>{value}</b>
-
-  Serás notificado para auto-bans, listas negras, bloqueos y antiflood."
-approvals_approve_is_bot_itself: ¡Ya me has aprobado haciéndome administrador!
-approvals_approve_user_approved: "Usuario {user} aprobado exitosamente
-
-  De ahora en adelante, será ignorado de auto-bans, listas negras, bloqueos y antiflood."
-approvals_approve_user_not_in_chat: Este usuario no está en este chat, ¿cómo puedo aprobarlo?
-approvals_approved_approved_list:
-  "Estos usuarios están aprobados en <b>{first}:</b>
-
-  {admin}
-
-
-  Para obtener más información sobre cada usuario como Aprobado por y Hora de aprobación, usa
-  /approval (id de usuario)."
-approvals_approved_none_approved: ¡No hay usuarios aprobados en <b>{user}</b>!
-approvals_help_msg:
-  "A veces, podrías confiar en que un usuario no envíe contenido no deseado.
-
-  Quizás no lo suficiente para hacerlo administrador, pero podrías estar de acuerdo con que los bloqueos, listas negras,
-  y antiflood no se apliquen a ellos.
-
-  Para eso son las aprobaciones - aprobar usuarios confiables para permitirles enviar
-
-
-  *Comandos de usuario:*
-
-  × /approval: Verificar el estado de aprobación de un usuario en este chat.
-
-
-  *Comandos de Administrador:*
-
-  × /approve: Aprobar a un usuario. Los bloqueos, listas negras y antiflood ya no se aplicarán
-  a ellos.
-
-  × /unapprove: Desaprobar a un usuario. Ahora estarán sujetos a bloqueos, listas negras,
-  y antiflood nuevamente.
-
-  × /approved: Listar todos los usuarios aprobados.
-
-
-  *Comandos del Propietario:*
-
-  × /unapproveall: Desaprobar a TODOS los usuarios en un chat. Esto no se puede deshacer."
-approvals_unapprove_all_ask:
-  ¿Estás seguro de que quieres eliminar todos los Usuarios Aprobados de
-  este chat?
-approvals_unapprove_all_button_handler_no:
-  Cancelada la eliminación de todos los Usuarios Aprobados de
-  este Chat ❌
-approvals_unapprove_all_button_handler_yes:
-  Eliminados todos los Usuarios Aprobados de este Chat
-  ✅
-approvals_unapprove_all_chat_creator_only:
-  Solo el Creador del Chat puede usar este comando
-  para desaprobar a todos los usuarios en este chat.
-approvals_unapprove_is_bot_itself: ¡Soy administrador, no puedo ser desaprobado!
-approvals_unapprove_user_unapproved: "Usuario desaprobado: {user}
-
-  De ahora en adelante, será notificado para auto-bans, listas negras, bloqueos y antiflood."
 bans_ban_ban_reason: <b>Razón:</b> %s
 bans_ban_dban_no_reply: ¡Necesitas responder a un mensaje para eliminarlo y banear al usuario!
 bans_ban_is_admin: ¿Por qué banearía a un administrador? Eso suena como una idea bastante tonta.
@@ -871,19 +800,6 @@ rules_help_msg:
   × /resetrulesbutton: Restablecer el texto del botón de reglas a predeterminado.
 
   × /resetrulesbtn: Igual que arriba."
-tagger_help_msg: |
-  Tagger es una función esencial para mencionar a todos los miembros suscritos en el grupo.
-  Cualquier miembro del chat puede suscribirse al tagger.
-
-  *Comandos de Usuario:*
-  × /tagme: Permitir al usuario ser etiquetado
-  × /untagme: No permitir al usuario ser etiquetado
-
-  *Comandos de Administrador:*
-  × /tagall: etiquetar/mencionar a todos los usuarios etiquetados
-  × /untagall: limpiar todos los miembros etiquetados
-  × /addtag <usuario>: Añadir un usuario manualmente a la lista de etiquetas
-  × /rmtag <usuario>: Eliminar un usuario manualmente de la lista de etiquetas
 utils_chat_status_anon_admin_btn: Confirma tu Identidad
 utils_chat_status_anon_admin_string: Parece que eres anónimo. Toca este botón
   para confirmar tu identidad.

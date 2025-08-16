@@ -50,20 +50,17 @@ admin_help_msg: "Make it easy to promote and demote users with the admin module!
   × /title `<reply/username/mention/userid>` `<custom title>`: Set custom title for
   user"
 admin_promote_admin_title_truncated: Admin title truncated to 16 characters from %d
-admin_promote_is_admin:
-  This person is already an admin, and how am I supposed
+admin_promote_is_admin: This person is already an admin, and how am I supposed
   to promote them?
 admin_promote_is_bot_itself: If only I could do this to myself ;_;
-admin_promote_is_owner:
-  This person created this chat, and how am I supposed
+admin_promote_is_owner: This person created this chat, and how am I supposed
   to promote them?
 admin_promote_success_promote: Successfully promoted %s!
 admin_title_is_admin:
   This person is already an admin, how can I set a custom admin
   title for them?
 admin_title_is_bot_itself: If only I could do this to myself ;_;
-admin_title_is_owner:
-  This person created this chat, and how am I supposed to
+admin_title_is_owner: This person created this chat, and how am I supposed to
   set an admin title for them?
 admin_title_success_set: Successfully set %s's admin title to <b>%s</b>
 antiflood_checkflood_perform_action:
@@ -122,78 +119,6 @@ antiflood_setfloodmode_specify_action:
   flooding. Current modes are: `ban`/`kick`/`mute`"
 antiflood_setfloodmode_success: Flood mode has been set to %s.
 antiflood_setfloodmode_unknown_type: "Unknown type '%s'. Please use one of: ban/kick/mute"
-approvals_approval_is_admin: "{admin} is an admin, and they don't need approval."
-approvals_approval_is_approved: "{user} is an approved User in <b>{chat}</b>
-
-  They are ignored from auto-bans, blacklists, locks, and antiflood.
-
-
-  <b>Approved By:</b> {approvedBy} (<code>{approvedById}</code>)
-
-  <b>Approved Time:</b> {approvedTime} UTC"
-approvals_approval_is_bot_itself: I'm an admin, and I don't need approval.
-approvals_approval_is_unapproved: "You are not approved in <b>{value}</b>
-
-  You will be noticed for auto-bans, blacklists, locks, and antiflood."
-approvals_approve_is_bot_itself: You have already approved me by making me an admin!
-approvals_approve_user_approved: "Successfully Approved User {user}
-
-  From now onwards, they will be ignored from auto-bans, blacklists, locks, and antiflood."
-approvals_approve_user_not_in_chat:
-  This user is not in this chat, how can I approve
-  them?
-approvals_approved_approved_list: "These users are approved in <b>{first}:</b>
-
-  {admin}
-
-
-  To get more information about each user such as Approved By and Approved Time, use
-  /approval (user id)."
-approvals_approved_none_approved: No users are approved in <b>{user}</b>!
-approvals_help_msg:
-  "Sometimes, you might trust a user not to send unwanted content.
-
-  Maybe not enough to make them admin, but you might be ok with locks, blacklists,
-  and antiflood not applying to them.
-
-  That's what approvals are for - approve of trustworthy users to allow them to send
-
-
-  *User commands:*
-
-  × /approval: Check a user's approval status in this chat.
-
-
-  *Admin Commands:*
-
-  × /approve: Approve of a user. Locks, blacklists, and antiflood won't apply to
-  them anymore.
-
-  × /unapprove: Unapprove of a user. They will now be subject to locks, blacklists,
-  and antiflood again.
-
-  × /approved: List all approved users.
-
-
-  *Owner Commands:*
-
-  × /unapproveall: Unapprove ALL users in a chat. This cannot be undone."
-approvals_unapprove_all_ask:
-  Are you sure you want to remove all Approved Users from
-  this chat?
-approvals_unapprove_all_button_handler_no:
-  Canceled removing all Approved Users from
-  this Chat ❌
-approvals_unapprove_all_button_handler_yes:
-  Removed all Approved Users from this Chat
-  ✅
-approvals_unapprove_all_chat_creator_only:
-  Only Chat Creator can use this command
-  to disapprove all users in this chat.
-approvals_unapprove_is_bot_itself: I'm an admin, I can't be unapproved!
-approvals_unapprove_user_unapproved: "Unapproved User: {user}
-
-  From now onwards, they will be noticed for auto-bans, blacklists, locks, and antiflood."
 bans_ban_ban_reason: <b>Reason:</b> %s
 bans_ban_dban_no_reply: You need to reply to a message to delete it and ban the user!
 bans_ban_is_admin: Why would I ban an admin? That sounds like a pretty dumb idea.
@@ -874,19 +799,6 @@ rules_help_msg:
   × /resetrulesbutton: Reset the text of the rules button to default.
 
   × /resetrulesbtn: Same as above."
-tagger_help_msg: |
-  Tagger is an essential feature to mention all subscribed members in the group.
-  Any chat members can subscribe to the tagger.
-
-  *User Commands:*
-  × /tagme: Allow user to be tagged
-  × /untagme: Disallow user to be tagged
-
-  *Admin Commands:*
-  × /tagall: tag/mention all tagged users
-  × /untagall: clear all tagged members
-  × /addtag <user>: Add a user manually to taglist
-  × /rmtag <user>: Remove a user manually from taglist
 utils_chat_status_anon_admin_btn: Confirm your Identity
 utils_chat_status_anon_admin_string:
   It looks like you're anonymous. Tap this button

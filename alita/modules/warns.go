@@ -764,6 +764,69 @@ func (moduleStruct) warnsButtonHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	return ext.EndGroups
 }
 
+// removeWarn handles /rmwarn and /unwarn commands to remove the latest warning
+// from a specific user. Requires bot and user admin permissions.
+func (moduleStruct) removeWarn(b *gotgbot.Bot, ctx *ext.Context) error {
+	msg := ctx.EffectiveMessage
+	chat := ctx.EffectiveChat
+	user := ctx.EffectiveSender.User
+	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
+
+	// Check permissions
+	if !chat_status.RequireGroup(b, ctx, nil, false) {
+		return ext.EndGroups
+	}
+	if !chat_status.RequireBotAdmin(b, ctx, nil, false) {
+		return ext.EndGroups
+	}
+	if !chat_status.RequireUserAdmin(b, ctx, nil, user.Id, false) {
+		return ext.EndGroups
+	}
+
+	userId := extraction.ExtractUser(b, ctx)
+	if userId == -1 {
+		return ext.EndGroups
+	} else if helpers.IsChannelID(userId) {
+		text, _ := tr.GetString("warns_anonymous_user_error")
+		_, err := msg.Reply(b, text, nil)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		return ext.EndGroups
+	} else if userId == 0 {
+		text, _ := tr.GetString("warns_no_user_specified")
+		_, err := msg.Reply(b, text, helpers.Shtml())
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		return ext.EndGroups
+	}
+
+	var replyText string
+	if db.RemoveWarn(userId, chat.Id) {
+		temp, _ := tr.GetString("warns_removed_success")
+		replyText = fmt.Sprintf(temp, helpers.MentionHtml(user.Id, user.FirstName))
+	} else {
+		// Prefer existing key; fallback to alternative if needed
+		replyText, _ = tr.GetString("warns_no_warns_existing")
+		if replyText == "" {
+			replyText, _ = tr.GetString("warns_no_warns_to_remove")
+			if replyText == "" {
+				replyText = "User already has no warns!"
+			}
+		}
+	}
+
+	_, err := msg.Reply(b, replyText, helpers.Shtml())
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return ext.EndGroups
+}
+
 // LoadWarns registers all warns module handlers with the dispatcher,
 // including warning commands and callback handlers.
 func LoadWarns(dispatcher *ext.Dispatcher) {
@@ -775,6 +838,9 @@ func LoadWarns(dispatcher *ext.Dispatcher) {
 	// Aliases for reset warnings (docs mention /resetwarn as well)
 	dispatcher.AddHandler(handlers.NewCommand("resetwarns", warnsModule.resetWarns))
 	dispatcher.AddHandler(handlers.NewCommand("resetwarn", warnsModule.resetWarns))
+	// Add commands to remove latest warn for a user
+	dispatcher.AddHandler(handlers.NewCommand("rmwarn", warnsModule.removeWarn))
+	dispatcher.AddHandler(handlers.NewCommand("unwarn", warnsModule.removeWarn))
 	dispatcher.AddHandler(handlers.NewCommand("warns", warnsModule.warns))
 	misc.AddCmdToDisableable("warns")
 	dispatcher.AddHandler(handlers.NewCommand("setwarnlimit", warnsModule.setWarnLimit))
