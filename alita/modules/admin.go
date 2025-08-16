@@ -717,7 +717,7 @@ func LoadAdmin(dispatcher *ext.Dispatcher) {
 			"clearadmincache",
 			func(b *gotgbot.Bot, ctx *ext.Context) error {
 				chat := ctx.EffectiveChat
-				err := cache.Marshal.Delete(cache.Context, cache.AdminCache{ChatId: chat.Id})
+				err := cache.Marshal.Delete(cache.Context, fmt.Sprintf("alita:adminCache:%d", chat.Id))
 				if err != nil {
 					log.Error(err)
 					return err

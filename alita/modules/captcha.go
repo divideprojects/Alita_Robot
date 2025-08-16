@@ -984,7 +984,7 @@ func (moduleStruct) captchaRefreshCallback(bot *gotgbot.Bot, ctx *ext.Context) e
 	}
 
 	// Cooldown: block rapid refreshes per user+chat
-	cooldownKey := fmt.Sprintf("captcha.refresh.cooldown.%d.%d", chat.Id, targetUserID)
+	cooldownKey := fmt.Sprintf("alita:captcha:refresh:cooldown:%d:%d", chat.Id, targetUserID)
 	if exists, _ := cache.Marshal.Get(cache.Context, cooldownKey, new(bool)); exists != nil {
 		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		text, _ := tr.GetString("captcha_wait_refresh")

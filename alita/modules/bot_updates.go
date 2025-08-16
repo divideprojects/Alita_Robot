@@ -230,7 +230,7 @@ func verifyAnonyamousAdmin(b *gotgbot.Bot, ctx *ext.Context) error {
 // setAdminCache retrieves cached message data for anonymous admin verification.
 // Returns the original message context stored during anonymous admin command execution.
 func setAdminCache(chatId, msgId int64) (any, error) {
-	return cache.Marshal.Get(cache.Context, fmt.Sprintf("anonAdmin.%d.%d", chatId, msgId), new(gotgbot.Message))
+	return cache.Marshal.Get(cache.Context, fmt.Sprintf("alita:anonAdmin:%d:%d", chatId, msgId), new(gotgbot.Message))
 }
 
 // LoadBotUpdates registers bot event handlers for group management.
@@ -254,5 +254,5 @@ func LoadBotUpdates(dispatcher *ext.Dispatcher) {
 		),
 	)
 
-	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("anonAdmin."), verifyAnonyamousAdmin))
+	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("alita:anonAdmin:"), verifyAnonyamousAdmin))
 }

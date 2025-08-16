@@ -921,7 +921,7 @@ func (moduleStruct) joinRequestHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 	case "accept":
 		_, _ = b.ApproveChatJoinRequest(chat.Id, joinUser.Id, nil)
 		helpText, _ = tr.GetString("greetings_join_request_accepted")
-		_ = cache.Marshal.Delete(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chat.Id, joinUser.Id))
+		_ = cache.Marshal.Delete(cache.Context, fmt.Sprintf("alita:pendingJoins:%d:%d", chat.Id, joinUser.Id))
 	case "decline":
 		_, _ = b.DeclineChatJoinRequest(chat.Id, joinUser.Id, nil)
 		helpText, _ = tr.GetString("greetings_join_request_declined")
@@ -1020,7 +1020,7 @@ func (moduleStruct) autoApprove(bot *gotgbot.Bot, ctx *ext.Context) error {
 // loadPendingJoins checks if a join request notification has already been sent for a user.
 // Prevents duplicate join request messages by checking cache for recent requests.
 func (moduleStruct) loadPendingJoins(chatId, userId int64) bool {
-	alreadyAsked, _ := cache.Marshal.Get(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chatId, userId), new(bool))
+	alreadyAsked, _ := cache.Marshal.Get(cache.Context, fmt.Sprintf("alita:pendingJoins:%d:%d", chatId, userId), new(bool))
 	if alreadyAsked == nil || !alreadyAsked.(bool) {
 		return false
 	}
@@ -1030,7 +1030,7 @@ func (moduleStruct) loadPendingJoins(chatId, userId int64) bool {
 // setPendingJoins marks a join request as processed in cache with expiration.
 // Stores request info for 5 minutes to prevent duplicate approval notifications.
 func (moduleStruct) setPendingJoins(chatId, userId int64) {
-	_ = cache.Marshal.Set(cache.Context, fmt.Sprintf("pendingJoins.%d.%d", chatId, userId), true, store.WithExpiration(5*time.Minute))
+	_ = cache.Marshal.Set(cache.Context, fmt.Sprintf("alita:pendingJoins:%d:%d", chatId, userId), true, store.WithExpiration(5*time.Minute))
 }
 
 // LoadGreetings registers all greeting-related handlers with the dispatcher.

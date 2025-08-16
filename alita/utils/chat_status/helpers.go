@@ -29,7 +29,7 @@ func sendAnonAdminKeyboard(b *gotgbot.Bot, msg *gotgbot.Message, chat *gotgbot.C
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 					{{
 						Text:         buttonText,
-						CallbackData: fmt.Sprintf("anonAdmin.%d.%d", chat.Id, msg.MessageId),
+						CallbackData: fmt.Sprintf("alita:anonAdmin:%d:%d", chat.Id, msg.MessageId),
 					}},
 				},
 			},

@@ -115,7 +115,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 	go func() {
 		maxRetries := 3
 		for i := range maxRetries {
-			if err := Marshal.Set(Context, AdminCache{ChatId: chatId}, adminCache, store.WithExpiration(constants.AdminCacheTTL)); err != nil {
+			if err := Marshal.Set(Context, fmt.Sprintf("alita:adminCache:%d", chatId), adminCache, store.WithExpiration(constants.AdminCacheTTL)); err != nil {
 				log.WithFields(log.Fields{
 					"chatId": chatId,
 					"error":  err,
@@ -143,9 +143,7 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 func GetAdminCacheList(chatId int64) (bool, AdminCache) {
 	gotAdminlist, err := Marshal.Get(
 		Context,
-		AdminCache{
-			ChatId: chatId,
-		},
+		fmt.Sprintf("alita:adminCache:%d", chatId),
 		new(AdminCache),
 	)
 	if err != nil {

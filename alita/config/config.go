@@ -64,6 +64,7 @@ type Config struct {
 	DispatcherMaxRoutines       int `validate:"min=1,max=1000"` // Max concurrent goroutines for dispatcher
 
 	// Cache configuration - Redis only (no local cache configuration needed)
+	ClearCacheOnStartup bool // Whether to clear all caches on bot startup
 
 	// Activity monitoring configuration
 	InactivityThresholdDays int  `validate:"min=1,max=365"` // Days before marking a chat as inactive
@@ -139,6 +140,7 @@ var (
 	DispatcherMaxRoutines       int
 
 	// Cache configuration - Redis only (no local cache configuration needed)
+	ClearCacheOnStartup bool
 
 	// Activity monitoring configuration
 	InactivityThresholdDays int
@@ -304,7 +306,8 @@ func LoadConfig() (*Config, error) {
 		EnableBackgroundStats:       typeConvertor{str: os.Getenv("ENABLE_BACKGROUND_STATS")}.Bool(),
 		DispatcherMaxRoutines:       typeConvertor{str: os.Getenv("DISPATCHER_MAX_ROUTINES")}.Int(),
 
-		// Cache configuration - Redis only (no environment variables needed)
+		// Cache configuration - Redis only
+		ClearCacheOnStartup: typeConvertor{str: os.Getenv("CLEAR_CACHE_ON_STARTUP")}.Bool(),
 
 		// Activity monitoring configuration
 		InactivityThresholdDays: typeConvertor{str: os.Getenv("INACTIVITY_THRESHOLD_DAYS")}.Int(),
@@ -453,6 +456,10 @@ func (cfg *Config) setDefaults() {
 		cfg.DispatcherMaxRoutines = 200 // Optimized for better throughput
 	}
 
+	// Set cache defaults
+	// ClearCacheOnStartup defaults to true for better reliability
+	cfg.ClearCacheOnStartup = true
+
 	// Enable monitoring by default in production
 	if !cfg.Debug {
 		if !cfg.EnablePerformanceMonitoring {
@@ -575,7 +582,7 @@ func init() {
 	EnablePerformanceMonitoring = cfg.EnablePerformanceMonitoring
 	EnableBackgroundStats = cfg.EnableBackgroundStats
 	DispatcherMaxRoutines = cfg.DispatcherMaxRoutines
-	// Cache config removed - using Redis only
+	ClearCacheOnStartup = cfg.ClearCacheOnStartup
 	InactivityThresholdDays = cfg.InactivityThresholdDays
 	ActivityCheckInterval = cfg.ActivityCheckInterval
 	EnableAutoCleanup = &cfg.EnableAutoCleanup

@@ -10,12 +10,14 @@ import (
 	"github.com/eko/gocache/lib/v4/marshaler"
 	redis_store "github.com/eko/gocache/store/redis/v4"
 	"github.com/redis/go-redis/v9"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
-	Context = context.Background()
-	Marshal *marshaler.Marshaler
-	Manager *cache.Cache[any]
+	Context     = context.Background()
+	Marshal     *marshaler.Marshaler
+	Manager     *cache.Cache[any]
+	redisClient *redis.Client
 )
 
 type AdminCache struct {
@@ -27,8 +29,8 @@ type AdminCache struct {
 // InitCache initializes the Redis-only cache system.
 // It establishes connection to Redis and returns an error if initialization fails.
 func InitCache() error {
-	// Test Redis connection first
-	redisClient := redis.NewClient(&redis.Options{
+	// Initialize Redis client
+	redisClient = redis.NewClient(&redis.Options{
 		Addr:     config.RedisAddress,
 		Password: config.RedisPassword, // no password set
 		DB:       config.RedisDB,       // use default DB
@@ -39,6 +41,13 @@ func InitCache() error {
 		return fmt.Errorf("failed to connect to Redis: %w", err)
 	}
 
+	// Clear all caches on startup if configured to do so
+	if config.ClearCacheOnStartup {
+		if err := ClearAllCaches(); err != nil {
+			log.Warnf("[Cache] Failed to clear caches on startup: %v", err)
+		}
+	}
+
 	// Initialize cache manager with Redis only
 	redisStore := redis_store.NewRedis(redisClient)
 	cacheManager := cache.New[any](redisStore)
@@ -47,5 +56,25 @@ func InitCache() error {
 	Marshal = marshaler.New(cacheManager)
 	Manager = cacheManager
 
+	return nil
+}
+
+// ClearAllCaches clears all cache entries from Redis using FLUSHDB.
+// This function is called on bot startup to ensure fresh data and eliminate cache coherence issues.
+// Since Redis is dedicated to the bot, FLUSHDB safely clears all keys in the current database.
+func ClearAllCaches() error {
+	if redisClient == nil {
+		return fmt.Errorf("redis client not initialized")
+	}
+
+	log.Info("[Cache] Clearing all caches using FLUSHDB...")
+
+	// Use FLUSHDB to clear all keys in current database
+	// This is safe since Redis is dedicated to the bot
+	if err := redisClient.FlushDB(Context).Err(); err != nil {
+		return fmt.Errorf("failed to flush database: %w", err)
+	}
+
+	log.Info("[Cache] Successfully cleared all cache entries")
 	return nil
 }
