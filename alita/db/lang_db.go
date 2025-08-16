@@ -65,11 +65,25 @@ func getUserLanguage(UserID int64) string {
 }
 
 // ChangeUserLanguage updates the language preference for a specific user.
-// Does nothing if the user doesn't exist or if the language is already set to the specified value.
+// Creates the user with the specified language if they don't exist.
+// Does nothing if the language is already set to the specified value.
 // Invalidates the user language cache after successful update.
 func ChangeUserLanguage(UserID int64, lang string) {
 	userc := checkUserInfo(UserID)
 	if userc == nil {
+		// Create new user with the specified language
+		newUser := &User{
+			UserId:   UserID,
+			Language: lang,
+		}
+		err := DB.Create(newUser).Error
+		if err != nil {
+			log.Errorf("[Database] ChangeUserLanguage (create): %v - %d", err, UserID)
+			return
+		}
+		// Invalidate cache after create
+		deleteCache(userLanguageCacheKey(UserID))
+		log.Infof("[Database] ChangeUserLanguage: created new user %d with language %s", UserID, lang)
 		return
 	} else if userc.Language == lang {
 		return
@@ -86,11 +100,30 @@ func ChangeUserLanguage(UserID int64, lang string) {
 }
 
 // ChangeGroupLanguage updates the language preference for a specific group.
+// Creates the chat with the specified language if it doesn't exist.
 // Does nothing if the language is already set to the specified value.
 // Invalidates both the group language and chat settings caches after successful update.
 func ChangeGroupLanguage(GroupID int64, lang string) {
 	groupc := GetChatSettings(GroupID)
-	if groupc.Language == lang {
+
+	// Check if chat exists (GetChatSettings returns empty struct if not found)
+	if groupc.ChatId == 0 {
+		// Create new chat with the specified language
+		newChat := &Chat{
+			ChatId:   GroupID,
+			Language: lang,
+		}
+		err := DB.Create(newChat).Error
+		if err != nil {
+			log.Errorf("[Database] ChangeGroupLanguage (create): %v - %d", err, GroupID)
+			return
+		}
+		// Invalidate caches after create
+		deleteCache(chatLanguageCacheKey(GroupID))
+		deleteCache(chatSettingsCacheKey(GroupID))
+		log.Infof("[Database] ChangeGroupLanguage: created new chat %d with language %s", GroupID, lang)
+		return
+	} else if groupc.Language == lang {
 		return
 	}
 

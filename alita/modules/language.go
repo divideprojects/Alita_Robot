@@ -87,11 +87,22 @@ func (moduleStruct) langBtnHandler(b *gotgbot.Bot, ctx *ext.Context) error {
 
 	tr := i18n.MustNewTranslator(language)
 	if chat.Type == "private" {
-		go db.ChangeUserLanguage(user.Id, language)
+		db.ChangeUserLanguage(user.Id, language)
 		replyString, _ = tr.GetString("language_changed_user", i18n.TranslationParams{"s": helpers.GetLangFormat(language)})
 	} else {
-		go db.ChangeGroupLanguage(chat.Id, language)
-		replyString, _ = tr.GetString("language_changed_group", i18n.TranslationParams{"s": helpers.GetLangFormat(language)})
+		// Check if user is admin before changing group language
+		if !chat_status.RequireUserAdmin(b, ctx, chat, user.Id, false) {
+			// Use current language for error message since we can't change it
+			currentLang := db.GetLanguage(ctx)
+			tr := i18n.MustNewTranslator(currentLang)
+			replyString, _ = tr.GetString("language_admin_required", i18n.TranslationParams{})
+			if replyString == "" {
+				replyString = "You need to be an admin to change the group language."
+			}
+		} else {
+			db.ChangeGroupLanguage(chat.Id, language)
+			replyString, _ = tr.GetString("language_changed_group", i18n.TranslationParams{"s": helpers.GetLangFormat(language)})
+		}
 	}
 
 	_, _, err := query.Message.EditText(
