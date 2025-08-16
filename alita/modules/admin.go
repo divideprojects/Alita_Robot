@@ -704,7 +704,7 @@ func (moduleStruct) adminCache(b *gotgbot.Bot, ctx *ext.Context) error {
 func LoadAdmin(dispatcher *ext.Dispatcher) {
 	HelpModule.AbleMap.Store("Admin", true)
 
-	dispatcher.AddHandler(handlers.NewCommand("admin", adminModule.promote))
+	dispatcher.AddHandler(handlers.NewCommand("promote", adminModule.promote))
 	dispatcher.AddHandler(handlers.NewCommand("demote", adminModule.demote))
 	dispatcher.AddHandler(handlers.NewCommand("invitelink", adminModule.getinvitelink))
 	dispatcher.AddHandler(handlers.NewCommand("title", adminModule.setTitle))
