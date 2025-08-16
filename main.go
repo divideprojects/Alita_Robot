@@ -112,6 +112,17 @@ func main() {
 	}
 	log.Infof("[Main] Bot initialized with optimized connection pooling (MaxIdleConns: %d, MaxIdleConnsPerHost: %d, HTTP/2 enabled)", maxIdleConns, maxIdleConnsPerHost)
 
+	// Retrieve bot identity early for logging and downstream components that reference username
+	var botUsername string
+	if me, errMe := b.GetMe(nil); errMe == nil && me != nil {
+		botUsername = me.Username
+		if botUsername == "" {
+			log.Warn("[Main] Bot username is empty after GetMe; deep links may not work until resolved")
+		}
+	} else if errMe != nil {
+		log.Warnf("[Main] GetMe failed during bootstrap: %v", errMe)
+	}
+
 	// Pre-warm connections to Telegram API for faster initial responses
 	go func() {
 		log.Info("[Main] Pre-warming connections to Telegram API...")
@@ -301,7 +312,11 @@ func main() {
 		}
 
 		// Log the message that bot started
-		log.Infof("[Bot] %s has been started in webhook mode...", b.Username)
+		if botUsername == "" {
+			log.Infof("[Bot] Bot has been started in webhook mode...")
+		} else {
+			log.Infof("[Bot] %s has been started in webhook mode...", botUsername)
+		}
 
 		// Wait for shutdown signal
 		webhookServer.WaitForShutdown()
@@ -372,7 +387,11 @@ func main() {
 		}
 
 		// Log the message that bot started
-		log.Infof("[Bot] %s has been started in polling mode...", b.Username)
+		if botUsername == "" {
+			log.Infof("[Bot] Bot has been started in polling mode...")
+		} else {
+			log.Infof("[Bot] %s has been started in polling mode...", botUsername)
+		}
 
 		// Register handler to stop the updater on shutdown
 		shutdownManager.RegisterHandler(func() error {

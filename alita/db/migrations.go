@@ -509,23 +509,20 @@ func (m *MigrationRunner) verifyIndexes() error {
 	// Define expected indexes (table -> index_name -> columns)
 	expectedIndexes := map[string]map[string][]string{
 		"users": {
-			"idx_users_user_id":       {"user_id"},
-			"idx_users_username":      {"username"},
-			"idx_users_last_activity": {"last_activity"},
+			"idx_users_user_id":   {"user_id"},
+			"idx_users_user_name": {"username"},
 		},
 		"chats": {
-			"idx_chats_chat_id":       {"chat_id"},
-			"idx_chats_last_activity": {"last_activity"},
+			"idx_chats_chat_id": {"chat_id"},
 		},
-		"chat_filters": {
-			"idx_chat_filters_chat_id": {"chat_id"},
-			"idx_chat_filters_keyword": {"chat_id", "keyword"},
+		"filters": {
+			"idx_filters_chat_keyword": {"chat_id", "keyword"},
 		},
 		"antiflood_settings": {
-			"idx_antiflood_chat_id": {"chat_id"},
+			"idx_antiflood_settings_chat_id": {"chat_id"},
 		},
-		"lock_settings": {
-			"idx_lock_settings_chat_lock": {"chat_id", "lock_type"},
+		"locks": {
+			"idx_lock_chat_type": {"chat_id", "lock_type"},
 		},
 		"captcha_attempts": {
 			"idx_captcha_user_chat":  {"user_id", "chat_id"},

@@ -19,6 +19,28 @@ import (
 	"github.com/divideprojects/Alita_Robot/alita/utils/string_handling"
 )
 
+// cache the bot username after first successful fetch
+var cachedBotUsername string
+
+func getBotUsername(b *gotgbot.Bot) string {
+	if cachedBotUsername != "" {
+		return cachedBotUsername
+	}
+	// try bot struct first
+	if b != nil && b.Username != "" {
+		cachedBotUsername = b.Username
+		return cachedBotUsername
+	}
+	// fallback to GetMe
+	if b != nil {
+		if me, err := b.GetMe(nil); err == nil && me != nil && me.Username != "" {
+			cachedBotUsername = me.Username
+			return cachedBotUsername
+		}
+	}
+	return ""
+}
+
 // Dynamic strings that will be loaded using i18n
 func getAboutText(tr *i18n.Translator) string {
 	text, _ := tr.GetString("help_info_about_header")
@@ -226,15 +248,29 @@ func (moduleStruct) about(b *gotgbot.Bot, ctx *ext.Context) error {
 			clickButtonText, _ := tr.GetString("help_click_button_info")
 			aboutButtonText, _ := tr.GetString("help_button_about")
 			currText = clickButtonText
-			currKb = gotgbot.InlineKeyboardMarkup{
-				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
-					{
+			if uname := getBotUsername(b); uname != "" {
+				currKb = gotgbot.InlineKeyboardMarkup{
+					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 						{
-							Text: aboutButtonText,
-							Url:  fmt.Sprintf("https://t.me/%s?start=about", b.Username),
+							{
+								Text: aboutButtonText,
+								Url:  fmt.Sprintf("https://t.me/%s?start=about", uname),
+							},
 						},
 					},
-				},
+				}
+			} else {
+				// If bot username unavailable, present a non-linking button to avoid broken deep links
+				currKb = gotgbot.InlineKeyboardMarkup{
+					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
+						{
+							{
+								Text:         aboutButtonText,
+								CallbackData: "about.main",
+							},
+						},
+					},
+				}
 			}
 		}
 		_, err := msg.Reply(

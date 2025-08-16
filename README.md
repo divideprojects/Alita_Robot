@@ -156,6 +156,20 @@ docker-compose logs -f alita
 docker-compose down
 ```
 
+Note: Database migrations run automatically in Docker (AUTO_MIGRATE=true).
+
+Optional: To run a local Telegram Bot API server for faster file handling, use the compose profile and set API_SERVER in your `.env`:
+
+```bash
+# .env
+API_SERVER=http://telegram-bot-api:8081
+TELEGRAM_API_ID=your_api_id
+TELEGRAM_API_HASH=your_api_hash
+
+# Start with profile
+docker compose --profile local-bot-api up -d
+```
+
 #### Using Docker Run (Bot Only)
 
 If you have existing PostgreSQL and Redis instances:
@@ -219,6 +233,12 @@ make build
 
 # Run the bot
 ./alita_robot
+
+# (Recommended) Run database migrations before the first run
+# Provide your Postgres connection via env vars:
+#   PSQL_DB_HOST, PSQL_DB_NAME, PSQL_DB_USER, PSQL_DB_PASSWORD
+# Optional: PSQL_DB_PORT (default 5432), PSQL_DB_SSLMODE (default require)
+make psql-migrate
 ```
 
 #### Development Build

@@ -11,17 +11,21 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-alita_robot}?sslmode=disable
       REDIS_ADDRESS: redis:6379
-      API_SERVER: http://telegram-bot-api:8081
+      # Enable automatic SQL migrations at startup
+      AUTO_MIGRATE: "true"
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_started
-      telegram-bot-api:
-        condition: service_healthy
-    ports:
-      # Only expose webhook port when USE_WEBHOOKS=true
-      - "${WEBHOOK_PORT:-8080}:${WEBHOOK_PORT:-8080}"
+    # Optional port mappings:
+    # - Expose webhook port only when using webhooks
+    # - Expose metrics/health if you want host access
+    # Uncomment as needed.
+    # ports:
+    #   - "${WEBHOOK_PORT:-8080}:${WEBHOOK_PORT:-8080}"
+    #   - "9090:9090"   # Prometheus metrics
+    #   - "8080:8080"   # Health (polling mode)
     # Resource limits to prevent crashes
     deploy:
       resources:
@@ -86,6 +90,7 @@ services:
   #         cpus: "0.1"
 
   telegram-bot-api:
+    profiles: ["local-bot-api"]
     image: aiogram/telegram-bot-api:latest
     restart: unless-stopped
     environment:
@@ -96,7 +101,7 @@ services:
       - telegram-bot-api-data:/var/lib/telegram-bot-api
     expose:
       - "8081" # Expose port for container-to-container communication
-    command: 
+    command:
       - "--api-id=${TELEGRAM_API_ID}"
       - "--api-hash=${TELEGRAM_API_HASH}"
       - "--local" # Enable local mode for faster file operations

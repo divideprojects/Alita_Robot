@@ -15,13 +15,29 @@ import (
 // Creates or updates the bot's user record with current username and name.
 // Returns error if database operation fails.
 func EnsureBotInDb(b *gotgbot.Bot) error {
-	usersUpdate := &User{UserId: b.Id, UserName: b.Username, Name: b.FirstName}
-	err := DB.Where("user_id = ?", b.Id).Assign(usersUpdate).FirstOrCreate(&User{})
+	// Ensure we have accurate bot identity from Telegram API.
+	me, errGet := b.GetMe(nil)
+	if errGet != nil {
+		log.Errorf("[Database] EnsureBotInDb: failed to fetch bot identity via GetMe: %v", errGet)
+		// Continue with whatever is available to avoid blocking startup.
+	}
+
+	botID := b.Id
+	botUsername := b.Username
+	botFirstName := b.FirstName
+	if me != nil {
+		botID = me.Id
+		botUsername = me.Username
+		botFirstName = me.FirstName
+	}
+
+	usersUpdate := &User{UserId: botID, UserName: botUsername, Name: botFirstName}
+	err := DB.Where("user_id = ?", botID).Assign(usersUpdate).FirstOrCreate(&User{})
 	if err.Error != nil {
 		log.Errorf("[Database] EnsureBotInDb: %v", err.Error)
-		return fmt.Errorf("failed to ensure bot %d in database: %w", b.Id, err.Error)
+		return fmt.Errorf("failed to ensure bot %d in database: %w", botID, err.Error)
 	}
-	log.Infof("[Database] Bot Updated in Database!")
+	log.Infof("[Database] Bot Updated in Database! (id=%d username=%s)", botID, botUsername)
 	return nil
 }
 
