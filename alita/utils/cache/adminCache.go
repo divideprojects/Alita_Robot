@@ -44,12 +44,6 @@ func LoadAdminCache(b *gotgbot.Bot, chatId int64) AdminCache {
 
 	botStatus := botMember.GetStatus()
 	if botStatus != "administrator" && botStatus != "creator" {
-		log.WithFields(log.Fields{
-			"chatId":    chatId,
-			"botId":     b.Id,
-			"botStatus": botStatus,
-		}).Warning("LoadAdminCache: Bot is not admin, cannot fetch admin list")
-		// Return empty cache when bot lacks admin privileges
 		return AdminCache{
 			ChatId:   chatId,
 			UserInfo: []gotgbot.MergedChatMember{},

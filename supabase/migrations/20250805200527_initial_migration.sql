@@ -1,44 +1,44 @@
-create sequence "public"."admin_id_seq";
+create sequence if not exists "public"."admin_id_seq";
 
-create sequence "public"."antiflood_settings_id_seq";
+create sequence if not exists "public"."antiflood_settings_id_seq";
 
-create sequence "public"."blacklists_id_seq";
+create sequence if not exists "public"."blacklists_id_seq";
 
-create sequence "public"."channels_id_seq";
+create sequence if not exists "public"."channels_id_seq";
 
-create sequence "public"."chats_id_seq";
+create sequence if not exists "public"."chats_id_seq";
 
-create sequence "public"."connection_id_seq";
+create sequence if not exists "public"."connection_id_seq";
 
-create sequence "public"."connection_settings_id_seq";
+create sequence if not exists "public"."connection_settings_id_seq";
 
-create sequence "public"."devs_id_seq";
+create sequence if not exists "public"."devs_id_seq";
 
-create sequence "public"."disable_id_seq";
+create sequence if not exists "public"."disable_id_seq";
 
-create sequence "public"."filters_id_seq";
+create sequence if not exists "public"."filters_id_seq";
 
-create sequence "public"."greetings_id_seq";
+create sequence if not exists "public"."greetings_id_seq";
 
-create sequence "public"."locks_id_seq";
+create sequence if not exists "public"."locks_id_seq";
 
-create sequence "public"."notes_id_seq";
+create sequence if not exists "public"."notes_id_seq";
 
-create sequence "public"."notes_settings_id_seq";
+create sequence if not exists "public"."notes_settings_id_seq";
 
-create sequence "public"."pins_id_seq";
+create sequence if not exists "public"."pins_id_seq";
 
-create sequence "public"."report_chat_settings_id_seq";
+create sequence if not exists "public"."report_chat_settings_id_seq";
 
-create sequence "public"."report_user_settings_id_seq";
+create sequence if not exists "public"."report_user_settings_id_seq";
 
-create sequence "public"."rules_id_seq";
+create sequence if not exists "public"."rules_id_seq";
 
-create sequence "public"."users_id_seq";
+create sequence if not exists "public"."users_id_seq";
 
-create sequence "public"."warns_settings_id_seq";
+create sequence if not exists "public"."warns_settings_id_seq";
 
-create sequence "public"."warns_users_id_seq";
+create sequence if not exists "public"."warns_users_id_seq";
 
 create table "public"."admin" (
     "id" bigint not null default nextval('admin_id_seq'::regclass),
@@ -1389,5 +1389,3 @@ grant trigger on table "public"."warns_users" to "service_role";
 grant truncate on table "public"."warns_users" to "service_role";
 
 grant update on table "public"."warns_users" to "service_role";
-
-
