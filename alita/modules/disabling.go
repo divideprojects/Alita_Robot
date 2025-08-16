@@ -213,7 +213,7 @@ func (moduleStruct) disabledel(b *gotgbot.Bot, ctx *ext.Context) error {
 			go db.ToggleDel(chat.Id, false)
 			text, _ = tr.GetString("disabling_delete_disabled")
 		default:
-			text, _ = tr.GetString("pins_input_not_recognized")
+			text, _ = tr.GetString("disabling_invalid_option")
 		}
 	} else {
 		currStatus := db.ShouldDel(chat.Id)

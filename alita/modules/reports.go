@@ -78,13 +78,13 @@ func (moduleStruct) report(b *gotgbot.Bot, ctx *ext.Context) error {
 		return ext.EndGroups
 	}
 
-	if user.Id == 1087968824|777000|136817688 {
+	if user.Id == 1087968824 || user.Id == 777000 || user.Id == 136817688 {
 		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		text, _ := tr.GetString("reports_expose_yourself")
 		_, _ = msg.Reply(b, text, nil)
 		return ext.EndGroups
 	}
-	if msg.ReplyToMessage.From.Id == 1087968824|777000|136817688 {
+	if msg.ReplyToMessage.From.Id == 1087968824 || msg.ReplyToMessage.From.Id == 777000 || msg.ReplyToMessage.From.Id == 136817688 {
 		tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 		text, _ := tr.GetString("reports_special_account")
 		_, _ = msg.Reply(b, text, nil)
@@ -388,13 +388,10 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 	tr := i18n.MustNewTranslator(db.GetLanguage(ctx))
 	switch action {
 	case "kick":
-		replyQuery = "✅ Successfully Kicked"
+		replyQuery, _ = tr.GetString("reports_success_kick")
 		kickedText, _ := tr.GetString("reports_user_kicked")
-		replyText = fmt.Sprintf(
-			kickedText+
-				"Action taken by %s",
-			helpers.MentionHtml(user.Id, user.FirstName),
-		)
+		actionBy, _ := tr.GetString("reports_action_by", i18n.TranslationParams{"s": helpers.MentionHtml(user.Id, user.FirstName)})
+		replyText = fmt.Sprintf("%s\n%s", kickedText, actionBy)
 		_, err := chat.BanMember(b, userId, nil)
 		if err != nil {
 			log.Error(err)
@@ -409,13 +406,10 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 			return err
 		}
 	case "ban":
-		replyQuery = "✅ Successfully Banned"
+		replyQuery, _ = tr.GetString("reports_success_ban")
 		bannedText, _ := tr.GetString("reports_user_banned")
-		replyText = fmt.Sprintf(
-			bannedText+
-				"Action taken by %s",
-			helpers.MentionHtml(user.Id, user.FirstName),
-		)
+		actionBy, _ := tr.GetString("reports_action_by", i18n.TranslationParams{"s": helpers.MentionHtml(user.Id, user.FirstName)})
+		replyText = fmt.Sprintf("%s\n%s", bannedText, actionBy)
 		_, err := chat.BanMember(b, userId, nil)
 		if err != nil {
 			log.Error(err)
@@ -423,23 +417,17 @@ func (moduleStruct) markResolvedButtonHandler(b *gotgbot.Bot, ctx *ext.Context) 
 		}
 
 	case "delete":
-		replyQuery = "✅ Successfully Deleted"
+		replyQuery, _ = tr.GetString("reports_success_delete")
 		deletedText, _ := tr.GetString("reports_message_deleted")
-		replyText = fmt.Sprintf(
-			deletedText+
-				"Action taken by %s",
-			helpers.MentionHtml(user.Id, user.FirstName),
-		)
+		actionBy, _ := tr.GetString("reports_action_by", i18n.TranslationParams{"s": helpers.MentionHtml(user.Id, user.FirstName)})
+		replyText = fmt.Sprintf("%s\n%s", deletedText, actionBy)
 		err := helpers.DeleteMessageWithErrorHandling(b, chat.Id, msgId)
 		if err != nil {
 			return err
 		}
 	default:
-		replyQuery = "✅ Resolved Report Successfully!"
-		replyText = fmt.Sprintf(
-			"<b>Resolved by:</b> %s",
-			helpers.MentionHtml(user.Id, user.FirstName),
-		)
+		replyQuery, _ = tr.GetString("reports_resolved_success")
+		replyText, _ = tr.GetString("reports_resolved_by", i18n.TranslationParams{"s": helpers.MentionHtml(user.Id, user.FirstName)})
 
 	}
 	_, _, err := msg.EditText(

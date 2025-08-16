@@ -1140,6 +1140,7 @@ disabling_delete_current_disabled: La eliminación de comandos deshabilitados es
 disabling_enabled_successfully: "Re-habilitado el uso de lo siguiente en este chat:%s"
 disabling_unknown_reenable: "Comando desconocido para Re-habilitar:\n-%s\n¡Revisa /disableable!"
 disabling_no_command_reenable: No has especificado un comando para deshabilitar.
+disabling_invalid_option: "Solo entiendo una opción de: `yes`/`no`/`on`/`off`"
 
 # Misc module strings
 misc_reply_to_someone: Responde a alguien.
@@ -1589,6 +1590,7 @@ language_help_translate: "Ayúdanos a Traducir 🌎"
 bot_updates_need_supergroup: "Lo siento, pero para usar todas mis funciones, necesitas convertir este grupo en supergrupo."
 bot_updates_thanks_for_adding: "¡Gracias por añadirme en tu grupo!"
 bot_updates_button_expired: "Este botón ha expirado, Por favor usa el comando de nuevo."
+bot_updates_creators_plug: "\nSigue a @DivideProjects para más bots útiles de mis creadores."
 
 # Formatting module additional strings
 formatting_press_button: "¡Presiona el botón de abajo para obtener Ayuda de Markdown!"
@@ -1651,6 +1653,12 @@ reports_preference_disabled_private: "No has habilitado reportes. No serás noti
 reports_status_enabled_group: "Los reportes están actualmente habilitados en este chat.\nLos usuarios pueden usar el comando /report, o mencionar @admin, para etiquetar a todos los administradores."
 reports_status_disabled_group: "Los reportes están actualmente deshabilitados en este chat."
 reports_change_settings_hint: "\n\nPara cambiar esta configuración, intenta este comando de nuevo, con uno de los siguientes argumentos: yes/no/on/off"
+reports_success_kick: "✅ Expulsado correctamente"
+reports_success_ban: "✅ Baneado correctamente"
+reports_success_delete: "✅ Eliminado correctamente"
+reports_resolved_success: "✅ Reporte resuelto"
+reports_action_by: "Acción realizada por %s"
+reports_resolved_by: "<b>Resuelto por:</b> %s"
 
 # Captcha module strings
 captcha_mode_math_desc: "problemas matemáticos"

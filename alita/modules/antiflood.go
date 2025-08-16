@@ -348,7 +348,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 			}()
 
 			// Create context with timeout
-			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			timeoutCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
 
 			timer := time.NewTimer(3 * time.Second)
@@ -364,7 +364,7 @@ func (m *moduleStruct) checkFlood(b *gotgbot.Bot, ctx *ext.Context) error {
 						"error":  unbanErr,
 					}).Error("Failed to unban user after antiflood kick")
 				}
-			case <-ctx.Done():
+			case <-timeoutCtx.Done():
 				log.WithFields(log.Fields{
 					"chatId": chat.Id,
 					"userId": userId,

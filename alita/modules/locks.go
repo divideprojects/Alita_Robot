@@ -25,20 +25,20 @@ import (
 
 var (
 	locksModule = moduleStruct{
-		moduleName:        "Languages",
+		moduleName:        "Locks",
 		permHandlerGroup:  5,
 		restrHandlerGroup: 6,
 	}
 	arabmatch, _                 = regexp.Compile("[\u0600-\u06FF]") // the regex detects the arabic language
 	GIF          filters.Message = message.Animation
 	OTHER        filters.Message = func(msg *gotgbot.Message) bool {
-		return msg.Game != nil || msg.Sticker != nil || GIF != nil
+		return msg.Game != nil || msg.Sticker != nil || message.Animation(msg)
 	}
 	MEDIA filters.Message = func(msg *gotgbot.Message) bool {
 		return msg.Audio != nil || msg.Document != nil || msg.VideoNote != nil || msg.Video != nil || msg.Voice != nil || msg.Photo != nil
 	}
 	MESSAGES filters.Message = func(msg *gotgbot.Message) bool {
-		return msg.Text != "" || msg.Contact != nil || msg.Location != nil || msg.Venue != nil || MEDIA != nil || OTHER != nil
+		return msg.Text != "" || msg.Contact != nil || msg.Location != nil || msg.Venue != nil || MEDIA(msg) || OTHER(msg)
 	}
 	PREVIEW filters.Message = func(msg *gotgbot.Message) bool {
 		for _, s := range msg.Entities {
@@ -133,7 +133,7 @@ func (moduleStruct) buildLockTypesMessage(chatID int64) (res string) {
 func (m moduleStruct) locktypes(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
-	if chat_status.CheckDisabledCmd(b, msg, "adminlist") {
+	if chat_status.CheckDisabledCmd(b, msg, "locktypes") {
 		return ext.EndGroups
 	}
 	// connection status
@@ -160,7 +160,7 @@ func (m moduleStruct) locktypes(b *gotgbot.Bot, ctx *ext.Context) error {
 func (m moduleStruct) locks(b *gotgbot.Bot, ctx *ext.Context) error {
 	msg := ctx.EffectiveMessage
 	// if command is disabled, return
-	if chat_status.CheckDisabledCmd(b, msg, "adminlist") {
+	if chat_status.CheckDisabledCmd(b, msg, "locks") {
 		return ext.EndGroups
 	}
 	// connection status

@@ -859,6 +859,7 @@ utils_extraction_extract_chat_fail_need_chat_id:
 utils_extraction_extract_user_badrequest_failed_getchatmember:
   "failed to get user:
   unable to getChatMember: Bad Request: chat not found"
+bot_updates_creators_plug: "\nFollow @DivideProjects for more useful bots from my creators."
 utils_extraction_extract_user_no_user_found:
   Could not find a user by this name; are
   you sure I've seen them before?
@@ -1143,6 +1144,7 @@ disabling_delete_current_disabled: Disabled Command deleting is *disabled*, disa
 disabling_enabled_successfully: "Re-Enabled the use of the following in this chat:%s"
 disabling_unknown_reenable: "Unknown command to Re-Enable:\n-%s\nCheck /disableable!"
 disabling_no_command_reenable: You haven't specified a command to disable.
+disabling_invalid_option: "I only understand an option from: `yes`/`no`/`on`/`off`"
 
 # Misc module strings
 misc_reply_to_someone: Reply to someone.
@@ -1654,6 +1656,12 @@ reports_preference_disabled_private: "You haven't enabled reports. You won't be 
 reports_status_enabled_group: "Reports are currently enabled in this chat.\nUsers can use the /report command, or mention @admin, to tag all admins."
 reports_status_disabled_group: "Reports are currently disabled in this chat."
 reports_change_settings_hint: "\n\nTo change this setting, try this command again, with one of the following args: yes/no/on/off"
+reports_success_kick: "✅ Successfully kicked"
+reports_success_ban: "✅ Successfully banned"
+reports_success_delete: "✅ Successfully deleted"
+reports_resolved_success: "✅ Resolved report"
+reports_action_by: "Action taken by %s"
+reports_resolved_by: "<b>Resolved by:</b> %s"
 
 # Captcha module strings
 captcha_mode_math_desc: "mathematical problems"

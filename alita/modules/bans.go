@@ -58,7 +58,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 	if !chat_status.CanUserDelete(b, ctx, chat, user.Id, false) {
 		return ext.EndGroups
 	}
-	if msg.ReplyToMessage != nil {
+	if msg.ReplyToMessage == nil {
 		text, _ := tr.GetString("bans_dkick_reply_error")
 		_, _ = msg.Reply(b, text, nil)
 		return ext.EndGroups
@@ -133,7 +133,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 		}()
 
 		// Create context with timeout
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		timeoutCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
 		timer := time.NewTimer(2 * time.Second)
@@ -149,7 +149,7 @@ func (m moduleStruct) dkick(b *gotgbot.Bot, ctx *ext.Context) error {
 					"error":  unbanErr,
 				}).Error("Failed to unban user after dkick")
 			}
-		case <-ctx.Done():
+		case <-timeoutCtx.Done():
 			log.WithFields(log.Fields{
 				"chatId": chat.Id,
 				"userId": userId,

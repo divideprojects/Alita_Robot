@@ -159,9 +159,8 @@ func (moduleStruct) genFormattingKbDefault() [][]gotgbot.InlineKeyboardButton {
 
 // getMarkdownHelp retrieves the appropriate help text for a specific formatting module.
 // Returns localized help content based on the requested formatting category.
-func (moduleStruct) getMarkdownHelp(module string) string {
+func (moduleStruct) getMarkdownHelp(tr *i18n.Translator, module string) string {
 	var helpTxt string
-	tr := i18n.MustNewTranslator("en")
 	switch module {
 	case "md_formatting":
 		helpTxt, _ = tr.GetString("formatting_markdown")
@@ -186,20 +185,18 @@ func (m moduleStruct) formattingHandler(b *gotgbot.Bot, ctx *ext.Context) error 
 	backText, _ := tr.GetString("common_back")
 
 	// Edit the help as per sub-module selected in markdownhelp
-	_, _, err := msg.EditText(b,
-		m.getMarkdownHelp(module),
-		&gotgbot.EditMessageTextOpts{
-			MessageId: msg.GetMessageId(),
-			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
-				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
-					{
-						{Text: backText, CallbackData: "helpq.Formatting"},
-					},
+	opts := &gotgbot.EditMessageTextOpts{
+		MessageId: msg.GetMessageId(),
+		ReplyMarkup: gotgbot.InlineKeyboardMarkup{
+			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
+				{
+					{Text: backText, CallbackData: "helpq.Formatting"},
 				},
 			},
-			ParseMode: helpers.HTML,
 		},
-	)
+		ParseMode: helpers.HTML,
+	}
+	_, _, err := msg.EditText(b, m.getMarkdownHelp(tr, module), opts)
 	if err != nil {
 		log.Error(err)
 		return err

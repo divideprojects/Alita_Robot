@@ -6,7 +6,6 @@ db_warn_no_reason: "No Reason"
 alt_names:
   Admin: [admins, promote, demote, title]
   Antiflood: [flood]
-  Approvals: [approval, approve]
   Bans:
     [ban, kick, dkick, restrict, kickme, unrestrict, sban, dban, tban, unban]
   Blacklists: [blacklist, unblacklist]
@@ -24,5 +23,4 @@ alt_names:
   Purges: [purge, del]
   Reports: [report, reporting]
   Rules: [rule]
-  Tagger: [tagme, tagall, tagging, untagme, addtag]
   Warns: [warn, warning, warnings]

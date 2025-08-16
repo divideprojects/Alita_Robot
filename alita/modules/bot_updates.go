@@ -78,7 +78,7 @@ func botJoinedGroup(b *gotgbot.Bot, ctx *ext.Context) error {
 		chat.Id,
 		fmt.Sprint(
 			thanksText,
-			"\nCheckout @DivideProjects for more such useful bots from my creators.",
+			func() string { plug, _ := tr.GetString("bot_updates_creators_plug"); return plug }(),
 			msgAdmin,
 		),
 		nil,
