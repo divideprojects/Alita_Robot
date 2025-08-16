@@ -1,7 +1,6 @@
 package db
 
 import (
-	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	log "github.com/sirupsen/logrus"
 )
@@ -10,15 +9,8 @@ import (
 // Returns the user's language preference for private chats, or the group's language for group chats.
 // Defaults to "en" (English) if no preference is found.
 func GetLanguage(ctx *ext.Context) string {
-	var chat gotgbot.Chat
-	if ctx.CallbackQuery != nil {
-		chat = ctx.CallbackQuery.Message.GetChat()
-	} else if ctx.ChatJoinRequest != nil {
-		// Handle ChatJoinRequest - these don't have messages
-		chat = ctx.ChatJoinRequest.Chat
-	} else if ctx.EffectiveMessage != nil {
-		chat = ctx.EffectiveMessage.Chat
-	} else {
+	chat := ctx.EffectiveChat
+	if chat == nil {
 		// Fallback to default language if we can't determine chat context
 		log.Warn("[GetLanguage] Unable to determine chat context, using default language")
 		return "en"
