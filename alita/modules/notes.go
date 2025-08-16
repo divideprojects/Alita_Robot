@@ -796,6 +796,8 @@ func LoadNotes(dispatcher *ext.Dispatcher) {
 	dispatcher.AddHandler(handlers.NewCommand("clear", notesModule.rmNote))
 	dispatcher.AddHandler(handlers.NewCommand("rmnote", notesModule.rmNote))
 	dispatcher.AddHandler(handlers.NewCommand("notes", notesModule.notesList))
+	// Alias: /saved should behave like /notes per documentation
+	dispatcher.AddHandler(handlers.NewCommand("saved", notesModule.notesList))
 	misc.AddCmdToDisableable("notes")
 	dispatcher.AddHandler(handlers.NewCommand("clearall", notesModule.rmAllNotes))
 	dispatcher.AddHandler(handlers.NewCallback(callbackquery.Prefix("rmAllNotes"), notesModule.notesButtonHandler))
